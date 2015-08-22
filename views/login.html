@@ -1,0 +1,67 @@
+<!DOCTYPE HTML>
+<html lang="en" ng-app='giddhApp'>
+<head>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=egde"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Do you feel accounting is tough to manage? Giddh will solve all your accounting related needs. Get a free invitation now." />
+	<meta name="keywords" content="Accounting softwares, online accounting software, Web Based Accounting Software" />
+  	<title>Login - Giddh ~ Accounting at its Rough! Angular js</title>
+  	<!-- LIBRARIES -->
+	<script src='/bower_components/modernizr/modernizr.js'></script>
+	<script src='/bower_components/jquery/jquery.min.js'></script>
+	<script src="/bower_components/angular/angular.min.js"></script>
+	
+	<script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="/bower_components/satellizer/satellizer.js"></script>
+	<!-- STYLE / THEME -->
+	<link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/views/css/style-web.css" rel="stylesheet">
+	<script src="/views/js/app.js"></script>
+	<script src="/views/js/controller/loginController.js"></script>
+</head>
+  <body>
+
+	<div ng-controller="loginController">
+		<section id="topSection" class="login">
+			<ng-include src="'views/header.html'"></ng-include>
+			<!-- start of banner -->
+			<div class="container othPage" id="banner">
+				<div class="row">
+					<div class="col-md-12 col-sm-12 alC">
+						<h2 class="lghead mocha">
+							{{login.banner.mainHead}} <br>
+							{{login.banner.mainHead1}}
+						</h2>
+						<div id="dasheddiv" style="border-color:rgba(41, 37, 31, 0.3); margin-bottom:40px;"></div>
+			            <div id="prnat">
+			                <span class="h2s mocha">Login as</span>
+			                <a class="lgbtn" href="javascript:void(0)">
+			                    <div class="clearfix">
+			                        <img src="/views/images/fb.png" border="0" align="absmiddle" alt="Facebook" height="40" width="140"/>
+			                    </div>
+			                </a>
+
+			                <a class="lgbtn" ng-click="authenticate('google')">
+			                    <div class="clearfix">
+			                        <img src="/views/images/google.png" border="0" align="absmiddle" alt="Google" height="40" width="140"/>
+			                    </div>
+			                </a>
+			            </div>
+					</div>
+				</div>
+			</div>
+			<!-- End of banner -->
+		</section>
+
+		<section class="container" id="midSection">
+			<div style="margin-bottom:40px;">
+		        <div id="tipscnt" class="tipcnt mocha">
+		            Tip : "Every transaction has a statement."
+		        </div>
+		    </div>
+		</section>
+		<ng-include src="'views/footer.html'"></ng-include>
+	</div>
+  </body>
+</html>

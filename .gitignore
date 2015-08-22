@@ -1,0 +1,6 @@
+*.DS_Store
+*.csv
+*.txt
+bower_components/
+bin/
+node_modules/

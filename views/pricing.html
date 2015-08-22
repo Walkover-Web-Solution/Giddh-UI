@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html lang="en" ng-app='giddhApp'>
+<head>
+	<meta charset="UTF-8"/>
+	<meta http-equiv="X-UA-Compatible" content="IE=egde"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Do you feel accounting is tough to manage? Giddh will solve all your accounting related needs. Get a free invitation now." />
+	<meta name="keywords" content="Accounting softwares, online accounting software, Web Based Accounting Software" />
+  	<title>Giddh ~ Accounting at its Rough! Angular js</title>
+  	<!-- LIBRARIES -->
+	<script src='/bower_components/modernizr/modernizr.js'></script>
+	<script src='/bower_components/jquery/jquery.min.js'></script>
+	<script src="/bower_components/angular/angular.min.js"></script>
+	
+	<script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+	<script src="/bower_components/satellizer/satellizer.js"></script>
+	<!-- STYLE / THEME -->
+	<link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/views/css/style-web.css" rel="stylesheet">
+	<script src="/views/js/app.js"></script>
+	<script src="/views/js/controller/pricingController.js"></script>
+</head>
+	<body>
+		<div ng-controller="pricingController">
+			<section id="topSection">
+				<ng-include src="'views/header.html'"></ng-include>
+				<!-- start of banner -->
+				<div class="container othPage" id="banner">
+					<div class="row">
+						<div class="col-md-12 col-sm-12 alC">
+							<h2 class="h2 mocha">
+								{{pricing.banner.mainHead}} <br>
+								{{pricing.banner.mainHead1}}
+							</h2>
+							<h3 class="h3 trumph">{{pricing.banner.subHead}}</h3>
+							<div id="trywrap">
+								<a target="_blank" href="/login">
+									<div id="try">
+										<img border="0" ng-src="{{pricing.banner.banBtnImgSrc}}" alt="{{pricing.banner.banBtnImgTitle}}" />
+									</div>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- End of banner -->
+			</section>
+
+			<section class="container" id="midSection">
+				<ul class="ln" id="cmnul">
+					<li class="col-md-4 col-sm-12"  ng-repeat="list in pricing.middle.list">
+		            	<h4 class="h4">{{list.title}}</h4>
+		                <p class="cmnp">{{list.details}}</p>
+		                <a href="javascript:;" class="readmore">Read more</a>
+		            </li>
+				</ul>
+			</section>
+			<ng-include src="'views/footer.html'"></ng-include>
+		</div>
