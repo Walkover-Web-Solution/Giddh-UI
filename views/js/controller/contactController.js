@@ -44,14 +44,45 @@
         ]
       }
     };
+    $scope.hasWhiteSpace = function(s) {
+      return /\s/g.test(s);
+    };
     $scope.form = {};
     $scope.integerval = /^\d*$/;
     return $scope.submitForm = function() {
-      var htmlBody;
+      var details, unameArr;
       if ($scope.form.$valid) {
-        console.log($scope.form);
-        htmlBody = '<div>Name: ' + $scope.form.uEmail.$viewValue + '</div>' + '<div>Email: ' + $scope.form.uNumber.$viewValue + '</div>' + '<div>Email: ' + $scope.form.uEmail.$viewValue + '</div>' + '<div>Message: ' + $scope.form.uMessage.$viewValue + '</div>' + '<div>Date: ' + (new Date).toString() + '</div>';
-        console.log('our form is amazing', htmlBody);
+        details = [];
+        if ($scope.hasWhiteSpace($scope.user.name)) {
+          console.log("dude you rock");
+          unameArr = $scope.user.name.split(" ");
+          details.uFname = unameArr[0];
+          details.uLname = unameArr[1];
+        } else {
+          details.uFname = $scope.user.name;
+          details.uFname = $scope.user.name;
+        }
+        return $http.post('http://localhost:8000/submitContactDetail', {
+          uFname: details.uFname,
+          uLname: details.uLname,
+          email: $scope.user.email,
+          number: $scope.user.number,
+          msg: $scope.user.msg
+        }).then((function(response) {
+          console.log('then', response);
+          if (response.status === 200) {
+            $scope.blank = {};
+            $scope.user = angular.copy($scope.blank);
+            $scope.form.$setPristine();
+            if (angular.isUndefined(response.data.message)) {
+              return $scope.responseMsg = "Thanks! will get in touch with you soon";
+            } else {
+              return $scope.responseMsg = response.data.message;
+            }
+          }
+        }), function(response) {
+          return console.log('in response', response);
+        });
       }
     };
   };

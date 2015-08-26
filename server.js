@@ -1,11 +1,16 @@
 var express = require('express');
 var path = require('path');
+var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
+
+//Example POST method invocation 
+var Client = require('node-rest-client').Client; 
+var client = new Client();
 /*
 //commented not in use modified by sarfaraz
 var routes = require('./routes/index');
@@ -23,15 +28,18 @@ app.set('views', __dirname + '/views/');
 app.engine('html', engines.mustache);
 app.set('view engine', 'html');
 
+app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/public',  express.static(__dirname + '/public'));
 app.use('/views',  express.static(__dirname + '/views'));
+
+
 
 
 /*for serve app only templates files after login*/
@@ -102,9 +110,60 @@ app.get('/accountingsoftware', function(req, res, next) {
 });
 /*
  |--------------------------------------------------------------------------
+ | Submit contact form in hubspot
+ |--------------------------------------------------------------------------
+*/
+var hubURL = "https://api.hubapi.com/contacts/v1/contact/?hapikey=41e07798-d4bf-499b-81df-4dfa52317054";
+
+app.post('/submitContactDetail', function(req, res) {
+  console.log(req.body, "in submitContactDetail");
+  var formData = {
+    "properties": [
+      {
+        "property": "email",
+        "value": req.body.email
+      },
+      {
+        "property": "firstname",
+        "value": req.body.uFname
+      },
+      {
+        "property": "lastname",
+        "value": req.body.uLname
+      },
+      {
+        "property": "phone",
+        "value": req.body.number
+      },
+      {
+        "property": "message",
+        "value": req.body.msg
+      },
+    ]
+  }
+  var args = {
+    data: formData,
+    headers:{"Content-Type": "application/json"}
+  };
+  console.log(args, "in args", formData.properties[0].value)
+  
+  client.post(hubURL, args, function(data,response) {
+      if(Buffer.isBuffer(data)){
+          data = data.toString('utf-8');
+      }
+      console.log(data, "data in client post");
+      res.send(data);
+  });
+  
+
+})
+
+
+/*
+ |--------------------------------------------------------------------------
  | Login with Google
  |--------------------------------------------------------------------------
- */
+*/
 app.post('/auth/google', function(req, res) {
   var accessTokenUrl = 'https://accounts.google.com/o/oauth2/token';
   var peopleApiUrl = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect';

@@ -308,6 +308,10 @@ footer a:hover{
 .hd a{
 	color: #d25a05;
 }
+.form-response{
+	font-size: 2em;
+	color: green
+}
 
 /*social icons*/
 .socialwrap{ -moz-transition:0.3s ease 0s; }

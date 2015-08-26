@@ -7,6 +7,7 @@
     <meta name="description" content="Do you feel accounting is tough to manage? Giddh will solve all your accounting related needs. Get a free invitation now." />
     <meta name="keywords" content="Accounting softwares, online accounting software, Web Based Accounting Software" />
     <title>Giddh - Contact ~ Accounting at its Rough! Angular js</title>
+    <!-- <link rel="shortcut icon" type="image/png" href="/views/images/favicon.ico"/> -->
     <!-- LIBRARIES -->
     <script src='/bower_components/modernizr/modernizr.js'></script>
     <script src='/bower_components/jquery/jquery.min.js'></script>
@@ -51,12 +52,15 @@
     		<div id="cntRow" class="row">
     			<div class="col-md-6 col-sm-12">
     				<h4 class="h4">{{contact.middle.formHead}}</h4>
-    				<div class="form">
+                    <div  ng-show="responseMsg" class="form-response">
+                        {{responseMsg}}
+                    </div>
+    				<div class="form" ng-hide="responseMsg">
 
                         <form name="form" class="contactForm" novalidate>
 
                             <div class="buff">
-                                <p class="lable">Name</p>
+                                <p class="lable">Full Name</p>
                                 <input placeholder="Adam John" class="form-control" type="text" ng-model="user.name" name="uName" ng-minlength="3" required="" />
                                 <div class="alertCnt" ng-show="form.$submitted || form.uName.$touched">
                                     <span ng-show="form.uName.$error.required">Tell us your name.</span>
@@ -83,9 +87,8 @@
 
                             <div class="buff">
                                 <p class="lable">Message</p>
-                                <textarea class="form-control" name="uMessage" ng-model="user.msg" placeholder="Your messsage"></textarea>
+                                <textarea class="form-control" name="uMessage" ng-model="user.msg" placeholder="Your messsage" required></textarea>
                             </div>
-
                             <div class="buff">
                                 <button class="btn btn-primary" ng-click="submitForm()" ng-disabled="form.$invalid">Submit</button>
                             </div>

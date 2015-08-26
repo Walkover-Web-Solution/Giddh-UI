@@ -1,6 +1,7 @@
 'use strict'
 
 contactController = ($scope, $rootScope, $http, $timeout) ->
+
   $scope.contact = 
     "banner": 
         "mainHead":"support",
@@ -44,6 +45,9 @@ contactController = ($scope, $rootScope, $http, $timeout) ->
             "class": "rss"
         }
       ]
+  # check string has whitespace
+  $scope.hasWhiteSpace  = (s) ->
+    return /\s/g.test(s);
   $scope.form = {}
   $scope.integerval = /^\d*$/
   # function to submit the form after all validation has occurred  
@@ -51,9 +55,38 @@ contactController = ($scope, $rootScope, $http, $timeout) ->
   $scope.submitForm = ->
     # check to make sure the form is completely valid
     if $scope.form.$valid
-      console.log $scope.form
-      htmlBody = '<div>Name: ' + $scope.form.uEmail.$viewValue + '</div>' + '<div>Email: ' + $scope.form.uNumber.$viewValue + '</div>' + '<div>Email: ' + $scope.form.uEmail.$viewValue + '</div>' + '<div>Message: ' + $scope.form.uMessage.$viewValue + '</div>' + '<div>Date: ' + (new Date).toString() + '</div>'
-      console.log 'our form is amazing', htmlBody
-    return
+      details = [];
+      #check and split full name in first and last name
+      if($scope.hasWhiteSpace($scope.user.name))
+        console.log("dude you rock")
+        unameArr = $scope.user.name.split(" ");
+        details.uFname = unameArr[0]
+        details.uLname = unameArr[1]
+      else 
+        details.uFname = $scope.user.name
+        details.uFname = $scope.user.name
+
+      $http.post('http://localhost:8000/submitContactDetail',
+        uFname: details.uFname
+        uLname: details.uLname
+        email: $scope.user.email
+        number: $scope.user.number
+        msg: $scope.user.msg).then ((response) ->
+          console.log 'then', response
+          if(response.status == 200)
+            $scope.blank = {}
+            $scope.user = angular.copy($scope.blank)
+            $scope.form.$setPristine()
+
+            if(angular.isUndefined(response.data.message))
+              $scope.responseMsg = "Thanks! will get in touch with you soon"
+            else
+              $scope.responseMsg = response.data.message
+        ),(response) ->
+          console.log 'in response', response
+
+
+  
+
 
 angular.module('giddhApp').controller 'contactController', contactController
