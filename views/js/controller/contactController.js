@@ -60,7 +60,7 @@
           details.uLname = unameArr[1];
         } else {
           details.uFname = $scope.user.name;
-          details.uFname = $scope.user.name;
+          details.uLname = $scope.user.name;
         }
         return $http.post('http://localhost:8000/submitContactDetail', {
           uFname: details.uFname,

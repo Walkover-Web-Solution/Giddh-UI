@@ -20,6 +20,13 @@ module.exports = function (grunt) {
             src: ['**/*.coffee'],
             dest: 'views/js',
             ext: '.js'
+          },
+          {
+            expand: true,
+            cwd: "webapp_coffee",
+            src: ['**/*.coffee'],
+            dest: 'public/javascripts/',
+            ext: '.js'
           }
         ]
       }
@@ -30,7 +37,8 @@ module.exports = function (grunt) {
       },
       src: {
         files: [
-          'website_coffee/**/*.coffee'
+          'website_coffee/**/*.coffee',
+          'webapp_coffee/**/*.coffee'
         ],
         tasks: ['coffee']
       }

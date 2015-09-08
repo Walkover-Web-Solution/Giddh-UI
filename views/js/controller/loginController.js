@@ -2,48 +2,52 @@
   'use strict';
   var loginController;
 
-  loginController = function($scope, $rootScope, $http, $timeout, $auth) {
-    var alertMsg, rand;
-    $scope.authenticate = function(provider) {
-      return $auth.authenticate(provider).then(function(response) {
-        return console.log(response, 'You have successfully created a new account');
-      })["catch"](function(response) {
-        return console.log(response);
-      });
-    };
+  loginController = function($scope, $rootScope, $http, $timeout, $auth, localStorageService) {
     $scope.login = {
       'banner': {
-        'mainHead': 'Welcome to the world of',
-        'mainHead1': 'secure and online accounting'
+        'mainHead': 'Uh, oh!',
+        'mainHead1': 'You can\'t go through because the app is invitation only.'
       }
     };
-    rand = Math.random() * 4;
-    window.onload = function() {
-      alertMsg(parseInt(rand));
+    $scope.form = {};
+    $scope.hasWhiteSpace = function(s) {
+      return /\s/g.test(s);
     };
-    return alertMsg = function() {
-      var ele, id;
-      $timeout(alertMsg, 5000);
-      id = parseInt(Math.random() * 3);
-      ele = angular.element(document.querySelector('#tipscnt'));
-      switch (id) {
-        case 0:
-          ele.html('Tip : "Every transaction has a statement."');
-          break;
-        case 1:
-          ele.html('Tip : "Your account book will never contain your name."');
-          break;
-        case 2:
-          ele.html('Tip : "Every statement will have an entry."');
-          break;
-        case 3:
-          ele.html('Tip : "Ateast two things will happen in every statement."');
-          break;
-        case 3:
-          ele.html('Tip : "Accounting works on double entry system"');
+    return $scope.submitUserForm = function() {
+      var details, unameArr;
+      if ($scope.form.$valid) {
+        details = [];
+        if ($scope.hasWhiteSpace($scope.user.name)) {
+          console.log("dude you rock");
+          unameArr = $scope.user.name.split(" ");
+          details.uFname = unameArr[0];
+          details.uLname = unameArr[1];
+        } else {
+          details.uFname = $scope.user.name;
+          details.uLname = $scope.user.name;
+        }
+        return $http.post('/submitBetaInviteDetails', {
+          uFname: details.uFname,
+          uLname: details.uLname,
+          email: $scope.user.email,
+          company: $scope.user.company,
+          reason: $scope.user.reason
+        }).then((function(response) {
+          console.log('then', response);
+          if (response.status === 200) {
+            $scope.blank = {};
+            $scope.user = angular.copy($scope.blank);
+            $scope.form.$setPristine();
+            if (angular.isUndefined(response.data.message)) {
+              return $scope.responseMsg = "Thanks! will get in touch with you soon";
+            } else {
+              return $scope.responseMsg = response.data.message;
+            }
+          }
+        }), function(response) {
+          return console.log('in response', response);
+        });
       }
-      return;
-      return $timeout(alertMsg, 5000);
     };
   };
 

@@ -1,7 +1,7 @@
 (function() {
   var app;
 
-  app = angular.module("giddhApp", ["satellizer"]);
+  app = angular.module("giddhApp", ["satellizer", "LocalStorageModule"]);
 
   app.config([
     "$authProvider", function($authProvider) {
@@ -10,6 +10,10 @@
       });
     }
   ]);
+
+  app.config(function(localStorageServiceProvider) {
+    return localStorageServiceProvider.setPrefix('giddh');
+  });
 
   app.run(function($rootScope, $http) {
     return console.log("app init");

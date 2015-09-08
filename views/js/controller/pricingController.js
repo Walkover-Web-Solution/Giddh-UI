@@ -5,8 +5,8 @@
   pricingController = function($scope, $rootScope, $timeout) {
     return $scope.pricing = {
       "banner": {
-        "mainHead": "$100",
-        "mainHead1": "A year/user",
+        "mainHead": "Free",
+        "mainHead1": "",
         "subHead": "No accounting on this. Let’s make one plan, one pricing and no complications.",
         "banBtnImgSrc": "/views/images/try.png",
         "banBtnImgTitle": "Try Now"

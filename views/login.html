@@ -14,6 +14,7 @@
 	
 	<script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 	<script src="/bower_components/satellizer/satellizer.js"></script>
+	<script src="/bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
 	<!-- STYLE / THEME -->
 	<link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="/views/css/style-web.css" rel="stylesheet">
@@ -29,38 +30,78 @@
 			<div class="container othPage" id="banner">
 				<div class="row">
 					<div class="col-md-12 col-sm-12 alC">
-						<h2 class="lghead mocha">
-							{{login.banner.mainHead}} <br>
-							{{login.banner.mainHead1}}
-						</h2>
-						<div id="dasheddiv" style="border-color:rgba(41, 37, 31, 0.3); margin-bottom:40px;"></div>
-			            <div id="prnat">
-			                <span class="h2s mocha">Login as</span>
-			                <a class="lgbtn" href="javascript:void(0)">
-			                    <div class="clearfix">
-			                        <img src="/views/images/fb.png" border="0" align="absmiddle" alt="Facebook" height="40" width="140"/>
-			                    </div>
-			                </a>
+						<h2 class="lghead">Hey, Charm!</h2>
 
-			                <a class="lgbtn" ng-click="authenticate('google')">
-			                    <div class="clearfix">
-			                        <img src="/views/images/google.png" border="0" align="absmiddle" alt="Google" height="40" width="140"/>
-			                    </div>
-			                </a>
-			            </div>
+            <h3 class="h3 lwit">We only have beta version currently!</h3>
+
+            <div class="mrB4" id="dasheddiv" style="border-color:rgba(41, 37, 31, 0.3);"></div>
+
+            <div id="thead">
+            	Why don't you tell us why you need this app and let us call you back?
+            </div>
+
+            <!-- form code start -->
+            <div class="nTxt col-md-6 col-md-offset-3 col-sm-12">
+            	<div ng-show="responseMsg" class="form-response betaLog">
+                  {{responseMsg}}
+              </div>
+
+              <div class="" ng-hide="responseMsg">
+
+                <form name="form" class="contactForm form-horizontal" novalidate>
+
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">Full Name</label>
+                      <div class="col-sm-9">
+	                      <input placeholder="Adam John" class="form-control" type="text" ng-model="user.name" name="uName" ng-minlength="3" required="" />
+	                      <div class="alertCnt" ng-show="form.$submitted || form.uName.$touched">
+	                          <span ng-show="form.uName.$error.required">Tell us your name.</span>
+	                      </div>
+	                    </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">Company Name</label>
+                      <div class="col-sm-9">
+	                      <input class="form-control" type="text" name="uCompany" ng-model="user.company" placeholder="Your company name">
+	                    </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">E-mail:</label>
+                      <div class="col-sm-9">
+	                      <input placeholder="john_adam@example.com" class="form-control" type="email" ng-model="user.email" name="uEmail" required="" />
+	                      <div class="alertCnt" ng-show="form.$submitted || form.uEmail.$touched">
+	                          <span ng-show="form.uEmail.$error.required">Tell us your email.</span>
+	                          <span ng-show="form.uEmail.$error.email">It looks like not a valid email.</span>
+	                      </div>
+	                    </div>
+                  </div>
+
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">Reason</label>
+                      <div class="col-sm-9">
+                      	<textarea class="form-control" name="uReason" ng-model="user.reason" placeholder="Your messsage" required></textarea>
+                      </div>
+                  </div>
+                  <div class="form-group">
+                  	<div class="col-sm-offset-3 col-sm-9">
+                      <button class="btn btn-default" ng-click="submitUserForm()" ng-disabled="form.$invalid">Send me beta invite</button>
+                    </div>
+                  </div>
+
+                </form>
+            </div>
+            </div>
+            <!-- form end -->
+
 					</div>
 				</div>
 			</div>
 			<!-- End of banner -->
 		</section>
 
-		<section class="container" id="midSection">
-			<div style="margin-bottom:40px;">
-		        <div id="tipscnt" class="tipcnt mocha">
-		            Tip : "Every transaction has a statement."
-		        </div>
-		    </div>
-		</section>
+		
 		<ng-include src="'views/footer.html'"></ng-include>
 	</div>
   </body>

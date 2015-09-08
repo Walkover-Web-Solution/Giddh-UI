@@ -1,6 +1,12 @@
 *.DS_Store
 *.csv
 *.txt
+*.log
 bower_components/
 bin/
+bin/*
 node_modules/
+node_modules/*
+giddh-node.sublime-project
+giddh-node.sublime-workspace
+npm-debug.log

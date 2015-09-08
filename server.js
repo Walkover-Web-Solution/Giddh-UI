@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var session = require('express-session');
 var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
@@ -11,17 +12,16 @@ var jwt = require('jwt-simple');
 //Example POST method invocation 
 var Client = require('node-rest-client').Client; 
 var client = new Client();
-/*
-//commented not in use modified by sarfaraz
-var routes = require('./routes/index');
-var users = require('./routes/users');
-app.use('/', routes);
-app.use('/users', users);
-*/
+
+//enabling cors
+var cors = require('cors')
 
 var app = express();
 
+var userDetailObj = {};
 
+//enabling cors
+app.use(cors())
 
 //set engine
 app.set('views', __dirname + '/views/');
@@ -40,22 +40,18 @@ app.use('/public',  express.static(__dirname + '/public'));
 app.use('/views',  express.static(__dirname + '/views'));
 
 
-
-
-/*for serve app only templates files after login*/
-var options = {
-  root: __dirname + '/public/view',
-  dotfiles: 'deny',
-  headers: {
-      'x-timestamp': Date.now(),
-      'x-sent': true
-  }
-};
-app.get('/app/*', function (req, res, next) {
-  console.log(req.url);
-  var fileName = "indexa.html";
-  res.sendFile(fileName, options);
-});
+// for session
+app.use(cookieParser());
+app.use(session({
+    secret: "keyboardcat",
+    name: "userVerified",
+    resave: true,
+    saveUninitialized: true,
+    cookie: { 
+        secure: false,
+        maxAge: null
+    }
+}));
 
 
 
@@ -190,12 +186,91 @@ app.post('/auth/google', function(req, res) {
 
       //var decoded = jwt.decode(token, params.client_secret);
       //console.log(decoded)
-      res.send({ token: token });
+      userDetailObj = response.body;
+      req.session.name = response.body.email
+      res.send({ token: token, userDetails : response.body });
 
     });
   });
 });
 
+/*
+ |--------------------------------------------------------------------------
+ | Submit beta invites
+ |--------------------------------------------------------------------------
+*/
+var hubURL = "https://api.hubapi.com/contacts/v1/contact/?hapikey=41e07798-d4bf-499b-81df-4dfa52317054";
+
+app.post('/submitBetaInviteDetails', function(req, res) {
+  console.log(req.body, "in submitBetaInviteDetails");
+  var formData = {
+    "properties": [
+      {
+        "property": "email",
+        "value": req.body.email
+      },
+      {
+        "property": "firstname",
+        "value": req.body.uFname
+      },
+      {
+        "property": "lastname",
+        "value": req.body.uLname
+      },
+      {
+        "property": "company",
+        "value": req.body.company
+      },
+      {
+        "property": "message",
+        "value": req.body.reason
+      },
+    ]
+  }
+  var args = {
+    data: formData,
+    headers:{"Content-Type": "application/json"}
+  };
+  console.log(args, "in args", formData.properties[0].value)
+  
+  client.post(hubURL, args, function(data,response) {
+      if(Buffer.isBuffer(data)){
+          data = data.toString('utf-8');
+      }
+      console.log(data, "data in client post");
+      res.send(data);
+  });
+  
+})
+
+
+
+
+/*for serve app only templates files after login*/
+var options = {
+  root: __dirname + '/public/view',
+  dotfiles: 'deny',
+  headers: {
+      'x-timestamp': Date.now(),
+      'x-sent': true
+  }
+};
+app.get('/app/*', function (req, res, next) {
+  console.log(req.session.name, "in app", userDetailObj)
+  if (req.session.name != undefined){
+    res.sendFile("index.html", options);
+  }
+  else{
+    res.redirect('/login');
+  }
+
+
+  //console.log(req.url);
+  //res.render('index', { title: 'sarfaraz' });
+  //res.sendFile("index.html", options);
+
+
+});
 
 
 
