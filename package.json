@@ -17,7 +17,8 @@
     "cors":"~2.7.1",
     "morgan":"",
     "request":"~2.61.0",
-    "jwt-simple":"~0.3.1"
+    "jwt-simple":"~0.3.1",
+    "npid": "*"
   },
   "devDependencies": {
     "coffee-script": "*",
