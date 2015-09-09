@@ -51,7 +51,7 @@
                 <form name="form" class="contactForm form-horizontal" novalidate>
 
                   <div class="form-group">
-                      <label class="col-sm-3 control-label">Full Name</label>
+                      <label class="col-sm-3 control-label">Full Name: *</label>
                       <div class="col-sm-9">
 	                      <input placeholder="Adam John" class="form-control" type="text" ng-model="user.name" name="uName" ng-minlength="3" required="" />
 	                      <div class="alertCnt" ng-show="form.$submitted || form.uName.$touched">
@@ -61,14 +61,14 @@
                   </div>
 
                   <div class="form-group">
-                      <label class="col-sm-3 control-label">Company Name</label>
+                      <label class="col-sm-3 control-label">Company Name:</label>
                       <div class="col-sm-9">
 	                      <input class="form-control" type="text" name="uCompany" ng-model="user.company" placeholder="Your company name">
 	                    </div>
                   </div>
 
                   <div class="form-group">
-                      <label class="col-sm-3 control-label">E-mail:</label>
+                      <label class="col-sm-3 control-label">E-mail: *</label>
                       <div class="col-sm-9">
 	                      <input placeholder="john_adam@example.com" class="form-control" type="email" ng-model="user.email" name="uEmail" required="" />
 	                      <div class="alertCnt" ng-show="form.$submitted || form.uEmail.$touched">
@@ -79,7 +79,7 @@
                   </div>
 
                   <div class="form-group">
-                      <label class="col-sm-3 control-label">Reason</label>
+                      <label class="col-sm-3 control-label">Reason: *</label>
                       <div class="col-sm-9">
                       	<textarea class="form-control" name="uReason" ng-model="user.reason" placeholder="Your messsage" required></textarea>
                       </div>

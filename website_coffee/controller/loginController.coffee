@@ -1,7 +1,11 @@
 'use strict'
 
-loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService) ->
-  
+loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, $location) ->
+
+  $scope.isActive = (viewLocation) ->
+    console.log($location.path())
+    active = (viewLocation == $location.path())
+    return active
 
   #webpage data
   $scope.login = 'banner':

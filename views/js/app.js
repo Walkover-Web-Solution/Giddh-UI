@@ -15,7 +15,7 @@
     return localStorageServiceProvider.setPrefix('giddh');
   });
 
-  app.run(function($rootScope, $http) {
+  app.run(function($rootScope, $http, $location) {
     return console.log("app init");
   });
 

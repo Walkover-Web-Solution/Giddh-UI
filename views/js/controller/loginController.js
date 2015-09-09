@@ -2,7 +2,13 @@
   'use strict';
   var loginController;
 
-  loginController = function($scope, $rootScope, $http, $timeout, $auth, localStorageService) {
+  loginController = function($scope, $rootScope, $http, $timeout, $auth, localStorageService, $location) {
+    $scope.isActive = function(viewLocation) {
+      var active;
+      console.log($location.path());
+      active = viewLocation === $location.path();
+      return active;
+    };
     $scope.login = {
       'banner': {
         'mainHead': 'Uh, oh!',

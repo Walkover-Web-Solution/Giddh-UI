@@ -152,6 +152,11 @@ color: #fff;
 .navbar-nav > li > a{
 	padding-bottom: 12px
 }
+
+.navbar-nav > li > a.beta{
+	background-color: #000;
+	border-radius: 2px;
+}
 /*font-family styles*/
 .mocha{
 	font-family: "MochaMattari", "Helvetica Neue", Helvetica, Calibri, Arial, sans-serif; word-wrap: break-word;

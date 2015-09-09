@@ -14,6 +14,6 @@ app.config(["$authProvider"
 app.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
 
-app.run(($rootScope, $http)->
+app.run(($rootScope, $http, $location)->
   console.log "app init"
 )
