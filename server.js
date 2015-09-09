@@ -19,7 +19,7 @@ var cors = require('cors')
 var app = express();
 
 var userDetailObj = {};
-
+var port = process.env.PORT || 5252;
 //enabling cors
 app.use(cors())
 
@@ -245,8 +245,9 @@ app.post('/submitBetaInviteDetails', function(req, res) {
 
 // app.listen(8000, 'localhost');
 // console.log('Server running at http://localhost:8000/');
-app.listen(8000, 'localhost', function(){
-  console.log('Express Server running at http://localhost and using port', this.address().port);
+app.listen(port, function(){
+  console.log('Express Server running at port', this.address().port);
+  console.log(this.address());
 });
 
 // catch 404 and forward to error handler
