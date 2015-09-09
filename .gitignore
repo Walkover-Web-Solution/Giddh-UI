@@ -4,7 +4,7 @@
 *.log
 .idea/
 giddh-node.iml
-webapp_coffee/
+webapp_coffee/*
 bower_components/
 bin/
 bin/*
