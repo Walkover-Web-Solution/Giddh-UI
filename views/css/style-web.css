@@ -144,7 +144,7 @@ html, body {
  -moz-transition: background .2s ease-in;
  transition: background .2s ease-in;
 }
-.navbar-default .navbar-nav > li > a:visited, .navbar-default .navbar-nav > li > a:hover {
+.navbar-default .navbar-nav > li > a.active, .navbar-default .navbar-nav > li > a:visited, .navbar-default .navbar-nav > li > a:hover {
 color: #fff;  
 	text-shadow: 0 2px 1px rgba(41, 37, 31, 0.2); background: rgba(41, 37, 31, 0.3); zoom: 1;  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#4C000000, endColorstr=#4C000000); /* IE 6 & 7 */
 -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#4C000000,endColorstr=#4C000000)"; /* IE8 */ 

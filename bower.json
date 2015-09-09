@@ -9,9 +9,7 @@
     "**/.*",
     ".gitignore",
     "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "bower_components"
   ],
   "dependencies": {
     "angular": "~1.4.4",
