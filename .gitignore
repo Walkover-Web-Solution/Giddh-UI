@@ -2,6 +2,8 @@
 *.csv
 *.txt
 *.log
+.idea/
+giddh-node.iml
 bower_components/
 bin/
 bin/*
