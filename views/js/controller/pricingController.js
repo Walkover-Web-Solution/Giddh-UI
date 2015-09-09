@@ -7,7 +7,7 @@
       "banner": {
         "mainHead": "Free",
         "mainHead1": "",
-        "subHead": "No accounting on this. Let’s make one plan, one pricing and no complications.",
+        "subHead": "No accounting on this. Let’s make one plan, No pricing and no complications.",
         "banBtnImgSrc": "/views/images/try.png",
         "banBtnImgTitle": "Try Now"
       },

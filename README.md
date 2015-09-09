@@ -10,8 +10,7 @@ Note: Make sure you have installed node, npm, coffescript, grunt, grunt-contrib-
 `COFFESCRIPT`
 `ANGULARJS`
 `GRUNT`
-
-
+`GRUNT-CLI`
 
 ## Run
 For first time run `npm install` and run `bower install`

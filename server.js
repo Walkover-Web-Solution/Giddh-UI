@@ -243,40 +243,6 @@ app.post('/submitBetaInviteDetails', function(req, res) {
   
 })
 
-
-
-
-/*for serve app only templates files after login*/
-var options = {
-  root: __dirname + '/public/view',
-  dotfiles: 'deny',
-  headers: {
-      'x-timestamp': Date.now(),
-      'x-sent': true
-  }
-};
-app.get('/app/*', function (req, res, next) {
-  console.log(req.session.name, "in app", userDetailObj)
-  if (req.session.name != undefined){
-    res.sendFile("index.html", options);
-  }
-  else{
-    res.redirect('/login');
-  }
-
-
-  //console.log(req.url);
-  //res.render('index', { title: 'sarfaraz' });
-  //res.sendFile("index.html", options);
-
-
-});
-
-
-
-
-
-
 // app.listen(8000, 'localhost');
 // console.log('Server running at http://localhost:8000/');
 app.listen(8000, 'localhost', function(){
