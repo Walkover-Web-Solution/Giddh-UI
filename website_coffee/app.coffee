@@ -27,15 +27,18 @@ do ->
         scope: false
         link: (scope, element) ->
           setActive = ->
+
             fURL = $location.absUrl().split('/')
             pathT = fURL.reverse()
             path = pathT[0]
+
+            console.log 
             if path
-              elem = angular.element('.nav li a.' + path)
-              elem.addClass 'active'
+              cElem = element.find('li a.' + path)
+              cElem.addClass 'active'
             else
-              elem = angular.element('.nav li a.home')
-              elem.addClass 'active'
+              cElem = element.find('.nav li a.home')
+              cElem.addClass 'active'
 
           setActive()
           scope.$on '$locationChangeSuccess', setActive

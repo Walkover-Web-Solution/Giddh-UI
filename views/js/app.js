@@ -28,16 +28,17 @@
           link: function(scope, element) {
             var setActive;
             setActive = function() {
-              var elem, fURL, path, pathT;
+              var cElem, fURL, path, pathT;
               fURL = $location.absUrl().split('/');
               pathT = fURL.reverse();
               path = pathT[0];
+              console.log;
               if (path) {
-                elem = angular.element('.nav li a.' + path);
-                return elem.addClass('active');
+                cElem = element.find('li a.' + path);
+                return cElem.addClass('active');
               } else {
-                elem = angular.element('.nav li a.home');
-                return elem.addClass('active');
+                cElem = element.find('.nav li a.home');
+                return cElem.addClass('active');
               }
             };
             setActive();
