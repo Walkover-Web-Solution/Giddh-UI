@@ -24,7 +24,7 @@
           details.uLname = unameArr[1];
         } else {
           details.uFname = $scope.user.name;
-          details.uLname = $scope.user.name;
+          details.uLname = "   ";
         }
         return $http.post('/submitBetaInviteDetails', {
           uFname: details.uFname,
