@@ -53,6 +53,7 @@ contactController = ($scope, $rootScope, $http, $timeout) ->
   # function to submit the form after all validation has occurred  
 
   $scope.submitForm = ->
+    $scope.responseMsg = "loading... Submitting Form"
     # check to make sure the form is completely valid
     if $scope.form.$valid
       details = [];
@@ -64,7 +65,7 @@ contactController = ($scope, $rootScope, $http, $timeout) ->
         details.uLname = unameArr[1]
       else 
         details.uFname = $scope.user.name
-        details.uLname = $scope.user.name
+        details.uLname = "  "
 
       $http.post('http://localhost:8000/submitContactDetail',
         uFname: details.uFname

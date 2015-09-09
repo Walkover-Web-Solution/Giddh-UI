@@ -14,6 +14,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $location) ->
     return /\s/g.test(s);
 
   $scope.submitUserForm = ->
+    $scope.responseMsg = "loading... Submitting Form"
     if $scope.form.$valid
 
       details = [];

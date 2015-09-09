@@ -15,6 +15,7 @@
     };
     return $scope.submitUserForm = function() {
       var details, unameArr;
+      $scope.responseMsg = "loading... Submitting Form";
       if ($scope.form.$valid) {
         details = [];
         if ($scope.hasWhiteSpace($scope.user.name)) {

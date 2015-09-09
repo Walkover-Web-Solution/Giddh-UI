@@ -51,6 +51,7 @@
     $scope.integerval = /^\d*$/;
     return $scope.submitForm = function() {
       var details, unameArr;
+      $scope.responseMsg = "loading... Submitting Form";
       if ($scope.form.$valid) {
         details = [];
         if ($scope.hasWhiteSpace($scope.user.name)) {
@@ -60,7 +61,7 @@
           details.uLname = unameArr[1];
         } else {
           details.uFname = $scope.user.name;
-          details.uLname = $scope.user.name;
+          details.uLname = "  ";
         }
         return $http.post('http://localhost:8000/submitContactDetail', {
           uFname: details.uFname,
