@@ -2,13 +2,16 @@
 
 module.exports = function (grunt) {
   'use strict';
-  var webDir, testDir;
+  var webDir, srcDir, destDir;
 
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-karma');
 
   webDir = 'app/website_coffee';
+  srcDir = 'app/';
+  destDir = 'public/';
 
   grunt.initConfig({
     coffee: {
@@ -22,6 +25,17 @@ module.exports = function (grunt) {
             ext: '.js'
           }
         ]
+      }
+    },
+    copy: {
+      dist: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: srcDir,
+          src: ['images/*'],
+          dest: destDir
+        }]
       }
     },
     watch: {
@@ -53,8 +67,7 @@ module.exports = function (grunt) {
     grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
   });
 
-  //grunt.registerTask 'compile', ['coffee']
-  grunt.registerTask('default', ['coffee', 'watch'])
+  grunt.registerTask('default', ['copy', 'coffee', 'watch'])
 
   grunt.registerTask('test', [
     'coffee',

@@ -4,13 +4,11 @@
 *.log
 .idea/
 giddh-node.iml
-app/webapp_coffee/*
 app/webapp_coffee
-bower_components/
-bin/
-bin/*
-node_modules/
-node_modules/*
+bower_components
+bin
+public
+node_modules
 giddh-node.sublime-project
 giddh-node.sublime-workspace
 npm-debug.log
