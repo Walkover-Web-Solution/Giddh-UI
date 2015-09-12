@@ -2,7 +2,7 @@
   'use strict';
   var loginController;
 
-  loginController = function($scope, $rootScope, $http, $timeout, $location) {
+  loginController = function($scope, $rootScope, $http) {
     $scope.login = {
       'banner': {
         'mainHead': 'Uh, oh!',

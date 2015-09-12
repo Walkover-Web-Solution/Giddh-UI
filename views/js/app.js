@@ -3,14 +3,6 @@
 
   app = angular.module("giddhApp", ["satellizer", "LocalStorageModule"]);
 
-  app.config([
-    "$authProvider", function($authProvider) {
-      return $authProvider.google({
-        clientId: '40342793-h9vu599ed13f54kb673t2ltbc713vad7.apps.googleusercontent.com'
-      });
-    }
-  ]);
-
   app.config(function(localStorageServiceProvider) {
     return localStorageServiceProvider.setPrefix('giddh');
   });
@@ -20,7 +12,7 @@
   });
 
   (function() {
-    angular.module('giddhApp', []).directive('autoActive', [
+    return angular.module('giddhApp', []).directive('autoActive', [
       '$location', function($location) {
         return {
           restrict: 'A',
@@ -42,7 +34,7 @@
               }
             };
             setActive();
-            scope.$on('$locationChangeSuccess', setActive);
+            return scope.$on('$locationChangeSuccess', setActive);
           }
         };
       }

@@ -56,31 +56,29 @@
       }
     };
     changeText = function() {
-      var heading, id, subHeading;
+      var id;
       $timeout(changeText, 5000);
       id = parseInt(Math.random() * 4);
-      heading = angular.element(document.querySelector('#imd'));
-      subHeading = angular.element(document.querySelector('#imdContent'));
       switch (id) {
         case 0:
-          heading.html('Analyse BIG<br/> DATA');
-          subHeading.html('Accounting is nothing but keeping your transactions in an efficient way. Your eyes could have limitations; let me show you everything in one shot.');
+          $scope.home.banner.mainHead = 'Analyse BIG \nDATA';
+          $scope.home.banner.subHead = 'Accounting is nothing but keeping your transactions in an efficient way. Your eyes could have limitations; let me show you everything in one shot.';
           break;
         case 1:
-          heading.html('Ant or<br/> Elephant');
-          subHeading.html('Accounting is a breadth of every Business, small business, Start-ups and even for a person. It makes you alive or at least makes you feel');
+          $scope.home.banner.mainHead = 'Ant or \nElephant';
+          $scope.home.banner.subHead = 'Accounting is a breadth of every Business, small business, Start-ups and even for a person. It makes you alive or at least makes you feel';
           break;
         case 2:
-          heading.html('Not for<br/> Accountants');
-          subHeading.html('I am not scary like you imagine accounts. I am simple, basic and very friendly and will never let you regret.');
+          $scope.home.banner.mainHead = 'Not for \nAccountants';
+          $scope.home.banner.subHead = 'I am not scary like you imagine accounts. I am simple, basic and very friendly and will never let you regret.';
           break;
         case 3:
-          heading.html('Accounting is necessary');
-          subHeading.html('Our perception says accounting is the synonyms of necessities, Use any accounting software but use... that’s our motto and that’s why we are.');
+          $scope.home.banner.mainHead = 'Accounting is necessary';
+          $scope.home.banner.subHead = 'Our perception says accounting is the synonyms of necessities, Use any accounting software but use... that’s our motto and that’s why we are.';
           break;
         case 4:
-          heading.html('Accounting is the foundation');
-          subHeading.html('Accounting is the very first step of every successful business, Start using it today! You cannot build the foundation later.');
+          $scope.home.banner.mainHead = 'Accounting is the foundation';
+          $scope.home.banner.subHead = 'Accounting is the very first step of every successful business, Start using it today! You cannot build the foundation later.';
       }
     };
     return $timeout(changeText, 5000);

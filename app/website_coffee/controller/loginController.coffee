@@ -1,6 +1,6 @@
 'use strict'
 
-loginController = ($scope, $rootScope, $http, $timeout, $location) ->
+loginController = ($scope, $rootScope, $http) ->
 
   #webpage data
   $scope.login = 'banner':
@@ -8,7 +8,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $location) ->
     'mainHead1': 'You can\'t go through because the app is invitation only.'
 
   $scope.form = {}
-  
+
   # check string has whitespace
   $scope.hasWhiteSpace  = (s) ->
     return /\s/g.test(s);
@@ -24,11 +24,9 @@ loginController = ($scope, $rootScope, $http, $timeout, $location) ->
         unameArr = $scope.user.name.split(" ");
         details.uFname = unameArr[0]
         details.uLname = unameArr[1]
-      else 
+      else
         details.uFname = $scope.user.name
         details.uLname = "   "
-
-
 
       $http.post('/submitBetaInviteDetails',
         uFname: details.uFname
