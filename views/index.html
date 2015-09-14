@@ -66,8 +66,7 @@
 		      <div class="modal-body">
 		      	<!-- 16:9 aspect ratio ?autoplay=1-->
 				<div class="embed-responsive embed-responsive-16by9">
-				  <div id="player"></div>
-				  <!-- <iframe id="homeVideo" class="embed-responsive-item" src="http://www.youtube.com/embed/p6HClX7mMMY?autoplay=0"></iframe> -->
+				  <div id="player" class="embed-responsive-item" ></div>
 				</div>
 		      </div>
 		    </div>
@@ -116,6 +115,8 @@
     var player;
     function onYouTubeIframeAPIReady() {
       player = new YT.Player('player', {
+      	width: "100%",
+    		height: "100%",
         videoId: 'p6HClX7mMMY',
         events: {
           'onReady': onPlayerReady,
