@@ -10,11 +10,18 @@
       }
     };
     $scope.form = {};
+    $scope.getRandomInt = function(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    };
+    $scope.rn1 = $scope.getRandomInt(1, 19);
+    $scope.rn2 = $scope.getRandomInt(1, 19);
+    $scope.isHuman = function() {
+      return parseInt($scope.user.totalSum) === $scope.rn1 + $scope.rn2;
+    };
     $scope.hasWhiteSpace = function(s) {
       return /\s/g.test(s);
     };
     $scope.onLoginSuccess = function(response) {
-      $scope.user = {};
       if (angular.isUndefined(response.message)) {
         return $scope.responseMsg = "Thanks! will get in touch with you soon";
       } else {
@@ -27,8 +34,12 @@
     $scope.submitUserForm = function() {
       $scope.responseMsg = "loading... Submitting Form";
       if ($scope.form.$valid) {
-        $scope.splitFirstAndLastName($scope.user.name);
-        return loginService.submitUserForm($scope.user, $scope.onLoginSuccess, $scope.onLoginFailure);
+        if ($scope.isHuman()) {
+          $scope.splitFirstAndLastName($scope.user.name);
+          return loginService.submitUserForm($scope.user, $scope.onLoginSuccess, $scope.onLoginFailure);
+        } else {
+          return $scope.responseMsg = "You are not a human being!";
+        }
       }
     };
     return $scope.splitFirstAndLastName = function(name) {

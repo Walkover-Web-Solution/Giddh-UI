@@ -39,9 +39,6 @@
 					</div>
 					
 					<div class="col-md-6 col-sm-12">
-					    <div class="play_button">
-					    	<a data-toggle="modal" data-target="#myModal" href="javascript:void(0)"></a>
-					    </div>
 					    <figure class="pull-right">
 					    	<img class="img-responsive center-block" ng-src="{{home.banner.imgSrc}}" alt="{{home.banner.imgTitle}}" />
 					    </figure>
@@ -59,20 +56,7 @@
 			</div> <!-- end of banner -->
 		</section>
 		<!-- end of top section -->
-		<!-- modal content -->
-		<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-		  <div class="modal-dialog" role="document">
-		    <div class="modal-content">
-		      <div class="modal-body">
-		      	<!-- 16:9 aspect ratio ?autoplay=1-->
-				<div class="embed-responsive embed-responsive-16by9">
-				  <div id="player" class="embed-responsive-item" ></div>
-				</div>
-		      </div>
-		    </div>
-		  </div>
-		</div>
-		<!-- end modal -->
+		
 
 
 
@@ -103,43 +87,6 @@
 
 		<ng-include src="'/views/footer.html'"></ng-include>
 	</div>
-	<script type="text/javascript">
-		
-    var tag = document.createElement('script');
-
-    tag.src = "https://www.youtube.com/iframe_api";
-    var firstScriptTag = document.getElementsByTagName('script')[0];
-    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-
-    var player;
-    function onYouTubeIframeAPIReady() {
-      player = new YT.Player('player', {
-      	width: "100%",
-    		height: "100%",
-        videoId: 'p6HClX7mMMY',
-        events: {
-          'onReady': onPlayerReady,
-          'onStateChange': onPlayerStateChange
-        }
-      });
-    }
-
-    function onPlayerReady(event) {
-      $('#myModal').on('shown.bs.modal', function (e) {
-	    	event.target.playVideo();
-      });
-    }
-
-
-    function onPlayerStateChange(event) {
-    	//do nothing
-    }
-
-		$("#myModal").on('hide.bs.modal', function (e) {
-	    player.stopVideo();
-	  });
-		
-	</script>
+	
   </body>
 </html>

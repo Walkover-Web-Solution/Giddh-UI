@@ -9,6 +9,21 @@ describe 'loginController', ->
     @loginController = $controller('loginController',
       {$scope: @scope, loginService: @loginService})
 
+  describe "#isHuman", ->
+    it "should return true if random numbers addition matched", ->
+      @scope.rn1 = 1
+      @scope.rn2 = 2
+      @scope.user = {totalSum: "3"}
+      result = @scope.isHuman()
+      expect(result).toBeTruthy()
+
+    it "should return false if random numbers addition does not matched", ->
+      @scope.rn1 = 1
+      @scope.rn2 = 2
+      @scope.user = {totalSum: "5"}
+      result = @scope.isHuman()
+      expect(result).toBeFalsy()
+
   describe "#hasWhiteSpace", ->
     it "should return true if string contains white space", ->
       s = "Hello I have hite spaces"
@@ -26,6 +41,7 @@ describe 'loginController', ->
       @scope.user = {"name": "Priyanka Pathak"}
       spyOn(@loginService, "submitUserForm")
       spyOn(@scope, "splitFirstAndLastName")
+      spyOn(@scope, "isHuman").andReturn(true)
 
       @scope.submitUserForm()
 
@@ -34,16 +50,31 @@ describe 'loginController', ->
       expect(@scope.splitFirstAndLastName).toHaveBeenCalledWith(@scope.user.name)
       expect(@scope.responseMsg).toBe("loading... Submitting Form")
 
+    it "should not call service method if user is not human", ->
+      @scope.form.$valid = true
+      @scope.user = {"name": "Priyanka Pathak"}
+      spyOn(@loginService, "submitUserForm")
+      spyOn(@scope, "splitFirstAndLastName")
+      spyOn(@scope, "isHuman").andReturn(false)
+
+      @scope.submitUserForm()
+
+      expect(@loginService.submitUserForm).not.toHaveBeenCalledWith(jasmine.any(Object), @scope.onLoginSuccess,
+        @scope.onLoginFailure)
+      expect(@scope.splitFirstAndLastName).not.toHaveBeenCalledWith(@scope.user.name)
+      expect(@scope.responseMsg).toBe("You are not a human being!")
 
     it "should not call service method if form is inValid", ->
       @scope.form.$valid = false
       spyOn(@loginService, "submitUserForm")
       spyOn(@scope, "splitFirstAndLastName")
+      spyOn(@scope, "isHuman")
 
       @scope.submitUserForm()
 
       expect(@loginService.submitUserForm).not.toHaveBeenCalled()
-      expect(@scope.splitFirstAndLastName).not.toHaveBeenCalledWith()
+      expect(@scope.splitFirstAndLastName).not.toHaveBeenCalled()
+      expect(@scope.isHuman).not.toHaveBeenCalled()
 
   describe "#splitFirstAndLastName", ->
     it "should split name into first name and last name is name contains white space", ->

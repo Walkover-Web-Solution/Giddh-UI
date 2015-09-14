@@ -43,7 +43,7 @@
             </div>
 
             <!-- form code start -->
-            <div class="nTxt col-md-6 col-md-offset-3 col-sm-12">
+            <div class="nTxt col-md-8 col-md-offset-2 col-sm-12">
             	<div ng-show="responseMsg" class="form-response betaLog">
                   {{responseMsg}}
               </div>
@@ -81,11 +81,21 @@
                   </div>
 
                   <div class="form-group">
-                      <label class="col-sm-3 control-label">Reason: *</label>
+                      <label class="col-sm-3 control-label">Are you human: *</label>
                       <div class="col-sm-9">
-                      	<textarea class="form-control" name="uReason" ng-model="user.reason" placeholder="Your messsage" required></textarea>
+                        <div class="splWrp clearfix">
+                          <span>{{rn1}} + {{rn2}} = </span>
+                          <input style="width:60px;" class="form-control" type="text" name="uHuman" ng-model="user.totalSum" required>
+                        </div>
                       </div>
                   </div>
+                  <div class="form-group">
+                      <label class="col-sm-3 control-label">Reason: *</label>
+                      <div class="col-sm-9">
+                        <textarea class="form-control" name="uHuman" ng-model="user.reason" placeholder="Your messsage" required></textarea>
+                      </div>
+                  </div>
+
                   <div class="form-group">
                   	<div class="col-sm-offset-3 col-sm-9">
                       <button class="btn btn-default" ng-click="submitUserForm()" ng-disabled="form.$invalid">Send me beta invite</button>

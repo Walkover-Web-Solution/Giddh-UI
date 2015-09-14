@@ -9,11 +9,19 @@ loginController = ($scope, $rootScope, $http, loginService) ->
 
   $scope.form = {}
 
+  $scope.getRandomInt = (min, max) ->
+    Math.floor(Math.random() * (max - min + 1)) + min;
+  
+  $scope.rn1 = $scope.getRandomInt(1, 19)
+  $scope.rn2 = $scope.getRandomInt(1, 19)
+
+  $scope.isHuman = ->
+    parseInt($scope.user.totalSum) == $scope.rn1 + $scope.rn2
+
   $scope.hasWhiteSpace = (s) ->
     return /\s/g.test(s);
 
   $scope.onLoginSuccess = (response) ->
-    $scope.user = {}
     if(angular.isUndefined(response.message))
       $scope.responseMsg = "Thanks! will get in touch with you soon"
     else
@@ -25,8 +33,11 @@ loginController = ($scope, $rootScope, $http, loginService) ->
   $scope.submitUserForm = ->
     $scope.responseMsg = "loading... Submitting Form"
     if $scope.form.$valid
-      $scope.splitFirstAndLastName($scope.user.name)
-      loginService.submitUserForm($scope.user, $scope.onLoginSuccess, $scope.onLoginFailure)
+      if($scope.isHuman())
+        $scope.splitFirstAndLastName($scope.user.name)
+        loginService.submitUserForm($scope.user, $scope.onLoginSuccess, $scope.onLoginFailure)
+      else
+        $scope.responseMsg = "You are not a human being!"
 
   $scope.splitFirstAndLastName = (name) ->
     if($scope.hasWhiteSpace(name))

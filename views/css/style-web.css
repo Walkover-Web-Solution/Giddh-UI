@@ -600,6 +600,11 @@ textarea.form-control {
 .white-space-pre-wrap{
   white-space: pre-wrap;
 }
+.splWrp span, .splWrp input{
+  float: left;
+  line-height: 34px;
+  margin-right: 10px;
+}
 
 /*media queries*/
 @media only screen and (max-width: 1024px), (max-device-width: 1024px) {

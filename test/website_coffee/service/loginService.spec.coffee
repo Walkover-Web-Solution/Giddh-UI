@@ -21,13 +21,14 @@ describe "Login Service", ->
         {"message": "success"})
 
       @loginService.submitUserForm(user,
-        (data)-> expect(data.message).toBe('success'))
+        (data)-> expect(data.message).toBe('success'), 
+        (data)-> expect(true).toBeFalsy())
 
     it 'should not submit user form', ->
       user = {uFname: "Priyanka", uLname: "pathak", email: "p@p.com", company: "Walkover", reason: "blank"}
       @httpBackend.when('POST', '/submitBetaInviteDetails', user).respond(401,
         {"message": "failure message"})
 
-      @loginService.submitUserForm(user, (->),
-        (data)->
-          expect(data.data.message).toBe("failure message"))
+      @loginService.submitUserForm(user, 
+        (data)-> expect(true).toBeFalsy()
+        (data)-> expect(data.data.message).toBe("failure message"))
