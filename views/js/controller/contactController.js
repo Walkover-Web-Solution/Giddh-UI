@@ -55,7 +55,6 @@
       if ($scope.form.$valid) {
         details = [];
         if ($scope.hasWhiteSpace($scope.user.name)) {
-          console.log("dude you rock");
           unameArr = $scope.user.name.split(" ");
           details.uFname = unameArr[0];
           details.uLname = unameArr[1];
@@ -70,7 +69,6 @@
           number: $scope.user.number,
           msg: $scope.user.msg
         }).then((function(response) {
-          console.log('then', response);
           if (response.status === 200) {
             $scope.blank = {};
             $scope.user = angular.copy($scope.blank);

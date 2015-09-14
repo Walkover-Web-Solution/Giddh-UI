@@ -4,8 +4,6 @@ loginControllerBackup = ($scope, $rootScope, $http, $timeout, $auth, localStorag
   
   $scope.authenticate = (provider) ->
     $auth.authenticate(provider).then((response) ->
-      console.log response, 'You have successfully created a new account'
-      console.log "in status", response.data.userDetails
       localStorageService.set("_userDetails", response.data.userDetails);
       window.location = "/app/"
 

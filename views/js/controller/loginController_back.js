@@ -6,8 +6,6 @@
     var alertMsg, rand;
     $scope.authenticate = function(provider) {
       return $auth.authenticate(provider).then(function(response) {
-        console.log(response, 'You have successfully created a new account');
-        console.log("in status", response.data.userDetails);
         localStorageService.set("_userDetails", response.data.userDetails);
         return window.location = "/app/";
       })["catch"](function(response) {

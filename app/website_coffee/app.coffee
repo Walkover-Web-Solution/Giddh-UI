@@ -18,7 +18,6 @@ do ->
           pathT = fURL.reverse()
           path = pathT[0]
 
-          console.log
           if path
             cElem = element.find('li a.' + path)
             cElem.addClass 'active'

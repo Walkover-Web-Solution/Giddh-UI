@@ -247,7 +247,6 @@ app.post('/submitBetaInviteDetails', function(req, res) {
 // console.log('Server running at http://localhost:8000/');
 app.listen(port, function(){
   console.log('Express Server running at port', this.address().port);
-  console.log(this.address());
 });
 
 // catch 404 and forward to error handler

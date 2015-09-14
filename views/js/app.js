@@ -22,7 +22,6 @@
               fURL = $location.absUrl().split('/');
               pathT = fURL.reverse();
               path = pathT[0];
-              console.log;
               if (path) {
                 cElem = element.find('li a.' + path);
                 return cElem.addClass('active');
