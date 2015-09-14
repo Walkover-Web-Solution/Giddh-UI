@@ -1,6 +1,6 @@
 'use strict'
 
-loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService) ->
+loginControllerBackup = ($scope, $rootScope, $http, $timeout, $auth, localStorageService) ->
   
   $scope.authenticate = (provider) ->
     $auth.authenticate(provider).then((response) ->
@@ -43,4 +43,4 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
     $timeout alertMsg, 5000
 
 
-angular.module('giddhApp').controller 'loginController', loginController
+angular.module('giddhApp').controller 'loginControllerBackup', loginControllerBackup

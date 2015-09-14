@@ -1,18 +1,16 @@
 (function() {
   var app;
 
-  app = angular.module("giddhApp", ["satellizer", "LocalStorageModule"]);
+  app = angular.module("giddhApp", ["satellizer", "LocalStorageModule", "ngResource"]);
 
   app.config(function(localStorageServiceProvider) {
     return localStorageServiceProvider.setPrefix('giddh');
   });
 
-  app.run(function($rootScope, $http, $location) {
-    return console.log("app init");
-  });
+  app.run(function($rootScope, $http, $location) {});
 
   (function() {
-    return angular.module('giddhApp', []).directive('autoActive', [
+    return angular.module('giddhApp').directive('autoActive', [
       '$location', function($location) {
         return {
           restrict: 'A',

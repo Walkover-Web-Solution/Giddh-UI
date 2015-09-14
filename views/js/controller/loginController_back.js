@@ -1,8 +1,8 @@
 (function() {
   'use strict';
-  var loginController;
+  var loginControllerBackup;
 
-  loginController = function($scope, $rootScope, $http, $timeout, $auth, localStorageService) {
+  loginControllerBackup = function($scope, $rootScope, $http, $timeout, $auth, localStorageService) {
     var alertMsg, rand;
     $scope.authenticate = function(provider) {
       return $auth.authenticate(provider).then(function(response) {
@@ -50,6 +50,6 @@
     };
   };
 
-  angular.module('giddhApp').controller('loginController', loginController);
+  angular.module('giddhApp').controller('loginControllerBackup', loginControllerBackup);
 
 }).call(this);

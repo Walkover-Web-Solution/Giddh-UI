@@ -1,14 +1,12 @@
-app = angular.module("giddhApp", ["satellizer", "LocalStorageModule"])
+app = angular.module("giddhApp", ["satellizer", "LocalStorageModule", "ngResource"])
 
 app.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
 
-app.run(($rootScope, $http, $location)->
-  console.log "app init"
-)
+app.run ($rootScope, $http, $location)->
 
 do ->
-  angular.module('giddhApp', []).directive 'autoActive', [
+  angular.module('giddhApp').directive 'autoActive', [
     '$location'
     ($location) ->
       {
