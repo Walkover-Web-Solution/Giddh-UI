@@ -14,10 +14,10 @@
     "serve-favicon": "~2.3.0",
     "express-session": "",
     "node-rest-client": "~1.4.3",
-    "cors":"~2.7.1",
-    "morgan":"",
-    "request":"~2.61.0",
-    "jwt-simple":"~0.3.1",
+    "cors": "~2.7.1",
+    "morgan": "",
+    "request": "~2.61.0",
+    "jwt-simple": "~0.3.1",
     "npid": "*",
     "grunt-karma": "~0.6.2",
     "karma-script-launcher": "~0.1.0",
@@ -34,8 +34,9 @@
     "coffee-script": "*",
     "grunt": "~0.4.2",
     "grunt-contrib-coffee": "^0.13.0",
+    "grunt-contrib-copy": "~0.8.1",
     "grunt-contrib-watch": "^0.6.1",
-    "grunt-contrib-copy": "~0.8.1"
+    "karma": "^0.10.10"
   },
   "engines": {
     "node": "~0.13.0"
