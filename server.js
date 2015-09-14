@@ -28,7 +28,7 @@ app.set('views', __dirname + '/views/');
 app.engine('html', engines.mustache);
 app.set('view engine', 'html');
 
-app.use(favicon(__dirname + '/public/images/favicon.ico'));
+app.use(favicon(__dirname + '/app/images/favicon.ico'));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
