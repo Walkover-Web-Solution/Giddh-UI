@@ -3,7 +3,6 @@
   var homeController;
 
   homeController = function($scope, $rootScope, $timeout) {
-    var changeText;
     $scope.home = {
       "banner": {
         "mainHead": "Accounting is the foundation",
@@ -55,9 +54,9 @@
         "altText": "Giddh"
       }
     };
-    changeText = function() {
+    $scope.changeText = function() {
       var id;
-      $timeout(changeText, 5000);
+      $timeout($scope.changeText, 5000);
       id = parseInt(Math.random() * 4);
       switch (id) {
         case 0:
@@ -81,7 +80,7 @@
           $scope.home.banner.subHead = 'Accounting is the very first step of every successful business, Start using it today! You cannot build the foundation later.';
       }
     };
-    return $timeout(changeText, 5000);
+    return $timeout($scope.changeText, 5000);
   };
 
   angular.module('giddhApp').controller('homeController', homeController);
