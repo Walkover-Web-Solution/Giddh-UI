@@ -13,7 +13,7 @@ module.exports = (config) ->
             "bower_components/bootstrap/dist/js/bootstrap.js",
             "bower_components/satellizer/satellizer.js",
             "bower_components/angular-mocks/angular-mocks.js",
-            "app/website_coffee/**/*.coffee",
+            "app/website/**/*.coffee",
             "test/**/*.coffee"]
     plugins: [
       'karma-jasmine',
@@ -24,7 +24,7 @@ module.exports = (config) ->
       'karma-coffee-preprocessor'
     ]
     preprocessors: {
-      "app/website_coffee/**/*.coffee": ["coffee", "coverage"]
+      "app/website/**/*.coffee": ["coffee", "coverage"]
       "test/**/*.coffee": ["coffee"]
     }
     reporters: [
