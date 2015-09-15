@@ -1,7 +1,6 @@
 'use strict'
 
 loginController = ($scope, $rootScope, $http, loginService) ->
-
   $scope.login =
     'banner':
       'mainHead': 'Uh, oh!'
@@ -10,8 +9,8 @@ loginController = ($scope, $rootScope, $http, loginService) ->
   $scope.form = {}
 
   $scope.getRandomInt = (min, max) ->
-    Math.floor(Math.random() * (max - min + 1)) + min;
-  
+    Math.floor(Math.random() * (max - min + 1)) + min
+
   $scope.rn1 = $scope.getRandomInt(1, 19)
   $scope.rn2 = $scope.getRandomInt(1, 19)
 
@@ -19,7 +18,7 @@ loginController = ($scope, $rootScope, $http, loginService) ->
     parseInt($scope.user.totalSum) == $scope.rn1 + $scope.rn2
 
   $scope.hasWhiteSpace = (s) ->
-    return /\s/g.test(s);
+    return /\s/g.test(s)
 
   $scope.onLoginSuccess = (response) ->
     if(angular.isUndefined(response.message))
@@ -41,7 +40,7 @@ loginController = ($scope, $rootScope, $http, loginService) ->
 
   $scope.splitFirstAndLastName = (name) ->
     if($scope.hasWhiteSpace(name))
-      unameArr = name.split(" ");
+      unameArr = name.split(" ")
       $scope.user.uFname = unameArr[0]
       $scope.user.uLname = unameArr[1]
     else

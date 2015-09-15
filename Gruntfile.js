@@ -76,7 +76,7 @@ module.exports = function (grunt) {
     grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
   });
 
-  grunt.registerTask('default', ['copy', 'coffee', 'watch'])
+  grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch'])
 
   grunt.registerTask('run', ['copy', 'coffee'])
 
