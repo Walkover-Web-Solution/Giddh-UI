@@ -1,11 +1,11 @@
 "use strict"
-pricingController = ($scope, $rootScope, $timeout) ->
+pricingController = ($scope,) ->
 	$scope.pricing = 
         "banner": 
             "mainHead":"Free",
             "mainHead1":"",
             "subHead":"No accounting on this. Let’s make one plan, No pricing and no complications.",
-            "banBtnImgSrc":"/views/images/try.png",
+            "banBtnImgSrc":"/public/website/images/try.png",
             "banBtnImgTitle":"Try Now"
         "middle":
             "list":[

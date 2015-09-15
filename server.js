@@ -24,11 +24,11 @@ var port = process.env.PORT || 5252;
 app.use(cors())
 
 //set engine
-app.set('views', __dirname + '/views/');
+app.set('public', __dirname + '/public/');
 app.engine('html', engines.mustache);
 app.set('view engine', 'html');
 
-app.use(favicon(__dirname + '/app/images/favicon.ico'));
+app.use(favicon(__dirname + '/app/website/images/favicon.ico'));
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -37,7 +37,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/public',  express.static(__dirname + '/public'));
-app.use('/views',  express.static(__dirname + '/views'));
 
 
 // for session
@@ -59,7 +58,7 @@ app.use(session({
   defining routes before login static web pages
 */
 var options1 = {
-  root: __dirname + '/views',
+  root: __dirname + '/app/website/template/',
   dotfiles: 'deny',
   headers: {
       'x-timestamp': Date.now(),

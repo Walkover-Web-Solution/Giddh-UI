@@ -17,15 +17,15 @@
     <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
 	<!-- STYLE / THEME -->
 	<link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="/views/css/style-web.css" rel="stylesheet">
-    <script src="/views/js/app.js"></script>
-    <script src="/views/js/controller/homeController.js"></script>
+	<link href="/public/website/css/style-web.css" rel="stylesheet">
+    <script src="/public/website/js/app.js"></script>
+    <script src="/public/website/js/controller/homeController.js"></script>
 </head>
   <body>
   	<div ng-controller="homeController">
 
 		<section id="topSection">
-			<ng-include src="'/views/header.html'"></ng-include>
+			<ng-include src="'/public/website/template/header.html'"></ng-include>
 			<!-- start of slider -->
 
 			<div class="container" id="banner">
@@ -85,7 +85,7 @@
 			<img ng-src="{{home.bottomContent.imgSrc}}" alt="{{home.bottomContent.altText}}" align="absmiddle" />
 		</section>
 
-		<ng-include src="'/views/footer.html'"></ng-include>
+		<ng-include src="'/public/website/template/footer.html'"></ng-include>
 	</div>
 	
   </body>

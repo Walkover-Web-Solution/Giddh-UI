@@ -6,10 +6,8 @@ loginControllerBackup = ($scope, $rootScope, $http, $timeout, $auth, localStorag
     $auth.authenticate(provider).then((response) ->
       localStorageService.set("_userDetails", response.data.userDetails);
       window.location = "/app/"
-
     ).catch (response) ->
       console.log response
-
 
   #webpage data
   $scope.login = 'banner':
@@ -39,6 +37,5 @@ loginControllerBackup = ($scope, $rootScope, $http, $timeout, $auth, localStorag
     return
 
     $timeout alertMsg, 5000
-
 
 angular.module('giddhApp').controller 'loginControllerBackup', loginControllerBackup

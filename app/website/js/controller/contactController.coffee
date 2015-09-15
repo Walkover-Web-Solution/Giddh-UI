@@ -1,13 +1,13 @@
 'use strict'
 
-contactController = ($scope, $rootScope, $http, $timeout) ->
+contactController = ($scope, $rootScope, $http) ->
 
   $scope.contact = 
     "banner": 
         "mainHead":"support",
         "mainHead1":"@giddh.com",
         "subHead":"I would love to read you. I have some guys who are reading your emails day and night for the support, feature request, press or sales.",
-        "banBtnImgSrc":"/views/images/try.png",
+        "banBtnImgSrc":"/public/website/images/try.png",
         "banBtnImgTitle":"Try Now"
     "middle":
       "formHead":"You can email me",
@@ -83,9 +83,5 @@ contactController = ($scope, $rootScope, $http, $timeout) ->
               $scope.responseMsg = response.data.message
         ),(response) ->
           console.log 'in response', response
-
-
-  
-
 
 angular.module('giddhApp').controller 'contactController', contactController

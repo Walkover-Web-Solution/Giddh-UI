@@ -9,7 +9,6 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-karma');
 
-  webDir = 'app/website_coffee';
   srcDir = 'app/';
   destDir = 'public/';
 
@@ -19,9 +18,9 @@ module.exports = function (grunt) {
         files: [
           {
             expand: true,
-            cwd: webDir,
+            cwd: srcDir,
             src: ['**/*.coffee'],
-            dest: 'views/js',
+            dest: destDir,
             ext: '.js'
           }
         ]
@@ -33,7 +32,7 @@ module.exports = function (grunt) {
           expand: true,
           dot: true,
           cwd: srcDir,
-          src: ['images/*'],
+          src: ['**/images/*', '**/css/*', '**/fonts/*', '**/template/*'],
           dest: destDir
         }]
       }

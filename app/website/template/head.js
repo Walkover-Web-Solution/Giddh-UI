@@ -10,14 +10,14 @@ var scriptToImport = [
     "/bower_components/angular-local-storage/dist/angular-local-storage.js",
     "/bower_components/bootstrap/dist/js/bootstrap.min.js",
     "/bower_components/satellizer/satellizer.js",
-    "/views/js/app.js",
-    "/views/js/controller/homeController.js",
-    "/views/js/controller/loginController.js",
-    "/views/js/service/loginService.js",
-    "/views/js/controller/allPageController.js",
-    "/views/js/controller/contactController.js",
-    "/views/js/controller/pricingController.js",
-  "/views/js/controller/versionController.js"
+    "/public/website/js/app.js",
+    "/public/website/js/controller/homeController.js",
+    "/public/website/js/controller/loginController.js",
+    "/public/website/js/service/loginService.js",
+    "/public/website/js/controller/allPageController.js",
+    "/public/website/js/controller/contactController.js",
+    "/public/website/js/controller/pricingController.js",
+  "/public/website/js/controller/versionController.js"
 ]
 
 function loadScript(url, callback){

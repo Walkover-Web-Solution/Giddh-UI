@@ -15,18 +15,18 @@
     <script src="/bower_components/satellizer/satellizer.js"></script>
     <script src="/bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
     <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
-    <script src="/views/js/app.js"></script>
-    <script src="/views/js/controller/contactController.js"></script>
+    <script src="/public/website/js/app.js"></script>
+    <script src="/public/website/js/controller/contactController.js"></script>
     <!-- STYLE / THEME -->
     <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/views/css/style-web.css" rel="stylesheet">
+    <link href="/public/website/css/style-web.css" rel="stylesheet">
 
 </head>
 <body>
 
     <div ng-controller="contactController">
     	<section id="topSection">
-    		<ng-include src="'/views/header.html'"></ng-include>
+    		<ng-include src="'/public/website/template/header.html'"></ng-include>
     		<!-- start of banner -->
     		<div class="container othPage" id="banner">
     			<div class="row">
@@ -122,7 +122,7 @@
     			</div>
     		</div>
     	</section>
-    	<ng-include src="'/views/footer.html'"></ng-include>
+    	<ng-include src="'/public/website/template/footer.html'"></ng-include>
     </div>
 </body>
 </html>

@@ -1,12 +1,12 @@
 'use strict'
 
-versionController = ($scope, $rootScope, $http, $timeout) ->
+versionController = ($scope) ->
   $scope.version = 
     "banner": 
       "mainHead":"Giddh",
       "mainHead1":"VERSION 2",
       "subHead":"Features are never ending but important thing is that we bring the most important feature for you with the same simplicity. Here are few most exciting features coming in Giddh version 2.",
-      "banBtnImgSrc":"/views/images/try.png",
+      "banBtnImgSrc":"/public/website/images/try.png",
       "banBtnImgTitle":"Try Now"
     "middle": 
       "list":[
@@ -23,7 +23,5 @@ versionController = ($scope, $rootScope, $http, $timeout) ->
               "details" : "Internet is fantastic, but what if you can’t get access to it when you need to make an entry. Chrome and Android App has sync facility so that your transactions will never be missed and it will be in real time always."
           }
       ]
-        
-    
 
 angular.module('giddhApp').controller 'versionController', versionController

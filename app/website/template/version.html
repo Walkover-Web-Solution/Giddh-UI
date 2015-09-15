@@ -8,41 +8,37 @@
 	<meta name="keywords" content="Accounting softwares, online accounting software, Web Based Accounting Software" />
   	<title>Giddh ~ Accounting at its Rough! Angular js</title>
   	<!-- LIBRARIES -->
-	<script src='/bower_components/modernizr/modernizr.js'></script>
-	<script src='/bower_components/jquery/jquery.min.js'></script>
-	<script src="/bower_components/angular/angular.min.js"></script>
-	<script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-	<script src="/bower_components/satellizer/satellizer.js"></script>
-	<script src="/bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+    <script src='/bower_components/modernizr/modernizr.js'></script>
+    <script src='/bower_components/jquery/jquery.min.js'></script>
+    <script src="/bower_components/angular/angular.min.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/bower_components/satellizer/satellizer.js"></script>
+    <script src="/bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
     <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
+    <script src="/public/website/js/app.js"></script>
+    <script src="/public/website/js/controller/versionController.js"></script>
 	<!-- STYLE / THEME -->
 	<link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="/views/css/style-web.css" rel="stylesheet">
-	<script src="/views/js/app.js"></script>
-	<script src="/views/js/controller/pricingController.js"></script>
-	<style type="text/css">
-	#topSection{
-		min-height: inherit;
-	}
-	</style>
+	<link href="/public/website/css/style-web.css" rel="stylesheet">
 </head>
 	<body>
-		<div ng-controller="pricingController">
+
+		<div ng-controller="versionController">
 			<section id="topSection">
-				<ng-include src="'views/header.html'"></ng-include>
+				<ng-include src="'/public/website/template/header.html'"></ng-include>
 				<!-- start of banner -->
 				<div class="container othPage" id="banner">
 					<div class="row">
 						<div class="col-md-12 col-sm-12 alC">
 							<h2 class="h2 mocha">
-								{{pricing.banner.mainHead}} <br>
-								{{pricing.banner.mainHead1}}
+								{{version.banner.mainHead}} <br>
+								{{version.banner.mainHead1}}
 							</h2>
-							<h3 class="h3 trumph">{{pricing.banner.subHead}}</h3>
+							<h3 class="h3 trumph">{{version.banner.subHead}}</h3>
 							<div id="trywrap">
 								<a href="/login">
 									<div id="try">
-										<img border="0" ng-src="{{pricing.banner.banBtnImgSrc}}" alt="{{pricing.banner.banBtnImgTitle}}" />
+										<img border="0" ng-src="{{version.banner.banBtnImgSrc}}" alt="{{version.banner.banBtnImgTitle}}" />
 									</div>
 								</a>
 							</div>
@@ -54,12 +50,14 @@
 
 			<section class="container" id="midSection">
 				<ul class="ln" id="cmnul">
-					<li class="col-md-4 col-sm-12"  ng-repeat="list in pricing.middle.list">
+					<li class="col-md-4 col-sm-12"  ng-repeat="list in version.middle.list">
 		            	<h4 class="h4">{{list.title}}</h4>
 		                <p class="cmnp">{{list.details}}</p>
 		                <a href="javascript:;" class="readmore">Read more</a>
 		            </li>
 				</ul>
 			</section>
-			<ng-include src="'views/footer.html'"></ng-include>
+			<ng-include src="'/public/website/template/footer.html'"></ng-include>
 		</div>
+	</body>
+</html>
