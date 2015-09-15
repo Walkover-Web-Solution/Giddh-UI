@@ -138,8 +138,8 @@ allPageController = ($scope) ->
           "imgTitle": "Online on Cloud"
         },
         {
-          "title": "M different!",
-          "details": "This easy accounts software is unique in many ways. Unlike other accounting software it is not desktop software but online accounting software. This means it elates your wings with internet to work while you fly places. Your data is available on cloud computing and not stored on any specific â€œaccounting systemâ€? to be accessed at any time. This makes it more convenient, reliable, and consistent, free of theft, and free of updating as it updates on its own.",
+          "title": "Am different!",
+          "details": "This easy accounts software is unique in many ways. Unlike other accounting software it is not desktop software but online accounting software. This means it elates your wings with internet to work while you fly places. Your data is available on cloud computing and not stored on any specific accounting system? to be accessed at any time. This makes it more convenient, reliable, and consistent, free of theft, and free of updating as it updates on its own.",
           "imgSrc": "/public/website/images/no_need_to_learn.png",
           "imgTitle": "No need to learn"
         },
