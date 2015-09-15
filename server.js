@@ -79,7 +79,7 @@ app.get('/contact', function(req, res, next) {
 app.get('/version', function(req, res, next) {
   res.sendFile("version.html", options1);
 });
-app.get('/login', function(req, res, next) {
+app.get('/beta', function(req, res, next) {
   res.sendFile("login.html", options1);
 });
 app.get('/pricing', function(req, res, next) {
