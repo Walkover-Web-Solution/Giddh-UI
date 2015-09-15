@@ -53,9 +53,9 @@ module.exports = function (grunt) {
       },
       src: {
         files: [
-          srcDir + '/**/*.coffee'
+          srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '/**/*.css'
         ],
-        tasks: ['coffee']
+        tasks: ['coffee', 'copy']
       }
     },
     karma: {
