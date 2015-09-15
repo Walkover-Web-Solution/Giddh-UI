@@ -24,7 +24,7 @@ describe 'homeController', ->
       @scope.changeText()
 
       expect(@scope.home.banner.mainHead).toEqual("Ant or \nElephant")
-      expect(@scope.home.banner.subHead).toEqual("Accounting is a breadth of every Business, small business, Start-ups and even for a person. It makes you alive or at least makes you feel")
+      expect(@scope.home.banner.subHead).toEqual("Accounting is a breadth of every business; small business,\nstart-ups and even for a person. It makes you alive.\nOr atleast makes you feel.")
 
     it 'should goes in 2 in switch case', ->
       @scope.home = {banner: {mainHead: "Hi", subHead: "Hello"}}
@@ -42,7 +42,7 @@ describe 'homeController', ->
       @scope.changeText()
 
       expect(@scope.home.banner.mainHead).toEqual("Accounting is necessary")
-      expect(@scope.home.banner.subHead).toEqual("Our perception says accounting is the synonyms of necessities, Use any accounting software but use... that’s our motto and that’s why we are.")
+      expect(@scope.home.banner.subHead).toEqual("Our perception says accounting is the synonyms of necessities.\nOur purpose is to bring ease to your workflow.")
 
     it 'should goes in 4 in switch case', ->
       @scope.home = {banner: {mainHead: "Hi", subHead: "Hello"}}
@@ -51,7 +51,7 @@ describe 'homeController', ->
       @scope.changeText()
 
       expect(@scope.home.banner.mainHead).toEqual("Accounting is the foundation")
-      expect(@scope.home.banner.subHead).toEqual("Accounting is the very first step of every successful business, Start using it today! You cannot build the foundation later.")
+      expect(@scope.home.banner.subHead).toEqual("Accounting is the very first step of every successful business,\nstart using it today! You cannot build the foundation later.")
 
 
       

@@ -4,7 +4,7 @@ homeController = ($scope, $rootScope, $timeout) ->
   $scope.home =
     "banner":
       "mainHead": "Accounting is the foundation",
-      "subHead": "Accounting is the very first step of every successful business, Start using it today! You cannot build the foundation later.",
+      "subHead": 'Accounting is the very first step of every successful business,\nstart using it today! You cannot build the foundation later.',
       "p": "Giddh is an online accounting software for everyone",
       "imgSrc": "/public/website/images/screen.png",
       "imgTitle": "Giddh",
@@ -14,7 +14,7 @@ homeController = ($scope, $rootScope, $timeout) ->
       "list": [
         {
           "title": "Online on cloud",
-          "details": "Access your accounts anywhere and anytime you want,but of course you must be having an Internet.",
+          "details": "Access your accounts anywhere and anytime you want, but of course you must have active Internet connection.",
           "imgSrc": "/public/website/images/online_on_cloud.png",
           "imgTitle": "Online on Cloud"
         },
@@ -63,16 +63,16 @@ homeController = ($scope, $rootScope, $timeout) ->
         $scope.home.banner.subHead = 'Accounting is nothing but keeping your transactions in an efficient way. Your eyes could have limitations; let me show you everything in one shot.'
       when 1
         $scope.home.banner.mainHead = 'Ant or \nElephant'
-        $scope.home.banner.subHead = 'Accounting is a breadth of every Business, small business, Start-ups and even for a person. It makes you alive or at least makes you feel'
+        $scope.home.banner.subHead = 'Accounting is a breadth of every business; small business,\nstart-ups and even for a person. It makes you alive.\nOr atleast makes you feel.'
       when 2
         $scope.home.banner.mainHead = 'Not for \nAccountants'
         $scope.home.banner.subHead = 'I am not scary like you imagine accounts. I am simple, basic and very friendly and will never let you regret.'
       when 3
         $scope.home.banner.mainHead = 'Accounting is necessary'
-        $scope.home.banner.subHead = 'Our perception says accounting is the synonyms of necessities, Use any accounting software but use... that’s our motto and that’s why we are.'
+        $scope.home.banner.subHead = 'Our perception says accounting is the synonyms of necessities.\nOur purpose is to bring ease to your workflow.'
       when 4
         $scope.home.banner.mainHead = 'Accounting is the foundation'
-        $scope.home.banner.subHead = 'Accounting is the very first step of every successful business, Start using it today! You cannot build the foundation later.'
+        $scope.home.banner.subHead = 'Accounting is the very first step of every successful business,\nstart using it today! You cannot build the foundation later.'
     return
   $timeout($scope.changeText, 30000)
 
