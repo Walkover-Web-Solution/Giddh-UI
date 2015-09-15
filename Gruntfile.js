@@ -2,17 +2,27 @@
 
 module.exports = function (grunt) {
   'use strict';
-  var webDir, srcDir, destDir;
+  var testDir, srcDir, destDir;
 
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
+  grunt.loadNpmTasks('grunt-coffeelint');
   grunt.loadNpmTasks('grunt-karma');
 
   srcDir = 'app/';
   destDir = 'public/';
+  testDir = 'test/';
 
   grunt.initConfig({
+    coffeelint: {
+      app: ['karma.conf.coffee', "" + srcDir + "/**/*.coffee", "" + testDir + "/**/*.coffee"],
+      options: {
+        max_line_length: {
+          level: 'ignore'
+        }
+      }
+    },
     coffee: {
       dist: {
         files: [
@@ -32,7 +42,7 @@ module.exports = function (grunt) {
           expand: true,
           dot: true,
           cwd: srcDir,
-          src: ['**/images/*', '**/css/*', '**/fonts/*', '**/template/*'],
+          src: ['**/images/*', '**/css/*', '**/fonts/*', '**/views/*'],
           dest: destDir
         }]
       }
@@ -43,7 +53,7 @@ module.exports = function (grunt) {
       },
       src: {
         files: [
-          webDir + '/**/*.coffee'
+          srcDir + '/**/*.coffee'
         ],
         tasks: ['coffee']
       }

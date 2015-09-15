@@ -58,7 +58,7 @@ app.use(session({
   defining routes before login static web pages
 */
 var options1 = {
-  root: __dirname + '/app/website/template/',
+  root: __dirname + '/public/website/views/',
   dotfiles: 'deny',
   headers: {
       'x-timestamp': Date.now(),

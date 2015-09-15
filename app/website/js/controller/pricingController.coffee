@@ -1,5 +1,5 @@
 "use strict"
-pricingController = ($scope,) ->
+pricingController = ($scope) ->
 	$scope.pricing = 
         "banner": 
             "mainHead":"Free",
