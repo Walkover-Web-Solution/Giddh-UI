@@ -1,29 +1,37 @@
-# packaged Giddh with node, express, angular and coffe script
+# README
 
-Note: Make sure you have installed node, npm, coffescript, grunt, grunt-contrib-coffee, grunt-contrib-watch on your local/server
+The following is a quick guide to preparing the internal 'Giddh' web
+application.
 
-### dependancy
-`BOOTSTRAP`
-`NPM`
-`EXPRESS`
-`NODE`
-`COFFESCRIPT`
-`ANGULARJS`
-`GRUNT`
-`GRUNT-CLI`
+Prerequisites
+-------------
 
-## Run
-For first time run `npm install` and run `bower install`
-Go to root dir of project and then hit command
+* node 0.12.4
+* npm 2.12.1
+* bower 1.4.1
+* grunt 0.4.5
+* grunt-cli 0.1.13
 
+Use [homebrew](http://mxcl.github.com/homebrew/) and [npm]() to install the stuff you need.
+
+Usual build tasks
+-----------------
+
+* Single run over the Coffee specs
+`grunt test` or `grunt karma:unit`
+
+* Watch over the Coffee specs
+`grunt karma:continuous` or `grunt karma`
+
+* To initialize project before starting server
+`grunt init`
+
+* Start server
 `node server.js`
 
-## Run in developement mode
-Go to root dir and run `node server.js`
-then run `grunt coffee` to watch javascript files
+* Watch over the Coffee changes
+`grunt coffee`
 
-### response
-Now go to your web browser and type
-http://localhost:8000/
-
+* Check coffee syntax
+`grunt coffeelint`
 

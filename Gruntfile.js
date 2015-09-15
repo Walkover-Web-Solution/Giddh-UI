@@ -78,7 +78,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch'])
 
-  grunt.registerTask('run', ['copy', 'coffee'])
+  grunt.registerTask('init', ['copy', 'coffee'])
 
   grunt.registerTask('test', [
     'coffee',
