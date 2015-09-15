@@ -56,7 +56,7 @@
     };
     $scope.changeText = function() {
       var id;
-      $timeout($scope.changeText, 5000);
+      $timeout($scope.changeText, 30000);
       id = parseInt(Math.random() * 4);
       switch (id) {
         case 0:
@@ -80,7 +80,7 @@
           $scope.home.banner.subHead = 'Accounting is the very first step of every successful business, Start using it today! You cannot build the foundation later.';
       }
     };
-    return $timeout($scope.changeText, 5000);
+    return $timeout($scope.changeText, 30000);
   };
 
   angular.module('giddhApp').controller('homeController', homeController);
