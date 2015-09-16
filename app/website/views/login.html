@@ -1,11 +1,12 @@
 <!DOCTYPE HTML>
 <html lang="en" ng-app='giddhApp'>
 <head>
-	<meta charset="UTF-8"/>
-	<meta http-equiv="X-UA-Compatible" content="IE=egde"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Do you feel accounting is tough to manage? Giddh will solve all your accounting related needs. Get a free invitation now." />
-	<meta name="keywords" content="Accounting softwares, online accounting software, Web Based Accounting Software" />
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+          content="Do you feel accounting is tough to manage? Giddh will solve all your accounting related needs. Get a free invitation now."/>
+    <meta name="keywords" content="Accounting softwares, online accounting software, Web Based Accounting Software"/>
     <title>Login - Giddh ~ Accounting at its Rough! Angular js</title>
     <!-- LIBRARIES -->
     <script src='/bower_components/modernizr/modernizr.js'></script>
@@ -23,90 +24,100 @@
     <script src="/public/website/js/service/loginService.js"></script>
 
 </head>
-  <body>
+<body>
 
-	<div ng-controller="loginController">
-		<section id="topSection" class="login">
-			<ng-include src="'public/website/views/header.html'"></ng-include>
-			<!-- start of banner -->
-			<div class="container othPage" id="banner">
-				<div class="row">
-					<div class="col-md-6 col-sm-12">
-						<h2 class="lghead mocha">Hey, Charm!</h2>
+<div ng-controller="loginController">
+    <section id="topSection" class="login">
+        <ng-include src="'public/website/views/header.html'"></ng-include>
+        <!-- start of banner -->
+        <div class="container othPage" id="banner">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <h2 class="lghead mocha">Hey, Charm!</h2>
 
-            <h3 class="h3 lwit">We only have beta version currently!</h3>
+                    <h3 class="h3 lwit">We only have beta version currently!</h3>
 
-            <div class="mrB4 brdDividr"></div>
+                    <div class="mrB4 brdDividr"></div>
 
-            <div id="thead">
-            	Why don't you tell us why you need this app and let us call you back?
-            </div>
-          </div>
-
-          <div class="col-md-6 col-sm-12">
-            <!-- form code start -->
-            <div class="col-md-10 col-md-offset-1 col-sm-12">
-            <div class="formBg">
-            	<div ng-show="responseMsg" class="form-response betaLog">
-                  {{responseMsg}}
-              </div>
-
-              <div class="" ng-hide="responseMsg">
-
-                <form name="form" class="contactForm betaForm" novalidate>
-
-                  <div class="form-group">
-                    <input placeholder="Adam John" class="form-control" type="text" ng-model="user.name" name="uName" ng-minlength="3" required="" />
-                    <div class="alertCnt" ng-show="form.$submitted || form.uName.$touched">
-                        <span ng-show="form.uName.$error.required">Tell us your name.</span>
+                    <div id="thead">
+                        Why don't you tell us why you need this app and let us call you back?
                     </div>
-                  </div>
+                </div>
 
-                  <div class="form-group">
-                    <input class="form-control" type="text" name="uCompany" ng-model="user.company" placeholder="Your company name">
-                  </div>
+                <div class="col-md-6 col-sm-12">
+                    <!-- form code start -->
+                    <div class="col-md-10 col-md-offset-1 col-sm-12">
+                        <div class="formBg">
+                            <div ng-show="responseMsg" class="form-response betaLog">
+                                {{responseMsg}}
+                            </div>
 
-                  <div class="form-group">
-                    <input placeholder="john_adam@example.com" class="form-control" type="email" ng-model="user.email" name="uEmail" required="" />
-                    <div class="alertCnt" ng-show="form.$submitted || form.uEmail.$touched">
-                        <span ng-show="form.uEmail.$error.required">Tell us your email.</span>
-                        <span ng-show="form.uEmail.$error.email">It looks like not a valid email.</span>
-                    </div>
-                  </div>
-                  <div class="form-group">
-                    <textarea class="form-control" name="uHuman" ng-model="user.reason" placeholder="Your messsage" required></textarea>
-                  </div>
-                  <div class="form-group">
+                            <div class="" ng-hide="responseMsg">
 
-                    <label class="control-label">Are you human: *</label>
-                    <div class="row">
-                      <div class="col-md-6 col-sm-12">
-                        
-                        <div class="splWrp clearfix">
-                          <span>{{rn1}} + {{rn2}} = </span>
-                          <input style="width:60px;" class="form-control" type="text" name="uHuman" ng-model="user.totalSum" required>
+                                <form name="form" class="contactForm betaForm" novalidate>
+
+                                    <div class="form-group">
+                                        <div class="alertCnt" ng-show="form.$submitted || form.uName.$touched">
+                                            <span ng-show="form.uName.$error.required">Required<sup>*</sup></span>
+                                        </div>
+
+                                        <input placeholder="Full Name" class="form-control" type="text"
+                                               ng-model="user.name" name="uName" ng-minlength="3" required=""/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <input class="form-control" type="text" name="uCompany" ng-model="user.company"
+                                               placeholder="Your company name">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="alertCnt" ng-show="form.$submitted || form.uEmail.$touched">
+                                            <span ng-show="form.uEmail.$error.required">Required<sup>*</sup></span>
+                                            <span ng-show="form.uEmail.$error.email">It looks like not a valid email.</span>
+                                        </div>
+                                        <input placeholder="Email" class="form-control" type="email"
+                                               ng-model="user.email" name="uEmail" required=""/>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea class="form-control" name="uHuman" ng-model="user.reason"
+                                                  placeholder="Your messsage" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+
+                                        <label class="control-label">Are you human: *</label>
+
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-12">
+
+                                                <div class="splWrp clearfix">
+                                                    <span>{{rn1}} + {{rn2}} = </span>
+                                                    <input style="width:60px;" class="form-control" type="text"
+                                                           name="uHuman" ng-model="user.totalSum" required>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-sm-12">
+                                                <button class="btn btn-default" ng-click="submitUserForm()"
+                                                        ng-disabled="form.$invalid">Contact me soon
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </form>
+                            </div>
                         </div>
-                      </div>
-                      <div class="col-md-6 col-sm-12">
-                        <button class="btn btn-default" ng-click="submitUserForm()" ng-disabled="form.$invalid">Contact me soon</button>
-                      </div>
+                        <!-- form end -->
                     </div>
-                  </div>
-
-                </form>
+                </div>
             </div>
-            </div>
-            <!-- form end -->
-          </div>
-					</div>
-				</div>
-			</div>
-			<!-- End of banner -->
-		</section>
+        </div>
+        <!-- End of banner -->
+    </section>
 
-		
-		<ng-include src="'public/website/views/footer.html'"></ng-include>
 
-	</div>
-  </body>
+    <ng-include src="'public/website/views/footer.html'"></ng-include>
+
+</div>
+</body>
 </html>
