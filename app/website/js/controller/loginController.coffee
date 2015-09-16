@@ -1,6 +1,7 @@
 'use strict'
 
 loginController = ($scope, $rootScope, $http, loginService) ->
+  $scope.notHuman = false
   $scope.login =
     'banner':
       'mainHead': 'Uh, oh!'
@@ -30,13 +31,14 @@ loginController = ($scope, $rootScope, $http, loginService) ->
     console.log "call failed", response
 
   $scope.submitUserForm = ->
-    $scope.responseMsg = "loading... Submitting Form"
     if $scope.form.$valid
       if($scope.isHuman())
+        $scope.responseMsg = "loading... Submitting Form"
         $scope.splitFirstAndLastName($scope.user.name)
         loginService.submitUserForm($scope.user, $scope.onLoginSuccess, $scope.onLoginFailure)
       else
-        $scope.responseMsg = "You are not a human being!"
+        $scope.notHuman = true
+        $scope.notHumanMessage = "You are not a human being!"
 
   $scope.splitFirstAndLastName = (name) ->
     if($scope.hasWhiteSpace(name))

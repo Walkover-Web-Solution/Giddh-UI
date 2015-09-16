@@ -49,6 +49,7 @@ describe 'loginController', ->
         @scope.onLoginFailure)
       expect(@scope.splitFirstAndLastName).toHaveBeenCalledWith(@scope.user.name)
       expect(@scope.responseMsg).toBe("loading... Submitting Form")
+      expect(@scope.notHuman).toBeFalsy()
 
     it "should not call service method if user is not human", ->
       @scope.form.$valid = true
@@ -62,7 +63,9 @@ describe 'loginController', ->
       expect(@loginService.submitUserForm).not.toHaveBeenCalledWith(jasmine.any(Object), @scope.onLoginSuccess,
         @scope.onLoginFailure)
       expect(@scope.splitFirstAndLastName).not.toHaveBeenCalledWith(@scope.user.name)
-      expect(@scope.responseMsg).toBe("You are not a human being!")
+      expect(@scope.notHuman).toBeTruthy()
+      expect(@scope.notHumanMessage).toBe("You are not a human being!")
+      expect(@scope.responseMsg).toBeUndefined()
 
     it "should not call service method if form is inValid", ->
       @scope.form.$valid = false
@@ -75,6 +78,7 @@ describe 'loginController', ->
       expect(@loginService.submitUserForm).not.toHaveBeenCalled()
       expect(@scope.splitFirstAndLastName).not.toHaveBeenCalled()
       expect(@scope.isHuman).not.toHaveBeenCalled()
+      expect(@scope.notHuman).toBeFalsy()
 
   describe "#splitFirstAndLastName", ->
     it "should split name into first name and last name is name contains white space", ->
