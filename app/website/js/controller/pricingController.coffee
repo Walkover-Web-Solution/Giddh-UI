@@ -4,24 +4,22 @@ pricingController = ($scope) ->
     "banner":
       "mainHead": "Free",
       "mainHead1": "",
-      "subHead": "No accounting on this. Let’s make one plan, No pricing and no complications.",
+      "subHead": "Pure unlimited accounting. All for free. No hidden fees!",
       "banBtnImgSrc": "/public/website/images/try.png",
       "banBtnImgTitle": "Try Now"
     "middle":
       "list": [
         {
           "title": "Unlimited companies",
-          "details": "Our plan has no limitation, as we said it is only one plan and all is yours. Everything is unlimited including unlimited companies."
+          "details": "Create unlimited Companies in your account and do as many entries associated with the Companies. Giddh can handle multiple transactions of multiple Companies with extreme ease."
         },
         {
-          "title": "Charges are per user",
-          "details": "Add as many user you want. It is free for these users to add
-unlimited companies in their account. We charge only per user 
-(email ID) basis with all features free for them."
+          "title": "Free of cost",
+          "details": "Giddh's beta version comes free of cost with no hidden charges associated. Create multi-users and hold as many records. If you are on Giddh, it's free!"
         },
         {
-          "title": "24X7 email support",
-          "details": "Business never stops whether it is midnight of new year. My support guys are trained and love to assist you anytime you need it."
+          "title": "Round the clock support",
+          "details": "Our team works hard so that we can make your accounting life easy. Give us a call or write to us whenever you face any trouble. Our team is available 24*7."
         }
       ]
 
