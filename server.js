@@ -72,13 +72,6 @@ app.get('/', function(req, res, next) {
 app.get('/index', function(req, res, next) {
   res.sendFile("index.html", options1);
 });
-
-app.get('/contact', function(req, res, next) {
-  res.sendFile("contact.html", options1);
-});
-app.get('/version', function(req, res, next) {
-  res.sendFile("version.html", options1);
-});
 app.get('/beta', function(req, res, next) {
   res.sendFile("beta.html", options1);
 });
@@ -90,9 +83,6 @@ app.get('/privacy', function(req, res, next) {
 });
 app.get('/terms', function(req, res, next) {
   res.sendFile("terms.html", options1);
-});
-app.get('/invoice', function(req, res, next) {
-  res.sendFile("invoice.html", options1);
 });
 app.get('/billing', function(req, res, next) {
   res.sendFile("billing.html", options1);
