@@ -80,7 +80,7 @@ app.get('/version', function(req, res, next) {
   res.sendFile("version.html", options1);
 });
 app.get('/beta', function(req, res, next) {
-  res.sendFile("login.html", options1);
+  res.sendFile("beta.html", options1);
 });
 app.get('/pricing', function(req, res, next) {
   res.sendFile("pricing.html", options1);
