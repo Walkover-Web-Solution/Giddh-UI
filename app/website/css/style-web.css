@@ -584,6 +584,9 @@ textarea.form-control {
   padding: 40px 30px;
   background-color: #a44701
 }
+.formBg .btn{
+  padding: 9px 20px;
+}
 
 .betaForm  ::-webkit-input-placeholder {
   /* WebKit, Blink, Edge */
