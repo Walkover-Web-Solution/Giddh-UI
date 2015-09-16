@@ -132,40 +132,34 @@ allPageController = ($scope) ->
     "middle":
       "list": [
         {
-          "title": "For me?",
-          "details": "Do you have butterflies in the stomach when you hear the task of accounting? Is it really this complex? Well, need is the mother of invention. It is extremely easy when you use Giddh as your accounting tool. We have broken down the complexity of accounts into simple ABCs which readily fits into any type and size of brain. This software is not just accounting software but the only ACCOUNTING SOFTWARE of its kind.",
+          "title": "Why for you?",
+          "details": "Because we all get that tingly feeling when we hear maths, numbers, and accounts. But it's extremely easy when you use Giddh as your accounting tool. We have broken down the complexity of accounts into simple ABCs which readily fits into any type and size of brain and business.",
           "imgSrc": "/public/website/images/for_me.png",
           "imgTitle": "Online on Cloud"
         },
         {
-          "title": "Am different!",
-          "details": "This easy accounts software is unique in many ways. Unlike other accounting software it is not desktop software but online accounting software. This means it elates your wings with internet to work while you fly places. Your data is available on cloud computing and not stored on any specific accounting system? to be accessed at any time. This makes it more convenient, reliable, and consistent, free of theft, and free of updating as it updates on its own.",
+          "title": "It's different",
+          "details": "Rather easy we may call it. Unlike other accounting software's Giddh does not keep your data on desktop, it rather manages everything through cloud computing. This makes it more convenient, reliable, free of theft, and free of updating as it updates on its own.",
           "imgSrc": "/public/website/images/m_different.png",
           "imgTitle": "No need to learn"
         },
         {
-          "title": "Accounts simplified!",
-          "details": "Usually when it comes to financial and accounting software it is implicit that the user is well acquainted with the accounting jargons like assets, liabilities, credits, debts, balance sheet, inventory, capital, cash flow, depreciation, appreciation, fixed and variable costs, etc. Seems gibberish? We have this simple accounting software which talks in the language that you understand! Giddh works just like a handbook in which you enter the details of your transaction and that is it.",
+          "title": "Accounts simplified",
+          "details": "When it comes to an accounting software, people believe that users will naturally understand the accounting jargons like inventory, capital, cash flow, depreciation, appreciation, fixed and variable costs, etc. But people usually don't! So Giddh talks in the language that understand! It works just like a handbook in which you enter the details of your transaction. And you are done!",
           "imgSrc": "/public/website/images/accounts_simplified.png",
           "imgTitle": "Secure"
         },
         {
-          "title": "Worry not!",
-          "details": "You need not worry about financial statements, graphical presentations, balance sheet and hell lot of ratios ranging from the turnover ratios, profitability ratios, and liquidity ratios. This accounting software for business is designed to serve it all to you. It transforms your data in the form of several charts and graphs. You can just be happy after entering the basic transactions and gear yourself to simply analyze the reports served to you by Giddh.",
+          "title": "Worry not",
+          "details": "You need not worry about financial statements, graphical presentations, balance sheet and hell lot of ratios ranging from the turnover ratios, profitability ratios, and liquidity ratios. Giddh is designed to serve the purpose for you. It transforms your data in the form of charts and graphs, which helps you to simply analyze the reports served by Giddh.",
           "imgSrc": "/public/website/images/worry_not.png",
           "imgTitle": "Multiple User"
         },
         {
-          "title": "Why me?",
-          "details": "The basic purpose of any business accounting software is to ameliorate its profits. A business not only grows by its production or sales but also by its internal processes. Finance department is such a big process in any organization that its perfection directly affects the future and profits of the company. Financial accounting software reduces down all the complexity to simple analysis. Finance department of any organization is usually considered as a very complex department.",
+          "title": "Again your question, why Giddh?",
+          "details": "The basic purpose of any business accounting software is to know the business and its profits state. Finance department is such a big process in any organization that its perfection directly affects the future and profits of the company. Having an online accounting software like Giddh will reduce down your complexity to simple analysis.",
           "imgSrc": "/public/website/images/why_me.png",
           "imgTitle": "Recursive Entry"
-        },
-        {
-          "title": "Profits",
-          "details": "With the launch of online accounting software finances of the company have become very handy. The users no longer have to sit glued to one PC to get all the accounting details. It can be accessed at any time by any hand held gizmo or for that matters any internet enabled device as it offers home accounting software as well. This freedom of space and time in web accounting software is just awesome!",
-          "imgSrc": "/public/website/images/profits.png",
-          "imgTitle": "Export"
         }
       ]
 
