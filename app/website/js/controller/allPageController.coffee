@@ -128,7 +128,7 @@ allPageController = ($scope) ->
       ]
 
   #accounting software page
-  $scope.accountingsoftware =
+  $scope.whyGiddh =
     "middle":
       "list": [
         {

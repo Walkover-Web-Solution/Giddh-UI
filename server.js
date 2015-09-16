@@ -100,8 +100,8 @@ app.get('/billing', function(req, res, next) {
 app.get('/accountingbook', function(req, res, next) {
   res.sendFile("accountingbook.html", options1);
 });
-app.get('/accountingsoftware', function(req, res, next) {
-  res.sendFile("accountingsoftware.html", options1);
+app.get('/why-giddh', function(req, res, next) {
+  res.sendFile("whyGiddh.html", options1);
 });
 /*
  |--------------------------------------------------------------------------
