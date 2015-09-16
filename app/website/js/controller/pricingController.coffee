@@ -15,7 +15,9 @@ pricingController = ($scope) ->
         },
         {
           "title": "Charges are per user",
-          "details": "You can add as many user you want and then it is free for those users to add unlimited companies in their account. We charge only per user (email id) basis, If it is added once then all features are free."
+          "details": "Add as many user you want. It is free for these users to add
+unlimited companies in their account. We charge only per user 
+(email ID) basis with all features free for them."
         },
         {
           "title": "24X7 email support",

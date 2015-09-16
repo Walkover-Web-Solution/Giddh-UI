@@ -465,6 +465,11 @@ footer a:hover {
   height: 20px;
   margin-bottom: 20px;
 }
+.brdDividr{
+  background-color: #b44e01;
+  height: 1px;
+  margin-bottom: 40px;
+}
 
 #prnat {
   height: 70px;
@@ -547,20 +552,16 @@ textarea.form-control {
 }
 
 /*beta invite page*/
-.nTxt {
-  padding-top: 50px;
-}
-
 .contactForm {
   font-family: inherit;
   text-align: left;
 }
 
-.form-horizontal .control-label {
+.betaForm .control-label {
   font-weight: normal;
 }
 
-.form-horizontal .alertCnt span {
+.betaForm .alertCnt span {
   color: #fff;
   font-size: 14px;
 }
@@ -569,32 +570,41 @@ textarea.form-control {
   color: #fff
 }
 
-.form-horizontal .form-control {
-  background-color: #b85115;
-  border: 2px solid #8d4213;
+.betaForm .form-control{
+  background-color: #7a3705;
+  border: 2px solid #7a3705;
   color: #fff;
+  border-radius: 5px;
+  height: 40px
+}
+.betaForm .form-control:not(input){
+  height: 90px;
+}
+.formBg{
+  padding: 40px 30px;
+  background-color: #a44701
 }
 
-.form-horizontal ::-webkit-input-placeholder {
+.betaForm  ::-webkit-input-placeholder {
   /* WebKit, Blink, Edge */
-  color: #772d05;
+  color: #eb7823;
 }
 
-.form-horizontal :-moz-placeholder {
+.betaForm  :-moz-placeholder {
   /* Mozilla Firefox 4 to 18 */
-  color: #772d05;
+  color: #eb7823;
   opacity: 1;
 }
 
-.form-horizontal ::-moz-placeholder {
+.betaForm  ::-moz-placeholder {
   /* Mozilla Firefox 19+ */
-  color: #772d05;
+  color: #eb7823;
   opacity: 1;
 }
 
-.form-horizontal :-ms-input-placeholder {
+.betaForm  :-ms-input-placeholder {
   /* Internet Explorer 10-11 */
-  color: #772d05;
+  color: #eb7823;
 }
 
 .white-space-pre-wrap{

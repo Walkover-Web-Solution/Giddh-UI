@@ -3,7 +3,7 @@
 contactController = ($scope, $rootScope, $http) ->
   $scope.contact =
     "banner":
-      "mainHead": "support",
+      "mainHead": "marketing",
       "mainHead1": "@giddh.com",
       "subHead": "I would love to support you. I have a team working day and night for your support, sales or feature request.",
       "banBtnImgSrc": "/public/website/images/try.png",

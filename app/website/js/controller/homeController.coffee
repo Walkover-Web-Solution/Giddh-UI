@@ -32,7 +32,9 @@ homeController = ($scope, $rootScope, $timeout) ->
         },
         {
           "title": "Multi user",
-          "details": "Voila, I allow multi-user access too. Your accounts can be managed by several admins, accountants, and CA’s too…that too in real time. And what’s better is that entries can even be done OFF RECORD",
+          "details": "Voila, I allow multi-user access too. Your accounts can be managed
+ by several admins, accountants, and CA’s…that too in real time.
+ And what’s better is that entries can even be done OFF RECORD!",
           "imgSrc": "/public/website/images/multi_user.png",
           "imgTitle": "Multiple User"
         },

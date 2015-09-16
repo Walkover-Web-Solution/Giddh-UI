@@ -9,37 +9,37 @@ allPageController = ($scope) ->
         {
           "title": "Invoice",
           "details": "The business world rests upon transactions such as buying and selling every day in and day out. Invoice is a small formal document issued by the seller to the buyer which holds all the important information of the purchase regarding the quantity, price, discount, time of billing, taxes and due date, etc. literal meaning of invoice is to own or being owed. Most common forms of invoices today are Electronic invoices.",
-          "imgSrc": "/public/website/images/online_on_cloud.png",
+          "imgSrc": "/public/website/images/invoice.png",
           "imgTitle": "Online on Cloud"
         },
         {
           "title": "For small fishes",
           "details": "It is a blessing! In a small group of motivated people for who sky is the limit. Don’t have all the time to prepare invoices. Entrepreneurs can focus on business expansion rather than getting involved in accounts management which can be done by software alone. It saves hell lot of time along with the cost of labor. One thing you can be sure of in your organization will be invoicing with Giddh.",
-          "imgSrc": "/public/website/images/no_need_to_learn.png",
+          "imgSrc": "/public/website/images/for_small_fishes.png",
           "imgTitle": "No need to learn"
         },
         {
           "title": "The software",
           "details": "Invoice software is the latest fad in the industry! It is said to be great for small businesses and freelancers. As you can manage multiple accounts/customers simultaneously this ultimately leads to raised profits. This is the best means of managing invoices most efficiently and cost effectively. Enterprises that have less manpower and more work power benefit the best out of it. Giddh users have access to its invoicing service also for free. ",
-          "imgSrc": "/public/website/images/secure.png",
+          "imgSrc": "/public/website/images/the_software.png",
           "imgTitle": "Secure"
         },
         {
           "title": "Technically",
           "details": "Invoicing software has filled the time gaps! It is many folds faster in receiving payments online as compared to paper based invoicing ways. Creating invoices appeared to be quite tricky and on top of it were very time consuming. Using invoicing software is easy and faster to create and send professional looking invoices which are difficult to create otherwise. Invoicing software has increased the convenience and comfort hugely.",
-          "imgSrc": "/public/website/images/multi_user.png",
+          "imgSrc": "/public/website/images/technically.png",
           "imgTitle": "Multiple User"
         },
         {
           "title": "Online invoice creator",
           "details": "In this cut throat competitive market it is utmost important to keep up with the technology for slightest advancement in the industry. How can one lag in the accounts department, which is considered as the back bone of any business. Online invoice creator was formed in order to reduce the distance and time taken in delivery and payment receiving. Online invoice creator is now facilitated with the PDF converter as well.",
-          "imgSrc": "/public/website/images/recursive_entry.png",
+          "imgSrc": "/public/website/images/online_invoice_creator.png",
           "imgTitle": "Recursive Entry"
         },
         {
           "title": "Easy",
           "details": "Customers are the first priority for any business enterprise and using simple invoice software you top the list in customer care.  From production techniques to the packaging industry every sector of the business is growing at jet speed. You need to revamp you invoicing as well and with the new online invoice software you stay at par with the competitors. Online invoicing is more creative and advanced way of interacting with the customers.",
-          "imgSrc": "/public/website/images/search_export_api.png",
+          "imgSrc": "/public/website/images/easy.png",
           "imgTitle": "Export"
         }
       ]
@@ -50,37 +50,37 @@ allPageController = ($scope) ->
         {
           "title": "Yearn profits?",
           "details": "Your customer should get a bill for every purchase! If you are dissipating goods for free then it’s all together a different thing. But an apt billing system justifies your hard work in the form of correct bills. As if bills are computed correctly only then you get justified profits and that is all what you work hard for. Now with the new and easy billing software you get what you deserve.",
-          "imgSrc": "/public/website/images/online_on_cloud.png",
+          "imgSrc": "/public/website/images/yearn_profits.png",
           "imgTitle": "Online on Cloud"
         },
         {
           "title": "Online billing ",
           "details": "Technology again! Speed and time are the two factors which always fall short. The concept of online billing targets both of them equally. It saves time in the entire billing process and is the fastest way of billing in the industry. It frees half of the billing crew to do some other jobs while it finishes off half the task alone. This way it reduces the physical efforts as well!",
-          "imgSrc": "/public/website/images/no_need_to_learn.png",
+          "imgSrc": "/public/website/images/online_billing.png",
           "imgTitle": "No need to learn"
         },
         {
           "title": "Err not! ",
           "details": "Billing system software takes away the strain off your grey matter by performing major tasks on its own. It is a computer designed program which automatically computes the bill according to the utility and usage. Billing software solution is great as it is very accurate and designed to perform zero errors which can be expected when computed by humans as to err is human but we are not gods to forgive such mistakes!",
-          "imgSrc": "/public/website/images/secure.png",
+          "imgSrc": "/public/website/images/err_not.png",
           "imgTitle": "Secure"
         },
         {
           "title": "The awaited ",
           "details": "Bill software is what you have been looking for since long! It has reduced the headaches of many business personals and so will yours. Your wish of hassle free billing system is in action with the new software which is fully automated and works as per your terms and conditions. The technicians just have to fill in the standards like the price per quantity and et al, which is later computed by the software.",
-          "imgSrc": "/public/website/images/multi_user.png",
+          "imgSrc": "/public/website/images/the_awaited.png",
           "imgTitle": "Multiple User"
         },
         {
           "title": "Pay anytime ",
           "details": "A billing or invoicing software is the paper less way of computing and sending out bills. It is easier both for the customers as well as the business personnel. The customers can access the bill anytime and anywhere widening the scope for bill payment faster and easier. It has a good design with a good level of security. One has various options to secure his/her transactions on choice.",
-          "imgSrc": "/public/website/images/recursive_entry.png",
+          "imgSrc": "/public/website/images/pay_anytime.png",
           "imgTitle": "Recursive Entry"
         },
         {
           "title": "Sigh of relief ",
           "details": "Customer relations in small businesses are of utmost importance. At such times when you have a billing software doing the most annoying thing for your customers, you stay safe! It is annoying to continuously breathe down someone’s neck for payments. The software for billing in small business is very perfect for both customer care and business. It also retains the name small business by performing most of the tasks alone.",
-          "imgSrc": "/public/website/images/search_export_api.png",
+          "imgSrc": "/public/website/images/sigh_of_relief.png",
           "imgTitle": "Export"
         }
       ]
