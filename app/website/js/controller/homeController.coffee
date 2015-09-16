@@ -5,7 +5,7 @@ homeController = ($scope, $rootScope, $timeout) ->
     "banner":
       "mainHead": "Accounting is the foundation",
       "subHead": 'Accounting is the very first step of every successful business,\nstart using it today! You cannot build the foundation later.',
-      "p": "Giddh is an online accounting software for everyone",
+#      "p": "Giddh is an online accounting software for everyone",
       "imgSrc": "/public/website/images/screen.png",
       "imgTitle": "Giddh",
       "banBtnImgSrc": "/public/website/images/try.png",
@@ -13,46 +13,56 @@ homeController = ($scope, $rootScope, $timeout) ->
     "middle":
       "list": [
         {
-          "title": "Online on cloud",
-          "details": "Access your accounts anywhere and anytime you want, but of course you must have active Internet connection.",
+          "title": "Pocket accounting - anytime, anywhere",
+          "details": "Giddh is based on cloud computing. So it doesn't matter where you are, you can access your accounts anytime.",
           "imgSrc": "/public/website/images/online_on_cloud.png",
           "imgTitle": "Online on Cloud"
         },
         {
           "title": "No need to learn",
-          "details": "The biggest advantage of bringing me into use is that you will get familiar with me in less than 10 minutes. If you use me, you can use ANY accounting software.",
+          "details": "The interface and functionality is so simple that you'll get familiar with Giddh in less than 10 minutes. Have a transaction in mind or on paper? Giddh it!",
           "imgSrc": "/public/website/images/no_need_to_learn.png",
           "imgTitle": "No need to learn"
         },
         {
-          "title": "Secure",
-          "details": "As long as it is Giddh, you need not worry about data security. Your sensitive data is utmost secure with 256 bit SSL that is FIPS (Federal Information Processing Standard) certified – one of the strongest encryption methods out there. We keep data encrypted, if someone anyhow get the access of database, they will get this @#$@%$%^&^**, although it is impossible.",
+          "title": "256 bit SSL Security",
+          "details": "Your sensitive data is utmost secure with 256 bit SSL that is FIPS (Federal Information Processing Standard) certified – one of the strongest encryption methods out there.",
           "imgSrc": "/public/website/images/secure.png",
           "imgTitle": "Secure"
         },
         {
-          "title": "Multi user",
-          "details": "Voila, I allow multi-user access too. Your accounts can be managed
- by several admins, accountants, and CA’s…that too in real time.
- And what’s better is that entries can even be done OFF RECORD!",
+          "title": "Multi-user access",
+          "details": "Your accounts can be managed by several admins, accountants, and even CA’s, that too in real time.\nAnd what’s fun is that entries can even be done OFF RECORD.",
           "imgSrc": "/public/website/images/multi_user.png",
           "imgTitle": "Multiple User"
         },
         {
-          "title": "Recursive Entry",
-          "details": "There are some entries that are needed to be made every month. Forget them. I will remember all such recursive entries and alert you the same moment I do those entries",
-          "imgSrc": "/public/website/images/recursive_entry.png",
-          "imgTitle": "Recursive Entry"
-        },
-        {
-          "title": "Search, Export and API",
-          "details": "‘Search’ is the key feature I came to know about when our beta tester explored it. You can download your accounting data in CSV or PDF as per your need and convenience. Also, customization according to your need is possible by my API.",
+          "title": "API's for everything",
+          "details": "Still need to customize?\nGiddh offers you API's suiting your needs and requirements so that you can use them anywhere.",
           "imgSrc": "/public/website/images/search_export_api.png",
           "imgTitle": "Export"
+        },
+        {
+          "title": "Search and export on the go",
+          "details": "Search even the minute details and transactions with the easy to search feature. You can also download or export your accounting data in CSV or PDF as per your need and convenience.",
+          "imgSrc": "/public/website/images/search_export_api.png",
+          "imgTitle": "Search"
+        },
+        {
+          "title": "Assistance in analysis",
+          "details": "Giddh is not limited to transactions recording. It gives you immense help in analysis of your accounting data by providing you tools for it.",
+          "imgSrc": "/public/website/images/search_export_api.png",
+          "imgTitle": "Analysis"
+        },
+        {
+          "title": "Benefits for start-ups",
+          "details": "You have plenty of tasks other than maintaining accounts book, right?\nGo ahead and take up all the tasks that need your attention at first, because accounting is going to be easy with Giddh.",
+          "imgSrc": "/public/website/images/search_export_api.png",
+          "imgTitle": "Benefits"
         }
       ]
     "bottomContent":
-      "text": "These little features, with maximum simplicity makes me ",
+      "text": "The intuitive features with maximum simplicity makes accounting easy with",
       "imgSrc": "/public/website/images/backlogo.png",
       "altText": "Giddh"
 
@@ -64,14 +74,14 @@ homeController = ($scope, $rootScope, $timeout) ->
         $scope.home.banner.mainHead = 'Analyse BIG \nDATA'
         $scope.home.banner.subHead = 'Accounting is nothing but keeping your transactions in an efficient way. Your eyes could have limitations; let me show you everything in one shot.'
       when 1
-        $scope.home.banner.mainHead = 'Ant or \nElephant'
-        $scope.home.banner.subHead = 'Accounting is a breadth of every business; small business,\nstart-ups and even for a person. It makes you alive.\nOr atleast makes you feel.'
+        $scope.home.banner.mainHead = 'Stuck in complex accounting?'
+        $scope.home.banner.subHead = "Chuck it.\nGiddh isn't a math business. It's simple, intuitive and friendly.\nFrom big businesses to individuals, it's an online accounting software for everyone."
       when 2
-        $scope.home.banner.mainHead = 'Not for \nAccountants'
-        $scope.home.banner.subHead = 'I am not scary like you imagine accounts. I am simple, basic and very friendly and will never let you regret.'
+        $scope.home.banner.mainHead = "Not 'only' for accountants!"
+        $scope.home.banner.subHead = "Giddh is for people and businesses of all groups.\nWith a simple interface and a friendly design,\nyou'll never feel you are using an accounting software."
       when 3
-        $scope.home.banner.mainHead = 'Accounting is necessary'
-        $scope.home.banner.subHead = 'Our perception says accounting is the synonyms of necessities.\nOur purpose is to bring ease to your workflow.'
+        $scope.home.banner.mainHead = 'Backbone of a \nbusiness!'
+        $scope.home.banner.subHead = "Analysis of income-expenses, management of transactions \nand statement of profit-loss is a necessity. \nAnd it's a simple and user-firendly task with Giddh."
       when 4
         $scope.home.banner.mainHead = 'Accounting is the foundation'
         $scope.home.banner.subHead = 'Accounting is the very first step of every successful business,\nstart using it today! You cannot build the foundation later.'
