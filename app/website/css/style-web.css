@@ -121,15 +121,12 @@ html, body {
 /*structure styles*/
 #topSection {
   background: url(../images/orange.jpg) repeat scroll -100% -100% #D25A05;
-  min-height: 620px;
+  min-height: 520px;
   padding-bottom: 100px;
-  border-top: 7px solid #29251F;
 }
-
 #topSection.noMin {
   min-height: inherit;
 }
-
 #midSection {
   padding: 100px 0 30px;
 }
@@ -147,17 +144,18 @@ html, body {
   text-align: center;
   margin-top: 20px;
 }
-
+header{
+  background-color: rgba(0,0,0,.1);
+}
 /*navigation styles*/
 .navbar-brand {
   float: left;
   font-size: 18px;
-  height: 110px;
-  line-height: 110px;
+  height: 80px;
+  line-height: 80px;
   padding: 0;
-  margin-top: 15px;
+  margin-top: 20px;
 }
-
 .navbar {
   border: 0;
   margin-bottom: 0;
@@ -215,14 +213,14 @@ html, body {
 
 /*banner styles*/
 #banner {
-  margin-top: 60px;
+  margin-top: 40px;
   color: #f5f6ef
 }
 
 .h2i {
   font-size: 4.0em;
   letter-spacing: 0.03em;
-  margin: 0 0 15px;
+  margin: 20px 0 15px;
   padding: 0;
   text-shadow: -1px 0 0 #F5F6EF, 2px 2px 1px rgba(41, 37, 31, 0.06);
   line-height: 64px;
@@ -277,16 +275,13 @@ html, body {
 }
 
 #try {
-  padding: 10px 30px;
-  background: #060606;
   display: inline-block;
   cursor: pointer;
 }
 
 #try:hover {
-  background: #3f3f3f;
+  opacity: .9
 }
-
 /*list home page*/
 #indul li {
   width: 100%;
