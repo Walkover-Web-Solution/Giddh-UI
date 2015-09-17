@@ -62,29 +62,23 @@ homeController = ($scope, $rootScope, $timeout) ->
         }
       ]
     "bottomContent":
-      "text": "The intuitive features with maximum simplicity makes accounting easy with",
+      "text": "Intuitive features with maximum simplicity makes accounting easy with",
       "imgSrc": "/public/website/images/backlogo.png",
       "altText": "Giddh"
 
   $scope.changeText = ->
     $timeout $scope.changeText, 30000
-    id = parseInt(Math.random() * 4)
+    id = parseInt(Math.random() * 2)
     switch id
       when 0
-        $scope.home.banner.mainHead = 'Analyse BIG \nDATA'
-        $scope.home.banner.subHead = 'Accounting is nothing but keeping your transactions in an efficient way. Your eyes could have limitations; let me show you everything in one shot.'
-      when 1
         $scope.home.banner.mainHead = 'Stuck in complex accounting?'
         $scope.home.banner.subHead = "Chuck it.\nGiddh isn't a math business. It's simple, intuitive and friendly.\nFrom big businesses to individuals, it's an online accounting software for everyone."
-      when 2
+      when 1
         $scope.home.banner.mainHead = "Not 'only' for accountants!"
         $scope.home.banner.subHead = "Giddh is for people and businesses of all groups.\nWith a simple interface and a friendly design,\nyou'll never feel you are using an accounting software."
-      when 3
+      when 2
         $scope.home.banner.mainHead = 'Backbone of a \nbusiness!'
         $scope.home.banner.subHead = "Analysis of income-expenses, management of transactions \nand statement of profit-loss is a necessity. \nAnd it's a simple and user-firendly task with Giddh."
-      when 4
-        $scope.home.banner.mainHead = 'Accounting is the foundation'
-        $scope.home.banner.subHead = 'Accounting is the very first step of every successful business,\nstart using it today! You cannot build the foundation later.'
     return
   $timeout($scope.changeText, 30000)
 

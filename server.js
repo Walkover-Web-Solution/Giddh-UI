@@ -84,12 +84,6 @@ app.get('/privacy', function(req, res, next) {
 app.get('/terms', function(req, res, next) {
   res.sendFile("terms.html", options1);
 });
-app.get('/billing', function(req, res, next) {
-  res.sendFile("billing.html", options1);
-});
-app.get('/accountingbook', function(req, res, next) {
-  res.sendFile("accountingbook.html", options1);
-});
 app.get('/why-giddh', function(req, res, next) {
   res.sendFile("whyGiddh.html", options1);
 });
