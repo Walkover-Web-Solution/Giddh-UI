@@ -9,6 +9,19 @@ var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
 
+/*
+//commented not in use modified by sarfaraz
+var routes = require('./routes/index');
+var users = require('./routes/users');
+app.use('/', routes);
+app.use('/users', users);
+*/
+
+
+
+
+
+
 //Example POST method invocation 
 var Client = require('node-rest-client').Client; 
 var client = new Client();
@@ -19,7 +32,7 @@ var cors = require('cors')
 var app = express();
 
 var userDetailObj = {};
-var port = process.env.PORT || 5252;
+var port = process.env.PORT || 8000;
 //enabling cors
 app.use(cors())
 
@@ -93,38 +106,69 @@ app.get('/login', function(req, res, next) {
 
 /*
  |--------------------------------------------------------------------------
- | Error Handlers
+ | for serve app only templates files after login
  |--------------------------------------------------------------------------
 */
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Page Not Found');
-  err.status = 404;
-  next(err);
+var options = {
+  root: __dirname + '/public/webapp/views',
+  dotfiles: 'deny',
+  headers: {
+      'x-timestamp': Date.now(),
+      'x-sent': true
+  }
+};
+app.get('/app/*', function (req, res, next) {
+  console.log(req.session.name, "in app", userDetailObj)
+  if (req.session.name != undefined){
+    res.sendFile("index.html", options);
+  }
+  else{
+    res.redirect('/login');
+  }
 });
 
-// development error handler
-// will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    var filePath = __dirname + '/public/website/views/error';
-    res.render(filePath, {
-      message: err.message,
-      error: err
-    });
-  });
-}
 
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  var filePath = __dirname + '/public/website/views/error';
-  res.render(filePath, {
-    message: err.message,
-    error: {}
+/*
+ |--------------------------------------------------------------------------
+ | Login with Google
+ |--------------------------------------------------------------------------
+*/
+app.post('/reports', function(req, res, next){
+  console.log("reports loading", req.session.name);
+});
+
+app.post('/auth/google', function(req, res) {
+  console.log("in request");
+  var accessTokenUrl = 'https://accounts.google.com/o/oauth2/token';
+  var peopleApiUrl = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect';
+  var params = {
+    code: req.body.code,
+    client_id: req.body.clientId,
+    client_secret: "9ejAFtIyKTQz2KuAXmD-jN68",
+    redirect_uri: req.body.redirectUri,
+    grant_type: 'authorization_code'
+  };
+
+  // Step 1. Exchange authorization code for access token.
+  request.post(accessTokenUrl, { json: true, form: params }, function(err, response, token) {
+    var accessToken = token.access_token;
+    var headers = { Authorization: 'Bearer ' + accessToken };
+
+    // Step 2. Retrieve profile information about the current user.
+    request.get({ url: peopleApiUrl, headers: headers, json: true }, function(err, response, profile) {
+      if (profile.error) {
+        return res.status(500).send({message: profile.error.message});
+      }
+      console.log(response.body, "auth response");
+      var token = jwt.encode(response, params.client_secret);
+
+      //var decoded = jwt.decode(token, params.client_secret);
+      //console.log(decoded)
+      userDetailObj = response.body;
+      req.session.name = response.body.email
+      res.send({ token: token, userDetails : response.body });
+
+    });
   });
 });
 
@@ -178,46 +222,6 @@ app.post('/submitContactDetail', function(req, res) {
   
 
 })
-
-
-/*
- |--------------------------------------------------------------------------
- | Login with Google
- |--------------------------------------------------------------------------
-*/
-app.post('/auth/google', function(req, res) {
-  var accessTokenUrl = 'https://accounts.google.com/o/oauth2/token';
-  var peopleApiUrl = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect';
-  var params = {
-    code: req.body.code,
-    client_id: req.body.clientId,
-    client_secret: "9ejAFtIyKTQz2KuAXmD-jN68",
-    redirect_uri: req.body.redirectUri,
-    grant_type: 'authorization_code'
-  };
-
-  // Step 1. Exchange authorization code for access token.
-  request.post(accessTokenUrl, { json: true, form: params }, function(err, response, token) {
-    var accessToken = token.access_token;
-    var headers = { Authorization: 'Bearer ' + accessToken };
-
-    // Step 2. Retrieve profile information about the current user.
-    request.get({ url: peopleApiUrl, headers: headers, json: true }, function(err, response, profile) {
-      if (profile.error) {
-        return res.status(500).send({message: profile.error.message});
-      }
-      console.log(response.body, "auth response");
-      var token = jwt.encode(response, params.client_secret);
-
-      //var decoded = jwt.decode(token, params.client_secret);
-      //console.log(decoded)
-      userDetailObj = response.body;
-      req.session.name = response.body.email
-      res.send({ token: token, userDetails : response.body });
-
-    });
-  });
-});
 
 /*
  |--------------------------------------------------------------------------
@@ -275,5 +279,41 @@ app.listen(port, function(){
 
 
 
+/*
+ |--------------------------------------------------------------------------
+ | Error Handlers
+ |--------------------------------------------------------------------------
+*/
+
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Page Not Found');
+  err.status = 404;
+  next(err);
+});
+
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    var filePath = __dirname + '/public/website/views/error';
+    res.render(filePath, {
+      message: err.message,
+      error: err
+    });
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  var filePath = __dirname + '/public/website/views/error';
+  res.render(filePath, {
+    message: err.message,
+    error: {}
+  });
+});
 
 module.exports = app;
