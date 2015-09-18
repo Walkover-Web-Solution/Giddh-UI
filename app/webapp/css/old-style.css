@@ -1,0 +1,141 @@
+@charset "utf-8";
+/*
+________/\\\\\\\\\\\\______
+_______/\\\/////////\\_____
+______\//\\\______\///_____
+_______\////\\\____________
+__________\////\\\_________
+_____________\////\\\______
+______/\\\______\//\\\_____
+_____\///\\\\\\\\\\\/______
+______\////////////________
+
+  TITLE:    Styles for giddh.com
+  AUTHOR:   @Sarfaraz
+  VERSION:  1
+*/
+
+* { margin:0; padding:0; }
+body, input, textarea, select { font-family:Helvetica Neue, Helvetica, Arial, sans-serif; }
+body { background:#fefff8; }
+/*------------------------------------common color css start from here-----------*/
+a:focus { outline:none; }
+a:link { text-decoration:none; }
+body, .grey, #footer a { color: #50514B; }
+.white, #nav li a:link { color:#fff; }
+.lwit { color:#F5F6EF; }
+#nav li a:visited, #nav li a:hover { color: #f8f9f2; }
+a:link, a:visited, a:active, .readmore, #footer a:hover, .dflt a { color: #D25A05; }
+/*------------------------------------common css start from here-----------*/
+.tmarg { margin-top:15px; }
+.lmarg { margin-left:15px; }
+.rmarg { }
+.bmarg { margin-bottom:15px; }
+.fltl { float:left; }
+.fltr { float:right; }
+.clr { clear:both; }
+.dnone { display:none; }
+.dblock { display:block; }
+.dinblock { display:inline-block; }
+.ln { list-style:none; }
+h1, h2, h3, h4, h5 { font-weight:normal; }
+.cntr { text-align:center; }
+.cmarg { margin:0 auto; }
+/*------------------------------------structure css start from here-----------*/
+#wrapper { background:url(../images/orange.jpg) repeat scroll -100% -100% #D25A05; height:620px; border-top:7px solid #29251F; }
+.wrap { width:960px; margin:0 auto; }
+#header { height:110px; }
+#logo { margin-top:20px; }
+#container { padding:70px 0 30px; }
+#mainline { padding:40px 0; background:url(../images/orange.jpg) repeat scroll -100% -100% #D25A05; }
+#footer { padding:20px 0; border-top:1px solid #ccc; font-size:13px; }
+/*------------------------------------navigation css start from here-----------*/
+#nav { padding-top:45px; font-family:"TrumpGothicEastRegular", "Arial Narrow", Impact, Calibri, Arial, sans-serif; font-size:1.6em; text-transform: uppercase;  -webkit-transition: padding .3s ease;
+ -moz-transition: padding .3s ease;
+ transition: padding .3s ease;
+letter-spacing: 1.6px; }
+#nav li { float:right; }
+#nav li a:link { padding:10px 15px; display:block; }
+#nav li a:visited, #nav li a:hover {  -webkit-transition: background .2s ease-in;
+ -moz-transition: background .2s ease-in;
+ transition: background .2s ease-in;
+}
+#nav li a:hover, #nav li.active a { text-shadow: 0 2px 1px rgba(41, 37, 31, 0.2); background: rgba(41, 37, 31, 0.3); zoom: 1;  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=#4C000000, endColorstr=#4C000000); /* IE 6 & 7 */
+-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#4C000000,endColorstr=#4C000000)"; /* IE8 */ }
+/*------------------------------------banner css start from here-----------*/
+#banner { margin-top:60px; position:relative; }
+.tips { margin-top:15px; }
+#mainline, .tips { font-family: "MochaMattari", "Helvetica Neue", Helvetica, Calibri, Arial, sans-serif; font-size: 2.5em; letter-spacing: 0.01em; }
+#mainline { color:#fff; }
+.h2, .h2i, .tipcnt, .lghead { width:100%; }
+.h2, .h2i, .tipcnt, .h2s, .lghead { font-family: "MochaMattari", "Helvetica Neue", Helvetica, Calibri, Arial, sans-serif; word-wrap: break-word; }
+.tipcnt { font-size:3.5em; text-align:center; margin-top:20px; }
+.h2 { font-size: 8.5em; letter-spacing: 0.03em; margin: 0 0 15px; padding: 0; text-shadow: -1px 0 0 #F5F6EF, 2px 2px 1px rgba(41, 37, 31, 0.06); display: block; line-height:150px; }
+.h2i { font-size: 4.0em; letter-spacing: 0.03em; margin: 0 0 15px; padding: 0; text-shadow: -1px 0 0 #F5F6EF, 2px 2px 1px rgba(41, 37, 31, 0.06); display: block; line-height:64px; }
+.lghead { font-size: 4.5em; letter-spacing: 0.03em; margin: 0 0 15px; padding: 0; display: block; line-height:80px; color:rgba(41, 37, 31, 0.3); }
+.h2s { font-size: 5.0em; letter-spacing: 0.03em; padding: 0; text-shadow: -1px 0 0 #F5F6EF, 2px 2px 1px rgba(41, 37, 31, 0.06); display:inline; line-height:64px; }
+.h3 { margin-bottom: 25px; font-family:"TrumpGothicEastRegular", "Arial Narrow", Impact, Calibri, Arial, sans-serif; letter-spacing: 1px; margin-bottom: 15px; text-transform: uppercase; }
+.h3, .h4 { font-size: 1.75em; line-height: 1.5em; }
+.h4 { color: #29251F; font-family: "TrumpGothicEastMedium", "Arial Narrow", Impact, Calibri, Arial, sans-serif; letter-spacing: 1px; margin-bottom: 0.3em; text-align: left; text-transform: uppercase; margin-bottom:7px; }
+#cmnline { background:url(../images/thanks.png) no-repeat; width:960px; height:80px; }
+#indul li { width: 100%; margin:0 0 40px 0; border-bottom:1px solid #e9ebdc; padding-bottom:40px; height:200px; }
+#indul li:nth-child(6n) {
+ margin:0 0 0 0;
+}
+#cmnul li { width: 295px; margin:0 25px 15px 0; }
+.readmore { -moz-transition: padding 0.2s ease-in 0s; background-position: right 4px; cursor:pointer; }
+.readmore:hover, .dflt a:hover { text-decoration:underline; }
+#footer a { margin:0 10px; }
+.form, input, textarea, #contact-detail { font-family:"TrumpGothicEastRegular", "Arial Narrow", Impact, Calibri, Arial, sans-serif; letter-spacing: 1px; }
+.cmnp { font-size: 1em; margin-bottom: 2px; }
+.lable { font-size: 1.5em; }
+.hd, .inpt, .textar, #messg { margin-bottom:20px; font-size:1.8em }
+.inpt, .textar { width:90%; padding-left:5px; background:#fefff8; border:none; border-left:1px solid #ccc; border-bottom:1px solid #ccc; outline:none; }
+.inpt:focus, .textar:focus { outline:none; }
+.inpt { height:40px; }
+.btn { background:#D25A05; border:1px solid #a34400; color:#fff; width:200px; height:60px; font-size:2.5em; cursor:pointer; -moz-transition:0.3s ease 0s; }
+.btn:hover { background:#50514B; border:1px solid #292a26; }
+#trywrap { position:absolute; top:400px; left:50%; margin-left:-168px }
+#try { width:276px; height:66px; padding:10px 30px; background:#060606; display:inline-block; cursor:pointer; }
+#try:hover { background:#3f3f3f; }
+#cost { width:400px; height:66px; }
+.wid500 { width:400px; padding:0 50px; }
+.wid450 { width:450px; }
+/*----------------------------------social icons css start from here-----*/
+.socialwrap, #trywrap { -moz-transition:0.3s ease 0s; }
+.scicn { width:34px; height:34px; background:url(../images/social_icons.png) no-repeat; margin:10px 15px 0 0; }
+.scicn:hover { opacity:0.5; }
+.gplus { background-position:0 0; }
+.fb { background-position:-40px 0; }
+.twit { background-position:-120px 0; }
+.in { background-position:-80px 0; }
+.yt { background-position:-160px 0; }
+.rss { background-position:-200px 0; }
+.button { border: medium none; cursor: pointer; display: inline-block; padding: 4px 10px; position: relative; text-decoration: none; text-shadow: 0 1px rgba(0, 0, 0, 0.3); }
+.button.white { background: none repeat scroll 0 0 #F3F3F3; border: 1px solid #BBBBBB; color: #444444; text-shadow: 0 1px 0 #FFFFFF; display:block; margin-bottom:15px; }
+.button.white:hover { border-color: #999999; box-shadow: 0 1px 10px rgba(0, 0, 0, 0.15); }
+.loginlogos { background-image: url("http://images.giddh.com/loginlogos.png"); display: block; height: 30px; width: 120px; }
+.openid { background-position: 0 -90px; }
+.yahoo { background-position: 0 -60px; }
+.google { background-position: 0 -30px; }
+.facebook { background-position: 0 0; }
+#lgdiv { background:#fefff8; margin-top:20px; padding:50px 0; }
+#lglink { position:absolute; right:100px; top:16px; }
+#fkdiv { background:#060606; width:355px; height:80px; display:inline-block; }
+#welcome { background:url(../images/welcnt.png) no-repeat; width:510px; height:90px; }
+/*---------------------------slider css start from here-----------------*/
+#slide-left { width:430px; }
+#thead { font-family: "TrumpGothicEastMedium", "Arial Narrow", Impact, Calibri, Arial, sans-serif; letter-spacing: 1px; font-size:28px; color:#ffbe8c; font-weight:normal; }
+.bnpnt li { line-height:18px; margin-bottom:8px; }
+#slide-right { width:530px; }
+.play_button { height: 100px; left:67%; position: absolute; top: 130px; width: 100px; z-index: 9999; }
+.play_button a { background: url("../images/play_button.png") no-repeat 0 -122px; display: block; height: 100%; width: 100%; }
+.play_button a:hover { background-position:0 0; }
+.lgbtn { height:64px; width:180px; background:#333; margin-left:20px; cursor:pointer; }
+.lgbtn:hover { background:rgba(41, 37, 31, 0.3); }
+.lgbtn a img { display:block; margin-top:16px; }
+#dasheddiv { border-bottom:5px dashed #ccc; height:20px; margin-bottom:20px; }
+#video-box { background: none repeat scroll 0 0 #D6D6D6; box-shadow: 0 6px 10px #000000; height: 360px; margin-top: 30px; padding: 15px; width: 640px; }
+#prnat { height:70px; clear:both; width:640px; margin:0 auto; }
+.pr{ position:relative;}   a.suggestIdea { position:fixed; right:6%; bottom:0;  background: url("suggestGidds.png") no-repeat; width:48px; height:46px; display: block;  }
+ a.suggestIdea:hover{ opacity:0.7}

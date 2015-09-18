@@ -1,0 +1,27 @@
+@charset "utf-8";
+/*
+________/\\\\\\\\\\\\______
+_______/\\\/////////\\_____
+______\//\\\______\///_____
+_______\////\\\____________
+__________\////\\\_________
+_____________\////\\\______
+______/\\\______\//\\\_____
+_____\///\\\\\\\\\\\/______
+______\////////////________
+
+  TITLE:    Styles for giddh.com
+  AUTHOR:   @Sarfaraz
+  VERSION:  1
+*/
+header .navbar{
+	min-height: 45px;
+	border: 0;
+	margin: 0;
+	padding: 0;
+	background-color: #d35f29;
+}
+header .navbar-btn.btn-sm{
+}
+
+body { padding-top: 50px; }

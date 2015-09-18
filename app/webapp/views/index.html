@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html lang="en" ng-app='giddhWebApp'>
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content=""/>
+    <meta name="keywords" content=""/>
+    <title>Giddh ~ Accounting at its Rough! Angular js</title>
+    <!-- LIBRARIES INCLUDE -->
+    <script src='/bower_components/modernizr/modernizr.js'></script>
+    <script src='/bower_components/jquery/jquery.min.js'></script>
+    <script src="/bower_components/angular/angular.min.js"></script>
+    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="/bower_components/satellizer/satellizer.js"></script>
+    <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
+    <script src="/bower_components/angular-route/angular-route.min.js"></script>
+    <script src="/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+    <script src="/bower_components/angular-translate/angular-translate.min.js"></script>
+    <script src="/bower_components/angular-ui-tree/dist/angular-ui-tree.min.js"></script>
+    <script src="/bower_components/angular-mocks/angular-mocks.js"></script>
+    <script src="/bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+    <script src="/bower_components/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js"></script>
+    <script src="/public/webapp/js/directive/angular-perfect-scrollbar.js"></script>
+
+    <!-- including all controllers and app -->
+    <script src="/public/webapp/js/app.js"></script>
+    <script src="/public/webapp/js/controller/mainController.js"></script>
+    <script src="/public/webapp/js/controller/homeController.js"></script>
+    <!-- lib styles include -->
+    <link rel="stylesheet" type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/bower_components/perfect-scrollbar/css/perfect-scrollbar.min.css">
+
+    <!-- manual styles include-->
+    <!-- <link rel="stylesheet" type="text/css" href="/public/webapp/css/old-style.css"> -->
+    <link rel="stylesheet" type="text/css" href="/public/webapp/css/new-style.css">
+</head>
+<body ng-controller="mainController">
+    <div ng-include="'/public/webapp/views/header.html'"></div>
+    <!-- main content loaded below here -->
+    <div ng-view=""></div>
+</body>
+</html>
+
