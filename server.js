@@ -127,18 +127,33 @@ app.get('/app/*', function (req, res, next) {
   }
 });
 
+/*logout*/
+app.post('/logout', function(req, res, next){
+  console.log(req.body, "in logout request")
+  req.session.destroy();
+  res.json({ status: 'success' });
+});
+
+/*
+ |--------------------------------------------------------------------------
+ | hit APIs for get data getBasicDetails
+ |--------------------------------------------------------------------------
+*/
+app.get('/getBasicDetails', function(req, res, next){
+  console.log(req, "in get getBasicDetails");
+  res.json({success : "success"})
+});
+
+
+
 
 /*
  |--------------------------------------------------------------------------
  | Login with Google
  |--------------------------------------------------------------------------
 */
-app.post('/reports', function(req, res, next){
-  console.log("reports loading", req.session.name);
-});
-
-app.post('/auth/google', function(req, res) {
-  console.log("in request");
+app.post('/auth/google', function(req, res, next) {
+  console.log("in auth google request");
   var accessTokenUrl = 'https://accounts.google.com/o/oauth2/token';
   var peopleApiUrl = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect';
   var params = {
@@ -162,11 +177,33 @@ app.post('/auth/google', function(req, res) {
       console.log(response.body, "auth response");
       var token = jwt.encode(response, params.client_secret);
 
-      //var decoded = jwt.decode(token, params.client_secret);
-      //console.log(decoded)
+      console.log("in get success")
+      //knowing if user is verified in giddh
+      var authUrl = "http://54.169.180.68:8080/giddh-api/users/auth-key?userEmail=systemadmin@giddh.com";
+      args = {
+        headers:{"Content-Type": "application/json"} 
+      }
       userDetailObj = response.body;
-      req.session.name = response.body.email
-      res.send({ token: token, userDetails : response.body });
+
+      client.get(authUrl, args, function(data,response) {
+          console.log(data, "data in client post by authUrl");
+
+          if (data.status == "error"){
+            //do nothing
+          }
+          else{
+            userDetailObj.uniqueName =  data.body.uniqueName;
+            req.session.name = data.body.authKey
+            console.log(userDetailObj)
+          }
+          res.send({ 
+            token: token, 
+            userDetails : userDetailObj,
+            result : data
+          });         
+      });
+      
+      
 
     });
   });

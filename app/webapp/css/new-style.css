@@ -14,8 +14,10 @@ ______\////////////________
   AUTHOR:   @Sarfaraz
   VERSION:  1
 */
+/*imp for fixed navigation*/
+body {padding-top: 54px}
 header .navbar{
-	min-height: 45px;
+	min-height: 54px;
 	border: 0;
 	margin: 0;
 	padding: 0;
@@ -23,5 +25,143 @@ header .navbar{
 }
 header .navbar-btn.btn-sm{
 }
+header .navbar-nav > li.active{
+	margin-left: -15px;
+}
+/*header nav links override*/
+.navbar-inverse .navbar-nav > li > a{
+	color: #fff;
+	 border-right: 1px solid rgba(255, 255, 255, 0.3);
+	 line-height: 24px;
+}
+.navbar-inverse .navbar-text{
+	color: #fff;
+}
+.navbar-right{
+	border-left: 1px solid rgba(255, 255, 255, 0.3)
+}
+.navbar-inverse .navbar-nav > .active > a, 
+.navbar-inverse .navbar-nav > .active > a:focus, 
+.navbar-inverse .navbar-nav > .active > a:hover
+{
+	background-color: rgba(0, 0,0,.2);
+}
+.navbar-inverse .navbar-nav > li > a:hover{
+	background-color: rgba(0, 0,0,.2);
+}
+#cmpWrp{
+	padding-top: 0;
+	padding-bottom: 0;
+}
+#cmpWrp i{
+	float: left;
+	margin: 15px 0 ;
+}
+#cmpWrp .cText{
+	float: left;
+	margin: 8px 0 0 10px;
+}
+.cText span{
+	display: block;
+}
+.cName{
+	font-size: 15px;
+  line-height: 20px;
+  min-width: 130px;
+  text-transform: uppercase;
+}
+.cDate{
+	font-size: 11px;
+	line-height: 16px;
+}
+#hdrbtWrp{
+	padding:12px 15px
+}
+/*dashboard panel*/
+/*Dashboard*/
+.dshUl{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.dshUl > li {
+  background: rgba(25, 25, 25, .85);
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  float: left;
+}
 
-body { padding-top: 50px; }
+.dshUl > li > a {
+  display: block;
+  width: 240px;
+  padding: 22px;
+  color: #fff;
+  text-decoration: none;
+  border-right: 1px solid rgba(256, 256, 256, .2)
+
+}
+
+.dshUl > li:hover {
+  background: rgba(63, 63, 63, .9);
+}
+.dshUl li .icon48 {
+  float: left;
+  margin-right: 15px
+}
+
+.dshUl li .title {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 5px;
+    text-transform: uppercase
+}
+
+.dshUl li .subTitle {
+    font-size: 11px;
+}
+
+
+
+/*icons style*/
+[class^="gic-"]{
+	background-image: url(../images/iconset.png);
+	background-repeat: no-repeat;
+}
+[class^="gic-48"]{
+	width: 48px;
+	height: 48px;
+	display: block;
+}
+[class^="gic-24"]{
+	width: 24px;
+	height: 24px;
+	display: block;
+}
+/*48px icons*/
+.icon-tb {
+    background-position: 0 -792px
+}
+.icon-ew {
+    background-position: 0 -840px
+}
+
+.icon-lw {
+    background-position: 0 -888px
+}
+
+.icon-pnl {
+    background-position: 0 -936px
+}
+
+.icon-bs {
+    background-position: 0 -984px
+}
+/*24px icons*/
+.icon-menu-w {
+    background-position: -24px -216px
+}
+.icon-building-w {
+    background-position: -24px -768px
+}
+.icon-user {
+    background-position: 0 -360px
+}

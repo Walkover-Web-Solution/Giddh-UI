@@ -14,13 +14,24 @@ app = angular.module("giddhWebApp",
 	]
 )
 
-app.config ($routeProvider) ->
+app.config (localStorageServiceProvider) ->
+  localStorageServiceProvider.setPrefix 'giddh'
+
+app.config ($locationProvider, $routeProvider) ->
+  # $locationProvider.html5Mode({
+  # 	enabled: true,
+  # 	requireBase: false
+  # })
   $routeProvider
 	  .when('/home',
 	  	controller : 'homeController',
-	  	templateUrl: '/public/webapp/views/home.html')
+	  	templateUrl: '/public/webapp/views/home.html'
+	  )
+	  .when('/thankyou',
+	  	controller : 'homeController',
+	  	templateUrl: '/public/webapp/views/thanks.html'
+	  )
 	  .otherwise redirectTo: '/home'
-	  return
 
 app.run(($rootScope, $http, $templateCache)->
   #$rootScope.$on '$viewContentLoaded', ->

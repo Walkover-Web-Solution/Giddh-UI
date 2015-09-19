@@ -4,10 +4,22 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
   
   $scope.authenticate = (provider) ->
     $auth.authenticate(provider).then((response) ->
-      console.log response, 'You have successfully created a new account'
-      console.log "in status", response.data.userDetails
-      localStorageService.set("_userDetails", response.data.userDetails);
-      window.location = "/app/"
+      console.log "in authenticate status", response
+      
+      if response.data.result.status is "error"
+        #user is not registerd with us
+        toastr[response.data.result.status](response.data.result.error);
+        $timeout (->
+          window.location = "/beta"
+        ), 3000
+      else
+        #user is registered and redirect it to app
+        localStorageService.set("_userDetails", response.data.userDetails);
+        window.location = "/app/"
+
+      
+
+      #window.location = "/app/"
     ).catch (response) ->
       console.log response
 
