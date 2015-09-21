@@ -21,8 +21,10 @@
     <script src="/bower_components/angular-ui-tree/dist/angular-ui-tree.min.js"></script>
     <script src="/bower_components/angular-mocks/angular-mocks.js"></script>
     <script src="/bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+    <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
     <script src="/bower_components/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js"></script>
     <script src="/public/webapp/js/directive/angular-perfect-scrollbar.js"></script>
+    <script type="text/javascript" src="/bower_components/toastr/toastr.min.js"></script>
 
     <!-- including all controllers and app -->
     <script src="/public/webapp/js/app.js"></script>
@@ -31,15 +33,21 @@
     <!-- lib styles include -->
     <link rel="stylesheet" type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/bower_components/perfect-scrollbar/css/perfect-scrollbar.min.css">
+    <link rel="stylesheet" type="text/css" href="/bower_components/toastr/toastr.min.css">
 
     <!-- manual styles include-->
     <!-- <link rel="stylesheet" type="text/css" href="/public/webapp/css/old-style.css"> -->
     <link rel="stylesheet" type="text/css" href="/public/webapp/css/new-style.css">
+
+    <script src="/public/webapp/js/service/createCompanyService.js"></script>
+    <!--<script src="/public/webapp/js/service/homeControllerServices.js"></script>-->
 </head>
 <body ng-controller="mainController">
     <div ng-include="'/public/webapp/views/header.html'"></div>
     <!-- main content loaded below here -->
     <div ng-view=""></div>
+
+
 </body>
 </html>
 

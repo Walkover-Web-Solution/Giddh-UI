@@ -165,3 +165,9 @@ header .navbar-nav > li.active{
 .icon-user {
     background-position: 0 -360px
 }
+
+/*structure style*/
+.lgreyBg{
+	background-color: #f5f5f5;
+}
+

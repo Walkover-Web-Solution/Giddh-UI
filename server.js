@@ -32,6 +32,9 @@ var cors = require('cors')
 var app = express();
 
 var userDetailObj = {};
+//for test environment
+var envUrl = "http://54.169.180.68:8080/giddh-api/";
+
 var port = process.env.PORT || 8000;
 //enabling cors
 app.use(cors())
@@ -126,6 +129,10 @@ app.get('/app/*', function (req, res, next) {
     res.redirect('/login');
   }
 });
+// thanks page
+app.get('/thanks', function(req, res, next) {
+  res.sendFile("thanks.html", options);
+});
 
 /*logout*/
 app.post('/logout', function(req, res, next){
@@ -138,14 +145,50 @@ app.post('/logout', function(req, res, next){
  |--------------------------------------------------------------------------
  | hit APIs for get data getBasicDetails
  |--------------------------------------------------------------------------
+ cNeL1CM3PrcDGfOSn-xdsp6g6lszrkjlAMDAY2SGBxbsibIwyWqrMK5UyzfUk4nil5FwZuvmsqq8BMAsyg374BKfHIVqWhFyFf9z2HPhZXM=
 */
-app.get('/getBasicDetails', function(req, res, next){
-  console.log(req.sessionStore, "in get getBasicDetails");
-  res.json({success : "success"})
+//some universal var for hitting apis
+var onlySmpHead = {
+  headers:{"Content-Type": "application/json"} 
+}
+
+
+app.get('/getCompanyList', function(req, res, next){
+  console.log("in get getCompanyList");
+  var onlyAuthHead = {
+    headers:{"Auth-Key":req.session.name} 
+  }
+  var hUrl = envUrl+"company/";
+  
+  client.get(hUrl, onlyAuthHead, function(data,response) {
+    console.log(data, "data in company list for user");
+    res.send(data);         
+  });
+
 });
 
+//get details of a single company
+app.get('/getCompanyDetails', function(req, res){
+  console.log("in get getBasicDetails");
+});
 
-
+//create new company
+app.post('/createCompany', function(req, res){
+  console.log("in createCompany", req.body)
+  hUrl = envUrl+"company/";
+  args = {
+    headers:{
+      "Auth-Key": req.session.name,
+      "Content-Type": "application/json"
+    },
+    data: req.body 
+  }
+  console.log("making req", args)
+  client.post(hUrl, args, function(data,response) {
+    console.log(data, "data in company list for user");
+    res.send(data);         
+  });
+})
 
 /*
  |--------------------------------------------------------------------------
@@ -179,7 +222,7 @@ app.post('/auth/google', function(req, res, next) {
 
       console.log("in get success")
       //knowing if user is verified in giddh
-      var authUrl = "http://54.169.180.68:8080/giddh-api/users/auth-key?userEmail=systemadmin@giddh.com";
+      var authUrl = envUrl+"users/auth-key?userEmail="+response.body.email;
       args = {
         headers:{"Content-Type": "application/json"} 
       }
@@ -192,7 +235,7 @@ app.post('/auth/google', function(req, res, next) {
             //do nothing
           }
           else{
-            userDetailObj.uniqueName =  data.body.uniqueName;
+            userDetailObj.userUniqueName =  data.body.uniqueName;
             req.session.name = data.body.authKey
             console.log(userDetailObj)
           }

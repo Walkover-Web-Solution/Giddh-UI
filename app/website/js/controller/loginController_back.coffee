@@ -13,6 +13,7 @@ loginBackController = ($scope, $rootScope, $http, $timeout, $auth, localStorageS
         ), 3000
       else
         #user is registered and redirect it to app
+        console.log response.data.userDetails
         localStorageService.set("_userDetails", response.data.userDetails)
         window.location = "/app/"
     ).catch (response) ->

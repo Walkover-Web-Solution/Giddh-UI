@@ -11,6 +11,7 @@ app = angular.module("giddhWebApp",
 		"perfect_scrollbar"
 		"ui.tree"
 		"ngSanitize"
+		"ui.bootstrap"
 	]
 )
 
@@ -25,7 +26,8 @@ app.config ($locationProvider, $routeProvider) ->
   $routeProvider
 	  .when('/home',
 	  	controller : 'homeController',
-	  	templateUrl: '/public/webapp/views/home.html'
+	  	templateUrl: '/public/webapp/views/home.html',
+	  	firstTimeUser : false
 	  )
 	  .when('/thankyou',
 	  	controller : 'homeController',
@@ -36,3 +38,8 @@ app.config ($locationProvider, $routeProvider) ->
 app.run(($rootScope, $http, $templateCache)->
   console.log "app init"
 )
+
+#for project lib helps check out
+#bootstrap related - http://angular-ui.github.io/bootstrap/#/tooltip
+#LocalStorageModule - https://github.com/grevory/angular-local-storage
+#perfect_scrollbar - perfect_scrollbar

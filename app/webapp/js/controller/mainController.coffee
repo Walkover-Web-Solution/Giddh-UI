@@ -1,12 +1,34 @@
 "use strict"
 
-mainController = ($scope, $rootScope, $timeout, $http, localStorageService, $location) ->
+mainController = ($scope, $rootScope, $timeout, $http, localStorageService, $location, createCompanyService) ->
 
-	$rootScope.getBasicDetails = ->
+	$scope.dynamicTooltip = 'Hello, World!';
+
+	#this var contains all basic info of user
+	$rootScope.basicInfo = {}
+
+	
+
+
+
+
+	#for get localStorage items by key
+	$rootScope.getItem =(key) ->
+		localStorageService.get(key)
+
+	$rootScope.getCompanyList = ->
 		try
-			$http.get('/getBasicDetails').then ((response) ->
-				console.log "in getBasicDetails"
+			$http.get('/getCompanyList').then ((response) ->
+				console.log "in getCompanyList"
 				console.log response
+				if response.data.status is "error"
+					#taking user to create company dialog
+					$rootScope.openFirstTimeUserModal()
+				else
+					#doing something
+					$rootScope.mngCompDataFound = true
+					
+
 			), (response) ->
 		catch e
 			throw new Error(e.message);
@@ -17,23 +39,23 @@ mainController = ($scope, $rootScope, $timeout, $http, localStorageService, $loc
 				
 	##logout calling
 	$scope.logout = ->
-		console.log "vipin farzi"
 		try
 			$http.post('/logout').then ((response) ->
 				console.log "in logout response"
 				console.log response
 				localStorageService.remove("_userDetails")
-				#$location.path('/thankyou')
 				window.location = "/thanks"
 			), (response) ->
 				#console.log response
 		catch e
 			throw new Error(e.message);
 	
+	
 
 	$rootScope.$on '$viewContentLoaded', ->
 		console.log "view ready"
-		$rootScope.getBasicDetails()
+		$rootScope.getCompanyList()
+		$rootScope.basicInfo = $rootScope.getItem("_userDetails")
 
 
 angular.module('giddhWebApp').controller 'mainController', mainController
