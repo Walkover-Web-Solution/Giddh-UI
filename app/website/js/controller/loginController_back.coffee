@@ -1,25 +1,20 @@
 'use strict'
 
-loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService) ->
+loginBackController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService) ->
   
   $scope.authenticate = (provider) ->
     $auth.authenticate(provider).then((response) ->
       console.log "in authenticate status", response
-      
       if response.data.result.status is "error"
         #user is not registerd with us
-        toastr[response.data.result.status](response.data.result.error);
+        toastr[response.data.result.status](response.data.result.error)
         $timeout (->
           window.location = "/beta"
         ), 3000
       else
         #user is registered and redirect it to app
-        localStorageService.set("_userDetails", response.data.userDetails);
+        localStorageService.set("_userDetails", response.data.userDetails)
         window.location = "/app/"
-
-      
-
-      #window.location = "/app/"
     ).catch (response) ->
       console.log response
 
@@ -54,4 +49,4 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
     $timeout alertMsg, 5000
 
 
-angular.module('giddhApp').controller 'loginController', loginController
+angular.module('giddhApp').controller 'loginBackController', loginBackController

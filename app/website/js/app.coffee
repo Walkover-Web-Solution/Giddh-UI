@@ -1,4 +1,9 @@
-app = angular.module("giddhApp", ["satellizer", "LocalStorageModule", "ngResource"])
+app = angular.module("giddhApp", [
+  "satellizer"
+  "LocalStorageModule"
+  "ngResource"
+  ]
+)
 
 
 

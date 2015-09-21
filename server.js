@@ -140,7 +140,7 @@ app.post('/logout', function(req, res, next){
  |--------------------------------------------------------------------------
 */
 app.get('/getBasicDetails', function(req, res, next){
-  console.log(req, "in get getBasicDetails");
+  console.log(req.sessionStore, "in get getBasicDetails");
   res.json({success : "success"})
 });
 

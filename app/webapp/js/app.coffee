@@ -15,13 +15,13 @@ app = angular.module("giddhWebApp",
 )
 
 app.config (localStorageServiceProvider) ->
-  localStorageServiceProvider.setPrefix 'giddh'
+	localStorageServiceProvider.setPrefix 'giddh'
 
 app.config ($locationProvider, $routeProvider) ->
-  # $locationProvider.html5Mode({
-  # 	enabled: true,
-  # 	requireBase: false
-  # })
+  $locationProvider.html5Mode({
+  	enabled: false,
+  	requireBase: false
+  })
   $routeProvider
 	  .when('/home',
 	  	controller : 'homeController',
@@ -34,8 +34,5 @@ app.config ($locationProvider, $routeProvider) ->
 	  .otherwise redirectTo: '/home'
 
 app.run(($rootScope, $http, $templateCache)->
-  #$rootScope.$on '$viewContentLoaded', ->
-  	#$templateCache.removeAll()
-
   console.log "app init"
 )
