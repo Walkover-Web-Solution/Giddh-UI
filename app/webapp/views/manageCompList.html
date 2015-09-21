@@ -1,0 +1,35 @@
+<div ng-init="listCompanyGet()">
+    <div id="topMngCompRit">
+        <div class="pd15 bdrB" id="insertCompDiv">
+            <button class="btn btn-primary" ng-click="openFirstTimeUserModal()">Create New Company</button>
+        </div>
+        <div class="pd15 bdrB pdB1 gryClr">My Companies</div>
+    </div>
+    <perfect-scrollbar id="restMngCompRit" class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20"  auto-height>
+        <ul id="companyList" class="companyList manageCompany">
+            <li class="oh li" ng-repeat="(key,value) in companyList" id="limsg91">
+                <a href="javascript:;" class="a pa r4 l1"
+                   ng-click="goToCompany(value.uniqueName, value.name,0);">
+                    <span class="ui-icon ui-icon-flag"></span>
+
+                    <h3 class="upc ellp">{{value.name}}</h3>
+
+                    <p class="date">
+                        <span class="startDate mrR">2015-05-26</span>
+                        <span>to</span>
+                        <span class="endDate mrL">2015-12-26</span>
+                    </p>
+                </a>
+
+                <div class="action pa r1">
+                    <a href="javascript:;" ng-click="dropCompany(value.companyId,$index)" class="icon trns"><span
+                            class="glyphicon glyphicon-trash"></span>
+                    </a>
+                </div>
+            </li>
+
+        </ul>
+
+        
+    </perfect-scrollbar>
+</div>
