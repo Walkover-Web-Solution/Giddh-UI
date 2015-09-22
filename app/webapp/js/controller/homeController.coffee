@@ -71,7 +71,16 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, homeControllerServ
 	$scope.goToCompany = (data) ->
 		console.log data
 		$scope.cmpViewShow = true
+		$scope.companyDetails = data
 
+	#form submit for changeBasicInfo
+	$scope.updateBasicInfo = () ->
+		console.log 'in updateBasicInfo', $scope.companyDetails
+		
+
+	
+
+	#fire function after page fully loaded
 	$rootScope.$on '$viewContentLoaded', ->
 		console.log "homeController viewContentLoaded"
 		$scope.getCompanyList()

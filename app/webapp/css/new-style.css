@@ -241,4 +241,18 @@ header .navbar-nav > li.active{
 .companyList li:hover .action {
   opacity: 1
 }
+/*manage company detail*/
+.greyBox{
+	color: #444;
+  background: #f3f3f3;
+  border: solid 1px #ddd;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+}
 
+/*overriding tabs style*/
+.nav.nav-tabs {
+    background: #f0f0f0;
+    margin: 0;
+    padding: 10px 0 0 12px;
+}

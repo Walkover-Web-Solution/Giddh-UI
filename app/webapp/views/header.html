@@ -18,12 +18,12 @@
         <li>
           <a href="javascript:void(0)">Link</a>
         </li>
-        <li>
+        <li ng-if="cmpViewShow">
           <a id="cmpWrp" class="clearfix" href="javascript:void(0)">
             <i class="gic-24 icon-building-w"></i>
             <div class="cText">
-              <span class="cName">Company Name</span>
-              <span class="cDate">Date</span>
+              <span class="cName">{{companyDetails.name}}</span>
+              <!-- <span class="cDate">Date</span> -->
             </div>
           </a>
         </li>
