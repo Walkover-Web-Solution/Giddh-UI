@@ -71,13 +71,15 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, homeControllerServ
 	$scope.goToCompany = (data) ->
 		console.log data
 		$scope.cmpViewShow = true
-		$scope.companyDetails = data
+		$scope.companyBasicInfo = data
 
 	#form submit for changeBasicInfo
 	$scope.updateBasicInfo = () ->
-		console.log 'in updateBasicInfo', $scope.companyDetails
+		console.log 'in updateBasicInfo', $scope.companyBasicInfo
+		console.log @formScope.cmpnyBascFrm, "hurray"
 		
-
+	$scope.setFormScope = (scope) ->
+  	@formScope = scope
 	
 
 	#fire function after page fully loaded
