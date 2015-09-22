@@ -1,11 +1,11 @@
 "use strict"
 
-homeController = ($scope, $rootScope, $timeout, $modal, $log, createCompanyService) ->
-
-	$scope.title = "Sarfaraz"
+homeController = ($scope, $rootScope, $timeout, $modal, $log, homeControllerServices, $http) ->
 
 	#blank Obj for modal
 	$rootScope.company = {}
+
+	$scope.companyList =[]
 
 	#dialog for first time user
 	$rootScope.openFirstTimeUserModal = () ->
@@ -25,10 +25,10 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, createCompanyServi
 	#creating company
 	$scope.createCompany = (cdata) ->
 		console.log "inc createCompany", cdata
-		createCompanyService.createCompany(cdata, $scope.onCreateCompanySuccess, $scope.onCreateCompanyFailure)
+		homeControllerServices.createCompany(cdata, onCreateCompanySuccess, onCreateCompanyFailure)
 
 	#create company success
-	$scope.onCreateCompanySuccess = (response) ->
+	onCreateCompanySuccess = (response) ->
 		console.log response, "in create company success"
 		if response.status is "success"
 			toastr[response.status]("Company create successfully")
@@ -38,13 +38,43 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, createCompanyServi
 			toastr[response.status](response.message)
 
 	#create company failure
-	$scope.onCreateCompanyFailure = (response) ->
+	onCreateCompanyFailure = (response) ->
 		console.log response, "in onCreateCompanyFailure"
 
 
-	$scope.listCompanyGet = ->
-		console.log "in listCompany"
+	#get company list failure
+	getCompanyListFail = (response)->
+		console.log "companyList failure", response
+		toastr[response.status](response.message)
 
+	#Get company list
+	getCompanyListSuc = (response) ->
+		console.log "companyList successfully", response
+		if response.status is "error"
+			$rootScope.openFirstTimeUserModal()
+		else
+			$rootScope.mngCompDataFound = true
+			angular.extend($scope.companyList, response.body)
+
+	#Get company list
+	$scope.getCompanyList = ->
+		try
+			homeControllerServices.getCompList(getCompanyListSuc, getCompanyListFail)
+		catch e
+			throw new Error(e.message);
+
+	#delete company
+	$scope.deleteCompany = (id, index) ->
+		console.log id, index
+
+	#making a detail company view
+	$scope.goToCompany = (data) ->
+		console.log data
+		$scope.cmpViewShow = true
+
+	$rootScope.$on '$viewContentLoaded', ->
+		console.log "homeController viewContentLoaded"
+		$scope.getCompanyList()
 
 #init angular app
 angular.module('giddhWebApp').controller 'homeController', homeController

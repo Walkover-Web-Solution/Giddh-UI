@@ -2,30 +2,21 @@
 <div class="container-fluid">
 	<div class="row">
 		<!-- left side -->
-		<div class="col-md-2 col-sm-2 lgreyBg" id="left">
-			<div class="">
+		<div class="col-md-2 col-sm-2 greyBg">
+			<div class="" id="left">
 				Left menu
 			</div>
 		</div>
 
 		<!-- middle body -->
-		<div class="col-md-8 col-sm-8">
-			
-			<div>
-				<a href="#" tooltip="{{dynamicTooltip}}">{{dynamicTooltip}}</a>
-
-
-				<h1>Hey </h1>
-				<h2>Dude {{title}}</h2>
-				<h3>{{basicInfo.email}}</h3>
+		<div class="col-md-7 col-sm-7">
+			<div class="middleBody">
+				<div ng-if="cmpViewShow" ng-include="'/public/webapp/views/manageCompany.html'"></div>
 			</div>
-
-
-
 		</div>
 
 		<!-- right side -->
-		<div class="col-md-2 col-sm-2">
+		<div class="col-md-3 col-sm-3" id="right">
 			<div ng-if="mngCompDataFound" ng-include="'/public/webapp/views/manageCompList.html'"></div>
 		</div>
 

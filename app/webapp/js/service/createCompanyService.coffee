@@ -17,5 +17,5 @@ angular.module('giddhWebApp').service 'createCompanyService', ($resource) ->
         {
           addCompList: addCompList
           getCompList: getCompList
-        }  
+        }
   createCompanyService
