@@ -1,6 +1,6 @@
 "use strict"
 
-homeController = ($scope, $rootScope, $timeout, $modal, $log, homeControllerServices, $http) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyControllerServices, $http) ->
 
 	#blank Obj for modal
 	$rootScope.company = {}
@@ -9,7 +9,7 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, homeControllerServ
 	$rootScope.mngCompDataFound = false
 
 	#make sure manage company detail not load
-	$scope.cmpViewShow = false
+	$rootScope.cmpViewShow = false
 
 	#contains company list
 	$scope.companyList =[]
@@ -37,7 +37,7 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, homeControllerServ
 	#creating company
 	$scope.createCompany = (cdata) ->
 		console.log "inc createCompany", cdata
-		homeControllerServices.createCompany(cdata, onCreateCompanySuccess, onCreateCompanyFailure)
+		companyControllerServices.createCompany(cdata, onCreateCompanySuccess, onCreateCompanyFailure)
 
 	#create company success
 	onCreateCompanySuccess = (response) ->
@@ -71,7 +71,7 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, homeControllerServ
 	#Get company list
 	$scope.getCompanyList = ->
 		try
-			homeControllerServices.getCompList(getCompanyListSuc, getCompanyListFail)
+			companyControllerServices.getCompList(getCompanyListSuc, getCompanyListFail)
 		catch e
 			throw new Error(e.message);
 
@@ -99,11 +99,11 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, homeControllerServ
 
 	#fire function after page fully loaded
 	$rootScope.$on '$viewContentLoaded', ->
-		console.log "homeController viewContentLoaded"
+		console.log "companyController viewContentLoaded"
 		$scope.getCompanyList()
 
 #init angular app
-angular.module('giddhWebApp').controller 'homeController', homeController
+angular.module('giddhWebApp').controller 'companyController', companyController
 
 
 

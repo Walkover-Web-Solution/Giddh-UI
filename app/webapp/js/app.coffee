@@ -25,12 +25,12 @@ app.config ($locationProvider, $routeProvider) ->
   })
   $routeProvider
 	  .when('/home',
-	  	controller : 'homeController',
+	  	controller : 'companyController',
 	  	templateUrl: '/public/webapp/views/home.html',
 	  	firstTimeUser : false
 	  )
 	  .when('/thankyou',
-	  	controller : 'homeController',
+	  	controller : 'companyController',
 	  	templateUrl: '/public/webapp/views/thanks.html'
 	  )
 	  .otherwise redirectTo: '/home'

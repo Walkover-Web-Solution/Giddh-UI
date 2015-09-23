@@ -1,6 +1,6 @@
 "use strict"
 
-mainController = ($scope, $rootScope, $timeout, $http, localStorageService, $location, homeControllerServices) ->
+mainController = ($scope, $rootScope, $timeout, $http, localStorageService, $location) ->
 
 	$scope.dynamicTooltip = 'Hello, World!';
 

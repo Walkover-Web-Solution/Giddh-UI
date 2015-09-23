@@ -4,7 +4,10 @@
 
     <tab heading="Basic Information">
     	<div class="pd2">
-    		
+    		{{cmpnyBascFrm.$valid}}
+            {{cmpnyBascFrm.cName.$error.required}}
+            {{cmpnyBascFrm.cName.$dirty}}
+            {{cmpnyBascFrm.cName.$touched}}
     		<form name="cmpnyBascFrm" novalidate  ng-init="setFormScope(this)">
 
     			<p ng-hide="cmpnyBascFrm.$submitted" class="bg-warning pd1 mrB1">
@@ -13,19 +16,19 @@
 
         	<div class="row">
         		<div class="col-md-6 col-sm-12">
-        			<div class="form-group">
-						    <label>Name</label>
-						    <input type="text" ng-model="companyBasicInfo.name" class="form-control" required>
-						  </div>
-						  <div class="form-group">
-						    <label>Email</label>
-						    <input type="email" ng-model="companyBasicInfo.email" class="form-control"  required>
-						  </div>
+<div class="form-group" ng-class="cmpnyBascFrm.cName.$dirty ? 'has-error' : 'has-success'">
+				    <label>Name</label>
+				    <input type="text" ng-model="companyBasicInfo.name" class="form-control" required ng-value="companyDetails.name" name="cName">
+				  </div>
+				  <div class="form-group">
+				    <label>Email</label>
+				    <input type="email" ng-model="companyBasicInfo.email" class="form-control"  required  name="cEmail">
+				  </div>
 						  
 						  
 						  <div class="form-group">
 						    <label>Address</label>
-						    <textarea ng-model="companyBasicInfo.address" class="form-control" required ></textarea>
+						    <textarea ng-model="companyBasicInfo.address" class="form-control" name="cAddress" required ></textarea>
 						  </div>
 
         		</div>
