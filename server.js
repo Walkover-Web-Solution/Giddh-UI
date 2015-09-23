@@ -159,7 +159,8 @@ app.get('/getCompanyList', function(req, res, next){
   var onlyAuthHead = {
     headers:{"Auth-Key":req.session.name} 
   }
-  var hUrl = envUrl+"company/";
+  var hUrl = envUrl+"users/"+userDetailObj.userUniqueName+"/companies";
+  http://54.169.180.68:8080/giddh-api/users/ravisoni/companies
   
   client.get(hUrl, onlyAuthHead, function(data,response) {
     console.log(data, "data in company list for user");

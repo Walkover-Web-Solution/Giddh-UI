@@ -26,11 +26,12 @@
     "angular-translate": "~2.7.2",
     "angular-local-storage": "~0.2.1",
     "angular-mocks": "~1.4.6",
-    "perfect-scrollbar":"~0.6.5",
+    "perfect-scrollbar": "~0.6.5",
     "toastr": "~2.1.2",
     "angular-bootstrap": "~0.13.4"
   },
   "resolutions": {
-    "angular": "~1.4.4"
+    "angular": "~1.4.4",
+    "perfect-scrollbar": "~0.5.1"
   }
 }

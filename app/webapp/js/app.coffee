@@ -12,6 +12,7 @@ app = angular.module("giddhWebApp",
 		"ui.tree"
 		"ngSanitize"
 		"ui.bootstrap"
+		"twygmbh.auto-height"
 	]
 )
 
