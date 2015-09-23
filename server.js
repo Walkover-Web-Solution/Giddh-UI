@@ -9,13 +9,7 @@ var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
 
-/*
-//commented not in use modified by sarfaraz
-var routes = require('./routes/index');
-var users = require('./routes/users');
-app.use('/', routes);
-app.use('/users', users);
-*/
+
 
 
 
@@ -33,7 +27,7 @@ var app = express();
 
 var userDetailObj = {};
 //for test environment
-var envUrl = "http://54.169.180.68:8080/giddh-api/";
+var envUrl = process.env.ENVURL || "http://54.169.180.68:8080/giddh-api/";
 
 var port = process.env.PORT || 8000;
 //enabling cors
@@ -55,6 +49,8 @@ app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.use('/public',  express.static(__dirname + '/public'));
 
 
+console.log("dir in server", __dirname)
+
 // for session
 app.use(cookieParser());
 app.use(session({
@@ -68,6 +64,12 @@ app.use(session({
     }
 }));
 
+
+
+/**/
+// do not remove code from this position
+var appusers = require('./routes/appusers');
+app.use('/', appusers);
 
 
 /*
@@ -107,39 +109,8 @@ app.get('/login', function(req, res, next) {
   res.sendFile("login_back.html", options1);
 });
 
-/*
- |--------------------------------------------------------------------------
- | for serve app only templates files after login
- |--------------------------------------------------------------------------
-*/
-var options = {
-  root: __dirname + '/public/webapp/views',
-  dotfiles: 'deny',
-  headers: {
-      'x-timestamp': Date.now(),
-      'x-sent': true
-  }
-};
-app.get('/app/*', function (req, res, next) {
-  console.log(req.session.name, "in app", userDetailObj)
-  if (req.session.name != undefined){
-    res.sendFile("index.html", options);
-  }
-  else{
-    res.redirect('/login');
-  }
-});
-// thanks page
-app.get('/thanks', function(req, res, next) {
-  res.sendFile("thanks.html", options);
-});
 
-/*logout*/
-app.post('/logout', function(req, res, next){
-  console.log(req.body, "in logout request")
-  req.session.destroy();
-  res.json({ status: 'success' });
-});
+
 
 /*
  |--------------------------------------------------------------------------
@@ -161,7 +132,7 @@ function getRandomString(cun,uun){
 
 function removeSpecialCharacters(str){
     var finalString = str.replace(/[^a-zA-Z0-9]/g, "");
-    finalString = finalString.substr(0,6);
+    finalString = finalString.substr(0,6).toLowerCase();
     return finalString;
 }
 
