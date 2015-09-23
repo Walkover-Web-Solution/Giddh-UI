@@ -19,20 +19,38 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyControll
 	#for update company basic info contains
 	$scope.companyBasicInfo = {}
 
+	#for make sure
+	$scope.checkCmpCretedOrNot = ->
+		console.log $scope.companyList.length
+		if $scope.companyList.length <= 0
+			console.log "in if"
+			$rootScope.openFirstTimeUserModal()
+
 	#dialog for first time user
 	$rootScope.openFirstTimeUserModal = () ->
 	  modalInstance = $modal.open(
 	    templateUrl: '/public/webapp/views/createCompanyModal.html',
 	    size: "sm",
+	    backdrop: 'static',
 	    scope : $scope
 	  )
 	  console.log 'modal opened', $scope
 
 	  modalInstance.result.then ((data) ->
 	    console.log data, "modal close"
-	    $scope.createCompany(data)
+	    cData = {}
+	    cData.name = data.name.replace(/[\s]/g, '')
+	    cData.city = data.city
+	    console.log cData 
+	    $scope.createCompany(cData)
+
+	    #reset form obj and reset form
+	    $scope.company = {}
 	  ), ->
 	    console.log 'Modal dismissed at: ' + new Date
+	    #check if popup is closed without make company
+	    $scope.checkCmpCretedOrNot()
+	    
 
 	#creating company
 	$scope.createCompany = (cdata) ->
@@ -92,7 +110,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyControll
 			console.log @formScope.cmpnyBascFrm
 			console.log "hurray dude form is valid"
 			console.log $scope.companyBasicInfo
-		
+	
+	#to inject form again on scope
 	$scope.setFormScope = (scope) ->
   	@formScope = scope
 	

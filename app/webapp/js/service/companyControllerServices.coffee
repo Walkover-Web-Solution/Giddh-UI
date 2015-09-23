@@ -14,7 +14,7 @@ angular.module('giddhWebApp').service 'companyControllerServices', ($resource) -
 
   companyControllerServices =
     createCompany: (cdata, onSuccess, onFailure) ->
-      compResource.addCmpny({name: cdata.name, city : cdata.city, uniqueName : cdata.uniqueName}, onSuccess, onFailure)
+      compResource.addCmpny(cdata, onSuccess, onFailure)
     getCompList: (onSuccess, onFailure) ->
       compGetResource.getCmpny(onSuccess, onFailure)
         
@@ -26,7 +26,6 @@ angular.module('giddhWebApp').service 'companyControllerServices', ($resource) -
   # compList = []
   # addCompList = (newObj) ->
   #   compList.push newObj
-
   # getCompList = ->
   #   compList
 

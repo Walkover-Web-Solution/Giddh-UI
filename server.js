@@ -143,9 +143,39 @@ app.post('/logout', function(req, res, next){
 
 /*
  |--------------------------------------------------------------------------
+ | Custom functions get random string for company unique name
+ |--------------------------------------------------------------------------
+*/
+function getRandomString(cun,uun){
+  var userUN, cmpUN, d, n, randomGenerate, stringss, randomString;
+
+  userUN = removeSpecialCharacters(uun);
+  cmpUN = removeSpecialCharacters(cun);
+  d = new Date();
+  n = d.getTime().toString();
+  randomGenerate = getSixCharRandom();
+  stringss = [userUN,cmpUN,n,randomGenerate];
+  randomString = stringss.join("");
+  return randomString;
+}
+
+function removeSpecialCharacters(str){
+    var finalString = str.replace(/[^a-zA-Z0-9]/g, "");
+    finalString = finalString.substr(0,6);
+    return finalString;
+}
+
+function getSixCharRandom(){
+    var randomGenerate = Math.random().toString(36).replace(/[^a-zA-Z0-9]+/g, '').substr(0, 6);
+    return randomGenerate;
+}
+
+
+
+/*
+ |--------------------------------------------------------------------------
  | hit APIs for get data getBasicDetails
  |--------------------------------------------------------------------------
- cNeL1CM3PrcDGfOSn-xdsp6g6lszrkjlAMDAY2SGBxbsibIwyWqrMK5UyzfUk4nil5FwZuvmsqq8BMAsyg374BKfHIVqWhFyFf9z2HPhZXM=
 */
 //some universal var for hitting apis
 var onlySmpHead = {
@@ -176,13 +206,18 @@ app.get('/getCompanyDetails', function(req, res){
 app.post('/createCompany', function(req, res){
   console.log("in createCompany", req.body)
   hUrl = envUrl+"company/";
+
+  req.body.uniqueName = getRandomString(req.body.name, req.body.city)
+
+  console.log("randomString", req.body.uniqueName)
   args = {
     headers:{
       "Auth-Key": req.session.name,
       "Content-Type": "application/json"
     },
-    data: req.body 
+    data: req.body
   }
+  
   console.log("making req", args)
   client.post(hUrl, args, function(data,response) {
     console.log(data, "data in company list for user");

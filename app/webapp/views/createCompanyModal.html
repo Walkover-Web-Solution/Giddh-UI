@@ -3,19 +3,21 @@
         <h3 class="modal-title">Create New Company</h3>
     </div>
     <!-- createNewCompany() call method -->
-    <div class="modal-body">
-        <div class="form-group">
-            <input type="text" ng-model="company.name" class="form-control" placeholder="Company Name" maxlength="50">
+    
+    <form name="createCompForm" novalidate id="createCompForm">
+        <div class="modal-body">
+            <div class="form-group" ng-class="(createCompForm.name.$valid  && createCompForm.name.$touched) ? 'has-success' : (createCompForm.name.$touched) ? 'has-error' : '' ">
+                <input type="text" ng-model="company.name" class="form-control" placeholder="Company Name" required name="name" ngMinlength="5" ngMaxlength="30" ngPattern="/[a-zA-Z0-9^ ]/">
+            </div>
+            <div class="form-group" ng-class="(createCompForm.city.$valid  && createCompForm.city.$touched) ? 'has-success' : (createCompForm.city.$touched) ? 'has-error' : '' ">
+                <input type="text" ng-model="company.city" class="form-control" placeholder="Company City" maxlength="50" required name="city">
+            </div>
         </div>
-        <div class="form-group">
-            <input type="text" ng-model="company.city" class="form-control" placeholder="Company City" maxlength="50">
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="$close(company)" ng-disabled="createCompForm.$invalid">Create</button>
+            <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancel</button>
         </div>
-        <div class="form-group">
-            <input type="text" ng-model="company.uniqueName" class="form-control" placeholder="Company Unique Name" maxlength="50">
-        </div>
-    </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="$close(company)">Create</button>
-        <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancel</button>
-    </div>
+    </form>
 </div>
+
+ <!-- ng-class="createCompForm.name.$dirty ? 'has-error' : 'has-success'" -->
