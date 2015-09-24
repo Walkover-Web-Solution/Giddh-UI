@@ -20,7 +20,7 @@ var app = express();
 
 var userDetailObj = {};
 //for test environment
-var envUrl = process.env.ENVURL || "http://localhost:9292/giddh-api/";
+var envUrl = "http://54.169.180.68:8080/giddh-api/";
 
 var port = process.env.PORT || 8000;
 //enabling cors
@@ -40,6 +40,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 app.use('/public', express.static(__dirname + '/public'));
+
 
 // for session
 app.use(cookieParser());
@@ -109,8 +110,7 @@ app.get('/getCompanyList', function (req, res, next) {
   var onlyAuthHead = {
     headers: {"Auth-Key": req.session.name}
   }
-  var hUrl = envUrl + "users/" + userDetailObj.userUniqueName + "/companies";
-  http://54.169.180.68:8080/giddh-api/users/ravisoni/companies
+  var hUrl = envUrl + "users/" + userDetailObj.userUniqueName + "/companies";  
 
       client.get(hUrl, onlyAuthHead, function (data, response) {
         console.log(data, "data in company list for user");
@@ -145,7 +145,46 @@ app.post('/createCompany', function (req, res) {
     console.log(data, "data in company list for user");
     res.send(data);
   });
-})
+});
+
+/*
+ |--------------------------------------------------------------------------
+ | Get currency list
+ |--------------------------------------------------------------------------
+ */
+app.get('/getCurrencyList', function (req, res) {
+  console.log("we are here to get currency list");
+  hUrl = envUrl + "currency";
+  args = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  }
+  client.post(hUrl, args, function (data, response) {
+    console.log("currency list we get");
+    res.send(data);
+  });
+});
+
+/*
+ |--------------------------------------------------------------------------
+ | Location using google api
+ |--------------------------------------------------------------------------
+ */
+app.get('/getLocation', function (req, res) {
+  console.log("In get location#######################################");
+  console.log(req.query.queryString);
+  console.log("In get location############################################################");
+  var googleApi = 'http://maps.googleapis.com/maps/api/geocode/json?callback=JSON_CALLBACK&address=' + req.query.queryString;
+  request.get(googleApi, function (err, response) {
+    console.log(response.body);
+    res.send(response.body);
+    //response.data.results.map(function (item) {
+    //  console.log(item.formatted_address);
+      //return item.formatted_address;
+    //});
+  });
+});
 
 /*
  |--------------------------------------------------------------------------

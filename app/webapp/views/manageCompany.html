@@ -1,103 +1,131 @@
-<div class="">
+<div class="row bdrR bdrL">
 
   <tabset justified="true">
 
     <tab heading="Basic Information">
-    	<div class="pd2">
-    		{{cmpnyBascFrm.$valid}}
-            {{cmpnyBascFrm.cName.$error.required}}
-            {{cmpnyBascFrm.cName.$dirty}}
-            {{cmpnyBascFrm.cName.$touched}}
-    		<form name="cmpnyBascFrm" novalidate  ng-init="setFormScope(this)">
+      <div class="pd2">
+        {{cmpnyBascFrm.$valid}}
+        {{cmpnyBascFrm.cName.$error.required}}
+        {{cmpnyBascFrm.cName.$dirty}}
+        {{cmpnyBascFrm.cName.$touched}}
+        <form name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
 
-    			<p ng-hide="cmpnyBascFrm.$submitted" class="bg-warning pd1 mrB1">
-    				For better experience fill all details of form
-    			</p>
+          <p ng-hide="cmpnyBascFrm.$submitted" class="bg-warning pd1 mrB1">
+            For better experience fill all details of form
+          </p>
 
-        	<div class="row">
-        		<div class="col-md-6 col-sm-12">
-<div class="form-group" ng-class="cmpnyBascFrm.cName.$dirty ? 'has-error' : 'has-success'">
-				    <label>Name</label>
-				    <input type="text" ng-model="companyBasicInfo.name" class="form-control" required ng-value="companyDetails.name" name="cName">
-				  </div>
-				  <div class="form-group">
-				    <label>Email</label>
-				    <input type="email" ng-model="companyBasicInfo.email" class="form-control"  required  name="cEmail">
-				  </div>
-						  
-						  
-						  <div class="form-group">
-						    <label>Address</label>
-						    <textarea ng-model="companyBasicInfo.address" class="form-control" name="cAddress" required ></textarea>
-						  </div>
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cName.$valid  && cmpnyBascFrm.cName.$touched) ? 'has-success' : (cmpnyBascFrm.cName.$touched) ? 'has-error' : '' ">
+                <label>Name
+                  <input type="text" ng-model="companyBasicInfo.name" class="form-control" required
+                         ng-value="companyDetails.name" name="cName">
+                </label>
+              </div>
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cEmail.$valid  && cmpnyBascFrm.cEmail.$touched) ? 'has-success' : (cmpnyBascFrm.cEmail.$touched) ? 'has-error' : '' ">
+                <label>Email
+                  <input type="email" ng-model="companyBasicInfo.email" class="form-control" required
+                         name="cEmail">
+                </label>
+              </div>
 
-        		</div>
-        		<div class="col-md-6 col-sm-12">
-        			<div class="form-group">
-						    <label>Country</label>
-						    <input type="tel" ng-model="companyBasicInfo.country" class="form-control" required >
-						  </div>
-        			
-    					<div class="form-group">
-						    <label>Contact</label>
-						    <input type="tel" ng-model="companyBasicInfo.contactNo" class="form-control" required pattern="^[0-9]*$">
-						  </div>
-        				
-        			<div class="row">
-        				<div class="col-md-4 col-sm-12">
-        					<div class="form-group">
-								    <label>Currency</label>
-								    <input type="text" ng-model="companyBasicInfo.baseCurrency" class="form-control" required >
-								  </div>
-        				</div>
-        				<div class="col-md-8 col-sm-12">
-        					<div class="form-group">
-								    <label>Pincode</label>
-								    <input type="number" ng-model="companyBasicInfo.pincode" class="form-control" required pattern="^[0-9]*$">
-								  </div>
-        				</div>
-        			</div>
-						  
-						  <div class="form-group">
-						    <label>State</label>
-						    <input type="text" ng-model="companyBasicInfo.state" class="form-control" required >
-						  </div>
-						  
-        		</div>
-        	</div> <!-- end of row -->
-		      <div class="clearfix">
-		      	<button ng-click="updateBasicInfo()"  class="btn btn-primary" ng-disabled="cmpnyBascFrm.$invalid">Save</button>
-		      </div>
+
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cAddress.$valid  && cmpnyBascFrm.cAddress.$touched) ? 'has-success' : (cmpnyBascFrm.cAddress.$touched) ? 'has-error' : '' ">
+                <label>Address
+                  <textarea ng-model="companyBasicInfo.address" class="form-control" name="cAddress" required/>
+                </label>
+              </div>
+
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cCountry.$valid  && cmpnyBascFrm.cCountry.$touched) ? 'has-success' : (cmpnyBascFrm.cCountry.$touched) ? 'has-error' : '' ">
+                <label>Country
+                  <input type="tel" ng-model="companyBasicInfo.country" class="form-control" required name="cCountry">
+                </label>
+              </div>
+
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cContact.$valid  && cmpnyBascFrm.cContact.$touched) ? 'has-success' : (cmpnyBascFrm.cContact.$touched) ? 'has-error' : '' ">
+                <label>Contact
+                  <input type="tel" ng-model="companyBasicInfo.contactNo" class="form-control" required
+                         pattern="^[0-9]*$" name="cContact">
+                </label>
+              </div>
+
+              <div class="row">
+                <div class="col-md-4 col-sm-12">
+                  <div class="form-group"
+                       ng-class="(cmpnyBascFrm.cCurrency.$valid  && cmpnyBascFrm.cCurrency.$touched) ? 'has-success' : (cmpnyBascFrm.cCurrency.$touched) ? 'has-error' : '' ">
+                    <label>Currency
+                      <input type="text" ng-model="companyBasicInfo.baseCurrency" class="form-control"
+                             required name="cCurrency">
+                    </label>
+                  </div>
+                </div>
+                <div class="col-md-8 col-sm-12">
+                  <div class="form-group"
+                       ng-class="(cmpnyBascFrm.cPincode.$valid  && cmpnyBascFrm.cPincode.$touched) ? 'has-success' : (cmpnyBascFrm.cPincode.$touched) ? 'has-error' : '' ">
+                    <label>Pincode
+                      <input type="number" ng-model="companyBasicInfo.pincode" class="form-control"
+                             required pattern="^[0-9]*$" name="cPincode">
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cState.$valid  && cmpnyBascFrm.cState.$touched) ? 'has-success' : (cmpnyBascFrm.cState.$touched) ? 'has-error' : '' ">
+                <label>State</label>
+                  <!--<input type="text" ng-model="companyBasicInfo.state" class="form-control" required name="cState">-->
+                <input type="text" ng-model="asyncSelected" placeholder="Locations loaded via $http" typeahead="address for address in getLocation($viewValue)" typeahead-loading="loadingLocations" typeahead-no-results="noResults" class="form-control" name="cName">
+                  <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
+                  <div ng-show="noResults">
+                    <i class="glyphicon glyphicon-remove"></i> No Results Found
+                  </div>
+              </div>
+
+            </div>
+          </div>
+          <!-- end of row -->
+          <div class="clearfix">
+            <button ng-click="updateBasicInfo()" class="btn btn-primary"
+                    ng-disabled="cmpnyBascFrm.$invalid">Save
+            </button>
+          </div>
         </form>
         <!-- end of change basic infor -->
 
-    	</div>
+      </div>
     </tab>
     <!-- basic information tab end here -->
 
     <tab ng-show="basicInfo == 'admin'" heading="Permission">
-    	<div class="pd2">
-    		Permission content
-    	</div>
+      <div class="pd2">
+        Permission content
+      </div>
     </tab>
     <!-- basic information tab end here -->
 
     <tab heading="Entries">
-    	<div class="pd2">
-    		Entries content
-    	</div>
+      <div class="pd2">
+        Entries content
+      </div>
     </tab>
     <!-- entries end here -->
     <tab heading="Upload Accounts">
-    	<div class="pd2">
-	    	Long Labeled Justified content
-	    </div>
+      <div class="pd2">
+        Long Labeled Justified content
+      </div>
     </tab>
     <!-- upload group and accounts end here -->
     <tab heading="Description">
-    	<div class="pd2">
-    		Description Content here
-    	</div>
+      <div class="pd2">
+        Description Content here
+      </div>
     </tab>
     <!-- description end here -->
 

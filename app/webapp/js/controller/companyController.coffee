@@ -2,6 +2,8 @@
 
 companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, $http) ->
 
+#blank Obj for modal
+  $rootScope.company = {}
   #blank Obj for modal
   $rootScope.company = {}
 
@@ -99,7 +101,29 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #fire function after page fully loaded
   $rootScope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
+  
+  $scope.getLocation = (val) ->
+    console.log "called"
+    companyServices.getLocation(val,((response) -> response.results.map((item) ->
+        console.log item.formatted_address
+        item.formatted_address
+    )), (->))
 
+  $scope.getCurrencyList = ->
+    try
+      companyServices.getCurrencyList(getCurrencyListSuc,getCurrencyListFail)
+    catch e
+      throw new Error(e.message)
+
+  getCurrencyListFail = (response)->
+    console.log "companyList failure", response
+    toastr[response.status](response.message)
+
+  #Get company list
+  getCurrencyListSuc = (response) ->
+    console.log "companyList successfully", response.body
+    response.body
+		
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController
 
