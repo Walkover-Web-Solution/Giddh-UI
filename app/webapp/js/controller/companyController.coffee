@@ -1,6 +1,6 @@
 "use strict"
 
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService) ->
 
   #blank Obj for modal
   $rootScope.company = {}
@@ -104,7 +104,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   $scope.getLocation = (val) ->
     console.log "called"
-    companyServices.getLocation(val, ((response) -> response.results.map((item) ->
+    locationService.search(val, ((response) -> response.results.map((item) ->
       console.log item.formatted_address
       item.formatted_address
     )), (->))
