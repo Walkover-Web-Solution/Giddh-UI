@@ -9,7 +9,6 @@ var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
 
-
 //Example POST method invocation
 var Client = require('node-rest-client').Client;
 var client = new Client();
@@ -61,47 +60,11 @@ app.use(session({
 
 /**/
 // do not remove code from this position
+var websiteRoutes = require('./routes/website/main');
+app.use('/', websiteRoutes);
+
 var appRoutes = require('./routes/webapp/main');
 app.use('/', appRoutes);
-
-
-/*
- defining routes before login static web pages
- */
-var options1 = {
-  root: __dirname + '/public/website/views/',
-  dotfiles: 'deny',
-  headers: {
-    'x-timestamp': Date.now(),
-    'x-sent': true
-  }
-};
-
-app.get('/', function (req, res, next) {
-  res.sendFile("index.html", options1);
-});
-app.get('/index', function (req, res, next) {
-  res.sendFile("index.html", options1);
-});
-app.get('/beta', function (req, res, next) {
-  res.sendFile("beta.html", options1);
-});
-app.get('/pricing', function (req, res, next) {
-  res.sendFile("pricing.html", options1);
-});
-app.get('/privacy', function (req, res, next) {
-  res.sendFile("privacy.html", options1);
-});
-app.get('/terms', function (req, res, next) {
-  res.sendFile("terms.html", options1);
-});
-app.get('/why-giddh', function (req, res, next) {
-  res.sendFile("whyGiddh.html", options1);
-});
-app.get('/login', function (req, res, next) {
-  res.sendFile("login_back.html", options1);
-});
-
 
 /*
  |--------------------------------------------------------------------------
