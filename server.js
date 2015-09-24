@@ -56,12 +56,12 @@ app.use(session({
 }));
 
 // do not remove code from this position
-var websiteRoutes = require('./routes/website/main');
+var websiteRoutes = require('./public/routes/website/main');
 app.use('/', websiteRoutes);
-var contact = require('./routes/website/contact');
+var contact = require('./public/routes/website/contact');
 app.use('/contact', contact);
 
-var appRoutes = require('./routes/webapp/main');
+var appRoutes = require('./public/routes/webapp/main');
 app.use('/', appRoutes);
 
 /*
