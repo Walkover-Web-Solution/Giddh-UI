@@ -61,8 +61,8 @@ app.use(session({
 
 /**/
 // do not remove code from this position
-var appusers = require('./routes/appusers');
-app.use('/', appusers);
+var appRoutes = require('./routes/webapp/main');
+app.use('/', appRoutes);
 
 
 /*
