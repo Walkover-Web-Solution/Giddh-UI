@@ -1,6 +1,6 @@
 "use strict"
 
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyControllerServices, $http) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, $http) ->
 
 	#blank Obj for modal
 	$rootScope.company = {}
@@ -54,8 +54,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyControll
 
 	#creating company
 	$scope.createCompany = (cdata) ->
-		console.log "inc createCompany", cdata
-		companyControllerServices.createCompany(cdata, onCreateCompanySuccess, onCreateCompanyFailure)
+    companyServices.createCompany(cdata, onCreateCompanySuccess, onCreateCompanyFailure)
 
 	#create company success
 	onCreateCompanySuccess = (response) ->
@@ -89,7 +88,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyControll
 	#Get company list
 	$scope.getCompanyList = ->
 		try
-			companyControllerServices.getCompList(getCompanyListSuc, getCompanyListFail)
+      companyServices.getCompList(getCompanyListSuc, getCompanyListFail)
 		catch e
 			throw new Error(e.message);
 

@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('giddhWebApp').service 'homeControllerServices', ($resource) ->
+angular.module('giddhWebApp').service 'companyServices', ($resource) ->
   compResource = $resource('/createCompany', {}, {
     addCmpny: {method: 'POST'}
   })
@@ -9,10 +9,11 @@ angular.module('giddhWebApp').service 'homeControllerServices', ($resource) ->
     getCmpny: {method: 'GET'}
   })
 
-  homeControllerServices =
+  companyServices =
     createCompany: (cdata, onSuccess, onFailure) ->
-      compResource.addCmpny({name: cdata.name, city : cdata.city, uniqueName : cdata.uniqueName}, onSuccess, onFailure)
+      compResource.addCmpny(cdata, onSuccess, onFailure)
     getCompList: (onSuccess, onFailure) ->
       compGetResource.getCmpny(onSuccess, onFailure)
-        
-  homeControllerServices
+
+
+  companyServices
