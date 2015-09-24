@@ -1,7 +1,7 @@
 "use strict"
 
 mainController = ($scope, $rootScope, $timeout, $http, localStorageService) ->
-  $scope.dynamicTooltip = 'Hello, World!';
+  $scope.dynamicTooltip = 'Hello, World!'
 
   $rootScope.basicInfo = {}
 
@@ -15,7 +15,7 @@ mainController = ($scope, $rootScope, $timeout, $http, localStorageService) ->
         window.location = "/thanks"
       ), (response) ->
     catch e
-      throw new Error(e.message);
+      throw new Error(e.message)
 
   $rootScope.$on '$viewContentLoaded', ->
     $rootScope.basicInfo = $rootScope.getItem("_userDetails")

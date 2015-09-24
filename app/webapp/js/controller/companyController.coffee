@@ -60,7 +60,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #create company failure
   onCreateCompanyFailure = (response) ->
 
-    #get company list failure
+#get company list failure
   getCompanyListFail = (response)->
     toastr[response.status](response.message)
 
@@ -77,12 +77,12 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     try
       companyServices.getCompList(getCompanyListSuc, getCompanyListFail)
     catch e
-      throw new Error(e.message);
+      throw new Error(e.message)
 
   #delete company
   $scope.deleteCompany = (id, index) ->
 
-    #making a detail company view
+#making a detail company view
   $scope.goToCompany = (data) ->
     $rootScope.cmpViewShow = true
     $rootScope.companyDetailsName = data.name
@@ -101,17 +101,17 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #fire function after page fully loaded
   $rootScope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
-  
+
   $scope.getLocation = (val) ->
     console.log "called"
-    companyServices.getLocation(val,((response) -> response.results.map((item) ->
-        console.log item.formatted_address
-        item.formatted_address
+    companyServices.getLocation(val, ((response) -> response.results.map((item) ->
+      console.log item.formatted_address
+      item.formatted_address
     )), (->))
 
   $scope.getCurrencyList = ->
     try
-      companyServices.getCurrencyList(getCurrencyListSuc,getCurrencyListFail)
+      companyServices.getCurrencyList(getCurrencyListSuc, getCurrencyListFail)
     catch e
       throw new Error(e.message)
 
@@ -123,7 +123,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   getCurrencyListSuc = (response) ->
     console.log "companyList successfully", response.body
     response.body
-		
+
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController
 

@@ -23,7 +23,7 @@ angular.module('giddhWebApp').service 'companyServices', ($resource) ->
     getCompList: (onSuccess, onFailure) ->
       compGetResource.getCmpny(onSuccess, onFailure)
     getLocation: (searchThis, onSuccess, onFailure)->
-      console.log("In get location#######################################");
+      console.log("In get location#######################################")
       searchCity.getCity({"queryString": searchThis}, onSuccess, onFailure)
     getCurrencyList: (onSuccess, onFailure) ->
       currencyGetResource.currencyList(onSuccess, onFailure)

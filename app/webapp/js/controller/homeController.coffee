@@ -65,7 +65,7 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, $
     try
       companyServices.getCompList(getCompanyListSuc, getCompanyListFail)
     catch e
-      throw new Error(e.message);
+      throw new Error(e.message)
 
   #delete company
   $scope.deleteCompany = (id, index) ->
