@@ -28,7 +28,6 @@ loginController = ($scope, $rootScope, $http, loginService) ->
       $scope.responseMsg = response.message
 
   $scope.onLoginFailure = (response) ->
-    console.log "call failed", response
 
   $scope.submitUserForm = ->
     if $scope.form.$valid

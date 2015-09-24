@@ -15,5 +15,4 @@ angular.module('giddhWebApp').service 'companyServices', ($resource) ->
     getCompList: (onSuccess, onFailure) ->
       compGetResource.getCmpny(onSuccess, onFailure)
 
-
   companyServices

@@ -4,41 +4,33 @@ var router = express.Router();
 
 __dirname = path.resolve(__dirname, "..");
 
-console.log("page called appusers")
-
 var options = {
   root: __dirname + '/public/webapp/views',
   dotfiles: 'deny',
   headers: {
-      'x-timestamp': Date.now(),
-      'x-sent': true
+    'x-timestamp': Date.now(),
+    'x-sent': true
   }
 };
 
-console.log(options.root, "dir in app user", __dirname)
-
 router.get('/app/*', function (req, res, next) {
-  console.log(req.session.name, "in app")
-  if (req.session.name != undefined){
+  if (req.session.name != undefined) {
     res.sendFile("index.html", options);
   }
-  else{
+  else {
     res.redirect('/login');
   }
 });
 
 // thanks page
-router.get('/thanks', function(req, res, next) {
+router.get('/thanks', function (req, res, next) {
   res.sendFile("thanks.html", options);
 });
 
 /*logout*/
-router.post('/logout', function(req, res, next){
-  console.log(req.body, "in logout request")
+router.post('/logout', function (req, res, next) {
   req.session.destroy();
-  res.json({ status: 'success' });
+  res.json({status: 'success'});
 });
-
-
 
 module.exports = router;
