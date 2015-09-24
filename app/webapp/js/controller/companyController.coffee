@@ -1,8 +1,8 @@
 "use strict"
 
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, $http) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService) ->
 
-#blank Obj for modal
+  #blank Obj for modal
   $rootScope.company = {}
   #blank Obj for modal
   $rootScope.company = {}
@@ -110,10 +110,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     )), (->))
 
   $scope.getCurrencyList = ->
-    try
-      companyServices.getCurrencyList(getCurrencyListSuc, getCurrencyListFail)
-    catch e
-      throw new Error(e.message)
+    currencyService.getList(getCurrencyListSuc, getCurrencyListFail)
 
   getCurrencyListFail = (response)->
     console.log "companyList failure", response
@@ -126,7 +123,3 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController
-
-
-
-

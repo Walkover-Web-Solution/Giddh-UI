@@ -56,15 +56,15 @@ app.use(session({
 }));
 
 // do not remove code from this position
-var websiteRoutes = require('./public/routes/website/main');
-app.use('/', websiteRoutes);
 var contact = require('./public/routes/website/contact');
 app.use('/contact', contact);
+var websiteRoutes = require('./public/routes/website/main');
+app.use('/', websiteRoutes);
 
-var appRoutes = require('./public/routes/webapp/main');
-app.use('/', appRoutes);
 var currency = require('./public/routes/webapp/currency');
 app.use('/currency', currency);
+var appRoutes = require('./public/routes/webapp/main');
+app.use('/', appRoutes);
 
 /*
  |--------------------------------------------------------------------------
