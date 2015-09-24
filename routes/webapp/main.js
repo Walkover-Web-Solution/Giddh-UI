@@ -12,7 +12,7 @@ var options = {
     'x-sent': true
   }
 };
-console.log(options.root, "webapp views Route*******************************")
+
 router.get('/app/*', function (req, res, next) {
   if (req.session.name != undefined) {
     res.sendFile("index.html", options);

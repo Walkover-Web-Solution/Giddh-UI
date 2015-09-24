@@ -17,7 +17,7 @@ describe "Login Service", ->
   describe "#submitUserForm", ->
     it 'should submit user form', ->
       user = {uFname: "Priyanka", uLname: "pathak", email: "p@p.com", company: "Walkover", reason: "blank"}
-      @httpBackend.when('POST', '/submitBetaInviteDetails', user).respond(200,
+      @httpBackend.when('POST', '/contact/submitDetails', user).respond(200,
         {"message": "success"})
 
       @loginService.submitUserForm(user,
@@ -26,7 +26,7 @@ describe "Login Service", ->
 
     it 'should not submit user form', ->
       user = {uFname: "Priyanka", uLname: "pathak", email: "p@p.com", company: "Walkover", reason: "blank"}
-      @httpBackend.when('POST', '/submitBetaInviteDetails', user).respond(401,
+      @httpBackend.when('POST', '/contact/submitDetails', user).respond(401,
         {"message": "failure message"})
 
       @loginService.submitUserForm(user,

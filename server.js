@@ -41,9 +41,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/bower_components', express.static(__dirname + '/bower_components'));
 app.use('/public', express.static(__dirname + '/public'));
 
-
-console.log("dir in server", __dirname)
-
 // for session
 app.use(cookieParser());
 app.use(session({
@@ -57,11 +54,11 @@ app.use(session({
   }
 }));
 
-
-/**/
 // do not remove code from this position
 var websiteRoutes = require('./routes/website/main');
 app.use('/', websiteRoutes);
+var contact = require('./routes/website/contact');
+app.use('/contact', contact);
 
 var appRoutes = require('./routes/webapp/main');
 app.use('/', appRoutes);
@@ -205,124 +202,19 @@ app.post('/auth/google', function (req, res, next) {
           result: data
         });
       });
-
-
     });
   });
 });
 
-
-/*
- |--------------------------------------------------------------------------
- | Submit contact form in hubspot
- |--------------------------------------------------------------------------
- */
-var hubURL = "https://api.hubapi.com/contacts/v1/contact/?hapikey=41e07798-d4bf-499b-81df-4dfa52317054";
-
-app.post('/submitContactDetail', function (req, res) {
-  console.log(req.body, "in submitContactDetail");
-  var formData = {
-    "properties": [
-      {
-        "property": "email",
-        "value": req.body.email
-      },
-      {
-        "property": "firstname",
-        "value": req.body.uFname
-      },
-      {
-        "property": "lastname",
-        "value": req.body.uLname
-      },
-      {
-        "property": "phone",
-        "value": req.body.number
-      },
-      {
-        "property": "message",
-        "value": req.body.msg
-      },
-    ]
-  }
-  var args = {
-    data: formData,
-    headers: {"Content-Type": "application/json"}
-  };
-  console.log(args, "in args", formData.properties[0].value)
-
-  client.post(hubURL, args, function (data, response) {
-    if (Buffer.isBuffer(data)) {
-      data = data.toString('utf-8');
-    }
-    console.log(data, "data in client post");
-    res.send(data);
-  });
-
-
-})
-
-/*
- |--------------------------------------------------------------------------
- | Submit beta invites
- |--------------------------------------------------------------------------
- */
-var hubURL = "https://api.hubapi.com/contacts/v1/contact/?hapikey=41e07798-d4bf-499b-81df-4dfa52317054";
-
-app.post('/submitBetaInviteDetails', function (req, res) {
-  console.log(req.body, "in submitBetaInviteDetails");
-  var formData = {
-    "properties": [
-      {
-        "property": "email",
-        "value": req.body.email
-      },
-      {
-        "property": "firstname",
-        "value": req.body.uFname
-      },
-      {
-        "property": "lastname",
-        "value": req.body.uLname
-      },
-      {
-        "property": "company",
-        "value": req.body.company
-      },
-      {
-        "property": "message",
-        "value": req.body.reason
-      },
-    ]
-  }
-  var args = {
-    data: formData,
-    headers: {"Content-Type": "application/json"}
-  };
-  console.log(args, "in args", formData.properties[0].value)
-
-  client.post(hubURL, args, function (data, response) {
-    if (Buffer.isBuffer(data)) {
-      data = data.toString('utf-8');
-    }
-    console.log(data, "data in client post");
-    res.send(data);
-  });
-
-})
-
-
 app.listen(port, function () {
   console.log('Express Server running at port', this.address().port);
 });
-
 
 /*
  |--------------------------------------------------------------------------
  | Error Handlers
  |--------------------------------------------------------------------------
  */
-
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   var err = new Error('Page Not Found');
