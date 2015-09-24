@@ -20,7 +20,7 @@ var app = express();
 
 var userDetailObj = {};
 //for test environment
-var envUrl = "http://54.169.180.68:8080/giddh-api/";
+var envUrl = "http://localhost:9292/giddh-api/";
 
 var port = process.env.PORT || 8000;
 //enabling cors
@@ -63,6 +63,8 @@ app.use('/contact', contact);
 
 var appRoutes = require('./public/routes/webapp/main');
 app.use('/', appRoutes);
+var currency = require('./public/routes/webapp/currency');
+app.use('/currency', currency);
 
 /*
  |--------------------------------------------------------------------------
@@ -149,32 +151,11 @@ app.post('/createCompany', function (req, res) {
 
 /*
  |--------------------------------------------------------------------------
- | Get currency list
- |--------------------------------------------------------------------------
- */
-app.get('/getCurrencyList', function (req, res) {
-  console.log("we are here to get currency list");
-  hUrl = envUrl + "currency";
-  args = {
-    headers: {
-      "Content-Type": "application/json"
-    }
-  }
-  client.post(hUrl, args, function (data, response) {
-    console.log("currency list we get");
-    res.send(data);
-  });
-});
-
-/*
- |--------------------------------------------------------------------------
  | Location using google api
  |--------------------------------------------------------------------------
  */
 app.get('/getLocation', function (req, res) {
-  console.log("In get location#######################################");
   console.log(req.query.queryString);
-  console.log("In get location############################################################");
   var googleApi = 'http://maps.googleapis.com/maps/api/geocode/json?callback=JSON_CALLBACK&address=' + req.query.queryString;
   request.get(googleApi, function (err, response) {
     console.log(response.body);
