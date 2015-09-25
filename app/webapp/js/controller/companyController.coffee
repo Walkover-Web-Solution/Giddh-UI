@@ -82,7 +82,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #delete company
   $scope.deleteCompany = (id, index) ->
 
-#making a detail company view
+  #making a detail company view
   $scope.goToCompany = (data) ->
     $rootScope.cmpViewShow = true
     $rootScope.companyDetailsName = data.name
@@ -97,17 +97,23 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.setFormScope = (scope) ->
     @formScope = scope
 
-
   #fire function after page fully loaded
   $rootScope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
 
   $scope.getLocation = (val) ->
     console.log "called"
-    locationService.search(val, ((response) -> response.results.map((item) ->
+    promise = locationService.search(val)
+    promise.then(onGetLocationSuccess, onGetLocationFailure)
+
+  onGetLocationSuccess = (data) ->
+    data.results.map((item) ->
       console.log item.formatted_address
       item.formatted_address
-    )), (->))
+    )
+
+  onGetLocationFailure = (data) ->
+    console.lon "in get location failure"
 
   $scope.getCurrencyList = ->
     currencyService.getList(getCurrencyListSuc, getCurrencyListFail)
