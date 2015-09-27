@@ -1,4 +1,4 @@
-module.exports.utils = require('./sharedUtility')
+module.exports.stringUtil = require('./stringUtil')
 module.exports.express = require('express')
 module.exports.path = require('path')
 module.exports.router = module.exports.express.Router()

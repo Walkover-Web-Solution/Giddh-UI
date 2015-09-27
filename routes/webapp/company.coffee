@@ -1,4 +1,4 @@
-settings = require('../shared/settings')
+settings = require('../util/settings')
 router = settings.express.Router()
 
 router.get '/all', (req, res) ->
@@ -12,7 +12,7 @@ router.get '/:uniqueName', (req, res) ->
 
 router.post '/', (req, res) ->
   hUrl = settings.envUrl + 'company/'
-  req.body.uniqueName = settings.utils.getRandomString(req.body.name, req.body.city)
+  req.body.uniqueName = settings.stringUtil.getRandomString(req.body.name, req.body.city)
   args =
     headers:
       'Auth-Key': req.session.authKey

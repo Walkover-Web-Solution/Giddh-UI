@@ -1,4 +1,4 @@
-settings = require('../shared/settings')
+settings = require('../util/settings')
 router = settings.express.Router()
 
 hubURL = 'https://api.hubapi.com/contacts/v1/contact/?hapikey=41e07798-d4bf-499b-81df-4dfa52317054'

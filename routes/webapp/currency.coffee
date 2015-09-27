@@ -1,4 +1,4 @@
-settings = require('../shared/settings')
+settings = require('../util/settings')
 router = settings.express.Router()
 
 router.get '/', (req, res) ->

@@ -1,6 +1,6 @@
 "use strict"
 
-homeController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, $http) ->
+homeController = ($scope, $rootScope, $timeout, $modal, $log, companyServices) ->
 
   #blank Obj for modal
   $rootScope.company = {}
