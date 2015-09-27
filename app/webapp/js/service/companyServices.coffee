@@ -3,6 +3,7 @@
 angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
   Company = $resource('/company', {'uniqueName': @uniqueName}, {
     add: {method: 'POST'}
+    get: {method: 'GET', url: '/company/:uniqueName'}
     getList: {method: 'GET', url: '/company/all'}
   })
 
@@ -19,5 +20,8 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
 
     getAll: (onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Company.getList(onSuccess, onFailure))
+
+    get: (uniqueName, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.get({uniqueName: uniqueName}, onSuccess, onFailure))
 
   companyServices

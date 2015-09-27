@@ -79,6 +79,9 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     catch e
       throw new Error(e.message)
 
+  $scope.getCompany = (uniqueName)->
+    companyServices.get(uniqueName).then(getCompanyListSuc, getCompanyListFail)
+
   #delete company
   $scope.deleteCompany = (id, index) ->
 

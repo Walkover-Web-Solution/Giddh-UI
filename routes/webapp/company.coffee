@@ -7,6 +7,9 @@ router.get '/all', (req, res) ->
   settings.client.get hUrl, onlyAuthHead, (data) ->
     res.send data
 
+router.get '/:uniqueName', (req, res) ->
+  console.log req.params.uniqueName
+
 router.post '/', (req, res) ->
   hUrl = settings.envUrl + 'company/'
   req.body.uniqueName = settings.utils.getRandomString(req.body.name, req.body.city)
