@@ -1,0 +1,7 @@
+module.exports.utils = require('./sharedUtility')
+express = require('express')
+module.exports.path = require('path')
+module.exports.router = express.Router()
+Client = require('node-rest-client').Client;
+module.exports.client = new Client();
+module.exports.envUrl = "http://localhost:9292/giddh-api/";

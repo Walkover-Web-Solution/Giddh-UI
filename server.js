@@ -20,7 +20,7 @@ var app = express();
 
 var userDetailObj = {};
 //for test environment
-var envUrl = "http://54.169.180.68:8080/giddh-api/";
+var envUrl = "http://localhost:9292/giddh-api/";
 
 var port = process.env.PORT || 8000;
 //enabling cors
@@ -57,97 +57,18 @@ app.use(session({
 
 // do not remove code from this position
 var contact = require('./public/routes/website/contact');
-app.use('/contact', contact);
 var websiteRoutes = require('./public/routes/website/main');
+
+app.use('/contact', contact);
 app.use('/', websiteRoutes);
 
 var currency = require('./public/routes/webapp/currency');
-app.use('/currency', currency);
+var company = require('./public/routes/webapp/company');
 var appRoutes = require('./public/routes/webapp/main');
+
+app.use('/currency', currency);
+app.use('/company', company);
 app.use('/', appRoutes);
-
-/*
- |--------------------------------------------------------------------------
- | Custom functions get random string for company unique name
- |--------------------------------------------------------------------------
- */
-function getRandomString(cun, uun) {
-  var userUN, cmpUN, d, n, randomGenerate, stringss, randomString;
-
-  userUN = removeSpecialCharacters(uun);
-  cmpUN = removeSpecialCharacters(cun);
-  d = new Date();
-  n = d.getTime().toString();
-  randomGenerate = getSixCharRandom();
-  stringss = [userUN, cmpUN, n, randomGenerate];
-  randomString = stringss.join("");
-  return randomString;
-}
-
-function removeSpecialCharacters(str) {
-  var finalString = str.replace(/[^a-zA-Z0-9]/g, "");
-  finalString = finalString.substr(0, 6).toLowerCase();
-  return finalString;
-}
-
-function getSixCharRandom() {
-  var randomGenerate = Math.random().toString(36).replace(/[^a-zA-Z0-9]+/g, '').substr(0, 6);
-  return randomGenerate;
-}
-
-
-/*
- |--------------------------------------------------------------------------
- | hit APIs for get data getBasicDetails
- |--------------------------------------------------------------------------
- */
-//some universal var for hitting apis
-var onlySmpHead = {
-  headers: {"Content-Type": "application/json"}
-}
-
-
-app.get('/getCompanyList', function (req, res, next) {
-  console.log("in get getCompanyList");
-  var onlyAuthHead = {
-    headers: {"Auth-Key": req.session.name}
-  }
-  var hUrl = envUrl + "users/" + userDetailObj.userUniqueName + "/companies";  
-
-      client.get(hUrl, onlyAuthHead, function (data, response) {
-        console.log(data, "data in company list for user");
-        res.send(data);
-      });
-
-});
-
-//get details of a single company
-app.get('/getCompanyDetails', function (req, res) {
-  console.log("in get getBasicDetails");
-});
-
-//create new company
-app.post('/createCompany', function (req, res) {
-  console.log("in createCompany", req.body)
-  hUrl = envUrl + "company/";
-
-  req.body.uniqueName = getRandomString(req.body.name, req.body.city)
-
-  console.log("randomString", req.body.uniqueName)
-  args = {
-    headers: {
-      "Auth-Key": req.session.name,
-      "Content-Type": "application/json"
-    },
-    data: req.body
-  }
-
-  console.log("making req", args)
-  client.post(hUrl, args, function (data, response) {
-    console.log(data, "data in company list for user");
-    res.send(data);
-  });
-});
 
 /*
  |--------------------------------------------------------------------------
@@ -160,10 +81,6 @@ app.get('/getLocation', function (req, res) {
   request.get(googleApi, function (err, response) {
     console.log(response.body);
     res.send(response.body);
-    //response.data.results.map(function (item) {
-    //  console.log(item.formatted_address);
-      //return item.formatted_address;
-    //});
   });
 });
 
@@ -213,7 +130,8 @@ app.post('/auth/google', function (req, res, next) {
         }
         else {
           userDetailObj.userUniqueName = data.body.uniqueName;
-          req.session.name = data.body.authKey
+          req.session.name = data.body.uniqueName
+          req.session.authKey = data.body.authKey
           console.log(userDetailObj)
         }
         res.send({

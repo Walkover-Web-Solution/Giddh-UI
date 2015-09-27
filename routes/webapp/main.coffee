@@ -1,8 +1,6 @@
-express = require('express')
-path = require('path')
-router = express.Router()
+settings = require('../shared/settings')
 
-dirName = path.resolve(__dirname, '..', '..')
+dirName = settings.path.resolve(__dirname, '..', '..')
 
 options = {
   root: dirName + '/webapp/views',
@@ -12,17 +10,17 @@ options = {
     'x-sent': true
 }
 
-router.get '/app/*', (req, res, next) ->
+settings.router.get '/app/*', (req, res) ->
   if req.session.name != undefined
     res.sendFile 'index.html', options
   else
     res.redirect '/login'
 
-router.get '/thanks', (req, res, next) ->
+settings.router.get '/thanks', (req, res) ->
   res.sendFile 'thanks.html', options
 
-router.post '/logout', (req, res, next) ->
+settings.router.post '/logout', (req, res) ->
   req.session.destroy()
   res.json status: 'success'
 
-module.exports = router
+module.exports = settings.router

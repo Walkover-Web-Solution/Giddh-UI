@@ -1,11 +1,11 @@
 'use strict'
 
 angular.module('giddhWebApp').service 'companyServices', ($resource) ->
-  compResource = $resource('/createCompany', {}, {
+  compResource = $resource('/company', {}, {
     addCmpny: {method: 'POST'}
   })
 
-  compGetResource = $resource('/getCompanyList', {}, {
+  compGetResource = $resource('/company/all', {}, {
     getCmpny: {method: 'GET'}
   })
 
