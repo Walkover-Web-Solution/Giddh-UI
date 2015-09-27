@@ -34,7 +34,7 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, $
 
   #creating company
   $scope.createCompany = (cdata) ->
-    companyServices.createCompany(cdata, onCreateCompanySuccess, onCreateCompanyFailure)
+    companyServices.create(cdata, onCreateCompanySuccess, onCreateCompanyFailure)
 
   #create company success
   onCreateCompanySuccess = (response) ->
@@ -63,7 +63,7 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, $
   #Get company list
   $scope.getCompanyList = ->
     try
-      companyServices.getCompList(getCompanyListSuc, getCompanyListFail)
+      companyServices.getAll().then(getCompanyListSuc, getCompanyListFail)
     catch e
       throw new Error(e.message)
 

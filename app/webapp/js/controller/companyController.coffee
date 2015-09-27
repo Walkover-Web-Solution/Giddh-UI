@@ -46,7 +46,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #creating company
   $scope.createCompany = (cdata) ->
-    companyServices.createCompany(cdata, onCreateCompanySuccess, onCreateCompanyFailure)
+    companyServices.create(cdata).then(onCreateCompanySuccess, onCreateCompanyFailure)
 
   #create company success
   onCreateCompanySuccess = (response) ->
@@ -60,7 +60,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #create company failure
   onCreateCompanyFailure = (response) ->
 
-#get company list failure
+    #get company list failure
   getCompanyListFail = (response)->
     toastr[response.status](response.message)
 
@@ -75,14 +75,14 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #Get company list
   $scope.getCompanyList = ->
     try
-      companyServices.getCompList(getCompanyListSuc, getCompanyListFail)
+      companyServices.getAll().then(getCompanyListSuc, getCompanyListFail)
     catch e
       throw new Error(e.message)
 
   #delete company
   $scope.deleteCompany = (id, index) ->
 
-  #making a detail company view
+    #making a detail company view
   $scope.goToCompany = (data) ->
     $rootScope.cmpViewShow = true
     $rootScope.companyDetailsName = data.name

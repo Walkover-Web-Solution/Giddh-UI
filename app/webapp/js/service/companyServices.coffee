@@ -1,19 +1,23 @@
 'use strict'
 
-angular.module('giddhWebApp').service 'companyServices', ($resource) ->
-  compResource = $resource('/company', {}, {
-    addCmpny: {method: 'POST'}
-  })
-
-  compGetResource = $resource('/company/all', {}, {
-    getCmpny: {method: 'GET'}
+angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
+  Company = $resource('/company', {'uniqueName': @uniqueName}, {
+    add: {method: 'POST'}
+    getList: {method: 'GET', url: '/company/all'}
   })
 
   companyServices =
-    createCompany: (cdata, onSuccess, onFailure) ->
-      compResource.addCmpny(cdata, onSuccess, onFailure)
+    handlePromise: (func) ->
+      deferred = $q.defer()
+      onSuccess = (data)-> deferred.resolve(data)
+      onFailure = (data)-> deferred.reject(data)
+      func(onSuccess, onFailure)
+      deferred.promise
 
-    getCompList: (onSuccess, onFailure) ->
-      compGetResource.getCmpny(onSuccess, onFailure)
+    create: (cdata, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.add(cdata, onSuccess, onFailure))
+
+    getAll: (onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getList(onSuccess, onFailure))
 
   companyServices

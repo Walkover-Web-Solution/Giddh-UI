@@ -1,8 +1,9 @@
 settings = require('../shared/settings')
+router = settings.express.Router()
 
 hubURL = 'https://api.hubapi.com/contacts/v1/contact/?hapikey=41e07798-d4bf-499b-81df-4dfa52317054'
 
-settings.router.post '/submitDetails', (req, res) ->
+router.post '/submitDetails', (req, res) ->
   console.log req.body, 'in submitBetaInviteDetails'
   formData =
     'properties': [
@@ -39,4 +40,4 @@ settings.router.post '/submitDetails', (req, res) ->
     console.log data, 'data in client post'
     res.send data
 
-module.exports = settings.router
+module.exports = router
