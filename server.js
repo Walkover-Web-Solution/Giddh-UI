@@ -1,5 +1,4 @@
-var express = require('express');
-var path = require('path');
+var settings = require('./public/routes/util/settings');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
@@ -9,18 +8,13 @@ var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
 
-//Example POST method invocation
-var Client = require('node-rest-client').Client;
-var client = new Client();
-
 //enabling cors
 var cors = require('cors')
 
-var app = express();
+var app = settings.express();
 
 var userDetailObj = {};
 //for test environment
-var envUrl = "http://54.169.180.68:8080/giddh-api/";
 
 var port = process.env.PORT || 8000;
 //enabling cors
@@ -37,9 +31,9 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/bower_components', express.static(__dirname + '/bower_components'));
-app.use('/public', express.static(__dirname + '/public'));
+app.use(settings.express.static(settings.path.join(__dirname, 'public')));
+app.use('/bower_components', settings.express.static(__dirname + '/bower_components'));
+app.use('/public', settings.express.static(__dirname + '/public'));
 
 
 // for session
@@ -116,13 +110,13 @@ app.post('/auth/google', function (req, res, next) {
 
       console.log("in get success")
       //knowing if user is verified in giddh
-      var authUrl = envUrl + "users/auth-key?userEmail=" + response.body.email;
+      var authUrl = settings.envUrl + "users/auth-key?userEmail=" + response.body.email;
       args = {
         headers: {"Content-Type": "application/json"}
       }
       userDetailObj = response.body;
 
-      client.get(authUrl, args, function (data, response) {
+      settings.client.get(authUrl, args, function (data, response) {
         console.log(data, "data in client post by authUrl");
 
         if (data.status == "error") {
