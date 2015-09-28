@@ -59,11 +59,13 @@ app.use('/', websiteRoutes);
 var currency = require('./public/routes/webapp/currency');
 var company = require('./public/routes/webapp/company');
 var groups = require('./public/routes/webapp/groups');
+var accounts = require('./public/routes/webapp/accounts');
 var appRoutes = require('./public/routes/webapp/main');
 
 app.use('/currency', currency);
 app.use('/company', company);
 app.use('/company/:companyUniqueName/groups', groups);
+app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts', accounts);
 app.use('/', appRoutes);
 
 /*
