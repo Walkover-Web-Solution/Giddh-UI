@@ -1,11 +1,11 @@
 module.exports =
-  getRandomString: (firstString, firstString)->
+  getRandomString: (firstString, secondString)->
     firstString = this.removeSpecialCharacters(firstString)
     secondString = this.removeSpecialCharacters(secondString)
     d = new Date
-    n = d.getTime().toString()
+    dateString = d.getTime().toString()
     randomGenerate = this.getSixCharRandom()
-    strings = [firstString, secondString, n, randomGenerate]
+    strings = [firstString, secondString, dateString, randomGenerate]
     strings.join('')
 
   removeSpecialCharacters: (str) ->
