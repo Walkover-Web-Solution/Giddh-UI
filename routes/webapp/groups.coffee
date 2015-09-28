@@ -7,7 +7,7 @@ router.get '/', (req, res) ->
   settings.client.get hUrl, authHead, (data) ->
     res.send data
 
-router.get '/with-account', (req, res) ->
+router.get '/with-accounts', (req, res) ->
   authHead = headers: 'Auth-Key': req.session.authKey
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups-with-accounts'
   settings.client.get hUrl, authHead, (data) ->
