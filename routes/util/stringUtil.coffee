@@ -1,11 +1,11 @@
 module.exports =
-  getRandomString: (cun, uun)->
-    userUN = this.removeSpecialCharacters(uun)
-    cmpUN = this.removeSpecialCharacters(cun)
+  getRandomString: (firstString, firstString)->
+    firstString = this.removeSpecialCharacters(firstString)
+    secondString = this.removeSpecialCharacters(secondString)
     d = new Date
     n = d.getTime().toString()
     randomGenerate = this.getSixCharRandom()
-    strings = [userUN, cmpUN, n, randomGenerate]
+    strings = [firstString, secondString, n, randomGenerate]
     strings.join('')
 
   removeSpecialCharacters: (str) ->
