@@ -62,6 +62,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
     #get company list failure
   getCompanyListFail = (response)->
+    console.log(response)
     toastr[response.status](response.message)
 
   #Get company list
@@ -84,6 +85,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #delete company
   $scope.deleteCompany = (id, index) ->
+    console.log(id, index, "in deleteCompany")
 
     #making a detail company view
   $scope.goToCompany = (data) ->
@@ -105,18 +107,16 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     $scope.getCompanyList()
 
   $scope.getLocation = (val) ->
-    console.log "called"
     promise = locationService.search(val)
     promise.then(onGetLocationSuccess, onGetLocationFailure)
 
   onGetLocationSuccess = (data) ->
     data.results.map((item) ->
-      console.log item.formatted_address
       item.formatted_address
     )
 
   onGetLocationFailure = (data) ->
-    console.lon "in get location failure"
+    console.lon "in get location failure", data
 
   $scope.getCurrencyList = ->
     currencyService.getList(getCurrencyListSuc, getCurrencyListFail)

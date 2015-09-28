@@ -20,7 +20,7 @@ var app = express();
 
 var userDetailObj = {};
 //for test environment
-var envUrl = "http://localhost:9292/giddh-api/";
+var envUrl = "http://54.169.180.68:8080/giddh-api/";
 
 var port = process.env.PORT || 8000;
 //enabling cors
