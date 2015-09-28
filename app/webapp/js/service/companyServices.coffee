@@ -15,13 +15,13 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
       func(onSuccess, onFailure)
       deferred.promise
 
-    create: (cdata, onSuccess, onFailure) ->
+    create: (cdata) ->
       @handlePromise((onSuccess, onFailure) -> Company.add(cdata, onSuccess, onFailure))
 
-    getAll: (onSuccess, onFailure) ->
+    getAll: () ->
       @handlePromise((onSuccess, onFailure) -> Company.getList(onSuccess, onFailure))
 
-    get: (uniqueName, onSuccess, onFailure) ->
+    get: (uniqueName) ->
       @handlePromise((onSuccess, onFailure) -> Company.get({uniqueName: uniqueName}, onSuccess, onFailure))
 
   companyServices
