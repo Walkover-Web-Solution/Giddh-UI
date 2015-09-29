@@ -16,6 +16,14 @@ mainController = ($scope, $rootScope, $timeout, $http, localStorageService) ->
     catch e
       throw new Error(e.message)
 
+  $rootScope.closePop = ()->
+    console.log "closePop"
+    #$modalInstance.close()
+
+  $scope.cancelPop = () ->
+    console.log "cancelPop"
+    #$modalInstance.dismiss('cancel')
+
   $rootScope.$on '$viewContentLoaded', ->
     $rootScope.basicInfo = $rootScope.getItem("_userDetails")
 

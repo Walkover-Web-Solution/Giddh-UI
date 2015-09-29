@@ -34,6 +34,14 @@ app.config ($locationProvider, $routeProvider) ->
 app.run(()->
 )
 
+# confirm modal settings
+app.value('$confirmModalDefaults',
+  templateUrl : '/public/webapp/views/confirmModal.html'
+  defaultLabels:
+    title: 'Confirm'
+    ok: 'OK'
+    cancel: 'Cancel')
+
 #for project lib helps check out
 #bootstrap related - http://angular-ui.github.io/bootstrap/#/tooltip
 #LocalStorageModule - https://github.com/grevory/angular-local-storage

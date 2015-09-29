@@ -1,11 +1,11 @@
 "use strict"
 
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, $confirm) ->
 
   #blank Obj for modal
   $rootScope.company = {}
-  #blank Obj for modal
-  $rootScope.company = {}
+
+  $rootScope.data = {}
 
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
@@ -83,9 +83,28 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.getCompany = (uniqueName)->
     companyServices.get(uniqueName).then((->), (->))
 
+
   #delete company
-  $scope.deleteCompany = (id, index) ->
-    console.log(id, index, "in deleteCompany")
+  $scope.deleteCompany = (uniqueName, index, name) ->
+    console.log(uniqueName, index, "in deleteCompany")
+    $confirm(
+      text: 'Are you sure you want to delete?',
+      title: 'Delete it', 
+      ok: 'Yes', 
+      cancel: 'No'
+    ).then ->
+      console.log "in confirm success"
+
+    #companyServices.delete(uniqueName).then(delCompanySuc, delCompanyFail)
+
+  #delete company success
+  delCompanySuc = (response) ->
+    console.log response, "in deleteCompany success"
+    toastr[response.status](response.message)
+
+  #delete company failure
+  delCompanyFail = (response) ->
+    console.log response, "deleteCompany failure"
 
     #making a detail company view
   $scope.goToCompany = (data) ->

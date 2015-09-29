@@ -5,6 +5,7 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
     add: {method: 'POST'}
     get: {method: 'GET', url: '/company/:uniqueName'}
     getList: {method: 'GET', url: '/company/all'}
+    delete:{method: 'DELETE', url: '/company/:uniqueName'}
   })
 
   companyServices =
@@ -23,5 +24,14 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
 
     get: (uniqueName) ->
       @handlePromise((onSuccess, onFailure) -> Company.get({uniqueName: uniqueName}, onSuccess, onFailure))
+
+    delete: (uniqueName, onSuccess, onFailure) ->
+      console.log "in delete company", uniqueName
+      @handlePromise((onSuccess, onFailure) -> Company.delete({
+        uniqueName: uniqueName}, onSuccess, onFailure))
+
+    confirm: (name) ->
+      console.log "in company confirm", name
+      
 
   companyServices

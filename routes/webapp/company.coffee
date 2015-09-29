@@ -7,6 +7,17 @@ router.get '/all', (req, res) ->
   settings.client.get hUrl, onlyAuthHead, (data) ->
     res.send data
 
+router.delete '/:uniqueName', (req, res) ->
+  console.log req.params.uniqueName, "in delete company"
+  hUrl = settings.envUrl + 'company/'+req.params.uniqueName
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+  settings.client.post hUrl, args, (data) ->
+    console.log data, "in delete company data"
+    res.send data
+
 router.get '/:uniqueName', (req, res) ->
   console.log req.params.uniqueName
 

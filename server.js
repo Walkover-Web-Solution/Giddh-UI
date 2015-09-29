@@ -77,7 +77,6 @@ app.get('/getLocation', function (req, res) {
   console.log(req.query.queryString);
   var googleApi = 'http://maps.googleapis.com/maps/api/geocode/json?callback=JSON_CALLBACK&address=' + req.query.queryString;
   request.get(googleApi, function (err, response) {
-    console.log(response.body);
     res.send(response.body);
   });
 });

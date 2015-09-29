@@ -16,4 +16,7 @@ angular.module('giddhWebApp').service 'locationService', ($resource, $q) ->
     search: (searchThis, onSuccess, onFailure)->
       @handlePromise((onSuccess, onFailure) -> Search.getCity({"queryString": searchThis}, onSuccess, onFailure))
 
+    confirm: (name) ->
+      console.log "in company confirm service", name
+
   locationService
