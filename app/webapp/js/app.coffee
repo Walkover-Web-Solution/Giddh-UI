@@ -1,15 +1,16 @@
 app = angular.module("giddhWebApp",
-    [
-      "satellizer"
-      "LocalStorageModule"
-      "ngRoute"
-      "ngResource"
-      "perfect_scrollbar"
-      "ui.tree"
-      "ngSanitize"
-      "ui.bootstrap"
-      "twygmbh.auto-height"
-    ]
+  [
+    "satellizer"
+    "LocalStorageModule"
+    "ngRoute"
+    "ngResource"
+    "perfect_scrollbar"
+    "ui.tree"
+    "ngSanitize"
+    "ui.bootstrap"
+    "twygmbh.auto-height"
+    "toastr"
+  ]
 )
 
 app.config (localStorageServiceProvider) ->
@@ -36,7 +37,7 @@ app.run(()->
 
 # confirm modal settings
 app.value('$confirmModalDefaults',
-  templateUrl : '/public/webapp/views/confirmModal.html',
+  templateUrl: '/public/webapp/views/confirmModal.html',
   controller: 'ConfirmModalController',
   defaultLabels:
     title: 'Confirm'

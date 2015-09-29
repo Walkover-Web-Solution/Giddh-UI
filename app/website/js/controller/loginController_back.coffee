@@ -1,12 +1,12 @@
 'use strict'
 
-loginBackController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService) ->
+loginBackController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr) ->
   
   $scope.authenticate = (provider) ->
     $auth.authenticate(provider).then((response) ->
       if response.data.result.status is "error"
         #user is not registerd with us
-        toastr[response.data.result.status](response.data.result.error)
+        toastr.error(response.data.result.message, "Error")
         $timeout (->
           window.location = "/beta"
         ), 3000

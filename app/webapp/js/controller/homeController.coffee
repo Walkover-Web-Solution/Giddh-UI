@@ -1,6 +1,6 @@
 "use strict"
 
-homeController = ($scope, $rootScope, $timeout, $modal, $log, companyServices) ->
+homeController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, toastr) ->
 
 #blank Obj for modal
   $rootScope.company = {}
@@ -39,18 +39,18 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, companyServices) -
   #create company success
   onCreateCompanySuccess = (response) ->
     if response.status is "success"
-      toastr[response.status]("Company create successfully")
+      toastr.success("Company create successfully", "Success")
       $rootScope.mngCompDataFound = true
       $scope.companyList.push(response.body)
     else
-      toastr[response.status](response.message)
+      toastr.error(response.message, "Error")
 
   #create company failure
   onCreateCompanyFailure = (response) ->
 
 #get company list failure
   getCompanyListFail = (response)->
-    toastr[response.status](response.message)
+    toastr.error(response.message, "Error")
 
   #Get company list
   getCompanyListSuc = (response) ->

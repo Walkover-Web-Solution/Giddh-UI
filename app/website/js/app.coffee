@@ -2,17 +2,15 @@ app = angular.module("giddhApp", [
   "satellizer"
   "LocalStorageModule"
   "ngResource"
+  "toastr"
   ]
 )
-
-
 
 app.config [
   '$authProvider'
   ($authProvider) ->
     $authProvider.google clientId: '40342793-h9vu599ed13f54kb673t2ltbc713vad7.apps.googleusercontent.com'
 ]
-
 
 app.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'

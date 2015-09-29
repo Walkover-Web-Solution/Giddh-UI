@@ -1,6 +1,6 @@
 "use strict"
 
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, $confirm) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, $confirm, toastr) ->
 
   #blank Obj for modal
   $rootScope.company = {}
@@ -53,18 +53,18 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #create company success
   onCreateCompanySuccess = (response) ->
     if response.status is "success"
-      toastr[response.status]("Company create successfully")
+      toastr.success("Company create successfully", "Success")
       $rootScope.mngCompDataFound = true
       $scope.companyList.push(response.body)
     else
-      toastr[response.status](response.message)
+      toastr.error(response.message, "Error")
 
   #create company failure
   onCreateCompanyFailure = (response) ->
 
     #get company list failure
   getCompanyListFail = (response)->
-    toastr[response.status](response.message)
+    toastr.error(response.message, "Error")
 
   #Get company list
   getCompanyListSuc = (response) ->
@@ -95,12 +95,11 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #delete company success
   delCompanySuc = (response) ->
-    console.log response, "in deleteCompany success"
     if response.status is "success"
-      toastr[response.status](response.body)
+      toastr.success(response.message, "Success")
       $scope.getCompanyList()
     else  
-      toastr[response.status](response.message)
+      toastr.error(response.message, "Error")
 
   #delete company failure
   delCompanyFail = (response) ->
@@ -172,12 +171,12 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     currencyService.getList(getCurrencyListSuccess, getCurrencyListFail)
 
   getCurrencyListFail = (response)->
-    toastr[response.status](response.message)
+    toastr.error(response.message, "Error")
 
   #Get company list
   getCurrencyListSuccess = (response) ->
     if(response.status is "error")
-      toastr[response.status](response.message)
+      toastr.error(response.message, "Error")
     else
       $scope.currencyList = response.body.map((item) ->
         item.code
