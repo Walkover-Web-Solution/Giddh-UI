@@ -5,8 +5,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #blank Obj for modal
   $rootScope.company = {}
 
-  $rootScope.data = {}
-
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
 
@@ -71,7 +69,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       $rootScope.openFirstTimeUserModal()
     else
       $rootScope.mngCompDataFound = true
-      angular.extend($scope.companyList, response.body)
+      $scope.companyList = response.body
 
   #Get company list
   $scope.getCompanyList = ->
@@ -86,21 +84,21 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #delete company
   $scope.deleteCompany = (uniqueName, index, name) ->
-    console.log(uniqueName, index, "in deleteCompany")
     $confirm(
-      text: 'Are you sure you want to delete?',
-      title: 'Delete it', 
+      title: 'Are you sure you want to delete? '+ name, 
       ok: 'Yes', 
       cancel: 'No'
     ).then ->
-      console.log "in confirm success"
-
-    #companyServices.delete(uniqueName).then(delCompanySuc, delCompanyFail)
+      companyServices.delete(uniqueName).then(delCompanySuc, delCompanyFail)
 
   #delete company success
   delCompanySuc = (response) ->
     console.log response, "in deleteCompany success"
-    toastr[response.status](response.message)
+    if response.status is "success"
+      toastr[response.status](response.body)
+      $scope.getCompanyList()
+    else  
+      toastr[response.status](response.message)
 
   #delete company failure
   delCompanyFail = (response) ->

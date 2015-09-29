@@ -29,9 +29,6 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
       console.log "in delete company", uniqueName
       @handlePromise((onSuccess, onFailure) -> Company.delete({
         uniqueName: uniqueName}, onSuccess, onFailure))
-
-    confirm: (name) ->
-      console.log "in company confirm", name
       
 
   companyServices

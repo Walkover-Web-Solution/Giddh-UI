@@ -36,7 +36,8 @@ app.run(()->
 
 # confirm modal settings
 app.value('$confirmModalDefaults',
-  templateUrl : '/public/webapp/views/confirmModal.html'
+  templateUrl : '/public/webapp/views/confirmModal.html',
+  controller: 'ConfirmModalController',
   defaultLabels:
     title: 'Confirm'
     ok: 'OK'

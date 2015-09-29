@@ -14,7 +14,9 @@ router.delete '/:uniqueName', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
-  settings.client.post hUrl, args, (data) ->
+
+  console.log hUrl, "delete url print"
+  settings.client.delete hUrl, args, (data) ->
     console.log data, "in delete company data"
     res.send data
 
