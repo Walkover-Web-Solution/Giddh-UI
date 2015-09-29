@@ -35,7 +35,6 @@ app.use(settings.express.static(settings.path.join(__dirname, 'public')));
 app.use('/bower_components', settings.express.static(__dirname + '/bower_components'));
 app.use('/public', settings.express.static(__dirname + '/public'));
 
-
 // for session
 app.use(cookieParser());
 app.use(session({

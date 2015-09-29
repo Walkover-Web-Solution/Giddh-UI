@@ -2,9 +2,13 @@ settings = require('../util/settings')
 router = settings.express.Router()
 
 router.get '/all', (req, res) ->
-  onlyAuthHead = headers: 'Auth-Key': req.session.authKey
+  onlyAuthHead =
+    headers:
+      'Auth-Key': req.session.authKey
   hUrl = settings.envUrl + 'users/' + req.session.name + '/companies'
   settings.client.get hUrl, onlyAuthHead, (data) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 router.delete '/:uniqueName', (req, res) ->
@@ -14,10 +18,9 @@ router.delete '/:uniqueName', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
-
-  console.log hUrl, "delete url print"
-  settings.client.delete hUrl, args, (data) ->
-    console.log data, "in delete company data"
+  settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 router.get '/:uniqueName', (req, res) ->
@@ -32,6 +35,8 @@ router.post '/', (req, res) ->
       'Content-Type': 'application/json'
     data: req.body
   settings.client.post hUrl, args, (data) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 module.exports = router

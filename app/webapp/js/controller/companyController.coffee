@@ -52,22 +52,20 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #create company success
   onCreateCompanySuccess = (response) ->
-    if response.status is "success"
-      toastr.success("Company create successfully", "Success")
-      $rootScope.mngCompDataFound = true
-      $scope.companyList.push(response.body)
-    else
-      toastr.error(response.message, "Error")
+    toastr.success("Company create successfully", "Success")
+    $rootScope.mngCompDataFound = true
+    $scope.companyList.push(response.body)
 
   #create company failure
   onCreateCompanyFailure = (response) ->
+    toastr.error(response.data.message, "Error")
 
-    #get company list failure
-  getCompanyListFail = (response)->
-    toastr.error(response.message, "Error")
+  #get company list failure
+  getCompanyListFailure = (response)->
+    toastr.error(response.data.message, "Error")
 
   #Get company list
-  getCompanyListSuc = (response) ->
+  getCompanyListSuccess = (response) ->
     if response.status is "error"
       $rootScope.openFirstTimeUserModal()
     else
@@ -77,7 +75,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #Get company list
   $scope.getCompanyList = ->
     try
-      companyServices.getAll().then(getCompanyListSuc, getCompanyListFail)
+      companyServices.getAll().then(getCompanyListSuccess, getCompanyListFailure)
     catch e
       throw new Error(e.message)
 
@@ -87,25 +85,22 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #delete company
   $scope.deleteCompany = (uniqueName, index, name) ->
     $confirm(
-      title: 'Are you sure you want to delete? '+ name, 
-      ok: 'Yes', 
+      title: 'Are you sure you want to delete? ' + name,
+      ok: 'Yes',
       cancel: 'No'
     ).then ->
-      companyServices.delete(uniqueName).then(delCompanySuc, delCompanyFail)
+      companyServices.delete(uniqueName).then(delCompanySuccess, delCompanyFailure)
 
   #delete company success
-  delCompanySuc = (response) ->
-    if response.status is "success"
-      toastr.success(response.message, "Success")
-      $scope.getCompanyList()
-    else  
-      toastr.error(response.message, "Error")
+  delCompanySuccess = (response) ->
+    toastr.success("Company deleted successfully", "Success")
+    $scope.getCompanyList()
 
   #delete company failure
-  delCompanyFail = (response) ->
-    console.log response, "deleteCompany failure"
+  delCompanyFailure = (response) ->
+    toastr.error(response.data.message, "Error")
 
-    #making a detail company view
+  #making a detail company view
   $scope.goToCompany = (data) ->
     $rootScope.cmpViewShow = true
     $rootScope.companyDetailsName = data.name
@@ -171,16 +166,13 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     currencyService.getList(getCurrencyListSuccess, getCurrencyListFail)
 
   getCurrencyListFail = (response)->
-    toastr.error(response.message, "Error")
+    toastr.error(response.data.message, "Error")
 
   #Get company list
   getCurrencyListSuccess = (response) ->
-    if(response.status is "error")
-      toastr.error(response.message, "Error")
-    else
-      $scope.currencyList = response.body.map((item) ->
-        item.code
-      )
+    $scope.currencyList = response.body.map((item) ->
+      item.code
+    )
 
   $scope.getCurrencyList()
 
