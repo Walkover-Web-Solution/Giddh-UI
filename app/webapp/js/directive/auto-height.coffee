@@ -1,4 +1,3 @@
-
 angular.module('twygmbh.auto-height', []).
 directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
   link: ($scope, $element, $attrs) ->

@@ -16,77 +16,111 @@
 
           <div class="row">
             <div class="col-md-6 col-sm-12">
-              <div class="form-group" ng-class="(cmpnyBascFrm.cName.$valid  && cmpnyBascFrm.cName.$touched) ? 'has-success' : (cmpnyBascFrm.cName.$touched) ? 'has-error' : '' ">
-                <label>Name</label>
-                <input type="text" ng-model="companyBasicInfo.name" class="form-control" required ng-value="companyDetails.name" name="cName" minlength="5" maxlength="30">
-                
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cName.$valid  && cmpnyBascFrm.cName.$touched) ? 'has-success' : (cmpnyBascFrm.cName.$touched) ? 'has-error' : '' ">
+                <label>Name
+                  <input type="text" ng-model="companyBasicInfo.name" class="form-control" required
+                         ng-value="companyDetails.name" name="cName">
+                </label>
               </div>
               <div class="form-group"
                    ng-class="(cmpnyBascFrm.cEmail.$valid  && cmpnyBascFrm.cEmail.$touched) ? 'has-success' : (cmpnyBascFrm.cEmail.$touched) ? 'has-error' : '' ">
-                <label>Email</label>
-                <input type="email" ng-model="companyBasicInfo.email" class="form-control" required name="cEmail">
-                
+                <label>Email
+                  <input type="email" ng-model="companyBasicInfo.email" class="form-control" required
+                         name="cEmail">
+                </label>
               </div>
 
 
               <div class="form-group"
                    ng-class="(cmpnyBascFrm.cAddress.$valid  && cmpnyBascFrm.cAddress.$touched) ? 'has-success' : (cmpnyBascFrm.cAddress.$touched) ? 'has-error' : '' ">
-                <label>Address</label>
+                <label>Address
                   <textarea ng-model="companyBasicInfo.address" class="form-control" name="cAddress" required/>
-                
+                </label>
               </div>
 
             </div>
             <div class="col-md-6 col-sm-12">
               <div class="form-group"
                    ng-class="(cmpnyBascFrm.cCountry.$valid  && cmpnyBascFrm.cCountry.$touched) ? 'has-success' : (cmpnyBascFrm.cCountry.$touched) ? 'has-error' : '' ">
-                <label>Country</label>
-                  <input type="tel" ng-model="companyBasicInfo.country" class="form-control" required name="cCountry">
-                
+                <label>Country
+                  <!--<input type="tel" ng-model="companyBasicInfo.country" class="form-control" required name="cCountry">-->
+                  <input type="text" ng-model="companyBasicInfo.country" typeahead="address for address in getCountry($viewValue)"
+                         typeahead-loading="loadingLocationsC" typeahead-no-results="noResultsC" class="form-control"
+                         name="cCountry">
+                  <i ng-show="loadingLocationsC" class="glyphicon glyphicon-refresh"></i>
+
+                  <div ng-show="noResultsC">
+                    <i class="glyphicon glyphicon-remove"></i> No Results Found
+                  </div>
+                </label>
+              </div>
+
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cState.$valid  && cmpnyBascFrm.cState.$touched) ? 'has-success' : (cmpnyBascFrm.cState.$touched) ? 'has-error' : '' ">
+                <label>State
+                  <!--<input type="text" ng-model="companyBasicInfo.state" class="form-control" required name="cState">-->
+                  <input type="text" ng-model="asyncSelected" typeahead="address for address in getState($viewValue)"
+                         typeahead-loading="loadingLocationsS" typeahead-no-results="noResultsS" class="form-control"
+                         name="cState">
+                  <i ng-show="loadingLocationsS" class="glyphicon glyphicon-refresh"></i>
+
+                  <div ng-show="noResultsS">
+                    <i class="glyphicon glyphicon-remove"></i> No Results Found
+                  </div>
+                </label>
+              </div>
+
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cCity.$valid  && cmpnyBascFrm.cCity.$touched) ? 'has-success' : (cmpnyBascFrm.cCity.$touched) ? 'has-error' : '' ">
+                <label>City
+                  <!--<input type="text" ng-model="companyBasicInfo.state" class="form-control" required name="cState">-->
+                  <input type="text" ng-model="companyBasicInfo.city" typeahead="address for address in getCity($viewValue)"
+                         typeahead-loading="loadingLocationsCt" typeahead-no-results="noResultsCt" class="form-control"
+                         name="cCity">
+                  <i ng-show="loadingLocationsCt" class="glyphicon glyphicon-refresh"></i>
+
+                  <div ng-show="noResultsCt">
+                    <i class="glyphicon glyphicon-remove"></i> No Results Found
+                  </div>
+                </label>
               </div>
 
               <div class="form-group"
                    ng-class="(cmpnyBascFrm.cContact.$valid  && cmpnyBascFrm.cContact.$touched) ? 'has-success' : (cmpnyBascFrm.cContact.$touched) ? 'has-error' : '' ">
-                <label>Contact</label>
-                <input type="tel" ng-model="companyBasicInfo.contactNo" class="form-control" required pattern="^[0-9]*$" name="cContact">
-                
+                <label>Contact
+                  <input type="tel" ng-model="companyBasicInfo.contactNo" class="form-control" required
+                         pattern="^[0-9]*$" name="cContact">
+                </label>
               </div>
 
               <div class="row">
                 <div class="col-md-4 col-sm-12">
-                  <div class="form-group" ng-class="(cmpnyBascFrm.cCurrency.$valid  && cmpnyBascFrm.cCurrency.$touched) ? 'has-success' : (cmpnyBascFrm.cCurrency.$touched) ? 'has-error' : '' ">
-                    <label>Currency</label>
+                  <div class="form-group"
+                       ng-class="(cmpnyBascFrm.cCurrency.$valid  && cmpnyBascFrm.cCurrency.$touched) ? 'has-success' : (cmpnyBascFrm.cCurrency.$touched) ? 'has-error' : '' ">
+                    <label>Currency
                       <input type="text" ng-model="companyBasicInfo.baseCurrency" class="form-control"
+                             ng-model="currencySelected" typeahead="currency for currency in currencyList | filter:$viewValue | limitTo:4"
                              required name="cCurrency">
-                    
+                    </label>
                   </div>
                 </div>
                 <div class="col-md-8 col-sm-12">
                   <div class="form-group"
                        ng-class="(cmpnyBascFrm.cPincode.$valid  && cmpnyBascFrm.cPincode.$touched) ? 'has-success' : (cmpnyBascFrm.cPincode.$touched) ? 'has-error' : '' ">
-                    <label>Pincode</label>
+                    <label>Pincode
                       <input type="number" ng-model="companyBasicInfo.pincode" class="form-control"
                              required pattern="^[0-9]*$" name="cPincode">
-                    
+                    </label>
                   </div>
                 </div>
               </div>
-
-              <div class="form-group"
-                   ng-class="(cmpnyBascFrm.cState.$valid  && cmpnyBascFrm.cState.$touched) ? 'has-success' : (cmpnyBascFrm.cState.$touched) ? 'has-error' : '' ">
-                <label>State</label>
-                <input type="text" ng-model="asyncSelected" placeholder="Locations loaded via $http" typeahead="address for address in getLocation($viewValue)" typeahead-loading="loadingLocations" typeahead-no-results="noResults" class="form-control" name="cName">
-                  <i ng-show="loadingLocations" class="glyphicon glyphicon-refresh"></i>
-                  <div ng-show="noResults">
-                    <i class="glyphicon glyphicon-remove"></i> No Results Found
-                  </div>
-              </div>
-
             </div>
           </div>
           <!-- end of row -->
           <div class="clearfix">
-            <button ng-click="updateBasicInfo()" class="btn btn-primary" ng-disabled="cmpnyBascFrm.$invalid">Save
+            <button ng-click="updateBasicInfo()" class="btn btn-primary"
+                    ng-disabled="cmpnyBascFrm.$invalid">Save
             </button>
           </div>
         </form>

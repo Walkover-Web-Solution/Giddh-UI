@@ -2,7 +2,7 @@
 
 homeController = ($scope, $rootScope, $timeout, $modal, $log, companyServices) ->
 
-  #blank Obj for modal
+#blank Obj for modal
   $rootScope.company = {}
 
   #make sure managecompanylist page not load
@@ -48,7 +48,7 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, companyServices) -
   #create company failure
   onCreateCompanyFailure = (response) ->
 
-    #get company list failure
+#get company list failure
   getCompanyListFail = (response)->
     toastr[response.status](response.message)
 
@@ -70,7 +70,7 @@ homeController = ($scope, $rootScope, $timeout, $modal, $log, companyServices) -
   #delete company
   $scope.deleteCompany = (id, index) ->
 
-    #making a detail company view
+#making a detail company view
   $scope.goToCompany = (data) ->
     $rootScope.cmpViewShow = true
     $rootScope.companyDetailsName = data.name

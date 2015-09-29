@@ -19,6 +19,10 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #for update company basic info contains
   $scope.companyBasicInfo = {}
 
+  $scope.currencyList = []
+  $scope.currencySelected = undefined;
+
+
   #for make sure
   $scope.checkCmpCretedOrNot = ->
     if $scope.companyList.length <= 0
@@ -60,7 +64,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
     #get company list failure
   getCompanyListFail = (response)->
-    console.log(response)
     toastr[response.status](response.message)
 
   #Get company list
@@ -80,7 +83,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   $scope.getCompany = (uniqueName)->
     companyServices.get(uniqueName).then((->), (->))
-
 
   #delete company
   $scope.deleteCompany = (uniqueName, index, name) ->
@@ -123,29 +125,65 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $rootScope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
 
-  $scope.getLocation = (val) ->
-    promise = locationService.search(val)
-    promise.then(onGetLocationSuccess, onGetLocationFailure)
+  $scope.getCity = (val) ->
+    console.log @formScope.cmpnyBascFrm.cState.$viewValue
+    promise = locationService.searchCity(val, @formScope.cmpnyBascFrm.cState.$viewValue)
+    promise.then(onGetCitySuccess, onGetCityFailure)
 
-  onGetLocationSuccess = (data) ->
-    data.results.map((item) ->
-      item.formatted_address
+  onGetCitySuccess = (data) ->
+    console.log data.results
+    filterThis = data.results.filter (i) -> i.types[0] is "locality"
+    filterThis.map((item) ->
+      item.address_components[0].long_name
     )
 
-  onGetLocationFailure = (data) ->
-    console.lon "in get location failure", data
+  onGetCityFailure = (data) ->
+    console.lon "in get city failure"
+
+  $scope.getState = (val) ->
+    promise = locationService.searchState(val, @formScope.cmpnyBascFrm.cCountry.$viewValue)
+    promise.then(onGetStateSuccess, onGetStateFailure)
+
+  onGetStateSuccess = (data) ->
+    console.log data
+    filterThis = data.results.filter (i) -> i.types[0] is "administrative_area_level_1"
+    filterThis.map((item) ->
+      item.address_components[0].long_name
+    )
+
+  onGetStateFailure = (data) ->
+    console.lon "in get state failure"
+
+  $scope.getCountry = (val) ->
+    promise = locationService.searchCountry(val)
+    promise.then(onGetCountrySuccess, onGetCountryFailure)
+
+  onGetCountrySuccess = (data) ->
+    console.log data.results
+    filterThis = data.results.filter (i) -> i.types[0] is "country"
+    filterThis.map((item) ->
+      item.address_components[0].long_name
+    )
+
+  onGetCountryFailure = (data) ->
+    console.lon "in get country failure"
 
   $scope.getCurrencyList = ->
-    currencyService.getList(getCurrencyListSuc, getCurrencyListFail)
+    currencyService.getList(getCurrencyListSuccess, getCurrencyListFail)
 
   getCurrencyListFail = (response)->
-    console.log "companyList failure", response
     toastr[response.status](response.message)
 
   #Get company list
-  getCurrencyListSuc = (response) ->
-    console.log "companyList successfully", response.body
-    response.body
+  getCurrencyListSuccess = (response) ->
+    if(response.status is "error")
+      toastr[response.status](response.message)
+    else
+      $scope.currencyList = response.body.map((item) ->
+        item.code
+      )
+
+  $scope.getCurrencyList()
 
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController

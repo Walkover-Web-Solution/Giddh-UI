@@ -1,9 +1,10 @@
 'use strict'
 
 angular.module('giddhWebApp').service 'locationService', ($resource, $q) ->
-  Search = $resource('/getLocation', {"queryString": @queryString}, {
-    getCity: {method: 'GET'}
-  })
+  Search = $resource('/location/search',
+      {"queryString": @queryString, "administrator_level": @administrator_level, "country": @country}, {
+        getCity: {method: 'GET'}
+      })
 
   locationService =
     handlePromise: (func) ->
@@ -13,7 +14,15 @@ angular.module('giddhWebApp').service 'locationService', ($resource, $q) ->
       func(onSuccess, onFailure)
       deferred.promise
 
-    search: (searchThis, onSuccess, onFailure)->
+    searchCity: (searchThis, state)->
+      @handlePromise((onSuccess, onFailure) -> Search.getCity({"queryString": searchThis, "administrator_level": state},
+          onSuccess, onFailure))
+
+    searchState: (searchThis, country)->
+      @handlePromise((onSuccess, onFailure) -> Search.getCity({"queryString": searchThis, "country": country},
+          onSuccess, onFailure))
+
+    searchCountry: (searchThis)->
       @handlePromise((onSuccess, onFailure) -> Search.getCity({"queryString": searchThis}, onSuccess, onFailure))
 
     confirm: (name) ->

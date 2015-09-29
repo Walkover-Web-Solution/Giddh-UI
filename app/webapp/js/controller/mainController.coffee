@@ -1,7 +1,6 @@
 "use strict"
 
 mainController = ($scope, $rootScope, $timeout, $http, localStorageService) ->
-
   $rootScope.basicInfo = {}
 
   $rootScope.getItem = (key) ->

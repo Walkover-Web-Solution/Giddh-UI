@@ -1,15 +1,15 @@
 app = angular.module("giddhWebApp",
-  [
-    "satellizer"
-    "LocalStorageModule"
-    "ngRoute"
-    "ngResource"
-    "perfect_scrollbar"
-    "ui.tree"
-    "ngSanitize"
-    "ui.bootstrap"
-    "twygmbh.auto-height"
-  ]
+    [
+      "satellizer"
+      "LocalStorageModule"
+      "ngRoute"
+      "ngResource"
+      "perfect_scrollbar"
+      "ui.tree"
+      "ngSanitize"
+      "ui.bootstrap"
+      "twygmbh.auto-height"
+    ]
 )
 
 app.config (localStorageServiceProvider) ->
