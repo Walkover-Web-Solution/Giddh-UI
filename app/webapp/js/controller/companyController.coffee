@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, $confirm, localStorageService) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, $confirm, localStorageService, toastr) ->
 
   #blank Obj for modal
   $rootScope.company = {}
@@ -122,12 +122,11 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #update company success
   updtCompanySuc = (response)->
-    console.log response, "in updtCompanySuc"
-    toastr[response.status](response.message)
+    toastr.success("Company updated successfully")
 
   #update company failure
   updtCompanyFail = (response)->
-    console.log response, "in updtCompanyFail"
+    toastr.error(response.data.message, "Error")
 
   #to inject form again on scope
   $scope.setFormScope = (scope) ->

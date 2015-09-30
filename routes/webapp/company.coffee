@@ -34,7 +34,8 @@ router.put '/:uniqueName', (req, res) ->
       'Content-Type': 'application/json'
     body : res.body
   settings.client.put hUrl, args, (data, response) ->
-    console.log "company updated", data
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 

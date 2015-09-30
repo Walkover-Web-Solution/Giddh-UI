@@ -10,8 +10,6 @@ router.get '/search', (req, res) ->
   else
     googleApi = googleApi + 'components=country:' + req.query.queryString
   settings.request.get googleApi, (err, response) ->
-    if data.status == 'error'
-      res.status(response.statusCode)
     res.send response.body
 
 module.exports = router
