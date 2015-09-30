@@ -16,6 +16,7 @@ module.exports = (config) ->
             "bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"
             "bower_components/bootstrap/dist/js/bootstrap.js",
             "bower_components/satellizer/satellizer.js",
+            "bower_components/underscore/underscore-min.js",
             "bower_components/angular-mocks/angular-mocks.js",
             "app/website/**/*.coffee",
             "app/webapp/**/*.coffee",

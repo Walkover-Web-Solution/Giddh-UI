@@ -210,7 +210,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     if response.status is "error"
       toastr[response.status](response.message)
     else
-      $scope.currencyList = response.body.map((item) ->
+      $scope.currencyList = _.map(response.body,(item) ->
+        console.log item
         item.code
       )
       localStorageService.set("_currencyList", $scope.currencyList)
