@@ -3,9 +3,6 @@
 mainController = ($scope, $rootScope, $timeout, $http, localStorageService) ->
   $rootScope.basicInfo = {}
 
-  $rootScope.getItem = (key) ->
-    localStorageService.get(key)
-
   $scope.logout = ->
     try
       $http.post('/logout').then ((response) ->
@@ -24,7 +21,7 @@ mainController = ($scope, $rootScope, $timeout, $http, localStorageService) ->
     #$modalInstance.dismiss('cancel')
 
   $rootScope.$on '$viewContentLoaded', ->
-    $rootScope.basicInfo = $rootScope.getItem("_userDetails")
+    $rootScope.basicInfo = localStorageService.get("_userDetails")
 
 
 angular.module('giddhWebApp').controller 'mainController', mainController

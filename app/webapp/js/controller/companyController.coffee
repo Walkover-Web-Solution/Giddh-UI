@@ -122,6 +122,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #making a detail company view
   $scope.goToCompany = (data) ->
+    console.log "inside go to company"
     $scope.ifHavePermission(data)
     $rootScope.cmpViewShow = true
     $rootScope.companyDetailsName = data.name
