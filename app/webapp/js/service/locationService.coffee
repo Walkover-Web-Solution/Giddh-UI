@@ -26,7 +26,6 @@ angular.module('giddhWebApp').service 'locationService', ($resource, $q) ->
           onSuccess, onFailure))
 
     searchOnlyCity: (val)->
-      console.log val, "searchOnlyCity"
       @handlePromise((onSuccess, onFailure) -> Search.getCity({"queryString": val, "onlyCity": true}, onSuccess, onFailure))
 
     searchState: (searchThis, country)->
