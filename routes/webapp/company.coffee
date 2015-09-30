@@ -23,7 +23,6 @@ router.delete '/:uniqueName', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-
 #update company
 router.put '/:uniqueName', (req, res) ->
   console.log req.body
@@ -33,14 +32,10 @@ router.put '/:uniqueName', (req, res) ->
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
     data: req.body
-
-  console.log args, "args in update company"
   settings.client.put hUrl, args, (data, response) ->
-    console.log data, "after update company"
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
-
 
 router.get '/:uniqueName', (req, res) ->
   console.log req.params.uniqueName

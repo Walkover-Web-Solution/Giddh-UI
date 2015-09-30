@@ -23,10 +23,9 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #check if user is admin
   $scope.ifHavePermission = (data) ->
-    angular.forEach data.permisions, (value, key) ->
+    angular.forEach data.role.permissions, (value, key) ->
       if value.code is "MNG_USR"
         $scope.isAdmin = true
-
 
   #for make sure
   $scope.checkCmpCretedOrNot = ->
