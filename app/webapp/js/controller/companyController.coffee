@@ -1,6 +1,5 @@
 "use strict"
-
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, $confirm, toastr) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, $confirm, localStorageService) ->
 
   #blank Obj for modal
   $rootScope.company = {}
@@ -21,6 +20,14 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   $scope.currencyList = []
   $scope.currencySelected = undefined;
+
+
+
+  #check if user is admin
+  $scope.ifHavePermission = (data) ->
+    angular.forEach data.permisions, (value, key) ->
+      if value.code is "MNG_USR"
+        $scope.isAdmin = true
 
 
   #for make sure
@@ -102,22 +109,31 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #making a detail company view
   $scope.goToCompany = (data) ->
+    $scope.ifHavePermission(data)
     $rootScope.cmpViewShow = true
     $rootScope.companyDetailsName = data.name
-    $scope.companyDetails = data
+    angular.extend($scope.companyBasicInfo, data)
 
-  #form submit for changeBasicInfo
-  $scope.updateBasicInfo = () ->
+  #update company details
+  $scope.updateCompanyInfo = () ->
     if @formScope.cmpnyBascFrm.$valid
       console.log $scope.companyBasicInfo
+      companyServices.update($scope.companyBasicInfo).then(updtCompanySuc, updtCompanyFail)
+
+  #update company success
+  updtCompanySuc = (response)->
+    console.log response, "in updtCompanySuc"
+    toastr[response.status](response.message)
+
+  #update company failure
+  updtCompanyFail = (response)->
+    console.log response, "in updtCompanyFail"
 
   #to inject form again on scope
   $scope.setFormScope = (scope) ->
     @formScope = scope
 
-  #fire function after page fully loaded
-  $rootScope.$on '$viewContentLoaded', ->
-    $scope.getCompanyList()
+  
 
   $scope.getCity = (val) ->
     promise = locationService.searchCity(val, @formScope.cmpnyBascFrm.cState.$viewValue)
@@ -143,11 +159,12 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     )
 
   onGetStateFailure = (data) ->
-    console.lon "in get state failure"
+    console.log "in get state failure"
 
   $scope.getCountry = (val) ->
     promise = locationService.searchCountry(val)
     promise.then(onGetCountrySuccess, onGetCountryFailure)
+    
 
   onGetCountrySuccess = (data) ->
     filterThis = data.results.filter (i) -> i.types[0] is "country"
@@ -159,18 +176,30 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     console.log "in get country failure"
 
   $scope.getCurrencyList = ->
-    currencyService.getList(getCurrencyListSuccess, getCurrencyListFail)
+    lsKeys = localStorageService.keys()
+    if _.contains(lsKeys, "_currencyList")
+      $scope.currencyList = $rootScope.getItem("_currencyList")
+    else
+      currencyService.getList(getCurrencyListSuccess, getCurrencyListFail)
+    
 
   getCurrencyListFail = (response)->
     toastr.error(response.data.message, "Error")
 
   #Get company list
   getCurrencyListSuccess = (response) ->
-    $scope.currencyList = response.body.map((item) ->
-      item.code
-    )
+    if response.status is "error"
+      toastr[response.status](response.message)
+    else
+      $scope.currencyList = response.body.map((item) ->
+        item.code
+      )
+      localStorageService.set("_currencyList", $scope.currencyList)
 
-  $scope.getCurrencyList()
+  #fire function after page fully loaded
+  $rootScope.$on '$viewContentLoaded', ->
+    $scope.getCompanyList()
+    $scope.getCurrencyList()
 
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController
