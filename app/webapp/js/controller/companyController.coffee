@@ -53,7 +53,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     ), ->
       $scope.checkCmpCretedOrNot()
 
-  
+
 
   #get only city for create company
   $scope.getOnlyCity = (val) ->
@@ -183,7 +183,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.getCountry = (val) ->
     promise = locationService.searchCountry(val)
     promise.then(onGetCountrySuccess, onGetCountryFailure)
-    
+
 
   onGetCountrySuccess = (data) ->
     filterThis = data.results.filter (i) -> i.types[0] is "country"
@@ -200,7 +200,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       $scope.currencyList = $rootScope.getItem("_currencyList")
     else
       currencyService.getList(getCurrencyListSuccess, getCurrencyListFail)
-    
+
 
   getCurrencyListFail = (response)->
     toastr.error(response.data.message, "Error")
