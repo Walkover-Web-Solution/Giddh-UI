@@ -13,7 +13,7 @@ router.get '/all', (req, res) ->
 
 #delete company
 router.delete '/:uniqueName', (req, res) ->
-  hUrl = settings.envUrl + 'company/'+req.params.uniqueName
+  hUrl = settings.envUrl + 'company/' + req.params.uniqueName
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -26,7 +26,7 @@ router.delete '/:uniqueName', (req, res) ->
 #update company
 router.put '/:uniqueName', (req, res) ->
   console.log req.body
-  hUrl = settings.envUrl + 'company/'+req.params.uniqueName
+  hUrl = settings.envUrl + 'company/' + req.params.uniqueName
   args =
     headers:
       'Auth-Key': req.session.authKey
