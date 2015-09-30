@@ -3,22 +3,15 @@
 describe 'companyController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, currencyService, toastr) ->
+  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService) ->
     @scope = $rootScope.$new()
     @currencyService = currencyService
     @toastr = toastr
+    @localStorageService = localStorageService
     @companyController = $controller('companyController',
-        {$scope: @scope, currencyService: @currencyService, toastr: @toastr})
+        {$scope: @scope, currencyService: @currencyService, toastr: @toastr, localStorageService: @localStorageService})
 
   describe '#getCurrencyListSuccess', ->
-    it 'should show toastr if status is error', ->
-      data = {"status":"error","message":"some-message"}
-      spyOn(@toastr,'error')
-      spyOn(@toastr,'success')
-      @scope.getCurrencyListSuccess(data)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message','Error')
-      expect(@toastr.success).not.toHaveBeenCalled()
-
     it 'should save currency details to scope.currencyList', ->
       data = {"status":"success","body":[{'code':'USD'},{'code': 'CAD'},{'code': 'EUR'}]}
       @scope.getCurrencyListSuccess(data)
@@ -27,15 +20,16 @@ describe 'companyController', ->
       expect(@scope.currencyList).toContain('CAD')
       expect(@scope.currencyList).toContain('EUR')
 
-  describe '#getCurrencyListFail', ->
+  describe '#getCurrencyListFailure', ->
     it 'should show a toastr with error as heading', ->
-      data = {"status":"some-error", "message":"some-message"}
+      response = {"data":{"status":"some-error", "message":"some-message"}}
       spyOn(@toastr,'error')
-      @scope.getCurrencyListFail(data)
+      @scope.getCurrencyListFailure(response)
       expect(@toastr.error).toHaveBeenCalledWith('some-message','Error')
 
   describe '#getCurrencyList', ->
     it 'should call service method and return success', ->
       spyOn(@currencyService,'getList')
+      spyOn(@localStorageService,'keys').andReturn({'_currencyList': ["USD"]})
       @scope.getCurrencyList()
-      expect(@currencyService.getList).toHaveBeenCalledWith(@scope.getCurrencyListSuccess, @scope.getCurrencyListFail)
+      expect(@currencyService.getList).toHaveBeenCalledWith(@scope.getCurrencyListSuccess, @scope.getCurrencyListFailure)

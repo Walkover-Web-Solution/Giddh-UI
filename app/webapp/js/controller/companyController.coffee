@@ -21,8 +21,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.currencyList = []
   $scope.currencySelected = undefined;
 
-
-
   #check if user is admin
   $scope.ifHavePermission = (data) ->
     angular.forEach data.permisions, (value, key) ->
@@ -52,8 +50,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       $scope.company = {}
     ), ->
       $scope.checkCmpCretedOrNot()
-
-
 
   #get only city for create company
   $scope.getOnlyCity = (val) ->
@@ -140,7 +136,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #update company success
   updtCompanySuc = (response)->
-    console.log response
     toastr.success("Company updated successfully")
     $scope.getCompanyList()
 
@@ -151,8 +146,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #to inject form again on scope
   $scope.setFormScope = (scope) ->
     @formScope = scope
-
-
 
   $scope.getCity = (val) ->
     promise = locationService.searchCity(val, @formScope.cmpnyBascFrm.cState.$viewValue)
@@ -184,7 +177,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     promise = locationService.searchCountry(val)
     promise.then(onGetCountrySuccess, onGetCountryFailure)
 
-
   onGetCountrySuccess = (data) ->
     filterThis = data.results.filter (i) -> i.types[0] is "country"
     filterThis.map((item) ->
@@ -199,22 +191,17 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     if _.contains(lsKeys, "_currencyList")
       $scope.currencyList = $rootScope.getItem("_currencyList")
     else
-      currencyService.getList(getCurrencyListSuccess, getCurrencyListFail)
+      currencyService.getList($scope.getCurrencyListSuccess, $scope.getCurrencyListFailure)
 
-
-  getCurrencyListFail = (response)->
+  $scope.getCurrencyListFailure = (response)->
     toastr.error(response.data.message, "Error")
 
   #Get company list
-  getCurrencyListSuccess = (response) ->
-    if response.status is "error"
-      toastr[response.status](response.message)
-    else
-      $scope.currencyList = _.map(response.body,(item) ->
-        console.log item
-        item.code
-      )
-      localStorageService.set("_currencyList", $scope.currencyList)
+  $scope.getCurrencyListSuccess = (response) ->
+    $scope.currencyList = _.map(response.body,(item) ->
+      item.code
+    )
+    localStorageService.set("_currencyList", $scope.currencyList)
 
   #fire function after page fully loaded
   $rootScope.$on '$viewContentLoaded', ->
