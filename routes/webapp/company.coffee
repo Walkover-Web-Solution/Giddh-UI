@@ -6,7 +6,7 @@ router.get '/all', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
   hUrl = settings.envUrl + 'users/' + req.session.name + '/companies'
-  settings.client.get hUrl, onlyAuthHead, (data) ->
+  settings.client.get hUrl, onlyAuthHead, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
@@ -18,13 +18,9 @@ router.delete '/:uniqueName', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
-<<<<<<< HEAD
   settings.client.delete hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
-=======
-  settings.client.delete hUrl, args, (data) ->
->>>>>>> currency list in localstorage and user permission tab
     res.send data
 
 
@@ -37,7 +33,7 @@ router.put '/:uniqueName', (req, res) ->
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
     body : res.body
-  settings.client.put hUrl, args, (data) ->
+  settings.client.put hUrl, args, (data, response) ->
     console.log "company updated", data
     res.send data
 
@@ -53,7 +49,7 @@ router.post '/', (req, res) ->
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
     data: req.body
-  settings.client.post hUrl, args, (data) ->
+  settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
