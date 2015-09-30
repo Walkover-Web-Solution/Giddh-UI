@@ -120,26 +120,23 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     $scope.getCompanyList()
 
   $scope.getCity = (val) ->
-    console.log @formScope.cmpnyBascFrm.cState.$viewValue
     promise = locationService.searchCity(val, @formScope.cmpnyBascFrm.cState.$viewValue)
     promise.then(onGetCitySuccess, onGetCityFailure)
 
   onGetCitySuccess = (data) ->
-    console.log data.results
     filterThis = data.results.filter (i) -> i.types[0] is "locality"
     filterThis.map((item) ->
       item.address_components[0].long_name
     )
 
   onGetCityFailure = (data) ->
-    console.lon "in get city failure"
+    console.log "in get city failure"
 
   $scope.getState = (val) ->
     promise = locationService.searchState(val, @formScope.cmpnyBascFrm.cCountry.$viewValue)
     promise.then(onGetStateSuccess, onGetStateFailure)
 
   onGetStateSuccess = (data) ->
-    console.log data
     filterThis = data.results.filter (i) -> i.types[0] is "administrative_area_level_1"
     filterThis.map((item) ->
       item.address_components[0].long_name
@@ -153,14 +150,13 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     promise.then(onGetCountrySuccess, onGetCountryFailure)
 
   onGetCountrySuccess = (data) ->
-    console.log data.results
     filterThis = data.results.filter (i) -> i.types[0] is "country"
     filterThis.map((item) ->
       item.address_components[0].long_name
     )
 
   onGetCountryFailure = (data) ->
-    console.lon "in get country failure"
+    console.log "in get country failure"
 
   $scope.getCurrencyList = ->
     currencyService.getList(getCurrencyListSuccess, getCurrencyListFail)

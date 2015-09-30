@@ -97,7 +97,6 @@ app.post('/auth/google', function (req, res, next) {
       if (profile.error) {
         return res.status(500).send({message: profile.error.message});
       }
-      console.log(response.body, "auth response");
       var token = jwt.encode(response, params.client_secret);
 
       console.log("in get success")
@@ -109,8 +108,7 @@ app.post('/auth/google', function (req, res, next) {
       userDetailObj = response.body;
 
       settings.client.get(authUrl, args, function (data, response) {
-        console.log(data, "data in client post by authUrl");
-
+        console.log("In client post by authUrl");
         if (data.status == "error") {
           //do nothing
         }

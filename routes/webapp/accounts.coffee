@@ -6,6 +6,8 @@ router.get '/', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/groups/' + req.params.groupUniqueName + '/accounts'
   settings.client.get hUrl, authHead, (data) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 router.get '/:accountUniqueName', (req, res) ->
@@ -13,6 +15,8 @@ router.get '/:accountUniqueName', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName
   settings.client.get hUrl, authHead, (data) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 router.put '/:accountUniqueName', (req, res) ->
@@ -24,7 +28,8 @@ router.put '/:accountUniqueName', (req, res) ->
       'Content-Type': 'application/json'
     data: req.body
   settings.client.put hUrl, args, (data) ->
-    console.log data
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 router.delete '/:accountUniqueName', (req, res) ->
@@ -32,6 +37,8 @@ router.delete '/:accountUniqueName', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName
   settings.client.delete hUrl, authHead, (data) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 router.post '/', (req, res) ->
@@ -44,6 +51,8 @@ router.post '/', (req, res) ->
       'Content-Type': 'application/json'
     data: req.body
   settings.client.post hUrl, args, (data) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 module.exports = router

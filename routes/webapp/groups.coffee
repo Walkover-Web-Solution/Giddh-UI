@@ -5,12 +5,16 @@ router.get '/', (req, res) ->
   authHead = headers: 'Auth-Key': req.session.authKey
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups'
   settings.client.get hUrl, authHead, (data) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 router.get '/with-accounts', (req, res) ->
   authHead = headers: 'Auth-Key': req.session.authKey
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups-with-accounts'
   settings.client.get hUrl, authHead, (data) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 router.put '/:groupUniqueName', (req, res) ->
@@ -21,13 +25,16 @@ router.put '/:groupUniqueName', (req, res) ->
       'Content-Type': 'application/json'
     data: req.body
   settings.client.put hUrl, args, (data) ->
-    console.log data
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 router.delete '/:groupUniqueName', (req, res) ->
   authHead = headers: 'Auth-Key': req.session.authKey
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName
   settings.client.delete hUrl, authHead, (data) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 router.post '/', (req, res) ->
@@ -39,6 +46,8 @@ router.post '/', (req, res) ->
       'Content-Type': 'application/json'
     data: req.body
   settings.client.post hUrl, args, (data) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
     res.send data
 
 module.exports = router

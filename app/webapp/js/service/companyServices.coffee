@@ -26,9 +26,7 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Company.get({uniqueName: uniqueName}, onSuccess, onFailure))
 
     delete: (uniqueName, onSuccess, onFailure) ->
-      console.log "in delete company", uniqueName
       @handlePromise((onSuccess, onFailure) -> Company.delete({
         uniqueName: uniqueName}, onSuccess, onFailure))
-      
 
   companyServices
