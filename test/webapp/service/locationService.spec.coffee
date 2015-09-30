@@ -65,3 +65,24 @@ describe "Location Service", ->
         (data) -> expect(true).toBeFalsy()
         (data) -> expect(data.data.status).toBe("error")
       )
+
+  describe "#searchOnlyCity", ->
+    it 'should call success callback when search for onlyCity return a promise', ->
+      @httpBackend.when('GET', '/location/search?onlyCity=true&queryString=Indore').respond(200, {"status":"success"})
+
+      @locationService.searchOnlyCity("Indore", true).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+
+    it 'should call error callback when search for onlyCity return failure', ->
+      @httpBackend.when('GET', '/location/search?onlyCity=true&queryString=Indore').respond(401, {"status":"error"})
+
+      @locationService.searchOnlyCity("Indore", true).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) -> expect(data.data.status).toBe("error")
+      )
+
+
+
+
