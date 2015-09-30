@@ -53,6 +53,24 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     ), ->
       $scope.checkCmpCretedOrNot()
 
+  
+
+  #get only city for create company
+  $scope.getOnlyCity = (val) ->
+    promise = locationService.searchOnlyCity(val)
+    promise.then(getOnlyCitySuccess, getOnlyCityFailure)
+
+  #get only city success
+  getOnlyCitySuccess = (data) ->
+    filterThis = data.results.filter (i) -> i.types[0] is "locality"
+    filterThis.map((item) ->
+      item.address_components[0].long_name
+    )
+
+  #get only city failure
+  getOnlyCityFailure = (response) ->
+    console.log response, "in getOnlyCityFailure"
+
   #creating company
   $scope.createCompany = (cdata) ->
     companyServices.create(cdata).then(onCreateCompanySuccess, onCreateCompanyFailure)
@@ -113,16 +131,18 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     $rootScope.cmpViewShow = true
     $rootScope.companyDetailsName = data.name
     angular.extend($scope.companyBasicInfo, data)
+    localStorageService.set("_selectedCompany", $scope.companyBasicInfo)
 
   #update company details
   $scope.updateCompanyInfo = () ->
     if @formScope.cmpnyBascFrm.$valid
-      console.log $scope.companyBasicInfo
       companyServices.update($scope.companyBasicInfo).then(updtCompanySuc, updtCompanyFail)
 
   #update company success
   updtCompanySuc = (response)->
+    console.log response
     toastr.success("Company updated successfully")
+    $scope.getCompanyList()
 
   #update company failure
   updtCompanyFail = (response)->
@@ -132,7 +152,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.setFormScope = (scope) ->
     @formScope = scope
 
-  
+
 
   $scope.getCity = (val) ->
     promise = locationService.searchCity(val, @formScope.cmpnyBascFrm.cState.$viewValue)

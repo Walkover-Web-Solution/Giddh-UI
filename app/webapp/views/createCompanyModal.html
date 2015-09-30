@@ -1,23 +1,37 @@
 <div>
-    <div class="modal-header">
-        <h3 class="modal-title">Create New Company</h3>
+  <div class="modal-header">
+    <h3 class="modal-title">Create New Company</h3>
+  </div>
+  <!-- createNewCompany() call method -->
+
+  <form name="createCompForm" novalidate id="createCompForm">
+    <div class="modal-body">
+      <div class="form-group"
+           ng-class="(createCompForm.name.$valid  && createCompForm.name.$touched) ? 'has-success' : (createCompForm.name.$touched) ? 'has-error' : '' ">
+        <input type="text" ng-model="company.name" class="form-control" placeholder="Company Name" required name="name"
+               minlength="5" maxlength="30" ngPattern="/[a-zA-Z0-9^ ]/">
+      </div>
+      <div class="form-group"
+           ng-class="(createCompForm.city.$valid  && createCompForm.city.$touched) ? 'has-success' : (createCompForm.city.$touched) ? 'has-error' : '' ">
+
+        <input type="text" ng-model="company.city" typeahead="address for address in getOnlyCity($viewValue)"
+               typeahead-loading="loadingLocationsOnlyCt" typeahead-no-results="noResultsOnlyCt" class="form-control"
+               name="city" autocomplete="off" required maxlength="50" placeholder="Company City">
+        <i ng-show="loadingLocationsOnlyCt" class="glyphicon glyphicon-refresh"></i>
+
+        <div ng-show="noResultsOnlyCt">
+          <i class="glyphicon glyphicon-remove"></i> No Results Found
+        </div>
+
+      </div>
     </div>
-    <!-- createNewCompany() call method -->
-    
-    <form name="createCompForm" novalidate id="createCompForm">
-        <div class="modal-body">
-            <div class="form-group" ng-class="(createCompForm.name.$valid  && createCompForm.name.$touched) ? 'has-success' : (createCompForm.name.$touched) ? 'has-error' : '' ">
-                <input type="text" ng-model="company.name" class="form-control" placeholder="Company Name" required name="name" minlength="5" maxlength="30" ngPattern="/[a-zA-Z0-9^ ]/">
-            </div>
-            <div class="form-group" ng-class="(createCompForm.city.$valid  && createCompForm.city.$touched) ? 'has-success' : (createCompForm.city.$touched) ? 'has-error' : '' ">
-                <input type="text" ng-model="company.city" class="form-control" placeholder="Company City" maxlength="50" required name="city">
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="$close(company)" ng-disabled="createCompForm.$invalid">Create</button>
-            <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancel</button>
-        </div>
-    </form>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="button" ng-click="$close(company)" ng-disabled="createCompForm.$invalid">
+        Create
+      </button>
+      <button class="btn btn-warning" type="button" ng-click="$dismiss()">Cancel</button>
+    </div>
+  </form>
 </div>
 
- <!-- ng-class="createCompForm.name.$dirty ? 'has-error' : 'has-success'" -->
+<!-- ng-class="createCompForm.name.$dirty ? 'has-error' : 'has-success'" -->

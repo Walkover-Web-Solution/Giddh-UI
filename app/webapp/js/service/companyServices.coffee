@@ -31,7 +31,6 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
         uniqueName: uniqueName}, onSuccess, onFailure))
     
     update: (updtData, onSuccess, onFailure) ->
-      console.log updtData
       @handlePromise((onSuccess, onFailure) -> Company.update({
         uniqueName: updtData.uniqueName}, updtData,  onSuccess, onFailure))
 

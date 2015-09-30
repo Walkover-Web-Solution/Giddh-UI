@@ -4,10 +4,6 @@
 
     <tab heading="Basic Information">
       <div class="pd2">
-        {{cmpnyBascFrm.$valid}}
-        {{cmpnyBascFrm.cName.$error.required}}
-        {{cmpnyBascFrm.cName.$dirty}}
-        {{cmpnyBascFrm.cName.$touched}}
         <form id="cmpnyBascFrm" name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
 
           <p ng-hide="cmpnyBascFrm.$submitted" class="bg-warning pd1 mrB1">
@@ -85,7 +81,7 @@
                 <div class="col-md-8 col-sm-12">
                   <div class="form-group" ng-class="(cmpnyBascFrm.cPincode.$valid  && cmpnyBascFrm.cPincode.$touched) ? 'has-success' : (cmpnyBascFrm.cPincode.$touched) ? 'has-error' : '' ">
                     <label>Pincode</label>
-                    <input type="number" ng-model="companyBasicInfo.pincode" class="form-control" required pattern="^[0-9]*$" name="cPincode" tabindex="9">
+                    <input type="text" ng-model="companyBasicInfo.pincode" class="form-control" required pattern="^[0-9]*$" name="cPincode" tabindex="9">
                     
                   </div>
                 </div>
