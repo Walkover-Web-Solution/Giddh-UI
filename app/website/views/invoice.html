@@ -1,62 +1,68 @@
 <!DOCTYPE HTML>
 <html lang="en" ng-app='giddhApp'>
 <head>
-	<meta charset="UTF-8"/>
-	<meta http-equiv="X-UA-Compatible" content="IE=egde"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="description" content="Online Invoice software is easy way to handle your daily transactions, manage your billing and invoice through web based online invoice software. " />
-	<meta name="keywords" content="Invoice, invoicing software, online invoice software, web based invoice" />
-	<title>Invoice | Online Invoice Software – Manage your Invoices Online</title>
-  	<!-- LIBRARIES -->
-    <script src='/bower_components/modernizr/modernizr.js'></script>
-    <script src='/bower_components/jquery/jquery.min.js'></script>
-    <script src="/bower_components/angular/angular.min.js"></script>
-    <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="/bower_components/satellizer/satellizer.js"></script>
-    <script src="/bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
-    <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
-    <script src="/public/website/js/app.js"></script>
-    <script src="/public/website/js/controller/allPageController.js"></script>
-	<!-- STYLE / THEME -->
-	<link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="/public/website/css/style-web.css" rel="stylesheet">
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description"
+        content="Online Invoice software is easy way to handle your daily transactions, manage your billing and invoice through web based online invoice software. "/>
+  <meta name="keywords" content="Invoice, invoicing software, online invoice software, web based invoice"/>
+  <title>Invoice | Online Invoice Software – Manage your Invoices Online</title>
+  <!-- LIBRARIES -->
+  <script src='/bower_components/modernizr/modernizr.js'></script>
+  <script src='/bower_components/jquery/jquery.min.js'></script>
+  <script src="/bower_components/angular/angular.min.js"></script>
+  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="/bower_components/satellizer/satellizer.js"></script>
+  <script src="/bower_components/angular-local-storage/dist/angular-local-storage.js"></script>
+  <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
+  <script src="/public/website/js/app.js"></script>
+  <script src="/public/website/js/controller/allPageController.js"></script>
+  <script type="text/javascript" src="/bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
+
+
+  <!-- STYLE / THEME -->
+  <link rel="stylesheet" type="text/css" href="/bower_components/angular-toastr/dist/angular-toastr.min.css">
+  <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/public/website/css/style-web.css" rel="stylesheet">
 </head>
 <body>
 
-	<div ng-controller="allPageController">
-		<section class="noMin" id="topSection">
-			<ng-include src="'/public/website/views/header.html'"></ng-include>
-			<!-- start of banner -->
-			<div class="container othPage" id="banner">
-				<div class="row">
-					<div class="col-md-12 col-sm-12 alC">
-						<h2 class="h2 mocha">
-							Invoice
-						</h2>
-					</div>
-				</div>
-			</div>
-			<!-- End of banner -->
-		</section>
+<div ng-controller="allPageController">
+  <section class="noMin" id="topSection">
+    <ng-include src="'/public/website/views/header.html'"></ng-include>
+    <!-- start of banner -->
+    <div class="container othPage" id="banner">
+      <div class="row">
+        <div class="col-md-12 col-sm-12 alC">
+          <h2 class="h2 mocha">
+            Invoice
+          </h2>
+        </div>
+      </div>
+    </div>
+    <!-- End of banner -->
+  </section>
 
-		<section class="container" id="midSection">
-			<ul class="ln" id="indul">
+  <section class="container" id="midSection">
+    <ul class="ln" id="indul">
 
-				<li class="row" ng-repeat="list in invoice.middle.list">
-					<div class="col-md-6 col-sm-12 lSide">
-						<h4 class="h4">{{list.title}}</h4>
-						<p class="cmnp">{{list.details}}</p>
-					</div>
-					<div class="col-md-6 col-sm-12 rSide">
-						<figure class="">
-							<img class="img-responsive center-block" ng-src="{{list.imgSrc}}" alt="{{list.imgTitle}}"/>
-						</figure>
-					</div>
-				</li>
+      <li class="row" ng-repeat="list in invoice.middle.list">
+        <div class="col-md-6 col-sm-12 lSide">
+          <h4 class="h4">{{list.title}}</h4>
 
-			</ul>
-		</section>
-		<ng-include src="'/public/website/views/footer.html'"></ng-include>
-	</div>
+          <p class="cmnp">{{list.details}}</p>
+        </div>
+        <div class="col-md-6 col-sm-12 rSide">
+          <figure class="">
+            <img class="img-responsive center-block" ng-src="{{list.imgSrc}}" alt="{{list.imgTitle}}"/>
+          </figure>
+        </div>
+      </li>
+
+    </ul>
+  </section>
+  <ng-include src="'/public/website/views/footer.html'"></ng-include>
+</div>
 </body>
 </html>
