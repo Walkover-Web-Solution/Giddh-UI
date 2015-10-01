@@ -31,6 +31,10 @@ app.config ($locationProvider, $routeProvider) ->
     controller: 'companyController',
     templateUrl: '/public/webapp/views/thanks.html'
   )
+  .when('/manageGroup',
+    controller: 'groupController',
+    templateUrl: '/public/webapp/views/manageGroupAndAccount.html'
+  )
   .otherwise redirectTo: '/home'
 app.run(()->
 )

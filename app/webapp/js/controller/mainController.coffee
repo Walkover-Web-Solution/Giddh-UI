@@ -23,5 +23,11 @@ mainController = ($scope, $rootScope, $timeout, $http, localStorageService) ->
   $rootScope.$on '$viewContentLoaded', ->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
 
+  $scope.goToManageGroups = ->
+    lsKeys = localStorageService.keys()
+    if _.contains(lsKeys, "_selectedCompany")
+      window.location = "/manageGroup"
+    else
+      toastr.error("Select company first.", "Error")
 
 angular.module('giddhWebApp').controller 'mainController', mainController

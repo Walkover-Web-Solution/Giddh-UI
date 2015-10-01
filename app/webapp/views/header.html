@@ -2,14 +2,13 @@
 <div class="loader"></div> -->
 
 
-
 <header class="clearfix">
-	
 
-	<nav class="navbar navbar-fixed-top  navbar-inverse">
-	  <div class="container-fluid">
 
-	  	<ul class="nav navbar-nav">
+  <nav class="navbar navbar-fixed-top  navbar-inverse">
+    <div class="container-fluid">
+
+      <ul class="nav navbar-nav">
         <li class="active">
           <a href="javascript:void(0)">
             <i class="gic-24 icon-menu-w"></i>
@@ -21,6 +20,7 @@
         <li ng-if="cmpViewShow">
           <a id="cmpWrp" class="clearfix" href="javascript:void(0)">
             <i class="gic-24 icon-building-w"></i>
+
             <div class="cText">
               <span class="cName">{{companyDetailsName}}</span>
               <!-- <span class="cDate">Date</span> -->
@@ -28,17 +28,17 @@
           </a>
         </li>
         <li id="hdrbtWrp">
-          <button type="button" class="btn btn-primary btn-sm">
-          <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add &amp; Manage
-        </button>
+          <button type="button" class="btn btn-primary btn-sm" ng-click="goToManageGroups()">
+            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add &amp; Manage
+          </button>
         </li>
       </ul>
 
 
-
-			<ul class="nav navbar-nav navbar-right">
+      <ul class="nav navbar-nav navbar-right">
         <li class="dropdown">
-          <a tooltip-placement="left" tooltip="{{basicInfo.name}}" href="javascript:void(0)" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+          <a tooltip-placement="left" tooltip="{{basicInfo.name}}" href="javascript:void(0)" class="dropdown-toggle"
+             data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
             <i class="glyphicon glyphicon-user"></i> <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li><a href="javascript:void(0)">Action</a></li>
@@ -50,9 +50,9 @@
         </li>
       </ul>
 
-	  </div>
-	</nav>
-	
+    </div>
+  </nav>
+
 </header>
 <!-- 
 <div class="collapse">

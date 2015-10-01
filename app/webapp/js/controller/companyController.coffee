@@ -125,7 +125,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     console.log "inside go to company"
     $scope.ifHavePermission(data)
     $rootScope.cmpViewShow = true
-    $rootScope.companyDetailsName = data.name
+#    $rootScope.companyDetailsName = data.name
     angular.extend($scope.companyBasicInfo, data)
     localStorageService.set("_selectedCompany", $scope.companyBasicInfo)
 
