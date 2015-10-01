@@ -1,240 +1,56 @@
-<div id="popup_wrapper" style="display: block; top: 5%; bottom: 5%; left: 4%; right: 6%;" ng-init="getGroups()">
-  <div class="container-bg">
-    <div id="helpBox" class="pr">
-      Add/Manage Groups & Accounts
-      <div class="closeDil" ng-click="closeThisDialog('popup_wrapper')"><span class="glyphicon glyphicon-remove"></span>
-      </div>
+<div class="" ng-init="getGroups()">
+  <div class="themeBG">
+    Add/Manage Groups & Accounts
+    <div class="" ng-click="$dismiss()">
+      <span class="glyphicon glyphicon-remove"></span>
     </div>
-
-    <div id="selectBox" class="pa l b bdrR">
-      <div class="topSrch clear ng-scope">
-        <div class="input-group mr1 mrR">
+  </div>
+</div>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-3 col-sm-3 greyBg">
+      <div id="selectBox left" auto-height>
+        <div class="topSrch clear ng-scope">
+          <div class="input-group mr1 mrR">
                     <span class="input-group-addon" id="sizing-addon2"><div
                         class="icon24 icon-srch closeQsrch"></div></span>
-          <input class="form-control" ng-model="sgInput" name="" type="text" placeholder="Search">
-        </div>
-
-        <div class="expCol ng-scope">
-                    <span onclick="collapseExpand(this);" title="Collapse"
-                          class="icon24 icon-expand fl ptr mrR coexTip"></span>
-        </div>
-      </div>
-
-      <div id="grouplist" class="groupList">
-        <script type="text/ng-template" id="nodes_rendereracc">
-          <div ui-tree-handle ng-click="selectGroupToAddAcc(value,1);">
-            <a class="btn-xs" data-nodrag ng-click="toggle(this)"><span class="tpico DnBArr"
-                                                                        ng-class="{'r': collapsed, '': !collapsed}"></span></a>
-            <span>{{value.name}}</span>
-
-            <p class="ellp">synonym, nickname, nickname1, nick2</p>
+            <input class="form-control" ng-model="sgInput" name="" type="text" placeholder="Search">
           </div>
-          <ol ui-tree-nodes="" ng-model="value.children" ng-class="{hidden: collapsed}">
-            <li ng-repeat="(key,value) in value.children  | filter:sgInput " ui-tree-node
-                ng-include="'nodes_rendereracc'">
-            </li>
-          </ol>
-        </script>
-        <div ui-tree data-drag-enabled="false">
-          <ol ui-tree-nodes="" ng-model="groupList" id="tree-root">
-            <li ng-repeat="(key,value) in groupList | filter:sgInput" ui-tree-node
-                ng-include="'nodes_rendereracc'"></li>
-          </ol>
-        </div>
-      </div>
 
+          <div class="expCol ng-scope">
+                    <span onclick="" title="Collapse"
+                          class="icon24 icon-expand fl ptr mrR coexTip"></span>
+          </div>
+        </div>
+        <perfect-scrollbar id="restMngCompRit" class="scrClass" wheel-propagation="true" wheel-speed="10"
+                           min-scrollbar-length="20" suppressScrollX="true" auto-height>
+          <ul class="companyList ln">
+            <li class="clearfix" ng-repeat="value in groupList">
+              <span class="ui-icon ui-icon-flag"></span>
+
+              <div class="action">
+              <span ng-click=""
+                    class="glyphicon glyphicon-triangle-bottom"></span>
+              </div>
+              <a href="javascript:;" ng-click="">
+                <h3 class="txtUpc ellp">{{value.name}}</h3>
+              </a>
+            </li>
+          </ul>
+        </perfect-scrollbar>
+      </div>
     </div>
 
-    <form id="insertName" name="f1" action="javascript:;" ng-submit="addNewAccount()" method="post">
-      <div id="addBox" class="bdrR">
-        <div id="addBoxForm" class="{{addGroupBox}}">
-
-          <div class="col2 fl bdrR groupInfo">
-            <div class="hdMang info">Group Info</div>
-            <div class="pd2">
-              <label>Group Name</label>
-
-              <div class="orIWrp cl">
-                <input class="orI form-control" name="groupName" type="text"
-                       value="{{accHelpNoteTitle}}" placeholder="Enter Company Name">
-              </div>
-
-              <label>Unique Names</label>
-
-              <div class="orIWrp cl fl">
-                                <textarea class="form-control" placeholder="Enter Unique names" rows="1" cols="30"
-                                          ng-model="groupUniqueName"></textarea>
-              </div>
-
-              <label class="cl">Synonyms (nicknames)</label>
-
-              <div class="orIWrp cl fl">
-                                <textarea class="form-control" placeholder="Enter synonyms (nicknames)" rows="1"
-                                          cols="30"></textarea>
-              </div>
-            </div>
-          </div>
-          <div class="col2 fl groupInfo">
-            <div class="hdMang">Add Subgroup</div>
-            <div class="pd2">
-              <input class="form-control" type="text" placeholder="Enter Subgroup name"/>
-                            <textarea class="mrT1 form-control" placeholder="Enter Unique names" rows="1"
-                                      cols="30"></textarea>
-                            <textarea class="mrT1 form-control" placeholder="Enter synonyms (nicknames)" rows="1"
-                                      cols="30"></textarea>
-
-              <div class="cl">
-                <input type="button" class="btn btn-primary mrT1" value="Add Subgroup">
-              </div>
-            </div>
-          </div>
-
-          <div class="cl"></div>
-
-          <div class="hdMang">Add New Account</div>
-          <div class="pd2 clear">
-            <div class="fl shadBox">
-              <p>Basic Info (required) <span style="color:#FF1188">*</span></p>
-
-              <div class="iWrp mrB1 mrT1">
-                <input class="form-control" name="name" type="text" id="name" ng-model="acc.name"
-                       placeholder="Enter Account Name" maxlength="60">
-              </div>
-              <div class="iWrp mrB1">
-                <input class="form-control" type="text" id="nickname" name="nickname"
-                       ng-model="acc.uname" placeholder="Unique Name">
-              </div>
-
-              <div class="cl openingBal clear">
-                <div class="iWrp fl mrR1">
-                  <input class="form-control" name="openingBal" ng-model="acc.openBal" type="text"
-                         step="0.01" id="openingBal" placeholder="Opening Balance">
-                </div>
-                <div class="fl">
-                  <select class="form-control" id="opType" name="openingBalType"
-                          ng-model="acc.drcrType">
-                    <option selected="selected" value="dr">dr</option>
-                    <option value="cr">cr</option>
-                  </select>
-                </div>
-                <div class="cl"></div>
-              </div>
-            </div>
-            <div class="fl">
-              <div class="clear cl">
-                <div class="onlyPersonal fl mrR3">
-                  <div class="iWrp mrB1">
-                    <input id="email" name="email" ng-model="acc.email" type="email"
-                           class="form-control" placeholder="Email">
-                  </div>
-                  <div class="iWrp mrB1">
-                    <input id="mobile" name="mobile" type="text" ng-model="acc.mobile"
-                           class="form-control" placeholder="Mobile">
-                  </div>
-                  <div class="iWrp mrB">
-                                        <textarea id="address" name="address" class="form-control"
-                                                  ng-model="acc.address" placeholder="Address"></textarea>
-                  </div>
-                </div>
-                <div class="otherInfo fl">
-                  <div class="iWrp mrB1">
-                    <input id="pan" name="pan" ng-model="acc.pan" type="text" class="form-control"
-                           placeholder="PAN">
-                  </div>
-                  <div class="iWrp mrB1">
-                    <input id="serviceTaxNumber" name="serviceTaxNumber" type="text"
-                           ng-model="acc.serviceTaxNumber" class="form-control" value=""
-                           placeholder="service tax number">
-                  </div>
-                  <div class="iWrp mrB1">
-                    <input type="text" id="wtCst" name="wtCst" class="form-control"
-                           ng-model="acc.wtCst" placeholder="VAT/cst">
-                  </div>
-                  <div class="iWrp mrB">
-                    <input type="text" id="others" name="others" class="form-control"
-                           ng-model="acc.others" placeholder="others">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="cl">
-              <input id="insertNameSubmit" class="btn btn-primary" name="" value="Add account" type="submit">
-            </div>
-          </div>
-
-          <div id="addBoxHelp" class="{{hideClass}}" style="margin-top:70px;">
-            <span class="icArw arwL"></span>
-
-            <div style="margin-top:-20px;" class="mrL4">
-              <div class="fs1 hWrt bgWh gryClr">Select a group!</div>
-
-              <p class="fwB">Manage all your alike accounts with Group facility.</p>
-
-              <p class="mrT1"><strong>Add a New Account</strong><span> under the appropriate group heading.</span>
-              </p>
-
-              <p class=""><span>On the left side you can see fixed default groups which </span><strong>cannot
-                be changed or deleted.</strong></p>
-
-              <p class="mrT1"><strong>BUT, </strong><span> we understand your organizing needs!</span></p>
-
-              <p><span>Therefore, if you want to </span><strong>add a new group,</strong></p>
-
-              <p>Add them under the appropriate fixed default group.</p>
-
-            </div>
-          </div>
-
-          <div id="afterOneAcHelp" style="margin-top:30px; display:none;">
-            <div class="mrL4">
-              <div class="fs1 hWrt bgWh gryClr">Now! Add One More Account!</div>
-              <p class=""><span>Since every account has a </span><strong>dual effect.</strong></p>
-
-              <p class="mrT1">For example, consider this entry:</p>
-
-              <p><strong>Giving Rs. 500 in cash to Ram</strong></p>
-
-              <p><strong>Giving Rs. 500 for tea expenses</strong></p>
-
-              <p class="mrT1">Here, you will either give cash against tea expenses</p>
-
-              <p>OR you will give cash to a person.</p>
-
-              <p class="mrT1">Now the system will record either reduce Cash and increase tea expenses</p>
-
-              <p>OR it will reduce Cash and increase money due to a person.</p>
-
-              <p class="mrT1 fwB">So there will ALWAYS be two accounts that will get affected.</p>
-              <input class="btn btn-primary mrT1" type="button" onClick="showhide()" value="Proceed">
-            </div>
-          </div>
-        </div>
-
+    <!-- middle body -->
+    <div class="col-md-6 col-sm-6">
+      <div class="middleBody bdrR bdrL row" auto-height>
+        <div></div>
       </div>
-    </form>
+    </div>
 
-    <div id="previewBox" class="">
-      <div onclick="uiDrop(this,'#moveToGroup2')" class="pdL2 pdT1">
-        <div class="gHeading">Move to group</div>
-        <input class="form-control" ng-model="searchGroup" type="text" placeholder="Group name"/>
-        <ul id="moveToGroup2" class="dn moveGroup">
-          <li ng-repeat="value in groupListById | filter:searchGroup"><a href="javascript:;"
-                                                                         ng-click="moveGroupToGroup(value.groupId)">{{value.groupName}}</a>
-          </li>
-        </ul>
-      </div>
-      <div class="cl"></div>
-      <form action="javascript:;" method="post" class="pdL2">
-        <div class="gHeading">Share {{accHelpNoteTitle}} group</div>
-        <div class="searchUser">
-          <input type="text" placeholder="Enter Email ID" class="form-control mrB1">
-          <input type="submit" value="Share" class="btn btn-warning" name="">
-        </div>
-      </form>
-
-      <div class="pd2 mrT2 bdrT">
-        <input type="button" value="Delete Group" class="btn btn-danger"/>
-      </div>
+    <!-- right side -->
+    <div class="col-md-3 col-sm-3" id="right">
+      <div ng-include="'/public/webapp/views/groupOperations.html'"></div>
     </div>
   </div>
 </div>

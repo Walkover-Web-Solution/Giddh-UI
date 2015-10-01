@@ -1,6 +1,6 @@
 "use strict"
 
-mainController = ($scope, $rootScope, $timeout, $http, localStorageService) ->
+mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageService) ->
   $rootScope.basicInfo = {}
 
   $scope.logout = ->
@@ -14,19 +14,25 @@ mainController = ($scope, $rootScope, $timeout, $http, localStorageService) ->
 
   $rootScope.closePop = ()->
     console.log "closePop"
-    #$modalInstance.close()
+  #$modalInstance.close()
 
   $scope.cancelPop = () ->
     console.log "cancelPop"
-    #$modalInstance.dismiss('cancel')
+  #$modalInstance.dismiss('cancel')
 
   $rootScope.$on '$viewContentLoaded', ->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
 
   $scope.goToManageGroups = ->
+    console.log "inside manage group method"
     lsKeys = localStorageService.keys()
     if _.contains(lsKeys, "_selectedCompany")
-      window.location = "/manageGroup"
+      modalInstance = $modal.open(
+        templateUrl: '/public/webapp/views/manageGroupAndAccount.html',
+        size: "lg",
+        backdrop: 'static'
+        controller: 'groupController'
+      )
     else
       toastr.error("Select company first.", "Error")
 
