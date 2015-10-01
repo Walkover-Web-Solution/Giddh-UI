@@ -3,6 +3,7 @@
 loginBackController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr) ->
   
   $scope.authenticate = (provider) ->
+    $scope.loginIsProcessing = true
     $auth.authenticate(provider).then((response) ->
       if response.data.result.status is "error"
         #user is not registerd with us
@@ -16,6 +17,7 @@ loginBackController = ($scope, $rootScope, $http, $timeout, $auth, localStorageS
         window.location = "/app/"
     ).catch (response) ->
       console.log response
+      $scope.loginIsProcessing = false
 
 
   #webpage data

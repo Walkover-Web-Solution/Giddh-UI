@@ -122,10 +122,9 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #making a detail company view
   $scope.goToCompany = (data) ->
-    console.log "inside go to company"
     $scope.ifHavePermission(data)
     $rootScope.cmpViewShow = true
-    $rootScope.selectedCompany = data
+    $rootScope.companyDetailsName = data.name
     angular.extend($scope.companyBasicInfo, data)
     localStorageService.set("_selectedCompany", $scope.companyBasicInfo)
 
@@ -189,7 +188,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.getCurrencyList = ->
     lsKeys = localStorageService.keys()
     if _.contains(lsKeys, "_currencyList")
-      $scope.currencyList = localStorageService.get("_currencyList")
+      $scope.currencyList = $rootScope.getItem("_currencyList")
     else
       currencyService.getList($scope.getCurrencyListSuccess, $scope.getCurrencyListFailure)
 
