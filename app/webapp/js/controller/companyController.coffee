@@ -188,7 +188,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.getCurrencyList = ->
     lsKeys = localStorageService.keys()
     if _.contains(lsKeys, "_currencyList")
-      $scope.currencyList = $rootScope.getItem("_currencyList")
+      $scope.currencyList = localStorageService.get("_currencyList")
     else
       currencyService.getList($scope.getCurrencyListSuccess, $scope.getCurrencyListFailure)
 

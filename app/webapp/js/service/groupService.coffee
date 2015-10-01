@@ -1,14 +1,14 @@
 'use strict'
 
 angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
-  Group = $resource('/company/:company/groups',
-    {'company': @company, 'groupUniqueName': @groupUniqueName},
+  Group = $resource('/company/:companyUniqueName/groups',
+    {'companyUniqueName': @companyUniqueName, 'groupUniqueName': @groupUniqueName},
     {
       add: {method: 'POST'}
       getAll: {method: 'GET'}
-      getAllWithAccounts: {method: 'GET', url: '/company/:company/groups/with-accounts'}
-      update: {method: 'PUT', url: '/company/:company/groups/:groupUniqueName'}
-      delete: {method: 'DELETE', url: '/company/:company/groups/:groupUniqueName'}
+      getAllWithAccounts: {method: 'GET', url: '/company/:companyUniqueName/groups/with-accounts'}
+      update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
+      delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
     })
 
   groupService =
@@ -19,21 +19,21 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
       func(onSuccess, onFailure)
       deferred.promise
 
-    create: (company, data) ->
-      @handlePromise((onSuccess, onFailure) -> Group.add({company: company}, data, onSuccess, onFailure))
+    create: (companyUniqueName, data) ->
+      @handlePromise((onSuccess, onFailure) -> Group.add({companyUniqueName: companyUniqueName}, data, onSuccess, onFailure))
 
-    getAllFor: (company) ->
-      @handlePromise((onSuccess, onFailure) -> Group.getAll({company: company}, onSuccess, onFailure))
+    getAllFor: (companyUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Group.getAll({companyUniqueName: companyUniqueName}, onSuccess, onFailure))
 
-    getAllWithAccountsFor: (company) ->
-      @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccounts({company: company}, onSuccess, onFailure))
+    getAllWithAccountsFor: (companyUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccounts({companyUniqueName: companyUniqueName}, onSuccess, onFailure))
 
-    update: (company, group) ->
-      @handlePromise((onSuccess, onFailure) -> Group.update({company: company, groupUniqueName: group.uniqueName},
+    update: (companyUniqueName, group) ->
+      @handlePromise((onSuccess, onFailure) -> Group.update({companyUniqueName: companyUniqueName, groupUniqueName: group.uniqueName},
         group, onSuccess, onFailure))
 
-    delete: (company, group) ->
-      @handlePromise((onSuccess, onFailure) -> Group.delete({company: company, groupUniqueName: group.uniqueName},
+    delete: (companyUniqueName, group) ->
+      @handlePromise((onSuccess, onFailure) -> Group.delete({companyUniqueName: companyUniqueName, groupUniqueName: group.uniqueName},
         onSuccess, onFailure))
 
   groupService
