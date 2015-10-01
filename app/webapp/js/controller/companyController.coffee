@@ -21,19 +21,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.currencyList = []
   $scope.currencySelected = undefined;
 
-  #check if user is admin
-  $scope.ifHavePermission = (data) ->
-    angular.forEach data.role.permissions, (value, key) ->
-      if value.code is "MNG_USR"
-        $scope.isAdmin = true
-
-  #for make sure
-  $scope.checkCmpCretedOrNot = ->
-    if $scope.companyList.length <= 0
-      $rootScope.openFirstTimeUserModal()
-
   #dialog for first time user
-  $rootScope.openFirstTimeUserModal = () ->
+  $scope.openFirstTimeUserModal = () ->
     modalInstance = $modal.open(
       templateUrl: '/public/webapp/views/createCompanyModal.html',
       size: "sm",
@@ -50,42 +39,52 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     ), ->
       $scope.checkCmpCretedOrNot()
 
+  #check if user is admin
+  $scope.ifHavePermission = (data) ->
+    angular.forEach data.role.permissions, (value, key) ->
+      if value.code is "MNG_USR"
+        $scope.canManageUser = true
+
+  #for make sure
+  $scope.checkCmpCretedOrNot = ->
+    if $scope.companyList.length <= 0
+      $scope.openFirstTimeUserModal()
+
   #get only city for create company
   $scope.getOnlyCity = (val) ->
-    promise = locationService.searchOnlyCity(val)
-    promise.then(getOnlyCitySuccess, getOnlyCityFailure)
+    locationService.searchOnlyCity(val).then($scope.getOnlyCitySuccess, $scope.getOnlyCityFailure)
 
   #get only city success
-  getOnlyCitySuccess = (data) ->
+  $scope.getOnlyCitySuccess = (data) ->
     filterThis = data.results.filter (i) -> i.types[0] is "locality"
     filterThis.map((item) ->
       item.address_components[0].long_name
     )
 
   #get only city failure
-  getOnlyCityFailure = (response) ->
+  $scope.getOnlyCityFailure = (response) ->
     console.log response, "in getOnlyCityFailure"
 
   #creating company
   $scope.createCompany = (cdata) ->
-    companyServices.create(cdata).then(onCreateCompanySuccess, onCreateCompanyFailure)
+    companyServices.create(cdata).then($scope.onCreateCompanySuccess, $scope.onCreateCompanyFailure)
 
   #create company success
-  onCreateCompanySuccess = (response) ->
+  $scope.onCreateCompanySuccess = (response) ->
     toastr.success("Company create successfully", "Success")
     $rootScope.mngCompDataFound = true
     $scope.companyList.push(response.body)
 
   #create company failure
-  onCreateCompanyFailure = (response) ->
+  $scope.onCreateCompanyFailure = (response) ->
     toastr.error(response.data.message, "Error")
 
   #get company list failure
-  getCompanyListFailure = (response)->
+  $scope.getCompanyListFailure = (response)->
     toastr.error(response.data.message, "Error")
 
   #Get company list
-  getCompanyListSuccess = (response) ->
+  $scope.getCompanyListSuccess = (response) ->
     if response.status is "error"
       $rootScope.openFirstTimeUserModal()
     else
@@ -95,7 +94,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #Get company list
   $scope.getCompanyList = ->
     try
-      companyServices.getAll().then(getCompanyListSuccess, getCompanyListFailure)
+      companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
     catch e
       throw new Error(e.message)
 
@@ -109,7 +108,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       ok: 'Yes',
       cancel: 'No'
     ).then ->
-      companyServices.delete(uniqueName).then(delCompanySuccess, delCompanyFailure)
+      companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
 
   #delete company success
   delCompanySuccess = (response) ->
@@ -188,7 +187,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.getCurrencyList = ->
     lsKeys = localStorageService.keys()
     if _.contains(lsKeys, "_currencyList")
-      $scope.currencyList = $rootScope.getItem("_currencyList")
+      $scope.currencyList = localStorageService.get("_currencyList")
     else
       currencyService.getList($scope.getCurrencyListSuccess, $scope.getCurrencyListFailure)
 
