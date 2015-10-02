@@ -24,12 +24,11 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
     $rootScope.basicInfo = localStorageService.get("_userDetails")
 
   $scope.goToManageGroups = ->
-    console.log "inside manage group method"
     lsKeys = localStorageService.keys()
     if _.contains(lsKeys, "_selectedCompany")
       modalInstance = $modal.open(
-        templateUrl: '/public/webapp/views/manageGroupAndAccount.html',
-        size: "lg",
+        templateUrl: '/public/webapp/views/addManageGroupModal.html'
+        size: "lg"
         backdrop: 'static'
         controller: 'groupController'
       )
