@@ -44,7 +44,15 @@
     <!-- middle body -->
     <div class="col-md-12 col-sm-12">
       <div class="middleBody bdrR bdrL row" auto-height>
-
+        <div class="container-fluid">
+          <div class="row">
+            <div ng-include="'/public/webapp/views/groupInfo.html'"></div>
+            <div ng-include="'/public/webapp/views/addNewGroup.html'"></div>
+          </div>
+          <div class="row">
+            <div ng-include="'/public/webapp/views/addNewAccount.html'"></div>
+          </div>
+        </div>
       </div>
     </div>
 
