@@ -28,7 +28,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
     if _.contains(lsKeys, "_selectedCompany")
       modalInstance = $modal.open(
         templateUrl: '/public/webapp/views/addManageGroupModal.html'
-        size: "lg"
+        size: "liq90"
         backdrop: 'static'
         controller: 'groupController'
       )

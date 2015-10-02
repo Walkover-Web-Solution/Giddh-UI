@@ -4,6 +4,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.companyBasicInfo = {}
   $scope.groupList = {}
 
+  $scope.ravi = false
+
   $scope.getGroups = ->
     #console.log "inside get groups methods"
     lsKeys = localStorageService.keys()

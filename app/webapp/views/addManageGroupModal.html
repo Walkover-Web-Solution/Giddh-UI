@@ -1,64 +1,86 @@
 <div class="" ng-init="getGroups()">
-  <div class="themeBG">
-    Add/Manage Groups &amp; Accounts
-    <div class="" ng-click="$dismiss()">
-      <span class="glyphicon glyphicon-remove"></span>
+  
+  
+    <div class="modal-header themeBg">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h3 class="modal-title">Add/Manage Groups &amp; Accounts</h3>
     </div>
-  </div>
-</div>
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-3 col-sm-3 greyBg" id="left">
-      <div id="selectBox left" auto-height>
-        <div class="topSrch clear ng-scope">
-          <div class="input-group mr1 mrR">
-                    <span class="input-group-addon" id="sizing-addon2"><div
-                        class="icon24 icon-srch closeQsrch"></div></span>
-            <input class="form-control" ng-model="sgInput" name="" type="text" placeholder="Search">
+    <!-- end header -->
+  
+  <div class="modal-body noPad">
+
+    <div class="clearfix">
+
+      <div class="col-md-3 col-sm-12 greyBg">
+        <div auto-height>
+
+          <div class="topSrch clear">
+            <div class="input-group mr1 mrR">
+              <span class="input-group-addon" id="sizing-addon2">
+                <div class="icon24 icon-srch closeQsrch"></div>
+              </span>
+              <input class="form-control" ng-model="sgInput" name="" type="text" placeholder="Search">
+            </div>
+
+            <div class="expCol">
+              <span onclick="" title="Collapse" class="icon24 icon-expand fl ptr mrR coexTip"></span>
+            </div>
           </div>
 
-          <div class="expCol ng-scope">
-                    <span onclick="" title="Collapse"
-                          class="icon24 icon-expand fl ptr mrR coexTip"></span>
-          </div>
+          <perfect-scrollbar id="restMngCompRit" class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20" suppressScrollX="true" auto-height>
+            <ul class="companyList ln">
+              <li class="clearfix" ng-repeat="value in groupList">
+                <span class="ui-icon ui-icon-flag"></span>
+
+                <div class="action">
+                  <span ng-click="" class="glyphicon glyphicon-triangle-bottom"></span>
+                </div>
+                <a href="javascript:;" ng-click="">
+                  <h3 class="txtUpc ellp">{{value.name}}</h3>
+                </a>
+              </li>
+            </ul>
+          </perfect-scrollbar>
         </div>
-        <perfect-scrollbar id="restMngCompRit" class="scrClass" wheel-propagation="true" wheel-speed="10"
-                           min-scrollbar-length="20" suppressScrollX="true" auto-height>
-          <ul class="companyList ln">
-            <li class="clearfix" ng-repeat="value in groupList">
-              <span class="ui-icon ui-icon-flag"></span>
-
-              <div class="action">
-              <span ng-click=""
-                    class="glyphicon glyphicon-triangle-bottom"></span>
-              </div>
-              <a href="javascript:;" ng-click="">
-                <h3 class="txtUpc ellp">{{value.name}}</h3>
-              </a>
-            </li>
-          </ul>
-        </perfect-scrollbar>
       </div>
-    </div>
 
-    <!-- middle body -->
-    <div class="col-md-12 col-sm-12">
-      <div class="middleBody bdrR bdrL row" auto-height>
-        <div class="container-fluid">
-          <div class="row">
-            <div ng-include="'/public/webapp/views/groupInfo.html'"></div>
-            <div ng-include="'/public/webapp/views/addNewGroup.html'"></div>
-          </div>
-          <div class="row">
+
+
+      <!-- middle body -->
+      <div class="col-md-7 col-sm-12">
+        <div ng-show="ravi" class="bdrR bdrL row" auto-height>
+
+          <div class="clearfix">
+
+            <div class="col-md-6 col-sm-12 bdrR">
+              <div ng-include="'/public/webapp/views/groupInfo.html'"></div>
+            </div>
+            <!-- group info content end -->
+            
+            <div class="col-md-6 col-sm-12">
+              <div ng-include="'/public/webapp/views/addNewGroup.html'"></div>
+            </div>
+            <!-- add new group content end -->
+
+          </div> 
+          <!-- end row first -->
+
+          <div class="clearfix">
             <div ng-include="'/public/webapp/views/addNewAccount.html'"></div>
           </div>
+          <!-- end of second row -->
+            
         </div>
       </div>
-    </div>
 
-    <!-- right side -->
-    <div class="col-md-3 col-sm-3" id="right">
-      <div ng-include="'/public/webapp/views/groupOperations.html'"></div>
+      <!-- right side -->
+      <div class="col-md-2 col-sm-12" id="right">
+        <div ng-include="'/public/webapp/views/groupOperations.html'"></div>
+      </div>
     </div>
+  
   </div>
+  <!-- end modal body -->
+
+
 </div>
