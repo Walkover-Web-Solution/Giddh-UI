@@ -35,7 +35,7 @@
                 <div class="action">
                   <span ng-click="" class="glyphicon glyphicon-triangle-bottom"></span>
                 </div>
-                <a href="javascript:;" ng-click="">
+                <a href="javascript:;" ng-click="selectGroupToEdit(value)">
                   <h3 class="txtUpc ellp">{{value.name}}</h3>
                 </a>
               </li>
@@ -48,28 +48,8 @@
 
       <!-- middle body -->
       <div class="col-md-7 col-sm-12">
-        <div ng-show="ravi" class="bdrR bdrL row" auto-height>
-
-          <div class="clearfix">
-
-            <div class="col-md-6 col-sm-12 bdrR">
-              <div ng-include="'/public/webapp/views/groupInfo.html'"></div>
-            </div>
-            <!-- group info content end -->
-            
-            <div class="col-md-6 col-sm-12">
-              <div ng-include="'/public/webapp/views/addNewGroup.html'"></div>
-            </div>
-            <!-- add new group content end -->
-
-          </div> 
-          <!-- end row first -->
-
-          <div class="clearfix">
-            <div ng-include="'/public/webapp/views/addNewAccount.html'"></div>
-          </div>
-          <!-- end of second row -->
-            
+        <div class="bdrR bdrL row" auto-height>
+          <div ng-if="showGroupDetails" ng-include="'/public/webapp/views/groupDetails.html'"/>
         </div>
       </div>
 

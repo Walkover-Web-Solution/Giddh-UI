@@ -3,11 +3,11 @@
 groupController = ($scope, $rootScope, localStorageService, groupService, toastr) ->
   $scope.companyBasicInfo = {}
   $scope.groupList = {}
+  $scope.selectedGroup = {}
 
-  $scope.ravi = false
+  $scope.showGroupDetails = false
 
   $scope.getGroups = ->
-    #console.log "inside get groups methods"
     lsKeys = localStorageService.keys()
     if _.contains(lsKeys, "_selectedCompany")
       $scope.companyBasicInfo = localStorageService.get("_selectedCompany")
@@ -21,6 +21,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.getGroupListFailure = (result) ->
     toastr.error("Unable to get group details.", "Error")
+
+  $scope.selectGroupToEdit = (group) ->
+    $scope.selectedGroup = group
+    $scope.showGroupDetails = true
+
+  $scope.updateGroup = (groupD) ->
+    console.log $scope.companyBasicInfo.uniqueName
+    console.log groupD
+    #groupService.update(localStorageService.companyBasicInfo.uniqueName,$scope.selectedGroup)
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController

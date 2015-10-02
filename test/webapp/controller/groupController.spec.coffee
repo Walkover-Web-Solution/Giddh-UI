@@ -37,3 +37,26 @@ describe 'groupController', ->
       @scope.getGroups()
       expect(@groupService.getAllFor).toHaveBeenCalledWith("soniravi")
 
+  describe '#getGroupListSuccess', ->
+    it 'should set group list', ->
+      result = ["body":{"name":"fixed assets"},{"name":"capital account"}]
+      @scope.getGroupListSuccess(result)
+      expect(@scope.groupList).toBe(result.body)
+
+  describe '#getGroupListFailure', ->
+    it 'should show a toastr for error', ->
+      spyOn(@toastr,'error')
+      @scope.getGroupListFailure()
+      expect(@toastr.error).toHaveBeenCalledWith("Unable to get group details.", "Error")
+
+  describe '#selectGroupToEdit', ->
+    it 'should set group as selected and a variable to true to show its detail', ->
+      group = {"name":"Fixed Assets"}
+      @scope.selectGroupToEdit(group)
+      expect(@scope.selectedGroup).toBe(group)
+      expect(@scope.showGroupDetails).toBeTruthy()
+
+  describe '#updateGroup', ->
+    xit 'should call group service and update group', ->
+      spyOn(@groupService,'update')
+      @scope.updateGroup()
