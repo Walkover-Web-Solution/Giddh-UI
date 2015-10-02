@@ -103,7 +103,57 @@
 
     <tab ng-show="canManageUser" heading="Permission">
       <div class="pd2">
-        Permission content
+        <div class="greyBox">
+          <form ng-submit="shareCompanyWithUser(addShareEmailForm)" name="addShareEmailForm" novalidate  class="form-inline" ng-init="setFormScope(this)">
+            <div class="mrB">Give permission to:</div>
+
+            <div class="form-group">
+              <input ng-model="shareWithEmail" name="userEmail" type="email" class="form-control fl mrR1" placeholder="Enter Email ID" required />
+            </div>
+            <div class="form-group">
+              <button ng-disabled="addShareEmailForm.$invalid" class="btn btn-primary">Add</button>
+            </div>
+
+          </form>
+        </div>
+
+        <ul class="userList ln">
+
+          <li ng-repeat="(key,value) in shareEmailList track by $index" class="clearfix">
+
+              <div class="action fr">
+                  <span class="icon mrR1 trns">
+                      <input id="mkAdmin1" class="mrR" ng-model="mkAdmin1" ng-checked="{{value.adminStatus == 2}}" type="checkbox" ng-click="makeAdminOnOff(value)"/>
+                      <label for="mkAdmin" ng-hide="{{value.adminStatus == 3}}"> Make User</label>
+                      <label for="mkAdmin" ng-hide="{{value.adminStatus == 2}}"> Make Admin</label>
+                  </span>
+                  <span class="icon trns mrR1">
+                      <input ng-checked="{{value.onOffStatus == 1}}" class="mrR" name="OnOffUser" ng-model="OnOffUser" type="checkbox" ng-click="assignAdminOrOnOffStatus(value, value.onOffStatus, 1)"/>
+                      <label for="off_">Allow off record</label>
+                  </span>
+                  <div class="delDv">
+                      <span class="icon trns mrL1" ng-click="deleteSharedUser(value.userId, $index)">
+                         <i class="glyphicon glyphicon-trash"></i>
+                          
+                      </span>
+                  </div>
+
+              </div>
+
+              <div class="liContent fl">
+                  <span ng-if="value.adminStatus == '1'">
+                      <span class="ui-icon ui-icon-star-person fl"></span>
+                  </span>
+                  <span ng-if="value.adminStatus != '1'">     <span
+                          class="ui-icon ui-icon-person fl mrT1"></span>
+                  </span>
+
+                  <p class="a fl">{{value.email}}</p>
+              </div>
+          </li>
+
+        </ul>
+
       </div>
     </tab>
     

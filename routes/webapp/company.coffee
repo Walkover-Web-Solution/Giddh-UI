@@ -53,4 +53,8 @@ router.post '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+#share company with user
+router.put '/:uniqueName/share', (req, res) ->
+  console.log req.body, "in share company req"
+
 module.exports = router

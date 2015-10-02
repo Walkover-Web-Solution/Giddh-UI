@@ -136,7 +136,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.updtCompanyFailure = (response)->
     toastr.error(response.data.message, "Error")
 
-  #to inject form again on scope
+  #to inject form again on scope do not remove very imp function
   $scope.setFormScope = (scope) ->
     @formScope = scope
 
@@ -177,10 +177,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.onGetCityFailure = (data) ->
     console.log "in get city failure"
 
-  
-
-  
-
   $scope.getCurrencyList = ->
     lsKeys = localStorageService.keys()
     if _.contains(lsKeys, "_currencyList")
@@ -197,6 +193,17 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       item.code
     )
     localStorageService.set("_currencyList", $scope.currencyList)
+
+  #share and manage permission in manage company
+  $scope.shareCompanyWithUser = (data) ->
+    shareFormData = {
+      uniqueName: $scope.companyBasicInfo.uniqueName
+      user: data.userEmail.$modelValue
+      role: "admin"
+    }
+    companyServices.share(shareFormData).then($scope.onShareCompanySuccess, $scope.onShareCompanyFailure)
+    
+
 
   #fire function after page fully loaded
   $rootScope.$on '$viewContentLoaded', ->

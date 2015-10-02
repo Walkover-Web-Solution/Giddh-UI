@@ -7,6 +7,7 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
     getCompanyList: {method: 'GET', url: '/company/all'}
     deleteCompany:{method: 'DELETE', url: '/company/:uniqueName'}
     updateCompany:{method: 'PUT', url: '/company/:uniqueName'}
+    shareCompany:{method: 'PUT', url: '/company/:uniqueName/share'}
   })
 
   companyServices =
@@ -33,6 +34,11 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
     update: (updtData, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Company.updateCompany({
         uniqueName: updtData.uniqueName}, updtData,  onSuccess, onFailure))
+
+    share:(shareData, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.shareCompany({
+          uniqueName: shareData.uniqueName
+        }, shareData, onSuccess, onFailure))
 
 
   companyServices
