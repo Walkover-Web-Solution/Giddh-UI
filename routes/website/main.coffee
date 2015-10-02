@@ -31,7 +31,6 @@ router.get '/terms', (req, res) ->
 router.get '/why-giddh', (req, res) ->
   res.sendFile 'whyGiddh.html', options
 
-
 router.get '/login', (req, res) ->
   res.sendFile 'login_back.html', options
 
