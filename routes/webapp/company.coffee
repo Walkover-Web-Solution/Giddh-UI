@@ -56,5 +56,15 @@ router.post '/', (req, res) ->
 #share company with user
 router.put '/:uniqueName/share', (req, res) ->
   console.log req.body, "in share company req"
+  hUrl = settings.envUrl + 'company/'+ req.params.uniqueName + '/share'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+    data: req.body
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
 
 module.exports = router
