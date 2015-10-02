@@ -27,6 +27,7 @@ describe 'groupController', ->
       @scope.getGroups()
       expect(@toastr.error).toHaveBeenCalledWith('Select company first.', 'Error')
 
+
     it 'should call groups from route after getting company unique name', ->
       result = {"data": "Got it", "uniqueName": "soniravi"}
       deferred = @q.defer()
@@ -35,3 +36,4 @@ describe 'groupController', ->
       spyOn(@groupService, 'getAllFor').andReturn(deferred.promise)
       @scope.getGroups()
       expect(@groupService.getAllFor).toHaveBeenCalledWith("soniravi")
+

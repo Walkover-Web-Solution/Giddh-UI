@@ -63,7 +63,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #get only city failure
   $scope.getOnlyCityFailure = (response) ->
-    console.log response, "in getOnlyCityFailure"
+    toastr.error(response.data.message, "Error")
 
   #creating company
   $scope.createCompany = (cdata) ->
@@ -79,25 +79,22 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.onCreateCompanyFailure = (response) ->
     toastr.error(response.data.message, "Error")
 
-  #get company list failure
-  $scope.getCompanyListFailure = (response)->
-    toastr.error(response.data.message, "Error")
+  #Get company list
+  $scope.getCompanyList = ->
+    companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
 
   #Get company list
   $scope.getCompanyListSuccess = (response) ->
     if response.status is "error"
-      $rootScope.openFirstTimeUserModal()
+      $scope.openFirstTimeUserModal()
     else
       $rootScope.mngCompDataFound = true
       $scope.companyList = response.body
 
-  #Get company list
-  $scope.getCompanyList = ->
-    try
-      companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
-    catch e
-      throw new Error(e.message)
-
+  #get company list failure
+  $scope.getCompanyListFailure = (response)->
+    toastr.error(response.data.message, "Error")
+  
   $scope.getCompany = (uniqueName)->
     companyServices.get(uniqueName).then((->), (->))
 
@@ -111,78 +108,78 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
 
   #delete company success
-  delCompanySuccess = (response) ->
+  $scope.delCompanySuccess = (response) ->
     toastr.success("Company deleted successfully", "Success")
     $scope.getCompanyList()
 
   #delete company failure
-  delCompanyFailure = (response) ->
+  $scope.delCompanyFailure = (response) ->
     toastr.error(response.data.message, "Error")
 
   #making a detail company view
   $scope.goToCompany = (data) ->
     $scope.ifHavePermission(data)
     $rootScope.cmpViewShow = true
-    $rootScope.companyDetailsName = data.name
     angular.extend($scope.companyBasicInfo, data)
     localStorageService.set("_selectedCompany", $scope.companyBasicInfo)
 
   #update company details
-  $scope.updateCompanyInfo = () ->
-    if @formScope.cmpnyBascFrm.$valid
-      companyServices.update($scope.companyBasicInfo).then(updtCompanySuc, updtCompanyFail)
+  $scope.updateCompanyInfo = (data) ->
+    companyServices.update(data).then($scope.updtCompanySuccess, $scope.updtCompanyFailure)
 
   #update company success
-  updtCompanySuc = (response)->
-    toastr.success("Company updated successfully")
+  $scope.updtCompanySuccess = (response)->
+    toastr.success("Company updated successfully", "Success")
     $scope.getCompanyList()
 
   #update company failure
-  updtCompanyFail = (response)->
+  $scope.updtCompanyFailure = (response)->
     toastr.error(response.data.message, "Error")
 
   #to inject form again on scope
   $scope.setFormScope = (scope) ->
     @formScope = scope
 
-  $scope.getCity = (val) ->
-    promise = locationService.searchCity(val, @formScope.cmpnyBascFrm.cState.$viewValue)
-    promise.then(onGetCitySuccess, onGetCityFailure)
-
-  onGetCitySuccess = (data) ->
-    filterThis = data.results.filter (i) -> i.types[0] is "locality"
-    filterThis.map((item) ->
-      item.address_components[0].long_name
-    )
-
-  onGetCityFailure = (data) ->
-    console.log "in get city failure"
-
-  $scope.getState = (val) ->
-    promise = locationService.searchState(val, @formScope.cmpnyBascFrm.cCountry.$viewValue)
-    promise.then(onGetStateSuccess, onGetStateFailure)
-
-  onGetStateSuccess = (data) ->
-    filterThis = data.results.filter (i) -> i.types[0] is "administrative_area_level_1"
-    filterThis.map((item) ->
-      item.address_components[0].long_name
-    )
-
-  onGetStateFailure = (data) ->
-    console.log "in get state failure"
 
   $scope.getCountry = (val) ->
-    promise = locationService.searchCountry(val)
-    promise.then(onGetCountrySuccess, onGetCountryFailure)
+    locationService.searchCountry(val).then($scope.onGetCountrySuccess, $scope.onGetCountryFailure)
 
-  onGetCountrySuccess = (data) ->
+  $scope.onGetCountrySuccess = (data) ->
     filterThis = data.results.filter (i) -> i.types[0] is "country"
     filterThis.map((item) ->
       item.address_components[0].long_name
     )
 
-  onGetCountryFailure = (data) ->
+  $scope.onGetCountryFailure = (data) ->
     console.log "in get country failure"
+
+  $scope.getState = (val) ->
+    locationService.searchState(val, $scope.companyBasicInfo.country).then($scope.onGetStateSuccess, $scope.onGetStateFailure)
+
+  $scope.onGetStateSuccess = (data) ->
+    filterThis = data.results.filter (i) -> i.types[0] is "administrative_area_level_1"
+    filterThis.map((item) ->
+      item.address_components[0].long_name
+    )
+
+  $scope.onGetStateFailure = (data) ->
+    console.log "in get state failure"
+
+  $scope.getCity = (val) ->
+    locationService.searchCity(val, $scope.companyBasicInfo.state).then($scope.onGetCitySuccess, $scope.onGetCityFailure)
+
+  $scope.onGetCitySuccess = (data) ->
+    filterThis = data.results.filter (i) -> i.types[0] is "locality"
+    filterThis.map((item) ->
+      item.address_components[0].long_name
+    )
+
+  $scope.onGetCityFailure = (data) ->
+    console.log "in get city failure"
+
+  
+
+  
 
   $scope.getCurrencyList = ->
     lsKeys = localStorageService.keys()

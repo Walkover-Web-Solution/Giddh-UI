@@ -5,11 +5,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.groupList = {}
 
   $scope.getGroups = ->
-    console.log "inside get groups methods"
+    #console.log "inside get groups methods"
     lsKeys = localStorageService.keys()
     if _.contains(lsKeys, "_selectedCompany")
       $scope.companyBasicInfo = localStorageService.get("_selectedCompany")
-      console.log $scope.companyBasicInfo
       groupService.getAllFor($scope.companyBasicInfo.uniqueName).then($scope.getGroupListSuccess,
           $scope.getGroupListFailure)
     else
