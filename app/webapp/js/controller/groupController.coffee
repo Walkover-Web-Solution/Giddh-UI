@@ -19,7 +19,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.getGroupListSuccess = (result) ->
     $scope.groupList = result.body
 
-  $scope.getGroupListFailure = (result) ->
+  $scope.getGroupListFailure = () ->
     toastr.error("Unable to get group details.", "Error")
 
   $scope.selectGroupToEdit = (group) ->

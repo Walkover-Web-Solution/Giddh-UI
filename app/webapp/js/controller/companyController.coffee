@@ -29,15 +29,16 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       backdrop: 'static',
       scope: $scope
     )
+    modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
 
-    modalInstance.result.then ((data) ->
-      cData = {}
-      cData.name = data.name.replace(/[\s]/g, '')
-      cData.city = data.city
-      $scope.createCompany(cData)
-      $scope.company = {}
-    ), ->
-      $scope.checkCmpCretedOrNot()
+  $scope.onCompanyCreateModalCloseSuccess = (data) ->
+    cData = {}
+    cData.name = data.name
+    cData.city = data.city
+    $scope.createCompany(cData)
+
+  $scope.onCompanyCreateModalCloseFailure = () ->
+    $scope.checkCmpCretedOrNot()
 
   #check if user is admin
   $scope.ifHavePermission = (data) ->
@@ -100,7 +101,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #delete company
   $scope.deleteCompany = (uniqueName, index, name) ->
-    $confirm(
+    $confirm.openModal(
       title: 'Are you sure you want to delete? ' + name,
       ok: 'Yes',
       cancel: 'No'
