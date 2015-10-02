@@ -12,12 +12,6 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
     catch e
       throw new Error(e.message)
 
-  $rootScope.closePop = ()->
-    console.log "closePop"
-
-  $scope.cancelPop = () ->
-    console.log "cancelPop"
-
   $rootScope.$on '$viewContentLoaded', ->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
 
