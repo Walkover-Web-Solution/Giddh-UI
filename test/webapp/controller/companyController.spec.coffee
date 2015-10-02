@@ -183,14 +183,12 @@ describe 'companyController', ->
     it 'should make a call for check permissions, set a variable true, put data in scope variable and set data in localStorage', ->
       data = {}
       spyOn(@scope, "ifHavePermission")
-      spyOn(@localStorageService, "set")
 
       @scope.goToCompany(data)
       expect(@scope.ifHavePermission).toHaveBeenCalledWith(data)
       expect(@scope.cmpViewShow).toBeTruthy()
-      expect(@scope.companyBasicInfo).toEqual(data) 
-      expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)
-  
+      expect(@rootScope.selectedCompany).toEqual(data)
+
   describe '#updateCompanyInfo', ->
     it 'should update company data if form is valid', ->
       data = {}
@@ -239,11 +237,11 @@ describe 'companyController', ->
   describe '#getState', ->
     it 'should call search state service', ->
       val = "Madhya Pradesh"
-      @scope.companyBasicInfo.country = "India"
+      @rootScope.selectedCompany.country = "India"
       deferred = @q.defer()
       spyOn(@locationService, "searchState").andReturn(deferred.promise)
       @scope.getState(val)
-      expect(@locationService.searchState).toHaveBeenCalledWith(val, @scope.companyBasicInfo.country)
+      expect(@locationService.searchState).toHaveBeenCalledWith(val, @rootScope.selectedCompany.country)
   
   describe '#onGetStateSuccess', ->
     it 'should filter data from a object', ->
@@ -260,11 +258,11 @@ describe 'companyController', ->
   describe '#getCity', ->
     it 'should call getCity service with city value and state value', ->
       val = "Houston"
-      @scope.companyBasicInfo.state = "Texas"
+      @rootScope.selectedCompany.state = "Texas"
       deferred = @q.defer()
       spyOn(@locationService, "searchCity").andReturn(deferred.promise)
       @scope.getCity(val)
-      expect(@locationService.searchCity).toHaveBeenCalledWith(val, @scope.companyBasicInfo.state)
+      expect(@locationService.searchCity).toHaveBeenCalledWith(val, @rootScope.selectedCompany.state)
 
   describe '#onGetCitySuccess', ->
     it 'should filter data from a object', ->

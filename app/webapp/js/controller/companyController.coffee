@@ -1,19 +1,15 @@
 "use strict"
 companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, $confirm, localStorageService, toastr) ->
-
-  #blank Obj for modal
-  $rootScope.company = {}
-
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
 
   #make sure manage company detail not load
   $rootScope.cmpViewShow = false
+  $rootScope.selectedCompany = {}
 
   #contains company list
   $scope.companyList = []
   $scope.companyDetails = {}
-  $scope.companyBasicInfo = {}
   $scope.currencyList = []
   $scope.currencySelected = undefined;
   $scope.shareRequest = {role: 'admin', user: null}
@@ -118,8 +114,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.goToCompany = (data) ->
     $scope.ifHavePermission(data)
     $rootScope.cmpViewShow = true
-    angular.extend($scope.companyBasicInfo, data)
-    localStorageService.set("_selectedCompany", $scope.companyBasicInfo)
+    angular.extend($rootScope.selectedCompany, data)
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
@@ -138,7 +133,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.setFormScope = (scope) ->
     @formScope = scope
 
-
   $scope.getCountry = (val) ->
     locationService.searchCountry(val).then($scope.onGetCountrySuccess, $scope.onGetCountryFailure)
 
@@ -152,7 +146,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     console.log "in get country failure"
 
   $scope.getState = (val) ->
-    locationService.searchState(val, $scope.companyBasicInfo.country).then($scope.onGetStateSuccess, $scope.onGetStateFailure)
+    locationService.searchState(val, $rootScope.selectedCompany.country).then($scope.onGetStateSuccess, $scope.onGetStateFailure)
 
   $scope.onGetStateSuccess = (data) ->
     filterThis = data.results.filter (i) -> i.types[0] is "administrative_area_level_1"
@@ -164,7 +158,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     console.log "in get state failure"
 
   $scope.getCity = (val) ->
-    locationService.searchCity(val, $scope.companyBasicInfo.state).then($scope.onGetCitySuccess, $scope.onGetCityFailure)
+    locationService.searchCity(val, $rootScope.selectedCompany.state).then($scope.onGetCitySuccess, $scope.onGetCityFailure)
 
   $scope.onGetCitySuccess = (data) ->
     filterThis = data.results.filter (i) -> i.types[0] is "locality"
@@ -194,7 +188,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #share and manage permission in manage company
   $scope.shareCompanyWithUser = () ->
-    companyServices.share($scope.companyBasicInfo.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess, $scope.onShareCompanyFailure)
+    companyServices.share($rootScope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess, $scope.onShareCompanyFailure)
 
   $scope.onShareCompanySuccess = (response) ->
     console.log "success", response

@@ -1,20 +1,17 @@
 'use strict'
 
 groupController = ($scope, $rootScope, localStorageService, groupService, toastr) ->
-  $scope.companyBasicInfo = {}
   $scope.groupList = {}
   $scope.selectedGroup = {}
 
   $scope.showGroupDetails = false
 
   $scope.getGroups = ->
-    lsKeys = localStorageService.keys()
-    if _.contains(lsKeys, "_selectedCompany")
-      $scope.companyBasicInfo = localStorageService.get("_selectedCompany")
-      groupService.getAllFor($scope.companyBasicInfo.uniqueName).then($scope.getGroupListSuccess,
-          $scope.getGroupListFailure)
-    else
+    if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
+    else
+      groupService.getAllFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
+          $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (result) ->
     $scope.groupList = result.body
@@ -27,9 +24,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showGroupDetails = true
 
   $scope.updateGroup = (groupD) ->
-    console.log $scope.companyBasicInfo.uniqueName
+    console.log $rootScope.selectedCompany.uniqueName
     console.log groupD
-    #groupService.update(localStorageService.companyBasicInfo.uniqueName,$scope.selectedGroup)
+    #groupService.update(localStorageService.selectedCompany.uniqueName,$scope.selectedGroup)
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController

@@ -1,6 +1,6 @@
 "use strict"
 
-mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageService) ->
+mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageService, toastr) ->
   $rootScope.basicInfo = {}
 
   $scope.logout = ->
@@ -14,25 +14,22 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
 
   $rootScope.closePop = ()->
     console.log "closePop"
-  #$modalInstance.close()
 
   $scope.cancelPop = () ->
     console.log "cancelPop"
-  #$modalInstance.dismiss('cancel')
 
   $rootScope.$on '$viewContentLoaded', ->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
 
   $scope.goToManageGroups = ->
-    lsKeys = localStorageService.keys()
-    if _.contains(lsKeys, "_selectedCompany")
+    if _.isEmpty($rootScope.selectedCompany)
+      toastr.error("Select company first.", "Error")
+    else
       modalInstance = $modal.open(
         templateUrl: '/public/webapp/views/addManageGroupModal.html'
         size: "liq90"
         backdrop: 'static'
         controller: 'groupController'
       )
-    else
-      toastr.error("Select company first.", "Error")
 
 angular.module('giddhWebApp').controller 'mainController', mainController
