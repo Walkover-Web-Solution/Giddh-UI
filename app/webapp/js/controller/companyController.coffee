@@ -12,14 +12,11 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #contains company list
   $scope.companyList = []
-
-  #for get company basic info contains
   $scope.companyDetails = {}
-  #for update company basic info contains
   $scope.companyBasicInfo = {}
-
   $scope.currencyList = []
   $scope.currencySelected = undefined;
+  $scope.shareRequest = {role: 'admin', user: null}
 
   #dialog for first time user
   $scope.openFirstTimeUserModal = () ->
@@ -196,15 +193,14 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     localStorageService.set("_currencyList", $scope.currencyList)
 
   #share and manage permission in manage company
-  $scope.shareCompanyWithUser = (data) ->
-    shareFormData = {
-      uniqueName: $scope.companyBasicInfo.uniqueName
-      user: data.userEmail.$modelValue
-      role: "admin"
-    }
-    companyServices.share(shareFormData).then($scope.onShareCompanySuccess, $scope.onShareCompanyFailure)
-    
+  $scope.shareCompanyWithUser = () ->
+    companyServices.share($scope.companyBasicInfo.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess, $scope.onShareCompanyFailure)
 
+  $scope.onShareCompanySuccess = (response) ->
+    console.log "success", response
+
+  $scope.onShareCompanyFailure = (response) ->
+    console.log "failure", response
 
   #fire function after page fully loaded
   $rootScope.$on '$viewContentLoaded', ->

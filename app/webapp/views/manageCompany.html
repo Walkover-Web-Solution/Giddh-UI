@@ -10,79 +10,105 @@
             For better experience fill all details of form
           </p>
           <input type="hidden" ng-model="companyBasicInfo.uniqueName" name="cUniqName"/>
+
           <div class="row">
             <div class="col-md-6 col-sm-12">
-              <div class="form-group" ng-class="(cmpnyBascFrm.cName.$valid  && cmpnyBascFrm.cName.$touched) ? 'has-success' : (cmpnyBascFrm.cName.$touched) ? 'has-error' : '' ">
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cName.$valid  && cmpnyBascFrm.cName.$touched) ? 'has-success' : (cmpnyBascFrm.cName.$touched) ? 'has-error' : '' ">
                 <label>Name</label>
-                <input type="text" ng-model="companyBasicInfo.name" class="form-control" required  name="cName" tabindex="1">
-                
+                <input type="text" ng-model="companyBasicInfo.name" class="form-control" required name="cName"
+                       tabindex="1">
+
               </div>
-              <div class="form-group" ng-class="(cmpnyBascFrm.cEmail.$valid  && cmpnyBascFrm.cEmail.$touched) ? 'has-success' : (cmpnyBascFrm.cEmail.$touched) ? 'has-error' : '' ">
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cEmail.$valid  && cmpnyBascFrm.cEmail.$touched) ? 'has-success' : (cmpnyBascFrm.cEmail.$touched) ? 'has-error' : '' ">
                 <label>Email</label>
-                <input type="email" ng-model="companyBasicInfo.email" class="form-control" required name="cEmail" tabindex="2">
-                
+                <input type="email" ng-model="companyBasicInfo.email" class="form-control" required name="cEmail"
+                       tabindex="2">
+
               </div>
 
-              <div class="form-group" ng-class="(cmpnyBascFrm.cContact.$valid  && cmpnyBascFrm.cContact.$touched) ? 'has-success' : (cmpnyBascFrm.cContact.$touched) ? 'has-error' : '' ">
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cContact.$valid  && cmpnyBascFrm.cContact.$touched) ? 'has-success' : (cmpnyBascFrm.cContact.$touched) ? 'has-error' : '' ">
                 <label>Contact</label>
-                <input type="tel" ng-model="companyBasicInfo.contactNo" class="form-control" required pattern="^[0-9]*$" name="cContact" tabindex="3">
-                
+                <input type="tel" ng-model="companyBasicInfo.contactNo" class="form-control" required pattern="^[0-9]*$"
+                       name="cContact" tabindex="3">
+
               </div>
 
-              <div class="form-group" ng-class="(cmpnyBascFrm.cAddress.$valid  && cmpnyBascFrm.cAddress.$touched) ? 'has-success' : (cmpnyBascFrm.cAddress.$touched) ? 'has-error' : '' ">
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cAddress.$valid  && cmpnyBascFrm.cAddress.$touched) ? 'has-success' : (cmpnyBascFrm.cAddress.$touched) ? 'has-error' : '' ">
                 <label>Address</label>
-                <textarea ng-model="companyBasicInfo.address" class="form-control" name="cAddress" required tabindex="4"/>
+                <textarea ng-model="companyBasicInfo.address" class="form-control" name="cAddress" required
+                          tabindex="4"/>
               </div>
 
             </div>
             <div class="col-md-6 col-sm-12">
-              <div class="form-group" ng-class="(cmpnyBascFrm.cCountry.$valid  && cmpnyBascFrm.cCountry.$touched) ? 'has-success' : (cmpnyBascFrm.cCountry.$touched) ? 'has-error' : '' ">
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cCountry.$valid  && cmpnyBascFrm.cCountry.$touched) ? 'has-success' : (cmpnyBascFrm.cCountry.$touched) ? 'has-error' : '' ">
                 <label>Country</label>
-                <input type="text" ng-model="companyBasicInfo.country" typeahead="address for address in getCountry($viewValue)" typeahead-loading="loadingLocationsC" typeahead-no-results="noResultsC" class="form-control" name="cCountry" autocomplete="off" tabindex="5" required>
-                  <i ng-show="loadingLocationsC" class="glyphicon glyphicon-refresh"></i>
+                <input type="text" ng-model="companyBasicInfo.country"
+                       typeahead="address for address in getCountry($viewValue)" typeahead-loading="loadingLocationsC"
+                       typeahead-no-results="noResultsC" class="form-control" name="cCountry" autocomplete="off"
+                       tabindex="5" required>
+                <i ng-show="loadingLocationsC" class="glyphicon glyphicon-refresh"></i>
 
-                  <div ng-show="noResultsC">
-                    <i class="glyphicon glyphicon-remove"></i> No Results Found
-                  </div>
-                
+                <div ng-show="noResultsC">
+                  <i class="glyphicon glyphicon-remove"></i> No Results Found
+                </div>
+
               </div>
-              <div class="form-group" ng-class="(cmpnyBascFrm.cState.$valid  && cmpnyBascFrm.cState.$touched) ? 'has-success' : (cmpnyBascFrm.cState.$touched) ? 'has-error' : '' ">
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cState.$valid  && cmpnyBascFrm.cState.$touched) ? 'has-success' : (cmpnyBascFrm.cState.$touched) ? 'has-error' : '' ">
                 <label>State</label>
-                <input type="text" ng-model="companyBasicInfo.state" typeahead="address for address in getState($viewValue)" typeahead-loading="loadingLocationsS" typeahead-no-results="noResultsS" class="form-control" name="cState" autocomplete="off" tabindex="6" ng-disabled="cmpnyBascFrm.cCountry.$invalid" required>
+                <input type="text" ng-model="companyBasicInfo.state"
+                       typeahead="address for address in getState($viewValue)" typeahead-loading="loadingLocationsS"
+                       typeahead-no-results="noResultsS" class="form-control" name="cState" autocomplete="off"
+                       tabindex="6" ng-disabled="cmpnyBascFrm.cCountry.$invalid" required>
                 <i ng-show="loadingLocationsS" class="glyphicon glyphicon-refresh"></i>
 
                 <div ng-show="noResultsS">
                   <i class="glyphicon glyphicon-remove"></i> No Results Found
                 </div>
-                
+
               </div>
 
-              <div class="form-group" ng-class="(cmpnyBascFrm.cCity.$valid  && cmpnyBascFrm.cCity.$touched) ? 'has-success' : (cmpnyBascFrm.cCity.$touched) ? 'has-error' : '' ">
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cCity.$valid  && cmpnyBascFrm.cCity.$touched) ? 'has-success' : (cmpnyBascFrm.cCity.$touched) ? 'has-error' : '' ">
                 <label>City</label>
-                <input type="text" ng-model="companyBasicInfo.city" typeahead="address for address in getCity($viewValue)" typeahead-loading="loadingLocationsCt" typeahead-no-results="noResultsCt" class="form-control"  name="cCity" autocomplete="off" tabindex="7"  ng-disabled="cmpnyBascFrm.cState.$invalid" required>
+                <input type="text" ng-model="companyBasicInfo.city"
+                       typeahead="address for address in getCity($viewValue)" typeahead-loading="loadingLocationsCt"
+                       typeahead-no-results="noResultsCt" class="form-control" name="cCity" autocomplete="off"
+                       tabindex="7" ng-disabled="cmpnyBascFrm.cState.$invalid" required>
                 <i ng-show="loadingLocationsCt" class="glyphicon glyphicon-refresh"></i>
 
                 <div ng-show="noResultsCt">
                   <i class="glyphicon glyphicon-remove"></i> No Results Found
                 </div>
-                
+
               </div>
 
-              
 
               <div class="row">
                 <div class="col-md-4 col-sm-12">
-                  <div class="form-group" ng-class="(cmpnyBascFrm.cCurrency.$valid  && cmpnyBascFrm.cCurrency.$touched) ? 'has-success' : (cmpnyBascFrm.cCurrency.$touched) ? 'has-error' : '' ">
+                  <div class="form-group"
+                       ng-class="(cmpnyBascFrm.cCurrency.$valid  && cmpnyBascFrm.cCurrency.$touched) ? 'has-success' : (cmpnyBascFrm.cCurrency.$touched) ? 'has-error' : '' ">
                     <label>Currency</label>
-                    <input type="text" ng-model="companyBasicInfo.baseCurrency" class="form-control" ng-model="currencySelected" typeahead="currency for currency in currencyList | filter:$viewValue | limitTo:4" required name="cCurrency" autocomplete="off" tabindex="8">
-                    
+                    <input type="text" ng-model="companyBasicInfo.baseCurrency" class="form-control"
+                           ng-model="currencySelected"
+                           typeahead="currency for currency in currencyList | filter:$viewValue | limitTo:4" required
+                           name="cCurrency" autocomplete="off" tabindex="8">
+
                   </div>
                 </div>
                 <div class="col-md-8 col-sm-12">
-                  <div class="form-group" ng-class="(cmpnyBascFrm.cPincode.$valid  && cmpnyBascFrm.cPincode.$touched) ? 'has-success' : (cmpnyBascFrm.cPincode.$touched) ? 'has-error' : '' ">
+                  <div class="form-group"
+                       ng-class="(cmpnyBascFrm.cPincode.$valid  && cmpnyBascFrm.cPincode.$touched) ? 'has-success' : (cmpnyBascFrm.cPincode.$touched) ? 'has-error' : '' ">
                     <label>Pincode</label>
-                    <input type="text" ng-model="companyBasicInfo.pincode" class="form-control" required pattern="^[0-9]*$" name="cPincode" tabindex="9">
-                    
+                    <input type="text" ng-model="companyBasicInfo.pincode" class="form-control" required
+                           pattern="^[0-9]*$" name="cPincode" tabindex="9">
+
                   </div>
                 </div>
               </div>
@@ -104,16 +130,17 @@
     <tab ng-show="canManageUser" heading="Permission">
       <div class="pd2">
         <div class="greyBox">
-          <form ng-submit="shareCompanyWithUser(addShareEmailForm)" name="addShareEmailForm" novalidate  class="form-inline" ng-init="setFormScope(this)">
-            <div class="mrB">Give permission to:</div>
-
-            <div class="form-group">
-              <input ng-model="shareWithEmail" name="userEmail" type="email" class="form-control fl mrR1" placeholder="Enter Email ID" required />
-            </div>
-            <div class="form-group">
-              <button ng-disabled="addShareEmailForm.$invalid" class="btn btn-primary">Add</button>
-            </div>
-
+          <form name="addShareEmailForm" novalidate class="form-inline">
+          <div class="mrB">Give permission to:</div>
+          <div class="form-group">
+            <input ng-model="shareRequest.user" name="userEmail" type="email" class="form-control fl mrR1"
+                   placeholder="Enter Email ID" required/>
+          </div>
+          <div class="form-group">
+            <button ng-disabled="addShareEmailForm.$invalid" class="btn btn-primary" ng-click="shareCompanyWithUser()">
+              Add
+            </button>
+          </div>
           </form>
         </div>
 
@@ -121,49 +148,43 @@
 
           <li ng-repeat="(key,value) in shareEmailList track by $index" class="clearfix">
 
-              <div class="action fr">
+            <div class="action fr">
                   <span class="icon mrR1 trns">
-                      <input id="mkAdmin1" class="mrR" ng-model="mkAdmin1" ng-checked="{{value.adminStatus == 2}}" type="checkbox" ng-click="makeAdminOnOff(value)"/>
+                      <input id="mkAdmin1" class="mrR" ng-model="mkAdmin1" ng-checked="{{value.adminStatus == 2}}"
+                             type="checkbox" ng-click="makeAdminOnOff(value)"/>
                       <label for="mkAdmin" ng-hide="{{value.adminStatus == 3}}"> Make User</label>
                       <label for="mkAdmin" ng-hide="{{value.adminStatus == 2}}"> Make Admin</label>
                   </span>
                   <span class="icon trns mrR1">
-                      <input ng-checked="{{value.onOffStatus == 1}}" class="mrR" name="OnOffUser" ng-model="OnOffUser" type="checkbox" ng-click="assignAdminOrOnOffStatus(value, value.onOffStatus, 1)"/>
+                      <input ng-checked="{{value.onOffStatus == 1}}" class="mrR" name="OnOffUser" ng-model="OnOffUser"
+                             type="checkbox" ng-click="assignAdminOrOnOffStatus(value, value.onOffStatus, 1)"/>
                       <label for="off_">Allow off record</label>
                   </span>
-                  <div class="delDv">
+
+              <div class="delDv">
                       <span class="icon trns mrL1" ng-click="deleteSharedUser(value.userId, $index)">
                          <i class="glyphicon glyphicon-trash"></i>
                           
                       </span>
-                  </div>
-
               </div>
 
-              <div class="liContent fl">
+            </div>
+
+            <div class="liContent fl">
                   <span ng-if="value.adminStatus == '1'">
                       <span class="ui-icon ui-icon-star-person fl"></span>
                   </span>
                   <span ng-if="value.adminStatus != '1'">     <span
-                          class="ui-icon ui-icon-person fl mrT1"></span>
+                      class="ui-icon ui-icon-person fl mrT1"></span>
                   </span>
 
-                  <p class="a fl">{{value.email}}</p>
-              </div>
+              <p class="a fl">{{value.email}}</p>
+            </div>
           </li>
 
         </ul>
 
       </div>
     </tab>
-    
-<!-- 
-    <tab heading="Entries">
-      <div class="pd2">
-        Entries content
-      </div>
-    </tab> -->
-    
-
   </tabset>
 </div>

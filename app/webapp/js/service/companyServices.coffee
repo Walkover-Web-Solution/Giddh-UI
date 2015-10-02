@@ -5,9 +5,9 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
     addCompany: {method: 'POST'}
     getCompanyDetails: {method: 'GET', url: '/company/:uniqueName'}
     getCompanyList: {method: 'GET', url: '/company/all'}
-    deleteCompany:{method: 'DELETE', url: '/company/:uniqueName'}
-    updateCompany:{method: 'PUT', url: '/company/:uniqueName'}
-    shareCompany:{method: 'PUT', url: '/company/:uniqueName/share'}
+    deleteCompany: {method: 'DELETE', url: '/company/:uniqueName'}
+    updateCompany: {method: 'PUT', url: '/company/:uniqueName'}
+    shareCompany: {method: 'PUT', url: '/company/:uniqueName/share'}
   })
 
   companyServices =
@@ -25,20 +25,22 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Company.getCompanyList(onSuccess, onFailure))
 
     get: (uniqueName) ->
-      @handlePromise((onSuccess, onFailure) -> Company.getCompanyDetails({uniqueName: uniqueName}, onSuccess, onFailure))
+      @handlePromise((onSuccess, onFailure) -> Company.getCompanyDetails({uniqueName: uniqueName}, onSuccess,
+        onFailure))
 
     delete: (uniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Company.deleteCompany({
-        uniqueName: uniqueName}, onSuccess, onFailure))
-    
+        uniqueName: uniqueName
+      }, onSuccess, onFailure))
+
     update: (updtData, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Company.updateCompany({
-        uniqueName: updtData.uniqueName}, updtData,  onSuccess, onFailure))
+        uniqueName: updtData.uniqueName
+      }, updtData, onSuccess, onFailure))
 
-    share:(shareData, onSuccess, onFailure) ->
+    share: (companyUniqueName, shareRequest, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Company.shareCompany({
-          uniqueName: shareData.uniqueName
-        }, shareData, onSuccess, onFailure))
-
+        uniqueName: companyUniqueName
+      }, shareRequest, onSuccess, onFailure))
 
   companyServices
