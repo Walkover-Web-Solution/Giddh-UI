@@ -192,14 +192,46 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   $scope.onShareCompanySuccess = (response) ->
     console.log "success", response
+    toastr.success(response.body, response.status)
 
   $scope.onShareCompanyFailure = (response) ->
     console.log "failure", response
+    toastr.error(response.data.message, response.data.status)
+
+  #get roles and set it in local storage
+  $scope.getRolesList = () ->
+    console.log "in getRolesList"
+    companyServices.getRoles().then($scope.getRolesSuccess, $scope.getRolesFailure)
+
+  $scope.getRolesSuccess = (response) ->
+    console.log response, "getRolesSuccess"
+    $scope.rolesList = response.body
+
+  $scope.getRolesFailure = (response) ->
+    console.log response, "getRolesFailure"
+
+  #get shared user list
+  $scope.getSharedUserList = (uniqueName) ->
+    companyServices.shredList(uniqueName).then($scope.getSharedUserListSuccess, $scope.getSharedUserListFailure)
+
+  $scope.getSharedUserListSuccess = (response) ->
+    console.log response, "getSharedUserListSuccess"
+    $scope.sharedUsersList = response.body
+    console.log $scope.sharedUsersList
+
+  $scope.getSharedUserListFailure = (response) ->
+    console.log response, "getSharedUserListFailure"
+    toastr.error(response.data.message, response.data.status)
+
+  #delete shared user
+  $scope.deleteSharedUser = (email, id) ->
+    console.log email, id, "in deleteSharedUser"
 
   #fire function after page fully loaded
   $rootScope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
     $scope.getCurrencyList()
+    $scope.getRolesList()
 
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController

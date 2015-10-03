@@ -127,59 +127,55 @@
     </tab>
     <!-- basic information tab end here -->
 
-    <tab ng-show="canManageUser" heading="Permission">
+    <tab ng-show="canManageUser" heading="Permission" ng-click="getSharedUserList(selectedCompany.uniqueName)">
       <div class="pd2">
-        <div class="greyBox">
+        <div class="greyBox mrB2">
           <form name="addShareEmailForm" novalidate class="form-inline">
-          <div class="mrB">Give permission to:</div>
           <div class="form-group">
-            <input ng-model="shareRequest.user" name="userEmail" type="email" class="form-control fl mrR1"
-                   placeholder="Enter Email ID" required/>
+            <label class="mrR1">Give permission to:</label>
+            <input ng-model="shareRequest.user" name="userEmail" type="text" class="form-control" placeholder="Enter Email ID" required/>
           </div>
           <div class="form-group">
-            <button ng-disabled="addShareEmailForm.$invalid" class="btn btn-primary" ng-click="shareCompanyWithUser()">
+            <button ng-disabled="addShareEmailForm.$invalid" class="btn btn-primary mrL1" ng-click="shareCompanyWithUser()">
               Add
             </button>
           </div>
           </form>
         </div>
+{{selectedCompany.role.uniqueName}}
+        <ul class="list-group ln">
 
-        <ul class="userList ln">
+          <li ng-repeat="(key,value) in sharedUsersList track by $index" class="list-group-item">
 
-          <li ng-repeat="(key,value) in shareEmailList track by $index" class="clearfix">
+            <div class="row">
+              
+              <div class="col-md-6 col-sm-12">
+                <i ng-if="value.role.uniqueName != 'super_admin_off_the_record'" class="glyphicon glyphicon-user"></i>
+                <i ng-if="value.role.uniqueName == 'super_admin_off_the_record'" class="glyphicon glyphicon-star"></i>
 
-            <div class="action fr">
-                  <span class="icon mrR1 trns">
-                      <input id="mkAdmin1" class="mrR" ng-model="mkAdmin1" ng-checked="{{value.adminStatus == 2}}"
-                             type="checkbox" ng-click="makeAdminOnOff(value)"/>
-                      <label for="mkAdmin" ng-hide="{{value.adminStatus == 3}}"> Make User</label>
-                      <label for="mkAdmin" ng-hide="{{value.adminStatus == 2}}"> Make Admin</label>
-                  </span>
-                  <span class="icon trns mrR1">
-                      <input ng-checked="{{value.onOffStatus == 1}}" class="mrR" name="OnOffUser" ng-model="OnOffUser"
-                             type="checkbox" ng-click="assignAdminOrOnOffStatus(value, value.onOffStatus, 1)"/>
-                      <label for="off_">Allow off record</label>
-                  </span>
+                {{value.userEmail}}
+              </div>
 
-              <div class="delDv">
-                      <span class="icon trns mrL1" ng-click="deleteSharedUser(value.userId, $index)">
-                         <i class="glyphicon glyphicon-trash"></i>
-                          
-                      </span>
+              <div class="col-md-6 col-sm-12">
+<div class="form-inline">
+  <div class="form-group">
+    <select class="form-control" name="rolesListSelected" ng-model="rolesListSelected">
+      <option ng-repeat="option in rolesList" ng-selected="{{option.uniqueName == value.role.uniqueName}}" value="{{option.uniqueName}}">{{option.name}}</option>
+    </select>
+    <button class="btn btn-sm btn-primary mrL1" ng-click="">Update</button>
+  </div>
+  <span class="delIcon">
+    <i class="glyphicon glyphicon-trash" ng-click="deleteSharedUser(value.userEmail, $index)"></i>
+  </span>
+  
+  
+</div>                
+     {{rolesListSelected}}   
+
               </div>
 
             </div>
 
-            <div class="liContent fl">
-                  <span ng-if="value.adminStatus == '1'">
-                      <span class="ui-icon ui-icon-star-person fl"></span>
-                  </span>
-                  <span ng-if="value.adminStatus != '1'">     <span
-                      class="ui-icon ui-icon-person fl mrT1"></span>
-                  </span>
-
-              <p class="a fl">{{value.email}}</p>
-            </div>
           </li>
 
         </ul>

@@ -53,9 +53,37 @@ router.post '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+#get all Roles
+router.get '/roles/all', (req, res) ->
+  console.log "in getting roles"
+  hUrl = settings.envUrl+'/roles/all'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+  settings.client.get hUrl, args, (data, response) ->
+    console.log data, "with roles list"
+    if data.status == 'error'
+      res.status(response.statusCode).send(data)
+    else
+      res.send data
+
+#get company Shared user list
+router.get '/:uniqueName/shared-with', (req, res) ->
+  hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/shared-with'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode).send(data)
+    else
+      res.send data
+    
+
 #share company with user
 router.put '/:uniqueName/share', (req, res) ->
-  console.log req.body, "in share company req"
   hUrl = settings.envUrl + 'company/'+ req.params.uniqueName + '/share'
   args =
     headers:
@@ -64,7 +92,8 @@ router.put '/:uniqueName/share', (req, res) ->
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
     if data.status == 'error'
-      res.status(response.statusCode)
-    res.send data
+      res.status(response.statusCode).send(data)
+    else
+      res.send data
 
 module.exports = router

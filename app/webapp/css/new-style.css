@@ -254,6 +254,17 @@ header .navbar-nav > li.active{
 #cmpnyBascFrm .form-control{
   width: 100%
 }
+.delIcon{
+  float: right;
+  width: 34px;
+  height: 34px;
+  display: block;
+  cursor: pointer;
+}
+.delIcon .glyphicon{
+  left: 9px;
+  top: 9px;
+}
 
 /*overriding tabs style*/
 .nav.nav-tabs {
@@ -295,3 +306,4 @@ header .navbar-nav > li.active{
   font-weight: 600;
   padding: 9px 20px;
 }
+/*manage company*/
