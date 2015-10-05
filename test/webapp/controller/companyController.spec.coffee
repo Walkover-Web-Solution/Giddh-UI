@@ -16,7 +16,17 @@ describe 'companyController', ->
     @timeout = $timeout
     @localStorageService = localStorageService
     @companyController = $controller('companyController',
-      {$scope: @scope, $rootScope: @rootScope, currencyService: @currencyService, toastr: @toastr, localStorageService: @localStorageService, locationService: @locationService, companyServices: @companyServices, $confirm: @confirm, $timeout: @timeout})
+        {
+          $scope: @scope,
+          $rootScope: @rootScope,
+          currencyService: @currencyService,
+          toastr: @toastr,
+          localStorageService: @localStorageService,
+          locationService: @locationService,
+          companyServices: @companyServices,
+          $confirm: @confirm,
+          $timeout: @timeout
+        })
 
   describe '#ifHavePermission', ->
     it 'should set permission according to company role data', ->
@@ -85,22 +95,24 @@ describe 'companyController', ->
 
   describe '#getOnlyCitySuccess', ->
     it 'should filter data from a object', ->
-      data = {"results" : [{
-         "address_components" : [{
-            "long_name" : "Indore"
+      data = {
+        "results": [{
+          "address_components": [{
+            "long_name": "Indore"
           }],
-         "types" : [ "locality", "political" ]
-      }]} 
+          "types": ["locality", "political"]
+        }]
+      }
       @scope.getOnlyCitySuccess(data)
       expect(data.results[0].types[0]).toBe("locality")
       expect(data.results[0].address_components[0].long_name).toBe("Indore")
-  
+
   describe '#getOnlyCityFailure', ->
     it 'should show a toastr with error message', ->
-      response = {"data":{"status":"some-error", "message":"some-message"}}
-      spyOn(@toastr,'error')
+      response = {"data": {"status": "some-error", "message": "some-message"}}
+      spyOn(@toastr, 'error')
       @scope.getOnlyCityFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message','Error')
+      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
 
   describe '#createCompany', ->
     it 'should call service method', ->
@@ -121,13 +133,13 @@ describe 'companyController', ->
       expect(@toastr.success).toHaveBeenCalledWith('Company create successfully', 'Success')
       expect(@scope.mngCompDataFound).toBeTruthy()
       expect(@scope.companyList).toContain(response.body)
-  
+
   describe '#onCreateCompanyFailure', ->
     it 'should show a toastr with error message', ->
-      response = {"data":{"status":"some-error", "message":"some-message"}}
-      spyOn(@toastr,'error')
+      response = {"data": {"status": "some-error", "message": "some-message"}}
+      spyOn(@toastr, 'error')
       @scope.onCreateCompanyFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message','Error')
+      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
 
   describe '#getCompanyList', ->
     it 'should call get companyList service', ->
@@ -135,68 +147,68 @@ describe 'companyController', ->
       spyOn(@companyServices, "getAll").andReturn(deferred.promise)
       @scope.getCompanyList()
       expect(@companyServices.getAll).toHaveBeenCalled()
-    
+
   describe '#getCompanyListSuccess', ->
-    
     beforeEach ->
-      # @timeout = $injector.get('$timeout')
+# @timeout = $injector.get('$timeout')
       timerCallback = jasmine.createSpy('timerCallback')
       jasmine.Clock.useMock()
       angular.element('#cmpnyli_0').click().trigger('click')
-      
+
 
     it 'should show error if response have error and call a function to open modal', ->
       spyOn(@scope, "openFirstTimeUserModal")
-      response = {"status": "error", "body": {"email":"abc@def","contactNo":"9104120","baseCurrency":"INR"}}
+      response = {"status": "error", "body": {"email": "abc@def", "contactNo": "9104120", "baseCurrency": "INR"}}
       @scope.getCompanyListSuccess(response)
       expect(@scope.openFirstTimeUserModal).toHaveBeenCalled()
 
     it 'should set true to a variable and push data in company list, and by default click on first child to get company details', ->
-      response = {"status": "success", "body": {"email":"abc@def","contactNo":"9104120","baseCurrency":"INR"}}
+      response = {"status": "success", "body": {"email": "abc@def", "contactNo": "9104120", "baseCurrency": "INR"}}
       @scope.getCompanyListSuccess(response)
       setTimeout(->
         console.log "sarfaraz"
-      ,1000)
-      
+      , 1000)
+
       expect(@scope.mngCompDataFound).toBeTruthy()
       expect(@scope.companyList).toEqual(response.body)
       #waits(1500)
       @timeout.flush()
-      console.log "Sar", angular.element(".companyList").hasClass('active')
-      #expect(angular.element(".companyList li").hasClass('active')).toBeTruthy()
-
-      
+  #expect(angular.element(".companyList li").hasClass('active')).toBeTruthy()
 
 
   describe '#getCompanyListFailure', ->
     it 'should show a toastr with error message', ->
-      response = {"data":{"status":"some-error", "message":"some-message"}}
-      spyOn(@toastr,'error')
+      response = {"data": {"status": "some-error", "message": "some-message"}}
+      spyOn(@toastr, 'error')
       @scope.getCompanyListFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message','Error')
+      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
 
   describe '#deleteCompany', ->
     it 'should Open Confirm Popup', ->
       deferred = @q.defer()
       @spyOn(@confirm, 'openModal').andReturn(deferred.promise)
       @scope.deleteCompany("foo", 2, "bar")
-      expect(@confirm.openModal).toHaveBeenCalledWith({title: 'Are you sure you want to delete? bar', ok: 'Yes', cancel: 'No'})
+      expect(@confirm.openModal).toHaveBeenCalledWith({
+        title: 'Are you sure you want to delete? bar',
+        ok: 'Yes',
+        cancel: 'No'
+      })
 
   describe '#delCompanySuccess', ->
     it 'should show success message and call get companyList function', ->
-      response = {"status":"success","body":"Company 'companyUniqueName' deleted successfully."}
-      spyOn(@toastr,'success')
+      response = {"status": "success", "body": "Company 'companyUniqueName' deleted successfully."}
+      spyOn(@toastr, 'success')
       spyOn(@scope, "getCompanyList")
       @scope.delCompanySuccess(response)
-      expect(@toastr.success).toHaveBeenCalledWith('Company deleted successfully','Success')
+      expect(@toastr.success).toHaveBeenCalledWith('Company deleted successfully', 'Success')
       expect(@scope.getCompanyList).toHaveBeenCalled()
-    
+
   describe '#delCompanyFailure', ->
     it 'should show error alert with toastr', ->
-      response = {"data":{"status":"some-error", "message":"some-message"}}
+      response = {"data": {"status": "some-error", "message": "some-message"}}
       @spyOn(@toastr, "error")
       @scope.delCompanyFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message','Error')
+      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
 
   describe '#goToCompany', ->
     it 'should make a call for check permissions, set a variable true, put data in scope variable and set data in localStorage, and add active class in li', ->
@@ -224,17 +236,17 @@ describe 'companyController', ->
       response = {}
       spyOn(@toastr, "success")
       spyOn(@scope, "getCompanyList")
-      
+
       @scope.updtCompanySuccess(response)
-      expect(@toastr.success).toHaveBeenCalledWith('Company updated successfully','Success')
+      expect(@toastr.success).toHaveBeenCalledWith('Company updated successfully', 'Success')
       expect(@scope.getCompanyList).toHaveBeenCalled()
 
   describe '#updtCompanyFailure', ->
     it 'should show error alert with toastr', ->
-      response = {"data":{"status":"some-error", "message":"some-message"}}
+      response = {"data": {"status": "some-error", "message": "some-message"}}
       @spyOn(@toastr, "error")
       @scope.updtCompanyFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message','Error')
+      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
 
   describe '#getCountry', ->
     it 'should call search coutry service with value', ->
@@ -243,19 +255,21 @@ describe 'companyController', ->
       spyOn(@locationService, "searchCountry").andReturn(deferred.promise)
       @scope.getCountry(val)
       expect(@locationService.searchCountry).toHaveBeenCalledWith(val)
-  
+
   describe '#getCountrySuccess', ->
     it 'should filter data from a object', ->
-      data = {"results" : [{
-         "address_components" : [{
-            "long_name" : "India"
+      data = {
+        "results": [{
+          "address_components": [{
+            "long_name": "India"
           }],
-         "types" : [ "country", "political" ]
-      }]} 
+          "types": ["country", "political"]
+        }]
+      }
       @scope.onGetCountrySuccess(data)
       expect(data.results[0].types[0]).toBe("country")
       expect(data.results[0].address_components[0].long_name).toBe("India")
-  
+
   describe '#getState', ->
     it 'should call search state service', ->
       val = "Madhya Pradesh"
@@ -264,19 +278,21 @@ describe 'companyController', ->
       spyOn(@locationService, "searchState").andReturn(deferred.promise)
       @scope.getState(val)
       expect(@locationService.searchState).toHaveBeenCalledWith(val, @rootScope.selectedCompany.country)
-  
+
   describe '#onGetStateSuccess', ->
     it 'should filter data from a object', ->
-      data = {"results" : [{
-         "address_components" : [{
-            "long_name" : "Madhya Pradesh"
+      data = {
+        "results": [{
+          "address_components": [{
+            "long_name": "Madhya Pradesh"
           }],
-         "types" : [ "administrative_area_level_1", "political" ]
-      }]} 
+          "types": ["administrative_area_level_1", "political"]
+        }]
+      }
       @scope.onGetStateSuccess(data)
       expect(data.results[0].types[0]).toBe("administrative_area_level_1")
       expect(data.results[0].address_components[0].long_name).toBe("Madhya Pradesh")
-    
+
   describe '#getCity', ->
     it 'should call getCity service with city value and state value', ->
       val = "Houston"
@@ -288,12 +304,14 @@ describe 'companyController', ->
 
   describe '#onGetCitySuccess', ->
     it 'should filter data from a object', ->
-      data = {"results" : [{
-         "address_components" : [{
-            "long_name" : "Texas"
+      data = {
+        "results": [{
+          "address_components": [{
+            "long_name": "Texas"
           }],
-         "types" : [ "locality", "political" ]
-      }]} 
+          "types": ["locality", "political"]
+        }]
+      }
       @scope.getOnlyCitySuccess(data)
       expect(data.results[0].types[0]).toBe("locality")
       expect(data.results[0].address_components[0].long_name).toBe("Texas")
@@ -319,12 +337,12 @@ describe 'companyController', ->
       @scope.getCurrencyList()
 
       expect(@currencyService.getList).toHaveBeenCalledWith(@scope.getCurrencyListSuccess,
-        @scope.getCurrencyListFailure)
+          @scope.getCurrencyListFailure)
       expect(@localStorageService.get).not.toHaveBeenCalled()
-      
+
   describe '#getCurrencyListSuccess', ->
     it 'should save currency details to scope.currencyList', ->
-      data = {"status":"success","body":[{'code':'USD'},{'code': 'CAD'},{'code': 'EUR'}]}
+      data = {"status": "success", "body": [{'code': 'USD'}, {'code': 'CAD'}, {'code': 'EUR'}]}
       @scope.getCurrencyListSuccess(data)
       expect(@scope.currencyList.length).toBe(3)
       expect(@scope.currencyList).toContain('USD')
@@ -333,7 +351,7 @@ describe 'companyController', ->
 
   describe '#getCurrencyListFailure', ->
     it 'should show a toastr with error as heading', ->
-      response = {"data":{"status":"some-error", "message":"some-message"}}
-      spyOn(@toastr,'error')
+      response = {"data": {"status": "some-error", "message": "some-message"}}
+      spyOn(@toastr, 'error')
       @scope.getCurrencyListFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message','Error')
+      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')

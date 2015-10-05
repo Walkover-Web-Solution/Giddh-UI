@@ -1,12 +1,13 @@
 <div class="" ng-init="getGroups()">
-  
-  
-    <div class="modal-header themeBg">
-      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-      <h3 class="modal-title">Add/Manage Groups &amp; Accounts</h3>
-    </div>
-    <!-- end header -->
-  
+
+
+  <div class="modal-header themeBg">
+    <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title">Add/Manage Groups &amp; Accounts</h3>
+  </div>
+  <!-- end header -->
+
   <div class="modal-body noPad">
 
     <div class="clearfix">
@@ -26,7 +27,7 @@
                 <input type="text" class="form-control" id="exampleInputAmount" placeholder="Amount">
 
                 <div ng-hide="subGroupVisible" class="input-group-addon cp" ng-click="collapseAll()">
-                  <i  class="glyphicon glyphicon-list"></i>
+                  <i class="glyphicon glyphicon-list"></i>
                 </div>
 
                 <div ng-show="subGroupVisible" class="input-group-addon cp" ng-click="expandAll()">
@@ -38,27 +39,29 @@
           </div>
           <!-- searchbar end -->
 
-          <perfect-scrollbar id="restMngCompRit" class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20" suppressScrollX="true" auto-height>
+          <perfect-scrollbar id="restMngCompRit" class="scrClass" wheel-propagation="true" wheel-speed="10"
+                             min-scrollbar-length="20" suppressScrollX="true" auto-height>
 
             <!-- Nested node template -->
             <script type="text/ng-template" id="nodes_renderer.html">
               <div ui-tree-handle class="tree-node tree-node-content">
                 <a class="" ng-if="node.groups && node.groups.length > 0" data-nodrag ng-click="toggle(this)">
                   <span class="glyphicon"
-                    ng-class="{
+                        ng-class="{
                       'glyphicon-chevron-right': collapsed,
                       'glyphicon-chevron-down': !collapsed
                     }"></span></a>
-                {{node.name}}
+                <span ng-click="selectGroupToEdit(node)">{{node.name}}</span>
               </div>
               <ol ui-tree-nodes="" ng-model="node.groups" ng-class="{hidden: collapsed}">
-                <li ng-repeat="node in node.groups" ui-tree-node ng-include="'nodes_renderer.html'">
+                <li ng-repeat="node in node.groups" ui-tree-node ng-include="'nodes_renderer.html'"
+                    ng-click="selectGroupToEdit(node)">
                 </li>
               </ol>
             </script>
 
             <div class="row">
-              <div ui-tree id="tree-root"  data-drag-enabled="false" data-nodrop-enabled="true">
+              <div ui-tree id="tree-root" data-drag-enabled="false" data-nodrop-enabled="true">
                 <ol ui-tree-nodes ng-model="groupList">
                   <li ng-repeat="node in groupList" ui-tree-node ng-include="'nodes_renderer.html'"></li>
                 </ol>

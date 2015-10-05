@@ -38,6 +38,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.selectGroupToEdit = (group) ->
     $scope.selectedGroup = group
+    console.log $scope.selectedGroup
+    $scope.showGroupDetails = true
+
+  $scope.selectSubgroupToEdit = (sGroup) ->
+    $scope.selectedGroup = sGroup
+    console.log $scope.selectedGroup
     $scope.showGroupDetails = true
 
   $scope.updateGroup = ->
@@ -63,6 +69,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   onCreateGroupSuccess = (result) ->
     toastr.success("Sub group added successfully", "Success")
     $scope.selectedSubGroup = {}
+    $scope.getGroups()
 
   onCreateGroupFailure = (result) ->
     toastr.error("Unable to create subgroup.", "Error")
