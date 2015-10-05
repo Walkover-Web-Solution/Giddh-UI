@@ -7,12 +7,10 @@
     </div>
     <perfect-scrollbar id="restMngCompRit" class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20" suppressScrollX="true"  auto-height>
         <ul class="companyList ln">
-            <li class="clearfix" ng-repeat="value in companyList track by $index">
+            <li ng-repeat="value in companyList track by $index" class="clearfix" ng-class="{'active': $index == selectedCmpLi}">
                 <span class="ui-icon ui-icon-flag"></span>
-                <a href="javascript:;"
-                   ng-click="goToCompany(value);">
-                    
-
+                <a id="cmpnyli_{{$index}}" href="javascript:;"
+                   ng-click="goToCompany(value, $index);">
                     <h3 class="txtUpc ellp">{{value.name}}</h3>
 
                     <p class="date">

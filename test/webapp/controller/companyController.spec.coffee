@@ -3,8 +3,7 @@
 describe 'companyController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService,
-                     $q, companyServices, $modal, $confirm) ->
+  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $modal, $confirm, $timeout) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @currencyService = currencyService
@@ -14,9 +13,10 @@ describe 'companyController', ->
     @toastr = toastr
     @companyServices = companyServices
     @q = $q
+    @timeout = $timeout
     @localStorageService = localStorageService
     @companyController = $controller('companyController',
-      {$scope: @scope, $rootScope: @rootScope, currencyService: @currencyService, toastr: @toastr, localStorageService: @localStorageService, locationService: @locationService, companyServices: @companyServices, $confirm: @confirm})
+      {$scope: @scope, $rootScope: @rootScope, currencyService: @currencyService, toastr: @toastr, localStorageService: @localStorageService, locationService: @locationService, companyServices: @companyServices, $confirm: @confirm, $timeout: @timeout})
 
   describe '#ifHavePermission', ->
     it 'should set permission according to company role data', ->
@@ -137,17 +137,36 @@ describe 'companyController', ->
       expect(@companyServices.getAll).toHaveBeenCalled()
     
   describe '#getCompanyListSuccess', ->
+    
+    beforeEach ->
+      # @timeout = $injector.get('$timeout')
+      timerCallback = jasmine.createSpy('timerCallback')
+      jasmine.Clock.useMock()
+      angular.element('#cmpnyli_0').click().trigger('click')
+      
+
     it 'should show error if response have error and call a function to open modal', ->
       spyOn(@scope, "openFirstTimeUserModal")
       response = {"status": "error", "body": {"email":"abc@def","contactNo":"9104120","baseCurrency":"INR"}}
       @scope.getCompanyListSuccess(response)
       expect(@scope.openFirstTimeUserModal).toHaveBeenCalled()
 
-    it 'should set true to a variable and push data in company list', ->
+    it 'should set true to a variable and push data in company list, and by default click on first child to get company details', ->
       response = {"status": "success", "body": {"email":"abc@def","contactNo":"9104120","baseCurrency":"INR"}}
       @scope.getCompanyListSuccess(response)
+      setTimeout(->
+        console.log "sarfaraz"
+      ,1000)
+      
       expect(@scope.mngCompDataFound).toBeTruthy()
       expect(@scope.companyList).toEqual(response.body)
+      #waits(1500)
+      @timeout.flush()
+      console.log "Sar", angular.element(".companyList").hasClass('active')
+      #expect(angular.element(".companyList li").hasClass('active')).toBeTruthy()
+
+      
+
 
   describe '#getCompanyListFailure', ->
     it 'should show a toastr with error message', ->
@@ -180,14 +199,17 @@ describe 'companyController', ->
       expect(@toastr.error).toHaveBeenCalledWith('some-message','Error')
 
   describe '#goToCompany', ->
-    it 'should make a call for check permissions, set a variable true, put data in scope variable and set data in localStorage', ->
+    it 'should make a call for check permissions, set a variable true, put data in scope variable and set data in localStorage, and add active class in li', ->
       data = {}
+      index = 0
       spyOn(@scope, "ifHavePermission")
 
-      @scope.goToCompany(data)
+      @scope.goToCompany(data, index)
       expect(@scope.ifHavePermission).toHaveBeenCalledWith(data)
       expect(@scope.cmpViewShow).toBeTruthy()
+      expect(@scope.selectedCmpLi).toEqual(index)
       expect(@rootScope.selectedCompany).toEqual(data)
+
 
   describe '#updateCompanyInfo', ->
     it 'should update company data if form is valid', ->

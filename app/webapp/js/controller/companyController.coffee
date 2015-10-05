@@ -84,6 +84,14 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     else
       $rootScope.mngCompDataFound = true
       $scope.companyList = response.body
+      #default click on first child
+      $timeout( ->
+        angular.element('#cmpnyli_0').trigger('click')
+        console.log angular.element(".companyList li").hasClass('active')
+      ,1000)
+      
+      
+      
 
   #get company list failure
   $scope.getCompanyListFailure = (response)->
@@ -111,9 +119,10 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     toastr.error(response.data.message, "Error")
 
   #making a detail company view
-  $scope.goToCompany = (data) ->
+  $scope.goToCompany = (data, index) ->
     $scope.ifHavePermission(data)
     $rootScope.cmpViewShow = true
+    $scope.selectedCmpLi = index
     angular.extend($rootScope.selectedCompany, data)
 
   #update company details
@@ -200,7 +209,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #get roles and set it in local storage
   $scope.getRolesList = () ->
-    console.log "in getRolesList"
     companyServices.getRoles().then($scope.getRolesSuccess, $scope.getRolesFailure)
 
   $scope.getRolesSuccess = (response) ->
@@ -232,6 +240,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     $scope.getCompanyList()
     $scope.getCurrencyList()
     $scope.getRolesList()
+
+
 
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController

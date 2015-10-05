@@ -209,6 +209,9 @@ header .navbar-nav > li.active{
 .companyList li:hover {
     background: #fafafa
 }
+.companyList li.active{
+  background: #ddd
+}
 
 .companyList > li > a {
     color: #777;
