@@ -313,11 +313,15 @@ header .navbar-nav > li.active{
 .angular-ui-tree-node {
   margin: -1px !important
 }
+#tree-root{
+  background: #f8faff;
+}
 .angular-ui-tree-handle {
   background: #f8faff;
   border-top: 1px solid #ddd;
   color: #567288;
   padding: 7px 10px;
+  cursor: pointer;
 }
 li:last-child .angular-ui-tree-handle {
   border-bottom: 1px solid #ddd;
@@ -327,7 +331,6 @@ li:last-child .angular-ui-tree-handle {
   font-weight: lighter;
   display: none;
 }
-
 .angular-ui-tree-handle:hover, .angular-ui-tree-handle.active {
   background: linen;
 }
@@ -335,12 +338,16 @@ li:last-child .angular-ui-tree-handle {
 .angular-ui-tree-handle:hover p, .angular-ui-tree-handle.active p {
   display: block;
 }
-
-.angular-ui-tree-placeholder {
-  background: #f0f9ff;
-  border: 2px dashed #bed2db;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+.tree-node > a.btn-xs{
+  cursor: pointer;
 }
-
+.filtered-out .angular-ui-tree-handle {
+    background-color: rgba(248, 250, 255, 0.3);
+    border: 1px solid rgba(218, 226, 234, 0.3);
+    color: rgba(124, 158, 178, 0.3);
+}
+.angular-ui-tree-node:not(.filtered-out) .ui-match {
+    background: #ffdc0f none repeat scroll 0 0;
+    border-radius: 2px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}

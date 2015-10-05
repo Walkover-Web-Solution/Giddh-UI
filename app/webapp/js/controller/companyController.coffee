@@ -212,7 +212,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     companyServices.getRoles().then($scope.getRolesSuccess, $scope.getRolesFailure)
 
   $scope.getRolesSuccess = (response) ->
-    console.log response, "getRolesSuccess"
+    #console.log response, "getRolesSuccess"
     $scope.rolesList = response.body
 
   $scope.getRolesFailure = (response) ->

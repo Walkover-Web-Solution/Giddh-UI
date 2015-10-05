@@ -5,12 +5,13 @@ app = angular.module("giddhWebApp",
     "ngRoute"
     "ngResource"
     "perfect_scrollbar"
-    "ui.tree"
     "ngSanitize"
     "ui.bootstrap"
     "twygmbh.auto-height"
     "toastr"
     "ui.tree"
+    "ui.tree-filter"
+    "ui.highlight"
   ]
 )
 
@@ -49,6 +50,10 @@ app.value('$confirmModalDefaults',
     ok: 'OK'
     cancel: 'Cancel')
 
+app.filter 'trust', ($sce) ->
+  (val) ->
+    $sce.trustAsHtml val
+    
 #for project lib helps check out
 #bootstrap related - http://angular-ui.github.io/bootstrap/#/tooltip
 #LocalStorageModule - https://github.com/grevory/angular-local-storage
