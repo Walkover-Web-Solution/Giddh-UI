@@ -6,15 +6,30 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.showGroupDetails = false
 
+  $scope.subGroupVisible = false
+
+  # expand and collapse all tree structure
+  getRootNodesScope = ->
+    angular.element(document.getElementById('tree-root')).scope()
+
+  $scope.collapseAll = ->
+    scope = getRootNodesScope()
+    scope.collapseAll()
+    $scope.subGroupVisible = true
+
+  $scope.expandAll = ->
+    scope = getRootNodesScope()
+    scope.expandAll()
+    $scope.subGroupVisible = false
+
   $scope.getGroups = ->
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
-      groupService.getAllFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
+      groupService.getAllWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
           $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (result) ->
-    console.log result.body
     $scope.groupList = result.body
 
   $scope.getGroupListFailure = () ->

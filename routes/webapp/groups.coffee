@@ -11,6 +11,7 @@ router.get '/', (req, res) ->
     res.send data
 
 router.get '/with-accounts', (req, res) ->
+  console.log req.session.authKey
   authHead = headers:
     'Auth-Key': req.session.authKey
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups-with-accounts'
@@ -21,7 +22,7 @@ router.get '/with-accounts', (req, res) ->
 
 router.put '/:groupUniqueName', (req, res) ->
   console.log "inside group update method"
-      hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName
   args =
     headers:
       'Auth-Key': req.session.authKey

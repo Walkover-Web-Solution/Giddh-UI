@@ -10,6 +10,7 @@ app = angular.module("giddhWebApp",
     "ui.bootstrap"
     "twygmbh.auto-height"
     "toastr"
+    "ui.tree"
   ]
 )
 

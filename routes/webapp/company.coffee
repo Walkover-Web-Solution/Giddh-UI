@@ -62,7 +62,6 @@ router.get '/roles/all', (req, res) ->
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
   settings.client.get hUrl, args, (data, response) ->
-    console.log data, "with roles list"
     if data.status == 'error'
       res.status(response.statusCode).send(data)
     else

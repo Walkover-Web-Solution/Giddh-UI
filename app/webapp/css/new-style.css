@@ -309,4 +309,38 @@ header .navbar-nav > li.active{
   font-weight: 600;
   padding: 9px 20px;
 }
-/*manage company*/
+/*manage company ui tree*/
+.angular-ui-tree-node {
+  margin: -1px !important
+}
+.angular-ui-tree-handle {
+  background: #f8faff;
+  border-top: 1px solid #ddd;
+  color: #567288;
+  padding: 7px 10px;
+}
+li:last-child .angular-ui-tree-handle {
+  border-bottom: 1px solid #ddd;
+}
+.angular-ui-tree-handle p {
+  color: #999;
+  font-weight: lighter;
+  display: none;
+}
+
+.angular-ui-tree-handle:hover, .angular-ui-tree-handle.active {
+  background: linen;
+}
+
+.angular-ui-tree-handle:hover p, .angular-ui-tree-handle.active p {
+  display: block;
+}
+
+.angular-ui-tree-placeholder {
+  background: #f0f9ff;
+  border: 2px dashed #bed2db;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
