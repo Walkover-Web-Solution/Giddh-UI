@@ -45,18 +45,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         onUpdateGroupFailure)
 
   onUpdateGroupSuccess = (result) ->
-    console.log result, "in group success"
     toastr.success("Group has been updated successfully.", "Success")
 
   onUpdateGroupFailure = (result) ->
-    console.log result, "in group failure"
     toastr.error("Unable to update group at the moment. Please try again later.", "Error")
 
   $scope.addNewSubGroup = (subGroupForm) ->
-    console.log $scope.selectedSubGroup
     if _.isEmpty($scope.selectedSubGroup.name)
       return
-    console.log "name is not empty"
     body = {
       "name": $scope.selectedSubGroup.name,
       "uniqueName": "group",
@@ -65,12 +61,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     groupService.create($rootScope.selectedCompany.uniqueName, body).then(onCreateGroupSuccess, onCreateGroupFailure)
 
   onCreateGroupSuccess = (result) ->
-    console.log result, "in create group success"
     toastr.success("Sub group added successfully", "Success")
     $scope.selectedSubGroup = {}
 
   onCreateGroupFailure = (result) ->
-    console.log result, "in create group failure"
     toastr.error("Unable to create subgroup.", "Error")
 
 #init angular app
