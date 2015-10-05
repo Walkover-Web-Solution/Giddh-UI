@@ -7,7 +7,7 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
       add: {method: 'POST'}
       getAll: {method: 'GET'}
       getAllWithAccounts: {method: 'GET', url: '/company/:companyUniqueName/groups/with-accounts'}
-      update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
+      update: {method: 'PUT', url: '/groupUpdate'}
       delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
     })
 
@@ -30,7 +30,7 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
 
     update: (companyUniqueName, group) ->
       @handlePromise((onSuccess, onFailure) -> Group.update({companyUniqueName: companyUniqueName, groupUniqueName: group.uniqueName},
-        group, onSuccess, onFailure))
+        group, (result) -> console.log result, onFailure))
 
     delete: (companyUniqueName, group) ->
       @handlePromise((onSuccess, onFailure) -> Group.delete({companyUniqueName: companyUniqueName, groupUniqueName: group.uniqueName},

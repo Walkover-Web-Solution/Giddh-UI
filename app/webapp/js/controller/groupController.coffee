@@ -14,6 +14,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
           $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (result) ->
+    console.log result.body
     $scope.groupList = result.body
 
   $scope.getGroupListFailure = () ->
@@ -24,9 +25,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showGroupDetails = true
 
   $scope.updateGroup = (groupD) ->
-    console.log $rootScope.selectedCompany.uniqueName
-    console.log groupD
-    #groupService.update(localStorageService.selectedCompany.uniqueName,$scope.selectedGroup)
+    groupService.update(localStorageService.selectedCompany.uniqueName, $scope.selectedGroup,updateSuccess)
+
+  updateSuccess = (result) ->
+    console.log result
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController
