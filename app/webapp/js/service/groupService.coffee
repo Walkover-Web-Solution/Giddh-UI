@@ -32,7 +32,6 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
           onSuccess, onFailure))
 
     update: (companyUniqueName, group) ->
-      console.log "in group service update"
       @handlePromise((onSuccess, onFailure) -> Group.update({
             companyUniqueName: companyUniqueName,
             groupUniqueName: group.uniqueName

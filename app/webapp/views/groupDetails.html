@@ -1,5 +1,5 @@
 <div class="clearfix">
-  <div class="clearfix">
+  <div class="clearfix bdrB">
 
     <div class="col-md-6 col-sm-12 bdrR">
       <div class="row">
@@ -18,7 +18,7 @@
             <textarea maxlength="200" class="form-control" placeholder="Enter description"
                       ng-model="selectedGroup.description"/>
             </div>
-            <button ng-click="updateGroup(groupDetailForm)" class="btn btn-primary"
+            <button ng-click="updateGroup()" class="btn btn-primary"
                     ng-disabled="groupDetailForm.$invalid">Update
             </button>
           </form>
@@ -33,9 +33,15 @@
           Add Subgroup
         </div>
         <div class="pd2">
-          <input type="text" placeholder="Enter Subgroup name" class="form-control form-group"/>
-          <textarea maxlength="200" class="form-control form-group" placeholder="Enter description"/>
-          <button class="btn btn-info" ng-click="">Add Subgroup</button>
+          <form id="subGroupForm" name="subGroupForm" novalidate>
+            <input type="text" placeholder="Enter Subgroup name" class="form-control form-group"
+                   ng-model="selectedSubGroup.name" required/>
+            <textarea maxlength="200" class="form-control form-group" placeholder="Enter description"
+                      ng-model="selectedSubGroup.desc"/>
+            <button class="btn btn-primary" ng-click="addNewSubGroup()" ng-disabled="subGroupForm.$invalid">Add
+              Subgroup
+            </button>
+          </form>
         </div>
       </div>
     </div>
@@ -44,7 +50,7 @@
   </div>
   <!-- end row first -->
 
-  <div class="clearfix bdrT">
+  <div class="clearfix bdrT" ng-hide="true">
     <div class="clearfix">
       <div class="dGryHead">
         Add New Account

@@ -3,6 +3,7 @@
 groupController = ($scope, $rootScope, localStorageService, groupService, toastr) ->
   $scope.groupList = {}
   $scope.selectedGroup = {}
+  $scope.selectedSubGroup = {}
 
   $scope.showGroupDetails = false
 
@@ -39,17 +40,38 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.selectedGroup = group
     $scope.showGroupDetails = true
 
-  $scope.updateGroup = (groupD) ->
-    console.log $rootScope.selectedCompany.uniqueName
-    console.log $scope.selectedGroup
-    groupService.update($rootScope.selectedCompany.uniqueName, $scope.selectedGroup).then(updateGroupSuccess,
-        updateGroupFailure)
+  $scope.updateGroup = ->
+    groupService.update($rootScope.selectedCompany.uniqueName, $scope.selectedGroup).then(onUpdateGroupSuccess,
+        onUpdateGroupFailure)
 
-  updateGroupSuccess = (result) ->
+  onUpdateGroupSuccess = (result) ->
     console.log result, "in group success"
+    toastr.success("Group has been updated successfully.", "Success")
 
-  updateGroupFailure = (result) ->
+  onUpdateGroupFailure = (result) ->
     console.log result, "in group failure"
+    toastr.error("Unable to update group at the moment. Please try again later.", "Error")
+
+  $scope.addNewSubGroup = (subGroupForm) ->
+    console.log $scope.selectedSubGroup
+    if _.isEmpty($scope.selectedSubGroup.name)
+      return
+    console.log "name is not empty"
+    body = {
+      "name": $scope.selectedSubGroup.name,
+      "uniqueName": "group",
+      "parentGroupUniqueName": $scope.selectedGroup.uniqueName
+    }
+    groupService.create($rootScope.selectedCompany.uniqueName, body).then(onCreateGroupSuccess, onCreateGroupFailure)
+
+  onCreateGroupSuccess = (result) ->
+    console.log result, "in create group success"
+    toastr.success("Sub group added successfully", "Success")
+    $scope.selectedSubGroup = {}
+
+  onCreateGroupFailure = (result) ->
+    console.log result, "in create group failure"
+    toastr.error("Unable to create subgroup.", "Error")
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController

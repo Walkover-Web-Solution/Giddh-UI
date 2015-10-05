@@ -23,30 +23,34 @@ describe 'groupController', ->
     it 'should call groups from route after getting company unique name', ->
       @rootScope.selectedCompany = {"data": "Got it", "uniqueName": "soniravi"}
       deferred = @q.defer()
-      spyOn(@groupService, 'getAllFor').andReturn(deferred.promise)
+      spyOn(@groupService, 'getAllWithAccountsFor').andReturn(deferred.promise)
       @scope.getGroups()
-      expect(@groupService.getAllFor).toHaveBeenCalledWith("soniravi")
+      expect(@groupService.getAllWithAccountsFor).toHaveBeenCalledWith("soniravi")
 
   describe '#getGroupListSuccess', ->
     it 'should set group list', ->
-      result = ["body":{"name":"fixed assets"},{"name":"capital account"}]
+      result = ["body": {"name": "fixed assets"}, {"name": "capital account"}]
       @scope.getGroupListSuccess(result)
       expect(@scope.groupList).toBe(result.body)
 
   describe '#getGroupListFailure', ->
     it 'should show a toastr for error', ->
-      spyOn(@toastr,'error')
+      spyOn(@toastr, 'error')
       @scope.getGroupListFailure()
       expect(@toastr.error).toHaveBeenCalledWith("Unable to get group details.", "Error")
 
   describe '#selectGroupToEdit', ->
     it 'should set group as selected and a variable to true to show its detail', ->
-      group = {"name":"Fixed Assets"}
+      group = {"name": "Fixed Assets"}
       @scope.selectGroupToEdit(group)
       expect(@scope.selectedGroup).toBe(group)
       expect(@scope.showGroupDetails).toBeTruthy()
 
   describe '#updateGroup', ->
-    xit 'should call group service and update group', ->
-      spyOn(@groupService,'update')
+    it 'should call group service and update group', ->
+      @scope.selectedGroup = {"uniqueName": "1"}
+      @rootScope.selectedCompany = {"uniqueName": "2"}
+      deferred = @q.defer()
+      spyOn(@groupService, 'update').andReturn(deferred.promise)
       @scope.updateGroup()
+      expect(@groupService.update).toHaveBeenCalledWith("2", {'uniqueName': '1'})
