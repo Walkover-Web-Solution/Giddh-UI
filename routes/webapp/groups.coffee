@@ -19,9 +19,9 @@ router.get '/with-accounts', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.put '/groupUpdate', (req, res) ->
+router.put '/:groupUniqueName', (req, res) ->
   console.log "inside group update method"
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName
+      hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName
   args =
     headers:
       'Auth-Key': req.session.authKey

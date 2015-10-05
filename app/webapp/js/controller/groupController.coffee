@@ -25,10 +25,16 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showGroupDetails = true
 
   $scope.updateGroup = (groupD) ->
-    groupService.update(localStorageService.selectedCompany.uniqueName, $scope.selectedGroup,updateSuccess)
+    console.log $rootScope.selectedCompany.uniqueName
+    console.log $scope.selectedGroup
+    groupService.update($rootScope.selectedCompany.uniqueName, $scope.selectedGroup).then(updateGroupSuccess,
+        updateGroupFailure)
 
-  updateSuccess = (result) ->
-    console.log result
+  updateGroupSuccess = (result) ->
+    console.log result, "in group success"
+
+  updateGroupFailure = (result) ->
+    console.log result, "in group failure"
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController
