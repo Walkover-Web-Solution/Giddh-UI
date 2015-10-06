@@ -73,7 +73,7 @@
   </div>
 </div>
 
-<!-- selectGroupToEdit(node) -->
+<!--   ng-click="selectGroupToEdit(node)"-->
           </perfect-scrollbar>
         </div>
       </div>
@@ -82,7 +82,29 @@
       <!-- middle body -->
       <div class="col-md-7 col-sm-12">
         <div class="bdrR bdrL row" auto-height>
-              
+          
+          <div class="col-md-12">
+             <input class="form-control" ng-model="srchGrp" name="" type="text" placeholder="Search">
+         </div>
+
+         <div class="col-md-12">
+            <script type="text/ng-template" id="lista_renderer.html">
+                <div ui-tree-handle>
+                    {{item.name}}
+                    {{item.description}}
+                </div>
+                <ol ui-tree-nodes ng-model="item.groups">
+                    <li ng-repeat="item in item.groups | filter:srchGrp" ui-tree-node ng-include="'lista_renderer.html'">
+                    </li>
+                </ol>
+            </script>
+            <div ui-tree data-drag-enabled="false" data-nodrop-enabled="true">
+                <ol ui-tree-nodes ng-model="lista">
+                    <li ng-repeat="item in lista | filter:srchGrp" ui-tree-node ng-include="'lista_renderer.html'"></li>
+                </ol>
+            </div>
+         </div>
+
           <!-- <div ng-if="showGroupDetails" ng-include="'/public/webapp/views/groupDetails.html'"/> -->
         </div>
       </div>

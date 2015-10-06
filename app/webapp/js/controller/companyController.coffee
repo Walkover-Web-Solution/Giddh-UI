@@ -87,8 +87,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       #default click on first child
       $timeout( ->
         angular.element('#cmpnyli_0').trigger('click')
-        console.log angular.element(".companyList li").hasClass('active')
-      ,1000)
+      ,1500)
       
       
       
