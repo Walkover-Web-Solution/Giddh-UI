@@ -57,15 +57,16 @@ describe 'groupController', ->
 
   describe '#addNewSubGroup', ->
     it 'should call group service and add new subgroup to selected group', ->
-      @scope.selectedSubGroup.name = "subgroup1"
+      @scope.selectedSubGroup = {"name": "subgroup1", "desc": "description"}
       @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName"}
       @scope.selectedGroup = {"uniqueName": "grpUName"}
       body = {
         "name": @scope.selectedSubGroup.name,
-        "uniqueName": "group",
+        "uniqueName": "",
         "parentGroupUniqueName": @scope.selectedGroup.uniqueName
+        "description": "description"
       }
       deferred = @q.defer()
-      spyOn(@groupService,'create').andReturn(deferred.promise)
+      spyOn(@groupService, 'create').andReturn(deferred.promise)
       @scope.addNewSubGroup()
-      expect(@groupService.create).toHaveBeenCalledWith("CmpUniqueName",body)
+      expect(@groupService.create).toHaveBeenCalledWith("CmpUniqueName", body)
