@@ -24,7 +24,8 @@
                   <i class="glyphicon glyphicon-search"></i>
                 </div>
 
-                <input type="text" name="searchGroup" class="form-control" ng-model="grpSrch" placeholder="Search groups">
+                <input type="text" name="searchGroup" class="form-control" ng-model="grpSrch"
+                       placeholder="Search groups">
 
                 <div ng-hide="subGroupVisible" class="input-group-addon cp" ng-click="collapseAll()">
                   <i class="glyphicon glyphicon-list"></i>
@@ -40,31 +41,35 @@
           <!-- searchbar end -->
 
 
-          <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20" suppressScrollX="false" useBothWheelAxes="false" auto-height suppressScrollY="true" ng-init="dim=false; highlight=true">
-            
-            <!-- Nested node template -->
-            <script type="text/ng-template" id="nodes_renderer.html">
-              <div ui-tree-handle class="tree-node tree-node-content">
-                <a class="btn-xs" ng-if="node.groups && node.groups.length > 0" data-nodrag ng-click="toggle(this)">
+          <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20"
+                             suppressScrollX="false" useBothWheelAxes="false" auto-height suppressScrollY="true"
+                             ng-init="dim=false; highlight=true">
+            <div ng-if="showListGroupsNow">
+              <!-- Nested node template -->
+              <script type="text/ng-template" id="nodes_renderer.html">
+                <div ui-tree-handle class="tree-node tree-node-content">
+                  <a class="btn-xs" ng-if="node.groups && node.groups.length > 0" data-nodrag ng-click="toggle(this)">
                   <span class="glyphicon"
-                    ng-class="{
+                        ng-class="{
                       'glyphicon-chevron-right': collapsed,
                       'glyphicon-chevron-down': !collapsed
                     }"></span>
-                </a>
-                <span ng-click="selectGroupToEdit(node)">{{node.name}}</span>
-              </div>
-              <ol ui-tree-nodes="" ng-model="node.groups" ng-class="{hidden: collapsed}">
-                <li ng-repeat="node in node.groups | filter:grpSrch" ui-tree-node ng-include="'nodes_renderer.html'">
-                </li>
-              </ol>
-            </script>
-
-            <div class="clearfix">
-              <div ui-tree id="tree-root"  data-drag-enabled="false" data-nodrop-enabled="true">
-                <ol ui-tree-nodes ng-model="lista">
-                  <li ng-repeat="node in lista | filter:grpSrch" ui-tree-node ng-include="'nodes_renderer.html'"></li>
+                  </a>
+                  <span ng-click="selectGroupToEdit(node)">{{node.name}}</span>
+                </div>
+                <ol ui-tree-nodes="" ng-model="node.groups" ng-class="{hidden: collapsed}">
+                  <li ng-repeat="node in node.groups | filter:grpSrch" ui-tree-node ng-include="'nodes_renderer.html'">
+                  </li>
                 </ol>
+              </script>
+
+              <div class="clearfix">
+                <div ui-tree id="tree-root" data-drag-enabled="false" data-nodrop-enabled="true">
+                  <ol ui-tree-nodes ng-model="groupList">
+                    <li ng-repeat="node in groupList | filter:grpSrch" ui-tree-node
+                        ng-include="'nodes_renderer.html'"></li>
+                  </ol>
+                </div>
               </div>
             </div>
           </perfect-scrollbar>
