@@ -12,7 +12,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.companyDetails = {}
   $scope.currencyList = []
   $scope.currencySelected = undefined;
-  $scope.shareRequest = {role: 'admin', user: null}
+
+  $scope.shareRequest = {role: 'view_only', user: null}
 
   #dialog for first time user
   $scope.openFirstTimeUserModal = () ->
@@ -194,12 +195,17 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     )
     localStorageService.set("_currencyList", $scope.currencyList)
 
+  #update user role
+  $scope.updateUserRole = () ->
+    console.log "updateUserRole"
+
   #share and manage permission in manage company
   $scope.shareCompanyWithUser = () ->
+    console.log $scope.shareRequest, "shareCompanyWithUser"
     companyServices.share($rootScope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess, $scope.onShareCompanyFailure)
 
   $scope.onShareCompanySuccess = (response) ->
-    console.log "success", response
+    #console.log "success", response
     toastr.success(response.body, response.status)
 
   $scope.onShareCompanyFailure = (response) ->

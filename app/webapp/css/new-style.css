@@ -674,7 +674,10 @@ header .navbar-nav > li.active {
 .modal-liq90 {
     width: 90%;
 }
-
+#getGroupModal{
+  height: 500px;
+  overflow: hidden;
+}
 /*typography styles*/
 .dGryHead {
     background-color: #e2e2e2;
