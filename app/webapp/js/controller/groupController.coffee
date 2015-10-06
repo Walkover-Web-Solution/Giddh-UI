@@ -1,6 +1,6 @@
 'use strict'
 
-groupController = ($scope, $rootScope, localStorageService, groupService, toastr, $filter) ->
+groupController = ($scope, $rootScope, localStorageService, groupService, toastr) ->
   $scope.groupList = {}
   $scope.selectedGroup = {}
   $scope.selectedSubGroup = {}
@@ -76,42 +76,92 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error("Unable to create subgroup.", "Error")
 
 
-  $scope.treeFilter = $filter('uiTreeFilter')
-  # $scope.availableFields = [
-  #   'name'
-  #   'groups.name'
-  # ]
-  $scope.supportedFields = [
-    'name'
-    'name.groups.name'
-  ]
+  
 
   $scope.lista = [
     {
       id: 1
-      name: '1. dragon-breath'
+      name: 'Fixed Assets'
+      uniqueName: "fixed_assets"
       description: 'lorem ipsum dolor sit amet'
-      groups: []
+      groups: [
+        {
+          "accounts": [],
+          "uniqueName": "sarfa",
+          "description": "null",
+          "role": "null",
+          "groups": [],
+          "name": "sarfa"
+        },
+        {
+          "accounts": [],
+          "uniqueName": "sarfara",
+          "description": "null",
+          "role": "null",
+          "groups": [],
+          "name": "sarfara"
+        },
+        {
+          "accounts": [],
+          "uniqueName": "sarfar",
+          "description": "null",
+          "role": "null",
+          "groups": [],
+          "name": "sarfar"
+        },
+        {
+          "accounts": [],
+          "uniqueName": "sara",
+          "description": "null",
+          "role": "null",
+          "groups": [],
+          "name": "sara"
+        },
+        {
+          "accounts": [],
+          "uniqueName": "saraf",
+          "description": "null",
+          "role": "null",
+          "groups": [],
+          "name": "saraf"
+        },
+        {
+          "accounts": [],
+          "uniqueName": "sarfaraz",
+          "description": "null",
+          "role": "null",
+          "groups": [],
+          "name": "sarfaraz"
+        },
+        {
+          "accounts": [],
+          "uniqueName": "sarf",
+          "description": "null",
+          "role": "null",
+          "groups": [],
+          "name": "sarf"
+        }
+      ]
     }
     {
       id: 2
-      name: '2. moiré-vision'
+      name: 'moiré-vision'
       description: 'Ut tempus magna id nibh'
       groups: [
         {
           id: 21
-          name: '2.1. tofu-animation'
+          name: 'tofu-animation'
           description: 'Sed nec diam laoreet, aliquam'
           groups: [
             {
               id: 211
-              name: '2.1.1. spooky-giraffe'
+              name: 'spooky-giraffe'
               description: 'In vel imperdiet justo. Ut'
               groups: []
             }
             {
               id: 212
-              name: '2.1.2. bubble-burst'
+              name: 'bubble-burst'
               description: 'Maecenas sodales a ante at'
               groups: []
             }
@@ -119,7 +169,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         }
         {
           id: 22
-          name: '2.2. barehand-atomsplitting'
+          name: 'barehand-atomsplitting'
           description: 'Fusce ut tellus posuere sapien'
           groups: []
         }
@@ -127,21 +177,20 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     }
     {
       id: 3
-      name: '3. unicorn-zapper'
+      name: 'unicorn-zapper'
       description: 'Integer ullamcorper nibh eu ipsum'
       groups: []
     }
     {
       id: 4
-      name: '4. romantic-transclusion'
+      name: 'romantic-transclusion'
       description: 'Nulam luctus velit eget enim'
       groups: []
     }
   ]
   
 
-  $scope.toggleSupport = (propertyName) ->
-    if $scope.supportedFields.indexOf(propertyName) > -1 then $scope.supportedFields.splice($scope.supportedFields.indexOf(propertyName), 1) else $scope.supportedFields.push(propertyName)
+  
 
 
 

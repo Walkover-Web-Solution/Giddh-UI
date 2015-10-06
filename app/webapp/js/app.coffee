@@ -10,8 +10,6 @@ app = angular.module("giddhWebApp",
     "twygmbh.auto-height"
     "toastr"
     "ui.tree"
-    "ui.tree-filter"
-    "ui.highlight"
   ]
 )
 
@@ -50,9 +48,7 @@ app.value('$confirmModalDefaults',
     ok: 'OK'
     cancel: 'Cancel')
 
-app.filter 'trust', ($sce) ->
-  (val) ->
-    $sce.trustAsHtml val
+
     
 #for project lib helps check out
 #bootstrap related - http://angular-ui.github.io/bootstrap/#/tooltip
