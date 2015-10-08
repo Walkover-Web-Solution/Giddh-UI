@@ -36,6 +36,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #check if user is admin
   $scope.ifHavePermission = (data) ->
+    $scope.canManageUser = false
     angular.forEach data.role.permissions, (value, key) ->
       if value.code is "MNG_USR"
         $scope.canManageUser = true
@@ -85,11 +86,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     else
       $rootScope.mngCompDataFound = true
       $scope.companyList = response.body
-      #default click on first child
-      $timeout( ->
-        angular.element('#cmpnyli_0').trigger('click')
-      ,1500)
-      
+      $scope.goToCompany($scope.companyList[0], 0)
       
       
 
@@ -120,11 +117,11 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #making a detail company view
   $scope.goToCompany = (data, index) ->
-    $scope.canManageUser = false
+    console.log data
     $scope.ifHavePermission(data)
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
-    angular.extend($rootScope.selectedCompany, data)
+    angular.extend($scope.selectedCompany, data)
     if $scope.canManageUser is true
       $scope.getSharedUserList($scope.selectedCompany.uniqueName)
     $scope.getRolesList()
@@ -200,62 +197,53 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     localStorageService.set("_currencyList", $scope.currencyList)
 
   #update user role
-  $scope.updateUserRole = () ->
-    console.log "updateUserRole"
+  $scope.updateUserRole = (role, userEmail) ->
+    sData = {role: role, user: userEmail}
+    companyServices.share($scope.selectedCompany.uniqueName, sData).then($scope.onShareCompanySuccess, $scope.onShareCompanyFailure)
 
   #share and manage permission in manage company
   $scope.shareCompanyWithUser = () ->
-    companyServices.share($rootScope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess, $scope.onShareCompanyFailure)
+    companyServices.share($scope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess, $scope.onShareCompanyFailure)
 
   $scope.onShareCompanySuccess = (response) ->
-    #console.log "success", response
     $scope.shareRequest = {}
     toastr.success(response.body, response.status)
     $scope.getSharedUserList($scope.selectedCompany.uniqueName)
 
 
   $scope.onShareCompanyFailure = (response) ->
-    console.log "failure", response
     toastr.error(response.data.message, response.data.status)
 
   #get roles and set it in local storage
   $scope.getRolesList = () ->
-    cUname = $scope.selectedCompany.uniqueName
-    companyServices.getRoles(cUname).then($scope.getRolesSuccess, $scope.getRolesFailure)
+    companyServices.getRoles($scope.selectedCompany.uniqueName).then($scope.getRolesSuccess, $scope.getRolesFailure)
 
   $scope.getRolesSuccess = (response) ->
-    console.log response, "getRolesSuccess"
     $scope.rolesList = response.body
 
   $scope.getRolesFailure = (response) ->
-    console.log response, "getRolesFailure"
+    toastr.error(response.data.message, response.data.status)
 
   #get shared user list
   $scope.getSharedUserList = (uniqueName) ->
     companyServices.shredList(uniqueName).then($scope.getSharedUserListSuccess, $scope.getSharedUserListFailure)
 
   $scope.getSharedUserListSuccess = (response) ->
-    console.log response, "getSharedUserListSuccess"
     $scope.sharedUsersList = response.body
 
   $scope.getSharedUserListFailure = (response) ->
-    console.log response, "getSharedUserListFailure"
     toastr.error(response.data.message, response.data.status)
 
   #delete shared user
   $scope.unSharedUser = (uNqame, id) ->
     data = {user: uNqame}
     companyServices.unSharedComp($scope.selectedCompany.uniqueName, data).then($scope.unSharedCompSuccess, $scope.unSharedCompFailure)
-    console.log data, id, "in deleteSharedUser"
 
   $scope.unSharedCompSuccess = (response) ->
-    console.log response, "unSharedCompSuccess"
     toastr.success("Company unshared successfully", "Success")
-    console.log $scope.selectedCompany.uniqueName
     $scope.getSharedUserList($scope.selectedCompany.uniqueName)
 
   $scope.unSharedCompFailure = (response) ->
-    console.log response, "unSharedCompFailure"
     toastr.error(response.data.message, response.data.status)
 
 
