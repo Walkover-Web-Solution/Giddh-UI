@@ -10,6 +10,7 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
     shareCompany: {method: 'PUT', url: '/company/:uniqueName/share'}
     getSharedList: {method: 'GET', url: '/company/:uniqueName/shared-with'}
     getCmpRolesList: {method: 'GET', url: '/company/roles/all'}
+    unSharedUser: {method: 'PUT', url: '/company/:uniqueName/unshare'}
   })
 
   companyServices =
@@ -48,6 +49,10 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
     shredList: (uniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) ->
         Company.getSharedList({uniqueName: uniqueName}, onSuccess, onFailure))
+
+    unSharedComp: (uniqueName, data, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) ->
+        Company.unSharedUser({uniqueName: uniqueName}, data, onSuccess, onFailure))
 
     getRoles: (onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) ->

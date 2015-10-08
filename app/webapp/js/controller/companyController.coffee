@@ -201,12 +201,14 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #share and manage permission in manage company
   $scope.shareCompanyWithUser = () ->
-    console.log $scope.shareRequest, "shareCompanyWithUser"
     companyServices.share($rootScope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess, $scope.onShareCompanyFailure)
 
   $scope.onShareCompanySuccess = (response) ->
     #console.log "success", response
+    $scope.shareRequest = {}
     toastr.success(response.body, response.status)
+    $scope.getSharedUserList($scope.selectedCompany.uniqueName)
+
 
   $scope.onShareCompanyFailure = (response) ->
     console.log "failure", response
@@ -237,8 +239,21 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     toastr.error(response.data.message, response.data.status)
 
   #delete shared user
-  $scope.deleteSharedUser = (email, id) ->
-    console.log email, id, "in deleteSharedUser"
+  $scope.unSharedUser = (email, id) ->
+    data = {user: email}
+    companyServices.unSharedComp($scope.selectedCompany.uniqueName, data).then($scope.unSharedCompSuccess, $scope.unSharedCompFailure)
+    console.log data, id, "in deleteSharedUser"
+
+  $scope.unSharedCompSuccess = (response) ->
+    console.log response, "unSharedCompSuccess"
+    toastr.success("Company unshared successfully", "Success")
+    console.log $scope.selectedCompany.uniqueName
+    $scope.getSharedUserList($scope.selectedCompany.uniqueName)
+
+  $scope.unSharedCompFailure = (response) ->
+    console.log response, "unSharedCompFailure"
+    toastr.error(response.data.message, response.data.status)
+
 
   #fire function after page fully loaded
   $rootScope.$on '$viewContentLoaded', ->

@@ -95,4 +95,18 @@ router.put '/:uniqueName/share', (req, res) ->
     else
       res.send data
 
+#unShare company with user
+router.put '/:uniqueName/unshare', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+ req.params.uniqueName + '/unshare'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+    data: req.body
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode).send(data)
+    else
+      res.send data
+
 module.exports = router
