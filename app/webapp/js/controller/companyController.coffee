@@ -120,10 +120,14 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #making a detail company view
   $scope.goToCompany = (data, index) ->
+    $scope.canManageUser = false
     $scope.ifHavePermission(data)
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
     angular.extend($rootScope.selectedCompany, data)
+    if $scope.canManageUser is true
+      $scope.getSharedUserList($scope.selectedCompany.uniqueName)
+    $scope.getRolesList()
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
@@ -216,10 +220,11 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #get roles and set it in local storage
   $scope.getRolesList = () ->
-    companyServices.getRoles().then($scope.getRolesSuccess, $scope.getRolesFailure)
+    cUname = $scope.selectedCompany.uniqueName
+    companyServices.getRoles(cUname).then($scope.getRolesSuccess, $scope.getRolesFailure)
 
   $scope.getRolesSuccess = (response) ->
-    #console.log response, "getRolesSuccess"
+    console.log response, "getRolesSuccess"
     $scope.rolesList = response.body
 
   $scope.getRolesFailure = (response) ->
@@ -232,15 +237,14 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.getSharedUserListSuccess = (response) ->
     console.log response, "getSharedUserListSuccess"
     $scope.sharedUsersList = response.body
-    console.log $scope.sharedUsersList
 
   $scope.getSharedUserListFailure = (response) ->
     console.log response, "getSharedUserListFailure"
     toastr.error(response.data.message, response.data.status)
 
   #delete shared user
-  $scope.unSharedUser = (email, id) ->
-    data = {user: email}
+  $scope.unSharedUser = (uNqame, id) ->
+    data = {user: uNqame}
     companyServices.unSharedComp($scope.selectedCompany.uniqueName, data).then($scope.unSharedCompSuccess, $scope.unSharedCompFailure)
     console.log data, id, "in deleteSharedUser"
 
@@ -259,7 +263,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $rootScope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
     $scope.getCurrencyList()
-    $scope.getRolesList()
+    
 
 
 

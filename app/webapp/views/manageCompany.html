@@ -127,7 +127,7 @@
     </tab>
     <!-- basic information tab end here -->
 
-    <tab ng-show="canManageUser" heading="Permission" ng-click="getSharedUserList(selectedCompany.uniqueName)">
+    <tab ng-if="canManageUser" heading="Permission">
       <div class="pd2">
         <div class="greyBox mrB2">
           <form name="addShareEmailForm" novalidate class="form-inline">
@@ -170,7 +170,7 @@
     
   </div>
   <span class="delIcon">
-    <i class="glyphicon glyphicon-trash" ng-click="unSharedUser(value.userEmail, $index)"></i>
+    <i class="glyphicon glyphicon-trash" ng-click="unSharedUser(value.userUniqueName, $index)"></i>
   </span>
 
 </div>                

@@ -54,13 +54,15 @@ router.post '/', (req, res) ->
     res.send data
 
 #get all Roles
-router.get '/roles/all', (req, res) ->
-  console.log "in getting roles"
-  hUrl = settings.envUrl+'/roles/all'
+router.get '/:uniqueName/shareable-roles', (req, res) ->
+  console.log "in getting roles", 
+  hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/shareable-roles'
   args =
     headers:
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
+
+  console.log args, hUrl
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode).send(data)
