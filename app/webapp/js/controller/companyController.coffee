@@ -216,7 +216,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #get roles and set it in local storage
   $scope.getRolesList = () ->
-    companyServices.getRoles($scope.selectedCompany.uniqueName).then($scope.getRolesSuccess, $scope.getRolesFailure)
+    cUname = $scope.selectedCompany.uniqueName
+    companyServices.getRoles(cUname).then($scope.getRolesSuccess, $scope.getRolesFailure)
 
   $scope.getRolesSuccess = (response) ->
     $scope.rolesList = response.body

@@ -56,6 +56,6 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
 
     getRoles: (cUname, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) ->
-        Company.getCmpRolesList(cUname, onSuccess, onFailure))
+        Company.getCmpRolesList({uniqueName: cUname}, onSuccess, onFailure))
 
   companyServices

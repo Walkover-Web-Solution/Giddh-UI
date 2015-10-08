@@ -55,7 +55,8 @@ router.post '/', (req, res) ->
 
 #get all Roles
 router.get '/:uniqueName/shareable-roles', (req, res) ->
-  console.log "in getting roles", 
+  date = Date()
+  console.log date, "shareable-role"
   hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/shareable-roles'
   args =
     headers:
@@ -67,6 +68,7 @@ router.get '/:uniqueName/shareable-roles', (req, res) ->
     if data.status == 'error'
       res.status(response.statusCode).send(data)
     else
+      console.log "roles completed", Date()
       res.send data
 
 #get company Shared user list
