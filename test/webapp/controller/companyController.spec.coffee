@@ -149,26 +149,21 @@ describe 'companyController', ->
       expect(@companyServices.getAll).toHaveBeenCalled()
 
   describe '#getCompanyListSuccess', ->
-
     it 'should show error if response have error and call a function to open modal', ->
       spyOn(@scope, "openFirstTimeUserModal")
-      response = {"status": "error", "body": {"email": "abc@def", "contactNo": "9104120", "baseCurrency": "INR"}}
+      response = {"body": []}
       @scope.getCompanyListSuccess(response)
       expect(@scope.openFirstTimeUserModal).toHaveBeenCalled()
 
     it 'should set true to a variable and push data in company list, and by default click on first child to get company details', ->
-
+      response = {"body": [{"email": "abc@def", "contactNo": "9104120", "baseCurrency": "INR"}]}
       spyOn(@scope, "goToCompany")
 
-      response = {"status": "success", "body": [{"email": "abc@def", "contactNo": "9104120", "baseCurrency": "INR"}]}
       @scope.getCompanyListSuccess(response)
-      
 
       expect(@scope.mngCompDataFound).toBeTruthy()
       expect(@scope.companyList).toEqual(response.body)
       expect(@scope.goToCompany).toHaveBeenCalledWith(response.body[0], 0)
-      
-
 
   describe '#getCompanyListFailure', ->
     it 'should show a toastr with error message', ->
@@ -483,7 +478,3 @@ describe 'companyController', ->
       spyOn(@toastr, 'error')
       @scope.unSharedCompFailure(response)
       expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
-
-
-
-

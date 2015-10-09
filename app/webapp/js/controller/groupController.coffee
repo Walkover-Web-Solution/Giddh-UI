@@ -29,12 +29,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
-      #console.log "company unique name : ", $rootScope.selectedCompany.uniqueName
       groupService.getAllWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
           $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (result) ->
-    #console.log result.body
     $scope.groupList = result.body
     $scope.showListGroupsNow = true
 

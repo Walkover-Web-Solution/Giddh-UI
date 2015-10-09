@@ -81,14 +81,12 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #Get company list
   $scope.getCompanyListSuccess = (response) ->
-    if response.status is "error"
+    $scope.companyList = response.body
+    if _.isEmpty($scope.companyList)
       $scope.openFirstTimeUserModal()
     else
       $rootScope.mngCompDataFound = true
-      $scope.companyList = response.body
       $scope.goToCompany($scope.companyList[0], 0)
-      
-      
 
   #get company list failure
   $scope.getCompanyListFailure = (response)->
