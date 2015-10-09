@@ -4,11 +4,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.groupList = {}
   $scope.selectedGroup = {}
   $scope.selectedSubGroup = {}
-
   $scope.showGroupDetails = false
-
   $scope.subGroupVisible = false
-
   $scope.showListGroupsNow = false
 
   # expand and collapse all tree structure
@@ -42,7 +39,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.selectGroupToEdit = (group) ->
     $scope.selectedGroup = group
     $scope.showGroupDetails = true
-
 
   $scope.updateGroup = ->
     groupService.update($rootScope.selectedCompany.uniqueName, $scope.selectedGroup).then(onUpdateGroupSuccess,
