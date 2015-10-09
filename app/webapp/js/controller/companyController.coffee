@@ -117,7 +117,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #making a detail company view
   $scope.goToCompany = (data, index) ->
-    console.log data
     $scope.ifHavePermission(data)
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index

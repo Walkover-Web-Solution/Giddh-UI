@@ -4,18 +4,13 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
   $rootScope.basicInfo = {}
 
   $scope.logout = ->
-    try
-      $http.post('/logout').then ((response) ->
-        localStorageService.remove("_userDetails")
-        window.location = "/thanks"
-      ), (response) ->
-    catch e
-      throw new Error(e.message)
-
-  $rootScope.$on '$viewContentLoaded', ->
-    $rootScope.basicInfo = localStorageService.get("_userDetails")
-
+    $http.post('/logout').then ((response) ->
+      localStorageService.remove("_userDetails")
+      window.location = "/thanks"
+    ), (response) ->
+    
   $scope.goToManageGroups = ->
+    console.log (_.isEmpty($rootScope.selectedCompany))
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
@@ -25,5 +20,10 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
         #backdrop: 'static'
         controller: 'groupController'
       )
+
+  $rootScope.$on '$viewContentLoaded', ->
+    $rootScope.basicInfo = localStorageService.get("_userDetails")
+
+  
 
 angular.module('giddhWebApp').controller 'mainController', mainController
