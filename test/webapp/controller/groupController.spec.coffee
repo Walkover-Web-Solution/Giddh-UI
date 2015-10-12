@@ -57,12 +57,12 @@ describe 'groupController', ->
 
   describe '#addNewSubGroup', ->
     it 'should call group service and add new subgroup to selected group', ->
-      @scope.selectedSubGroup = {"name": "subgroup1", "desc": "description"}
+      @scope.selectedSubGroup = {"name": "subgroup1", "desc": "description","uniqueName":"suniqueName"}
       @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName"}
       @scope.selectedGroup = {"uniqueName": "grpUName"}
       body = {
         "name": @scope.selectedSubGroup.name,
-        "uniqueName": "",
+        "uniqueName": "suniquename",
         "parentGroupUniqueName": @scope.selectedGroup.uniqueName
         "description": "description"
       }
@@ -70,3 +70,12 @@ describe 'groupController', ->
       spyOn(@groupService, 'create').andReturn(deferred.promise)
       @scope.addNewSubGroup()
       expect(@groupService.create).toHaveBeenCalledWith("CmpUniqueName", body)
+
+  describe '#deleteGroup', ->
+    it 'should call group service and delete and call group list', ->
+      deferred = @q.defer()
+      @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName","isFixed":"false"}
+      spyOn(@groupService, 'delete').andReturn(deferred.promise)
+      @scope.deleteGroup()
+      expect(@rootScope.selectedCompany.isFixed).toBeTruthy()
+      expect(@groupService.delete)

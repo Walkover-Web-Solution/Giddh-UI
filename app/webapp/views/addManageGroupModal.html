@@ -1,12 +1,10 @@
-
 <div id="getGroupModal" ng-init="getGroups()">
-
 
 
   <div class="modal-header themeBg">
     <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
         aria-hidden="true">&times;</span></button>
-    <h3 class="modal-title">Add/Manage Groups &amp; Accounts</h3>
+    <h3 class="modal-title">Manage Groups &amp; Accounts</h3>
   </div>
   <!-- end header -->
 
@@ -44,9 +42,9 @@
 
 
           <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20"
-                             suppressScrollX="false" useBothWheelAxes="false" auto-height suppressScrollY="true"
-                             ng-init="dim=false; highlight=true">
-            <div ng-if="showListGroupsNow">
+                             suppressScrollX="false" useBothWheelAxes="false" suppressScrollY="true"
+                             ng-init="dim=false; highlight=true" ng-if="showListGroupsNow">
+            <div>
               <!-- Nested node template -->
               <script type="text/ng-template" id="nodes_renderer.html">
                 <div ui-tree-handle class="tree-node tree-node-content">
@@ -59,7 +57,8 @@
                   </a>
                   <span ng-click="selectGroupToEdit(node)">{{node.name}}</span>
                 </div>
-                <ol ui-tree-nodes="" ng-model="node.groups" ng-class="{hidden: collapsed}">
+                <ol ui-tree-nodes="" ng-model="node.groups"
+                    ng-class="grpSrch.length > 0 ? collapsed : {hidden: collapsed}">
                   <li ng-repeat="node in node.groups | filter:grpSrch" ui-tree-node ng-include="'nodes_renderer.html'">
                   </li>
                 </ol>
@@ -82,13 +81,21 @@
       <!-- middle body -->
       <div class="col-md-7 col-sm-12">
         <div class="bdrR bdrL row" auto-height>
-          <div ng-if="showGroupDetails" ng-include="'/public/webapp/views/groupDetails.html'"/>
+          <div class="col-md-12 col-sm-12 bdrB" ng-if="showGroupDetails">
+            <div class="row">
+              <div class="pd2" ng-show!="selectedGroup.isFixed">
+                <button class="btn btn-danger" ng-click="deleteGroup()" ng-hide="selectedGroup.isFixed">Delete</button>
+              </div>
+            </div>
+          </div>
+          <div ng-if="showGroupDetails" ng-include="'/public/webapp/views/groupDetails.html'"></div>
+          <div ng-include="'/public/webapp/views/groupOperations.html'" ng-if="showGroupDetails"></div>
         </div>
       </div>
 
       <!-- right side -->
       <div class="col-md-2 col-sm-12" id="right">
-        <div ng-include="'/public/webapp/views/groupOperations.html'"></div>
+
       </div>
     </div>
 

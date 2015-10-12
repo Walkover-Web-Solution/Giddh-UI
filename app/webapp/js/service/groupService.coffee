@@ -9,6 +9,8 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
         getAllWithAccounts: {method: 'GET', url: '/company/:companyUniqueName/groups/with-accounts'}
         update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
         delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
+        move: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/move'}
+        share: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/share'}
       })
 
   groupService =
@@ -34,7 +36,7 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
     update: (companyUniqueName, group) ->
       @handlePromise((onSuccess, onFailure) -> Group.update({
             companyUniqueName: companyUniqueName,
-            groupUniqueName: group.uniqueName
+            groupUniqueName: group.oldUName
           },
           group, (result) -> console.log result, onFailure))
 
@@ -44,5 +46,17 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
             groupUniqueName: group.uniqueName
           },
           onSuccess, onFailure))
+
+    move: (companyUniqueName, groupUniqueName, data) ->
+      @handlePromise((onSuccess, onFailure) -> Group.move({
+        companyUniqueName: companyUniqueName,
+        groupUniqueName: group.uniqueName
+      }, data, onSuccess, onFailure))
+
+    share: (companyUniqueName, groupUniqueName, data) ->
+      @handlePromise((onSuccess, onFailure) -> Group.share({
+        companyUniqueName: companyUniqueName,
+        groupUniqueName: group.uniqueName
+      }, data, onSuccess, onFailure))
 
   groupService
