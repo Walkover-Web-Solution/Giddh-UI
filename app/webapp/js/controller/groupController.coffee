@@ -27,6 +27,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.subGroupVisible = false
 
   $scope.getGroups = ->
+    console.log "in getGroups"
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else

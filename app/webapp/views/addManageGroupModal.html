@@ -1,6 +1,5 @@
 <div id="getGroupModal" ng-init="getGroups()">
 
-
   <div class="modal-header themeBg">
     <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
         aria-hidden="true">&times;</span></button>
@@ -13,7 +12,7 @@
     <div class="clearfix">
 
       <div class="col-md-3 col-sm-12 greyBg">
-        <div auto-height>
+        <div>
 
           <div class="mrT1 mrB1 form-inline">
             <div class="form-group">
@@ -42,9 +41,8 @@
 
 
           <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20"
-                             suppressScrollX="false" useBothWheelAxes="false" suppressScrollY="true"
-                             ng-init="dim=false; highlight=true" ng-if="showListGroupsNow">
-            <div>
+                             suppressScrollX="false" useBothWheelAxes="false" suppressScrollY="true">
+            <div ng-if="showListGroupsNow">
               <!-- Nested node template -->
               <script type="text/ng-template" id="nodes_renderer.html">
                 <div ui-tree-handle class="tree-node tree-node-content">
@@ -56,6 +54,7 @@
                     }"></span>
                   </a>
                   <span ng-click="selectGroupToEdit(node)">{{node.name}}</span>
+                  {{node.uniqueName}}
                 </div>
                 <ol ui-tree-nodes="" ng-model="node.groups"
                     ng-class="grpSrch.length > 0 ? collapsed : {hidden: collapsed}">
