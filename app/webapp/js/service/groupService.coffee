@@ -11,6 +11,8 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
         delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
         move: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/move'}
         share: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/share'}
+        unshare: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/unshare'}
+        sharedWith: {method: 'GET', url: '/company/:companyUniqueName/groups/:groupUniqueName/shared-with'}
       })
 
   groupService =
@@ -21,42 +23,54 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
       func(onSuccess, onFailure)
       deferred.promise
 
-    create: (companyUniqueName, data) ->
+    create: (companyUniqueName, data, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.add({companyUniqueName: companyUniqueName}, data, onSuccess,
           onFailure))
 
-    getAllFor: (companyUniqueName) ->
+    getAllFor: (companyUniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.getAll({companyUniqueName: companyUniqueName}, onSuccess,
           onFailure))
 
-    getAllWithAccountsFor: (companyUniqueName) ->
+    getAllWithAccountsFor: (companyUniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccounts({companyUniqueName: companyUniqueName},
           onSuccess, onFailure))
 
     update: (companyUniqueName, group) ->
       @handlePromise((onSuccess, onFailure) -> Group.update({
-            companyUniqueName: companyUniqueName,
-            groupUniqueName: group.oldUName
-          },
-          group, (result) -> console.log result, onFailure))
+        companyUniqueName: companyUniqueName,
+        groupUniqueName: group.oldUName
+      },group, onSuccess, onFailure))
 
-    delete: (companyUniqueName, group) ->
+
+    delete: (companyUniqueName, group, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.delete({
             companyUniqueName: companyUniqueName,
             groupUniqueName: group.uniqueName
           },
           onSuccess, onFailure))
 
-    move: (companyUniqueName, groupUniqueName, data) ->
+    move: (unqNamesObj, data) ->
       @handlePromise((onSuccess, onFailure) -> Group.move({
-        companyUniqueName: companyUniqueName,
-        groupUniqueName: group.uniqueName
+        companyUniqueName: unqNamesObj.compUname,
+        groupUniqueName: unqNamesObj.selGrpUname
       }, data, onSuccess, onFailure))
 
-    share: (companyUniqueName, groupUniqueName, data) ->
+    share: (unqNamesObj, data) ->
       @handlePromise((onSuccess, onFailure) -> Group.share({
-        companyUniqueName: companyUniqueName,
-        groupUniqueName: group.uniqueName
+        companyUniqueName: unqNamesObj.compUname,
+        groupUniqueName: unqNamesObj.selGrpUname
       }, data, onSuccess, onFailure))
+
+    unshare: (unqNamesObj, data) ->
+      @handlePromise((onSuccess, onFailure) -> Group.unshare({
+        companyUniqueName: unqNamesObj.compUname,
+        groupUniqueName: unqNamesObj.selGrpUname
+      }, data, onSuccess, onFailure))
+
+    sharedList: (unqNamesObj, data) ->
+      @handlePromise((onSuccess, onFailure) -> Group.sharedWith({
+        companyUniqueName: unqNamesObj.compUname,
+        groupUniqueName: unqNamesObj.selGrpUname
+      },onSuccess, onFailure))
 
   groupService

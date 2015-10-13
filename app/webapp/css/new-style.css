@@ -679,6 +679,14 @@ header .navbar-nav > li.active {
     height: 500px;
     overflow: hidden;
 }
+#addMngGrpScrBar{
+    height: 380px;
+}
+#middleBody{
+    height: 434px;
+    overflow-x:hidden;
+    overflow-y: auto;
+}
 
 /*typography styles*/
 .dGryHead {
@@ -689,9 +697,7 @@ header .navbar-nav > li.active {
     padding: 9px 20px;
 }
 
-#getGroupModal {
-    height: 650px;
-}
+
 
 /*manage company ui tree*/
 .angular-ui-tree-node {
@@ -709,6 +715,12 @@ header .navbar-nav > li.active {
     padding: 7px 10px;
     cursor: pointer;
 }
+.angular-ui-tree-handle > div > .btn-xs{
+    display: inline-block;
+}
+.angular-ui-tree-handle > div > span{
+    display: inline-block;
+}
 
 li:last-child .angular-ui-tree-handle {
     border-bottom: 1px solid #ddd;
@@ -720,11 +732,18 @@ li:last-child .angular-ui-tree-handle {
     display: none;
 }
 
-.angular-ui-tree-handle:hover, .angular-ui-tree-handle.active {
+
+.angular-ui-tree-handle:hover{
     background: linen;
 }
 
-.angular-ui-tree-handle:hover p, .angular-ui-tree-handle.active p {
+.angular-ui-tree-handle:hover p{
+    display: block;
+}
+.angular-ui-tree-handle.active {
+    background: #cfd5e2;
+}
+.angular-ui-tree-handle.active p {
     display: block;
 }
 

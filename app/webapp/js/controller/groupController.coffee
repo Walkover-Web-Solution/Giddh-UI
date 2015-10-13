@@ -12,6 +12,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.subGroupVisible = false
   $scope.showListGroupsNow = false
 
+
   # expand and collapse all tree structure
   getRootNodesScope = ->
     angular.element(document.getElementById('tree-root')).scope()
@@ -27,7 +28,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.subGroupVisible = false
 
   $scope.getGroups = ->
-    console.log "in getGroups"
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
@@ -46,6 +46,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error("Unable to get group details.", "Error")
 
   $scope.selectGroupToEdit = (group) ->
+    #$scope.isSelected = true
     $scope.selectedGroup = group
     if _.isEmpty($scope.selectedGroup.oldUName)
       $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
@@ -54,17 +55,76 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
     $scope.selectedSubGroup = {}
     $scope.showGroupDetails = true
+    $scope.getGroupSharedList(group)
+
+  $scope.getGroupSharedList = (group) ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroup.uniqueName
+    }
+    groupService.sharedList(unqNamesObj).then($scope.onsharedListSuccess, $scope.onsharedListFailure)
+  
+  $scope.onsharedListSuccess = (result) ->
+    $scope.groupSharedUserList = result.body
+
+  $scope.onsharedListFailure = (result) ->
+    console.log result, "onsharedListFailure"
+
+  #set a object for share group
+  $scope.shareGroupObj = {
+    role: "view_only"
+    user: ""
+  }
+  #share group with user
+  $scope.shareGroup = () ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroup.uniqueName
+    }
+    console.log $scope.shareGroupObj, "shareGroup", unqNamesObj
+    groupService.share(unqNamesObj, $scope.shareGroupObj).then($scope.onShareGroupSuccess, $scope.onShareGroupFailure)
+
+  $scope.onShareGroupSuccess = (response) ->
+    console.log response, "onShareGroupSuccess"
+    $scope.shareGroupObj = {
+      role: "view_only"
+      user: ""
+    }
+    toastr.success(response.body, response.status)
+    $scope.getGroupSharedList($scope.selectedGroup)
+    
+  $scope.onShareGroupFailure = (response) ->
+    console.log response, "onShareGroupFailure"
+    toastr.error(response.data.message, response.data.status)
+
+  #unShare group with user
+  $scope.unShareGroup = (user) ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroup.uniqueName
+    }
+    data = {
+      user: user
+    }
+    groupService.unshare(unqNamesObj, data).then($scope.unShareGroupSuccess, $scope.unShareGroupFailure)
+  
+  $scope.unShareGroupSuccess = (response)->
+    toastr.success(response.body, response.status)
+    $scope.getGroupSharedList($scope.selectedGroup)
+
+  $scope.unShareGroupFailure = (response)->
+    toastr.error(response.data.message, response.data.status)
 
   $scope.updateGroup = ->
     $scope.selectedGroup.uniqueName = $scope.selectedGroup.uniqueName.toLowerCase()
-    groupService.update($rootScope.selectedCompany.uniqueName, $scope.selectedGroup).then(onUpdateGroupSuccess,
-        onUpdateGroupFailure)
+    groupService.update($scope.selectedCompany.uniqueName, $scope.selectedGroup).then($scope.onUpdateGroupSuccess, $scope.onUpdateGroupFailure)
 
-  onUpdateGroupSuccess = (result) ->
+  $scope.onUpdateGroupSuccess = (result) ->
+    console.log "in onUpdateGroupSuccess", result
     $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
     toastr.success("Group has been updated successfully.", "Success")
 
-  onUpdateGroupFailure = (result) ->
+  $scope.onUpdateGroupFailure = (result) ->
     toastr.error("Unable to update group at the moment. Please try again later.", "Error")
 
   $scope.getUniqueNameFromGroupList = (list) ->
@@ -134,45 +194,30 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   onDeleteGroupFailure = (result) ->
     toastr.error("Unable to delete group.", "Error")
 
-  $scope.shareGroup = () ->
-    body = {
-      "user": "xyz1",
-      "role": "edit"
-    }
-    groupService.share($rootScope.selectedCompany.uniqueName, $scope.selectedGroup.uniqueName,
-        body).then(onShareGroupSuccess, onShareGroupFailure)
-
-  onShareGroupSuccess = (result) ->
-    toastr.success("Group shared successfully.", "Success")
-    $scope.selectedGroup = {}
-    $scope.showGroupDetails = false
-    $scope.getGroups()
-
-  onShareGroupFailure = (result) ->
-    toastr.error("Unable to share group.", "Error")
+  
 
   $scope.moveGroup = (group) ->
-    if $scope.selectedGroup.isFixed
-      toastr.error("You can not move permanent groups.","Error")
-      return
-
-    console.log group
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroup.uniqueName
+    }
     body = {
       "parentGroupUniqueName": group.uniqueName
     }
-    groupService.move($rootScope.selectedCompany.uniqueName, $scope.selectedGroup.uniqueName,
-        body).then(onMoveGroupSuccess, onMoveGroupFailure)
+    groupService.move(unqNamesObj, body).then($scope.onMoveGroupSuccess, $scope.onMoveGroupFailure)
 
-  onMoveGroupSuccess = (result) ->
+  $scope.onMoveGroupSuccess = (result) ->
     toastr.success("Group moved successfully.", "Success")
+    $scope.getGroups()
     $scope.selectedGroup = {}
     $scope.showGroupDetails = false
     $scope.moveto = undefined
-    $scope.getGroups()
 
-  onMoveGroupFailure = (result) ->
+  $scope.onMoveGroupFailure = (result) ->
     toastr.error("Unable to move group.", "Error")
 
+  $scope.selectItem = (item) ->
+    $scope.selectedItem = item
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController

@@ -23,8 +23,7 @@
                   <i class="glyphicon glyphicon-search"></i>
                 </div>
 
-                <input type="text" name="searchGroup" class="form-control" ng-model="grpSrch"
-                       placeholder="Search groups">
+                <input type="text" name="searchGroup" class="form-control" ng-model="grpSrch" placeholder="Search groups">
 
                 <div ng-hide="subGroupVisible" class="input-group-addon cp" ng-click="collapseAll()">
                   <i class="glyphicon glyphicon-list"></i>
@@ -40,21 +39,23 @@
           <!-- searchbar end -->
 
 
-          <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20"
+          <perfect-scrollbar id="addMngGrpScrBar" class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20"
                              suppressScrollX="false" useBothWheelAxes="false" suppressScrollY="true">
             <div ng-if="showListGroupsNow">
               <!-- Nested node template -->
               <script type="text/ng-template" id="nodes_renderer.html">
-                <div ui-tree-handle class="tree-node tree-node-content">
-                  <a class="btn-xs" ng-if="node.groups && node.groups.length > 0" data-nodrag ng-click="toggle(this)">
-                  <span class="glyphicon"
-                        ng-class="{
-                      'glyphicon-chevron-right': collapsed,
-                      'glyphicon-chevron-down': !collapsed
-                    }"></span>
-                  </a>
-                  <span ng-click="selectGroupToEdit(node)">{{node.name}}</span>
-                  {{node.uniqueName}}
+                <div ui-tree-handle class="tree-node tree-node-content" ng-class="{'active': selectedItem === node}" ng-click="selectItem(node)">
+                  <div class="clearfix">
+                    <a class="btn-xs" ng-if="node.groups && node.groups.length > 0" data-nodrag ng-click="toggle(this)">
+                    <span class="glyphicon"
+                          ng-class="{
+                        'glyphicon-chevron-right': collapsed,
+                        'glyphicon-chevron-down': !collapsed
+                      }"></span>
+                    </a>
+                    <span ng-click="selectGroupToEdit(node)">{{node.name}}</span>
+                  </div>
+                  <p ng-click="selectGroupToEdit(node)">{{node.uniqueName}}</p>
                 </div>
                 <ol ui-tree-nodes="" ng-model="node.groups"
                     ng-class="grpSrch.length > 0 ? collapsed : {hidden: collapsed}">
@@ -79,16 +80,18 @@
 
       <!-- middle body -->
       <div class="col-md-7 col-sm-12">
-        <div class="bdrR bdrL row" auto-height>
-          <div class="col-md-12 col-sm-12 bdrB" ng-if="showGroupDetails">
-            <div class="row">
-              <div class="pd2" ng-show!="selectedGroup.isFixed">
-                <button class="btn btn-danger" ng-click="deleteGroup()" ng-hide="selectedGroup.isFixed">Delete</button>
-              </div>
+        <div class="bdrR bdrL row" id="middleBody">
+
+          <div ng-if="showGroupDetails" ng-include="'/public/webapp/views/groupDetails.html'"></div>
+          
+          <div ng-include="'/public/webapp/views/groupOperations.html'" ng-if="showGroupDetails"></div>
+          
+          <div class="" ng-if="showGroupDetails">
+            <div class="pd2" ng-hide="selectedGroup.isFixed">
+              <button class="btn btn-danger" ng-click="deleteGroup()">Delete</button>
             </div>
           </div>
-          <div ng-if="showGroupDetails" ng-include="'/public/webapp/views/groupDetails.html'"></div>
-          <div ng-include="'/public/webapp/views/groupOperations.html'" ng-if="showGroupDetails"></div>
+
         </div>
       </div>
 
