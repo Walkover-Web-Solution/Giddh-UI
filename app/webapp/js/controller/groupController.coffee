@@ -47,7 +47,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.flatAccntList = $scope.FlattenAccountList($scope.groupList)
     $scope.showListGroupsNow = true
 
-    
 
   $scope.getGroupListFailure = () ->
     toastr.error("Unable to get group details.", "Error")
@@ -60,7 +59,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       console.log "inside else condition"
 
     $scope.selectedSubGroup = {}
-    
     $scope.showGroupDetails = true
     $scope.showAccountListDetails = true
     $scope.showAccountDetails = false
@@ -75,14 +73,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       selGrpUname: $scope.selectedGroup.uniqueName
     }
     groupService.sharedList(unqNamesObj).then($scope.onsharedListSuccess, $scope.onsharedListFailure)
-  
+
   $scope.onsharedListSuccess = (result) ->
     $scope.groupSharedUserList = result.body
 
   $scope.onsharedListFailure = (result) ->
     console.log result, "onsharedListFailure"
 
-  
+
   #share group with user
   $scope.shareGroup = () ->
     unqNamesObj = {
@@ -98,7 +96,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     }
     toastr.success(response.body, response.status)
     $scope.getGroupSharedList($scope.selectedGroup)
-    
+
   $scope.onShareGroupFailure = (response) ->
     toastr.error(response.data.message, response.data.status)
 
@@ -112,7 +110,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       user: user
     }
     groupService.unshare(unqNamesObj, data).then($scope.unShareGroupSuccess, $scope.unShareGroupFailure)
-  
+
   $scope.unShareGroupSuccess = (response)->
     toastr.success(response.body, response.status)
     $scope.getGroupSharedList($scope.selectedGroup)
@@ -122,7 +120,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.updateGroup = ->
     $scope.selectedGroup.uniqueName = $scope.selectedGroup.uniqueName.toLowerCase()
-    groupService.update($scope.selectedCompany.uniqueName, $scope.selectedGroup).then($scope.onUpdateGroupSuccess, $scope.onUpdateGroupFailure)
+    groupService.update($scope.selectedCompany.uniqueName, $scope.selectedGroup).then($scope.onUpdateGroupSuccess,
+        $scope.onUpdateGroupFailure)
 
   $scope.onUpdateGroupSuccess = (result) ->
     $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
@@ -169,14 +168,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       "parentGroupUniqueName": $scope.selectedGroup.uniqueName,
       "description": $scope.selectedSubGroup.desc
     }
-    groupService.create($rootScope.selectedCompany.uniqueName, body).then(onCreateGroupSuccess, onCreateGroupFailure)
+    groupService.create($rootScope.selectedCompany.uniqueName, body).then($scope.onCreateGroupSuccess,
+        $scope.onCreateGroupFailure)
 
-  onCreateGroupSuccess = (result) ->
+  $scope.onCreateGroupSuccess = (result) ->
     toastr.success("Sub group added successfully", "Success")
     $scope.selectedSubGroup = {}
     $scope.getGroups()
 
-  onCreateGroupFailure = (result) ->
+  $scope.onCreateGroupFailure = (result) ->
     toastr.error("Unable to create subgroup.", "Error")
 
   $scope.deleteGroup = ->
@@ -185,20 +185,19 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         title: 'Are you sure you want to delete this group? All child groups will also be deleted. ',
         ok: 'Yes',
         cancel: 'No').then -> groupService.delete($rootScope.selectedCompany.uniqueName,
-          $scope.selectedGroup).then(onDeleteGroupSuccess,
-          onDeleteGroupFailure)
+          $scope.selectedGroup).then($scope.onDeleteGroupSuccess,
+          $scope.onDeleteGroupFailure)
 
 
-  onDeleteGroupSuccess = (result) ->
+  $scope.onDeleteGroupSuccess = (result) ->
     toastr.success("Group deleted successfully.", "Success")
     $scope.selectedGroup = {}
     $scope.showGroupDetails = false
     $scope.getGroups()
 
-  onDeleteGroupFailure = (result) ->
+  $scope.onDeleteGroupFailure = (result) ->
     toastr.error("Unable to delete group.", "Error")
 
-  
 
   $scope.moveGroup = (group) ->
     unqNamesObj = {
@@ -220,7 +219,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onMoveGroupFailure = (result) ->
     toastr.error("Unable to move group.", "Error")
 
-  #select group
   $scope.selectItem = (item) ->
     $scope.selectedItem = item
 
@@ -233,8 +231,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
           if _.isUndefined(accntItem.pName)
             accntItem.pName = [listItem.name]
             accntItem.pUnqName = [listItem.uniqueName]
-          else 
-            accntItem.pName.push(listItem.name) 
+          else
+            accntItem.pName.push(listItem.name)
             accntItem.pUnqName.push(listItem.uniqueName)
         )
         uniqueList.push(listItem.accounts)
@@ -242,27 +240,26 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
           if _.isUndefined(accntItem.pName)
             accntItem.pName = [listItem.name]
             accntItem.pUnqName = [listItem.uniqueName]
-          else 
-            accntItem.pName.push(listItem.name) 
+          else
+            accntItem.pName.push(listItem.name)
             accntItem.pUnqName.push(listItem.uniqueName)
         )
         uniqueList
       else
         _.each(listItem.accounts, (accntItem) ->
-            if _.isUndefined(accntItem.pName)
-              accntItem.pName = [listItem.name]
-              accntItem.pUnqName = [listItem.uniqueName]
-            else 
-              accntItem.pName.push(listItem.name) 
-              accntItem.pUnqName.push(listItem.uniqueName)
-          )
+          if _.isUndefined(accntItem.pName)
+            accntItem.pName = [listItem.name]
+            accntItem.pUnqName = [listItem.uniqueName]
+          else
+            accntItem.pName.push(listItem.name)
+            accntItem.pUnqName.push(listItem.uniqueName)
+        )
         listItem.accounts
     )
     _.flatten(listofUN)
 
   #show account
   $scope.showAccount = (data) ->
-    console.log data, "showAccount"
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
 
@@ -270,7 +267,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
 
   #check if object is empty
-  $scope.isEmptyObject =(obj) ->
+  $scope.isEmptyObject = (obj) ->
     return angular.equals({}, obj)
 
   #highlight account menus

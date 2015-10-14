@@ -13,6 +13,7 @@ describe 'groupController', ->
     @groupController = $controller('groupController',
         {$scope: @scope, $rootScope: @rootScope, localStorageService: @localStorageService})
 
+
   describe '#getGroups', ->
     it 'should show a toastr informing user to select company first when no company selected', ->
       @rootScope.selectedCompany = {}
@@ -44,11 +45,9 @@ describe 'groupController', ->
       spyOn(@scope, "getGroupSharedList")
       @scope.selectedGroup.oldUName = ''
       group = {"name": "Fixed Assets"}
-
       @scope.selectGroupToEdit(group)
-      
       expect(@scope.selectedGroup.oldUName).toEqual(@scope.selectedGroup.uniqueName)
-  
+
     it 'should set group as selected and a variable to true and make a call to fuction with group variable', ->
       spyOn(@scope, "getGroupSharedList")
       group = {"name": "Fixed Assets"}
@@ -76,7 +75,7 @@ describe 'groupController', ->
       result = {"body": "something"}
       @scope.onsharedListSuccess(result)
       expect(@scope.groupSharedUserList).toBe(result.body)
-  
+
   describe '#shareGroup', ->
     it 'should call service share method with obj var', ->
       @scope.selectedGroup = {"uniqueName": "1"}
@@ -93,7 +92,7 @@ describe 'groupController', ->
       spyOn(@groupService, "share").andReturn(deferred.promise)
       @scope.shareGroup()
       expect(@groupService.share).toHaveBeenCalledWith(unqNamesObj, @scope.shareGroupObj)
-    
+
   describe '#onShareGroupSuccess', ->
     it 'should blank a key and show success message with toastr and call getGroupSharedList with selected group variable', ->
       @scope.selectedGroup = {"uniqueName": "1"}
@@ -114,7 +113,7 @@ describe 'groupController', ->
       @spyOn(@toastr, "error")
       @scope.onShareGroupFailure(response)
       expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
-  
+
   describe '#unShareGroup', ->
     it 'should call service share method with obj var', ->
       @scope.selectedGroup = {"uniqueName": "1"}
@@ -131,7 +130,7 @@ describe 'groupController', ->
       spyOn(@groupService, "unshare").andReturn(deferred.promise)
       @scope.unShareGroup(user)
       expect(@groupService.unshare).toHaveBeenCalledWith(unqNamesObj, data)
-    
+
   describe '#unShareGroupSuccess', ->
     it 'should show success message with toastr and call getGroupSharedList with selected group variable', ->
       @scope.selectedGroup = {"uniqueName": "1"}
@@ -160,30 +159,66 @@ describe 'groupController', ->
 
   describe '#onUpdateGroupSuccess', ->
     it 'should show success message with toastr and set value in variable', ->
-      
       response = {"status": "Success", "body": "Group has been updated successfully."}
       spyOn(@toastr, 'success')
-      
       @scope.onUpdateGroupSuccess(response)
       expect(@toastr.success).toHaveBeenCalledWith('Group has been updated successfully.', 'Success')
       expect(@scope.selectedGroup.oldUName).toEqual(@scope.selectedGroup.uniqueName)
 
   describe '#onUpdateGroupFailure', ->
     it 'should show error message with toastr', ->
-      response = {"data": {"status": "Error", "message": "Unable to update group at the moment. Please try again later."}}
+      response = {
+        "data": {
+          "status": "Error",
+          "message": "Unable to update group at the moment. Please try again later."
+        }
+      }
       @spyOn(@toastr, "error")
       @scope.onUpdateGroupFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('Unable to update group at the moment. Please try again later.', 'Error')
+      expect(@toastr.error).toHaveBeenCalledWith('Unable to update group at the moment. Please try again later.',
+          'Error')
 
   describe '#getUniqueNameFromGroupList', ->
-    
+    it 'should take list of group as input and return unique name of all groups in flatten way', ->
+      groupList = [{
+        "name": "group1",
+        "uniqueName": "g1",
+        "groups": [{"name": "group2", "uniqueName": "g2", "groups": []}]
+      },
+        {"name": "group3", "uniqueName": "g3", "groups": []}]
+      result = @scope.getUniqueNameFromGroupList(groupList)
+      expect(result).toContain("g1")
+      expect(result).toContain("g2")
+      expect(result).toContain("g3")
+
 
   describe '#FlattenGroupList', ->
+    it 'should take list of group and flatten them', ->
+      groupList = [{
+        "name": "group1",
+        "uniqueName": "g1",
+        "groups": [{"name": "group2", "uniqueName": "g2", "groups": []}]
+      },
+        {"name": "group3", "uniqueName": "g3", "groups": []}]
+      result = @scope.FlattenGroupList(groupList)
+      expect(result).toContain({"name": "group2", "uniqueName": "g2", "groups": []})
+
+  describe '#FlattenAccountList', ->
+    it 'should take list of groups and flatten them and filter out accounts', ->
+      groupList = [{
+        "name": "group1",
+        "uniqueName": "g1",
+        "accounts": [{"name": "a1"}]
+        "groups": [{"name": "group2", "uniqueName": "g2", "groups": [], "accounts": []}]
+      },
+        {"name": "group3", "uniqueName": "g3", "groups": [], "accounts": []}]
+      result = @scope.FlattenAccountList(groupList)
+      expect(result).toContain({"name": "a1", "pName": ["group1"], "pUnqName": ["g1"]})
 
 
   describe '#addNewSubGroup', ->
     it 'should call group service and add new subgroup to selected group', ->
-      @scope.selectedSubGroup = {"name": "subgroup1", "desc": "description","uniqueName":"suniqueName"}
+      @scope.selectedSubGroup = {"name": "subgroup1", "desc": "description", "uniqueName": "suniqueName"}
       @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName"}
       @scope.selectedGroup = {"uniqueName": "grpUName"}
       body = {
@@ -197,15 +232,51 @@ describe 'groupController', ->
       @scope.addNewSubGroup()
       expect(@groupService.create).toHaveBeenCalledWith("CmpUniqueName", body)
 
+  describe '#onCreateGroupFailure', ->
+    it 'should call toastr to show error', ->
+      spyOn(@toastr, "error")
+      @scope.onCreateGroupFailure()
+      expect(@toastr.error).toHaveBeenCalledWith("Unable to create subgroup.", "Error")
+
+  describe '#onCreateGroupSuccess', ->
+    it 'should call toastr with success, empty selected sub group and call getGroups', ->
+      spyOn(@toastr, "success")
+      spyOn(@scope, "getGroups")
+      @scope.onCreateGroupSuccess()
+      expect(@toastr.success).toHaveBeenCalledWith("Sub group added successfully", "Success")
+      expect(@scope.selectedSubGroup).toEqual({})
+      expect(@scope.getGroups)
+
   describe '#deleteGroup', ->
     it 'should call group service and delete and call group list', ->
       deferred = @q.defer()
-      @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName","isFixed":"false"}
+      @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName", "isFixed": "false"}
       spyOn(@groupService, 'delete').andReturn(deferred.promise)
       @scope.deleteGroup()
       expect(@rootScope.selectedCompany.isFixed).toBeTruthy()
       expect(@groupService.delete)
 
+    xit 'should not call service if isFixed variable is true', ->
+      deferred = @q.defer()
+      @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName", "isFixed": "true"}
+      spyOn(@groupService, 'delete').andReturn(deferred.promise)
+      @scope.deleteGroup()
+      expect(@rootScope.selectedCompany.isFixed).toBeTruthy()
+      expect(@groupService.delete).not.toHaveBeenCalled()
+
+  describe '#onDeleteGroupFailure', ->
+    it 'should show a toastr for error', ->
+      spyOn(@toastr, "error")
+      @scope.onDeleteGroupFailure()
+      expect(@toastr.error).toHaveBeenCalledWith("Unable to delete group.", "Error")
+
+  describe '#onDeleteGroupSuccess', ->
+    it 'should show a toastr, empty the selected group, show group detail to be false & get group list from server', ->
+      emptyObject = {}
+      spyOn(@toastr, "success")
+      @scope.onDeleteGroupSuccess()
+      expect(@toastr.success).toHaveBeenCalledWith("Group deleted successfully.", "Success")
+      expect(@scope.selectedGroup).toEqual(emptyObject)
 
   describe '#moveGroup', ->
     it 'should call group service move method with variables', ->
@@ -226,7 +297,6 @@ describe 'groupController', ->
 
   describe '#onUpdateGroupSuccess', ->
     it 'should show success message with toastr, call getgroups fucntion, set a blank object, set a variable false, and make a scope var undefined', ->
-      
       response = {"status": "Success", "body": "Group moved successfully."}
       spyOn(@toastr, 'success')
       spyOn(@scope, "getGroups")
@@ -237,7 +307,6 @@ describe 'groupController', ->
       expect(@scope.showGroupDetails).toBeFalsy()
       expect(@scope.moveto).toBe(undefined)
 
-      
 
   describe '#onMoveGroupFailure', ->
     it 'should show error message with toastr', ->
@@ -251,9 +320,39 @@ describe 'groupController', ->
       item = "item"
       @scope.selectItem(item)
       expect(@scope.selectedItem).toBe(item)
-      
-    
+
+  describe '#onMoveGroupSuccess', ->
+    it 'should show success toastr, call getGroups, set selected group to be empty, set showGroupDetails variable to be false and moveTo variable to undefined', ->
+      spyOn(@toastr, "success")
+      @scope.onMoveGroupSuccess()
+      expect(@toastr.success).toHaveBeenCalledWith("Group moved successfully.", "Success")
+      expect(@scope.getGroups)
+      expect(@scope.selectedGroup).toEqual({})
+      expect(@scope.showGroupDetails).toBeFalsy()
+      expect(@scope.moveto).toBeUndefined()
 
 
+  describe '#showAccount', ->
+    it 'should set showGroupDetails variable to false, showAccountDetails to true & set value for selected account vaiable', ->
+      data = {"name": "testing"}
+      @scope.showAccount(data)
+      expect(@scope.showGroupDetails).toBeFalsy()
+      expect(@scope.showAccountDetails).toBeTruthy()
+      expect(@scope.selectedAccount).toEqual(data)
 
+  describe '#isEmptyObject', ->
+    it 'should return true if object is empty', ->
+      data = {}
+      result = @scope.isEmptyObject(data)
+      expect(result).toBeTruthy()
 
+    it 'should return false if object is not empty', ->
+      data = {"name"}
+      result = @scope.isEmptyObject(data)
+      expect(result).toBeFalsy()
+
+  describe '#selectAcMenu', ->
+    it 'should set value for account menu variable', ->
+      data = {"name"}
+      @scope.selectAcMenu(data)
+      expect(@scope.selectedAccntMenu).toBe(data)
