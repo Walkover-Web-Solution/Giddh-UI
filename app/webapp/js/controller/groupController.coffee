@@ -12,6 +12,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.subGroupVisible = false
   $scope.showListGroupsNow = false
 
+  #set a object for share group
+  $scope.shareGroupObj = {
+    role: "view_only"
+    user: ""
+  }
 
   # expand and collapse all tree structure
   getRootNodesScope = ->
@@ -46,7 +51,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error("Unable to get group details.", "Error")
 
   $scope.selectGroupToEdit = (group) ->
-    #$scope.isSelected = true
     $scope.selectedGroup = group
     if _.isEmpty($scope.selectedGroup.oldUName)
       $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
@@ -70,22 +74,16 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onsharedListFailure = (result) ->
     console.log result, "onsharedListFailure"
 
-  #set a object for share group
-  $scope.shareGroupObj = {
-    role: "view_only"
-    user: ""
-  }
+  
   #share group with user
   $scope.shareGroup = () ->
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroup.uniqueName
     }
-    console.log $scope.shareGroupObj, "shareGroup", unqNamesObj
     groupService.share(unqNamesObj, $scope.shareGroupObj).then($scope.onShareGroupSuccess, $scope.onShareGroupFailure)
 
   $scope.onShareGroupSuccess = (response) ->
-    console.log response, "onShareGroupSuccess"
     $scope.shareGroupObj = {
       role: "view_only"
       user: ""
@@ -94,7 +92,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.getGroupSharedList($scope.selectedGroup)
     
   $scope.onShareGroupFailure = (response) ->
-    console.log response, "onShareGroupFailure"
     toastr.error(response.data.message, response.data.status)
 
   #unShare group with user
@@ -120,7 +117,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     groupService.update($scope.selectedCompany.uniqueName, $scope.selectedGroup).then($scope.onUpdateGroupSuccess, $scope.onUpdateGroupFailure)
 
   $scope.onUpdateGroupSuccess = (result) ->
-    console.log "in onUpdateGroupSuccess", result
     $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
     toastr.success("Group has been updated successfully.", "Success")
 
