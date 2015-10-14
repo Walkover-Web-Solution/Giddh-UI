@@ -1,6 +1,65 @@
-<div class="clearfix">
-  
-  <div class="col-sm-12 col-md-6  bdrB" ng-hide="selectedGroup.isFixed">
+
+<div class="clearfix bdrB">
+  <div class="col-md-6 col-sm-12 bdrR">
+    <div class="row">
+      <div class="dGryHead">
+        Group Info
+      </div>
+      <div class="pd2 ">
+        <form id="groupDetailForm" name="groupDetailForm" novalidate>
+          <div class="form-group">
+            <label>Group Name</label>
+            <input type="text" class="form-control" placeholder="Enter Group Name" ng-model="selectedGroup.name"
+                   required>
+          </div>
+
+          <div class="form-group">
+            <label>Unique name</label>
+            <input type="text" class="form-control" placeholder="Enter Unique Name"
+                   ng-model="selectedGroup.uniqueName" required>
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea maxlength="200" class="form-control" placeholder="Enter description"
+                      ng-model="selectedGroup.description"></textarea>
+          </div>
+          <button ng-click="updateGroup()" class="btn btn-primary"
+                  ng-disabled="groupDetailForm.$invalid">Update
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- group info content end -->
+
+  <div class="col-md-6 col-sm-12">
+    <div class="row">
+      <div class="dGryHead">
+        Add Subgroup
+      </div>
+      <div class="pd2">
+        <form id="subGroupForm" name="subGroupForm" novalidate>
+          <input type="text" placeholder="Enter Subgroup name" class="form-control form-group"
+                 ng-model="selectedSubGroup.name" required/>
+          <input type="text" placeholder="Enter Unique name" class="form-control form-group"
+                 ng-model="selectedSubGroup.uniqueName" required/>
+          <textarea maxlength="200" class="form-control form-group" placeholder="Enter description"
+                    ng-model="selectedSubGroup.desc"></textarea>
+          <button class="btn btn-primary" ng-click="addNewSubGroup()" ng-disabled="subGroupForm.$invalid">Add
+            Subgroup
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- add new group content end -->
+</div>
+
+  <!-- end row first -->
+<div class="clearfix bdrB">
+
+  <div class="col-sm-12 col-md-6" ng-hide="selectedGroup.isFixed">
     <div class="row">
       <div class="pd2 form-inline">
         <div>
@@ -16,7 +75,7 @@
     </div>
   </div>
 
-  <div class="col-md-6 col-sm-12 bdrL bdrB">
+  <div class="col-md-6 col-sm-12 bdrL">
     <div class="row">
       <form name="shareGroupForm" novalidate class="form-inline pd2">
         <div>
@@ -56,5 +115,6 @@
     </div>
     <!-- end of row -->
   </div>
-
 </div>
+  
+

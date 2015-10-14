@@ -82,15 +82,15 @@
       <div class="col-md-7 col-sm-12">
         <div class="bdrR bdrL row" id="middleBody">
 
-          <div ng-if="showGroupDetails" ng-include="'/public/webapp/views/groupDetails.html'"></div>
+          <div ng-if="showGroupDetails" ng-include="'/public/webapp/views/groupOperations.html'"></div>
           
-          <div ng-include="'/public/webapp/views/groupOperations.html'" ng-if="showGroupDetails"></div>
-          
-          <div class="" ng-if="showGroupDetails">
+          <div ng-if="showGroupDetails">
             <div class="pd2" ng-hide="selectedGroup.isFixed">
               <button class="btn btn-danger" ng-click="deleteGroup()">Delete</button>
             </div>
           </div>
+
+          <div ng-include="'/public/webapp/views/accountOperations.html'" ng-if="showAccountDetails"></div>
 
         </div>
       </div>
@@ -108,7 +108,7 @@
               </div>
           </div>
 
-        <div ng-if="showGroupDetails">
+        <div ng-if="showAccountListDetails">
 
           <div class="pdL1 pdR1 mrB1" ng-if="groupAccntList.length == 0">
             <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{selectedGroup.name}}</strong> <a href="javascript:void(0)">+ add new</a></h4>
@@ -120,8 +120,8 @@
 
             <perfect-scrollbar id="selAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20">
               <div class="list-group">
-                <a ng-repeat="(key,value) in groupAccntList | filter:accountsSearch track by $index" href="javascript:void(0)" ng-click="showAccount(value)" class="list-group-item">
-                  <h4 class="list-group-item-heading">{{value.name}}</h4>
+                <a ng-repeat="(key,value) in groupAccntList | filter:accountsSearch track by $index" href="javascript:void(0)" ng-click="showAccount(value); selectAcMenu(value)" class="list-group-item" ng-class="{'active': selectedAccntMenu === value}">
+                  <h4 tooltip-placement="top" tooltip="{{value.pName[0]}}" class="list-group-item-heading">{{value.name}}</h4>
                 </a>
               </div>
             </perfect-scrollbar>
@@ -132,8 +132,8 @@
           <h3 class="mrB1 mrL1">Accounts from <strong>all group</strong></h3>
           <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20">
             <div class="list-group">
-              <a ng-repeat="(key,value) in flatAccntList | filter:accountsSearch track by $index" href="javascript:void(0)" ng-click="showAccount(value)" class="list-group-item" ng-if="value.pName[0]!=selectedGroup.name">
-                <h4 class="list-group-item-heading">{{value.name}}</h4>
+              <a ng-repeat="(key,value) in flatAccntList | filter:accountsSearch track by $index" href="javascript:void(0)" ng-click="showAccount(value); selectAcMenu(value)" class="list-group-item" ng-if="value.pName[0]!=selectedGroup.name" ng-class="{'active': selectedAccntMenu === value}">
+                <h4 tooltip-placement="top" tooltip="{{value.pName[0]}}" class="list-group-item-heading">{{value.name}}</h4>
               </a>
             </div>
           </perfect-scrollbar>

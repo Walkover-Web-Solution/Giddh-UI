@@ -1,0 +1,62 @@
+
+<div class="clearfix">
+  <div class="dGryHead">
+    Add New Account
+  </div>
+
+  <form class="col-md-12 col-sm-12" name="addAccountForm" novalidate>
+    
+    <div class="clearfix pdT2">
+
+      <div class="col-md-4 col-sm-12">
+        <section class="greyBox">
+          <p class="form-group">Basic Info (required)*</p>
+          <div class="form-group">
+            <input type="text" placeholder="Enter Account name" class="form-control" name="name" ng-model="selectedAccount.name"/>
+          </div>
+          <div class="form-group">
+            <input type="text" placeholder="Unique Names" class="form-control" name="uniqueName" ng-model="selectedAccount.uniqueName" />
+          </div>
+          <div class="">
+            <input type="text" placeholder="opening Balance" class="form-control" name="openingBalanceDate" ng-model="selectedAccount.openingBalanceDate" />
+          </div>
+        </section>
+      </div>
+      <div class="col-md-4 col-sm-12">
+        <div class="form-group">
+          <input type="email" placeholder="Email" class="form-control" name="email" ng-model="selectedAccount.email" />
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="Mobile" class="form-control" name="mobileNo" ng-model="selectedAccount.mobileNo" />
+        </div>
+        <div class="form-group">
+          <textarea placeholder="Address" class="form-control" name="address" ng-model="selectedAccount.address"></textarea>
+        </div>
+      </div>
+      <!-- <div class="col-md-4 col-sm-12">
+        <div class="form-group">
+          <input type="text" placeholder="PAN" class="form-control" name="" ng-model="selectedAccount." />
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="Service Tax Number" class="form-control" name="" ng-model="selectedAccount." />
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="VAT/cst" class="form-control" name="" ng-model="selectedAccount." />
+        </div>
+        <div class="form-group">
+          <input type="text" placeholder="others" class="form-control" name="" ng-model="selectedAccount." />
+        </div>
+      </div> -->
+
+    </div>
+    <!-- end of clearfix -->
+    <div class="col-md-12 col-sm-12 pdT2">
+      <div class="form-group">
+        <button class="btn btn-success" ng-click="">Update</button>
+      </div>
+    </div>
+
+  </form>
+
+</div>
+  

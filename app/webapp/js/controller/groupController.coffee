@@ -11,6 +11,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.showGroupDetails = false
   $scope.subGroupVisible = false
   $scope.showListGroupsNow = false
+  $scope.showAccountDetails = false
+  $scope.showAccountListDetails = false
 
   #set a object for share group
   $scope.shareGroupObj = {
@@ -58,10 +60,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       console.log "inside else condition"
 
     $scope.selectedSubGroup = {}
+    
     $scope.showGroupDetails = true
-    $scope.getGroupSharedList(group)
+    $scope.showAccountListDetails = true
+    $scope.showAccountDetails = false
 
+    $scope.getGroupSharedList(group)
     $scope.groupAccntList = group.accounts
+    $scope.accountsSearch = undefined
 
   $scope.getGroupSharedList = (group) ->
     unqNamesObj = {
@@ -214,6 +220,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onMoveGroupFailure = (result) ->
     toastr.error("Unable to move group.", "Error")
 
+  #select group
   $scope.selectItem = (item) ->
     $scope.selectedItem = item
 
@@ -256,9 +263,19 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   #show account
   $scope.showAccount = (data) ->
     console.log data, "showAccount"
+    $scope.showGroupDetails = false
+    $scope.showAccountDetails = true
 
+    $scope.selectedAccount = data
+
+
+  #check if object is empty
   $scope.isEmptyObject =(obj) ->
     return angular.equals({}, obj)
+
+  #highlight account menus
+  $scope.selectAcMenu = (item) ->
+    $scope.selectedAccntMenu = item
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController
