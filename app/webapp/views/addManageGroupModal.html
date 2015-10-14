@@ -97,8 +97,51 @@
 
       <!-- right side -->
       <div class="col-md-2 col-sm-12" id="right">
+        <div class="row">
 
+          <div class="form-group pdL1 pdT1 pdR1">
+            <div class="input-group">
+                <div class="input-group-addon">
+                  <i class="glyphicon glyphicon-search"></i>
+                </div>
+                <input type="text" name="accountsSearch" ng-model="accountsSearch" class="form-control"  placeholder="Search groups">
+              </div>
+          </div>
+
+        <div ng-if="showGroupDetails">
+
+          <div class="pdL1 pdR1 mrB1" ng-if="groupAccntList.length == 0">
+            <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{selectedGroup.name}}</strong> <a href="javascript:void(0)">+ add new</a></h4>
+          </div>
+
+          <div ng-hide="groupAccntList.length == 0" >
+
+            <h3 class="mrB1 mrL1">Accounts from <strong>{{selectedGroup.name}}</strong></h3>
+
+            <perfect-scrollbar id="selAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20">
+              <div class="list-group">
+                <a ng-repeat="(key,value) in groupAccntList | filter:accountsSearch track by $index" href="javascript:void(0)" ng-click="showAccount(value)" class="list-group-item">
+                  <h4 class="list-group-item-heading">{{value.name}}</h4>
+                </a>
+              </div>
+            </perfect-scrollbar>
+          </div>
+        </div>
+        
+        <div ng-if="accountsSearch.length > 0 || isEmptyObject(selectedGroup)">
+          <h3 class="mrB1 mrL1">Accounts from <strong>all group</strong></h3>
+          <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20">
+            <div class="list-group">
+              <a ng-repeat="(key,value) in flatAccntList | filter:accountsSearch track by $index" href="javascript:void(0)" ng-click="showAccount(value)" class="list-group-item" ng-if="value.pName[0]!=selectedGroup.name">
+                <h4 class="list-group-item-heading">{{value.name}}</h4>
+              </a>
+            </div>
+          </perfect-scrollbar>
+        </div>
+
+        </div>
       </div>
+      <!-- right side end -->
     </div>
 
   </div>

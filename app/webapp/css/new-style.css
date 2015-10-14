@@ -762,3 +762,18 @@ li:last-child .angular-ui-tree-handle {
     border-radius: 2px;
     box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
 }
+/*accounts list style*/
+#allAcntWrap, #selAcntWrap{
+    height: 150px;
+}
+#selAcntWrap{
+    margin-bottom: 20px;
+}
+.acntListDiv .list-group-item{
+    padding: 6px 10px;
+    border-left: 0;
+    border-right: 0;
+}
+.acntListDiv .list-group-item-heading, .acntListDiv .list-group {
+    margin-bottom: 0
+}

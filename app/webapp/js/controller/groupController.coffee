@@ -41,11 +41,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.getGroupListSuccess = (result) ->
     $scope.groupList = result.body
-    _.each($scope.groupList, (groupItem) ->
-      groupItem.isFixed = true
-    )
     $scope.flattenGroupList = $scope.FlattenGroupList($scope.groupList)
+    $scope.flatAccntList = $scope.FlattenAccountList($scope.groupList)
     $scope.showListGroupsNow = true
+
+    
 
   $scope.getGroupListFailure = () ->
     toastr.error("Unable to get group details.", "Error")
@@ -60,6 +60,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.selectedSubGroup = {}
     $scope.showGroupDetails = true
     $scope.getGroupSharedList(group)
+
+    $scope.groupAccntList = group.accounts
 
   $scope.getGroupSharedList = (group) ->
     unqNamesObj = {
@@ -214,6 +216,49 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.selectItem = (item) ->
     $scope.selectedItem = item
+
+  #account code
+  $scope.FlattenAccountList = (list) ->
+    listofUN = _.map(list, (listItem) ->
+      if listItem.groups.length > 0
+        uniqueList = $scope.FlattenAccountList(listItem.groups)
+        _.each(listItem.accounts, (accntItem) ->
+          if _.isUndefined(accntItem.pName)
+            accntItem.pName = [listItem.name]
+            accntItem.pUnqName = [listItem.uniqueName]
+          else 
+            accntItem.pName.push(listItem.name) 
+            accntItem.pUnqName.push(listItem.uniqueName)
+        )
+        uniqueList.push(listItem.accounts)
+        _.each(uniqueList, (accntItem) ->
+          if _.isUndefined(accntItem.pName)
+            accntItem.pName = [listItem.name]
+            accntItem.pUnqName = [listItem.uniqueName]
+          else 
+            accntItem.pName.push(listItem.name) 
+            accntItem.pUnqName.push(listItem.uniqueName)
+        )
+        uniqueList
+      else
+        _.each(listItem.accounts, (accntItem) ->
+            if _.isUndefined(accntItem.pName)
+              accntItem.pName = [listItem.name]
+              accntItem.pUnqName = [listItem.uniqueName]
+            else 
+              accntItem.pName.push(listItem.name) 
+              accntItem.pUnqName.push(listItem.uniqueName)
+          )
+        listItem.accounts
+    )
+    _.flatten(listofUN)
+
+  #show account
+  $scope.showAccount = (data) ->
+    console.log data, "showAccount"
+
+  $scope.isEmptyObject =(obj) ->
+    return angular.equals({}, obj)
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController

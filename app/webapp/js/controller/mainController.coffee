@@ -10,7 +10,6 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
     ), (response) ->
     
   $scope.goToManageGroups = ->
-    console.log (_.isEmpty($rootScope.selectedCompany))
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
