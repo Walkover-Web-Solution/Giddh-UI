@@ -249,9 +249,13 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $rootScope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
     $scope.getCurrencyList()
-    
+  
 
+  
+  
+  
 
+  
 
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController

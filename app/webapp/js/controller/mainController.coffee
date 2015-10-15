@@ -16,7 +16,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
       modalInstance = $modal.open(
         templateUrl: '/public/webapp/views/addManageGroupModal.html'
         size: "liq90"
-        #backdrop: 'static'
+        backdrop: 'static'
         controller: 'groupController'
       )
 

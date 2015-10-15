@@ -74,3 +74,43 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
       },onSuccess, onFailure))
 
   groupService
+
+
+angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
+  
+  Account = $resource('/company/:companyUniqueName/groups/:groupUniqueName/accounts',
+      {
+        'companyUniqueName': @companyUniqueName, 
+        'groupUniqueName': @groupUniqueName,
+        'accountsUniqueName': @accountsUniqueName
+      },
+      {
+        create: {method: 'POST'}
+        update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'}
+        delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'}
+      })
+
+  accountService =
+    handlePromise: (func) ->
+      deferred = $q.defer()
+      onSuccess = (data)-> deferred.resolve(data)
+      onFailure = (data)-> deferred.reject(data)
+      func(onSuccess, onFailure)
+      deferred.promise
+
+    createAc: (unqNamesObj, data) ->
+      @handlePromise((onSuccess, onFailure) -> Account.create({
+        companyUniqueName: unqNamesObj.compUname,
+        groupUniqueName: unqNamesObj.selGrpUname,
+        accountsUniqueName: unqNamesObj.acntUname
+      },data, onSuccess, onFailure))
+
+    updateAc: (unqNamesObj, data) ->
+      console.log "in updateAc"
+      @handlePromise((onSuccess, onFailure) -> Account.update({
+        companyUniqueName: unqNamesObj.compUname,
+        groupUniqueName: unqNamesObj.selGrpUname,
+        accountsUniqueName: unqNamesObj.acntUname
+      },data, onSuccess, onFailure))
+
+  accountService

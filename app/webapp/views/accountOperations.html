@@ -14,51 +14,66 @@
     
     <div class="row pdT2 pdL pdR">
 
-      <div class="col-md-4 col-sm-12">
+      <div class="col-md-6 col-sm-12">
         <section class="greyBox">
           <p class="form-group">Basic Info (required)*</p>
           <div class="form-group">
-            <input type="text" placeholder="Enter Account name" class="form-control" name="name" ng-model="selectedAccount.name"/>
+            <input type="text" placeholder="Enter Account name" class="form-control" name="name" ng-model="selectedAccount.name" required/>
           </div>
           <div class="form-group">
             <input type="text" placeholder="Unique Names" class="form-control" name="uniqueName" ng-model="selectedAccount.uniqueName" />
           </div>
-          <div class="">
-            <input type="text" placeholder="opening Balance" class="form-control" name="openingBalanceDate" ng-model="selectedAccount.openingBalanceDate" />
+          <div class="form-group">
+            <input type="text" placeholder="opening Balance" class="form-control" name="openingBalanceDate" ng-model="selectedAccount.openingBalanceDate" required />
           </div>
+
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <select name="openingBalanceType" ng-model="selectedAccount.openingBalanceType" class="form-control"  required>
+                <option ng-repeat="value in openingBalType" ng-selected="{{value.val == selectedAccount.openingBalanceType}}" value="{{value.val}}">{{value.name}}
+                </option>
+              </select>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <input type="text" class="form-control" name="openingBalance" ng-model="selectedAccount.openingBalance" required />
+            </div>
+          </div>
+
         </section>
       </div>
-      <div class="col-md-4 col-sm-12">
+      <div class="col-md-6 col-sm-12">
+
+        <div class="form-group row">
+          <div class="col-md-3 col-sm-12">
+            <input type="text" placeholder="91" class="form-control" name="ccode" ng-model="acntExt.Ccode" />
+          </div>
+          <div class="col-md-9 col-sm-12">
+            <input type="text" placeholder="98XXXXXXXX" class="form-control" name="onlyMobileNo" ng-model="acntExt.onlyMobileNo" />
+          </div>
+        </div>
+
         <div class="form-group">
           <input type="email" placeholder="Email" class="form-control" name="email" ng-model="selectedAccount.email" />
         </div>
+
         <div class="form-group">
-          <input type="text" placeholder="Mobile" class="form-control" name="mobileNo" ng-model="selectedAccount.mobileNo" />
+          <input type="text" placeholder="Company Name" class="form-control" name="companyName" ng-model="selectedAccount.companyName" />
         </div>
+
+        <div class="form-group">
+          <input type="text" placeholder="Description" class="form-control" name="description" ng-model="selectedAccount.description" />
+        </div>
+        
         <div class="form-group">
           <textarea placeholder="Address" class="form-control" name="address" ng-model="selectedAccount.address"></textarea>
         </div>
       </div>
-      <!-- <div class="col-md-4 col-sm-12">
-        <div class="form-group">
-          <input type="text" placeholder="PAN" class="form-control" name="" ng-model="selectedAccount." />
-        </div>
-        <div class="form-group">
-          <input type="text" placeholder="Service Tax Number" class="form-control" name="" ng-model="selectedAccount." />
-        </div>
-        <div class="form-group">
-          <input type="text" placeholder="VAT/cst" class="form-control" name="" ng-model="selectedAccount." />
-        </div>
-        <div class="form-group">
-          <input type="text" placeholder="others" class="form-control" name="" ng-model="selectedAccount." />
-        </div>
-      </div> -->
 
     </div>
     <!-- end of clearfix -->
     <div class="row pdT2 pdL pdR">
       <div class="form-group col-md-12">
-        <button class="btn btn-success" ng-click="">Update</button>
+        <button class="btn btn-success" ng-click="updateAccount(selectedAccount)" ng-disabled="addAccountForm.$invalid">Update</button>
       </div>
     </div>
 

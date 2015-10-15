@@ -1,6 +1,6 @@
 'use strict'
 
-groupController = ($scope, $rootScope, localStorageService, groupService, toastr, $confirm, $timeout) ->
+groupController = ($scope, $rootScope, localStorageService, groupService, toastr, $confirm, $timeout, accountService) ->
   $scope.groupList = {}
   $scope.flattenGroupList = {}
   $scope.moveto = undefined
@@ -19,6 +19,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     role: "view_only"
     user: ""
   }
+  $scope.openingBalType = [
+    {"name": "Credit", "val": "credit"}
+    {"name": "Debit", "val": "debit"}
+  ]
 
   # expand and collapse all tree structure
   getRootNodesScope = ->
@@ -266,12 +270,13 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showAccountDetails = true
     $scope.selectedAccount = data
     $scope.showBreadCrumbs(data)
+    console.log $scope.selectedAccount, "selectedAccount"
 
   #show breadcrumbs
   $scope.showBreadCrumbs = (data) ->
     $scope.showBreadCrumb = true
     $scope.breadCrumbList = _.zip(data.pName, data.pUnqName).reverse()
-    console.log $scope.breadCrumbList
+    
 
   #jump to group
   $scope.jumpToGroup = (grpUniqName, grpList)  ->
@@ -286,12 +291,44 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   #check if object is empty
   $scope.isEmptyObject =(obj) ->
     return _.isEmpty(obj)
-    
-    
 
   #highlight account menus
   $scope.selectAcMenu = (item) ->
     $scope.selectedAccntMenu = item
+
+  $scope.acntExt = {
+    Ccode: undefined,
+    onlyMobileNo: undefined
+  }
+
+  $scope.updateAccount = (data) ->
+    console.log $scope.acntExt, "updateAccount", data
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroup.uniqueName
+      acntUname: data.uniqueName
+    }
+
+    if _.isUndefined($scope.selectedGroup.uniqueName)
+      console.log "hurray"
+      lastVal = _.last($scope.breadCrumbList)
+      unqNamesObj.selGrpUname = lastVal[1]
+
+    #data.
+    
+    console.log unqNamesObj, "obj", data
+    #accountService.updateAc(unqNamesObj, data).then($scope.updateAccountSuccess, $scope.updateAccountFailure)
+  
+  $scope.updateAccountSuccess = (result) ->
+    console.log "updateAccountSuccess", result
+
+  $scope.updateAccountFailure = (result) ->
+    console.log "updateAccountFailure", result
+
+  
+  
+  
+  
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController
