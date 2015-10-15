@@ -11,12 +11,12 @@ describe 'mainController', ->
     @modal = $modal
     @q = $q
     @mainController = $controller('mainController',
-    {
-      $scope: @scope, 
-      $rootScope: @rootScope, 
-      localStorageService: @localStorageService
-      #$modal: @modal
-    })
+        {
+          $scope: @scope,
+          $rootScope: @rootScope,
+          localStorageService: @localStorageService
+#$modal: @modal
+        })
 
   describe '#goToManageGroups', ->
     it 'should show a toastr error message if object is blank', ->
@@ -31,10 +31,10 @@ describe 'mainController', ->
 
     it 'should call modal service', ->
       @rootScope.selectedCompany = {something: "something"}
-      modalData ={
+      modalData = {
         templateUrl: '/public/webapp/views/addManageGroupModal.html'
         size: "liq90"
-        #backdrop: 'static'
+        backdrop: 'static'
         controller: 'groupController'
       }
       deferred = @q.defer()

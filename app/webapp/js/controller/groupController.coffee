@@ -56,7 +56,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error("Unable to get group details.", "Error")
 
   $scope.selectGroupToEdit = (group) ->
-    console.log group, "selectGroupToEdit"
     $scope.selectedGroup = group
     if _.isEmpty($scope.selectedGroup.oldUName)
       $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
@@ -270,13 +269,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showAccountDetails = true
     $scope.selectedAccount = data
     $scope.showBreadCrumbs(data)
-    console.log $scope.selectedAccount, "selectedAccount"
 
   #show breadcrumbs
   $scope.showBreadCrumbs = (data) ->
     $scope.showBreadCrumb = true
     $scope.breadCrumbList = _.zip(data.pName, data.pUnqName).reverse()
-    
 
   #jump to group
   $scope.jumpToGroup = (grpUniqName, grpList)  ->
