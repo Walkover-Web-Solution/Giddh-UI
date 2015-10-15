@@ -275,7 +275,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #jump to group
   $scope.jumpToGroup = (grpUniqName, grpList)  ->
-    console.log grpUniqName, "jumpToGroup"
     fltGrpList = $scope.FlattenGroupList(grpList)
     obj = _.find(fltGrpList, (item) ->
       item.uniqueName == grpUniqName
@@ -286,7 +285,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #check if object is empty
   $scope.isEmptyObject =(obj) ->
-    return angular.equals({}, obj)
+    return _.isEmpty(obj)
     
     
 
