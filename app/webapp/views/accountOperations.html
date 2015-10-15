@@ -1,3 +1,9 @@
+<ol class="breadcrumb mrB2" ng-if="showBreadCrumb">
+  <li ng-repeat="(key,value) in breadCrumbList">
+    <a href="javascript:void(0)" ng-click="jumpToGroup(value[1], groupList)">{{value[0]}} 
+    </a>
+  </li>
+</ol>
 
 <div class="clearfix">
   <div class="dGryHead">
@@ -6,7 +12,7 @@
 
   <form class="col-md-12 col-sm-12" name="addAccountForm" novalidate>
     
-    <div class="clearfix pdT2">
+    <div class="row pdT2 pdL pdR">
 
       <div class="col-md-4 col-sm-12">
         <section class="greyBox">
@@ -50,8 +56,8 @@
 
     </div>
     <!-- end of clearfix -->
-    <div class="col-md-12 col-sm-12 pdT2">
-      <div class="form-group">
+    <div class="row pdT2 pdL pdR">
+      <div class="form-group col-md-12">
         <button class="btn btn-success" ng-click="">Update</button>
       </div>
     </div>

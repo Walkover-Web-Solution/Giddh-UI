@@ -23,7 +23,7 @@
                   <i class="glyphicon glyphicon-search"></i>
                 </div>
 
-                <input type="text" name="searchGroup" class="form-control" ng-model="grpSrch" placeholder="Search groups">
+                <input type="text" name="searchGroup" class="form-control" ng-model="grpSrch" placeholder="Search accounts">
 
                 <div ng-hide="subGroupVisible" class="input-group-addon cp" ng-click="collapseAll()">
                   <i class="glyphicon glyphicon-list"></i>
@@ -121,7 +121,7 @@
             <perfect-scrollbar id="selAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20">
               <div class="list-group">
                 <a ng-repeat="(key,value) in groupAccntList | filter:accountsSearch track by $index" href="javascript:void(0)" ng-click="showAccount(value); selectAcMenu(value)" class="list-group-item" ng-class="{'active': selectedAccntMenu === value}">
-                  <h4 tooltip-placement="top" tooltip="{{value.pName[0]}}" class="list-group-item-heading">{{value.name}}</h4>
+                  <h4 tooltip-placement="bottom" tooltip="{{value.pName[0]}}" class="list-group-item-heading">{{value.name}}</h4>
                 </a>
               </div>
             </perfect-scrollbar>
@@ -133,7 +133,7 @@
           <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20">
             <div class="list-group">
               <a ng-repeat="(key,value) in flatAccntList | filter:accountsSearch track by $index" href="javascript:void(0)" ng-click="showAccount(value); selectAcMenu(value)" class="list-group-item" ng-if="value.pName[0]!=selectedGroup.name" ng-class="{'active': selectedAccntMenu === value}">
-                <h4 tooltip-placement="top" tooltip="{{value.pName[0]}}" class="list-group-item-heading">{{value.name}}</h4>
+                <h4 tooltip-placement="bottom" tooltip="{{value.pName[0]}}" class="list-group-item-heading">{{value.name}}</h4>
               </a>
             </div>
           </perfect-scrollbar>

@@ -1,6 +1,6 @@
 'use strict'
 
-groupController = ($scope, $rootScope, localStorageService, groupService, toastr, $confirm) ->
+groupController = ($scope, $rootScope, localStorageService, groupService, toastr, $confirm, $timeout) ->
   $scope.groupList = {}
   $scope.flattenGroupList = {}
   $scope.moveto = undefined
@@ -52,6 +52,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error("Unable to get group details.", "Error")
 
   $scope.selectGroupToEdit = (group) ->
+    console.log group, "selectGroupToEdit"
     $scope.selectedGroup = group
     if _.isEmpty($scope.selectedGroup.oldUName)
       $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
@@ -221,6 +222,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.selectItem = (item) ->
     $scope.selectedItem = item
+    $scope.selectedAccntMenu = undefined
 
   #account code
   $scope.FlattenAccountList = (list) ->
@@ -262,13 +264,31 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.showAccount = (data) ->
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
-
     $scope.selectedAccount = data
+    $scope.showBreadCrumbs(data)
 
+  #show breadcrumbs
+  $scope.showBreadCrumbs = (data) ->
+    $scope.showBreadCrumb = true
+    $scope.breadCrumbList = _.zip(data.pName, data.pUnqName).reverse()
+    console.log $scope.breadCrumbList
+
+  #jump to group
+  $scope.jumpToGroup = (grpUniqName, grpList)  ->
+    console.log grpUniqName, "jumpToGroup"
+    fltGrpList = $scope.FlattenGroupList(grpList)
+    obj = _.find(fltGrpList, (item) ->
+      item.uniqueName == grpUniqName
+    )
+    $scope.selectGroupToEdit(obj)
+    $scope.selectItem(obj)
+    
 
   #check if object is empty
-  $scope.isEmptyObject = (obj) ->
+  $scope.isEmptyObject =(obj) ->
     return angular.equals({}, obj)
+    
+    
 
   #highlight account menus
   $scope.selectAcMenu = (item) ->
