@@ -15,14 +15,19 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.showAccountListDetails = false
 
   #set a object for share group
-  $scope.shareGroupObj = {
+  $scope.shareGroupObj =
     role: "view_only"
     user: ""
-  }
   $scope.openingBalType = [
     {"name": "Credit", "val": "credit"}
     {"name": "Debit", "val": "debit"}
   ]
+  $scope.dateOptions =
+    dateFormat: 'dd-mm-yy'
+    defaultDate: new Date()
+    maxDate: new Date()
+    showOn: 'both'
+    showAnim: 'slideDown'
 
   # expand and collapse all tree structure
   getRootNodesScope = ->
@@ -43,7 +48,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       toastr.error("Select company first.", "Error")
     else
       groupService.getAllWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
-          $scope.getGroupListFailure)
+        $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (result) ->
     $scope.groupList = result.body
@@ -125,7 +130,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.updateGroup = ->
     $scope.selectedGroup.uniqueName = $scope.selectedGroup.uniqueName.toLowerCase()
     groupService.update($scope.selectedCompany.uniqueName, $scope.selectedGroup).then($scope.onUpdateGroupSuccess,
-        $scope.onUpdateGroupFailure)
+      $scope.onUpdateGroupFailure)
 
   $scope.onUpdateGroupSuccess = (result) ->
     $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
@@ -173,7 +178,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       "description": $scope.selectedSubGroup.desc
     }
     groupService.create($rootScope.selectedCompany.uniqueName, body).then($scope.onCreateGroupSuccess,
-        $scope.onCreateGroupFailure)
+      $scope.onCreateGroupFailure)
 
   $scope.onCreateGroupSuccess = (result) ->
     toastr.success("Sub group added successfully", "Success")
@@ -189,8 +194,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         title: 'Are you sure you want to delete this group? All child groups will also be deleted. ',
         ok: 'Yes',
         cancel: 'No').then -> groupService.delete($rootScope.selectedCompany.uniqueName,
-          $scope.selectedGroup).then($scope.onDeleteGroupSuccess,
-          $scope.onDeleteGroupFailure)
+        $scope.selectedGroup).then($scope.onDeleteGroupSuccess,
+        $scope.onDeleteGroupFailure)
 
 
   $scope.onDeleteGroupSuccess = (result) ->
@@ -283,10 +288,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     )
     $scope.selectGroupToEdit(obj)
     $scope.selectItem(obj)
-    
+
 
   #check if object is empty
-  $scope.isEmptyObject =(obj) ->
+  $scope.isEmptyObject = (obj) ->
     return _.isEmpty(obj)
 
   #highlight account menus
@@ -310,22 +315,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       console.log "hurray"
       lastVal = _.last($scope.breadCrumbList)
       unqNamesObj.selGrpUname = lastVal[1]
-
-    #data.
-    
     console.log unqNamesObj, "obj", data
-    #accountService.updateAc(unqNamesObj, data).then($scope.updateAccountSuccess, $scope.updateAccountFailure)
-  
+  #accountService.updateAc(unqNamesObj, data).then($scope.updateAccountSuccess, $scope.updateAccountFailure)
+
   $scope.updateAccountSuccess = (result) ->
     console.log "updateAccountSuccess", result
 
   $scope.updateAccountFailure = (result) ->
     console.log "updateAccountFailure", result
 
-  
-  
-  
-  
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController

@@ -1,7 +1,5 @@
 <div class="">
-
   <tabset justified="true">
-
     <tab heading="Basic Information">
       <div class="pd2">
         <form id="cmpnyBascFrm" name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
@@ -31,9 +29,9 @@
               <div class="form-group"
                    ng-class="(cmpnyBascFrm.cContact.$valid  && cmpnyBascFrm.cContact.$touched) ? 'has-success' : (cmpnyBascFrm.cContact.$touched) ? 'has-error' : '' ">
                 <label>Contact</label>
-                <input type="tel" ng-model="selectedCompany.contactNo" class="form-control" required pattern="^[0-9]*$"
+                <input type="tel" ng-model="selectedCompany.contactNo" class="form-control" required
+                       pattern="^\d{2,4}-\d{8,14}$"
                        name="cContact" tabindex="3">
-
               </div>
 
               <div class="form-group"
@@ -42,7 +40,6 @@
                 <textarea ng-model="selectedCompany.address" class="form-control" name="cAddress" required
                           tabindex="4"/>
               </div>
-
             </div>
             <div class="col-md-6 col-sm-12">
               <div class="form-group"
@@ -123,11 +120,6 @@
         </form>
         <!-- end of change basic info -->
 
-            
-
-
-
-
 
       </div>
     </tab>
@@ -162,7 +154,7 @@
           <li ng-repeat="(key,value) in sharedUsersList track by $index" class="list-group-item">
 
             <div class="row">
-              
+
               <div class="col-md-6 col-sm-12">
                 <i ng-if="value.role.uniqueName != 'super_admin_off_the_record'" class="glyphicon glyphicon-user"></i>
                 <i ng-if="value.role.uniqueName == 'super_admin_off_the_record'" class="glyphicon glyphicon-star"></i>
@@ -171,19 +163,22 @@
 
               <div class="col-md-6 col-sm-12">
 
-<div class="form-inline">
-  
-  <div class="form-group">
-    <select class="form-control" name="rolesListSelected" ng-model="rolesListSelected" ng-change="updateUserRole(rolesListSelected, value.userEmail)">
-      <option ng-repeat="option in rolesList" ng-selected="{{option.uniqueName == value.role.uniqueName}}" value="{{option.uniqueName}}">{{option.name}}</option>
-    </select>
-    
-  </div>
+                <div class="form-inline">
+
+                  <div class="form-group">
+                    <select class="form-control" name="rolesListSelected" ng-model="rolesListSelected"
+                            ng-change="updateUserRole(rolesListSelected, value.userEmail)">
+                      <option ng-repeat="option in rolesList"
+                              ng-selected="{{option.uniqueName == value.role.uniqueName}}"
+                              value="{{option.uniqueName}}">{{option.name}}
+                      </option>
+                    </select>
+
+                  </div>
   <span class="delIcon">
     <i class="glyphicon glyphicon-trash" ng-click="unSharedUser(value.userUniqueName, $index)"></i>
   </span>
-
-</div>                
+                </div>
 
               </div>
 

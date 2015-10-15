@@ -2,7 +2,6 @@
 companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, $confirm, localStorageService, toastr) ->
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
-
   #make sure manage company detail not load
   $rootScope.cmpViewShow = false
   $rootScope.selectedCompany = {}
@@ -12,7 +11,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.companyDetails = {}
   $scope.currencyList = []
   $scope.currencySelected = undefined;
-
   $scope.shareRequest = {role: 'view_only', user: null}
 
   #dialog for first time user
@@ -244,18 +242,10 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.unSharedCompFailure = (response) ->
     toastr.error(response.data.message, response.data.status)
 
-
   #fire function after page fully loaded
   $rootScope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
     $scope.getCurrencyList()
   
-
-  
-  
-  
-
-  
-
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController

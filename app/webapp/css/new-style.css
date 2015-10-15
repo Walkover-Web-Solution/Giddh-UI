@@ -14,6 +14,20 @@ ______\////////////________
   AUTHOR:   @Sarfaraz
   VERSION:  1
 */
+
+div > input.date-picker {
+  width: 90%;
+  float: left;
+}
+
+button.ui-datepicker-trigger {
+  background: url("../images/calendar.png") no-repeat;
+  border: none;
+  vertical-align: middle;
+  height: 32px;
+  width: 28px;
+}
+
 html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, time, mark, audio, video, hr, input, textarea, select, radio, a {
     margin: 0;
     padding: 0;
@@ -618,10 +632,6 @@ header .navbar-nav > li.active {
     border: solid 1px #ddd;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     padding: 15px;
-}
-
-#cmpnyBascFrm .form-control {
-    width: 100%
 }
 
 .delIcon {

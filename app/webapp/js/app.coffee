@@ -10,6 +10,7 @@ app = angular.module("giddhWebApp",
     "twygmbh.auto-height"
     "toastr"
     "ui.tree"
+    "ui.date"
   ]
 )
 
@@ -48,8 +49,6 @@ app.value('$confirmModalDefaults',
     ok: 'OK'
     cancel: 'Cancel')
 
-
-    
 #for project lib helps check out
 #bootstrap related - http://angular-ui.github.io/bootstrap/#/tooltip
 #LocalStorageModule - https://github.com/grevory/angular-local-storage
