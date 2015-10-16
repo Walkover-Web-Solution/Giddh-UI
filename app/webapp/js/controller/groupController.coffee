@@ -1,6 +1,6 @@
 'use strict'
 
-groupController = ($scope, $rootScope, localStorageService, groupService, toastr, $confirm, $timeout, accountService) ->
+groupController = ($scope, $rootScope, localStorageService, groupService, toastr, $confirm, $timeout, accountService, locationService,$filter) ->
   $scope.groupList = {}
   $scope.flattenGroupList = {}
   $scope.moveto = undefined
@@ -22,12 +22,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     {"name": "Credit", "val": "credit"}
     {"name": "Debit", "val": "debit"}
   ]
-  $scope.dateOptions =
-    dateFormat: 'dd-mm-yy'
-    defaultDate: new Date()
-    maxDate: new Date()
-    showOn: 'both'
-    showAnim: 'slideDown'
+  $scope.acntExt = {
+    Ccode: undefined,
+    onlyMobileNo: undefined
+  }
 
   # expand and collapse all tree structure
   getRootNodesScope = ->
@@ -55,6 +53,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.flattenGroupList = $scope.FlattenGroupList($scope.groupList)
     $scope.flatAccntList = $scope.FlattenAccountList($scope.groupList)
     $scope.showListGroupsNow = true
+
+
+
 
 
   $scope.getGroupListFailure = () ->
@@ -270,10 +271,19 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #show account
   $scope.showAccount = (data) ->
+    console.log data
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
     $scope.selectedAccount = data
     $scope.showBreadCrumbs(data)
+    $scope.breakMobNo(data)
+
+    # prepare date object
+    if data.openingBalanceDate
+      newDateObj = moment(data.openingBalanceDate, "DD-MM-yyyy")
+      $scope.opDate = newDateObj._d
+    else
+      $scope.opDate = new Date()
 
   #show breadcrumbs
   $scope.showBreadCrumbs = (data) ->
@@ -298,28 +308,70 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.selectAcMenu = (item) ->
     $scope.selectedAccntMenu = item
 
-  $scope.acntExt = {
-    Ccode: undefined,
-    onlyMobileNo: undefined
-  }
+  
 
-  $scope.updateAccount = (data) ->
-    console.log $scope.acntExt, "updateAccount", data
+
+
+  $scope.mergeNum = (num) ->
+    if _.isObject(num.Ccode)
+      num.Ccode.value + "-" +num.onlyMobileNo
+    else 
+      num.Ccode + "-" +num.onlyMobileNo
+  
+  $scope.breakMobNo = (data) ->
+    if data.mobileNo
+      res = data.mobileNo.split("-")
+      $scope.acntExt = {
+        Ccode: res[0]
+        onlyMobileNo: res[1]
+      }
+    else
+      $scope.acntExt = {
+        Ccode: undefined
+        onlyMobileNo: undefined
+      }
+    
+  #date time picker code starts here
+  $scope.today = new Date()
+
+  $scope.valuationDatePickerIsOpen = false
+
+  $scope.valuationDatePickerOpen = ->
+    this.valuationDatePickerIsOpen = true
+
+  $scope.dateOptions = {
+    'year-format': "'yy'",
+    'starting-day': 1,
+    'showWeeks': false,
+    'show-button-bar': false,
+    'year-range':1
+  }
+  $scope.format = "dd-MM-yyyy"
+
+  $scope.updateAccount = () ->
+    
+    #merge ccode and m no
+    $scope.selectedAccount.mobileNo = $scope.mergeNum($scope.acntExt)
+
+    #filter date from date object turn it as a string
+    $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.opDate,"dd-MM-yyyy")
+
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroup.uniqueName
-      acntUname: data.uniqueName
+      acntUname: $scope.selectedAccount.uniqueName
     }
 
     if _.isUndefined($scope.selectedGroup.uniqueName)
-      console.log "hurray"
       lastVal = _.last($scope.breadCrumbList)
       unqNamesObj.selGrpUname = lastVal[1]
-    console.log unqNamesObj, "obj", data
-  #accountService.updateAc(unqNamesObj, data).then($scope.updateAccountSuccess, $scope.updateAccountFailure)
+    
+    console.log unqNamesObj, "obj", $scope.selectedAccount
+    accountService.updateAc(unqNamesObj, $scope.selectedAccount).then($scope.updateAccountSuccess, $scope.updateAccountFailure)
 
   $scope.updateAccountSuccess = (result) ->
     console.log "updateAccountSuccess", result
+    toastr.success("Group updated successfully", result.status)
 
   $scope.updateAccountFailure = (result) ->
     console.log "updateAccountFailure", result

@@ -1,6 +1,6 @@
 "use strict"
 
-mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageService, toastr) ->
+mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageService, toastr, locationService) ->
   $rootScope.basicInfo = {}
 
   $scope.logout = ->
@@ -19,9 +19,13 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
         backdrop: 'static'
         controller: 'groupController'
       )
+  $rootScope.countryCodesList = locationService.getCountryCode()
 
   $rootScope.$on '$viewContentLoaded', ->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
+
+    
+    
 
   
 

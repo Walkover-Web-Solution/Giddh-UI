@@ -10,7 +10,7 @@ app = angular.module("giddhWebApp",
     "twygmbh.auto-height"
     "toastr"
     "ui.tree"
-    "ui.date"
+    #"ui.date"
   ]
 )
 
