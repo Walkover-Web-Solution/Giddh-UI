@@ -2,7 +2,7 @@
 
 mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageService, toastr, locationService) ->
   $rootScope.basicInfo = {}
-
+  $rootScope.isCollapsed = true
   $scope.logout = ->
     $http.post('/logout').then ((response) ->
       localStorageService.remove("_userDetails")
@@ -23,6 +23,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
 
   $rootScope.$on '$viewContentLoaded', ->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
+    
 
     
     

@@ -1,5 +1,6 @@
 "use strict"
 companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, $confirm, localStorageService, toastr) ->
+
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -246,6 +247,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $rootScope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
     $scope.getCurrencyList()
+    $rootScope.isCollapsed = true
   
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController

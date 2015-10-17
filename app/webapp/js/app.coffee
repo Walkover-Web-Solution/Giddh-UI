@@ -10,7 +10,6 @@ app = angular.module("giddhWebApp",
     "twygmbh.auto-height"
     "toastr"
     "ui.tree"
-    #"ui.date"
   ]
 )
 
@@ -32,9 +31,9 @@ app.config ($locationProvider, $routeProvider) ->
     controller: 'companyController',
     templateUrl: '/public/webapp/views/thanks.html'
   )
-  .when('/manageGroup',
-    controller: 'groupController',
-    templateUrl: '/public/webapp/views/manageGroupAndAccount.html'
+  .when('/ledger',
+    controller: 'ledgerController',
+    templateUrl: '/public/webapp/views/ledger.html'
   )
   .otherwise redirectTo: '/home'
 app.run(()->

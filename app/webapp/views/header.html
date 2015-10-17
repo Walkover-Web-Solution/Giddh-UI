@@ -10,7 +10,7 @@
 
       <ul class="nav navbar-nav">
         <li class="active">
-          <a href="javascript:void(0)">
+          <a href="javascript:void(0)" ng-click="isCollapsed = !isCollapsed">
             <i class="gic-24 icon-menu-w"></i>
           </a>
         </li>
@@ -54,26 +54,26 @@
   </nav>
 
 </header>
-<!-- 
-<div class="collapse">
+
+<div class="collapse" id="topMenusBar" collapse="isCollapsed">
   <ul class="dshUl clearfix">
 
     <li class="dmLi trialB">
-        <a href="javascript:;" ng-click="loadSheet('trialBalance')">
+        <a href="#/home">
           <div class="media">
             <div class="media-left">
               <div class="gic-48 icon-tb"></div>
             </div>
             <div class="media-body">
-              <div class="title">Trial Balance</div>
-              <div class="subTitle">All your account balances <b>summary</b> at one place.</div>
+              <div class="title">Manage Company</div>
+              <div class="subTitle">All your <b>Groups, accounts</b> at one place.</div>
             </div>
           </div>
         </a>
     </li>
 
     <li class="dmLi">
-        <a href="javascript:;" ng-click="loadSheet('entryWall')">
+        <a href="#/ledger" >
           <div class="media">
             <div class="media-left">
               <div class="gic-48 icon-ew"></div>
@@ -85,7 +85,7 @@
           </div>
         </a>
     </li>
-
+<!-- 
     <li class="dmLi">
         <a href="javascript:;" ng-click="loadSheet('logWall')">
           <div class="media">
@@ -127,6 +127,6 @@
           </div>
         </a>
     </li>
-
+-->
   </ul>
-</div> -->
+</div> 

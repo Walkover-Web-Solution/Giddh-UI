@@ -49,6 +49,13 @@ body, textarea, input, button {
 body {
     padding-top: 54px
 }
+/*top menus bar*/
+#topMenusBar.in{
+    position: absolute;
+    z-index: 3;
+    left: 0;
+    right: 0;
+}
 
 header .navbar {
     min-height: 54px;
@@ -789,4 +796,206 @@ li:last-child .angular-ui-tree-handle {
 }
 .acntListDiv .list-group-item:first-child, .acntListDiv .list-group-item:last-child{
     border-radius: 0
+}
+
+
+/*----------css for loader animation------------*/
+#loader {
+    text-align: center
+}
+#loader span {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin: 70px 2px;
+    background: rgba(0, 0, 0, 0.25);
+    border-radius: 50%;
+    transform: translateY(0);
+    -moz-transform: translateY(0);
+    -webkit-transform: translateY(0);
+
+    animation: wave 2s infinite ease-in-out;
+    -moz-animation: wave 2s infinite ease-in-out;
+    -webkit-animation: wave 2s infinite ease-in-out;
+}
+
+@keyframes wave {
+    0%, 60%, 100% {
+        background: rgba(0, 0, 0, 0.25);
+        transform: translateY(0);
+        -moz-transform: translateY(0);
+    }
+
+    20% {
+        background: rgba(0, 0, 0, 0.75);
+        transform: translateY(13px);
+        -moz-transform: translateY(13px);
+    }
+
+    40% {
+        background: rgba(0, 0, 0, 0.75);
+        transform: translateY(-13px);
+        -moz-transform: translateY(-13px);
+    }
+
+}
+
+@-webkit-keyframes wave {
+    0%, 60%, 100% {
+        background: rgba(0, 0, 0, 0.25);
+        transform: translateY(0);
+        -webkit-transform: translateY(0);
+    }
+
+    20% {
+        background: rgba(0, 0, 0, 0.75);
+        transform: translateY(13px);
+        -webkit-transform: translateY(13px);
+    }
+
+    40% {
+        background: rgba(0, 0, 0, 0.75);
+        transform: translateY(-13px);
+        -webkit-transform: translateY(-13px);
+    }
+}
+
+#loader span:nth-child(1) {
+    animation-delay: 0s;
+    -moz-animation-delay: 0s;
+    -webkit-animation-delay: 0s;
+}
+
+#loader span:nth-child(2) {
+    animation-delay: 0.1s;
+    -moz-animation-delay: 0.1s;
+    -webkit-animation-delay: 0.1s;
+}
+
+#loader span:nth-child(3) {
+    animation-delay: 0.2s;
+    -moz-animation-delay: 0.2s;
+    -webkit-animation-delay: 0.2s;
+}
+
+#loader span:nth-child(4) {
+    animation-delay: 0.3s;
+    -moz-animation-delay: 0.3s;
+    -webkit-animation-delay: 0.3s;
+}
+
+#loader span:nth-child(5) {
+    animation-delay: 0.4s;
+    -moz-animation-delay: 0.4s;
+    -webkit-animation-delay: 0.4s;
+}
+
+/*account list menus*/
+.acntAccordion{
+    font-size: 12px;
+}
+.acntAccordion a {
+    color: #333
+}
+.acntAccordion .title a {
+    display: block;
+    padding: 5px 5px 5px 10px
+}
+.acntAccordion .title {
+    background-image: url(../images/plus.png);
+    background-repeat: no-repeat;
+    background-position: -3px 12px
+}
+.acntAccordion .title.active {
+    background-image: url(../images/minus.png);
+    background-repeat: no-repeat;
+    background-position: -3px 12px
+}
+.acntAccordion .title a .ui-icon-triangle-1-e {
+    background-position: -35px -16px
+}
+.acntAccordion .accBox {
+    overflow: hidden;
+    background: url(../images/vrDot.png) repeat-y;
+    background-position: 4px 0
+}
+.subAccBox{
+    margin-left: 14px;
+}
+.subAccBox li a{
+    display: block;
+    padding: 7px 5px
+}
+.subAccBox li a:hover, .subAccBox li a.active {
+    background: url(../images/noise.png);
+    color: #fff;
+}
+.subAccBox li a span{
+    float: left;
+    display: inline-block;
+}
+.subAccBox li a i.smlSquare{
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    float: left;
+    margin-right: 5px;
+    margin-top: 7px;
+}
+.accBox > li > div {
+    border-left: 5px solid transparent
+}
+
+/*group and account list*/
+.smlSquare.LIB {
+    background: #F90
+}
+.smlSquare.ASS {
+    background: #39F
+}
+.smlSquare.INC {
+    background: #009900
+}
+.smlSquare.EXP {
+    background: #C0F
+}
+.LIB:hover, .LIB.active {
+    background-color: #F90;
+    color: #fff
+}
+.ASS:hover, .ASS.active {
+    background-color: #39F;
+    color: #fff
+}
+.INC:hover, .INC.active {
+    background-color: #009900;
+    color: #fff
+}
+.EXP:hover, .EXP.active {
+    background-color: #C0F;
+    color: #fff
+}
+.LIB1:hover, .LIB1.active {
+    background-color: #cabfb8
+}
+.ASS2:hover, .ASS2.active {
+    background-color: #39F
+}
+.INC3:hover, .INC3.active {
+    background-color: #009900
+}
+.EXP4:hover, .EXP4.active {
+    background-color: #C0F
+}
+.LIB1:hover a, .LIB1.active a {
+    color: #fff
+}
+.ASS2:hover a, .ASS2.active a {
+    color: #fff
+}
+.INC3:hover a, .INC3.active a {
+    color: #fff
+}
+.EXP4:hover a, .EXP4.active a {
+    color: #fff
 }

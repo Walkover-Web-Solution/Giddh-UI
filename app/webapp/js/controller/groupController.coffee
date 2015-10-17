@@ -280,7 +280,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       newDateObj = moment(data.openingBalanceDate, "DD-MM-yyyy")
       $scope.opDate = newDateObj._d
     else
-      console.log "in else openingBalanceDate"
+      console.log "in else openingBalanceDate", $scope.opDate
       $scope.opDate = new Date()
 
   #show breadcrumbs
@@ -345,7 +345,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     'starting-day': 1,
     'showWeeks': false,
     'show-button-bar': false,
-    'year-range':1
+    'year-range':1,
+    'todayBtn': false
   }
   $scope.format = "dd-MM-yyyy"
 
