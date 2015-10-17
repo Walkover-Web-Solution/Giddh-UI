@@ -1,6 +1,6 @@
 'use strict'
 
-groupController = ($scope, $rootScope, localStorageService, groupService, toastr, $confirm, $timeout, accountService, locationService,$filter) ->
+groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService,$filter) ->
   $scope.groupList = {}
   $scope.flattenGroupList = {}
   $scope.moveto = undefined
@@ -187,7 +187,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.deleteGroup = ->
     if not $scope.selectedGroup.isFixed
-      $confirm.openModal(
+      modalService.openConfirmModal(
         title: 'Are you sure you want to delete this group? All child groups will also be deleted. ',
         ok: 'Yes',
         cancel: 'No').then -> groupService.delete($rootScope.selectedCompany.uniqueName,

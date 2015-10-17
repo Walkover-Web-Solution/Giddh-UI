@@ -15,7 +15,6 @@ describe 'mainController', ->
           $scope: @scope,
           $rootScope: @rootScope,
           localStorageService: @localStorageService
-#$modal: @modal
         })
 
   describe '#goToManageGroups', ->

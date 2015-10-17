@@ -1,6 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, $confirm, localStorageService, toastr) ->
-
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr) ->
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -96,7 +95,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #delete company
   $scope.deleteCompany = (uniqueName, index, name) ->
-    $confirm.openModal(
+    modalService.openConfirmModal(
       title: 'Are you sure you want to delete? ' + name,
       ok: 'Yes',
       cancel: 'No'

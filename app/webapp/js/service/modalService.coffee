@@ -1,9 +1,9 @@
 'use strict'
 
-angular.module('giddhWebApp').service('$confirm',
+angular.module('giddhWebApp').service('modalService',
   ($modal, $confirmModalDefaults) ->
-    $confirm =
-      openModal: (data, settings) ->
+    modalService =
+      openConfirmModal: (data, settings) ->
         settings = angular.extend($confirmModalDefaults, settings or {})
         data = angular.extend({}, settings.defaultLabels, data or {})
         if 'templateUrl' of settings and 'template' of settings
@@ -13,5 +13,5 @@ angular.module('giddhWebApp').service('$confirm',
             data
         $modal.open(settings).result
 
-    $confirm
+    modalService
 )

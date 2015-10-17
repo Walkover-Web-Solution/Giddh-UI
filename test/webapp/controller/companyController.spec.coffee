@@ -3,13 +3,13 @@
 describe 'companyController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $modal, $confirm, $timeout) ->
+  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $modal, modalService, $timeout) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @currencyService = currencyService
     @locationService = locationService
     @modal = $modal
-    @confirm = $confirm
+    @modalService = modalService
     @toastr = toastr
     @companyServices = companyServices
     @q = $q
@@ -24,7 +24,7 @@ describe 'companyController', ->
           localStorageService: @localStorageService,
           locationService: @locationService,
           companyServices: @companyServices,
-          $confirm: @confirm,
+          modalService: @modalService,
           $timeout: @timeout
         })
 
@@ -175,9 +175,9 @@ describe 'companyController', ->
   describe '#deleteCompany', ->
     it 'should Open Confirm Popup', ->
       deferred = @q.defer()
-      @spyOn(@confirm, 'openModal').andReturn(deferred.promise)
+      @spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
       @scope.deleteCompany("foo", 2, "bar")
-      expect(@confirm.openModal).toHaveBeenCalledWith({
+      expect(@modalService.openConfirmModal).toHaveBeenCalledWith({
         title: 'Are you sure you want to delete? bar',
         ok: 'Yes',
         cancel: 'No'
