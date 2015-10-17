@@ -60,3 +60,15 @@ describe "Group Service", ->
           {"name": "group3", "uniqueName": "g3", "groups": [], "accounts": []}]
         result = @groupService.flattenAccount(groupList)
         expect(result).toContain({"name": "a1", "pName": ["group1"], "pUnqName": ["g1"]})
+
+    describe '#flattenGroupsWithAccounts', ->
+      it 'should filter out all groups that contains account', ->
+        groupList = [{
+          "name": "group1",
+          "uniqueName": "g1",
+          "accounts": [{"name": "a1"}]
+        },
+          {"name": "group2", "uniqueName": "g2", "accounts": []},
+          {"name": "group3", "uniqueName": "g3", "accounts": []}]
+        result = @groupService.flattenGroupsWithAccounts(groupList)
+        expect(result).toEqual([{"groupName": "group1", "groupUniqueName": "g1", "accountDetails": [{"name": "a1"}]}])

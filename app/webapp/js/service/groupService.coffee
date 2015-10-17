@@ -2,18 +2,18 @@
 
 angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
   Group = $resource('/company/:companyUniqueName/groups',
-    {'companyUniqueName': @companyUniqueName, 'groupUniqueName': @groupUniqueName},
-    {
-      add: {method: 'POST'}
-      getAll: {method: 'GET'}
-      getAllWithAccounts: {method: 'GET', url: '/company/:companyUniqueName/groups/with-accounts'}
-      update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
-      delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
-      move: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/move'}
-      share: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/share'}
-      unshare: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/unshare'}
-      sharedWith: {method: 'GET', url: '/company/:companyUniqueName/groups/:groupUniqueName/shared-with'}
-    })
+      {'companyUniqueName': @companyUniqueName, 'groupUniqueName': @groupUniqueName},
+      {
+        add: {method: 'POST'}
+        getAll: {method: 'GET'}
+        getAllWithAccounts: {method: 'GET', url: '/company/:companyUniqueName/groups/with-accounts'}
+        update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
+        delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
+        move: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/move'}
+        share: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/share'}
+        unshare: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/unshare'}
+        sharedWith: {method: 'GET', url: '/company/:companyUniqueName/groups/:groupUniqueName/shared-with'}
+      })
 
   groupService =
     handlePromise: (func) ->
@@ -25,15 +25,15 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
 
     create: (companyUniqueName, data, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.add({companyUniqueName: companyUniqueName}, data, onSuccess,
-        onFailure))
+          onFailure))
 
     getAllFor: (companyUniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.getAll({companyUniqueName: companyUniqueName}, onSuccess,
-        onFailure))
+          onFailure))
 
     getAllWithAccountsFor: (companyUniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccounts({companyUniqueName: companyUniqueName},
-        onSuccess, onFailure))
+          onSuccess, onFailure))
 
     update: (companyUniqueName, group) ->
       @handlePromise((onSuccess, onFailure) -> Group.update({
@@ -44,10 +44,10 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
 
     delete: (companyUniqueName, group, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.delete({
-          companyUniqueName: companyUniqueName,
-          groupUniqueName: group.uniqueName
-        },
-        onSuccess, onFailure))
+            companyUniqueName: companyUniqueName,
+            groupUniqueName: group.uniqueName
+          },
+          onSuccess, onFailure))
 
     move: (unqNamesObj, data) ->
       @handlePromise((onSuccess, onFailure) -> Group.move({
@@ -91,8 +91,11 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
           addThisGroup.groupName = groupItem.name
           addThisGroup.groupUniqueName = groupItem.uniqueName
           addThisGroup.accountDetails = groupItem.accounts
+          addThisGroup
+        else
+         #do nothing
       )
-      listGA
+      _.without(_.flatten(listGA), undefined);
 
     flattenAccount: (list) ->
       listofUN = _.map(list, (listItem) ->
@@ -134,16 +137,19 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
 
 angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
   Account = $resource('/company/:companyUniqueName/groups/:groupUniqueName/accounts',
-    {
-      'companyUniqueName': @companyUniqueName,
-      'groupUniqueName': @groupUniqueName,
-      'accountsUniqueName': @accountsUniqueName
-    },
-    {
-      create: {method: 'POST'}
-      update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'}
-      delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'}
-    })
+      {
+        'companyUniqueName': @companyUniqueName,
+        'groupUniqueName': @groupUniqueName,
+        'accountsUniqueName': @accountsUniqueName
+      },
+      {
+        create: {method: 'POST'}
+        update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'}
+        delete: {
+          method: 'DELETE',
+          url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'
+        }
+      })
 
   accountService =
     handlePromise: (func) ->

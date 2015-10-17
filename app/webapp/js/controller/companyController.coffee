@@ -1,11 +1,13 @@
 "use strict"
 companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr) ->
-  #make sure managecompanylist page not load
+
+#make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
 
   #make sure manage company detail not load
   $rootScope.cmpViewShow = false
   $rootScope.selectedCompany = {}
+  $rootScope.nowShowAccounts = false
 
   #contains company list
   $scope.companyList = []
@@ -76,6 +78,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #Get company list
   $scope.getCompanyList = ->
+    $rootScope.nowShowAccounts = false
     companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
 
   #Get company list
@@ -90,7 +93,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #get company list failure
   $scope.getCompanyListFailure = (response)->
     toastr.error(response.data.message, "Error")
-  
+
   $scope.getCompany = (uniqueName)->
     companyServices.get(uniqueName).then((->), (->))
 
@@ -122,6 +125,10 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       $scope.getSharedUserList($scope.selectedCompany.uniqueName)
       $scope.getRolesList()
 
+    $rootScope.nowShowAccounts = true
+    $rootScope.$broadcast('$reloadAccount')
+
+
   #update company details
   $scope.updateCompanyInfo = (data) ->
     companyServices.update(data).then($scope.updtCompanySuccess, $scope.updtCompanyFailure)
@@ -152,7 +159,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     console.log "in get country failure"
 
   $scope.getState = (val) ->
-    locationService.searchState(val, $rootScope.selectedCompany.country).then($scope.onGetStateSuccess, $scope.onGetStateFailure)
+    locationService.searchState(val, $rootScope.selectedCompany.country).then($scope.onGetStateSuccess,
+        $scope.onGetStateFailure)
 
   $scope.onGetStateSuccess = (data) ->
     filterThis = data.results.filter (i) -> i.types[0] is "administrative_area_level_1"
@@ -164,7 +172,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     console.log "in get state failure"
 
   $scope.getCity = (val) ->
-    locationService.searchCity(val, $rootScope.selectedCompany.state).then($scope.onGetCitySuccess, $scope.onGetCityFailure)
+    locationService.searchCity(val, $rootScope.selectedCompany.state).then($scope.onGetCitySuccess,
+        $scope.onGetCityFailure)
 
   $scope.onGetCitySuccess = (data) ->
     filterThis = data.results.filter (i) -> i.types[0] is "locality"
@@ -187,7 +196,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #Get company list
   $scope.getCurrencyListSuccess = (response) ->
-    $scope.currencyList = _.map(response.body,(item) ->
+    $scope.currencyList = _.map(response.body, (item) ->
       item.code
     )
     localStorageService.set("_currencyList", $scope.currencyList)
@@ -195,11 +204,13 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #update user role
   $scope.updateUserRole = (role, userEmail) ->
     sData = {role: role, user: userEmail}
-    companyServices.share($scope.selectedCompany.uniqueName, sData).then($scope.onShareCompanySuccess, $scope.onShareCompanyFailure)
+    companyServices.share($scope.selectedCompany.uniqueName, sData).then($scope.onShareCompanySuccess,
+        $scope.onShareCompanyFailure)
 
   #share and manage permission in manage company
   $scope.shareCompanyWithUser = () ->
-    companyServices.share($scope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess, $scope.onShareCompanyFailure)
+    companyServices.share($scope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess,
+        $scope.onShareCompanyFailure)
 
   $scope.onShareCompanySuccess = (response) ->
     $scope.shareRequest = {}
@@ -234,7 +245,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #delete shared user
   $scope.unSharedUser = (uNqame, id) ->
     data = {user: uNqame}
-    companyServices.unSharedComp($scope.selectedCompany.uniqueName, data).then($scope.unSharedCompSuccess, $scope.unSharedCompFailure)
+    companyServices.unSharedComp($scope.selectedCompany.uniqueName, data).then($scope.unSharedCompSuccess,
+        $scope.unSharedCompFailure)
 
   $scope.unSharedCompSuccess = (response) ->
     toastr.success("Company unshared successfully", "Success")
@@ -248,6 +260,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     $scope.getCompanyList()
     $scope.getCurrencyList()
     $rootScope.isCollapsed = true
-  
+    $rootScope.$broadcast('$reloadAccount');
+
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController

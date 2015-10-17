@@ -13,5 +13,13 @@ angular.module('giddhWebApp').service('modalService',
             data
         $modal.open(settings).result
 
+      openManageGroupsModal: () ->
+        $modal.open(
+          templateUrl: '/public/webapp/views/addManageGroupModal.html'
+          size: "liq90"
+          backdrop: 'static'
+          controller: 'groupController'
+        )
+
     modalService
 )
