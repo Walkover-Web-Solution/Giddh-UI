@@ -58,6 +58,7 @@ var location = require('./public/routes/webapp/location');
 var company = require('./public/routes/webapp/company');
 var groups = require('./public/routes/webapp/groups');
 var accounts = require('./public/routes/webapp/accounts');
+var ledgers = require('./public/routes/webapp/ledgers');
 var appRoutes = require('./public/routes/webapp/main');
 
 app.use('/currency', currency);
@@ -65,6 +66,7 @@ app.use('/location', location);
 app.use('/company', company);
 app.use('/company/:companyUniqueName/groups', groups);
 app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts', accounts);
+app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
 app.use('/', appRoutes);
 
 app.listen(port, function () {

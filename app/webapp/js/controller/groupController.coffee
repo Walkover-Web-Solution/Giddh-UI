@@ -54,10 +54,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.flatAccntList = $scope.FlattenAccountList($scope.groupList)
     $scope.showListGroupsNow = true
 
-
-
-
-
   $scope.getGroupListFailure = () ->
     toastr.error("Unable to get group details.", "Error")
 
@@ -207,7 +203,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.onDeleteGroupFailure = (result) ->
     toastr.error("Unable to delete group.", "Error")
-
 
   $scope.moveGroup = (group) ->
     unqNamesObj = {
