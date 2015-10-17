@@ -271,7 +271,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #show account
   $scope.showAccount = (data) ->
-    console.log data
+    $scope.opDate = undefined
+    console.log data, $scope.opDate
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
     $scope.selectedAccount = data
@@ -280,9 +281,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
     # prepare date object
     if data.openingBalanceDate
+      console.log "in if openingBalanceDate"
       newDateObj = moment(data.openingBalanceDate, "DD-MM-yyyy")
       $scope.opDate = newDateObj._d
     else
+      console.log "in else openingBalanceDate"
       $scope.opDate = new Date()
 
   #show breadcrumbs
@@ -313,9 +316,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
 
   $scope.mergeNum = (num) ->
+    if _.isUndefined(num.Ccode) || _.isUndefined(num.onlyMobileNo) || _.isEmpty(num.Ccode) || _.isEmpty(num.onlyMobileNo)
+      return null
+    
     if _.isObject(num.Ccode)
       num.Ccode.value + "-" +num.onlyMobileNo
-    else 
+    else
       num.Ccode + "-" +num.onlyMobileNo
   
   $scope.breakMobNo = (data) ->
@@ -348,13 +354,21 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   }
   $scope.format = "dd-MM-yyyy"
 
-  $scope.updateAccount = () ->
+  $scope.updateAccount = (data, dt, mobObj) ->
     
+    console.log mobObj
+    #filter date from date object turn it as a string
+    ndt = $filter('date')(dt,"dd-MM-yyyy")
+    console.log $scope.opDate, ndt, $scope.selectedAccount.openingBalanceDate
+    $scope.selectedAccount.openingBalanceDate = undefined
+    $scope.selectedAccount.openingBalanceDate = ndt
+
     #merge ccode and m no
     $scope.selectedAccount.mobileNo = $scope.mergeNum($scope.acntExt)
 
-    #filter date from date object turn it as a string
-    $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.opDate,"dd-MM-yyyy")
+    console.log $scope.selectedAccount.openingBalanceDate
+    
+
 
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
@@ -370,8 +384,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     accountService.updateAc(unqNamesObj, $scope.selectedAccount).then($scope.updateAccountSuccess, $scope.updateAccountFailure)
 
   $scope.updateAccountSuccess = (result) ->
+    $scope.opDate = null
     console.log "updateAccountSuccess", result
+    console.log $scope.flatAccntList
     toastr.success("Group updated successfully", result.status)
+    console.log $scope.opDate
 
   $scope.updateAccountFailure = (result) ->
     console.log "updateAccountFailure", result

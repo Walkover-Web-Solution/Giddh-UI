@@ -119,7 +119,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     angular.extend($scope.selectedCompany, data)
     if $scope.canManageUser is true
       $scope.getSharedUserList($scope.selectedCompany.uniqueName)
-    $scope.getRolesList()
+      $scope.getRolesList()
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
