@@ -191,31 +191,6 @@ describe 'groupController', ->
       expect(result).toContain("g2")
       expect(result).toContain("g3")
 
-
-  describe '#FlattenGroupList', ->
-    it 'should take list of group and flatten them', ->
-      groupList = [{
-        "name": "group1",
-        "uniqueName": "g1",
-        "groups": [{"name": "group2", "uniqueName": "g2", "groups": []}]
-      },
-        {"name": "group3", "uniqueName": "g3", "groups": []}]
-      result = @scope.FlattenGroupList(groupList)
-      expect(result).toContain({"name": "group2", "uniqueName": "g2", "groups": []})
-
-  describe '#FlattenAccountList', ->
-    it 'should take list of groups and flatten them and filter out accounts', ->
-      groupList = [{
-        "name": "group1",
-        "uniqueName": "g1",
-        "accounts": [{"name": "a1"}]
-        "groups": [{"name": "group2", "uniqueName": "g2", "groups": [], "accounts": []}]
-      },
-        {"name": "group3", "uniqueName": "g3", "groups": [], "accounts": []}]
-      result = @scope.FlattenAccountList(groupList)
-      expect(result).toContain({"name": "a1", "pName": ["group1"], "pUnqName": ["g1"]})
-
-
   describe '#addNewSubGroup', ->
     it 'should call group service and add new subgroup to selected group', ->
       @scope.selectedSubGroup = {"name": "subgroup1", "desc": "description", "uniqueName": "suniqueName"}

@@ -73,6 +73,62 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
         groupUniqueName: unqNamesObj.selGrpUname
       }, onSuccess, onFailure))
 
+    flattenGroup: (rawList) ->
+      listofUN = _.map(rawList, (listItem) ->
+        if listItem.groups.length > 0
+          uniqueList = groupService.flattenGroup(listItem.groups)
+          uniqueList.push(listItem)
+          uniqueList
+        else
+          listItem
+      )
+      _.flatten(listofUN)
+
+    flattenGroupsWithAccounts: (groupList) ->
+      listGA = _.map(groupList, (groupItem) ->
+        if groupItem.accounts.length > 0
+          addThisGroup = {}
+          addThisGroup.groupName = groupItem.name
+          addThisGroup.groupUniqueName = groupItem.uniqueName
+          addThisGroup.accountDetails = groupItem.accounts
+      )
+      listGA
+
+    flattenAccount: (list) ->
+      listofUN = _.map(list, (listItem) ->
+        if listItem.groups.length > 0
+          uniqueList = groupService.flattenAccount(listItem.groups)
+          _.each(listItem.accounts, (accntItem) ->
+            if _.isUndefined(accntItem.pName)
+              accntItem.pName = [listItem.name]
+              accntItem.pUnqName = [listItem.uniqueName]
+            else
+              accntItem.pName.push(listItem.name)
+              accntItem.pUnqName.push(listItem.uniqueName)
+          )
+          uniqueList.push(listItem.accounts)
+          _.each(uniqueList, (accntItem) ->
+            if _.isUndefined(accntItem.pName)
+              accntItem.pName = [listItem.name]
+              accntItem.pUnqName = [listItem.uniqueName]
+            else
+              accntItem.pName.push(listItem.name)
+              accntItem.pUnqName.push(listItem.uniqueName)
+          )
+          uniqueList
+        else
+          _.each(listItem.accounts, (accntItem) ->
+            if _.isUndefined(accntItem.pName)
+              accntItem.pName = [listItem.name]
+              accntItem.pUnqName = [listItem.uniqueName]
+            else
+              accntItem.pName.push(listItem.name)
+              accntItem.pUnqName.push(listItem.uniqueName)
+          )
+          listItem.accounts
+      )
+      _.flatten(listofUN)
+
   groupService
 
 

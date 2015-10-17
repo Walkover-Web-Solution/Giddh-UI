@@ -50,8 +50,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.getGroupListSuccess = (result) ->
     $scope.groupList = result.body
-    $scope.flattenGroupList = $scope.FlattenGroupList($scope.groupList)
-    $scope.flatAccntList = $scope.FlattenAccountList($scope.groupList)
+    $scope.flattenGroupList = groupService.flattenGroup($scope.groupList)
+    $scope.flatAccntList = groupService.flattenAccount($scope.groupList)
     $scope.showListGroupsNow = true
 
   $scope.getGroupListFailure = () ->
@@ -147,17 +147,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     )
     _.flatten(listofUN)
 
-  $scope.FlattenGroupList = (list) ->
-    listofUN = _.map(list, (listItem) ->
-      if listItem.groups.length > 0
-        uniqueList = $scope.FlattenGroupList(listItem.groups)
-        uniqueList.push(listItem)
-        uniqueList
-      else
-        listItem
-    )
-    _.flatten(listofUN)
-
   $scope.addNewSubGroup = ->
     uNameList = $scope.getUniqueNameFromGroupList($scope.groupList)
     UNameExist = _.contains(uNameList, $scope.selectedSubGroup.uniqueName)
@@ -228,42 +217,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.selectedItem = item
     $scope.selectedAccntMenu = undefined
 
-  #account code
-  $scope.FlattenAccountList = (list) ->
-    listofUN = _.map(list, (listItem) ->
-      if listItem.groups.length > 0
-        uniqueList = $scope.FlattenAccountList(listItem.groups)
-        _.each(listItem.accounts, (accntItem) ->
-          if _.isUndefined(accntItem.pName)
-            accntItem.pName = [listItem.name]
-            accntItem.pUnqName = [listItem.uniqueName]
-          else
-            accntItem.pName.push(listItem.name)
-            accntItem.pUnqName.push(listItem.uniqueName)
-        )
-        uniqueList.push(listItem.accounts)
-        _.each(uniqueList, (accntItem) ->
-          if _.isUndefined(accntItem.pName)
-            accntItem.pName = [listItem.name]
-            accntItem.pUnqName = [listItem.uniqueName]
-          else
-            accntItem.pName.push(listItem.name)
-            accntItem.pUnqName.push(listItem.uniqueName)
-        )
-        uniqueList
-      else
-        _.each(listItem.accounts, (accntItem) ->
-          if _.isUndefined(accntItem.pName)
-            accntItem.pName = [listItem.name]
-            accntItem.pUnqName = [listItem.uniqueName]
-          else
-            accntItem.pName.push(listItem.name)
-            accntItem.pUnqName.push(listItem.uniqueName)
-        )
-        listItem.accounts
-    )
-    _.flatten(listofUN)
-
   #show account
   $scope.showAccount = (data) ->
     $scope.opDate = undefined
@@ -290,7 +243,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #jump to group
   $scope.jumpToGroup = (grpUniqName, grpList)  ->
-    fltGrpList = $scope.FlattenGroupList(grpList)
+    fltGrpList = groupService.FlattenGroupList(grpList)
     obj = _.find(fltGrpList, (item) ->
       item.uniqueName == grpUniqName
     )

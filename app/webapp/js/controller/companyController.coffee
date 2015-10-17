@@ -2,6 +2,7 @@
 companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr) ->
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
+
   #make sure manage company detail not load
   $rootScope.cmpViewShow = false
   $rootScope.selectedCompany = {}
