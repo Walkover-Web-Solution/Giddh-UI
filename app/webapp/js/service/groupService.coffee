@@ -167,7 +167,6 @@ angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
       }, data, onSuccess, onFailure))
 
     updateAc: (unqNamesObj, data) ->
-      console.log "in updateAc"
       @handlePromise((onSuccess, onFailure) -> Account.update({
         companyUniqueName: unqNamesObj.compUname,
         groupUniqueName: unqNamesObj.selGrpUname,

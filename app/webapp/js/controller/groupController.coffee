@@ -1,11 +1,12 @@
 'use strict'
 
-groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService,$filter) ->
+groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, $filter) ->
   $scope.groupList = {}
   $scope.flattenGroupList = {}
   $scope.moveto = undefined
   $scope.selectedGroup = {}
   $scope.selectedSubGroup = {}
+  $scope.datePicker = {accountOpeningBalanceDate: ""}
   $scope.selectedGroupUName = ""
 
   $scope.showGroupDetails = false
@@ -63,7 +64,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
     else
       console.log "inside else condition"
-
     $scope.selectedSubGroup = {}
     $scope.showGroupDetails = true
     $scope.showAccountListDetails = true
@@ -73,7 +73,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.groupAccntList = group.accounts
     $scope.accountsSearch = undefined
 
-  $scope.getGroupSharedList = (group) ->
+  $scope.getGroupSharedList = () ->
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroup.uniqueName
@@ -84,8 +84,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.groupSharedUserList = result.body
 
   $scope.onsharedListFailure = (result) ->
-    console.log result, "onsharedListFailure"
-
+    console.log result, "on shared List Failure"
 
   #share group with user
   $scope.shareGroup = () ->
@@ -129,11 +128,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     groupService.update($scope.selectedCompany.uniqueName, $scope.selectedGroup).then($scope.onUpdateGroupSuccess,
       $scope.onUpdateGroupFailure)
 
-  $scope.onUpdateGroupSuccess = (result) ->
+  $scope.onUpdateGroupSuccess = () ->
     $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
     toastr.success("Group has been updated successfully.", "Success")
 
-  $scope.onUpdateGroupFailure = (result) ->
+  $scope.onUpdateGroupFailure = () ->
     toastr.error("Unable to update group at the moment. Please try again later.", "Error")
 
   $scope.getUniqueNameFromGroupList = (list) ->
@@ -166,12 +165,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     groupService.create($rootScope.selectedCompany.uniqueName, body).then($scope.onCreateGroupSuccess,
       $scope.onCreateGroupFailure)
 
-  $scope.onCreateGroupSuccess = (result) ->
+  $scope.onCreateGroupSuccess = () ->
     toastr.success("Sub group added successfully", "Success")
     $scope.selectedSubGroup = {}
     $scope.getGroups()
 
-  $scope.onCreateGroupFailure = (result) ->
+  $scope.onCreateGroupFailure = () ->
     toastr.error("Unable to create subgroup.", "Error")
 
   $scope.deleteGroup = ->
@@ -183,14 +182,13 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         $scope.selectedGroup).then($scope.onDeleteGroupSuccess,
         $scope.onDeleteGroupFailure)
 
-
-  $scope.onDeleteGroupSuccess = (result) ->
+  $scope.onDeleteGroupSuccess = () ->
     toastr.success("Group deleted successfully.", "Success")
     $scope.selectedGroup = {}
     $scope.showGroupDetails = false
     $scope.getGroups()
 
-  $scope.onDeleteGroupFailure = (result) ->
+  $scope.onDeleteGroupFailure = () ->
     toastr.error("Unable to delete group.", "Error")
 
   $scope.moveGroup = (group) ->
@@ -203,38 +201,19 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     }
     groupService.move(unqNamesObj, body).then($scope.onMoveGroupSuccess, $scope.onMoveGroupFailure)
 
-  $scope.onMoveGroupSuccess = (result) ->
+  $scope.onMoveGroupSuccess = () ->
     toastr.success("Group moved successfully.", "Success")
     $scope.getGroups()
     $scope.selectedGroup = {}
     $scope.showGroupDetails = false
     $scope.moveto = undefined
 
-  $scope.onMoveGroupFailure = (result) ->
+  $scope.onMoveGroupFailure = () ->
     toastr.error("Unable to move group.", "Error")
 
   $scope.selectItem = (item) ->
     $scope.selectedItem = item
     $scope.selectedAccntMenu = undefined
-
-  #show account
-  $scope.showAccount = (data) ->
-    $scope.opDate = undefined
-    console.log data, $scope.opDate
-    $scope.showGroupDetails = false
-    $scope.showAccountDetails = true
-    $scope.selectedAccount = data
-    $scope.showBreadCrumbs(data)
-    $scope.breakMobNo(data)
-
-    # prepare date object
-    if data.openingBalanceDate
-      console.log "in if openingBalanceDate"
-      newDateObj = moment(data.openingBalanceDate, "DD-MM-yyyy")
-      $scope.opDate = newDateObj._d
-    else
-      console.log "in else openingBalanceDate", $scope.opDate
-      $scope.opDate = new Date()
 
   #show breadcrumbs
   $scope.showBreadCrumbs = (data) ->
@@ -259,19 +238,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.selectAcMenu = (item) ->
     $scope.selectedAccntMenu = item
 
-  
-
-
-
   $scope.mergeNum = (num) ->
     if _.isUndefined(num.Ccode) || _.isUndefined(num.onlyMobileNo) || _.isEmpty(num.Ccode) || _.isEmpty(num.onlyMobileNo)
       return null
-    
+
     if _.isObject(num.Ccode)
-      num.Ccode.value + "-" +num.onlyMobileNo
+      num.Ccode.value + "-" + num.onlyMobileNo
     else
-      num.Ccode + "-" +num.onlyMobileNo
-  
+      num.Ccode + "-" + num.onlyMobileNo
+
   $scope.breakMobNo = (data) ->
     if data.mobileNo
       res = data.mobileNo.split("-")
@@ -284,7 +259,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         Ccode: undefined
         onlyMobileNo: undefined
       }
-    
+
   #date time picker code starts here
   $scope.today = new Date()
 
@@ -298,50 +273,47 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     'starting-day': 1,
     'showWeeks': false,
     'show-button-bar': false,
-    'year-range':1,
+    'year-range': 1,
     'todayBtn': false
   }
   $scope.format = "dd-MM-yyyy"
 
-  $scope.updateAccount = (data, dt, mobObj) ->
-    
-    console.log mobObj
-    #filter date from date object turn it as a string
-    ndt = $filter('date')(dt,"dd-MM-yyyy")
-    console.log $scope.opDate, ndt, $scope.selectedAccount.openingBalanceDate
-    $scope.selectedAccount.openingBalanceDate = undefined
-    $scope.selectedAccount.openingBalanceDate = ndt
+  #show account
+  $scope.showAccount = (data) ->
+    $scope.showGroupDetails = false
+    $scope.showAccountDetails = true
+    $scope.selectedAccount = data
+    $scope.showBreadCrumbs(data)
+    $scope.breakMobNo(data)
+    $scope.setOpeningBalanceDate()
 
-    #merge ccode and m no
+  # prepare date object
+  $scope.setOpeningBalanceDate = () ->
+    if $scope.selectedAccount.openingBalanceDate
+      newDateObj = $scope.selectedAccount.openingBalanceDate.split("-");
+      $scope.datePicker.accountOpeningBalanceDate = new Date(newDateObj[2], newDateObj[1] - 1, newDateObj[0]);
+    else
+      $scope.datePicker.accountOpeningBalanceDate = new Date()
+
+  $scope.updateAccount = () ->
+    $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.datePicker.accountOpeningBalanceDate,"dd-MM-yyyy")
     $scope.selectedAccount.mobileNo = $scope.mergeNum($scope.acntExt)
-
-    console.log $scope.selectedAccount.openingBalanceDate
-    
-
-
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroup.uniqueName
       acntUname: $scope.selectedAccount.uniqueName
     }
-
     if _.isUndefined($scope.selectedGroup.uniqueName)
       lastVal = _.last($scope.breadCrumbList)
       unqNamesObj.selGrpUname = lastVal[1]
-    
-    console.log unqNamesObj, "obj", $scope.selectedAccount
-    accountService.updateAc(unqNamesObj, $scope.selectedAccount).then($scope.updateAccountSuccess, $scope.updateAccountFailure)
+    accountService.updateAc(unqNamesObj, $scope.selectedAccount).then($scope.updateAccountSuccess,
+      $scope.updateAccountFailure)
 
   $scope.updateAccountSuccess = (result) ->
-    $scope.opDate = null
-    console.log "updateAccountSuccess", result
-    console.log $scope.flatAccntList
     toastr.success("Group updated successfully", result.status)
-    console.log $scope.opDate
 
   $scope.updateAccountFailure = (result) ->
     console.log "updateAccountFailure", result
-
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController

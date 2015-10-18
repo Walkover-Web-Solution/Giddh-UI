@@ -1,4 +1,3 @@
-
 <div class="clearfix bdrB">
   <div class="col-md-6 col-sm-12 bdrR">
     <div class="row">
@@ -56,7 +55,7 @@
   <!-- add new group content end -->
 </div>
 
-  <!-- end row first -->
+<!-- end row first -->
 <div class="clearfix bdrB">
 
   <div class="col-sm-12 col-md-6" ng-hide="selectedGroup.isFixed">
@@ -66,7 +65,8 @@
           <label class="mrR">Move to group</label>
         </div>
         <div class="form-group">
-          <input ng-model="moveto" type="text" placeholder="Group name" class="form-control" typeahead="groups as groups.name for groups in flattenGroupList | filter:{name:$viewValue}"/>
+          <input ng-model="moveto" type="text" placeholder="Group name" class="form-control"
+                 typeahead="groups as groups.name for groups in flattenGroupList | filter:{name:$viewValue}"/>
         </div>
         <div class="form-group">
           <button class="btn btn-info mrL" ng-click="moveGroup(moveto)">Move</button>
@@ -82,7 +82,8 @@
           <label class="mrR">Share group</label>
         </div>
         <div class="form-group">
-          <input required name="userEmail" type="email" ng-model="shareGroupObj.user" placeholder="Enter Email ID" class="form-control"/>
+          <input required name="userEmail" type="email" ng-model="shareGroupObj.user" placeholder="Enter Email ID"
+                 class="form-control"/>
         </div>
         <div class="form-group">
           <button ng-disabled="shareGroupForm.$invalid" class="btn btn-info mrL" ng-click="shareGroup()">Share</button>
@@ -94,7 +95,7 @@
       <div class="pd2">
         <ul class="list-group ln">
           <li ng-repeat="(key,value) in groupSharedUserList track by $index" class="list-group-item">
-            
+
             <div class="form-inline clearfix">
               <div class="form-group">
                 <i class="glyphicon glyphicon-user"></i>
@@ -107,7 +108,7 @@
                 <i class="glyphicon glyphicon-trash" ng-click="unShareGroup(value.userUniqueName)"></i>
               </span>
             </div>
-            
+
           </li>
         </ul>
 

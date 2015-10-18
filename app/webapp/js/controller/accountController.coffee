@@ -21,7 +21,6 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
     $scope.showAccountList = true
 
-
   $scope.getGroupListFailure = () ->
     toastr.error("Unable to get group details.", "Error")
 
@@ -33,7 +32,6 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
   $rootScope.$on '$reloadAccount', ->
     $scope.getAccountsGroups()
-
 
 #init angular app
 angular.module('giddhWebApp').controller 'accountController', accountController
