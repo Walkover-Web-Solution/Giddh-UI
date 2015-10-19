@@ -81,14 +81,14 @@
           <tr ng-repeat="(key, value) in sampleLedger.ledgers track by $index" class="{{$index}}">
             <form name="drEntryForm_{{$index}}" novalidate>
               <td>
-                <input type="text" name="entryDate" ng-model="value.entryDate"/>
+                <input type="text" name="entryDate" ng-model="value.entryDate" valid-date/>
               </td>
               <td>
                 <input type="text" name="name" ng-model="value.transactions[0].particular.name"/>
                 <input type="hidden" name="" ng-model="value.transactions[0].particular.uniqueName">
               </td>
               <td>
-                <input type="text" name="amount" ng-model="value.transactions[0].amount"/>
+                <input type="text" name="amount" ng-model="value.transactions[0].amount"  valid-number/>
               </td>
             </form>
           </tr>
