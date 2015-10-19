@@ -6,13 +6,15 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.flattenAccountListWithParent = {}
   $scope.flatAccntWGroupsList = {}
   $scope.showAccountList = false
+  $scope.selectedCompany = {}
 
   $scope.getAccountsGroups = ->
+    $scope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.showAccountList = false
-    if _.isEmpty($rootScope.selectedCompany)
+    if _.isEmpty($scope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
-      groupService.getAllWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
+      groupService.getAllWithAccountsFor($scope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
           $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (result) ->
@@ -27,10 +29,10 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.showManageGroups = () ->
     modalService.openManageGroupsModal()
 
-  $rootScope.$on '$viewContentLoaded', ->
+  $rootScope.$on '$reloadAccount', ->
     $scope.getAccountsGroups()
 
-  $rootScope.$on '$reloadAccount', ->
+  $rootScope.$on '$viewContentLoaded', ->
     $scope.getAccountsGroups()
 
 #init angular app

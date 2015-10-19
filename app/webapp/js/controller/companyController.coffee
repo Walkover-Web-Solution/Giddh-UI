@@ -78,7 +78,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #Get company list
   $scope.getCompanyList = ->
-    $rootScope.nowShowAccounts = false
+#    $rootScope.nowShowAccounts = false
     companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
 
   #Get company list
@@ -121,12 +121,15 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
     angular.extend($scope.selectedCompany, data)
+    localStorageService.set("_selectedCompany", $scope.selectedCompany)
     if $scope.canManageUser is true
       $scope.getSharedUserList($scope.selectedCompany.uniqueName)
       $scope.getRolesList()
 
-    $rootScope.nowShowAccounts = true
-    $rootScope.$broadcast('$reloadAccount')
+    if not $rootScope.nowShowAccounts
+      $rootScope.nowShowAccounts = true
+    else
+      $rootScope.$broadcast('$reloadAccount')
 
 
   #update company details
@@ -256,11 +259,10 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     toastr.error(response.data.message, response.data.status)
 
   #fire function after page fully loaded
-  $rootScope.$on '$viewContentLoaded', ->
+  $scope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
     $scope.getCurrencyList()
     $rootScope.isCollapsed = true
-    $rootScope.$broadcast('$reloadAccount');
 
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController

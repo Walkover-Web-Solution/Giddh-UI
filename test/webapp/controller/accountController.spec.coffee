@@ -3,7 +3,7 @@
 describe 'accountController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, toastr, accountService, groupService, $q, modalService) ->
+  beforeEach inject ($rootScope, $controller, toastr, accountService, groupService, $q, modalService, localStorageService) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @toastr = toastr
@@ -11,19 +11,20 @@ describe 'accountController', ->
     @groupService = groupService
     @q = $q
     @modalService = modalService
+    @localStorageService = localStorageService
     @accountController = $controller('accountController',
         {$scope: @scope, groupService: @groupService})
 
   describe '#getAccountsGroups', ->
     it 'should show a toastr informing user to select company first when no company selected', ->
-      @rootScope.selectedCompany = {}
       spyOn(@toastr, 'error')
+      spyOn(@localStorageService, 'get').andReturn({})
       @scope.getAccountsGroups()
       expect(@toastr.error).toHaveBeenCalledWith('Select company first.', 'Error')
       expect(@scope.showAccountList).toBeFalsy()
 
     it 'should call groups from route after getting company unique name', ->
-      @rootScope.selectedCompany = {"data": "Got it", "uniqueName": "soniravi"}
+      spyOn(@localStorageService, 'get').andReturn({"data": "Got it", "uniqueName": "soniravi"})
       deferred = @q.defer()
       spyOn(@groupService, 'getAllWithAccountsFor').andReturn(deferred.promise)
       @scope.getAccountsGroups()
