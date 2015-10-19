@@ -222,7 +222,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #jump to group
   $scope.jumpToGroup = (grpUniqName, grpList)  ->
-    fltGrpList = groupService.FlattenGroupList(grpList)
+    fltGrpList = groupService.flattenGroup(grpList)
     obj = _.find(fltGrpList, (item) ->
       item.uniqueName == grpUniqName
     )

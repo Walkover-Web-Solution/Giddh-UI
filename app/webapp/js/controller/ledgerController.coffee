@@ -1,10 +1,32 @@
 "use strict"
 
 ledgerController = ($scope, $rootScope, $timeout, $http, $modal, localStorageService, toastr, locationService) ->
-  
   $scope.sarfaraz = "My name"
 
-  
+  #date time picker code starts here
+  $scope.today = new Date()
+  $scope.fromDate = new Date()
+  $scope.toDate = new Date()
+
+  $scope.fromDatePickerIsOpen = false
+  $scope.toDatePickerIsOpen = false
+
+  $scope.fromDatePickerOpen = ->
+    this.fromDatePickerIsOpen = true
+
+  $scope.toDatePickerOpen = ->
+    this.toDatePickerIsOpen = true
+
+  $scope.dateOptions = {
+    'year-format': "'yy'",
+    'starting-day': 1,
+    'showWeeks': false,
+    'show-button-bar': false,
+    'year-range': 1,
+    'todayBtn': false
+  }
+  $scope.format = "dd-MM-yyyy"
+
   $scope.sampleLedger = {
     "broughtForwardBalance": {
       "amount": 0,
@@ -131,11 +153,8 @@ ledgerController = ($scope, $rootScope, $timeout, $http, $modal, localStorageSer
 
   $rootScope.$on '$viewContentLoaded', ->
     console.log "ledger rootScope viewContentLoaded"
+    $scope.fromDate.setDate(1)
     $rootScope.isCollapsed = true
 
-    
-    
-
-  
 
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController

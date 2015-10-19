@@ -1,130 +1,163 @@
 <div class="pdL2 pdR2 pdT1">
 
-	<div class="clearfix pdB1">
-		<!-- date picker code here -->
-	</div>
+  <div class="clearfix pdB1">
+    <div class="form-group col-md-3 col-sm-12">
+      <label>From date</label>
+
+      <p class="input-group">
+        <input type="text" class="form-control"
+               datepicker-popup="{{format}}"
+               datepicker-options="dateOptions"
+               is-open="fromDatePickerIsOpen"
+               ng-click="fromDatePickerOpen()"
+               ng-model="fromDate" max-date="today" placeholder="from date"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="valuationDatePickerOpen()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+      </p>
+    </div>
+    <div class="form-group col-md-3 col-sm-12">
+      <label>To date</label>
+
+      <p class="input-group">
+        <input type="text" class="form-control"
+               datepicker-popup="{{format}}"
+               datepicker-options="dateOptions"
+               is-open="toDatePickerIsOpen"
+               ng-click="toDatePickerOpen()"
+               ng-model="toDate" min-date="fromDate" max-date="today" placeholder="to date"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="valuationDatePickerOpen()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+      </p>
+    </div>
+  </div>
 
 
-	<table class="table ledgerTable">
-		<thead>
-			<th class="nopad">
-				<div class="clearfix ldgTheadL">
-					<span class="icon48 icon-in"></span>
-					<h3 class="ledgerHead">
-						<span class="ellp">{{sarfaraz}}</span>
-            <span>&nbsp;is <strong>receiving</strong></span>
-					</h3>
-				</div>
-			</th>
-			<th class="nopad">
-				<div class="pull-right alR">
-					<div class="clearfix ldgTheadR">
-						<span class="icon48 icon-out"></span>
-						<h3 class="ledgerHead">
-	            <span>&nbsp;is <strong>giving</strong></span>
-	            <span class="ellp">{{sarfaraz}}</span>
-						</h3>
-					</div>
-				</div>
-			</th>
-		</thead>
-		<!-- end main thead -->
-		<tbody>
-			<tr>
-				<td class="nopad" style="width:50%">
-					<table class="table table-bordered">
-						<thead>
-							<tr class="splBg">
-								<th colspan="100%">Debit (Dr)</th>
-							</tr>
-							<tr class="dgreyBg">
-								<th>Date</th>
-								<th>Particular</th>
-								<th>Amount</th>
-							</tr>
-						</thead>
-						
-						<tbody id="ledgerBodyContent">
-							<tr ng-repeat="(key, value) in sampleLedger.ledgers track by $index" class="{{$index}}">
-								<form name="drEntryForm_{{$index}}" novalidate>
-									<td>
-										<input type="text" name="entryDate" ng-model="value.entryDate" />
-									</td>
-									<td>
-										<input type="text" name="name" ng-model="value.transactions[0].particular.name" />
-										<input type="hidden" name="" ng-model="value.transactions[0].particular.uniqueName">
-									</td>
-									<td>
-										<input type="text" name="amount" ng-model="value.transactions[0].amount" />
-									</td>
-								</form>
-							</tr>
-						</tbody>
+  <table class="table ledgerTable">
+    <thead>
+    <th class="nopad">
+      <div class="clearfix ldgTheadL">
+        <span class="icon48 icon-in"></span>
 
-					</table>
-				</td>
-				<!-- main left td end here -->
-				<td class="nopad" style="width:50%">
-					<table class="table table-bordered">
-						<thead>
-							<tr class="splBg">
-								<th colspan="100%">Credit (Dr)</th>
-							</tr>
-							<tr class="dgreyBg">
-								<th>Date</th>
-								<th>Particular</th>
-								<th>Amount</th>
-							</tr>
-						</thead>
-						
-						<tbody id="ledgerBodyContent">
-							<tr>
-								<td>
-									<input type="text" name="" />
-								</td>
-								<td>
-									<input type="text" name="" />
-								</td>
-								<td>
-									<input type="text" name="" />
-								</td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-				<!-- main right td end here -->
-			</tr>
-		</tbody>
-		<!-- end main tbody -->
-		<tfoot>
+        <h3 class="ledgerHead">
+          <span class="ellp">{{sarfaraz}}</span>
+          <span>&nbsp;is <strong>receiving</strong></span>
+        </h3>
+      </div>
+    </th>
+    <th class="nopad">
+      <div class="pull-right alR">
+        <div class="clearfix ldgTheadR">
+          <span class="icon48 icon-out"></span>
 
-			<tr class="fw600 dgreyBg">
-				<td class="">
-					Balance
-				</td>
-				<td class="">
-					Balance
-				</td>
-			</tr>
-			<tr class="total greyBg">
-				<td class="">
-					<span class="">Total</span>
-				</td>
-				<td class="cr taR bdrR">
-				</td>
-			</tr>
-			<!-- 
-			<tr id="plus_row" class="nobdr footer">
-				<td class="nobdr marks"></td>
-				<td class="td" colspan="6">
-					<input type="hidden" value="SUSPENSE ACCOUNT" id="accountee_name" name="accountee_name">
-				</td>
-				<td class="nobdr marks"></td>
-			</tr> -->
+          <h3 class="ledgerHead">
+            <span>&nbsp;is <strong>giving</strong></span>
+            <span class="ellp">{{sarfaraz}}</span>
+          </h3>
+        </div>
+      </div>
+    </th>
+    </thead>
+    <!-- end main thead -->
+    <tbody>
+    <tr>
+      <td class="nopad" style="width:50%">
+        <table class="table table-bordered">
+          <thead>
+          <tr class="splBg">
+            <th colspan="100%">Debit (Dr)</th>
+          </tr>
+          <tr class="dgreyBg">
+            <th>Date</th>
+            <th>Particular</th>
+            <th>Amount</th>
+          </tr>
+          </thead>
+
+          <tbody id="ledgerBodyContent">
+          <tr ng-repeat="(key, value) in sampleLedger.ledgers track by $index" class="{{$index}}">
+            <form name="drEntryForm_{{$index}}" novalidate>
+              <td>
+                <input type="text" name="entryDate" ng-model="value.entryDate"/>
+              </td>
+              <td>
+                <input type="text" name="name" ng-model="value.transactions[0].particular.name"/>
+                <input type="hidden" name="" ng-model="value.transactions[0].particular.uniqueName">
+              </td>
+              <td>
+                <input type="text" name="amount" ng-model="value.transactions[0].amount"/>
+              </td>
+            </form>
+          </tr>
+          </tbody>
+
+        </table>
+      </td>
+      <!-- main left td end here -->
+      <td class="nopad" style="width:50%">
+        <table class="table table-bordered">
+          <thead>
+          <tr class="splBg">
+            <th colspan="100%">Credit (Dr)</th>
+          </tr>
+          <tr class="dgreyBg">
+            <th>Date</th>
+            <th>Particular</th>
+            <th>Amount</th>
+          </tr>
+          </thead>
+
+          <tbody id="ledgerBodyContent">
+          <tr>
+            <td>
+              <input type="text" name=""/>
+            </td>
+            <td>
+              <input type="text" name=""/>
+            </td>
+            <td>
+              <input type="text" name=""/>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </td>
+      <!-- main right td end here -->
+    </tr>
+    </tbody>
+    <!-- end main tbody -->
+    <tfoot>
+
+    <tr class="fw600 dgreyBg">
+      <td class="">
+        Balance
+      </td>
+      <td class="">
+        Balance
+      </td>
+    </tr>
+    <tr class="total greyBg">
+      <td class="">
+        <span class="">Total</span>
+      </td>
+      <td class="cr taR bdrR">
+      </td>
+    </tr>
+    <!--
+    <tr id="plus_row" class="nobdr footer">
+      <td class="nobdr marks"></td>
+      <td class="td" colspan="6">
+        <input type="hidden" value="SUSPENSE ACCOUNT" id="accountee_name" name="accountee_name">
+      </td>
+      <td class="nobdr marks"></td>
+    </tr> -->
 
 
-		</tfoot>
-		<!-- end main tfoot -->
+    </tfoot>
+    <!-- end main tfoot -->
 
-	</table>
+  </table>
 </div>
