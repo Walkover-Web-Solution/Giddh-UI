@@ -104,7 +104,7 @@
                        ng-class="(cmpnyBascFrm.cPincode.$valid  && cmpnyBascFrm.cPincode.$touched) ? 'has-success' : (cmpnyBascFrm.cPincode.$touched) ? 'has-error' : '' ">
                     <label>Pincode</label>
                     <input type="text" ng-model="selectedCompany.pincode" class="form-control" required
-                           pattern="^[0-9]*$" name="cPincode" tabindex="9">
+                           pattern="^[0-9]*$" name="cPincode" tabindex="9" valid-number>
 
                   </div>
                 </div>

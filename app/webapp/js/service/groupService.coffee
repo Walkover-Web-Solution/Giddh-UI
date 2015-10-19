@@ -174,3 +174,42 @@ angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
       }, data, onSuccess, onFailure))
 
   accountService
+
+
+angular.module('giddhWebApp').service 'ledgerService', ($resource, $q) ->
+  Ledger = $resource('/company/:companyUniqueName/groups/:groupUniqueName/accounts',
+      {
+        'companyUniqueName': @companyUniqueName,
+        'groupUniqueName': @groupUniqueName,
+        'accountsUniqueName': @accountsUniqueName
+      },
+      {
+        get: {
+          method: 'GET', 
+          url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/ledgers'
+        }
+        create: {method: 'POST'}
+        update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'}
+        delete: {
+          method: 'DELETE',
+          url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'
+        }
+      })
+
+  ledgerService =
+    handlePromise: (func) ->
+      deferred = $q.defer()
+      onSuccess = (data)-> deferred.resolve(data)
+      onFailure = (data)-> deferred.reject(data)
+      func(onSuccess, onFailure)
+      deferred.promise
+
+    getLedger: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> Ledger.get({
+        companyUniqueName: unqNamesObj.compUname,
+        groupUniqueName: unqNamesObj.selGrpUname,
+        accountsUniqueName: unqNamesObj.acntUname
+      }, onSuccess, onFailure))
+
+
+  ledgerService

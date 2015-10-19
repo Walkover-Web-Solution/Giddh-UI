@@ -20,6 +20,7 @@
     <div class="form-group col-md-3 col-sm-12">
       <label>To date</label>
 
+
       <p class="input-group">
         <input type="text" class="form-control"
                datepicker-popup="{{format}}"
@@ -34,6 +35,62 @@
       </p>
     </div>
   </div>
+	<table class="table ledgerTable">
+		<thead>
+			<th class="nopad">
+				<div class="clearfix ldgTheadL">
+					<span class="icon48 icon-in"></span>
+					<h3 class="ledgerHead">
+						<span class="ellp">{{sarfaraz}}</span>
+            <span>&nbsp;is <strong>receiving</strong></span>
+					</h3>
+				</div>
+			</th>
+			<th class="nopad">
+				<div class="pull-right alR">
+					<div class="clearfix ldgTheadR">
+						<span class="icon48 icon-out"></span>
+						<h3 class="ledgerHead">
+	            <span>&nbsp;is <strong>giving</strong></span>
+	            <span class="ellp">{{sarfaraz}}</span>
+						</h3>
+					</div>
+				</div>
+			</th>
+		</thead>
+		<!-- end main thead -->
+		<tbody>
+			<tr>
+				<td class="nopad" style="width:50%">
+					<table class="table table-bordered">
+						<thead>
+							<tr class="splBg">
+								<th colspan="100%">Debit (Dr)</th>
+							</tr>
+							<tr class="dgreyBg">
+								<th>Date</th>
+								<th>Particular</th>
+								<th>Amount</th>
+							</tr>
+						</thead>
+						
+						<tbody id="ledgerBodyContent">
+							<tr ng-repeat="(key, value) in sampleLedger.ledgers track by $index" class="{{$index}}">
+								<form name="drEntryForm_{{$index}}" novalidate>
+									<td>
+										<input type="text" name="entryDate" ng-model="value.entryDate" valid-date placeholder="dd-mm-yyyy" />
+									</td>
+									<td>
+										<input type="text" name="name" ng-model="value.transactions[0].particular.name" />
+										<input type="hidden" name="" ng-model="value.transactions[0].particular.uniqueName">
+									</td>
+									<td>
+										<input type="text" name="amount" ng-model="value.transactions[0].amount" valid-number />
+									</td>
+								</form>
+							</tr>
+						</tbody>
+>>>>>>> number only directive added and selected company problem resolved
 
 
   <table class="table ledgerTable">

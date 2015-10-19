@@ -899,7 +899,8 @@ li:last-child .angular-ui-tree-handle {
 }
 .acntAccordion .title a {
     display: block;
-    padding: 5px 5px 5px 10px
+    padding: 5px 5px 5px 10px;
+    cursor: pointer;
 }
 .acntAccordion .title {
     background-image: url(../images/plus.png);

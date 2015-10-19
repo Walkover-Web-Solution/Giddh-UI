@@ -61,16 +61,14 @@
 
               <ul class="accBox subAccBox" ng-show="showSubMenus" id="ul_{{value.groupUniqueName}}">
 
-                <li ng-repeat="(index,accDtl) in value.accountDetails  | filter:acntSrch" id="ac_{{accDtl.uniqueName}}">
+                <li ng-repeat="(index,accDtl) in value.accountDetails  | filter:acntSrch track by $index" id="ac_{{accDtl.uniqueName}}">
 
-                  <a class="clearfix" ng-click="loadLedger(accDtl,value.groupUniqueName)" href="javascript:">
+                  <a class="clearfix" href="javascript:void(0)" ng-click="loadLedger(value, accDtl)" href="javascript:">
                     <i ng-class="accDtl.charId ==1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
-                                <span>
-                                {{accDtl.name}}
-                                </span>
+                    <span>{{accDtl.name}}</span>
                   </a>
                 </li>
-                <!-- <a ng-show="false" class="tdUndr ptr fs5">more</a> -->
+                <!-- <a ng-show="false" class="tdUndr ptr fs5">more</a>-->
               </ul>
 
             </li>

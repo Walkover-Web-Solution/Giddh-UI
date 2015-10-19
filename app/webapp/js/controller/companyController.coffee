@@ -88,7 +88,12 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       $scope.openFirstTimeUserModal()
     else
       $rootScope.mngCompDataFound = true
-      $scope.goToCompany($scope.companyList[0], 0)
+      lsKeys = localStorageService.keys()
+      if _.contains(lsKeys, "_selectedCompany")
+        cdt = localStorageService.get("_selectedCompany")
+        $scope.goToCompany(cdt, cdt.index)
+      else
+        $scope.goToCompany($scope.companyList[0], 0)
 
   #get company list failure
   $scope.getCompanyListFailure = (response)->
@@ -121,6 +126,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
     angular.extend($scope.selectedCompany, data)
+    $scope.selectedCompany.index = index
     localStorageService.set("_selectedCompany", $scope.selectedCompany)
     if $scope.canManageUser is true
       $scope.getSharedUserList($scope.selectedCompany.uniqueName)
