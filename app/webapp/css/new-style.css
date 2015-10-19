@@ -999,3 +999,56 @@ li:last-child .angular-ui-tree-handle {
 .EXP4:hover a, .EXP4.active a {
     color: #fff
 }
+/*ledger style*/
+.table .table{margin-bottom: 0;}
+.ledgerTable.table .nopad{
+    padding: 0 !important
+}
+.fw600{font-weight: 600}
+.dgreyBg td, .dgreyBg th{
+    background-color: #e6e6e6
+}
+.greyBg td, .greyBg th{
+    background-color: #f5f5f5
+}
+.splBg th{
+    background-color: #5c534d;
+    color: #fff
+}
+#ledgerBodyContent td{
+    padding: 0;
+}
+#ledgerBodyContent input{
+    width: 100%;
+    border: 0;
+    padding: 8px;
+}
+
+.ldgTheadL span, .ldgTheadL .ledgerHead{
+    float: left;
+    display: block;
+}
+.ldgTheadR span, .ldgTheadR .ledgerHead{
+    float: right;
+    display: block;
+}
+.ledgerHead span{
+    display: inline-block;
+    line-height: 48px;
+    font-size: 18px;
+}
+.ledgerHead .ellp{
+    text-transform: capitalize;
+    max-width: 200px;
+}
+.icon48 {
+    width: 48px;
+    height: 48px;
+    background-image: url(../images/iconset.png);
+}
+.icon-in {
+    background-position: 0 -384px
+}
+.icon-out {
+    background-position: 0 -432px
+}

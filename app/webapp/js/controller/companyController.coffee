@@ -257,7 +257,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   $scope.unSharedCompFailure = (response) ->
     toastr.error(response.data.message, response.data.status)
-
+  
   #fire function after page fully loaded
   $scope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
