@@ -317,10 +317,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.acntCase = "Add"
     $scope.showBreadCrumbs($scope.selectedGroup.parentGroups)
 
-    
-
-
-  $scope.updateAccount = () ->
+  $scope.setAdditionalAccountDetails = ()->
     $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.datePicker.accountOpeningBalanceDate,"dd-MM-yyyy")
     $scope.selectedAccount.mobileNo = $scope.mergeNum($scope.acntExt)
     unqNamesObj = {
@@ -328,6 +325,20 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       selGrpUname: $scope.selectedGroup.uniqueName
       acntUname: $scope.selectedAccount.uniqueName
     }
+
+
+  $scope.addAccount = () ->
+    console.log "addAccount", $scope.selectedAccount
+    unqNamesObj = $scope.setAdditionalAccountDetails()
+    accountService.createAc(unqNamesObj, $scope.selectedAccount).then($scope.updateAccountSuccess,
+      $scope.updateAccountFailure)
+
+
+
+  $scope.updateAccount = () ->
+
+    unqNamesObj = $scope.setAdditionalAccountDetails()
+
     if _.isUndefined($scope.selectedGroup.uniqueName)
       lastVal = _.last($scope.breadCrumbList)
       unqNamesObj.selGrpUname = lastVal[1]
@@ -336,6 +347,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.updateAccountSuccess = (result) ->
     toastr.success("Group updated successfully", result.status)
+    $scope.getGroups()
 
   $scope.updateAccountFailure = (result) ->
     console.log "updateAccountFailure", result

@@ -48,7 +48,7 @@
               </select>
             </div>
             <div class="col-md-6 col-sm-12">
-              <input type="text" class="form-control" name="openingBalance" ng-model="selectedAccount.openingBalance" required />
+              <input type="text" class="form-control" name="openingBalance" ng-model="selectedAccount.openingBalance" required  valid-number />
             </div>
           </div>
 
@@ -95,7 +95,7 @@
 
     </div>
     <!-- end of clearfix -->
-    <div class="row pdT1 pdL pdR">
+    <div class="row pdL pdR">
       <div class="form-group col-md-12">
         <button ng-if="acntCase == 'Update'" class="btn btn-success" ng-click="updateAccount()" ng-disabled="addAccountForm.$invalid">{{acntCase}}</button>
 

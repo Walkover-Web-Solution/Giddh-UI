@@ -44,7 +44,6 @@ router.delete '/:accountUniqueName', (req, res) ->
 router.post '/', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/groups/' + req.params.groupUniqueName + '/accounts'
-  req.body.uniqueName = settings.stringUtil.getRandomString(req.body.name, req.params.companyUniqueName)
   args =
     headers:
       'Auth-Key': req.session.authKey

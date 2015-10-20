@@ -160,8 +160,7 @@ angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
     createAc: (unqNamesObj, data) ->
       @handlePromise((onSuccess, onFailure) -> Account.create({
         companyUniqueName: unqNamesObj.compUname,
-        groupUniqueName: unqNamesObj.selGrpUname,
-        accountsUniqueName: unqNamesObj.acntUname
+        groupUniqueName: unqNamesObj.selGrpUname
       }, data, onSuccess, onFailure))
 
     updateAc: (unqNamesObj, data) ->
