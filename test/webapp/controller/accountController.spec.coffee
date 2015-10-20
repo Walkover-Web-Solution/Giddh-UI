@@ -47,7 +47,7 @@ describe 'accountController', ->
         "accountDetails": [{"name": "a1"}]
       }])
       @scope.getGroupListSuccess(result)
-      expect(@groupService.flattenGroup).toHaveBeenCalledWith(result.body)
+      expect(@groupService.flattenGroup).toHaveBeenCalledWith(result.body,[])
       expect(@groupService.flattenGroupsWithAccounts).toHaveBeenCalledWith(@scope.flattenGroupList)
       expect(@scope.groupList).toBe(result.body)
       expect(@scope.flattenGroupList).toEqual({"name": "group2", "uniqueName": "g2", "groups": []})

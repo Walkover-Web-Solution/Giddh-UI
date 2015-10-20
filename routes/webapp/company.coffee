@@ -25,7 +25,7 @@ router.delete '/:uniqueName', (req, res) ->
 
 #update company
 router.put '/:uniqueName', (req, res) ->
-  console.log req.body
+  console.log "update company", req.body
   hUrl = settings.envUrl + 'company/' + req.params.uniqueName
   args =
     headers:
@@ -57,7 +57,7 @@ router.post '/', (req, res) ->
 router.get '/:uniqueName/shareable-roles', (req, res) ->
   date = Date()
   console.log date, "shareable-role"
-  hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/shareable-roles'
+  hUrl = settings.envUrl + 'company/' + req.params.uniqueName + '/shareable-roles'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -73,7 +73,7 @@ router.get '/:uniqueName/shareable-roles', (req, res) ->
 
 #get company Shared user list
 router.get '/:uniqueName/shared-with', (req, res) ->
-  hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/shared-with'
+  hUrl = settings.envUrl + 'company/' + req.params.uniqueName + '/shared-with'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -83,11 +83,11 @@ router.get '/:uniqueName/shared-with', (req, res) ->
       res.status(response.statusCode).send(data)
     else
       res.send data
-    
+
 
 #share company with user
 router.put '/:uniqueName/share', (req, res) ->
-  hUrl = settings.envUrl + 'company/'+ req.params.uniqueName + '/share'
+  hUrl = settings.envUrl + 'company/' + req.params.uniqueName + '/share'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -101,7 +101,7 @@ router.put '/:uniqueName/share', (req, res) ->
 
 #unShare company with user
 router.put '/:uniqueName/unshare', (req, res) ->
-  hUrl = settings.envUrl + 'company/'+ req.params.uniqueName + '/unshare'
+  hUrl = settings.envUrl + 'company/' + req.params.uniqueName + '/unshare'
   args =
     headers:
       'Auth-Key': req.session.authKey

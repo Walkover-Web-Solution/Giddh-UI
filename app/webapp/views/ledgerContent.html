@@ -12,7 +12,7 @@
                ng-click="fromDatePickerOpen()"
                ng-model="fromDate" max-date="today" placeholder="from date"/>
               <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="valuationDatePickerOpen()"><i
+                <button type="button" class="btn btn-default" ng-click="fromDatePickerOpen()"><i
                     class="glyphicon glyphicon-calendar"></i></button>
               </span>
       </p>
@@ -29,7 +29,7 @@
                ng-click="toDatePickerOpen()"
                ng-model="toDate" min-date="fromDate" max-date="today" placeholder="to date"/>
               <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="valuationDatePickerOpen()"><i
+                <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i
                     class="glyphicon glyphicon-calendar"></i></button>
               </span>
       </p>
@@ -88,7 +88,7 @@
                 <input type="hidden" name="" ng-model="value.transactions[0].particular.uniqueName">
               </td>
               <td>
-                <input type="text" name="amount" ng-model="value.transactions[0].amount"  valid-number/>
+                <input type="text" name="amount" ng-model="value.transactions[0].amount" valid-number/>
               </td>
             </form>
           </tr>

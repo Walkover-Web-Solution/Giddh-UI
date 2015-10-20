@@ -29,7 +29,7 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
 
     get: (uniqueName) ->
       @handlePromise((onSuccess, onFailure) -> Company.getCompanyDetails({uniqueName: uniqueName}, onSuccess,
-        onFailure))
+          onFailure))
 
     delete: (uniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Company.deleteCompany({

@@ -284,7 +284,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #show account
   $scope.showAccountDtl = (data) ->
-    console.log "showAccountDtl", data
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
     angular.extend($scope.selectedAccount, data)

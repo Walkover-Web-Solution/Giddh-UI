@@ -307,22 +307,26 @@ describe 'groupController', ->
       expect(@scope.moveto).toBeUndefined()
 
 
-  describe '#showAccount', ->
-    it 'should set showGroupDetails variable to false, showAccountDetails to true & set value for selected account variable and set breadcrum', ->
-      data = {"name": "testing"}
-      spyOn(@scope, "showBreadCrumbs")
-      @scope.showAccount(data)
+  describe '#showAccountDtl', ->
+    xit 'should set showGroupDetails variable to false, showAccountDetails to true & set value for selected account variable and set breadcrum', ->
+      data = {"name": "testing","groups":[{"name":"g1"},{"name":"g1"}]}
+      spyOn(@scope, 'breakMobNo')
+      spyOn(@scope, 'setOpeningBalanceDate')
+      @scope.showAccountDtl(data)
       expect(@scope.showGroupDetails).toBeFalsy()
       expect(@scope.showAccountDetails).toBeTruthy()
       expect(@scope.selectedAccount).toEqual(data)
-      expect(@scope.showBreadCrumbs).toHaveBeenCalled()
+      expect(@scope.breakMobNo).toHaveBeenCalledWith(data)
+      expect(@scope.setOpeningBalanceDate).toHaveBeenCalled()
+      expect(@scope.acntCase).toBe("Update")
+
 
   describe '#showBreadCrumbs', ->
     it 'should set showBreadCrumbs variable to true & set value in breadCrumbList', ->
       data = {"pName": ["n1", "n2", "n3"], "pUnqName": ["un1", "un2", "un3"]}
       @scope.showBreadCrumbs(data)
       expect(@scope.showBreadCrumb).toBeTruthy()
-      expect(@scope.breadCrumbList).toEqual([["n3", "un3"], ["n2", "un2"], ["n1", "un1"]])
+      expect(@scope.breadCrumbList).toEqual({"pName": ["n1", "n2", "n3"], "pUnqName": ["un1", "un2", "un3"]})
 
   describe '#isEmptyObject', ->
     it 'should return true if object is empty', ->

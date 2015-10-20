@@ -156,8 +156,9 @@ describe 'companyController', ->
       expect(@scope.openFirstTimeUserModal).toHaveBeenCalled()
 
     it 'should set true to a variable and push data in company list, and by default click on first child to get company details', ->
-      response = {"body": [{"email": "abc@def", "contactNo": "9104120", "baseCurrency": "INR"}]}
+      response = {"body": [{"email": "abc@def", "contactNo": "9104120", "baseCurrency": "INR", "index": 0}]}
       spyOn(@scope, "goToCompany")
+      spyOn(@localStorageService, "get").andReturn(response.body[0])
 
       @scope.getCompanyListSuccess(response)
 
@@ -201,7 +202,7 @@ describe 'companyController', ->
 
   describe '#goToCompany', ->
     it 'should make a call for check permissions, set a variable true, put data in scope variable and set data in localStorage, and add active class in li', ->
-      data = {uniqueName: "afafafafaf1443520197325007bgo"}
+      data = {uniqueName: "afafafafaf1443520197325007bgo", "index": 0, "cCode": ""}
       index = 0
       @scope.canManageUser = true
 
@@ -217,7 +218,7 @@ describe 'companyController', ->
 
     it 'should not call getSharedUserList', ->
       @scope.canManageUser = false
-      data = {uniqueName: "afafafafaf1443520197325007bgo"}
+      data = {uniqueName: "afafafafaf1443520197325007bgo", "index": 0, "cCode": ""}
       index = 0
 
       spyOn(@scope, "ifHavePermission")
@@ -365,7 +366,7 @@ describe 'companyController', ->
 
   describe '#updateUserRole', ->
     it 'should call companyServices.share service with role or json object contains email', ->
-      role= "view_only"
+      role = "view_only"
       userEmail = "s@g.com"
       sData = {role: role, user: userEmail}
       @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
@@ -382,7 +383,7 @@ describe 'companyController', ->
       spyOn(@companyServices, "share").andReturn(deferred.promise)
       @scope.shareCompanyWithUser()
       expect(@companyServices.share).toHaveBeenCalledWith(@scope.selectedCompany.uniqueName, @scope.shareRequest)
-      
+
   describe '#onShareCompanySuccess', ->
     it 'should make a blank object, show success message and call getSharedUserList function', ->
       @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
@@ -393,7 +394,8 @@ describe 'companyController', ->
 
       @scope.onShareCompanySuccess(response)
       expect(@scope.shareRequest).toEqual(data)
-      expect(@toastr.success).toHaveBeenCalledWith("Company 'companyUniqueName' shared successfully with 'name'", "success")
+      expect(@toastr.success).toHaveBeenCalledWith("Company 'companyUniqueName' shared successfully with 'name'",
+          "success")
       expect(@scope.getSharedUserList).toHaveBeenCalledWith(@scope.selectedCompany.uniqueName)
 
   describe '#onShareCompanyFailure', ->
@@ -410,7 +412,7 @@ describe 'companyController', ->
       spyOn(@companyServices, "getRoles").andReturn(deferred.promise)
       @scope.getRolesList()
       expect(@companyServices.getRoles).toHaveBeenCalledWith(@scope.selectedCompany.uniqueName)
-  
+
   describe '#getRolesSuccess', ->
     it 'should set data in scope variable rolesList', ->
       response = {
@@ -418,17 +420,18 @@ describe 'companyController', ->
         "body": [{
           "name": "Some Name"
           "uniqueName": "some_name"
-        }]}
+        }]
+      }
       @scope.getRolesSuccess(response)
       expect(@scope.rolesList).toEqual(response.body)
-  
+
   describe '#getRolesFailure', ->
     it 'should show toastr with error message', ->
       response = {"data": {"status": "Error", "message": "some-message"}}
       spyOn(@toastr, 'error')
       @scope.getRolesFailure(response)
       expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
-  
+
   describe '#getSharedUserList', ->
     it 'should call companyService with shredList method', ->
       uniqueName = "afafafafaf1443520197325007bgo"
@@ -436,14 +439,17 @@ describe 'companyController', ->
       spyOn(@companyServices, "shredList").andReturn(deferred.promise)
       @scope.getSharedUserList(uniqueName)
       expect(@companyServices.shredList).toHaveBeenCalledWith(uniqueName)
-    
+
 
   describe '#getSharedUserListSuccess', ->
     it 'should set data in scope variable sharedUsersList', ->
-      response = {"status":"success","body":[{"userName":"ravi","userEmail":"ravisoni@hostnsoft.com","userUniqueName":"ravisoni"}]}
+      response = {
+        "status": "success",
+        "body": [{"userName": "ravi", "userEmail": "ravisoni@hostnsoft.com", "userUniqueName": "ravisoni"}]
+      }
       @scope.getSharedUserListSuccess(response)
       expect(@scope.sharedUsersList).toEqual(response.body)
-  
+
   describe '#getSharedUserListFailure', ->
     it 'should show toastr with error message', ->
       response = {"data": {"status": "Error", "message": "some-message"}}
@@ -465,13 +471,13 @@ describe 'companyController', ->
   describe '#unSharedCompSuccess', ->
     it 'should show success toastr and call getSharedUserList function', ->
       @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
-      response = {"status":"success","body": "Company unshared successfully"}
+      response = {"status": "success", "body": "Company unshared successfully"}
       spyOn(@toastr, 'success')
       spyOn(@scope, "getSharedUserList")
       @scope.unSharedCompSuccess(response)
       expect(@toastr.success).toHaveBeenCalledWith("Company unshared successfully", "Success")
       expect(@scope.getSharedUserList).toHaveBeenCalledWith(@scope.selectedCompany.uniqueName)
-  
+
   describe '#unSharedCompFailure', ->
     it 'should show toastr with error message', ->
       response = {"data": {"status": "Error", "message": "some-message"}}

@@ -91,6 +91,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       lsKeys = localStorageService.keys()
       if _.contains(lsKeys, "_selectedCompany")
         cdt = localStorageService.get("_selectedCompany")
+        cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName});
+        localStorageService.set("_selectedCompany", cdt)
         $scope.goToCompany(cdt, cdt.index)
       else
         $scope.goToCompany($scope.companyList[0], 0)
@@ -127,7 +129,17 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     $scope.selectedCmpLi = index
     angular.extend($scope.selectedCompany, data)
     $scope.selectedCompany.index = index
+
+    contactnumber = $scope.selectedCompany.contactNo
+    if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
+      SplitNumber = contactnumber.split('-')
+      console.log "split number", SplitNumber
+      $scope.selectedCompany.contactNo = SplitNumber[1]
+      $scope.selectedCompany.cCode = SplitNumber[0]
+
+
     localStorageService.set("_selectedCompany", $scope.selectedCompany)
+
     if $scope.canManageUser is true
       $scope.getSharedUserList($scope.selectedCompany.uniqueName)
       $scope.getRolesList()
@@ -140,12 +152,16 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
+    if not _.isEmpty(data.contactNo)
+      data.contactNo = data.cCode + "-" + data.contactNo
+
     companyServices.update(data).then($scope.updtCompanySuccess, $scope.updtCompanyFailure)
 
   #update company success
   $scope.updtCompanySuccess = (response)->
     toastr.success("Company updated successfully", "Success")
     $scope.getCompanyList()
+    localStorageService.set("_selectedCompany", response.body)
 
   #update company failure
   $scope.updtCompanyFailure = (response)->
@@ -263,7 +279,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   $scope.unSharedCompFailure = (response) ->
     toastr.error(response.data.message, response.data.status)
-  
+
   #fire function after page fully loaded
   $scope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()

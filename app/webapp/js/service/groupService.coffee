@@ -78,7 +78,7 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
       listofUN = _.map(rawList, (listItem) ->
         newParents = _.union([],parents)
         newParents.push({name: listItem.name, uniqueName: listItem.uniqueName})
-        if listItem.groups.length > 0          
+        if listItem.groups.length > 0
           result = groupService.flattenGroup(listItem.groups, newParents)
           result.push(listItem)
         else
