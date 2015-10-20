@@ -19,7 +19,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
   $scope.getGroupListSuccess = (result) ->
     $scope.groupList = result.body
-    $scope.flattenGroupList = groupService.flattenGroup($scope.groupList)
+    $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
     $scope.showAccountList = true
 

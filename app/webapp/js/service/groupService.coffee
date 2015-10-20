@@ -73,14 +73,18 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
         groupUniqueName: unqNamesObj.selGrpUname
       }, onSuccess, onFailure))
 
-    flattenGroup: (rawList) ->
+
+    flattenGroup: (rawList, parents) ->
       listofUN = _.map(rawList, (listItem) ->
-        if listItem.groups.length > 0
-          uniqueList = groupService.flattenGroup(listItem.groups)
-          uniqueList.push(listItem)
-          uniqueList
+        newParents = _.union([],parents)
+        newParents.push({name: listItem.name, uniqueName: listItem.uniqueName})
+        if listItem.groups.length > 0          
+          result = groupService.flattenGroup(listItem.groups, newParents)
+          result.push(listItem)
         else
-          listItem
+          result = listItem
+        listItem.parentGroups = newParents
+        result
       )
       _.flatten(listofUN)
 
@@ -102,31 +106,25 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
         if listItem.groups.length > 0
           uniqueList = groupService.flattenAccount(listItem.groups)
           _.each(listItem.accounts, (accntItem) ->
-            if _.isUndefined(accntItem.pName)
-              accntItem.pName = [listItem.name]
-              accntItem.pUnqName = [listItem.uniqueName]
+            if _.isUndefined(accntItem.parentGroups)
+              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName}]
             else
-              accntItem.pName.push(listItem.name)
-              accntItem.pUnqName.push(listItem.uniqueName)
+              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName})
           )
           uniqueList.push(listItem.accounts)
           _.each(uniqueList, (accntItem) ->
-            if _.isUndefined(accntItem.pName)
-              accntItem.pName = [listItem.name]
-              accntItem.pUnqName = [listItem.uniqueName]
+            if _.isUndefined(accntItem.parentGroups)
+              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName}]
             else
-              accntItem.pName.push(listItem.name)
-              accntItem.pUnqName.push(listItem.uniqueName)
+              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName})
           )
           uniqueList
         else
           _.each(listItem.accounts, (accntItem) ->
-            if _.isUndefined(accntItem.pName)
-              accntItem.pName = [listItem.name]
-              accntItem.pUnqName = [listItem.uniqueName]
+            if _.isUndefined(accntItem.parentGroups)
+              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName}]
             else
-              accntItem.pName.push(listItem.name)
-              accntItem.pUnqName.push(listItem.uniqueName)
+              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName})
           )
           listItem.accounts
       )

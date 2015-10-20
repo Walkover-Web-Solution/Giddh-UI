@@ -1053,3 +1053,7 @@ li:last-child .angular-ui-tree-handle {
 .icon-out {
     background-position: 0 -432px
 }
+/*breadcrumb style*/
+.breadcrumb > .active > a{
+    color: #777;
+}

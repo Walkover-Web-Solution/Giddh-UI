@@ -1,14 +1,13 @@
 <ol class="breadcrumb mrB2" ng-if="showBreadCrumb">
-  <li ng-repeat="(key,value) in breadCrumbList">
-    <a href="javascript:void(0)" ng-click="jumpToGroup(value[1], groupList)">{{value[0]}} 
+  <li ng-repeat="(key,value) in breadCrumbList" 
+  ng-class="{active:$last}">
+    <a href="javascript:void(0)" ng-click="jumpToGroup(value.uniqueName, groupList)">{{value.name}} 
     </a>
   </li>
 </ol>
 
 <div class="clearfix">
-  <div class="dGryHead">
-    Add New Account
-  </div>
+  <div class="dGryHead">{{acntCase}} Account</div>
 
   <form class="col-md-12 col-sm-12" name="addAccountForm" novalidate>
     
@@ -96,9 +95,12 @@
 
     </div>
     <!-- end of clearfix -->
-    <div class="row pdT2 pdL pdR">
+    <div class="row pdT1 pdL pdR">
       <div class="form-group col-md-12">
-        <button class="btn btn-success" ng-click="updateAccount()" ng-disabled="addAccountForm.$invalid">Update</button>
+        <button ng-if="acntCase == 'Update'" class="btn btn-success" ng-click="updateAccount()" ng-disabled="addAccountForm.$invalid">{{acntCase}}</button>
+
+        <button ng-if="acntCase == 'Add'" class="btn btn-success" ng-click="addAccount()" ng-disabled="addAccountForm.$invalid">{{acntCase}}</button>
+
       </div>
     </div>
 

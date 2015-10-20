@@ -6,6 +6,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.moveto = undefined
   $scope.selectedGroup = {}
   $scope.selectedSubGroup = {}
+  $scope.selectedAccount ={}
   $scope.datePicker = {accountOpeningBalanceDate: ""}
   $scope.selectedGroupUName = ""
 
@@ -20,8 +21,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     role: "view_only"
     user: ""
   $scope.openingBalType = [
-    {"name": "Credit", "val": "credit"}
-    {"name": "Debit", "val": "debit"}
+    {"name": "Credit", "val": "CREDIT"}
+    {"name": "Debit", "val": "DEBIT"}
   ]
   $scope.acntExt = {
     Ccode: undefined,
@@ -50,8 +51,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (result) ->
-    $scope.groupList = result.body
-    $scope.flattenGroupList = groupService.flattenGroup($scope.groupList)
+    # angular.extend($scope.groupList, result.body)
+    $scope.groupList= result.body
+    $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntList = groupService.flattenAccount($scope.groupList)
     $scope.showListGroupsNow = true
 
@@ -131,6 +133,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onUpdateGroupSuccess = () ->
     $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
     toastr.success("Group has been updated successfully.", "Success")
+    $scope.getGroups()
 
   $scope.onUpdateGroupFailure = () ->
     toastr.error("Unable to update group at the moment. Please try again later.", "Error")
@@ -218,11 +221,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   #show breadcrumbs
   $scope.showBreadCrumbs = (data) ->
     $scope.showBreadCrumb = true
-    $scope.breadCrumbList = _.zip(data.pName, data.pUnqName).reverse()
+    $scope.breadCrumbList = data
 
   #jump to group
   $scope.jumpToGroup = (grpUniqName, grpList)  ->
-    fltGrpList = groupService.flattenGroup(grpList)
+    console.log "jumpToGroup"
+    fltGrpList = groupService.flattenGroup(grpList, [])
     obj = _.find(fltGrpList, (item) ->
       item.uniqueName == grpUniqName
     )
@@ -279,13 +283,16 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.format = "dd-MM-yyyy"
 
   #show account
-  $scope.showAccount = (data) ->
+  $scope.showAccountDtl = (data) ->
+    console.log "showAccountDtl", data
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
-    $scope.selectedAccount = data
-    $scope.showBreadCrumbs(data)
+    angular.extend($scope.selectedAccount, data)
+    $scope.showBreadCrumbs(data.parentGroups.reverse())
     $scope.breakMobNo(data)
     $scope.setOpeningBalanceDate()
+    # for play between update and add
+    $scope.acntCase = "Update"
 
   # prepare date object
   $scope.setOpeningBalanceDate = () ->
@@ -294,6 +301,24 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.datePicker.accountOpeningBalanceDate = new Date(newDateObj[2], newDateObj[1] - 1, newDateObj[0]);
     else
       $scope.datePicker.accountOpeningBalanceDate = new Date()
+
+  $scope.addNewAccountShow = (groupData)  ->
+    # make blank for new
+    $scope.selectedAccount = {}
+    $scope.acntExt = {
+      Ccode: undefined
+      onlyMobileNo: undefined
+    }
+    $scope.breadCrumbList = undefined
+    $scope.setOpeningBalanceDate()
+    $scope.showGroupDetails = false
+    $scope.showAccountDetails = true
+    # for play between update and add
+    $scope.acntCase = "Add"
+    $scope.showBreadCrumbs($scope.selectedGroup.parentGroups)
+
+    
+
 
   $scope.updateAccount = () ->
     $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.datePicker.accountOpeningBalanceDate,"dd-MM-yyyy")
