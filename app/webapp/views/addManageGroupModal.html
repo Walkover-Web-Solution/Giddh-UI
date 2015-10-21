@@ -46,16 +46,16 @@
               <script type="text/ng-template" id="nodes_renderer.html">
                 <div ui-tree-handle class="tree-node tree-node-content" ng-class="{'active': selectedItem === node}" ng-click="selectItem(node)">
                   <div class="clearfix">
-                    <a class="btn-xs" ng-if="node.groups && node.groups.length > 0" data-nodrag ng-click="toggle(this)">
+                    <a class="btn-xs" ng-if="node.groups && node.groups.length > 0" data-nodrag ng-click="toggle(this); stopBubble($event)">
                     <span class="glyphicon"
                           ng-class="{
                         'glyphicon-chevron-right': collapsed,
                         'glyphicon-chevron-down': !collapsed
                       }"></span>
                     </a>
-                    <span ng-click="selectGroupToEdit(node)">{{node.name}}</span>
+                    <span>{{node.name}}</span>
                   </div>
-                  <p ng-click="selectGroupToEdit(node)">{{node.uniqueName}}</p>
+                  <p>{{node.uniqueName}}</p>
                 </div>
                 <ol ui-tree-nodes="" ng-model="node.groups"
                     ng-class="grpSrch.length > 0 ? collapsed : {hidden: collapsed}">

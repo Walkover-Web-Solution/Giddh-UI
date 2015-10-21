@@ -61,6 +61,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error("Unable to get group details.", "Error")
 
   $scope.selectGroupToEdit = (group) ->
+    console.log group, "selectGroupToEdit"
     $scope.selectedGroup = group
     if _.isEmpty($scope.selectedGroup.oldUName)
       $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
@@ -214,9 +215,13 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onMoveGroupFailure = () ->
     toastr.error("Unable to move group.", "Error")
 
+  $scope.stopBubble = (e) ->
+    e.stopPropagation()
+
   $scope.selectItem = (item) ->
     $scope.selectedItem = item
     $scope.selectedAccntMenu = undefined
+    $scope.selectGroupToEdit(item)
 
   #show breadcrumbs
   $scope.showBreadCrumbs = (data) ->
@@ -329,15 +334,23 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.addAccount = () ->
     console.log "addAccount", $scope.selectedAccount
     unqNamesObj = $scope.setAdditionalAccountDetails()
-    accountService.createAc(unqNamesObj, $scope.selectedAccount).then($scope.updateAccountSuccess,
-      $scope.updateAccountFailure)
+    accountService.createAc(unqNamesObj, $scope.selectedAccount).then($scope.addAccountSuccess,
+      $scope.addAccountFailure)
+
+  # $scope.selectGroupToEdit = (group)
+  $scope.addAccountSuccess = (result) ->
+    toastr.success("Account updated successfully", result.status)
+    $scope.selectedAccount = {}
+    $scope.selectedGroup.accounts.push(result.body)
+    $scope.groupAccntList = $scope.selectedGroup.accounts
 
 
+  $scope.addAccountFailure = (result) ->
+    console.log "addAccountFailure", result
+      
 
   $scope.updateAccount = () ->
-
     unqNamesObj = $scope.setAdditionalAccountDetails()
-
     if _.isUndefined($scope.selectedGroup.uniqueName)
       lastVal = _.last($scope.breadCrumbList)
       unqNamesObj.selGrpUname = lastVal[1]
@@ -346,7 +359,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.updateAccountSuccess = (result) ->
     toastr.success("Group updated successfully", result.status)
-    $scope.getGroups()
+    angular.merge($scope.selectedAccount, result.body)
+    getTrueIndex = 0
+    getIndex = _.find($scope.selectedGroup.accounts, (item, index) ->
+        if item.uniqueName == $scope.selectedAccount.uniqueName
+          getTrueIndex = index
+      )
+    angular.merge($scope.groupAccntList[getTrueIndex], $scope.selectedAccount)
+
+    
 
   $scope.updateAccountFailure = (result) ->
     console.log "updateAccountFailure", result
