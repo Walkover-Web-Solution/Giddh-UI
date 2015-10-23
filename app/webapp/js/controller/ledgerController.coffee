@@ -1,12 +1,14 @@
 "use strict"
 
-ledgerController = ($scope, $rootScope, $timeout, $http, $modal, localStorageService, toastr, locationService) ->
-  $scope.sarfaraz = "My name"
+ledgerController = ($scope, $rootScope, localStorageService, toastr, groupService, modalService, accountService, ledgerService, $filter, locationService) ->
+  $scope.accntTitle = undefined
+  $scope.showLedgerBox = true
+  
 
   #date time picker code starts here
   $scope.today = new Date()
-  $scope.fromDate = new Date()
-  $scope.toDate = new Date()
+  $scope.fromDate = {date: new Date()}
+  $scope.toDate = {date: new Date()}
 
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
@@ -27,7 +29,38 @@ ledgerController = ($scope, $rootScope, $timeout, $http, $modal, localStorageSer
   }
   $scope.format = "dd-MM-yyyy"
 
-  $scope.sampleLedger = {
+
+  # ledger
+  # load ledger start
+  $scope.loadLedger = (data, acData) ->
+    $scope.accntTitle = acData.name
+    $scope.showLedgerBox = true
+
+    unqNamesObj = {
+      compUname: $scope.selectedCompany.uniqueName
+      selGrpUname: data.groupUniqueName
+      acntUname: acData.uniqueName
+      fromDate: $filter('date')($scope.fromDate.date,"dd-MM-yyyy")
+      toDate: $filter('date')($scope.toDate.date,"dd-MM-yyyy")
+    }
+    ledgerService.getLedger(unqNamesObj).then($scope.loadLedgerSuccess, $scope.loadLedgerFailure)
+
+  $scope.loadLedgerSuccess = (response) ->
+    console.log response, "loadLedgerSuccess"
+    # $scope.ledgerData = response.body
+
+  $scope.loadLedgerFailure = (response) ->
+    console.log response
+
+  $scope.addCrossFormField = (i, d, c) ->
+    console.log i, d, c, 'addCrossFormField'
+
+  
+  
+
+  $scope.states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
+
+  $scope.ledgerData = {
     "broughtForwardBalance": {
       "amount": 0,
       "type": "CREDIT"
@@ -153,7 +186,7 @@ ledgerController = ($scope, $rootScope, $timeout, $http, $modal, localStorageSer
 
   $rootScope.$on '$viewContentLoaded', ->
     console.log "ledger rootScope viewContentLoaded"
-    $scope.fromDate.setDate(1)
+    $scope.fromDate.date.setDate(1)
     $rootScope.isCollapsed = true
 
 

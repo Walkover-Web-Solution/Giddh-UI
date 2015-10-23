@@ -12,6 +12,7 @@ app = angular.module("giddhWebApp",
     "ui.tree"
     "valid-number"
     "valid-date"
+    "ledger"
   ]
 )
 

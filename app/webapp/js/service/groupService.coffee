@@ -179,11 +179,13 @@ angular.module('giddhWebApp').service 'ledgerService', ($resource, $q) ->
         'companyUniqueName': @companyUniqueName,
         'groupUniqueName': @groupUniqueName,
         'accountsUniqueName': @accountsUniqueName
+        'date1': @date1
+        'date2': @date2
       },
       {
         get: {
           method: 'GET', 
-          url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/ledgers'
+          url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/ledgers?fromDate=:date1&toDate=:date2'
         }
         create: {method: 'POST'}
         update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'}
@@ -206,6 +208,8 @@ angular.module('giddhWebApp').service 'ledgerService', ($resource, $q) ->
         companyUniqueName: unqNamesObj.compUname,
         groupUniqueName: unqNamesObj.selGrpUname,
         accountsUniqueName: unqNamesObj.acntUname
+        date1: unqNamesObj.fromDate
+        date2: unqNamesObj.toDate
       }, onSuccess, onFailure))
 
 

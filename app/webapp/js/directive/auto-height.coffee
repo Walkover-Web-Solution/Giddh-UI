@@ -74,3 +74,16 @@ directive 'validDate', ->
 
   }
 
+# custom directive for ledger
+angular.module('ledger', []).
+directive 'giddhLedger', ->
+  {
+    link: (scope, ele, attrs) ->
+      siblingDiv = ele.context.nextElementSibling
+      childs = ele.context
+      ele.bind('mouseenter', ->
+        console.log "mouseenter", ele
+      )
+      ele.bind('mouseleave', ->
+      )
+  }

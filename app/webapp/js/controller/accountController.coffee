@@ -1,20 +1,21 @@
 "use strict"
 
-accountController = ($scope, $rootScope, localStorageService, toastr, groupService, modalService, accountService, ledgerService) ->
+accountController = ($scope, $rootScope, localStorageService, toastr, groupService, modalService, accountService, ledgerService, $filter) ->
   $scope.groupList = {}
   $scope.flattenGroupList = {}
   $scope.flattenAccountListWithParent = {}
   $scope.flatAccntWGroupsList = {}
   $scope.showAccountList = false
-  #$scope.selectedCompany = {}
+  #$rootScope.selectedCompany = {}
+  
 
   $scope.getAccountsGroups = ->
-    $scope.selectedCompany = localStorageService.get("_selectedCompany")
+    $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.showAccountList = false
-    if _.isEmpty($scope.selectedCompany)
+    if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
-      groupService.getAllWithAccountsFor($scope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
+      groupService.getAllWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
           $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (result) ->
@@ -34,24 +35,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   #   console.log item, index, "selAccnt"
   #   $scope.selAccntMenu = item
 
-  # load ledger start
-  $scope.loadLedger = (data, acData) ->
-    $scope.fromDate = ""
-    $scope.toDate = ""
-
-    unqNamesObj = {
-      compUname: $scope.selectedCompany.uniqueName
-      selGrpUname: data.groupUniqueName
-      acntUname: acData.uniqueName
-    }
-    console.log unqNamesObj, "loadLedger"
-    ledgerService.getLedger(unqNamesObj).then($scope.loadLedgerSuccess, $scope.loadLedgerFailure)
-
-  $scope.loadLedgerSuccess = (response) ->
-    console.log response, "loadLedgerSuccess"
-
-  $scope.loadLedgerFailure = (response) ->
-    console.log response
+  
 
 
   $rootScope.$on '$reloadAccount', ->
