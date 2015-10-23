@@ -74,4 +74,91 @@ directive 'validDate', ->
 
   }
 
-  
+
+(->
+  angular.module('ledger', []).directive 'giddhLedger', ->
+    { link: (scope, ele, attrs) ->
+      childs = undefined
+      siblingDiv = undefined
+      siblingDiv = ele.context.nextElementSibling
+      childs = ele.context
+      ele.bind 'mouseenter', ->
+        # console.log("mouseenter", ele);
+        return
+      ele.bind 'mouseleave', ->
+        #do nothing
+        return
+      return
+ }
+  angular.module('ledgerD', []).directive 'myForm', ->
+    {
+      restrict: 'E'
+      scope: false
+      transclude: true
+      replace: true
+      template: '<div>' + '<a href="" ng-transclude></a>' + 
+      '<div ng-hide="!formVisible" ng-attr-popover="">' + 
+      '<div class="form-group"><input type="text" class="form-control" name="extraForm.name"></div>' + 
+      '<div class="form-group"><input type="text" class="form-control" name="extraForm.cname"></div>' + 
+      '<div class="">' + 
+      '<button ng-click="submit($event, extraForm)" type="button" class="btn btn-primary">OK</button>' + 
+        '<button type="button" class="btn" ng-click="formVisible=false">close</button>' + 
+          '</div>' + 
+          '<div class="editable-error help-block" ng-show="error">{{ error }}</div>' + 
+            '</div>' + 
+            '</div>'
+      controller: ($scope, $element, $attrs) ->
+        $scope.formVisible = false
+
+        $scope.submit = (evt, formdata) ->
+          console.log formdata, 'form submit', evt
+          $scope.formVisible = false
+          return
+
+        return
+
+    }
+  angular.module('ledgerB', []).directive 'popover', ($compile) ->
+    {
+      restrict: 'A'
+      scope: false
+      compile: (tElement, tAttrs, transclude) ->
+        {
+          pre: (scope, iElement, iAttrs, controller) ->
+          post: (scope, iElement, iAttrs, controller) ->
+            attrs = iAttrs
+            element = iElement
+            # We assume that the trigger (i.e. the element the popover will be
+            # positioned at is the previous child.
+            trigger = element.prev()
+            popup = element
+            # Connect scope to popover.
+            trigger.on 'shown', ->
+              tip = trigger.data('popover').tip()
+              $compile(tip) scope
+              scope.$digest()
+              return
+            trigger.popover
+              html: true
+              title: 'Hey DUDE'
+              content: ->
+                scope.$apply ->
+                  scope.formVisible = true
+                  return
+                popup
+              container: 'body'
+            scope.$watch 'formVisible', (formVisible) ->
+              console.log formVisible
+              if !formVisible
+                trigger.popover 'hide'
+              return
+            if trigger.data('popover')
+              trigger.data('popover').tip().css 'width', '500px'
+            return
+
+        }
+
+    }
+  return
+).call this
+
