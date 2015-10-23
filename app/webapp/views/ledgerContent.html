@@ -35,9 +35,6 @@
 
 
 
-
-  
-
   <table class="table ledgerTable">
     <thead>
     <th class="nopad">
@@ -92,8 +89,10 @@
                     class="drEntryForm_{{$index}}" 
                     name="drEntryForm_{{$index}}" 
                     novalidate
+                    ng-click="somethingHappens()"
+                    giddh-ledger
                   >
-                  <div giddh-ledger class=""  tabindex="-1">
+                  <div>
                   <table class="table ldgrInnerTbl">
                   <tr>
                     <td width="28%">
@@ -118,13 +117,14 @@
                     <td width="28%">
                       <input type="text" 
                       name="drEntryForm_{{$index}}.amount" ng-model="value.transactions[0].amount" valid-number/>
+
+                      
                     </td>
-                  
+                    
                   </tr>
                   </table>
                   </div>
-                  <div class="popContent">
-                  </div>
+                  
                   </form>
                 </div>
 
@@ -203,3 +203,22 @@
 
   </table>
 </div>
+
+
+<div class="col-md-12">
+<!-- directive -->
+
+  <my-form value="AFAFAF">
+    Click me am normal directive with extra elements
+  </my-form>
+
+</div>
+
+
+
+
+
+  
+
+  
+

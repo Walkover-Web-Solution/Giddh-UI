@@ -13,6 +13,8 @@ app = angular.module("giddhWebApp",
     "valid-number"
     "valid-date"
     "ledger"
+    "ledgerD"
+    "ledgerB"
   ]
 )
 
