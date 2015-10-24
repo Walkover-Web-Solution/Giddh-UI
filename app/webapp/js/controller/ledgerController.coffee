@@ -68,8 +68,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     console.log formdata, "form submit", evt
     $scope.formVisible = false;
 
-   
-
   $scope.states = ['Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Dakota', 'North Carolina', 'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
 
   $scope.ledgerData = {
@@ -91,7 +89,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
               "name": "Sarfaraz",
               "uniqueName": "temp"
             },
-            "amount": 4004,
+            "amount": 1001,
             "type": "DEBIT"
           }
         ],
@@ -112,7 +110,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
               "name": "Rahul",
               "uniqueName": "bank"
             },
-            "amount": 501,
+            "amount": 2001,
             "type": "DEBIT"
           },
           {
@@ -120,7 +118,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
               "name": "Rahul",
               "uniqueName": "cake"
             },
-            "amount": 501,
+            "amount": 3001,
             "type": "DEBIT"
           }
         ],
@@ -141,7 +139,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
               "name": "Rahul",
               "uniqueName": "bank"
             },
-            "amount": 501,
+            "amount":4001,
             "type": "DEBIT"
           },
           {
@@ -149,7 +147,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
               "name": "Rahul",
               "uniqueName": "cake"
             },
-            "amount": 501,
+            "amount": 5001,
             "type": "DEBIT"
           }
         ],
@@ -160,7 +158,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
           "name": "sales",
           "shortCode": "sal"
         },
-        "entryDate": "12-09-2015",
+        "entryDate": "13-09-2015",
         "voucherNo": 1004
       },
       {
@@ -170,7 +168,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
               "name": "Rahul",
               "uniqueName": "temp"
             },
-            "amount": 501,
+            "amount": 6001,
             "type": "DEBIT"
           },
           {
@@ -178,7 +176,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
               "name": "Rahul",
               "uniqueName": "water"
             },
-            "amount": 501,
+            "amount": 7001,
             "type": "DEBIT"
           }
         ],
@@ -195,11 +193,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     ]
   }
 
-
   $rootScope.$on '$viewContentLoaded', ->
     console.log "ledger rootScope viewContentLoaded"
     $scope.fromDate.date.setDate(1)
     $rootScope.isCollapsed = true
-
 
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController
