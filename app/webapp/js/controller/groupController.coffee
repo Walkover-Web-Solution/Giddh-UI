@@ -61,12 +61,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error("Unable to get group details.", "Error")
 
   $scope.selectGroupToEdit = (group) ->
-    console.log group, "selectGroupToEdit"
     $scope.selectedGroup = group
     if _.isEmpty($scope.selectedGroup.oldUName)
       $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
-    else
-      console.log "inside else condition"
     $scope.selectedSubGroup = {}
     $scope.showGroupDetails = true
     $scope.showAccountListDetails = true
@@ -330,7 +327,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       selGrpUname: $scope.selectedGroup.uniqueName
       acntUname: $scope.selectedAccount.uniqueName
     }
-
 
   $scope.addAccount = () ->
     console.log "addAccount", $scope.selectedAccount

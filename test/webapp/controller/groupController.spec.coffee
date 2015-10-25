@@ -354,3 +354,10 @@ describe 'groupController', ->
       data = {"name"}
       @scope.selectAcMenu(data)
       expect(@scope.selectedAccntMenu).toBe(data)
+
+  describe '#hasSharePermission', ->
+    it 'should call permission service method with selected company and manage user permission', ->
+      @scope.selectedCompany = {name: "myCompany"}
+      spyOn(@permissionService, "hasPermissionOn")
+      @scope.hasSharePermission()
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(@scope.selectedCompany, "MNG_USR")

@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService) ->
 
 #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
@@ -38,9 +38,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #check if user is admin
   $scope.ifHavePermission = (data) ->
     $scope.canManageUser = false
-    angular.forEach data.role.permissions, (value, key) ->
-      if value.code is "MNG_USR"
-        $scope.canManageUser = true
+    if permissionService.hasPermissionOn(data, "MNG_USR")
+      $scope.canManageUser = true
 
   #for make sure
   $scope.checkCmpCretedOrNot = ->
