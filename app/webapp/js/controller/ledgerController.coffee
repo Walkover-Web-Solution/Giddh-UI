@@ -3,13 +3,11 @@
 ledgerController = ($scope, $rootScope, localStorageService, toastr, groupService, modalService, accountService, ledgerService, $filter, locationService) ->
   $scope.accntTitle = undefined
   $scope.showLedgerBox = true
-  
 
   #date time picker code starts here
   $scope.today = new Date()
   $scope.fromDate = {date: new Date()}
   $scope.toDate = {date: new Date()}
-
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
 
@@ -27,8 +25,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     'year-range': 1,
     'todayBtn': false
   }
-  $scope.format = "dd-MM-yyyy"
 
+  $scope.format = "dd-MM-yyyy"
 
   # ledger
   # load ledger start
@@ -55,7 +53,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.addCrossFormField = (i, d, c) ->
     console.log i, d, c, 'addCrossFormField'
 
-  
   $scope.somethingHappens = () ->
     console.log "somethingHappens"
 
@@ -64,6 +61,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     templateUrl: 'myPopoverTemplate.html',
     title: 'Title'
   }
+
   $scope.getData = (evt, formdata) ->
     console.log formdata, "form submit", evt
     $scope.formVisible = false;

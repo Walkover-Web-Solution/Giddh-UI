@@ -1,6 +1,6 @@
 'use strict'
 
-groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, $filter) ->
+groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, $filter, permissionService) ->
   $scope.groupList = {}
   $scope.flattenGroupList = {}
   $scope.moveto = undefined
@@ -77,11 +77,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.accountsSearch = undefined
 
   $scope.getGroupSharedList = () ->
-    unqNamesObj = {
-      compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: $scope.selectedGroup.uniqueName
-    }
-    groupService.sharedList(unqNamesObj).then($scope.onsharedListSuccess, $scope.onsharedListFailure)
+    if $scope.hasSharePermission()
+      unqNamesObj = {
+        compUname: $rootScope.selectedCompany.uniqueName
+        selGrpUname: $scope.selectedGroup.uniqueName
+      }
+      groupService.sharedList(unqNamesObj).then($scope.onsharedListSuccess, $scope.onsharedListFailure)
 
   $scope.onsharedListSuccess = (result) ->
     $scope.groupSharedUserList = result.body
@@ -367,7 +368,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       )
     angular.merge($scope.groupAccntList[getTrueIndex], $scope.selectedAccount)
 
-    
+  $scope.hasSharePermission = () ->
+    permissionService.hasPermissionOn($scope.selectedCompany, "MNG_USR")
 
   $scope.updateAccountFailure = (result) ->
     console.log "updateAccountFailure", result

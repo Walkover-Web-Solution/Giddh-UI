@@ -7,7 +7,6 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.flatAccntWGroupsList = {}
   $scope.showAccountList = false
   #$rootScope.selectedCompany = {}
-  
 
   $scope.getAccountsGroups = ->
     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -35,18 +34,11 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   #   console.log item, index, "selAccnt"
   #   $scope.selAccntMenu = item
 
-  
-
-
   $rootScope.$on '$reloadAccount', ->
     $scope.getAccountsGroups()
-    
 
   $rootScope.$on '$viewContentLoaded', ->
     $scope.getAccountsGroups()
-    
-    
-
 
 #init angular app
 angular.module('giddhWebApp').controller 'accountController', accountController

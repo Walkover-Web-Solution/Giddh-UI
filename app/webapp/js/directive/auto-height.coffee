@@ -47,9 +47,7 @@ directive 'validNumber', ->
 
   }
 
-angular.module('valid-date', []).
-directive 'validDate', ->
-  {
+angular.module('valid-date', []).directive 'validDate', ->{
   require: '?ngModel'
   link: (scope, element, attrs, ngModelCtrl) ->
     if !ngModelCtrl
@@ -71,7 +69,6 @@ directive 'validDate', ->
         event.preventDefault()
       return
     return
-
   }
 
 
@@ -115,9 +112,7 @@ directive 'validDate', ->
         console.log formdata, 'form submit', evt
         $scope.formVisible = false
         return
-
       return
-
     }
   angular.module('ledgerB', []).directive 'popover', ($compile) ->
     {
@@ -156,9 +151,7 @@ directive 'validDate', ->
         if trigger.data('popover')
           trigger.data('popover').tip().css 'width', '500px'
         return
-
       }
-
     }
   return
 ).call this

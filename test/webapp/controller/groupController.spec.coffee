@@ -3,16 +3,16 @@
 describe 'groupController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q) ->
+  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, permissionService) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @localStorageService = localStorageService
     @toastr = toastr
     @groupService = groupService
+    @permissionService = permissionService
     @q = $q
     @groupController = $controller('groupController',
-        {$scope: @scope, $rootScope: @rootScope, localStorageService: @localStorageService})
-
+        {$scope: @scope, $rootScope: @rootScope, localStorageService: @localStorageService, permissionService: @permissionService})
 
   describe '#getGroups', ->
     it 'should show a toastr informing user to select company first when no company selected', ->
@@ -57,7 +57,7 @@ describe 'groupController', ->
       expect(@scope.getGroupSharedList).toHaveBeenCalledWith(group)
 
   describe '#getGroupSharedList', ->
-    it 'should call a service with a obj var to get data', ->
+    it 'should call a service with a obj var to get data if user has share permission', ->
       @scope.selectedGroup = {"uniqueName": "1"}
       @rootScope.selectedCompany = {"uniqueName": "2"}
       group = {"name": "Fixed Assets"}
@@ -67,8 +67,17 @@ describe 'groupController', ->
       }
       deferred = @q.defer()
       spyOn(@groupService, "sharedList").andReturn(deferred.promise)
+      spyOn(@permissionService, "hasPermissionOn").andReturn(true)
+
       @scope.getGroupSharedList(group)
       expect(@groupService.sharedList).toHaveBeenCalledWith(unqNamesObj)
+
+    it 'should not call a service with a obj var to get data if user does not have share permission', ->
+      spyOn(@groupService, "sharedList")
+      spyOn(@permissionService, "hasPermissionOn").andReturn(false)
+
+      @scope.getGroupSharedList({})
+      expect(@groupService.sharedList).not.toHaveBeenCalled()
 
   describe '#onsharedListSuccess', ->
     it 'should set response to a variable', ->
@@ -282,7 +291,6 @@ describe 'groupController', ->
       expect(@scope.showGroupDetails).toBeFalsy()
       expect(@scope.moveto).toBe(undefined)
 
-
   describe '#onMoveGroupFailure', ->
     it 'should show error message with toastr', ->
       response = {"data": {"status": "Error", "message": "Unable to move group."}}
@@ -293,8 +301,10 @@ describe 'groupController', ->
   describe '#selectItem', ->
     it 'should make group menus highlight set active class', ->
       item = "item"
+      @spyOn(@scope, "selectGroupToEdit")
       @scope.selectItem(item)
       expect(@scope.selectedItem).toBe(item)
+      expect(@scope.selectGroupToEdit).toHaveBeenCalled()
 
   describe '#onMoveGroupSuccess', ->
     it 'should show success toastr, call getGroups, set selected group to be empty, set showGroupDetails variable to be false and moveTo variable to undefined', ->
