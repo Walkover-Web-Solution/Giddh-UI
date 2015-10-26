@@ -6,7 +6,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.moveto = undefined
   $scope.selectedGroup = {}
   $scope.selectedSubGroup = {}
-  $scope.selectedAccount ={}
+  $scope.selectedAccount = {}
   $scope.datePicker = {accountOpeningBalanceDate: ""}
   $scope.selectedGroupUName = ""
 
@@ -15,6 +15,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.showListGroupsNow = false
   $scope.showAccountDetails = false
   $scope.showAccountListDetails = false
+
+  $scope.canEditGroups = false
+  $scope.canDeleteGroups = false
+  $scope.canAddGroups = false
 
   #set a object for share group
   $scope.shareGroupObj =
@@ -48,11 +52,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       toastr.error("Select company first.", "Error")
     else
       groupService.getAllWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
-        $scope.getGroupListFailure)
+          $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (result) ->
-    # angular.extend($scope.groupList, result.body)
-    $scope.groupList= result.body
+# angular.extend($scope.groupList, result.body)
+    $scope.groupList = result.body
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntList = groupService.flattenAccount($scope.groupList)
     $scope.showListGroupsNow = true
@@ -127,10 +131,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.updateGroup = ->
     $scope.selectedGroup.uniqueName = $scope.selectedGroup.uniqueName.toLowerCase()
     groupService.update($scope.selectedCompany.uniqueName, $scope.selectedGroup).then($scope.onUpdateGroupSuccess,
-      $scope.onUpdateGroupFailure)
+        $scope.onUpdateGroupFailure)
 
   $scope.onUpdateGroupSuccess = () ->
     $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
+    if not _.isEmpty($scope.selectedGroup)
+      $scope.selectedItem = $scope.selectedGroup
     toastr.success("Group has been updated successfully.", "Success")
     $scope.getGroups()
 
@@ -165,7 +171,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       "description": $scope.selectedSubGroup.desc
     }
     groupService.create($rootScope.selectedCompany.uniqueName, body).then($scope.onCreateGroupSuccess,
-      $scope.onCreateGroupFailure)
+        $scope.onCreateGroupFailure)
 
   $scope.onCreateGroupSuccess = () ->
     toastr.success("Sub group added successfully", "Success")
@@ -178,11 +184,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.deleteGroup = ->
     if not $scope.selectedGroup.isFixed
       modalService.openConfirmModal(
-        title: 'Are you sure you want to delete this group? All child groups will also be deleted. ',
+        title: 'Delete group?',
+        body: 'Are you sure you want to delete this group? All child groups will also be deleted.',
         ok: 'Yes',
         cancel: 'No').then -> groupService.delete($rootScope.selectedCompany.uniqueName,
-        $scope.selectedGroup).then($scope.onDeleteGroupSuccess,
-        $scope.onDeleteGroupFailure)
+          $scope.selectedGroup).then($scope.onDeleteGroupSuccess,
+          $scope.onDeleteGroupFailure)
 
   $scope.onDeleteGroupSuccess = () ->
     toastr.success("Group deleted successfully.", "Success")
@@ -305,7 +312,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.datePicker.accountOpeningBalanceDate = new Date()
 
   $scope.addNewAccountShow = (groupData)  ->
-    # make blank for new
+# make blank for new
     $scope.selectedAccount = {}
     $scope.acntExt = {
       Ccode: undefined
@@ -317,10 +324,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showAccountDetails = true
     # for play between update and add
     $scope.acntCase = "Add"
+    $scope.selectedAccntMenu = undefined
     $scope.showBreadCrumbs($scope.selectedGroup.parentGroups)
 
   $scope.setAdditionalAccountDetails = ()->
-    $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.datePicker.accountOpeningBalanceDate,"dd-MM-yyyy")
+    $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.datePicker.accountOpeningBalanceDate,
+        "dd-MM-yyyy")
     $scope.selectedAccount.mobileNo = $scope.mergeNum($scope.acntExt)
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
@@ -332,7 +341,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     console.log "addAccount", $scope.selectedAccount
     unqNamesObj = $scope.setAdditionalAccountDetails()
     accountService.createAc(unqNamesObj, $scope.selectedAccount).then($scope.addAccountSuccess,
-      $scope.addAccountFailure)
+        $scope.addAccountFailure)
 
   # $scope.selectGroupToEdit = (group)
   $scope.addAccountSuccess = (result) ->
@@ -344,7 +353,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.addAccountFailure = (result) ->
     console.log "addAccountFailure", result
-      
+
 
   $scope.updateAccount = () ->
     unqNamesObj = $scope.setAdditionalAccountDetails()
@@ -352,16 +361,16 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       lastVal = _.last($scope.breadCrumbList)
       unqNamesObj.selGrpUname = lastVal[1]
     accountService.updateAc(unqNamesObj, $scope.selectedAccount).then($scope.updateAccountSuccess,
-      $scope.updateAccountFailure)
+        $scope.updateAccountFailure)
 
   $scope.updateAccountSuccess = (result) ->
     toastr.success("Group updated successfully", result.status)
     angular.merge($scope.selectedAccount, result.body)
     getTrueIndex = 0
     getIndex = _.find($scope.selectedGroup.accounts, (item, index) ->
-        if item.uniqueName == $scope.selectedAccount.uniqueName
-          getTrueIndex = index
-      )
+      if item.uniqueName == $scope.selectedAccount.uniqueName
+        getTrueIndex = index
+    )
     angular.merge($scope.groupAccntList[getTrueIndex], $scope.selectedAccount)
 
   $scope.hasSharePermission = () ->

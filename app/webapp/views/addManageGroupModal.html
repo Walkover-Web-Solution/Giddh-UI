@@ -23,7 +23,8 @@
                   <i class="glyphicon glyphicon-search"></i>
                 </div>
 
-                <input type="text" name="searchGroup" class="form-control" ng-model="grpSrch" placeholder="Search accounts">
+                <input type="text" name="searchGroup" class="form-control" ng-model="grpSrch"
+                       placeholder="Search accounts">
 
                 <div ng-hide="subGroupVisible" class="input-group-addon cp" ng-click="collapseAll()">
                   <i class="glyphicon glyphicon-list"></i>
@@ -39,14 +40,17 @@
           <!-- searchbar end -->
 
 
-          <perfect-scrollbar id="addMngGrpScrBar" class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20"
+          <perfect-scrollbar id="addMngGrpScrBar" class="scrClass" wheel-propagation="true" wheel-speed="10"
+                             min-scrollbar-length="20"
                              suppressScrollX="false" useBothWheelAxes="false" suppressScrollY="true">
             <div ng-if="showListGroupsNow">
               <!-- Nested node template -->
               <script type="text/ng-template" id="nodes_renderer.html">
-                <div ui-tree-handle class="tree-node tree-node-content" ng-class="{'active': selectedItem === node}" ng-click="selectItem(node)">
+                <div ui-tree-handle class="tree-node tree-node-content"
+                     ng-class="{'active': node.uniqueName === selectedItem.uniqueName}" ng-click="selectItem(node)">
                   <div class="clearfix">
-                    <a class="btn-xs" ng-if="node.groups && node.groups.length > 0" data-nodrag ng-click="toggle(this); stopBubble($event)">
+                    <a class="btn-xs" ng-if="node.groups && node.groups.length > 0" data-nodrag
+                       ng-click="toggle(this); stopBubble($event)">
                     <span class="glyphicon"
                           ng-class="{
                         'glyphicon-chevron-right': collapsed,
@@ -83,7 +87,7 @@
         <div class="bdrR bdrL row" id="middleBody">
 
           <div ng-if="showGroupDetails" ng-include="'/public/webapp/views/groupOperations.html'"></div>
-          
+
           <div ng-if="showGroupDetails">
             <div class="pd2" ng-hide="selectedGroup.isFixed">
               <button class="btn btn-danger" ng-click="deleteGroup()">Delete</button>
@@ -101,52 +105,66 @@
 
           <div class="form-group pdL1 pdT1 pdR1">
             <div class="input-group">
-                <div class="input-group-addon">
-                  <i class="glyphicon glyphicon-search"></i>
-                </div>
-                <input type="text" name="accountsSearch" ng-model="accountsSearch" class="form-control"  placeholder="Search groups">
+              <div class="input-group-addon">
+                <i class="glyphicon glyphicon-search"></i>
               </div>
-          </div>
-
-        <div ng-if="showAccountListDetails">
-
-          <div class="pdL1 pdR1 mrB1" ng-if="groupAccntList.length == 0">
-            <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{selectedGroup.name}}</strong></h4>
-            <div class="mrB1 mrT1">
-            <button class="btn btn-success btn-block" ng-click="addNewAccountShow(selectedGroup)"
-              href="javascript:void(0)">+ Add New</button>
+              <input type="text" name="accountsSearch" ng-model="accountsSearch" class="form-control"
+                     placeholder="Search groups">
             </div>
           </div>
 
-          <div ng-hide="groupAccntList.length == 0" >
+          <div ng-if="showAccountListDetails">
 
-            <h3 class="mrB1 mrL1">Accounts from <strong>{{selectedGroup.name}}</strong></h3>
+            <div class="pdL1 pdR1 mrB1" ng-if="groupAccntList.length == 0">
+              <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{selectedGroup.name}}</strong>
+              </h4>
 
-            <div class="mrB1 mrT1 pdL1 pdR1">
-            <button class="btn btn-success btn-block" ng-click="addNewAccountShow(selectedGroup)"
-              href="javascript:void(0)">+ Add New</button>
+              <div class="mrB1 mrT1">
+                <button class="btn btn-success btn-block" ng-click="addNewAccountShow(selectedGroup)"
+                        href="javascript:void(0)">+ Add New
+                </button>
+              </div>
             </div>
 
-            <perfect-scrollbar id="selAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20">
+            <div ng-hide="groupAccntList.length == 0">
+
+              <h3 class="mrB1 mrL1">Accounts from <strong>{{selectedGroup.name}}</strong></h3>
+
+              <div class="mrB1 mrT1 pdL1 pdR1">
+                <button class="btn btn-success btn-block" ng-click="addNewAccountShow(selectedGroup)"
+                        href="javascript:void(0)">+ Add New
+                </button>
+              </div>
+
+              <perfect-scrollbar id="selAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="10"
+                                 min-scrollbar-length="20">
+                <div class="list-group">
+                  <a ng-repeat="(key,value) in groupAccntList | filter:accountsSearch track by $index"
+                     href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)"
+                     class="list-group-item" ng-class="{'active': selectedAccntMenu === value}">
+                    <h4 tooltip-placement="bottom" tooltip="{{value.pName[0]}}" class="list-group-item-heading">
+                      {{value.name}}</h4>
+                  </a>
+                </div>
+              </perfect-scrollbar>
+            </div>
+          </div>
+
+          <div ng-if="accountsSearch.length > 0 || isEmptyObject(selectedGroup)">
+            <h3 class="mrB1 mrL1">Accounts from <strong>all group</strong></h3>
+            <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="10"
+                               min-scrollbar-length="20">
               <div class="list-group">
-                <a ng-repeat="(key,value) in groupAccntList | filter:accountsSearch track by $index" href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)" class="list-group-item" ng-class="{'active': selectedAccntMenu === value}">
-                  <h4 tooltip-placement="bottom" tooltip="{{value.pName[0]}}" class="list-group-item-heading">{{value.name}}</h4>
+                <a ng-repeat="(key,value) in flatAccntList | filter:accountsSearch track by $index"
+                   href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)"
+                   class="list-group-item" ng-if="value.parentGroups[0].name!=selectedGroup.name"
+                   ng-class="{'active': selectedAccntMenu === value}">
+                  <h4 tooltip-placement="bottom" tooltip="{{value.parentGroups[0].name}}"
+                      class="list-group-item-heading">{{value.name}}</h4>
                 </a>
               </div>
             </perfect-scrollbar>
           </div>
-        </div>
-        
-        <div ng-if="accountsSearch.length > 0 || isEmptyObject(selectedGroup)">
-          <h3 class="mrB1 mrL1">Accounts from <strong>all group</strong></h3>
-          <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20">
-            <div class="list-group">
-              <a ng-repeat="(key,value) in flatAccntList | filter:accountsSearch track by $index" href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)" class="list-group-item" ng-if="value.parentGroups[0].name!=selectedGroup.name" ng-class="{'active': selectedAccntMenu === value}">
-                <h4 tooltip-placement="bottom" tooltip="{{value.parentGroups[0].name}}" class="list-group-item-heading">{{value.name}}</h4>
-              </a>
-            </div>
-          </perfect-scrollbar>
-        </div>
 
         </div>
       </div>
