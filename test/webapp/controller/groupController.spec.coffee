@@ -3,7 +3,7 @@
 describe 'groupController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, permissionService) ->
+  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, permissionService, modalService) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @localStorageService = localStorageService
@@ -11,8 +11,14 @@ describe 'groupController', ->
     @groupService = groupService
     @permissionService = permissionService
     @q = $q
+    @modalService = modalService
     @groupController = $controller('groupController',
-        {$scope: @scope, $rootScope: @rootScope, localStorageService: @localStorageService, permissionService: @permissionService})
+        {
+          $scope: @scope,
+          $rootScope: @rootScope,
+          localStorageService: @localStorageService,
+          permissionService: @permissionService
+        })
 
   describe '#getGroups', ->
     it 'should show a toastr informing user to select company first when no company selected', ->
@@ -43,18 +49,30 @@ describe 'groupController', ->
   describe '#selectGroupToEdit', ->
     it 'should check if variable is empty then set value according to condition', ->
       spyOn(@scope, "getGroupSharedList")
+      spyOn(@scope, "hasAddPermission")
+      spyOn(@scope, "hasUpdatePermission")
+      spyOn(@scope, "hasDeletePermission")
       @scope.selectedGroup.oldUName = ''
       group = {"name": "Fixed Assets"}
       @scope.selectGroupToEdit(group)
       expect(@scope.selectedGroup.oldUName).toEqual(@scope.selectedGroup.uniqueName)
+      expect(@scope.hasAddPermission).toHaveBeenCalledWith(group)
+      expect(@scope.hasUpdatePermission).toHaveBeenCalledWith(group)
+      expect(@scope.hasDeletePermission).toHaveBeenCalledWith(group)
 
     it 'should set group as selected and a variable to true and make a call to fuction with group variable', ->
       spyOn(@scope, "getGroupSharedList")
+      spyOn(@scope, "hasAddPermission")
+      spyOn(@scope, "hasUpdatePermission")
+      spyOn(@scope, "hasDeletePermission")
       group = {"name": "Fixed Assets"}
       @scope.selectGroupToEdit(group)
       expect(@scope.selectedGroup).toEqual(group)
       expect(@scope.showGroupDetails).toBeTruthy()
       expect(@scope.getGroupSharedList).toHaveBeenCalledWith(group)
+      expect(@scope.hasAddPermission).toHaveBeenCalledWith(group)
+      expect(@scope.hasUpdatePermission).toHaveBeenCalledWith(group)
+      expect(@scope.hasDeletePermission).toHaveBeenCalledWith(group)
 
   describe '#getGroupSharedList', ->
     it 'should call a service with a obj var to get data if user has share permission', ->
@@ -319,7 +337,7 @@ describe 'groupController', ->
 
   describe '#showAccountDtl', ->
     xit 'should set showGroupDetails variable to false, showAccountDetails to true & set value for selected account variable and set breadcrum', ->
-      data = {"name": "testing","groups":[{"name":"g1"},{"name":"g1"}]}
+      data = {"name": "testing", "groups": [{"name": "g1"}, {"name": "g1"}]}
       spyOn(@scope, 'breakMobNo')
       spyOn(@scope, 'setOpeningBalanceDate')
       @scope.showAccountDtl(data)
@@ -361,3 +379,10 @@ describe 'groupController', ->
       spyOn(@permissionService, "hasPermissionOn")
       @scope.hasSharePermission()
       expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(@scope.selectedCompany, "MNG_USR")
+
+  describe '#deleteAccount', ->
+    it 'should check whether user have permission to delete and if no then do not call servie', ->
+      @scope.canDelete = false
+      spyOn(@modalService, 'openConfirmModal')
+      @scope.deleteAccount()
+      expect(@modalService.openConfirmModal).not.toHaveBeenCalled()

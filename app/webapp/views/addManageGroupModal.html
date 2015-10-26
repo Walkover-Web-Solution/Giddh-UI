@@ -89,12 +89,17 @@
           <div ng-if="showGroupDetails" ng-include="'/public/webapp/views/groupOperations.html'"></div>
 
           <div ng-if="showGroupDetails">
-            <div class="pd2" ng-hide="selectedGroup.isFixed">
+            <div class="pd2" ng-hide="selectedGroup.isFixed || !canDelete">
               <button class="btn btn-danger" ng-click="deleteGroup()">Delete</button>
             </div>
           </div>
 
           <div ng-include="'/public/webapp/views/accountOperations.html'" ng-if="showAccountDetails"></div>
+          <div ng-if="showAccountDetails">
+            <div class="pd2">
+              <button class="btn btn-danger" ng-hide="!canDelete" ng-click="deleteAccount()">Delete</button>
+            </div>
+          </div>
 
         </div>
       </div>
@@ -119,7 +124,7 @@
               <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{selectedGroup.name}}</strong>
               </h4>
 
-              <div class="mrB1 mrT1">
+              <div class="mrB1 mrT1" ng-show="canAdd">
                 <button class="btn btn-success btn-block" ng-click="addNewAccountShow(selectedGroup)"
                         href="javascript:void(0)">+ Add New
                 </button>
@@ -130,7 +135,7 @@
 
               <h3 class="mrB1 mrL1">Accounts from <strong>{{selectedGroup.name}}</strong></h3>
 
-              <div class="mrB1 mrT1 pdL1 pdR1">
+              <div class="mrB1 mrT1 pdL1 pdR1" ng-show="canAdd">
                 <button class="btn btn-success btn-block" ng-click="addNewAccountShow(selectedGroup)"
                         href="javascript:void(0)">+ Add New
                 </button>

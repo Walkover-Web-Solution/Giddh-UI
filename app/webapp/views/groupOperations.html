@@ -5,35 +5,37 @@
         Group Info
       </div>
       <div class="pd2 ">
-        <form id="groupDetailForm" name="groupDetailForm" novalidate>
-          <div class="form-group">
-            <label>Group Name</label>
-            <input type="text" class="form-control" placeholder="Enter Group Name" ng-model="selectedGroup.name"
-                   required>
-          </div>
+        <fieldset ng-disabled="!canUpdate">
+          <form id="groupDetailForm" name="groupDetailForm" novalidate>
+            <div class="form-group">
+              <label>Group Name</label>
+              <input type="text" class="form-control" placeholder="Enter Group Name" ng-model="selectedGroup.name"
+                     required>
+            </div>
 
-          <div class="form-group">
-            <label>Unique name</label>
-            <input type="text" class="form-control" placeholder="Enter Unique Name"
-                   ng-model="selectedGroup.uniqueName" required>
-          </div>
+            <div class="form-group">
+              <label>Unique name</label>
+              <input type="text" class="form-control" placeholder="Enter Unique Name"
+                     ng-model="selectedGroup.uniqueName" required>
+            </div>
 
-          <div class="form-group">
-            <label>Description</label>
+            <div class="form-group">
+              <label>Description</label>
             <textarea maxlength="200" class="form-control" placeholder="Enter description"
                       ng-model="selectedGroup.description"></textarea>
-          </div>
-          <button ng-click="updateGroup()" class="btn btn-primary"
-                  ng-disabled="groupDetailForm.$invalid">Update
-          </button>
-        </form>
+            </div>
+            <button ng-click="updateGroup()" class="btn btn-primary"
+                    ng-disabled="groupDetailForm.$invalid">Update
+            </button>
+          </form>
+        </fieldset>
       </div>
     </div>
   </div>
   <!-- group info content end -->
 
   <div class="col-md-6 col-sm-12">
-    <div class="row">
+    <div class="row" ng-show="canAdd">
       <div class="dGryHead">
         Add Subgroup
       </div>
@@ -58,12 +60,13 @@
 <!-- end row first -->
 <div class="clearfix bdrB">
 
-  <div class="col-sm-12 col-md-6" ng-hide="selectedGroup.isFixed">
+  <div class="col-sm-12 col-md-6" ng-hide="selectedGroup.isFixed || !canUpdate">
     <div class="row">
       <div class="pd2 form-inline">
         <div>
           <label class="mrR">Move to group</label>
         </div>
+
         <div class="form-group">
           <input ng-model="moveto" type="text" placeholder="Group name" class="form-control"
                  typeahead="groups as groups.name for groups in flattenGroupList | filter:{name:$viewValue}"/>

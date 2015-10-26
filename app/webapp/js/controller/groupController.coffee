@@ -16,9 +16,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.showAccountDetails = false
   $scope.showAccountListDetails = false
 
-  $scope.canEditGroups = false
-  $scope.canDeleteGroups = false
-  $scope.canAddGroups = false
+  $scope.canUpdate = false
+  $scope.canDelete = false
+  $scope.canAdd = false
 
   #set a object for share group
   $scope.shareGroupObj =
@@ -60,6 +60,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntList = groupService.flattenAccount($scope.groupList)
     $scope.showListGroupsNow = true
+    if not _.isEmpty($scope.selectedGroup)
+      $scope.selectedGroup = _.find($scope.flattenGroupList, (item) ->
+        item.uniqueName == $scope.selectedGroup.uniqueName
+      )
+      $scope.selectItem($scope.selectedGroup)
 
   $scope.getGroupListFailure = () ->
     toastr.error("Unable to get group details.", "Error")
@@ -72,6 +77,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showGroupDetails = true
     $scope.showAccountListDetails = true
     $scope.showAccountDetails = false
+    $scope.hasAddPermission(group)
+    $scope.hasUpdatePermission(group)
+    $scope.hasDeletePermission(group)
 
     $scope.getGroupSharedList(group)
     $scope.groupAccntList = group.accounts
@@ -195,6 +203,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.success("Group deleted successfully.", "Success")
     $scope.selectedGroup = {}
     $scope.showGroupDetails = false
+    $scope.showAccountListDetails = false
     $scope.getGroups()
 
   $scope.onDeleteGroupFailure = () ->
@@ -355,6 +364,28 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     console.log "addAccountFailure", result
 
 
+  $scope.deleteAccount = ->
+    if $scope.canDelete
+      unqNamesObj = $scope.setAdditionalAccountDetails()
+      if _.isUndefined($scope.selectedGroup.uniqueName)
+        lastVal = _.last($scope.breadCrumbList)
+        unqNamesObj.selGrpUname = lastVal[1]
+      modalService.openConfirmModal(
+        title: 'Delete Account?',
+        body: 'Are you sure you want to delete this Account?',
+        ok: 'Yes',
+        cancel: 'No').then -> accountService.deleteAc(unqNamesObj,
+          $scope.selectedAccount).then($scope.onDeleteAccountSuccess,
+          $scope.onDeleteAccountFailure)
+
+  $scope.onDeleteAccountSuccess = () ->
+    toastr.success("Account deleted successfully.", "Success")
+    $scope.getGroups()
+    $scope.selectedAccount = {}
+
+  $scope.onDeleteAccountFailure = () ->
+    toastr.error("Unable to delete group.", "Error")
+
   $scope.updateAccount = () ->
     unqNamesObj = $scope.setAdditionalAccountDetails()
     if _.isUndefined($scope.selectedGroup.uniqueName)
@@ -375,6 +406,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.hasSharePermission = () ->
     permissionService.hasPermissionOn($scope.selectedCompany, "MNG_USR")
+
+  $scope.hasUpdatePermission = (group) ->
+    $scope.canUpdate = permissionService.hasPermissionOn(group, "UPDT")
+
+  $scope.hasAddPermission = (group) ->
+    $scope.canAdd = permissionService.hasPermissionOn(group, "ADD")
+
+  $scope.hasDeletePermission = (group) ->
+    $scope.canDelete = permissionService.hasPermissionOn(group, "DLT")
 
   $scope.updateAccountFailure = (result) ->
     console.log "updateAccountFailure", result

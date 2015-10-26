@@ -170,6 +170,13 @@ angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
         accountsUniqueName: unqNamesObj.acntUname
       }, data, onSuccess, onFailure))
 
+    deleteAc: (unqNamesObj, data) ->
+      @handlePromise((onSuccess, onFailure) -> Account.delete({
+        companyUniqueName: unqNamesObj.compUname,
+        groupUniqueName: unqNamesObj.selGrpUname,
+        accountsUniqueName: unqNamesObj.acntUname
+      }, data, onSuccess, onFailure))
+
   accountService
 
 
