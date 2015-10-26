@@ -15,12 +15,25 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
     else
       modalService.openManageGroupsModal()
 
+
+  # for ledger
+  $rootScope.makeAccountFlatten = (data) ->
+    console.log "in makeAccountFlatten"
+    $rootScope.fltAccntList = data
+    # $scope.fltAccntList = []
+    # _.filter(data, (obj) ->
+    #   $scope.fltAccntList.push(obj.name)
+    # )
+
   $rootScope.countryCodesList = locationService.getCountryCode()
 
   $rootScope.$on '$viewContentLoaded', ->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
 
-  $rootScope
+
+  $rootScope.$watch 'isCollapsed', (isCollapsed) ->
+    console.log "isCollapsed", isCollapsed
+  
 
 
 angular.module('giddhWebApp').controller 'mainController', mainController

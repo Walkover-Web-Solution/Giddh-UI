@@ -22,6 +22,9 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
     $scope.showAccountList = true
+    $rootScope.makeAccountFlatten(groupService.flattenAccount($scope.groupList))  
+    
+
 
   $scope.getGroupListFailure = () ->
     toastr.error("Unable to get group details.", "Error")
