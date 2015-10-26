@@ -63,7 +63,7 @@
 
                 <li ng-repeat="(index,accDtl) in value.accountDetails  | filter:acntSrch track by $index" id="ac_{{accDtl.uniqueName}}">
 
-                  <a class="clearfix" href="javascript:void(0)" ng-click="loadLedger(value, accDtl)" href="javascript:">
+                  <a class="clearfix" href="#ledger" ng-click="loadLedger(value, accDtl)" href="javascript:">
                     <i ng-class="accDtl.charId ==1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
                     <span>{{accDtl.name}}</span>
                   </a>

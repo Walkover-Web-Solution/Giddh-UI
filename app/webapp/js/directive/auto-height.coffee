@@ -161,3 +161,110 @@ directive 'validDate', ->
   return
 ).call this
 
+
+# angular.module('ledgerF', []).directive 'test', ($compile) ->
+angular.module('ledgerF', []).directive 'ledgerPop', ($compile) ->
+  {
+    restrict: 'A'
+    replace: false
+    transclude: false
+    scope:
+      index: '=index'
+      item: '=itemdata'
+      aclist: '=acntlist'
+    template: "<div ng-click='openDialog(item, index)'>
+          <table class='table ldgrInnerTbl'>
+            <tr>
+              <td width='28%'>
+                <input type='text'
+                       name='drEntryForm_{{index}}.entryDate' ng-model='item.entryDate' valid-date/>
+              </td>
+              <td width=v44%'>
+                <div ng-if='noResults'>
+                  No Results Found!
+                </div>
+                <input type='hidden'
+                       name='drEntryForm_{{index}}.trnsUniq'
+                       ng-model='item.transactions[0].particular.uniqueName'>
+                <input type='text'
+                       name='drEntryForm_{{index}}.trnsName'
+                       ng-model='item.transactions[0].particular.name'
+                       typeahead='obj as obj.name for obj in aclist | filter:$viewValue | limitTo:8'
+                       class='form-control'
+                       typeahead-no-results='noResults'
+                       typeahead-on-select='addCrossFormField($item, $model, $label)'>
+              </td>
+              <td width='28%'>
+                <input type='text'
+                  name='drEntryForm_{{index}}.amount' 
+                  ng-model='item.transactions[0].amount'
+                  valid-number/>
+              </td>
+            </tr>
+          </table>
+        </div>"
+    controller: 'ledgerController'
+    controllerAs: 'ctrl'
+    link: (scope, elem, attrs) ->
+      
+      scope.removeDialog = (type) ->
+        allPopElem = angular.element(document.querySelector('.ledgerPopDiv'))
+        allPopElem.remove()
+        return true
+
+      scope.openDialog = (item, index) ->
+        rect = elem.context.getBoundingClientRect()
+        console.log rect, elem, item
+        scope.removeDialog("all")
+
+        popHtml = angular.element('
+          <div class="popover fade bottom ledgerPopDiv" id="popid_{{index}}">
+          <div class="arrow"></div>
+          <h3 class="popover-title">Update Entry</h3>
+          <div class="popover-content">
+            <div class="">
+              <div class="form-group">
+                <span class="" ng-click="addNewAccount()">Add new account</span>
+                <span class="pull-right" ng-click="discardEntry()">Discard</span>
+              </div>
+              <div class="row">
+                <div class="col-md-6 col-sm-12">
+                  <div class="form-group">
+                    <select class="form-control" name="voucherType" ng-model="item.voucher.shortCode">
+                      <option 
+                        ng-repeat="option in voucherTypeList"
+                        ng-selected="{{option.shortCode == item.voucher.shortCode}}"
+                        value="{{option.shortCode}}">
+                        {{option.name}}
+                      </option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <input type="text" name="tag" class="form-control" ng-model="item.tag" />
+                  </div>
+                </div>
+                <div class="col-md-6 col-sm-12">
+                  <textarea class="form-control" name="description" ng-model="item.description"></textarea>
+                </div>
+              </div>
+              <div class="">
+                <button class="btn btn-primary" type="button" ng-click="updateEntry(item)">Update</button>
+                <button ng-click="removeDialog()" class="btn" type="button">close</button>
+              </div>
+            </div>
+          </div>
+        </div>')
+        $compile(popHtml)(scope)
+        $('body').append(popHtml)
+        console.log "append complete"
+        popHtml.css({
+          display: "block",
+          top: rect.height + rect.top,
+          left: rect.left,
+          visibility: "visible",
+          maxWidth: rect.width,
+          width: rect.width
+        })
+        popHtml.addClass('in')
+        return true
+  }

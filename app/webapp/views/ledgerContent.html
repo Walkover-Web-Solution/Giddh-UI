@@ -1,4 +1,4 @@
-<div class="pdL2 pdR2 pdT2" ng-if="showLedgerBox">
+<div class="pdL2 pdR2 pdT2" ng-if="showLedgerBox" auto-height>
 
   <div class="form-inline pdB1">
     <div class="form-group mrR1">
@@ -84,47 +84,16 @@
               <div class="pr" ng-if="ledgerData.ledgers.length == 0">
               </div>
               <div class="pr" ng-if="ledgerData.ledgers.length > 0">
-                <form
-                    ng-repeat="(key, value) in ledgerData.ledgers track by $index"
-                    class="drEntryForm_{{$index}}"
-                    name="drEntryForm_{{$index}}"
-                    novalidate
-                    ng-click="somethingHappens()"
-                    giddh-ledger>
-                  <div>
-                  <table class="table ldgrInnerTbl">
-                  <tr>
-                    <td width="28%">
-                      <input type="text" 
-                      name="drEntryForm_{{$index}}.entryDate" ng-model="value.entryDate" valid-date/>
-                    </td>
-                    <td width="44%">
-                      <div ng-if="noResults">
-                        No Results Found!
-                      </div>
-                      <input type="hidden" 
-                      name="drEntryForm_{{$index}}.trnsUniq" 
-                      ng-model="value.transactions[0].particular.uniqueName">
-                      <input type="text"
-                      name="drEntryForm_{{$index}}.trnsName"
-                      ng-model="value.transactions[0].particular.name" 
-                      autocomplete="false"
-                      typeahead="obj as obj.name for obj in fltAccntList | filter:$viewValue | limitTo:8" class="form-control"
-                      typeahead-no-results="noResults"
-                      typeahead-on-select="addCrossFormField($item, $model, $label)"
-                      >
-                    </td>
-                    <td width="28%">
-                      <input type="text" 
-                      name="drEntryForm_{{$index}}.amount" ng-model="value.transactions[0].amount" valid-number/>
-
-                      <!-- state as state.name for state in
-                      state for state in states -->
-                    </td>
-                    
-                  </tr>
-                  </table>
-                  </div>
+                <form 
+                  ng-repeat="(key, value) in ledgerData.ledgers track by $index" 
+                  ledger-pop 
+                  index="$index" 
+                  itemdata="value" 
+                  acntlist="fltAccntList"
+                  class='drEntryForm_{{$index}}'
+                  name='drEntryForm_{{$index}}'
+                  novalidate
+                >
                 </form>
               </div>
 
@@ -206,11 +175,11 @@
 
 
 <div class="col-md-12">
-  <!-- directive -->
+  
 
-  <my-form>
-    Click me am normal directive with extra elements
-  </my-form>
+  <!-- style="top: 422px; left: 573.25px; display: block;" -->
+  
+
 
 </div>
 

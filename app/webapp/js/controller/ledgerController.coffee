@@ -53,8 +53,37 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.addCrossFormField = (i, d, c) ->
     console.log i, d, c, 'addCrossFormField'
 
-  $scope.somethingHappens = () ->
-    console.log "somethingHappens"
+  $scope.addNewAccount = () ->
+    console.log "addNewAccount"
+
+  $scope.discardEntry = () ->
+    console.log "discardEntry"
+
+  $scope.updateEntry = (data) ->
+    console.log "updateEntry", data
+
+  $scope.voucherTypeList = [
+    {
+      name: "sales"
+      shortCode: "sal"
+    }
+    {
+      name: "Purchases"
+      shortCode: "pur"
+    }
+    {
+      name: "Receipt"
+      shortCode: "rcpt"
+    }
+    {
+      name: "Payment"
+      shortCode: "pay"
+    }
+    {
+      name: "Journal"
+      shortCode: "jr"
+    }
+  ]
 
   $scope.dynamicPopover = {
     content: 'Hello, World!',

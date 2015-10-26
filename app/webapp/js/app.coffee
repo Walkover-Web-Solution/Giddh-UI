@@ -15,6 +15,7 @@ app = angular.module("giddhWebApp",
     "ledger"
     "ledgerD"
     "ledgerB"
+    "ledgerF"
   ]
 )
 

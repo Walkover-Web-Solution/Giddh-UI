@@ -31,8 +31,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
     $rootScope.basicInfo = localStorageService.get("_userDetails")
 
 
-  $rootScope.$watch 'isCollapsed', (isCollapsed) ->
-    console.log "isCollapsed", isCollapsed
+  
   
 
 
