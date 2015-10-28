@@ -90,28 +90,30 @@ directive 'validDate', (toastr, $filter) ->
 angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
   {
     restrict: 'A'
-    replace: false
+    replace: true
     transclude: false
     scope:
       index: '=index'
       item: '=itemdata'
       aclist: '=acntlist'
-    template: "<div ng-click='openDialog(item, index)'>
+      ftype: '=ftype'
+    template: "<form class='pr drEntryForm_{{index}} name='drEntryForm_{{index}}' novalidate tabindex='-1'>
+      <div ng-click='openDialog(item, index, ftype)'>
           <table class='table ldgrInnerTbl'>
             <tr>
               <td width='28%'>
                 <input type='text' class='nobdr'
-                  tabindex='-1'
-                  name='drEntryForm_{{index}}.entryDate' 
+                  tabindex='-1' required
+                  name='entryDate_{{index}}' 
                   ng-model='item.entryDate' valid-date/>
               </td>
-              <td width=v44%'>
+              <td width=44%'>
                 <input type='hidden'  class='nobdr'
-                  name='drEntryForm_{{index}}.trnsUniq'
+                  name='trnsUniq_{{index}}'
                   ng-model='item.transactions[0].particular.uniqueName'>
                 <input type='text'
-                  tabindex='-1'  class='nobdr'
-                  name='drEntryForm_{{index}}.trnsName'
+                  tabindex='-1'  class='nobdr' required
+                  name='trnsName_{{index}}'
                   ng-model='item.transactions[0].particular.name'
                   typeahead='obj as obj.name for obj in aclist | filter:$viewValue | limitTo:8'
                   class='form-control'
@@ -120,16 +122,17 @@ angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
               </td>
               <td width='28%'>
                 <input type='text'  class='nobdr'
-                  tabindex='-1'
-                  name='drEntryForm_{{index}}.amount' 
+                  tabindex='-1' required
+                  name='amount_{{index}}'
                   ng-model='item.transactions[0].amount'
                   valid-number/>
               </td>
             </tr>
           </table>
-        </div>"
+        </div></form>"
     controller: 'ledgerController'
     controllerAs: 'ctrl'
+    # bindToController: true
     link: (scope, elem, attrs) ->
       
       scope.removeDialog = (type) ->
@@ -137,17 +140,20 @@ angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
         allPopElem.remove()
         return true
 
-      scope.openDialog = (item, index) ->
+      scope.openDialog = (item, index, ftype) ->
         rect = elem.context.getBoundingClientRect()
         childCount = elem.context.childElementCount
         # console.log rect, childCount
+        # console.log ctrl, "uname"
         popHtml = angular.element('
           <div class="popover fade bottom ledgerPopDiv" id="popid_{{index}}">
           <div class="arrow"></div>
-          <h3 class="popover-title">Update Entry</h3>
+          <h3 class="popover-title" ng-if="ftype == \'update\'">Update entry</h3>
+          <h3 class="popover-title" ng-if="ftype == \'add\'">Add new entry</h3>
           <div class="popover-content">
             <div class="">
               <div class="form-group clearfix">
+                
                 <a class="pull-left" ng-show="noResults" href="javascript:void(0)" ng-click="addNewAccount()">Add new account</a>
                 <a href="javascript:void(0)" class="pull-right" ng-click="discardEntry()">Discard</a>
               </div>
@@ -172,8 +178,15 @@ angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
                 </div>
               </div>
               <div class="">
-                <button class="btn btn-primary" type="button" ng-click="updateEntry(item)">Update</button>
-                <button ng-click="removeDialog()" class="btn" type="button">close</button>
+                <button ng-if="ftype == \'update\'" class="btn btn-success" 
+                  type="button" ng-disabled="drEntryForm_{{index}}.$invalid"
+                  ng-click="updateEntry(item)">Update</button>
+
+                <button ng-if="ftype == \'add\'" class="btn btn-success" 
+                  type="button" ng-disabled="drEntryForm_{{index}}.$invalid"
+                  ng-click="addNewEntry(item)">Add</button>
+
+                <button ng-click="removeDialog()" class="btn mrL1" type="button">close</button>
               </div>
             </div>
           </div>

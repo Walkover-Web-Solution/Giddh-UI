@@ -82,20 +82,32 @@
             <td class="nopad" colspan="100%">
 
               <div class="pr" ng-if="ledgerData.ledgers.length == 0">
+                {{drEntryForm_0.$invalid}}
+                <div
+                  ledger-pop 
+                  index="0"
+                  ftype="ftypeAdd" 
+                  itemdata="dummyValue" 
+                  acntlist="fltAccntList"
+                  class='drEntryForm_0 pr'
+                  name='drEntryForm_0'
+                  novalidate
+                >
+                </div>
               </div>
               <div class="pr" ng-if="ledgerData.ledgers.length > 0">
-                <form 
-                  tabindex='-1'
+                <div
                   ng-repeat="(key, value) in ledgerData.ledgers track by $index" 
                   ledger-pop 
-                  index="$index" 
+                  index="$index"
+                  ftype="ftypeUpdate"
                   itemdata="value" 
                   acntlist="fltAccntList"
                   class='drEntryForm_{{$index}} pr'
                   name='drEntryForm_{{$index}}'
                   novalidate
                 >
-                </form>
+                </div>
               </div>
 
             </td>

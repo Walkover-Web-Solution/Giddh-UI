@@ -31,14 +31,40 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   }
 
   $scope.format = "dd-MM-yyyy"
+  $scope.ftypeAdd = "add"
+  $scope.ftypeUpdate = "update"
+  $scope.dummyValue = [
+    {
+      "transactions": [
+        {
+          "particular": {
+            "name": "",
+            "uniqueName": ""
+          },
+          "amount": "",
+          "type": "DEBIT"
+        }
+      ],
+      "description": "",
+      "tag": "",
+      "uniqueName": "",
+      "voucher": {
+        "name": "sales"
+        "shortCode": "sal"
+      },
+      "entryDate": ""
+    }
+  ]
 
   # ledger
   # load ledger start
   $scope.loadLedger = (data, acData) ->
+
     $scope.accntTitle = acData.name
-    $scope.showLedgerBox = true
     $scope.selectedAccountUname = acData.uniqueName 
     $scope.selectedGroupUname = data.groupUniqueName
+
+    # console.log $scope.selectedAccountUname, $scope.selectedGroupUname
 
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
@@ -51,8 +77,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $scope.loadLedgerSuccess = (response) ->
     console.log response, "loadLedgerSuccess"
-    # $scope.ledgerData = response.body
-    console.log $scope
+    $scope.showLedgerBox = true
+    $scope.ledgerData = response.body
+    
 
   $scope.loadLedgerFailure = (response) ->
     console.log response
@@ -70,19 +97,38 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.discardEntry = () ->
     console.log "discardEntry"
 
-  $scope.updateEntry = (data) ->
-    console.log "updateEntry", data
+  
+  $scope.addNewEntry = (edata) ->
+    console.log "addNewEntry", edata
+    console.log $scope.selectedAccountUname, $scope.selectedGroupUname, $scope
 
-    console.log $scope.selectedAccountUname, $scope.selectedGroupUname, $rootScope.selectedCompany, $scope
+  $scope.updateEntry = (edata) ->
+    console.log "updateEntry", edata
+
+    data = {
+      description: edata.description
+      entryDate: edata.entryDate
+      tag: edata.tag
+      voucherType: edata.voucher.shortCode
+      transaction:[{
+          type: edata.transactions[0].type
+          amount: edata.transactions[0].amount
+          particular: edata.transactions[0].particular.uniqueName
+      }]
+    }
     
-    # unqNamesObj = {
-    #   compUname: $scope.selectedCompany.uniqueName
-    #   selGrpUname: data.groupUniqueName
-    #   acntUname: acData.uniqueName
-    #   entUname: data.uniqueName
-    # }
+    # console.log $scope.selectedAccountUname, $scope.selectedGroupUname, $rootScope.selectedCompany, $scope
 
-    # ledgerService.createEntry(unqNamesObj, data).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: "soni"
+      acntUname: "1soni"
+      entUname: edata.uniqueName
+    }
+
+    console.log data, "actdata", unqNamesObj
+
+    ledgerService.updateEntry(unqNamesObj, data).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
 
   $scope.updateEntrySuccess = (response) ->
     console.log response, "updateEntrySuccess"
@@ -119,7 +165,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     title: 'Title'
   }
 
-  $scope.ledgerData = {
+  $scope.ledgerDataE = {
     "broughtForwardBalance": {
       "amount": 0,
       "type": "CREDIT"
@@ -244,7 +290,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $rootScope.$on '$viewContentLoaded', ->
     $scope.fromDate.date.setDate(1)
-    
     
 
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController
