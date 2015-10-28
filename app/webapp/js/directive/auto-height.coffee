@@ -96,9 +96,8 @@ angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
       index: '=index'
       item: '=itemdata'
       aclist: '=acntlist'
-      ftype: '=ftype'
-    template: "<form class='pr drEntryForm_{{index}} name='drEntryForm_{{index}}' novalidate tabindex='-1'>
-      <div ng-click='openDialog(item, index, ftype)'>
+      updateLedger: '&'
+    template: "<div ng-click='openDialog(item, index)'>
           <table class='table ldgrInnerTbl'>
             <tr>
               <td width='28%'>
@@ -132,7 +131,6 @@ angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
         </div></form>"
     controller: 'ledgerController'
     controllerAs: 'ctrl'
-    # bindToController: true
     link: (scope, elem, attrs) ->
       
       scope.removeDialog = (type) ->
@@ -178,15 +176,8 @@ angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
                 </div>
               </div>
               <div class="">
-                <button ng-if="ftype == \'update\'" class="btn btn-success" 
-                  type="button" ng-disabled="drEntryForm_{{index}}.$invalid"
-                  ng-click="updateEntry(item)">Update</button>
-
-                <button ng-if="ftype == \'add\'" class="btn btn-success" 
-                  type="button" ng-disabled="drEntryForm_{{index}}.$invalid"
-                  ng-click="addNewEntry(item)">Add</button>
-
-                <button ng-click="removeDialog()" class="btn mrL1" type="button">close</button>
+                <button class="btn btn-primary" type="button" ng-click="updateLedger({entry: item})">Update</button>
+                <button ng-click="removeDialog()" class="btn" type="button">close</button>
               </div>
             </div>
           </div>

@@ -6,8 +6,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.selectedAccountUname = undefined
   $scope.selectedGroupUname = undefined
 
-
-
   #date time picker code starts here
   $scope.today = new Date()
   $scope.fromDate = {date: new Date()}
