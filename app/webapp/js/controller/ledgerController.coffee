@@ -2,7 +2,11 @@
 
 ledgerController = ($scope, $rootScope, localStorageService, toastr, groupService, modalService, accountService, ledgerService, $filter, locationService) ->
   $scope.accntTitle = undefined
-  $scope.showLedgerBox = true
+  $scope.showLedgerBox = false
+  $scope.selectedAccountUname = undefined
+  $scope.selectedGroupUname = undefined
+
+
 
   #date time picker code starts here
   $scope.today = new Date()
@@ -33,11 +37,13 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.loadLedger = (data, acData) ->
     $scope.accntTitle = acData.name
     $scope.showLedgerBox = true
+    $scope.selectedAccountUname = acData.uniqueName 
+    $scope.selectedGroupUname = data.groupUniqueName
 
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
-      selGrpUname: data.groupUniqueName
-      acntUname: acData.uniqueName
+      selGrpUname: $scope.selectedGroupUname
+      acntUname: $scope.selectedAccountUname
       fromDate: $filter('date')($scope.fromDate.date,"dd-MM-yyyy")
       toDate: $filter('date')($scope.toDate.date,"dd-MM-yyyy")
     }
@@ -46,6 +52,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.loadLedgerSuccess = (response) ->
     console.log response, "loadLedgerSuccess"
     # $scope.ledgerData = response.body
+    console.log $scope
 
   $scope.loadLedgerFailure = (response) ->
     console.log response
@@ -65,6 +72,23 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $scope.updateEntry = (data) ->
     console.log "updateEntry", data
+
+    console.log $scope.selectedAccountUname, $scope.selectedGroupUname, $rootScope.selectedCompany, $scope
+    
+    # unqNamesObj = {
+    #   compUname: $scope.selectedCompany.uniqueName
+    #   selGrpUname: data.groupUniqueName
+    #   acntUname: acData.uniqueName
+    #   entUname: data.uniqueName
+    # }
+
+    # ledgerService.createEntry(unqNamesObj, data).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
+
+  $scope.updateEntrySuccess = (response) ->
+    console.log response, "updateEntrySuccess"
+
+  $scope.updateEntryFailure = (response) ->
+    console.log response, "updateEntryFailure"
 
   $scope.voucherTypeList = [
     {
@@ -220,6 +244,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $rootScope.$on '$viewContentLoaded', ->
     $scope.fromDate.date.setDate(1)
+    
     
 
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController
