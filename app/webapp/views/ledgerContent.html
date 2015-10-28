@@ -85,12 +85,13 @@
               </div>
               <div class="pr" ng-if="ledgerData.ledgers.length > 0">
                 <form 
+                  tabindex='-1'
                   ng-repeat="(key, value) in ledgerData.ledgers track by $index" 
                   ledger-pop 
                   index="$index" 
                   itemdata="value" 
                   acntlist="fltAccntList"
-                  class='drEntryForm_{{$index}}'
+                  class='drEntryForm_{{$index}} pr'
                   name='drEntryForm_{{$index}}'
                   novalidate
                 >

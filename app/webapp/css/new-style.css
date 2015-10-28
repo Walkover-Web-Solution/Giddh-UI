@@ -1019,11 +1019,16 @@ li:last-child .angular-ui-tree-handle {
 .ledgerBodyContent td{
     padding: 0 !important;
 }
-.ledgerBodyContent input{
+.ledgerBodyContent input.nobdr{
     width: 100%;
     border: 0;
     padding: 8px;
 }
+.ledgerBodyContent input.nobdr.error{
+    border:1px solid #a94442;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+}
+
 .ledgerBodyContent .table.ldgrInnerTbl{
     border: 0 !important
 }
@@ -1050,6 +1055,9 @@ li:last-child .angular-ui-tree-handle {
 .ledgerHead .ellp{
     text-transform: capitalize;
     max-width: 200px;
+}
+.popover.ledgerPopDiv{
+    z-index: 3 !important
 }
 .icon48 {
     width: 48px;

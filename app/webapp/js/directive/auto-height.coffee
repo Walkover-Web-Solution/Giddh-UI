@@ -47,8 +47,9 @@ directive 'validNumber', ->
 
   }
 
+# only for ledger
 angular.module('valid-date', []).
-directive 'validDate', ->
+directive 'validDate', (toastr, $filter) ->
   {
     require: '?ngModel'
     link: (scope, element, attrs, ngModelCtrl) ->
@@ -67,103 +68,26 @@ directive 'validDate', ->
           ngModelCtrl.$render()
         clean
       element.bind 'keypress', (event) ->
+        element.removeClass('error')
         if event.keyCode == 32
           event.preventDefault()
         return
+      element.bind 'focus', () ->
+        if element.context.value is "" || element.context.value is undefined || element.context.value is null
+          element.context.value = $filter('date')(new Date(),"dd-MM-yyyy")
+
+      element.bind 'blur', () ->
+        if moment(element.context.value, "DD-MM-YYYY", true).isValid()
+          element.removeClass('error')
+        else
+          toastr.error("Date is not valid.", "Error")
+          element.addClass('error')
       return
 
   }
 
 
-(->
-  angular.module('ledger', []).directive 'giddhLedger', ->
-    { link: (scope, ele, attrs) ->
-      childs = undefined
-      siblingDiv = undefined
-      siblingDiv = ele.context.nextElementSibling
-      childs = ele.context
-      ele.bind 'mouseenter', ->
-        # console.log("mouseenter", ele);
-        return
-      ele.bind 'mouseleave', ->
-        #do nothing
-        return
-      return
- }
-  angular.module('ledgerD', []).directive 'myForm', ->
-    {
-      restrict: 'E'
-      scope: false
-      transclude: true
-      replace: true
-      template: '<div>' + '<a href="" ng-transclude></a>' + 
-      '<div ng-show="formVisible" ng-attr-popover="">' + 
-      '<div class="form-group"><input type="text" class="form-control" name="extraForm.name"></div>' + 
-      '<div class="form-group"><input type="text" class="form-control" name="extraForm.cname"></div>' + 
-      '<div class="">' + 
-      '<button ng-click="submit($event, extraForm)" type="button" class="btn btn-primary">OK</button>' + 
-        '<button type="button" class="btn" ng-click="formVisible=false">close</button>' + 
-          '</div>' + 
-          '<div class="editable-error help-block" ng-show="error">{{ error }}</div>' + 
-            '</div>' + 
-            '</div>'
-      controller: ($scope, $element, $attrs) ->
-        $scope.formVisible = false
-
-        $scope.submit = (evt, formdata) ->
-          console.log formdata, 'form submit', evt
-          $scope.formVisible = false
-          return
-
-        return
-
-    }
-  angular.module('ledgerB', []).directive 'popover', ($compile) ->
-    {
-      restrict: 'A'
-      scope: false
-      compile: (tElement, tAttrs, transclude) ->
-        {
-          pre: (scope, iElement, iAttrs, controller) ->
-          post: (scope, iElement, iAttrs, controller) ->
-            attrs = iAttrs
-            element = iElement
-            # We assume that the trigger (i.e. the element the popover will be
-            # positioned at is the previous child.
-            trigger = element.prev()
-            popup = element
-            # Connect scope to popover.
-            trigger.on 'shown', ->
-              tip = trigger.data('popover').tip()
-              $compile(tip) scope
-              scope.$digest()
-              return
-            trigger.popover
-              html: true
-              title: 'Hey DUDE'
-              content: ->
-                scope.$apply ->
-                  scope.formVisible = true
-                  return
-                popup
-              container: 'body'
-            scope.$watch 'formVisible', (formVisible) ->
-              if !formVisible
-                trigger.popover 'hide'
-              return
-            if trigger.data('popover')
-              trigger.data('popover').tip().css 'width', '500px'
-            return
-
-        }
-
-    }
-  return
-).call this
-
-
-# angular.module('ledgerF', []).directive 'test', ($compile) ->
-angular.module('ledgerF', []).directive 'ledgerPop', ($compile) ->
+angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
   {
     restrict: 'A'
     replace: false
@@ -176,26 +100,27 @@ angular.module('ledgerF', []).directive 'ledgerPop', ($compile) ->
           <table class='table ldgrInnerTbl'>
             <tr>
               <td width='28%'>
-                <input type='text'
-                       name='drEntryForm_{{index}}.entryDate' ng-model='item.entryDate' valid-date/>
+                <input type='text' class='nobdr'
+                  tabindex='-1'
+                  name='drEntryForm_{{index}}.entryDate' 
+                  ng-model='item.entryDate' valid-date/>
               </td>
               <td width=v44%'>
-                <div ng-if='noResults'>
-                  No Results Found!
-                </div>
-                <input type='hidden'
-                       name='drEntryForm_{{index}}.trnsUniq'
-                       ng-model='item.transactions[0].particular.uniqueName'>
+                <input type='hidden'  class='nobdr'
+                  name='drEntryForm_{{index}}.trnsUniq'
+                  ng-model='item.transactions[0].particular.uniqueName'>
                 <input type='text'
-                       name='drEntryForm_{{index}}.trnsName'
-                       ng-model='item.transactions[0].particular.name'
-                       typeahead='obj as obj.name for obj in aclist | filter:$viewValue | limitTo:8'
-                       class='form-control'
-                       typeahead-no-results='noResults'
-                       typeahead-on-select='addCrossFormField($item, $model, $label)'>
+                  tabindex='-1'  class='nobdr'
+                  name='drEntryForm_{{index}}.trnsName'
+                  ng-model='item.transactions[0].particular.name'
+                  typeahead='obj as obj.name for obj in aclist | filter:$viewValue | limitTo:8'
+                  class='form-control'
+                  typeahead-no-results='noResults'
+                  typeahead-on-select='addCrossFormField($item, $model, $label)'>
               </td>
               <td width='28%'>
-                <input type='text'
+                <input type='text'  class='nobdr'
+                  tabindex='-1'
                   name='drEntryForm_{{index}}.amount' 
                   ng-model='item.transactions[0].amount'
                   valid-number/>
@@ -214,18 +139,17 @@ angular.module('ledgerF', []).directive 'ledgerPop', ($compile) ->
 
       scope.openDialog = (item, index) ->
         rect = elem.context.getBoundingClientRect()
-        console.log rect, elem, item
-        scope.removeDialog("all")
-
+        childCount = elem.context.childElementCount
+        # console.log rect, childCount
         popHtml = angular.element('
           <div class="popover fade bottom ledgerPopDiv" id="popid_{{index}}">
           <div class="arrow"></div>
           <h3 class="popover-title">Update Entry</h3>
           <div class="popover-content">
             <div class="">
-              <div class="form-group">
-                <span class="" ng-click="addNewAccount()">Add new account</span>
-                <span class="pull-right" ng-click="discardEntry()">Discard</span>
+              <div class="form-group clearfix">
+                <a class="pull-left" ng-show="noResults" href="javascript:void(0)" ng-click="addNewAccount()">Add new account</a>
+                <a href="javascript:void(0)" class="pull-right" ng-click="discardEntry()">Discard</a>
               </div>
               <div class="row">
                 <div class="col-md-6 col-sm-12">
@@ -254,17 +178,21 @@ angular.module('ledgerF', []).directive 'ledgerPop', ($compile) ->
             </div>
           </div>
         </div>')
-        $compile(popHtml)(scope)
-        $('body').append(popHtml)
-        console.log "append complete"
-        popHtml.css({
-          display: "block",
-          top: rect.height + rect.top,
-          left: rect.left,
-          visibility: "visible",
-          maxWidth: rect.width,
-          width: rect.width
-        })
-        popHtml.addClass('in')
+        
+        if childCount == 1
+          scope.removeDialog("all")
+          $compile(popHtml)(scope)
+          elem.append(popHtml)
+          popHtml.css({
+            display: "block",
+            top: rect.height,
+            left: "0px",
+            visibility: "visible",
+            maxWidth: rect.width,
+            width: rect.width
+          })
+          popHtml.addClass('in')
+        else
+          return false
         return true
   }

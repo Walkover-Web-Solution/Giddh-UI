@@ -55,6 +55,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $scope.addNewAccount = () ->
     console.log "addNewAccount"
+    if _.isEmpty($rootScope.selectedCompany)
+      toastr.error("Select company first.", "Error")
+    else
+      modalService.openManageGroupsModal()
 
   $scope.discardEntry = () ->
     console.log "discardEntry"
@@ -90,11 +94,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     templateUrl: 'myPopoverTemplate.html',
     title: 'Title'
   }
-
-  $scope.getData = (evt, formdata) ->
-    console.log formdata, "form submit", evt
-    $scope.formVisible = false;
-
 
   $scope.ledgerData = {
     "broughtForwardBalance": {
@@ -220,7 +219,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   }
 
   $rootScope.$on '$viewContentLoaded', ->
-    console.log "ledger rootScope viewContentLoaded"
     $scope.fromDate.date.setDate(1)
     
 

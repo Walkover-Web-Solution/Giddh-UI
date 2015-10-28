@@ -10,6 +10,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
     ), (response) ->
 
   $scope.goToManageGroups = ->
+    console.log "in goToManageGroups"
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
@@ -18,12 +19,13 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
 
   # for ledger
   $rootScope.makeAccountFlatten = (data) ->
-    console.log "in makeAccountFlatten"
-    $rootScope.fltAccntList = data
-    # $scope.fltAccntList = []
-    # _.filter(data, (obj) ->
-    #   $scope.fltAccntList.push(obj.name)
-    # )
+    obj = _.map(data, (item) ->
+      obj = {}
+      obj.name = item.name
+      obj.uName = item.uniqueName
+      obj
+    )
+    $rootScope.fltAccntList = obj
 
   $rootScope.countryCodesList = locationService.getCountryCode()
 
