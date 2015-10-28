@@ -74,7 +74,7 @@ directive 'validDate', (toastr, $filter) ->
         return
       element.bind 'focus', () ->
         if element.context.value is "" || element.context.value is undefined || element.context.value is null
-          element.context.value = $filter('date')(new Date(),"dd-MM-yyyy")
+          scope.item.entryDate = $filter('date')(new Date(),"dd-MM-yyyy")
 
       element.bind 'blur', () ->
         if moment(element.context.value, "DD-MM-YYYY", true).isValid()

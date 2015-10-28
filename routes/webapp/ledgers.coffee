@@ -42,6 +42,21 @@ router.get '/:ledgerUniqueName', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+#Create ledgers
+router.post '/', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/groups/' + req.params.groupUniqueName + '/accounts' + req.params.accountUniqueName + '/ledgers'
+  req.body.uniqueName = settings.stringUtil.getRandomString(req.params.accountUniqueName, req.params.companyUniqueName)
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+    data: req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+    
 #Update ledgers
 router.put '/:ledgerUniqueName', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
@@ -70,19 +85,5 @@ router.delete '/:ledgerUniqueName', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-#Create ledgers
-router.post '/', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/groups/' + req.params.groupUniqueName + '/accounts' + req.params.accountUniqueName + '/ledgers'
-  req.body.uniqueName = settings.stringUtil.getRandomString(req.params.accountUniqueName, req.params.companyUniqueName)
-  args =
-    headers:
-      'Auth-Key': req.session.authKey
-      'Content-Type': 'application/json'
-    data: req.body
-  settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
-      res.status(response.statusCode)
-    res.send data
 
 module.exports = router

@@ -188,6 +188,7 @@ angular.module('giddhWebApp').service 'ledgerService', ($resource, $q) ->
         'accountsUniqueName': @accountsUniqueName
         'date1': @date1
         'date2': @date2
+        'entryUniqueName': @entryUniqueName
       },
       {
         get: {
@@ -195,7 +196,7 @@ angular.module('giddhWebApp').service 'ledgerService', ($resource, $q) ->
           url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/ledgers?fromDate=:date1&toDate=:date2'
         }
         create: {method: 'POST'}
-        update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'}
+        update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/ledgers/:entryUniqueName'}
         delete: {
           method: 'DELETE',
           url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'
@@ -218,6 +219,21 @@ angular.module('giddhWebApp').service 'ledgerService', ($resource, $q) ->
         date1: unqNamesObj.fromDate
         date2: unqNamesObj.toDate
       }, onSuccess, onFailure))
+
+    createEntry: (unqNamesObj, data) ->
+      @handlePromise((onSuccess, onFailure) -> Ledger.add({
+        companyUniqueName: unqNamesObj.compUname,
+        groupUniqueName: unqNamesObj.selGrpUname,
+        accountsUniqueName: unqNamesObj.acntUname
+      },data, onSuccess, onFailure))
+
+    updateEntry: (unqNamesObj, data) ->
+      @handlePromise((onSuccess, onFailure) -> Ledger.update({
+        companyUniqueName: unqNamesObj.compUname,
+        groupUniqueName: unqNamesObj.selGrpUname,
+        accountsUniqueName: unqNamesObj.acntUname
+        entryUniqueName: unqNamesObj.entUname
+      },data, onSuccess, onFailure))
 
 
   ledgerService
