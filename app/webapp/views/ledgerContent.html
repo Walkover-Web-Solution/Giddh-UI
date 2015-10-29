@@ -1,5 +1,14 @@
-<div class="pdL2 pdR2 pdT2" ng-if="showLedgerBox" auto-height>
+<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20" auto-height>
 
+<div class="loader" ng-hide="showLedgerBox">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+
+<div class="pdL2 pdR2 pdT2" ng-if="showLedgerBox">
   <div class="form-inline pdB1">
     <div class="form-group mrR1">
       <label>From date</label>
@@ -92,6 +101,7 @@
                   class='drEntryForm_{{$index}} pr'
                   name='drEntryForm_{{$index}}'
                   update-ledger="updateEntry(entry)"
+                  add-ledger="addNewEntry(entry)"
                   novalidate
                   >
                 </div>
@@ -118,9 +128,22 @@
 
           <tbody class="ledgerBodyContent" id="ledgerBodyContentCredit">
           <tr>
-            <td colspan="100%" class="nopad">
-              <div>
-
+            <td class="nopad" colspan="100%">
+              <div class="pr">
+                <div
+                  ng-repeat="(key, value) in ledgerData.ledgers | pick: creditOnly track by $index"
+                  ledger-pop
+                  index="$index"
+                  ftype="value.uniqueName == undefined ? 'Add' : 'Update'"
+                  itemdata="value"
+                  acntlist="fltAccntList"
+                  class='drEntryForm_{{$index}} pr'
+                  name='drEntryForm_{{$index}}'
+                  update-ledger="updateEntry(entry)"
+                  add-ledger="addNewEntry(entry)"
+                  novalidate
+                  >
+                </div>
               </div>
             </td>
           </tr>
@@ -154,16 +177,4 @@
 
   </table>
 </div>
-
-
-<div class="col-md-12">
-</div>
-
-
-
-
-
-  
-
-  
-
+</perfect-scrollbar>

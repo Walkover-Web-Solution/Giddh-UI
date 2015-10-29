@@ -47,7 +47,8 @@ body, textarea, input, button {
 
 /*imp for fixed navigation*/
 body {
-    padding-top: 54px
+    padding-top: 54px;
+    overflow: hidden;
 }
 /*top menus bar*/
 #topMenusBar.in{
@@ -800,10 +801,10 @@ li:last-child .angular-ui-tree-handle {
 
 
 /*----------css for loader animation------------*/
-#loader {
+.loader {
     text-align: center
 }
-#loader span {
+.loader span {
     display: inline-block;
     width: 10px;
     height: 10px;
@@ -860,31 +861,31 @@ li:last-child .angular-ui-tree-handle {
     }
 }
 
-#loader span:nth-child(1) {
+.loader span:nth-child(1) {
     animation-delay: 0s;
     -moz-animation-delay: 0s;
     -webkit-animation-delay: 0s;
 }
 
-#loader span:nth-child(2) {
+.loader span:nth-child(2) {
     animation-delay: 0.1s;
     -moz-animation-delay: 0.1s;
     -webkit-animation-delay: 0.1s;
 }
 
-#loader span:nth-child(3) {
+.loader span:nth-child(3) {
     animation-delay: 0.2s;
     -moz-animation-delay: 0.2s;
     -webkit-animation-delay: 0.2s;
 }
 
-#loader span:nth-child(4) {
+.loader span:nth-child(4) {
     animation-delay: 0.3s;
     -moz-animation-delay: 0.3s;
     -webkit-animation-delay: 0.3s;
 }
 
-#loader span:nth-child(5) {
+.loader span:nth-child(5) {
     animation-delay: 0.4s;
     -moz-animation-delay: 0.4s;
     -webkit-animation-delay: 0.4s;

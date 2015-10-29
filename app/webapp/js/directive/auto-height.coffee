@@ -152,8 +152,8 @@ angular.module('ledger', [])
         popHtml = angular.element('
           <div class="popover fade bottom ledgerPopDiv" id="popid_{{index}}">
           <div class="arrow"></div>
-          <h3 class="popover-title" ng-if="ftype == \'update\'">Update entry</h3>
-          <h3 class="popover-title" ng-if="ftype == \'add\'">Add new entry</h3>
+          <h3 class="popover-title" ng-if="ftype == \'Update\'">Update entry</h3>
+          <h3 class="popover-title" ng-if="ftype == \'Add\'">Add new entry</h3>
           <div class="popover-content">
             <div class="">
               <div class="form-group clearfix">
@@ -182,11 +182,11 @@ angular.module('ledger', [])
                 </div>
               </div>
               <div class="">
-                <button ng-if="ftype == \'update\'" class="btn btn-success"
+                <button ng-if="ftype == \'Update\'" class="btn btn-success"
                   type="button" ng-disabled="drEntryForm_{{index}}.$invalid"
                   ng-click="updateLedger({entry: item})">Update</button>
 
-                <button ng-if="ftype == \'add\'" class="btn btn-success"
+                <button ng-if="ftype == \'Add\'" class="btn btn-success"
                   type="button" ng-disabled="drEntryForm_{{index}}.$invalid || noResults"
                   ng-click="addLedger({entry: item})">Add</button>
 

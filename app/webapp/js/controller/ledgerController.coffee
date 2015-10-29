@@ -45,7 +45,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     ],
     "description": "",
     "tag": "test",
-    "uniqueName": "",
+    "uniqueName": undefined,
     "voucher": {
       "name": "sales"
       "shortCode": "sal"
@@ -66,7 +66,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     ],
     "description": "",
     "tag": "",
-    "uniqueName": "",
+    "uniqueName": undefined,
     "voucher": {
       "name": "sales"
       "shortCode": "sal"
@@ -124,7 +124,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   
   $scope.addNewEntry = (data) ->
     console.log "addNewEntry"
-    edata = data
+    # $scope.edata = undefined
+    edata = {}
+    angular.copy(data, edata)
     
     if angular.isUndefined(data.voucher)
       console.log "true"
@@ -146,32 +148,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $scope.addEntrySuccess = (response) ->
     console.log response, "addEntrySuccess"
-    dummyresponse = {
-      "voucherNo": 1004,
-      "voucherType": "sales",
-      "transactions": [
-        {
-          "debitAccount": {
-            "uniqueName": "account123",
-            "name": "account123"
-          },
-          "creditAccount": {
-            "uniqueName": "account789",
-            "name": "account789"
-          },
-          "amount": 1230
-        }
-      ],
-      "uniqueName": "oi51446093711489",
-      "date": "08-10-2015",
-      "tag": "tag123",
-      "description": "description123"
-    }
+    
     console.log $scope.ledgerData, "before"
     # $scope.addNewRow('debit')
     # $scope.ledgerData.ledgers.unshift(dummyresponse)
 
-    console.log $scope.ledgerData, "finally"
 
   $scope.addEntryFailure = (response) ->
     console.log response, "addEntryFailure"
