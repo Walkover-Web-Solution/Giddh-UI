@@ -91,13 +91,15 @@ angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
   {
     restrict: 'A'
     replace: true
-    transclude: false
+    transclude: true
     scope:
       index: '=index'
       item: '=itemdata'
       aclist: '=acntlist'
       ftype: '=ftype'
       updateLedger: '&'
+      addLedger: '&'
+    controller: 'ledgerController'
     template: "<form class='pr drEntryForm_{{index}} name='drEntryForm_{{index}}' novalidate tabindex='-1'>
       <div ng-click='openDialog(item, index, ftype)'>
           <table class='table ldgrInnerTbl'>
@@ -131,10 +133,7 @@ angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
             </tr>
           </table>
         </div></form>"
-    controller: 'ledgerController'
-    controllerAs: 'ctrl'
     link: (scope, elem, attrs) ->
-      
       scope.removeDialog = (type) ->
         allPopElem = angular.element(document.querySelector('.ledgerPopDiv'))
         allPopElem.remove()
@@ -143,8 +142,6 @@ angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
       scope.openDialog = (item, index, ftype) ->
         rect = elem.context.getBoundingClientRect()
         childCount = elem.context.childElementCount
-        # console.log rect, childCount
-        # console.log ctrl, "uname"
         popHtml = angular.element('
           <div class="popover fade bottom ledgerPopDiv" id="popid_{{index}}">
           <div class="arrow"></div>
@@ -184,7 +181,7 @@ angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
 
                 <button ng-if="ftype == \'add\'" class="btn btn-success"
                   type="button" ng-disabled="drEntryForm_{{index}}.$invalid"
-                  ng-click="addNewEntry(item)">Add</button>
+                  ng-click="addLedger({entry: item})">Add</button>
 
                 <button ng-click="removeDialog()" class="btn mrL1" type="button">close</button>
               </div>
