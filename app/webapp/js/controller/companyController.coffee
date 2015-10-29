@@ -82,7 +82,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #Get company list
   $scope.getCompanyListSuccess = (response) ->
-    $scope.companyList = response.body
+    $scope.companyList = _.sortBy(response.body, 'shared')
+    console.log _.groupBy($scope.companyList, 'shared')
     if _.isEmpty($scope.companyList)
       $scope.openFirstTimeUserModal()
     else

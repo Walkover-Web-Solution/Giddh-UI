@@ -306,7 +306,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
     angular.extend($scope.selectedAccount, data)
-    $scope.showBreadCrumbs(data.parentGroups.reverse())
+    pGroups = []
+    angular.extend(pGroups, data.parentGroups)
+    $scope.showBreadCrumbs(pGroups.reverse())
     $scope.breakMobNo(data)
     $scope.setOpeningBalanceDate()
     # for play between update and add
