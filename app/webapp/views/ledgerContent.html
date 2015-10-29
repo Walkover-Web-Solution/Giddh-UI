@@ -47,7 +47,7 @@
 
   <table class="table ledgerTable">
     <thead>
-    <th class="nopad">
+    <th class="nopad" colspan="3">
       <div class="clearfix ldgTheadL">
         <span class="icon48 icon-in"></span>
 
@@ -57,7 +57,7 @@
         </h3>
       </div>
     </th>
-    <th class="nopad">
+    <th class="nopad" colspan="3">
       <div class="pull-right alR">
         <div class="clearfix ldgTheadR">
           <span class="icon48 icon-out"></span>
@@ -73,7 +73,7 @@
     <!-- end main thead -->
     <tbody>
     <tr>
-      <td class="nopad" style="width:50%">
+      <td class="nopad" style="width:50%"  colspan="3">
         <table class="table table-bordered">
           <thead>
           <tr class="splBg">
@@ -113,7 +113,7 @@
         </table>
       </td>
       <!-- main left td end here -->
-      <td class="nopad" style="width:50%">
+      <td class="nopad" style="width:50%" colspan="3">
         <table class="table table-bordered">
           <thead>
           <tr class="splBg">
@@ -157,18 +157,35 @@
     <tfoot>
 
     <tr class="fw600 dgreyBg">
-      <td class="">
-        Balance
+      <td colspan="2" style="width:36%">
+        Balance 
       </td>
-      <td class="">
-        Balance
+      <td style="width:14%">
+        <div ng-if="ledgerData.balance.type == 'DEBIT'">
+          <span class="pull-right">{{ledgerData.balance.amount}}</span>
+        </div>
+      </td>
+      <td colspan="2" style="width:36%">
+        Balance 
+      </td>
+      <td style="width:14%">
+        <div ng-if="ledgerData.balance.type == 'CREDIT'">
+          <span class="pull-right">{{ledgerData.balance.amount}}</span>
+        </div>
       </td>
     </tr>
     <tr class="total greyBg">
-      <td class="">
-        <span class="">Total</span>
+      <td colspan="2" style="width:36%">
+        Total
       </td>
-      <td class="cr taR bdrR">
+      <td style="width:14%">
+        <span class="pull-right">{{ledgerData.debitTotal}}</span>
+      </td>
+      <td colspan="2" style="width:36%">
+        Total
+      </td>
+      <td class="" style="width:14%">
+        <span class="pull-right">{{ledgerData.creditTotal}}</span>
       </td>
     </tr>
 
