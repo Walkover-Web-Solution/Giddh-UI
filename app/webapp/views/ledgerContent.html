@@ -81,37 +81,21 @@
 
           <tr>
             <td class="nopad" colspan="100%">
-
-              <div class="pr" ng-if="ledgerData.ledgers.length == 0">
-                {{drEntryForm_0.$invalid}}
+              <div class="pr">
                 <div
+                  ng-repeat="(key, value) in ledgerData.ledgers | pick: debitOnly track by $index"
                   ledger-pop
-                  index="0"
-                  ftype="ftypeAdd"
-                  itemdata="dummyValue"
+                  index="$index"
+                  ftype="value.uniqueName == undefined ? 'Add' : 'Update'"
+                  itemdata="value"
                   acntlist="fltAccntList"
-                  class='drEntryForm_0 pr'
-                  name='drEntryForm_0'
+                  class='drEntryForm_{{$index}} pr'
+                  name='drEntryForm_{{$index}}'
+                  update-ledger="updateEntry(entry)"
                   novalidate
-                >
+                  >
                 </div>
               </div>
-              <div class="pr" ng-if="ledgerData.ledgers.length > 0">
-                <div
-                    ng-repeat="(key, value) in ledgerData.ledgers | pick: debitOnly track by $index"
-                    ledger-pop
-                    index="$index"
-                    ftype="value.uniqueName == undefined ? 'Add' : 'Update'"
-                    itemdata="value"
-                    acntlist="fltAccntList"
-                    class='drEntryForm_{{$index}} pr'
-                    name='drEntryForm_{{$index}}'
-                    update-ledger="updateEntry(entry)"
-                    novalidate
-                    >
-                </div>
-              </div>
-
             </td>
           </tr>
           </tbody>

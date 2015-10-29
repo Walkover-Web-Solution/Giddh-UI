@@ -44,6 +44,7 @@ router.get '/:ledgerUniqueName', (req, res) ->
 
 #Create ledgers
 router.post '/', (req, res) ->
+  console.log "in create ledgers"
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/groups/' + req.params.groupUniqueName + '/accounts' + req.params.accountUniqueName + '/ledgers'
   req.body.uniqueName = settings.stringUtil.getRandomString(req.params.accountUniqueName, req.params.companyUniqueName)
@@ -52,6 +53,8 @@ router.post '/', (req, res) ->
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
     data: req.body
+
+  console.log args, "args"
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)

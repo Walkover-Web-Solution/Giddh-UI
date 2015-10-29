@@ -86,8 +86,8 @@ directive 'validDate', (toastr, $filter) ->
 
   }
 
-
-angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
+angular.module('ledger', [])
+.directive 'ledgerPop', ($compile) ->
   {
     restrict: 'A'
     replace: true
@@ -124,7 +124,7 @@ angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
                   typeahead-on-select='addCrossFormField($item, $model, $label)'>
               </td>
               <td width='28%'>
-                <input type='text'  class='nobdr'
+                <input type='text' class='nobdr'
                   tabindex='-1' required
                   name='amount_{{index}}'
                   ng-model='item.transactions[0].amount'
@@ -134,6 +134,13 @@ angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
           </table>
         </div></form>"
     link: (scope, elem, attrs) ->
+
+      scope.addCrossFormField = (i, d, c) ->
+        scope.item.transactions[0].particular.uniqueName = i.uName
+        # item.transactions[0].particular.name = i.name
+        console.log i, d, c, 'addCrossFormField'
+        console.log scope.item.transactions[0].particular, "particular Updated"
+
       scope.removeDialog = (type) ->
         allPopElem = angular.element(document.querySelector('.ledgerPopDiv'))
         allPopElem.remove()
@@ -180,7 +187,7 @@ angular.module('ledger', []).directive 'ledgerPop', ($compile) ->
                   ng-click="updateLedger({entry: item})">Update</button>
 
                 <button ng-if="ftype == \'add\'" class="btn btn-success"
-                  type="button" ng-disabled="drEntryForm_{{index}}.$invalid"
+                  type="button" ng-disabled="drEntryForm_{{index}}.$invalid || noResults"
                   ng-click="addLedger({entry: item})">Add</button>
 
                 <button ng-click="removeDialog()" class="btn mrL1" type="button">close</button>

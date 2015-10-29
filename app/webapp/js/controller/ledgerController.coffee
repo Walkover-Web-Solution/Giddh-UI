@@ -31,28 +31,49 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.format = "dd-MM-yyyy"
   $scope.ftypeAdd = "add"
   $scope.ftypeUpdate = "update"
-  $scope.dummyValue = [
-    {
-      "transactions": [
-        {
-          "particular": {
-            "name": "",
-            "uniqueName": ""
-          },
-          "amount": "",
-          "type": "DEBIT"
-        }
-      ],
-      "description": "",
-      "tag": "",
-      "uniqueName": "",
-      "voucher": {
-        "name": "sales"
-        "shortCode": "sal"
-      },
-      "entryDate": ""
-    }
-  ]
+  $scope.dummyValueDebit = 
+  {
+    "transactions": [
+      {
+        "particular": {
+          "name": "",
+          "uniqueName": ""
+        },
+        "amount": "",
+        "type": "DEBIT"
+      }
+    ],
+    "description": "",
+    "tag": "test",
+    "uniqueName": "",
+    "voucher": {
+      "name": "sales"
+      "shortCode": "sal"
+    },
+    "entryDate": ""
+  }
+  $scope.dummyValueCredit = 
+  {
+    "transactions": [
+      {
+        "particular": {
+          "name": "",
+          "uniqueName": ""
+        },
+        "amount": "",
+        "type": "CREDIT"
+      }
+    ],
+    "description": "",
+    "tag": "",
+    "uniqueName": "",
+    "voucher": {
+      "name": "sales"
+      "shortCode": "sal"
+    },
+    "entryDate": ""
+  }
+  
 
   # ledger
   # load ledger start
@@ -75,17 +96,20 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $scope.loadLedgerSuccess = (response) ->
     console.log response, "loadLedgerSuccess"
+    response.body.ledgers.push($scope.dummyValueDebit)
+    response.body.ledgers.push($scope.dummyValueCredit)
+    $scope.ledgerData = response.body
     $scope.showLedgerBox = true
-    $scope.ledgerData = $scope.ledgerDataE
-
+    
   $scope.debitOnly = (ledger) ->
     'DEBIT' == ledger.transactions[0].type
+  
+  $scope.creditOnly = (ledger) ->
+    'CREDIT' == ledger.transactions[0].type  
 
   $scope.loadLedgerFailure = (response) ->
     console.log response
 
-  $scope.addCrossFormField = (i, d, c) ->
-    console.log i, d, c, 'addCrossFormField'
 
   $scope.addNewAccount = () ->
     console.log "addNewAccount"
@@ -98,20 +122,69 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     console.log "discardEntry"
 
   
-  $scope.addEntry = (edata) ->
-    console.log "addNewEntry", edata
-    console.log $scope.selectedAccountUname, $scope.selectedGroupUname, $scope
-
-  $scope.updateEntry = (edata) ->
-    console.log "updateEntry", edata
-
+  $scope.addNewEntry = (data) ->
+    console.log "addNewEntry"
+    edata = data
     
-    console.log $scope.selectedAccountUname, $scope.selectedGroupUname, $rootScope.selectedCompany
+    if angular.isUndefined(data.voucher)
+      console.log "true"
+    else
+      edata.voucherType = data.voucher.shortCode
+
+    if angular.isObject(data.transactions[0].particular)
+      unk = data.transactions[0].particular.uniqueName
+      edata.transactions[0].particular = unk
+
+    console.log "hurray", edata
 
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: "soni"
-      acntUname: "1soni"
+      selGrpUname: $scope.selectedGroupUname
+      acntUname: $scope.selectedAccountUname
+    }
+    ledgerService.createEntry(unqNamesObj, edata).then($scope.addEntrySuccess, $scope.addEntryFailure)
+
+  $scope.addEntrySuccess = (response) ->
+    console.log response, "addEntrySuccess"
+    dummyresponse = {
+      "voucherNo": 1004,
+      "voucherType": "sales",
+      "transactions": [
+        {
+          "debitAccount": {
+            "uniqueName": "account123",
+            "name": "account123"
+          },
+          "creditAccount": {
+            "uniqueName": "account789",
+            "name": "account789"
+          },
+          "amount": 1230
+        }
+      ],
+      "uniqueName": "oi51446093711489",
+      "date": "08-10-2015",
+      "tag": "tag123",
+      "description": "description123"
+    }
+    console.log $scope.ledgerData, "before"
+    # $scope.addNewRow('debit')
+    # $scope.ledgerData.ledgers.unshift(dummyresponse)
+
+    console.log $scope.ledgerData, "finally"
+
+  $scope.addEntryFailure = (response) ->
+    console.log response, "addEntryFailure"
+
+
+  $scope.updateEntry = (edata) ->
+    console.log "updateEntry"
+    edata.voucherType = edata.voucher.shortCode
+    
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroupUname
+      acntUname: $scope.selectedAccountUname
       entUname: edata.uniqueName
     }
 
@@ -124,6 +197,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $scope.updateEntryFailure = (response) ->
     console.log response, "updateEntryFailure"
+
+
+  $scope.addNewRow = (type) ->
+    console.log type, "add new row"
+
 
   $scope.voucherTypeList = [
     {
@@ -154,7 +232,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     title: 'Title'
   }
 
-  $scope.ledgerDatadaa = {
+
+  $scope.ledgerDataata = {
     "broughtForwardBalance": {
       "amount": 0,
       "type": "CREDIT"
@@ -191,8 +270,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
         "transactions": [
           {
             "particular": {
-              "name": "Rahul",
-              "uniqueName": "bank"
+              "name": "frnd",
+              "uniqueName": "frndafafaf14453422453110l26ow"
             },
             "amount": 2001,
             "type": "CREDIT"
@@ -228,8 +307,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
           },
           {
             "particular": {
-              "name": "Rahul",
-              "uniqueName": "cake"
+              "name": "sonu",
+              "uniqueName": "sonu_gates"
             },
             "amount": 5001,
             "type": "DEBIT"
