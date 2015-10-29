@@ -76,8 +76,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.loadLedgerSuccess = (response) ->
     console.log response, "loadLedgerSuccess"
     $scope.showLedgerBox = true
-    $scope.ledgerData = response.body
-    
+    $scope.ledgerData = $scope.ledgerDataE
+
+  $scope.debitOnly = (ledger) ->
+    'DEBIT' == ledger.transactions[0].type
 
   $scope.loadLedgerFailure = (response) ->
     console.log response
@@ -187,7 +189,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
           }
         ],
         "description": "testing",
-        "tag": "testing",
+        "tag": "HELLO",
         "uniqueName": "khb1445237230952",
         "voucher": {
           "name": "sales",
@@ -204,7 +206,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
               "uniqueName": "bank"
             },
             "amount": 2001,
-            "type": "DEBIT"
+            "type": "CREDIT"
           },
           {
             "particular": {
@@ -229,7 +231,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
         "transactions": [
           {
             "particular": {
-              "name": "Rahul",
+              "name": "Priyanka",
               "uniqueName": "bank"
             },
             "amount":4001,
@@ -258,11 +260,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
         "transactions": [
           {
             "particular": {
-              "name": "Rahul",
+              "name": "Ravi",
               "uniqueName": "temp"
             },
             "amount": 6001,
-            "type": "DEBIT"
+            "type": "CREDIT"
           },
           {
             "particular": {

@@ -19,6 +19,7 @@
     </div>
     <div class="form-group">
       <label>To date</label>
+
       <p class="input-group">
         <input type="text" class="form-control"
                datepicker-popup="{{format}}"
@@ -84,10 +85,10 @@
               <div class="pr" ng-if="ledgerData.ledgers.length == 0">
                 {{drEntryForm_0.$invalid}}
                 <div
-                  ledger-pop 
+                  ledger-pop
                   index="0"
-                  ftype="ftypeAdd" 
-                  itemdata="dummyValue" 
+                  ftype="ftypeAdd"
+                  itemdata="dummyValue"
                   acntlist="fltAccntList"
                   class='drEntryForm_0 pr'
                   name='drEntryForm_0'
@@ -97,17 +98,17 @@
               </div>
               <div class="pr" ng-if="ledgerData.ledgers.length > 0">
                 <div
-                  ng-repeat="(key, value) in ledgerData.ledgers track by $index" 
-                  ledger-pop 
-                  index="$index"
-                  ftype="ftypeUpdate"
-                  itemdata="value" 
-                  acntlist="fltAccntList"
-                  class='drEntryForm_{{$index}} pr'
-                  name='drEntryForm_{{$index}}'
-                  update-ledger="updateEntry(entry)"
-                  novalidate
-                >
+                    ng-repeat="(key, value) in ledgerData.ledgers | pick: debitOnly track by $index"
+                    ledger-pop
+                    index="$index"
+                    ftype="value.uniqueName == undefined ? 'Add' : 'Update'"
+                    itemdata="value"
+                    acntlist="fltAccntList"
+                    class='drEntryForm_{{$index}} pr'
+                    name='drEntryForm_{{$index}}'
+                    update-ledger="updateEntry(entry)"
+                    novalidate
+                    >
                 </div>
               </div>
 
@@ -135,15 +136,7 @@
           <tr>
             <td colspan="100%" class="nopad">
               <div>
-                <!-- <td>
-                  <input type="text" name=""/>
-                </td>
-                <td>
-                  <input type="text" name=""/>
-                </td>
-                <td>
-                  <input type="text" name=""/>
-                </td> -->
+
               </div>
             </td>
           </tr>
@@ -171,15 +164,6 @@
       <td class="cr taR bdrR">
       </td>
     </tr>
-    <!--
-    <tr id="plus_row" class="nobdr footer">
-      <td class="nobdr marks"></td>
-      <td class="td" colspan="6">
-        <input type="hidden" value="SUSPENSE ACCOUNT" id="accountee_name" name="accountee_name">
-      </td>
-      <td class="nobdr marks"></td>
-    </tr> -->
-
 
     </tfoot>
     <!-- end main tfoot -->
@@ -189,12 +173,6 @@
 
 
 <div class="col-md-12">
-  
-
-  <!-- style="top: 422px; left: 573.25px; display: block;" -->
-  
-
-
 </div>
 
 

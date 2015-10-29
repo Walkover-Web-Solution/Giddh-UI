@@ -2,7 +2,7 @@ settings = require('../util/settings')
 jwt = require('jwt-simple');
 router = settings.express.Router()
 accessTokenUrl = 'https://accounts.google.com/o/oauth2/token'
-loginUrl = settings.envUrl + '/login-with-google'
+loginUrl = settings.envUrl + 'login-with-google'
 
 router.post '/google', (req, res, next) ->
   params =
