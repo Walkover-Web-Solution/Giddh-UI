@@ -6,6 +6,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.selectedAccountUname = undefined
   $scope.selectedGroupUname = undefined
 
+
+  $scope.creditTotal = undefined
+  $scope.debitTotal = undefined
+  $scope.creditBalanceAmount = undefined
+  $scope.debitBalanceAmount = undefined
+
   #date time picker code starts here
   $scope.today = new Date()
   $scope.fromDate = {date: new Date()}
@@ -31,7 +37,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.format = "dd-MM-yyyy"
   $scope.ftypeAdd = "add"
   $scope.ftypeUpdate = "update"
-  $scope.dummyValueDebit = 
+
+  dummyValueDebit = 
   {
     "transactions": [
       {
@@ -44,7 +51,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
       }
     ],
     "description": "",
-    "tag": "test",
+    "tag": "",
     "uniqueName": undefined,
     "voucher": {
       "name": "sales"
@@ -52,7 +59,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     },
     "entryDate": ""
   }
-  $scope.dummyValueCredit = 
+  dummyValueCredit = 
   {
     "transactions": [
       {
@@ -95,9 +102,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     ledgerService.getLedger(unqNamesObj).then($scope.loadLedgerSuccess, $scope.loadLedgerFailure)
 
   $scope.loadLedgerSuccess = (response) ->
-    console.log response, "loadLedgerSuccess"
-    response.body.ledgers.push($scope.dummyValueDebit)
-    response.body.ledgers.push($scope.dummyValueCredit)
+    response.body.ledgers.push(angular.copy(dummyValueDebit))
+    response.body.ledgers.push(angular.copy(dummyValueCredit))
     $scope.ledgerData = response.body
     $scope.showLedgerBox = true
     
@@ -124,7 +130,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   
   $scope.addNewEntry = (data) ->
     console.log "addNewEntry"
-    # $scope.edata = undefined
     edata = {}
     angular.copy(data, edata)
     
@@ -148,12 +153,28 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $scope.addEntrySuccess = (response) ->
     toastr.success("Entry created successfully", "Success")
-    console.log response, "addEntrySuccess"
-    # $scope.ledgerData.ledgers.push(response.body)
-    console.log $scope.ledgerData, "after"
+    $scope.removeLedgerDialog()
+    tType = response.body.transactions[0].type
+    count = 0
+    rpl = 0
+    _.each($scope.ledgerData.ledgers, (ledger) ->
+      if ledger.uniqueName is undefined && ledger.transactions[0].type is tType
+        rpl =  count
+      count++
+    )
+    $scope.ledgerData.ledgers[rpl] = response.body
+
+    console.log "after add entry", $scope.ledgerData.ledgers.length
     
-    # response.body.ledgers.push($scope.dummyValueDebit)
-    # response.body.ledgers.push($scope.dummyValueCredit)
+
+    if tType is 'DEBIT'
+      console.log "in DEBIT"
+      $scope.ledgerData.ledgers.push(dummyValueDebit)
+    if tType is 'CREDIT'
+      console.log "in CREDIT"
+      $scope.ledgerData.ledgers.push(dummyValueCredit)
+
+    
     
 
 
@@ -164,7 +185,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.updateEntry = (data) ->
     edata = {}
     angular.copy(data, edata)
-    console.log "updateEntry"
+
     edata.voucherType = data.voucher.shortCode
     
     unqNamesObj = {
@@ -177,16 +198,30 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
       unk = data.transactions[0].particular.uniqueName
       edata.transactions[0].particular = unk
 
-    console.log edata, "actdata"
-
     ledgerService.updateEntry(unqNamesObj, edata).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
 
   $scope.updateEntrySuccess = (response) ->
     console.log response, "updateEntrySuccess"
+    toastr.success("Entry updated successfully", "Success")
+    $scope.removeLedgerDialog()
+    count = 0
+    rpl = 0
+    _.each($scope.ledgerData.ledgers, (ledger) ->
+      if ledger.uniqueName is response.body.uniqueName
+        rpl =  count
+      count++
+    )
+    $scope.ledgerData.ledgers[rpl] = response.body
+
+    console.log $scope.ledgerData.ledgers, "actual var after"
 
   $scope.updateEntryFailure = (response) ->
     console.log response, "updateEntryFailure"
 
+  $scope.removeLedgerDialog = () ->
+    allPopElem = angular.element(document.querySelector('.ledgerPopDiv'))
+    allPopElem.remove()
+    return true
 
   $scope.addNewRow = (type) ->
     console.log type, "add new row"
@@ -260,6 +295,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $rootScope.$on '$viewContentLoaded', ->
     $scope.fromDate.date.setDate(1)
+
     
 
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController

@@ -81,7 +81,7 @@
             <th colspan="100%">Debit (Dr)</th>
           </tr>
           <tr class="dgreyBg">
-            <th width="28%">Date</th>
+            <th width="28%">Date (DD-MM-YYYY)</th>
             <th width="44%">Particular</th>
             <th width="28%">Amount</th>
           </tr>
@@ -103,6 +103,7 @@
                   name='drEntryForm_{{$index}}'
                   update-ledger="updateEntry(entry)"
                   add-ledger="addNewEntry(entry)"
+                  remove-ledgdialog="removeLedgerDialog()"
                   novalidate
                   >
                 </div>
@@ -121,7 +122,7 @@
             <th colspan="100%">Credit (Dr)</th>
           </tr>
           <tr class="dgreyBg">
-            <th width="28%">Date</th>
+            <th width="28%">Date (DD-MM-YYYY)</th>
             <th width="44%">Particular</th>
             <th width="28%">Amount</th>
           </tr>
@@ -142,6 +143,7 @@
                   name='drEntryForm_{{$index}}'
                   update-ledger="updateEntry(entry)"
                   add-ledger="addNewEntry(entry)"
+                  remove-ledgdialog="removeLedgerDialog()"
                   novalidate
                   >
                 </div>
@@ -159,38 +161,38 @@
 
     <tr class="fw600 dgreyBg">
       <td colspan="2" style="width:36%">
-        <div ng-if="ledgerData.balance.type == 'DEBIT'">
+        <div class="pull-right" ng-if="ledgerData.balance.type == 'DEBIT'">
           Balance 
         </div>
       </td>
       <td style="width:14%">
         <div ng-if="ledgerData.balance.type == 'DEBIT'">
-          <span>{{ledgerData.balance.amount}}</span>
+          <span>{{debitBalanceAmount}}</span>
         </div>
       </td>
       <td colspan="2" style="width:36%">
-        <div ng-if="ledgerData.balance.type == 'CREDIT'">
+        <div class="pull-right" ng-if="ledgerData.balance.type == 'CREDIT'">
           Balance 
         </div>
       </td>
       <td style="width:14%">
         <div ng-if="ledgerData.balance.type == 'CREDIT'">
-          <span>{{ledgerData.balance.amount}}</span>
+          <span>{{creditBalanceAmount}}</span>
         </div>
       </td>
     </tr>
     <tr class="total greyBg">
       <td colspan="2" style="width:36%">
-        Total
+        <span class="pull-right">Total</span>
       </td>
       <td style="width:14%">
-        <span>{{ledgerData.debitTotal}}</span>
+        <span>{{debitTotal}}</span>
       </td>
       <td colspan="2" style="width:36%">
-        Total
+        <span class="pull-right">Total</span>
       </td>
       <td class="" style="width:14%">
-        <span>{{ledgerData.creditTotal}}</span>
+        <span>{{creditTotal}}</span>
       </td>
     </tr>
 

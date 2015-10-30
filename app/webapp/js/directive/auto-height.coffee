@@ -99,6 +99,7 @@ angular.module('ledger', [])
       ftype: '=ftype'
       updateLedger: '&'
       addLedger: '&'
+      removeLedgdialog: '&'
     controller: 'ledgerController'
     template: "<form class='pr drEntryForm_{{index}} name='drEntryForm_{{index}}' novalidate tabindex='-1'>
       <div ng-click='openDialog(item, index, ftype)'>
@@ -137,14 +138,6 @@ angular.module('ledger', [])
 
       scope.addCrossFormField = (i, d, c) ->
         scope.item.transactions[0].particular.uniqueName = i.uName
-        # item.transactions[0].particular.name = i.name
-        console.log i, d, c, 'addCrossFormField'
-        console.log scope.item.transactions[0].particular, "particular Updated"
-
-      scope.removeDialog = (type) ->
-        allPopElem = angular.element(document.querySelector('.ledgerPopDiv'))
-        allPopElem.remove()
-        return true
 
       scope.openDialog = (item, index, ftype) ->
         rect = elem.context.getBoundingClientRect()
@@ -190,14 +183,14 @@ angular.module('ledger', [])
                   type="button" ng-disabled="drEntryForm_{{index}}.$invalid || noResults"
                   ng-click="addLedger({entry: item})">Add</button>
 
-                <button ng-click="removeDialog()" class="btn mrL1" type="button">close</button>
+                <button ng-click="removeLedgdialog()" class="btn mrL1" type="button">close</button>
               </div>
             </div>
           </div>
         </div>')
         
         if childCount == 1
-          scope.removeDialog("all")
+          scope.removeLedgerDialog("all")
           $compile(popHtml)(scope)
           elem.append(popHtml)
           popHtml.css({
