@@ -6,6 +6,7 @@
   <span></span>
   <span></span>
   <span></span>
+  <h1>Click on account to load ledger</h1>
 </div>
 
 <div class="pdL2 pdR2 pdT2" ng-if="showLedgerBox">
@@ -158,19 +159,23 @@
 
     <tr class="fw600 dgreyBg">
       <td colspan="2" style="width:36%">
-        Balance 
+        <div ng-if="ledgerData.balance.type == 'DEBIT'">
+          Balance 
+        </div>
       </td>
       <td style="width:14%">
         <div ng-if="ledgerData.balance.type == 'DEBIT'">
-          <span class="pull-right">{{ledgerData.balance.amount}}</span>
+          <span>{{ledgerData.balance.amount}}</span>
         </div>
       </td>
       <td colspan="2" style="width:36%">
-        Balance 
+        <div ng-if="ledgerData.balance.type == 'CREDIT'">
+          Balance 
+        </div>
       </td>
       <td style="width:14%">
         <div ng-if="ledgerData.balance.type == 'CREDIT'">
-          <span class="pull-right">{{ledgerData.balance.amount}}</span>
+          <span>{{ledgerData.balance.amount}}</span>
         </div>
       </td>
     </tr>
@@ -179,13 +184,13 @@
         Total
       </td>
       <td style="width:14%">
-        <span class="pull-right">{{ledgerData.debitTotal}}</span>
+        <span>{{ledgerData.debitTotal}}</span>
       </td>
       <td colspan="2" style="width:36%">
         Total
       </td>
       <td class="" style="width:14%">
-        <span class="pull-right">{{ledgerData.creditTotal}}</span>
+        <span>{{ledgerData.creditTotal}}</span>
       </td>
     </tr>
 

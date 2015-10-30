@@ -147,29 +147,37 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     ledgerService.createEntry(unqNamesObj, edata).then($scope.addEntrySuccess, $scope.addEntryFailure)
 
   $scope.addEntrySuccess = (response) ->
+    toastr.success("Entry created successfully", "Success")
     console.log response, "addEntrySuccess"
+    # $scope.ledgerData.ledgers.push(response.body)
+    console.log $scope.ledgerData, "after"
     
-    console.log $scope.ledgerData, "before"
-    # $scope.addNewRow('debit')
-    # $scope.ledgerData.ledgers.unshift(dummyresponse)
+    # response.body.ledgers.push($scope.dummyValueDebit)
+    # response.body.ledgers.push($scope.dummyValueCredit)
+    
 
 
   $scope.addEntryFailure = (response) ->
     console.log response, "addEntryFailure"
 
 
-  $scope.updateEntry = (edata) ->
+  $scope.updateEntry = (data) ->
+    edata = {}
+    angular.copy(data, edata)
     console.log "updateEntry"
-    edata.voucherType = edata.voucher.shortCode
+    edata.voucherType = data.voucher.shortCode
     
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
       acntUname: $scope.selectedAccountUname
-      entUname: edata.uniqueName
+      entUname: data.uniqueName
     }
+    if angular.isObject(data.transactions[0].particular)
+      unk = data.transactions[0].particular.uniqueName
+      edata.transactions[0].particular = unk
 
-    console.log edata, "actdata", unqNamesObj
+    console.log edata, "actdata"
 
     ledgerService.updateEntry(unqNamesObj, edata).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
 
@@ -186,7 +194,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $scope.voucherTypeList = [
     {
-      name: "sales"
+      name: "Sales"
       shortCode: "sal"
     }
     {
@@ -246,93 +254,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
         },
         "entryDate": "02-06-2015",
         "voucherNo": 1007
-      },
-      {
-        "transactions": [
-          {
-            "particular": {
-              "name": "frnd",
-              "uniqueName": "frndafafaf14453422453110l26ow"
-            },
-            "amount": 2001,
-            "type": "CREDIT"
-          },
-          {
-            "particular": {
-              "name": "Rahul",
-              "uniqueName": "cake"
-            },
-            "amount": 3001,
-            "type": "DEBIT"
-          }
-        ],
-        "description": "testing",
-        "tag": "testing",
-        "uniqueName": "tdq1445237034341",
-        "voucher": {
-          "name": "sales",
-          "shortCode": "sal"
-        },
-        "entryDate": "12-09-2015",
-        "voucherNo": 1003
-      },
-      {
-        "transactions": [
-          {
-            "particular": {
-              "name": "Priyanka",
-              "uniqueName": "bank"
-            },
-            "amount":4001,
-            "type": "DEBIT"
-          },
-          {
-            "particular": {
-              "name": "sonu",
-              "uniqueName": "sonu_gates"
-            },
-            "amount": 5001,
-            "type": "DEBIT"
-          }
-        ],
-        "description": "testing",
-        "tag": "testing",
-        "uniqueName": "ycc1445237041390",
-        "voucher": {
-          "name": "sales",
-          "shortCode": "sal"
-        },
-        "entryDate": "13-09-2015",
-        "voucherNo": 1004
-      },
-      {
-        "transactions": [
-          {
-            "particular": {
-              "name": "Ravi",
-              "uniqueName": "temp"
-            },
-            "amount": 6001,
-            "type": "CREDIT"
-          },
-          {
-            "particular": {
-              "name": "Rahul",
-              "uniqueName": "water"
-            },
-            "amount": 7001,
-            "type": "DEBIT"
-          }
-        ],
-        "description": "testing",
-        "tag": "testing",
-        "uniqueName": "l471445237226558",
-        "voucher": {
-          "name": "sales",
-          "shortCode": "sal"
-        },
-        "entryDate": "12-09-2015",
-        "voucherNo": 1006
       }
     ]
   }

@@ -46,7 +46,7 @@ router.get '/:ledgerUniqueName', (req, res) ->
 router.post '/', (req, res) ->
   console.log "in create ledgers"
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/groups/' + req.params.groupUniqueName + '/accounts' + req.params.accountUniqueName + '/ledgers'
+      '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName + '/ledgers'
   req.body.uniqueName = settings.stringUtil.getRandomString(req.params.accountUniqueName, req.params.companyUniqueName)
   args =
     headers:
