@@ -100,6 +100,7 @@ angular.module('ledger', [])
       updateLedger: '&'
       addLedger: '&'
       removeLedgdialog: '&'
+      discardLedger: '&'
     controller: 'ledgerController'
     template: "<form class='pr drEntryForm_{{index}} name='drEntryForm_{{index}}' novalidate tabindex='-1'>
       <div ng-click='openDialog(item, index, ftype)'>
@@ -135,11 +136,16 @@ angular.module('ledger', [])
           </table>
         </div></form>"
     link: (scope, elem, attrs) ->
+      scope.lItem = {}
 
       scope.addCrossFormField = (i, d, c) ->
         scope.item.transactions[0].particular.uniqueName = i.uName
 
+      scope.resetEntry = (item, lItem) ->
+        angular.copy(lItem, item)
+
       scope.openDialog = (item, index, ftype) ->
+        console.log item
         rect = elem.context.getBoundingClientRect()
         childCount = elem.context.childElementCount
         popHtml = angular.element('
@@ -148,11 +154,9 @@ angular.module('ledger', [])
           <h3 class="popover-title" ng-if="ftype == \'Update\'">Update entry</h3>
           <h3 class="popover-title" ng-if="ftype == \'Add\'">Add new entry</h3>
           <div class="popover-content">
-            <div class="">
-              <div class="form-group clearfix">
-                
-                <a class="pull-left" ng-show="noResults" href="javascript:void(0)" ng-click="addNewAccount()">Add new account</a>
-                <a href="javascript:void(0)" class="pull-right" ng-click="discardEntry()">Discard</a>
+            <div class="mrT">
+              <div class="form-group" ng-show="noResults">
+                <a href="javascript:void(0)" ng-click="addNewAccount()">Add new account</a>
               </div>
               <div class="row">
                 <div class="col-md-6 col-sm-12">
@@ -171,7 +175,13 @@ angular.module('ledger', [])
                   </div>
                 </div>
                 <div class="col-md-6 col-sm-12">
-                  <textarea class="form-control" name="description" ng-model="item.description"></textarea>
+                  <div class="form-group" ng-if="ftype == \'Update\'">
+                    <label>Vouher no. </label>
+                    {{item.voucher.shortCode}}-{{item.voucherNo}}
+                  </div>
+                  <div class="form-group">
+                    <textarea class="form-control" name="description" ng-model="item.description"></textarea>
+                  </div>
                 </div>
               </div>
               <div class="">
@@ -183,13 +193,16 @@ angular.module('ledger', [])
                   type="button" ng-disabled="drEntryForm_{{index}}.$invalid || noResults"
                   ng-click="addLedger({entry: item})">Add</button>
 
-                <button ng-click="removeLedgdialog()" class="btn mrL1" type="button">close</button>
+                <button ng-click="removeLedgdialog(); resetEntry(item, lItem)" class="btn mrL1" type="button">close</button>
+
+                <button class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
               </div>
             </div>
           </div>
         </div>')
         
         if childCount == 1
+          angular.copy(item, scope.lItem)
           scope.removeLedgerDialog("all")
           $compile(popHtml)(scope)
           elem.append(popHtml)

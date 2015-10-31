@@ -205,7 +205,7 @@ angular.module('giddhWebApp').service 'ledgerService', ($resource, $q) ->
         }
         delete: {
           method: 'DELETE',
-          url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'
+          url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/ledgers/:entryUniqueName'
         }
       })
 
@@ -240,6 +240,14 @@ angular.module('giddhWebApp').service 'ledgerService', ($resource, $q) ->
         accountsUniqueName: unqNamesObj.acntUname
         entryUniqueName: unqNamesObj.entUname
       },data, onSuccess, onFailure))
+
+    deleteEntry: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> Ledger.delete({
+        companyUniqueName: unqNamesObj.compUname,
+        groupUniqueName: unqNamesObj.selGrpUname,
+        accountsUniqueName: unqNamesObj.acntUname
+        entryUniqueName: unqNamesObj.entUname
+      }, onSuccess, onFailure))
 
 
   ledgerService

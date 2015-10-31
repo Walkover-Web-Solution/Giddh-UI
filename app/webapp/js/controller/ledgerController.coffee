@@ -106,6 +106,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     response.body.ledgers.push(angular.copy(dummyValueCredit))
     $scope.ledgerData = response.body
     $scope.showLedgerBox = true
+    $scope.calculateLedger($scope.ledgerData, "server")
     
   $scope.debitOnly = (ledger) ->
     'DEBIT' == ledger.transactions[0].type
@@ -124,9 +125,35 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     else
       modalService.openManageGroupsModal()
 
-  $scope.discardEntry = () ->
-    console.log "discardEntry"
 
+  $scope.deleteEntry = (item) ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroupUname
+      acntUname: $scope.selectedAccountUname
+      entUname: item.uniqueName
+    }
+    ledgerService.deleteEntry(unqNamesObj).then((response) ->
+      $scope.deleteEntrySuccess(item, response)
+     , $scope.deleteEntryFailure)
+
+  $scope.deleteEntrySuccess = (item, response) ->
+    console.log $scope.ledgerData.ledgers.length, "before"
+    count = 0
+    rpl = 0
+    _.each($scope.ledgerData.ledgers, (entry) ->
+      if entry.uniqueName is item.uniqueName
+        rpl = count
+      count++
+    )
+    $scope.ledgerData.ledgers.splice(rpl, 1)
+    toastr.success(response.message, response.status)
+    $scope.removeLedgerDialog()
+    console.log $scope.ledgerData.ledgers.length, "after"
+    $scope.calculateLedger($scope.ledgerData, "deleted")
+
+  $scope.deleteEntryFailure = (response) ->
+    console.log "deleteEntryFailure", response
   
   $scope.addNewEntry = (data) ->
     console.log "addNewEntry"
@@ -141,8 +168,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     if angular.isObject(data.transactions[0].particular)
       unk = data.transactions[0].particular.uniqueName
       edata.transactions[0].particular = unk
-
-    console.log "hurray", edata
 
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
@@ -164,16 +189,14 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     )
     $scope.ledgerData.ledgers[rpl] = response.body
 
-    console.log "after add entry", $scope.ledgerData.ledgers.length
-    
-
     if tType is 'DEBIT'
       console.log "in DEBIT"
-      $scope.ledgerData.ledgers.push(dummyValueDebit)
+      $scope.ledgerData.ledgers.push(angular.copy(dummyValueDebit))
     if tType is 'CREDIT'
       console.log "in CREDIT"
-      $scope.ledgerData.ledgers.push(dummyValueCredit)
+      $scope.ledgerData.ledgers.push(angular.copy(dummyValueCredit))
 
+    $scope.calculateLedger($scope.ledgerData, "add")
     
     
 
@@ -185,8 +208,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.updateEntry = (data) ->
     edata = {}
     angular.copy(data, edata)
-
-    edata.voucherType = data.voucher.shortCode
+    
+    if _.isUndefined(data.voucher)
+      console.log "voucher undefined", data.voucher
+    else
+      edata.voucherType = data.voucher.shortCode
     
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
@@ -201,7 +227,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     ledgerService.updateEntry(unqNamesObj, edata).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
 
   $scope.updateEntrySuccess = (response) ->
-    console.log response, "updateEntrySuccess"
     toastr.success("Entry updated successfully", "Success")
     $scope.removeLedgerDialog()
     count = 0
@@ -212,8 +237,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
       count++
     )
     $scope.ledgerData.ledgers[rpl] = response.body
-
-    console.log $scope.ledgerData.ledgers, "actual var after"
+    $scope.calculateLedger($scope.ledgerData, "update")
 
   $scope.updateEntryFailure = (response) ->
     console.log response, "updateEntryFailure"
@@ -223,8 +247,48 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     allPopElem.remove()
     return true
 
-  $scope.addNewRow = (type) ->
-    console.log type, "add new row"
+  $scope.calculateLedger = (data, loadtype) ->
+    console.log "calculateLedger", data
+    crt = 0
+    drt = 0
+
+    if data.broughtForwardBalance.type is 'CREDIT'
+      crt += data.broughtForwardBalance.amount
+
+    if data.broughtForwardBalance.type is 'DEBIT'
+      drt += data.broughtForwardBalance.amount
+      
+    _.each(data.ledgers, (entry) ->
+      if entry.transactions[0].type is 'DEBIT'
+        drt += entry.transactions[0].amount
+
+      if entry.transactions[0].type is 'CREDIT'
+        crt += entry.transactions[0].amount
+    )
+    
+    if drt > crt 
+      console.log "debit is greater"
+      $scope.creditBalanceAmount = drt-crt
+      $scope.debitTotal = drt
+      $scope.creditTotal = parseInt(crt) + parseInt($scope.creditBalanceAmount)
+    if crt > drt 
+      console.log "credit is greater"
+      $scope.debitBalanceAmount = crt-drt
+      $scope.debitTotal = parseInt(drt) + parseInt($scope.debitBalanceAmount)
+      $scope.creditTotal = crt
+
+    
+
+    # if calculation is wrong than make entry in newrelic
+    if loadtype is 'server'
+      if parseInt(data.debitTotal) isnt parseInt(crt)
+        console.log "something is wrong in calculateLedger"
+        console.log parseInt(data.debitTotal),  parseInt(crt)
+      if parseInt(data.creditTotal) isnt parseInt(drt)
+        console.log "something is wrong in calculateLedger"
+        console.log parseInt(data.creditTotal),  parseInt(drt)
+      
+
 
 
   $scope.voucherTypeList = [
