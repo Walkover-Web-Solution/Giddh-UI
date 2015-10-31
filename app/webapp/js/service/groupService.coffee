@@ -76,8 +76,8 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
 
     flattenGroup: (rawList, parents) ->
       listofUN = _.map(rawList, (listItem) ->
-        newParents = _.union([],parents)
-        newParents.push({name: listItem.name, uniqueName: listItem.uniqueName})
+        newParents = _.union([], parents)
+        newParents.push({name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role})
         if listItem.groups.length > 0
           result = groupService.flattenGroup(listItem.groups, newParents)
           result.push(listItem)
@@ -97,7 +97,7 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
           addThisGroup.accountDetails = groupItem.accounts
           addThisGroup
         else
-         #do nothing
+#do nothing
       )
       _.without(_.flatten(listGA), undefined);
 
@@ -107,24 +107,24 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
           uniqueList = groupService.flattenAccount(listItem.groups)
           _.each(listItem.accounts, (accntItem) ->
             if _.isUndefined(accntItem.parentGroups)
-              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName}]
+              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role}]
             else
-              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName})
+              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role})
           )
           uniqueList.push(listItem.accounts)
           _.each(uniqueList, (accntItem) ->
             if _.isUndefined(accntItem.parentGroups)
-              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName}]
+              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role}]
             else
-              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName})
+              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role})
           )
           uniqueList
         else
           _.each(listItem.accounts, (accntItem) ->
             if _.isUndefined(accntItem.parentGroups)
-              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName}]
+              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role}]
             else
-              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName})
+              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role})
           )
           listItem.accounts
       )
@@ -192,7 +192,7 @@ angular.module('giddhWebApp').service 'ledgerService', ($resource, $q) ->
       },
       {
         get: {
-          method: 'GET', 
+          method: 'GET',
           url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/ledgers?fromDate=:date1&toDate=:date2'
         }
         create: {
@@ -231,7 +231,7 @@ angular.module('giddhWebApp').service 'ledgerService', ($resource, $q) ->
         companyUniqueName: unqNamesObj.compUname,
         groupUniqueName: unqNamesObj.selGrpUname,
         accountsUniqueName: unqNamesObj.acntUname
-      },data, onSuccess, onFailure))
+      }, data, onSuccess, onFailure))
 
     updateEntry: (unqNamesObj, data) ->
       @handlePromise((onSuccess, onFailure) -> Ledger.update({
@@ -239,7 +239,7 @@ angular.module('giddhWebApp').service 'ledgerService', ($resource, $q) ->
         groupUniqueName: unqNamesObj.selGrpUname,
         accountsUniqueName: unqNamesObj.acntUname
         entryUniqueName: unqNamesObj.entUname
-      },data, onSuccess, onFailure))
+      }, data, onSuccess, onFailure))
 
     deleteEntry: (unqNamesObj) ->
       @handlePromise((onSuccess, onFailure) -> Ledger.delete({

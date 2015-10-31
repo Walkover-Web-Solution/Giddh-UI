@@ -147,7 +147,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.selectedItem = $scope.selectedGroup
     toastr.success("Group has been updated successfully.", "Success")
     $scope.getGroups()
-    console.log "broadcasting"
     $rootScope.$broadcast('$reloadAccount')
 
   $scope.onUpdateGroupFailure = () ->
@@ -207,7 +206,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showGroupDetails = false
     $scope.showAccountListDetails = false
     $scope.getGroups()
-    console.log "delete group broadcast"
     $rootScope.$broadcast('$reloadAccount')
 
   $scope.onDeleteGroupFailure = () ->
@@ -308,6 +306,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #show account
   $scope.showAccountDtl = (data) ->
+    if _.isEmpty($scope.selectedGroup)
+      $scope.hasSharePermission()
+      $scope.hasAddPermission(data.parentGroups[0])
+      $scope.hasUpdatePermission(data.parentGroups[0])
+      $scope.hasDeletePermission(data.parentGroups[0])
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
     angular.extend($scope.selectedAccount, data)
@@ -365,7 +368,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.selectedAccount = {}
     $scope.selectedGroup.accounts.push(result.body)
     $scope.groupAccntList = $scope.selectedGroup.accounts
-    console.log "add account broadcast"
     $rootScope.$broadcast('$reloadAccount')
 
 
