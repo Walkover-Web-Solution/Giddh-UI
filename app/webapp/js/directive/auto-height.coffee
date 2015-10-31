@@ -142,10 +142,15 @@ angular.module('ledger', [])
         scope.item.transactions[0].particular.uniqueName = i.uName
 
       scope.resetEntry = (item, lItem) ->
-        angular.copy(lItem, item)
+        if _.isUndefined(lItem.uniqueName)
+          item.entryDate = undefined
+          item.transactions[0].particular.uniqueName = undefined
+          item.transactions[0].particular.name = undefined
+          item.transactions[0].amount = undefined
+        else
+          angular.copy(lItem, item)
 
       scope.openDialog = (item, index, ftype) ->
-        console.log item
         rect = elem.context.getBoundingClientRect()
         childCount = elem.context.childElementCount
         popHtml = angular.element('

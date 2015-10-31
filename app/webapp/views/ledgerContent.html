@@ -74,8 +74,8 @@
     <!-- end main thead -->
     <tbody>
     <tr>
-      <td class="nopad" style="width:50%"  colspan="3">
-        <table class="table table-bordered">
+      <td class="nopad bdrL bdrR" style="width:50%"  colspan="3">
+        <table class="table">
           <thead>
           <tr class="splBg">
             <th colspan="100%">Debit (Dr)</th>
@@ -116,8 +116,8 @@
         </table>
       </td>
       <!-- main left td end here -->
-      <td class="nopad" style="width:50%" colspan="3">
-        <table class="table table-bordered">
+      <td class="nopad bdrL bdrR" style="width:50%" colspan="3">
+        <table class="table">
           <thead>
           <tr class="splBg">
             <th colspan="100%">Credit (Dr)</th>
@@ -162,38 +162,36 @@
     <tfoot>
 
     <tr class="fw600 dgreyBg">
-      <td colspan="2" style="width:36%">
+      <td colspan="2" class="bdrL" style="width:36%">
         <div class="pull-right" ng-if="ledgerData.balance.type == 'DEBIT'">
           Balance 
         </div>
       </td>
-      <td style="width:14%">
+      <td style="width:14%" class="bdrR">
         
         <span>{{debitBalanceAmount}}</span>
         
       </td>
-      <td colspan="2" style="width:36%">
+      <td colspan="2" style="width:36%" class="bdrL">
         <div class="pull-right" ng-if="ledgerData.balance.type == 'CREDIT'">
           Balance 
         </div>
       </td>
-      <td style="width:14%">
-        
+      <td style="width:14%" class="bdrR">
         <span>{{creditBalanceAmount}}</span>
-        
       </td>
     </tr>
     <tr class="total greyBg">
-      <td colspan="2" style="width:36%">
+      <td colspan="2" style="width:36%" class="bdrL">
         <span class="pull-right">Total</span>
       </td>
-      <td style="width:14%">
+      <td style="width:14%" class="bdrR">
         <span>{{debitTotal}}</span>
       </td>
-      <td colspan="2" style="width:36%">
+      <td colspan="2" style="width:36%" class="bdrL">
         <span class="pull-right">Total</span>
       </td>
-      <td class="" style="width:14%">
+      <td style="width:14%" class="bdrR">
         <span>{{creditTotal}}</span>
       </td>
     </tr>
