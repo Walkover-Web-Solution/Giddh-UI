@@ -281,12 +281,14 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
     # if calculation is wrong than make entry in newrelic
     if loadtype is 'server'
-      if parseInt(data.debitTotal) isnt parseInt(crt)
-        console.log "something is wrong in calculateLedger"
-        console.log parseInt(data.debitTotal),  parseInt(crt)
-      if parseInt(data.creditTotal) isnt parseInt(drt)
-        console.log "something is wrong in calculateLedger"
-        console.log parseInt(data.creditTotal),  parseInt(drt)
+      if drt > crt 
+        if parseInt(data.debitTotal) isnt parseInt(drt)
+          console.log "something is wrong in calculateLedger debitTotal"
+          console.log parseInt(data.debitTotal),  parseInt(drt)
+      if crt > drt 
+        if parseInt(data.creditTotal) isnt parseInt(crt)
+          console.log "something is wrong in calculateLedger creditTotal"
+          console.log parseInt(data.creditTotal),  parseInt(crt)
       
 
 

@@ -42,33 +42,19 @@
           <ul id="ul_0" class="accBox" style="border-left:none">
             <li ng-repeat="(key, value) in flatAccntWGroupsList  | filter:acntSrch" class=""
                 id="li_{{value.groupUniqueName}}">
-
               <div class="title  LIB{{value.groupUniqueName}}" ng-click="showSubMenus =! showSubMenus"
                    ng-class="{'active' : showSubMenus}">
                 <a>{{value.groupName}}</a>
               </div>
-
-              <!-- <ul class="accBox" ng-show="showMatchedAccounts" id="ul_{{value.groupId}}">
-
-                  <li ng-repeat="(index,accDtl) in value.matchedAccounts" class="mLi" id="ac_{{accDtl.accountId}}">
-
-                      <div ng-class="accDtl.charId ==1 ? 'smlSquare LIB' : 'smlSquare ASS'" > </div>
-                      <a style="text-transform: capitalize;" ng-click="loadLedger(accDtl,value.groupId)" href="javascript:">{{accDtl.accountName}}</a>
-                      <span class="quickSelect"></span>
-                  </li>
-                 <input type="button" value="Show More" ng-click="showAllAccountsMenu()" />
-              </ul> -->
-
               <ul class="accBox subAccBox" ng-show="showSubMenus" id="ul_{{value.groupUniqueName}}">
-
                 <li ng-repeat="(index,accDtl) in value.accountDetails  | filter:acntSrch track by $index" id="ac_{{accDtl.uniqueName}}">
-
-                  <a class="clearfix" href="#ledger" ng-click="loadLedger(value, accDtl)" href="javascript:">
-                    <i ng-class="accDtl.charId ==1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
-                    <span>{{accDtl.name}}</span>
+                  <a href="#ledger" ng-click="loadLedger(value, accDtl)" href="javascript:">
+                    <div class="clearfix" >
+                      <i ng-class="accDtl.charId ==1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
+                      <span>{{accDtl.name}}</span>
+                    </div>
                   </a>
                 </li>
-                <!-- <a ng-show="false" class="tdUndr ptr fs5">more</a>-->
               </ul>
 
             </li>

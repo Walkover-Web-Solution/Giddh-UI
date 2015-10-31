@@ -921,28 +921,36 @@ li:last-child .angular-ui-tree-handle {
     background: url(../images/vrDot.png) repeat-y;
     background-position: 4px 0
 }
+.acntAccordion > li > ul > li > ul > li{
+    line-height: 0;
+}
+.acntAccordion > li > ul > li > ul > li > a > div{
+    line-height: 24px;
+    height: 24px;
+}
 .subAccBox{
     margin-left: 14px;
 }
 .subAccBox li a{
     display: block;
-    padding: 7px 5px
+    padding-left: 2px;
 }
 .subAccBox li a:hover, .subAccBox li a.active {
     background: url(../images/noise.png);
     color: #fff;
 }
 .subAccBox li a span{
-    float: left;
     display: inline-block;
+    float: left;
+    line-height: 24px;
 }
 .subAccBox li a i.smlSquare{
     display: inline-block;
+    float: left;
     width: 5px;
     height: 5px;
-    float: left;
     margin-right: 5px;
-    margin-top: 7px;
+    margin-top: 10px;
 }
 .accBox > li > div {
     border-left: 5px solid transparent
