@@ -14,6 +14,7 @@ module.exports = (config) ->
             "bower_components/angular-ui-tree/dist/angular-ui-tree.min.js",
             "bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js",
             "bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"
+            "bower_components/angular-filter/dist/angular-filter.min.js"
             "bower_components/bootstrap/dist/js/bootstrap.js",
             "bower_components/satellizer/satellizer.js",
             "bower_components/underscore/underscore-min.js",
