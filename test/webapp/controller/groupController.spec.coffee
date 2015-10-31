@@ -176,13 +176,14 @@ describe 'groupController', ->
       expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
 
   describe '#updateGroup', ->
-    it 'should call group service and update group', ->
-      @scope.selectedGroup = {"uniqueName": "1"}
+    it 'should change the unique name to lower case & call group service and update group', ->
+      @scope.selectedGroup = {"uniqueName": "1R"}
       @rootScope.selectedCompany = {"uniqueName": "2"}
       deferred = @q.defer()
       spyOn(@groupService, 'update').andReturn(deferred.promise)
       @scope.updateGroup()
-      expect(@groupService.update).toHaveBeenCalledWith("2", {'uniqueName': '1'})
+      expect(@scope.selectedGroup.uniqueName).toEqual("1r")
+      expect(@groupService.update).toHaveBeenCalledWith("2", {'uniqueName': '1r'})
 
   describe '#onUpdateGroupSuccess', ->
     it 'should show success message with toastr and set value in variable', ->
@@ -191,6 +192,12 @@ describe 'groupController', ->
       @scope.onUpdateGroupSuccess(response)
       expect(@toastr.success).toHaveBeenCalledWith('Group has been updated successfully.', 'Success')
       expect(@scope.selectedGroup.oldUName).toEqual(@scope.selectedGroup.uniqueName)
+
+    it 'should set scope variable if selectedGroup is not empty', ->
+      response = {"status": "Success", "body": "Group has been updated successfully."}
+      @scope.selectedGroup = {"name": "g1"}
+      @scope.onUpdateGroupSuccess(response)
+      expect(@scope.selectedItem).toEqual(@scope.selectedGroup)
 
   describe '#onUpdateGroupFailure', ->
     it 'should show error message with toastr', ->

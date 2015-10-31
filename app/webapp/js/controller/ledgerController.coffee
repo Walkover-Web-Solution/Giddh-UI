@@ -85,7 +85,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   # ledger
   # load ledger start
   $scope.loadLedger = (data, acData) ->
-
     $scope.accntTitle = acData.name
     $scope.selectedAccountUname = acData.uniqueName 
     $scope.selectedGroupUname = data.groupUniqueName

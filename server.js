@@ -60,8 +60,10 @@ var groups = require('./public/routes/webapp/groups');
 var accounts = require('./public/routes/webapp/accounts');
 var ledgers = require('./public/routes/webapp/ledgers');
 var appRoutes = require('./public/routes/webapp/main');
+var users = require('./public/routes/webapp/users');
 
 app.use('/currency', currency);
+app.use('/users', users);
 app.use('/location', location);
 app.use('/company', company);
 app.use('/company/:companyUniqueName/groups', groups);

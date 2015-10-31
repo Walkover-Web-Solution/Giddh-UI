@@ -33,6 +33,8 @@ describe 'accountController', ->
 
   describe '#getGroupListSuccess', ->
     it 'should set group list', ->
+      @rootScope.makeAccountFlatten = (data) ->
+
       result = ["body": [{
         "name": "group1",
         "uniqueName": "g1",
@@ -46,6 +48,7 @@ describe 'accountController', ->
         "groupUniqueName": "g1",
         "accountDetails": [{"name": "a1"}]
       }])
+      spyOn(@rootScope, 'makeAccountFlatten')
       @scope.getGroupListSuccess(result)
       expect(@groupService.flattenGroup).toHaveBeenCalledWith(result.body, [])
       expect(@groupService.flattenGroupsWithAccounts).toHaveBeenCalledWith(@scope.flattenGroupList)

@@ -40,7 +40,7 @@
 
                   <div class="col-md-3 col-sm-12">
 
-                    <input type="hidden" ng-model="selectedAccount.mobileNo">
+                    <input type="hidden" ng-model="selectedCompany.contactNo">
 
                     <input type="text" ng-model="selectedCompany.cCode"
                            typeahead="country as country.value for country in countryCodesList | filter:$viewValue | limitTo:8"
@@ -49,7 +49,7 @@
                   </div>
                   <div class="col-md-9 col-sm-12">
                     <input type="text" placeholder="98XXXXXXXX" class="form-control" name="onlyMobileNo"
-                           ng-model="selectedCompany.contactNo" valid-number/>
+                           ng-model="selectedCompany.mobileNo" valid-number/>
                   </div>
                 </div>
 
@@ -135,7 +135,7 @@
           <!-- end of row -->
           <div class="clearfix">
             <button tabindex="10" ng-click="updateCompanyInfo(selectedCompany)" class="btn btn-primary"
-                    ng-disabled="cmpnyBascFrm.$invalid">Save
+                    ng-disabled="cmpnyBascFrm.$invalid">Update
             </button>
           </div>
         </form>
@@ -172,7 +172,7 @@
         </div>
         <ul class="list-group ln">
 
-          <li ng-repeat="(key,value) in sharedUsersList track by $index" class="list-group-item">
+          <li ng-repeat="(key,value) in sharedUsersList | pick: exceptOwnEmail track by $index" class="list-group-item">
 
             <div class="row">
 

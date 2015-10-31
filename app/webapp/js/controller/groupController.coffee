@@ -147,6 +147,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.selectedItem = $scope.selectedGroup
     toastr.success("Group has been updated successfully.", "Success")
     $scope.getGroups()
+    console.log "broadcasting"
+    $rootScope.$broadcast('$reloadAccount')
 
   $scope.onUpdateGroupFailure = () ->
     toastr.error("Unable to update group at the moment. Please try again later.", "Error")
@@ -205,6 +207,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showGroupDetails = false
     $scope.showAccountListDetails = false
     $scope.getGroups()
+    console.log "delete group broadcast"
+    $rootScope.$broadcast('$reloadAccount')
 
   $scope.onDeleteGroupFailure = () ->
     toastr.error("Unable to delete group.", "Error")
@@ -222,9 +226,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onMoveGroupSuccess = () ->
     toastr.success("Group moved successfully.", "Success")
     $scope.getGroups()
-    $scope.selectedGroup = {}
-    $scope.showGroupDetails = false
+    #    $scope.selectedGroup = {}
+    #    $scope.showGroupDetails = false
     $scope.moveto = undefined
+  #    $scope.showAccountListDetails = false
 
   $scope.onMoveGroupFailure = () ->
     toastr.error("Unable to move group.", "Error")
@@ -360,6 +365,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.selectedAccount = {}
     $scope.selectedGroup.accounts.push(result.body)
     $scope.groupAccntList = $scope.selectedGroup.accounts
+    console.log "add account broadcast"
+    $rootScope.$broadcast('$reloadAccount')
 
 
   $scope.addAccountFailure = (result) ->
@@ -385,6 +392,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.getGroups()
     $scope.selectedAccount = {}
 
+
   $scope.onDeleteAccountFailure = () ->
     toastr.error("Unable to delete group.", "Error")
 
@@ -395,6 +403,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       unqNamesObj.selGrpUname = lastVal[1]
     accountService.updateAc(unqNamesObj, $scope.selectedAccount).then($scope.updateAccountSuccess,
         $scope.updateAccountFailure)
+    $rootScope.$broadcast('$reloadAccount')
 
   $scope.updateAccountSuccess = (result) ->
     toastr.success("Group updated successfully", result.status)

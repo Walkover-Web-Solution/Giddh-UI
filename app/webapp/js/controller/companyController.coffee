@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService, userServices) ->
 
 #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
@@ -101,6 +101,23 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.getCompanyListFailure = (response)->
     toastr.error(response.data.message, "Error")
 
+  $scope.getUserDetails = ->
+    console.log "in controller", $rootScope.basicInfo
+    if _.isUndefined($rootScope.basicInfo.userUniqueName)
+      $rootScope.basicInfo = localStorageService.get("_userDetails")
+    userServices.get($rootScope.basicInfo.userUniqueName).then($scope.getUserDetailSuccess, $scope.getUserDetailFailure)
+
+
+  #Get user details
+  $scope.getUserDetailSuccess = (response) ->
+    console.log "get user details"
+    $rootScope.basicInfo = response.body
+    console.log $rootScope.basicInfo
+
+  #get company list failure
+  $scope.getUserDetailFailure = (response)->
+    toastr.error(response.data.message, "Error")
+
   $scope.getCompany = (uniqueName)->
     companyServices.get(uniqueName).then((->), (->))
 
@@ -134,7 +151,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
       SplitNumber = contactnumber.split('-')
       console.log "split number", SplitNumber
-      $scope.selectedCompany.contactNo = SplitNumber[1]
+      $scope.selectedCompany.mobileNo = SplitNumber[1]
       $scope.selectedCompany.cCode = SplitNumber[0]
 
 
@@ -153,7 +170,10 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #update company details
   $scope.updateCompanyInfo = (data) ->
     if not _.isEmpty(data.contactNo)
-      data.contactNo = data.cCode + "-" + data.contactNo
+      if _.isObject(data.cCode)
+        data.contactNo = data.cCode.value + "-" + data.mobileNo
+      else
+        data.contactNo = data.cCode + "-" + data.mobileNo
 
     companyServices.update(data).then($scope.updtCompanySuccess, $scope.updtCompanyFailure)
 
@@ -280,10 +300,14 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.unSharedCompFailure = (response) ->
     toastr.error(response.data.message, response.data.status)
 
+  $scope.exceptOwnEmail = (email) ->
+    $rootScope.basicInfo.email.userEmail != email.userEmail
+
   #fire function after page fully loaded
   $scope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
     $scope.getCurrencyList()
+    $scope.getUserDetails()
     $rootScope.isCollapsed = true
 
 #init angular app

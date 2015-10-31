@@ -1,18 +1,19 @@
 'use strict'
 
 loginBackController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr) ->
-  
+  $scope.loginIsProcessing = false
+
   $scope.authenticate = (provider) ->
     $scope.loginIsProcessing = true
     $auth.authenticate(provider).then((response) ->
       if response.data.result.status is "error"
-        #user is not registerd with us
+#user is not registerd with us
         toastr.error(response.data.result.message, "Error")
         $timeout (->
           window.location = "/beta"
         ), 3000
       else
-        #user is registered and redirect it to app
+#user is registered and redirect it to app
         localStorageService.set("_userDetails", response.data.userDetails)
         window.location = "/app/"
     ).catch (response) ->
@@ -21,9 +22,10 @@ loginBackController = ($scope, $rootScope, $http, $timeout, $auth, localStorageS
 
 
   #webpage data
-  $scope.login = 'banner':
-    'mainHead': 'Welcome to the world of'
-    'mainHead1': 'secure and online accounting'
+  $scope.login =
+    'banner':
+      'mainHead': 'Welcome to the world of'
+      'mainHead1': 'secure and online accounting'
 
   rand = Math.random() * 4
   window.onload = ->
