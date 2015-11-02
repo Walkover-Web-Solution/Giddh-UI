@@ -5,6 +5,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.showLedgerBox = false
   $scope.selectedAccountUname = undefined
   $scope.selectedGroupUname = undefined
+  $scope.selectedLedgerAccount = undefined
+  $scope.selectedLedgerGroup = undefined
 
   $scope.selectedCompany = {}
   lsKeys = localStorageService.keys()
@@ -90,12 +92,21 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   # ledger
   # load ledger start
+  $scope.reloadLedger = ->
+    if not _.isUndefined($scope.selectedLedgerGroup)
+      $scope.loadLedger($scope.selectedLedgerGroup, $scope.selectedLedgerAccount)
+
+
   $scope.loadLedger = (data, acData) ->
+    if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
+      toastr.error("Date should be in proper format", "Error")
+      return
     $scope.showLedgerBox = false
+    $scope.selectedLedgerAccount = acData
+    $scope.selectedLedgerGroup = data
     $scope.accntTitle = acData.name
     $scope.selectedAccountUname = acData.uniqueName
     $scope.selectedGroupUname = data.groupUniqueName
-
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
@@ -257,7 +268,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
     if data.forwardedBalance.type is 'DEBIT'
       drt += data.forwardedBalance.amount
-      
+
     _.each(data.ledgers, (entry) ->
       if entry.transactions[0].type is 'DEBIT'
         drt += entry.transactions[0].amount

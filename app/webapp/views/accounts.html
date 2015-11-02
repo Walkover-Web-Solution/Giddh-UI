@@ -43,13 +43,17 @@
             <li ng-repeat="(key, value) in flatAccntWGroupsList  | filter:acntSrch" class=""
                 id="li_{{value.groupUniqueName}}">
               <div class="title  LIB{{value.groupUniqueName}}" ng-click="showSubMenus =! showSubMenus"
-                   ng-class="{'active' : showSubMenus}">
+                   ng-class="{'active' : showSubMenus || value.groupUniqueName === selectedGroupUname}">
                 <a>{{value.groupName}}</a>
               </div>
-              <ul class="accBox subAccBox" ng-show="showSubMenus" id="ul_{{value.groupUniqueName}}">
-                <li ng-repeat="(index,accDtl) in value.accountDetails  | filter:acntSrch track by $index" id="ac_{{accDtl.uniqueName}}">
-                  <a href="#ledger" ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl)" href="javascript:">
-                    <div class="clearfix" >
+              <ul class="accBox subAccBox" ng-show="showSubMenus || value.groupUniqueName === selectedGroupUname"
+                  id="ul_{{value.groupUniqueName}}">
+                <li ng-repeat="(index,accDtl) in value.accountDetails  | filter:acntSrch track by $index"
+                    id="ac_{{accDtl.uniqueName}}"
+                    >
+                  <a href="#ledger" ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl)"
+                     ng-class="{'active': accDtl.uniqueName === selectedAccountUniqueName || accDtl.uniqueName === selectedAccountUname}">
+                    <div class="clearfix">
                       <i ng-class="accDtl.charId ==1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
                       <span>{{accDtl.name}}</span>
                     </div>

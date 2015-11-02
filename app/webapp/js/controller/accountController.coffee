@@ -6,6 +6,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.flattenAccountListWithParent = {}
   $scope.flatAccntWGroupsList = {}
   $scope.showAccountList = false
+  $scope.selectedAccountUniqueName = "";
   #$rootScope.selectedCompany = {}
 
   $scope.getAccountsGroups = ->
@@ -32,6 +33,8 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     modalService.openManageGroupsModal()
 
   $scope.setLedgerData = (data, acData) ->
+    console.log "inside setLedgerData"
+    $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
 
   #highlight account menus

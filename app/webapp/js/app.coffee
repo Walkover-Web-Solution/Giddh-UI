@@ -39,6 +39,10 @@ app.config ($locationProvider, $routeProvider) ->
     controller: 'ledgerController',
     templateUrl: '/public/webapp/views/ledger.html'
   )
+  .when('/user',
+    controller: 'userController',
+    templateUrl: '/public/webapp/views/userDetails.html'
+  )
   .otherwise redirectTo: '/home'
 app.run(()->
 )
