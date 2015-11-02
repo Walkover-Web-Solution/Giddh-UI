@@ -9,7 +9,7 @@ app = angular.module("giddhApp", [
 app.config [
   '$authProvider'
   ($authProvider) ->
-    $authProvider.google clientId: '40342793-h9vu599ed13f54kb673t2ltbc713vad7.apps.googleusercontent.com'
+    $authProvider.google clientId: '932165600137-9nd18nvvkq9uqnaffkh5b41u62jmhrl1.apps.googleusercontent.com'
 ]
 
 app.config (localStorageServiceProvider) ->
