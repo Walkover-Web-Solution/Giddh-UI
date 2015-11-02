@@ -85,6 +85,18 @@
             <th width="44%">Particular</th>
             <th width="28%">Amount</th>
           </tr>
+
+          <tr class="greyBg" ng-if="ledgerData.broughtForwardBalance.type == 'DEBIT'">
+            <th colspan="100%">
+              B/F Balance: {{ledgerData.broughtForwardBalance.amount}}
+            </th>
+          </tr>
+          <tr class="greyBg" ng-if="ledgerData.broughtForwardBalance.type == 'CREDIT'">
+              <th colspan="100%">
+                &nbsp;
+              </th>
+            </tr>
+
           </thead>
 
           <tbody class="ledgerBodyContent" id="ledgerBodyContentDebit">
@@ -119,14 +131,25 @@
       <td class="nopad bdrL bdrR" style="width:50%" colspan="3">
         <table class="table">
           <thead>
-          <tr class="splBg">
-            <th colspan="100%">Credit (Dr)</th>
-          </tr>
-          <tr class="dgreyBg">
-            <th width="28%">Date <span class="small">(DD-MM-YYYY)</span></th>
-            <th width="44%">Particular</th>
-            <th width="28%">Amount</th>
-          </tr>
+            <tr class="splBg">
+              <th colspan="100%">Credit (Dr)</th>
+            </tr>
+            <tr class="dgreyBg">
+              <th width="28%">Date <span class="small">(DD-MM-YYYY)</span></th>
+              <th width="44%">Particular</th>
+              <th width="28%">Amount</th>
+            </tr>
+            <tr class="greyBg" ng-if="ledgerData.broughtForwardBalance.type == 'CREDIT'">
+              <th colspan="100%">
+                B/F Balance: {{ledgerData.broughtForwardBalance.amount}}
+              </th>
+            </tr>
+            <tr class="greyBg" ng-if="ledgerData.broughtForwardBalance.type == 'DEBIT'">
+              <th colspan="100%">
+                &nbsp;
+              </th>
+            </tr>
+
           </thead>
 
           <tbody class="ledgerBodyContent" id="ledgerBodyContentCredit">
@@ -163,22 +186,20 @@
 
     <tr class="fw600 dgreyBg">
       <td colspan="2" class="bdrL" style="width:36%">
-        <div class="pull-right" ng-if="ledgerData.balance.type == 'DEBIT'">
+        <div class="pull-right" ng-if="ledgBalType == 'CREDIT'">
           Balance 
         </div>
       </td>
       <td style="width:14%" class="bdrR">
-        
-        <span>{{debitBalanceAmount}}</span>
-        
+        <span ng-if="ledgBalType == 'CREDIT'">{{debitBalanceAmount}}</span>
       </td>
       <td colspan="2" style="width:36%" class="bdrL">
-        <div class="pull-right" ng-if="ledgerData.balance.type == 'CREDIT'">
+        <div class="pull-right" ng-if="ledgBalType == 'DEBIT'">
           Balance 
         </div>
       </td>
       <td style="width:14%" class="bdrR">
-        <span>{{creditBalanceAmount}}</span>
+        <span ng-if="ledgBalType == 'DEBIT'">{{creditBalanceAmount}}</span>
       </td>
     </tr>
     <tr class="total greyBg">

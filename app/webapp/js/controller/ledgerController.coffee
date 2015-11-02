@@ -267,12 +267,15 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     
     if drt > crt 
       console.log "debit is greater"
+      $scope.ledgBalType = 'DEBIT'
       $scope.creditBalanceAmount = drt-crt
       $scope.debitTotal = drt
       $scope.creditTotal = parseInt(crt) + parseInt($scope.creditBalanceAmount)
     if crt > drt 
       console.log "credit is greater"
+      $scope.ledgBalType = 'CREDIT'
       $scope.debitBalanceAmount = crt-drt
+      console.log $scope.debitBalanceAmount, "$scope.debitBalanceAmount"
       $scope.debitTotal = parseInt(drt) + parseInt($scope.debitBalanceAmount)
       $scope.creditTotal = crt
 

@@ -87,7 +87,7 @@ directive 'validDate', (toastr, $filter) ->
   }
 
 angular.module('ledger', [])
-.directive 'ledgerPop', ($compile) ->
+.directive 'ledgerPop', ($compile, $filter) ->
   {
     restrict: 'A'
     replace: true
@@ -150,7 +150,12 @@ angular.module('ledger', [])
         else
           angular.copy(lItem, item)
 
+      scope.checkDateField = (item) ->
+        if (item.entryDate is "" || item.entryDate is undefined || item.entryDate is null)
+          item.entryDate = $filter('date')(new Date(),"dd-MM-yyyy")
+
       scope.openDialog = (item, index, ftype) ->
+        scope.checkDateField(item)
         rect = elem.context.getBoundingClientRect()
         childCount = elem.context.childElementCount
         popHtml = angular.element('
