@@ -91,13 +91,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   # ledger
   # load ledger start
   $scope.loadLedger = (data, acData) ->
-    console.log "hey in loadLedger"
     $scope.showLedgerBox = false
     $scope.accntTitle = acData.name
     $scope.selectedAccountUname = acData.uniqueName
     $scope.selectedGroupUname = data.groupUniqueName
-
-    # console.log $scope.selectedAccountUname, $scope.selectedGroupUname
 
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
@@ -126,7 +123,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
 
   $scope.addNewAccount = () ->
-    console.log "addNewAccount"
     if _.isEmpty($scope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
@@ -163,7 +159,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     console.log "deleteEntryFailure", response
 
   $scope.addNewEntry = (data) ->
-    console.log "addNewEntry"
     edata = {}
     angular.copy(data, edata)
 
@@ -197,10 +192,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     $scope.ledgerData.ledgers[rpl] = response.body
 
     if tType is 'DEBIT'
-      console.log "in DEBIT"
+      # console.log "in DEBIT"
       $scope.ledgerData.ledgers.push(angular.copy(dummyValueDebit))
     if tType is 'CREDIT'
-      console.log "in CREDIT"
+      # console.log "in CREDIT"
       $scope.ledgerData.ledgers.push(angular.copy(dummyValueCredit))
 
     $scope.calculateLedger($scope.ledgerData, "add")
@@ -272,16 +267,15 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     )
 
     if drt > crt
-      console.log "debit is greater"
+      # console.log "debit is greater"
       $scope.ledgBalType = 'DEBIT'
       $scope.creditBalanceAmount = drt - crt
       $scope.debitTotal = drt
       $scope.creditTotal = parseInt(crt) + parseInt($scope.creditBalanceAmount)
     if crt > drt
-      console.log "credit is greater"
+      # console.log "credit is greater"
       $scope.ledgBalType = 'CREDIT'
       $scope.debitBalanceAmount = crt - drt
-      console.log $scope.debitBalanceAmount, "$scope.debitBalanceAmount"
       $scope.debitTotal = parseInt(drt) + parseInt($scope.debitBalanceAmount)
       $scope.creditTotal = crt
 
@@ -330,12 +324,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.onScroll = (sp, tsS) ->
     if  !_.isUndefined($scope.ledgerData)
       ledgerLength = $scope.ledgerData.ledgers.length
-      console.log sp, "onScroll", tsS, ledgerLength
       if ledgerLength > 50
-        console.log "will load data onScroll"
-        if sp+100 >= tsS
+        if sp+200 >= tsS
           $scope.quantity += 50
-          console.log "hurray data added in scope", $scope.quantity
 
   $rootScope.$on '$loadLedgerHere', (data, acdtl) ->
     $scope.loadLedger(data, acdtl)
@@ -343,7 +334,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $rootScope.$on '$viewContentLoaded', ->
     $scope.fromDate.date.setDate(1)
     ledgerObj = DAServices.LedgerGet()
-    console.log "ledgerObj", ledgerObj
+    ledgerObj = DAServices.LedgerGet()
     if !_.isEmpty(ledgerObj.ledgerData)
       $scope.loadLedger(ledgerObj.ledgerData, ledgerObj.selectedAccount)
     else

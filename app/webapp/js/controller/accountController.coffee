@@ -32,7 +32,6 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     modalService.openManageGroupsModal()
 
   $scope.setLedgerData = (data, acData) ->
-    console.log "inside setLedgerData"
     DAServices.LedgerSet(data, acData)
 
   #highlight account menus

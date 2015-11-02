@@ -13,7 +13,7 @@ router.get '/', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName + '/ledgers'
   settings.client.get hUrl, args, (data, response) ->
-    console.log new Date(), "req completed", data
+    console.log new Date(), "req completed"
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
