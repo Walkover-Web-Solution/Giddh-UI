@@ -48,7 +48,7 @@
               </div>
               <ul class="accBox subAccBox" ng-show="showSubMenus" id="ul_{{value.groupUniqueName}}">
                 <li ng-repeat="(index,accDtl) in value.accountDetails  | filter:acntSrch track by $index" id="ac_{{accDtl.uniqueName}}">
-                  <a href="#ledger" ng-click="loadLedger(value, accDtl)" href="javascript:">
+                  <a href="#ledger" ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl)" href="javascript:">
                     <div class="clearfix" >
                       <i ng-class="accDtl.charId ==1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
                       <span>{{accDtl.name}}</span>

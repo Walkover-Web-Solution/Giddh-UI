@@ -6,6 +6,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.selectedAccountUname = undefined
   $scope.selectedGroupUname = undefined
 
+  $scope.selectedCompany = {}
+  lsKeys = localStorageService.keys()
+  if _.contains(lsKeys, "_selectedCompany")
+    $scope.selectedCompany = localStorageService.get("_selectedCompany")
 
   $scope.creditTotal = undefined
   $scope.debitTotal = undefined
@@ -87,6 +91,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   # ledger
   # load ledger start
   $scope.loadLedger = (data, acData) ->
+    console.log "hey in loadLedger"
     $scope.showLedgerBox = false
     $scope.accntTitle = acData.name
     $scope.selectedAccountUname = acData.uniqueName
@@ -122,7 +127,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $scope.addNewAccount = () ->
     console.log "addNewAccount"
-    if _.isEmpty($rootScope.selectedCompany)
+    if _.isEmpty($scope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
       modalService.openManageGroupsModal()
@@ -130,7 +135,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $scope.deleteEntry = (item) ->
     unqNamesObj = {
-      compUname: $rootScope.selectedCompany.uniqueName
+      compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
       acntUname: $scope.selectedAccountUname
       entUname: item.uniqueName
@@ -172,7 +177,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
       edata.transactions[0].particular = unk
 
     unqNamesObj = {
-      compUname: $rootScope.selectedCompany.uniqueName
+      compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
       acntUname: $scope.selectedAccountUname
     }
@@ -215,7 +220,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
       edata.voucherType = data.voucher.shortCode
 
     unqNamesObj = {
-      compUname: $rootScope.selectedCompany.uniqueName
+      compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
       acntUname: $scope.selectedAccountUname
       entUname: data.uniqueName
@@ -338,7 +343,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $rootScope.$on '$viewContentLoaded', ->
     $scope.fromDate.date.setDate(1)
     ledgerObj = DAServices.LedgerGet()
-    $scope.loadLedger(ledgerObj.ledgerData, ledgerObj.selectedAccount)
+    console.log "ledgerObj", ledgerObj
+    if !_.isEmpty(ledgerObj.ledgerData)
+      $scope.loadLedger(ledgerObj.ledgerData, ledgerObj.selectedAccount)
+    else
+      console.log "not to load anything"
 
 
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController

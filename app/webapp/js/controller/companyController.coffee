@@ -297,7 +297,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     toastr.error(response.data.message, response.data.status)
 
   $scope.exceptOwnEmail = (email) ->
-    $rootScope.basicInfo.email.userEmail != email.userEmail
+    $rootScope.basicInfo.email isnt email.userEmail
 
   #fire function after page fully loaded
   $scope.$on '$viewContentLoaded', ->
