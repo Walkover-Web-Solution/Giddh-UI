@@ -8,7 +8,7 @@ router.post '/google', (req, res, next) ->
   params =
     code: req.body.code
     client_id: req.body.clientId
-    client_secret: '9ejAFtIyKTQz2KuAXmD-jN68'
+    client_secret: settings.googleKey
     redirect_uri: req.body.redirectUri
     grant_type: 'authorization_code'
   # Step 1. Login in Giddh API.

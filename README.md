@@ -12,6 +12,11 @@ Prerequisites
 * grunt 0.4.5
 * grunt-cli 0.1.13
 
+Following environment variable(s) need to be set:
+
+0. API_URL
+0. GOOGLE_KEY
+
 Use [homebrew](http://mxcl.github.com/homebrew/) and [npm]() to install the stuff you need.
 
 Usual build tasks
