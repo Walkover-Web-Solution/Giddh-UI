@@ -12,6 +12,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.creditBalanceAmount = undefined
   $scope.debitBalanceAmount = undefined
 
+  $scope.quantity = 50
+
   #date time picker code starts here
   $scope.today = new Date()
   $scope.fromDate = {date: new Date()}
@@ -85,6 +87,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   # ledger
   # load ledger start
   $scope.loadLedger = (data, acData) ->
+    $scope.showLedgerBox = false
     $scope.accntTitle = acData.name
     $scope.selectedAccountUname = acData.uniqueName
     $scope.selectedGroupUname = data.groupUniqueName
@@ -254,7 +257,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
     if data.forwardedBalance.type is 'DEBIT'
       drt += data.forwardedBalance.amount
-
+      
     _.each(data.ledgers, (entry) ->
       if entry.transactions[0].type is 'DEBIT'
         drt += entry.transactions[0].amount
@@ -319,42 +322,15 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     title: 'Title'
   }
 
-
-  $scope.ledgerDataata = {
-    "forwardedBalance": {
-      "amount": 0,
-      "type": "CREDIT"
-    },
-    "creditTotal": 4008,
-    "debitTotal": 4008,
-    "balance": {
-      "amount": 4008,
-      "type": "CREDIT"
-    },
-    "ledgers": [
-      {
-        "transactions": [
-          {
-            "particular": {
-              "name": "Sarfaraz",
-              "uniqueName": "temp"
-            },
-            "amount": 1001,
-            "type": "DEBIT"
-          }
-        ],
-        "description": "testing",
-        "tag": "HELLO",
-        "uniqueName": "khb1445237230952",
-        "voucher": {
-          "name": "sales",
-          "shortCode": "sal"
-        },
-        "entryDate": "02-06-2015",
-        "voucherNo": 1007
-      }
-    ]
-  }
+  $scope.onScroll = (sp, tsS) ->
+    if  !_.isUndefined($scope.ledgerData)
+      ledgerLength = $scope.ledgerData.ledgers.length
+      console.log sp, "onScroll", tsS, ledgerLength
+      if ledgerLength > 50
+        console.log "will load data onScroll"
+        if sp+100 >= tsS
+          $scope.quantity += 50
+          console.log "hurray data added in scope", $scope.quantity
 
   $rootScope.$on '$loadLedgerHere', (data, acdtl) ->
     $scope.loadLedger(data, acdtl)

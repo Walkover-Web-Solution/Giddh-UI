@@ -3,7 +3,7 @@ router = settings.express.Router({mergeParams: true})
 
 #Get all ledgers for an account, query params are - fromDate/toDate {dd-mm-yyyy}
 router.get '/', (req, res) ->
-  console.log req.query, "get all ledgers by date"
+  console.log req.query, "get all ledgers by date", new Date()
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -13,6 +13,7 @@ router.get '/', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName + '/ledgers'
   settings.client.get hUrl, args, (data, response) ->
+    console.log new Date(), "req completed", data
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data

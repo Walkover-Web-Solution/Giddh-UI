@@ -1,4 +1,4 @@
-<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20" auto-height>
+<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight)">
 
 <div class="loader" ng-hide="showLedgerBox">
   <span></span>
@@ -6,7 +6,7 @@
   <span></span>
   <span></span>
   <span></span>
-  <h1>Click on account to load ledger</h1>
+  <h1>loading ledger</h1>
 </div>
 
 <div class="pdL2 pdR2 pdT2" ng-if="showLedgerBox">
@@ -86,12 +86,12 @@
             <th width="28%">Amount</th>
           </tr>
 
-          <tr class="greyBg" ng-if="ledgerData.forwardedBalance.type == 'DEBIT'">
+          <tr class="greyBg" ng-if="ledgerData.ForwardedBalance.type == 'DEBIT' && ledgerData.ForwardedBalance.amount > 0 ">
             <th colspan="100%">
-              B/F Balance: {{ledgerData.forwardedBalance.amount}}
+              B/F Balance: {{ledgerData.ForwardedBalance.amount}}
             </th>
           </tr>
-          <tr class="greyBg" ng-if="ledgerData.forwardedBalance.type == 'CREDIT'">
+          <tr class="greyBg" ng-if="ledgerData.ForwardedBalance.type == 'CREDIT' && ledgerData.ForwardedBalance.amount > 0">
               <th colspan="100%">
                 &nbsp;
               </th>
@@ -105,7 +105,7 @@
             <td class="nopad" colspan="100%">
               <div class="pr">
                 <div
-                  ng-repeat="(key, value) in ledgerData.ledgers | pick: debitOnly track by $index"
+                  ng-repeat="(key, value) in ledgerData.ledgers | pick: debitOnly | limitTo: quantity track by $index"
                   ledger-pop
                   index="$index"
                   ftype="value.uniqueName == undefined ? 'Add' : 'Update'"
@@ -139,12 +139,12 @@
               <th width="44%">Particular</th>
               <th width="28%">Amount</th>
             </tr>
-            <tr class="greyBg" ng-if="ledgerData.forwardedBalance.type == 'CREDIT'">
+            <tr class="greyBg" ng-if="ledgerData.ForwardedBalance.type == 'CREDIT' && ledgerData.ForwardedBalance.amount > 0">
               <th colspan="100%">
-                B/F Balance: {{ledgerData.forwardedBalance.amount}}
+                B/F Balance: {{ledgerData.ForwardedBalance.amount}}
               </th>
             </tr>
-            <tr class="greyBg" ng-if="ledgerData.forwardedBalance.type == 'DEBIT'">
+            <tr class="greyBg" ng-if="ledgerData.ForwardedBalance.type == 'DEBIT' && ledgerData.ForwardedBalance.amount > 0">
               <th colspan="100%">
                 &nbsp;
               </th>
@@ -155,9 +155,10 @@
           <tbody class="ledgerBodyContent" id="ledgerBodyContentCredit">
           <tr>
             <td class="nopad" colspan="100%">
+
               <div class="pr">
                 <div
-                  ng-repeat="(key, value) in ledgerData.ledgers | pick: creditOnly track by $index"
+                  ng-repeat="(key, value) in ledgerData.ledgers | pick: creditOnly | limitTo: quantity track by $index "
                   ledger-pop
                   index="$index"
                   ftype="value.uniqueName == undefined ? 'Add' : 'Update'"
