@@ -1,6 +1,6 @@
 "use strict"
 
-accountController = ($scope, $rootScope, localStorageService, toastr, groupService, modalService, accountService, ledgerService, $filter) ->
+accountController = ($scope, $rootScope, localStorageService, toastr, groupService, modalService, accountService, ledgerService, $filter, DAServices) ->
   $scope.groupList = {}
   $scope.flattenGroupList = {}
   $scope.flattenAccountListWithParent = {}
@@ -22,8 +22,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
     $scope.showAccountList = true
-    $rootScope.makeAccountFlatten(groupService.flattenAccount($scope.groupList))  
-    
+    $rootScope.makeAccountFlatten(groupService.flattenAccount($scope.groupList))
 
 
   $scope.getGroupListFailure = () ->
@@ -31,6 +30,10 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
   $scope.showManageGroups = () ->
     modalService.openManageGroupsModal()
+
+  $scope.loadLedger = (data, acData) ->
+    console.log "inside load ledger"
+    DAServices.LedgerSet(data, acData)
 
   #highlight account menus
   # $scope.selAccnt = (item, index) ->

@@ -83,7 +83,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   #Get company list
   $scope.getCompanyListSuccess = (response) ->
     $scope.companyList = _.sortBy(response.body, 'shared')
-    console.log _.groupBy($scope.companyList, 'shared')
     if _.isEmpty($scope.companyList)
       $scope.openFirstTimeUserModal()
     else
@@ -110,9 +109,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #Get user details
   $scope.getUserDetailSuccess = (response) ->
-    console.log "get user details"
     $rootScope.basicInfo = response.body
-    console.log $rootScope.basicInfo
 
   #get company list failure
   $scope.getUserDetailFailure = (response)->
@@ -150,7 +147,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     contactnumber = $scope.selectedCompany.contactNo
     if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
       SplitNumber = contactnumber.split('-')
-      console.log "split number", SplitNumber
       $scope.selectedCompany.mobileNo = SplitNumber[1]
       $scope.selectedCompany.cCode = SplitNumber[0]
 

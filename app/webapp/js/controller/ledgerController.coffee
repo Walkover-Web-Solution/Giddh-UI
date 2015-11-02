@@ -1,6 +1,6 @@
 "use strict"
 
-ledgerController = ($scope, $rootScope, localStorageService, toastr, groupService, modalService, accountService, ledgerService, $filter, locationService) ->
+ledgerController = ($scope, $rootScope, localStorageService, toastr, groupService, modalService, accountService, ledgerService, $filter, locationService, DAServices) ->
   $scope.accntTitle = undefined
   $scope.showLedgerBox = false
   $scope.selectedAccountUname = undefined
@@ -38,7 +38,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.ftypeAdd = "add"
   $scope.ftypeUpdate = "update"
 
-  dummyValueDebit = 
+  dummyValueDebit =
   {
     "transactions": [
       {
@@ -59,7 +59,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     },
     "entryDate": ""
   }
-  dummyValueCredit = 
+  dummyValueCredit =
   {
     "transactions": [
       {
@@ -80,13 +80,13 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     },
     "entryDate": ""
   }
-  
+
 
   # ledger
   # load ledger start
   $scope.loadLedger = (data, acData) ->
     $scope.accntTitle = acData.name
-    $scope.selectedAccountUname = acData.uniqueName 
+    $scope.selectedAccountUname = acData.uniqueName
     $scope.selectedGroupUname = data.groupUniqueName
 
     # console.log $scope.selectedAccountUname, $scope.selectedGroupUname
@@ -95,8 +95,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
       compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
       acntUname: $scope.selectedAccountUname
-      fromDate: $filter('date')($scope.fromDate.date,"dd-MM-yyyy")
-      toDate: $filter('date')($scope.toDate.date,"dd-MM-yyyy")
+      fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
     }
     ledgerService.getLedger(unqNamesObj).then($scope.loadLedgerSuccess, $scope.loadLedgerFailure)
 
@@ -106,12 +106,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     $scope.ledgerData = response.body
     $scope.showLedgerBox = true
     $scope.calculateLedger($scope.ledgerData, "server")
-    
+
   $scope.debitOnly = (ledger) ->
     'DEBIT' == ledger.transactions[0].type
-  
+
   $scope.creditOnly = (ledger) ->
-    'CREDIT' == ledger.transactions[0].type  
+    'CREDIT' == ledger.transactions[0].type
 
   $scope.loadLedgerFailure = (response) ->
     console.log response
@@ -134,7 +134,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     }
     ledgerService.deleteEntry(unqNamesObj).then((response) ->
       $scope.deleteEntrySuccess(item, response)
-     , $scope.deleteEntryFailure)
+    , $scope.deleteEntryFailure)
 
   $scope.deleteEntrySuccess = (item, response) ->
     console.log $scope.ledgerData.ledgers.length, "before"
@@ -153,12 +153,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $scope.deleteEntryFailure = (response) ->
     console.log "deleteEntryFailure", response
-  
+
   $scope.addNewEntry = (data) ->
     console.log "addNewEntry"
     edata = {}
     angular.copy(data, edata)
-    
+
     if angular.isUndefined(data.voucher)
       console.log "true"
     else
@@ -183,7 +183,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     rpl = 0
     _.each($scope.ledgerData.ledgers, (ledger) ->
       if ledger.uniqueName is undefined && ledger.transactions[0].type is tType
-        rpl =  count
+        rpl = count
       count++
     )
     $scope.ledgerData.ledgers[rpl] = response.body
@@ -196,8 +196,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
       $scope.ledgerData.ledgers.push(angular.copy(dummyValueCredit))
 
     $scope.calculateLedger($scope.ledgerData, "add")
-    
-    
 
 
   $scope.addEntryFailure = (response) ->
@@ -207,12 +205,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.updateEntry = (data) ->
     edata = {}
     angular.copy(data, edata)
-    
+
     if _.isUndefined(data.voucher)
       console.log "voucher undefined", data.voucher
     else
       edata.voucherType = data.voucher.shortCode
-    
+
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
@@ -232,7 +230,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     rpl = 0
     _.each($scope.ledgerData.ledgers, (ledger) ->
       if ledger.uniqueName is response.body.uniqueName
-        rpl =  count
+        rpl = count
       count++
     )
     $scope.ledgerData.ledgers[rpl] = response.body
@@ -251,12 +249,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     crt = 0
     drt = 0
 
-    if data.broughtForwardBalance.type is 'CREDIT'
-      crt += data.broughtForwardBalance.amount
+    if data.forwardedBalance.type is 'CREDIT'
+      crt += data.forwardedBalance.amount
 
-    if data.broughtForwardBalance.type is 'DEBIT'
-      drt += data.broughtForwardBalance.amount
-      
+    if data.forwardedBalance.type is 'DEBIT'
+      drt += data.forwardedBalance.amount
+
     _.each(data.ledgers, (entry) ->
       if entry.transactions[0].type is 'DEBIT'
         drt += entry.transactions[0].amount
@@ -264,35 +262,32 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
       if entry.transactions[0].type is 'CREDIT'
         crt += entry.transactions[0].amount
     )
-    
-    if drt > crt 
+
+    if drt > crt
       console.log "debit is greater"
       $scope.ledgBalType = 'DEBIT'
-      $scope.creditBalanceAmount = drt-crt
+      $scope.creditBalanceAmount = drt - crt
       $scope.debitTotal = drt
       $scope.creditTotal = parseInt(crt) + parseInt($scope.creditBalanceAmount)
-    if crt > drt 
+    if crt > drt
       console.log "credit is greater"
       $scope.ledgBalType = 'CREDIT'
-      $scope.debitBalanceAmount = crt-drt
+      $scope.debitBalanceAmount = crt - drt
       console.log $scope.debitBalanceAmount, "$scope.debitBalanceAmount"
       $scope.debitTotal = parseInt(drt) + parseInt($scope.debitBalanceAmount)
       $scope.creditTotal = crt
 
-    
 
     # if calculation is wrong than make entry in newrelic
     if loadtype is 'server'
-      if drt > crt 
+      if drt > crt
         if parseInt(data.debitTotal) isnt parseInt(drt)
           console.log "something is wrong in calculateLedger debitTotal"
-          console.log parseInt(data.debitTotal),  parseInt(drt)
-      if crt > drt 
+          console.log parseInt(data.debitTotal), parseInt(drt)
+      if crt > drt
         if parseInt(data.creditTotal) isnt parseInt(crt)
           console.log "something is wrong in calculateLedger creditTotal"
-          console.log parseInt(data.creditTotal),  parseInt(crt)
-      
-
+          console.log parseInt(data.creditTotal), parseInt(crt)
 
 
   $scope.voucherTypeList = [
@@ -326,7 +321,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
 
   $scope.ledgerDataata = {
-    "broughtForwardBalance": {
+    "forwardedBalance": {
       "amount": 0,
       "type": "CREDIT"
     },
@@ -361,9 +356,13 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     ]
   }
 
+  $rootScope.$on '$loadLedgerHere', (data, acdtl) ->
+    $scope.loadLedger(data, acdtl)
+
   $rootScope.$on '$viewContentLoaded', ->
     $scope.fromDate.date.setDate(1)
+    ledgerObj = DAServices.LedgerGet()
+    $scope.loadLedger(ledgerObj.ledgerData, ledgerObj.selectedAccount)
 
-    
 
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController

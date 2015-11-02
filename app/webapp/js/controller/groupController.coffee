@@ -432,5 +432,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.updateAccountFailure = (result) ->
     console.log "updateAccountFailure", result
 
+
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController

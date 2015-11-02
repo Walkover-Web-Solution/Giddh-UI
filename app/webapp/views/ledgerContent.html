@@ -86,12 +86,12 @@
             <th width="28%">Amount</th>
           </tr>
 
-          <tr class="greyBg" ng-if="ledgerData.broughtForwardBalance.type == 'DEBIT'">
+          <tr class="greyBg" ng-if="ledgerData.forwardedBalance.type == 'DEBIT'">
             <th colspan="100%">
-              B/F Balance: {{ledgerData.broughtForwardBalance.amount}}
+              B/F Balance: {{ledgerData.forwardedBalance.amount}}
             </th>
           </tr>
-          <tr class="greyBg" ng-if="ledgerData.broughtForwardBalance.type == 'CREDIT'">
+          <tr class="greyBg" ng-if="ledgerData.forwardedBalance.type == 'CREDIT'">
               <th colspan="100%">
                 &nbsp;
               </th>
@@ -139,12 +139,12 @@
               <th width="44%">Particular</th>
               <th width="28%">Amount</th>
             </tr>
-            <tr class="greyBg" ng-if="ledgerData.broughtForwardBalance.type == 'CREDIT'">
+            <tr class="greyBg" ng-if="ledgerData.forwardedBalance.type == 'CREDIT'">
               <th colspan="100%">
-                B/F Balance: {{ledgerData.broughtForwardBalance.amount}}
+                B/F Balance: {{ledgerData.forwardedBalance.amount}}
               </th>
             </tr>
-            <tr class="greyBg" ng-if="ledgerData.broughtForwardBalance.type == 'DEBIT'">
+            <tr class="greyBg" ng-if="ledgerData.forwardedBalance.type == 'DEBIT'">
               <th colspan="100%">
                 &nbsp;
               </th>

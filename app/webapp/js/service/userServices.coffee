@@ -14,7 +14,6 @@ angular.module('giddhWebApp').service 'userServices', ($resource, $q) ->
       deferred.promise
 
     get: (uniqueName) ->
-      console.log "uniqueName", uniqueName
       @handlePromise((onSuccess, onFailure) -> User.getUserDetails({uniqueName: uniqueName}, onSuccess,
           onFailure))
 
