@@ -46,48 +46,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.ftypeAdd = "add"
   $scope.ftypeUpdate = "update"
 
-  dummyValueDebit =
-  {
-    "transactions": [
-      {
-        "particular": {
-          "name": "",
-          "uniqueName": ""
-        },
-        "amount": "",
-        "type": "DEBIT"
-      }
-    ],
-    "description": "",
-    "tag": "",
-    "uniqueName": undefined,
-    "voucher": {
-      "name": "sales"
-      "shortCode": "sal"
-    },
-    "entryDate": ""
-  }
-  dummyValueCredit =
-  {
-    "transactions": [
-      {
-        "particular": {
-          "name": "",
-          "uniqueName": ""
-        },
-        "amount": "",
-        "type": "CREDIT"
-      }
-    ],
-    "description": "",
-    "tag": "",
-    "uniqueName": undefined,
-    "voucher": {
-      "name": "sales"
-      "shortCode": "sal"
-    },
-    "entryDate": ""
-  }
+  dummyValueDebit = new angular.Ledger("DEBIT")
+  dummyValueCredit = new angular.Ledger("CREDIT")
 
   # ledger
   # load ledger start
@@ -335,7 +295,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     if  !_.isUndefined($scope.ledgerData)
       ledgerLength = $scope.ledgerData.ledgers.length
       if ledgerLength > 50
-        if sp+200 >= tsS
+        if sp + 200 >= tsS
           event.preventDefault()
           event.stopPropagation()
           $scope.quantity += 20
@@ -354,3 +314,28 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
 
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController
+
+class angular.Ledger
+  constructor: (type)->
+    @transactions = [new angular.Transaction(type)]
+    @description = ""
+    @tag = ""
+    @uniqueName = undefined
+    @entryDate = ""
+    @voucher = new angular.Voucher()
+
+class angular.Transaction
+  constructor: (type)->
+    @amount = ""
+    @type = type
+    @particular = new angular.Particular
+
+class angular.Voucher
+  sales: ()->
+    @name = "sales"
+    @shortCode = "sal"
+
+class angular.Particular
+  constructor: ()->
+    @name = ""
+    @uniqueName = ""
