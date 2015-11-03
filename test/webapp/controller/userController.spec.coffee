@@ -47,4 +47,32 @@ describe 'userController', ->
       expect(@toastr.error).toHaveBeenCalledWith("Unable to generate auth key", "Error")
 
   describe '#regenerateKey', ->
-    it ''
+    it 'should regenerate key for user by calling service', ->
+      @rootScope.basicInfo = {"userUniqueName": "ravisoni"}
+      deferred = @q.defer()
+      spyOn(@userServices, 'generateKey').andReturn(deferred.promise)
+      @scope.regenerateKey()
+      expect(@userServices.generateKey).toHaveBeenCalled()
+
+  describe '#generateKeySuccess', ->
+    it 'should set userAuthKey value', ->
+      result = {"body": "userUniqueId"}
+      @scope.getUserAuthKeySuccess(result)
+      expect(@scope.userAuthKey).toEqual(result.body)
+
+  describe '#generateKeyFailure', ->
+    it 'should show toastr with error message', ->
+      result = {"body": {"message": "Unable to generate auth key"}}
+      spyOn(@toastr, 'error')
+      @scope.getUserAuthKeyFailure(result)
+      expect(@toastr.error).toHaveBeenCalledWith("Unable to generate auth key", "Error")
+
+  describe '#test to check for viewContentLoaded event', ->
+    it 'should call a getAccountsGroups method', ->
+      spyOn(@scope, 'getUserAuthKey')
+      @rootScope.$broadcast('$viewContentLoaded')
+      expect(@scope.getUserAuthKey).toHaveBeenCalled()
+
+  describe '#test to check variable set to undefined or not', ->
+    it 'should check whether variable declared is undefined or not', ->
+      expect(@scope.userAuthKey).toBe(undefined)

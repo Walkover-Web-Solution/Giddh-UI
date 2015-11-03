@@ -16,12 +16,10 @@ userController = ($scope, $rootScope, toastr, userServices) ->
     toastr.error(result.body.message, "Error")
 
   $scope.regenerateKey = () ->
-    console.log "we are here to regenerate"
     userServices.generateKey($rootScope.basicInfo.userUniqueName).then($scope.generateKeySuccess,
         $scope.generateKeyFailure)
 
   $scope.generateKeySuccess = (result) ->
-    console.log "generate key success", result
     $scope.userAuthKey = result.body.authKey
 
   $scope.generateKeyFailure = (result) ->
