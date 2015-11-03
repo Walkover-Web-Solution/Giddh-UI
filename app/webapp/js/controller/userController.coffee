@@ -1,11 +1,12 @@
 "use strict"
 
-userController = ($scope, $rootScope, localStorageService, toastr, userServices) ->
+userController = ($scope, $rootScope, toastr, userServices) ->
   $scope.userAuthKey = undefined
 
   $scope.getUserAuthKey = () ->
-    userServices.getKey($rootScope.basicInfo.userUniqueName).then($scope.getUserAuthKeySuccess,
-        $scope.getUserAuthKeyFailure)
+    if not _.isUndefined($rootScope.basicInfo)
+      userServices.getKey($rootScope.basicInfo.userUniqueName).then($scope.getUserAuthKeySuccess,
+          $scope.getUserAuthKeyFailure)
 
   $scope.getUserAuthKeySuccess = (result) ->
     $scope.userAuthKey = result.body
