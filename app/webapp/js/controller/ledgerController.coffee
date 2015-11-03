@@ -1,6 +1,6 @@
 "use strict"
 
-ledgerController = ($scope, $rootScope, localStorageService, toastr, groupService, modalService, accountService, ledgerService, $filter, locationService, DAServices) ->
+ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices) ->
   $scope.accntTitle = undefined
   $scope.showLedgerBox = false
   $scope.selectedAccountUname = undefined
@@ -51,7 +51,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   # ledger
   # load ledger start
-  $scope.reloadLedger = ->
+  $scope.reloadLedger = () ->
     if not _.isUndefined($scope.selectedLedgerGroup)
       $scope.loadLedger($scope.selectedLedgerGroup, $scope.selectedLedgerAccount)
 
@@ -59,7 +59,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.loadLedger = (data, acData) ->
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
-      return
+      return false
     $scope.showLedgerBox = false
     $scope.selectedLedgerAccount = acData
     $scope.selectedLedgerGroup = data
@@ -122,8 +122,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     $scope.ledgerData.ledgers.splice(rpl, 1)
     toastr.success(response.message, response.status)
     $scope.removeLedgerDialog()
-    console.log $scope.ledgerData.ledgers.length, "after"
     $scope.calculateLedger($scope.ledgerData, "deleted")
+    console.log $scope.ledgerData.ledgers.length, "after"
 
   $scope.deleteEntryFailure = (response) ->
     console.log "deleteEntryFailure", response
@@ -132,12 +132,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     edata = {}
     angular.copy(data, edata)
 
-    if angular.isUndefined(data.voucher)
-      console.log "true"
-    else
+    if not _.isUndefined(data.voucher)
       edata.voucherType = data.voucher.shortCode
 
-    if angular.isObject(data.transactions[0].particular)
+    if _.isObject(data.transactions[0].particular)
       unk = data.transactions[0].particular.uniqueName
       edata.transactions[0].particular = unk
 
@@ -162,10 +160,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     $scope.ledgerData.ledgers[rpl] = response.body
 
     if tType is 'DEBIT'
-      # console.log "in DEBIT"
       $scope.ledgerData.ledgers.push(angular.copy(dummyValueDebit))
     if tType is 'CREDIT'
-      # console.log "in CREDIT"
       $scope.ledgerData.ledgers.push(angular.copy(dummyValueCredit))
 
     $scope.calculateLedger($scope.ledgerData, "add")
