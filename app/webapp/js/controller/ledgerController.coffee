@@ -332,12 +332,14 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     title: 'Title'
   }
 
-  $scope.onScroll = (sp, tsS) ->
+  $scope.onScroll = (sp, tsS, event) ->
     if  !_.isUndefined($scope.ledgerData)
       ledgerLength = $scope.ledgerData.ledgers.length
       if ledgerLength > 50
         if sp+200 >= tsS
-          $scope.quantity += 50
+          event.preventDefault()
+          event.stopPropagation()
+          $scope.quantity += 20
 
   $rootScope.$on '$loadLedgerHere', (data, acdtl) ->
     $scope.loadLedger(data, acdtl)

@@ -41,14 +41,15 @@ angular.module('perfect_scrollbar', []).directive 'perfectScrollbar', [
         if $attr[opt] != undefined
           options[opt] = $parse($attr[opt])()
         i++
-      $scope.$evalAsync ->
+      $scope.$evalAsync (event)->
         $elem.perfectScrollbar options
         onScrollHandler = $parse($attr.onScroll)
-        $elem.scroll ->
+        $elem.scroll (event)->
           scrollTop = $elem.scrollTop()
           scrollHeight = $elem.prop('scrollHeight') - $elem.height()
           $scope.$apply ->
             onScrollHandler $scope,
+              event: event
               scrollTop: scrollTop
               scrollHeight: scrollHeight
             return
