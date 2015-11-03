@@ -89,7 +89,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, groupServic
     "entryDate": ""
   }
 
-
   # ledger
   # load ledger start
   $scope.reloadLedger = ->
