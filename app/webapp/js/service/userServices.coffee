@@ -1,13 +1,19 @@
 'use strict'
 
 angular.module('giddhWebApp').service 'userServices', ($resource, $q) ->
-  User = $resource('/users', {'uniqueName': @uniqueName}, {
-    getUserDetails: {method: 'GET', url: '/users/:uniqueName'}
-    getAuthKey: {
-      method: 'GET',
-      url: '/users/auth-key?uniqueName=:uniqueName'
+  UserSET = $resource('/users/auth-key', 
+    {
+      'uniqueName': @uniqueName
+    }, 
+    {
+      getUserDetails: {
+        method: 'GET', url: '/users/:uniqueName'
+      }
+      getSetAuthKey: {
+        method: 'GET', url: '/users/auth-key/:uniqueName'
+      }
     }
-  })
+  )
 
   userServices =
     handlePromise: (func) ->
@@ -17,12 +23,13 @@ angular.module('giddhWebApp').service 'userServices', ($resource, $q) ->
       func(onSuccess, onFailure)
       deferred.promise
 
-    get: (uniqueName) ->
-      @handlePromise((onSuccess, onFailure) -> User.getUserDetails({uniqueName: uniqueName}, onSuccess,
-          onFailure))
+    get: (name) ->
+      @handlePromise((onSuccess, onFailure) -> UserSET.getUserDetails({uniqueName: name}, onSuccess, onFailure))
 
-    getAuthKey: (uniqueName) ->
-      console.log "get Auth key in service"
-      @handlePromise((onSuccess, onFailure) -> User.getAuthKey({uniqueName: uniqueName}, onSuccess, onFailure))
+    getKey: (name) ->
+      console.log "in get key service", name
+      @handlePromise((onSuccess, onFailure) -> 
+        UserSET.getSetAuthKey({uniqueName: name}, onSuccess, onFailure)
+      )
 
   userServices

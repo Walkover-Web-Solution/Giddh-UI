@@ -6,7 +6,10 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
       {
         add: {method: 'POST'}
         getAll: {method: 'GET'}
-        getAllWithAccounts: {method: 'GET', url: '/company/:companyUniqueName/groups/with-accounts'}
+        getAllWithAccounts: {
+          method: 'GET', 
+          url: '/company/:companyUniqueName/groups/with-accounts'
+        }
         update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
         delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
         move: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/move'}

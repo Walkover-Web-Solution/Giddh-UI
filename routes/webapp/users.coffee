@@ -12,17 +12,13 @@ router.get '/:uniqueName', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.get '/auth-key', (req, res) ->
-  console.log "inside get auth key"
-  args =
-    parameters:
-      uniqueName: req.query.uniqueName
-  hUrl = settings.envUrl + 'giddh-api/users/auth-key'
-  console.log "url:", hUrl
-  settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
-      res.status(response.statusCode)
-    res.send data
+router.get '/auth-key/:uniqueName', (req, res) ->
+  console.log "inside get auth key", req.session.authKey
+  data = {
+    status: "success"
+    body: req.session.authKey
+  }
+  res.send(data)
 
 
 module.exports = router
