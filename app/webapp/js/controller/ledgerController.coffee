@@ -33,6 +33,35 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.toDatePickerOpen = ->
     this.toDatePickerIsOpen = true
 
+  $scope.voucherTypeList = [
+    {
+      name: "Sales"
+      shortCode: "sal"
+    }
+    {
+      name: "Purchases"
+      shortCode: "pur"
+    }
+    {
+      name: "Receipt"
+      shortCode: "rcpt"
+    }
+    {
+      name: "Payment"
+      shortCode: "pay"
+    }
+    {
+      name: "Journal"
+      shortCode: "jr"
+    }
+  ]
+
+  $scope.dynamicPopover = {
+    content: 'Hello, World!',
+    templateUrl: 'myPopoverTemplate.html',
+    title: 'Title'
+  }
+  
   $scope.dateOptions = {
     'year-format': "'yy'",
     'starting-day': 1,
@@ -175,9 +204,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     edata = {}
     angular.copy(data, edata)
 
-    if _.isUndefined(data.voucher)
-      console.log "voucher undefined", data.voucher
-    else
+    if not _.isUndefined(data.voucher)
       edata.voucherType = data.voucher.shortCode
 
     unqNamesObj = {
@@ -186,7 +213,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       acntUname: $scope.selectedAccountUname
       entUname: data.uniqueName
     }
-    if angular.isObject(data.transactions[0].particular)
+    if _.isObject(data.transactions[0].particular)
       unk = data.transactions[0].particular.uniqueName
       edata.transactions[0].particular = unk
 
@@ -256,36 +283,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         if parseInt(data.creditTotal) isnt parseInt(crt)
           console.log "something is wrong in calculateLedger creditTotal"
           console.log parseInt(data.creditTotal), parseInt(crt)
-
-
-  $scope.voucherTypeList = [
-    {
-      name: "Sales"
-      shortCode: "sal"
-    }
-    {
-      name: "Purchases"
-      shortCode: "pur"
-    }
-    {
-      name: "Receipt"
-      shortCode: "rcpt"
-    }
-    {
-      name: "Payment"
-      shortCode: "pay"
-    }
-    {
-      name: "Journal"
-      shortCode: "jr"
-    }
-  ]
-
-  $scope.dynamicPopover = {
-    content: 'Hello, World!',
-    templateUrl: 'myPopoverTemplate.html',
-    title: 'Title'
-  }
 
   $scope.onScroll = (sp, tsS, event) ->
     if  !_.isUndefined($scope.ledgerData)
