@@ -47,10 +47,10 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
 
     delete: (companyUniqueName, group, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.delete({
-            companyUniqueName: companyUniqueName,
-            groupUniqueName: group.uniqueName
-          },
-          onSuccess, onFailure))
+          companyUniqueName: companyUniqueName,
+          groupUniqueName: group.uniqueName
+        },
+        onSuccess, onFailure))
 
     move: (unqNamesObj, data) ->
       @handlePromise((onSuccess, onFailure) -> Group.move({

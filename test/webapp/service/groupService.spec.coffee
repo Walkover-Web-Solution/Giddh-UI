@@ -16,9 +16,39 @@ describe "Group Service", ->
       @httpBackend.verifyNoOutstandingRequest()
     )
 
+    describe '#create', ->
+      it 'should call success callback when create group method completes', ->
+        companyUniqueName = 'giddh'
+        data = {
+          "name":"group123",
+          "uniqueName":"group123",
+          "parentGroupUniqueName":"loan"
+        }
+        @httpBackend.when('POST', '/company/' + companyUniqueName + '/groups').respond(200, {"status": "success"})
+        @groupService.create(companyUniqueName, data).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+      it 'should call failure callback when create group for company fails', ->
+        data = {
+          "name":"group123",
+          "uniqueName":"group123",
+          "parentGroupUniqueName":"loan"
+        }
+        companyUniqueName = 'giddh'
+        @httpBackend.when('POST', '/company/' + companyUniqueName + '/groups').respond(400, {"status": "error"})
+
+        @groupService.create(companyUniqueName, data).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+      
+
     describe "#getAllFor", ->
       it 'should call success callback when get group for company return success', ->
-        companyUniqueName = 'walkover123'
+        companyUniqueName = 'giddh'
         @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups').respond(200, {"status": "success"})
 
         @groupService.getAllFor(companyUniqueName).then(
@@ -27,7 +57,7 @@ describe "Group Service", ->
         )
 
       it 'should call failure callback when get group for company fails', ->
-        companyUniqueName = 'walkover123'
+        companyUniqueName = 'giddh'
         @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups').respond(400, {"status": "error"})
 
         @groupService.getAllFor(companyUniqueName).then(
@@ -36,6 +66,169 @@ describe "Group Service", ->
             expect(data.data.status).toBe("error")
             expect(data.status).toBe(400)
         )
+
+    describe "#getAllWithAccountsFor", ->
+      it 'should call success callback when get all group for company return success', ->
+        companyUniqueName = 'giddh'
+        @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups/with-accounts').respond(200, {"status": "success"})
+
+        @groupService.getAllWithAccountsFor(companyUniqueName).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+
+      it 'should call failure callback when get all group for company fails', ->
+        companyUniqueName = 'giddh'
+        @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups/with-accounts').respond(400, {"status": "error"})
+
+        @groupService.getAllWithAccountsFor(companyUniqueName).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+
+    describe "#update", ->
+      it 'should call success callback when group updated', ->
+        companyUniqueName = 'giddh'
+        group = {oldUName: "name"}
+        @httpBackend.when('PUT', '/company/' + companyUniqueName + '/groups/'+group.oldUName).respond(200, {"status": "success"})
+
+        @groupService.update(companyUniqueName, group).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+
+
+      it 'should call failure callback when group updated', ->
+        companyUniqueName = 'giddh'
+        group = {oldUName: "name"}
+        @httpBackend.when('PUT', '/company/' + companyUniqueName + '/groups/'+group.oldUName).respond(400, {"status": "error"})
+
+        @groupService.update(companyUniqueName, group).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+
+    describe "#delete", ->
+      it 'should call success callback when group deleted', ->
+        companyUniqueName = 'giddh'
+        group = {uniqueName: "name"}
+        @httpBackend.when('DELETE', '/company/' + companyUniqueName + '/groups/'+group.uniqueName).respond(200, {"status": "success"})
+
+        @groupService.delete(companyUniqueName, group).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+      it 'should call failure callback when group deleted', ->
+        companyUniqueName = 'giddh'
+        group = {uniqueName: "name"}
+        @httpBackend.when('DELETE', '/company/' + companyUniqueName + '/groups/'+group.uniqueName).respond(400, {"status": "error"})
+
+        @groupService.delete(companyUniqueName, group).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+
+    describe '#move', ->
+      it 'should call success callback when group moved', ->
+        companyUniqueName = 'giddh'
+        data ={}
+        unqNamesObj = {compUname: "name", selGrpUname: "name"}
+        @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/move').respond(200, {"status": "success"})
+
+        @groupService.move(unqNamesObj, data).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+      it 'should call failure callback when group moved', ->
+        companyUniqueName = 'giddh'
+        data ={}
+        unqNamesObj = {compUname: "name", selGrpUname: "name"}
+        @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/move').respond(400, {"status": "error"})
+
+        @groupService.move(unqNamesObj, data).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+    describe '#share', ->
+      it 'should call success callback when group shared', ->
+        companyUniqueName = 'giddh'
+        data ={}
+        unqNamesObj = {compUname: "name", selGrpUname: "name"}
+        @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/share').respond(200, {"status": "success"})
+
+        @groupService.share(unqNamesObj, data).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+      it 'should call failure callback when group shared', ->
+        companyUniqueName = 'giddh'
+        data ={}
+        unqNamesObj = {compUname: "name", selGrpUname: "name"}
+        @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/share').respond(400, {"status": "error"})
+
+        @groupService.share(unqNamesObj, data).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+    describe '#unshare', ->
+      it 'should call success callback when group unshared', ->
+        companyUniqueName = 'giddh'
+        data ={}
+        unqNamesObj = {compUname: "name", selGrpUname: "name"}
+        @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/unshare').respond(200, {"status": "success"})
+
+        @groupService.unshare(unqNamesObj, data).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+      it 'should call failure callback when group unshared', ->
+        companyUniqueName = 'giddh'
+        data ={}
+        unqNamesObj = {compUname: "name", selGrpUname: "name"}
+        @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/unshare').respond(400, {"status": "error"})
+
+        @groupService.unshare(unqNamesObj, data).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+    # describe '#sharedList', ->
+    #   it 'should call success callback when group sharedList', ->
+    #     companyUniqueName = 'giddh'
+    #     data ={}
+    #     unqNamesObj = {compUname: "name", selGrpUname: "name"}
+    #     @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/shared-with').respond(200, {"status": "success"})
+
+    #     @groupService.sharedList(unqNamesObj, data).then(
+    #       (data) -> expect(data.status).toBe("success")
+    #       (data) -> expect(true).toBeFalsy()
+    #     )
+      # it 'should call failure callback when group sharedList', ->
+      #   companyUniqueName = 'giddh'
+      #   data ={}
+      #   unqNamesObj = {compUname: "name", selGrpUname: "name"}
+      #   @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/shared-with').respond(400, {"status": "error"})
+
+      #   @groupService.sharedList(unqNamesObj, data).then(
+      #     (data) -> expect(true).toBeFalsy()
+      #     (data) ->
+      #       expect(data.data.status).toBe("error")
+      #       expect(data.status).toBe(400)
+      #   )
+        
+      
+
 
   describe "nonHttpRequestMethods", ->
     describe '#flattenGroup', ->
