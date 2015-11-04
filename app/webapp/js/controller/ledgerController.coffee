@@ -161,9 +161,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     edata = {}
     angular.copy(data, edata)
 
-    if not _.isUndefined(data.voucher)
-      edata.voucherType = data.voucher.shortCode
-
+    edata.voucherType = data.voucher.shortCode
     if _.isObject(data.transactions[0].particular)
       unk = data.transactions[0].particular.uniqueName
       edata.transactions[0].particular = unk
@@ -241,7 +239,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     return true
 
   $scope.calculateLedger = (data, loadtype) ->
-    console.log "calculateLedger", data
     crt = 0
     drt = 0
 
@@ -272,17 +269,14 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $scope.debitTotal = parseInt(drt) + parseInt($scope.debitBalanceAmount)
       $scope.creditTotal = crt
 
-
     # if calculation is wrong than make entry in newrelic
     if loadtype is 'server'
-      if drt > crt
-        if parseInt(data.debitTotal) isnt parseInt(drt)
-          console.log "something is wrong in calculateLedger debitTotal"
-          console.log parseInt(data.debitTotal), parseInt(drt)
-      if crt > drt
-        if parseInt(data.creditTotal) isnt parseInt(crt)
-          console.log "something is wrong in calculateLedger creditTotal"
-          console.log parseInt(data.creditTotal), parseInt(crt)
+      if parseInt(data.debitTotal) isnt parseInt($scope.debitTotal)
+        console.log "something is wrong in calculateLedger debitTotal"
+        console.log parseInt(data.debitTotal), parseInt($scope.debitTotal)
+      if parseInt(data.creditTotal) isnt parseInt($scope.creditTotal)
+        console.log "something is wrong in calculateLedger creditTotal"
+        console.log parseInt(data.creditTotal), parseInt($scope.creditTotal)
 
   $scope.onScroll = (sp, tsS, event) ->
     if  !_.isUndefined($scope.ledgerData)

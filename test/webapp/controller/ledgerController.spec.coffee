@@ -400,11 +400,11 @@ describe 'ledgerController', ->
       it 'should calculate data and set some variables to according in this DEBIT is greater', ->
         data = {
           balance: {
-            amount: 8
-            type: "DEBIT"
+            amount: 208
+            type: "CREDIT"
           }
-          creditTotal: 158
-          debitTotal: 158
+          creditTotal: 258
+          debitTotal: 258
           forwardedBalance: {
             amount: 108
             description: "BF_BALANCE"
