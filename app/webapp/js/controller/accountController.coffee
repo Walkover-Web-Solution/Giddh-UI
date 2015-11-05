@@ -7,7 +7,6 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.flatAccntWGroupsList = {}
   $scope.showAccountList = false
   $scope.selectedAccountUniqueName = "";
-  #$rootScope.selectedCompany = {}
 
   $scope.getAccountsGroups = ->
     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -33,14 +32,17 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     modalService.openManageGroupsModal()
 
   $scope.setLedgerData = (data, acData) ->
-    console.log "inside setLedgerData"
     $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
 
-  #highlight account menus
-  # $scope.selAccnt = (item, index) ->
-  #   console.log item, index, "selAccnt"
-  #   $scope.selAccntMenu = item
+  # Collapse all account menus
+  $scope.collapseAllSubMenus = () ->
+    $scope.showSubMenus = true
+
+  # Expand all account menus
+  $scope.expandAllSubMenus = () ->
+    $scope.showSubMenus = false
+
 
   $rootScope.$on '$reloadAccount', ->
     $scope.getAccountsGroups()

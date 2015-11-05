@@ -3,7 +3,7 @@
 describe 'accountController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, toastr, accountService, groupService, $q, modalService, localStorageService) ->
+  beforeEach inject ($rootScope, $controller, toastr, accountService, groupService, $q, modalService, localStorageService, DAServices) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @toastr = toastr
@@ -12,8 +12,13 @@ describe 'accountController', ->
     @q = $q
     @modalService = modalService
     @localStorageService = localStorageService
+    @DAServices = DAServices
     @accountController = $controller('accountController',
-        {$scope: @scope, groupService: @groupService})
+        {
+          $scope: @scope, 
+          groupService: @groupService, 
+          DAServices: @DAServices
+        })
 
   describe '#getAccountsGroups', ->
     it 'should show a toastr informing user to select company first when no company selected', ->
@@ -84,3 +89,28 @@ describe 'accountController', ->
       spyOn(@modalService, 'openManageGroupsModal')
       @modalService.openManageGroupsModal()
       expect(@modalService.openManageGroupsModal).toHaveBeenCalled()
+
+  describe '#setLedgerData', ->
+    it 'should set value in a variable and call da service ledgerset method', ->
+      data = {}
+      acData = {uniqueName: "name"}
+      spyOn(@DAServices, "LedgerSet")
+      @scope.setLedgerData(data, acData)
+      expect(@scope.selectedAccountUniqueName).toEqual(acData.uniqueName)
+      expect(@DAServices.LedgerSet).toHaveBeenCalledWith(data, acData)
+
+  describe '#collapseAllSubMenus', ->
+    it 'should collapseAllSubMenus and set a variable value to true', ->
+      @scope.collapseAllSubMenus()
+      expect(@scope.showSubMenus).toBeTruthy() 
+
+  describe '#expandAllSubMenus', ->
+    it 'should expandAllSubMenus and set a variable value to false', ->
+      @scope.expandAllSubMenus()
+      expect(@scope.showSubMenus).toBeFalsy() 
+    
+      
+    
+
+
+

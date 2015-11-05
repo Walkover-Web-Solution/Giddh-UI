@@ -30,6 +30,8 @@ directive 'validNumber', ->
         `var val`
         if angular.isUndefined(val)
           val = ''
+        if _.isNull(val)
+          val = ''
         clean = val.replace(/[^0-9\.]/g, '')
         decimalCheck = clean.split('.')
         if !angular.isUndefined(decimalCheck[1])
@@ -58,6 +60,8 @@ directive 'validDate', (toastr, $filter) ->
       ngModelCtrl.$parsers.push (val) ->
         `var val`
         if angular.isUndefined(val)
+          val = ''
+        if _.isNull(val)
           val = ''
         clean = val.replace(/[^0-9\-]/g, '')
         hyphenCheck = clean.split('-')
@@ -203,7 +207,7 @@ angular.module('ledger', [])
                   type="button" ng-disabled="drEntryForm_{{index}}.$invalid || noResults"
                   ng-click="addLedger({entry: item})">Add</button>
 
-                <button ng-click="removeLedgdialog(); resetEntry(item, lItem)" class="btn mrL1" type="button">close</button>
+                <button ng-click="removeLedgdialog(); resetEntry(item, lItem)" class="btn btn-default mrL1" type="button">close</button>
 
                 <button class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
               </div>
