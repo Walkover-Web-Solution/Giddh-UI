@@ -47,30 +47,29 @@ app.config ($locationProvider, $routeProvider) ->
 app.run(()->
 )
 
-app.config ($httpProvider) ->
-  $httpProvider.interceptors.push('giddhHttpResponseInterceptor')
+# app.config ($httpProvider) ->
+#   $httpProvider.interceptors.push('giddhHttpResponseInterceptor')
 
 
 
-app.factory 'giddhHttpResponseInterceptor', [
-  '$q'
-  '$location'
-  '$log'
-  ($q, $location, $log) ->
-    $log.debug '$log is here to show you that this is a regular factory with injection'
-    giddhInterceptor = { 
-      response: (response) ->
-        # console.log response, "response"
-        response
-      responseError: (responseError) ->
-        console.log responseError, "responseError"
-        if responseError.status is 0
-          window.location = "/thanks"
-        else
-          responseError
-    }
-    giddhInterceptor
-]
+# app.factory 'giddhHttpResponseInterceptor', [
+#   '$q'
+#   '$location'
+#   '$log'
+#   ($q, $location, $log) ->
+#     $log.debug '$log is here to show you that this is a regular factory with injection'
+#     giddhInterceptor = { 
+#       response: (response) ->
+#         response
+#       responseError: (responseError) ->
+#         console.log responseError, "responseError"
+#         if responseError.status is 0
+#           window.location = "/login"
+#         else
+#           responseError
+#     }
+#     giddhInterceptor
+# ]
 
 # confirm modal settings
 app.value('$confirmModalDefaults',
