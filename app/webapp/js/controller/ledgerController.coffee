@@ -140,7 +140,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     , $scope.deleteEntryFailure)
 
   $scope.deleteEntrySuccess = (item, response) ->
-    console.log $scope.ledgerData.ledgers.length, "before"
     count = 0
     rpl = 0
     _.each($scope.ledgerData.ledgers, (entry) ->
@@ -152,7 +151,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.success(response.message, response.status)
     $scope.removeLedgerDialog()
     $scope.calculateLedger($scope.ledgerData, "deleted")
-    console.log $scope.ledgerData.ledgers.length, "after"
 
   $scope.deleteEntryFailure = (response) ->
     console.log "deleteEntryFailure", response

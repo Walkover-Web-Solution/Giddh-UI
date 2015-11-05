@@ -36,7 +36,6 @@ angular.module('giddhWebApp').service 'userServices', ($resource, $q) ->
       )
 
     generateKey: (name) ->
-      console.log "generate key in service", name
       @handlePromise((onSuccess, onFailure) ->
         UserSET.generateAuthKey({uniqueName: name}, {}, onSuccess, onFailure)
       )

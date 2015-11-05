@@ -36,7 +36,6 @@ describe "Group Service", ->
             expect(data.data.status).toBe("error")
             expect(data.status).toBe(400)
         )
-      
 
     describe "#getAllFor", ->
       companyUniqueName = 'giddh'
