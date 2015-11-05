@@ -32,7 +32,7 @@ app.config ($locationProvider, $routeProvider) ->
     firstTimeUser: false
   )
   .when('/thankyou',
-    controller: 'companyController',
+    controller: 'thankyouController',
     templateUrl: '/public/webapp/views/thanks.html'
   )
   .when('/ledger',
@@ -46,6 +46,31 @@ app.config ($locationProvider, $routeProvider) ->
   .otherwise redirectTo: '/home'
 app.run(()->
 )
+
+app.config ($httpProvider) ->
+  $httpProvider.interceptors.push('giddhHttpResponseInterceptor')
+
+
+
+app.factory 'giddhHttpResponseInterceptor', [
+  '$q'
+  '$location'
+  '$log'
+  ($q, $location, $log) ->
+    $log.debug '$log is here to show you that this is a regular factory with injection'
+    giddhInterceptor = { 
+      response: (response) ->
+        # console.log response, "response"
+        response
+      responseError: (responseError) ->
+        console.log responseError, "responseError"
+        if responseError.status is 0
+          $location.path('/thankyou')
+        else
+          responseError
+    }
+    giddhInterceptor
+]
 
 # confirm modal settings
 app.value('$confirmModalDefaults',
