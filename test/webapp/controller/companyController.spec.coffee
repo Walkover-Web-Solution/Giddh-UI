@@ -325,28 +325,26 @@ describe 'companyController', ->
       expect(data.results[0].address_components[0].long_name).toBe("Texas")
 
   describe '#getCurrencyList', ->
-    it 'should call not service method and return success', ->
+    it 'should not call service method and return success', ->
       data = {'code': 'USD'}
-      spyOn(@localStorageService, "keys").andReturn(['_currencyList'])
       spyOn(@localStorageService, "get").andReturn(data)
       spyOn(@currencyService, "getList")
 
       @scope.getCurrencyList()
-
+      expect(@localStorageService.get).toHaveBeenCalled()
       expect(@scope.currencyList).toBe(data)
       expect(@currencyService.getList).not.toHaveBeenCalled()
 
     it 'should call service method and return success', ->
       data = {'code': 'USD'}
-      spyOn(@localStorageService, "keys").andReturn([])
-      spyOn(@localStorageService, "get")
+      spyOn(@localStorageService, "get").andReturn({})
       spyOn(@currencyService, "getList").andReturn(data)
 
       @scope.getCurrencyList()
 
       expect(@currencyService.getList).toHaveBeenCalledWith(@scope.getCurrencyListSuccess,
           @scope.getCurrencyListFailure)
-      expect(@localStorageService.get).not.toHaveBeenCalled()
+      expect(@localStorageService.get).toHaveBeenCalled()
 
   describe '#getCurrencyListSuccess', ->
     it 'should save currency details to scope.currencyList', ->
@@ -377,12 +375,24 @@ describe 'companyController', ->
 
   describe '#shareCompanyWithUser', ->
     it 'should call companyServices.share service with role or json object contains email', ->
+      @rootScope.basicInfo = {email: "s@f.com"}
       @scope.shareRequest = {role: "view_only", user: "s@g.com"}
       @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
       deferred = @q.defer()
       spyOn(@companyServices, "share").andReturn(deferred.promise)
       @scope.shareCompanyWithUser()
       expect(@companyServices.share).toHaveBeenCalledWith(@scope.selectedCompany.uniqueName, @scope.shareRequest)
+
+    it 'should not call service if email matched and show a toastr', ->
+      @rootScope.basicInfo = {email: "s@g.com"}
+      @scope.shareRequest = {role: "view_only", user: "s@g.com"}
+      @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
+      deferred = @q.defer()
+      spyOn(@toastr, 'error')
+      spyOn(@companyServices, "share").andReturn(deferred.promise)
+      @scope.shareCompanyWithUser()
+      expect(@companyServices.share).not.toHaveBeenCalledWith(@scope.selectedCompany.uniqueName, @scope.shareRequest)
+      expect(@toastr.error).toHaveBeenCalledWith('You cannot add yourself.', 'Error')
 
   describe '#onShareCompanySuccess', ->
     it 'should make a blank object, show success message and call getSharedUserList function', ->

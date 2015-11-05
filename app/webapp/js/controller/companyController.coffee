@@ -87,9 +87,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       $scope.openFirstTimeUserModal()
     else
       $rootScope.mngCompDataFound = true
-      lsKeys = localStorageService.keys()
-      if _.contains(lsKeys, "_selectedCompany")
-        cdt = localStorageService.get("_selectedCompany")
+      cdt = localStorageService.get("_selectedCompany")
+      if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
         cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName});
         localStorageService.set("_selectedCompany", cdt)
         $scope.goToCompany(cdt, cdt.index)
@@ -226,9 +225,9 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     console.log "in get city failure"
 
   $scope.getCurrencyList = ->
-    lsKeys = localStorageService.keys()
-    if _.contains(lsKeys, "_currencyList")
-      $scope.currencyList = localStorageService.get("_currencyList")
+    currencyListt = localStorageService.get("_currencyList")
+    if not _.isNull(currencyListt) && not _.isEmpty(currencyListt) && not _.isUndefined(currencyListt)
+      $scope.currencyList = currencyListt
     else
       currencyService.getList($scope.getCurrencyListSuccess, $scope.getCurrencyListFailure)
 
@@ -250,6 +249,9 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #share and manage permission in manage company
   $scope.shareCompanyWithUser = () ->
+    if _.isEqual($scope.shareRequest.user, $rootScope.basicInfo.email)
+      toastr.error("You cannot add yourself.", "Error")
+      return
     companyServices.share($scope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess,
         $scope.onShareCompanyFailure)
 

@@ -19,6 +19,12 @@ loginBackController = ($scope, $rootScope, $http, $timeout, $auth, localStorageS
     ).catch (response) ->
       console.log response
       $scope.loginIsProcessing = false
+      if response.data.result.status is "error"
+#user is not registerd with us
+        toastr.error(response.data.result.message, "Error")
+        $timeout (->
+          window.location = "/beta"
+        ), 3000
 
 
   #webpage data

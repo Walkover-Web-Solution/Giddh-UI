@@ -8,7 +8,7 @@ describe 'ledgerController', ->
       @scope = $rootScope.$new()
       @rootScope = $rootScope
       @localStorageService = localStorageService
-      spyOn(@localStorageService, 'keys').andReturn(["_selectedCompany"])
+#      spyOn(@localStorageService, 'keys').andReturn(["_selectedCompany"])
       spyOn(@localStorageService, 'get').andReturn({name: "walkover"})
 
       @ledgerController = $controller('ledgerController',
@@ -35,7 +35,7 @@ describe 'ledgerController', ->
       expect(@scope.format).toBe("dd-MM-yyyy")
       expect(@scope.ftypeAdd).toBe("add")
       expect(@scope.ftypeUpdate).toBe("update")
-      expect(@localStorageService.keys).toHaveBeenCalled()
+#      expect(@localStorageService.keys).toHaveBeenCalled()
       expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
 
   describe 'controller methods', ->

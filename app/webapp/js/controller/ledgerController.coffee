@@ -9,9 +9,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.selectedLedgerGroup = undefined
 
   $scope.selectedCompany = {}
-  lsKeys = localStorageService.keys()
-  if _.contains(lsKeys, "_selectedCompany")
-    $scope.selectedCompany = localStorageService.get("_selectedCompany")
+  lsKeys = localStorageService.get("_selectedCompany")
+  if not _.isNull(lsKeys) && not _.isEmpty(lsKeys) && not _.isUndefined(lsKeys)
+    $scope.selectedCompany = lsKeys
 
   $scope.creditTotal = undefined
   $scope.debitTotal = undefined
