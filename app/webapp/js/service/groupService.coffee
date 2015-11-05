@@ -100,7 +100,7 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
           addThisGroup.accountDetails = groupItem.accounts
           addThisGroup
         else
-#do nothing
+          #do nothing
       )
       _.without(_.flatten(listGA), undefined);
 
