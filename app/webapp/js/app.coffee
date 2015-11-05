@@ -65,7 +65,7 @@ app.factory 'giddhHttpResponseInterceptor', [
       responseError: (responseError) ->
         console.log responseError, "responseError"
         if responseError.status is 0
-          $location.path('/thankyou')
+          window.location = "/thanks"
         else
           responseError
     }
