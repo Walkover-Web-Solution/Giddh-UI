@@ -102,12 +102,12 @@ describe 'accountController', ->
   describe '#collapseAllSubMenus', ->
     it 'should collapseAllSubMenus and set a variable value to true', ->
       @scope.collapseAllSubMenus()
-      expect(@scope.showSubMenus).toBeTruthy() 
+      expect(@rootScope.showSubMenus).toBeTruthy() 
 
   describe '#expandAllSubMenus', ->
     it 'should expandAllSubMenus and set a variable value to false', ->
       @scope.expandAllSubMenus()
-      expect(@scope.showSubMenus).toBeFalsy() 
+      expect(@rootScope.showSubMenus).toBeFalsy() 
     
       
     

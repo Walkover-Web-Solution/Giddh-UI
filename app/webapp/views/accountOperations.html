@@ -45,9 +45,11 @@
             </div>
 
             <div class="row">
+              <p class="mrB col-md-12 small col-sm-12">Opening balance types</p>
+            </div>
+            <div class="row">
               <div class="col-md-6 col-sm-12">
-                <select name="openingBalanceType" ng-model="selectedAccount.openingBalanceType" class="form-control"
-                        required>
+                <select name="openingBalanceType" ng-model="selectedAccount.openingBalanceType" class="form-control" required>
                   <option ng-repeat="value in openingBalType"
                           ng-selected="{{value.val == selectedAccount.openingBalanceType}}" value="{{value.val}}">
                     {{value.name}}
@@ -55,8 +57,7 @@
                 </select>
               </div>
               <div class="col-md-6 col-sm-12">
-                <input type="text" class="form-control" name="openingBalance" ng-model="selectedAccount.openingBalance"
-                       required valid-number/>
+                <input type="text" class="form-control" name="openingBalance" ng-model="selectedAccount.openingBalance" required valid-number/>
               </div>
             </div>
 
@@ -109,7 +110,7 @@
 
       </div>
       <!-- end of clearfix -->
-      <div class="row pdL pdR">
+      <div class="row pdL pdR mrT2">
         <div class="form-group col-md-12">
           <button ng-if="acntCase == 'Update'" class="btn btn-success" ng-click="updateAccount()"
                   ng-disabled="addAccountForm.$invalid">{{acntCase}}

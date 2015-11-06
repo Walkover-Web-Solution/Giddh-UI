@@ -33,6 +33,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     onlyMobileNo: undefined
   }
 
+
+
+
   # expand and collapse all tree structure
   getRootNodesScope = ->
     angular.element(document.getElementById('tree-root')).scope()
@@ -211,7 +214,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onDeleteGroupFailure = () ->
     toastr.error("Unable to delete group.", "Error")
 
+  $scope.isChildGroup =(group) ->   
+    _.some(group.parentGroups, (group) ->
+      group.uniqueName == $scope.selectedGroup.uniqueName)
+
   $scope.moveGroup = (group) ->
+    if _.isUndefined(group.uniqueName)
+      toastr.error("Select group only from list", "Error")
+      return 
+
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroup.uniqueName

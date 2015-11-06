@@ -62,19 +62,20 @@
 
   <div class="col-sm-12 col-md-6" ng-hide="selectedGroup.isFixed || !canUpdate">
     <div class="row">
-      <div class="pd2 form-inline">
+      <form name="moveGroupForm" novalidate class="pd2 form-inline">
         <div>
           <label class="mrR">Move to group</label>
         </div>
 
         <div class="form-group">
-          <input ng-model="moveto" type="text" placeholder="Group name" class="form-control"
-                 typeahead="groups as groups.name for groups in flattenGroupList | filter:{name:$viewValue}"/>
+          <input ng-model="moveto" type="text" placeholder="Group name" class="form-control" required
+            typeahead="groups as groups.name for groups in flattenGroupList | 
+            omit: isChildGroup | filter:{name: $viewValue}"/>
         </div>
         <div class="form-group">
-          <button class="btn btn-info mrL" ng-click="moveGroup(moveto)">Move</button>
+          <button class="btn btn-info mrL" ng-click="moveGroup(moveto)" ng-disabled="moveGroupForm.$invalid">Move</button>
         </div>
-      </div>
+      </form>
     </div>
   </div>
 

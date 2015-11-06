@@ -4,7 +4,7 @@
       <div class="pd2">
         <form id="cmpnyBascFrm" name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
 
-          <p ng-hide="cmpnyBascFrm.$submitted" class="bg-warning pd1 mrB1">
+          <p ng-hide="cmpnyBascFrm.$submitted || !ecmpnyBascFrm.cCountry.$invalid" class="bg-warning pd1 mrB1">
             For better experience fill all details of form
           </p>
           <input type="hidden" ng-model="selectedCompany.uniqueName" name="cUniqName"/>

@@ -37,11 +37,11 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
   # Collapse all account menus
   $scope.collapseAllSubMenus = () ->
-    $scope.showSubMenus = true
+    $rootScope.showSubMenus = true
 
   # Expand all account menus
   $scope.expandAllSubMenus = () ->
-    $scope.showSubMenus = false
+    $rootScope.showSubMenus = false
 
 
   $rootScope.$on '$reloadAccount', ->
