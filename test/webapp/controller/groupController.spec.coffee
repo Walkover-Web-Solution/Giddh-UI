@@ -39,6 +39,7 @@ describe 'groupController', ->
       result = ["body": {"name": "fixed assets"}, {"name": "capital account"}]
       @scope.getGroupListSuccess(result)
       expect(@scope.groupList).toBe(result.body)
+      expect(@scope.showListGroupsNow).toBeTruthy()
 
   describe '#getGroupListFailure', ->
     it 'should show a toastr for error', ->

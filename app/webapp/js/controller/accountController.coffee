@@ -8,7 +8,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.showAccountList = false
   $scope.selectedAccountUniqueName = "";
 
-  $scope.getAccountsGroups = ->
+  $scope.getAccountsGroups = ()->
     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.showAccountList = false
     if _.isEmpty($rootScope.selectedCompany)
@@ -44,10 +44,10 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $rootScope.showSubMenus = false
 
 
-  $rootScope.$on '$reloadAccount', ->
+  $scope.$on '$reloadAccount', ->
     $scope.getAccountsGroups()
 
-  $rootScope.$on '$viewContentLoaded', ->
+  $scope.$on '$viewContentLoaded', ->
     $scope.getAccountsGroups()
 
 #init angular app
