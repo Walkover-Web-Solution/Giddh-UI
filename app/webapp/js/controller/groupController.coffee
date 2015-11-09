@@ -7,6 +7,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.selectedGroup = {}
   $scope.selectedSubGroup = {}
   $scope.selectedAccount = {}
+  $scope.selAcntPrevObj = {}
   $scope.datePicker = {accountOpeningBalanceDate: ""}
   $scope.selectedGroupUName = ""
 
@@ -317,6 +318,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #show account
   $scope.showAccountDtl = (data) ->
+    console.log data, "showAccountDtl"
+    angular.copy(data, $scope.selAcntPrevObj)
     if _.isEmpty($scope.selectedGroup)
       $scope.hasSharePermission()
       $scope.hasAddPermission(data.parentGroups[0])
@@ -332,6 +335,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.setOpeningBalanceDate()
     # for play between update and add
     $scope.acntCase = "Update"
+    
 
   # prepare date object
   $scope.setOpeningBalanceDate = () ->
@@ -342,7 +346,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.datePicker.accountOpeningBalanceDate = new Date()
 
   $scope.addNewAccountShow = (groupData)  ->
-# make blank for new
+    # make blank for new
     $scope.selectedAccount = {}
     $scope.acntExt = {
       Ccode: undefined
@@ -370,8 +374,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.addAccount = () ->
     console.log "addAccount", $scope.selectedAccount
     unqNamesObj = $scope.setAdditionalAccountDetails()
-    accountService.createAc(unqNamesObj, $scope.selectedAccount).then($scope.addAccountSuccess,
-        $scope.addAccountFailure)
+    console.log unqNamesObj
+    # accountService.createAc(unqNamesObj, $scope.selectedAccount).then($scope.addAccountSuccess,
+    #     $scope.addAccountFailure)
 
   # $scope.selectGroupToEdit = (group)
   $scope.addAccountSuccess = (result) ->
@@ -384,14 +389,18 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.addAccountFailure = (result) ->
     console.log "addAccountFailure", result
+    toastr.error(result.data.message, "Error")
 
 
   $scope.deleteAccount = ->
     if $scope.canDelete
       unqNamesObj = $scope.setAdditionalAccountDetails()
-      if _.isUndefined($scope.selectedGroup.uniqueName)
-        lastVal = _.last($scope.breadCrumbList)
-        unqNamesObj.selGrpUname = lastVal[1]
+      if $scope.selectedAccount.uniqueName isnt $scope.selAcntPrevObj.uniqueName
+        unqNamesObj.acntUname = $scope.selAcntPrevObj.uniqueName
+
+      if _.isEmpty($scope.selectedGroup)
+        unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
+
       modalService.openConfirmModal(
         title: 'Delete Account?',
         body: 'Are you sure you want to delete this Account?',
@@ -411,9 +420,16 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.updateAccount = () ->
     unqNamesObj = $scope.setAdditionalAccountDetails()
-    if _.isUndefined($scope.selectedGroup.uniqueName)
-      lastVal = _.last($scope.breadCrumbList)
-      unqNamesObj.selGrpUname = lastVal[1]
+    if angular.equals($scope.selectedAccount, $scope.selAcntPrevObj)
+      toastr.info("Nothing to update", "Info")
+      return false
+
+    if $scope.selectedAccount.uniqueName isnt $scope.selAcntPrevObj.uniqueName
+      unqNamesObj.acntUname = $scope.selAcntPrevObj.uniqueName
+      
+    if _.isEmpty($scope.selectedGroup)
+      unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
+
     accountService.updateAc(unqNamesObj, $scope.selectedAccount).then($scope.updateAccountSuccess,
         $scope.updateAccountFailure)
     $rootScope.$broadcast('$reloadAccount')
@@ -426,7 +442,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       if item.uniqueName == $scope.selectedAccount.uniqueName
         getTrueIndex = index
     )
-    angular.merge($scope.groupAccntList[getTrueIndex], $scope.selectedAccount)
+    if !_.isEmpty($scope.selectedGroup)
+      angular.merge($scope.groupAccntList[getTrueIndex], $scope.selectedAccount)
+  
+  $scope.updateAccountFailure = (result) ->
+    console.log "updateAccountFailure", result
+    toastr.error(result.data.message, "Error")
 
   $scope.hasSharePermission = () ->
     permissionService.hasPermissionOn($scope.selectedCompany, "MNG_USR")
@@ -439,9 +460,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.hasDeletePermission = (group) ->
     $scope.canDelete = permissionService.hasPermissionOn(group, "DLT")
-
-  $scope.updateAccountFailure = (result) ->
-    console.log "updateAccountFailure", result
 
 
 #init angular app

@@ -14,6 +14,7 @@ app = angular.module("giddhWebApp",
     "valid-date"
     "ledger"
     "angular.filter"
+    "unique-name"
   ]
 )
 

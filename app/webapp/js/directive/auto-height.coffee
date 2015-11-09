@@ -19,6 +19,20 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
     , 1000
 ]
 
+angular.module('unique-name', []).
+directive 'customValidation', ->
+  {
+    require: 'ngModel'
+    link: (scope, element, attrs, modelCtrl) ->
+      modelCtrl.$parsers.push (inputValue) ->
+        transformedInput = inputValue.toLowerCase().replace(RegExp(' ', 'g'), '')
+        if transformedInput != inputValue
+          modelCtrl.$setViewValue transformedInput
+          modelCtrl.$render()
+        transformedInput
+      return
+  }
+
 angular.module('valid-number', []).
 directive 'validNumber', ->
   {
@@ -185,7 +199,7 @@ angular.module('ledger', [])
                     </select>
                   </div>
                   <div class="form-group">
-                    <input type="text" name="tag" class="form-control" ng-model="item.tag" />
+                    <input type="text" name="tag" class="form-control" ng-model="item.tag" placeholder="Tag" />
                   </div>
                 </div>
                 <div class="col-md-6 col-sm-12">
@@ -194,7 +208,7 @@ angular.module('ledger', [])
                     {{item.voucher.shortCode}}-{{item.voucherNo}}
                   </div>
                   <div class="form-group">
-                    <textarea class="form-control" name="description" ng-model="item.description"></textarea>
+                    <textarea class="form-control" name="description" ng-model="item.description" placeholder="Description"></textarea>
                   </div>
                 </div>
               </div>
