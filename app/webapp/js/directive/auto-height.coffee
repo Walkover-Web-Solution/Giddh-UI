@@ -209,7 +209,7 @@ angular.module('ledger', [])
 
                 <button ng-click="removeLedgdialog(); resetEntry(item, lItem)" class="btn btn-default mrL1" type="button">close</button>
 
-                <button class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
+                <button ng-show="item.uniqueName != undefined" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
               </div>
             </div>
           </div>

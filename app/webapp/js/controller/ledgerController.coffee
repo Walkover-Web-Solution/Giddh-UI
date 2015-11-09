@@ -160,6 +160,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     angular.copy(data, edata)
 
     edata.voucherType = data.voucher.shortCode
+
     if _.isObject(data.transactions[0].particular)
       unk = data.transactions[0].particular.uniqueName
       edata.transactions[0].particular = unk
@@ -308,7 +309,6 @@ class angular.Ledger
     @uniqueName = undefined
     @entryDate = ""
     @voucher = new angular.Voucher()
-
 class angular.Transaction
   constructor: (type)->
     @amount = ""
@@ -316,7 +316,7 @@ class angular.Transaction
     @particular = new angular.Particular
 
 class angular.Voucher
-  sales: ()->
+  constructor: ()->
     @name = "sales"
     @shortCode = "sal"
 
