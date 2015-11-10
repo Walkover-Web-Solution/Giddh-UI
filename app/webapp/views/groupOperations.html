@@ -15,7 +15,7 @@
 
             <div class="form-group">
               <label>Unique name</label>
-              <input type="text" class="form-control" placeholder="Enter Unique Name"
+              <input type="text" class="form-control" placeholder="Enter Unique Name" valid-unique
                      ng-model="selectedGroup.uniqueName" required>
             </div>
 
@@ -43,7 +43,7 @@
         <form id="subGroupForm" name="subGroupForm" novalidate>
           <input type="text" placeholder="Enter Subgroup name" class="form-control form-group"
                  ng-model="selectedSubGroup.name" required/>
-          <input type="text" placeholder="Enter Unique name" class="form-control form-group"
+          <input type="text" placeholder="Enter Unique name" class="form-control form-group" valid-unique
                  ng-model="selectedSubGroup.uniqueName" required/>
           <textarea maxlength="200" class="form-control form-group" placeholder="Enter description"
                     ng-model="selectedSubGroup.desc"></textarea>

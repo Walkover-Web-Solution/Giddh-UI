@@ -63,6 +63,20 @@ app.factory 'appInterceptor', ['$q', '$location', '$log',
         $q.reject responseError
 ]
 
+# toastr setting
+app.config (toastrConfig) ->
+  angular.extend toastrConfig,
+    # autoDismiss: false
+    # containerId: 'toast-container'
+    maxOpened: 3
+    closeButton: true
+    # newestOnTop: true
+    # positionClass: 'toast-top-right'
+    preventDuplicates: false
+    preventOpenDuplicates: true
+    target: 'body'
+  return
+
 # confirm modal settings
 app.value('$confirmModalDefaults',
   templateUrl: '/public/webapp/views/confirmModal.html',
@@ -76,3 +90,4 @@ app.value('$confirmModalDefaults',
 #bootstrap related - http://angular-ui.github.io/bootstrap/#/tooltip
 #LocalStorageModule - https://github.com/grevory/angular-local-storage
 #perfect_scrollbar - perfect_scrollbar
+# toastr = https://github.com/Foxandxss/angular-toastr

@@ -20,10 +20,15 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
 ]
 
 angular.module('unique-name', []).
-directive 'customValidation', ->
+directive 'validUnique', (toastr)->
   {
     require: 'ngModel'
     link: (scope, element, attrs, modelCtrl) ->
+      element.bind 'keypress', (event) ->
+        if event.which == 32
+          toastr.warning("Space not allowed", "Warning")
+          event.preventDefault()
+        return
       modelCtrl.$parsers.push (inputValue) ->
         transformedInput = inputValue.toLowerCase().replace(RegExp(' ', 'g'), '')
         if transformedInput != inputValue

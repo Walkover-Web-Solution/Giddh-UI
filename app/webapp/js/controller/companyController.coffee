@@ -100,7 +100,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     toastr.error(response.data.message, "Error")
 
   $scope.getUserDetails = ->
-    console.log "in controller", $rootScope.basicInfo
     if _.isUndefined($rootScope.basicInfo.userUniqueName)
       $rootScope.basicInfo = localStorageService.get("_userDetails")
     userServices.get($rootScope.basicInfo.userUniqueName).then($scope.getUserDetailSuccess, $scope.getUserDetailFailure)
