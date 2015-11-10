@@ -34,6 +34,23 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     onlyMobileNo: undefined
   }
 
+  #date time picker code starts here
+  $scope.today = new Date()
+
+  $scope.valuationDatePickerIsOpen = false
+
+  $scope.valuationDatePickerOpen = ->
+    this.valuationDatePickerIsOpen = true
+
+  $scope.dateOptions = {
+    'year-format': "'yy'",
+    'starting-day': 1,
+    'showWeeks': false,
+    'show-button-bar': false,
+    'year-range': 1,
+    'todayBtn': false
+  }
+  $scope.format = "dd-MM-yyyy"
 
 
 
@@ -41,12 +58,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   getRootNodesScope = ->
     angular.element(document.getElementById('tree-root')).scope()
 
-  $scope.collapseAll = ->
+  $scope.collapseAll = () ->
     scope = getRootNodesScope()
     scope.collapseAll()
     $scope.subGroupVisible = true
 
-  $scope.expandAll = ->
+  $scope.expandAll = () ->
     scope = getRootNodesScope()
     scope.expandAll()
     $scope.subGroupVisible = false
@@ -59,7 +76,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
           $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (result) ->
-# angular.extend($scope.groupList, result.body)
     $scope.groupList = result.body
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntList = groupService.flattenAccount($scope.groupList)
@@ -102,6 +118,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.onsharedListFailure = (result) ->
     console.log result, "on shared List Failure"
+    toastr.error(result.body.message, "Error")
 
   #share group with user
   $scope.shareGroup = () ->
@@ -236,10 +253,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onMoveGroupSuccess = () ->
     toastr.success("Group moved successfully.", "Success")
     $scope.getGroups()
-    #    $scope.selectedGroup = {}
-    #    $scope.showGroupDetails = false
     $scope.moveto = undefined
-  #    $scope.showAccountListDetails = false
 
   $scope.onMoveGroupFailure = () ->
     toastr.error("Unable to move group.", "Error")
@@ -259,7 +273,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #jump to group
   $scope.jumpToGroup = (grpUniqName, grpList)  ->
-    console.log "jumpToGroup"
     fltGrpList = groupService.flattenGroup(grpList, [])
     obj = _.find(fltGrpList, (item) ->
       item.uniqueName == grpUniqName
@@ -268,7 +281,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.selectItem(obj)
 
 
-  #check if object is empty
+  #check if object is empty on client side by mechanic
   $scope.isEmptyObject = (obj) ->
     return _.isEmpty(obj)
 
@@ -298,28 +311,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         onlyMobileNo: undefined
       }
 
-  #date time picker code starts here
-  $scope.today = new Date()
-
-  $scope.valuationDatePickerIsOpen = false
-
-  $scope.valuationDatePickerOpen = ->
-    this.valuationDatePickerIsOpen = true
-
-  $scope.dateOptions = {
-    'year-format': "'yy'",
-    'starting-day': 1,
-    'showWeeks': false,
-    'show-button-bar': false,
-    'year-range': 1,
-    'todayBtn': false
-  }
-  $scope.format = "dd-MM-yyyy"
-
   #show account
   $scope.showAccountDtl = (data) ->
-    console.log data, "showAccountDtl"
-    angular.copy(data, $scope.selAcntPrevObj)
+    pGroups = []
     if _.isEmpty($scope.selectedGroup)
       $scope.hasSharePermission()
       $scope.hasAddPermission(data.parentGroups[0])
@@ -327,8 +321,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.hasDeletePermission(data.parentGroups[0])
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
+    angular.copy(data, $scope.selAcntPrevObj)
     angular.extend($scope.selectedAccount, data)
-    pGroups = []
     angular.extend(pGroups, data.parentGroups)
     $scope.showBreadCrumbs(pGroups.reverse())
     $scope.breakMobNo(data)
@@ -341,7 +335,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.setOpeningBalanceDate = () ->
     if $scope.selectedAccount.openingBalanceDate
       newDateObj = $scope.selectedAccount.openingBalanceDate.split("-");
-      $scope.datePicker.accountOpeningBalanceDate = new Date(newDateObj[2], newDateObj[1] - 1, newDateObj[0]);
+      $scope.datePicker.accountOpeningBalanceDate = new Date(newDateObj[2], newDateObj[1] - 1, newDateObj[0])
     else
       $scope.datePicker.accountOpeningBalanceDate = new Date()
 
@@ -353,12 +347,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       onlyMobileNo: undefined
     }
     $scope.breadCrumbList = undefined
-    $scope.setOpeningBalanceDate()
+    $scope.selectedAccntMenu = undefined
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
     # for play between update and add
     $scope.acntCase = "Add"
-    $scope.selectedAccntMenu = undefined
+    $scope.setOpeningBalanceDate()
     $scope.showBreadCrumbs($scope.selectedGroup.parentGroups)
 
   $scope.setAdditionalAccountDetails = ()->
@@ -373,8 +367,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.addAccount = () ->
     unqNamesObj = $scope.setAdditionalAccountDetails()
-    accountService.createAc(unqNamesObj, $scope.selectedAccount).then($scope.addAccountSuccess,
-        $scope.addAccountFailure)
+    accountService.createAc(unqNamesObj, $scope.selectedAccount).then($scope.addAccountSuccess, $scope.addAccountFailure)
 
   # $scope.selectGroupToEdit = (group)
   $scope.addAccountSuccess = (result) ->
@@ -386,7 +379,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
 
   $scope.addAccountFailure = (result) ->
-    console.log "addAccountFailure", result
     toastr.error(result.data.message, "Error")
 
 
@@ -403,8 +395,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         title: 'Delete Account?',
         body: 'Are you sure you want to delete this Account?',
         ok: 'Yes',
-        cancel: 'No').then -> accountService.deleteAc(unqNamesObj,
-          $scope.selectedAccount).then($scope.onDeleteAccountSuccess,
+        cancel: 'No').then -> 
+          accountService.deleteAc(unqNamesObj, $scope.selectedAccount).then($scope.onDeleteAccountSuccess,
           $scope.onDeleteAccountFailure)
 
   $scope.onDeleteAccountSuccess = () ->

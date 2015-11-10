@@ -194,8 +194,9 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       item.address_components[0].long_name
     )
 
-  $scope.onGetCountryFailure = (data) ->
-    console.log "in get country failure"
+  $scope.onGetCountryFailure = (result) ->
+    console.log "in get country failure", result
+    toastr.error(result.body.message, "Error")
 
   $scope.getState = (val) ->
     locationService.searchState(val, $rootScope.selectedCompany.country).then($scope.onGetStateSuccess,
@@ -207,8 +208,9 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       item.address_components[0].long_name
     )
 
-  $scope.onGetStateFailure = (data) ->
-    console.log "in get state failure"
+  $scope.onGetStateFailure = (result) ->
+    console.log "in get state failure", result
+    toastr.error(result.body.message, "Error")
 
   $scope.getCity = (val) ->
     locationService.searchCity(val, $rootScope.selectedCompany.state).then($scope.onGetCitySuccess,
@@ -220,8 +222,9 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       item.address_components[0].long_name
     )
 
-  $scope.onGetCityFailure = (data) ->
-    console.log "in get city failure"
+  $scope.onGetCityFailure = (result) ->
+    console.log "in get city failure", result
+    toastr.error(result.body.message, "Error")
 
   $scope.getCurrencyList = ->
     currencyListt = localStorageService.get("_currencyList")

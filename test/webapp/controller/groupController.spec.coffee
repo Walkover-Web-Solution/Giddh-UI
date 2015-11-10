@@ -1,9 +1,10 @@
 'use strict'
 
 describe 'groupController', ->
+
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, permissionService, modalService) ->
+  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, permissionService, modalService, accountService) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @localStorageService = localStorageService
@@ -12,14 +13,15 @@ describe 'groupController', ->
     @permissionService = permissionService
     @q = $q
     @modalService = modalService
+    @accountService = accountService
     @groupController = $controller('groupController',
         {
           $scope: @scope,
           $rootScope: @rootScope,
           localStorageService: @localStorageService,
           permissionService: @permissionService
+          accountService: @accountService
         })
-
   describe '#getGroups', ->
     it 'should show a toastr informing user to select company first when no company selected', ->
       @rootScope.selectedCompany = {}
@@ -324,6 +326,14 @@ describe 'groupController', ->
       @scope.onMoveGroupFailure(response)
       expect(@toastr.error).toHaveBeenCalledWith('Unable to move group.', 'Error')
 
+  describe '#stopBubble', ->
+    it 'should prevent event from bubbling', ->
+      # e = {stopPropagation: jasmine.createSpy()}
+      e = jasmine.createSpyObj('e', [ 'stopPropagation' ])
+      @scope.stopBubble(e)
+      expect(e.stopPropagation).toHaveBeenCalled()
+    
+
   describe '#selectItem', ->
     it 'should make group menus highlight set active class', ->
       item = "item"
@@ -331,6 +341,208 @@ describe 'groupController', ->
       @scope.selectItem(item)
       expect(@scope.selectedItem).toBe(item)
       expect(@scope.selectGroupToEdit).toHaveBeenCalled()
+
+  describe '#showBreadCrumbs', ->
+    it 'should set showBreadCrumbs variable to true & set value in breadCrumbList', ->
+      data = {"pName": ["n1", "n2", "n3"], "pUnqName": ["un1", "un2", "un3"]}
+      @scope.showBreadCrumbs(data)
+      expect(@scope.showBreadCrumb).toBeTruthy()
+      expect(@scope.breadCrumbList).toEqual({"pName": ["n1", "n2", "n3"], "pUnqName": ["un1", "un2", "un3"]})
+
+  describe '#jumpToGroup', ->
+    it 'should call selectGroupToEdit and selectItem function with a obj and make a call to groupService flattenGroup method', ->
+      abc =  "loan"
+      def = [
+        {
+          groups:[{
+            accounts:[]
+            description:null
+            groups:[]
+            isFixed:true
+            name:"ravi"
+            parentGroups:[]
+            uniqueName:"ravi"
+          }]
+          name:"Loan"
+          uniqueName:"loan"
+        }
+        {
+          groups:[{
+            accounts:[]
+            description:null
+            groups:[]
+            isFixed:true
+            name:"dude"
+            parentGroups:[]
+            uniqueName:"dude"
+          }]
+          name:"Mortgage"
+          uniqueName:"mortgage"
+        }
+      ]
+      res = {
+          groups:[{
+            accounts:[]
+            description:null
+            groups:[]
+            isFixed:true
+            name:"ravi"
+            parentGroups:[]
+            uniqueName:"ravi"
+          }]
+          name:"Loan"
+          uniqueName:"loan"
+        }
+      spyOn(@scope, "selectGroupToEdit")
+      spyOn(@groupService, "flattenGroup").andReturn(def)
+      spyOn(@scope, "selectItem")
+      @scope.jumpToGroup(abc, def)
+      expect(@scope.selectGroupToEdit).toHaveBeenCalledWith(res)
+
+  describe '#isEmptyObject', ->
+    it 'should return true if object is empty', ->
+      data = {}
+      result = @scope.isEmptyObject(data)
+      expect(result).toBeTruthy()
+
+    it 'should return false if object is not empty', ->
+      data = {name: "name"}
+      result = @scope.isEmptyObject(data)
+      expect(result).toBeFalsy()
+
+  describe '#selectAcMenu', ->
+    it 'should set value for account menu variable', ->
+      data = {"name"}
+      @scope.selectAcMenu(data)
+      expect(@scope.selectedAccntMenu).toBe(data)
+  
+  describe '#mergeNum', ->
+    it 'should return null', ->
+      num = {
+        Ccode: undefined
+        onlyMobileNo: ""
+      }
+      expect(@scope.mergeNum(num)).toBeNull()
+    it 'should merge number', ->
+      num = {
+        Ccode: {value: "91", name: "india"}
+        onlyMobileNo: "123456"
+      }
+      expect(@scope.mergeNum(num)).toBe("91-123456")
+    it 'should merge number', ->
+      num = {
+        Ccode: "91"
+        onlyMobileNo: "123456"
+      }
+      expect(@scope.mergeNum(num)).toBe("91-123456")
+
+  
+  describe '#breakMobNo', ->
+    it 'should break mobile number string', ->
+      data = {mobileNo: "91-123456"}
+      @scope.breakMobNo(data)
+      expect(@scope.acntExt.Ccode).toEqual("91")
+      expect(@scope.acntExt.onlyMobileNo).toEqual("123456")
+    it 'should set value undefined and not break string', ->
+      data = {}
+      @scope.breakMobNo(data)
+      expect(@scope.acntExt.Ccode).toEqual(undefined)
+      expect(@scope.acntExt.onlyMobileNo).toEqual(undefined)
+      
+  describe '#showAccountDtl', ->
+    data = {
+      address:null
+      companyName:null
+      description:null
+      email:null
+      mergedAccounts:[]
+      mobileNo:null
+      name:"cash in hand"
+      openingBalance:50000
+      openingBalanceDate:"01-11-2015"
+      openingBalanceType:"DEBIT"
+      uniqueName: "cashinhand"
+      parentGroups: [
+        {
+          name: "cash"
+          uniqueName: "cash"
+          role: {
+            name: "Admin"
+            uniqueName: "admin"
+            permissions: [
+              {code:"VW", description:"View"}
+              {code:"DLT", description:"Delete"}
+              {code:"UPDT", description:"Update"}
+              {code:"ADD", description:"Add"}
+            ]
+          }
+        }
+      ]
+    }
+    
+    it 'should check if selectedGroup is empty and copy data to selAcntPrevObj, set showGroupDetails variable to false, showAccountDetails to true and set value for selected account variable and set breadcrumb', ->
+      @scope.selectedGroup = {}
+      spyOn(@scope, "hasSharePermission")
+      spyOn(@scope, "hasAddPermission")
+      spyOn(@scope, "hasUpdatePermission")
+      spyOn(@scope, "hasDeletePermission")
+      spyOn(@scope, "showBreadCrumbs")
+      spyOn(@scope, 'breakMobNo')
+      spyOn(@scope, 'setOpeningBalanceDate')
+
+      @scope.showAccountDtl(data)
+      expect(@scope.hasSharePermission).toHaveBeenCalled()
+      expect(@scope.hasAddPermission).toHaveBeenCalledWith(data.parentGroups[0])
+      expect(@scope.hasUpdatePermission).toHaveBeenCalledWith(data.parentGroups[0])
+      expect(@scope.hasDeletePermission).toHaveBeenCalledWith(data.parentGroups[0])
+      expect(@scope.showGroupDetails).toBeFalsy()
+      expect(@scope.showAccountDetails).toBeTruthy()
+      expect(@scope.selAcntPrevObj).toEqual(data)
+      expect(@scope.selectedAccount).toEqual(data)
+
+      expect(@scope.showBreadCrumbs).toHaveBeenCalledWith(data.parentGroups.reverse())
+      expect(@scope.breakMobNo).toHaveBeenCalledWith(data)
+      expect(@scope.setOpeningBalanceDate).toHaveBeenCalled()
+      expect(@scope.acntCase).toBe("Update")
+      
+
+    it 'should copy data to selAcntPrevObj, set showGroupDetails variable to false, showAccountDetails to true and set value for selected account variable and set breadcrumb', ->
+      
+      @scope.selectedGroup = {name: "some"}
+      spyOn(@scope, "hasSharePermission")
+      spyOn(@scope, "hasAddPermission")
+      spyOn(@scope, "hasUpdatePermission")
+      spyOn(@scope, "hasDeletePermission")
+      spyOn(@scope, "showBreadCrumbs")
+      spyOn(@scope, 'breakMobNo')
+      spyOn(@scope, 'setOpeningBalanceDate')
+
+      @scope.showAccountDtl(data)
+      expect(@scope.hasSharePermission).not.toHaveBeenCalled()
+      expect(@scope.hasAddPermission).not.toHaveBeenCalledWith(data.parentGroups[0])
+      expect(@scope.hasUpdatePermission).not.toHaveBeenCalledWith(data.parentGroups[0])
+      expect(@scope.hasDeletePermission).not.toHaveBeenCalledWith(data.parentGroups[0])
+      expect(@scope.showGroupDetails).toBeFalsy()
+      expect(@scope.showAccountDetails).toBeTruthy()
+      expect(@scope.selAcntPrevObj).toEqual(data)
+      expect(@scope.selectedAccount).toEqual(data)
+
+      expect(@scope.showBreadCrumbs).toHaveBeenCalledWith(data.parentGroups.reverse())
+      expect(@scope.breakMobNo).toHaveBeenCalledWith(data)
+      expect(@scope.setOpeningBalanceDate).toHaveBeenCalled()
+      expect(@scope.acntCase).toBe("Update")
+    
+  describe '#setOpeningBalanceDate', ->
+    it 'should check if openingBalanceDate is defined then set value according to condition', ->
+      @scope.selectedAccount = {
+        openingBalanceDate:"01-11-2015"
+      }
+      @scope.setOpeningBalanceDate()
+      expect(@scope.datePicker.accountOpeningBalanceDate instanceof Date).toBe(true)
+    it 'should check if openingBalanceDate is undefined then set new date ', ->
+      @scope.selectedAccount = {}
+      @scope.setOpeningBalanceDate()
+      expect(@scope.datePicker.accountOpeningBalanceDate instanceof Date).toBe(true)
 
   describe '#onMoveGroupSuccess', ->
     it 'should show success toastr, call getGroups, set selected group to be empty, set showGroupDetails variable to be false and moveTo variable to undefined', ->
@@ -342,44 +554,174 @@ describe 'groupController', ->
       expect(@scope.showGroupDetails).toBeFalsy()
       expect(@scope.moveto).toBeUndefined()
 
-
-  describe '#showAccountDtl', ->
-    xit 'should set showGroupDetails variable to false, showAccountDetails to true & set value for selected account variable and set breadcrum', ->
-      data = {"name": "testing", "groups": [{"name": "g1"}, {"name": "g1"}]}
-      spyOn(@scope, 'breakMobNo')
-      spyOn(@scope, 'setOpeningBalanceDate')
-      @scope.showAccountDtl(data)
+  describe '#addNewAccountShow', ->
+    it 'should call setOpeningBalanceDate, set false to showGroupDetails, set true to showAccountDetails, set acntCase to add, and undefined to some scope variables and call showBreadCrumbs function with data', ->
+      @scope.selectedGroup = {
+        address:null
+        companyName:null
+        description:null
+        email:null
+        mergedAccounts:[]
+        mobileNo:null
+        name:"cash in hand"
+        openingBalance:50000
+        openingBalanceDate:"01-11-2015"
+        openingBalanceType:"DEBIT"
+        uniqueName: "cashinhand"
+        parentGroups: [
+          {
+            name: "cash"
+            uniqueName: "cash"
+            role: {
+              name: "Admin"
+              uniqueName: "admin"
+              permissions: [
+                {code:"VW", description:"View"}
+                {code:"DLT", description:"Delete"}
+                {code:"UPDT", description:"Update"}
+                {code:"ADD", description:"Add"}
+              ]
+            }
+          }
+        ]
+      }
+      spyOn(@scope, "showBreadCrumbs")
+      spyOn(@scope, "setOpeningBalanceDate")
+      @scope.addNewAccountShow(@scope.selectedGroup)
+      expect(@scope.selectedAccount).toEqual({})
+      expect(@scope.acntExt.Ccode).toBe (undefined)
+      expect(@scope.acntExt.onlyMobileNo).toBe (undefined)
+      expect(@scope.breadCrumbList).toBe (undefined)
+      expect(@scope.selectedAccntMenu).toBe (undefined)
       expect(@scope.showGroupDetails).toBeFalsy()
-      expect(@scope.showAccountDetails).toBeTruthy()
-      expect(@scope.selectedAccount).toEqual(data)
-      expect(@scope.breakMobNo).toHaveBeenCalledWith(data)
+      expect(@scope.showAccountDetails).toBeTruthy() 
+      expect(@scope.acntCase).toBe("Add")
       expect(@scope.setOpeningBalanceDate).toHaveBeenCalled()
-      expect(@scope.acntCase).toBe("Update")
+      expect(@scope.showBreadCrumbs).toHaveBeenCalledWith(@scope.selectedGroup.parentGroups)
 
+  describe '#setAdditionalAccountDetails', ->
+    it 'should convert date to a string and set value in openingBalanceDate, it should call mergeNum', ->
+      @scope.datePicker = {
+        accountOpeningBalanceDate: new Date(2015, 10, 10)
+      }
+      @scope.acntExt ={
+        Ccode: undefined
+        onlyMobileNo: undefined
+      }
+      @rootScope.selectedCompany ={
+        uniqueName: "name"
+      }
+      @scope.selectedGroup ={
+        uniqueName: "name"
+      }
+      @scope.selectedAccount ={
+        uniqueName: "name"
+      }
+      unqNamesObj = {
+        compUname: @rootScope.selectedCompany.uniqueName
+        selGrpUname: @scope.selectedGroup.uniqueName
+        acntUname: @scope.selectedAccount.uniqueName
+      }
+      res = @scope.setAdditionalAccountDetails()
+      expect(@scope.selectedAccount.openingBalanceDate).toBe("10-11-2015")
+      expect(@scope.selectedAccount.mobileNo).toBeNull()
+      expect(res).toEqual(unqNamesObj)
+      
+  describe '#addAccount', ->
+    it 'should call accountservice create method with obj', ->
+      data = {
+        compUname: "Cname"
+        selGrpUname: "Gname"
+        acntUname: "Aname"
+      }
+      @scope.selectedAccount = {}
+      spyOn(@scope, "setAdditionalAccountDetails").andReturn(data)
+      deferred = @q.defer()
+      spyOn(@accountService, 'createAc').andReturn(deferred.promise)
+      @scope.addAccount()
+      expect(@accountService.createAc).toHaveBeenCalledWith(data, @scope.selectedAccount)
+  
+  describe '#addAccountSuccess', ->
+    it 'should show success message through toastr, set selectedAccount to blank object, and push data in selectedGroup.accounts variable, set value to groupAccntList and check reload account broadcast', ->
+      spyOn(@toastr, "success")
+      spyOn(@rootScope, "$broadcast")
+      res = {
+        status: "Success"
+        body: {some: "name"}
+      }
+      @scope.selectedGroup = {accounts: []}
+      @scope.addAccountSuccess(res)
+      expect(@toastr.success).toHaveBeenCalledWith("Account updated successfully", res.status)
+      expect(@scope.selectedAccount).toEqual({})
+      expect(@scope.selectedGroup.accounts).toContain(res.body)
+      expect(@scope.groupAccntList).toEqual([res.body])
+      expect(@rootScope.$broadcast).toHaveBeenCalled()
+  
+  describe '#addAccountFailure', ->
+    it 'should show error message through toastr', ->
+      spyOn(@toastr, "error")
+      res = {
+        status: "Error"
+        data: {message: "Add account failure"}
+      }
+      @scope.addAccountFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.status)
 
-  describe '#showBreadCrumbs', ->
-    it 'should set showBreadCrumbs variable to true & set value in breadCrumbList', ->
-      data = {"pName": ["n1", "n2", "n3"], "pUnqName": ["un1", "un2", "un3"]}
-      @scope.showBreadCrumbs(data)
-      expect(@scope.showBreadCrumb).toBeTruthy()
-      expect(@scope.breadCrumbList).toEqual({"pName": ["n1", "n2", "n3"], "pUnqName": ["un1", "un2", "un3"]})
+  describe '#deleteAccount', ->
+    it 'should check whether user have permission to delete and if no then do not call servie', ->
+      @scope.canDelete = false
+      deferred = @q.defer()
+      @spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
+      @scope.deleteAccount()
+      expect(@modalService.openConfirmModal).not.toHaveBeenCalled()
+    it 'should call modalService and check prev uniqueName value is same like new ', ->
+      data = {
+        compUname: "Cname"
+        selGrpUname: "Gname"
+        acntUname: "Aname"
+      }
+      @scope.selectedGroup = {}
+      @scope.canDelete = true
+      @scope.selectedAccount = {
+        uniqueName: "name"
+        parentGroups: [{uniqueName: "pUnqName"}]
+      }
+      @scope.selAcntPrevObj = {uniqueName: "naame"}
+      deferred = @q.defer()
+      @spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
+      spyOn(@scope, "setAdditionalAccountDetails").andReturn(data)
+      @scope.deleteAccount()
+      expect(@modalService.openConfirmModal).toHaveBeenCalledWith({
+          title: 'Delete Account?'
+          body: 'Are you sure you want to delete this Account?'
+          ok: 'Yes'
+          cancel: 'No'
+        })
 
-  describe '#isEmptyObject', ->
-    it 'should return true if object is empty', ->
-      data = {}
-      result = @scope.isEmptyObject(data)
-      expect(result).toBeTruthy()
+  describe '#onDeleteAccountSuccess', ->
+    it 'should show success message and call getGroups function and set selectedAccount variable to blank object', ->
+      spyOn(@toastr, "success")
+      spyOn(@scope, "getGroups")
+      @scope.onDeleteAccountSuccess()
+      expect(@toastr.success).toHaveBeenCalledWith("Account deleted successfully.", "Success")
+      expect(@scope.getGroups).toHaveBeenCalled()
+      expect(@scope.selectedAccount).toEqual({})
 
-    it 'should return false if object is not empty', ->
-      data = {"name"}
-      result = @scope.isEmptyObject(data)
-      expect(result).toBeFalsy()
+  describe '#onDeleteAccountFailure', ->
+    it 'should show error message through toastr', ->
+      spyOn(@toastr, "error")
+      @scope.onDeleteAccountFailure()
+      expect(@toastr.error).toHaveBeenCalledWith("Unable to delete group.", "Error")
 
-  describe '#selectAcMenu', ->
-    it 'should set value for account menu variable', ->
-      data = {"name"}
-      @scope.selectAcMenu(data)
-      expect(@scope.selectedAccntMenu).toBe(data)
+      
+    
+
+    
+    
+
+  
+
+  
 
   describe '#hasSharePermission', ->
     it 'should call permission service method with selected company and manage user permission', ->
@@ -388,9 +730,4 @@ describe 'groupController', ->
       @scope.hasSharePermission()
       expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(@scope.selectedCompany, "MNG_USR")
 
-  describe '#deleteAccount', ->
-    it 'should check whether user have permission to delete and if no then do not call servie', ->
-      @scope.canDelete = false
-      spyOn(@modalService, 'openConfirmModal')
-      @scope.deleteAccount()
-      expect(@modalService.openConfirmModal).not.toHaveBeenCalled()
+  

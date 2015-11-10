@@ -118,7 +118,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     'CREDIT' == ledger.transactions[0].type
 
   $scope.loadLedgerFailure = (response) ->
-    console.log response
+    console.log response, "loadLedgerFailure"
+    toastr.error(response.body.message, "Error")
 
 
   $scope.addNewAccount = () ->
@@ -154,6 +155,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.deleteEntryFailure = (response) ->
     console.log "deleteEntryFailure", response
+    toastr.error(response.body.message, "Error")
 
   $scope.addNewEntry = (data) ->
     edata = {}
@@ -232,6 +234,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.updateEntryFailure = (response) ->
     console.log response, "updateEntryFailure"
+    toastr.error(response.body.message, "Error")
 
   $scope.removeLedgerDialog = () ->
     allPopElem = angular.element(document.querySelector('.ledgerPopDiv'))
