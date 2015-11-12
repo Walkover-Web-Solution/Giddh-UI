@@ -53,7 +53,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.format = "dd-MM-yyyy"
 
 
-
   # expand and collapse all tree structure
   getRootNodesScope = ->
     angular.element(document.getElementById('tree-root')).scope()
@@ -313,6 +312,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #show account
   $scope.showAccountDtl = (data) ->
+    console.log "showAccountDtl", data
     pGroups = []
     if _.isEmpty($scope.selectedGroup)
       $scope.hasSharePermission()
@@ -329,7 +329,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.setOpeningBalanceDate()
     # for play between update and add
     $scope.acntCase = "Update"
-    
 
   # prepare date object
   $scope.setOpeningBalanceDate = () ->
@@ -409,12 +408,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error("Unable to delete group.", "Error")
 
   $scope.updateAccount = () ->
-    
+    unqNamesObj = $scope.setAdditionalAccountDetails()
     if angular.equals($scope.selectedAccount, $scope.selAcntPrevObj)
       toastr.info("Nothing to update", "Info")
       return false
-
-    unqNamesObj = $scope.setAdditionalAccountDetails()
 
     if $scope.selectedAccount.uniqueName isnt $scope.selAcntPrevObj.uniqueName
       unqNamesObj.acntUname = $scope.selAcntPrevObj.uniqueName
