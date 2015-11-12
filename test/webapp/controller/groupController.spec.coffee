@@ -713,21 +713,135 @@ describe 'groupController', ->
       @scope.onDeleteAccountFailure()
       expect(@toastr.error).toHaveBeenCalledWith("Unable to delete group.", "Error")
 
-      
-    
+  describe '#updateAccount', ->
+    it 'should check if prev object and new object is not changed then call toastr info message', ->
+      @scope.selectedAccount = {
+        uniqueName: "name"
+        parentGroups: [{uniqueName: "pUnqName"}]
+      }
+      @scope.selAcntPrevObj = {
+        uniqueName: "name"
+        parentGroups: [{uniqueName: "pUnqName"}]
+      }
+      @spyOn(@toastr, 'info')
+      @scope.updateAccount()
+      expect(@toastr.info).toHaveBeenCalledWith("Nothing to update", "Info")
+    it 'should call accountService updateAc method and check prev uniqueName value is same like new or selected group is empty ', ->
+      data = {
+        compUname: "Cname"
+        selGrpUname: "Gname"
+        acntUname: "Aname"
+      }
+      @scope.selectedGroup = {}
+      @scope.selectedAccount = {
+        uniqueName: "name"
+        parentGroups: [{uniqueName: "pUnqName"}]
+      }
+      @scope.selAcntPrevObj = {uniqueName: "naame"}
+      spyOn(@scope, "setAdditionalAccountDetails").andReturn(data)
+      deferred = @q.defer()
+      @spyOn(@accountService, 'updateAc').andReturn(deferred.promise)
+      spyOn(@rootScope, "$broadcast")
+      @scope.updateAccount()
+      expect(@accountService.updateAc).toHaveBeenCalledWith(data, @scope.selectedAccount)
+      expect(@rootScope.$broadcast).toHaveBeenCalled()
 
-    
-    
+   describe '#updateAccountSuccess', ->
+    it 'should show success message and call getGroups function and set selectedAccount variable to blank object', ->
+      res = {
+        status: "Success"
+        body: {
+          uniqueName: "name"
+          parentGroups: [{uniqueName: "pUnqName"}]
+        }
+      }
+      dobj= {
+        uniqueName: "name"
+        parentGroups: [{uniqueName: "pUnqName"}]
+      }
+      @scope.selectedAccount = {}
+      @scope.selectedGroup ={
+        accounts: [
+          {uniqueName: "ss"}
+          {uniqueName: "name"}
+          {uniqueName: "dsdd"}
+        ]
+      }
+      @scope.groupAccntList = [
+        {uniqueName: "ss"}
+        {uniqueName: "d"}
+        {uniqueName: "dsdd"}
+      ]
+      spyOn(@toastr, "success")
+      @scope.updateAccountSuccess(res)
+      expect(@toastr.success).toHaveBeenCalledWith("Group updated successfully", res.status)
+      expect(@scope.selectedAccount).toEqual(dobj)
+      expect(@scope.groupAccntList[1].uniqueName).toEqual(@scope.selectedAccount.uniqueName)
 
-  
-
-  
-
+  describe '#updateAccountFailure', ->
+    it 'should show error message through toastr', ->
+      res = {
+        status: "Error"
+        data: {
+          message: "Unable to update account"
+        }
+      }
+      spyOn(@toastr, "error")
+      @scope.updateAccountFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.status)
+ 
   describe '#hasSharePermission', ->
     it 'should call permission service method with selected company and manage user permission', ->
       @scope.selectedCompany = {name: "myCompany"}
       spyOn(@permissionService, "hasPermissionOn")
       @scope.hasSharePermission()
       expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(@scope.selectedCompany, "MNG_USR")
+
+  describe '#hasUpdatePermission', ->
+    it 'should call permission service hasPermissionOn method and set value true to canUpdate variable', ->
+      data ={
+        role: {
+          permissions: [
+            {code:"VW", description:"View"}
+            {code:"DLT", description:"Delete"}
+            {code:"UPDT", description:"Update"}
+            {code:"ADD", description:"Add"}
+          ]
+        }
+      }
+      @scope.hasUpdatePermission(data)
+      expect(@scope.canUpdate).toBeTruthy() 
+      # expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "UPDT")
+  describe '#hasAddPermission', ->
+    it 'should call permission service hasPermissionOn method and set value true to canAdd variable', ->
+      data ={
+        role: {
+          permissions: [
+            {code:"VW", description:"View"}
+            {code:"DLT", description:"Delete"}
+            {code:"UPDT", description:"Update"}
+            {code:"ADD", description:"Add"}
+          ]
+        }
+      }
+      @scope.hasAddPermission(data)
+      expect(@scope.canAdd).toBeTruthy() 
+
+  describe '#hasDeletePermission', ->
+    it 'should call permission service hasPermissionOn method and set value true to canDelete variable', ->
+      data ={
+        role: {
+          permissions: [
+            {code:"VW", description:"View"}
+            {code:"DLT", description:"Delete"}
+            {code:"UPDT", description:"Update"}
+            {code:"ADD", description:"Add"}
+          ]
+        }
+      }
+      @scope.hasDeletePermission(data)
+      expect(@scope.canDelete).toBeTruthy()
+      
+    
 
   
