@@ -715,6 +715,11 @@ describe 'groupController', ->
 
   describe '#updateAccount', ->
     it 'should check if prev object and new object is not changed then call toastr info message', ->
+      data = {
+        compUname: "Cname"
+        selGrpUname: "Gname"
+        acntUname: "Aname"
+      }
       @scope.selectedAccount = {
         uniqueName: "name"
         parentGroups: [{uniqueName: "pUnqName"}]
@@ -723,8 +728,10 @@ describe 'groupController', ->
         uniqueName: "name"
         parentGroups: [{uniqueName: "pUnqName"}]
       }
+      spyOn(@scope, "setAdditionalAccountDetails").andReturn(data)
       @spyOn(@toastr, 'info')
       @scope.updateAccount()
+      expect(@scope.setAdditionalAccountDetails).toHaveBeenCalled()
       expect(@toastr.info).toHaveBeenCalledWith("Nothing to update", "Info")
     it 'should call accountService updateAc method and check prev uniqueName value is same like new or selected group is empty ', ->
       data = {
@@ -812,7 +819,7 @@ describe 'groupController', ->
       @scope.hasUpdatePermission(data)
       expect(@scope.canUpdate).toBeTruthy() 
       # expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "UPDT")
-      
+
   describe '#hasAddPermission', ->
     it 'should call permission service hasPermissionOn method and set value true to canAdd variable', ->
       data ={

@@ -312,7 +312,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #show account
   $scope.showAccountDtl = (data) ->
-    console.log "showAccountDtl", data
     pGroups = []
     if _.isEmpty($scope.selectedGroup)
       $scope.hasSharePermission()
