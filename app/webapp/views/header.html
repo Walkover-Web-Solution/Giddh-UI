@@ -3,16 +3,49 @@
     <div class="container-fluid">
 
       <ul class="nav navbar-nav">
-        <li class="active">
-          <a href="javascript:void(0)" ng-click="isCollapsed = !isCollapsed">
+        <li dropdown style="margin-left:-15px;">
+          <a href id="page-dropdown" dropdown-toggle>
             <i class="gic-24 icon-menu-w"></i>
           </a>
+          <ul id="topMenusBar" class="dropdown-menu" aria-labelledby="page-dropdown">
+            <li>
+              <div>
+              <ul class="dshUl clearfix">
+                <li class="dmLi trialB">
+                    <a href="#/home">
+                      <div class="media">
+                        <div class="media-left">
+                          <div class="gic-48 icon-tb"></div>
+                        </div>
+                        <div class="media-body">
+                          <div class="title">Manage Company</div>
+                          <div class="subTitle">All your <b>Groups, accounts</b> at one place.</div>
+                        </div>
+                      </div>
+                    </a>
+                </li>
+
+                <li class="dmLi">
+                    <a href="#/ledger" >
+                      <div class="media">
+                        <div class="media-left">
+                          <div class="gic-48 icon-ew"></div>
+                        </div>
+                        <div class="media-body">
+                          <div class="title">Ledger</div>
+                          <div class="subTitle">View and edit all your <b>done</b> entries.</div>
+                        </div>
+                      </div>
+                    </a>
+                </li>
+              </ul>
+              </div> 
+            </li>
+          </ul>
         </li>
-        <li>
-          <a href="javascript:void(0)">Link</a>
-        </li>
+
         <li ng-if="cmpViewShow">
-          <a id="cmpWrp" class="clearfix" href="javascript:void(0)">
+          <a id="cmpWrp" class="clearfix" href="#/home">
             <i class="gic-24 icon-building-w"></i>
 
             <div class="cText">
@@ -47,34 +80,3 @@
   </nav>
 
 </header>
-<div class="collapse" id="topMenusBar" collapse="isCollapsed">
-  <ul class="dshUl clearfix">
-    <li class="dmLi trialB">
-        <a href="#/home">
-          <div class="media">
-            <div class="media-left">
-              <div class="gic-48 icon-tb"></div>
-            </div>
-            <div class="media-body">
-              <div class="title">Manage Company</div>
-              <div class="subTitle">All your <b>Groups, accounts</b> at one place.</div>
-            </div>
-          </div>
-        </a>
-    </li>
-
-    <li class="dmLi">
-        <a href="#/ledger" >
-          <div class="media">
-            <div class="media-left">
-              <div class="gic-48 icon-ew"></div>
-            </div>
-            <div class="media-body">
-              <div class="title">Ledger</div>
-              <div class="subTitle">View and edit all your <b>done</b> entries.</div>
-            </div>
-          </div>
-        </a>
-    </li>
-  </ul>
-</div> 

@@ -308,7 +308,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     $scope.getCompanyList()
     $scope.getCurrencyList()
     $scope.getUserDetails()
-    $rootScope.isCollapsed = true
 
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController

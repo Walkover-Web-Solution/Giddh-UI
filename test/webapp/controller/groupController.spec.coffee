@@ -812,6 +812,7 @@ describe 'groupController', ->
       @scope.hasUpdatePermission(data)
       expect(@scope.canUpdate).toBeTruthy() 
       # expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "UPDT")
+      
   describe '#hasAddPermission', ->
     it 'should call permission service hasPermissionOn method and set value true to canAdd variable', ->
       data ={
