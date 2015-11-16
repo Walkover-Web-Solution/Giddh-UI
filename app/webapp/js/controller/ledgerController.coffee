@@ -86,6 +86,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
 
   $scope.loadLedger = (data, acData) ->
+    console.log data, "loadLedger", acData
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
       return false
@@ -292,10 +293,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
           event.stopPropagation()
           $scope.quantity += 20
 
-  $rootScope.$on '$loadLedgerHere', (data, acdtl) ->
-    $scope.loadLedger(data, acdtl)
-
-  $rootScope.$on '$viewContentLoaded', ->
+  $scope.$on '$viewContentLoaded',  ->
     $scope.fromDate.date.setDate(1)
     ledgerObj = DAServices.LedgerGet()
     ledgerObj = DAServices.LedgerGet()
@@ -303,7 +301,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $scope.loadLedger(ledgerObj.ledgerData, ledgerObj.selectedAccount)
     else
       console.log "not to load anything"
-
 
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController
 

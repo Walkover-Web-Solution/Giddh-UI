@@ -84,12 +84,15 @@ router.get '/:groupUniqueName/shared-with', (req, res) ->
 
 
 router.delete '/:groupUniqueName', (req, res) ->
+  console.log req.session.authKey
   authHead = headers:
     'Auth-Key': req.session.authKey
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName
   settings.client.delete hUrl, authHead, (data, response) ->
+    console.log data, "before"
     if data.status == 'error'
       res.status(response.statusCode)
+    console.log data, "after"
     res.send data
 
 router.post '/', (req, res) ->

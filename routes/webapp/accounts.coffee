@@ -37,8 +37,10 @@ router.delete '/:accountUniqueName', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName
   settings.client.delete hUrl, authHead, (data, response) ->
+    console.log data, "before"
     if data.status == 'error'
       res.status(response.statusCode)
+    console.log data, "after"
     res.send data
 
 router.post '/', (req, res) ->

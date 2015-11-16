@@ -74,8 +74,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       groupService.getAllWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
           $scope.getGroupListFailure)
 
-  $scope.getGroupListSuccess = (result) ->
-    $scope.groupList = result.body
+  $scope.getGroupListSuccess = (res) ->
+    $scope.groupList = res.body
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntList = groupService.flattenAccount($scope.groupList)
     $scope.showListGroupsNow = true
@@ -85,7 +85,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       )
       $scope.selectItem($scope.selectedGroup)
 
-  $scope.getGroupListFailure = () ->
+  $scope.getGroupListFailure = (res) ->
+    # console.log res, "getGroupListFailure"
     toastr.error("Unable to get group details.", "Error")
 
   $scope.selectGroupToEdit = (group) ->
@@ -112,12 +113,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       }
       groupService.sharedList(unqNamesObj).then($scope.onsharedListSuccess, $scope.onsharedListFailure)
 
-  $scope.onsharedListSuccess = (result) ->
-    $scope.groupSharedUserList = result.body
+  $scope.onsharedListSuccess = (res) ->
+    $scope.groupSharedUserList = res.body
 
-  $scope.onsharedListFailure = (result) ->
-    console.log result, "on shared List Failure"
-    toastr.error(result.body.message, "Error")
+  $scope.onsharedListFailure = (res) ->
+    # console.log res, "on shared List Failure"
+    toastr.error(res.data.message, res.data.status)
 
   #share group with user
   $scope.shareGroup = () ->
@@ -127,16 +128,16 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     }
     groupService.share(unqNamesObj, $scope.shareGroupObj).then($scope.onShareGroupSuccess, $scope.onShareGroupFailure)
 
-  $scope.onShareGroupSuccess = (response) ->
+  $scope.onShareGroupSuccess = (res) ->
     $scope.shareGroupObj = {
       role: "view_only"
       user: ""
     }
-    toastr.success(response.body, response.status)
+    toastr.success(res.body, res.status)
     $scope.getGroupSharedList($scope.selectedGroup)
 
-  $scope.onShareGroupFailure = (response) ->
-    toastr.error(response.data.message, response.data.status)
+  $scope.onShareGroupFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   #unShare group with user
   $scope.unShareGroup = (user) ->
@@ -149,19 +150,20 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     }
     groupService.unshare(unqNamesObj, data).then($scope.unShareGroupSuccess, $scope.unShareGroupFailure)
 
-  $scope.unShareGroupSuccess = (response)->
-    toastr.success(response.body, response.status)
+  $scope.unShareGroupSuccess = (res)->
+    toastr.success(res.body, res.status)
     $scope.getGroupSharedList($scope.selectedGroup)
 
-  $scope.unShareGroupFailure = (response)->
-    toastr.error(response.data.message, response.data.status)
+  $scope.unShareGroupFailure = (res)->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.updateGroup = ->
     $scope.selectedGroup.uniqueName = $scope.selectedGroup.uniqueName.toLowerCase()
     groupService.update($scope.selectedCompany.uniqueName, $scope.selectedGroup).then($scope.onUpdateGroupSuccess,
         $scope.onUpdateGroupFailure)
 
-  $scope.onUpdateGroupSuccess = () ->
+  $scope.onUpdateGroupSuccess = (res) ->
+    # console.log "onUpdateGroupSuccess", res
     $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
     if not _.isEmpty($scope.selectedGroup)
       $scope.selectedItem = $scope.selectedGroup
@@ -169,8 +171,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.getGroups()
     $rootScope.$broadcast('$reloadAccount')
 
-  $scope.onUpdateGroupFailure = () ->
-    toastr.error("Unable to update group at the moment. Please try again later.", "Error")
+  $scope.onUpdateGroupFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.getUniqueNameFromGroupList = (list) ->
     listofUN = _.map(list, (listItem) ->
@@ -202,13 +204,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     groupService.create($rootScope.selectedCompany.uniqueName, body).then($scope.onCreateGroupSuccess,
         $scope.onCreateGroupFailure)
 
-  $scope.onCreateGroupSuccess = () ->
+  $scope.onCreateGroupSuccess = (res) ->
+    # console.log "onCreateGroupSuccess", res
     toastr.success("Sub group added successfully", "Success")
     $scope.selectedSubGroup = {}
     $scope.getGroups()
 
-  $scope.onCreateGroupFailure = () ->
-    toastr.error("Unable to create subgroup.", "Error")
+  $scope.onCreateGroupFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.deleteGroup = ->
     if not $scope.selectedGroup.isFixed
@@ -216,8 +219,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         title: 'Delete group?',
         body: 'Are you sure you want to delete this group? All child groups will also be deleted.',
         ok: 'Yes',
-        cancel: 'No').then -> groupService.delete($rootScope.selectedCompany.uniqueName,
-          $scope.selectedGroup).then($scope.onDeleteGroupSuccess,
+        cancel: 'No').then -> $scope.deleteGroupConfirm($rootScope.selectedCompany.uniqueName,
+          $scope.selectedGroup)
+
+  $scope.deleteGroupConfirm = (a, b) ->
+    groupService.delete(a, b).then($scope.onDeleteGroupSuccess,
           $scope.onDeleteGroupFailure)
 
   $scope.onDeleteGroupSuccess = () ->
@@ -228,8 +234,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.getGroups()
     $rootScope.$broadcast('$reloadAccount')
 
-  $scope.onDeleteGroupFailure = () ->
-    toastr.error("Unable to delete group.", "Error")
+  $scope.onDeleteGroupFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.isChildGroup =(group) ->   
     _.some(group.parentGroups, (group) ->
@@ -249,13 +255,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     }
     groupService.move(unqNamesObj, body).then($scope.onMoveGroupSuccess, $scope.onMoveGroupFailure)
 
-  $scope.onMoveGroupSuccess = () ->
+  $scope.onMoveGroupSuccess = (res) ->
+    # console.log res, "onMoveGroupSuccess"
     toastr.success("Group moved successfully.", "Success")
     $scope.getGroups()
     $scope.moveto = undefined
 
-  $scope.onMoveGroupFailure = () ->
-    toastr.error("Unable to move group.", "Error")
+  $scope.onMoveGroupFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.stopBubble = (e) ->
     e.stopPropagation()
@@ -368,16 +375,17 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     accountService.createAc(unqNamesObj, $scope.selectedAccount).then($scope.addAccountSuccess, $scope.addAccountFailure)
 
   # $scope.selectGroupToEdit = (group)
-  $scope.addAccountSuccess = (result) ->
-    toastr.success("Account updated successfully", result.status)
+  $scope.addAccountSuccess = (res) ->
+    toastr.success("Account updated successfully", res.status)
     $scope.selectedAccount = {}
-    $scope.selectedGroup.accounts.push(result.body)
+    $scope.selectedGroup.accounts.push(res.body)
     $scope.groupAccntList = $scope.selectedGroup.accounts
     $rootScope.$broadcast('$reloadAccount')
 
 
-  $scope.addAccountFailure = (result) ->
-    toastr.error(result.data.message, "Error")
+  $scope.addAccountFailure = (res) ->
+    # console.log "addAccountFailure", res
+    toastr.error(res.data.message, res.data.status)
 
 
   $scope.deleteAccount = ->
@@ -397,14 +405,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
           accountService.deleteAc(unqNamesObj, $scope.selectedAccount).then($scope.onDeleteAccountSuccess,
           $scope.onDeleteAccountFailure)
 
-  $scope.onDeleteAccountSuccess = () ->
+  $scope.onDeleteAccountSuccess = (res) ->
+    # console.log "onDeleteAccountSuccess", res
     toastr.success("Account deleted successfully.", "Success")
     $scope.getGroups()
     $scope.selectedAccount = {}
 
-
-  $scope.onDeleteAccountFailure = () ->
-    toastr.error("Unable to delete group.", "Error")
+  $scope.onDeleteAccountFailure = (res) ->
+    # console.log "onDeleteAccountFailure", res
+    toastr.error(res.data.message, res.data.status)
 
   $scope.updateAccount = () ->
     unqNamesObj = $scope.setAdditionalAccountDetails()
@@ -422,9 +431,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         $scope.updateAccountFailure)
     $rootScope.$broadcast('$reloadAccount')
 
-  $scope.updateAccountSuccess = (result) ->
-    toastr.success("Group updated successfully", result.status)
-    angular.merge($scope.selectedAccount, result.body)
+  $scope.updateAccountSuccess = (res) ->
+    toastr.success("Group updated successfully", res.status)
+    angular.merge($scope.selectedAccount, res.body)
+    angular.merge($scope.selAcntPrevObj, res.body)
     getTrueIndex = 0
     getIndex = _.find($scope.selectedGroup.accounts, (item, index) ->
       if item.uniqueName == $scope.selectedAccount.uniqueName
@@ -432,9 +442,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     )
     if !_.isEmpty($scope.selectedGroup)
       angular.merge($scope.groupAccntList[getTrueIndex], $scope.selectedAccount)
+
+    # console.log  $scope.selectedGroup, "updateAccountSuccess" ,res.body, $scope.groupAccntList
   
-  $scope.updateAccountFailure = (result) ->
-    toastr.error(result.data.message, "Error")
+  $scope.updateAccountFailure = (res) ->
+    # console.log res, "updateAccountFailure"
+    toastr.error(res.data.message, res.data.status)
 
   $scope.hasSharePermission = () ->
     permissionService.hasPermissionOn($scope.selectedCompany, "MNG_USR")

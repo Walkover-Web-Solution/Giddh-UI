@@ -122,4 +122,6 @@
   </div>
 </div>
   
-
+<div class="pd2" ng-hide="selectedGroup.isFixed || !canDelete">
+  <button class="btn btn-danger" ng-click="deleteGroup()">Delete {{selectedGroup.name}} group</button>
+</div>

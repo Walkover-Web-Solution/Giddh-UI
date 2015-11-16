@@ -106,6 +106,16 @@ describe 'groupController', ->
       @scope.onsharedListSuccess(result)
       expect(@scope.groupSharedUserList).toBe(result.body)
 
+  describe '#onsharedListFailure', ->
+    it 'should show error message with toastr', ->
+      res = 
+        data: 
+          status: "Error"
+          message: "some-message"
+      spyOn(@toastr, "error")
+      @scope.onsharedListFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
   describe '#shareGroup', ->
     it 'should call service share method with obj var', ->
       @scope.selectedGroup = {"uniqueName": "1"}
@@ -139,10 +149,10 @@ describe 'groupController', ->
 
   describe '#onShareGroupFailure', ->
     it 'should show error message with toastr', ->
-      response = {"data": {"status": "Error", "message": "some-message"}}
-      @spyOn(@toastr, "error")
-      @scope.onShareGroupFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
+      res = {"data": {"status": "Error", "message": "some-message"}}
+      spyOn(@toastr, "error")
+      @scope.onShareGroupFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#unShareGroup', ->
     it 'should call service share method with obj var', ->
@@ -173,10 +183,10 @@ describe 'groupController', ->
 
   describe '#unShareGroupFailure', ->
     it 'should show error message with toastr', ->
-      response = {"data": {"status": "Error", "message": "some-message"}}
-      @spyOn(@toastr, "error")
-      @scope.unShareGroupFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
+      res = {"data": {"status": "Error", "message": "some-message"}}
+      spyOn(@toastr, "error")
+      @scope.unShareGroupFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#updateGroup', ->
     it 'should change the unique name to lower case & call group service and update group', ->
@@ -204,16 +214,15 @@ describe 'groupController', ->
 
   describe '#onUpdateGroupFailure', ->
     it 'should show error message with toastr', ->
-      response = {
+      res = {
         "data": {
           "status": "Error",
           "message": "Unable to update group at the moment. Please try again later."
         }
       }
-      @spyOn(@toastr, "error")
-      @scope.onUpdateGroupFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('Unable to update group at the moment. Please try again later.',
-          'Error')
+      spyOn(@toastr, "error")
+      @scope.onUpdateGroupFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#getUniqueNameFromGroupList', ->
     it 'should take list of group as input and return unique name of all groups in flatten way', ->
@@ -245,10 +254,16 @@ describe 'groupController', ->
       expect(@groupService.create).toHaveBeenCalledWith("CmpUniqueName", body)
 
   describe '#onCreateGroupFailure', ->
+    res = {
+      "data": {
+        "status": "Error",
+        "message": "Unable to create subgroup."
+      }
+    }
     it 'should call toastr to show error', ->
       spyOn(@toastr, "error")
-      @scope.onCreateGroupFailure()
-      expect(@toastr.error).toHaveBeenCalledWith("Unable to create subgroup.", "Error")
+      @scope.onCreateGroupFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#onCreateGroupSuccess', ->
     it 'should call toastr with success, empty selected sub group and call getGroups', ->
@@ -260,27 +275,56 @@ describe 'groupController', ->
       expect(@scope.getGroups)
 
   describe '#deleteGroup', ->
-    it 'should call group service and delete and call group list', ->
+    it 'should check if selectedGroup is not fixed then open openConfirmModal', ->
+      @scope.selectedGroup = {isFixed: false}
+      @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName"}
       deferred = @q.defer()
-      @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName", "isFixed": "false"}
-      spyOn(@groupService, 'delete').andReturn(deferred.promise)
+      spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
       @scope.deleteGroup()
-      expect(@rootScope.selectedCompany.isFixed).toBeTruthy()
-      expect(@groupService.delete)
+      expect(@scope.selectedGroup.isFixed).toBeFalsy()
+      expect(@modalService.openConfirmModal).toHaveBeenCalled()
 
-    xit 'should not call service if isFixed variable is true', ->
+    it 'should not openConfirmModal if selectedGroup is true', ->
+      @scope.selectedGroup = {isFixed: true}
       deferred = @q.defer()
-      @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName", "isFixed": "true"}
-      spyOn(@groupService, 'delete').andReturn(deferred.promise)
+      spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
       @scope.deleteGroup()
-      expect(@rootScope.selectedCompany.isFixed).toBeTruthy()
-      expect(@groupService.delete).not.toHaveBeenCalled()
+      expect(@scope.selectedGroup.isFixed).toBeTruthy()
+      expect(@modalService.openConfirmModal).not.toHaveBeenCalled()
+    it 'should call deleteGroup on success', ->
+      @scope.selectedGroup = {isFixed: false}
+      @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName"}
+      deferred = @q.defer()
+      
+      spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
+      spyOn(@scope, "deleteGroupConfirm")
+      @scope.deleteGroup()
+      # deferred.resolve({})
+      expect(@scope.selectedGroup.isFixed).toBeFalsy()
+      expect(@modalService.openConfirmModal).toHaveBeenCalled()
+      # expect(@scope.deleteGroupConfirm).toHaveBeenCalledWith("CmpUniqueName", @scope.selectedGroup)
+
+  describe '#deleteGroupConfirm', ->
+    it 'should call groupService delete method with two parameters', ->
+      a = {isFixed: false}
+      b = {"uniqueName": "CmpUniqueName"}
+      deferred = @q.defer()
+      spyOn(@groupService, 'delete').andReturn(deferred.promise)
+      @scope.deleteGroupConfirm(a, b)
+      expect(@groupService.delete).toHaveBeenCalledWith(a, b)
+      
 
   describe '#onDeleteGroupFailure', ->
     it 'should show a toastr for error', ->
+      res = {
+        "data": {
+          "status": "Error",
+          "message": "Only empty groups can be deleted."
+        }
+      }
       spyOn(@toastr, "error")
-      @scope.onDeleteGroupFailure()
-      expect(@toastr.error).toHaveBeenCalledWith("Unable to delete group.", "Error")
+      @scope.onDeleteGroupFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#onDeleteGroupSuccess', ->
     it 'should show a toastr, empty the selected group, show group detail to be false & get group list from server', ->
@@ -307,24 +351,25 @@ describe 'groupController', ->
       @scope.moveGroup(group)
       expect(@groupService.move).toHaveBeenCalledWith(unqNamesObj, body)
 
-  describe '#onUpdateGroupSuccess', ->
+  describe '#onMoveGroupSuccess', ->
     it 'should show success message with toastr, call getgroups fucntion, set a blank object, set a variable false, and make a scope var undefined', ->
-      response = {"status": "Success", "body": "Group moved successfully."}
+      res = {data: {"status": "Success", "body": "Group moved successfully."}}
       spyOn(@toastr, 'success')
       spyOn(@scope, "getGroups")
-      @scope.onMoveGroupSuccess(response)
+      @scope.onMoveGroupSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith('Group moved successfully.', 'Success')
       expect(@scope.getGroups).toHaveBeenCalled()
       expect(@scope.selectedGroup).toEqual({})
       expect(@scope.showGroupDetails).toBeFalsy()
-      expect(@scope.moveto).toBe(undefined)
+      expect(@scope.moveto).toBeUndefined()
+
 
   describe '#onMoveGroupFailure', ->
     it 'should show error message with toastr', ->
-      response = {"data": {"status": "Error", "message": "Unable to move group."}}
-      @spyOn(@toastr, "error")
-      @scope.onMoveGroupFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('Unable to move group.', 'Error')
+      res = {"data": {"status": "Error", "message": "Unable to move group."}}
+      spyOn(@toastr, "error")
+      @scope.onMoveGroupFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#stopBubble', ->
     it 'should prevent event from bubbling', ->
@@ -337,7 +382,7 @@ describe 'groupController', ->
   describe '#selectItem', ->
     it 'should make group menus highlight set active class', ->
       item = "item"
-      @spyOn(@scope, "selectGroupToEdit")
+      spyOn(@scope, "selectGroupToEdit")
       @scope.selectItem(item)
       expect(@scope.selectedItem).toBe(item)
       expect(@scope.selectGroupToEdit).toHaveBeenCalled()
@@ -544,15 +589,7 @@ describe 'groupController', ->
       @scope.setOpeningBalanceDate()
       expect(@scope.datePicker.accountOpeningBalanceDate instanceof Date).toBe(true)
 
-  describe '#onMoveGroupSuccess', ->
-    it 'should show success toastr, call getGroups, set selected group to be empty, set showGroupDetails variable to be false and moveTo variable to undefined', ->
-      spyOn(@toastr, "success")
-      @scope.onMoveGroupSuccess()
-      expect(@toastr.success).toHaveBeenCalledWith("Group moved successfully.", "Success")
-      expect(@scope.getGroups)
-      expect(@scope.selectedGroup).toEqual({})
-      expect(@scope.showGroupDetails).toBeFalsy()
-      expect(@scope.moveto).toBeUndefined()
+  
 
   describe '#addNewAccountShow', ->
     it 'should call setOpeningBalanceDate, set false to showGroupDetails, set true to showAccountDetails, set acntCase to add, and undefined to some scope variables and call showBreadCrumbs function with data', ->
@@ -661,17 +698,19 @@ describe 'groupController', ->
     it 'should show error message through toastr', ->
       spyOn(@toastr, "error")
       res = {
-        status: "Error"
-        data: {message: "Add account failure"}
+        data: {
+          message: "Add account failure"
+          status: "Error"
+        }
       }
       @scope.addAccountFailure(res)
-      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.status)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#deleteAccount', ->
     it 'should check whether user have permission to delete and if no then do not call servie', ->
       @scope.canDelete = false
       deferred = @q.defer()
-      @spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
+      spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
       @scope.deleteAccount()
       expect(@modalService.openConfirmModal).not.toHaveBeenCalled()
     it 'should call modalService and check prev uniqueName value is same like new ', ->
@@ -688,7 +727,7 @@ describe 'groupController', ->
       }
       @scope.selAcntPrevObj = {uniqueName: "naame"}
       deferred = @q.defer()
-      @spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
+      spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
       spyOn(@scope, "setAdditionalAccountDetails").andReturn(data)
       @scope.deleteAccount()
       expect(@modalService.openConfirmModal).toHaveBeenCalledWith({
@@ -709,9 +748,13 @@ describe 'groupController', ->
 
   describe '#onDeleteAccountFailure', ->
     it 'should show error message through toastr', ->
+      res =
+        data: 
+          status: "Error"
+          message: "Only empty accounts can be deleted."
       spyOn(@toastr, "error")
-      @scope.onDeleteAccountFailure()
-      expect(@toastr.error).toHaveBeenCalledWith("Unable to delete group.", "Error")
+      @scope.onDeleteAccountFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#updateAccount', ->
     it 'should check if prev object and new object is not changed then call toastr info message', ->
@@ -729,7 +772,7 @@ describe 'groupController', ->
         parentGroups: [{uniqueName: "pUnqName"}]
       }
       spyOn(@scope, "setAdditionalAccountDetails").andReturn(data)
-      @spyOn(@toastr, 'info')
+      spyOn(@toastr, 'info')
       @scope.updateAccount()
       expect(@scope.setAdditionalAccountDetails).toHaveBeenCalled()
       expect(@toastr.info).toHaveBeenCalledWith("Nothing to update", "Info")
@@ -747,7 +790,7 @@ describe 'groupController', ->
       @scope.selAcntPrevObj = {uniqueName: "naame"}
       spyOn(@scope, "setAdditionalAccountDetails").andReturn(data)
       deferred = @q.defer()
-      @spyOn(@accountService, 'updateAc').andReturn(deferred.promise)
+      spyOn(@accountService, 'updateAc').andReturn(deferred.promise)
       spyOn(@rootScope, "$broadcast")
       @scope.updateAccount()
       expect(@accountService.updateAc).toHaveBeenCalledWith(data, @scope.selectedAccount)
@@ -767,6 +810,7 @@ describe 'groupController', ->
         parentGroups: [{uniqueName: "pUnqName"}]
       }
       @scope.selectedAccount = {}
+      @scope.selAcntPrevObj = {}
       @scope.selectedGroup ={
         accounts: [
           {uniqueName: "ss"}
@@ -783,19 +827,18 @@ describe 'groupController', ->
       @scope.updateAccountSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith("Group updated successfully", res.status)
       expect(@scope.selectedAccount).toEqual(dobj)
+      expect(@scope.selAcntPrevObj).toEqual(dobj)
       expect(@scope.groupAccntList[1].uniqueName).toEqual(@scope.selectedAccount.uniqueName)
 
   describe '#updateAccountFailure', ->
     it 'should show error message through toastr', ->
-      res = {
-        status: "Error"
-        data: {
+      res =
+        data:
           message: "Unable to update account"
-        }
-      }
+          status: "Error"
       spyOn(@toastr, "error")
       @scope.updateAccountFailure(res)
-      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.status)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
  
   describe '#hasSharePermission', ->
     it 'should call permission service method with selected company and manage user permission', ->

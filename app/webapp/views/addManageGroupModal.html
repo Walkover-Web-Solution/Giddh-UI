@@ -88,18 +88,7 @@
 
           <div ng-if="showGroupDetails" ng-include="'/public/webapp/views/groupOperations.html'"></div>
 
-          <div ng-if="showGroupDetails">
-            <div class="pd2" ng-hide="selectedGroup.isFixed || !canDelete">
-              <button class="btn btn-danger" ng-click="deleteGroup()">Delete</button>
-            </div>
-          </div>
-
           <div ng-include="'/public/webapp/views/accountOperations.html'" ng-if="showAccountDetails"></div>
-          <div ng-if="showAccountDetails">
-            <div class="pd2">
-              <button class="btn btn-danger" ng-hide="!canDelete" ng-click="deleteAccount()">Delete</button>
-            </div>
-          </div>
 
         </div>
       </div>
