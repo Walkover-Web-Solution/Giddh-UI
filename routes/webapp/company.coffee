@@ -68,7 +68,6 @@ router.get '/:uniqueName/shareable-roles', (req, res) ->
     if data.status == 'error'
       res.status(response.statusCode).send(data)
     else
-      console.log "roles completed", Date()
       res.send data
 
 #get company Shared user list

@@ -4,7 +4,6 @@ router = settings.express.Router()
 hubURL = 'https://api.hubapi.com/contacts/v1/contact/?hapikey=41e07798-d4bf-499b-81df-4dfa52317054'
 
 router.post '/submitDetails', (req, res) ->
-  console.log req.body, 'in submitBetaInviteDetails'
   formData =
     'properties': [
       {
@@ -37,7 +36,6 @@ router.post '/submitDetails', (req, res) ->
   settings.client.post hubURL, args, (data) ->
     if Buffer.isBuffer(data)
       data = data.toString('utf-8')
-    console.log data, 'data in client post'
     res.send data
 
 module.exports = router

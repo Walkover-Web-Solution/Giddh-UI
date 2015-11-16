@@ -274,22 +274,49 @@ describe 'groupController', ->
       expect(@scope.getGroups)
 
   describe '#deleteGroup', ->
-    it 'should check if selectedGroup is not fixed then open openConfirmModal', ->
+    beforeEach ->
+      @deferred = @q.defer()
+      @promise = @deferred.promise
+
+    it 'should open confirmation modal if selectedGroup is not fixed', ->
       @scope.selectedGroup = {isFixed: false}
       @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName"}
-      deferred = @q.defer()
-      spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
+      spyOn(@modalService, 'openConfirmModal').andReturn(@promise)
       @scope.deleteGroup()
       expect(@scope.selectedGroup.isFixed).toBeFalsy()
-      expect(@modalService.openConfirmModal).toHaveBeenCalled()
+      expect(@modalService.openConfirmModal).toHaveBeenCalledWith({
+        title: 'Delete group?',
+        body: 'Are you sure you want to delete this group? All child groups will also be deleted.',
+        ok: 'Yes',
+        cancel: 'No'
+      })
 
-    it 'should not openConfirmModal if selectedGroup is true', ->
+    it 'should not openConfirmModal if selectedGroup is fixed group', ->
       @scope.selectedGroup = {isFixed: true}
-      deferred = @q.defer()
-      spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
+      spyOn(@modalService, 'openConfirmModal').andReturn(@promise)
       @scope.deleteGroup()
       expect(@scope.selectedGroup.isFixed).toBeTruthy()
       expect(@modalService.openConfirmModal).not.toHaveBeenCalled()
+
+    it 'should call delete group on confirmation ok', ->
+      @scope.selectedGroup = {isFixed: false}
+      @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName"}
+      spyOn(@modalService, 'openConfirmModal').andReturn(@promise)
+      spyOn(@scope, 'deleteGroupConfirm')
+      @scope.deleteGroup()
+      @deferred.resolve({})
+      expect(@modalService.openConfirmModal).toHaveBeenCalled()
+      expect(@scope.deleteGroupConfirm).toHaveBeenCalledWith("CmpUniqueName", @scope.selectedGroup)
+
+    it 'should not call delete group on confirmation close', ->
+      @scope.selectedGroup = {isFixed: false}
+      @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName"}
+      spyOn(@modalService, 'openConfirmModal').andReturn(@promise)
+      spyOn(@scope, 'deleteGroupConfirm')
+      @scope.deleteGroup()
+      @deferred.reject({})
+      expect(@modalService.openConfirmModal).toHaveBeenCalled()
+      expect(@scope.deleteGroupConfirm).not.toHaveBeenCalledWith()
 
   describe '#deleteGroupConfirm', ->
     it 'should call groupService delete method with two parameters', ->
@@ -349,7 +376,6 @@ describe 'groupController', ->
       expect(@scope.showGroupDetails).toBeFalsy()
       expect(@scope.moveto).toBeUndefined()
 
-
   describe '#onMoveGroupFailure', ->
     it 'should show error message with toastr', ->
       res = {"data": {"status": "Error", "message": "Unable to move group."}}
@@ -363,7 +389,6 @@ describe 'groupController', ->
       e = jasmine.createSpyObj('e', ['stopPropagation'])
       @scope.stopBubble(e)
       expect(e.stopPropagation).toHaveBeenCalled()
-
 
   describe '#selectItem', ->
     it 'should make group menus highlight set active class', ->
@@ -695,6 +720,7 @@ describe 'groupController', ->
       spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
       @scope.deleteAccount()
       expect(@modalService.openConfirmModal).not.toHaveBeenCalled()
+
     it 'should call modalService and check prev uniqueName value is same like new ', ->
       data = {
         compUname: "Cname"
@@ -874,7 +900,3 @@ describe 'groupController', ->
       }
       @scope.hasDeletePermission(data)
       expect(@scope.canDelete).toBeTruthy()
-      
-    
-
-  

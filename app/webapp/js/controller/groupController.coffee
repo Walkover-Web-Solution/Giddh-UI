@@ -52,7 +52,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   }
   $scope.format = "dd-MM-yyyy"
 
-
   # expand and collapse all tree structure
   getRootNodesScope = ->
     angular.element(document.getElementById('tree-root')).scope()
@@ -86,7 +85,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.selectItem($scope.selectedGroup)
 
   $scope.getGroupListFailure = (res) ->
-    # console.log res, "getGroupListFailure"
     toastr.error("Unable to get group details.", "Error")
 
   $scope.selectGroupToEdit = (group) ->
@@ -117,7 +115,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.groupSharedUserList = res.body
 
   $scope.onsharedListFailure = (res) ->
-    # console.log res, "on shared List Failure"
     toastr.error(res.data.message, res.data.status)
 
   #share group with user
@@ -163,7 +160,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         $scope.onUpdateGroupFailure)
 
   $scope.onUpdateGroupSuccess = (res) ->
-    # console.log "onUpdateGroupSuccess", res
     $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
     if not _.isEmpty($scope.selectedGroup)
       $scope.selectedItem = $scope.selectedGroup
@@ -205,7 +201,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         $scope.onCreateGroupFailure)
 
   $scope.onCreateGroupSuccess = (res) ->
-    # console.log "onCreateGroupSuccess", res
     toastr.success("Sub group added successfully", "Success")
     $scope.selectedSubGroup = {}
     $scope.getGroups()
@@ -219,8 +214,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         title: 'Delete group?',
         body: 'Are you sure you want to delete this group? All child groups will also be deleted.',
         ok: 'Yes',
-        cancel: 'No').then -> $scope.deleteGroupConfirm($rootScope.selectedCompany.uniqueName,
-          $scope.selectedGroup)
+        cancel: 'No').then($scope.deleteGroupConfirm($rootScope.selectedCompany.uniqueName,
+          $scope.selectedGroup))
 
   $scope.deleteGroupConfirm = (a, b) ->
     groupService.delete(a, b).then($scope.onDeleteGroupSuccess,
@@ -256,7 +251,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     groupService.move(unqNamesObj, body).then($scope.onMoveGroupSuccess, $scope.onMoveGroupFailure)
 
   $scope.onMoveGroupSuccess = (res) ->
-    # console.log res, "onMoveGroupSuccess"
     toastr.success("Group moved successfully.", "Success")
     $scope.getGroups()
     $scope.moveto = undefined
@@ -374,7 +368,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     unqNamesObj = $scope.setAdditionalAccountDetails()
     accountService.createAc(unqNamesObj, $scope.selectedAccount).then($scope.addAccountSuccess, $scope.addAccountFailure)
 
-  # $scope.selectGroupToEdit = (group)
   $scope.addAccountSuccess = (res) ->
     toastr.success("Account updated successfully", res.status)
     $scope.selectedAccount = {}
@@ -382,11 +375,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.groupAccntList = $scope.selectedGroup.accounts
     $rootScope.$broadcast('$reloadAccount')
 
-
   $scope.addAccountFailure = (res) ->
-    # console.log "addAccountFailure", res
     toastr.error(res.data.message, res.data.status)
-
 
   $scope.deleteAccount = ->
     if $scope.canDelete
@@ -401,19 +391,17 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         title: 'Delete Account?',
         body: 'Are you sure you want to delete this Account?',
         ok: 'Yes',
-        cancel: 'No').then -> $scope.deleteAccountConfirm(unqNamesObj, $scope.selectedAccount)
+        cancel: 'No').then($scope.deleteAccountConfirm(unqNamesObj, $scope.selectedAccount))
 
   $scope.deleteAccountConfirm = (unqNamesObj, account) ->
     accountService.deleteAc(unqNamesObj, account).then($scope.onDeleteAccountSuccess, $scope.onDeleteAccountFailure)
 
   $scope.onDeleteAccountSuccess = (res) ->
-    # console.log "onDeleteAccountSuccess", res
     toastr.success("Account deleted successfully.", "Success")
     $scope.getGroups()
     $scope.selectedAccount = {}
 
   $scope.onDeleteAccountFailure = (res) ->
-    # console.log "onDeleteAccountFailure", res
     toastr.error(res.data.message, res.data.status)
 
   $scope.updateAccount = () ->
@@ -444,10 +432,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if !_.isEmpty($scope.selectedGroup)
       angular.merge($scope.groupAccntList[getTrueIndex], $scope.selectedAccount)
 
-    # console.log  $scope.selectedGroup, "updateAccountSuccess" ,res.body, $scope.groupAccntList
-  
   $scope.updateAccountFailure = (res) ->
-    # console.log res, "updateAccountFailure"
     toastr.error(res.data.message, res.data.status)
 
   $scope.hasSharePermission = () ->
@@ -461,7 +446,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.hasDeletePermission = (group) ->
     $scope.canDelete = permissionService.hasPermissionOn(group, "DLT")
-
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController

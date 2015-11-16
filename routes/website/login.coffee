@@ -30,7 +30,6 @@ router.post '/google', (req, res, next) ->
         userDetailObj.userUniqueName = data.body.uniqueName
         req.session.name = data.body.uniqueName
         req.session.authKey = data.body.authKey
-        console.log userDetailObj
       res.send
         token: token
         userDetails: userDetailObj

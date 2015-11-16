@@ -2,7 +2,6 @@ settings = require('../util/settings')
 router = settings.express.Router()
 
 router.get '/:uniqueName', (req, res) ->
-  console.log "inside user route"
   onlyAuthHead =
     headers:
       'Auth-Key': req.session.authKey
@@ -21,7 +20,6 @@ router.get '/auth-key/:uniqueName', (req, res) ->
   res.send(data)
 
 router.put '/:uniqueName/generate-auth-key', (req, res) ->
-  console.log "inside generate auth key"
   onlyAuthHead =
     headers:
       'Auth-Key': req.session.authKey

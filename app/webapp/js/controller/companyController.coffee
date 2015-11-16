@@ -122,8 +122,10 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       title: 'Are you sure you want to delete? ' + name,
       ok: 'Yes',
       cancel: 'No'
-    ).then ->
-      companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
+    ).then($scope.deleteCompanyConfirm(uniqueName))
+
+  $scope.deleteCompanyConfirm = (uniqueName) ->
+    companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
 
   #delete company success
   $scope.delCompanySuccess = (response) ->
