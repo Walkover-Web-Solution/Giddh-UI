@@ -4,6 +4,8 @@ module.exports = function (grunt) {
   'use strict';
   var testDir, srcDir, destDir, routeSrcDir, routeDestDir;
 
+  grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-copy');
@@ -64,7 +66,7 @@ module.exports = function (grunt) {
         files: [
           srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '/**/*.css', routeSrcDir + "/**/*.coffee"
         ],
-        tasks: ['coffee', 'copy']
+        tasks: ['coffee', 'copy', 'concat']
       }
     },
     karma: {
@@ -78,6 +80,13 @@ module.exports = function (grunt) {
         autoWatch: true,
         reporters: 'dots'
       }
+    },
+    concat: {
+      js:{
+        files:{
+          'public/webapp/app.js': ['public/webapp/**/*.js']
+        }
+      }
     }
   });
 
@@ -87,7 +96,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch'])
 
-  grunt.registerTask('init', ['copy', 'coffee'])
+  grunt.registerTask('init', ['copy', 'coffee', 'concat'])
 
   grunt.registerTask('test', [
     'coffee',

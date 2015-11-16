@@ -90,4 +90,5 @@ app.value('$confirmModalDefaults',
 #bootstrap related - http://angular-ui.github.io/bootstrap/#/tooltip
 #LocalStorageModule - https://github.com/grevory/angular-local-storage
 #perfect_scrollbar - perfect_scrollbar
-# toastr = https://github.com/Foxandxss/angular-toastr
+#toastr = https://github.com/Foxandxss/angular-toastr
+#angular filter - https://github.com/a8m/angular-filter#filterby
