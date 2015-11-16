@@ -695,7 +695,7 @@ describe 'groupController', ->
       }
       @scope.selectedGroup = {accounts: []}
       @scope.addAccountSuccess(res)
-      expect(@toastr.success).toHaveBeenCalledWith("Account updated successfully", res.status)
+      expect(@toastr.success).toHaveBeenCalledWith("Account created successfully", res.status)
       expect(@scope.selectedAccount).toEqual({})
       expect(@scope.selectedGroup.accounts).toContain(res.body)
       expect(@scope.groupAccntList).toEqual([res.body])

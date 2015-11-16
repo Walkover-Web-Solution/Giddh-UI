@@ -369,7 +369,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     accountService.createAc(unqNamesObj, $scope.selectedAccount).then($scope.addAccountSuccess, $scope.addAccountFailure)
 
   $scope.addAccountSuccess = (res) ->
-    toastr.success("Account updated successfully", res.status)
+    toastr.success("Account created successfully", res.status)
     $scope.selectedAccount = {}
     $scope.selectedGroup.accounts.push(res.body)
     $scope.groupAccntList = $scope.selectedGroup.accounts
