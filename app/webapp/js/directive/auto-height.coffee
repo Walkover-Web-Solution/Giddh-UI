@@ -22,49 +22,48 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
 angular.module('unique-name', []).
 directive 'validUnique', (toastr)->
   {
-    require: 'ngModel'
-    link: (scope, element, attrs, modelCtrl) ->
-      element.bind 'keypress', (event) ->
-        if event.which == 32
-          toastr.warning("Space not allowed", "Warning")
-          event.preventDefault()
-        return
-      modelCtrl.$parsers.push (inputValue) ->
-        transformedInput = inputValue.toLowerCase().replace(RegExp(' ', 'g'), '')
-        if transformedInput != inputValue
-          modelCtrl.$setViewValue transformedInput
-          modelCtrl.$render()
-        transformedInput
+  require: 'ngModel'
+  link: (scope, element, attrs, modelCtrl) ->
+    element.bind 'keypress', (event) ->
+      if event.which == 32
+        toastr.warning("Space not allowed", "Warning")
+        event.preventDefault()
       return
+    modelCtrl.$parsers.push (inputValue) ->
+      transformedInput = inputValue.toLowerCase().replace(RegExp(' ', 'g'), '')
+      if transformedInput != inputValue
+        modelCtrl.$setViewValue transformedInput
+        modelCtrl.$render()
+      transformedInput
+    return
   }
 
 angular.module('valid-number', []).
 directive 'validNumber', ->
   {
-    require: '?ngModel'
-    link: (scope, element, attrs, ngModelCtrl) ->
-      if !ngModelCtrl
-        return
-      ngModelCtrl.$parsers.push (val) ->
-        `var val`
-        if angular.isUndefined(val)
-          val = ''
-        if _.isNull(val)
-          val = ''
-        clean = val.replace(/[^0-9\.]/g, '')
-        decimalCheck = clean.split('.')
-        if !angular.isUndefined(decimalCheck[1])
-          decimalCheck[1] = decimalCheck[1].slice(0, 2)
-          clean = decimalCheck[0] + '.' + decimalCheck[1]
-        if val != clean
-          ngModelCtrl.$setViewValue clean
-          ngModelCtrl.$render()
-        clean
-      element.bind 'keypress', (event) ->
-        if event.keyCode == 32
-          event.preventDefault()
-        return
+  require: '?ngModel'
+  link: (scope, element, attrs, ngModelCtrl) ->
+    if !ngModelCtrl
       return
+    ngModelCtrl.$parsers.push (val) ->
+      if angular.isUndefined(val)
+        val = ''
+      if _.isNull(val)
+        val = ''
+      clean = val.replace(/[^0-9\.]/g, '')
+      decimalCheck = clean.split('.')
+      if !angular.isUndefined(decimalCheck[1])
+        decimalCheck[1] = decimalCheck[1].slice(0, 2)
+        clean = decimalCheck[0] + '.' + decimalCheck[1]
+      if val != clean
+        ngModelCtrl.$setViewValue clean
+        ngModelCtrl.$render()
+      clean
+    element.bind 'keypress', (event) ->
+      if event.keyCode == 32
+        event.preventDefault()
+      return
+    return
 
   }
 
@@ -72,67 +71,66 @@ directive 'validNumber', ->
 angular.module('valid-date', []).
 directive 'validDate', (toastr, $filter) ->
   {
-    require: '?ngModel'
-    link: (scope, element, attrs, ngModelCtrl) ->
-      if !ngModelCtrl
-        return
-      ngModelCtrl.$parsers.push (val) ->
-        `var val`
-        if angular.isUndefined(val)
-          val = ''
-        if _.isNull(val)
-          val = ''
-        clean = val.replace(/[^0-9\-]/g, '')
-        hyphenCheck = clean.split('-')
-        if !angular.isUndefined(hyphenCheck[2])
-          clean = hyphenCheck[0] + '-' + hyphenCheck[1] + '-' + hyphenCheck[2]
-        if val != clean
-          ngModelCtrl.$setViewValue clean
-          ngModelCtrl.$render()
-        clean
-      element.bind 'keypress', (event) ->
-        element.removeClass('error')
-        if event.keyCode == 32
-          event.preventDefault()
-        return
-      element.bind 'focus', () ->
-        if element.context.value is "" || element.context.value is undefined || element.context.value is null
-          scope.item.entryDate = $filter('date')(new Date(),"dd-MM-yyyy")
-
-      element.bind 'blur', () ->
-        if moment(element.context.value, "DD-MM-YYYY", true).isValid()
-          element.removeClass('error')
-        else
-          toastr.error("Date is not valid.", "Error")
-          element.addClass('error')
+  require: '?ngModel'
+  link: (scope, element, attrs, ngModelCtrl) ->
+    if !ngModelCtrl
       return
+    ngModelCtrl.$parsers.push (val) ->
+      if angular.isUndefined(val)
+        val = ''
+      if _.isNull(val)
+        val = ''
+      clean = val.replace(/[^0-9\-]/g, '')
+      hyphenCheck = clean.split('-')
+      if !angular.isUndefined(hyphenCheck[2])
+        clean = hyphenCheck[0] + '-' + hyphenCheck[1] + '-' + hyphenCheck[2]
+      if val != clean
+        ngModelCtrl.$setViewValue clean
+        ngModelCtrl.$render()
+      clean
+    element.bind 'keypress', (event) ->
+      element.removeClass('error')
+      if event.keyCode == 32
+        event.preventDefault()
+      return
+    element.bind 'focus', () ->
+      if element.context.value is "" || element.context.value is undefined || element.context.value is null
+        scope.item.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
+
+    element.bind 'blur', () ->
+      if moment(element.context.value, "DD-MM-YYYY", true).isValid()
+        element.removeClass('error')
+      else
+        toastr.error("Date is not valid.", "Error")
+        element.addClass('error')
+    return
 
   }
 
 angular.module('ledger', [])
 .directive 'ledgerPop', ($compile, $filter) ->
   {
-    restrict: 'A'
-    replace: true
-    transclude: true
-    scope:
-      index: '=index'
-      item: '=itemdata'
-      aclist: '=acntlist'
-      ftype: '=ftype'
-      updateLedger: '&'
-      addLedger: '&'
-      removeLedgdialog: '&'
-      discardLedger: '&'
-    controller: 'ledgerController'
-    template: "<form class='pr drEntryForm_{{index}} name='drEntryForm_{{index}}' novalidate tabindex='-1'>
+  restrict: 'A'
+  replace: true
+  transclude: true
+  scope:
+    index: '=index'
+    item: '=itemdata'
+    aclist: '=acntlist'
+    ftype: '=ftype'
+    updateLedger: '&'
+    addLedger: '&'
+    removeLedgdialog: '&'
+    discardLedger: '&'
+  controller: 'ledgerController'
+  template: "<form class='pr drEntryForm_{{index}} name='drEntryForm_{{index}}' novalidate tabindex='-1'>
       <div ng-click='openDialog(item, index, ftype)'>
           <table class='table ldgrInnerTbl'>
             <tr>
               <td width='28%'>
                 <input type='text' class='nobdr'
                   tabindex='-1' required
-                  name='entryDate_{{index}}' 
+                  name='entryDate_{{index}}'
                   ng-model='item.entryDate' valid-date/>
               </td>
               <td width=44%'>
@@ -158,30 +156,30 @@ angular.module('ledger', [])
             </tr>
           </table>
         </div></form>"
-    link: (scope, elem, attrs) ->
-      scope.lItem = {}
+  link: (scope, elem, attrs) ->
+    scope.lItem = {}
 
-      scope.addCrossFormField = (i, d, c) ->
-        scope.item.transactions[0].particular.uniqueName = i.uName
+    scope.addCrossFormField = (i, d, c) ->
+      scope.item.transactions[0].particular.uniqueName = i.uName
 
-      scope.resetEntry = (item, lItem) ->
-        if _.isUndefined(lItem.uniqueName)
-          item.entryDate = undefined
-          item.transactions[0].particular.uniqueName = undefined
-          item.transactions[0].particular.name = undefined
-          item.transactions[0].amount = undefined
-        else
-          angular.copy(lItem, item)
+    scope.resetEntry = (item, lItem) ->
+      if _.isUndefined(lItem.uniqueName)
+        item.entryDate = undefined
+        item.transactions[0].particular.uniqueName = undefined
+        item.transactions[0].particular.name = undefined
+        item.transactions[0].amount = undefined
+      else
+        angular.copy(lItem, item)
 
-      scope.checkDateField = (item) ->
-        if (item.entryDate is "" || item.entryDate is undefined || item.entryDate is null)
-          item.entryDate = $filter('date')(new Date(),"dd-MM-yyyy")
+    scope.checkDateField = (item) ->
+      if (item.entryDate is "" || item.entryDate is undefined || item.entryDate is null)
+        item.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
 
-      scope.openDialog = (item, index, ftype) ->
-        scope.checkDateField(item)
-        rect = elem.context.getBoundingClientRect()
-        childCount = elem.context.childElementCount
-        popHtml = angular.element('
+    scope.openDialog = (item, index, ftype) ->
+      scope.checkDateField(item)
+      rect = elem.context.getBoundingClientRect()
+      childCount = elem.context.childElementCount
+      popHtml = angular.element('
           <div class="popover fade bottom ledgerPopDiv" id="popid_{{index}}">
           <div class="arrow"></div>
           <h3 class="popover-title" ng-if="ftype == \'Update\'">Update entry</h3>
@@ -195,7 +193,7 @@ angular.module('ledger', [])
                 <div class="col-md-6 col-sm-12">
                   <div class="form-group">
                     <select class="form-control" name="voucherType" ng-model="item.voucher.shortCode">
-                      <option 
+                      <option
                         ng-repeat="option in voucherTypeList"
                         ng-selected="{{option.shortCode == item.voucher.shortCode}}"
                         value="{{option.shortCode}}">
@@ -233,22 +231,22 @@ angular.module('ledger', [])
             </div>
           </div>
         </div>')
-        
-        if childCount == 1
-          angular.copy(item, scope.lItem)
-          scope.removeLedgerDialog("all")
-          $compile(popHtml)(scope)
-          elem.append(popHtml)
-          popHtml.css({
-            display: "block",
-            top: rect.height,
-            left: "0px",
-            visibility: "visible",
-            maxWidth: rect.width,
-            width: rect.width
-          })
-          popHtml.addClass('in')
-        else
-          return false
-        return true
+
+      if childCount == 1
+        angular.copy(item, scope.lItem)
+        scope.removeLedgerDialog("all")
+        $compile(popHtml)(scope)
+        elem.append(popHtml)
+        popHtml.css({
+          display: "block",
+          top: rect.height,
+          left: "0px",
+          visibility: "visible",
+          maxWidth: rect.width,
+          width: rect.width
+        })
+        popHtml.addClass('in')
+      else
+        return false
+      return true
   }

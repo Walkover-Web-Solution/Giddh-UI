@@ -49,7 +49,7 @@ app.run(()->
 )
 
 app.config ($httpProvider) ->
-   $httpProvider.interceptors.push('appInterceptor')
+  $httpProvider.interceptors.push('appInterceptor')
 
 app.factory 'appInterceptor', ['$q', '$location', '$log',
   ($q, $location, $log) ->
@@ -66,12 +66,8 @@ app.factory 'appInterceptor', ['$q', '$location', '$log',
 # toastr setting
 app.config (toastrConfig) ->
   angular.extend toastrConfig,
-    # autoDismiss: false
-    # containerId: 'toast-container'
     maxOpened: 3
     closeButton: true
-    # newestOnTop: true
-    # positionClass: 'toast-top-right'
     preventDuplicates: false
     preventOpenDuplicates: true
     target: 'body'

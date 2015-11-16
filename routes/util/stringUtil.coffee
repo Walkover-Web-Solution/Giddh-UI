@@ -13,4 +13,4 @@ module.exports =
     finalString.substr(0, 6).toLowerCase()
 
   getSixCharRandom: ->
-    Math.random().toString(36).replace(/[^a-zA-Z0-9]+/g, '').substr(0, 6);
+    Math.random().toString(36).replace(/[^a-zA-Z0-9]+/g, '').substr(0, 6)

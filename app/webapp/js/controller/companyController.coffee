@@ -13,7 +13,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.companyList = []
   $scope.companyDetails = {}
   $scope.currencyList = []
-  $scope.currencySelected = undefined;
+  $scope.currencySelected = undefined
   $scope.shareRequest = {role: 'view_only', user: null}
 
   #dialog for first time user
@@ -89,7 +89,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       $rootScope.mngCompDataFound = true
       cdt = localStorageService.get("_selectedCompany")
       if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
-        cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName});
+        cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName})
         localStorageService.set("_selectedCompany", cdt)
         $scope.goToCompany(cdt, cdt.index)
       else

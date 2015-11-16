@@ -6,7 +6,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.flattenAccountListWithParent = {}
   $scope.flatAccntWGroupsList = {}
   $scope.showAccountList = false
-  $scope.selectedAccountUniqueName = "";
+  $scope.selectedAccountUniqueName = ""
 
   $scope.getAccountsGroups = ()->
     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -15,7 +15,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
       toastr.error("Select company first.", "Error")
     else
       groupService.getAllWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
-          $scope.getGroupListFailure)
+        $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (result) ->
     $scope.groupList = result.body

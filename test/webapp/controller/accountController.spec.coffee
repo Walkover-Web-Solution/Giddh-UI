@@ -14,11 +14,11 @@ describe 'accountController', ->
     @localStorageService = localStorageService
     @DAServices = DAServices
     @accountController = $controller('accountController',
-        {
-          $scope: @scope, 
-          groupService: @groupService, 
-          DAServices: @DAServices
-        })
+      {
+        $scope: @scope,
+        groupService: @groupService,
+        DAServices: @DAServices
+      })
 
   describe '#getAccountsGroups', ->
     it 'should show a toastr informing user to select company first when no company selected', ->
@@ -102,15 +102,9 @@ describe 'accountController', ->
   describe '#collapseAllSubMenus', ->
     it 'should collapseAllSubMenus and set a variable value to true', ->
       @scope.collapseAllSubMenus()
-      expect(@rootScope.showSubMenus).toBeTruthy() 
+      expect(@rootScope.showSubMenus).toBeTruthy()
 
   describe '#expandAllSubMenus', ->
     it 'should expandAllSubMenus and set a variable value to false', ->
       @scope.expandAllSubMenus()
-      expect(@rootScope.showSubMenus).toBeFalsy() 
-    
-      
-    
-
-
-
+      expect(@rootScope.showSubMenus).toBeFalsy()

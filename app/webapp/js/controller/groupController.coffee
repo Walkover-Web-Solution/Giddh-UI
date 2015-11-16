@@ -237,14 +237,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onDeleteGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  $scope.isChildGroup =(group) ->   
+  $scope.isChildGroup =(group) ->
     _.some(group.parentGroups, (group) ->
       group.uniqueName == $scope.selectedGroup.uniqueName)
 
   $scope.moveGroup = (group) ->
     if _.isUndefined(group.uniqueName)
       toastr.error("Select group only from list", "Error")
-      return 
+      return
 
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
@@ -339,7 +339,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   # prepare date object
   $scope.setOpeningBalanceDate = () ->
     if $scope.selectedAccount.openingBalanceDate
-      newDateObj = $scope.selectedAccount.openingBalanceDate.split("-");
+      newDateObj = $scope.selectedAccount.openingBalanceDate.split("-")
       $scope.datePicker.accountOpeningBalanceDate = new Date(newDateObj[2], newDateObj[1] - 1, newDateObj[0])
     else
       $scope.datePicker.accountOpeningBalanceDate = new Date()
@@ -401,9 +401,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         title: 'Delete Account?',
         body: 'Are you sure you want to delete this Account?',
         ok: 'Yes',
-        cancel: 'No').then -> 
-          accountService.deleteAc(unqNamesObj, $scope.selectedAccount).then($scope.onDeleteAccountSuccess,
-          $scope.onDeleteAccountFailure)
+        cancel: 'No').then -> $scope.deleteAccountConfirm(unqNamesObj, $scope.selectedAccount)
+
+  $scope.deleteAccountConfirm = (unqNamesObj, account) ->
+    accountService.deleteAc(unqNamesObj, account).then($scope.onDeleteAccountSuccess, $scope.onDeleteAccountFailure)
 
   $scope.onDeleteAccountSuccess = (res) ->
     # console.log "onDeleteAccountSuccess", res
