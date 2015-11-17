@@ -2,7 +2,7 @@
 
 ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices) ->
   $scope.accntTitle = undefined
-  $scope.selectedAccountUname = undefined
+  $scope.selectedAccountUniqueName = undefined
   $scope.selectedGroupUname = undefined
   $scope.selectedLedgerAccount = undefined
   $scope.selectedLedgerGroup = undefined
@@ -92,12 +92,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.selectedLedgerAccount = acData
     $scope.selectedLedgerGroup = data
     $scope.accntTitle = acData.name
-    $scope.selectedAccountUname = acData.uniqueName
+    $scope.selectedAccountUniqueName = acData.uniqueName
     $scope.selectedGroupUname = data.groupUniqueName
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
-      acntUname: $scope.selectedAccountUname
+      acntUname: $scope.selectedAccountUniqueName
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
     }
@@ -130,7 +130,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
-      acntUname: $scope.selectedAccountUname
+      acntUname: $scope.selectedAccountUniqueName
       entUname: item.uniqueName
     }
     ledgerService.deleteEntry(unqNamesObj).then((response) ->
@@ -167,7 +167,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
-      acntUname: $scope.selectedAccountUname
+      acntUname: $scope.selectedAccountUniqueName
     }
     ledgerService.createEntry(unqNamesObj, edata).then($scope.addEntrySuccess, $scope.addEntryFailure)
 
@@ -205,7 +205,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
-      acntUname: $scope.selectedAccountUname
+      acntUname: $scope.selectedAccountUniqueName
       entUname: data.uniqueName
     }
     if _.isObject(data.transactions[0].particular)

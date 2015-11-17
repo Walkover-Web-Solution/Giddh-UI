@@ -52,7 +52,7 @@
                     id="ac_{{accDtl.uniqueName}}"
                     >
                   <a href="#ledger" ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl)"
-                     ng-class="{'active': accDtl.uniqueName === selectedAccountUniqueName || accDtl.uniqueName === selectedAccountUname}">
+                     ng-class="{'active': accDtl.uniqueName === selectedAccountUniqueName}">
                     <div class="clearfix">
                       <i ng-class="accDtl.charId ==1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
                       <span>{{accDtl.name}}</span>

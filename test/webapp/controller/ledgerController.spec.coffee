@@ -8,7 +8,6 @@ describe 'ledgerController', ->
       @scope = $rootScope.$new()
       @rootScope = $rootScope
       @localStorageService = localStorageService
-      #      spyOn(@localStorageService, 'keys').andReturn(["_selectedCompany"])
       spyOn(@localStorageService, 'get').andReturn({name: "walkover"})
 
       @ledgerController = $controller('ledgerController',
@@ -18,7 +17,7 @@ describe 'ledgerController', ->
       expect(@scope.selectedCompany).toEqual({name: "walkover"})
       expect(@scope.accntTitle).toBeUndefined()
       expect(@scope.showLedgerBox).toBeFalsy()
-      expect(@scope.selectedAccountUname).toBeUndefined()
+      expect(@scope.selectedAccountUniqueName).toBeUndefined()
       expect(@scope.selectedGroupUname).toBeUndefined()
       expect(@scope.selectedLedgerAccount).toBeUndefined()
       expect(@scope.creditTotal).toBeUndefined()
@@ -35,7 +34,6 @@ describe 'ledgerController', ->
       expect(@scope.format).toBe("dd-MM-yyyy")
       expect(@scope.ftypeAdd).toBe("add")
       expect(@scope.ftypeUpdate).toBe("update")
-      #      expect(@localStorageService.keys).toHaveBeenCalled()
       expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
 
   describe 'controller methods', ->
@@ -99,14 +97,14 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
-        @scope.selectedAccountUname = "somename"
+        @scope.selectedAccountUniqueName = "somename"
         data = {groupUniqueName: "somename"}
         acData = {name: "name", uniqueName: "somename"}
 
         udata = {
           compUname: @scope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUname
+          acntUname: @scope.selectedAccountUniqueName
           fromDate: @scope.toDate.date
           toDate: @scope.fromDate.date
         }
@@ -115,7 +113,7 @@ describe 'ledgerController', ->
         expect(@scope.selectedLedgerAccount).toBe(acData)
         expect(@scope.selectedLedgerGroup).toBe(data)
         expect(@scope.accntTitle).toEqual(acData.name)
-        expect(@scope.selectedAccountUname).toEqual(acData.uniqueName)
+        expect(@scope.selectedAccountUniqueName).toEqual(acData.uniqueName)
         expect(@scope.selectedGroupUname).toEqual(data.groupUniqueName)
 
         expect(@ledgerService.getLedger).toHaveBeenCalledWith(udata)
@@ -186,13 +184,13 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
-        @scope.selectedAccountUname = "somename"
+        @scope.selectedAccountUniqueName = "somename"
         item = {name: "name", uniqueName: "somename"}
 
         udata = {
           compUname: @scope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUname
+          acntUname: @scope.selectedAccountUniqueName
           entUname: item.uniqueName
         }
         @scope.deleteEntry(item)
@@ -227,11 +225,11 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "groupname"
-        @scope.selectedAccountUname = "accountname"
+        @scope.selectedAccountUniqueName = "accountname"
         udata = {
           compUname: @scope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUname
+          acntUname: @scope.selectedAccountUniqueName
         }
         deferred = @q.defer()
         spyOn(@ledgerService, "createEntry").andReturn(deferred.promise)
@@ -291,7 +289,7 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "groupname"
-        @scope.selectedAccountUname = "accountname"
+        @scope.selectedAccountUniqueName = "accountname"
         data = {
           uniqueName: "uniqueName"
           voucher: {shortcode: "12345"}
@@ -304,7 +302,7 @@ describe 'ledgerController', ->
         udata = {
           compUname: @scope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUname
+          acntUname: @scope.selectedAccountUniqueName
           entUname: data.uniqueName
         }
         deferred = @q.defer()
