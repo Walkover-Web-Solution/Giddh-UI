@@ -9,7 +9,7 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
     siblings = ($elm) ->
       elm for elm in $elm.parent().children() when elm != $elm[0]
 
-    angular.element($window).bind 'resize', ->
+    angular.element($window).on 'resize', ->
       additionalHeight = $attrs.additionalHeight || 0
       parentHeight = $window.innerHeight - $element.parent()[0].getBoundingClientRect().top
       $element.css('height', (parentHeight - combineHeights(siblings($element)) - additionalHeight) + "px")
@@ -24,7 +24,7 @@ directive 'validUnique', (toastr)->
   {
   require: 'ngModel'
   link: (scope, element, attrs, modelCtrl) ->
-    element.bind 'keypress', (event) ->
+    element.on 'keypress', (event) ->
       if event.which == 32
         toastr.warning("Space not allowed", "Warning")
         event.preventDefault()
@@ -59,7 +59,7 @@ directive 'validNumber', ->
         ngModelCtrl.$setViewValue clean
         ngModelCtrl.$render()
       clean
-    element.bind 'keypress', (event) ->
+    element.on 'keypress', (event) ->
       if event.keyCode == 32
         event.preventDefault()
       return
@@ -88,16 +88,16 @@ directive 'validDate', (toastr, $filter) ->
         ngModelCtrl.$setViewValue clean
         ngModelCtrl.$render()
       clean
-    element.bind 'keypress', (event) ->
+    element.on 'keypress', (event) ->
       element.removeClass('error')
       if event.keyCode == 32
         event.preventDefault()
       return
-    element.bind 'focus', () ->
+    element.on 'focus', () ->
       if element.context.value is "" || element.context.value is undefined || element.context.value is null
         scope.item.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
 
-    element.bind 'blur', () ->
+    element.on 'blur', () ->
       if moment(element.context.value, "DD-MM-YYYY", true).isValid()
         element.removeClass('error')
       else
@@ -134,8 +134,7 @@ angular.module('ledger', [])
                   ng-model='item.entryDate' valid-date/>
               </td>
               <td width=44%'>
-                <input type='hidden'  class='nobdr'
-                  name='trnsUniq_{{index}}'
+                <input type='hidden' name='trnsUniq_{{index}}'
                   ng-model='item.transactions[0].particular.uniqueName'>
                 <input type='text'
                   tabindex='-1'  class='nobdr' required
@@ -158,6 +157,11 @@ angular.module('ledger', [])
         </div></form>"
   link: (scope, elem, attrs) ->
     scope.lItem = {}
+    # console.log elem.context.getElementsByClassName('nobdr'), "element", elem
+    childInp = elem.context.getElementsByClassName('nobdr')
+    console.log childInp[0]
+    angular.element(childInp[0]).on 'focus', () ->
+      console.log "focus init", this.getBoundingClientRect()
 
     scope.addCrossFormField = (i, d, c) ->
       scope.item.transactions[0].particular.uniqueName = i.uName
