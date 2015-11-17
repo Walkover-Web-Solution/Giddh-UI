@@ -294,6 +294,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     else
       console.log "not to load anything"
 
+  $rootScope.$on '$reloadLedger',  ->
+    $scope.reloadLedger()
+
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController
 
 class angular.Ledger

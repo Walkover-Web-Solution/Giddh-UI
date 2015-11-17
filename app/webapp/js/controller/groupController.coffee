@@ -421,7 +421,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $rootScope.$broadcast('$reloadAccount')
 
   $scope.updateAccountSuccess = (res) ->
-    $rootScope.showLedgerBox = false
+    $rootScope.$broadcast('$reloadLedger')
     toastr.success("Group updated successfully", res.status)
     angular.merge($scope.selectedAccount, res.body)
     angular.merge($scope.selAcntPrevObj, res.body)

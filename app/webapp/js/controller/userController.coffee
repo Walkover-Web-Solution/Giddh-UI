@@ -25,7 +25,7 @@ userController = ($scope, $rootScope, toastr, userServices) ->
   $scope.generateKeyFailure = (result) ->
     toastr.error(result.body.message, "Error")
 
-  $rootScope.$on '$viewContentLoaded', ->
+  $scope.$on '$viewContentLoaded', ->
     $scope.getUserAuthKey()
 
 #init angular app

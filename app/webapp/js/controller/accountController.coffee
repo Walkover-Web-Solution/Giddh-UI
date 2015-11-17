@@ -18,13 +18,11 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
         $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (result) ->
-    console.log "getGroupListSuccess"
     $scope.groupList = result.body
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
     $scope.showAccountList = true
     $rootScope.makeAccountFlatten(groupService.flattenAccount($scope.groupList))
-
 
   $scope.getGroupListFailure = (res) ->
     toastr.error("Unable to get group details.", "Error")
@@ -33,7 +31,6 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     modalService.openManageGroupsModal()
 
   $scope.setLedgerData = (data, acData) ->
-    console.log "setLedgerData"
     $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
 
@@ -44,7 +41,6 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   # Expand all account menus
   $scope.expandAllSubMenus = () ->
     $rootScope.showSubMenus = false
-
 
   $scope.$on '$reloadAccount', ->
     $scope.getAccountsGroups()

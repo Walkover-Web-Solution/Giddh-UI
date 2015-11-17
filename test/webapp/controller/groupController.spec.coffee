@@ -699,7 +699,7 @@ describe 'groupController', ->
       expect(@scope.selectedAccount).toEqual({})
       expect(@scope.selectedGroup.accounts).toContain(res.body)
       expect(@scope.groupAccntList).toEqual([res.body])
-      expect(@rootScope.$broadcast).toHaveBeenCalled()
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith('$reloadAccount')
 
   describe '#addAccountFailure', ->
     it 'should show error message through toastr', ->
@@ -811,7 +811,7 @@ describe 'groupController', ->
       spyOn(@rootScope, "$broadcast")
       @scope.updateAccount()
       expect(@accountService.updateAc).toHaveBeenCalledWith(data, @scope.selectedAccount)
-      expect(@rootScope.$broadcast).toHaveBeenCalled()
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith('$reloadAccount')
 
   describe '#updateAccountSuccess', ->
     it 'should show success message and call getGroups function and set selectedAccount variable to blank object', ->
@@ -841,11 +841,13 @@ describe 'groupController', ->
         {uniqueName: "dsdd"}
       ]
       spyOn(@toastr, "success")
+      spyOn(@rootScope, "$broadcast")
       @scope.updateAccountSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith("Group updated successfully", res.status)
       expect(@scope.selectedAccount).toEqual(dobj)
       expect(@scope.selAcntPrevObj).toEqual(dobj)
       expect(@scope.groupAccntList[1].uniqueName).toEqual(@scope.selectedAccount.uniqueName)
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith("$reloadLedger")
 
   describe '#updateAccountFailure', ->
     it 'should show error message through toastr', ->

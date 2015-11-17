@@ -31,10 +31,4 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
   $rootScope.$on '$viewContentLoaded', ->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
 
-
-
-  
-  
-
-
 angular.module('giddhWebApp').controller 'mainController', mainController
