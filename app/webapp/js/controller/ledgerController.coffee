@@ -16,6 +16,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.debitTotal = undefined
   $scope.creditBalanceAmount = undefined
   $scope.debitBalanceAmount = undefined
+  $rootScope.cmpViewShow = true
 
   $scope.quantity = 50
 

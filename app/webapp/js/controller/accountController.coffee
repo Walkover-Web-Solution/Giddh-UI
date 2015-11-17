@@ -6,7 +6,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.flattenAccountListWithParent = {}
   $scope.flatAccntWGroupsList = {}
   $scope.showAccountList = false
-  $scope.selectedAccountUniqueName = ""
+  $scope.selectedAccountUniqueName = undefined
 
   $scope.getAccountsGroups = ()->
     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -18,6 +18,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
         $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (result) ->
+    console.log "getGroupListSuccess"
     $scope.groupList = result.body
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
@@ -25,13 +26,14 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $rootScope.makeAccountFlatten(groupService.flattenAccount($scope.groupList))
 
 
-  $scope.getGroupListFailure = () ->
+  $scope.getGroupListFailure = (res) ->
     toastr.error("Unable to get group details.", "Error")
 
   $scope.showManageGroups = () ->
     modalService.openManageGroupsModal()
 
   $scope.setLedgerData = (data, acData) ->
+    console.log "setLedgerData"
     $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
 
