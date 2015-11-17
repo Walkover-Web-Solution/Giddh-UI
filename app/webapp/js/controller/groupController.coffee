@@ -214,11 +214,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         title: 'Delete group?',
         body: 'Are you sure you want to delete this group? All child groups will also be deleted.',
         ok: 'Yes',
-        cancel: 'No').then($scope.deleteGroupConfirm($rootScope.selectedCompany.uniqueName,
-          $scope.selectedGroup))
+        cancel: 'No').then($scope.deleteGroupConfirm)
 
-  $scope.deleteGroupConfirm = (a, b) ->
-    groupService.delete(a, b).then($scope.onDeleteGroupSuccess,
+  $scope.deleteGroupConfirm = () ->
+    groupService.delete($rootScope.selectedCompany.uniqueName,
+      $scope.selectedGroup).then($scope.onDeleteGroupSuccess,
           $scope.onDeleteGroupFailure)
 
   $scope.onDeleteGroupSuccess = () ->
@@ -380,21 +380,20 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.deleteAccount = ->
     if $scope.canDelete
-      unqNamesObj = $scope.setAdditionalAccountDetails()
-      if $scope.selectedAccount.uniqueName isnt $scope.selAcntPrevObj.uniqueName
-        unqNamesObj.acntUname = $scope.selAcntPrevObj.uniqueName
-
-      if _.isEmpty($scope.selectedGroup)
-        unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
-
       modalService.openConfirmModal(
         title: 'Delete Account?',
         body: 'Are you sure you want to delete this Account?',
         ok: 'Yes',
-        cancel: 'No').then($scope.deleteAccountConfirm(unqNamesObj, $scope.selectedAccount))
+        cancel: 'No').then($scope.deleteAccountConfirm)
 
-  $scope.deleteAccountConfirm = (unqNamesObj, account) ->
-    accountService.deleteAc(unqNamesObj, account).then($scope.onDeleteAccountSuccess, $scope.onDeleteAccountFailure)
+  $scope.deleteAccountConfirm = ->
+    unqNamesObj = $scope.setAdditionalAccountDetails()
+    if $scope.selectedAccount.uniqueName isnt $scope.selAcntPrevObj.uniqueName
+      unqNamesObj.acntUname = $scope.selAcntPrevObj.uniqueName
+    if _.isEmpty($scope.selectedGroup)
+      unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
+
+    accountService.deleteAc(unqNamesObj, $scope.selectedAccount).then($scope.onDeleteAccountSuccess, $scope.onDeleteAccountFailure)
 
   $scope.onDeleteAccountSuccess = (res) ->
     toastr.success("Account deleted successfully.", "Success")

@@ -298,34 +298,14 @@ describe 'groupController', ->
       expect(@scope.selectedGroup.isFixed).toBeTruthy()
       expect(@modalService.openConfirmModal).not.toHaveBeenCalled()
 
-    it 'should call delete group on confirmation ok', ->
-      @scope.selectedGroup = {isFixed: false}
-      @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName"}
-      spyOn(@modalService, 'openConfirmModal').andReturn(@promise)
-      spyOn(@scope, 'deleteGroupConfirm')
-      @scope.deleteGroup()
-      @deferred.resolve({})
-      expect(@modalService.openConfirmModal).toHaveBeenCalled()
-      expect(@scope.deleteGroupConfirm).toHaveBeenCalledWith("CmpUniqueName", @scope.selectedGroup)
-
-    it 'should not call delete group on confirmation close', ->
-      @scope.selectedGroup = {isFixed: false}
-      @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName"}
-      spyOn(@modalService, 'openConfirmModal').andReturn(@promise)
-      spyOn(@scope, 'deleteGroupConfirm')
-      @scope.deleteGroup()
-      @deferred.reject({})
-      expect(@modalService.openConfirmModal).toHaveBeenCalled()
-      expect(@scope.deleteGroupConfirm).not.toHaveBeenCalledWith()
-
   describe '#deleteGroupConfirm', ->
     it 'should call groupService delete method with two parameters', ->
-      a = {isFixed: false}
-      b = {"uniqueName": "CmpUniqueName"}
+      @scope.selectedGroup = {isFixed: false}
+      @rootScope.selectedCompany = {"uniqueName": "CmpUniqueName"}
       deferred = @q.defer()
       spyOn(@groupService, 'delete').andReturn(deferred.promise)
-      @scope.deleteGroupConfirm(a, b)
-      expect(@groupService.delete).toHaveBeenCalledWith(a, b)
+      @scope.deleteGroupConfirm()
+      expect(@groupService.delete).toHaveBeenCalledWith("CmpUniqueName", @scope.selectedGroup)
 
   describe '#onDeleteGroupFailure', ->
     it 'should show a toastr for error', ->
@@ -722,21 +702,9 @@ describe 'groupController', ->
       expect(@modalService.openConfirmModal).not.toHaveBeenCalled()
 
     it 'should call modalService and check prev uniqueName value is same like new ', ->
-      data = {
-        compUname: "Cname"
-        selGrpUname: "Gname"
-        acntUname: "Aname"
-      }
-      @scope.selectedGroup = {}
       @scope.canDelete = true
-      @scope.selectedAccount = {
-        uniqueName: "name"
-        parentGroups: [{uniqueName: "pUnqName"}]
-      }
-      @scope.selAcntPrevObj = {uniqueName: "naame"}
       deferred = @q.defer()
       spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
-      spyOn(@scope, "setAdditionalAccountDetails").andReturn(data)
       @scope.deleteAccount()
       expect(@modalService.openConfirmModal).toHaveBeenCalledWith({
         title: 'Delete Account?'
@@ -747,12 +715,22 @@ describe 'groupController', ->
 
   describe '#deleteAccountConfirm', ->
     it 'should call accountservice delete method with two parameters', ->
-      a = {isFixed: false}
-      b = {"uniqueName": "CmpUniqueName"}
+      data = {
+        compUname: "Cname"
+        selGrpUname: "Gname"
+        acntUname: "Aname"
+      }
+      @scope.selectedGroup = {}
+      @scope.selectedAccount = {
+        uniqueName: "name"
+        parentGroups: [{uniqueName: "pUnqName"}]
+      }
+      @scope.selAcntPrevObj = {uniqueName: "naame"}
       deferred = @q.defer()
       spyOn(@accountService, 'deleteAc').andReturn(deferred.promise)
-      @scope.deleteAccountConfirm(a, b)
-      expect(@accountService.deleteAc).toHaveBeenCalledWith(a, b)
+      spyOn(@scope, "setAdditionalAccountDetails").andReturn(data)
+      @scope.deleteAccountConfirm()
+      expect(@accountService.deleteAc).toHaveBeenCalledWith(data, @scope.selectedAccount)
 
   describe '#onDeleteAccountSuccess', ->
     it 'should show success message and call getGroups function and set selectedAccount variable to blank object', ->
