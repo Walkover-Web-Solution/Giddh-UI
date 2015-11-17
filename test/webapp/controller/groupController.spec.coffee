@@ -745,6 +745,15 @@ describe 'groupController', ->
         cancel: 'No'
       })
 
+  describe '#deleteAccountConfirm', ->
+    it 'should call accountservice delete method with two parameters', ->
+      a = {isFixed: false}
+      b = {"uniqueName": "CmpUniqueName"}
+      deferred = @q.defer()
+      spyOn(@accountService, 'deleteAc').andReturn(deferred.promise)
+      @scope.deleteAccountConfirm(a, b)
+      expect(@accountService.deleteAc).toHaveBeenCalledWith(a, b)
+
   describe '#onDeleteAccountSuccess', ->
     it 'should show success message and call getGroups function and set selectedAccount variable to blank object', ->
       spyOn(@toastr, "success")

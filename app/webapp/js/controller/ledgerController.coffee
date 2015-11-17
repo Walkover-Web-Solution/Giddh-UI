@@ -2,7 +2,6 @@
 
 ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices) ->
   $scope.accntTitle = undefined
-  $scope.showLedgerBox = false
   $scope.selectedAccountUname = undefined
   $scope.selectedGroupUname = undefined
   $scope.selectedLedgerAccount = undefined
@@ -89,7 +88,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
       return false
-    $scope.showLedgerBox = false
+    $rootScope.showLedgerBox = false
     $scope.selectedLedgerAccount = acData
     $scope.selectedLedgerGroup = data
     $scope.accntTitle = acData.name
@@ -108,7 +107,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     response.body.ledgers.push(angular.copy(dummyValueDebit))
     response.body.ledgers.push(angular.copy(dummyValueCredit))
     $scope.ledgerData = response.body
-    $scope.showLedgerBox = true
+    $rootScope.showLedgerBox = true
     $scope.calculateLedger($scope.ledgerData, "server")
 
   $scope.debitOnly = (ledger) ->
