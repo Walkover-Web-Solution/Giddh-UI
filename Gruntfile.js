@@ -8,6 +8,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-coffee');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-coffeelint');
   grunt.loadNpmTasks('grunt-karma');
@@ -66,7 +67,7 @@ module.exports = function (grunt) {
         files: [
           srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '/**/*.css', routeSrcDir + "/**/*.coffee"
         ],
-        tasks: ['coffee', 'copy', 'concat']
+        tasks: ['coffee', 'copy', 'clean', 'concat']
       }
     },
     karma: {
@@ -87,6 +88,9 @@ module.exports = function (grunt) {
           'public/webapp/app.js': ['public/webapp/**/*.js']
         }
       }
+    },
+    clean: {
+      js: ["public/webapp/app.js"]
     }
   });
 
@@ -96,7 +100,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch'])
 
-  grunt.registerTask('init', ['copy', 'coffee', 'concat'])
+  grunt.registerTask('init', ['copy', 'coffee','clean', 'concat'])
 
   grunt.registerTask('test', [
     'coffee',

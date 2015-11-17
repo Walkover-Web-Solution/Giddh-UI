@@ -84,7 +84,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     if not _.isUndefined($scope.selectedLedgerGroup)
       $scope.loadLedger($scope.selectedLedgerGroup, $scope.selectedLedgerAccount)
 
-
   $scope.loadLedger = (data, acData) ->
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
@@ -121,13 +120,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     console.log response, "loadLedgerFailure"
     toastr.error(response.body.message, "Error")
 
-
   $scope.addNewAccount = () ->
     if _.isEmpty($scope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
       modalService.openManageGroupsModal()
-
 
   $scope.deleteEntry = (item) ->
     unqNamesObj = {
@@ -194,11 +191,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
     $scope.calculateLedger($scope.ledgerData, "add")
 
-
   $scope.addEntryFailure = (response) ->
     console.log response, "addEntryFailure"
     toastr.error(response.data.message, "Error")
-
 
   $scope.updateEntry = (data) ->
     edata = {}
@@ -309,6 +304,7 @@ class angular.Ledger
     @uniqueName = undefined
     @entryDate = ""
     @voucher = new angular.Voucher()
+
 class angular.Transaction
   constructor: (type)->
     @amount = ""
