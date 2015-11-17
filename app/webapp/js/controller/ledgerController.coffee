@@ -235,6 +235,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.calculateLedger = (data, loadtype) ->
     crt = 0
     drt = 0
+    $scope.creditBalanceAmount = 0
+    $scope.debitBalanceAmount = 0
+    $scope.ledgBalType = undefined
 
     if data.forwardedBalance.type is 'CREDIT'
       crt += data.forwardedBalance.amount
@@ -257,11 +260,14 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $scope.creditBalanceAmount = drt - crt
       $scope.debitTotal = drt
       $scope.creditTotal = crt + (drt - crt)
-    if crt > drt
+    else if crt > drt
       $scope.ledgBalType = 'CREDIT'
       $scope.debitBalanceAmount = crt - drt
       $scope.debitTotal = drt + (crt - drt)
       $scope.creditTotal = crt
+    else
+      $scope.creditTotal = crt
+      $scope.debitTotal = drt
 
     # if calculation is wrong than make entry in newrelic
     if loadtype is 'server'

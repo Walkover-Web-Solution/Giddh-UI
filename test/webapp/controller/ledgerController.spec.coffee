@@ -479,3 +479,45 @@ describe 'ledgerController', ->
         expect(@scope.creditBalanceAmount).toBe (208)
         expect(@scope.debitTotal).toBe(258)
         expect(@scope.creditTotal).toBe(258)
+
+
+      it 'should calculate data and set some variables to according in this CREDIT/DEBIT are same', ->
+        data = {
+          balance: {
+            amount: 0
+            type: "CREDIT"
+          }
+          creditTotal: 100
+          debitTotal: 100
+          forwardedBalance: {
+            amount: 0
+            description: "BF_BALANCE"
+            type: "DEBIT"
+          }
+          ledgers: [
+            {
+              uniqueName: "somename",
+              transactions: [
+                {type: "DEBIT", amount: 100}
+              ]
+            }
+            {
+              uniqueName: "somename1",
+              transactions: [
+                {type: "CREDIT", amount: 50}
+              ]
+            }
+            {
+              uniqueName: "somename2",
+              transactions: [
+                {type: "CREDIT", amount: 50}
+              ]
+            }
+          ]
+        }
+        @scope.calculateLedger(data, "server")
+        expect(@scope.ledgBalType).toBe (undefined)
+        expect(@scope.creditBalanceAmount).toBe(0)
+        expect(@scope.debitBalanceAmount).toBe(0)
+        expect(@scope.debitTotal).toBe(100)
+        expect(@scope.creditTotal).toBe(100)
