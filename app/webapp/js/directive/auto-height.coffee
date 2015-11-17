@@ -130,17 +130,17 @@ angular.module('ledger', [])
           <table class='table ldgrInnerTbl'>
             <tr>
               <td width='28%'>
-                <input type='text' class='nobdr'
+                <input type='text' class='nobdr test'
                   tabindex='-1' required
                   name='entryDate_{{index}}'
                   ng-model='item.entryDate' valid-date/>
               </td>
               <td width=44%'>
-                <input type='hidden'  class='nobdr'
+                <input type='hidden'  class='nobdr test'
                   name='trnsUniq_{{index}}'
                   ng-model='item.transactions[0].particular.uniqueName'>
                 <input type='text'
-                  tabindex='-1'  class='nobdr' required
+                  tabindex='-1'  class='nobdr test' required
                   name='trnsName_{{index}}'
                   ng-model='item.transactions[0].particular'
                   typeahead='obj as obj.name for obj in aclist | filter:$viewValue | limitTo:8'
