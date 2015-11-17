@@ -58,22 +58,22 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     )
 
   #get only city failure
-  $scope.getOnlyCityFailure = (response) ->
-    toastr.error(response.data.message, "Error")
+  $scope.getOnlyCityFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   #creating company
   $scope.createCompany = (cdata) ->
     companyServices.create(cdata).then($scope.onCreateCompanySuccess, $scope.onCreateCompanyFailure)
 
   #create company success
-  $scope.onCreateCompanySuccess = (response) ->
+  $scope.onCreateCompanySuccess = (res) ->
     toastr.success("Company create successfully", "Success")
     $rootScope.mngCompDataFound = true
-    $scope.companyList.push(response.body)
+    $scope.companyList.push(res.body)
 
   #create company failure
-  $scope.onCreateCompanyFailure = (response) ->
-    toastr.error(response.data.message, "Error")
+  $scope.onCreateCompanyFailure = (res) ->
+    toastr.error(res.data.message, "Error")
 
   #Get company list
   $scope.getCompanyList = ->
@@ -81,8 +81,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
 
   #Get company list
-  $scope.getCompanyListSuccess = (response) ->
-    $scope.companyList = _.sortBy(response.body, 'shared')
+  $scope.getCompanyListSuccess = (res) ->
+    $scope.companyList = _.sortBy(res.body, 'shared')
     if _.isEmpty($scope.companyList)
       $scope.openFirstTimeUserModal()
     else
@@ -96,8 +96,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
         $scope.goToCompany($scope.companyList[0], 0)
 
   #get company list failure
-  $scope.getCompanyListFailure = (response)->
-    toastr.error(response.data.message, "Error")
+  $scope.getCompanyListFailure = (res)->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.getUserDetails = ->
     if _.isUndefined($rootScope.basicInfo.userUniqueName)
@@ -106,12 +106,12 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
 
   #Get user details
-  $scope.getUserDetailSuccess = (response) ->
-    $rootScope.basicInfo = response.body
+  $scope.getUserDetailSuccess = (res) ->
+    $rootScope.basicInfo = res.body
 
   #get company list failure
-  $scope.getUserDetailFailure = (response)->
-    toastr.error(response.data.message, "Error")
+  $scope.getUserDetailFailure = (res)->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.getCompany = (uniqueName)->
     companyServices.get(uniqueName).then((->), (->))
@@ -128,13 +128,13 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
 
   #delete company success
-  $scope.delCompanySuccess = (response) ->
+  $scope.delCompanySuccess = (res) ->
     toastr.success("Company deleted successfully", "Success")
     $scope.getCompanyList()
 
   #delete company failure
-  $scope.delCompanyFailure = (response) ->
-    toastr.error(response.data.message, "Error")
+  $scope.delCompanyFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   #making a detail company view
   $scope.goToCompany = (data, index) ->
@@ -174,14 +174,14 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     companyServices.update(data).then($scope.updtCompanySuccess, $scope.updtCompanyFailure)
 
   #update company success
-  $scope.updtCompanySuccess = (response)->
+  $scope.updtCompanySuccess = (res)->
     toastr.success("Company updated successfully", "Success")
     $scope.getCompanyList()
-    localStorageService.set("_selectedCompany", response.body)
+    localStorageService.set("_selectedCompany", res.body)
 
   #update company failure
-  $scope.updtCompanyFailure = (response)->
-    toastr.error(response.data.message, "Error")
+  $scope.updtCompanyFailure = (res)->
+    toastr.error(res.data.message, res.data.status)
 
   #to inject form again on scope do not remove very imp function
   $scope.setFormScope = (scope) ->
@@ -196,9 +196,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       item.address_components[0].long_name
     )
 
-  $scope.onGetCountryFailure = (result) ->
-    console.log "in get country failure", result
-    toastr.error(result.body.message, "Error")
+  $scope.onGetCountryFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.getState = (val) ->
     locationService.searchState(val, $rootScope.selectedCompany.country).then($scope.onGetStateSuccess,
@@ -210,9 +209,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       item.address_components[0].long_name
     )
 
-  $scope.onGetStateFailure = (result) ->
-    console.log "in get state failure", result
-    toastr.error(result.body.message, "Error")
+  $scope.onGetStateFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.getCity = (val) ->
     locationService.searchCity(val, $rootScope.selectedCompany.state).then($scope.onGetCitySuccess,
@@ -224,9 +222,8 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       item.address_components[0].long_name
     )
 
-  $scope.onGetCityFailure = (result) ->
-    console.log "in get city failure", result
-    toastr.error(result.body.message, "Error")
+  $scope.onGetCityFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.getCurrencyList = ->
     currencyListt = localStorageService.get("_currencyList")
@@ -235,12 +232,12 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     else
       currencyService.getList($scope.getCurrencyListSuccess, $scope.getCurrencyListFailure)
 
-  $scope.getCurrencyListFailure = (response)->
-    toastr.error(response.data.message, "Error")
+  $scope.getCurrencyListFailure = (res)->
+    toastr.error(res.data.message, res.data.status)
 
   #Get company list
-  $scope.getCurrencyListSuccess = (response) ->
-    $scope.currencyList = _.map(response.body, (item) ->
+  $scope.getCurrencyListSuccess = (res) ->
+    $scope.currencyList = _.map(res.body, (item) ->
       item.code
     )
     localStorageService.set("_currencyList", $scope.currencyList)
@@ -259,35 +256,35 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     companyServices.share($scope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess,
         $scope.onShareCompanyFailure)
 
-  $scope.onShareCompanySuccess = (response) ->
+  $scope.onShareCompanySuccess = (res) ->
     $scope.shareRequest = {}
-    toastr.success(response.body, response.status)
+    toastr.success(res.body, res.status)
     $scope.getSharedUserList($scope.selectedCompany.uniqueName)
 
 
-  $scope.onShareCompanyFailure = (response) ->
-    toastr.error(response.data.message, response.data.status)
+  $scope.onShareCompanyFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   #get roles and set it in local storage
   $scope.getRolesList = () ->
     cUname = $scope.selectedCompany.uniqueName
     companyServices.getRoles(cUname).then($scope.getRolesSuccess, $scope.getRolesFailure)
 
-  $scope.getRolesSuccess = (response) ->
-    $scope.rolesList = response.body
+  $scope.getRolesSuccess = (res) ->
+    $scope.rolesList = res.body
 
-  $scope.getRolesFailure = (response) ->
-    toastr.error(response.data.message, response.data.status)
+  $scope.getRolesFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   #get shared user list
   $scope.getSharedUserList = (uniqueName) ->
     companyServices.shredList(uniqueName).then($scope.getSharedUserListSuccess, $scope.getSharedUserListFailure)
 
-  $scope.getSharedUserListSuccess = (response) ->
-    $scope.sharedUsersList = response.body
+  $scope.getSharedUserListSuccess = (res) ->
+    $scope.sharedUsersList = res.body
 
-  $scope.getSharedUserListFailure = (response) ->
-    toastr.error(response.data.message, response.data.status)
+  $scope.getSharedUserListFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   #delete shared user
   $scope.unSharedUser = (uNqame, id) ->
@@ -295,12 +292,12 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     companyServices.unSharedComp($scope.selectedCompany.uniqueName, data).then($scope.unSharedCompSuccess,
         $scope.unSharedCompFailure)
 
-  $scope.unSharedCompSuccess = (response) ->
+  $scope.unSharedCompSuccess = (res) ->
     toastr.success("Company unshared successfully", "Success")
     $scope.getSharedUserList($scope.selectedCompany.uniqueName)
 
-  $scope.unSharedCompFailure = (response) ->
-    toastr.error(response.data.message, response.data.status)
+  $scope.unSharedCompFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.exceptOwnEmail = (email) ->
     $rootScope.basicInfo.email isnt email.userEmail

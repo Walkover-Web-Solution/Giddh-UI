@@ -68,9 +68,13 @@ describe 'accountController', ->
 
   describe '#getGroupListFailure', ->
     it 'should show a toastr for error', ->
-      spyOn(@toastr, 'error')
-      @scope.getGroupListFailure()
-      expect(@toastr.error).toHaveBeenCalledWith("Unable to get group details.", "Error")
+      res =
+        data:
+          status: "Error"
+          message: "Unable to get group details."
+      spyOn(@toastr, "error")
+      @scope.getGroupListFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#test for reload account event', ->
     it 'should call a getAccountGroups', ->

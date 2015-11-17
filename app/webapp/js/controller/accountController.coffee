@@ -17,15 +17,15 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
       groupService.getAllWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
         $scope.getGroupListFailure)
 
-  $scope.getGroupListSuccess = (result) ->
-    $scope.groupList = result.body
+  $scope.getGroupListSuccess = (res) ->
+    $scope.groupList = res.body
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
     $scope.showAccountList = true
     $rootScope.makeAccountFlatten(groupService.flattenAccount($scope.groupList))
 
   $scope.getGroupListFailure = (res) ->
-    toastr.error("Unable to get group details.", "Error")
+    toastr.error(res.data.message, res.data.status)
 
   $scope.showManageGroups = () ->
     modalService.openManageGroupsModal()

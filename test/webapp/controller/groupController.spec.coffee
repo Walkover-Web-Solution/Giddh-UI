@@ -100,7 +100,7 @@ describe 'groupController', ->
       expect(@groupService.sharedList).not.toHaveBeenCalled()
 
   describe '#onsharedListSuccess', ->
-    it 'should set response to a variable', ->
+    it 'should set result to a variable', ->
       result = {"body": "something"}
       @scope.onsharedListSuccess(result)
       expect(@scope.groupSharedUserList).toBe(result.body)
@@ -139,10 +139,10 @@ describe 'groupController', ->
         role: "view_only"
         user: ""
       }
-      response = {"status": "Success", "body": "Group shared successfully"}
+      res = {"status": "Success", "body": "Group shared successfully"}
       spyOn(@toastr, 'success')
       spyOn(@scope, "getGroupSharedList")
-      @scope.onShareGroupSuccess(response)
+      @scope.onShareGroupSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith('Group shared successfully', 'Success')
       expect(@scope.getGroupSharedList).toHaveBeenCalledWith(@scope.selectedGroup)
 
@@ -173,10 +173,10 @@ describe 'groupController', ->
   describe '#unShareGroupSuccess', ->
     it 'should show success message with toastr and call getGroupSharedList with selected group variable', ->
       @scope.selectedGroup = {"uniqueName": "1"}
-      response = {"status": "Success", "body": "Group unShared successfully"}
+      res = {"status": "Success", "body": "Group unShared successfully"}
       spyOn(@toastr, 'success')
       spyOn(@scope, "getGroupSharedList")
-      @scope.unShareGroupSuccess(response)
+      @scope.unShareGroupSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith('Group unShared successfully', 'Success')
       expect(@scope.getGroupSharedList).toHaveBeenCalledWith(@scope.selectedGroup)
 
@@ -199,16 +199,16 @@ describe 'groupController', ->
 
   describe '#onUpdateGroupSuccess', ->
     it 'should show success message with toastr and set value in variable', ->
-      response = {"status": "Success", "body": "Group has been updated successfully."}
+      res = {"status": "Success", "body": "Group has been updated successfully."}
       spyOn(@toastr, 'success')
-      @scope.onUpdateGroupSuccess(response)
+      @scope.onUpdateGroupSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith('Group has been updated successfully.', 'Success')
       expect(@scope.selectedGroup.oldUName).toEqual(@scope.selectedGroup.uniqueName)
 
     it 'should set scope variable if selectedGroup is not empty', ->
-      response = {"status": "Success", "body": "Group has been updated successfully."}
+      res = {"status": "Success", "body": "Group has been updated successfully."}
       @scope.selectedGroup = {"name": "g1"}
-      @scope.onUpdateGroupSuccess(response)
+      @scope.onUpdateGroupSuccess(res)
       expect(@scope.selectedItem).toEqual(@scope.selectedGroup)
 
   describe '#onUpdateGroupFailure', ->

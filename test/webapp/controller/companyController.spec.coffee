@@ -109,10 +109,13 @@ describe 'companyController', ->
 
   describe '#getOnlyCityFailure', ->
     it 'should show a toastr with error message', ->
-      response = {"data": {"status": "some-error", "message": "some-message"}}
+      res = 
+        data: 
+          status: "Error"
+          message: "some-message"
       spyOn(@toastr, 'error')
-      @scope.getOnlyCityFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
+      @scope.getOnlyCityFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#createCompany', ->
     it 'should call service method', ->
@@ -125,20 +128,20 @@ describe 'companyController', ->
   describe '#onCreateCompanySuccess', ->
     it 'should show a alert and set a var to true and push data in a array', ->
       @scope.companyList = []
-      response = {body: {"email": null, "contactNo": null}}
+      res = {body: {"email": null, "contactNo": null}}
       spyOn(@toastr, 'success')
 
-      @scope.onCreateCompanySuccess(response)
+      @scope.onCreateCompanySuccess(res)
 
       expect(@toastr.success).toHaveBeenCalledWith('Company create successfully', 'Success')
       expect(@scope.mngCompDataFound).toBeTruthy()
-      expect(@scope.companyList).toContain(response.body)
+      expect(@scope.companyList).toContain(res.body)
 
   describe '#onCreateCompanyFailure', ->
     it 'should show a toastr with error message', ->
-      response = {"data": {"status": "some-error", "message": "some-message"}}
+      res = {"data": {"status": "some-error", "message": "some-message"}}
       spyOn(@toastr, 'error')
-      @scope.onCreateCompanyFailure(response)
+      @scope.onCreateCompanyFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
 
   describe '#getCompanyList', ->
@@ -149,29 +152,32 @@ describe 'companyController', ->
       expect(@companyServices.getAll).toHaveBeenCalled()
 
   describe '#getCompanyListSuccess', ->
-    it 'should show error if response have error and call a function to open modal', ->
+    it 'should show error if result have error and call a function to open modal', ->
       spyOn(@scope, "openFirstTimeUserModal")
-      response = {"body": []}
-      @scope.getCompanyListSuccess(response)
+      res = {"body": []}
+      @scope.getCompanyListSuccess(res)
       expect(@scope.openFirstTimeUserModal).toHaveBeenCalled()
 
     it 'should set true to a variable and push data in company list, and by default click on first child to get company details', ->
-      response = {"body": [{"email": "abc@def", "contactNo": "9104120", "baseCurrency": "INR", "index": 0}]}
+      res = {"body": [{"email": "abc@def", "contactNo": "9104120", "baseCurrency": "INR", "index": 0}]}
       spyOn(@scope, "goToCompany")
-      spyOn(@localStorageService, "get").andReturn(response.body[0])
+      spyOn(@localStorageService, "get").andReturn(res.body[0])
 
-      @scope.getCompanyListSuccess(response)
+      @scope.getCompanyListSuccess(res)
 
       expect(@scope.mngCompDataFound).toBeTruthy()
-      expect(@scope.companyList).toEqual(response.body)
-      expect(@scope.goToCompany).toHaveBeenCalledWith(response.body[0], 0)
+      expect(@scope.companyList).toEqual(res.body)
+      expect(@scope.goToCompany).toHaveBeenCalledWith(res.body[0], 0)
 
   describe '#getCompanyListFailure', ->
     it 'should show a toastr with error message', ->
-      response = {"data": {"status": "some-error", "message": "some-message"}}
+      res = 
+        data: 
+          status: "Error"
+          message: "some-message"
       spyOn(@toastr, 'error')
-      @scope.getCompanyListFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
+      @scope.getCompanyListFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#deleteCompany', ->
     it 'should Open Confirm Popup', ->
@@ -186,23 +192,32 @@ describe 'companyController', ->
 
   describe '#delCompanySuccess', ->
     it 'should show success message and call get companyList function', ->
-      response = {"status": "success", "body": "Company 'companyUniqueName' deleted successfully."}
+      res = 
+        data: 
+          status: "Success"
+          message: "Company 'companyUniqueName' deleted successfully."
       spyOn(@toastr, 'success')
       spyOn(@scope, "getCompanyList")
-      @scope.delCompanySuccess(response)
+      @scope.delCompanySuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith('Company deleted successfully', 'Success')
       expect(@scope.getCompanyList).toHaveBeenCalled()
 
   describe '#delCompanyFailure', ->
     it 'should show error alert with toastr', ->
-      response = {"data": {"status": "some-error", "message": "some-message"}}
+      res = 
+        data: 
+          status: "Error"
+          message: "some-message"
       @spyOn(@toastr, "error")
-      @scope.delCompanyFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
+      @scope.delCompanyFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#goToCompany', ->
     it 'should make a call for check permissions, set a variable true, put data in scope variable and set data in localStorage, and add active class in li', ->
-      data = {uniqueName: "afafafafaf1443520197325007bgo", "index": 0, "cCode": ""}
+      data = 
+        uniqueName: "afafafafaf1443520197325007bgo"
+        index: 0
+        cCode: ""
       index = 0
       @scope.canManageUser = true
 
@@ -218,7 +233,10 @@ describe 'companyController', ->
 
     it 'should not call getSharedUserList', ->
       @scope.canManageUser = false
-      data = {uniqueName: "afafafafaf1443520197325007bgo", "index": 0, "cCode": ""}
+      data = 
+        uniqueName: "afafafafaf1443520197325007bgo"
+        index: 0
+        cCode: ""
       index = 0
 
       spyOn(@scope, "ifHavePermission")
@@ -241,20 +259,23 @@ describe 'companyController', ->
 
   describe '#updtCompanySuccess', ->
     it 'should show success alert with toastr and call getCompanyList function', ->
-      response = {}
+      res = {}
       spyOn(@toastr, "success")
       spyOn(@scope, "getCompanyList")
 
-      @scope.updtCompanySuccess(response)
+      @scope.updtCompanySuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith('Company updated successfully', 'Success')
       expect(@scope.getCompanyList).toHaveBeenCalled()
 
   describe '#updtCompanyFailure', ->
     it 'should show error alert with toastr', ->
-      response = {"data": {"status": "some-error", "message": "some-message"}}
+      res =
+        data:
+          status: "Error"
+          message: "some-message"
       @spyOn(@toastr, "error")
-      @scope.updtCompanyFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
+      @scope.updtCompanyFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#getCountry', ->
     it 'should call search coutry service with value', ->
@@ -264,7 +285,7 @@ describe 'companyController', ->
       @scope.getCountry(val)
       expect(@locationService.searchCountry).toHaveBeenCalledWith(val)
 
-  describe '#getCountrySuccess', ->
+  describe '#onGetCountrySuccess', ->
     it 'should filter data from a object', ->
       data = {
         "results": [{
@@ -277,6 +298,16 @@ describe 'companyController', ->
       @scope.onGetCountrySuccess(data)
       expect(data.results[0].types[0]).toBe("country")
       expect(data.results[0].address_components[0].long_name).toBe("India")
+
+  describe '#onGetCountryFailure', ->
+    it 'should show error alert with toastr', ->
+      res =
+        data:
+          status: "Error"
+          message: "some-message"
+      @spyOn(@toastr, "error")
+      @scope.onGetCountryFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#getState', ->
     it 'should call search state service', ->
@@ -301,6 +332,16 @@ describe 'companyController', ->
       expect(data.results[0].types[0]).toBe("administrative_area_level_1")
       expect(data.results[0].address_components[0].long_name).toBe("Madhya Pradesh")
 
+  describe '#onGetStateFailure', ->
+    it 'should show error alert with toastr', ->
+      res =
+        data:
+          status: "Error"
+          message: "some-message"
+      @spyOn(@toastr, "error")
+      @scope.onGetStateFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
   describe '#getCity', ->
     it 'should call getCity service with city value and state value', ->
       val = "Houston"
@@ -323,6 +364,16 @@ describe 'companyController', ->
       @scope.getOnlyCitySuccess(data)
       expect(data.results[0].types[0]).toBe("locality")
       expect(data.results[0].address_components[0].long_name).toBe("Texas")
+
+  describe '#onGetCityFailure', ->
+    it 'should show error alert with toastr', ->
+      res =
+        data:
+          status: "Error"
+          message: "some-message"
+      @spyOn(@toastr, "error")
+      @scope.onGetCityFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#getCurrencyList', ->
     it 'should not call service method and return success', ->
@@ -357,10 +408,13 @@ describe 'companyController', ->
 
   describe '#getCurrencyListFailure', ->
     it 'should show a toastr with error as heading', ->
-      response = {"data": {"status": "some-error", "message": "some-message"}}
+      res =
+        data:
+          status: "Error"
+          message: "some-message"
       spyOn(@toastr, 'error')
-      @scope.getCurrencyListFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
+      @scope.getCurrencyListFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#updateUserRole', ->
     it 'should call companyServices.share service with role or json object contains email', ->
@@ -398,11 +452,11 @@ describe 'companyController', ->
     it 'should make a blank object, show success message and call getSharedUserList function', ->
       @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
       data = {}
-      response = {"status": "success", "body": "Company 'companyUniqueName' shared successfully with 'name'"}
+      res = {"status": "success", "body": "Company 'companyUniqueName' shared successfully with 'name'"}
       spyOn(@toastr, 'success')
       spyOn(@scope, "getSharedUserList")
 
-      @scope.onShareCompanySuccess(response)
+      @scope.onShareCompanySuccess(res)
       expect(@scope.shareRequest).toEqual(data)
       expect(@toastr.success).toHaveBeenCalledWith("Company 'companyUniqueName' shared successfully with 'name'",
           "success")
@@ -410,10 +464,13 @@ describe 'companyController', ->
 
   describe '#onShareCompanyFailure', ->
     it 'should show toastr with error message', ->
-      response = {"data": {"status": "Error", "message": "some-message"}}
+      res =
+        data:
+          status: "Error"
+          message: "some-message"
       spyOn(@toastr, 'error')
-      @scope.onShareCompanyFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
+      @scope.onShareCompanyFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#getRolesList', ->
     it 'should call companyService with getRoles method', ->
@@ -425,22 +482,25 @@ describe 'companyController', ->
 
   describe '#getRolesSuccess', ->
     it 'should set data in scope variable rolesList', ->
-      response = {
+      res = {
         "status": "success"
         "body": [{
           "name": "Some Name"
           "uniqueName": "some_name"
         }]
       }
-      @scope.getRolesSuccess(response)
-      expect(@scope.rolesList).toEqual(response.body)
+      @scope.getRolesSuccess(res)
+      expect(@scope.rolesList).toEqual(res.body)
 
   describe '#getRolesFailure', ->
     it 'should show toastr with error message', ->
-      response = {"data": {"status": "Error", "message": "some-message"}}
+      res =
+        data:
+          status: "Error"
+          message: "some-message"
       spyOn(@toastr, 'error')
-      @scope.getRolesFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
+      @scope.getRolesFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#getSharedUserList', ->
     it 'should call companyService with shredList method', ->
@@ -453,19 +513,22 @@ describe 'companyController', ->
 
   describe '#getSharedUserListSuccess', ->
     it 'should set data in scope variable sharedUsersList', ->
-      response = {
+      res = {
         "status": "success",
         "body": [{"userName": "ravi", "userEmail": "ravisoni@hostnsoft.com", "userUniqueName": "ravisoni"}]
       }
-      @scope.getSharedUserListSuccess(response)
-      expect(@scope.sharedUsersList).toEqual(response.body)
+      @scope.getSharedUserListSuccess(res)
+      expect(@scope.sharedUsersList).toEqual(res.body)
 
   describe '#getSharedUserListFailure', ->
     it 'should show toastr with error message', ->
-      response = {"data": {"status": "Error", "message": "some-message"}}
+      res =
+        data:
+          status: "Error"
+          message: "some-message"
       spyOn(@toastr, 'error')
-      @scope.getSharedUserListFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
+      @scope.getSharedUserListFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#unSharedUser', ->
     it 'should call companyService with unSharedComp method', ->
@@ -481,16 +544,28 @@ describe 'companyController', ->
   describe '#unSharedCompSuccess', ->
     it 'should show success toastr and call getSharedUserList function', ->
       @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
-      response = {"status": "success", "body": "Company unshared successfully"}
+      res = {"status": "success", "body": "Company unshared successfully"}
       spyOn(@toastr, 'success')
       spyOn(@scope, "getSharedUserList")
-      @scope.unSharedCompSuccess(response)
+      @scope.unSharedCompSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith("Company unshared successfully", "Success")
       expect(@scope.getSharedUserList).toHaveBeenCalledWith(@scope.selectedCompany.uniqueName)
 
   describe '#unSharedCompFailure', ->
     it 'should show toastr with error message', ->
-      response = {"data": {"status": "Error", "message": "some-message"}}
+      res =
+        data:
+          status: "Error"
+          message: "some-message"
       spyOn(@toastr, 'error')
-      @scope.unSharedCompFailure(response)
-      expect(@toastr.error).toHaveBeenCalledWith('some-message', 'Error')
+      @scope.unSharedCompFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+  describe '#exceptOwnEmail', ->
+    it 'should check if basicInfo email is same like email.userEmail and return true', ->
+      @rootScope.basicInfo = {"email": "some@some.some"}
+      email =
+        userEmail: "some@some.some"
+      @scope.exceptOwnEmail(email)
+      expect(@rootScope.basicInfo.email).toEqual(email.userEmail)
+

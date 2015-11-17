@@ -103,10 +103,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     }
     ledgerService.getLedger(unqNamesObj).then($scope.loadLedgerSuccess, $scope.loadLedgerFailure)
 
-  $scope.loadLedgerSuccess = (response) ->
-    response.body.ledgers.push(angular.copy(dummyValueDebit))
-    response.body.ledgers.push(angular.copy(dummyValueCredit))
-    $scope.ledgerData = response.body
+  $scope.loadLedgerSuccess = (res) ->
+    res.body.ledgers.push(angular.copy(dummyValueDebit))
+    res.body.ledgers.push(angular.copy(dummyValueCredit))
+    $scope.ledgerData = res.body
     $rootScope.showLedgerBox = true
     $scope.calculateLedger($scope.ledgerData, "server")
 
@@ -116,9 +116,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.creditOnly = (ledger) ->
     'CREDIT' == ledger.transactions[0].type
 
-  $scope.loadLedgerFailure = (response) ->
-    console.log response, "loadLedgerFailure"
-    toastr.error(response.body.message, "Error")
+  $scope.loadLedgerFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.addNewAccount = () ->
     if _.isEmpty($scope.selectedCompany)
@@ -133,11 +132,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       acntUname: $scope.selectedAccountUniqueName
       entUname: item.uniqueName
     }
-    ledgerService.deleteEntry(unqNamesObj).then((response) ->
-      $scope.deleteEntrySuccess(item, response)
+    ledgerService.deleteEntry(unqNamesObj).then((res) ->
+      $scope.deleteEntrySuccess(item, res)
     , $scope.deleteEntryFailure)
 
-  $scope.deleteEntrySuccess = (item, response) ->
+  $scope.deleteEntrySuccess = (item, res) ->
     count = 0
     rpl = 0
     _.each($scope.ledgerData.ledgers, (entry) ->
@@ -146,13 +145,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       count++
     )
     $scope.ledgerData.ledgers.splice(rpl, 1)
-    toastr.success(response.message, response.status)
+    toastr.success(res.message, res.status)
     $scope.removeLedgerDialog()
     $scope.calculateLedger($scope.ledgerData, "deleted")
 
-  $scope.deleteEntryFailure = (response) ->
-    console.log "deleteEntryFailure", response
-    toastr.error(response.body.message, "Error")
+  $scope.deleteEntryFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.addNewEntry = (data) ->
     edata = {}
@@ -171,10 +169,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     }
     ledgerService.createEntry(unqNamesObj, edata).then($scope.addEntrySuccess, $scope.addEntryFailure)
 
-  $scope.addEntrySuccess = (response) ->
+  $scope.addEntrySuccess = (res) ->
     toastr.success("Entry created successfully", "Success")
     $scope.removeLedgerDialog()
-    tType = response.body.transactions[0].type
+    tType = res.body.transactions[0].type
     count = 0
     rpl = 0
     _.each($scope.ledgerData.ledgers, (ledger) ->
@@ -182,7 +180,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         rpl = count
       count++
     )
-    $scope.ledgerData.ledgers[rpl] = response.body
+    $scope.ledgerData.ledgers[rpl] = res.body
 
     if tType is 'DEBIT'
       $scope.ledgerData.ledgers.push(angular.copy(dummyValueDebit))
@@ -191,9 +189,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
     $scope.calculateLedger($scope.ledgerData, "add")
 
-  $scope.addEntryFailure = (response) ->
-    console.log response, "addEntryFailure"
-    toastr.error(response.data.message, "Error")
+  $scope.addEntryFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.updateEntry = (data) ->
     edata = {}
@@ -214,22 +211,21 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
     ledgerService.updateEntry(unqNamesObj, edata).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
 
-  $scope.updateEntrySuccess = (response) ->
+  $scope.updateEntrySuccess = (res) ->
     toastr.success("Entry updated successfully", "Success")
     $scope.removeLedgerDialog()
     count = 0
     rpl = 0
     _.each($scope.ledgerData.ledgers, (ledger) ->
-      if ledger.uniqueName is response.body.uniqueName
+      if ledger.uniqueName is res.body.uniqueName
         rpl = count
       count++
     )
-    $scope.ledgerData.ledgers[rpl] = response.body
+    $scope.ledgerData.ledgers[rpl] = res.body
     $scope.calculateLedger($scope.ledgerData, "update")
 
-  $scope.updateEntryFailure = (response) ->
-    console.log response, "updateEntryFailure"
-    toastr.error(response.body.message, "Error")
+  $scope.updateEntryFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.removeLedgerDialog = () ->
     allPopElem = angular.element(document.querySelector('.ledgerPopDiv'))

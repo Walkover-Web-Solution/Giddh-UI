@@ -4,10 +4,10 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
   $rootScope.showLedgerBox = false
   $rootScope.basicInfo = {}
   $scope.logout = ->
-    $http.post('/logout').then ((response) ->
+    $http.post('/logout').then ((res) ->
       localStorageService.remove("_userDetails")
       window.location = "/thanks"
-    ), (response) ->
+    ), (res) ->
 
   $scope.goToManageGroups = ->
     if _.isEmpty($rootScope.selectedCompany)

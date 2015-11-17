@@ -35,16 +35,19 @@ describe 'userController', ->
 
   describe '#getUserAuthKeySuccess', ->
     it 'should set userAuthKey value', ->
-      result = {"body": "userUniqueId"}
-      @scope.getUserAuthKeySuccess(result)
-      expect(@scope.userAuthKey).toEqual(result.body)
+      res = {"body": "userUniqueId"}
+      @scope.getUserAuthKeySuccess(res)
+      expect(@scope.userAuthKey).toEqual(res.body)
 
   describe '#getUserAuthKeyFailure', ->
     it 'should show toastr with error message', ->
-      result = {"body": {"message": "Unable to generate auth key"}}
+      res = 
+        data: 
+          message: "Unable to generate auth key"
+          status: "Error"
       spyOn(@toastr, 'error')
-      @scope.getUserAuthKeyFailure(result)
-      expect(@toastr.error).toHaveBeenCalledWith("Unable to generate auth key", "Error")
+      @scope.getUserAuthKeyFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#regenerateKey', ->
     it 'should regenerate key for user by calling service', ->
@@ -56,16 +59,19 @@ describe 'userController', ->
 
   describe '#generateKeySuccess', ->
     it 'should set userAuthKey value', ->
-      result = {"body": "userUniqueId"}
-      @scope.getUserAuthKeySuccess(result)
-      expect(@scope.userAuthKey).toEqual(result.body)
+      res = {"body": "userUniqueId"}
+      @scope.getUserAuthKeySuccess(res)
+      expect(@scope.userAuthKey).toEqual(res.body)
 
   describe '#generateKeyFailure', ->
     it 'should show toastr with error message', ->
-      result = {"body": {"message": "Unable to generate auth key"}}
+      res = 
+        data: 
+          message: "Unable to generate auth key"
+          status: "Error"
       spyOn(@toastr, 'error')
-      @scope.getUserAuthKeyFailure(result)
-      expect(@toastr.error).toHaveBeenCalledWith("Unable to generate auth key", "Error")
+      @scope.getUserAuthKeyFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#test to check for viewContentLoaded event', ->
     it 'should call a getAccountsGroups method', ->

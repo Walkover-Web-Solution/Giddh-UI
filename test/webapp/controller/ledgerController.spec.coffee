@@ -121,15 +121,15 @@ describe 'ledgerController', ->
     describe '#loadLedgerSuccess', ->
       it 'should call calculate ledger function with data and set a variable true and push value in ledgerdata', ->
         spyOn(@scope, "calculateLedger")
-        response = {
+        res = {
           status: "success"
           body: {
             key: "value"
             ledgers: []
           }
         }
-        @scope.loadLedgerSuccess(response)
-        expect(@scope.ledgerData).toBe(response.body)
+        @scope.loadLedgerSuccess(res)
+        expect(@scope.ledgerData).toBe(res.body)
         expect(@scope.showLedgerBox).toBeTruthy()
         expect(@scope.calculateLedger).toHaveBeenCalledWith(@scope.ledgerData, "server")
 
@@ -161,6 +161,15 @@ describe 'ledgerController', ->
         @scope.debitOnly(data)
         expect("CREDIT").toBe(data.transactions[0].type)
 
+    describe '#loadLedgerFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.loadLedgerFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
     describe '#addNewAccount', ->
       it 'should check if selectedCompany is empty then it will show alert', ->
@@ -198,7 +207,7 @@ describe 'ledgerController', ->
 
     describe '#deleteEntrySuccess', ->
       it 'should check ledger array length and remove data from its position by index and show success message through toastr and call calculateLedger function with two para', ->
-        response = {
+        res = {
           status: "success"
           message: "Entry deleted successfully"
         }
@@ -214,10 +223,20 @@ describe 'ledgerController', ->
         spyOn(@toastr, "success")
         spyOn(@scope, "calculateLedger")
         spyOn(@scope, "removeLedgerDialog")
-        @scope.deleteEntrySuccess(item, response)
-        expect(@toastr.success).toHaveBeenCalledWith(response.message, response.status)
+        @scope.deleteEntrySuccess(item, res)
+        expect(@toastr.success).toHaveBeenCalledWith(res.message, res.status)
         expect(@scope.removeLedgerDialog).toHaveBeenCalled()
         expect(@scope.calculateLedger).toHaveBeenCalledWith(@scope.ledgerData, "deleted")
+
+    describe '#deleteEntryFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.deleteEntryFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
     describe '#addNewEntry', ->
       it 'should add a entry to ledger, copy data to a variable, call ledgerService createEntry method', ->
@@ -248,7 +267,7 @@ describe 'ledgerController', ->
 
     describe '#addEntrySuccess', ->
       it 'should show success message, call removeLedgerDialog function, and push data to main object and push data according to type in ledger Object, and call calculateLedger function', ->
-        response = {
+        res = {
           status: "Success"
           message: "Entry created successfully"
           body: {
@@ -268,20 +287,30 @@ describe 'ledgerController', ->
             }
           ]
         }
-        tType = response.body.transactions[0].type
+        tType = res.body.transactions[0].type
         count = 0
         rpl = 0
         spyOn(@scope, "removeLedgerDialog")
         spyOn(@scope, "calculateLedger")
         spyOn(@toastr, "success")
-        @scope.addEntrySuccess(response)
-        expect(@toastr.success).toHaveBeenCalledWith(response.message, response.status)
+        @scope.addEntrySuccess(res)
+        expect(@toastr.success).toHaveBeenCalledWith(res.message, res.status)
         expect(@scope.removeLedgerDialog).toHaveBeenCalled()
-        expect(tType).toBe(response.body.transactions[0].type)
+        expect(tType).toBe(res.body.transactions[0].type)
         expect(count).toBe (0)
         expect(rpl).toBe (0)
-        expect(@scope.ledgerData.ledgers[rpl]).toBe(response.body)
+        expect(@scope.ledgerData.ledgers[rpl]).toBe(res.body)
         expect(@scope.calculateLedger).toHaveBeenCalledWith(@scope.ledgerData, "add")
+
+    describe '#addEntryFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.addEntryFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
     describe '#updateEntry', ->
       it 'should update a entry to ledger, copy data to a variable, call ledgerService createEntry method', ->
@@ -314,7 +343,7 @@ describe 'ledgerController', ->
 
     describe '#updateEntrySuccess', ->
       it 'should show success message, call removeLedgerDialog function, and change data to main object, and call calculateLedger function', ->
-        response = {
+        res = {
           status: "Success"
           message: "Entry updated successfully"
           body: {
@@ -334,19 +363,29 @@ describe 'ledgerController', ->
             }
           ]
         }
-        tType = response.body.transactions[0].type
+        tType = res.body.transactions[0].type
         count = 0
         rpl = 0
         spyOn(@scope, "removeLedgerDialog")
         spyOn(@scope, "calculateLedger")
         spyOn(@toastr, "success")
-        @scope.updateEntrySuccess(response)
-        expect(@toastr.success).toHaveBeenCalledWith(response.message, response.status)
+        @scope.updateEntrySuccess(res)
+        expect(@toastr.success).toHaveBeenCalledWith(res.message, res.status)
         expect(@scope.removeLedgerDialog).toHaveBeenCalled()
         expect(count).toBe (0)
         expect(rpl).toBe (0)
-        expect(@scope.ledgerData.ledgers[rpl]).toBe(response.body)
+        expect(@scope.ledgerData.ledgers[rpl]).toBe(res.body)
         expect(@scope.calculateLedger).toHaveBeenCalledWith(@scope.ledgerData, "update")
+
+    describe '#updateEntryFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.updateEntryFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
     describe '#calculateLedger', ->
       it 'should calculate data and set some variables to according in this credit is greater', ->
