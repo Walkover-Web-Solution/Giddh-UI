@@ -69,7 +69,6 @@ router.put '/:groupUniqueName/unshare', (req, res) ->
 
 
 router.get '/:groupUniqueName/shared-with', (req, res) ->
-  console.log "in list of shared-with", req.params
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName + '/shared-with'
   args =
     headers:

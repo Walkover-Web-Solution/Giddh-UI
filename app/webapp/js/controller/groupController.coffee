@@ -33,7 +33,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     Ccode: undefined,
     onlyMobileNo: undefined
   }
-
+  
   #date time picker code starts here
   $scope.today = new Date()
 

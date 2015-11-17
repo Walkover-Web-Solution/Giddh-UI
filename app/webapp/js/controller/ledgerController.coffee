@@ -86,7 +86,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
 
   $scope.loadLedger = (data, acData) ->
-    console.log data, "loadLedger", acData
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
       return false
