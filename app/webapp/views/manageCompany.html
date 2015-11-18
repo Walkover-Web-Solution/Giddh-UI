@@ -3,7 +3,6 @@
     <tab heading="Basic Information">
       <div class="pd2">
         <form id="cmpnyBascFrm" name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
-
           <p ng-hide="cmpnyBascFrm.$submitted || !ecmpnyBascFrm.cCountry.$invalid" class="bg-warning pd1 mrB1">
             For better experience fill all details of form
           </p>
@@ -16,17 +15,12 @@
                 <label>Name</label>
                 <input type="text" ng-model="selectedCompany.name" class="form-control" required name="cName"
                        tabindex="1">
-
               </div>
-              <div class="form-group"
-                   ng-class="(cmpnyBascFrm.cEmail.$valid  && cmpnyBascFrm.cEmail.$touched) ? 'has-success' : (cmpnyBascFrm.cEmail.$touched) ? 'has-error' : '' ">
+              <div class="form-group">
                 <label>Email</label>
-                <input type="email" ng-model="selectedCompany.email" class="form-control" required name="cEmail"
+                <input type="email" ng-model="selectedCompany.email" class="form-control" name="cEmail"
                        tabindex="2">
-
               </div>
-
-
               <div class="form-group"
                    ng-class="(cmpnyBascFrm.cContact.$valid  && cmpnyBascFrm.cContact.$touched) ? 'has-success' : (cmpnyBascFrm.cContact.$touched) ? 'has-error' : '' ">
                 <label>Contact</label>
@@ -54,7 +48,6 @@
                 </div>
 
               </div>
-
               <div class="form-group"
                    ng-class="(cmpnyBascFrm.cAddress.$valid  && cmpnyBascFrm.cAddress.$touched) ? 'has-success' : (cmpnyBascFrm.cAddress.$touched) ? 'has-error' : '' ">
                 <label>Address</label>
@@ -91,7 +84,6 @@
                 </div>
 
               </div>
-
               <div class="form-group"
                    ng-class="(cmpnyBascFrm.cCity.$valid  && cmpnyBascFrm.cCity.$touched) ? 'has-success' : (cmpnyBascFrm.cCity.$touched) ? 'has-error' : '' ">
                 <label>City</label>
@@ -106,8 +98,6 @@
                 </div>
 
               </div>
-
-
               <div class="row">
                 <div class="col-md-4 col-sm-12">
                   <div class="form-group"
@@ -140,8 +130,6 @@
           </div>
         </form>
         <!-- end of change basic info -->
-
-
       </div>
     </tab>
     <!-- basic information tab end here -->
