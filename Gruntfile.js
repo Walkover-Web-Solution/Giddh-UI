@@ -11,7 +11,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-clean');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-coffeelint');
+  grunt.loadNpmTasks('grunt-preprocess');
   grunt.loadNpmTasks('grunt-karma');
+  grunt.loadNpmTasks('grunt-env');
 
   srcDir = 'app/';
   destDir = 'public/';
@@ -67,7 +69,7 @@ module.exports = function (grunt) {
         files: [
           srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '/**/*.css', routeSrcDir + "/**/*.coffee"
         ],
-        tasks: ['coffee', 'copy', 'clean', 'concat']
+        tasks: ['coffee', 'copy', 'clean', 'concat', 'env:dev', 'preprocess:dev']
       }
     },
     karma: {
@@ -91,6 +93,36 @@ module.exports = function (grunt) {
     },
     clean: {
       js: ["public/webapp/app.js"]
+    },
+    uglify: {
+      options: {
+        mangle: false
+      },
+      dist: {
+        files: {
+          'public/webapp/app.min.js': ['public/webapp/app.js']
+        }
+      }
+    },
+    env: {
+      dev: {
+        NODE_ENV: 'DEVELOPMENT'
+      },
+      prod: {
+        NODE_ENV: 'PRODUCTION'
+      }
+    },
+    preprocess:{
+      dev:{
+        files:{
+          'public/webapp/views/index.html': ['public/webapp/views/index.html']
+        }
+      },
+      prod:{
+        files:{
+          'public/webapp/views/index.html': ['public/webapp/views/index.html']
+        }
+      }
     }
   });
 
@@ -100,7 +132,9 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch'])
 
-  grunt.registerTask('init', ['copy', 'coffee','clean', 'concat'])
+  grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean', 'concat', 'preprocess:dev'])
+
+  grunt.registerTask('init-prod', ['copy', 'coffee', 'clean', 'env:prod', 'concat', 'uglify', 'preprocess:prod'])
 
   grunt.registerTask('test', [
     'coffee',

@@ -33,8 +33,13 @@
   <script src="/bower_components/angular-ui-tree/dist/angular-ui-tree.min.js"></script>
 
   <!-- including app Js Files -->
+  <!-- @if NODE_ENV='DEVELOPMENT' -->
   <script src="/public/webapp/app.js"></script>
-
+  <!-- @endif -->
+  <!-- @if NODE_ENV='PRODUCTION' -->
+  <script src="/public/webapp/app.min.js"></script>
+  <!-- @endif -->
+  
   <!-- lib styles include -->
   <link rel="stylesheet" type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
   <link rel="stylesheet" type="text/css" href="/bower_components/perfect-scrollbar/css/perfect-scrollbar.min.css">
