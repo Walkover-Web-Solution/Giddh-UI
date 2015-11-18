@@ -157,12 +157,7 @@ angular.module('ledger', [])
         </div></form>"
   link: (scope, elem, attrs) ->
     scope.lItem = {}
-    # console.log elem.context.getElementsByClassName('nobdr'), "element", elem
-    childInp = elem.context.getElementsByClassName('nobdr')
-    console.log childInp[0]
-    angular.element(childInp[0]).on 'focus', () ->
-      console.log "focus init", this.getBoundingClientRect()
-
+    
     scope.addCrossFormField = (i, d, c) ->
       scope.item.transactions[0].particular.uniqueName = i.uName
 
