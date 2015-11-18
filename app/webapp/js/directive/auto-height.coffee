@@ -108,7 +108,7 @@ directive 'validDate', (toastr, $filter) ->
   }
 
 angular.module('ledger', [])
-.directive 'ledgerPop', ($compile, $filter) ->
+.directive 'ledgerPop', ['$compile', '$filter', '$document', '$parse', ($compile, $filter, $document, $parse) ->
   {
   restrict: 'A'
   replace: true
@@ -125,22 +125,22 @@ angular.module('ledger', [])
     removeClassInAllEle: '&'
     el:'&'
   controller: 'ledgerController'
-  template: "<form class='pr drEntryForm_{{index}} name='drEntryForm_{{index}}' novalidate tabindex='-1'>
-      <div ng-click='openDialog(item, index, ftype)'>
+  template: "<form novalidate tabindex='-1'>
+      <div>
           <table class='table ldgrInnerTbl'>
             <tr>
               <td width='28%'>
-                <input type='text' class='nobdr test'
-                  tabindex='-1' required
+                <input type='text' class='nobdr ledgInpt'
+                  tabindex='{{index}}1' required
                   name='entryDate_{{index}}'
                   ng-model='item.entryDate' valid-date/>
               </td>
               <td width=44%'>
-                <input type='hidden'  class='nobdr test'
+                <input type='hidden'
                   name='trnsUniq_{{index}}'
                   ng-model='item.transactions[0].particular.uniqueName'>
                 <input type='text'
-                  tabindex='-1'  class='nobdr test' required
+                  tabindex='{{index}}2'  class='nobdr ledgInpt' required
                   name='trnsName_{{index}}'
                   ng-model='item.transactions[0].particular'
                   typeahead='obj as obj.name for obj in aclist | filter:$viewValue | limitTo:8'
@@ -149,8 +149,8 @@ angular.module('ledger', [])
                   typeahead-on-select='addCrossFormField($item, $model, $label)'>
               </td>
               <td width='28%'>
-                <input type='text' class='nobdr'
-                  tabindex='-1' required
+                <input type='text' class='nobdr ledgInpt'
+                  tabindex='{{index}}3' required
                   name='amount_{{index}}'
                   ng-model='item.transactions[0].amount'
                   valid-number/>
@@ -160,7 +160,17 @@ angular.module('ledger', [])
         </div></form>"
   link: (scope, elem, attrs) ->
     scope.lItem = {}
-    
+    fields = elem.context.getElementsByClassName('ledgInpt')
+    i = 0
+    while i < fields.length
+      fields[i].addEventListener 'focus', (event) ->
+        parentForm = angular.element(this).parents('form')
+        if parentForm.hasClass('open')
+          console.log "parent opened"
+        else
+          scope.openDialog(scope.item, scope.index, scope.ftype, parentForm)
+      i++
+
     scope.addCrossFormField = (i, d, c) ->
       scope.item.transactions[0].particular.uniqueName = i.uName
 
@@ -176,10 +186,14 @@ angular.module('ledger', [])
       if (item.entryDate is "" || item.entryDate is undefined || item.entryDate is null)
         item.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
 
-    scope.openDialog = (item, index, ftype) ->
+    scope.openDialog = (item, index, ftype, parentForm) ->
+      $document.off 'click'
+      $(".ledgEntryForm").removeClass('open')
+      elem.addClass('open')
+
       scope.checkDateField(item)
-      rect = elem.context.getBoundingClientRect()
-      childCount = elem.context.childElementCount
+      rect = parentForm[0].getBoundingClientRect()
+      childCount = parentForm[0].childElementCount
       popHtml = angular.element('
           <div class="popover fade bottom ledgerPopDiv" id="popid_{{index}}">
           <div class="arrow"></div>
@@ -193,7 +207,8 @@ angular.module('ledger', [])
               <div class="row">
                 <div class="col-md-6 col-sm-12">
                   <div class="form-group">
-                    <select class="form-control" name="voucherType" ng-model="item.voucher.shortCode">
+                    <select class="form-control"
+                    tabindex="{{index}}4" name="voucherType" ng-model="item.voucher.shortCode">
                       <option
                         ng-repeat="option in voucherTypeList"
                         ng-selected="{{option.shortCode == item.voucher.shortCode}}"
@@ -203,7 +218,7 @@ angular.module('ledger', [])
                     </select>
                   </div>
                   <div class="form-group">
-                    <input type="text" name="tag" class="form-control" ng-model="item.tag" placeholder="Tag" />
+                    <input type="text" name="tag" class="form-control" ng-model="item.tag" tabindex="{{index}}5" placeholder="Tag" />
                   </div>
                 </div>
                 <div class="col-md-6 col-sm-12">
@@ -212,32 +227,46 @@ angular.module('ledger', [])
                     {{item.voucher.shortCode}}-{{item.voucherNo}}
                   </div>
                   <div class="form-group">
-                    <textarea class="form-control" name="description" ng-model="item.description" placeholder="Description"></textarea>
+                    <textarea class="form-control" tabindex="{{index}}6" name="description" ng-model="item.description" placeholder="Description"></textarea>
                   </div>
                 </div>
               </div>
               <div class="">
-                <button ng-if="ftype == \'Update\'" class="btn btn-success"
+                <button ng-if="ftype == \'Update\'" class="btn btn-success" tabindex="{{index}}7"
                   type="button" ng-disabled="drEntryForm_{{index}}.$invalid"
                   ng-click="updateLedger({entry: item})">Update</button>
 
-                <button ng-if="ftype == \'Add\'" class="btn btn-success"
+                <button  tabindex="{{index}}7" ng-if="ftype == \'Add\'" class="btn btn-success"
                   type="button" ng-disabled="drEntryForm_{{index}}.$invalid || noResults"
                   ng-click="addLedger({entry: item})">Add</button>
 
-                <button ng-click="removeLedgdialog(); resetEntry(item, lItem)" class="btn btn-default mrL1" type="button">close</button>
+                <button  tabindex="{{index}}8" ng-click="removeLedgdialog(); resetEntry(item, lItem)" class="btn btn-default mrL1" type="button">close</button>
 
-                <button ng-show="item.uniqueName != undefined" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
+                <button  tabindex="{{index}}9" ng-show="item.uniqueName != undefined" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
               </div>
             </div>
           </div>
         </div>')
 
+      $document.on "click", (event)->
+        onDocumentClick(event)
+
+      scopeExpression = attrs.removeLedgdialog
+
+      onDocumentClick = (event) ->
+        console.log "onDocumentClick", event
+        isChild = elem.find(event.target).length > 0
+        if !isChild
+          console.log "not isChild"
+          scope.$apply(scopeExpression)
+          $(".ledgEntryForm").removeClass('open')
+          $document.off 'click'
+
       if childCount == 1
         angular.copy(item, scope.lItem)
         scope.removeLedgerDialog("all")
         $compile(popHtml)(scope)
-        elem.append(popHtml)
+        parentForm.append(popHtml)
         popHtml.css({
           display: "block",
           top: rect.height,
@@ -255,3 +284,4 @@ angular.module('ledger', [])
 
 
   }
+]
