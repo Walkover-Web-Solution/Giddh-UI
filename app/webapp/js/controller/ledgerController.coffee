@@ -155,13 +155,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.addNewEntry = (data) ->
     edata = {}
     angular.copy(data, edata)
-
     edata.voucherType = data.voucher.shortCode
-
-    if _.isObject(data.transactions[0].particular)
-      unk = data.transactions[0].particular.uniqueName
-      edata.transactions[0].particular = unk
-
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
@@ -205,9 +199,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       acntUname: $scope.selectedAccountUniqueName
       entUname: data.uniqueName
     }
-    if _.isObject(data.transactions[0].particular)
-      unk = data.transactions[0].particular.uniqueName
-      edata.transactions[0].particular = unk
 
     ledgerService.updateEntry(unqNamesObj, edata).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
 

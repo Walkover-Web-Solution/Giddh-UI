@@ -134,12 +134,10 @@ angular.module('ledger', [])
                   ng-model='item.entryDate' valid-date/>
               </td>
               <td width=44%'>
-                <input type='hidden' name='trnsUniq_{{index}}'
-                  ng-model='item.transactions[0].particular.uniqueName'>
                 <input type='text'
                   tabindex='-1'  class='nobdr' required
                   name='trnsName_{{index}}'
-                  ng-model='item.transactions[0].particular.name'
+                  ng-model='item.transactions[0].particular'
                   typeahead='obj as obj.name for obj in aclist | filter:$viewValue | limitTo:8'
                   class='form-control'
                   typeahead-no-results='noResults'
@@ -164,8 +162,7 @@ angular.module('ledger', [])
     scope.resetEntry = (item, lItem) ->
       if _.isUndefined(lItem.uniqueName)
         item.entryDate = undefined
-        item.transactions[0].particular.uniqueName = undefined
-        item.transactions[0].particular.name = undefined
+        item.transactions[0].particular = {}
         item.transactions[0].amount = undefined
       else
         angular.copy(lItem, item)
