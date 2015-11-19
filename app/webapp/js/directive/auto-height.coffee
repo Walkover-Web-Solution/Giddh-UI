@@ -95,7 +95,7 @@ directive 'validDate', (toastr, $filter) ->
       return
     element.on 'focus', () ->
       if element.context.value is "" || element.context.value is undefined || element.context.value is null
-        scope.item.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
+        scope.item.sharedData.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
 
     element.on 'blur', () ->
       if moment(element.context.value, "DD-MM-YYYY", true).isValid()
@@ -133,7 +133,7 @@ angular.module('ledger', [])
                 <input type='text' class='nobdr ledgInpt'
                   tabindex='{{index}}1' required
                   name='entryDate_{{index}}'
-                  ng-model='item.entryDate' valid-date/>
+                  ng-model='item.sharedData.entryDate' valid-date/>
               </td>
               <td width=44%'>
                 <input type='hidden'
@@ -175,16 +175,17 @@ angular.module('ledger', [])
       scope.item.transactions[0].particular.uniqueName = i.uName
 
     scope.resetEntry = (item, lItem) ->
-      if _.isUndefined(lItem.uniqueName)
-        item.entryDate = undefined
-        item.transactions[0].particular = {}
+      if _.isUndefined(lItem.sharedData.uniqueName)
+        item.sharedData.entryDate = undefined
+        item.transactions[0].particular.uniqueName = undefined
+        item.transactions[0].particular.name = undefined
         item.transactions[0].amount = undefined
       else
         angular.copy(lItem, item)
 
     scope.checkDateField = (item) ->
-      if (item.entryDate is "" || item.entryDate is undefined || item.entryDate is null)
-        item.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
+      if (item.sharedData.entryDate is "" || item.sharedData.entryDate is undefined || item.sharedData.entryDate is null)
+        item.sharedData.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
 
     scope.removeClassInAllEle = (target, clName)->
       el = document.getElementsByClassName(target)
@@ -192,8 +193,8 @@ angular.module('ledger', [])
 
     scope.highlightMultiEntry =(item)->
       scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
-      if item.multiEntry
-        el = document.getElementsByClassName(item.uniqueName)
+      if item.sharedData.multiEntry
+        el = document.getElementsByClassName(item.sharedData.uniqueName)
         angular.element(el).addClass('highlightRow')
 
     scope.openDialog = (item, index, ftype, parentForm) ->
@@ -218,26 +219,26 @@ angular.module('ledger', [])
                 <div class="col-md-6 col-sm-12">
                   <div class="form-group">
                     <select class="form-control"
-                    tabindex="{{index}}4" name="voucherType" ng-model="item.voucher.shortCode">
+                    tabindex="{{index}}4" name="voucherType" ng-model="item.sharedData.voucher.shortCode">
                       <option
                         ng-repeat="option in voucherTypeList"
-                        ng-selected="{{option.shortCode == item.voucher.shortCode}}"
+                        ng-selected="{{option.shortCode == item.sharedData.voucher.shortCode}}"
                         value="{{option.shortCode}}">
                         {{option.name}}
                       </option>
                     </select>
                   </div>
                   <div class="form-group">
-                    <input type="text" name="tag" class="form-control" ng-model="item.tag" tabindex="{{index}}5" placeholder="Tag" />
+                    <input type="text" name="tag" class="form-control" ng-model="item.sharedData.tag" tabindex="{{index}}5" placeholder="Tag" />
                   </div>
                 </div>
                 <div class="col-md-6 col-sm-12">
                   <div class="form-group" ng-if="ftype == \'Update\'">
                     <label>Vouher no. </label>
-                    {{item.voucher.shortCode}}-{{item.voucherNo}}
+                    {{item.sharedData.voucher.shortCode}}-{{item.sharedData.voucherNo}}
                   </div>
                   <div class="form-group">
-                    <textarea class="form-control" tabindex="{{index}}6" name="description" ng-model="item.description" placeholder="Description"></textarea>
+                    <textarea class="form-control" tabindex="{{index}}6" name="description" ng-model="item.sharedData.description" placeholder="Description"></textarea>
                   </div>
                 </div>
               </div>
@@ -252,7 +253,7 @@ angular.module('ledger', [])
 
                 <button  tabindex="{{index}}8" ng-click="removeLedgdialog(); resetEntry(item, lItem)" class="btn btn-default mrL1" type="button">close</button>
 
-                <button  tabindex="{{index}}9" ng-show="item.uniqueName != undefined" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
+                <button  tabindex="{{index}}9" ng-show="item.sharedData.uniqueName != undefined" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
               </div>
             </div>
           </div>

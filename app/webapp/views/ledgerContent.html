@@ -122,10 +122,10 @@
                       ng-repeat="(key, value) in ledgerOnlyDebitData | limitTo: quantity track by $index"
                       ledger-pop
                       index="$index"
-                      ftype="value.uniqueName == undefined ? 'Add' : 'Update'"
+                      ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"
                       itemdata="value"
                       acntlist="fltAccntList"
-                      class='pr drEntryForm_{{$index}} ledgEntryForm {{value.uniqueName}}'
+                      class='pr drEntryForm_{{$index}} ledgEntryForm {{value.sharedData.uniqueName}}'
                       name='drEntryForm_{{$index}}'
                       update-ledger="updateEntry(entry)"
                       add-ledger="addNewEntry(entry)"
@@ -177,10 +177,10 @@
                       ng-repeat="(key, value) in ledgerOnlyCreditData | limitTo: quantity track by $index "
                       ledger-pop
                       index="$index"
-                      ftype="value.uniqueName == undefined ? 'Add' : 'Update'"
+                      ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"
                       itemdata="value"
                       acntlist="fltAccntList"
-                      class='pr crEntryForm_{{$index}} ledgEntryForm {{value.uniqueName}}'
+                      class='pr crEntryForm_{{$index}} ledgEntryForm {{value.sharedData.uniqueName}}'
                       name='crEntryForm_{{$index}}'
                       update-ledger="updateEntry(entry)"
                       add-ledger="addNewEntry(entry)"

@@ -128,27 +128,25 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.loadLedgerFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  
   $scope.divideAndRule = (data) ->
     $scope.ledgerOnlyCreditData = []
     $scope.ledgerOnlyDebitData = []
-
-    console.log "divideAndRule"
     _.each(data.ledgers, (ledger) ->
-
       if ledger.transactions.length > 1
         ledger.multiEntry = true
+        console.log "divideAndRule multiple"
       else
         ledger.multiEntry = false
+      sharedData = _.omit(ledger, 'transactions')
       _.each(ledger.transactions, (transaction) ->
-        newEntry = {}
+        newEntry = {sharedData: sharedData}
         if transaction.type is "DEBIT"
-          _.extend(newEntry, ledger)
+#          _.extend(newEntry, ledger)
           newEntry.transactions = [transaction]
           $scope.ledgerOnlyDebitData.push(newEntry)
 
         if transaction.type is "CREDIT"
-          _.extend(newEntry, ledger)
+#          _.extend(newEntry, ledger)
           newEntry.transactions = [transaction]
           $scope.ledgerOnlyCreditData.push(newEntry)
       )
@@ -225,30 +223,32 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.updateEntry = (data) ->
-    console.log "updateEntry"
+    console.log "updateEntry", data
     edata = {}
     # angular.copy(data, edata)
-    _.extend(edata, data)
+    _.extend(edata, data.sharedData)
     
-    if not _.isUndefined(data.voucher)
-      edata.voucherType = data.voucher.shortCode
+    if not _.isUndefined(data.sharedData.voucher)
+      edata.voucherType = data.sharedData.voucher.shortCode
 
     if edata.multiEntry
+      console.log "yea its a multiEntry"
       edata.transactions = []
       _.filter($scope.ledgerOnlyDebitData, (entry) ->
-        if edata.uniqueName is entry.uniqueName
+        if edata.uniqueName is entry.sharedData.uniqueName
           edata.transactions.push(entry.transactions[0])
       )
       _.filter($scope.ledgerOnlyCreditData, (entry) ->
-        if edata.uniqueName is entry.uniqueName
+        if edata.uniqueName is entry.sharedData.uniqueName
           edata.transactions.push(entry.transactions[0])
       )
-      _.each(edata.transactions, (amtItem) ->
-        if _.isObject(amtItem.particular)
-          amtItem.particular = amtItem.particular.uniqueName
+      _.each(edata.transactions, (transaction) ->
+        if _.isObject(transaction.particular)
+          transaction.particular = transaction.particular.uniqueName
       )
     else
-      console.log "not multiEntry"
+      edata.transactions = data.transactions
+      console.log "No its not multiEntry"
       if _.isObject(data.transactions[0].particular)
         edata.transactions[0].particular = data.transactions[0].particular.uniqueName
     
@@ -370,6 +370,7 @@ class angular.Ledger
   constructor: (type)->
     @transactions = [new angular.Transaction(type)]
     @description = ""
+    @sharedData = {}
     @tag = ""
     @uniqueName = undefined
     @entryDate = ""
