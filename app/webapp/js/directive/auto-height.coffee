@@ -193,9 +193,8 @@ angular.module('ledger', [])
 
     scope.highlightMultiEntry =(item)->
       scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
-      if item.sharedData.multiEntry
-        el = document.getElementsByClassName(item.sharedData.uniqueName)
-        angular.element(el).addClass('highlightRow')
+      el = document.getElementsByClassName(item.sharedData.uniqueName)
+      angular.element(el).addClass('highlightRow')
 
     scope.openDialog = (item, index, ftype, parentForm) ->
       $document.off 'click'
