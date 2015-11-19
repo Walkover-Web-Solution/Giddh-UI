@@ -134,7 +134,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     _.each(data.ledgers, (ledger) ->
       if ledger.transactions.length > 1
         ledger.multiEntry = true
-        console.log "divideAndRule multiple"
       else
         ledger.multiEntry = false
       sharedData = _.omit(ledger, 'transactions')
@@ -223,7 +222,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.updateEntry = (data) ->
-    console.log "updateEntry", data
     edata = {}
     # angular.copy(data, edata)
     _.extend(edata, data.sharedData)
@@ -232,7 +230,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       edata.voucherType = data.sharedData.voucher.shortCode
 
     if edata.multiEntry
-      console.log "yea its a multiEntry"
       edata.transactions = []
       _.filter($scope.ledgerOnlyDebitData, (entry) ->
         if edata.uniqueName is entry.sharedData.uniqueName
@@ -242,41 +239,33 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         if edata.uniqueName is entry.sharedData.uniqueName
           edata.transactions.push(entry.transactions[0])
       )
-      _.each(edata.transactions, (transaction) ->
-        if _.isObject(transaction.particular)
-          transaction.particular = transaction.particular.uniqueName
-      )
     else
       edata.transactions = data.transactions
-      console.log "No its not multiEntry"
       if _.isObject(data.transactions[0].particular)
         edata.transactions[0].particular = data.transactions[0].particular.uniqueName
     
-    console.log edata, "after filter"
-
-    return false
-
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
       acntUname: $scope.selectedAccountUniqueName
-      entUname: data.uniqueName
+      entUname: edata.uniqueName
     }
 
-    # ledgerService.updateEntry(unqNamesObj, edata).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
+    ledgerService.updateEntry(unqNamesObj, edata).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
 
   $scope.updateEntrySuccess = (res) ->
     toastr.success("Entry updated successfully", "Success")
     $scope.removeLedgerDialog()
     count = 0
     rpl = 0
-    _.each($scope.ledgerData.ledgers, (ledger) ->
-      if ledger.uniqueName is res.body.uniqueName
-        rpl = count
-      count++
-    )
-    $scope.ledgerData.ledgers[rpl] = res.body
-    $scope.calculateLedger($scope.ledgerData, "update")
+#    Need to Update This Logic
+#    _.each($scope.ledgerData.ledgers, (ledger) ->
+#      if ledger.uniqueName is res.body.uniqueName
+#        rpl = count
+#      count++
+#    )
+#    $scope.ledgerData.ledgers[rpl] = res.body
+#    $scope.calculateLedger($scope.ledgerData, "update")
 
   $scope.updateEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
