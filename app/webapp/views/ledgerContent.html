@@ -119,13 +119,13 @@
               <td class="nopad" colspan="100%">
                 <div class="pr">
                   <div
-                      ng-repeat="(key, value) in ledgerData.ledgers | pick: debitOnly | limitTo: quantity track by $index"
+                      ng-repeat="(key, value) in ledgerOnlyDebitData | limitTo: quantity track by $index"
                       ledger-pop
                       index="$index"
                       ftype="value.uniqueName == undefined ? 'Add' : 'Update'"
                       itemdata="value"
                       acntlist="fltAccntList"
-                      class='pr drEntryForm_{{$index}} ledgEntryForm'
+                      class='pr drEntryForm_{{$index}} ledgEntryForm {{value.uniqueName}}'
                       name='drEntryForm_{{$index}}'
                       update-ledger="updateEntry(entry)"
                       add-ledger="addNewEntry(entry)"
@@ -174,13 +174,13 @@
 
                 <div class="pr">
                   <div
-                      ng-repeat="(key, value) in ledgerData.ledgers | pick: creditOnly | limitTo: quantity track by $index "
+                      ng-repeat="(key, value) in ledgerOnlyCreditData | limitTo: quantity track by $index "
                       ledger-pop
                       index="$index"
                       ftype="value.uniqueName == undefined ? 'Add' : 'Update'"
                       itemdata="value"
                       acntlist="fltAccntList"
-                      class='pr crEntryForm_{{$index}} ledgEntryForm'
+                      class='pr crEntryForm_{{$index}} ledgEntryForm {{value.uniqueName}}'
                       name='crEntryForm_{{$index}}'
                       update-ledger="updateEntry(entry)"
                       add-ledger="addNewEntry(entry)"

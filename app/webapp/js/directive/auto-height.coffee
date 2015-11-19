@@ -186,16 +186,21 @@ angular.module('ledger', [])
       if (item.entryDate is "" || item.entryDate is undefined || item.entryDate is null)
         item.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
 
-    scope.removeClassInAllEle = (clName)->
-      el = document.getElementsByClassName(clName)
-      angular.element(el).removeClass('open')
+    scope.removeClassInAllEle = (target, clName)->
+      el = document.getElementsByClassName(target)
+      angular.element(el).removeClass(clName)
 
+    scope.highlightMultiEntry =(item)->
+      scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
+      if item.multiEntry
+        el = document.getElementsByClassName(item.uniqueName)
+        angular.element(el).addClass('highlightRow')
 
     scope.openDialog = (item, index, ftype, parentForm) ->
       $document.off 'click'
-      scope.removeClassInAllEle("ledgEntryForm")
+      scope.removeClassInAllEle("ledgEntryForm", "open")
       elem.addClass('open')
-
+      scope.highlightMultiEntry(item)
       scope.checkDateField(item)
       rect = parentForm[0].getBoundingClientRect()
       childCount = parentForm[0].childElementCount
@@ -261,8 +266,10 @@ angular.module('ledger', [])
       onDocumentClick = (event) ->
         isChild = elem.find(event.target).length > 0
         if !isChild
+          scope.resetEntry(scope.item, scope.lItem)
           scope.$apply(scopeExpression)
-          scope.removeClassInAllEle("ledgEntryForm")
+          scope.removeClassInAllEle("ledgEntryForm", "open")
+          scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
           $document.off 'click'
 
       if childCount == 1

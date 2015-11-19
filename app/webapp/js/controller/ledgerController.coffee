@@ -7,6 +7,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.selectedGroupUname = undefined
   $scope.selectedLedgerAccount = undefined
   $scope.selectedLedgerGroup = undefined
+  $scope.ledgerOnlyDebitData = []
+  $scope.ledgerOnlyCreditData = []
+
   $scope.selectedCompany = {}
   lsKeys = localStorageService.get("_selectedCompany")
   if not _.isNull(lsKeys) && not _.isEmpty(lsKeys) && not _.isUndefined(lsKeys)
@@ -106,13 +109,15 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $stateParams.grpName = $scope.selectedGroupUname
 
   $scope.loadLedgerSuccess = (res) ->
-    res.body.ledgers.push(angular.copy(dummyValueDebit))
-    res.body.ledgers.push(angular.copy(dummyValueCredit))
-    $scope.ledgerData = res.body
-    $rootScope.showLedgerBox = true
-    $scope.calculateLedger($scope.ledgerData, "server")
-    localStorageService.set('ledgerData', $scope.ledgerData);
-    
+    console.log "loadLedgerSuccess", res.body
+    testData = {}
+    angular.copy(res.body, testData)
+    $scope.divideAndRule(testData)
+    # res.body.ledgers.push(angular.copy(dummyValueDebit))
+    # res.body.ledgers.push(angular.copy(dummyValueCredit))
+    # $scope.ledgerData = res.body
+    # $rootScope.showLedgerBox = true
+    # $scope.calculateLedger($scope.ledgerData, "server")
 
   $scope.debitOnly = (ledger) ->
     'DEBIT' == ledger.transactions[0].type
@@ -122,6 +127,35 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.loadLedgerFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
+
+  
+  $scope.divideAndRule = (data) ->
+    $scope.ledgerOnlyCreditData = []
+    $scope.ledgerOnlyDebitData = []
+
+    console.log "divideAndRule"
+    _.each(data.ledgers, (ledger) ->
+
+      if ledger.transactions.length > 1
+        ledger.multiEntry = true
+      else
+        ledger.multiEntry = false
+      _.each(ledger.transactions, (transaction) ->
+        newEntry = {}
+        if transaction.type is "DEBIT"
+          _.extend(newEntry, ledger)
+          newEntry.transactions = [transaction]
+          $scope.ledgerOnlyDebitData.push(newEntry)
+
+        if transaction.type is "CREDIT"
+          _.extend(newEntry, ledger)
+          newEntry.transactions = [transaction]
+          $scope.ledgerOnlyCreditData.push(newEntry)
+      )
+    )
+    $scope.ledgerOnlyDebitData.push(angular.copy(dummyValueDebit))
+    $scope.ledgerOnlyCreditData.push(angular.copy(dummyValueCredit))
+    $rootScope.showLedgerBox = true
 
   $scope.addNewAccount = () ->
     if _.isEmpty($scope.selectedCompany)
@@ -191,11 +225,36 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.updateEntry = (data) ->
+    console.log "updateEntry"
     edata = {}
-    angular.copy(data, edata)
-
+    # angular.copy(data, edata)
+    _.extend(edata, data)
+    
     if not _.isUndefined(data.voucher)
       edata.voucherType = data.voucher.shortCode
+
+    if edata.multiEntry
+      edata.transactions = []
+      _.filter($scope.ledgerOnlyDebitData, (entry) ->
+        if edata.uniqueName is entry.uniqueName
+          edata.transactions.push(entry.transactions[0])
+      )
+      _.filter($scope.ledgerOnlyCreditData, (entry) ->
+        if edata.uniqueName is entry.uniqueName
+          edata.transactions.push(entry.transactions[0])
+      )
+      _.each(edata.transactions, (amtItem) ->
+        if _.isObject(amtItem.particular)
+          amtItem.particular = amtItem.particular.uniqueName
+      )
+    else
+      console.log "not multiEntry"
+      if _.isObject(data.transactions[0].particular)
+        edata.transactions[0].particular = data.transactions[0].particular.uniqueName
+    
+    console.log edata, "after filter"
+
+    return false
 
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
@@ -204,7 +263,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       entUname: data.uniqueName
     }
 
-    ledgerService.updateEntry(unqNamesObj, edata).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
+    # ledgerService.updateEntry(unqNamesObj, edata).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
 
   $scope.updateEntrySuccess = (res) ->
     toastr.success("Entry updated successfully", "Success")
