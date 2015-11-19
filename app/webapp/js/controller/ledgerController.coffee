@@ -243,8 +243,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       if entry.transactions[0].type is 'CREDIT'
         crt += entry.transactions[0].amount
     )
-    crt = parseInt(crt)
-    drt = parseInt(drt)
+    crt = parseFloat(crt)
+    drt = parseFloat(drt)
 
     if drt > crt
       $scope.ledgBalType = 'DEBIT'
@@ -262,12 +262,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
     # if calculation is wrong than make entry in newrelic
     if loadtype is 'server'
-      if data.debitTotal isnt parseInt($scope.debitTotal)
+      if data.debitTotal isnt parseFloat($scope.debitTotal)
         console.log "something is wrong in calculateLedger debitTotal"
-        console.log data.debitTotal, parseInt($scope.debitTotal)
-      if data.creditTotal isnt parseInt($scope.creditTotal)
+        console.log data.debitTotal, parseFloat($scope.debitTotal)
+      if data.creditTotal isnt parseFloat($scope.creditTotal)
         console.log "something is wrong in calculateLedger creditTotal"
-        console.log data.creditTotal, parseInt($scope.creditTotal)
+        console.log data.creditTotal, parseFloat($scope.creditTotal)
 
   $scope.onScroll = (sp, tsS, event) ->
     if  !_.isUndefined($scope.ledgerData)

@@ -102,7 +102,7 @@
             <tr class="greyBg"
                 ng-if="ledgerData.forwardedBalance.type == 'DEBIT' && ledgerData.forwardedBalance.amount > 0 ">
               <th colspan="100%">
-                B/F Balance: {{ledgerData.forwardedBalance.amount}}
+                B/F Balance: {{ledgerData.forwardedBalance.amount | number:2}}
               </th>
             </tr>
             <tr class="greyBg"
@@ -156,7 +156,7 @@
             <tr class="greyBg"
                 ng-if="ledgerData.forwardedBalance.type == 'CREDIT' && ledgerData.forwardedBalance.amount > 0">
               <th colspan="100%">
-                B/F Balance: {{ledgerData.forwardedBalance.amount}}
+                B/F Balance: {{ledgerData.forwardedBalance.amount | number:2}}
               </th>
             </tr>
             <tr class="greyBg"
@@ -208,7 +208,7 @@
           </div>
         </td>
         <td style="width:14%" class="bdrR">
-          <span ng-if="ledgBalType == 'CREDIT'">{{debitBalanceAmount}}</span>
+          <span ng-if="ledgBalType == 'CREDIT'">{{debitBalanceAmount | number:2}}</span>
         </td>
         <td colspan="2" style="width:36%" class="bdrL">
           <div class="pull-right" ng-if="ledgBalType == 'DEBIT'">
@@ -216,7 +216,7 @@
           </div>
         </td>
         <td style="width:14%" class="bdrR">
-          <span ng-if="ledgBalType == 'DEBIT'">{{creditBalanceAmount}}</span>
+          <span ng-if="ledgBalType == 'DEBIT'">{{creditBalanceAmount | number:2}}</span>
         </td>
       </tr>
       <tr class="total greyBg">
@@ -224,13 +224,13 @@
           <span class="pull-right">Total</span>
         </td>
         <td style="width:14%" class="bdrR">
-          <span>{{debitTotal}}</span>
+          <span>{{debitTotal | number:2}}</span>
         </td>
         <td colspan="2" style="width:36%" class="bdrL">
           <span class="pull-right">Total</span>
         </td>
         <td style="width:14%" class="bdrR">
-          <span>{{creditTotal}}</span>
+          <span>{{creditTotal | number:2}}</span>
         </td>
       </tr>
 
