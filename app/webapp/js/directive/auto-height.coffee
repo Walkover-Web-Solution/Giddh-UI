@@ -160,7 +160,7 @@ angular.module('ledger', [])
         </div></form>"
   link: (scope, elem, attrs) ->
     scope.lItem = {}
-    fields = elem.context.getElementsByClassName('ledgInpt')
+    fields = elem[0].getElementsByClassName('ledgInpt')
     i = 0
     while i < fields.length
       fields[i].addEventListener 'focus', (event) ->
@@ -186,9 +186,14 @@ angular.module('ledger', [])
       if (item.entryDate is "" || item.entryDate is undefined || item.entryDate is null)
         item.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
 
+    scope.removeClassInAllEle = (clName)->
+      el = document.getElementsByClassName(clName)
+      angular.element(el).removeClass('open')
+
+
     scope.openDialog = (item, index, ftype, parentForm) ->
       $document.off 'click'
-      $(".ledgEntryForm").removeClass('open')
+      scope.removeClassInAllEle("ledgEntryForm")
       elem.addClass('open')
 
       scope.checkDateField(item)
@@ -254,12 +259,10 @@ angular.module('ledger', [])
       scopeExpression = attrs.removeLedgdialog
 
       onDocumentClick = (event) ->
-        console.log "onDocumentClick", event
         isChild = elem.find(event.target).length > 0
         if !isChild
-          console.log "not isChild"
           scope.$apply(scopeExpression)
-          $(".ledgEntryForm").removeClass('open')
+          scope.removeClassInAllEle("ledgEntryForm")
           $document.off 'click'
 
       if childCount == 1
