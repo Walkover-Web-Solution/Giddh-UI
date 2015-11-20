@@ -175,6 +175,8 @@ angular.module('ledger', [])
       scope.item.transactions[0].particular.uniqueName = i.uName
 
     scope.resetEntry = (item, lItem) ->
+      console.log "in resetEntry"
+      return false
       if _.isUndefined(lItem.sharedData.uniqueName)
         item.sharedData.entryDate = undefined
         item.transactions[0].particular.uniqueName = undefined

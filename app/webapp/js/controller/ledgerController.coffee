@@ -108,17 +108,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $stateParams.unqName = $scope.selectedAccountUniqueName
     $stateParams.grpName = $scope.selectedGroupUname
 
-  $scope.loadLedgerSuccess = (res) ->
-    console.log "loadLedgerSuccess", res.body
-    testData = {}
-    angular.copy(res.body, testData)
-    $scope.divideAndRule(testData)
-    # res.body.ledgers.push(angular.copy(dummyValueDebit))
-    # res.body.ledgers.push(angular.copy(dummyValueCredit))
-    # $scope.ledgerData = res.body
-    # $rootScope.showLedgerBox = true
-    # $scope.calculateLedger($scope.ledgerData, "server")
-
   $scope.debitOnly = (ledger) ->
     'DEBIT' == ledger.transactions[0].type
 
@@ -128,7 +117,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.loadLedgerFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  $scope.divideAndRule = (data) ->
+  $scope.loadLedgerSuccess = (res) ->
+    data = {}
+    angular.copy(res.body, data)
     $scope.ledgerOnlyCreditData = []
     $scope.ledgerOnlyDebitData = []
     _.each(data.ledgers, (ledger) ->
@@ -136,16 +127,15 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         ledger.multiEntry = true
       else
         ledger.multiEntry = false
+      
       sharedData = _.omit(ledger, 'transactions')
       _.each(ledger.transactions, (transaction) ->
         newEntry = {sharedData: sharedData}
         if transaction.type is "DEBIT"
-#          _.extend(newEntry, ledger)
           newEntry.transactions = [transaction]
           $scope.ledgerOnlyDebitData.push(newEntry)
 
         if transaction.type is "CREDIT"
-#          _.extend(newEntry, ledger)
           newEntry.transactions = [transaction]
           $scope.ledgerOnlyCreditData.push(newEntry)
       )
@@ -223,26 +213,20 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.updateEntry = (data) ->
     edata = {}
-    # angular.copy(data, edata)
     _.extend(edata, data.sharedData)
     
     if not _.isUndefined(data.sharedData.voucher)
       edata.voucherType = data.sharedData.voucher.shortCode
 
-    if edata.multiEntry
-      edata.transactions = []
-      _.filter($scope.ledgerOnlyDebitData, (entry) ->
-        if edata.uniqueName is entry.sharedData.uniqueName
-          edata.transactions.push(entry.transactions[0])
-      )
-      _.filter($scope.ledgerOnlyCreditData, (entry) ->
-        if edata.uniqueName is entry.sharedData.uniqueName
-          edata.transactions.push(entry.transactions[0])
-      )
-    else
-      edata.transactions = data.transactions
-      if _.isObject(data.transactions[0].particular)
-        edata.transactions[0].particular = data.transactions[0].particular.uniqueName
+    edata.transactions = []
+    _.filter($scope.ledgerOnlyDebitData, (entry) ->
+      if edata.uniqueName is entry.sharedData.uniqueName
+        edata.transactions.push(entry.transactions[0])
+    )
+    _.filter($scope.ledgerOnlyCreditData, (entry) ->
+      if edata.uniqueName is entry.sharedData.uniqueName
+        edata.transactions.push(entry.transactions[0])
+    )
     
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
@@ -250,22 +234,43 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       acntUname: $scope.selectedAccountUniqueName
       entUname: edata.uniqueName
     }
-
     ledgerService.updateEntry(unqNamesObj, edata).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
 
   $scope.updateEntrySuccess = (res) ->
     toastr.success("Entry updated successfully", "Success")
-    $scope.removeLedgerDialog()
-    count = 0
-    rpl = 0
-#    Need to Update This Logic
-#    _.each($scope.ledgerData.ledgers, (ledger) ->
-#      if ledger.uniqueName is res.body.uniqueName
-#        rpl = count
-#      count++
-#    )
-#    $scope.ledgerData.ledgers[rpl] = res.body
-#    $scope.calculateLedger($scope.ledgerData, "update")
+    # $scope.removeLedgerDialog()
+    uLedger = {}
+    _.extend(uLedger, res.body)
+
+    if uLedger.transactions.length > 1
+      uLedger.multiEntry = true
+    else
+      uLedger.multiEntry = false
+
+    _.each(uLedger.transactions, (transaction) ->
+      if transaction.type is "DEBIT"
+        _.filter($scope.ledgerOnlyDebitData, (ledger) ->
+          if ledger.sharedData.uniqueName is uLedger.uniqueName
+            if _.isEqual(ledger.transactions[0], transaction)
+              sharedData = _.omit(uLedger, 'transactions')
+              ledger.sharedData = sharedData
+              ledger.transactions[0] = transaction
+
+        )
+      if transaction.type is "CREDIT"
+        _.filter($scope.ledgerOnlyCreditData, (ledger) ->
+          if ledger.sharedData.uniqueName is uLedger.uniqueName
+            if _.isEqual(ledger.transactions[0], transaction)
+              sharedData = _.omit(uLedger, 'transactions')
+              ledger.sharedData = sharedData
+              ledger.transactions[0] = transaction
+        )
+    )
+    
+      
+
+
+    #$scope.calculateLedger($scope.ledgerData, "update")
 
   $scope.updateEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
