@@ -125,12 +125,14 @@
                       ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"
                       itemdata="value"
                       acntlist="fltAccntList"
-                      class='pr drEntryForm_{{$index}} ledgEntryForm {{value.sharedData.uniqueName}}'
-                      name='drEntryForm_{{$index}}'
+                      class='drLedgerEntryForm pr ledgerEntryForm_{{$index}} ledgEntryForm {{value.sharedData.uniqueName}}'
+                      name='ledgerEntryForm_{{$index}}'
                       update-ledger="updateEntry(entry)"
                       add-ledger="addNewEntry(entry)"
                       remove-ledgdialog="removeLedgerDialog()"
                       discard-ledger="deleteEntry(entry)"
+                      enter-rowdebit="addEntryInDebit()"
+                      enter-rowcredit="addEntryInCredit()"
                       novalidate
                       >
                   </div>
@@ -180,12 +182,14 @@
                       ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"
                       itemdata="value"
                       acntlist="fltAccntList"
-                      class='pr crEntryForm_{{$index}} ledgEntryForm {{value.sharedData.uniqueName}}'
-                      name='crEntryForm_{{$index}}'
+                      class='crLedgerEntryForm pr ledgerEntryForm_{{$index}} ledgEntryForm {{value.sharedData.uniqueName}}'
+                      name='ledgerEntryForm_{{$index}}'
                       update-ledger="updateEntry(entry)"
                       add-ledger="addNewEntry(entry)"
                       remove-ledgdialog="removeLedgerDialog()"
                       discard-ledger="deleteEntry(entry)"
+                      enter-rowdebit="addEntryInDebit()"
+                      enter-rowcredit="addEntryInCredit()"
                       novalidate
                       >
                   </div>

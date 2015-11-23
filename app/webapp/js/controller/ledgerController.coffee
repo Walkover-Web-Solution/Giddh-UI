@@ -144,38 +144,13 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.ledgerOnlyCreditData.push(angular.copy(dummyValueCredit))
     $rootScope.showLedgerBox = true
 
+    console.log  $scope.ledgerOnlyDebitData
+
   $scope.addNewAccount = () ->
     if _.isEmpty($scope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
       modalService.openManageGroupsModal()
-
-  $scope.deleteEntry = (item) ->
-    unqNamesObj = {
-      compUname: $scope.selectedCompany.uniqueName
-      selGrpUname: $scope.selectedGroupUname
-      acntUname: $scope.selectedAccountUniqueName
-      entUname: item.uniqueName
-    }
-    ledgerService.deleteEntry(unqNamesObj).then((res) ->
-      $scope.deleteEntrySuccess(item, res)
-    , $scope.deleteEntryFailure)
-
-  $scope.deleteEntrySuccess = (item, res) ->
-    count = 0
-    rpl = 0
-    _.each($scope.ledgerData.ledgers, (entry) ->
-      if entry.uniqueName is item.uniqueName
-        rpl = count
-      count++
-    )
-    $scope.ledgerData.ledgers.splice(rpl, 1)
-    toastr.success(res.message, res.status)
-    $scope.removeLedgerDialog()
-    $scope.calculateLedger($scope.ledgerData, "deleted")
-
-  $scope.deleteEntryFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
 
   $scope.addNewEntry = (data) ->
     edata = {}
@@ -237,8 +212,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     ledgerService.updateEntry(unqNamesObj, edata).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
 
   $scope.updateEntrySuccess = (res) ->
+    $scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
+    $scope.removeClassInAllEle("ledgEntryForm", "open")
+    $scope.removeLedgerDialog()
     toastr.success("Entry updated successfully", "Success")
-    # $scope.removeLedgerDialog()
     uLedger = {}
     _.extend(uLedger, res.body)
 
@@ -266,13 +243,74 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
               ledger.transactions[0] = transaction
         )
     )
-    
-      
-
-
     #$scope.calculateLedger($scope.ledgerData, "update")
 
   $scope.updateEntryFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.removeClassInAllEle = (target, clName)->
+    el = document.getElementsByClassName(target)
+    angular.element(el).removeClass(clName)
+
+  $scope.lItem = {}
+  $scope.resetEntry = (item, lItem) ->
+    # console.log "in resetEntry", item, lItem
+    return false
+    if _.isUndefined(lItem.sharedData.uniqueName)
+      item.sharedData.entryDate = undefined
+      item.transactions[0].particular = {}
+      item.transactions[0].amount = undefined
+    else
+      angular.copy(lItem, item)
+
+  $scope.addEntryInCredit =()->
+    lastRow = $scope.ledgerOnlyCreditData[$scope.ledgerOnlyCreditData.length-1]
+
+    if lastRow.sharedData.entryDate isnt "" and  not _.isEmpty(lastRow.transactions[0].amount) and not _.isEmpty(lastRow.transactions[0].particular.uniqueName)
+      $scope.ledgerOnlyCreditData.push(angular.copy(dummyValueCredit))
+    else
+      toastr.warning("You should fill entry first", "Warning")
+
+  $scope.addEntryInDebit =()->
+    arLen = $scope.ledgerOnlyDebitData.length-1
+    lastRow = $scope.ledgerOnlyDebitData[arLen]
+
+    if lastRow.sharedData.entryDate isnt "" and  not _.isEmpty(lastRow.transactions[0].amount) and not _.isEmpty(lastRow.transactions[0].particular.uniqueName)
+      $scope.ledgerOnlyDebitData.push(angular.copy(dummyValueDebit))
+    else
+      toastr.warning("You should fill entry first", "Warning")
+      formEle =  document.querySelectorAll(".drLedgerEntryForm")
+      console.log arLen, "lastRow" 
+      console.log formEle[arLen]
+      # console.log document.getElementsByClassName('ledgInpt')
+
+
+  $scope.deleteEntry = (item) ->
+    unqNamesObj = {
+      compUname: $scope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroupUname
+      acntUname: $scope.selectedAccountUniqueName
+      entUname: item.sharedData.uniqueName
+    }
+    ledgerService.deleteEntry(unqNamesObj).then((res) ->
+      $scope.deleteEntrySuccess(item, res)
+    , $scope.deleteEntryFailure)
+
+  $scope.deleteEntrySuccess = (item, res) ->
+    $scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
+    $scope.removeClassInAllEle("ledgEntryForm", "open")
+    $scope.removeLedgerDialog()
+    toastr.success(res.body, res.status)
+    $scope.ledgerOnlyDebitData = _.reject($scope.ledgerOnlyDebitData, (entry) ->
+      item.sharedData.uniqueName is entry.sharedData.uniqueName
+    )
+    $scope.ledgerOnlyCreditData = _.reject($scope.ledgerOnlyCreditData, (entry) ->
+      item.sharedData.uniqueName is entry.sharedData.uniqueName
+    )
+    
+    # $scope.calculateLedger($scope.ledgerData, "deleted")
+
+  $scope.deleteEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
   $scope.removeLedgerDialog = () ->

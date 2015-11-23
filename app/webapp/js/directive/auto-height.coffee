@@ -123,7 +123,9 @@ angular.module('ledger', [])
     removeLedgdialog: '&'
     discardLedger: '&'
     removeClassInAllEle: '&'
-    el:'&'
+    enterRowdebit: '&'
+    enterRowcredit: '&'
+    el: '&'
   controller: 'ledgerController'
   template: "<form novalidate tabindex='-1'>
       <div>
@@ -131,7 +133,7 @@ angular.module('ledger', [])
             <tr>
               <td width='28%'>
                 <input type='text' class='nobdr ledgInpt'
-                  tabindex='{{index}}1' required
+                  tabindex='-1' required
                   name='entryDate_{{index}}'
                   ng-model='item.sharedData.entryDate' valid-date/>
               </td>
@@ -140,7 +142,7 @@ angular.module('ledger', [])
                   name='trnsUniq_{{index}}'
                   ng-model='item.transactions[0].particular.uniqueName'>
                 <input type='text'
-                  tabindex='{{index}}2'  class='nobdr ledgInpt' required
+                  tabindex='-1'  class='nobdr ledgInpt' required
                   name='trnsName_{{index}}'
                   ng-model='item.transactions[0].particular'
                   typeahead='obj as obj.name for obj in aclist | filter:$viewValue | limitTo:8'
@@ -150,7 +152,7 @@ angular.module('ledger', [])
               </td>
               <td width='28%'>
                 <input type='text' class='nobdr ledgInpt'
-                  tabindex='{{index}}3' required
+                  tabindex='-1' required
                   name='amount_{{index}}'
                   ng-model='item.transactions[0].amount'
                   valid-number/>
@@ -159,7 +161,9 @@ angular.module('ledger', [])
           </table>
         </div></form>"
   link: (scope, elem, attrs) ->
-    scope.lItem = {}
+    scope.el = elem[0]
+
+    # scope.lItem = {}
     fields = elem[0].getElementsByClassName('ledgInpt')
     i = 0
     while i < fields.length
@@ -174,24 +178,23 @@ angular.module('ledger', [])
     scope.addCrossFormField = (i, d, c) ->
       scope.item.transactions[0].particular.uniqueName = i.uName
 
-    scope.resetEntry = (item, lItem) ->
-      console.log "in resetEntry"
-      return false
-      if _.isUndefined(lItem.sharedData.uniqueName)
-        item.sharedData.entryDate = undefined
-        item.transactions[0].particular.uniqueName = undefined
-        item.transactions[0].particular.name = undefined
-        item.transactions[0].amount = undefined
-      else
-        angular.copy(lItem, item)
+    # scope.resetEntry = (item, lItem) ->
+    #   console.log "in resetEntry"
+    #   return false
+    #   if _.isUndefined(lItem.sharedData.uniqueName)
+    #     item.sharedData.entryDate = undefined
+    #     item.transactions[0].particular = {}
+    #     item.transactions[0].amount = undefined
+    #   else
+    #     angular.copy(lItem, item)
+
+    # scope.removeClassInAllEle = (target, clName)->
+    #   el = document.getElementsByClassName(target)
+    #   angular.element(el).removeClass(clName)
 
     scope.checkDateField = (item) ->
       if (item.sharedData.entryDate is "" || item.sharedData.entryDate is undefined || item.sharedData.entryDate is null)
         item.sharedData.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
-
-    scope.removeClassInAllEle = (target, clName)->
-      el = document.getElementsByClassName(target)
-      angular.element(el).removeClass(clName)
 
     scope.highlightMultiEntry =(item)->
       scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
@@ -213,14 +216,16 @@ angular.module('ledger', [])
           <h3 class="popover-title" ng-if="ftype == \'Add\'">Add new entry</h3>
           <div class="popover-content">
             <div class="mrT">
-              <div class="form-group" ng-show="noResults">
-                <a href="javascript:void(0)" ng-click="addNewAccount()">Add new account</a>
+              <div class="form-group">
+                <button ng-disabled="ledgerEntryForm_{{index}}.$invalid" class="btn btn-sm btn-info mrR1" href="javascript:void(0)" ng-click="enterRowdebit()">Add in DR</button>
+                <button ng-disabled="ledgerEntryForm_{{index}}.$invalid" class="btn btn-sm btn-primary" href="javascript:void(0)" ng-click="enterRowcredit()">Add in CR</button>
+                <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResults">Add new account</a>
               </div>
               <div class="row">
                 <div class="col-md-6 col-sm-12">
                   <div class="form-group">
                     <select class="form-control"
-                    tabindex="{{index}}4" name="voucherType" ng-model="item.sharedData.voucher.shortCode">
+                    name="voucherType" ng-model="item.sharedData.voucher.shortCode">
                       <option
                         ng-repeat="option in voucherTypeList"
                         ng-selected="{{option.shortCode == item.sharedData.voucher.shortCode}}"
@@ -230,7 +235,7 @@ angular.module('ledger', [])
                     </select>
                   </div>
                   <div class="form-group">
-                    <input type="text" name="tag" class="form-control" ng-model="item.sharedData.tag" tabindex="{{index}}5" placeholder="Tag" />
+                    <input type="text" name="tag" class="form-control" ng-model="item.sharedData.tag" placeholder="Tag" />
                   </div>
                 </div>
                 <div class="col-md-6 col-sm-12">
@@ -239,22 +244,19 @@ angular.module('ledger', [])
                     {{item.sharedData.voucher.shortCode}}-{{item.sharedData.voucherNo}}
                   </div>
                   <div class="form-group">
-                    <textarea class="form-control" tabindex="{{index}}6" name="description" ng-model="item.sharedData.description" placeholder="Description"></textarea>
+                    <textarea class="form-control" name="description" ng-model="item.sharedData.description" placeholder="Description"></textarea>
                   </div>
                 </div>
               </div>
               <div class="">
-                <button ng-if="ftype == \'Update\'" class="btn btn-success" tabindex="{{index}}7"
-                  type="button" ng-disabled="drEntryForm_{{index}}.$invalid"
+                <button ng-if="ftype == \'Update\'" class="btn btn-success" type="button" ng-disabled="ledgerEntryForm_{{index}}.$invalid"
                   ng-click="updateLedger({entry: item})">Update</button>
-
-                <button  tabindex="{{index}}7" ng-if="ftype == \'Add\'" class="btn btn-success"
-                  type="button" ng-disabled="drEntryForm_{{index}}.$invalid || noResults"
+                <button  ng-if="ftype == \'Add\'" class="btn btn-success" type="button" ng-disabled="ledgerEntryForm_{{index}}.$invalid || noResults"
                   ng-click="addLedger({entry: item})">Add</button>
 
-                <button  tabindex="{{index}}8" ng-click="removeLedgdialog(); resetEntry(item, lItem)" class="btn btn-default mrL1" type="button">close</button>
+                <button ng-click="removeLedgdialog()" class="btn btn-default mrL1" type="button">close</button>
 
-                <button  tabindex="{{index}}9" ng-show="item.sharedData.uniqueName != undefined" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
+                <button  ng-show="item.sharedData.uniqueName != undefined" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
               </div>
             </div>
           </div>
@@ -291,9 +293,6 @@ angular.module('ledger', [])
       else
         return false
       return true
-
-     scope.el = elem[0]
-
-
+      scope.el = elem[0]
   }
 ]
