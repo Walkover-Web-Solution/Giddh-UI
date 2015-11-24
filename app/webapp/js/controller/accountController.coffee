@@ -33,7 +33,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.setLedgerData = (data, acData) ->
     $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
-
+    console.log $scope.selectedAccountUniqueName, data
   # Collapse all account menus
   $scope.collapseAllSubMenus = () ->
     $rootScope.showSubMenus = true
@@ -47,6 +47,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
   $scope.$on '$viewContentLoaded', ->
     $scope.getAccountsGroups()
+
 
 #init angular app
 angular.module('giddhWebApp').controller 'accountController', accountController

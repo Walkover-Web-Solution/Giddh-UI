@@ -1,6 +1,6 @@
 "use strict"
 
-ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices) ->
+ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams) ->
   $scope.accntTitle = undefined
   $scope.selectedAccountUniqueName = undefined
   $scope.selectedGroupUname = undefined
@@ -102,6 +102,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
     }
     ledgerService.getLedger(unqNamesObj).then($scope.loadLedgerSuccess, $scope.loadLedgerFailure)
+    $stateParams.unqName = $scope.selectedAccountUniqueName
+    $stateParams.grpName = $scope.selectedGroupUname
 
   $scope.loadLedgerSuccess = (res) ->
     res.body.ledgers.push(angular.copy(dummyValueDebit))
@@ -109,6 +111,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.ledgerData = res.body
     $rootScope.showLedgerBox = true
     $scope.calculateLedger($scope.ledgerData, "server")
+
+
 
   $scope.debitOnly = (ledger) ->
     'DEBIT' == ledger.transactions[0].type
@@ -289,6 +293,18 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $rootScope.$on '$reloadLedger',  ->
     $scope.reloadLedger()
+
+  $scope.removeClassInAllEle = (clName)->
+     el = $scope.el
+     # console.log el, clName
+     
+  setTimeout (->
+    $scope.removeClassInAllEle('popover')
+  ), 1000
+ 
+
+
+
 
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController
 

@@ -122,6 +122,8 @@ angular.module('ledger', [])
     addLedger: '&'
     removeLedgdialog: '&'
     discardLedger: '&'
+    removeClassInAllEle: '&'
+    el:'&'
   controller: 'ledgerController'
   template: "<form class='pr drEntryForm_{{index}} name='drEntryForm_{{index}}' novalidate tabindex='-1'>
       <div ng-click='openDialog(item, index, ftype)'>
@@ -245,4 +247,8 @@ angular.module('ledger', [])
       else
         return false
       return true
+  
+     scope.el = elem[0]
+    
+
   }

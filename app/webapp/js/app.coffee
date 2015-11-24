@@ -15,36 +15,71 @@ app = angular.module("giddhWebApp",
     "ledger"
     "angular.filter"
     "unique-name"
+    "ui.router"
   ]
 )
 
 app.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
 
-app.config ($locationProvider, $routeProvider) ->
-  $locationProvider.html5Mode({
-    enabled: false,
-    requireBase: false
-  })
-  $routeProvider
-  .when('/home',
-    controller: 'companyController',
-    templateUrl: '/public/webapp/views/home.html',
-    firstTimeUser: false
-  )
-  .when('/thankyou',
-    controller: 'thankyouController',
+# app.config ($locationProvider, $routeProvider) ->
+#   $locationProvider.html5Mode({
+#     enabled: false,
+#     requireBase: false
+#   })
+#   $routeProvider
+#   .when('/home',
+#     controller: 'companyController',
+#     templateUrl: '/public/webapp/views/home.html',
+#     firstTimeUser: false
+#   )
+#   .when('/thankyou',
+#     controller: 'thankyouController',
+#     templateUrl: '/public/webapp/views/thanks.html'
+#   )
+#   .when('/ledger',
+#     controller: 'ledgerController',
+#     templateUrl: '/public/webapp/views/ledger.html'
+#   )
+#   .when('/user',
+#     controller: 'userController',
+#     templateUrl: '/public/webapp/views/userDetails.html'
+#   )
+#   .otherwise redirectTo: '/home'
+
+app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
+  $urlRouterProvider.otherwise('/home')
+  $stateProvider.state('/home',
+    url: '/home'
+    templateUrl: '/public/webapp/views/home.html'
+    controller: 'companyController')
+  .state('/thankyou',
+    url: '/thankyou'
     templateUrl: '/public/webapp/views/thanks.html'
-  )
-  .when('/ledger',
-    controller: 'ledgerController',
-    templateUrl: '/public/webapp/views/ledger.html'
-  )
-  .when('/user',
-    controller: 'userController',
+    controller: 'thankyouController')
+  .state('/user',
+    url: '/user'
     templateUrl: '/public/webapp/views/userDetails.html'
-  )
-  .otherwise redirectTo: '/home'
+    controller: 'userController')
+  .state( 'ledger',
+    abstract: true
+    url: '/ledger:uniqueName'
+    templateUrl: '/public/webapp/views/ledger.html'
+    controller: 'ledgerController')
+  .state('ledger.ledgerContent',
+    url:'/:unqName',
+    templateUrl:'/public/webapp/views/ledgerContent.html'
+    )
+  # .state('ledger.accounts',
+  #   url:'',
+  #   templateUrl:'/public/webapp/views/accounts.html'
+  #   )
+  $locationProvider.html5Mode(false)
+  return
+
+
+
+
 app.run(()->
 )
 

@@ -6,6 +6,7 @@
 			<div>
         <div ng-controller="accountController" id="left" auto-height>
           <div ng-include="'/public/webapp/views/accounts.html'"></div>
+          <ui-view="ledger.accounts"></ui-view>
         </div>
       </div>
 		</div>
@@ -13,7 +14,8 @@
 		<!-- middle body -->
 		<div class="col-md-10 col-sm-7">
 			<div class="middleBody bdrR bdrL row"  auto-height>
-				<div ng-include="'/public/webapp/views/ledgerContent.html'"></div>
+				<!-- <div ng-include="'/public/webapp/views/ledgerContent.html'"></div> -->
+				<ui-view></ui-view>
 			</div>
 		</div>
 

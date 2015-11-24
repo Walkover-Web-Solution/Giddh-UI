@@ -9,7 +9,9 @@
     "**/.*",
     ".gitignore",
     "node_modules",
-    "bower_components"
+    "bower_components",
+    "test",
+    "tests"
   ],
   "dependencies": {
     "bootstrap": "~3.3.5",
@@ -35,5 +37,12 @@
   "resolutions": {
     "angular": "~1.4.4",
     "perfect-scrollbar": "~0.5.1"
+  },
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "homepage": "",
+  "devDependencies": {
+    "angular-ui-router": "~0.2.15"
   }
 }
