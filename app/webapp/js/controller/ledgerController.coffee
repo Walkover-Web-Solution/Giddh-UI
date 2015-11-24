@@ -249,12 +249,13 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.removeClassInAllEle = (target, clName)->
+    console.log "removeClassInAllEle", clName
     el = document.getElementsByClassName(target)
     angular.element(el).removeClass(clName)
 
   $scope.lItem = {}
   $scope.resetEntry = (item, lItem) ->
-    # console.log "in resetEntry", item, lItem
+    console.log "in resetEntry"
     return false
     if _.isUndefined(lItem.sharedData.uniqueName)
       item.sharedData.entryDate = undefined
@@ -264,12 +265,16 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       angular.copy(lItem, item)
 
   $scope.addEntryInCredit =()->
-    lastRow = $scope.ledgerOnlyCreditData[$scope.ledgerOnlyCreditData.length-1]
+    arLen = $scope.ledgerOnlyCreditData.length-1
+    lastRow = $scope.ledgerOnlyCreditData[arLen]
 
     if lastRow.sharedData.entryDate isnt "" and  not _.isEmpty(lastRow.transactions[0].amount) and not _.isEmpty(lastRow.transactions[0].particular.uniqueName)
       $scope.ledgerOnlyCreditData.push(angular.copy(dummyValueCredit))
+      $timeout ->
+        $scope.sameMethodForDrCr(arLen+1, ".crLedgerEntryForm")
+      , 300
     else
-      toastr.warning("You should fill entry first", "Warning")
+      $scope.sameMethodForDrCr(arLen, ".crLedgerEntryForm")
 
   $scope.addEntryInDebit =()->
     arLen = $scope.ledgerOnlyDebitData.length-1
@@ -277,12 +282,24 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
     if lastRow.sharedData.entryDate isnt "" and  not _.isEmpty(lastRow.transactions[0].amount) and not _.isEmpty(lastRow.transactions[0].particular.uniqueName)
       $scope.ledgerOnlyDebitData.push(angular.copy(dummyValueDebit))
+      $timeout ->
+        $scope.sameMethodForDrCr(arLen+1, ".drLedgerEntryForm")
+      , 300
+      
     else
-      toastr.warning("You should fill entry first", "Warning")
-      formEle =  document.querySelectorAll(".drLedgerEntryForm")
-      console.log arLen, "lastRow" 
-      console.log formEle[arLen]
-      # console.log document.getElementsByClassName('ledgInpt')
+      $scope.sameMethodForDrCr(arLen, ".drLedgerEntryForm")
+    
+  $scope.sameMethodForDrCr =(arLen, name)->
+    formEle =  document.querySelectorAll(name)
+    inp = angular.element(formEle[arLen]).find('td')[1].children
+    $scope.removeLedgerDialog()
+    $scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
+    $scope.removeClassInAllEle("ledgEntryForm", "open")
+    $timeout ->
+      angular.element(inp).focus()
+    , 300
+    return false
+      
 
 
   $scope.deleteEntry = (item) ->

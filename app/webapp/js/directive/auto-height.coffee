@@ -170,8 +170,9 @@ angular.module('ledger', [])
       fields[i].addEventListener 'focus', (event) ->
         parentForm = angular.element(this).parents('form')
         if parentForm.hasClass('open')
-          console.log "parent opened"
+          console.log "parent opened" 
         else
+          console.log "openDialog"
           scope.openDialog(scope.item, scope.index, scope.ftype, parentForm)
       i++
 
