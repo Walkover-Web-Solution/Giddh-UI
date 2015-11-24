@@ -1087,3 +1087,12 @@ li:last-child .angular-ui-tree-handle {
 .breadcrumb > .active > a{
     color: #777;
 }
+
+/*helpers*/
+.max100{
+    max-width:100px;
+}
+
+.max200{
+    max-width:200px;
+}
