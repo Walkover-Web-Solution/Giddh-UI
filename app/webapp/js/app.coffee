@@ -16,6 +16,7 @@ app = angular.module("giddhWebApp",
     "angular.filter"
     "unique-name"
     "ui.router"
+    "LocalStorageModule"
   ]
 )
 
@@ -65,10 +66,11 @@ app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     abstract: true
     url: '/ledger:uniqueName'
     templateUrl: '/public/webapp/views/ledger.html'
-    controller: 'ledgerController')
+    )
   .state('ledger.ledgerContent',
     url:'/:unqName',
     templateUrl:'/public/webapp/views/ledgerContent.html'
+    controller: 'ledgerController'
     )
   # .state('ledger.accounts',
   #   url:'',
@@ -79,9 +81,18 @@ app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
 
 
 
-
-app.run(()->
-)
+app.run [
+  '$rootScope'
+  '$state'
+  '$stateParams'
+  '$location'
+  ($rootScope, $state, $stateParams, $location) ->
+    $rootScope.$on '$stateChangeSuccess', ->
+      if $state.current.name == 'ledger.ledgerContent'
+        $rootScope.$broadcast 'refreshLedger'
+      return
+    return
+]
 
 app.config ($httpProvider) ->
   $httpProvider.interceptors.push('appInterceptor')

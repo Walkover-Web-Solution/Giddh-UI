@@ -33,7 +33,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.setLedgerData = (data, acData) ->
     $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
-    console.log $scope.selectedAccountUniqueName, data
+    #console.log $scope.selectedAccountUniqueName, data
   # Collapse all account menus
   $scope.collapseAllSubMenus = () ->
     $rootScope.showSubMenus = true

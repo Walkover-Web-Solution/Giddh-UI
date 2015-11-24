@@ -1,12 +1,12 @@
 "use strict"
 
 ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams) ->
+  $scope.ledgerData = undefined 
   $scope.accntTitle = undefined
   $scope.selectedAccountUniqueName = undefined
   $scope.selectedGroupUname = undefined
   $scope.selectedLedgerAccount = undefined
   $scope.selectedLedgerGroup = undefined
-
   $scope.selectedCompany = {}
   lsKeys = localStorageService.get("_selectedCompany")
   if not _.isNull(lsKeys) && not _.isEmpty(lsKeys) && not _.isUndefined(lsKeys)
@@ -111,8 +111,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.ledgerData = res.body
     $rootScope.showLedgerBox = true
     $scope.calculateLedger($scope.ledgerData, "server")
-
-
+    localStorageService.set('ledgerData', $scope.ledgerData);
+    
 
   $scope.debitOnly = (ledger) ->
     'DEBIT' == ledger.transactions[0].type
@@ -301,9 +301,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   setTimeout (->
     $scope.removeClassInAllEle('popover')
   ), 1000
- 
-
-
+  
+  
 
 
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController
