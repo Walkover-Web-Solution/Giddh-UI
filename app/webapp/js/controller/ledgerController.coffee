@@ -10,6 +10,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.ledgerOnlyDebitData = []
   $scope.ledgerOnlyCreditData = []
 
+
   $scope.selectedCompany = {}
   lsKeys = localStorageService.get("_selectedCompany")
   if not _.isNull(lsKeys) && not _.isEmpty(lsKeys) && not _.isUndefined(lsKeys)
@@ -129,8 +130,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         ledger.multiEntry = false
       
       sharedData = _.omit(ledger, 'transactions')
-      _.each(ledger.transactions, (transaction) ->
+      _.each(ledger.transactions, (transaction, index) ->
         newEntry = {sharedData: sharedData}
+        newEntry.id = sharedData.uniqueName + "_" + index
         if transaction.type is "DEBIT"
           newEntry.transactions = [transaction]
           $scope.ledgerOnlyDebitData.push(newEntry)
@@ -144,7 +146,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.ledgerOnlyCreditData.push(angular.copy(dummyValueCredit))
     $rootScope.showLedgerBox = true
 
-    console.log  $scope.ledgerOnlyDebitData
 
   $scope.addNewAccount = () ->
     if _.isEmpty($scope.selectedCompany)
@@ -154,7 +155,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.addNewEntry = (data) ->
     edata = {}
-    angular.copy(data, edata)
+    angular.copy(data.sharedData, edata)
     edata.voucherType = data.voucher.shortCode
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
@@ -249,20 +250,21 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.removeClassInAllEle = (target, clName)->
-    console.log "removeClassInAllEle", clName
     el = document.getElementsByClassName(target)
     angular.element(el).removeClass(clName)
 
-  $scope.lItem = {}
-  $scope.resetEntry = (item, lItem) ->
-    console.log "in resetEntry"
-    return false
-    if _.isUndefined(lItem.sharedData.uniqueName)
-      item.sharedData.entryDate = undefined
-      item.transactions[0].particular = {}
-      item.transactions[0].amount = undefined
-    else
-      angular.copy(lItem, item)
+  $rootScope.lItem = []
+
+
+  # $scope.resetEntry = (item, lItem) ->
+  #   console.log "in resetEntry", item, lItem
+  #   return false
+  #   if _.isUndefined(lItem.sharedData.uniqueName)
+  #     item.sharedData.entryDate = undefined
+  #     item.transactions[0].particular = {}
+  #     item.transactions[0].amount = undefined
+  #   else
+  #     angular.copy(lItem, item)
 
   $scope.addEntryInCredit =()->
     arLen = $scope.ledgerOnlyCreditData.length-1

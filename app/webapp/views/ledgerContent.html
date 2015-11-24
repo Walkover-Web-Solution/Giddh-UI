@@ -122,11 +122,12 @@
                       ng-repeat="(key, value) in ledgerOnlyDebitData | limitTo: quantity track by $index"
                       ledger-pop
                       index="$index"
+                      form-class='drLedgerEntryForm_{{$index}}'
                       ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"
                       itemdata="value"
                       acntlist="fltAccntList"
-                      class='drLedgerEntryForm pr ledgerEntryForm_{{$index}} ledgEntryForm {{value.sharedData.uniqueName}}'
-                      name='ledgerEntryForm_{{$index}}'
+                      class='drLedgerEntryForm pr drLedgerEntryForm_{{$index}} ledgEntryForm {{value.sharedData.uniqueName}}'
+                      name='drLedgerEntryForm_{{$index}}'
                       update-ledger="updateEntry(entry)"
                       add-ledger="addNewEntry(entry)"
                       remove-ledgdialog="removeLedgerDialog()"
@@ -179,11 +180,12 @@
                       ng-repeat="(key, value) in ledgerOnlyCreditData | limitTo: quantity track by $index "
                       ledger-pop
                       index="$index"
+                      form-class='crLedgerEntryForm_{{$index}}'
                       ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"
                       itemdata="value"
                       acntlist="fltAccntList"
-                      class='crLedgerEntryForm pr ledgerEntryForm_{{$index}} ledgEntryForm {{value.sharedData.uniqueName}}'
-                      name='ledgerEntryForm_{{$index}}'
+                      class='crLedgerEntryForm pr crLedgerEntryForm_{{$index}} ledgEntryForm {{value.sharedData.uniqueName}}'
+                      name='crLedgerEntryForm_{{$index}}'
                       update-ledger="updateEntry(entry)"
                       add-ledger="addNewEntry(entry)"
                       remove-ledgdialog="removeLedgerDialog()"

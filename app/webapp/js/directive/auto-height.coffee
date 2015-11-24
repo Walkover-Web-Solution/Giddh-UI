@@ -108,7 +108,7 @@ directive 'validDate', (toastr, $filter) ->
   }
 
 angular.module('ledger', [])
-.directive 'ledgerPop', ['$compile', '$filter', '$document', '$parse', ($compile, $filter, $document, $parse) ->
+.directive 'ledgerPop', ['$compile', '$filter', '$document', '$parse', '$rootScope', ($compile, $filter, $document, $parse, $rootScope) ->
   {
   restrict: 'A'
   replace: true
@@ -118,6 +118,7 @@ angular.module('ledger', [])
     item: '=itemdata'
     aclist: '=acntlist'
     ftype: '=ftype'
+    formClass: '@formClass'
     updateLedger: '&'
     addLedger: '&'
     removeLedgdialog: '&'
@@ -163,7 +164,6 @@ angular.module('ledger', [])
   link: (scope, elem, attrs) ->
     scope.el = elem[0]
 
-    # scope.lItem = {}
     fields = elem[0].getElementsByClassName('ledgInpt')
     i = 0
     while i < fields.length
@@ -172,26 +172,36 @@ angular.module('ledger', [])
         if parentForm.hasClass('open')
           console.log "parent opened" 
         else
-          console.log "openDialog"
-          scope.openDialog(scope.item, scope.index, scope.ftype, parentForm)
+          console.log "openDialog", scope.formClass
+          scope.openDialog(scope.item, scope.index, scope.ftype, parentForm, scope.formClass)
       i++
 
     scope.addCrossFormField = (i, d, c) ->
       scope.item.transactions[0].particular.uniqueName = i.uName
 
-    # scope.resetEntry = (item, lItem) ->
-    #   console.log "in resetEntry"
-    #   return false
-    #   if _.isUndefined(lItem.sharedData.uniqueName)
-    #     item.sharedData.entryDate = undefined
-    #     item.transactions[0].particular = {}
-    #     item.transactions[0].amount = undefined
-    #   else
-    #     angular.copy(lItem, item)
-
-    # scope.removeClassInAllEle = (target, clName)->
-    #   el = document.getElementsByClassName(target)
-    #   angular.element(el).removeClass(clName)
+    scope.resetEntry = (item, lItem) ->
+      console.log "in resetEntry", item, lItem
+      angular.copy(lItem[0], item)
+      return false
+      
+    scope.setItemInLocalItemArr = (item) ->
+      if $rootScope.lItem.length > 0
+        found = undefined
+        if $rootScope.lItem[0].sharedData.uniqueName is item.sharedData.uniqueName
+          found = _.find($rootScope.lItem, (obj)->
+              obj.id is item.id
+            )
+          if found is undefined
+            $rootScope.lItem.push(angular.copy(item))
+            found = undefined
+        else
+          $rootScope.lItem = []
+          $rootScope.lItem.push(angular.copy(item))
+        
+      else
+        console.log "lItem length is less than 1"
+        $rootScope.lItem.push(angular.copy(item))
+      console.log "pushed new object to array", $rootScope.lItem
 
     scope.checkDateField = (item) ->
       if (item.sharedData.entryDate is "" || item.sharedData.entryDate is undefined || item.sharedData.entryDate is null)
@@ -202,7 +212,7 @@ angular.module('ledger', [])
       el = document.getElementsByClassName(item.sharedData.uniqueName)
       angular.element(el).addClass('highlightRow')
 
-    scope.openDialog = (item, index, ftype, parentForm) ->
+    scope.openDialog = (item, index, ftype, parentForm, formclass) ->
       $document.off 'click'
       scope.removeClassInAllEle("ledgEntryForm", "open")
       elem.addClass('open')
@@ -218,8 +228,8 @@ angular.module('ledger', [])
           <div class="popover-content">
             <div class="mrT">
               <div class="form-group">
-                <button ng-disabled="ledgerEntryForm_{{index}}.$invalid" class="btn btn-sm btn-info mrR1" href="javascript:void(0)" ng-click="enterRowdebit()">Add in DR</button>
-                <button ng-disabled="ledgerEntryForm_{{index}}.$invalid" class="btn btn-sm btn-primary" href="javascript:void(0)" ng-click="enterRowcredit()">Add in CR</button>
+                <button ng-disabled="formclass.$invalid" class="btn btn-sm btn-info mrR1" href="javascript:void(0)" ng-click="enterRowdebit()">Add in DR</button>
+                <button ng-disabled="formclass.$invalid" class="btn btn-sm btn-primary" href="javascript:void(0)" ng-click="enterRowcredit()">Add in CR</button>
                 <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResults">Add new account</a>
               </div>
               <div class="row">
@@ -250,9 +260,9 @@ angular.module('ledger', [])
                 </div>
               </div>
               <div class="">
-                <button ng-if="ftype == \'Update\'" class="btn btn-success" type="button" ng-disabled="ledgerEntryForm_{{index}}.$invalid"
+                <button ng-if="ftype == \'Update\'" class="btn btn-success" type="button" ng-disabled="formclass.$invalid"
                   ng-click="updateLedger({entry: item})">Update</button>
-                <button  ng-if="ftype == \'Add\'" class="btn btn-success" type="button" ng-disabled="ledgerEntryForm_{{index}}.$invalid || noResults"
+                <button  ng-if="ftype == \'Add\'" class="btn btn-success" type="button" ng-disabled="formclass.$invalid || noResults"
                   ng-click="addLedger({entry: item})">Add</button>
 
                 <button ng-click="removeLedgdialog()" class="btn btn-default mrL1" type="button">close</button>
@@ -271,14 +281,14 @@ angular.module('ledger', [])
       onDocumentClick = (event) ->
         isChild = elem.find(event.target).length > 0
         if !isChild
-          scope.resetEntry(scope.item, scope.lItem)
+          scope.resetEntry(scope.item, $rootScope.lItem)
           scope.$apply(scopeExpression)
           scope.removeClassInAllEle("ledgEntryForm", "open")
           scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
           $document.off 'click'
 
       if childCount == 1
-        angular.copy(item, scope.lItem)
+        scope.setItemInLocalItemArr(item)
         scope.removeLedgerDialog("all")
         $compile(popHtml)(scope)
         parentForm.append(popHtml)
