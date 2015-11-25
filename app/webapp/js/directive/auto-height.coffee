@@ -172,7 +172,6 @@ angular.module('ledger', [])
         if parentForm.hasClass('open')
           console.log "parent opened" 
         else
-          console.log "openDialog", scope.formClass
           scope.openDialog(scope.item, scope.index, scope.ftype, parentForm, scope.formClass)
       i++
 

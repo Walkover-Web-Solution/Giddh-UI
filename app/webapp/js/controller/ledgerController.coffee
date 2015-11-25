@@ -146,6 +146,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.ledgerOnlyCreditData.push(angular.copy(dummyValueCredit))
     $rootScope.showLedgerBox = true
 
+    $scope.ledgerData = angular.copy(_.omit(res.body, 'ledgers'))
+    $scope.calculateLedger($scope.ledgerData, "server")
+
 
   $scope.addNewAccount = () ->
     if _.isEmpty($scope.selectedCompany)
@@ -244,7 +247,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
               ledger.transactions[0] = transaction
         )
     )
-    #$scope.calculateLedger($scope.ledgerData, "update")
+    $scope.calculateLedger($scope.ledgerData, "update")
 
   $scope.updateEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -327,7 +330,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       item.sharedData.uniqueName is entry.sharedData.uniqueName
     )
     
-    # $scope.calculateLedger($scope.ledgerData, "deleted")
+    $scope.calculateLedger($scope.ledgerData, "deleted")
 
   $scope.deleteEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -350,12 +353,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     if data.forwardedBalance.type is 'DEBIT'
       drt += data.forwardedBalance.amount
 
-    _.each(data.ledgers, (entry) ->
-      if entry.transactions[0].type is 'DEBIT'
-        drt += entry.transactions[0].amount
-
-      if entry.transactions[0].type is 'CREDIT'
-        crt += entry.transactions[0].amount
+    _.each($scope.ledgerOnlyDebitData, (entry) ->
+      drt += entry.transactions[0].amount
+    )
+    _.each($scope.ledgerOnlyCreditData, (entry) ->
+      crt += entry.transactions[0].amount
     )
     crt = parseFloat(crt)
     drt = parseFloat(drt)
@@ -385,8 +387,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.onScroll = (sp, tsS, event) ->
     if  !_.isUndefined($scope.ledgerData)
-      ledgerLength = $scope.ledgerData.ledgers.length
-      if ledgerLength > 50
+      ledgerDebLength = $scope.ledgerOnlyDebitData.length
+      ledgerCrdLength = $scope.ledgerOnlyCreditData.length
+      if ledgerDebLength > 50 || ledgerCrdLength > 50 
         if sp + 200 >= tsS
           event.preventDefault()
           event.stopPropagation()
