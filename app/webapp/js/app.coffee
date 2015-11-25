@@ -98,7 +98,7 @@ app.run [
   '$stateParams'
   '$location'
   ($rootScope, $state, $stateParams, $location) ->
-    $rootScope.$on '$stateChangeSuccess', ->
+    $rootScope.$on '$stateChangeStart', ->
       if $state.current.name == 'ledger.ledgerContent'
         $rootScope.$broadcast 'refreshLedger'
       return

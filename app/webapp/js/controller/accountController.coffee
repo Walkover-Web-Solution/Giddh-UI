@@ -31,9 +31,13 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     modalService.openManageGroupsModal()
 
   $scope.setLedgerData = (data, acData) ->
+    console.log "setLedgerData"
     $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
-    #console.log $scope.selectedAccountUniqueName, data
+    localStorageService.set("_ledgerData", data)
+    localStorageService.set("_selectedAccount", acData)
+    
+
   # Collapse all account menus
   $scope.collapseAllSubMenus = () ->
     $rootScope.showSubMenus = true

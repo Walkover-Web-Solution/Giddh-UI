@@ -126,7 +126,7 @@ angular.module('ledger', [])
     removeClassInAllEle: '&'
     enterRowdebit: '&'
     enterRowcredit: '&'
-    el: '&'
+    el:'&'
   controller: 'ledgerController'
   template: "<form novalidate tabindex='-1'>
       <div>

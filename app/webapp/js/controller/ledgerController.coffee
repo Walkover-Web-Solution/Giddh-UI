@@ -1,6 +1,6 @@
 "use strict"
 
-ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams) ->
+ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location) ->
   $scope.ledgerData = undefined 
   $scope.accntTitle = undefined
   $scope.selectedAccountUniqueName = undefined
@@ -253,11 +253,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.removeClassInAllEle = (target, clName)->
+    console.log "removeClassInAllEle"
     el = document.getElementsByClassName(target)
     angular.element(el).removeClass(clName)
 
   $rootScope.lItem = []
-
 
   # $scope.resetEntry = (item, lItem) ->
   #   console.log "in resetEntry", item, lItem
@@ -398,24 +398,17 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.$on '$viewContentLoaded',  ->
     $scope.fromDate.date.setDate(1)
     ledgerObj = DAServices.LedgerGet()
-    ledgerObj = DAServices.LedgerGet()
+
     if !_.isEmpty(ledgerObj.ledgerData)
       $scope.loadLedger(ledgerObj.ledgerData, ledgerObj.selectedAccount)
     else
-      console.log "not to load anything"
+      if !_.isNull(localStorageService.get("_ledgerData"))
+        $scope.loadLedger(localStorageService.get("_ledgerData"), localStorageService.get("_selectedAccount"))
+      else
+        console.log "nothing selected to load"
 
-  $rootScope.$on '$reloadLedger',  ->
+  $scope.$on '$reloadLedger',  ->
     $scope.reloadLedger()
-
-  $scope.removeClassInAllEle = (clName)->
-     el = $scope.el
-     # console.log el, clName
-     
-  setTimeout (->
-    $scope.removeClassInAllEle('popover')
-  ), 1000
-  
-  
 
 
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController
