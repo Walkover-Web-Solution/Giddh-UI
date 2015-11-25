@@ -404,6 +404,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     else
       if !_.isNull(localStorageService.get("_ledgerData"))
         $scope.loadLedger(localStorageService.get("_ledgerData"), localStorageService.get("_selectedAccount"))
+        # localStorageService.remove(key)
       else
         console.log "nothing selected to load"
 

@@ -1,6 +1,6 @@
 "use strict"
 
-accountController = ($scope, $rootScope, localStorageService, toastr, groupService, modalService, accountService, ledgerService, $filter, DAServices) ->
+accountController = ($scope, $rootScope, localStorageService, toastr, groupService, modalService, accountService, ledgerService, $filter, DAServices, $location, $timeout) ->
   $scope.groupList = {}
   $scope.flattenGroupList = {}
   $scope.flattenAccountListWithParent = {}
@@ -23,6 +23,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
     $scope.showAccountList = true
     $rootScope.makeAccountFlatten(groupService.flattenAccount($scope.groupList))
+    $scope.highlightAcMenu()
 
   $scope.getGroupListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -31,11 +32,22 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     modalService.openManageGroupsModal()
 
   $scope.setLedgerData = (data, acData) ->
-    console.log "setLedgerData"
     $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
+
+  $scope.highlightAcMenu = () ->
+    url = $location.path().split("/")
+    if url[1] is "ledger"
+      $timeout ->
+        acEle = document.getElementById("ac_"+url[2])
+        parentSib = acEle.parentElement.previousElementSibling
+        angular.element(parentSib).trigger('click')
+        angular.element(acEle).children().trigger('click')
+      , 500
+    else
+      console.log "not on ledger page"
     
 
   # Collapse all account menus
@@ -47,9 +59,6 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $rootScope.showSubMenus = false
 
   $scope.$on '$reloadAccount', ->
-    $scope.getAccountsGroups()
-
-  $scope.$on '$viewContentLoaded', ->
     $scope.getAccountsGroups()
 
 
