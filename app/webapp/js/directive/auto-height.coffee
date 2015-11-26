@@ -108,7 +108,7 @@ directive 'validDate', (toastr, $filter) ->
   }
 
 angular.module('ledger', [])
-.directive 'ledgerPop', ['$compile', '$filter', '$document', '$parse', '$rootScope', ($compile, $filter, $document, $parse, $rootScope) ->
+.directive 'ledgerPop', ['$compile', '$filter', '$document', '$parse', '$rootScope', '$timeout', ($compile, $filter, $document, $parse, $rootScope, $timeout) ->
   {
   restrict: 'A'
   replace: true
@@ -147,7 +147,7 @@ angular.module('ledger', [])
                   name='trnsName_{{index}}'
                   ng-model='item.transactions[0].particular'
                   typeahead='obj as obj.name for obj in aclist | filter:$viewValue | limitTo:8'
-                  class='form-control'
+                  class='form-control' autocomplete='off'
                   typeahead-no-results='noResults'
                   typeahead-on-select='addCrossFormField($item, $model, $label)'>
               </td>
@@ -172,7 +172,9 @@ angular.module('ledger', [])
         if parentForm.hasClass('open')
           console.log "parent opened" 
         else
-          scope.openDialog(scope.item, scope.index, scope.ftype, parentForm, scope.formClass)
+          $timeout ->
+            scope.openDialog(scope.item, scope.index, scope.ftype, parentForm, scope.formClass)
+          , 300
       i++
 
     scope.addCrossFormField = (i, d, c) ->
@@ -196,9 +198,8 @@ angular.module('ledger', [])
         else
           $rootScope.lItem = []
           $rootScope.lItem.push(angular.copy(item))
-        
       else
-        console.log "lItem length is less than 1"
+        console.log "longitud es menor que 1"
         $rootScope.lItem.push(angular.copy(item))
       console.log "pushed new object to array", $rootScope.lItem
 
@@ -278,9 +279,9 @@ angular.module('ledger', [])
       scopeExpression = attrs.removeLedgdialog
 
       onDocumentClick = (event) ->
-        isChild = elem.find(event.target).length > 0
+        isChild = elem.find(event.target).length > 0 || event.target.parentNode.nodeName is "LI"
         if !isChild
-          scope.resetEntry(scope.item, $rootScope.lItem)
+          scope.resetEntry(item, $rootScope.lItem)
           scope.$apply(scopeExpression)
           scope.removeClassInAllEle("ledgEntryForm", "open")
           scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
@@ -288,6 +289,7 @@ angular.module('ledger', [])
 
       if childCount == 1
         scope.setItemInLocalItemArr(item)
+        # scope.resetEntry(item, $rootScope.lItem)
         scope.removeLedgerDialog("all")
         $compile(popHtml)(scope)
         parentForm.append(popHtml)

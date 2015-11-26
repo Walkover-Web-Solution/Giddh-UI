@@ -253,7 +253,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.removeClassInAllEle = (target, clName)->
-    console.log "removeClassInAllEle"
     el = document.getElementsByClassName(target)
     angular.element(el).removeClass(clName)
 
