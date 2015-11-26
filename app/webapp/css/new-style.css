@@ -1082,6 +1082,10 @@ li:last-child .angular-ui-tree-handle {
     background-color: #FFFEE6
 }
 
+.ledgerBodyContent .newMultiEntryRow input.nobdr{
+    background-color: #E3FADC
+}
+
 .icon48 {
     width: 48px;
     height: 48px;

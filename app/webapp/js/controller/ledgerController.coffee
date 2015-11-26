@@ -1,6 +1,6 @@
 "use strict"
 
-ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location) ->
+ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document) ->
   $scope.ledgerData = undefined 
   $scope.accntTitle = undefined
   $scope.selectedAccountUniqueName = undefined
@@ -21,8 +21,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.creditBalanceAmount = undefined
   $scope.debitBalanceAmount = undefined
   $rootScope.cmpViewShow = true
-
   $scope.quantity = 50
+  $rootScope.lItem = []
 
   #date time picker code starts here
   $scope.today = new Date()
@@ -157,10 +157,17 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       modalService.openManageGroupsModal()
 
   $scope.addNewEntry = (data) ->
+    $scope.addEntryMultiObj.push(data)
+    console.log $scope.addEntryMultiObj, "addNewEntry", data
     edata = {}
-    angular.copy(data.sharedData, edata)
-    edata.voucherType = edata.voucher.shortCode
-    edata.transactions = data.transactions
+    _.extend(edata, data)
+    edata.transactions = []
+    _.each($scope.addEntryMultiObj, (entry) ->
+      console.log "each", entry.transactions[0]
+      edata.transactions.push(entry.transactions[0])
+    )
+    edata.sharedData.voucherType = data.sharedData.voucher.shortCode
+    console.log edata, "finally after each"
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
@@ -257,19 +264,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     el = document.getElementsByClassName(target)
     angular.element(el).removeClass(clName)
 
-  $rootScope.lItem = []
-
-  # $scope.resetEntry = (item, lItem) ->
-  #   console.log "in resetEntry", item, lItem
-  #   return false
-  #   if _.isUndefined(lItem.sharedData.uniqueName)
-  #     item.sharedData.entryDate = undefined
-  #     item.transactions[0].particular = {}
-  #     item.transactions[0].amount = undefined
-  #   else
-  #     angular.copy(lItem, item)
-
   $scope.addEntryInCredit =(data)->
+    $document.off 'click'
     console.log data
     arLen = $scope.ledgerOnlyCreditData.length-1
     lastRow = $scope.ledgerOnlyCreditData[arLen]
@@ -282,14 +278,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     else
       $scope.sameMethodForDrCr(arLen, ".crLedgerEntryForm")
 
+  $scope.addEntryMultiObj = []
   $scope.addEntryInDebit =(data)->
-    console.log data
-    if _.isUndefined(data.sharedData.uniqueName)
-      console.log "from lastRow new row"
-    else
-      console.log "don't know"
-
-    
+    $document.off 'click'
     arLen = $scope.ledgerOnlyDebitData.length-1
     lastRow = $scope.ledgerOnlyDebitData[arLen]
 
@@ -297,9 +288,29 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $scope.ledgerOnlyDebitData.push(angular.copy(dummyValueDebit))
       $timeout ->
         $scope.sameMethodForDrCr(arLen+1, ".drLedgerEntryForm")
-      , 300
+      , 200
     else
       $scope.sameMethodForDrCr(arLen, ".drLedgerEntryForm")
+
+    console.log data, "addEntryInDebit"
+
+    if _.isUndefined(data.sharedData.uniqueName)
+      console.log "from new row"
+      $scope.addEntryMultiObj.push(data)
+      wt = _.omit(data, 'transactions')
+      wd = _.omit(wt.sharedData, 'entryDate')
+      _.extend(_.last($scope.ledgerOnlyDebitData).sharedData, wd)
+      console.log $scope.addEntryMultiObj
+    else
+      if data.sharedData.multiEntry
+        console.log "multiEntry obj"
+      else
+        console.log "not multiEntry"
+
+    
+    
+
+    
     
   $scope.sameMethodForDrCr =(arLen, name)->
     formEle =  document.querySelectorAll(name)
