@@ -9,6 +9,7 @@ describe "Group Service", ->
       @groupService = $injector.get('groupService')
       @accountService = $injector.get('accountService')
       @ledgerService = $injector.get('ledgerService')
+    @httpBackend.when('GET', '/public/webapp/views/home.html').respond(200)
 
 
   describe "#httpRequestMethods", ->

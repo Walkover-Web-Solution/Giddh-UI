@@ -7,7 +7,7 @@ describe "User Service", ->
     inject ($injector) ->
       @httpBackend = $injector.get('$httpBackend')
       @userServices = $injector.get('userServices')
-
+    @httpBackend.when('GET', '/public/webapp/views/home.html').respond(200)
 
   describe "#httpRequestMethods", ->
     afterEach(->
