@@ -159,7 +159,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.addNewEntry = (data) ->
     edata = {}
     angular.copy(data.sharedData, edata)
-    edata.voucherType = data.voucher.shortCode
+    edata.voucherType = edata.voucher.shortCode
+    edata.transactions = data.transactions
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
