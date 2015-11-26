@@ -126,14 +126,14 @@
                       ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"
                       itemdata="value"
                       acntlist="fltAccntList"
-                      class='drLedgerEntryForm pr drLedgerEntryForm_{{$index}} ledgEntryForm {{value.sharedData.uniqueName}}'
+                      class='drLedgerEntryForm pr ledgEntryForm {{value.sharedData.uniqueName}}'
                       name='drLedgerEntryForm_{{$index}}'
                       update-ledger="updateEntry(entry)"
                       add-ledger="addNewEntry(entry)"
                       remove-ledgdialog="removeLedgerDialog()"
                       discard-ledger="deleteEntry(entry)"
-                      enter-rowdebit="addEntryInDebit()"
-                      enter-rowcredit="addEntryInCredit()"
+                      enter-rowdebit="addEntryInDebit(entry)"
+                      enter-rowcredit="addEntryInCredit(entry)"
                       novalidate
                       >
                   </div>
@@ -184,14 +184,14 @@
                       ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"
                       itemdata="value"
                       acntlist="fltAccntList"
-                      class='crLedgerEntryForm pr crLedgerEntryForm_{{$index}} ledgEntryForm {{value.sharedData.uniqueName}}'
+                      class='crLedgerEntryForm pr ledgEntryForm {{value.sharedData.uniqueName}}'
                       name='crLedgerEntryForm_{{$index}}'
                       update-ledger="updateEntry(entry)"
                       add-ledger="addNewEntry(entry)"
                       remove-ledgdialog="removeLedgerDialog()"
                       discard-ledger="deleteEntry(entry)"
-                      enter-rowdebit="addEntryInDebit()"
-                      enter-rowcredit="addEntryInCredit()"
+                      enter-rowdebit="addEntryInDebit(entry)"
+                      enter-rowcredit="addEntryInCredit(entry)"
                       novalidate
                       >
                   </div>

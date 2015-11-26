@@ -268,7 +268,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   #   else
   #     angular.copy(lItem, item)
 
-  $scope.addEntryInCredit =()->
+  $scope.addEntryInCredit =(data)->
+    console.log data
     arLen = $scope.ledgerOnlyCreditData.length-1
     lastRow = $scope.ledgerOnlyCreditData[arLen]
 
@@ -280,7 +281,14 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     else
       $scope.sameMethodForDrCr(arLen, ".crLedgerEntryForm")
 
-  $scope.addEntryInDebit =()->
+  $scope.addEntryInDebit =(data)->
+    console.log data
+    if _.isUndefined(data.sharedData.uniqueName)
+      console.log "from lastRow new row"
+    else
+      console.log "don't know"
+
+    
     arLen = $scope.ledgerOnlyDebitData.length-1
     lastRow = $scope.ledgerOnlyDebitData[arLen]
 
@@ -289,7 +297,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $timeout ->
         $scope.sameMethodForDrCr(arLen+1, ".drLedgerEntryForm")
       , 300
-      
     else
       $scope.sameMethodForDrCr(arLen, ".drLedgerEntryForm")
     
@@ -416,8 +423,11 @@ angular.module('giddhWebApp').controller 'ledgerController', ledgerController
 class angular.Ledger
   constructor: (type)->
     @transactions = [new angular.Transaction(type)]
+    @sharedData = new angular.SharedData
+
+class angular.SharedData
+  constructor: () ->
     @description = ""
-    @sharedData = {}
     @tag = ""
     @uniqueName = undefined
     @entryDate = ""
