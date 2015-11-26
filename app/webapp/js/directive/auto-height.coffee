@@ -170,10 +170,10 @@ angular.module('ledger', [])
       fields[i].addEventListener 'focus', (event) ->
         parentForm = angular.element(this).parents('form')
         if parentForm.hasClass('open')
-          console.log "parent opened" 
+          console.log "parent opened"
         else
           $timeout ->
-            scope.openDialog(scope.item, scope.index, scope.ftype, parentForm, scope.formClass)
+            scope.openDialog(scope.item, scope.index, scope.ftype, parentForm)
           , 300
       i++
 
@@ -212,7 +212,7 @@ angular.module('ledger', [])
       el = document.getElementsByClassName(item.sharedData.uniqueName)
       angular.element(el).addClass('highlightRow')
 
-    scope.openDialog = (item, indexs, ftype, parentForm, formclass) ->
+    scope.openDialog = (item, indexs, ftype, parentForm) ->
       $document.off 'click'
       scope.removeClassInAllEle("ledgEntryForm", "open")
       elem.addClass('open')
@@ -228,9 +228,9 @@ angular.module('ledger', [])
           <div class="popover-content">
             <div class="mrT">
               <div class="form-group">
-                {{index}} {{formclass}}
-                <button ng-disabled="formclass.$invalid" class="btn btn-sm btn-info mrR1" href="javascript:void(0)" ng-click="enterRowdebit({entry: item})">Add in DR</button>
-                <button ng-disabled="formclass.$invalid" class="btn btn-sm btn-primary" href="javascript:void(0)" ng-click="enterRowcredit({entry: item})">Add in CR</button>
+                {{index}} {{formClass}}
+                <button ng-disabled="{{formClass}}.$invalid" class="btn btn-sm btn-info mrR1" href="javascript:void(0)" ng-click="enterRowdebit({entry: item})">Add in DR</button>
+                <button ng-disabled="{{formClass}}.$invalid" class="btn btn-sm btn-primary" href="javascript:void(0)" ng-click="enterRowcredit({entry: item})">Add in CR</button>
                 <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResults">Add new account</a>
               </div>
               <div class="row">
@@ -261,9 +261,9 @@ angular.module('ledger', [])
                 </div>
               </div>
               <div class="">
-                <button ng-if="ftype == \'Update\'" class="btn btn-success" type="button" ng-disabled="formclass.$invalid"
+                <button ng-if="ftype == \'Update\'" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid"
                   ng-click="updateLedger({entry: item})">Update</button>
-                <button  ng-if="ftype == \'Add\'" class="btn btn-success" type="button" ng-disabled="formclass.$invalid || noResults"
+                <button  ng-if="ftype == \'Add\'" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults"
                   ng-click="addLedger({entry: item})">Add</button>
 
                 <button ng-click="removeLedgdialog()" class="btn btn-default mrL1" type="button">close</button>
@@ -308,6 +308,6 @@ angular.module('ledger', [])
       else
         return false
       return true
-      scope.el = elem[0]
+    scope.el = elem[0]
   }
 ]
