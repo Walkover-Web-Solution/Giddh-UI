@@ -157,17 +157,21 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       modalService.openManageGroupsModal()
 
   $scope.addNewEntry = (data) ->
-    $scope.addEntryMultiObj.push(data)
-    console.log $scope.addEntryMultiObj, "addNewEntry", data
     edata = {}
-    _.extend(edata, data)
     edata.transactions = []
-    _.each($scope.addEntryMultiObj, (entry) ->
-      console.log "each", entry.transactions[0]
-      edata.transactions.push(entry.transactions[0])
-    )
-    edata.sharedData.voucherType = data.sharedData.voucher.shortCode
-    console.log edata, "finally after each"
+    _.extend(edata, data.sharedData)
+    if data.sharedData.addType
+      _.filter($scope.ledgerOnlyDebitData, (entry) ->
+        if entry.sharedData.addType and entry.transactions[0].amount isnt ""
+          edata.transactions.push(entry.transactions[0])
+      )
+      _.filter($scope.ledgerOnlyCreditData, (entry) ->
+        if entry.sharedData.addType and entry.transactions[0].amount isnt ""
+          edata.transactions.push(entry.transactions[0])
+      )
+    else
+      _.extend(edata.transactions, data.transactions)
+    edata.voucherType = data.sharedData.voucher.shortCode
     unqNamesObj = {
       compUname: $scope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
@@ -177,23 +181,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.addEntrySuccess = (res) ->
     toastr.success("Entry created successfully", "Success")
+    $scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
+    $scope.$broadcast('$reloadLedger')
     $scope.removeLedgerDialog()
-    tType = res.body.transactions[0].type
-    count = 0
-    rpl = 0
-    _.each($scope.ledgerData.ledgers, (ledger) ->
-      if ledger.uniqueName is undefined && ledger.transactions[0].type is tType
-        rpl = count
-      count++
-    )
-    $scope.ledgerData.ledgers[rpl] = res.body
-
-    if tType is 'DEBIT'
-      $scope.ledgerData.ledgers.push(angular.copy(dummyValueDebit))
-    if tType is 'CREDIT'
-      $scope.ledgerData.ledgers.push(angular.copy(dummyValueCredit))
-
-    $scope.calculateLedger($scope.ledgerData, "add")
 
   $scope.addEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -226,8 +216,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.updateEntrySuccess = (res) ->
     $scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
     $scope.removeClassInAllEle("ledgEntryForm", "open")
-    $scope.removeLedgerDialog()
     toastr.success("Entry updated successfully", "Success")
+    $scope.removeLedgerDialog()
     uLedger = {}
     _.extend(uLedger, res.body)
 
@@ -266,7 +256,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.addEntryInCredit =(data)->
     $document.off 'click'
-    console.log data
     arLen = $scope.ledgerOnlyCreditData.length-1
     lastRow = $scope.ledgerOnlyCreditData[arLen]
 
@@ -274,11 +263,21 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $scope.ledgerOnlyCreditData.push(angular.copy(dummyValueCredit))
       $timeout ->
         $scope.sameMethodForDrCr(arLen+1, ".crLedgerEntryForm")
-      , 300
+      , 200
     else
       $scope.sameMethodForDrCr(arLen, ".crLedgerEntryForm")
 
-  $scope.addEntryMultiObj = []
+    if _.isUndefined(data.sharedData.uniqueName)
+      data.sharedData.addType = true
+      wt = _.omit(data, 'transactions')
+      wd = _.omit(wt.sharedData, 'entryDate')
+      _.extend(_.last($scope.ledgerOnlyCreditData).sharedData, wd)
+    else
+      if data.sharedData.multiEntry
+        console.log "multiEntry obj"
+      else
+        console.log "not multiEntry"
+  
   $scope.addEntryInDebit =(data)->
     $document.off 'click'
     arLen = $scope.ledgerOnlyDebitData.length-1
@@ -292,15 +291,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     else
       $scope.sameMethodForDrCr(arLen, ".drLedgerEntryForm")
 
-    console.log data, "addEntryInDebit"
-
     if _.isUndefined(data.sharedData.uniqueName)
-      console.log "from new row"
-      $scope.addEntryMultiObj.push(data)
+      data.sharedData.addType = true
       wt = _.omit(data, 'transactions')
       wd = _.omit(wt.sharedData, 'entryDate')
       _.extend(_.last($scope.ledgerOnlyDebitData).sharedData, wd)
-      console.log $scope.addEntryMultiObj
     else
       if data.sharedData.multiEntry
         console.log "multiEntry obj"

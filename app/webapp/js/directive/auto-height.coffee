@@ -178,7 +178,7 @@ angular.module('ledger', [])
       i++
 
     scope.addCrossFormField = (i, d, c) ->
-      scope.item.transactions[0].particular.uniqueName = i.uName
+      # scope.item.transactions[0].particular.uniqueName = i.uName
 
     scope.resetEntry = (item, lItem) ->
       console.log "in resetEntry", item, lItem
@@ -213,7 +213,7 @@ angular.module('ledger', [])
       angular.element(el).addClass('highlightRow')
 
     scope.makeItHigh = (item) ->
-      console.log "makeItHigh", item
+      # console.log "makeItHigh", item
       angular.element(scope.el).addClass('newMultiEntryRow')
       return false
 
@@ -234,7 +234,7 @@ angular.module('ledger', [])
             <div class="mrT">
               <div class="form-group">
                 <button ng-disabled="{{formClass}}.$invalid" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh(item)">Add in DR</button>
-                <button ng-disabled="{{formClass}}.$invalid" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item})">Add in CR</button>
+                <button ng-disabled="{{formClass}}.$invalid" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh(item)">Add in CR</button>
                 <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResults">Add new account</a>
               </div>
               <div class="row">
