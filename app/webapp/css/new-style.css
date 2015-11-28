@@ -421,6 +421,10 @@ header .navbar-nav > li.active {
     margin-right: 30px
 }
 
+.mrT2 {
+    margin-top: 20px
+}
+
 .mrT4 {
     margin-top: 40px
 }
@@ -1093,6 +1097,84 @@ li:last-child .angular-ui-tree-handle {
     max-width:100px;
 }
 
+.max150{
+    max-width:150px;
+}
+
 .max200{
     max-width:200px;
+}
+
+/* styles for trial-balance */
+
+.page-title{
+    font-size:15px;
+    font-weight:600;
+    margin:10px 0 0 10px;
+}
+
+.table-container{
+    display:block;
+    margin: 50px 0 0 0;
+    padding:0 20px;
+}
+
+.table-container tr > td:first-child{
+    padding-right:20px;
+}
+
+.table-container tr td table tr td:nth-child(2){
+    padding-right:0;
+}
+
+.table-container td, .table-container th{
+    max-width: 100px;
+    text-overflow:ellipsis;
+    overflow:hidden;
+    white-space: nowrap;
+}
+
+.tb-head{
+    margin:0 0 20px;
+    background:#337ab7;
+    color:#fff;
+    z-index:999;
+}
+
+.tb-head th{
+    padding: 5px 10px !important;
+    border: 1px solid #fff;
+
+}
+
+.tb-head th:nth-child(3){
+    line-height:25px;
+    padding:5px 0px !important;
+    padding-bottom:0px !important;
+}
+
+.tb-head th:nth-child(3) th{
+    border:none;
+    border-top:1px solid #fff;
+}
+
+.tb-head th:nth-child(3) th:first-child{
+    border-right:1px solid #fff;
+}
+
+.fl-none{
+    float:none;
+}
+
+.tb-foot thead{
+    line-height: 50px;
+    height: 50px;
+    color: #000;
+    background: #e0e0e0;
+    font-size: 16px;
+    font-weight: 400 !important;
+}
+
+.tb-foot tr th table tr th:nth-child(2){
+    padding-right:0;
 }

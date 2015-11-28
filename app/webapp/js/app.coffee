@@ -17,6 +17,7 @@ app = angular.module("giddhWebApp",
     "unique-name"
     "ui.router"
     "LocalStorageModule"
+    "vAccordion"
   ]
 )
 
@@ -72,6 +73,16 @@ app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl:'/public/webapp/views/ledgerContent.html'
     controller: 'ledgerController'
     )
+  .state('Trial-Balance',
+    url:'/trial-balance',
+    templateUrl:'/public/webapp/views/trialBalance.html',
+    controller:'trialBalanceController'
+    )
+  # .state('transaction-card-details',
+  #   url:'/transaction-card-details',
+  #   templateUrl:'/public/webapp/views/cardDetails.html',
+  #   controller:'trialBalanceController'
+  #   )
   # .state('ledger.accounts',
   #   url:'',
   #   templateUrl:'/public/webapp/views/accounts.html'

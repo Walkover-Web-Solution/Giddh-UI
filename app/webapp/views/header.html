@@ -11,7 +11,7 @@
             <li>
               <div>
               <ul class="dshUl clearfix">
-                <li class="dmLi trialB">
+                <li class="dmLi trialB" ui-sref="/home">
                     <a href="#/home">
                       <div class="media">
                         <div class="media-left">
@@ -25,7 +25,7 @@
                     </a>
                 </li>
 
-                <li class="dmLi">
+                <li class="dmLi" ui-sref="ledger.ledgerContent">
                     <a href="#/ledger" >
                       <div class="media">
                         <div class="media-left">
@@ -38,14 +38,27 @@
                       </div>
                     </a>
                 </li>
+                 <li class="dmLi" ui-sref="Trial-Balance">
+                    <a href="#/ledger" >
+                      <div class="media">
+                        <div class="media-left">
+                          <div class="gic-48 icon-ew"></div>
+                        </div>
+                        <div class="media-body">
+                          <div class="title">Trial Balance</div>
+                          <div class="subTitle">View and edit all your <b>done</b> entries.</div>
+                        </div>
+                      </div>
+                    </a>
+                </li>
               </ul>
               </div> 
             </li>
           </ul>
         </li>
 
-        <li ng-if="cmpViewShow">
-          <a id="cmpWrp" class="clearfix" href="#/home">
+        <li ng-if="cmpViewShow" >
+          <a id="cmpWrp" class="clearfix"  ui-sref="/home">
             <i class="gic-24 icon-building-w"></i>
 
             <div class="cText">
