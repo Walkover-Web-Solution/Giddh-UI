@@ -183,6 +183,7 @@ angular.module('ledger', [])
     scope.resetEntry = (item, lItem) ->
       console.log "in resetEntry", item, lItem
       angular.copy(lItem[0], item)
+      item.sharedData.entryDate = undefined
       return false
       
     scope.setItemInLocalItemArr = (item) ->
@@ -212,13 +213,13 @@ angular.module('ledger', [])
       el = document.getElementsByClassName(item.sharedData.uniqueName)
       angular.element(el).addClass('highlightRow')
 
-    scope.makeItHigh = (item) ->
-      # console.log "makeItHigh", item
-      angular.element(scope.el).addClass('newMultiEntryRow')
+    scope.makeItHigh = () ->
+      console.log "makeItHigh"
+      scope.forwardtoCntrlScope(angular.element(scope.el), scope.item)
       return false
 
     scope.openDialog = (item, indexs, ftype, parentForm) ->
-      $document.off 'click'
+      # $document.off 'click'
       scope.removeClassInAllEle("ledgEntryForm", "open")
       elem.addClass('open')
       scope.highlightMultiEntry(item)
@@ -233,8 +234,8 @@ angular.module('ledger', [])
           <div class="popover-content">
             <div class="mrT">
               <div class="form-group">
-                <button ng-disabled="{{formClass}}.$invalid" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh(item)">Add in DR</button>
-                <button ng-disabled="{{formClass}}.$invalid" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh(item)">Add in CR</button>
+                <button ng-disabled="{{formClass}}.$invalid" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh()">Add in DR</button>
+                <button ng-disabled="{{formClass}}.$invalid" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh()">Add in CR</button>
                 <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResults">Add new account</a>
               </div>
               <div class="row">
@@ -285,13 +286,16 @@ angular.module('ledger', [])
 
       onDocumentClick = (event) ->
         isChild = elem.find(event.target).length > 0 || event.target.parentNode.nodeName is "LI"
-        splCond = event.target.nodeName is "INPUT"
+        splCond = event.target.nodeName is "INPUT" || event.target.nodeName is "BUTTON"
         if !isChild
           if item.sharedData.multiEntry
+            console.log "is child and multiEntry"
           else if splCond
             console.log "splCond"
-            if !_.isUndefined(item.sharedData.uniqueName)
-              console.log "splCond rese"
+            if event.target.nodeName is "BUTTON"
+              console.log "by button click"
+            if event.target.nodeName is "INPUT"
+              console.log "by direct input"
               scope.resetEntry(item, $rootScope.lItem)
           else
             console.log "else reset"
