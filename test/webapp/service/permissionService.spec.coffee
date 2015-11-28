@@ -5,7 +5,6 @@ describe "Permission Service", ->
 
   beforeEach ->
     inject ($injector) ->
-      @httpBackend = $injector.get('$httpBackend')
       @permissionService = $injector.get('permissionService')
 
   describe "#searchCountry", ->

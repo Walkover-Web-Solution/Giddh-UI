@@ -247,8 +247,8 @@ angular.module('ledger', [])
       else
         return false
       return true
-  
+
      scope.el = elem[0]
-    
+
 
   }

@@ -6,6 +6,7 @@ describe 'Company Service', ->
     inject ($injector) ->
       @httpBackend = $injector.get('$httpBackend')
       @companyServices = $injector.get('companyServices')
+    @httpBackend.when('GET', '/public/webapp/views/home.html').respond(200)
 
   afterEach(->
     @httpBackend.flush()

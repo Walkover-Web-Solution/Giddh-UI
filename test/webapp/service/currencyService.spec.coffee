@@ -7,6 +7,7 @@ describe "Currency Service", ->
     inject ($injector) ->
       @httpBackend = $injector.get('$httpBackend')
       @currencyService = $injector.get('currencyService')
+    @httpBackend.when('GET', '/public/webapp/views/home.html').respond(200)
 
   afterEach(->
     @httpBackend.flush()
