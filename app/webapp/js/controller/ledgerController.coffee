@@ -377,10 +377,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       drt += data.forwardedBalance.amount
 
     _.each($scope.ledgerOnlyDebitData, (entry) ->
-      drt += entry.transactions[0].amount
+      drt += Number(entry.transactions[0].amount)
     )
     _.each($scope.ledgerOnlyCreditData, (entry) ->
-      crt += entry.transactions[0].amount
+      crt += Number(entry.transactions[0].amount)
     )
     crt = parseFloat(crt)
     drt = parseFloat(drt)
