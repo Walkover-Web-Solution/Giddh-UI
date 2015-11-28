@@ -134,7 +134,7 @@ angular.module('ledger', [])
             <tr>
               <td width='28%'>
                 <input type='text' class='nobdr ledgInpt'
-                  tabindex='-1' required
+                  tabindex='-1' required autocomplete='off'
                   name='entryDate_{{index}}'
                   ng-model='item.sharedData.entryDate' valid-date/>
               </td>
@@ -153,7 +153,7 @@ angular.module('ledger', [])
               </td>
               <td width='28%'>
                 <input type='text' class='nobdr ledgInpt'
-                  tabindex='-1' required
+                  tabindex='-1' required autocomplete='off'
                   name='amount_{{index}}'
                   ng-model='item.transactions[0].amount'
                   valid-number/>
@@ -180,10 +180,22 @@ angular.module('ledger', [])
     scope.addCrossFormField = (i, d, c) ->
       # scope.item.transactions[0].particular.uniqueName = i.uName
 
+    scope.closeEntry = ()->
+      scope.removeLedgdialog()
+      scope.resetEntry(scope.item, $rootScope.lItem)
+
+    scope.closeAllEntry =()->
+      scope.removeLedgdialog()
+      scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
+      scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
+      $rootScope.$broadcast('$reloadLedger')
+      
+
     scope.resetEntry = (item, lItem) ->
-      console.log "in resetEntry", item, lItem
+      scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
       angular.copy(lItem[0], item)
-      item.sharedData.entryDate = undefined
+      if _.isUndefined(scope.item.sharedData.uniqueName)
+        item.sharedData.entryDate = undefined
       return false
       
     scope.setItemInLocalItemArr = (item) ->
@@ -200,9 +212,7 @@ angular.module('ledger', [])
           $rootScope.lItem = []
           $rootScope.lItem.push(angular.copy(item))
       else
-        # console.log "longitud es menor que 1"
         $rootScope.lItem.push(angular.copy(item))
-      # console.log "pushed new object to array", $rootScope.lItem
 
     scope.checkDateField = (item) ->
       if (item.sharedData.entryDate is "" || item.sharedData.entryDate is undefined || item.sharedData.entryDate is null)
@@ -214,7 +224,6 @@ angular.module('ledger', [])
       angular.element(el).addClass('highlightRow')
 
     scope.makeItHigh = () ->
-      console.log "makeItHigh"
       scope.forwardtoCntrlScope(angular.element(scope.el), scope.item)
       return false
 
@@ -271,7 +280,9 @@ angular.module('ledger', [])
                 <button  ng-if="ftype == \'Add\'" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults"
                   ng-click="addLedger({entry: item})">Add</button>
 
-                <button ng-click="removeLedgdialog()" class="btn btn-default mrL1" type="button">close</button>
+                <button ng-click="closeEntry()" class="btn btn-default mrL1" type="button">close</button>
+
+                <button ng-click="closeAllEntry()" class="btn btn-default mrL1" type="button">close All</button>
 
                 <button  ng-show="item.sharedData.uniqueName != undefined" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
               </div>
@@ -291,14 +302,11 @@ angular.module('ledger', [])
           if item.sharedData.multiEntry
             console.log "is child and multiEntry"
           else if splCond
-            console.log "splCond"
             if event.target.nodeName is "BUTTON"
               console.log "by button click"
             if event.target.nodeName is "INPUT"
-              console.log "by direct input"
               scope.resetEntry(item, $rootScope.lItem)
           else
-            console.log "else reset"
             scope.resetEntry(item, $rootScope.lItem)
           scope.$apply(scopeExpression)
           scope.removeClassInAllEle("ledgEntryForm", "open")
