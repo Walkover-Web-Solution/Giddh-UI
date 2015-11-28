@@ -185,6 +185,7 @@ angular.module('ledger', [])
       scope.resetEntry(scope.item, $rootScope.lItem)
 
     scope.closeAllEntry =()->
+      $rootScope.lItem = []
       scope.removeLedgdialog()
       scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
       scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")

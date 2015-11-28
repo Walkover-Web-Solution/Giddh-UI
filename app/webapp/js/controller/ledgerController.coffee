@@ -249,7 +249,16 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
               ledger.transactions[0] = transaction
         )
     )
+    # after update check if updated row is last row
+    ddR = _.last($scope.ledgerOnlyDebitData)
+    cdR = _.last($scope.ledgerOnlyCreditData)
+    if !_.isUndefined(ddR.sharedData.uniqueName)
+      $scope.ledgerOnlyDebitData.push(angular.copy(dummyValueDebit))
+    if !_.isUndefined(cdR.sharedData.uniqueName)
+      $scope.ledgerOnlyCreditData.push(angular.copy(dummyValueCredit))
+
     $scope.calculateLedger($scope.ledgerData, "update")
+    
 
   $scope.updateEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
