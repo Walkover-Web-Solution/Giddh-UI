@@ -48,7 +48,6 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
       , 500
     else
       console.log "not on ledger page"
-    
 
   # Collapse all account menus
   $scope.collapseAllSubMenus = () ->

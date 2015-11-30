@@ -82,12 +82,6 @@ describe 'accountController', ->
       @rootScope.$broadcast('$reloadAccount')
       expect(@scope.getAccountsGroups).toHaveBeenCalled()
 
-  describe '#test to check for viewContentLoaded event', ->
-    it 'should call a getAccountsGroups method', ->
-      spyOn(@scope, 'getAccountsGroups')
-      @rootScope.$broadcast('$viewContentLoaded')
-      expect(@scope.getAccountsGroups).toHaveBeenCalled()
-
   describe '#showManageGroups', ->
     it 'should call modal service to show manage group pop up', ->
       spyOn(@modalService, 'openManageGroupsModal')
