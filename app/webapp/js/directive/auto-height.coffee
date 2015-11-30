@@ -244,8 +244,8 @@ angular.module('ledger', [])
           <div class="popover-content">
             <div class="mrT">
               <div class="form-group">
-                <button ng-disabled="{{formClass}}.$invalid" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh()">Add in DR</button>
-                <button ng-disabled="{{formClass}}.$invalid" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh()">Add in CR</button>
+                <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh()">Add in DR</button>
+                <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh()">Add in CR</button>
                 <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResults">Add new account</a>
               </div>
               <div class="row">
@@ -276,7 +276,7 @@ angular.module('ledger', [])
                 </div>
               </div>
               <div class="">
-                <button ng-if="ftype == \'Update\'" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid"
+                <button ng-if="ftype == \'Update\'" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults"
                   ng-click="updateLedger({entry: item})">Update</button>
                 <button  ng-if="ftype == \'Add\'" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults"
                   ng-click="addLedger({entry: item})">Add</button>
