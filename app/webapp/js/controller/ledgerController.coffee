@@ -256,9 +256,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $scope.ledgerOnlyDebitData.push(angular.copy(dummyValueDebit))
     if !_.isUndefined(cdR.sharedData.uniqueName)
       $scope.ledgerOnlyCreditData.push(angular.copy(dummyValueCredit))
-
     $scope.calculateLedger($scope.ledgerData, "update")
-    
 
   $scope.updateEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)

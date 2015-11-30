@@ -10,6 +10,7 @@ module.exports = (config) ->
             "bower_components/bootstrap/dist/js/bootstrap.min.js",
             "bower_components/angular-route/angular-route.js",
             "bower_components/angular-sanitize/angular-sanitize.js",
+            "bower_components/v-accordion/dist/v-accordion.js",
             "bower_components/angular-local-storage/dist/angular-local-storage.js",
             "bower_components/angular-ui-tree/dist/angular-ui-tree.min.js",
             "bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js",

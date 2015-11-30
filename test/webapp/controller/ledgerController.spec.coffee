@@ -129,7 +129,7 @@ describe 'ledgerController', ->
           }
         }
         @scope.loadLedgerSuccess(res)
-        expect(@scope.ledgerData).toBe(res.body)
+        expect(@scope.ledgerData).toEqual(_.omit(res.body, 'ledgers'))
         expect(@scope.showLedgerBox).toBeTruthy()
         expect(@scope.calculateLedger).toHaveBeenCalledWith(@scope.ledgerData, "server")
 
@@ -194,13 +194,13 @@ describe 'ledgerController', ->
         }
         @scope.selectedGroupUname = "somename"
         @scope.selectedAccountUniqueName = "somename"
-        item = {name: "name", uniqueName: "somename"}
+        item = {sharedData: {name: "name", uniqueName: "somename"}}
 
         udata = {
           compUname: @scope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
           acntUname: @scope.selectedAccountUniqueName
-          entUname: item.uniqueName
+          entUname: item.sharedData.uniqueName
         }
         @scope.deleteEntry(item)
         expect(@ledgerService.deleteEntry).toHaveBeenCalledWith(udata)
@@ -209,7 +209,7 @@ describe 'ledgerController', ->
       it 'should check ledger array length and remove data from its position by index and show success message through toastr and call calculateLedger function with two para', ->
         res = {
           status: "success"
-          message: "Entry deleted successfully"
+          body: "Entry deleted successfully"
         }
         item = {name: "name", uniqueName: "somename"}
         @scope.ledgerData = {
@@ -224,7 +224,7 @@ describe 'ledgerController', ->
         spyOn(@scope, "calculateLedger")
         spyOn(@scope, "removeLedgerDialog")
         @scope.deleteEntrySuccess(item, res)
-        expect(@toastr.success).toHaveBeenCalledWith(res.message, res.status)
+        expect(@toastr.success).toHaveBeenCalledWith(res.body, res.status)
         expect(@scope.removeLedgerDialog).toHaveBeenCalled()
         expect(@scope.calculateLedger).toHaveBeenCalledWith(@scope.ledgerData, "deleted")
 
@@ -253,6 +253,14 @@ describe 'ledgerController', ->
         deferred = @q.defer()
         spyOn(@ledgerService, "createEntry").andReturn(deferred.promise)
         data = {
+          sharedData: {voucher: {shortcode: "12345"}}
+          transactions: [
+            {
+              particular: "particular"
+            }
+          ]
+        }
+        edata = {
           voucher: {shortcode: "12345"}
           transactions: [
             {
@@ -260,47 +268,21 @@ describe 'ledgerController', ->
             }
           ]
         }
-        edata = {}
-
         @scope.addNewEntry(data)
-        expect(@ledgerService.createEntry).toHaveBeenCalledWith(udata, data)
+        expect(@ledgerService.createEntry).toHaveBeenCalledWith(udata, edata)
 
     describe '#addEntrySuccess', ->
       it 'should show success message, call removeLedgerDialog function, and push data to main object and push data according to type in ledger Object, and call calculateLedger function', ->
-        res = {
-          status: "Success"
-          message: "Entry created successfully"
-          body: {
-            transactions: [
-              {type: "DEBIT"}
-            ]
-          }
-        }
-        @scope.ledgerData = {
-          key: "value"
-          ledgers: [
-            {
-              uniqueName: "somename",
-              transactions: [
-                {type: "DEBIT"}
-              ]
-            }
-          ]
-        }
-        tType = res.body.transactions[0].type
-        count = 0
-        rpl = 0
         spyOn(@scope, "removeLedgerDialog")
-        spyOn(@scope, "calculateLedger")
+        spyOn(@scope, "removeClassInAllEle")
+        spyOn(@scope, "$broadcast")
         spyOn(@toastr, "success")
-        @scope.addEntrySuccess(res)
-        expect(@toastr.success).toHaveBeenCalledWith(res.message, res.status)
+        @scope.addEntrySuccess({})
+        expect(@toastr.success).toHaveBeenCalledWith("Entry created successfully", "Success")
         expect(@scope.removeLedgerDialog).toHaveBeenCalled()
-        expect(tType).toBe(res.body.transactions[0].type)
-        expect(count).toBe (0)
-        expect(rpl).toBe (0)
-        expect(@scope.ledgerData.ledgers[rpl]).toBe(res.body)
-        expect(@scope.calculateLedger).toHaveBeenCalledWith(@scope.ledgerData, "add")
+        expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "newMultiEntryRow")
+        expect(@scope.$broadcast).toHaveBeenCalledWith('$reloadLedger')
+        expect(@rootScope.lItem).toEqual([])
 
     describe '#addEntryFailure', ->
       it 'should show error message with toastr', ->
@@ -320,61 +302,58 @@ describe 'ledgerController', ->
         @scope.selectedGroupUname = "groupname"
         @scope.selectedAccountUniqueName = "accountname"
         data = {
+          sharedData: {
+            uniqueName: "uniqueName"
+            voucher: {shortCode: "12345"}
+          }
+          transactions: [{particular: "particular"}]
+        }
+        @scope.ledgerOnlyDebitData = [data]
+        eData = {
           uniqueName: "uniqueName"
-          voucher: {shortcode: "12345"}
-          transactions: [
-            {
-              particular: "particular"
-            }
-          ]
+          voucher: {shortCode: "12345"}
+          voucherType: "12345"
+          transactions: [{particular: "particular"}]
         }
         udata = {
           compUname: @scope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
           acntUname: @scope.selectedAccountUniqueName
-          entUname: data.uniqueName
+          entUname: data.sharedData.uniqueName
         }
         deferred = @q.defer()
         spyOn(@ledgerService, "updateEntry").andReturn(deferred.promise)
-        edata = {}
 
         @scope.updateEntry(data)
-        expect(@ledgerService.updateEntry).toHaveBeenCalledWith(udata, data)
+        expect(@ledgerService.updateEntry).toHaveBeenCalledWith(udata, eData)
 
     describe '#updateEntrySuccess', ->
       it 'should show success message, call removeLedgerDialog function, and change data to main object, and call calculateLedger function', ->
-        res = {
-          status: "Success"
-          message: "Entry updated successfully"
-          body: {
-            transactions: [
-              {type: "DEBIT"}
-            ]
-          }
+        debitLedger = {
+          sharedData: {uniqueName: "some-debit-entry"}
+          transactions: [ {type: "DEBIT"} ]
         }
-        @scope.ledgerData = {
-          key: "value"
-          ledgers: [
-            {
-              uniqueName: "somename",
-              transactions: [
-                {type: "DEBIT"}
-              ]
-            }
-          ]
+        creditLedger = {
+          sharedData: {uniqueName: "some-credit-entry"}
+          transactions: [ {type: "CREDIT"} ]
         }
-        tType = res.body.transactions[0].type
-        count = 0
-        rpl = 0
+        res = { body: debitLedger }
+        @scope.ledgerOnlyDebitData = [debitLedger]
+        @scope.ledgerOnlyCreditData = [creditLedger]
+        @scope.ledgerData = [creditLedger, creditLedger]
+
         spyOn(@scope, "removeLedgerDialog")
+        spyOn(@scope, "removeClassInAllEle")
         spyOn(@scope, "calculateLedger")
         spyOn(@toastr, "success")
+
         @scope.updateEntrySuccess(res)
-        expect(@toastr.success).toHaveBeenCalledWith(res.message, res.status)
+
+        expect(@toastr.success).toHaveBeenCalledWith("Entry updated successfully", "Success")
         expect(@scope.removeLedgerDialog).toHaveBeenCalled()
-        expect(count).toBe (0)
-        expect(rpl).toBe (0)
-        expect(@scope.ledgerData.ledgers[rpl]).toBe(res.body)
+        expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "newMultiEntryRow")
+        expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "highlightRow")
+        expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "open")
         expect(@scope.calculateLedger).toHaveBeenCalledWith(@scope.ledgerData, "update")
 
     describe '#updateEntryFailure', ->
@@ -401,33 +380,28 @@ describe 'ledgerController', ->
             description: "BF_BALANCE"
             type: "CREDIT"
           }
-          ledgers: [
-            {
-              uniqueName: "somename",
-              transactions: [
-                {type: "DEBIT", amount: 100}
-              ]
-            }
-            {
-              uniqueName: "somename1",
-              transactions: [
-                {type: "CREDIT", amount: 30}
-              ]
-            }
-            {
-              uniqueName: "somename2",
-              transactions: [
-                {type: "DEBIT", amount: 50}
-              ]
-            }
-            {
-              uniqueName: "somename3",
-              transactions: [
-                {type: "CREDIT", amount: 20}
-              ]
-            }
-          ]
         }
+        @scope.ledgerOnlyDebitData = [
+          {
+            uniqueName: "somename",
+            transactions: [ {type: "DEBIT", amount: 100} ]
+          }
+          {
+            uniqueName: "somename2",
+            transactions: [ {type: "DEBIT", amount: 50} ]
+          }
+        ]
+        @scope.ledgerOnlyCreditData = [
+          {
+            uniqueName: "somename1",
+            transactions: [ {type: "CREDIT", amount: 30} ]
+          }
+
+          {
+            uniqueName: "somename3",
+            transactions: [ {type: "CREDIT", amount: 20} ]
+          }
+        ]
         @scope.calculateLedger(data, "server")
         expect(@scope.ledgBalType).toBe ('CREDIT')
         expect(@scope.debitBalanceAmount).toBe (8)
@@ -447,33 +421,28 @@ describe 'ledgerController', ->
             description: "BF_BALANCE"
             type: "DEBIT"
           }
-          ledgers: [
-            {
-              uniqueName: "somename",
-              transactions: [
-                {type: "DEBIT", amount: 100}
-              ]
-            }
-            {
-              uniqueName: "somename1",
-              transactions: [
-                {type: "CREDIT", amount: 30}
-              ]
-            }
-            {
-              uniqueName: "somename2",
-              transactions: [
-                {type: "DEBIT", amount: 50}
-              ]
-            }
-            {
-              uniqueName: "somename3",
-              transactions: [
-                {type: "CREDIT", amount: 20}
-              ]
-            }
-          ]
         }
+        @scope.ledgerOnlyDebitData = [
+          {
+            uniqueName: "somename",
+            transactions: [ {type: "DEBIT", amount: 100} ]
+          }
+          {
+            uniqueName: "somename2",
+            transactions: [ {type: "DEBIT", amount: 50} ]
+          }
+        ]
+        @scope.ledgerOnlyCreditData = [
+          {
+            uniqueName: "somename1",
+            transactions: [ {type: "CREDIT", amount: 30} ]
+          }
+
+          {
+            uniqueName: "somename3",
+            transactions: [ {type: "CREDIT", amount: 20} ]
+          }
+        ]
         @scope.calculateLedger(data, "server")
         expect(@scope.ledgBalType).toBe ('DEBIT')
         expect(@scope.creditBalanceAmount).toBe (208)
@@ -494,27 +463,24 @@ describe 'ledgerController', ->
             description: "BF_BALANCE"
             type: "DEBIT"
           }
-          ledgers: [
-            {
-              uniqueName: "somename",
-              transactions: [
-                {type: "DEBIT", amount: 100}
-              ]
-            }
-            {
-              uniqueName: "somename1",
-              transactions: [
-                {type: "CREDIT", amount: 50}
-              ]
-            }
-            {
-              uniqueName: "somename2",
-              transactions: [
-                {type: "CREDIT", amount: 50}
-              ]
-            }
-          ]
         }
+        @scope.ledgerOnlyDebitData = [
+          {
+            uniqueName: "somename",
+            transactions: [ {type: "DEBIT", amount: 100} ]
+          }
+        ]
+        @scope.ledgerOnlyCreditData = [
+          {
+            uniqueName: "somename1",
+            transactions: [ {type: "CREDIT", amount: 50} ]
+          }
+
+          {
+            uniqueName: "somename3",
+            transactions: [ {type: "CREDIT", amount: 50} ]
+          }
+        ]
         @scope.calculateLedger(data, "server")
         expect(@scope.ledgBalType).toBe (undefined)
         expect(@scope.creditBalanceAmount).toBe(0)

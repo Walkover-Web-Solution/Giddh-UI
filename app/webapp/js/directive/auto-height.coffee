@@ -300,7 +300,7 @@ angular.module('ledger', [])
         isChild = elem.find(event.target).length > 0 || event.target.parentNode.nodeName is "LI"
         splCond = event.target.nodeName is "INPUT" || event.target.nodeName is "BUTTON"
         if !isChild
-          if item.sharedData.multiEntry
+          if item.sharedData.multiEntry || item.sharedData.addType
             console.log "is child and multiEntry"
           else if splCond
             if event.target.nodeName is "BUTTON"
