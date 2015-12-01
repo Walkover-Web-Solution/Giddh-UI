@@ -133,16 +133,13 @@ angular.module('ledger', [])
           <table class='table ldgrInnerTbl'>
             <tr>
               <td width='28%'>
-                <input type='text' class='nobdr ledgInpt'
+                <input pos='1' type='text' class='nobdr ledgInpt'
                   tabindex='-1' required autocomplete='off'
                   name='entryDate_{{index}}'
                   ng-model='item.sharedData.entryDate' valid-date/>
               </td>
               <td width=44%'>
-                <input type='hidden'
-                  name='trnsUniq_{{index}}'
-                  ng-model='item.transactions[0].particular.uniqueName'>
-                <input type='text'
+                <input pos='2' type='text'
                   tabindex='-1'  class='nobdr ledgInpt' required
                   name='trnsName_{{index}}'
                   ng-model='item.transactions[0].particular'
@@ -150,9 +147,12 @@ angular.module('ledger', [])
                   class='form-control' autocomplete='off'
                   typeahead-no-results='noResults'
                   typeahead-on-select='addCrossFormField($item, $model, $label)'>
+                <input type='hidden'
+                  name='trnsUniq_{{index}}'
+                  ng-model='item.transactions[0].particular.uniqueName'>
               </td>
               <td width='28%'>
-                <input type='text' class='nobdr ledgInpt'
+                <input pos='3' type='text' class='nobdr ledgInpt'
                   tabindex='-1' required autocomplete='off'
                   name='amount_{{index}}'
                   ng-model='item.transactions[0].amount'
@@ -167,16 +167,43 @@ angular.module('ledger', [])
     fields = elem[0].getElementsByClassName('ledgInpt')
     i = 0
     while i < fields.length
+      fields[i].addEventListener 'keydown', (e) ->
+        scope.moveCursor(e, this)
+
       fields[i].addEventListener 'focus', (event) ->
         parentForm = angular.element(this).parents('form')
-        if parentForm.hasClass('open')
-          console.log "parent opened"
-        else
+        if !parentForm.hasClass('open')
           $timeout ->
             scope.openDialog(scope.item, scope.index, scope.ftype, parentForm)
           , 300
       i++
 
+    scope.moveForward = (e, ths)->
+      target = ths.parentElement.nextElementSibling.firstElementChild
+      target.focus()
+
+    scope.moveBackward = (e, ths)->
+      target = ths.parentElement.previousElementSibling.firstElementChild
+      target.focus()
+
+    scope.moveCursor = (e, ths) ->
+      pos = ths.getAttribute("pos")
+      keycode1 = if window.event then e.keyCode else e.which
+      if pos is "1" or pos is "2"
+        # tab without shift key
+        if !e.shiftKey and (keycode1 is 0 or keycode1 is 9)
+          e.preventDefault()
+          scope.moveForward(e, ths)
+        # tab with shift key
+        if e.shiftKey and (keycode1 is 0 or keycode1 is 9)
+          e.preventDefault()
+          if pos is "2"
+            scope.moveBackward(e, ths)
+      else
+        if e.shiftKey and (keycode1 is 0 or keycode1 is 9)
+          e.preventDefault()
+          scope.moveBackward(e, ths)
+      
     scope.addCrossFormField = (i, d, c) ->
       # scope.item.transactions[0].particular.uniqueName = i.uName
 
