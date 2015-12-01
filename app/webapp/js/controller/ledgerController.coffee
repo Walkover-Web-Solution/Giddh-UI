@@ -9,21 +9,17 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.selectedLedgerGroup = undefined
   $scope.ledgerOnlyDebitData = []
   $scope.ledgerOnlyCreditData = []
-
-
   $scope.selectedCompany = {}
   lsKeys = localStorageService.get("_selectedCompany")
   if not _.isNull(lsKeys) && not _.isEmpty(lsKeys) && not _.isUndefined(lsKeys)
     $scope.selectedCompany = lsKeys
-
   $scope.creditTotal = undefined
   $scope.debitTotal = undefined
   $scope.creditBalanceAmount = undefined
   $scope.debitBalanceAmount = undefined
-  $rootScope.cmpViewShow = true
   $scope.quantity = 50
+  $rootScope.cmpViewShow = true
   $rootScope.lItem = []
-
   #date time picker code starts here
   $scope.today = new Date()
   $scope.fromDate = {date: new Date()}
@@ -109,15 +105,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $stateParams.unqName = $scope.selectedAccountUniqueName
     $stateParams.grpName = $scope.selectedGroupUname
 
-  $scope.debitOnly = (ledger) ->
-    'DEBIT' == ledger.transactions[0].type
-
-  $scope.creditOnly = (ledger) ->
-    'CREDIT' == ledger.transactions[0].type
-
-  $scope.loadLedgerFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
-
   $scope.loadLedgerSuccess = (res) ->
     data = {}
     angular.copy(res.body, data)
@@ -145,10 +132,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.ledgerOnlyDebitData.push(angular.copy(dummyValueDebit))
     $scope.ledgerOnlyCreditData.push(angular.copy(dummyValueCredit))
     $rootScope.showLedgerBox = true
-
     $scope.ledgerData = angular.copy(_.omit(res.body, 'ledgers'))
     $scope.calculateLedger($scope.ledgerData, "server")
 
+  $scope.loadLedgerFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.addNewAccount = () ->
     if _.isEmpty($scope.selectedCompany)
@@ -261,6 +249,34 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.updateEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+  $scope.deleteEntry = (item) ->
+    unqNamesObj = {
+      compUname: $scope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroupUname
+      acntUname: $scope.selectedAccountUniqueName
+      entUname: item.sharedData.uniqueName
+    }
+    ledgerService.deleteEntry(unqNamesObj).then((res) ->
+      $scope.deleteEntrySuccess(item, res)
+    , $scope.deleteEntryFailure)
+
+  $scope.deleteEntrySuccess = (item, res) ->
+    $scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
+    $scope.removeClassInAllEle("ledgEntryForm", "open")
+    $scope.removeLedgerDialog()
+    toastr.success(res.body, res.status)
+    $scope.ledgerOnlyDebitData = _.reject($scope.ledgerOnlyDebitData, (entry) ->
+      item.sharedData.uniqueName is entry.sharedData.uniqueName
+    )
+    $scope.ledgerOnlyCreditData = _.reject($scope.ledgerOnlyCreditData, (entry) ->
+      item.sharedData.uniqueName is entry.sharedData.uniqueName
+    )
+    
+    $scope.calculateLedger($scope.ledgerData, "deleted")
+
+  $scope.deleteEntryFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
   $scope.removeClassInAllEle = (target, clName)->
     el = document.getElementsByClassName(target)
     angular.element(el).removeClass(clName)
@@ -273,8 +289,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       angular.element(ele).addClass('newMultiEntryRow')
     
   $scope.addEntryInCredit =(data)->
-    # $document.off 'click'
-    # $rootScope.lItem = []
     arLen = $scope.ledgerOnlyCreditData.length-1
     lastRow = $scope.ledgerOnlyCreditData[arLen]
 
@@ -295,8 +309,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   
   $scope.addEntryInDebit =(data)->
-    # $document.off 'click'
-    # $rootScope.lItem = []
     arLen = $scope.ledgerOnlyDebitData.length-1
     lastRow = $scope.ledgerOnlyDebitData[arLen]
 
@@ -325,36 +337,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       angular.element(inp).focus()
     , 300
     return false
-      
-
-
-  $scope.deleteEntry = (item) ->
-    unqNamesObj = {
-      compUname: $scope.selectedCompany.uniqueName
-      selGrpUname: $scope.selectedGroupUname
-      acntUname: $scope.selectedAccountUniqueName
-      entUname: item.sharedData.uniqueName
-    }
-    ledgerService.deleteEntry(unqNamesObj).then((res) ->
-      $scope.deleteEntrySuccess(item, res)
-    , $scope.deleteEntryFailure)
-
-  $scope.deleteEntrySuccess = (item, res) ->
-    $scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
-    $scope.removeClassInAllEle("ledgEntryForm", "open")
-    $scope.removeLedgerDialog()
-    toastr.success(res.body, res.status)
-    $scope.ledgerOnlyDebitData = _.reject($scope.ledgerOnlyDebitData, (entry) ->
-      item.sharedData.uniqueName is entry.sharedData.uniqueName
-    )
-    $scope.ledgerOnlyCreditData = _.reject($scope.ledgerOnlyCreditData, (entry) ->
-      item.sharedData.uniqueName is entry.sharedData.uniqueName
-    )
-    
-    $scope.calculateLedger($scope.ledgerData, "deleted")
-
-  $scope.deleteEntryFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
 
   $scope.removeLedgerDialog = () ->
     allPopElem = angular.element(document.querySelector('.ledgerPopDiv'))

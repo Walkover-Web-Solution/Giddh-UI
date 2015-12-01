@@ -14,17 +14,21 @@ describe 'ledgerController', ->
         {$scope: @scope, $rootScope: @rootScope, localStorageService: @localStorageService})
 
     it 'should check scope variables set by default', ->
-      expect(@scope.selectedCompany).toEqual({name: "walkover"})
+      expect(@scope.ledgerdata).toBeUndefined()
       expect(@scope.accntTitle).toBeUndefined()
-      expect(@scope.showLedgerBox).toBeFalsy()
       expect(@scope.selectedAccountUniqueName).toBeUndefined()
       expect(@scope.selectedGroupUname).toBeUndefined()
       expect(@scope.selectedLedgerAccount).toBeUndefined()
+      expect(@scope.ledgerOnlyDebitData).toEqual([])
+      expect(@scope.ledgerOnlyCreditData).toEqual([])
+      expect(@scope.selectedCompany).toEqual({name: "walkover"})
       expect(@scope.creditTotal).toBeUndefined()
       expect(@scope.debitTotal).toBeUndefined()
       expect(@scope.creditBalanceAmount).toBeUndefined()
       expect(@scope.debitBalanceAmount).toBeUndefined()
       expect(@scope.quantity).toBe(50)
+      expect(@rootScope.cmpViewShow).toBeTruthy()
+      expect(@rootScope.lItem).toEqual([])
       expect(@scope.today).toBeDefined()
       expect(@scope.fromDate.date).toBeDefined()
       expect(@scope.toDate.date).toBeDefined()
@@ -35,9 +39,32 @@ describe 'ledgerController', ->
       expect(@scope.ftypeAdd).toBe("add")
       expect(@scope.ftypeUpdate).toBe("update")
       expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
+      vouchDat = [
+        {
+          name: "Sales"
+          shortCode: "sal"
+        }
+        {
+          name: "Purchases"
+          shortCode: "pur"
+        }
+        {
+          name: "Receipt"
+          shortCode: "rcpt"
+        }
+        {
+          name: "Payment"
+          shortCode: "pay"
+        }
+        {
+          name: "Journal"
+          shortCode: "jr"
+        }
+      ]
+      expect(@scope.voucherTypeList).toEqual(vouchDat)
 
   describe 'controller methods', ->
-    beforeEach inject ($rootScope, $controller, localStorageService, toastr, ledgerService, $q, modalService, DAServices) ->
+    beforeEach inject ($rootScope, $controller, localStorageService, toastr, ledgerService, $q, modalService, DAServices, $timeout) ->
       @scope = $rootScope.$new()
       @rootScope = $rootScope
       @localStorageService = localStorageService
@@ -54,6 +81,7 @@ describe 'ledgerController', ->
           ledgerService: @ledgerService
           DAServices: @DAServices
           modalService: @modalService
+          $timeout: @timeout
         })
 
     describe '#reloadLedger', ->
@@ -133,34 +161,6 @@ describe 'ledgerController', ->
         expect(@scope.showLedgerBox).toBeTruthy()
         expect(@scope.calculateLedger).toHaveBeenCalledWith(@scope.ledgerData, "server")
 
-    describe '#debitOnly', ->
-      it 'should check ledger transactions type', ->
-        data = {
-          voucher: {shortcode: "12345"}
-          transactions: [
-            {
-              particular: "particular"
-              type: "DEBIT"
-            }
-          ]
-        }
-        @scope.debitOnly(data)
-        expect("DEBIT").toBe(data.transactions[0].type)
-
-    describe '#creditOnly', ->
-      it 'should check ledger transactions type', ->
-        data = {
-          voucher: {shortcode: "12345"}
-          transactions: [
-            {
-              particular: "particular"
-              type: "CREDIT"
-            }
-          ]
-        }
-        @scope.debitOnly(data)
-        expect("CREDIT").toBe(data.transactions[0].type)
-
     describe '#loadLedgerFailure', ->
       it 'should show error message with toastr', ->
         res =
@@ -184,59 +184,6 @@ describe 'ledgerController', ->
         spyOn(@modalService, "openManageGroupsModal")
         @scope.addNewAccount()
         expect(@modalService.openManageGroupsModal).toHaveBeenCalled()
-
-    describe '#deleteEntry', ->
-      it 'should call ledgerService deleteEntry method with object', ->
-        deferred = @q.defer()
-        spyOn(@ledgerService, "deleteEntry").andReturn(deferred.promise)
-        @scope.selectedCompany = {
-          uniqueName: "giddh"
-        }
-        @scope.selectedGroupUname = "somename"
-        @scope.selectedAccountUniqueName = "somename"
-        item = {sharedData: {name: "name", uniqueName: "somename"}}
-
-        udata = {
-          compUname: @scope.selectedCompany.uniqueName
-          selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUniqueName
-          entUname: item.sharedData.uniqueName
-        }
-        @scope.deleteEntry(item)
-        expect(@ledgerService.deleteEntry).toHaveBeenCalledWith(udata)
-
-    describe '#deleteEntrySuccess', ->
-      it 'should check ledger array length and remove data from its position by index and show success message through toastr and call calculateLedger function with two para', ->
-        res = {
-          status: "success"
-          body: "Entry deleted successfully"
-        }
-        item = {name: "name", uniqueName: "somename"}
-        @scope.ledgerData = {
-          key: "value"
-          ledgers: [
-            {uniqueName: "somename"}
-            {uniqueName: "somename1"}
-            {uniqueName: "somename2"}
-          ]
-        }
-        spyOn(@toastr, "success")
-        spyOn(@scope, "calculateLedger")
-        spyOn(@scope, "removeLedgerDialog")
-        @scope.deleteEntrySuccess(item, res)
-        expect(@toastr.success).toHaveBeenCalledWith(res.body, res.status)
-        expect(@scope.removeLedgerDialog).toHaveBeenCalled()
-        expect(@scope.calculateLedger).toHaveBeenCalledWith(@scope.ledgerData, "deleted")
-
-    describe '#deleteEntryFailure', ->
-      it 'should show error message with toastr', ->
-        res =
-          data:
-            status: "Error"
-            message: "message"
-        spyOn(@toastr, "error")
-        @scope.deleteEntryFailure(res)
-        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
     describe '#addNewEntry', ->
       it 'should add a entry to ledger, copy data to a variable, call ledgerService createEntry method', ->
@@ -278,6 +225,7 @@ describe 'ledgerController', ->
         spyOn(@scope, "$broadcast")
         spyOn(@toastr, "success")
         @scope.addEntrySuccess({})
+        expect(@rootScope.lItem).toEqual([])
         expect(@toastr.success).toHaveBeenCalledWith("Entry created successfully", "Success")
         expect(@scope.removeLedgerDialog).toHaveBeenCalled()
         expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "newMultiEntryRow")
@@ -348,7 +296,7 @@ describe 'ledgerController', ->
         spyOn(@toastr, "success")
 
         @scope.updateEntrySuccess(res)
-
+        expect(@rootScope.lItem).toEqual([])
         expect(@toastr.success).toHaveBeenCalledWith("Entry updated successfully", "Success")
         expect(@scope.removeLedgerDialog).toHaveBeenCalled()
         expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "newMultiEntryRow")
@@ -366,6 +314,126 @@ describe 'ledgerController', ->
         @scope.updateEntryFailure(res)
         expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
+    describe '#deleteEntry', ->
+      it 'should call ledgerService deleteEntry method with object', ->
+        deferred = @q.defer()
+        spyOn(@ledgerService, "deleteEntry").andReturn(deferred.promise)
+        @scope.selectedCompany = {
+          uniqueName: "giddh"
+        }
+        @scope.selectedGroupUname = "somename"
+        @scope.selectedAccountUniqueName = "somename"
+        item = {sharedData: {name: "name", uniqueName: "somename"}}
+
+        udata = {
+          compUname: @scope.selectedCompany.uniqueName
+          selGrpUname: @scope.selectedGroupUname
+          acntUname: @scope.selectedAccountUniqueName
+          entUname: item.sharedData.uniqueName
+        }
+        @scope.deleteEntry(item)
+        expect(@ledgerService.deleteEntry).toHaveBeenCalledWith(udata)
+
+    describe '#deleteEntrySuccess', ->
+      it 'should check ledger array length and remove data from its position by index and show success message through toastr and call calculateLedger function with two para', ->
+        res = {
+          status: "success"
+          body: "Entry deleted successfully"
+        }
+        item = {name: "name", uniqueName: "somename"}
+        @scope.ledgerData = {
+          key: "value"
+          ledgers: [
+            {uniqueName: "somename"}
+            {uniqueName: "somename1"}
+            {uniqueName: "somename2"}
+          ]
+        }
+        spyOn(@toastr, "success")
+        spyOn(@scope, "calculateLedger")
+        spyOn(@scope, "removeLedgerDialog")
+        @scope.deleteEntrySuccess(item, res)
+        expect(@toastr.success).toHaveBeenCalledWith(res.body, res.status)
+        expect(@scope.removeLedgerDialog).toHaveBeenCalled()
+        expect(@scope.calculateLedger).toHaveBeenCalledWith(@scope.ledgerData, "deleted")
+
+    describe '#deleteEntryFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.deleteEntryFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+    describe '#addEntryInCredit', ->
+      data = {
+        sharedData:{
+          uniqueName: "somename"
+          entryDate: "01-12-2015"
+        }
+        transactions: [ {type: "CREDIT", amount: 20} ]
+      }
+      it 'should check array length and set value in local variable, then it should check if entryDate isnot blank and amount is not blank then it should call sameMethodForDrCr function with two parameters and it should check if uniqueName is undefined then it will add one more key {addType} in object after all this it will perform some underscore action {omit, last and extend}', ->
+        @scope.ledgerOnlyCreditData = [
+          {
+            sharedData:{
+              uniqueName: "somename1"
+              entryDate: "01-12-2015"
+            }
+            transactions: [ {type: "CREDIT", amount: 30} ]
+          }
+          {
+            sharedData:{
+              uniqueName: "somename2"
+              entryDate: "02-12-2015"
+            }
+            transactions: [ {type: "CREDIT", amount: 20} ]
+          }
+        ]
+        spyOn(@scope, "sameMethodForDrCr")
+        @scope.addEntryInCredit(data)
+        expect(@scope.sameMethodForDrCr).toHaveBeenCalledWith(1, ".crLedgerEntryForm")
+    
+    describe '#addEntryInDebit', ->
+      data = {
+        sharedData:{
+          uniqueName: "somename"
+          entryDate: "01-12-2015"
+        }
+        transactions: [ {type: "DEBIT", amount: 20} ]
+      }
+      it 'should check array length and set value in local variable, then it should check if entryDate isnot blank and amount is not blank then it should call sameMethodForDrCr function with two parameters and it should check if uniqueName is undefined then it will add one more key {addType} in object after all this it will perform some underscore action {omit, last and extend}', ->
+        @scope.ledgerOnlyDebitData = [
+          {
+            sharedData:{
+              uniqueName: "somename1"
+              entryDate: "01-12-2015"
+            }
+            transactions: [ {type: "DEBIT", amount: 30} ]
+          }
+          {
+            sharedData:{
+              uniqueName: "somename2"
+              entryDate: "02-12-2015"
+            }
+            transactions: [ {type: "DEBIT", amount: 20} ]
+          }
+        ]
+        spyOn(@scope, "sameMethodForDrCr")
+        @scope.addEntryInDebit(data)
+        expect(@scope.sameMethodForDrCr).toHaveBeenCalledWith(1, ".drLedgerEntryForm")
+
+    describe '#sameMethodForDrCr', ->
+      xit 'should call removeLedgerDialog function and removeClassInAllEle with parameters', ->
+        spyOn(@scope, "removeLedgerDialog")
+        spyOn(@scope, "removeClassInAllEle")
+        @scope.sameMethodForDrCr(1, ".drLedgerEntryForm")
+        expect(@scope.removeLedgerDialog).toHaveBeenCalled()
+        expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "highlightRow")
+        expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "open")
+      
     describe '#calculateLedger', ->
       it 'should calculate data and set some variables to according in this credit is greater', ->
         data = {
@@ -487,3 +555,20 @@ describe 'ledgerController', ->
         expect(@scope.debitBalanceAmount).toBe(0)
         expect(@scope.debitTotal).toBe(100)
         expect(@scope.creditTotal).toBe(100)
+
+    describe '#viewContentLoaded event', ->
+      xit 'should set date and call da service ledgerget method and call localStorageService and call loadLedger', ->
+        spyOn(@DAServices, 'LedgerGet')
+        @rootScope.$broadcast('$viewContentLoaded')
+        expect(@DAServices.LedgerGet).toHaveBeenCalled()
+
+
+
+
+
+
+
+
+
+
+

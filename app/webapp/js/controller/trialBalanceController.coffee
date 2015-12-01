@@ -87,27 +87,4 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     'expenses': '#E86850'
   }
 
-
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 angular.module('giddhWebApp').controller 'trialBalanceController', trialBalanceController
-
