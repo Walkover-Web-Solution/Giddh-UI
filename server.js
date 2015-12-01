@@ -6,9 +6,8 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 var engines = require('consolidate');
 var request = require('request');
-
-//enabling cors
 var cors = require('cors')
+var requestIp = require('request-ip');
 
 var app = settings.express();
 
@@ -44,6 +43,21 @@ app.use(session({
   }
 }));
 
+global.clientIp = "";
+app.use(function (req, res, next) {
+  clientIp = requestIp.getClientIp(req);
+  res.locales ={
+    "siteTitle": "Giddh ~ Accounting at its Rough!",
+    "author": "The Mechanic",
+    "description": "Giddh App description",
+    "remoteIp": requestIp.getClientIp(req),
+  }
+  next();
+});
+
+
+
+
 // do not remove code from this position
 var login = require('./public/routes/website/login');
 var contact = require('./public/routes/website/contact');
@@ -73,10 +87,12 @@ app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountUn
 app.use('/company/:companyUniqueName/trialBalance',trialBalance);
 app.use('/', appRoutes);
 
+
+
+
 app.listen(port, function () {
   console.log('Express Server running at port', this.address().port);
 });
-
 /*
  |--------------------------------------------------------------------------
  | Error Handlers
@@ -105,6 +121,7 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
+  console.log (err, "error")
   res.status(err.status || 500);
   var filePath = __dirname + '/public/website/views/error';
   res.render(filePath, {

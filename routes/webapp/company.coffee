@@ -1,12 +1,13 @@
 settings = require('../util/settings')
 router = settings.express.Router()
-
+# console.log clientIp, "shareable-role finally got", res.locales.remoteIp
 router.get '/all', (req, res) ->
-  onlyAuthHead =
+  args =
     headers:
       'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'users/' + req.session.name + '/companies'
-  settings.client.get hUrl, onlyAuthHead, (data, response) ->
+  settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
@@ -18,6 +19,7 @@ router.delete '/:uniqueName', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
   settings.client.delete hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
@@ -25,12 +27,12 @@ router.delete '/:uniqueName', (req, res) ->
 
 #update company
 router.put '/:uniqueName', (req, res) ->
-  console.log "update company", req.body
   hUrl = settings.envUrl + 'company/' + req.params.uniqueName
   args =
     headers:
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
     if data.status == 'error'
@@ -47,6 +49,7 @@ router.post '/', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error'
@@ -55,15 +58,12 @@ router.post '/', (req, res) ->
 
 #get all Roles
 router.get '/:uniqueName/shareable-roles', (req, res) ->
-  date = Date()
-  console.log date, "shareable-role"
   hUrl = settings.envUrl + 'company/' + req.params.uniqueName + '/shareable-roles'
   args =
     headers:
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
-
-  console.log args, hUrl
+      'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode).send(data)
@@ -77,6 +77,7 @@ router.get '/:uniqueName/shared-with', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode).send(data)
@@ -91,6 +92,7 @@ router.put '/:uniqueName/share', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
     if data.status == 'error'
@@ -105,6 +107,7 @@ router.put '/:uniqueName/unshare', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
     if data.status == 'error'

@@ -7,6 +7,7 @@ router.get '/', (req, res) ->
   args =
     headers:
       'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
     parameters:
       to: req.query.toDate
       from: req.query.fromDate
@@ -23,6 +24,7 @@ router.delete '/', (req, res) ->
   authHead =
     headers:
       'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName + '/ledgers'
   settings.client.delete hUrl, authHead, (data, response) ->
@@ -35,6 +37,7 @@ router.get '/:ledgerUniqueName', (req, res) ->
   authHead =
     headers:
       'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName +
       '/ledgers/' + req.params.ledgerUniqueName
@@ -51,10 +54,9 @@ router.post '/', (req, res) ->
   args =
     headers:
       'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
       'Content-Type': 'application/json'
     data: req.body
-
-  console.log args, "args"
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
@@ -68,6 +70,7 @@ router.put '/:ledgerUniqueName', (req, res) ->
   args =
     headers:
       'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
       'Content-Type': 'application/json'
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
@@ -80,6 +83,7 @@ router.delete '/:ledgerUniqueName', (req, res) ->
   authHead =
     headers:
       'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName +
       '/ledgers/' + req.params.ledgerUniqueName

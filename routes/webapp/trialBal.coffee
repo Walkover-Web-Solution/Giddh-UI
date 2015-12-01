@@ -7,6 +7,7 @@ router.get '/', (req, res) ->
   args =
     headers:
       'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
     parameters:
       to: req.query.toDate
       from: req.query.fromDate
