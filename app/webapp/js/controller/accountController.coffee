@@ -42,6 +42,8 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     if url[1] is "ledger"
       $timeout ->
         acEle = document.getElementById("ac_"+url[2])
+        if acEle is null
+          return false
         parentSib = acEle.parentElement.previousElementSibling
         angular.element(parentSib).trigger('click')
         angular.element(acEle).children().trigger('click')
