@@ -94,10 +94,6 @@ directive 'validDate', (toastr, $filter) ->
         event.preventDefault()
       return
     element.on 'focus', () ->
-      if _.isUndefined(scope.item.sharedData.entryDate)
-        console.log "in undefined"
-      else
-        console.log "else"
       if element.context.value is "" || element.context.value is undefined || element.context.value is null
         scope.item.sharedData.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
 
