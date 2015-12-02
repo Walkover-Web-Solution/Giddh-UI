@@ -94,6 +94,10 @@ directive 'validDate', (toastr, $filter) ->
         event.preventDefault()
       return
     element.on 'focus', () ->
+      if _.isUndefined(scope.item.sharedData.entryDate)
+        console.log "in undefined"
+      else
+        console.log "else"
       if element.context.value is "" || element.context.value is undefined || element.context.value is null
         scope.item.sharedData.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
 
@@ -221,7 +225,14 @@ angular.module('ledger', [])
 
     scope.resetEntry = (item, lItem) ->
       scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
-      angular.copy(lItem[0], item)
+      if lItem.length > 1
+        _.each(lItem, (entry) ->
+          if entry.id is item.id
+            angular.copy(entry, item)
+        )
+      else
+        angular.copy(lItem[0], item)
+
       if _.isUndefined(scope.item.sharedData.uniqueName)
         item.sharedData.entryDate = undefined
       return false

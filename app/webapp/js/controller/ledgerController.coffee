@@ -171,6 +171,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $rootScope.lItem = []
     toastr.success("Entry created successfully", "Success")
     $scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
+    $scope.removeClassInAllEle("ledgEntryForm", "open")
     $scope.$broadcast('$reloadLedger')
     $scope.removeLedgerDialog()
 
@@ -304,8 +305,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       data.sharedData.addType = true
 
     wt = _.omit(data, 'transactions')
-    wd = _.omit(wt.sharedData, 'entryDate')
-    _.extend(_.last($scope.ledgerOnlyCreditData).sharedData, wd)
+    wt.id = wt.id + arLen
+    _.extend(_.last($scope.ledgerOnlyCreditData), wt)
 
   
   $scope.addEntryInDebit =(data)->
@@ -324,8 +325,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       data.sharedData.addType = true
 
     wt = _.omit(data, 'transactions')
-    wd = _.omit(wt.sharedData, 'entryDate')
-    _.extend(_.last($scope.ledgerOnlyDebitData).sharedData, wd)
+    wt.id = wt.id + arLen
+    _.extend(_.last($scope.ledgerOnlyDebitData), wt)
     
   $scope.sameMethodForDrCr =(arLen, name)->
     formEle =  document.querySelectorAll(name)
