@@ -1283,3 +1283,75 @@ li:last-child .angular-ui-tree-handle {
 .angular-ui-tree-node.expenses{
     border-left-color:#E86850  !important;
 }
+
+/*v-accordion*/
+v-accordion {
+  display: block; }
+
+v-pane {
+  display: block; }
+  v-pane.is-expanded > v-pane-content > div {
+    visibility: visible; }
+  v-pane[disabled] > v-pane-header {
+    opacity: 1;
+    cursor: default; 
+    border-bottom-color: #ccc !important;
+   }
+
+v-pane-header {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  outline: none; }
+  v-pane-header:focus {
+    outline: none; }
+  v-pane-header[disabled] {
+    pointer-events: none; }
+  v-pane-header > div {
+    display: block; }
+
+v-pane-content {
+  display: block;
+  position: relative;
+  overflow: hidden;
+  max-height: 0px; }
+  v-pane-content > div {
+    visibility: none; }
+
+/* Theme: default
+   ***************************************/
+.vAccordion--default v-accordion {
+  margin-top: 20px;
+  margin-left: 10px;
+   }
+.vAccordion--default v-pane {
+  -webkit-transition: -webkit-transform 0.5s;
+          transition: transform 0.5s; }
+  .vAccordion--default v-pane.is-expanded > v-pane-header {
+    border-bottom-color: #337ab7; }
+    .vAccordion--default v-pane.is-expanded > v-pane-header::after {
+      -webkit-transform: rotate(90deg);
+          -ms-transform: rotate(90deg);
+              transform: rotate(90deg);
+      opacity: 0; }
+    .vAccordion--default v-pane.is-expanded > v-pane-header::before {
+      -webkit-transform: rotate(0deg);
+          -ms-transform: rotate(0deg);
+              transform: rotate(0deg); }
+  .vAccordion--default v-pane.is-expanded > v-pane-content > div {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0); }
+  .vAccordion--default v-pane.is-expanded-add > v-pane-content, .vAccordion--default v-pane.is-expanded-remove > v-pane-content {
+    -webkit-transition: max-height 0.5s;
+            transition: max-height 0.5s; }
+.vAccordion--default v-pane-header {
+  padding: 5px 0;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #D8D8D8;
+  -webkit-transition: color 0.25s, border-color 0.5s;
+          transition: color 0.25s, border-color 0.5s; }
