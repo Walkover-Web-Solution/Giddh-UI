@@ -1188,3 +1188,48 @@ li:last-child .angular-ui-tree-handle {
 .tb-foot tr th table tr th:nth-child(2){
     padding-right:0;
 }
+
+
+/* v-accordion custom styles */
+
+
+
+.vAccordion--default.root > v-pane {
+    border-left:10px solid;
+}
+
+.vAccordion--default.root > v-pane.assets{
+  border-left-color:#FFD800;
+}
+
+.vAccordion--default.root > v-pane.liabilities{
+ border-left-color:#587058;
+}
+
+.vAccordion--default.root > v-pane.income{
+  border-left-color: #6495ED;
+}
+
+.vAccordion--default.root > v-pane.expenses{
+  border-left-color:#E86850;
+}
+
+.vAccordion--default.root > v-pane > v-pane-content > div > v-accordion{
+  margin-top:0;
+}
+
+.vAccordion--default.root > v-pane > v-pane-content > div > v-accordion > div > v-pane {
+    /*border-left:2px solid;*/
+}
+
+.vAccordion--default.root > v-pane > v-pane-content > div > v-accordion > div > v-pane > v-pane-header{
+    border-bottom-color: rgba(51, 122, 183, 0.6);
+}
+
+.vAccordion--default.root > v-pane > v-pane-content > div > v-accordion > div > v-pane > v-pane-content v-accordion > v-pane{
+  /*border-left:2px solid;*/
+}
+
+.vAccordion--default.root > v-pane > v-pane-content > div > v-accordion > div > v-pane > v-pane-content v-accordion > v-pane > v-pane-header{
+  border-bottom-color: rgba(51, 122, 183, 0.3) !important;
+}
