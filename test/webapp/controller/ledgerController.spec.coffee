@@ -81,7 +81,6 @@ describe 'ledgerController', ->
           ledgerService: @ledgerService
           DAServices: @DAServices
           modalService: @modalService
-          $timeout: @timeout
         })
 
     describe '#reloadLedger', ->
@@ -395,6 +394,32 @@ describe 'ledgerController', ->
         spyOn(@scope, "sameMethodForDrCr")
         @scope.addEntryInCredit(data)
         expect(@scope.sameMethodForDrCr).toHaveBeenCalledWith(1, ".crLedgerEntryForm")
+
+      it 'timeout test', ->
+        @scope.ledgerOnlyCreditData = [
+          {
+            sharedData:{
+              uniqueName: ""
+              entryDate: ""
+            }
+            transactions: [ {type: "", amount: ""} ]
+          }
+          {
+            sharedData:{
+              uniqueName: ""
+              entryDate: ""
+            }
+            transactions: [ {type: "", amount: ""} ]
+          }
+        ]
+        spyOn(@scope, "sameMethodForDrCr")
+        runs ->
+          expect(@scope.sameMethodForDrCr).not.toHaveBeenCalledWith(1, ".crLedgerEntryForm")
+        waitsFor (->
+          @scope.addEntryInCredit(data)
+        ), 200
+        runs ->
+          expect(@scope.sameMethodForDrCr).toHaveBeenCalledWith(1, ".crLedgerEntryForm")
     
     describe '#addEntryInDebit', ->
       data = {
@@ -429,10 +454,17 @@ describe 'ledgerController', ->
       xit 'should call removeLedgerDialog function and removeClassInAllEle with parameters', ->
         spyOn(@scope, "removeLedgerDialog")
         spyOn(@scope, "removeClassInAllEle")
+        
+        loadFixtures('myfixture.html');
+        node=document.getElementById('my-fixture')
         @scope.sameMethodForDrCr(1, ".drLedgerEntryForm")
-        expect(@scope.removeLedgerDialog).toHaveBeenCalled()
-        expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "highlightRow")
-        expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "open")
+          
+        
+        # expect(document.getElementById('sandbox')).not.toHaveClass('my-class')
+
+        # expect(@scope.removeLedgerDialog).toHaveBeenCalled()
+        # expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "highlightRow")
+        # expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "open")
       
     describe '#calculateLedger', ->
       it 'should calculate data and set some variables to according in this credit is greater', ->

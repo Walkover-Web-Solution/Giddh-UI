@@ -21,6 +21,8 @@ module.exports = (config) ->
             "bower_components/satellizer/satellizer.js",
             "bower_components/underscore/underscore-min.js",
             "bower_components/angular-mocks/angular-mocks.js",
+            "bower_components/jasmine-dom/lib/jasmine-dom-matchers.js",
+            "bower_components/jasmine-dom/lib/jasmine-dom-fixtures.js",
             "app/website/**/*.coffee",
             "app/webapp/**/*.coffee",
             "test/**/*.coffee"]

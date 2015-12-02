@@ -32,7 +32,8 @@
     "angular-toastr": "~1.5.0",
     "angular-bootstrap": "~0.13.4",
     "angular-filter": "~0.5.1",
-    "moment": "~2.10.6"
+    "moment": "~2.10.6",
+    "jasmine-dom": "https://github.com/jeffwatkins/jasmine-dom.git"
   },
   "resolutions": {
     "angular": "~1.4.4",
