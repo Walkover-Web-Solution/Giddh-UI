@@ -56,7 +56,7 @@ module.exports = function (grunt) {
           expand: true,
           dot: true,
           cwd: srcDir,
-          src: ['**/images/*', '**/css/*', '**/fonts/*', '**/views/*'],
+          src: ['**/images/*', '**/css/*', '**/fonts/*', '**/views/*', "**/js/newRelic.js"],
           dest: destDir
         }]
       }
@@ -87,7 +87,7 @@ module.exports = function (grunt) {
     concat: {
       js:{
         files:{
-          'public/webapp/app.js': ['public/webapp/**/*.js']
+          'public/webapp/app.js': ['public/webapp/**/*.js', '!public/**/newRelic.js']
         }
       }
     },

@@ -458,14 +458,11 @@ describe 'ledgerController', ->
         loadFixtures('myfixture.html');
         node=document.getElementById('my-fixture')
         @scope.sameMethodForDrCr(1, ".drLedgerEntryForm")
-          
-        
         # expect(document.getElementById('sandbox')).not.toHaveClass('my-class')
-
         # expect(@scope.removeLedgerDialog).toHaveBeenCalled()
         # expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "highlightRow")
         # expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "open")
-      
+
     describe '#calculateLedger', ->
       it 'should calculate data and set some variables to according in this credit is greater', ->
         data = {
@@ -593,14 +590,3 @@ describe 'ledgerController', ->
         spyOn(@DAServices, 'LedgerGet')
         @rootScope.$broadcast('$viewContentLoaded')
         expect(@DAServices.LedgerGet).toHaveBeenCalled()
-
-
-
-
-
-
-
-
-
-
-

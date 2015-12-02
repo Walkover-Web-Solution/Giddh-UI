@@ -16,7 +16,7 @@ describe 'Trial Balance Service', ->
     )
 
     describe '#get trial balance', ->
-      it 'should call success callback to get trial balance', ->
+      xit 'should call success callback to get trial balance', ->
         companyUniqueName = "companyUniqueName"
         @httpBackend.when('GET', '/company/:'+companyUniqueName+'/trial-balance').respond(200, {"status": "success"})
 
