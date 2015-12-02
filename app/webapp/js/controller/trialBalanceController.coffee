@@ -38,8 +38,6 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     date: $scope.getDefaultDate().date
   }
 
-  
-
   $scope.getTrialBal = (data) ->
     if _.isNull(data.fromDate) || _.isNull(data.toDate)
       toastr.error("Date should be in proper format", "Error")
@@ -61,7 +59,11 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   	toastr.error(res.data.message, res.data.status)
 
   $scope.filterBydate = () ->
-  	$scope.expanded = false
+  	dateObj = {
+      'fromDate':$scope.getDefaultDate().date
+      'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+    }
+    $scope.expanded = false
   	$rootScope.showLedgerBox = false
   	dateObj.fromDate = $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
   	dateObj.toDate = $filter('date')($scope.toDate.date, "dd-MM-yyyy")
