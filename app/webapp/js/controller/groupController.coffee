@@ -449,5 +449,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   console.log $scope
 
+
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController

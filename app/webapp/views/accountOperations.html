@@ -122,10 +122,98 @@
 
         </div>
       </div>
-
     </form>
-
   </div>
+
+
+
+
+
+<!-- end row first -->
+<div class="clearfix bdrB">
+  <div class="col-sm-12 col-md-6" ng-hide="selectedGroup.isFixed || !canUpdate">
+    <div class="row">
+      <form name="moveGroupForm" novalidate class="pd2 form-inline">
+        <div>
+          <label class="mrR">Move to group</label>
+        </div>
+
+        <div class="form-group">
+          <input ng-model="moveto" type="text" placeholder="Group name" class="form-control" required
+            typeahead="groups as groups.name for groups in flattenGroupList | 
+            omit: isChildGroup | filter:{name: $viewValue}"/>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-info mrL" ng-click="moveGroup(moveto)" ng-disabled="moveGroupForm.$invalid">Move</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-sm-12 bdrL" ng-show="hasSharePermission()">
+    <div class="row">
+      <form name="shareGroupForm" novalidate class="form-inline pd2">
+        <div>
+          <label class="mrR">Share group</label>
+        </div>
+        <div class="form-group">
+          <input required name="userEmail" type="email" ng-model="shareGroupObj.user" placeholder="Enter Email ID"
+                 class="form-control"/>
+        </div>
+        <div class="form-group">
+          <button ng-disabled="shareGroupForm.$invalid" class="btn btn-info mrL" ng-click="shareGroup()">Share</button>
+        </div>
+      </form>
+    </div>
+    <!-- end of row -->
+    <div class="row" ng-if="groupSharedUserList.length">
+      <div class="pd2">
+        <ul class="list-group ln">
+          <li ng-repeat="(key,value) in groupSharedUserList track by $index" class="list-group-item">
+
+            <div class="form-inline clearfix">
+              <div class="form-group">
+                <i class="glyphicon glyphicon-user"></i>
+                {{value.userEmail}}
+              </div>
+              <div class="form-group">
+                {{option.role}}
+              </div>
+              <span class="delIcon">
+                <i class="glyphicon glyphicon-trash" ng-click="unShareGroup(value.userUniqueName)"></i>
+              </span>
+            </div>
+
+          </li>
+        </ul>
+
+      </div>
+    </div>
+    <!-- end of row -->
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   <div class="pd2">
     <button class="btn btn-danger" ng-click="deleteAccount()">Delete {{selectedAccount.name}} account</button>
   </div>

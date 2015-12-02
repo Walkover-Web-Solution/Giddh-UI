@@ -34,7 +34,6 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
 	  { date: getDate() }
  
   $scope.fromDate = {date: $scope.getDefaultDate().date }
-
   dateObj = {
   	'fromDate':$scope.getDefaultDate().date
   	'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
@@ -50,6 +49,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
    	'toDate': dateObj.toDate
    }
    trialBalService.getAllFor(reqParam).then $scope.getTrialBalSuccess, $scope.getTrialBalFailure
+   console.log $scope
    
   $scope.getTrialBalSuccess = (res) ->
    $scope.data = res.body

@@ -1261,3 +1261,25 @@ li:last-child .angular-ui-tree-handle {
 .vAccordion--default.root > v-pane > v-pane-content > div > v-accordion > div > v-pane > v-pane-content v-accordion > v-pane > v-pane-header{
   border-bottom-color: rgba(51, 122, 183, 0.3) !important;
 }
+
+/* ui-tree border-left style as per color codes */
+
+#tree-root > ol > .angular-ui-tree-node{
+    border-left:5px solid;
+}
+
+.angular-ui-tree-node.assets{
+    border-left-color:#FFD800 !important;
+}
+
+.angular-ui-tree-node.liabilities{
+    border-left-color:#587058  !important;   
+}
+
+.angular-ui-tree-node.income{
+    border-left-color: #6495ED  !important;
+}
+
+.angular-ui-tree-node.expenses{
+    border-left-color:#E86850  !important;
+}

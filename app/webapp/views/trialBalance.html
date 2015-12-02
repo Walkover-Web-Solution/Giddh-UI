@@ -241,7 +241,7 @@
                      </v-accordion>                   
 
                     <!--subgroup/group-->
-                     <v-accordion ng-if="grp.childGroups.length">
+                     <v-accordion ng-if="grp.childGroups.length" multiple>
                         <div ng-include="'trialBalSubGroup'"></div>
                      </v-accordion>                     
                   </v-pane-content>
