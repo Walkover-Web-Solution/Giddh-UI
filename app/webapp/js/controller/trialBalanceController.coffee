@@ -33,23 +33,24 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
 	  	date
 	  { date: getDate() }
  
-  $scope.fromDate = {date: $scope.getDefaultDate().date }
 
-  dateObj = {
-  	'fromDate':$scope.getDefaultDate().date
-  	'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+  $scope.fromDate = {
+    date: $scope.getDefaultDate().date
   }
 
-  $scope.getTrialBal = (dateObj) ->
-   if _.isNull(dateObj.fromDate) || _.isNull(dateObj.toDate)
+  
+
+  $scope.getTrialBal = (data) ->
+    if _.isNull(data.fromDate) || _.isNull(data.toDate)
       toastr.error("Date should be in proper format", "Error")
       return false
-   reqParam = {
-   	'companyUniqueName':$rootScope.selectedCompany.uniqueName
-   	'fromDate': dateObj.fromDate
-   	'toDate': dateObj.toDate
-   }
-   trialBalService.getAllFor(reqParam).then $scope.getTrialBalSuccess, $scope.getTrialBalFailure
+
+    reqParam = {
+    	'companyUniqueName':$rootScope.selectedCompany.uniqueName
+    	'fromDate': data.fromDate
+    	'toDate': data.toDate
+    }
+    trialBalService.getAllFor(reqParam).then $scope.getTrialBalSuccess, $scope.getTrialBalFailure
    
   $scope.getTrialBalSuccess = (res) ->
    $scope.data = res.body
@@ -66,7 +67,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   	dateObj.toDate = $filter('date')($scope.toDate.date, "dd-MM-yyyy")
   	$scope.getTrialBal(dateObj)
 
-  $scope.getTrialBal(dateObj)
+  
 
   #expand accordion on search
   $scope.expandAccordion = (e) ->
@@ -77,5 +78,12 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       else
         $scope.expanded = false
     ), 100
+
+  $scope.$on '$viewContentLoaded',  ->
+    dateObj = {
+      'fromDate':$scope.getDefaultDate().date
+      'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+    }
+    $scope.getTrialBal(dateObj)
     
 angular.module('giddhWebApp').controller 'trialBalanceController', trialBalanceController

@@ -447,7 +447,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.hasDeletePermission = (group) ->
     $scope.canDelete = permissionService.hasPermissionOn(group, "DLT")
 
-  console.log $scope
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController
