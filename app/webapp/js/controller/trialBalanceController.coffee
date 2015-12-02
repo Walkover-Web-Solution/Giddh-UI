@@ -9,7 +9,6 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   $scope.toDate = {date: new Date()}
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
-  $rootScope.showLedgerBox = false
  
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
@@ -19,7 +18,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
 
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
   
-  getDefaultDate = ->
+  $scope.getDefaultDate = ->
 	  date = undefined
 	  mm = '04'
 	  dd = '01'
@@ -34,10 +33,10 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
 	  	date
 	  { date: getDate() }
  
-  $scope.fromDate = {date: getDefaultDate().date }
+  $scope.fromDate = {date: $scope.getDefaultDate().date }
 
   dateObj = {
-  	'fromDate':getDefaultDate().date
+  	'fromDate':$scope.getDefaultDate().date
   	'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
   }
 
@@ -55,7 +54,6 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   $scope.getTrialBalSuccess = (res) ->
    $scope.data = res.body
    $rootScope.showLedgerBox = true
-   console.log $scope.data
    
 
   $scope.getTrialBalFailure = (res) ->
@@ -80,11 +78,4 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
         $scope.expanded = false
     ), 100
     
-  $scope.categoryColors = {
-    'assets':'#FFD800'
-    'liabilities': '#587058'
-    'income': '#587498'
-    'expenses': '#E86850'
-  }
-
 angular.module('giddhWebApp').controller 'trialBalanceController', trialBalanceController

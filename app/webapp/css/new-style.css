@@ -1189,9 +1189,37 @@ li:last-child .angular-ui-tree-handle {
     padding-right:0;
 }
 
+.circle{
+    width:15px;
+    height:15px;
+    border-radius: 50%;
+    display: inline-block;
+    vertical-align: text-top;
+    margin-right:5px;
+}
+
+.circle.assets{
+    background: #FFD800;
+}
+
+.circle.liabilities{
+    background: #587058;
+}
+
+.circle.income{
+    background: #6495ED;
+}
+
+.circle.expenses{
+    background: #E86850;
+}
+
+
+.color-codes{
+    margin:10px 20px;
+}
 
 /* v-accordion custom styles */
-
 
 
 .vAccordion--default.root > v-pane {

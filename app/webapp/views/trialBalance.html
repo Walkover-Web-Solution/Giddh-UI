@@ -16,7 +16,12 @@
       <div class="col-md-10 col-sm-7">
         <div class="middleBody bdrR bdrL row">
           <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="10" min-scrollbar-length="20" auto-height>
-            <h1 class="page-title">Trial Balance</h1>  
+            <ul class="list-inline color-codes">
+                <li><span class="circle assets"></span> Assets</li>
+                <li><span class="circle liabilities"></span>Liabilities</span></li>
+                <li><span class="circle income"></span>Income</li>
+                <li><span class="circle expenses"></span>Expenses</li>
+              </ul>  
               <div class="form-inline pdB1 mrT2 mrL3">
                 <form class=" pull-left" name="fromToDateForm" novalidate>
                   <div class="form-group mrR1">
@@ -182,7 +187,6 @@
   </div>
 
 <script type="text/ng-template" id="trialBalSubGroup">
-
                 <v-pane ng-repeat="grp in grp.childGroups  | filter:keyWord" expanded="expanded">
                   <v-pane-header ng-class="{'hasChild' : grp.childGroups.length || grp.accounts.length}">
                      <table class="col-sm-12 fl-none">

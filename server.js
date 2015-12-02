@@ -84,7 +84,7 @@ app.use('/company', company);
 app.use('/company/:companyUniqueName/groups', groups);
 app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts', accounts);
 app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
-app.use('/company/:companyUniqueName/trialBalance',trialBalance);
+app.use('/company/:companyUniqueName/trial-balance',trialBalance);
 app.use('/', appRoutes);
 
 

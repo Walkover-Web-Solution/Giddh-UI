@@ -11,7 +11,7 @@ router.get '/', (req, res) ->
     parameters:
       to: req.query.toDate
       from: req.query.fromDate
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/trialBalance'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/trial-balance'
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)

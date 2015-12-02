@@ -1,5 +1,5 @@
 angular.module('giddhWebApp').service 'trialBalService', ($resource, $q) ->
-  trialBal = $resource('/company/:companyUniqueName/trialBalance',
+  trialBal = $resource('/company/:companyUniqueName/trial-balance',
     {
       'companyUniqueName': @companyUniqueName,
       'fromDate': @date1,
@@ -8,7 +8,7 @@ angular.module('giddhWebApp').service 'trialBalService', ($resource, $q) ->
     {
       getAll: {
         method: 'GET',
-        url: '/company/:companyUniqueName/trialBalance'
+        url: '/company/:companyUniqueName/trial-balance'
       }
     })
 
