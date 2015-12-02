@@ -1325,7 +1325,7 @@ v-pane-content {
 /* Theme: default
    ***************************************/
 .vAccordion--default v-accordion {
-  margin-top: 20px;
+  margin-top: 0px;
   margin-left: 10px;
    }
 .vAccordion--default v-pane {
@@ -1350,8 +1350,8 @@ v-pane-content {
     -webkit-transition: max-height 0.5s;
             transition: max-height 0.5s; }
 .vAccordion--default v-pane-header {
-  padding: 5px 0;
-  margin-bottom: 20px;
-  border-bottom: 2px solid #D8D8D8;
+  padding: 10px 0 10px;
+  margin-bottom: 0px;
+  border-bottom: 1px solid #D8D8D8;
   -webkit-transition: color 0.25s, border-color 0.5s;
           transition: color 0.25s, border-color 0.5s; }
