@@ -118,6 +118,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       
       sharedData = _.omit(ledger, 'transactions')
       _.each(ledger.transactions, (transaction, index) ->
+        transaction.amount = parseFloat(transaction.amount).toFixed(2)
         newEntry = {sharedData: sharedData}
         newEntry.id = sharedData.uniqueName + "_" + index
         if transaction.type is "DEBIT"
