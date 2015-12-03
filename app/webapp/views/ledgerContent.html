@@ -213,7 +213,7 @@
             Balance
           </div>
         </td>
-        <td style="width:14%" class="bdrR">
+        <td style="width:14%" class="bdrR alR">
           <span ng-if="ledgBalType == 'CREDIT'">{{debitBalanceAmount | number:2}}</span>
         </td>
         <td colspan="2" style="width:36%" class="bdrL">
@@ -221,7 +221,7 @@
             Balance
           </div>
         </td>
-        <td style="width:14%" class="bdrR">
+        <td style="width:14%" class="bdrR alR">
           <span ng-if="ledgBalType == 'DEBIT'">{{creditBalanceAmount | number:2}}</span>
         </td>
       </tr>
@@ -229,13 +229,13 @@
         <td colspan="2" style="width:36%" class="bdrL">
           <span class="pull-right">Total</span>
         </td>
-        <td style="width:14%" class="bdrR">
+        <td style="width:14%" class="bdrR alR">
           <span>{{debitTotal | number:2}}</span>
         </td>
         <td colspan="2" style="width:36%" class="bdrL">
           <span class="pull-right">Total</span>
         </td>
-        <td style="width:14%" class="bdrR">
+        <td style="width:14%" class="bdrR alR">
           <span>{{creditTotal | number:2}}</span>
         </td>
       </tr>
