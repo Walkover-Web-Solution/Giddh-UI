@@ -98,7 +98,10 @@ directive 'validDate', (toastr, $filter) ->
         scope.item.sharedData.entryDate = $filter('date')(new Date(), "dd-MM-yyyy")
 
     element.on 'blur', () ->
-      if moment(element.context.value, "DD-MM-YYYY", true).isValid()
+      if moment(element.context.value, "DD-MM-YYYY").isAfter(new Date())
+        element.addClass('error')
+        toastr.error("You can\'t make a future entry", "Error")
+      else if moment(element.context.value, "DD-MM-YYYY", true).isValid()
         element.removeClass('error')
       else
         toastr.error("Date is not valid.", "Error")
@@ -152,7 +155,7 @@ angular.module('ledger', [])
                   ng-model='item.transactions[0].particular.uniqueName'>
               </td>
               <td width='28%'>
-                <input pos='3' type='text' class='nobdr ledgInpt'
+                <input pos='3' type='text' class='alR nobdr ledgInpt'
                   tabindex='-1' required autocomplete='off'
                   name='amount_{{index}}'
                   ng-model='item.transactions[0].amount'
