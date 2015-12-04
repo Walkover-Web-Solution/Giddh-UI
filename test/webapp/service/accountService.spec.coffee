@@ -112,20 +112,15 @@ describe "Account Service", ->
     data = {
       uniqueName: "name"
     }
-    unqNamesObj = {
-      compUname: "name"
-      selGrpUname: "name"
-      acntUname: "name"
-    }
     it 'should call success callback when group moved', ->
-      @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts/'+unqNamesObj.selGrpUname+'/move').respond(200, {"status": "success"})
+      @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts/'+unqNamesObj.acntUname+'/move').respond(200, {"status": "success"})
 
       @accountService.move(unqNamesObj, data).then(
         (data) -> expect(data.status).toBe("success")
         (data) -> expect(true).toBeFalsy()
       )
     it 'should call failure callback when group moved', ->
-      @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts/'+unqNamesObj.selGrpUname+'/move').respond(400, {"status": "error"})
+      @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts/'+unqNamesObj.acntUname+'/move').respond(400, {"status": "error"})
 
       @accountService.move(unqNamesObj, data).then(
         (data) -> expect(true).toBeFalsy()
