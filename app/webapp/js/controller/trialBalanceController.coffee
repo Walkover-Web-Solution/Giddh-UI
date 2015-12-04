@@ -1,6 +1,6 @@
 "use strict"
 
-trialBalanceController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout) ->
+trialBalanceController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, exportTBService, $window) ->
   $scope.expanded = false
 
   #date time picker code starts here
@@ -9,7 +9,9 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   $scope.toDate = {date: new Date()}
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
- 
+  $scope.showOptions = false
+
+
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
 
@@ -54,22 +56,23 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
    $scope.data = res.body
    $rootScope.showLedgerBox = true
    
+  
 
   $scope.getTrialBalFailure = (res) ->
   	toastr.error(res.data.message, res.data.status)
 
-  $scope.filterBydate = () ->
-  	dateObj = {
-      'fromDate':$scope.getDefaultDate().date
-      'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
-    }
-    $scope.expanded = false
-  	$rootScope.showLedgerBox = false
-  	dateObj.fromDate = $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
-  	dateObj.toDate = $filter('date')($scope.toDate.date, "dd-MM-yyyy")
-  	$scope.getTrialBal(dateObj)
+  $scope.filterBydate = ->
+  dateObj = undefined
+  dateObj =
+    'fromDate': $scope.getDefaultDate().date
+    'toDate': $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
+  $scope.expanded = false
 
-  
+  $rootScope.showLedgerBox = false
+  dateObj.fromDate = $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
+  dateObj.toDate = $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
+  $scope.getTrialBal dateObj
+
 
   #expand accordion on search
   $scope.expandAccordion = (e) ->
@@ -87,5 +90,36 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
     }
     $scope.getTrialBal(dateObj)
-    
+
+
+#format $scope.data to convert into csv
+  $scope.formatData = () ->
+   groups = []
+   rawData = $scope.data.groupDetails
+   csv = ''
+   $scope.fileName = "Trial_Balance.csv"
+   _.each rawData, (obj) ->
+    group = {}
+    group.name = obj.groupName
+    group.credit = obj.creditTotal
+    group.debit = obj.debitTotal
+    group.closingBalance = obj.closingBalance.amount
+    groups.push group
+
+   _.each groups, (obj) ->
+    row = ''
+    for key of obj
+     row += '"' + obj[key] + '",'
+    row.slice 0, row.length - 1
+    csv += row + '\r\n';  
+   uri = 'data:text/csv;charset=utf-8,' + escape(csv)
+   $window.location.assign(uri)
+
+
+
+
+
+
+
+
 angular.module('giddhWebApp').controller 'trialBalanceController', trialBalanceController

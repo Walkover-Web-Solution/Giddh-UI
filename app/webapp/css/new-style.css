@@ -1355,3 +1355,17 @@ v-pane-content {
   border-bottom: 1px solid #D8D8D8;
   -webkit-transition: color 0.25s, border-color 0.5s;
           transition: color 0.25s, border-color 0.5s; }
+
+.export{
+    margin-right:20px;
+    min-height:34px;
+}
+
+.export img{
+    margin-top:2px;
+    cursor:pointer;
+}
+
+.export img.csv{
+    max-height:32px;
+}
