@@ -857,7 +857,7 @@ describe 'groupController', ->
       spyOn(@toastr, "error")
       @scope.moveAccnt(data)
       expect(@toastr.error).toHaveBeenCalledWith("Select group only from list", "Error")
-
+    
     it 'should call accountservice move method with object', ->
       data = {
         uniqueName: "name"
@@ -880,7 +880,7 @@ describe 'groupController', ->
       spyOn(@accountService, 'move').andReturn(deferred.promise)
       @scope.moveAccnt(data)
       expect(@accountService.move).toHaveBeenCalledWith(obj, data)
-
+    
     it 'should call accountservice move method with object and also check if selectedGroup uniqname is undefined', ->
       data = {
         uniqueName: "name"
@@ -979,3 +979,60 @@ describe 'groupController', ->
       }
       @scope.hasDeletePermission(data)
       expect(@scope.canDelete).toBeTruthy()
+
+  describe '#shareAccount', ->
+    it 'should call service share method with obj var when group is selected', ->
+      @scope.selectedGroup = {"uniqueName": "1"}
+      @rootScope.selectedCompany = {"uniqueName": "2"}
+      @scope.selectedAccount = {uniqueName: "3"}
+      unqNamesObj = {
+        compUname: @rootScope.selectedCompany.uniqueName
+        selGrpUname: @scope.selectedGroup.uniqueName
+        acntUname: @scope.selectedAccount.uniqueName
+      }
+      @scope.shareAccountObj = {
+        role: "view_only"
+        user: "someUser"
+      }
+      deferred = @q.defer()
+      spyOn(@accountService, "share").andReturn(deferred.promise)
+      @scope.shareAccount()
+      expect(@accountService.share).toHaveBeenCalledWith(unqNamesObj, @scope.shareAccountObj)
+
+    it 'should call service share method with obj var when group is not selected', ->
+      @scope.selectedGroup = {}
+      @rootScope.selectedCompany = {"uniqueName": "2"}
+      @scope.selectedAccount = {uniqueName: "3", parentGroups: [{uniqueName: 1}]}
+      unqNamesObj = {
+        compUname: @rootScope.selectedCompany.uniqueName
+        selGrpUname: @scope.selectedAccount.parentGroups[0].uniqueName
+        acntUname: @scope.selectedAccount.uniqueName
+      }
+      @scope.shareAccountObj = {
+        role: "view_only"
+        user: "someUser"
+      }
+      deferred = @q.defer()
+      spyOn(@accountService, "share").andReturn(deferred.promise)
+      @scope.shareAccount()
+      expect(@accountService.share).toHaveBeenCalledWith(unqNamesObj, @scope.shareAccountObj)
+
+  describe '#onShareAccountSuccess', ->
+    it 'should blank a key and show success message with toastr and call getGroupSharedList with selected group variable', ->
+      @scope.selectedGroup = {"uniqueName": "1"}
+      @scope.shareAccountObj = {
+        role: "view_only"
+        user: ""
+      }
+      res = {"status": "Success", "body": "Account shared successfully"}
+      spyOn(@toastr, 'success')
+      spyOn(@scope, "getGroupSharedList")
+      @scope.onShareAccountSuccess(res)
+      expect(@toastr.success).toHaveBeenCalledWith('Account shared successfully', 'Success')
+
+  describe '#onShareAccountFailure', ->
+    it 'should show error message with toastr', ->
+      res = {"data": {"status": "Error", "message": "some-message"}}
+      spyOn(@toastr, "error")
+      @scope.onShareAccountFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status) 

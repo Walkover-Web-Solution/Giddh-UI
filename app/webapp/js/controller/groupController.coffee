@@ -22,9 +22,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.canAdd = false
 
   #set a object for share group
-  $scope.shareGroupObj =
-    role: "view_only"
-    user: ""
+  $scope.shareGroupObj ={role: "view_only"}
+  $scope.shareAccountObj ={role: "view_only"}
   $scope.openingBalType = [
     {"name": "Credit", "val": "CREDIT"}
     {"name": "Debit", "val": "DEBIT"}
@@ -461,6 +460,26 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.moveAccntFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
+
+  $scope.shareAccount = () ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroup.uniqueName
+      acntUname: $scope.selectedAccount.uniqueName
+    }
+    if _.isEmpty($scope.selectedGroup)
+      unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
+
+    accountService.share(unqNamesObj, $scope.shareAccountObj).then($scope.onShareAccountSuccess, $scope.onShareAccountFailure)
+
+  $scope.onShareAccountSuccess = (res) ->
+    $scope.shareAccountObj.user = ""
+    toastr.success(res.body, res.status)
+  #    $scope.getGroupSharedList($scope.selectedGroup)
+
+  $scope.onShareAccountFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
 
   $scope.hasSharePermission = () ->
     permissionService.hasPermissionOn($scope.selectedCompany, "MNG_USR")

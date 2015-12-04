@@ -148,43 +148,42 @@
 
   <div class="col-md-6 col-sm-12 bdrL" ng-show="hasSharePermission()">
     <div class="row">
-      <form name="shareGroupForm" novalidate class="form-inline pd2">
+      <form name="shareAccountForm" novalidate class="form-inline pd2">
         <div>
-          <label class="mrR">Share group</label>
+          <label class="mrR">Share Account</label>
         </div>
         <div class="form-group">
-          <input required name="userEmail" type="email" ng-model="shareGroupObj.user" placeholder="Enter Email ID"
+          <input required name="userEmail" type="email" ng-model="shareAccountObj.user" placeholder="Enter Email ID"
                  class="form-control"/>
         </div>
         <div class="form-group">
-          <button ng-disabled="shareGroupForm.$invalid" class="btn btn-info mrL" ng-click="shareGroup()">Share</button>
+          <button ng-disabled="shareAccountForm.$invalid" class="btn btn-info mrL" ng-click="shareAccount()">Share</button>
         </div>
       </form>
     </div>
     <!-- end of row -->
-    <div class="row" ng-if="groupSharedUserList.length">
-      <div class="pd2">
-        <ul class="list-group ln">
-          <li ng-repeat="(key,value) in groupSharedUserList track by $index" class="list-group-item">
-
-            <div class="form-inline clearfix">
-              <div class="form-group">
-                <i class="glyphicon glyphicon-user"></i>
-                {{value.userEmail}}
-              </div>
-              <div class="form-group">
-                {{option.role}}
-              </div>
-              <span class="delIcon">
-                <i class="glyphicon glyphicon-trash" ng-click="unShareGroup(value.userUniqueName)"></i>
-              </span>
-            </div>
-
-          </li>
-        </ul>
-
-      </div>
-    </div>
+    <!--<div class="row" ng-if="groupSharedUserList.length">-->
+      <!--<div class="pd2">-->
+        <!--<ul class="list-group ln">-->
+          <!--<li ng-repeat="(key,value) in groupSharedUserList track by $index" class="list-group-item">-->
+<!---->
+            <!--<div class="form-inline clearfix">-->
+              <!--<div class="form-group">-->
+                <!--<i class="glyphicon glyphicon-user"></i>-->
+                <!--{{value.userEmail}}-->
+              <!--</div>-->
+              <!--<div class="form-group">-->
+                <!--{{option.role}}-->
+              <!--</div>-->
+              <!--<span class="delIcon">-->
+                <!--<i class="glyphicon glyphicon-trash" ng-click="unShareGroup(value.userUniqueName)"></i>-->
+              <!--</span>-->
+            <!--</div>-->
+<!---->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</div>-->
+    <!--</div>-->
     <!-- end of row -->
   </div>
 </div>
