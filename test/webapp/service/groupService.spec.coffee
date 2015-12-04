@@ -7,10 +7,8 @@ describe "Group Service", ->
     inject ($injector) ->
       @httpBackend = $injector.get('$httpBackend')
       @groupService = $injector.get('groupService')
-      @accountService = $injector.get('accountService')
       @ledgerService = $injector.get('ledgerService')
     @httpBackend.when('GET', '/public/webapp/views/home.html').respond(200)
-
 
   describe "#httpRequestMethods", ->
     afterEach(->
@@ -198,9 +196,6 @@ describe "Group Service", ->
             expect(data.data.status).toBe("error")
             expect(data.status).toBe(400)
         )
-        
-      
-
 
   describe "nonHttpRequestMethods", ->
     describe '#flattenGroup', ->
@@ -242,108 +237,6 @@ describe "Group Service", ->
           {"name": "group3", "uniqueName": "g3", "groups": [], "accounts": []}]
         result = @groupService.flattenAccount(groupList)
         expect(result).toContain({"name": "a1", "parentGroups": [{"name": "group1", "uniqueName": "g1"}]})
-
-
-  describe "#httpRequestMethodsAccountService", ->
-    afterEach(->
-      @httpBackend.flush()
-      @httpBackend.verifyNoOutstandingExpectation()
-      @httpBackend.verifyNoOutstandingRequest()
-    )
-    describe '#createAc', ->
-      unqNamesObj = {
-        compUname: "name"
-        selGrpUname: "name"
-      }
-      data = {}
-      it 'should call success callback when account created', ->
-        @httpBackend.when('POST', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts').respond(200, {"status": "success"})
-
-        @accountService.createAc(unqNamesObj, data).then(
-          (data) -> expect(data.status).toBe("success")
-          (data) -> expect(true).toBeFalsy()
-        )
-      it 'should call failure callback when account create failed', ->
-        @httpBackend.when('POST', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts').respond(400, {"status": "error"})
-
-        @accountService.createAc(unqNamesObj, data).then(
-          (data) -> expect(true).toBeFalsy()
-          (data) ->
-            expect(data.data.status).toBe("error")
-            expect(data.status).toBe(400)
-        )
-
-    describe '#updateAc', ->
-      unqNamesObj = {
-        compUname: "name"
-        selGrpUname: "name"
-      }
-      data = {}
-      it 'should call success callback when account updated', ->
-        @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts').respond(200, {"status": "success"})
-
-        @accountService.updateAc(unqNamesObj, data).then(
-          (data) -> expect(data.status).toBe("success")
-          (data) -> expect(true).toBeFalsy()
-        )
-      it 'should call failure callback when account update failed', ->
-        @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts').respond(400, {"status": "error"})
-
-        @accountService.updateAc(unqNamesObj, data).then(
-          (data) -> expect(true).toBeFalsy()
-          (data) ->
-            expect(data.data.status).toBe("error")
-            expect(data.status).toBe(400)
-        )
-    
-    describe '#deleteAc', ->
-      unqNamesObj = {
-        compUname: "name"
-        selGrpUname: "name"
-      }
-      data = {}
-      it 'should call success callback when account deleted', ->
-        @httpBackend.when('DELETE', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts').respond(200, {"status": "success"})
-
-        @accountService.deleteAc(unqNamesObj, data).then(
-          (data) -> expect(data.status).toBe("success")
-          (data) -> expect(true).toBeFalsy()
-        )
-      it 'should call failure callback when account delete failed', ->
-        @httpBackend.when('DELETE', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts').respond(400, {"status": "error"})
-
-        @accountService.deleteAc(unqNamesObj, data).then(
-          (data) -> expect(true).toBeFalsy()
-          (data) ->
-            expect(data.data.status).toBe("error")
-            expect(data.status).toBe(400)
-        )
-
-    describe '#moveAc', ->
-      data = {
-        uniqueName: "name"
-      }
-      unqNamesObj = {
-        compUname: "name"
-        selGrpUname: "name"
-        acntUname: "name"
-      }
-      it 'should call success callback when group moved', ->
-        @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts/'+unqNamesObj.selGrpUname+'/move').respond(200, {"status": "success"})
-
-        @accountService.moveAc(unqNamesObj, data).then(
-          (data) -> expect(data.status).toBe("success")
-          (data) -> expect(true).toBeFalsy()
-        )
-      it 'should call failure callback when group moved', ->
-        @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts/'+unqNamesObj.selGrpUname+'/move').respond(400, {"status": "error"})
-
-        @accountService.moveAc(unqNamesObj, data).then(
-          (data) -> expect(true).toBeFalsy()
-          (data) ->
-            expect(data.data.status).toBe("error")
-            expect(data.status).toBe(400)
-        )
 
   describe "#httpRequestMethods-ledgerService", ->
     afterEach(->
@@ -447,13 +340,3 @@ describe "Group Service", ->
             expect(data.data.status).toBe("error")
             expect(data.status).toBe(400)
         )
-
-    
-
-
-
-
-
-
-
-

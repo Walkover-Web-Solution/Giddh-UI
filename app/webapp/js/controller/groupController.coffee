@@ -452,7 +452,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     body = {
       "uniqueName": group.uniqueName
     }
-    accountService.moveAc(unqNamesObj, body).then($scope.moveAccntSuccess, $scope.moveAccntFailure)
+    accountService.move(unqNamesObj, body).then($scope.moveAccntSuccess, $scope.moveAccntFailure)
 
   $scope.moveAccntSuccess = (res) ->
     toastr.success(res.body, res.status)

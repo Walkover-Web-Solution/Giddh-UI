@@ -857,7 +857,8 @@ describe 'groupController', ->
       spyOn(@toastr, "error")
       @scope.moveAccnt(data)
       expect(@toastr.error).toHaveBeenCalledWith("Select group only from list", "Error")
-    it 'should call accountservice moveAc method with object', ->
+
+    it 'should call accountservice move method with object', ->
       data = {
         uniqueName: "name"
       }
@@ -876,10 +877,11 @@ describe 'groupController', ->
         acntUname: @scope.selectedAccount.uniqueName
       }
       deferred = @q.defer()
-      spyOn(@accountService, 'moveAc').andReturn(deferred.promise)
+      spyOn(@accountService, 'move').andReturn(deferred.promise)
       @scope.moveAccnt(data)
-      expect(@accountService.moveAc).toHaveBeenCalledWith(obj, data)
-    it 'should call accountservice moveAc method with object and also check if selectedGroup uniqname is undefined', ->
+      expect(@accountService.move).toHaveBeenCalledWith(obj, data)
+
+    it 'should call accountservice move method with object and also check if selectedGroup uniqname is undefined', ->
       data = {
         uniqueName: "name"
       }
@@ -899,9 +901,9 @@ describe 'groupController', ->
         acntUname: @scope.selectedAccount.uniqueName
       }
       deferred = @q.defer()
-      spyOn(@accountService, 'moveAc').andReturn(deferred.promise)
+      spyOn(@accountService, 'move').andReturn(deferred.promise)
       @scope.moveAccnt(data)
-      expect(@accountService.moveAc).toHaveBeenCalledWith(obj, data)
+      expect(@accountService.move).toHaveBeenCalledWith(obj, data)
 
   describe '#moveAccntSuccess', ->
     it 'should show success message and call getGroups function and set showAccountDetails variable to false', ->
