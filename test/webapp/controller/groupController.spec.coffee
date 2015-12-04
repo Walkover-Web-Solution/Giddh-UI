@@ -837,6 +837,94 @@ describe 'groupController', ->
       @scope.updateAccountFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
+  describe '#isCurrentGroup', ->
+    it 'should check if condition is mathed and return true', ->
+      data = {
+        uniqueName: "name"
+      }
+      @scope.selectedAccount = {
+        uniqueName: "name"
+        parentGroups: [
+          {uniqueName: "name"}
+        ]
+      }
+      @scope.isCurrentGroup(data)
+      expect(@scope.isCurrentGroup).toBeTruthy()   
+
+  describe '#moveAccnt', ->
+    it 'should check if group uniqname is undefined then call toastr error message and return', ->
+      data = {}
+      spyOn(@toastr, "error")
+      @scope.moveAccnt(data)
+      expect(@toastr.error).toHaveBeenCalledWith("Select group only from list", "Error")
+    it 'should call accountservice moveAc method with object', ->
+      data = {
+        uniqueName: "name"
+      }
+      @rootScope.selectedCompany = {
+        uniqueName: "myCompany"
+      }
+      @scope.selectedGroup = {
+        uniqueName: "name"
+      }
+      @scope.selectedAccount = {
+        uniqueName: "name"
+      }
+      obj = {
+        compUname: @rootScope.selectedCompany.uniqueName
+        selGrpUname: @scope.selectedGroup.uniqueName
+        acntUname: @scope.selectedAccount.uniqueName
+      }
+      deferred = @q.defer()
+      spyOn(@accountService, 'moveAc').andReturn(deferred.promise)
+      @scope.moveAccnt(data)
+      expect(@accountService.moveAc).toHaveBeenCalledWith(obj, data)
+    it 'should call accountservice moveAc method with object and also check if selectedGroup uniqname is undefined', ->
+      data = {
+        uniqueName: "name"
+      }
+      @rootScope.selectedCompany = {
+        uniqueName: "myCompany"
+      }
+      @scope.selectedGroup = {}
+      @scope.selectedAccount = {
+        uniqueName: "name"
+        parentGroups: [
+          {uniqueName: "name"}
+        ]
+      }
+      obj = {
+        compUname: @rootScope.selectedCompany.uniqueName
+        selGrpUname: @scope.selectedAccount.parentGroups[0].uniqueName
+        acntUname: @scope.selectedAccount.uniqueName
+      }
+      deferred = @q.defer()
+      spyOn(@accountService, 'moveAc').andReturn(deferred.promise)
+      @scope.moveAccnt(data)
+      expect(@accountService.moveAc).toHaveBeenCalledWith(obj, data)
+
+  describe '#moveAccntSuccess', ->
+    it 'should show success message and call getGroups function and set showAccountDetails variable to false', ->
+      res =
+        body: "Account moved successfully"
+        status: "Success"
+      spyOn(@toastr, "success")
+      spyOn(@scope, "getGroups")
+      @scope.moveAccntSuccess(res)
+      expect(@toastr.success).toHaveBeenCalledWith(res.body, res.status)
+      expect(@scope.getGroups).toHaveBeenCalled()
+      expect(@scope.showAccountDetails).toBeFalsy
+
+  describe '#moveAccntFailure', ->
+    it 'should show error message through toastr', ->
+      res =
+        data:
+          message: "Unable to move account"
+          status: "Error"
+      spyOn(@toastr, "error")
+      @scope.moveAccntFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
   describe '#hasSharePermission', ->
     it 'should call permission service method with selected company and manage user permission', ->
       @scope.selectedCompany = {name: "myCompany"}

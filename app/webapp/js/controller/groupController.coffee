@@ -280,34 +280,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.selectGroupToEdit(obj)
     $scope.selectItem(obj)
 
-  $scope.isCurrentGroup =(group) ->
-    group.uniqueName is $scope.selectedAccount.parentGroups[0].uniqueName
-
-  $scope.moveAccnt = (group) ->
-    if _.isUndefined(group.uniqueName)
-      toastr.error("Select group only from list", "Error")
-      return
-    unqNamesObj = {
-      compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: $scope.selectedGroup.uniqueName
-      acntUname: $scope.selectedAccount.uniqueName
-    }
-    if _.isUndefined($scope.selectedGroup.uniqueName)
-      unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
-
-    body = {
-      "uniqueName": group.uniqueName
-    }
-    accountService.moveAc(unqNamesObj, body).then($scope.moveAccntSuccess, $scope.moveAccntFailure)
-
-  $scope.moveAccntSuccess = (res) ->
-    toastr.success(res.body, res.status)
-    $scope.getGroups()
-    $scope.showAccountDetails = false
-
-  $scope.moveAccntFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
-
   #check if object is empty on client side by mechanic
   $scope.isEmptyObject = (obj) ->
     return _.isEmpty(obj)
@@ -460,6 +432,34 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       angular.merge($scope.groupAccntList[getTrueIndex], $scope.selectedAccount)
 
   $scope.updateAccountFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.isCurrentGroup =(group) ->
+    group.uniqueName is $scope.selectedAccount.parentGroups[0].uniqueName
+
+  $scope.moveAccnt = (group) ->
+    if _.isUndefined(group.uniqueName)
+      toastr.error("Select group only from list", "Error")
+      return
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroup.uniqueName
+      acntUname: $scope.selectedAccount.uniqueName
+    }
+    if _.isUndefined($scope.selectedGroup.uniqueName)
+      unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
+
+    body = {
+      "uniqueName": group.uniqueName
+    }
+    accountService.moveAc(unqNamesObj, body).then($scope.moveAccntSuccess, $scope.moveAccntFailure)
+
+  $scope.moveAccntSuccess = (res) ->
+    toastr.success(res.body, res.status)
+    $scope.getGroups()
+    $scope.showAccountDetails = false
+
+  $scope.moveAccntFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
   $scope.hasSharePermission = () ->
