@@ -280,6 +280,33 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.selectGroupToEdit(obj)
     $scope.selectItem(obj)
 
+  $scope.isCurrentGroup =(group) ->
+    group.uniqueName is $scope.selectedAccount.parentGroups[0].uniqueName
+
+  $scope.moveAccnt = (group) ->
+    if _.isUndefined(group.uniqueName)
+      toastr.error("Select group only from list", "Error")
+      return
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroup.uniqueName
+      acntUname: $scope.selectedAccount.uniqueName
+    }
+    if _.isUndefined($scope.selectedGroup.uniqueName)
+      unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
+
+    body = {
+      "uniqueName": group.uniqueName
+    }
+    accountService.moveAc(unqNamesObj, body).then($scope.moveAccntSuccess, $scope.moveAccntFailure)
+
+  $scope.moveAccntSuccess = (res) ->
+    toastr.success(res.body, res.status)
+    $scope.getGroups()
+    $scope.showAccountDetails = false
+
+  $scope.moveAccntFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   #check if object is empty on client side by mechanic
   $scope.isEmptyObject = (obj) ->
@@ -322,8 +349,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
     angular.copy(data, $scope.selAcntPrevObj)
-    angular.extend($scope.selectedAccount, data)
-    angular.extend(pGroups, data.parentGroups)
+    _.extend($scope.selectedAccount, data)
+    _.extend(pGroups, data.parentGroups)
     $scope.showBreadCrumbs(pGroups.reverse())
     $scope.breakMobNo(data)
     $scope.setOpeningBalanceDate()
@@ -446,8 +473,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.hasDeletePermission = (group) ->
     $scope.canDelete = permissionService.hasPermissionOn(group, "DLT")
-
-
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController

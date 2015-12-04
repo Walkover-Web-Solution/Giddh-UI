@@ -25,9 +25,9 @@ router.get '/:accountUniqueName', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.put '/:accountUniqueName', (req, res) ->
+router.put '/:accountUniqueName/move', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName
+      '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName+ '/move'
   args =
     headers:
       'Auth-Key': req.session.authKey

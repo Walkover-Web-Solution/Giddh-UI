@@ -129,24 +129,22 @@
 
 <!-- end row first -->
 <div class="clearfix bdrB">
-  <!-- <div class="col-sm-12 col-md-6" ng-hide="selectedGroup.isFixed || !canUpdate">
+  <div class="col-sm-12 col-md-6" ng-show="hasSharePermission()">
     <div class="row">
-      <form name="moveGroupForm" novalidate class="pd2 form-inline">
+      <form name="moveAccntForm" novalidate class="pd2 form-inline">
         <div>
-          <label class="mrR">Move to group</label>
-        </div>
-
-        <div class="form-group">
-          <input ng-model="moveto" type="text" placeholder="Group name" class="form-control" required
-            typeahead="groups as groups.name for groups in flattenGroupList | 
-            omit: isChildGroup | filter:{name: $viewValue}"/>
+          <label class="mrR">Move to account</label>
         </div>
         <div class="form-group">
-          <button class="btn btn-info mrL" ng-click="moveGroup(moveto)" ng-disabled="moveGroupForm.$invalid">Move</button>
+          <input ng-model="moveacto" type="text" placeholder="Group name" class="form-control" required
+            typeahead="groups as groups.name for groups in flattenGroupList | omit: isCurrentGroup | filter:{name: $viewValue} | limitTo:4"/>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-info mrL" ng-click="moveAccnt(moveacto)" ng-disabled="moveAccntForm.$invalid">Move</button>
         </div>
       </form>
     </div>
-  </div> -->
+  </div>
 
   <div class="col-md-6 col-sm-12 bdrL" ng-show="hasSharePermission()">
     <div class="row">

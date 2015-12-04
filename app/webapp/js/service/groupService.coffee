@@ -149,7 +149,9 @@ angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
         method: 'DELETE',
         url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'
       }
+      move: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/move'}
     })
+
 
   accountService =
     handlePromise: (func) ->
@@ -174,6 +176,12 @@ angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
 
     deleteAc: (unqNamesObj, data) ->
       @handlePromise((onSuccess, onFailure) -> Account.delete({
+        companyUniqueName: unqNamesObj.compUname,
+        groupUniqueName: unqNamesObj.selGrpUname,
+        accountsUniqueName: unqNamesObj.acntUname
+      }, data, onSuccess, onFailure))
+    moveAc: (unqNamesObj, data) ->
+      @handlePromise((onSuccess, onFailure) -> Account.move({
         companyUniqueName: unqNamesObj.compUname,
         groupUniqueName: unqNamesObj.selGrpUname,
         accountsUniqueName: unqNamesObj.acntUname
