@@ -122,6 +122,7 @@
                       ng-repeat="(key, value) in ledgerOnlyDebitData | limitTo: quantity track by $index"
                       ledger-pop
                       index="$index"
+                      can-add-and-edit="canAddAndEdit"
                       form-class='drLedgerEntryForm_{{$index}}'
                       ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"
                       itemdata="value"
@@ -180,6 +181,7 @@
                       ng-repeat="(key, value) in ledgerOnlyCreditData | limitTo: quantity track by $index "
                       ledger-pop
                       index="$index"
+                      can-add-and-edit="canAddAndEdit"
                       form-class='crLedgerEntryForm_{{$index}}'
                       ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"
                       itemdata="value"

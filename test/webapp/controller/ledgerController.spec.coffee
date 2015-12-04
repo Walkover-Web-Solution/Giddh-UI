@@ -120,6 +120,7 @@ describe 'ledgerController', ->
         }
         deferred = @q.defer()
         spyOn(@ledgerService, "getLedger").andReturn(deferred.promise)
+        spyOn(@scope, "hasAddAndUpdatePermission").andReturn(true)
         @scope.selectedCompany = {
           uniqueName: "giddh"
         }
@@ -143,6 +144,7 @@ describe 'ledgerController', ->
         expect(@scope.selectedAccountUniqueName).toEqual(acData.uniqueName)
         expect(@scope.selectedGroupUname).toEqual(data.groupUniqueName)
 
+        expect(@scope.hasAddAndUpdatePermission).toHaveBeenCalledWith(acData)
         expect(@ledgerService.getLedger).toHaveBeenCalledWith(udata)
 
     describe '#loadLedgerSuccess', ->
@@ -590,3 +592,24 @@ describe 'ledgerController', ->
         spyOn(@DAServices, 'LedgerGet')
         @rootScope.$broadcast('$viewContentLoaded')
         expect(@DAServices.LedgerGet).toHaveBeenCalled()
+
+    describe '#hasAddAndUpdatePermission', ->
+      it 'should return true if user has add and update permission on account', ->
+        account = {parentGroups: [{role: {permissions: [{"code": "UPDT"}, {"code": "ADD"}]}}]}
+        result = @scope.hasAddAndUpdatePermission(account)
+        expect(result).toBeTruthy()
+
+      it 'should return false if user has only add permission on account not update', ->
+        account = {parentGroups: [{role: {permissions: [{"code": "ADD"}]}}]}
+        result = @scope.hasAddAndUpdatePermission(account)
+        expect(result).toBeFalsy()
+
+      it 'should return false if user has only update permission on account not add', ->
+        account = {parentGroups: [{role: {permissions: [{"code": "ADD"}]}}]}
+        result = @scope.hasAddAndUpdatePermission(account)
+        expect(result).toBeFalsy()
+
+      it 'should return false if user does not have any permission on account', ->
+        account = {parentGroups: [{role: {permissions: []}}]}
+        result = @scope.hasAddAndUpdatePermission(account)
+        expect(result).toBeFalsy()

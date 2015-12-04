@@ -1,6 +1,6 @@
 "use strict"
 
-ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document) ->
+ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService) ->
   $scope.ledgerData = undefined 
   $scope.accntTitle = undefined
   $scope.selectedAccountUniqueName = undefined
@@ -88,6 +88,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
       return false
+    $scope.canAddAndEdit = $scope.hasAddAndUpdatePermission(acData)
     $rootScope.showLedgerBox = false
     $scope.selectedLedgerAccount = acData
     $scope.selectedLedgerGroup = data
@@ -412,6 +413,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         # localStorageService.remove(key)
       else
         console.log "nothing selected to load"
+
+  $scope.hasAddAndUpdatePermission = (account) ->
+    permissionService.hasPermissionOn(account.parentGroups[0], "UPDT") and permissionService.hasPermissionOn(account.parentGroups[0], "ADD")
 
   $scope.$on '$reloadLedger',  ->
     $scope.reloadLedger()

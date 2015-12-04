@@ -122,6 +122,7 @@ angular.module('ledger', [])
     aclist: '=acntlist'
     ftype: '=ftype'
     formClass: '@formClass'
+    canAddAndEdit: '=canAddAndEdit'
     updateLedger: '&'
     addLedger: '&'
     removeLedgdialog: '&'
@@ -138,11 +139,11 @@ angular.module('ledger', [])
               <td width='28%'>
                 <input pos='1' type='text' class='nobdr ledgInpt'
                   tabindex='-1' required autocomplete='off'
-                  name='entryDate_{{index}}'
+                  name='entryDate_{{index}}' ng-readonly='!canAddAndEdit'
                   ng-model='item.sharedData.entryDate' valid-date/>
               </td>
               <td width=44%'>
-                <input pos='2' type='text'
+                <input pos='2' type='text' ng-readonly='!canAddAndEdit'
                   tabindex='-1'  class='nobdr ledgInpt' required
                   name='trnsName_{{index}}'
                   ng-model='item.transactions[0].particular'
@@ -157,7 +158,7 @@ angular.module('ledger', [])
               <td width='28%'>
                 <input pos='3' type='text' class='alR nobdr ledgInpt'
                   tabindex='-1' required autocomplete='off'
-                  name='amount_{{index}}'
+                  name='amount_{{index}}' ng-readonly='!canAddAndEdit'
                   ng-model='item.transactions[0].amount'
                   valid-number/>
               </td>
@@ -206,7 +207,7 @@ angular.module('ledger', [])
         if e.shiftKey and (keycode1 is 0 or keycode1 is 9)
           e.preventDefault()
           scope.moveBackward(e, ths)
-      
+
     scope.addCrossFormField = (i, d, c) ->
       # scope.item.transactions[0].particular.uniqueName = i.uName
 
@@ -220,7 +221,7 @@ angular.module('ledger', [])
       scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
       scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
       $rootScope.$broadcast('$reloadLedger')
-      
+
 
     scope.resetEntry = (item, lItem) ->
       scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
@@ -235,7 +236,7 @@ angular.module('ledger', [])
       if _.isUndefined(scope.item.sharedData.uniqueName)
         item.sharedData.entryDate = undefined
       return false
-      
+
     scope.setItemInLocalItemArr = (item) ->
       if $rootScope.lItem.length > 0
         found = undefined
@@ -281,14 +282,14 @@ angular.module('ledger', [])
           <div class="popover-content">
             <div class="mrT">
               <div class="form-group">
-                <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh()">Add in DR</button>
-                <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh()">Add in CR</button>
+                <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh()" ng-show="canAddAndEdit">Add in DR</button>
+                <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh()" ng-show="canAddAndEdit">Add in CR</button>
                 <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResults">Add new account</a>
               </div>
               <div class="row">
                 <div class="col-md-6 col-sm-12">
                   <div class="form-group">
-                    <select class="form-control"
+                    <select class="form-control" ng-readonly="!canAddAndEdit"
                     name="voucherType" ng-model="item.sharedData.voucher.shortCode">
                       <option
                         ng-repeat="option in voucherTypeList"
@@ -299,7 +300,7 @@ angular.module('ledger', [])
                     </select>
                   </div>
                   <div class="form-group">
-                    <input type="text" name="tag" class="form-control" ng-model="item.sharedData.tag" placeholder="Tag" />
+                    <input type="text" name="tag" ng-readonly="!canAddAndEdit" class="form-control" ng-model="item.sharedData.tag" placeholder="Tag" />
                   </div>
                 </div>
                 <div class="col-md-6 col-sm-12">
@@ -308,21 +309,21 @@ angular.module('ledger', [])
                     {{item.sharedData.voucher.shortCode}}-{{item.sharedData.voucherNo}}
                   </div>
                   <div class="form-group">
-                    <textarea class="form-control" name="description" ng-model="item.sharedData.description" placeholder="Description"></textarea>
+                    <textarea class="form-control" ng-readonly="!canAddAndEdit" name="description" ng-model="item.sharedData.description" placeholder="Description"></textarea>
                   </div>
                 </div>
               </div>
               <div class="">
-                <button ng-if="ftype == \'Update\'" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults"
+                <button ng-if="ftype == \'Update\'" ng-show="canAddAndEdit" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults"
                   ng-click="updateLedger({entry: item})">Update</button>
-                <button  ng-if="ftype == \'Add\'" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults"
+                <button  ng-if="ftype == \'Add\'" ng-show="canAddAndEdit" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults"
                   ng-click="addLedger({entry: item})">Add</button>
 
                 <button ng-click="closeEntry()" class="btn btn-default mrL1" type="button">close</button>
 
-                <button ng-click="closeAllEntry()" class="btn btn-default mrL1" type="button">close All</button>
+                <button ng-click="closeAllEntry()" ng-show="canAddAndEdit" class="btn btn-default mrL1" type="button">close All</button>
 
-                <button  ng-show="item.sharedData.uniqueName != undefined" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
+                <button ng-show="item.sharedData.uniqueName != undefined" ng-show="canAddAndEdit" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
               </div>
             </div>
           </div>
