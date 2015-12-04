@@ -481,6 +481,25 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onShareAccountFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+  $scope.unShareAccount = (user) ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroup.uniqueName
+      acntUname: $scope.selectedAccount.uniqueName
+    }
+    if _.isEmpty($scope.selectedGroup)
+      unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
+
+    data = { user: user}
+    accountService.unshare(unqNamesObj, data).then($scope.unShareAccountSuccess, $scope.unShareAccountFailure)
+
+  $scope.unShareAccountSuccess = (res)->
+    toastr.success(res.body, res.status)
+    $scope.getAccountSharedList()
+
+  $scope.unShareAccountFailure = (res)->
+    toastr.error(res.data.message, res.data.status)
+
   $scope.getAccountSharedList = () ->
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName

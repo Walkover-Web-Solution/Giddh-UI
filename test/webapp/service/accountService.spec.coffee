@@ -86,6 +86,28 @@ describe "Account Service", ->
           expect(data.status).toBe(400)
       )
 
+  describe '#unshare', ->
+    it 'should call success callback when account unsared', ->
+      @httpBackend.when('PUT',
+        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/unshare').respond(200,
+        {"status": "success"})
+
+      @accountService.unshare(unqNamesObj, data).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call failure callback when account unsaring failed', ->
+      @httpBackend.when('PUT',
+        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/unshare').respond(400,
+        {"status": "error"})
+
+      @accountService.unshare(unqNamesObj, data).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+          expect(data.status).toBe(400)
+      )
+
   describe '#delete', ->
     it 'should call success callback when account deleted', ->
       @httpBackend.when('DELETE',

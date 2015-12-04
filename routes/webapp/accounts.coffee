@@ -2,8 +2,8 @@ settings = require('../util/settings')
 router = settings.express.Router({mergeParams: true})
 
 router.get '/', (req, res) ->
-  authHead = 
-    headers: 
+  authHead =
+    headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
@@ -14,8 +14,8 @@ router.get '/', (req, res) ->
     res.send data
 
 router.get '/:accountUniqueName', (req, res) ->
-  authHead = 
-    headers: 
+  authHead =
+    headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
@@ -27,7 +27,7 @@ router.get '/:accountUniqueName', (req, res) ->
 
 router.put '/:accountUniqueName/move', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName+ '/move'
+      '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName + '/move'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -54,8 +54,8 @@ router.put '/:accountUniqueName/share', (req, res) ->
     res.send data
 
 router.delete '/:accountUniqueName', (req, res) ->
-  authHead = 
-    headers: 
+  authHead =
+    headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
@@ -88,6 +88,20 @@ router.get '/:accountUniqueName/shared-with', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+router.put '/:accountUniqueName/unshare', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName + '/unshare'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.put hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data

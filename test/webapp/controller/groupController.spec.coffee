@@ -1088,3 +1088,50 @@ describe 'groupController', ->
       @scope.onGetAccountSharedListFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
+  describe '#unShareAccount', ->
+    it 'should call service share method with obj var when group is selected', ->
+      @scope.selectedGroup = {"uniqueName": "1"}
+      @rootScope.selectedCompany = {"uniqueName": "2"}
+      @scope.selectedAccount = {uniqueName: "3"}
+      unqNamesObj = {
+        compUname: @rootScope.selectedCompany.uniqueName
+        selGrpUname: @scope.selectedGroup.uniqueName
+        acntUname: @scope.selectedAccount.uniqueName
+      }
+      data = {user: "user"}
+      deferred = @q.defer()
+      spyOn(@accountService, "unshare").andReturn(deferred.promise)
+      @scope.unShareAccount("user")
+      expect(@accountService.unshare).toHaveBeenCalledWith(unqNamesObj, data)
+
+    it 'should call service share method with obj var when group is not selected', ->
+      @scope.selectedGroup = {}
+      @rootScope.selectedCompany = {"uniqueName": "2"}
+      @scope.selectedAccount = {uniqueName: "3", parentGroups: [{uniqueName: 1}]}
+      unqNamesObj = {
+        compUname: @rootScope.selectedCompany.uniqueName
+        selGrpUname: @scope.selectedAccount.parentGroups[0].uniqueName
+        acntUname: @scope.selectedAccount.uniqueName
+      }
+      data = {user: "user"}
+      deferred = @q.defer()
+      spyOn(@accountService, "unshare").andReturn(deferred.promise)
+      @scope.unShareAccount("user")
+      expect(@accountService.unshare).toHaveBeenCalledWith(unqNamesObj, data)
+
+  describe '#unShareAccountSuccess', ->
+    it 'should show success message with toastr and call getAccountSharedList', ->
+      @scope.selectedGroup = {"uniqueName": "1"}
+      res = {"status": "Success", "body": "Account unShared successfully"}
+      spyOn(@toastr, 'success')
+      spyOn(@scope, "getAccountSharedList")
+      @scope.unShareAccountSuccess(res)
+      expect(@toastr.success).toHaveBeenCalledWith('Account unShared successfully', 'Success')
+      expect(@scope.getAccountSharedList).toHaveBeenCalled()
+
+  describe '#unShareAccountFailure', ->
+    it 'should show error message with toastr', ->
+      res = {"data": {"status": "Error", "message": "some-message"}}
+      spyOn(@toastr, "error")
+      @scope.unShareAccountFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
