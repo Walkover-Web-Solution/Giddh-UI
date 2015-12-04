@@ -75,7 +75,6 @@ router.put '/:groupUniqueName/unshare', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-
 router.get '/:groupUniqueName/shared-with', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName + '/shared-with'
   args =
@@ -87,8 +86,6 @@ router.get '/:groupUniqueName/shared-with', (req, res) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
-
-
 
 router.delete '/:groupUniqueName', (req, res) ->
   authHead = 

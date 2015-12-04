@@ -524,6 +524,7 @@ describe 'groupController', ->
       spyOn(@scope, "showBreadCrumbs")
       spyOn(@scope, 'breakMobNo')
       spyOn(@scope, 'setOpeningBalanceDate')
+      spyOn(@scope, 'getAccountSharedList')
 
       @scope.showAccountDtl(data)
       expect(@scope.hasSharePermission).toHaveBeenCalled()
@@ -539,7 +540,7 @@ describe 'groupController', ->
       expect(@scope.breakMobNo).toHaveBeenCalledWith(data)
       expect(@scope.setOpeningBalanceDate).toHaveBeenCalled()
       expect(@scope.acntCase).toBe("Update")
-
+      expect(@scope.getAccountSharedList).toHaveBeenCalled()
 
     it 'should copy data to selAcntPrevObj, set showGroupDetails variable to false, showAccountDetails to true and set value for selected account variable and set breadcrumb', ->
       @scope.selectedGroup = {name: "some"}
@@ -550,6 +551,7 @@ describe 'groupController', ->
       spyOn(@scope, "showBreadCrumbs")
       spyOn(@scope, 'breakMobNo')
       spyOn(@scope, 'setOpeningBalanceDate')
+      spyOn(@scope, 'getAccountSharedList')
 
       @scope.showAccountDtl(data)
       expect(@scope.hasSharePermission).not.toHaveBeenCalled()
@@ -560,7 +562,7 @@ describe 'groupController', ->
       expect(@scope.showAccountDetails).toBeTruthy()
       expect(@scope.selAcntPrevObj).toEqual(data)
       expect(@scope.selectedAccount).toEqual(data)
-
+      expect(@scope.getAccountSharedList).toHaveBeenCalled()
       expect(@scope.showBreadCrumbs).toHaveBeenCalledWith(data.parentGroups.reverse())
       expect(@scope.breakMobNo).toHaveBeenCalledWith(data)
       expect(@scope.setOpeningBalanceDate).toHaveBeenCalled()
@@ -1027,12 +1029,62 @@ describe 'groupController', ->
       res = {"status": "Success", "body": "Account shared successfully"}
       spyOn(@toastr, 'success')
       spyOn(@scope, "getGroupSharedList")
+      spyOn(@scope, 'getAccountSharedList')
       @scope.onShareAccountSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith('Account shared successfully', 'Success')
+      expect(@scope.getAccountSharedList).toHaveBeenCalled()
 
   describe '#onShareAccountFailure', ->
     it 'should show error message with toastr', ->
       res = {"data": {"status": "Error", "message": "some-message"}}
       spyOn(@toastr, "error")
       @scope.onShareAccountFailure(res)
-      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status) 
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+  describe '#getAccountSharedList', ->
+    it 'should call a service with a obj var to get data when group is selected', ->
+      @scope.selectedGroup = {"uniqueName": "1"}
+      @rootScope.selectedCompany = {"uniqueName": "2"}
+      @scope.selectedAccount = {uniqueName: "3"}
+      unqNamesObj = {
+        compUname: @rootScope.selectedCompany.uniqueName
+        selGrpUname: @scope.selectedGroup.uniqueName
+        acntUname: @scope.selectedAccount.uniqueName
+      }
+      deferred = @q.defer()
+      spyOn(@accountService, "sharedWith").andReturn(deferred.promise)
+
+      @scope.getAccountSharedList()
+      expect(@accountService.sharedWith).toHaveBeenCalledWith(unqNamesObj)
+
+  it 'should call a service with a obj var to get data when group is not selected', ->
+      @scope.selectedGroup = {}
+      @rootScope.selectedCompany = {"uniqueName": "2"}
+      @scope.selectedAccount = {uniqueName: "3", parentGroups: [{uniqueName: 1}]}
+      unqNamesObj = {
+        compUname: @rootScope.selectedCompany.uniqueName
+        selGrpUname: @scope.selectedAccount.parentGroups[0].uniqueName
+        acntUname: @scope.selectedAccount.uniqueName
+      }
+      deferred = @q.defer()
+      spyOn(@accountService, "sharedWith").andReturn(deferred.promise)
+
+      @scope.getAccountSharedList()
+      expect(@accountService.sharedWith).toHaveBeenCalledWith(unqNamesObj)
+
+  describe '#onsharedListSuccess', ->
+    it 'should set result to a variable', ->
+      result = {"body": "something"}
+      @scope.onGetAccountSharedListSuccess(result)
+      expect(@scope.accountSharedUserList).toBe(result.body)
+
+  describe '#onsharedListFailure', ->
+    it 'should show error message with toastr', ->
+      res =
+        data:
+          status: "Error"
+          message: "some-message"
+      spyOn(@toastr, "error")
+      @scope.onGetAccountSharedListFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+

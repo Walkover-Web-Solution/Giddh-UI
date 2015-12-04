@@ -11,6 +11,7 @@ angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
       create: {method: 'POST'}
       update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'}
       share: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/share'}
+      sharedWith: {method: 'GET', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/shared-with'}
       delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'}
       move: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/move'}
     })
@@ -49,6 +50,13 @@ angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
         groupUniqueName: unqNamesObj.selGrpUname,
         accountsUniqueName: unqNamesObj.acntUname
       }, data, onSuccess, onFailure))
+
+    sharedWith: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> Account.sharedWith({
+        companyUniqueName: unqNamesObj.compUname,
+        groupUniqueName: unqNamesObj.selGrpUname,
+        accountsUniqueName: unqNamesObj.acntUname
+      }, onSuccess, onFailure))
 
     move: (unqNamesObj, data) ->
       @handlePromise((onSuccess, onFailure) -> Account.move({

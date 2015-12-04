@@ -65,7 +65,7 @@ describe "Account Service", ->
       )
 
   describe '#share', ->
-    it 'should call success callback when account updated', ->
+    it 'should call success callback when account shared', ->
       @httpBackend.when('PUT',
         '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/share').respond(200,
         {"status": "success"})
@@ -74,7 +74,7 @@ describe "Account Service", ->
         (data) -> expect(data.status).toBe("success")
         (data) -> expect(true).toBeFalsy()
       )
-    it 'should call failure callback when account update failed', ->
+    it 'should call failure callback when account sharing failed', ->
       @httpBackend.when('PUT',
         '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/share').respond(400,
         {"status": "error"})
@@ -113,16 +113,42 @@ describe "Account Service", ->
       uniqueName: "name"
     }
     it 'should call success callback when group moved', ->
-      @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts/'+unqNamesObj.acntUname+'/move').respond(200, {"status": "success"})
+      @httpBackend.when('PUT',
+        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/move').respond(200,
+        {"status": "success"})
 
       @accountService.move(unqNamesObj, data).then(
         (data) -> expect(data.status).toBe("success")
         (data) -> expect(true).toBeFalsy()
       )
     it 'should call failure callback when group moved', ->
-      @httpBackend.when('PUT', '/company/' + unqNamesObj.compUname + '/groups/'+unqNamesObj.selGrpUname+'/accounts/'+unqNamesObj.acntUname+'/move').respond(400, {"status": "error"})
+      @httpBackend.when('PUT',
+        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/move').respond(400,
+        {"status": "error"})
 
       @accountService.move(unqNamesObj, data).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+          expect(data.status).toBe(400)
+      )
+
+  describe '#sharedWith', ->
+    it 'should call success callback', ->
+      @httpBackend.when('GET',
+        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/shared-with').respond(200,
+        {"status": "success"})
+
+      @accountService.sharedWith(unqNamesObj).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call failure callback', ->
+      @httpBackend.when('GET',
+        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/shared-with').respond(400,
+        {"status": "error"})
+
+      @accountService.sharedWith(unqNamesObj).then(
         (data) -> expect(true).toBeFalsy()
         (data) ->
           expect(data.data.status).toBe("error")

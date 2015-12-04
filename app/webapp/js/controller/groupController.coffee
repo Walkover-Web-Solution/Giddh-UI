@@ -325,6 +325,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showBreadCrumbs(pGroups.reverse())
     $scope.breakMobNo(data)
     $scope.setOpeningBalanceDate()
+    $scope.getAccountSharedList()
     # for play between update and add
     $scope.acntCase = "Update"
 
@@ -475,11 +476,26 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onShareAccountSuccess = (res) ->
     $scope.shareAccountObj.user = ""
     toastr.success(res.body, res.status)
-  #    $scope.getGroupSharedList($scope.selectedGroup)
+    $scope.getAccountSharedList()
 
   $scope.onShareAccountFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+  $scope.getAccountSharedList = () ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroup.uniqueName
+      acntUname: $scope.selectedAccount.uniqueName
+    }
+    if _.isEmpty($scope.selectedGroup)
+      unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
+    accountService.sharedWith(unqNamesObj).then($scope.onGetAccountSharedListSuccess, $scope.onGetAccountSharedListSuccess)
+
+  $scope.onGetAccountSharedListSuccess = (res) ->
+    $scope.accountSharedUserList = res.body
+
+  $scope.onGetAccountSharedListFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.hasSharePermission = () ->
     permissionService.hasPermissionOn($scope.selectedCompany, "MNG_USR")
