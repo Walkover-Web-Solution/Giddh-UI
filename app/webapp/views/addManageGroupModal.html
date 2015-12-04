@@ -23,16 +23,17 @@
                   <i class="glyphicon glyphicon-search"></i>
                 </div>
 
-                <input type="text" name="searchGroup" class="form-control" ng-model="grpSrch"
-                       placeholder="Search groups">
+                <input type="text" name="grpSrch" class="form-control" ng-model="grpSrch" placeholder="Search groups">
 
-                <div ng-hide="subGroupVisible" class="input-group-addon cp" ng-click="collapseAll()">
+              
+                <div class="input-group-addon cp" ng-if="!grpSrch.length > 0" ng-hide="subGroupVisible" ng-click="collapseAll()">
                   <i class="glyphicon glyphicon-list"></i>
                 </div>
 
-                <div ng-show="subGroupVisible" class="input-group-addon cp" ng-click="expandAll()">
+                <div class="input-group-addon cp" ng-show="subGroupVisible" ng-click="expandAll()">
                   <i class="glyphicon glyphicon-menu-hamburger"></i>
                 </div>
+                
 
               </div>
             </div>

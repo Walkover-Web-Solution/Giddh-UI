@@ -9,11 +9,11 @@
 
         <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts">
 
-        <div ng-hide="showSubMenus" class="input-group-addon cp" ng-click="collapseAllSubMenus()">
+        <div ng-if="!acntSrch.length > 0" ng-hide="showSubMenus" class="input-group-addon cp" ng-click="collapseAllSubMenus()">
           <i class="glyphicon glyphicon-list"></i>
         </div>
 
-        <div ng-show="showSubMenus" class="input-group-addon cp" ng-click="expandAllSubMenus()">
+        <div ng-if="!acntSrch.length > 0" ng-show="showSubMenus" class="input-group-addon cp" ng-click="expandAllSubMenus()">
           <i class="glyphicon glyphicon-menu-hamburger"></i>
         </div>
 
