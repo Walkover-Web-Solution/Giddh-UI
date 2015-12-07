@@ -28,11 +28,12 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
   $rootScope.countryCodesList = locationService.getCountryCode()
 
   $scope.getRoles = () ->
-    roleServices.getAll().then($scope.onGetRolesSuccess, $scope.onGetRolesFailure)
+    roles = localStorageService.get("_roles")
+    if(_.isUndefined(roles) or _.isEmpty(roles))
+      roleServices.getAll().then($scope.onGetRolesSuccess, $scope.onGetRolesFailure)
 
   $scope.onGetRolesSuccess = (response) ->
     localStorageService.set("_roles", response.body)
-    $rootScope.roles = response.body
 
   $scope.onGetRolesFailure = (response) ->
     console.log "Something went wrong while fetching role"
