@@ -1,6 +1,6 @@
 "use strict"
 
-mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageService, toastr, locationService, modalService) ->
+mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageService, toastr, locationService, modalService, roleServices) ->
   $rootScope.showLedgerBox = false
   $rootScope.basicInfo = {}
   $scope.logout = ->
@@ -15,7 +15,6 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
     else
       modalService.openManageGroupsModal()
 
-
   # for ledger
   $rootScope.makeAccountFlatten = (data) ->
     obj = _.map(data, (item) ->
@@ -28,7 +27,18 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
 
   $rootScope.countryCodesList = locationService.getCountryCode()
 
+  $scope.getRoles = () ->
+    roleServices.getAll().then($scope.onGetRolesSuccess, $scope.onGetRolesFailure)
+
+  $scope.onGetRolesSuccess = (response) ->
+    localStorageService.set("_roles", response.body)
+    $rootScope.roles = response.body
+
+  $scope.onGetRolesFailure = (response) ->
+    console.log "Something went wrong while fetching role"
+
   $rootScope.$on '$viewContentLoaded', ->
+    $scope.getRoles()
     $rootScope.basicInfo = localStorageService.get("_userDetails")
 
 angular.module('giddhWebApp').controller 'mainController', mainController

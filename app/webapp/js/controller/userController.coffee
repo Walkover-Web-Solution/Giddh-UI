@@ -11,7 +11,6 @@ userController = ($scope, $rootScope, toastr, userServices) ->
   $scope.getUserAuthKeySuccess = (res) ->
     $scope.userAuthKey = res.body
 
-
   $scope.getUserAuthKeyFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 

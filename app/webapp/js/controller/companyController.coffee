@@ -148,7 +148,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       $scope.selectedCompany.mobileNo = SplitNumber[1]
       $scope.selectedCompany.cCode = SplitNumber[0]
 
-
     localStorageService.set("_selectedCompany", $scope.selectedCompany)
 
     if $scope.canManageUser is true

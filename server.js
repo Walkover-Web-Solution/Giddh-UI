@@ -55,9 +55,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-
-
-
 // do not remove code from this position
 var login = require('./public/routes/website/login');
 var contact = require('./public/routes/website/contact');
@@ -75,10 +72,12 @@ var accounts = require('./public/routes/webapp/accounts');
 var ledgers = require('./public/routes/webapp/ledgers');
 var appRoutes = require('./public/routes/webapp/main');
 var users = require('./public/routes/webapp/users');
+var roles = require('./public/routes/webapp/roles');
 var trialBalance = require('./public/routes/webapp/trialBal');
 
 app.use('/currency', currency);
 app.use('/users', users);
+app.use('/roles', roles);
 app.use('/location', location);
 app.use('/company', company);
 app.use('/company/:companyUniqueName/groups', groups);
@@ -86,9 +85,6 @@ app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts', accounts
 app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
 app.use('/company/:companyUniqueName/trial-balance',trialBalance);
 app.use('/', appRoutes);
-
-
-
 
 app.listen(port, function () {
   console.log('Express Server running at port', this.address().port);

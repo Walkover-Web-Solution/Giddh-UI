@@ -3,9 +3,10 @@
 describe 'mainController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, $modal) ->
+  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, $modal, roleServices) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
+    @roleServices = roleServices
     @localStorageService = localStorageService
     @toastr = toastr
     @modal = $modal
@@ -15,6 +16,7 @@ describe 'mainController', ->
           $scope: @scope,
           $rootScope: @rootScope,
           localStorageService: @localStorageService
+          roleServices: @roleServices
         })
 
   describe '#goToManageGroups', ->
@@ -40,6 +42,4 @@ describe 'mainController', ->
       spyOn(@modal, 'open').andReturn({result: deferred.promise})
       @scope.goToManageGroups()
       expect(@modal.open).toHaveBeenCalledWith(modalData)
-      
 
-    
