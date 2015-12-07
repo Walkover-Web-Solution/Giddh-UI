@@ -41,7 +41,7 @@
           <!-- searchbar end -->
 
 
-          <perfect-scrollbar id="addMngGrpScrBar" class="scrClass" wheel-propagation="true" wheel-speed="10"
+          <perfect-scrollbar id="addMngGrpScrBar" class="scrClass" wheel-propagation="true" wheel-speed="1"
                              min-scrollbar-length="20"
                              suppressScrollX="false" useBothWheelAxes="false" suppressScrollY="true">
             <div ng-if="showListGroupsNow">
@@ -131,8 +131,7 @@
                 </button>
               </div>
 
-              <perfect-scrollbar id="selAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="10"
-                                 min-scrollbar-length="20">
+              <perfect-scrollbar id="selAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20">
                 <div class="list-group">
                   <a ng-repeat="(key,value) in groupAccntList | filter:accountsSearch track by $index"
                      href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)"
@@ -147,8 +146,7 @@
 
           <div ng-if="accountsSearch.length > 0 || isEmptyObject(selectedGroup)">
             <h3 class="mrB1 mrL1">Accounts from <strong>all group</strong></h3>
-            <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="10"
-                               min-scrollbar-length="20">
+            <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20">
               <div class="list-group">
                 <a ng-repeat="(key,value) in flatAccntList | filter:accountsSearch track by $index"
                    href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)"

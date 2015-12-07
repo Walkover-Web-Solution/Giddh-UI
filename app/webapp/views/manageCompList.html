@@ -5,8 +5,7 @@
     </div>
     <div class="pdBth1510 bdrB pdB1 gryClr thead">My Companies</div>
   </div>
-  <perfect-scrollbar id="restMngCompRit" class="scrClass" wheel-propagation="true" wheel-speed="10"
-                     min-scrollbar-length="20" suppressScrollX="true" auto-height>
+  <perfect-scrollbar id="restMngCompRit" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" suppressScrollX="true" auto-height>
     <ul class="companyList ln">
       <li ng-repeat="value in companyList track by $index" class="clearfix"
           ng-class="{'active': value.uniqueName === selectedCompany.uniqueName}">
