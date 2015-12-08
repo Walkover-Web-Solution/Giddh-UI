@@ -1355,3 +1355,65 @@ v-pane-content {
   border-bottom: 1px solid #D8D8D8;
   -webkit-transition: color 0.25s, border-color 0.5s;
           transition: color 0.25s, border-color 0.5s; }
+
+.export{
+    margin-right:20px;
+    min-height:34px;
+    position:relative;
+}
+
+.export img{
+    margin-top:2px;
+    cursor:pointer;
+}
+
+.export img.csv{
+    max-height:32px;
+}
+
+.export-options{
+    position: absolute;
+    left: -165px;
+    top: -35px;
+    background: #000;
+    color: #fff;
+    border-radius: 5px;
+    z-index:9999;
+    opacity:0.9;
+    -webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -ms-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out;
+
+}
+
+.export-options > .arrow{
+    position: absolute;
+    right: -11px;
+    top: 46px;
+    width: 0px;
+    height: 0px;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 10px solid black;
+    transform: rotate(90deg);
+}
+
+.export-options > ul > li {
+    font-size:14px;
+    text-align: left;
+    line-height:20px;
+    cursor:pointer;
+    line-height:25px;
+    padding:5px 10px;
+    border-bottom:1px solid #fff;
+}
+
+.export-options > ul > li  > a{
+    color:#fff;
+}
+
+.export-options > ul > li:last-child{
+    border-bottom:none;
+}

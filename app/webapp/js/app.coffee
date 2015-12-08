@@ -18,6 +18,7 @@ app = angular.module("giddhWebApp",
     "ui.router"
     "LocalStorageModule"
     "vAccordion"
+    "trialBalance"
   ]
 )
 
