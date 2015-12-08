@@ -32,7 +32,7 @@ angular.module('giddhWebApp').service 'uploadService', [
       console.log file
       fd = new FormData()
       fd.append 'files', file
-      console.log fd, "service"
+      console.log fd, "service", uploadUrl
       $http.post(uploadUrl, fd,
         transformRequest: angular.identity
         headers: 'Content-Type': undefined).success(->
