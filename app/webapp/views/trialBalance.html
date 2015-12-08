@@ -199,7 +199,7 @@
 
 <script type="text/ng-template" id="trialBalSubGroup">
                 <v-pane ng-repeat="grp in grp.childGroups  | filter:keyWord" expanded="expanded">
-                  <v-pane-header ng-class="{'hasChild' : grp.childGroups.length || grp.accounts.length}">
+                  <v-pane-header ng-class="{'noChild' : !grp.childGroups.length && !grp.accounts.length}">
                      <table class="col-sm-12 fl-none">
                         <tbody>
                           <tr>

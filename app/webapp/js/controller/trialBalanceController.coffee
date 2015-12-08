@@ -318,7 +318,8 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
         
         if obj.childGroups.length > 0
           _.each obj.childGroups, (grp) ->
-            row += grp.name + ' ('+obj.Name+')' + ',' + grp.debit + ',' + grp.credit + ',' + grp.closingBalance + ',' + $scope.typeFilter(grp.closingBalanceType) +  '\r\n'
+            if grp.closingBalance != 0
+              row += grp.name + ' ('+obj.Name+')' + ',' + grp.debit + ',' + grp.credit + ',' + grp.closingBalance + ',' + $scope.typeFilter(grp.closingBalanceType) +  '\r\n'
             
             if grp.subGroups.length > 0
               _.each grp.subGroups, (subgrp) ->

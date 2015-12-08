@@ -1356,6 +1356,10 @@ v-pane-content {
   -webkit-transition: color 0.25s, border-color 0.5s;
           transition: color 0.25s, border-color 0.5s; }
 
+v-pane-header.noChild {
+    display:none;
+}
+
 .export{
     margin-right:20px;
     min-height:34px;
