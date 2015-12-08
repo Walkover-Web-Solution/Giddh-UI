@@ -92,31 +92,19 @@ app.use('/', appRoutes);
 
 app.use(multer({ dest: './uploads/'}).single('file'));
 app.post('/fileUpload',function(req,res){
-  console.log ("response", req.file)
-  res.end("File is uploaded")
-
-  // { 
-  //   fieldname: 'photo',
-  //   originalname: '1-3def184ad8f4755ff269862ea77393dd125-356663713651353333393531Text.csv',
-  //   encoding: '7bit',
-  //   mimetype: 'text/csv',
-  //   destination: './uploads/',
-  //   filename: '82af97a2303ea669e71952239fe78502',
-  //   path: 'uploads/82af97a2303ea669e71952239fe78502',
-  //   size: 85 
-  // }
+  
 
   var formData = {
     // Pass a simple key-value pair 
     my_field: req.file.fieldname,
-
+    datafile: fs.createReadStream(__dirname + '/' +req.file.path),
     // Pass multiple values /w an Array 
     attachments: [
       fs.createReadStream(__dirname + '/' +req.file.path)
     ]
   };
   var options = {
-    url: settings.envUrl + 'company/afafagindore14437655102430wduc5/import-master',
+    url: settings.envUrl + 'company/sarfarindore14495779180320lr79h/import-master',
     headers: {
       'Auth-Key': req.session.authKey,
       'X-Forwarded-For': res.locales.remoteIp
@@ -128,6 +116,7 @@ app.post('/fileUpload',function(req,res){
     if (err) {
       return console.error('upload failed:', err);
     }
+    res.send(body)
     console.log('Upload successful!  Server responded with:', body);
   });
 });
