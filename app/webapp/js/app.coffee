@@ -102,6 +102,7 @@ app.run [
     $rootScope.$on '$stateChangeStart', ->
       if $state.current.name == 'ledger.ledgerContent'
         $rootScope.$broadcast 'refreshLedger'
+      $rootScope.showLedgerBox = false
       return
     return
 ]
