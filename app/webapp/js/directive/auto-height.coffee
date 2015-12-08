@@ -110,6 +110,23 @@ directive 'validDate', (toastr, $filter) ->
 
   }
 
+# angular.module('file-model', [])
+# .directive 'fileModel', [
+#   '$parse'
+#   ($parse) ->
+#     {
+#       restrict: 'A'
+#       link: (scope, element, attrs) ->
+#         model = $parse(attrs.fileModel)
+#         modelSetter = model.assign
+#         element.bind 'change', ->
+#           scope.$apply ->
+#             console.log "apply file-model", element[0]
+#             modelSetter scope, element[0].files[0]
+#     }
+# ]
+
+
 angular.module('ledger', [])
 .directive 'ledgerPop', ['$compile', '$filter', '$document', '$parse', '$rootScope', '$timeout', ($compile, $filter, $document, $parse, $rootScope, $timeout) ->
   {
