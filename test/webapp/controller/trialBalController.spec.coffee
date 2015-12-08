@@ -74,10 +74,43 @@ describe 'trialBalanceController', ->
         expect(@toastr.error).not.toHaveBeenCalledWith("Date should be in proper format", "Error")
         expect(@trialBalService.getAllFor).toHaveBeenCalledWith(reqParam)
 
+    describe '#getTrialBalSuccess', ->
+      it 'should set value of showLedgerContent to true', ->
+       res = {
+          body: {}
+       }
+       @scope.getTrialBalSuccess(res)
+       expect(@scope.data).toEqual(res.body)
+       expect(@rootScope.showLedgerBox).toBeTruthy()
 
+    describe '#getTrialBalFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.getTrialBalFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)   
 
+    describe '#filterByDate', ->
+      it 'should call getTrialBal with filtered dates', ->
+        dateObj = {
+            fromDate: '15/01/2015'
+            toDate: '08/12/2015'
+          }
+        expect(@scope.expanded).toBeFalsy()
+        expect(@rootScope.showLedgerBox).toBeFalsy()
+        spyOn(@scope, "getTrialBal")
+        @scope.getTrialBal(dateObj)
+        expect(@scope.getTrialBal).toHaveBeenCalledWith(dateObj)
 
-
+    describe '#typeFilter', ->
+      it 'should be called with input', ->
+        input = ''
+        spyOn(@scope, "typeFilter")
+        @scope.typeFilter(input)
+        expect(@scope.typeFilter).toHaveBeenCalledWith(input)
 
 
 

@@ -70,7 +70,6 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   	toastr.error(res.data.message, res.data.status)
 
   $scope.filterBydate = () ->
-    dateObj = undefined
     dateObj =
       'fromDate': $scope.getDefaultDate().date
       'toDate': $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
@@ -99,7 +98,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     }
     $scope.getTrialBal(dateObj)
 
-  $scope.typeFilter = (input, prev) ->
+  $scope.typeFilter = (input) ->
       switch input
         when 'DEBIT'
           input = "Dr."
