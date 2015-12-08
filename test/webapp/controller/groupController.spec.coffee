@@ -51,30 +51,22 @@ describe 'groupController', ->
   describe '#selectGroupToEdit', ->
     it 'should check if variable is empty then set value according to condition', ->
       spyOn(@scope, "getGroupSharedList")
-      spyOn(@scope, "hasAddPermission")
-      spyOn(@scope, "hasUpdatePermission")
-      spyOn(@scope, "hasDeletePermission")
+      spyOn(@scope, "checkPermissions")
       @scope.selectedGroup.oldUName = ''
       group = {"name": "Fixed Assets"}
       @scope.selectGroupToEdit(group)
       expect(@scope.selectedGroup.oldUName).toEqual(@scope.selectedGroup.uniqueName)
-      expect(@scope.hasAddPermission).toHaveBeenCalledWith(group)
-      expect(@scope.hasUpdatePermission).toHaveBeenCalledWith(group)
-      expect(@scope.hasDeletePermission).toHaveBeenCalledWith(group)
+      expect(@scope.checkPermissions).toHaveBeenCalledWith(group)
 
     it 'should set group as selected and a variable to true and make a call to fuction with group variable', ->
       spyOn(@scope, "getGroupSharedList")
-      spyOn(@scope, "hasAddPermission")
-      spyOn(@scope, "hasUpdatePermission")
-      spyOn(@scope, "hasDeletePermission")
+      spyOn(@scope, "checkPermissions")
       group = {"name": "Fixed Assets"}
       @scope.selectGroupToEdit(group)
       expect(@scope.selectedGroup).toEqual(group)
       expect(@scope.showGroupDetails).toBeTruthy()
       expect(@scope.getGroupSharedList).toHaveBeenCalledWith(group)
-      expect(@scope.hasAddPermission).toHaveBeenCalledWith(group)
-      expect(@scope.hasUpdatePermission).toHaveBeenCalledWith(group)
-      expect(@scope.hasDeletePermission).toHaveBeenCalledWith(group)
+      expect(@scope.checkPermissions).toHaveBeenCalledWith(group)
 
   describe '#getGroupSharedList', ->
     it 'should call a service with a obj var to get data if user has share permission', ->
@@ -86,15 +78,15 @@ describe 'groupController', ->
         selGrpUname: @scope.selectedGroup.uniqueName
       }
       deferred = @q.defer()
+      @scope.canShare = true
       spyOn(@groupService, "sharedList").andReturn(deferred.promise)
-      spyOn(@permissionService, "hasPermissionOn").andReturn(true)
 
       @scope.getGroupSharedList(group)
       expect(@groupService.sharedList).toHaveBeenCalledWith(unqNamesObj)
 
     it 'should not call a service with a obj var to get data if user does not have share permission', ->
       spyOn(@groupService, "sharedList")
-      spyOn(@permissionService, "hasPermissionOn").andReturn(false)
+      @scope.canShare = false
 
       @scope.getGroupSharedList({})
       expect(@groupService.sharedList).not.toHaveBeenCalled()
@@ -517,20 +509,14 @@ describe 'groupController', ->
 
     it 'should check if selectedGroup is empty and copy data to selAcntPrevObj, set showGroupDetails variable to false, showAccountDetails to true and set value for selected account variable and set breadcrumb', ->
       @scope.selectedGroup = {}
-      spyOn(@scope, "hasSharePermission")
-      spyOn(@scope, "hasAddPermission")
-      spyOn(@scope, "hasUpdatePermission")
-      spyOn(@scope, "hasDeletePermission")
+      spyOn(@scope, "checkPermissions")
       spyOn(@scope, "showBreadCrumbs")
       spyOn(@scope, 'breakMobNo')
       spyOn(@scope, 'setOpeningBalanceDate')
       spyOn(@scope, 'getAccountSharedList')
 
       @scope.showAccountDtl(data)
-      expect(@scope.hasSharePermission).toHaveBeenCalled()
-      expect(@scope.hasAddPermission).toHaveBeenCalledWith(data.parentGroups[0])
-      expect(@scope.hasUpdatePermission).toHaveBeenCalledWith(data.parentGroups[0])
-      expect(@scope.hasDeletePermission).toHaveBeenCalledWith(data.parentGroups[0])
+      expect(@scope.checkPermissions).toHaveBeenCalledWith(data)
       expect(@scope.showGroupDetails).toBeFalsy()
       expect(@scope.showAccountDetails).toBeTruthy()
       expect(@scope.selAcntPrevObj).toEqual(data)
@@ -544,20 +530,14 @@ describe 'groupController', ->
 
     it 'should copy data to selAcntPrevObj, set showGroupDetails variable to false, showAccountDetails to true and set value for selected account variable and set breadcrumb', ->
       @scope.selectedGroup = {name: "some"}
-      spyOn(@scope, "hasSharePermission")
-      spyOn(@scope, "hasAddPermission")
-      spyOn(@scope, "hasUpdatePermission")
-      spyOn(@scope, "hasDeletePermission")
+      spyOn(@scope, "checkPermissions")
       spyOn(@scope, "showBreadCrumbs")
       spyOn(@scope, 'breakMobNo')
       spyOn(@scope, 'setOpeningBalanceDate')
       spyOn(@scope, 'getAccountSharedList')
 
       @scope.showAccountDtl(data)
-      expect(@scope.hasSharePermission).not.toHaveBeenCalled()
-      expect(@scope.hasAddPermission).not.toHaveBeenCalledWith(data.parentGroups[0])
-      expect(@scope.hasUpdatePermission).not.toHaveBeenCalledWith(data.parentGroups[0])
-      expect(@scope.hasDeletePermission).not.toHaveBeenCalledWith(data.parentGroups[0])
+      expect(@scope.checkPermissions).toHaveBeenCalledWith(data)
       expect(@scope.showGroupDetails).toBeFalsy()
       expect(@scope.showAccountDetails).toBeTruthy()
       expect(@scope.selAcntPrevObj).toEqual(data)
@@ -851,7 +831,7 @@ describe 'groupController', ->
         ]
       }
       @scope.isCurrentGroup(data)
-      expect(@scope.isCurrentGroup).toBeTruthy()   
+      expect(@scope.isCurrentGroup).toBeTruthy()
 
   describe '#moveAccnt', ->
     it 'should check if group uniqname is undefined then call toastr error message and return', ->
@@ -859,7 +839,7 @@ describe 'groupController', ->
       spyOn(@toastr, "error")
       @scope.moveAccnt(data)
       expect(@toastr.error).toHaveBeenCalledWith("Select group only from list", "Error")
-    
+
     it 'should call accountservice move method with object', ->
       data = {
         uniqueName: "name"
@@ -882,7 +862,7 @@ describe 'groupController', ->
       spyOn(@accountService, 'move').andReturn(deferred.promise)
       @scope.moveAccnt(data)
       expect(@accountService.move).toHaveBeenCalledWith(obj, data)
-    
+
     it 'should call accountservice move method with object and also check if selectedGroup uniqname is undefined', ->
       data = {
         uniqueName: "name"
@@ -929,58 +909,34 @@ describe 'groupController', ->
       @scope.moveAccntFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
-  describe '#hasSharePermission', ->
-    it 'should call permission service method with selected company and manage user permission', ->
-      @scope.selectedCompany = {name: "myCompany"}
-      spyOn(@permissionService, "hasPermissionOn")
-      @scope.hasSharePermission()
-      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(@scope.selectedCompany, "MNG_USR")
-
-  describe '#hasUpdatePermission', ->
+  describe '#checkPermissions', ->
     it 'should call permission service hasPermissionOn method and set value true to canUpdate variable', ->
-      data = {
-        role: {
-          permissions: [
-            {code: "VW", description: "View"}
-            {code: "DLT", description: "Delete"}
-            {code: "UPDT", description: "Update"}
-            {code: "ADD", description: "Add"}
-          ]
-        }
-      }
-      @scope.hasUpdatePermission(data)
+      data = {role: {permissions: [{code: "UPDT"}]}}
+      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
+      @scope.checkPermissions(data)
       expect(@scope.canUpdate).toBeTruthy()
-  # expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "UPDT")
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "UPDT")
 
-  describe '#hasAddPermission', ->
     it 'should call permission service hasPermissionOn method and set value true to canAdd variable', ->
-      data = {
-        role: {
-          permissions: [
-            {code: "VW", description: "View"}
-            {code: "DLT", description: "Delete"}
-            {code: "UPDT", description: "Update"}
-            {code: "ADD", description: "Add"}
-          ]
-        }
-      }
-      @scope.hasAddPermission(data)
+      data = {role: {permissions: [{code: "ADD"}]}}
+      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
+      @scope.checkPermissions(data)
       expect(@scope.canAdd).toBeTruthy()
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "ADD")
 
-  describe '#hasDeletePermission', ->
     it 'should call permission service hasPermissionOn method and set value true to canDelete variable', ->
-      data = {
-        role: {
-          permissions: [
-            {code: "VW", description: "View"}
-            {code: "DLT", description: "Delete"}
-            {code: "UPDT", description: "Update"}
-            {code: "ADD", description: "Add"}
-          ]
-        }
-      }
-      @scope.hasDeletePermission(data)
+      data = {role: {permissions: [{code: "DLT"}]}}
+      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
+      @scope.checkPermissions(data)
       expect(@scope.canDelete).toBeTruthy()
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "DLT")
+
+    it 'should call permission service hasPermissionOn method and set value true to canDelete variable', ->
+      data = {role: {permissions: [{code: "MNG_USR"}]}}
+      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
+      @scope.checkPermissions(data)
+      expect(@scope.canShare).toBeTruthy()
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "MNG_USR")
 
   describe '#shareAccount', ->
     it 'should call service share method with obj var when group is selected', ->
@@ -1058,19 +1014,19 @@ describe 'groupController', ->
       expect(@accountService.sharedWith).toHaveBeenCalledWith(unqNamesObj)
 
   it 'should call a service with a obj var to get data when group is not selected', ->
-      @scope.selectedGroup = {}
-      @rootScope.selectedCompany = {"uniqueName": "2"}
-      @scope.selectedAccount = {uniqueName: "3", parentGroups: [{uniqueName: 1}]}
-      unqNamesObj = {
-        compUname: @rootScope.selectedCompany.uniqueName
-        selGrpUname: @scope.selectedAccount.parentGroups[0].uniqueName
-        acntUname: @scope.selectedAccount.uniqueName
-      }
-      deferred = @q.defer()
-      spyOn(@accountService, "sharedWith").andReturn(deferred.promise)
+    @scope.selectedGroup = {}
+    @rootScope.selectedCompany = {"uniqueName": "2"}
+    @scope.selectedAccount = {uniqueName: "3", parentGroups: [{uniqueName: 1}]}
+    unqNamesObj = {
+      compUname: @rootScope.selectedCompany.uniqueName
+      selGrpUname: @scope.selectedAccount.parentGroups[0].uniqueName
+      acntUname: @scope.selectedAccount.uniqueName
+    }
+    deferred = @q.defer()
+    spyOn(@accountService, "sharedWith").andReturn(deferred.promise)
 
-      @scope.getAccountSharedList()
-      expect(@accountService.sharedWith).toHaveBeenCalledWith(unqNamesObj)
+    @scope.getAccountSharedList()
+    expect(@accountService.sharedWith).toHaveBeenCalledWith(unqNamesObj)
 
   describe '#onsharedListSuccess', ->
     it 'should set result to a variable', ->

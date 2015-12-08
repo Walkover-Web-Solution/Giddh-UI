@@ -415,7 +415,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         console.log "nothing selected to load"
 
   $scope.hasAddAndUpdatePermission = (account) ->
-    permissionService.hasPermissionOn(account.parentGroups[0], "UPDT") and permissionService.hasPermissionOn(account.parentGroups[0], "ADD")
+    permissionService.hasPermissionOn(account, "UPDT") and permissionService.hasPermissionOn(account, "ADD")
 
   $scope.$on '$reloadLedger',  ->
     $scope.reloadLedger()

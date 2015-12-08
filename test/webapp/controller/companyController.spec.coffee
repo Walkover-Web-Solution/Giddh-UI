@@ -3,10 +3,11 @@
 describe 'companyController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $modal, modalService, $timeout) ->
+  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $modal, modalService, $timeout, permissionService) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @currencyService = currencyService
+    @permissionService = permissionService
     @locationService = locationService
     @modal = $modal
     @modalService = modalService
@@ -25,6 +26,7 @@ describe 'companyController', ->
           locationService: @locationService,
           companyServices: @companyServices,
           modalService: @modalService,
+          permissionService: @permissionService
           $timeout: @timeout
         })
 
@@ -34,16 +36,20 @@ describe 'companyController', ->
         role:
           permissions: [{code: "MNG_USR"}]
       }
+      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
       @scope.ifHavePermission(data)
       expect(@scope.canManageUser).toBeTruthy()
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "MNG_USR")
 
     it 'should not set permissions if not have permission', ->
       data = {
         role:
-          permissions: [{code: "NOT_USR"}]
+          permissions: [{code: "MNG_USR"}]
       }
+      spyOn(@permissionService, 'hasPermissionOn').andReturn(false)
       @scope.ifHavePermission(data)
       expect(@scope.canManageUser).toBeFalsy()
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "MNG_USR")
 
   describe '#checkCmpCretedOrNot', ->
     it 'should check if user created company or not after company modal open', ->

@@ -94,16 +94,13 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showGroupDetails = true
     $scope.showAccountListDetails = true
     $scope.showAccountDetails = false
-    $scope.hasAddPermission(group)
-    $scope.hasUpdatePermission(group)
-    $scope.hasDeletePermission(group)
-
+    $scope.checkPermissions(group)
     $scope.getGroupSharedList(group)
     $scope.groupAccntList = group.accounts
     $scope.accountsSearch = undefined
 
   $scope.getGroupSharedList = () ->
-    if $scope.hasSharePermission()
+    if $scope.canShare
       unqNamesObj = {
         compUname: $rootScope.selectedCompany.uniqueName
         selGrpUname: $scope.selectedGroup.uniqueName
@@ -312,11 +309,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   #show account
   $scope.showAccountDtl = (data) ->
     pGroups = []
-    if _.isEmpty($scope.selectedGroup)
-      $scope.hasSharePermission()
-      $scope.hasAddPermission(data.parentGroups[0])
-      $scope.hasUpdatePermission(data.parentGroups[0])
-      $scope.hasDeletePermission(data.parentGroups[0])
+    $scope.checkPermissions(data)
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
     angular.copy(data, $scope.selAcntPrevObj)
@@ -516,17 +509,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onGetAccountSharedListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  $scope.hasSharePermission = () ->
-    permissionService.hasPermissionOn($scope.selectedCompany, "MNG_USR")
-
-  $scope.hasUpdatePermission = (group) ->
-    $scope.canUpdate = permissionService.hasPermissionOn(group, "UPDT")
-
-  $scope.hasAddPermission = (group) ->
-    $scope.canAdd = permissionService.hasPermissionOn(group, "ADD")
-
-  $scope.hasDeletePermission = (group) ->
-    $scope.canDelete = permissionService.hasPermissionOn(group, "DLT")
+  $scope.checkPermissions = (entity) ->
+    $scope.canUpdate = permissionService.hasPermissionOn(entity, "UPDT")
+    $scope.canDelete = permissionService.hasPermissionOn(entity, "DLT")
+    $scope.canAdd = permissionService.hasPermissionOn(entity, "ADD")
+    $scope.canShare = permissionService.hasPermissionOn(entity, "MNG_USR")
 
 #init angular app
 angular.module('giddhWebApp').controller 'groupController', groupController

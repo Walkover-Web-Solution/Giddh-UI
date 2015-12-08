@@ -37,9 +37,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #check if user is admin
   $scope.ifHavePermission = (data) ->
-    $scope.canManageUser = false
-    if permissionService.hasPermissionOn(data, "MNG_USR")
-      $scope.canManageUser = true
+    $scope.canManageUser = permissionService.hasPermissionOn(data, "MNG_USR")
 
   #for make sure
   $scope.checkCmpCretedOrNot = ->

@@ -64,13 +64,14 @@ describe 'ledgerController', ->
       expect(@scope.voucherTypeList).toEqual(vouchDat)
 
   describe 'controller methods', ->
-    beforeEach inject ($rootScope, $controller, localStorageService, toastr, ledgerService, $q, modalService, DAServices, $timeout) ->
+    beforeEach inject ($rootScope, $controller, localStorageService, toastr, ledgerService, $q, modalService, DAServices, permissionService) ->
       @scope = $rootScope.$new()
       @rootScope = $rootScope
       @localStorageService = localStorageService
       @ledgerService = ledgerService
       @DAServices = DAServices
       @toastr = toastr
+      @permissionService = permissionService
       @modalService = modalService
       @q = $q
       @ledgerController = $controller('ledgerController',
@@ -81,6 +82,7 @@ describe 'ledgerController', ->
           ledgerService: @ledgerService
           DAServices: @DAServices
           modalService: @modalService
+          permissionService: @permissionService
         })
 
     describe '#reloadLedger', ->
@@ -460,10 +462,6 @@ describe 'ledgerController', ->
         loadFixtures('myfixture.html');
         node=document.getElementById('my-fixture')
         @scope.sameMethodForDrCr(1, ".drLedgerEntryForm")
-        # expect(document.getElementById('sandbox')).not.toHaveClass('my-class')
-        # expect(@scope.removeLedgerDialog).toHaveBeenCalled()
-        # expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "highlightRow")
-        # expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "open")
 
     describe '#calculateLedger', ->
       it 'should calculate data and set some variables to according in this credit is greater', ->
@@ -596,20 +594,16 @@ describe 'ledgerController', ->
     describe '#hasAddAndUpdatePermission', ->
       it 'should return true if user has add and update permission on account', ->
         account = {parentGroups: [{role: {permissions: [{"code": "UPDT"}, {"code": "ADD"}]}}]}
+        spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
         result = @scope.hasAddAndUpdatePermission(account)
         expect(result).toBeTruthy()
+        expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(account, "ADD")
+        expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(account, "UPDT")
 
       it 'should return false if user has only add permission on account not update', ->
         account = {parentGroups: [{role: {permissions: [{"code": "ADD"}]}}]}
+        spyOn(@permissionService, 'hasPermissionOn').andReturn(false)
         result = @scope.hasAddAndUpdatePermission(account)
         expect(result).toBeFalsy()
-
-      it 'should return false if user has only update permission on account not add', ->
-        account = {parentGroups: [{role: {permissions: [{"code": "ADD"}]}}]}
-        result = @scope.hasAddAndUpdatePermission(account)
-        expect(result).toBeFalsy()
-
-      it 'should return false if user does not have any permission on account', ->
-        account = {parentGroups: [{role: {permissions: []}}]}
-        result = @scope.hasAddAndUpdatePermission(account)
-        expect(result).toBeFalsy()
+        expect(@permissionService.hasPermissionOn).not.toHaveBeenCalledWith(account, "ADD")
+        expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(account, "UPDT")
