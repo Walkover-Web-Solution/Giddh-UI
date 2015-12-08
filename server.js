@@ -8,9 +8,7 @@ var engines = require('consolidate');
 var request = require('request');
 var cors = require('cors')
 var requestIp = require('request-ip');
-
 var app = settings.express();
-
 var port = process.env.PORT || 8000;
 //enabling cors
 app.use(cors())
@@ -85,6 +83,13 @@ app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts', accounts
 app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
 app.use('/company/:companyUniqueName/trial-balance',trialBalance);
 app.use('/', appRoutes);
+
+
+app.post('/fileUpload', function(req, res) {
+  console.log (req.body, "in fileUpload", req.files)
+  data = {status: "success", "message": req}
+  res.send(data);
+});
 
 app.listen(port, function () {
   console.log('Express Server running at port', this.address().port);

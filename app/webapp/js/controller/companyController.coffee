@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService, userServices) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService, userServices, uploadService) ->
 
 #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
@@ -297,6 +297,14 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.exceptOwnEmail = (email) ->
     $rootScope.basicInfo.email isnt email.userEmail
 
+  # upload file function
+  $scope.uploadFile = ->
+    file = $scope.myFile
+    console.log 'company scope is ', $scope
+    console.dir file
+    uploadUrl = '/fileUpload'
+    uploadService.uploadFileToUrl file, uploadUrl
+
   #fire function after page fully loaded
   $scope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
@@ -305,3 +313,17 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController
+
+angular.module('giddhWebApp').directive 'fileModel', [
+  '$rootScope','$parse', '$compile'
+  ($rootScope, $parse, $compile) ->
+    {
+      restrict: 'A'
+      link: (scope, element, attrs) ->
+        model = $parse(attrs.fileModel)
+        modelSetter = model.assign
+        element.bind 'change', ->
+          scope.$apply ->
+            modelSetter($rootScope, element[0].files[0])
+    }
+]

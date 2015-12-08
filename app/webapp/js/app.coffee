@@ -19,6 +19,7 @@ app = angular.module("giddhWebApp",
     "LocalStorageModule"
     "vAccordion"
     "trialBalance"
+    # "file-model"
   ]
 )
 
