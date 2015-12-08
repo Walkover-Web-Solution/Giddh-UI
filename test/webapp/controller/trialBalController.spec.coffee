@@ -22,7 +22,6 @@ describe 'trialBalanceController', ->
       expect(@scope.fromDatePickerIsOpen).toBeFalsy
       expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
 
-
   describe 'controller methods', ->
     beforeEach inject ($rootScope, $controller, localStorageService, toastr, $timeout, $filter, trialBalService, $q) ->
       @scope = $rootScope.$new()
@@ -54,6 +53,7 @@ describe 'trialBalanceController', ->
         @scope.getTrialBal(data)
         expect(@toastr.error).toHaveBeenCalledWith("Date should be in proper format", "Error")
         expect(@trialBalService.getAllFor).not.toHaveBeenCalled()
+
       it 'should call trialBalService getAllFor method with reqparam obj', ->
         spyOn(@toastr, "error")
         deferred = @q.defer()
@@ -73,6 +73,7 @@ describe 'trialBalanceController', ->
         @scope.getTrialBal(data)
         expect(@toastr.error).not.toHaveBeenCalledWith("Date should be in proper format", "Error")
         expect(@trialBalService.getAllFor).toHaveBeenCalledWith(reqParam)
+
 
 
 
