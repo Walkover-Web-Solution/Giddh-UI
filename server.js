@@ -3,6 +3,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var fs = require('fs');
 var session = require('express-session');
 var engines = require('consolidate');
 var request = require('request');
@@ -87,12 +88,48 @@ app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountUn
 app.use('/company/:companyUniqueName/trial-balance',trialBalance);
 app.use('/', appRoutes);
 
+
+
 app.use(multer({ dest: './uploads/'}).single('file'));
 app.post('/fileUpload',function(req,res){
-  console.log("*************************************************************************")
-  console.log(req.file)
-  console.log("*************************************************************************")
-  res.end("upload complete")
+  console.log ("response", req.file)
+  res.end("File is uploaded")
+
+  // { 
+  //   fieldname: 'photo',
+  //   originalname: '1-3def184ad8f4755ff269862ea77393dd125-356663713651353333393531Text.csv',
+  //   encoding: '7bit',
+  //   mimetype: 'text/csv',
+  //   destination: './uploads/',
+  //   filename: '82af97a2303ea669e71952239fe78502',
+  //   path: 'uploads/82af97a2303ea669e71952239fe78502',
+  //   size: 85 
+  // }
+
+  var formData = {
+    // Pass a simple key-value pair 
+    my_field: req.file.fieldname,
+
+    // Pass multiple values /w an Array 
+    attachments: [
+      fs.createReadStream(__dirname + '/' +req.file.path)
+    ]
+  };
+  var options = {
+    url: settings.envUrl + 'company/afafagindore14437655102430wduc5/import-master',
+    headers: {
+      'Auth-Key': req.session.authKey,
+      'X-Forwarded-For': res.locales.remoteIp
+    },
+    formData: formData
+  };
+
+  request.post(options, function optionalCallback(err, httpResponse, body) {
+    if (err) {
+      return console.error('upload failed:', err);
+    }
+    console.log('Upload successful!  Server responded with:', body);
+  });
 });
 
 app.listen(port, function () {
