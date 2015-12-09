@@ -321,17 +321,3 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController
-
-angular.module('giddhWebApp').directive 'fileModel', [
-  '$rootScope','$parse', '$compile'
-  ($rootScope, $parse, $compile) ->
-    {
-      restrict: 'A'
-      link: (scope, element, attrs) ->
-        model = $parse(attrs.fileModel)
-        modelSetter = model.assign
-        element.bind 'change', ->
-          scope.$apply ->
-            modelSetter($rootScope, element[0].files[0])
-    }
-]
