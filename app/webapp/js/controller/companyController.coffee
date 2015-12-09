@@ -196,7 +196,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   $scope.getState = (val) ->
     locationService.searchState(val, $rootScope.selectedCompany.country).then($scope.onGetStateSuccess,
-        $scope.onGetStateFailure)
+      $scope.onGetStateFailure)
 
   $scope.onGetStateSuccess = (data) ->
     filterThis = data.results.filter (i) -> i.types[0] is "administrative_area_level_1"
@@ -209,7 +209,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   $scope.getCity = (val) ->
     locationService.searchCity(val, $rootScope.selectedCompany.state).then($scope.onGetCitySuccess,
-        $scope.onGetCityFailure)
+      $scope.onGetCityFailure)
 
   $scope.onGetCitySuccess = (data) ->
     filterThis = data.results.filter (i) -> i.types[0] is "locality"
@@ -241,7 +241,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.updateUserRole = (role, userEmail) ->
     sData = {role: role, user: userEmail}
     companyServices.share($scope.selectedCompany.uniqueName, sData).then($scope.onShareCompanySuccess,
-        $scope.onShareCompanyFailure)
+      $scope.onShareCompanyFailure)
 
   #share and manage permission in manage company
   $scope.shareCompanyWithUser = () ->
@@ -249,7 +249,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       toastr.error("You cannot add yourself.", "Error")
       return
     companyServices.share($scope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess,
-        $scope.onShareCompanyFailure)
+      $scope.onShareCompanyFailure)
 
   $scope.onShareCompanySuccess = (res) ->
     $scope.shareRequest = {}
@@ -285,7 +285,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.unSharedUser = (uNqame, id) ->
     data = {user: uNqame}
     companyServices.unSharedComp($scope.selectedCompany.uniqueName, data).then($scope.unSharedCompSuccess,
-        $scope.unSharedCompFailure)
+      $scope.unSharedCompFailure)
 
   $scope.unSharedCompSuccess = (res) ->
     toastr.success("Company unshared successfully", "Success")
@@ -300,7 +300,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   # upload file function
   $scope.uploadFile = (file) ->
     $upload.upload(
-      url: '/fileUpload'
+      url: '/fileUpload/' + $rootScope.selectedCompany.uniqueName
       file: file[0])
     .success (data) ->
       onSuccess(data)

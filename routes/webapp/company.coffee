@@ -84,7 +84,6 @@ router.get '/:uniqueName/shared-with', (req, res) ->
     else
       res.send data
 
-
 #share company with user
 router.put '/:uniqueName/share', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.uniqueName + '/share'

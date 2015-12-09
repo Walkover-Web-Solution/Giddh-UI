@@ -10,6 +10,7 @@ var request = require('request');
 var cors = require('cors')
 var requestIp = require('request-ip');
 var multer   =  require('multer');
+var rest = require('restler');
 
 var app = settings.express();
 
@@ -88,36 +89,29 @@ app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountUn
 app.use('/company/:companyUniqueName/trial-balance',trialBalance);
 app.use('/', appRoutes);
 
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/')
+  },
+  filename: function (req, file, cb) {
+    console.log("In Multer")
+    cb(null, Date.now() + '.xml')
+  }
+})
 
+app.use(multer({ storage: storage }).single('file'));
 
-app.use(multer({ dest: './uploads/'}).single('file'));
-app.post('/fileUpload',function(req,res){
-  
-
-  var formData = {
-    // Pass a simple key-value pair 
-    my_field: req.file.fieldname,
-    datafile: fs.createReadStream(__dirname + '/' +req.file.path),
-    // Pass multiple values /w an Array 
-    attachments: [
-      fs.createReadStream(__dirname + '/' +req.file.path)
-    ]
-  };
-  var options = {
-    url: settings.envUrl + 'company/sarfarindore14495779180320lr79h/import-master',
-    headers: {
-      'Auth-Key': req.session.authKey,
-      'X-Forwarded-For': res.locales.remoteIp
-    },
-    formData: formData
-  };
-
-  request.post(options, function optionalCallback(err, httpResponse, body) {
-    if (err) {
-      return console.error('upload failed:', err);
+app.post('/fileUpload/:companyName',function(req,res){
+  var url = "http://localhost:9292/giddh-api/company/" + req.params.companyName + "/import-master"
+  rest.post(url, {
+    multipart: true,
+    headers: {'Auth-Key': req.session.authKey},
+    data: {
+      'datafile': rest.file(req.file.path, null, req.file.size, null, req.file.mimetype)
     }
-    res.send(body)
-    console.log('Upload successful!  Server responded with:', body);
+  }).on('complete', function(data) {
+    console.log("data is",data);
+    res.end(data)
   });
 });
 
