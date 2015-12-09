@@ -344,8 +344,6 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     $scope.formatDataCondensed(e)
     $scope.formatDataAccountWise(e)  
 
-
-
   $scope.hideOptions = (e) ->
     $timeout (->
       $scope.showOptions = false
@@ -357,9 +355,6 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       $scope.showOptions = false
     ), 100
     
-
-
-
 
 
 angular.module('giddhWebApp').controller 'trialBalanceController', trialBalanceController

@@ -112,6 +112,16 @@ describe 'trialBalanceController', ->
         @scope.typeFilter(input)
         expect(@scope.typeFilter).toHaveBeenCalledWith(input)
 
+    describe '#formatData', ->
+      it 'should call formatDataGroupWise , formatDataAccountWise and formatDataCondensed', ->
+        spyOn(@scope, "formatData").andCallThrough()
+        spyOn(@scope, "formatDataCondensed")
+        spyOn(@scope, "formatDataAccountWise")
+        spyOn(@scope, "formatDataGroupWise")
+        @scope.formatData()
+        expect(@scope.formatDataCondensed).toHaveBeenCalled()
+        expect(@scope.formatDataAccountWise).toHaveBeenCalled()
+        expect(@scope.formatDataGroupWise).toHaveBeenCalled()  
 
 
 
