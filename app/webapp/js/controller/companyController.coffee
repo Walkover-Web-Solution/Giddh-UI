@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService, userServices, uploadService, $upload) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService, userServices, uploadService, Upload) ->
 
 #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
@@ -299,9 +299,9 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   # upload file function
   $scope.uploadFile = (file) ->
-    $upload.upload(
+    Upload.upload(
       url: '/fileUpload/' + $rootScope.selectedCompany.uniqueName
-      file: file[0])
+      file: file)
     .success (data) ->
       onSuccess(data)
     .error (data, status) ->

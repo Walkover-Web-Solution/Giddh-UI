@@ -111,7 +111,7 @@ app.post('/fileUpload/:companyName',function(req,res){
     }
   }).on('complete', function(data) {
     console.log("data is",data);
-    res.end(data)
+    res.send(data)
   });
 });
 
