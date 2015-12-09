@@ -1185,6 +1185,10 @@ li:last-child .angular-ui-tree-handle {
     font-weight: 400 !important;
 }
 
+.tb-foot thead tr th:nth-child(2){
+    padding-right:10px;
+}
+
 .tb-foot tr th table tr th:nth-child(2){
     padding-right:0;
 }
@@ -1421,3 +1425,4 @@ v-pane-header.noChild {
 .export-options > ul > li:last-child{
     border-bottom:none;
 }
+

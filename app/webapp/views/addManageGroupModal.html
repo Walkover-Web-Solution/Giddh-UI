@@ -26,11 +26,11 @@
                 <input type="text" name="grpSrch" class="form-control" ng-model="grpSrch" placeholder="Search groups">
 
               
-                <div class="input-group-addon cp" ng-if="!grpSrch.length > 0" ng-hide="subGroupVisible" ng-click="collapseAll()">
+                <div class="input-group-addon cp" ng-show="!grpSrch.length > 0 && !subGroupVisible" ng-click="collapseAll()">
                   <i class="glyphicon glyphicon-list"></i>
                 </div>
 
-                <div class="input-group-addon cp" ng-show="subGroupVisible" ng-click="expandAll()">
+                <div class="input-group-addon cp" ng-show="!grpSrch.length > 0 && subGroupVisible" ng-click="expandAll()">
                   <i class="glyphicon glyphicon-menu-hamburger"></i>
                 </div>
                 
