@@ -100,13 +100,14 @@ var storage = multer.diskStorage({
 })
 
 app.use(multer({ storage: storage }).single('file'));
-
 app.post('/fileUpload/:companyName',function(req,res){
-  // settings.envUrl
-  var url = "http://localhost:9292/giddh-api/company/" + req.params.companyName + "/import-master"
+  var url = settings.envUrl+"company/" + req.params.companyName + "/import-master"
   rest.post(url, {
     multipart: true,
-    headers: {'Auth-Key': req.session.authKey},
+    headers: {
+      'Auth-Key': req.session.authKey,
+      'X-Forwarded-For': res.locales.remoteIp
+    },
     data: {
       'datafile': rest.file(req.file.path, null, req.file.size, null, req.file.mimetype)
     }

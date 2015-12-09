@@ -203,23 +203,33 @@
     <tab heading="Upload XML">
       <div class="pd2">
         <div class="greyBox mrB2">
-          <h3 class="mrB1">Only Master</h3>
-          <form enctype="multipart/form-data">
-            <input id="selectFile" type="file" ngf-select ng-model="file" name="file"/>
-            <button id="upload" ng-click="uploadFile(file)" >Upload</button>
-          </form>
-          <!-- <form class="form-inline" enctype="multipart/form-data">
+          <h3 class="mrB1">Upload Master Only</h3>
+          <form class="form-inline" enctype="multipart/form-data">
             <div class="form-group">
-              <div class="input-group">
-                <div class="input-group-addon">
-                  <i class="glyphicon glyphicon-folder-open"></i>
-                </div>
-                <input type="file" class="form-control" file-model="myFile" name="photo">
-                <div class="input-group-addon">Browse</div>
-              </div>
+              <button class="btn btn-primary" ngf-select="uploadFiles($files, $invalidFiles)" accept=".xml" ngf-max-size="25MB">
+                <i class="glyphicon glyphicon-folder-open"></i> 
+                &nbsp; Browse</button>
             </div>
-            <button ng-click="uploadFile()" class="btn btn-primary">Upload</button>
-          </form> -->
+          </form>
+
+          <div class="mrT2">
+            <!-- ng-bind="f.progress + '%'"  -->
+            {{errorMsg}}
+            <ul class="ln">
+              <li ng-repeat="f in files" style="font:smaller">
+                {{f.name}}
+                {{f.$errorParam}}
+                <div class="progress" ng-show="f.progress >= 0">
+                  <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:{{f.progress}}%">
+                    <span class="sr-only">{{f.progress}} %</span>
+                  </div>
+                </div>
+              </li>
+              <li ng-repeat="f in errFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
+              </li> 
+            </ul>
+          </div>
+          <!-- end mrT -->
         </div>
       </div>
     </tab>

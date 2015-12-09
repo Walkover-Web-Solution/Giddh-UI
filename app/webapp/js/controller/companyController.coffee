@@ -297,21 +297,32 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.exceptOwnEmail = (email) ->
     $rootScope.basicInfo.email isnt email.userEmail
 
-  # upload file function
-  $scope.uploadFile = (file) ->
-    Upload.upload(
-      url: '/fileUpload/' + $rootScope.selectedCompany.uniqueName
-      file: file)
-    .success (data) ->
-      onSuccess(data)
-    .error (data, status) ->
-      onFailure(data, status)
 
-  onFailure = (data, status) ->
-    console.log "Upload fail", data, status
+  # upload by progressbar
+  $scope.uploadFiles = (files, errFiles) ->
+    console.log files, errFiles
+    $scope.files = files
+    $scope.errFiles = errFiles
+    angular.forEach files, (file) ->
+      file.upload = Upload.upload(
+        url: '/fileUpload/' + $rootScope.selectedCompany.uniqueName
+        # url: 'https://angular-file-upload-cors-srv.appspot.com/upload'
+        file: file
+        # data: file: file
+      )
+      file.upload.then ((response) ->
+        console.log response, "success"
+        toastr.success(res.data.body.message, res.data.status)
+        $timeout ->
+          file.result = response.data
+      ), ((response) ->
+        console.log response, "error"
+        if response.status > 0
+          $scope.errorMsg = response.status + ': ' + response.data
+      ), (evt) ->
+        console.log "progress", evt
+        file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
 
-  onSuccess = (data, status) ->
-    console.log "Upload success", data, status
 
   #fire function after page fully loaded
   $scope.$on '$viewContentLoaded', ->
