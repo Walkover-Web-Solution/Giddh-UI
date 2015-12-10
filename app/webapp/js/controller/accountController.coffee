@@ -34,8 +34,6 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.setLedgerData = (data, acData) ->
     $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
-    localStorageService.set("_ledgerData", data)
-    localStorageService.set("_selectedAccount", acData)
 
   $scope.highlightAcMenu = () ->
     url = $location.path().split("/")

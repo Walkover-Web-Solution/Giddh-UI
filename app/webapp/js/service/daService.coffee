@@ -5,7 +5,6 @@ angular.module('giddhWebApp').service 'DAServices', ($resource, $q) ->
   ledgerAccount = {}
 
   DAServices =
-
     LedgerGet: () ->
       {"ledgerData": ledgerData, "selectedAccount": ledgerAccount}
 

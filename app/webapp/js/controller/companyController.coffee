@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService, userServices, Upload) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService, userServices, Upload, DAServices) ->
 
 #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
@@ -147,6 +147,10 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       $scope.selectedCompany.mobileNo = SplitNumber[1]
       $scope.selectedCompany.cCode = SplitNumber[0]
 
+    previousCompany = localStorageService.get("_selectedCompany")
+    if(previousCompany.uniqueName != data.uniqueName)
+      DAServices.LedgerSet(null, null)
+
     localStorageService.set("_selectedCompany", $scope.selectedCompany)
 
     if $scope.canManageUser is true
@@ -157,7 +161,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       $rootScope.nowShowAccounts = true
     else
       $rootScope.$broadcast('$reloadAccount')
-
 
   #update company details
   $scope.updateCompanyInfo = (data) ->

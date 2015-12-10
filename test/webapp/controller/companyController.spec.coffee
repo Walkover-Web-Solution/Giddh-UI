@@ -3,7 +3,7 @@
 describe 'companyController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $modal, modalService, $timeout, permissionService) ->
+  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $modal, modalService, $timeout, permissionService, DAServices) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @currencyService = currencyService
@@ -16,6 +16,7 @@ describe 'companyController', ->
     @q = $q
     @timeout = $timeout
     @localStorageService = localStorageService
+    @DAServices = DAServices
     @companyController = $controller('companyController',
         {
           $scope: @scope,
@@ -28,6 +29,7 @@ describe 'companyController', ->
           modalService: @modalService,
           permissionService: @permissionService
           $timeout: @timeout
+          DAServices: @DAServices
         })
 
   describe '#ifHavePermission', ->
@@ -229,6 +231,9 @@ describe 'companyController', ->
 
       spyOn(@scope, "ifHavePermission")
       spyOn(@scope, "getSharedUserList")
+      spyOn(@localStorageService, "get").andReturn({uniqueName: "some-other-company"})
+      spyOn(@localStorageService, "set")
+      spyOn(@DAServices, "LedgerSet")
 
       @scope.goToCompany(data, index)
       expect(@scope.ifHavePermission).toHaveBeenCalledWith(data)
@@ -236,8 +241,11 @@ describe 'companyController', ->
       expect(@scope.selectedCmpLi).toEqual(index)
       expect(@scope.selectedCompany).toEqual(data)
       expect(@scope.getSharedUserList).toHaveBeenCalledWith("afafafafaf1443520197325007bgo")
+      expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
+      expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)
+      expect(@DAServices.LedgerSet).toHaveBeenCalledWith(null, null)
 
-    it 'should not call getSharedUserList', ->
+    it 'should not call getSharedUserList and DAService', ->
       @scope.canManageUser = false
       data = 
         uniqueName: "afafafafaf1443520197325007bgo"
@@ -247,13 +255,16 @@ describe 'companyController', ->
 
       spyOn(@scope, "ifHavePermission")
       spyOn(@scope, "getSharedUserList")
+      spyOn(@DAServices, "LedgerSet")
+      spyOn(@localStorageService, "get").andReturn({uniqueName: "afafafafaf1443520197325007bgo"})
+
       @scope.goToCompany(data, index)
       expect(@scope.ifHavePermission).toHaveBeenCalledWith(data)
       expect(@scope.cmpViewShow).toBeTruthy()
       expect(@scope.selectedCmpLi).toEqual(index)
       expect(@scope.selectedCompany).toEqual(data)
       expect(@scope.getSharedUserList).not.toHaveBeenCalledWith("afafafafaf1443520197325007bgo")
-
+      expect(@DAServices.LedgerSet).not.toHaveBeenCalledWith(null, null)
 
   describe '#updateCompanyInfo', ->
     it 'should update company data if form is valid', ->

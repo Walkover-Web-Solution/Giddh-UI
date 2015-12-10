@@ -405,14 +405,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.fromDate.date.setDate(1)
     ledgerObj = DAServices.LedgerGet()
 
-    if !_.isEmpty(ledgerObj.ledgerData)
+    if !_.isNull(ledgerObj.ledgerData) or !_.isEmpty(ledgerObj.ledgerData)
       $scope.loadLedger(ledgerObj.ledgerData, ledgerObj.selectedAccount)
     else
-      if !_.isNull(localStorageService.get("_ledgerData"))
-        $scope.loadLedger(localStorageService.get("_ledgerData"), localStorageService.get("_selectedAccount"))
-        # localStorageService.remove(key)
-      else
-        console.log "nothing selected to load"
+      console.log "nothing selected to load"
 
   $scope.hasAddAndUpdatePermission = (account) ->
     permissionService.hasPermissionOn(account, "UPDT") and permissionService.hasPermissionOn(account, "ADD")
