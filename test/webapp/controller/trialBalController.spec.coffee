@@ -121,16 +121,4 @@ describe 'trialBalanceController', ->
         @scope.formatData()
         expect(@scope.formatDataCondensed).toHaveBeenCalled()
         expect(@scope.formatDataAccountWise).toHaveBeenCalled()
-        expect(@scope.formatDataGroupWise).toHaveBeenCalled()  
-
-
-
-
-
-
-
-
-
-
-
-
+        expect(@scope.formatDataGroupWise).toHaveBeenCalled()
