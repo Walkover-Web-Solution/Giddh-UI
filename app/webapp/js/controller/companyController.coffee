@@ -317,7 +317,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   # onSuccess = (data) ->
   #   console.log "Upload success", data
 
-
   # upload by progressbar
   $scope.uploadFiles = (files, errFiles) ->
     $scope.hideBar = false
@@ -326,10 +325,9 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     angular.forEach files, (file) ->
       file.upload = Upload.upload(
         url: '/fileUpload/' + $rootScope.selectedCompany.uniqueName
-        # url: 'https://angular-file-upload-cors-srv.appspot.com/upload'
-        # url: "http://192.168.1.179:9292/giddh-api/company/mayank/import-master"
+#        url: 'https://angular-file-upload-cors-srv.appspot.com/upload'
+#        url: "http://192.168.1.179:9292/giddh-api/company/mayank/import-master"
         file: file
-        # data: file: file
       )
       file.upload.then ((res) ->
         console.log res, "success"
