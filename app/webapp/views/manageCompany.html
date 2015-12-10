@@ -206,24 +206,19 @@
           <h3 class="mrB1">Upload Master Only</h3>
           <form class="form-inline" enctype="multipart/form-data">
             <div class="form-group">
-              <button class="btn btn-primary" ngf-select="uploadFiles($files, $invalidFiles)" accept=".xml" ngf-max-size="25MB">
+              <button type="file" class="btn btn-primary" ngf-select="uploadFiles($files, $invalidFiles)" accept=".xml" ngf-max-size="25MB">
                 <i class="glyphicon glyphicon-folder-open"></i> 
                 &nbsp; Browse</button>
             </div>
           </form>
 
           <div class="mrT2">
-            <!-- ng-bind="f.progress + '%'"  -->
             {{errorMsg}}
             <ul class="ln">
               <li ng-repeat="f in files" style="font:smaller">
                 {{f.name}}
-                {{f.$errorParam}}
-                <div class="progress" ng-show="f.progress >= 0">
-                  <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width:{{f.progress}}%">
-                    <span class="sr-only">{{f.progress}} %</span>
-                  </div>
-                </div>
+                {{f.result}}
+                <progressbar ng-hide="hideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</progressbar>
               </li>
               <li ng-repeat="f in errFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
               </li> 

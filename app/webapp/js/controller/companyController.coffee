@@ -8,6 +8,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $rootScope.cmpViewShow = false
   $rootScope.selectedCompany = {}
   $rootScope.nowShowAccounts = false
+  $scope.hideBar = false
 
   #contains company list
   $scope.companyList = []
@@ -298,27 +299,48 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
     $rootScope.basicInfo.email isnt email.userEmail
 
 
+  # upload file function
+  # $scope.uploadFile = (files, errFiles) ->
+  #   console.log files
+  #   Upload.upload(
+  #     url: '/fileUpload/' + $rootScope.selectedCompany.uniqueName
+  #     arrayKey: '',
+  #     file: files)
+  #   .success (data) ->
+  #     onSuccess(data)
+  #   .error (data, status) ->
+  #     onFailure(data, status)
+
+  # onFailure = (data, status) ->
+  #   console.log "Upload fail", data, status
+
+  # onSuccess = (data) ->
+  #   console.log "Upload success", data
+
+
   # upload by progressbar
   $scope.uploadFiles = (files, errFiles) ->
-    console.log files, errFiles
+    $scope.hideBar = false
     $scope.files = files
     $scope.errFiles = errFiles
     angular.forEach files, (file) ->
       file.upload = Upload.upload(
         url: '/fileUpload/' + $rootScope.selectedCompany.uniqueName
         # url: 'https://angular-file-upload-cors-srv.appspot.com/upload'
+        # url: "http://192.168.1.179:9292/giddh-api/company/mayank/import-master"
         file: file
         # data: file: file
       )
-      file.upload.then ((response) ->
-        console.log response, "success"
+      file.upload.then ((res) ->
+        console.log res, "success"
         toastr.success(res.data.body.message, res.data.status)
         $timeout ->
-          file.result = response.data
-      ), ((response) ->
-        console.log response, "error"
-        if response.status > 0
-          $scope.errorMsg = response.status + ': ' + response.data
+          $scope.hideBar = true
+          file.result = res.data
+      ), ((res) ->
+        console.log res, "error"
+        toastr.error(res.data.message, res.data.status)
+        $scope.errorMsg = res.data.status + ': ' + res.data.message
       ), (evt) ->
         console.log "progress", evt
         file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total))

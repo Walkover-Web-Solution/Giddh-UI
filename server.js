@@ -32,7 +32,7 @@ app.use(cookieParser());
 app.use(settings.express.static(settings.path.join(__dirname, 'public')));
 app.use('/bower_components', settings.express.static(__dirname + '/bower_components'));
 app.use('/public', settings.express.static(__dirname + '/public'));
-
+// app.use(multer({ storage: storage }).single('file'));
 // for session
 app.use(cookieParser());
 app.use(session({
@@ -46,7 +46,18 @@ app.use(session({
   }
 }));
 
+// some global variables
 global.clientIp = "";
+global.mStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/')
+  },
+  filename: function (req, file, cb) {
+    console.log("In Multer")
+    cb(null, Date.now() + '.xml')
+  }
+})
+
 app.use(function (req, res, next) {
   clientIp = requestIp.getClientIp(req);
   res.locales ={
@@ -77,6 +88,7 @@ var appRoutes = require('./public/routes/webapp/main');
 var users = require('./public/routes/webapp/users');
 var roles = require('./public/routes/webapp/roles');
 var trialBalance = require('./public/routes/webapp/trialBal');
+// var upload = require('./public/routes/webapp/upload'); 
 
 app.use('/currency', currency);
 app.use('/users', users);
@@ -87,19 +99,12 @@ app.use('/company/:companyUniqueName/groups', groups);
 app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts', accounts);
 app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
 app.use('/company/:companyUniqueName/trial-balance',trialBalance);
+// app.use('/fileUpload', upload);
 app.use('/', appRoutes);
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './uploads/')
-  },
-  filename: function (req, file, cb) {
-    console.log("In Multer")
-    cb(null, Date.now() + '.xml')
-  }
-})
 
-app.use(multer({ storage: storage }).single('file'));
+
+app.use(multer({ storage: mStorage }).single('file'));
 app.post('/fileUpload/:companyName',function(req,res){
   var url = settings.envUrl+"company/" + req.params.companyName + "/import-master"
   rest.post(url, {
@@ -113,6 +118,9 @@ app.post('/fileUpload/:companyName',function(req,res){
     }
   }).on('complete', function(data) {
     console.log("data is",data);
+    if (data.status === 'error') {
+      res.status(400);
+    }
     res.send(data)
   });
 });
