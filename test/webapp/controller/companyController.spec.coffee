@@ -3,13 +3,13 @@
 describe 'companyController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $modal, modalService, $timeout, permissionService, DAServices) ->
+  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $uibModal, modalService, $timeout, permissionService, DAServices) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @currencyService = currencyService
     @permissionService = permissionService
     @locationService = locationService
-    @modal = $modal
+    @uibModal = $uibModal
     @modalService = modalService
     @toastr = toastr
     @companyServices = companyServices
@@ -75,10 +75,10 @@ describe 'companyController', ->
         scope: @scope
       }
       deferred = @q.defer()
-      spyOn(@modal, 'open').andReturn({result: deferred.promise})
+      spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
 
       @scope.openFirstTimeUserModal()
-      expect(@modal.open).toHaveBeenCalledWith(modalData)
+      expect(@uibModal.open).toHaveBeenCalledWith(modalData)
 
   describe '#onCompanyCreateModalCloseSuccess', ->
     it 'should call create with data passed', ->
