@@ -1,19 +1,41 @@
 settings = require('../util/settings')
+rest = require('restler')
 router = settings.express.Router()
 
-settings.express().use(settings.multer({storage: mStorage }).single('file'));
-router.post '/:companyName', (req, res) ->
+router.post '/:companyName/master', (req, res) ->
+  console.log "Master file is: ", req.file
   url = settings.envUrl + 'company/' + req.params.companyName + '/import-master'
-  settings.rest.post(url,
+  rest.post(url,
     multipart: true
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
-    data: 'datafile': settings.rest.file(req.file.path, null, req.file.size, null, req.file.mimetype))
-  	.on 'complete', (data) ->
-    	console.log 'data is', data
-	    if data.status == 'error'
-	      res.status 400
-	    res.send data
+    data:
+      'datafile': rest.file(req.file.path, req.file.path, req.file.size, null, req.file.mimetype)
+  ).on 'complete', (data) ->
+    console.log 'data is', data
+    return
+  mRes =
+    status: 'Success'
+    body: message: 'Uploaded File is being processed, you can check status later'
+  res.send mRes
+
+router.post '/:companyName/daybook', (req, res) ->
+  console.log "Daybook file is: ", req.file
+  url = settings.envUrl + 'company/' + req.params.companyName + '/import-daybook'
+  rest.post(url,
+    multipart: true
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+    data:
+      'datafile': rest.file(req.file.path, req.file.path, req.file.size, null, req.file.mimetype)
+  ).on 'complete', (data) ->
+    console.log 'data is', data
+    return
+  mRes =
+    status: 'Success'
+    body: message: 'Uploaded File is being processed, you can check status later'
+  res.send mRes
 
 module.exports = router

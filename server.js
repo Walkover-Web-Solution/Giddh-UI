@@ -39,9 +39,7 @@ app.use(cookieParser());
 app.use(settings.express.static(settings.path.join(__dirname, 'public')));
 app.use('/bower_components', settings.express.static(__dirname + '/bower_components'));
 app.use('/public', settings.express.static(__dirname + '/public'));
-// app.use(multer({ storage: storage }).single('file'));
-// for session
-app.use(cookieParser());
+
 app.use(session({
   secret: "keyboardcat",
   name: "userVerified",
@@ -55,16 +53,6 @@ app.use(session({
 
 // some global variables
 global.clientIp = "";
-global.mStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './uploads/')
-  },
-  filename: function (req, file, cb) {
-    console.log("In Multer")
-    cb(null, Date.now() + '.xml')
-  }
-})
-
 app.use(function (req, res, next) {
   clientIp = requestIp.getClientIp(req);
   res.locales = {
@@ -84,6 +72,17 @@ var websiteRoutes = require('./public/routes/website/main');
 app.use('/auth', login);
 app.use('/contact', contact);
 app.use('/', websiteRoutes);
+var mStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/')
+  },
+  filename: function (req, file, cb) {
+    console.log("In Multer")
+    cb(null, Date.now() + '.xml')
+  }
+})
+
+var parseUploads = multer({storage: mStorage}).single('file');
 
 var currency = require('./public/routes/webapp/currency');
 var location = require('./public/routes/webapp/location');
@@ -95,7 +94,7 @@ var appRoutes = require('./public/routes/webapp/main');
 var users = require('./public/routes/webapp/users');
 var roles = require('./public/routes/webapp/roles');
 var trialBalance = require('./public/routes/webapp/trialBal');
-// var upload = require('./public/routes/webapp/upload'); 
+var upload = require('./public/routes/webapp/upload');
 
 app.use('/currency', currency);
 app.use('/users', users);
@@ -106,55 +105,8 @@ app.use('/company/:companyUniqueName/groups', groups);
 app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts', accounts);
 app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
 app.use('/company/:companyUniqueName/trial-balance', trialBalance);
-// app.use('/fileUpload', upload);
+app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
-
-app.use(multer({storage: mStorage}).single('file'));
-app.post('/fileUploadMaster/:companyName', function (req, res) {
-  var url = settings.envUrl + "company/" + req.params.companyName + "/import-master"
-  rest.post(url, {
-    multipart: true,
-    headers: {
-      'Auth-Key': req.session.authKey,
-      'X-Forwarded-For': res.locales.remoteIp
-    },
-    data: {
-      'datafile': rest.file(req.file.path, req.file.path, req.file.size, null, req.file.mimetype)
-    }
-  }).on('complete', function (data) {
-    console.log("data is", data);
-  });
-  var mRes = {
-    status: "Success",
-    body:{ 
-      message: 'Uploaded File is being processed, you can check status later'
-    }
-  }
-  res.send(mRes)
-});
-
-app.post('/fileUploadDaybook/:companyName', function (req, res) {
-  var url = settings.envUrl + "company/" + req.params.companyName + "/import-daybook"
-  rest.post(url, {
-    multipart: true,
-    headers: {
-      'Auth-Key': req.session.authKey,
-      'X-Forwarded-For': res.locales.remoteIp
-    },
-    data: {
-      'datafile': rest.file(req.file.path, req.file.path, req.file.size, null, req.file.mimetype)
-    }
-  }).on('complete', function (data) {
-    console.log("data is", data);
-  });
-  var mRes = {
-    status: "Success",
-    body:{ 
-      message: 'Uploaded File is being processed, you can check status later'
-    }
-  }
-  res.send(mRes)
-});
 
 app.listen(port, function () {
   console.log('Express Server running at port', this.address().port);
