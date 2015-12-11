@@ -201,31 +201,63 @@
     </tab>
     <!-- end of second tab ng-if="canManageUser" -->
     <tab heading="Upload XML">
-      <div class="pd2">
-        <div class="greyBox mrB2">
-          <h3 class="mrB1">Upload Master Only</h3>
-          <form class="form-inline" enctype="multipart/form-data">
-            <div class="form-group">
-              <button type="file" class="btn btn-primary" ngf-select="uploadFiles($files, $invalidFiles)" accept=".xml" ngf-max-size="25MB">
-                <i class="glyphicon glyphicon-folder-open"></i> 
-                &nbsp; Browse</button>
+      <div class="row">
+        <div class="col-md-6 col-sm-6">
+          <div class="pd2">
+            <div class="greyBox mrB2">
+              <h3 class="mrB1">Upload Master Only</h3>
+              <form class="form-inline" enctype="multipart/form-data">
+                <div class="form-group">
+                  <button type="file" class="btn btn-primary" ngf-select="uploadFiles($files, $invalidFiles)" accept=".xml" ngf-max-size="25MB">
+                    <i class="glyphicon glyphicon-folder-open"></i> 
+                    &nbsp; Browse</button>
+                </div>
+              </form>
             </div>
-          </form>
-
-          <div class="mrT2">
-            {{errorMsg}}
-            <ul class="ln">
-              <li ng-repeat="f in files" style="font:smaller">
-                {{f.name}}
-                {{f.result}}
-                <progressbar ng-hide="hideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</progressbar>
-              </li>
-              <li ng-repeat="f in errFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
-              </li> 
-            </ul>
+            <div class="">
+              {{errorMsg}}
+              <ul class="ln">
+                <li ng-repeat="f in files" style="font:smaller">
+                  {{f.name}}
+                  {{f.result}}
+                  <progressbar ng-hide="hideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</progressbar>
+                </li>
+                <li ng-repeat="f in errFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
+                </li> 
+              </ul>
+            </div>
+            <!-- end mrT -->
           </div>
-          <!-- end mrT -->
         </div>
+        <!-- end of first sec -->
+        <div class="col-md-6 col-sm-6">
+          <div class="pd2">
+            <div class="greyBox mrB2">
+              <h3 class="mrB1">Upload Devbook Only</h3>
+              <form class="form-inline" enctype="multipart/form-data">
+                <div class="form-group">
+                  <button type="file" class="btn btn-primary" ngf-select="uploadFiles($files, $invalidFiles)" accept=".xml" ngf-max-size="25MB">
+                    <i class="glyphicon glyphicon-folder-open"></i> 
+                    &nbsp; Browse</button>
+                </div>
+              </form>
+            </div>
+            <div class="">
+              {{errorMsg}}
+              <ul class="ln">
+                <li ng-repeat="f in files" style="font:smaller">
+                  {{f.name}}
+                  {{f.result}}
+                  <progressbar ng-hide="hideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</progressbar>
+                </li>
+                <li ng-repeat="f in errFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
+                </li> 
+              </ul>
+            </div>
+            <!-- end mrT -->
+          </div>
+        </div>
+        <!-- end of second grid -->
       </div>
     </tab>
   </tabset>

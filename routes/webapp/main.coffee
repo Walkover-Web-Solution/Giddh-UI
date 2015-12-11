@@ -24,17 +24,5 @@ router.post '/logout', (req, res) ->
   req.session.destroy()
   res.json status: 'success'
 
-# router.post '/fileUpload/:companyName', (req, res) ->
-#   url = settings.envUrl + 'company/' + req.params.companyName + '/import-master'
-#   rest.post(url,
-#     multipart: true
-#     headers:
-#       'Auth-Key': req.session.authKey
-#       'X-Forwarded-For': res.locales.remoteIp
-#     data: 'datafile': rest.file(req.file.path, null, req.file.size, null, req.file.mimetype)).on 'complete', (data) ->
-#     console.log 'data is', data
-#     if data.status == 'error'
-#       res.status 400
-#     res.send data
 
 module.exports = router
