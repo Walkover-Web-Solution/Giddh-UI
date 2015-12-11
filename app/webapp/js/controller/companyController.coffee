@@ -9,6 +9,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $rootScope.selectedCompany = {}
   $rootScope.nowShowAccounts = false
   $scope.hideBar = false
+  $scope.showUpdTbl = false
 
   #contains company list
   $scope.companyList = []
@@ -301,6 +302,16 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.exceptOwnEmail = (email) ->
     $rootScope.basicInfo.email isnt email.userEmail
 
+  $scope.getUploadsList = ->
+    companyServices.getUploadsList($scope.selectedCompany.uniqueName).then($scope.getUploadsListSuccess, $scope.getUploadsListFailure)
+
+  $scope.getUploadsListSuccess = (res) ->
+    $scope.showUpdTbl = true
+    console.log "getUploadsListSuccess", res
+    $scope.updlist = res.body
+
+  $scope.getUploadsListFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   # upload file function
   # $scope.uploadFile = (files, errFiles) ->

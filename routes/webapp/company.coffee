@@ -39,8 +39,17 @@ router.put '/:uniqueName', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.get '/:uniqueName', (req, res) ->
-  console.log req.params.uniqueName
+router.get '/:uniqueName/imports', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.uniqueName+ '/imports'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
 
 router.post '/', (req, res) ->
   hUrl = settings.envUrl + 'company/'
