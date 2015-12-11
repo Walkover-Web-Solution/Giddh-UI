@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService, userServices, uploadService, $upload) ->
+companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService, userServices, Upload, DAServices) ->
 
 #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
@@ -8,6 +8,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $rootScope.cmpViewShow = false
   $rootScope.selectedCompany = {}
   $rootScope.nowShowAccounts = false
+  $scope.hideBar = false
 
   #contains company list
   $scope.companyList = []
@@ -146,6 +147,10 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       $scope.selectedCompany.mobileNo = SplitNumber[1]
       $scope.selectedCompany.cCode = SplitNumber[0]
 
+    previousCompany = localStorageService.get("_selectedCompany")
+    if(previousCompany.uniqueName != data.uniqueName)
+      DAServices.LedgerSet(null, null)
+
     localStorageService.set("_selectedCompany", $scope.selectedCompany)
 
     if $scope.canManageUser is true
@@ -156,7 +161,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       $rootScope.nowShowAccounts = true
     else
       $rootScope.$broadcast('$reloadAccount')
-
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
@@ -196,7 +200,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   $scope.getState = (val) ->
     locationService.searchState(val, $rootScope.selectedCompany.country).then($scope.onGetStateSuccess,
-        $scope.onGetStateFailure)
+      $scope.onGetStateFailure)
 
   $scope.onGetStateSuccess = (data) ->
     filterThis = data.results.filter (i) -> i.types[0] is "administrative_area_level_1"
@@ -209,7 +213,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   $scope.getCity = (val) ->
     locationService.searchCity(val, $rootScope.selectedCompany.state).then($scope.onGetCitySuccess,
-        $scope.onGetCityFailure)
+      $scope.onGetCityFailure)
 
   $scope.onGetCitySuccess = (data) ->
     filterThis = data.results.filter (i) -> i.types[0] is "locality"
@@ -241,7 +245,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.updateUserRole = (role, userEmail) ->
     sData = {role: role, user: userEmail}
     companyServices.share($scope.selectedCompany.uniqueName, sData).then($scope.onShareCompanySuccess,
-        $scope.onShareCompanyFailure)
+      $scope.onShareCompanyFailure)
 
   #share and manage permission in manage company
   $scope.shareCompanyWithUser = () ->
@@ -249,7 +253,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
       toastr.error("You cannot add yourself.", "Error")
       return
     companyServices.share($scope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess,
-        $scope.onShareCompanyFailure)
+      $scope.onShareCompanyFailure)
 
   $scope.onShareCompanySuccess = (res) ->
     $scope.shareRequest = {}
@@ -285,7 +289,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.unSharedUser = (uNqame, id) ->
     data = {user: uNqame}
     companyServices.unSharedComp($scope.selectedCompany.uniqueName, data).then($scope.unSharedCompSuccess,
-        $scope.unSharedCompFailure)
+      $scope.unSharedCompFailure)
 
   $scope.unSharedCompSuccess = (res) ->
     toastr.success("Company unshared successfully", "Success")
@@ -297,21 +301,51 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
   $scope.exceptOwnEmail = (email) ->
     $rootScope.basicInfo.email isnt email.userEmail
 
+
   # upload file function
-  $scope.uploadFile = (file) ->
-    $upload.upload(
-      url: '/fileUpload'
-      file: file[0])
-    .success (data) ->
-      onSuccess(data)
-    .error (data, status) ->
-      onFailure(data, status)
+  # $scope.uploadFile = (files, errFiles) ->
+  #   console.log files
+  #   Upload.upload(
+  #     url: '/fileUpload/' + $rootScope.selectedCompany.uniqueName
+  #     arrayKey: '',
+  #     file: files)
+  #   .success (data) ->
+  #     onSuccess(data)
+  #   .error (data, status) ->
+  #     onFailure(data, status)
 
-  onFailure = (data, status) ->
-    console.log "Upload fail", data, status
+  # onFailure = (data, status) ->
+  #   console.log "Upload fail", data, status
 
-  onSuccess = (data, status) ->
-    console.log "Upload success", data, status
+  # onSuccess = (data) ->
+  #   console.log "Upload success", data
+
+  # upload by progressbar
+  $scope.uploadFiles = (files, errFiles) ->
+    $scope.hideBar = false
+    $scope.files = files
+    $scope.errFiles = errFiles
+    angular.forEach files, (file) ->
+      file.upload = Upload.upload(
+        url: '/fileUpload/' + $rootScope.selectedCompany.uniqueName
+#        url: 'https://angular-file-upload-cors-srv.appspot.com/upload'
+#        url: "http://192.168.1.179:9292/giddh-api/company/mayank/import-master"
+        file: file
+      )
+      file.upload.then ((res) ->
+        console.log res, "success"
+        toastr.success(res.data.body.message, res.data.status)
+        $timeout ->
+          $scope.hideBar = true
+          file.result = res.data
+      ), ((res) ->
+        console.log res, "error"
+        toastr.error(res.data.message, res.data.status)
+        $scope.errorMsg = res.data.status + ': ' + res.data.message
+      ), (evt) ->
+        console.log "progress", evt
+        file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
+
 
   #fire function after page fully loaded
   $scope.$on '$viewContentLoaded', ->
@@ -321,17 +355,3 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
 #init angular app
 angular.module('giddhWebApp').controller 'companyController', companyController
-
-angular.module('giddhWebApp').directive 'fileModel', [
-  '$rootScope','$parse', '$compile'
-  ($rootScope, $parse, $compile) ->
-    {
-      restrict: 'A'
-      link: (scope, element, attrs) ->
-        model = $parse(attrs.fileModel)
-        modelSetter = model.assign
-        element.bind 'change', ->
-          scope.$apply ->
-            modelSetter($rootScope, element[0].files[0])
-    }
-]

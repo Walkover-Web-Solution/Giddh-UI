@@ -18,37 +18,13 @@ app = angular.module("giddhWebApp",
     "ui.router"
     "vAccordion"
     "trialBalance"
-    'angularFileUpload'
+    'ngFileUpload'
   ]
 )
 
 app.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
 
-# app.config ($locationProvider, $routeProvider) ->
-#   $locationProvider.html5Mode({
-#     enabled: false,
-#     requireBase: false
-#   })
-#   $routeProvider
-#   .when('/home',
-#     controller: 'companyController',
-#     templateUrl: '/public/webapp/views/home.html',
-#     firstTimeUser: false
-#   )
-#   .when('/thankyou',
-#     controller: 'thankyouController',
-#     templateUrl: '/public/webapp/views/thanks.html'
-#   )
-#   .when('/ledger',
-#     controller: 'ledgerController',
-#     templateUrl: '/public/webapp/views/ledger.html'
-#   )
-#   .when('/user',
-#     controller: 'userController',
-#     templateUrl: '/public/webapp/views/userDetails.html'
-#   )
-#   .otherwise redirectTo: '/home'
 
 app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   $urlRouterProvider.otherwise('/home')
@@ -79,19 +55,8 @@ app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl:'/public/webapp/views/trialBalance.html',
     controller:'trialBalanceController'
     )
-  # .state('transaction-card-details',
-  #   url:'/transaction-card-details',
-  #   templateUrl:'/public/webapp/views/cardDetails.html',
-  #   controller:'trialBalanceController'
-  #   )
-  # .state('ledger.accounts',
-  #   url:'',
-  #   templateUrl:'/public/webapp/views/accounts.html'
-  #   )
   $locationProvider.html5Mode(false)
   return
-
-
 
 app.run [
   '$rootScope'
@@ -144,3 +109,4 @@ app.value('$confirmModalDefaults',
 #perfect_scrollbar - https://github.com/noraesae/perfect-scrollbar
 #toastr = https://github.com/Foxandxss/angular-toastr
 #angular filter - https://github.com/a8m/angular-filter#filterby
+#file upload - https://github.com/danialfarid/ng-file-upload

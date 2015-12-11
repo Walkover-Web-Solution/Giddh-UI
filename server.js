@@ -9,7 +9,8 @@ var engines = require('consolidate');
 var request = require('request');
 var cors = require('cors')
 var requestIp = require('request-ip');
-var multer   =  require('multer');
+var multer = require('multer');
+var rest = require('restler');
 
 var app = settings.express();
 
@@ -31,7 +32,7 @@ app.use(cookieParser());
 app.use(settings.express.static(settings.path.join(__dirname, 'public')));
 app.use('/bower_components', settings.express.static(__dirname + '/bower_components'));
 app.use('/public', settings.express.static(__dirname + '/public'));
-
+// app.use(multer({ storage: storage }).single('file'));
 // for session
 app.use(cookieParser());
 app.use(session({
@@ -45,10 +46,21 @@ app.use(session({
   }
 }));
 
+// some global variables
 global.clientIp = "";
+global.mStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, './uploads/')
+  },
+  filename: function (req, file, cb) {
+    console.log("In Multer")
+    cb(null, Date.now() + '.xml')
+  }
+})
+
 app.use(function (req, res, next) {
   clientIp = requestIp.getClientIp(req);
-  res.locales ={
+  res.locales = {
     "siteTitle": "Giddh ~ Accounting at its Rough!",
     "author": "The Mechanic",
     "description": "Giddh App description",
@@ -76,6 +88,7 @@ var appRoutes = require('./public/routes/webapp/main');
 var users = require('./public/routes/webapp/users');
 var roles = require('./public/routes/webapp/roles');
 var trialBalance = require('./public/routes/webapp/trialBal');
+// var upload = require('./public/routes/webapp/upload'); 
 
 app.use('/currency', currency);
 app.use('/users', users);
@@ -85,40 +98,26 @@ app.use('/company', company);
 app.use('/company/:companyUniqueName/groups', groups);
 app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts', accounts);
 app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
-app.use('/company/:companyUniqueName/trial-balance',trialBalance);
+app.use('/company/:companyUniqueName/trial-balance', trialBalance);
+// app.use('/fileUpload', upload);
 app.use('/', appRoutes);
 
-
-
-app.use(multer({ dest: './uploads/'}).single('file'));
-app.post('/fileUpload',function(req,res){
-  
-
-  var formData = {
-    // Pass a simple key-value pair 
-    my_field: req.file.fieldname,
-    datafile: fs.createReadStream(__dirname + '/' +req.file.path),
-    // Pass multiple values /w an Array 
-    attachments: [
-      fs.createReadStream(__dirname + '/' +req.file.path)
-    ]
-  };
-  var options = {
-    url: settings.envUrl + 'company/sarfarindore14495779180320lr79h/import-master',
+app.use(multer({storage: mStorage}).single('file'));
+app.post('/fileUpload/:companyName', function (req, res) {
+  var url = settings.envUrl + "company/" + req.params.companyName + "/import-master"
+  rest.post(url, {
+    multipart: true,
     headers: {
       'Auth-Key': req.session.authKey,
       'X-Forwarded-For': res.locales.remoteIp
     },
-    formData: formData
-  };
-
-  request.post(options, function optionalCallback(err, httpResponse, body) {
-    if (err) {
-      return console.error('upload failed:', err);
+    data: {
+      'datafile': rest.file(req.file.path, req.file.path, req.file.size, null, req.file.mimetype)
     }
-    res.send(body)
-    console.log('Upload successful!  Server responded with:', body);
+  }).on('complete', function (data) {
+    console.log("data is", data);
   });
+  res.send("Upload in process")
 });
 
 app.listen(port, function () {
@@ -152,7 +151,7 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function (err, req, res, next) {
-  console.log (err, "error")
+  console.log(err, "error")
   res.status(err.status || 500);
   var filePath = __dirname + '/public/website/views/error';
   res.render(filePath, {
