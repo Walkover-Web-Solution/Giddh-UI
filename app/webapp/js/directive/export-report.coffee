@@ -31,20 +31,34 @@ angular.module('trialBalance', []).directive('exportReport', [
                   'href': scope.uriGroupWise
                   'download': scope.fnGroupWise
               else
-                win = window.open("text/html", "replace")
-                win.document.write(scope.csvGW)
+                win = window.open()
+                win.document.write('sep=,\r\n',scope.csvGW)
                 win.document.close()
                 win.document.execCommand('SaveAs',true, scope.fnGroupWise + ".csv")
                 win.close()
 
             when 'condensed'
-              elem.attr
-                'href': scope.uriCondensed
-                'download': scope.fnCondensed
+              if !isIE
+                elem.attr
+                  'href': scope.uriCondensed
+                  'download': scope.fnCondensed
+              else
+                win = window.open()
+                win.document.write('sep=,\r\n',scope.csvCond)
+                win.document.close()
+                win.document.execCommand('SaveAs',true, scope.fnCondensed + ".csv")
+                win.close()
             when 'account-wise'
-              elem.attr
-                'href': scope.uriAccountWise
-                'download': scope.fnAccountWise
+              if !isIE
+                elem.attr
+                  'href': scope.uriAccountWise
+                  'download': scope.fnAccountWise
+              else
+                win = window.open()
+                win.document.write('sep=,\r\n',scope.csvAW)
+                win.document.close()
+                win.document.execCommand('SaveAs',true, scope.fnAccountWise + ".csv")
+                win.close()
           e.stopPropagation()
 
     }

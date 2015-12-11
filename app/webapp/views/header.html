@@ -3,8 +3,8 @@
     <div class="container-fluid">
 
       <ul class="nav navbar-nav">
-        <li dropdown style="margin-left:-15px;">
-          <a href id="page-dropdown" dropdown-toggle>
+        <li uib-dropdown style="margin-left:-15px;">
+          <a href id="page-dropdown" uib-dropdown-toggle>
             <i class="gic-24 icon-menu-w"></i>
           </a>
           <ul id="topMenusBar" class="dropdown-menu" aria-labelledby="page-dropdown">
@@ -75,13 +75,14 @@
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-        <li dropdown>
+        <li uib-dropdown
+          tooltip-placement="left" 
+          uib-tooltip="{{selectedCompany.name}}"
+        >
           <a  
             href
-            tooltip-placement="left" 
-            tooltip="{{selectedCompany.name}}"
             id="user-dropdown" 
-            dropdown-toggle
+            uib-dropdown-toggle
           >
             <i class="glyphicon glyphicon-user"></i> <span class="caret"></span></a>
           <ul class="dropdown-menu" aria-labelledby="user-dropdown">

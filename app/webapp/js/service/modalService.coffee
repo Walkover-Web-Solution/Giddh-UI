@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('giddhWebApp').service('modalService',
-  ($modal, $confirmModalDefaults) ->
+  ($uibModal, $confirmModalDefaults) ->
     modalService =
       openConfirmModal: (data, settings) ->
         settings = angular.extend($confirmModalDefaults, settings or {})
@@ -11,10 +11,10 @@ angular.module('giddhWebApp').service('modalService',
         settings.resolve =
           data: () ->
             data
-        $modal.open(settings).result
+        $uibModal.open(settings).result
 
       openManageGroupsModal: () ->
-        $modal.open(
+        $uibModal.open(
           templateUrl: '/public/webapp/views/addManageGroupModal.html'
           size: "liq90"
           backdrop: 'static'

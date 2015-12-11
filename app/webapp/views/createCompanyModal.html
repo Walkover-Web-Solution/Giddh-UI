@@ -15,7 +15,7 @@
       <div class="form-group"
            ng-class="(createCompForm.city.$valid  && createCompForm.city.$touched) ? 'has-success' : (createCompForm.city.$touched) ? 'has-error' : '' ">
 
-        <input type="text" ng-model="company.city" typeahead="address for address in getOnlyCity($viewValue)"
+        <input type="text" ng-model="company.city" uib-typeahead="address for address in getOnlyCity($viewValue)"
                typeahead-loading="loadingLocationsOnlyCt" typeahead-no-results="noResultsOnlyCt" class="form-control"
                name="city" autocomplete="off" required maxlength="50" placeholder="Company City">
         <i ng-show="loadingLocationsOnlyCt" class="glyphicon glyphicon-refresh"></i>

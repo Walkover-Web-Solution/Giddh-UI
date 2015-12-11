@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService, userServices, Upload, DAServices) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService, userServices, Upload, DAServices) ->
 
 #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
@@ -19,7 +19,7 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   #dialog for first time user
   $scope.openFirstTimeUserModal = () ->
-    modalInstance = $modal.open(
+    modalInstance = $uibModal.open(
       templateUrl: '/public/webapp/views/createCompanyModal.html',
       size: "sm",
       backdrop: 'static',

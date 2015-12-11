@@ -136,7 +136,7 @@
                   <a ng-repeat="(key,value) in groupAccntList | filter:accountsSearch track by $index"
                      href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)"
                      class="list-group-item" ng-class="{'active': selectedAccntMenu === value}">
-                    <h4 tooltip-placement="bottom" tooltip="{{value.pName[0]}}" class="list-group-item-heading">
+                    <h4 tooltip-placement="bottom" uib-tooltip="{{value.pName[0]}}" class="list-group-item-heading">
                       {{value.name}}</h4>
                   </a>
                 </div>
@@ -152,7 +152,7 @@
                    href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)"
                    class="list-group-item" ng-if="value.parentGroups[0].name!=selectedGroup.name"
                    ng-class="{'active': selectedAccntMenu === value}">
-                  <h4 tooltip-placement="bottom" tooltip="{{value.parentGroups[0].name}}"
+                  <h4 tooltip-placement="bottom" uib-tooltip="{{value.parentGroups[0].name}}"
                       class="list-group-item-heading ellp max200">{{value.name}}</h4>
                 </a>
               </div>

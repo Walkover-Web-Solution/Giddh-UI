@@ -69,7 +69,7 @@
 
         <div class="form-group">
           <input ng-model="moveto" type="text" placeholder="Group name" class="form-control" required
-            typeahead="groups as groups.name for groups in flattenGroupList | 
+            uib-typeahead="groups as groups.name for groups in flattenGroupList | 
             omit: isChildGroup | filter:{name: $viewValue}"/>
         </div>
         <div class="form-group">

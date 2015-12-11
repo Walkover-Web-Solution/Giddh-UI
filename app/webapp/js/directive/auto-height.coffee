@@ -164,7 +164,7 @@ angular.module('ledger', [])
                   tabindex='-1'  class='nobdr ledgInpt' required
                   name='trnsName_{{index}}'
                   ng-model='item.transactions[0].particular'
-                  typeahead='obj as obj.name for obj in aclist | filter:$viewValue | limitTo:8'
+                  uib-typeahead='obj as obj.name for obj in aclist | filter:$viewValue | limitTo:8'
                   class='form-control' autocomplete='off'
                   typeahead-no-results='noResults'
                   typeahead-on-select='addCrossFormField($item, $model, $label)'>

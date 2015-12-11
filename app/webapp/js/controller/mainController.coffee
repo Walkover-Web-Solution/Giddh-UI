@@ -1,6 +1,6 @@
 "use strict"
 
-mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageService, toastr, locationService, modalService, roleServices) ->
+mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices) ->
   $rootScope.showLedgerBox = false
   $rootScope.basicInfo = {}
   $scope.logout = ->

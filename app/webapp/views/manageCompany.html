@@ -1,6 +1,6 @@
 <div class="">
-  <tabset justified="true">
-    <tab heading="Basic Information">
+  <uib-tabset justified="true">
+    <uib-tab heading="Basic Information">
       <div class="pd2">
         <form id="cmpnyBascFrm" name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
           <p ng-hide="cmpnyBascFrm.$submitted || !ecmpnyBascFrm.cCountry.$invalid" class="bg-warning pd1 mrB1">
@@ -37,7 +37,7 @@
                     <input type="hidden" ng-model="selectedCompany.contactNo">
 
                     <input type="text" ng-model="selectedCompany.cCode"
-                           typeahead="country as country.value for country in countryCodesList | filter:$viewValue | limitTo:8"
+                           uib-typeahead="country as country.value for country in countryCodesList | filter:$viewValue | limitTo:8"
                            class="form-control" typeahead-template-url="cityTemplate.html" placeholder="91"/>
 
                   </div>
@@ -60,7 +60,7 @@
                    ng-class="(cmpnyBascFrm.cCountry.$valid  && cmpnyBascFrm.cCountry.$touched) ? 'has-success' : (cmpnyBascFrm.cCountry.$touched) ? 'has-error' : '' ">
                 <label>Country</label>
                 <input type="text" ng-model="selectedCompany.country"
-                       typeahead="address for address in getCountry($viewValue)" typeahead-loading="loadingLocationsC"
+                       uib-typeahead="address for address in getCountry($viewValue)" typeahead-loading="loadingLocationsC"
                        typeahead-no-results="noResultsC" class="form-control" name="cCountry" autocomplete="off"
                        tabindex="5" required>
                 <i ng-show="loadingLocationsC" class="glyphicon glyphicon-refresh"></i>
@@ -74,7 +74,7 @@
                    ng-class="(cmpnyBascFrm.cState.$valid  && cmpnyBascFrm.cState.$touched) ? 'has-success' : (cmpnyBascFrm.cState.$touched) ? 'has-error' : '' ">
                 <label>State</label>
                 <input type="text" ng-model="selectedCompany.state"
-                       typeahead="address for address in getState($viewValue)" typeahead-loading="loadingLocationsS"
+                       uib-typeahead="address for address in getState($viewValue)" typeahead-loading="loadingLocationsS"
                        typeahead-no-results="noResultsS" class="form-control" name="cState" autocomplete="off"
                        tabindex="6" ng-disabled="cmpnyBascFrm.cCountry.$invalid" required>
                 <i ng-show="loadingLocationsS" class="glyphicon glyphicon-refresh"></i>
@@ -88,7 +88,7 @@
                    ng-class="(cmpnyBascFrm.cCity.$valid  && cmpnyBascFrm.cCity.$touched) ? 'has-success' : (cmpnyBascFrm.cCity.$touched) ? 'has-error' : '' ">
                 <label>City</label>
                 <input type="text" ng-model="selectedCompany.city"
-                       typeahead="address for address in getCity($viewValue)" typeahead-loading="loadingLocationsCt"
+                       uib-typeahead="address for address in getCity($viewValue)" typeahead-loading="loadingLocationsCt"
                        typeahead-no-results="noResultsCt" class="form-control" name="cCity" autocomplete="off"
                        tabindex="7" ng-disabled="cmpnyBascFrm.cState.$invalid" required>
                 <i ng-show="loadingLocationsCt" class="glyphicon glyphicon-refresh"></i>
@@ -105,7 +105,7 @@
                     <label>Currency</label>
                     <input type="text" ng-model="selectedCompany.baseCurrency" class="form-control"
                            ng-model="currencySelected"
-                           typeahead="currency for currency in currencyList | filter:$viewValue | limitTo:4" required
+                           uib-typeahead="currency for currency in currencyList | filter:$viewValue | limitTo:4" required
                            name="cCurrency" autocomplete="off" tabindex="8">
 
                   </div>
@@ -131,10 +131,10 @@
         </form>
         <!-- end of change basic info -->
       </div>
-    </tab>
+    </uib-tab>
     <!-- basic information tab end here -->
 
-    <tab ng-if="canManageUser" heading="Permission">
+    <uib-tab ng-if="canManageUser" heading="Permission">
       <div class="pd2">
         <div class="greyBox mrB2">
           <form name="addShareEmailForm" novalidate class="form-inline">
@@ -198,9 +198,9 @@
         </ul>
 
       </div>
-    </tab>
+    </uib-tab>
     <!-- end of second tab ng-if="canManageUser" -->
-    <tab heading="Upload XML">
+    <uib-tab heading="Upload XML">
       <div class="pd2">
         <div class="greyBox mrB2">
           <h3 class="mrB1">Upload Master Only</h3>
@@ -227,6 +227,6 @@
           <!-- end mrT -->
         </div>
       </div>
-    </tab>
-  </tabset>
+    </uib-tab>
+  </uib-tabset>
 </div>

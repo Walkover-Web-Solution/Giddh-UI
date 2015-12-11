@@ -31,17 +31,19 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
 
   $scope.getDefaultDate = ->
     date = undefined
-    mm = '04'
-    dd = '01'
+    mm = '01'
+    dd = '04'
     year = moment().get('year')
     currentMonth = moment().get('month') + 1
     getDate = ->
       if currentMonth >= 4
-        date = dd + '-' + mm + '-' + year
+        dateStr = dd + '-' + mm + '-' + year
+        date = Date.parse(dateStr.replace(/-/g,"/"))
       else
         year -= 1
-        date = dd + '-' + mm + '-' + year
-      date
+        dateStr = dd + '-' + mm + '-' + year
+        date = Date.parse(dateStr.replace(/-/g,"/"))
+      date  
     {date: getDate()}
 
   $scope.fromDate = {
@@ -69,7 +71,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
 
   $scope.filterBydate = () ->
     dateObj =
-      'fromDate': $scope.getDefaultDate().date
+      'fromDate': $filter('date')($scope.getDefaultDate().date,'dd-MM-yyyy')
       'toDate': $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
     $scope.expanded = false
 
@@ -87,10 +89,10 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       else
         $scope.expanded = false
     ), 100
-
+    console.log trialBalanceController.accordion 
   $scope.$on '$viewContentLoaded', ->
     dateObj = {
-      'fromDate': $scope.getDefaultDate().date
+      'fromDate': $filter('date')($scope.getDefaultDate().date,'dd-MM-yyyy')
       'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
     }
     $scope.getTrialBal(dateObj)
@@ -133,6 +135,8 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
 
     csv += row + '\r\n';
     csv += '\r\n' + 'Total' + ',' + $scope.data.forwardedBalance.amount + ',' + $scope.data.debitTotal + ',' + $scope.data.creditTotal + ',' + $scope.data.closingBalance.amount + '\n'
+
+    $scope.csvGW = csv
 
     $scope.uriGroupWise = 'data:text/csv;charset=utf-8,' + escape(csv)
     $scope.showOptions = true
@@ -227,6 +231,8 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     createCsv(accounts)
 
     csv = header + '\r\n\r\n' + title + '\r\n' + body + footer
+
+    $scope.csvAW = csv
 
     $scope.uriAccountWise = 'data:text/csv;charset=utf-8,' + escape(csv)
     $scope.showOptions = true
@@ -332,6 +338,8 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       csv = header + '\r\n\r\n' + title + '\r\n' + body + '\r\n' + footer + '\r\n'
     createCsv(groupData)
 
+    $scope.csvCond = csv
+
     $scope.uriCondensed = 'data:text/csv;charset=utf-8,' + escape(csv)
     $scope.showOptions = true
     e.stopPropagation()
@@ -346,10 +354,13 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       $scope.showOptions = false
     ), 100
     e.stopPropagation()
-
+    
   $(document).on 'click', (e) ->
     $timeout (->
       $scope.showOptions = false
     ), 100
+
+  $scope.addData = ->
+    $scope.showChildren = true
 
 angular.module('giddhWebApp').controller 'trialBalanceController', trialBalanceController
