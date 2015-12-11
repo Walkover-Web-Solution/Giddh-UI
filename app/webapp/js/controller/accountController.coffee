@@ -39,7 +39,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     url = $location.path().split("/")
     if url[1] is "ledger"
       $timeout ->
-        acEle = document.getElementById("ac_"+url[2])
+        acEle = document.getElementById("ac_" + url[2])
         if acEle is null
           return false
         parentSib = acEle.parentElement.previousElementSibling
