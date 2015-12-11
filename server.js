@@ -87,6 +87,10 @@ app.get('/terms', function(req, res, next) {
 app.get('/why-giddh', function(req, res, next) {
   res.sendFile("whyGiddh.html", options1);
 });
+app.get('/google87e474bb481dae55', function(req, res) {
+  return res.sendFile('google87e474bb481dae55.html', options1);
+});
+
 /*
  |--------------------------------------------------------------------------
  | Submit contact form in hubspot
