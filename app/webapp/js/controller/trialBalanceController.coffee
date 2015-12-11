@@ -115,7 +115,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     title = '' + ',' + 'Opening Balance' + ',' + 'Debit' + ',' + 'Credit' + ',' + 'Closing Balance' + '\n'
     $scope.fnGroupWise = "Trial_Balance.csv"
     companyDetails = $rootScope.selectedCompany
-    header = companyDetails.name + '\r\n' + companyDetails.address + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'CIN: U72400MP2010PTC023806' + '\r\n' + 'Trial Balance' + ': ' + $scope.fromDate.date + ' to ' + $filter('date')($scope.toDate.date,
+    header = companyDetails.name + '\r\n' + '"'+companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'CIN: U72400MP2010PTC023806' + '\r\n' + 'Trial Balance' + ': ' + $filter('date')($scope.fromDate.date,'dd-MM-yyyy') + ' to ' + $filter('date')($scope.toDate.date,
       "dd-MM-yyyy") + '\r\n'
     csv += header + '\r\n' + title
 
@@ -124,6 +124,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       group = {}
       group.name = obj.groupName
       group.openingBalance = obj.forwardedBalance.amount
+      group.openingBalanceType = obj.forwardedBalance.type
       group.credit = obj.creditTotal
       group.debit = obj.debitTotal
       group.closingBalance = obj.closingBalance.amount
@@ -131,7 +132,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       groups.push group
 
     _.each groups, (obj) ->
-      row += obj.name + ',' + obj.openingBalance + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + ',' + $scope.typeFilter(obj.closingBalanceType) + '\r\n'
+      row += obj.name + ',' + obj.openingBalance + ' ' + $scope.typeFilter(obj.openingBalanceType) + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + ',' + $scope.typeFilter(obj.closingBalanceType) + '\r\n'
 
     csv += row + '\r\n';
     csv += '\r\n' + 'Total' + ',' + $scope.data.forwardedBalance.amount + ',' + $scope.data.debitTotal + ',' + $scope.data.creditTotal + ',' + $scope.data.closingBalance.amount + '\n'
