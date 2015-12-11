@@ -87,7 +87,7 @@ app.get('/terms', function(req, res, next) {
 app.get('/why-giddh', function(req, res, next) {
   res.sendFile("whyGiddh.html", options1);
 });
-app.get('/google87e474bb481dae55', function(req, res) {
+app.get('/google87e474bb481dae55.html', function(req, res) {
   return res.sendFile('google87e474bb481dae55.html', options1);
 });
 
@@ -137,10 +137,7 @@ app.post('/submitContactDetail', function(req, res) {
       console.log(data, "data in client post");
       res.send(data);
   });
-  
-
 })
-
 
 /*
  |--------------------------------------------------------------------------
