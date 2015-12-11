@@ -5,7 +5,8 @@ mainController = ($scope, $rootScope, $timeout, $http, $modal, localStorageServi
   $rootScope.basicInfo = {}
   $scope.logout = ->
     $http.post('/logout').then ((res) ->
-      localStorageService.remove("_userDetails")
+      #localStorageService.remove("_userDetails")
+      localStorageService.clearAll()
       window.location = "/thanks"
     ), (res) ->
 

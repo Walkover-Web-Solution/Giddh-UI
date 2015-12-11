@@ -136,6 +136,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
    csv += row + '\r\n';
    csv += '\r\n' + 'Total' + ',' + $scope.data.forwardedBalance.amount + ',' + $scope.data.debitTotal + ',' + $scope.data.creditTotal + ',' + $scope.data.closingBalance.amount + '\n'
 
+   $scope.csvGW = escape(csv)
 
    $scope.uriGroupWise = 'data:text/csv;charset=utf-8,' + escape(csv)
    $scope.showOptions = true

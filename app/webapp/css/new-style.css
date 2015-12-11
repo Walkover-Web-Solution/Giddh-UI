@@ -930,6 +930,7 @@ li:last-child .angular-ui-tree-handle {
 .acntAccordion > li > ul > li > ul > li > a > div{
     line-height: 24px;
     height: 24px;
+    overflow:hidden;
 }
 .subAccBox{
     margin-left: 14px;

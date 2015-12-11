@@ -16,7 +16,6 @@ app = angular.module("giddhWebApp",
     "angular.filter"
     "unique-name"
     "ui.router"
-    "LocalStorageModule"
     "vAccordion"
     "trialBalance"
     'angularFileUpload'
@@ -99,13 +98,10 @@ app.run [
   '$state'
   '$stateParams'
   '$location'
-  ($rootScope, $state, $stateParams, $location) ->
+  '$window'
+  ($rootScope, $state, $stateParams, $location, $window) ->
     $rootScope.$on '$stateChangeStart', ->
-      if $state.current.name == 'ledger.ledgerContent'
-        $rootScope.$broadcast 'refreshLedger'
       $rootScope.showLedgerBox = false
-      return
-    return
 ]
 
 app.config ($httpProvider) ->
