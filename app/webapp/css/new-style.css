@@ -657,7 +657,12 @@ header .navbar-nav > li.active {
     left: 9px;
     top: 9px;
 }
-
+.success.glyphicon{
+    color: green
+}
+.error.glyphicon{
+    color: red
+}
 /*overriding tabs style*/
 .nav.nav-tabs {
     background: #f0f0f0;

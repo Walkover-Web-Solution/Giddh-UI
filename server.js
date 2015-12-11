@@ -7,6 +7,13 @@ var fs = require('fs');
 var session = require('express-session');
 var engines = require('consolidate');
 var request = require('request');
+var jwt = require('jwt-simple');
+
+//Example POST method invocation 
+var Client = require('node-rest-client').Client; 
+var client = new Client();
+
+//enabling cors
 var cors = require('cors')
 var requestIp = require('request-ip');
 var multer = require('multer');
@@ -103,7 +110,7 @@ app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/', appRoutes);
 
 app.use(multer({storage: mStorage}).single('file'));
-app.post('/fileUpload/:companyName', function (req, res) {
+app.post('/fileUploadMaster/:companyName', function (req, res) {
   var url = settings.envUrl + "company/" + req.params.companyName + "/import-master"
   rest.post(url, {
     multipart: true,
@@ -117,7 +124,36 @@ app.post('/fileUpload/:companyName', function (req, res) {
   }).on('complete', function (data) {
     console.log("data is", data);
   });
-  res.send("Upload in process")
+  var mRes = {
+    status: "Success",
+    body:{ 
+      message: 'Uploaded File is being processed, you can check status later'
+    }
+  }
+  res.send(mRes)
+});
+
+app.post('/fileUploadDaybook/:companyName', function (req, res) {
+  var url = settings.envUrl + "company/" + req.params.companyName + "/import-daybook"
+  rest.post(url, {
+    multipart: true,
+    headers: {
+      'Auth-Key': req.session.authKey,
+      'X-Forwarded-For': res.locales.remoteIp
+    },
+    data: {
+      'datafile': rest.file(req.file.path, req.file.path, req.file.size, null, req.file.mimetype)
+    }
+  }).on('complete', function (data) {
+    console.log("data is", data);
+  });
+  var mRes = {
+    status: "Success",
+    body:{ 
+      message: 'Uploaded File is being processed, you can check status later'
+    }
+  }
+  res.send(mRes)
 });
 
 app.listen(port, function () {
