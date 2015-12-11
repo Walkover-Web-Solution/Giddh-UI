@@ -7,6 +7,13 @@ var fs = require('fs');
 var session = require('express-session');
 var engines = require('consolidate');
 var request = require('request');
+var jwt = require('jwt-simple');
+
+//Example POST method invocation 
+var Client = require('node-rest-client').Client; 
+var client = new Client();
+
+//enabling cors
 var cors = require('cors')
 var requestIp = require('request-ip');
 var multer = require('multer');
