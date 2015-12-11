@@ -70,7 +70,7 @@
             <div class="input-group input-group-md pull-right mrR3">
               <span class="input-group-addon" id="sizing-addon3"><i class="glyphicon glyphicon-search"></i></span>
               <input type="search" class="form-control" placeholder="Search" aria-describedby="sizing-addon3"
-                     ng-model="keyWord" ng-keydown="expandAccordion($event, $scope);" str-length>
+                     ng-model="keyWord" ng-keydown="accordion.expandAll()" str-length>
             </div>
             <div class="pull-right export" ng-show="showLedgerBox">
               <a href="" title="" download="" ng-click="formatData($event)"><img src="/public/webapp/images/csv.png" class="csv"/></a>
@@ -120,7 +120,7 @@
             <v-accordion class="vAccordion--default root" ng-show="showLedgerBox"
                          control="accordion" multiple onexpand="addData()">
               <v-pane ng-repeat="grp in data.groupDetails | filter:keyWord" expanded="expanded" ng-class="grp.category">
-                <v-pane-header ng-class="{'show-pseudo' : grp.childGroups.length || grp.accounts.length}">
+                <v-pane-header ng-class="{'show-pseudo' : !grp.childGroups.length && !grp.accounts.length}">
                   <table class="col-sm-12 fl-none">
                     <tbody>
                     <tr>

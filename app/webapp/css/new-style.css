@@ -1370,6 +1370,10 @@ v-pane-header.noChild {
     display:none;
 }
 
+v-pane-header.show-pseudo{
+    border-bottom:1px solid #D8D8D8 !important;
+}
+
 .export{
     margin-right:20px;
     min-height:34px;

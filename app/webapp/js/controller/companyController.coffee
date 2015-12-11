@@ -150,7 +150,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.selectedCompany.cCode = SplitNumber[0]
 
     previousCompany = localStorageService.get("_selectedCompany")
-    if(previousCompany.uniqueName != data.uniqueName)
+    if(_.isEmpty(previousCompany) || previousCompany.uniqueName != data.uniqueName)
       DAServices.LedgerSet(null, null)
 
     localStorageService.set("_selectedCompany", $scope.selectedCompany)

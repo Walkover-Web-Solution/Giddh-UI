@@ -10,6 +10,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
   $scope.showOptions = false
+  $scope.showChildren = false
   $scope.dateOptions = {
     'year-format': "'yy'",
     'starting-day': 1,
@@ -362,6 +363,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     ), 100
 
   $scope.addData = ->
-    $scope.showChildren = true
+    if $scope.showChildren == false
+      $scope.showChildren = true
 
 angular.module('giddhWebApp').controller 'trialBalanceController', trialBalanceController
