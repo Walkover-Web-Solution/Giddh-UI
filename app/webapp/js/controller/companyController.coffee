@@ -308,7 +308,6 @@ companyController = ($scope, $rootScope, $timeout, $modal, $log, companyServices
 
   $scope.getUploadsListSuccess = (res) ->
     $scope.showUpdTbl = true
-    console.log "getUploadsListSuccess", res
     $scope.updlist = res.body
 
   $scope.getUploadsListFailure = (res) ->

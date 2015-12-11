@@ -586,3 +586,24 @@ describe 'companyController', ->
       @scope.exceptOwnEmail(email)
       expect(@rootScope.basicInfo.email).toEqual(email.userEmail)
 
+  describe '#getUploadsList', ->
+    it 'should call get companyList service method getUploadsList', ->
+      deferred = @q.defer()
+      spyOn(@companyServices, "getUploadsList").andReturn(deferred.promise)
+      @scope.getUploadsList()
+      expect(@companyServices.getUploadsList).toHaveBeenCalled()
+
+  describe '#getUploadsListSuccess', ->
+    it 'should set a variable true and copy response in a scope variable', ->
+      res = {"body": []}
+      @scope.getUploadsListSuccess(res)
+      expect(@scope.showUpdTbl).toBeTruthy()
+      expect(@scope.updlist).toBe(res.body)
+
+  describe '#getUploadsListFailure', ->
+    it 'should show a toastr with error message', ->
+      res = {"data": {"status": "some-error", "message": "some-message"}}
+      spyOn(@toastr, 'error')
+      @scope.getUploadsListFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
