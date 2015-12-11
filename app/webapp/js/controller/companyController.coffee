@@ -338,7 +338,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.mErrFiles = errFiles
     angular.forEach files, (file) ->
       file.upload = Upload.upload(
-        url: '/fileUploadMaster/' + $rootScope.selectedCompany.uniqueName
+        url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/master'
         file: file
       )
       file.upload.then ((res) ->
@@ -359,7 +359,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.dErrFiles = errFiles
     angular.forEach files, (file) ->
       file.upload = Upload.upload(
-        url: '/fileUploadMaster/' + $rootScope.selectedCompany.uniqueName
+        url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/daybook'
         file: file
       )
       file.upload.then ((res) ->
