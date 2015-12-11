@@ -208,7 +208,7 @@
               <h3 class="mrB1">Upload Master Only</h3>
               <form class="form-inline" enctype="multipart/form-data">
                 <div class="form-group">
-                  <button type="file" class="btn btn-primary" ngf-select="uploadFiles($files, $invalidFiles)" accept=".xml" ngf-max-size="25MB">
+                  <button type="file" class="btn btn-primary" ngf-select="uploadMasterFiles($files, $invalidFiles)" accept=".xml" ngf-max-size="100MB">
                     <i class="glyphicon glyphicon-folder-open"></i> 
                     &nbsp; Browse</button>
                 </div>
@@ -217,12 +217,11 @@
             <div class="">
               {{errorMsg}}
               <ul class="ln">
-                <li ng-repeat="f in files" style="font:smaller">
+                <li ng-repeat="f in mFiles" style="font:smaller">
                   {{f.name}}
-                  {{f.result}}
-                  <progressbar ng-hide="hideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</progressbar>
+                  <progressbar ng-hide="mHideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</progressbar>
                 </li>
-                <li ng-repeat="f in errFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
+                <li ng-repeat="f in mErrFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
                 </li> 
               </ul>
             </div>
@@ -236,7 +235,7 @@
               <h3 class="mrB1">Upload Daybook Only</h3>
               <form class="form-inline" enctype="multipart/form-data">
                 <div class="form-group">
-                  <button type="file" class="btn btn-primary" ngf-select="uploadFiles($files, $invalidFiles)" accept=".xml" ngf-max-size="25MB">
+                  <button type="file" class="btn btn-primary" ngf-select="uploadDaybookFiles($files, $invalidFiles)" accept=".xml" ngf-max-size="100MB">
                     <i class="glyphicon glyphicon-folder-open"></i> 
                     &nbsp; Browse</button>
                 </div>
@@ -245,12 +244,11 @@
             <div class="">
               {{errorMsg}}
               <ul class="ln">
-                <li ng-repeat="f in files" style="font:smaller">
+                <li ng-repeat="f in dFiles" style="font:smaller">
                   {{f.name}}
-                  {{f.result}}
-                  <progressbar ng-hide="hideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</progressbar>
+                  <progressbar ng-hide="dHideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</progressbar>
                 </li>
-                <li ng-repeat="f in errFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
+                <li ng-repeat="f in dErrFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
                 </li> 
               </ul>
             </div>
