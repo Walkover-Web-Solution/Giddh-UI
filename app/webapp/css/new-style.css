@@ -19,7 +19,6 @@ div > input.date-picker {
   width: 90%;
   float: left;
 }
-
 button.ui-datepicker-trigger {
   background: url("../images/calendar.png") no-repeat;
   border: none;

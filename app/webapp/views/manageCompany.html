@@ -214,12 +214,12 @@
                 </div>
               </form>
             </div>
-            <div class="">
+            <div class="mrB1">
               {{errorMsg}}
               <ul class="ln">
                 <li ng-repeat="f in mFiles" style="font:smaller">
                   {{f.name}}
-                  <progressbar ng-hide="mHideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</progressbar>
+                  <uib-progressbar ng-hide="mHideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</uib-progressbar>
                 </li>
                 <li ng-repeat="f in mErrFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
                 </li> 
@@ -241,12 +241,12 @@
                 </div>
               </form>
             </div>
-            <div class="">
+            <div class="mrB1">
               {{errorMsg}}
               <ul class="ln">
                 <li ng-repeat="f in dFiles" style="font:smaller">
                   {{f.name}}
-                  <progressbar ng-hide="dHideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</progressbar>
+                  <uib-progressbar ng-hide="dHideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</uib-progressbar>
                 </li>
                 <li ng-repeat="f in dErrFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
                 </li> 
