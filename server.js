@@ -72,7 +72,8 @@ var websiteRoutes = require('./public/routes/website/main');
 app.use('/auth', login);
 app.use('/contact', contact);
 app.use('/', websiteRoutes);
-var mStorage = multer.diskStorage({
+
+global.mStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './uploads/')
   },
