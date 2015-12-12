@@ -1,0 +1,25 @@
+<!-- structure -->
+<div class="container-fluid">
+	<div class="row">
+		<!-- left side -->
+		<div class="col-md-2 col-sm-2 greyBg">
+			<div>
+        <div ng-controller="accountController" id="left" auto-height>
+          <div ng-include="'/public/webapp/views/accounts.html'"></div>
+          <ui-view="ledger.accounts"></ui-view>
+        </div>
+      </div>
+		</div>
+
+		<!-- middle body -->
+		<div class="col-md-10 col-sm-7">
+			<div class="middleBody bdrR bdrL row"  auto-height>
+				<ui-view></ui-view>
+			</div>
+		</div>
+
+	</div> <!-- end of row -->
+</div>
+
+
+

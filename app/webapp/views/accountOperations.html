@@ -1,0 +1,194 @@
+<fieldset ng-disabled="!canUpdate">
+  <ol class="breadcrumb mrB2" ng-if="showBreadCrumb">
+    <li ng-repeat="(key,value) in breadCrumbList"
+        ng-class="{active:$last}">
+      <a href="javascript:void(0)" ng-click="jumpToGroup(value.uniqueName, groupList)">{{value.name}}
+      </a>
+    </li>
+  </ol>
+
+  <div class="clearfix bdrB">
+    <div class="dGryHead">{{acntCase}} Account</div>
+
+    <form class="col-md-12 col-sm-12" name="addAccountForm" novalidate>
+
+      <div class="row pdT2 pdL pdR">
+
+        <div class="col-md-6 col-sm-12">
+          <section class="greyBox">
+            <p class="form-group">Basic Info (required)*</p>
+
+            <div class="form-group">
+              <input type="text" placeholder="Enter Account name" class="form-control" name="name" maxlength="100"
+                     ng-model="selectedAccount.name" required/>
+            </div>
+            <div class="form-group">
+              <input type="text" placeholder="Unique Names" class="form-control" name="uniqueName" valid-unique
+              ng-model="selectedAccount.uniqueName"/>
+            </div>
+
+            <div class="form-group">
+              <!-- selectedAccount.openingBalanceDate -->
+              <p class="input-group">
+                <input type="text" class="form-control"
+                       uib-datepicker-popup="{{format}}"
+                       datepicker-options="dateOptions"
+                       is-open="valuationDatePickerIsOpen"
+                       ng-click="valuationDatePickerOpen()"
+                       ng-model="datePicker.accountOpeningBalanceDate" max-date="today"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="valuationDatePickerOpen()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+              </p>
+
+            </div>
+
+            <div class="row">
+              <p class="mrB col-md-12 small col-sm-12">Opening balance types</p>
+            </div>
+            <div class="row">
+              <div class="col-md-6 col-sm-12">
+                <select name="openingBalanceType" ng-model="selectedAccount.openingBalanceType" class="form-control" required>
+                  <option ng-repeat="value in openingBalType"
+                          ng-selected="{{value.val == selectedAccount.openingBalanceType}}" value="{{value.val}}">
+                    {{value.name}}
+                  </option>
+                </select>
+              </div>
+              <div class="col-md-6 col-sm-12">
+                <input type="text" class="form-control" name="openingBalance" ng-model="selectedAccount.openingBalance" required valid-number/>
+              </div>
+            </div>
+
+          </section>
+        </div>
+        <div class="col-md-6 col-sm-12">
+
+          <script type="text/ng-template" id="customTemplate.html">
+            <a>
+              <span ng-bind-html="match.label"></span>
+              <span ng-bind-html="match.model.countryName"></span>
+            </a>
+          </script>
+
+          <div class="form-group row">
+            <div class="col-md-3 col-sm-12">
+
+              <input type="hidden" ng-model="selectedAccount.mobileNo">
+
+              <input type="text" ng-model="acntExt.Ccode"
+                     uib-typeahead="country as country.value for country in countryCodesList | filter:$viewValue | limitTo:8"
+                     class="form-control" typeahead-template-url="customTemplate.html" placeholder="91"/>
+
+            </div>
+            <div class="col-md-9 col-sm-12">
+              <input type="text" placeholder="98XXXXXXXX" class="form-control" name="onlyMobileNo"
+                     ng-model="acntExt.onlyMobileNo" valid-number/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <input type="email" placeholder="Email" class="form-control" name="email" ng-model="selectedAccount.email"/>
+          </div>
+
+          <div class="form-group">
+            <input type="text" placeholder="Company Name" class="form-control" name="companyName"
+                   ng-model="selectedAccount.companyName"/>
+          </div>
+
+          <div class="form-group">
+            <input type="text" placeholder="Description" class="form-control" name="description"
+                   ng-model="selectedAccount.description"/>
+          </div>
+
+          <div class="form-group">
+            <textarea placeholder="Address" class="form-control" name="address"
+                      ng-model="selectedAccount.address"></textarea>
+          </div>
+        </div>
+
+      </div>
+      <!-- end of clearfix -->
+      <div class="row pdL pdR mrT2">
+        <div class="form-group col-md-12">
+          <button ng-if="acntCase == 'Update'" class="btn btn-success" ng-click="updateAccount()"
+                  ng-disabled="addAccountForm.$invalid">{{acntCase}}
+          </button>
+
+          <button ng-if="acntCase == 'Add'" class="btn btn-success" ng-click="addAccount()"
+                  ng-disabled="addAccountForm.$invalid">{{acntCase}}
+          </button>
+
+        </div>
+      </div>
+    </form>
+  </div>
+
+
+
+<!-- end row first -->
+<div class="clearfix bdrB">
+  <div class="col-sm-12 col-md-6" ng-show="canUpdate">
+    <div class="row">
+      <form name="moveAccntForm" novalidate class="pd2 form-inline">
+        <div>
+          <label class="mrR">Move to account</label>
+        </div>
+        <div class="form-group">
+          <input ng-model="moveacto" type="text" placeholder="Group name" class="form-control" required
+            uib-typeahead="groups as groups.name for groups in flattenGroupList | omit: isCurrentGroup | filter:{name: $viewValue} | limitTo:4"/>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-info mrL" ng-click="moveAccnt(moveacto)" ng-disabled="moveAccntForm.$invalid">Move</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-sm-12 bdrL" ng-show="canShare">
+    <div class="row">
+      <form name="shareAccountForm" novalidate class="form-inline pd2">
+        <div>
+          <label class="mrR">Share Account</label>
+        </div>
+        <div class="form-group">
+          <input required name="userEmail" type="email" ng-model="shareAccountObj.user" placeholder="Enter Email ID"
+                 class="form-control"/>
+        </div>
+        <div class="form-group">
+          <button ng-disabled="shareAccountForm.$invalid" class="btn btn-info mrL" ng-click="shareAccount()">Share</button>
+        </div>
+      </form>
+    </div>
+     <!--end of row -->
+    <div class="row" ng-if="accountSharedUserList.length">
+      <div class="pd2">
+        <ul class="list-group ln">
+          <li ng-repeat="(key,value) in accountSharedUserList track by $index" class="list-group-item">
+
+            <div class="form-inline clearfix">
+              <div class="form-group">
+                <i class="glyphicon glyphicon-user"></i>
+                {{value.userEmail}}
+              </div>
+              <div class="form-group">
+                {{option.role}}
+              </div>
+              <span class="delIcon">
+                <i class="glyphicon glyphicon-trash" ng-click="unShareAccount(value.userUniqueName)"></i>
+              </span>
+            </div>
+
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- end of row -->
+  </div>
+</div>
+
+  <div class="pd2">
+    <button class="btn btn-danger" ng-click="deleteAccount()">Delete {{selectedAccount.name}} account</button>
+  </div>
+</fieldset>

@@ -1,0 +1,171 @@
+<div id="getGroupModal" ng-init="getGroups()">
+
+  <div class="modal-header themeBg">
+    <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title">Manage Groups &amp; Accounts</h3>
+  </div>
+  <!-- end header -->
+
+  <div class="modal-body noPad">
+
+    <div class="clearfix">
+
+      <div class="col-md-3 col-sm-12 greyBg">
+        <div>
+
+          <div class="mrT1 mrB1 form-inline">
+            <div class="form-group">
+
+              <div class="input-group">
+
+                <div class="input-group-addon">
+                  <i class="glyphicon glyphicon-search"></i>
+                </div>
+
+                <input type="text" name="grpSrch" class="form-control" ng-model="grpSrch" placeholder="Search groups">
+
+              
+                <div class="input-group-addon cp" ng-show="!grpSrch.length > 0 && !subGroupVisible" ng-click="collapseAll()">
+                  <i class="glyphicon glyphicon-list"></i>
+                </div>
+
+                <div class="input-group-addon cp" ng-show="!grpSrch.length > 0 && subGroupVisible" ng-click="expandAll()">
+                  <i class="glyphicon glyphicon-menu-hamburger"></i>
+                </div>
+                
+
+              </div>
+            </div>
+          </div>
+          <!-- searchbar end -->
+
+
+          <perfect-scrollbar id="addMngGrpScrBar" class="scrClass" wheel-propagation="true" wheel-speed="1"
+                             min-scrollbar-length="20"
+                             suppressScrollX="false" useBothWheelAxes="false" suppressScrollY="true">
+            <div ng-if="showListGroupsNow">
+              <!-- Nested node template -->
+              <script type="text/ng-template" id="nodes_renderer.html">
+                <div ui-tree-handle class="tree-node tree-node-content"
+                     ng-class="{'active': node.uniqueName === selectedItem.uniqueName}" ng-click="selectItem(node)">
+                  <div class="clearfix">
+                    <a class="btn-xs" ng-if="node.groups && node.groups.length > 0" data-nodrag
+                       ng-click="toggle(this); stopBubble($event)">
+                    <span class="glyphicon"
+                          ng-class="{
+                        'glyphicon-chevron-right': collapsed,
+                        'glyphicon-chevron-down': !collapsed
+                      }"></span>
+                    </a>
+                    <span>{{node.name}}</span>
+                  </div>
+                  <p>{{node.uniqueName}}</p>
+                </div>
+                <ol ui-tree-nodes="" ng-model="node.groups"
+                    ng-class="grpSrch.length > 0 ? collapsed : {hidden: collapsed}">
+                  <li ng-repeat="node in node.groups | filter:grpSrch" ui-tree-node ng-include="'nodes_renderer.html'">
+                  </li>
+                </ol>
+              </script>
+
+              <div class="clearfix">
+                <div ui-tree id="tree-root" data-drag-enabled="false" data-nodrop-enabled="true">
+                  <ol ui-tree-nodes ng-model="groupList">
+                    <li ng-repeat="node in groupList | filter:grpSrch" ui-tree-node
+                        ng-include="'nodes_renderer.html'" ng-class="node.category"></li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </perfect-scrollbar>
+        </div>
+      </div>
+
+
+      <!-- middle body -->
+      <div class="col-md-7 col-sm-12">
+        <div class="bdrR bdrL row" id="middleBody">
+
+          <div ng-if="showGroupDetails" ng-include="'/public/webapp/views/groupOperations.html'"></div>
+
+          <div ng-include="'/public/webapp/views/accountOperations.html'" ng-if="showAccountDetails"></div>
+
+        </div>
+      </div>
+
+      <!-- right side -->
+      <div class="col-md-2 col-sm-12" id="right">
+        <div class="row">
+
+          <div class="form-group pdL1 pdT1 pdR1">
+            <div class="input-group">
+              <div class="input-group-addon">
+                <i class="glyphicon glyphicon-search"></i>
+              </div>
+              <input type="text" name="accountsSearch" ng-model="accountsSearch" class="form-control"
+                     placeholder="Search accounts">
+            </div>
+          </div>
+
+          <div ng-if="showAccountListDetails">
+
+            <div class="pdL1 pdR1 mrB1" ng-if="groupAccntList.length == 0">
+              <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{selectedGroup.name}}</strong>
+              </h4>
+
+              <div class="mrB1 mrT1" ng-show="canAdd && !selectedGroup.isFixed">
+                <button class="btn btn-success btn-block" ng-click="addNewAccountShow(selectedGroup)"
+                        href="javascript:void(0)">+ Add New
+                </button>
+              </div>
+            </div>
+
+            <div ng-hide="groupAccntList.length == 0">
+
+              <h3 class="mrB1 mrL1">Accounts from <strong>{{selectedGroup.name}}</strong></h3>
+
+              <div class="mrB1 mrT1 pdL1 pdR1" ng-show="canAdd && !selectedGroup.isFixed">
+                <button class="btn btn-success btn-block" ng-click="addNewAccountShow(selectedGroup)"
+                        href="javascript:void(0)">+ Add New
+                </button>
+              </div>
+
+              <perfect-scrollbar id="selAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20">
+                <div class="list-group">
+                  <a ng-repeat="(key,value) in groupAccntList | filter:accountsSearch track by $index"
+                     href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)"
+                     class="list-group-item" ng-class="{'active': selectedAccntMenu === value}">
+                    <h4 tooltip-placement="bottom" uib-tooltip="{{value.pName[0]}}" class="list-group-item-heading">
+                      {{value.name}}</h4>
+                  </a>
+                </div>
+              </perfect-scrollbar>
+            </div>
+          </div>
+
+          <div ng-if="accountsSearch.length > 0 || isEmptyObject(selectedGroup)">
+            <h3 class="mrB1 mrL1">Accounts from <strong>all group</strong></h3>
+            <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20">
+              <div class="list-group">
+                <a ng-repeat="(key,value) in flatAccntList | filter:accountsSearch track by $index"
+                   href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)"
+                   class="list-group-item" ng-if="value.parentGroups[0].name!=selectedGroup.name"
+                   ng-class="{'active': selectedAccntMenu === value}">
+                  <h4 tooltip-placement="bottom" uib-tooltip="{{value.parentGroups[0].name}}"
+                      class="list-group-item-heading ellp max200">{{value.name}}</h4>
+                </a>
+              </div>
+            </perfect-scrollbar>
+          </div>
+
+        </div>
+      </div>
+      <!-- right side end -->
+    </div>
+
+  </div>
+  <!-- end modal body -->
+
+
+</div>

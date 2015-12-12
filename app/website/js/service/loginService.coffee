@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module('giddhApp').service 'loginService', ($resource) ->
-  Login = $resource('/submitBetaInviteDetails', {}, {sendInvite: {method: 'POST'}})
+  Login = $resource('/contact/submitDetails', {}, {sendInvite: {method: 'POST'}})
 
   loginService =
     submitUserForm: (user, onSuccess, onFailure) ->

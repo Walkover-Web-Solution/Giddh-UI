@@ -1,10 +1,10 @@
+uploads/
 *.DS_Store
 *.csv
 *.txt
 *.log
 .idea/
 giddh-node.iml
-app/webapp
 bower_components
 bin
 public

@@ -5,7 +5,7 @@ homeController = ($scope, $rootScope, $timeout) ->
     "banner":
       "mainHead": "Accounting is the foundation",
       "subHead": 'Accounting is the very first step of every successful business,\nstart using it today! You cannot build the foundation later.',
-#      "p": "Giddh is an online accounting software for everyone",
+      #"p": "Giddh is an online accounting software for everyone",
       "imgSrc": "/public/website/images/screen.png",
       "imgTitle": "Giddh",
       "banBtnImgSrc": "/public/website/images/try.png",
@@ -79,7 +79,6 @@ homeController = ($scope, $rootScope, $timeout) ->
       when 2
         $scope.home.banner.mainHead = 'Backbone of a \nbusiness!'
         $scope.home.banner.subHead = "Analysis of income-expenses, management of transactions \nand statement of profit-loss is a necessity. \nAnd it's a simple and user-firendly task with Giddh."
-    return
   $timeout($scope.changeText, 30000)
 
 angular.module('giddhApp').controller 'homeController', homeController

@@ -1,0 +1,292 @@
+<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+  <uib-tabset justified="true">
+    <uib-tab heading="Basic Information">
+      <div class="pd2">
+        <form id="cmpnyBascFrm" name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
+          <p ng-hide="cmpnyBascFrm.$submitted || !ecmpnyBascFrm.cCountry.$invalid" class="bg-warning pd1 mrB1">
+            For better experience fill all details of form
+          </p>
+          <input type="hidden" ng-model="selectedCompany.uniqueName" name="cUniqName"/>
+
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cName.$valid  && cmpnyBascFrm.cName.$touched) ? 'has-success' : (cmpnyBascFrm.cName.$touched) ? 'has-error' : '' ">
+                <label>Name</label>
+                <input type="text" ng-model="selectedCompany.name" class="form-control" required name="cName"
+                       tabindex="1">
+              </div>
+              <div class="form-group">
+                <label>Email</label>
+                <input type="email" ng-model="selectedCompany.email" class="form-control" name="cEmail"
+                       tabindex="2">
+              </div>
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cContact.$valid  && cmpnyBascFrm.cContact.$touched) ? 'has-success' : (cmpnyBascFrm.cContact.$touched) ? 'has-error' : '' ">
+                <label>Contact</label>
+                <script type="text/ng-template" id="cityTemplate.html">
+                  <a>
+                    <span ng-bind-html="match.label"></span>
+                    <span ng-bind-html="match.model.countryName"></span>
+                  </a>
+                </script>
+                <div class="row">
+
+                  <div class="col-md-3 col-sm-12">
+
+                    <input type="hidden" ng-model="selectedCompany.contactNo">
+
+                    <input type="text" ng-model="selectedCompany.cCode"
+                           uib-typeahead="country as country.value for country in countryCodesList | filter:$viewValue | limitTo:8"
+                           class="form-control" typeahead-template-url="cityTemplate.html" placeholder="91"/>
+
+                  </div>
+                  <div class="col-md-9 col-sm-12">
+                    <input type="text" placeholder="98XXXXXXXX" class="form-control" name="onlyMobileNo"
+                           ng-model="selectedCompany.mobileNo" valid-number/>
+                  </div>
+                </div>
+
+              </div>
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cAddress.$valid  && cmpnyBascFrm.cAddress.$touched) ? 'has-success' : (cmpnyBascFrm.cAddress.$touched) ? 'has-error' : '' ">
+                <label>Address</label>
+                <textarea ng-model="selectedCompany.address" class="form-control" name="cAddress" required
+                          tabindex="4"/>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cCountry.$valid  && cmpnyBascFrm.cCountry.$touched) ? 'has-success' : (cmpnyBascFrm.cCountry.$touched) ? 'has-error' : '' ">
+                <label>Country</label>
+                <input type="text" ng-model="selectedCompany.country"
+                       uib-typeahead="address for address in getCountry($viewValue)" typeahead-loading="loadingLocationsC"
+                       typeahead-no-results="noResultsC" class="form-control" name="cCountry" autocomplete="off"
+                       tabindex="5" required>
+                <i ng-show="loadingLocationsC" class="glyphicon glyphicon-refresh"></i>
+
+                <div ng-show="noResultsC">
+                  <i class="glyphicon glyphicon-remove"></i> No Results Found
+                </div>
+
+              </div>
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cState.$valid  && cmpnyBascFrm.cState.$touched) ? 'has-success' : (cmpnyBascFrm.cState.$touched) ? 'has-error' : '' ">
+                <label>State</label>
+                <input type="text" ng-model="selectedCompany.state"
+                       uib-typeahead="address for address in getState($viewValue)" typeahead-loading="loadingLocationsS"
+                       typeahead-no-results="noResultsS" class="form-control" name="cState" autocomplete="off"
+                       tabindex="6" ng-disabled="cmpnyBascFrm.cCountry.$invalid" required>
+                <i ng-show="loadingLocationsS" class="glyphicon glyphicon-refresh"></i>
+
+                <div ng-show="noResultsS">
+                  <i class="glyphicon glyphicon-remove"></i> No Results Found
+                </div>
+
+              </div>
+              <div class="form-group"
+                   ng-class="(cmpnyBascFrm.cCity.$valid  && cmpnyBascFrm.cCity.$touched) ? 'has-success' : (cmpnyBascFrm.cCity.$touched) ? 'has-error' : '' ">
+                <label>City</label>
+                <input type="text" ng-model="selectedCompany.city"
+                       uib-typeahead="address for address in getCity($viewValue)" typeahead-loading="loadingLocationsCt"
+                       typeahead-no-results="noResultsCt" class="form-control" name="cCity" autocomplete="off"
+                       tabindex="7" ng-disabled="cmpnyBascFrm.cState.$invalid" required>
+                <i ng-show="loadingLocationsCt" class="glyphicon glyphicon-refresh"></i>
+
+                <div ng-show="noResultsCt">
+                  <i class="glyphicon glyphicon-remove"></i> No Results Found
+                </div>
+
+              </div>
+              <div class="row">
+                <div class="col-md-4 col-sm-12">
+                  <div class="form-group"
+                       ng-class="(cmpnyBascFrm.cCurrency.$valid  && cmpnyBascFrm.cCurrency.$touched) ? 'has-success' : (cmpnyBascFrm.cCurrency.$touched) ? 'has-error' : '' ">
+                    <label>Currency</label>
+                    <input type="text" ng-model="selectedCompany.baseCurrency" class="form-control"
+                           ng-model="currencySelected"
+                           uib-typeahead="currency for currency in currencyList | filter:$viewValue | limitTo:4" required
+                           name="cCurrency" autocomplete="off" tabindex="8">
+
+                  </div>
+                </div>
+                <div class="col-md-8 col-sm-12">
+                  <div class="form-group"
+                       ng-class="(cmpnyBascFrm.cPincode.$valid  && cmpnyBascFrm.cPincode.$touched) ? 'has-success' : (cmpnyBascFrm.cPincode.$touched) ? 'has-error' : '' ">
+                    <label>Pincode</label>
+                    <input type="text" ng-model="selectedCompany.pincode" class="form-control" required
+                           pattern="^[0-9]*$" name="cPincode" tabindex="9" valid-number>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- end of row -->
+          <div class="clearfix">
+            <button tabindex="10" ng-click="updateCompanyInfo(selectedCompany)" class="btn btn-primary"
+                    ng-disabled="cmpnyBascFrm.$invalid">Update
+            </button>
+          </div>
+        </form>
+        <!-- end of change basic info -->
+      </div>
+    </uib-tab>
+    <!-- basic information tab end here -->
+
+    <uib-tab ng-if="canManageUser" heading="Permission">
+      <div class="pd2">
+        <div class="greyBox mrB2">
+          <form name="addShareEmailForm" novalidate class="form-inline">
+            <div class="form-group">
+              <label class="mrR1">Give permission to:</label>
+              <input ng-model="shareRequest.user" name="userEmail" type="text" class="form-control"
+                     placeholder="Enter Email ID" required/>
+            </div>
+            <div class="form-group">
+              <select class="form-control" name="userRole" ng-model="shareRequest.role">
+                <option ng-repeat="option in rolesList" ng-selected="{{option.uniqueName == shareRequest.role}}"
+                        value="{{option.uniqueName}}">{{option.name}}
+                </option>
+              </select>
+            </div>
+            <div class="form-group">
+              <button ng-disabled="addShareEmailForm.$invalid" class="btn btn-primary mrL1"
+                      ng-click="shareCompanyWithUser()">
+                Add
+              </button>
+            </div>
+          </form>
+        </div>
+        <ul class="list-group ln">
+
+          <li ng-repeat="(key,value) in sharedUsersList | pick: exceptOwnEmail track by $index" class="list-group-item">
+
+            <div class="row">
+
+              <div class="col-md-6 col-sm-12">
+                <i ng-if="value.role.uniqueName != 'super_admin_off_the_record'" class="glyphicon glyphicon-user"></i>
+                <i ng-if="value.role.uniqueName == 'super_admin_off_the_record'" class="glyphicon glyphicon-star"></i>
+                {{value.userEmail}}
+              </div>
+
+              <div class="col-md-6 col-sm-12">
+
+                <div class="form-inline">
+
+                  <div class="form-group">
+                    <select class="form-control" name="rolesListSelected" ng-model="rolesListSelected"
+                            ng-change="updateUserRole(rolesListSelected, value.userEmail)">
+                      <option ng-repeat="option in rolesList"
+                              ng-selected="{{option.uniqueName == value.role.uniqueName}}"
+                              value="{{option.uniqueName}}">{{option.name}}
+                      </option>
+                    </select>
+
+                  </div>
+  <span class="delIcon">
+    <i class="glyphicon glyphicon-trash" ng-click="unSharedUser(value.userUniqueName, $index)"></i>
+  </span>
+                </div>
+
+              </div>
+
+            </div>
+
+          </li>
+
+        </ul>
+
+      </div>
+    </uib-tab>
+    <!-- end of second tab ng-if="canManageUser" -->
+    <uib-tab heading="Tally XML upload">
+      <div class="clearfix bdrB">
+        <div class="col-md-6 col-sm-6">
+          <div class="pdT2">
+            <div class="greyBox mrB2">
+              <h3 class="mrB1">Upload Master Only</h3>
+              <form class="form-inline" enctype="multipart/form-data">
+                <div class="form-group">
+                  <button type="file" class="btn btn-primary" ngf-select="uploadMasterFiles($files, $invalidFiles)" accept=".xml" ngf-max-size="100MB">
+                    <i class="glyphicon glyphicon-folder-open"></i> 
+                    &nbsp; Browse</button>
+                </div>
+              </form>
+            </div>
+            <div class="">
+              {{errorMsg}}
+              <ul class="ln">
+                <li ng-repeat="f in mFiles" style="font:smaller">
+                  {{f.name}}
+                  <progressbar ng-hide="mHideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</progressbar>
+                </li>
+                <li ng-repeat="f in mErrFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
+                </li> 
+              </ul>
+            </div>
+            <!-- end mrT -->
+          </div>
+        </div>
+        <!-- end of first sec -->
+        <div class="col-md-6 col-sm-6">
+          <div class="pdT2">
+            <div class="greyBox mrB2">
+              <h3 class="mrB1">Upload Daybook Only</h3>
+              <form class="form-inline" enctype="multipart/form-data">
+                <div class="form-group">
+                  <button type="file" class="btn btn-primary" ngf-select="uploadDaybookFiles($files, $invalidFiles)" accept=".xml" ngf-max-size="100MB">
+                    <i class="glyphicon glyphicon-folder-open"></i> 
+                    &nbsp; Browse</button>
+                </div>
+              </form>
+            </div>
+            <div class="">
+              {{errorMsg}}
+              <ul class="ln">
+                <li ng-repeat="f in dFiles" style="font:smaller">
+                  {{f.name}}
+                  <progressbar ng-hide="dHideBar" class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</progressbar>
+                </li>
+                <li ng-repeat="f in dErrFiles" style="font:smaller">{{f.name}} {{f.$error}} {{f.$errorParam}}
+                </li> 
+              </ul>
+            </div>
+            <!-- end mrT -->
+          </div>
+        </div>
+        <!-- end of second grid -->
+      </div>
+      <!-- end of clearfix -->
+      <div class="clearfix pd2">
+        <button class="btn btn-info" ng-click="getUploadsList()">
+          Show Uploaded files List
+        </button>
+
+        <table ng-show="showUpdTbl" class="mrT2 table table-bordered table-striped">
+          <thead>
+            <th>Req. ID</th>
+            <th>Start</th>
+            <th>End</th>
+            <th>Status</th>
+            <th>User</th>
+          </thead>
+          <tbody>
+            <tr ng-repeat="(key, value) in updlist track by $index">
+              <td>{{value.requestId}}</td>
+              <td>{{value.startedAt}}</td>
+              <td>{{value.finishedAt}}</td>
+              <td class="alC">
+                <i ng-if="value.status === 'COMPLETED'" class="glyphicon glyphicon-check success"></i>
+                <i ng-if="value.status != 'COMPLETED'" class="glyphicon glyphicon-bell error"></i>
+              </td>
+              <td>{{value.user.name}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+      <!--end of clearfix  -->
+    </uib-tab>
+  </uib-tabset>
+</perfect-scrollbar>

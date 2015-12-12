@@ -65,7 +65,7 @@ contactController = ($scope, $rootScope, $http) ->
         details.uFname = $scope.user.name
         details.uLname = "  "
 
-      $http.post('http://localhost:8000/submitContactDetail',
+      $http.post('http://localhost:8000/contact/submitDetails',
         uFname: details.uFname
         uLname: details.uLname
         email: $scope.user.email

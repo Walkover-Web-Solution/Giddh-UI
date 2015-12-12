@@ -1,0 +1,248 @@
+<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent">
+
+  <div class="loader" ng-hide="showLedgerBox">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+
+    <h1>loading ledger</h1>
+  </div>
+
+  <div class="pdL2 pdR2 pdT2" ng-show="showLedgerBox">
+    <div class="form-inline pdB1">
+      <form name="fromToDateForm" novalidate>
+        <div class="form-group mrR1">
+          <label>From date</label>
+
+          <p class="input-group">
+            <input type="text" class="form-control"
+                   uib-datepicker-popup="{{format}}" required
+                   datepicker-options="dateOptions"
+                   is-open="fromDatePickerIsOpen"
+                   ng-click="fromDatePickerOpen()"
+                   ng-model="fromDate.date" 
+                   max-date="toDate.date" 
+                   placeholder="from date" 
+                    />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="fromDatePickerOpen()"><i
+              class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+          </p>
+        </div>
+        <div class="form-group">
+          <label>To date</label>
+
+          <p class="input-group">
+            <input type="text" class="form-control"
+                   uib-datepicker-popup="{{format}}" required
+                   datepicker-options="dateOptions"
+                   is-open="toDatePickerIsOpen"
+                   ng-click="toDatePickerOpen()"
+                   ng-model="toDate.date" min-date="fromDate.date"max-date="today" placeholder="to date" 
+                   />
+        <span class="input-group-btn">
+          <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i
+              class="glyphicon glyphicon-calendar"></i></button>
+        </span>
+          </p>
+        </div>
+        <div class="form-group">
+          <button type="button" class="btn btn-info mrL1" ng-click="reloadLedger()" ng-disabled="fromToDateForm.$invalid">
+            GO
+          </button>
+        </div>
+      </form>
+    </div>
+
+
+    <table class="table ledgerTable">
+      <thead>
+      <th class="nopad" colspan="3">
+        <div class="clearfix ldgTheadL">
+          <span class="icon48 icon-in"></span>
+
+          <h3 class="ledgerHead">
+            <span class="ellp">{{accntTitle}}</span>
+            <span>&nbsp;is <strong>receiving</strong></span>
+          </h3>
+        </div>
+      </th>
+      <th class="nopad" colspan="3">
+        <div class="pull-right alR">
+          <div class="clearfix ldgTheadR">
+            <span class="icon48 icon-out"></span>
+
+            <h3 class="ledgerHead">
+              <span>&nbsp;is <strong>giving</strong></span>
+              <span class="ellp">{{accntTitle}}</span>
+            </h3>
+          </div>
+        </div>
+      </th>
+      </thead>
+      <!-- end main thead -->
+      <tbody>
+      <tr>
+        <td class="nopad bdrL bdrR" style="width:50%" colspan="3">
+          <table class="table">
+            <thead>
+            <tr class="splBg">
+              <th colspan="100%">Debit (Dr)</th>
+            </tr>
+            <tr class="dgreyBg">
+              <th width="28%">Date <span class="small">(DD-MM-YYYY)</span></th>
+              <th width="44%">Particular</th>
+              <th width="28%">Amount</th>
+            </tr>
+
+            <tr class="greyBg"
+                ng-if="ledgerData.forwardedBalance.type == 'DEBIT' && ledgerData.forwardedBalance.amount > 0 ">
+              <th colspan="100%">
+                B/F Balance: {{ledgerData.forwardedBalance.amount | number:2}}
+              </th>
+            </tr>
+            <tr class="greyBg"
+                ng-if="ledgerData.forwardedBalance.type == 'CREDIT' && ledgerData.forwardedBalance.amount > 0">
+              <th colspan="100%">
+                &nbsp;
+              </th>
+            </tr>
+            </thead>
+
+            <tbody class="ledgerBodyContent" id="ledgerBodyContentDebit">
+
+            <tr>
+              <td class="nopad" colspan="100%">
+                <div class="pr">
+                  <div
+                      ng-repeat="(key, value) in ledgerOnlyDebitData | limitTo: quantity track by $index"
+                      ledger-pop
+                      index="$index"
+                      can-add-and-edit="canAddAndEdit"
+                      form-class='drLedgerEntryForm_{{$index}}'
+                      ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"
+                      itemdata="value"
+                      acntlist="fltAccntList"
+                      class='drLedgerEntryForm pr ledgEntryForm {{value.sharedData.uniqueName}}'
+                      name='drLedgerEntryForm_{{$index}}'
+                      update-ledger="updateEntry(entry)"
+                      add-ledger="addNewEntry(entry)"
+                      remove-ledgdialog="removeLedgerDialog()"
+                      discard-ledger="deleteEntry(entry)"
+                      enter-rowdebit="addEntryInDebit(entry)"
+                      enter-rowcredit="addEntryInCredit(entry)"
+                      novalidate
+                      >
+                  </div>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+
+          </table>
+        </td>
+        <!-- main left td end here -->
+        <td class="nopad bdrL bdrR" style="width:50%" colspan="3">
+          <table class="table">
+            <thead>
+            <tr class="splBg">
+              <th colspan="100%">Credit (Cr)</th>
+            </tr>
+            <tr class="dgreyBg">
+              <th width="28%">Date <span class="small">(DD-MM-YYYY)</span></th>
+              <th width="44%">Particular</th>
+              <th width="28%">Amount</th>
+            </tr>
+            <tr class="greyBg"
+                ng-if="ledgerData.forwardedBalance.type == 'CREDIT' && ledgerData.forwardedBalance.amount > 0">
+              <th colspan="100%">
+                B/F Balance: {{ledgerData.forwardedBalance.amount | number:2}}
+              </th>
+            </tr>
+            <tr class="greyBg"
+                ng-if="ledgerData.forwardedBalance.type == 'DEBIT' && ledgerData.forwardedBalance.amount > 0">
+              <th colspan="100%">
+                &nbsp;
+              </th>
+            </tr>
+
+            </thead>
+
+            <tbody class="ledgerBodyContent" id="ledgerBodyContentCredit">
+            <tr>
+              <td class="nopad" colspan="100%">
+
+                <div class="pr">
+                  <div
+                      ng-repeat="(key, value) in ledgerOnlyCreditData | limitTo: quantity track by $index "
+                      ledger-pop
+                      index="$index"
+                      can-add-and-edit="canAddAndEdit"
+                      form-class='crLedgerEntryForm_{{$index}}'
+                      ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"
+                      itemdata="value"
+                      acntlist="fltAccntList"
+                      class='crLedgerEntryForm pr ledgEntryForm {{value.sharedData.uniqueName}}'
+                      name='crLedgerEntryForm_{{$index}}'
+                      update-ledger="updateEntry(entry)"
+                      add-ledger="addNewEntry(entry)"
+                      remove-ledgdialog="removeLedgerDialog()"
+                      discard-ledger="deleteEntry(entry)"
+                      enter-rowdebit="addEntryInDebit(entry)"
+                      enter-rowcredit="addEntryInCredit(entry)"
+                      novalidate
+                      >
+                  </div>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </td>
+        <!-- main right td end here -->
+      </tr>
+      </tbody>
+      <!-- end main tbody -->
+      <tfoot>
+
+      <tr class="fw600 dgreyBg">
+        <td colspan="2" class="bdrL" style="width:36%">
+          <div class="pull-right" ng-if="ledgBalType == 'CREDIT'">
+            Balance
+          </div>
+        </td>
+        <td style="width:14%" class="bdrR alR">
+          <span ng-if="ledgBalType == 'CREDIT'">{{debitBalanceAmount | number:2}}</span>
+        </td>
+        <td colspan="2" style="width:36%" class="bdrL">
+          <div class="pull-right" ng-if="ledgBalType == 'DEBIT'">
+            Balance
+          </div>
+        </td>
+        <td style="width:14%" class="bdrR alR">
+          <span ng-if="ledgBalType == 'DEBIT'">{{creditBalanceAmount | number:2}}</span>
+        </td>
+      </tr>
+      <tr class="total greyBg">
+        <td colspan="2" style="width:36%" class="bdrL">
+          <span class="pull-right">Total</span>
+        </td>
+        <td style="width:14%" class="bdrR alR">
+          <span>{{debitTotal | number:2}}</span>
+        </td>
+        <td colspan="2" style="width:36%" class="bdrL">
+          <span class="pull-right">Total</span>
+        </td>
+        <td style="width:14%" class="bdrR alR">
+          <span>{{creditTotal | number:2}}</span>
+        </td>
+      </tr>
+
+      </tfoot>
+      <!-- end main tfoot -->
+    </table>
+  </div>
+</perfect-scrollbar>

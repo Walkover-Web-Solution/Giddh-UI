@@ -9,25 +9,46 @@
     "**/.*",
     ".gitignore",
     "node_modules",
-    "bower_components"
+    "bower_components",
+    "test",
+    "tests"
   ],
   "dependencies": {
-    "angular": "~1.4.4",
-    "angular-route": "1.4.4",
-    "angular-resource": "1.4.4",
-    "angular-sanitize": "1.4.4",
-    "bootstrap": "~3.3.5",
+    "bootstrap": "~3.3.6",
     "jquery": "~2.0.3",
     "underscore": "~1.5.2",
     "modernizr": "~2.6.2",
     "satellizer": "~0.12.1",
-    "angular-ui-tree": "~2.8.0",
+    "angular": "~1.4.4",
     "angular-animate": "~1.2.0",
+    "angular-resource": "1.4.4",
+    "angular-route": "1.4.4",
+    "angular-ui-tree": "~2.8.0",
+    "angular-sanitize": "1.4.4",
     "angular-translate": "~2.7.2",
     "angular-local-storage": "~0.2.1",
-    "angular-mocks": "~1.4.6"
+    "angular-mocks": "~1.4.6",
+    "perfect-scrollbar": "~0.6.5",
+    "angular-toastr": "~1.5.0",
+    "angular-filter": "~0.5.1",
+    "moment": "~2.10.6",
+    "ng-file-upload": "10.1.9",
+    "jasmine-dom": "https://github.com/jeffwatkins/jasmine-dom.git",
+    "angular-bootstrap": "~0.14.3"
   },
   "resolutions": {
-    "angular": "~1.4.4"
+    "angular": "~1.4.4",
+    "perfect-scrollbar": "~0.5.1"
+  },
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "homepage": "",
+  "devDependencies": {
+    "angular-ui-router": "~0.2.15",
+    "angular-local-storage": "~0.2.3",
+    "v-accordion": "~1.4.1",
+    "angular-animate": "~1.4.8",
+    "papaparse": "~4.1.2"
   }
 }
