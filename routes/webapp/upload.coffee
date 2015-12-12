@@ -13,7 +13,7 @@ router.post '/:companyName/master', (req, res) ->
     data:
       'datafile': rest.file(req.file.path, req.file.path, req.file.size, null, req.file.mimetype)
   ).on 'complete', (data) ->
-    console.log 'data is', data
+    console.log 'after upload data is', data
     return
   mRes =
     status: 'Success'
@@ -31,7 +31,7 @@ router.post '/:companyName/daybook', (req, res) ->
     data:
       'datafile': rest.file(req.file.path, req.file.path, req.file.size, null, req.file.mimetype)
   ).on 'complete', (data) ->
-    console.log 'data is', data
+    console.log 'after upload data is', data
     return
   mRes =
     status: 'Success'
