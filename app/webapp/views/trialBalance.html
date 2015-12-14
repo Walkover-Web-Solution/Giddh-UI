@@ -86,8 +86,8 @@
                 </ul>
               </div>
             </div>
-            <button class="btn btn-primary pull-left mrL1" ng-click="accordion.expandAll()" ng-show="showChildren">Expand All</button>
-            <button class="btn btn-danger pull-left mrL1" ng-click="accordion.collapseAll()" ng-show="showChildren">Collapse All</button>
+            <button class="btn btn-primary pull-left mrL1" ng-click="accordion.expandAll()" ng-show="showChildren" ng-class="{'fadeIn':showChildren}">Expand All</button>
+            <button class="btn btn-danger pull-left mrL1" ng-click="accordion.collapseAll()" ng-show="showChildren" ng-class="{'fadeIn':showChildren}">Collapse All</button>
           </div>
           <div class="table-container">
             <table class="col-sm-12 tb-head" ng-show="showLedgerBox">
