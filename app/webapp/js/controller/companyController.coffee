@@ -137,6 +137,12 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #making a detail company view
   $scope.goToCompany = (data, index) ->
+    $scope.showUpdTbl = false
+    $scope.mFiles = []
+    $scope.dFiles = []
+    $scope.mErrFiles = []
+    $scope.dErrFiles = []
+
     $scope.ifHavePermission(data)
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
@@ -307,8 +313,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     companyServices.getUploadsList($scope.selectedCompany.uniqueName).then($scope.getUploadsListSuccess, $scope.getUploadsListFailure)
 
   $scope.getUploadsListSuccess = (res) ->
-    $scope.showUpdTbl = true
-    $scope.updlist = res.body
+    if res.body.length > 0
+      $scope.showUpdTbl = true
+      $scope.updlist = res.body
+    else
+      toastr.info("No records found", "Info")
 
   $scope.getUploadsListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -356,6 +365,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #fire function after page fully loaded
   $scope.$on '$viewContentLoaded', ->
+    console.log "viewContentLoaded"
     $scope.getCompanyList()
     $scope.getCurrencyList()
     $scope.getUserDetails()

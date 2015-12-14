@@ -597,10 +597,15 @@ describe 'companyController', ->
 
   describe '#getUploadsListSuccess', ->
     it 'should set a variable true and copy response in a scope variable', ->
-      res = {"body": []}
+      res = {"body": ["something"]}
       @scope.getUploadsListSuccess(res)
       expect(@scope.showUpdTbl).toBeTruthy()
       expect(@scope.updlist).toBe(res.body)
+    it 'should show toastr alert', ->
+      res = {"body": []}
+      spyOn(@toastr, "info")
+      @scope.getUploadsListSuccess(res)
+      expect(@toastr.info).toHaveBeenCalledWith("No records found", "Info")
 
   describe '#getUploadsListFailure', ->
     it 'should show a toastr with error message', ->
