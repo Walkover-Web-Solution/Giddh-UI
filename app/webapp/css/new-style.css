@@ -1436,3 +1436,6 @@ v-pane-header.show-pseudo{
     border-bottom:none;
 }
 
+.btn:focus{
+    outline:0 !important;
+}
