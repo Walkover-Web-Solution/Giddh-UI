@@ -3,13 +3,13 @@
 describe 'mainController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, $modal, roleServices) ->
+  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, $uibModal, roleServices) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @roleServices = roleServices
     @localStorageService = localStorageService
     @toastr = toastr
-    @modal = $modal
+    @uibModal = $uibModal
     @q = $q
     @mainController = $controller('mainController',
         {
@@ -24,11 +24,11 @@ describe 'mainController', ->
       @rootScope.selectedCompany = {}
       spyOn(@toastr, 'error')
       deferred = @q.defer()
-      spyOn(@modal, 'open').andReturn({result: deferred.promise})
+      spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
 
       @scope.goToManageGroups()
       expect(@toastr.error).toHaveBeenCalledWith('Select company first.', 'Error')
-      expect(@modal.open).not.toHaveBeenCalled()
+      expect(@uibModal.open).not.toHaveBeenCalled()
 
     it 'should call modal service', ->
       @rootScope.selectedCompany = {something: "something"}
@@ -39,9 +39,9 @@ describe 'mainController', ->
         controller: 'groupController'
       }
       deferred = @q.defer()
-      spyOn(@modal, 'open').andReturn({result: deferred.promise})
+      spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
       @scope.goToManageGroups()
-      expect(@modal.open).toHaveBeenCalledWith(modalData)
+      expect(@uibModal.open).toHaveBeenCalledWith(modalData)
 
   describe '#getRoles', ->
     it 'should call service method to fetch roles if roles is undefined', ->

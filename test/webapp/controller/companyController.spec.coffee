@@ -3,13 +3,13 @@
 describe 'companyController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $modal, modalService, $timeout, permissionService, DAServices) ->
+  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $uibModal, modalService, $timeout, permissionService, DAServices, Upload) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @currencyService = currencyService
     @permissionService = permissionService
     @locationService = locationService
-    @modal = $modal
+    @uibModal = $uibModal
     @modalService = modalService
     @toastr = toastr
     @companyServices = companyServices
@@ -17,6 +17,7 @@ describe 'companyController', ->
     @timeout = $timeout
     @localStorageService = localStorageService
     @DAServices = DAServices
+    @Upload = Upload
     @companyController = $controller('companyController',
         {
           $scope: @scope,
@@ -30,6 +31,7 @@ describe 'companyController', ->
           permissionService: @permissionService
           $timeout: @timeout
           DAServices: @DAServices
+          Upload: @Upload
         })
 
   describe '#ifHavePermission', ->
@@ -75,10 +77,10 @@ describe 'companyController', ->
         scope: @scope
       }
       deferred = @q.defer()
-      spyOn(@modal, 'open').andReturn({result: deferred.promise})
+      spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
 
       @scope.openFirstTimeUserModal()
-      expect(@modal.open).toHaveBeenCalledWith(modalData)
+      expect(@uibModal.open).toHaveBeenCalledWith(modalData)
 
   describe '#onCompanyCreateModalCloseSuccess', ->
     it 'should call create with data passed', ->
@@ -606,4 +608,61 @@ describe 'companyController', ->
       spyOn(@toastr, 'error')
       @scope.getUploadsListFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+  describe '#uploadMasterFiles', ->
+    it 'should make variable false set values in a scope variable, then call upload service with upload method', ->
+      result = ''
+      files = [{ 
+        fieldname: 'file',
+        originalname: 'master-small.xml',
+        encoding: '7bit',
+        mimetype: 'text/xml',
+        destination: './uploads/',
+        filename: '1449894122205.xml',
+        path: 'uploads/1449894122205.xml',
+        size: 1288072 
+      }]
+      errFiles = []
+      deferred = @q.defer()
+      spyOn(@Upload, "upload").andReturn(deferred.promise)
+      # spyOn(@Upload, 'upload').and.returnValue(deferred.promise)
+      @scope.uploadMasterFiles(files, errFiles)
+      expect(@Upload.upload).toHaveBeenCalled()
+      expect(@scope.mHideBar).toBeFalsy()
+      expect(@scope.mFiles).toBe(files)
+      expect(@scope.mErrFiles).toBe(errFiles)
+      expect(angular.forEach).toBeDefined()
+  
+  describe '#uploadDaybookFiles', ->
+    it 'should make variable false set values in a scope variable, then call upload service with upload method', ->
+      result = ''
+      files = [{ 
+        fieldname: 'file',
+        originalname: 'Daybook-small.xml',
+        encoding: '7bit',
+        mimetype: 'text/xml',
+        destination: './uploads/',
+        filename: '1449894122205.xml',
+        path: 'uploads/1449894122205.xml',
+        size: 1288072 
+      }]
+      errFiles = []
+      deferred = @q.defer()
+      spyOn(@Upload, "upload").andReturn(deferred.promise)
+      @scope.uploadDaybookFiles(files, errFiles)
+      expect(@Upload.upload).toHaveBeenCalled()
+      expect(@scope.dHideBar).toBeFalsy()
+      expect(@scope.dFiles).toBe(files)
+      expect(@scope.dErrFiles).toBe(errFiles)
+      expect(angular.forEach).toBeDefined()
+
+  describe '#test to check for viewContentLoaded event', ->
+    it 'should call a getAccountsGroups method', ->
+      spyOn(@scope, 'getCompanyList')
+      spyOn(@scope, 'getCurrencyList')
+      spyOn(@scope, 'getUserDetails')
+      @rootScope.$broadcast('$viewContentLoaded')
+      expect(@scope.getCompanyList).toHaveBeenCalled()
+      expect(@scope.getCurrencyList).toHaveBeenCalled()
+      expect(@scope.getUserDetails).toHaveBeenCalled()
 

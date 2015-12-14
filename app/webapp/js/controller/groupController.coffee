@@ -494,14 +494,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error(res.data.message, res.data.status)
 
   $scope.getAccountSharedList = () ->
-    unqNamesObj = {
-      compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: $scope.selectedGroup.uniqueName
-      acntUname: $scope.selectedAccount.uniqueName
-    }
-    if _.isEmpty($scope.selectedGroup)
-      unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
-    accountService.sharedWith(unqNamesObj).then($scope.onGetAccountSharedListSuccess, $scope.onGetAccountSharedListSuccess)
+    if $scope.canShare
+      unqNamesObj = {
+        compUname: $rootScope.selectedCompany.uniqueName
+        selGrpUname: $scope.selectedGroup.uniqueName
+        acntUname: $scope.selectedAccount.uniqueName
+      }
+      if _.isEmpty($scope.selectedGroup)
+        unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
+      accountService.sharedWith(unqNamesObj).then($scope.onGetAccountSharedListSuccess, $scope.onGetAccountSharedListSuccess)
 
   $scope.onGetAccountSharedListSuccess = (res) ->
     $scope.accountSharedUserList = res.body

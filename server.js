@@ -62,7 +62,7 @@ app.use(function (req, res, next) {
     "remoteIp": requestIp.getClientIp(req),
   }
   next();
-});
+})
 
 // do not remove code from this position
 var login = require('./public/routes/website/login');
@@ -72,7 +72,8 @@ var websiteRoutes = require('./public/routes/website/main');
 app.use('/auth', login);
 app.use('/contact', contact);
 app.use('/', websiteRoutes);
-var mStorage = multer.diskStorage({
+
+global.mStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './uploads/')
   },
@@ -80,6 +81,7 @@ var mStorage = multer.diskStorage({
     console.log("In Multer")
     cb(null, Date.now() + '.xml')
   }
+
 })
 
 var parseUploads = multer({storage: mStorage}).single('file');

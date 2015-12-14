@@ -313,24 +313,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.getUploadsListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  # upload file function
-  # $scope.uploadFile = (files, errFiles) ->
-  #   console.log files
-  #   Upload.upload(
-  #     url: '/fileUploadMaster/' + $rootScope.selectedCompany.uniqueName
-  #     arrayKey: '',
-  #     file: files)
-  #   .success (data) ->
-  #     onSuccess(data)
-  #   .error (data, status) ->
-  #     onFailure(data, status)
-
-  # onFailure = (data, status) ->
-  #   console.log "Upload fail", data, status
-
-  # onSuccess = (data) ->
-  #   console.log "Upload success", data
-
   # upload by progressbar
   $scope.uploadMasterFiles = (files, errFiles) ->
     $scope.mHideBar = false
@@ -349,7 +331,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       ), ((res) ->
         console.log res, "error"
       ), (evt) ->
-        console.log "progress", evt
         file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
 
   # upload by progressbar
@@ -370,7 +351,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       ), ((res) ->
         console.log res, "error"
       ), (evt) ->
-        console.log "progress", evt
         file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
 
 

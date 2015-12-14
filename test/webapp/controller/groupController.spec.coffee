@@ -998,7 +998,8 @@ describe 'groupController', ->
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#getAccountSharedList', ->
-    it 'should call a service with a obj var to get data when group is selected', ->
+    it 'should call a service with a obj var to get data when account is selected and user has permission', ->
+      @scope.canShare = true
       @scope.selectedGroup = {"uniqueName": "1"}
       @rootScope.selectedCompany = {"uniqueName": "2"}
       @scope.selectedAccount = {uniqueName: "3"}
@@ -1013,20 +1014,12 @@ describe 'groupController', ->
       @scope.getAccountSharedList()
       expect(@accountService.sharedWith).toHaveBeenCalledWith(unqNamesObj)
 
-  it 'should call a service with a obj var to get data when group is not selected', ->
-    @scope.selectedGroup = {}
-    @rootScope.selectedCompany = {"uniqueName": "2"}
-    @scope.selectedAccount = {uniqueName: "3", parentGroups: [{uniqueName: 1}]}
-    unqNamesObj = {
-      compUname: @rootScope.selectedCompany.uniqueName
-      selGrpUname: @scope.selectedAccount.parentGroups[0].uniqueName
-      acntUname: @scope.selectedAccount.uniqueName
-    }
-    deferred = @q.defer()
-    spyOn(@accountService, "sharedWith").andReturn(deferred.promise)
+    it 'should not call a service with a obj var to get data when user does not have permission', ->
+      @scope.canShare = false
+      spyOn(@accountService, "sharedWith")
 
-    @scope.getAccountSharedList()
-    expect(@accountService.sharedWith).toHaveBeenCalledWith(unqNamesObj)
+      @scope.getAccountSharedList()
+      expect(@accountService.sharedWith).not.toHaveBeenCalled()
 
   describe '#onsharedListSuccess', ->
     it 'should set result to a variable', ->
