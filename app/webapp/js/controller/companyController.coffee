@@ -101,10 +101,9 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, res.data.status)
 
   $scope.getUserDetails = ->
-    if _.isUndefined($rootScope.basicInfo.userUniqueName)
+    if _.isUndefined($rootScope.basicInfo.uniqueName)
       $rootScope.basicInfo = localStorageService.get("_userDetails")
-    userServices.get($rootScope.basicInfo.userUniqueName).then($scope.getUserDetailSuccess, $scope.getUserDetailFailure)
-
+    userServices.get($rootScope.basicInfo.uniqueName).then($scope.getUserDetailSuccess, $scope.getUserDetailFailure)
 
   #Get user details
   $scope.getUserDetailSuccess = (res) ->

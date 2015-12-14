@@ -27,8 +27,8 @@ router.post '/google', (req, res, next) ->
       if data.status == 'error'
         res.status(response.statusCode)
       else
-        userDetailObj.userUniqueName = data.body.uniqueName
-        req.session.name = data.body.uniqueName
+        userDetailObj = data.body.user
+        req.session.name = data.body.user.uniqueName
         req.session.authKey = data.body.authKey
       res.send
         token: token

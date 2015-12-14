@@ -18,18 +18,18 @@ describe "User Service", ->
 
     describe '#get user details', ->
       it 'should call success callback to get user detail', ->
-        userUniqueName = "uniqueName"
-        @httpBackend.when('GET', '/users/' + userUniqueName).respond(200, {"status": "success"})
+        uniqueName = "uniqueName"
+        @httpBackend.when('GET', '/users/' + uniqueName).respond(200, {"status": "success"})
 
-        @userServices.get(userUniqueName).then(
+        @userServices.get(uniqueName).then(
           (data) -> expect(data.status).toBe("success")
           (data) -> expect(true).toBeFalsy()
         )
       it 'should call failure callback', ->
-        userUniqueName = "uniqueName"
-        @httpBackend.when('GET', '/users/' + userUniqueName).respond(400, {"status": "error"})
+        uniqueName = "uniqueName"
+        @httpBackend.when('GET', '/users/' + uniqueName).respond(400, {"status": "error"})
 
-        @userServices.get(userUniqueName).then(
+        @userServices.get(uniqueName).then(
           (data) -> expect(true).toBeFalsy()
           (data) ->
             expect(data.data.status).toBe("error")
@@ -38,19 +38,19 @@ describe "User Service", ->
 
     describe '#get auth key for current user', ->
       it 'shpuld call success callback', ->
-        userUniqueName = "uniqueName"
-        @httpBackend.when('GET', '/users/auth-key/' + userUniqueName).respond(200, {"status": "success"})
+        uniqueName = "uniqueName"
+        @httpBackend.when('GET', '/users/auth-key/' + uniqueName).respond(200, {"status": "success"})
 
-        @userServices.getKey(userUniqueName).then(
+        @userServices.getKey(uniqueName).then(
           (data) -> expect(data.status).toBe("success")
           (data) -> expect(true).toBeFalsy()
         )
 
       it 'should call failure callback', ->
-        userUniqueName = "uniqueName"
-        @httpBackend.when('GET', '/users/auth-key/' + userUniqueName).respond(400, {"status": "error"})
+        uniqueName = "uniqueName"
+        @httpBackend.when('GET', '/users/auth-key/' + uniqueName).respond(400, {"status": "error"})
 
-        @userServices.getKey(userUniqueName).then(
+        @userServices.getKey(uniqueName).then(
           (data) -> expect(true).toBeFalsy()
           (data) ->
             expect(data.data.status).toBe("error")
@@ -59,19 +59,19 @@ describe "User Service", ->
 
     describe '#generate new auth key for user', ->
       it 'should call success callback', ->
-        userUniqueName = "uniqueName"
-        @httpBackend.when('PUT', '/users/' + userUniqueName + '/generate-auth-key').respond(200, {"status": "success"})
+        uniqueName = "uniqueName"
+        @httpBackend.when('PUT', '/users/' + uniqueName + '/generate-auth-key').respond(200, {"status": "success"})
 
-        @userServices.generateKey(userUniqueName).then(
+        @userServices.generateKey(uniqueName).then(
           (data) -> expect(data.status).toBe("success")
           (data) -> expect(true).toBeFalsy()
         )
 
       it 'should call failure callback', ->
-        userUniqueName = "uniqueName"
-        @httpBackend.when('PUT', '/users/' + userUniqueName + '/generate-auth-key').respond(400, {"status": "error"})
+        uniqueName = "uniqueName"
+        @httpBackend.when('PUT', '/users/' + uniqueName + '/generate-auth-key').respond(400, {"status": "error"})
 
-        @userServices.generateKey(userUniqueName).then(
+        @userServices.generateKey(uniqueName).then(
           (data) -> expect(true).toBeFalsy()
           (data) ->
             expect(data.data.status).toBe("error")

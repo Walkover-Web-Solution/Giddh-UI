@@ -5,7 +5,7 @@ userController = ($scope, $rootScope, toastr, userServices) ->
 
   $scope.getUserAuthKey = () ->
     if not _.isUndefined($rootScope.basicInfo)
-      userServices.getKey($rootScope.basicInfo.userUniqueName).then($scope.getUserAuthKeySuccess,
+      userServices.getKey($rootScope.basicInfo.uniqueName).then($scope.getUserAuthKeySuccess,
           $scope.getUserAuthKeyFailure)
 
   $scope.getUserAuthKeySuccess = (res) ->
@@ -15,7 +15,7 @@ userController = ($scope, $rootScope, toastr, userServices) ->
     toastr.error(res.data.message, res.data.status)
 
   $scope.regenerateKey = () ->
-    userServices.generateKey($rootScope.basicInfo.userUniqueName).then($scope.generateKeySuccess,
+    userServices.generateKey($rootScope.basicInfo.uniqueName).then($scope.generateKeySuccess,
         $scope.generateKeyFailure)
 
   $scope.generateKeySuccess = (res) ->

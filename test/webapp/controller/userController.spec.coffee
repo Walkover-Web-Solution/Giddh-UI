@@ -18,7 +18,6 @@ describe 'userController', ->
 
   describe '#getUserAuthKey', ->
     it 'should not call service if basicinfo is undefined', ->
-#      @rootScope.basicInfo = {"userUniqueName": "ravisoni"}
       @rootScope.basicInfo = undefined
       deferred = @q.defer()
       spyOn(@userServices, 'getKey').andReturn(deferred.promise)
@@ -27,7 +26,6 @@ describe 'userController', ->
 
     it 'should call service', ->
       @rootScope.basicInfo = {"userUniqueName": "ravisoni"}
-      #      @rootScope.basicInfo = undefined
       deferred = @q.defer()
       spyOn(@userServices, 'getKey').andReturn(deferred.promise)
       @scope.getUserAuthKey()
