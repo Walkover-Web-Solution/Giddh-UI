@@ -264,7 +264,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.onShareCompanyFailure)
 
   $scope.onShareCompanySuccess = (res) ->
-    $scope.shareRequest = {}
+    $scope.shareRequest = {role: 'view_only', user: null}
     toastr.success(res.body, res.status)
     $scope.getSharedUserList($scope.selectedCompany.uniqueName)
 

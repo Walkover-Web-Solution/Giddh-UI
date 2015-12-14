@@ -7,7 +7,7 @@
           <i class="glyphicon glyphicon-search"></i>
         </div>
 
-        <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts">
+        <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList')">
 
         <div ng-if="!acntSrch.length > 0" ng-hide="showSubMenus" class="input-group-addon cp" ng-click="collapseAllSubMenus()">
           <i class="glyphicon glyphicon-list"></i>

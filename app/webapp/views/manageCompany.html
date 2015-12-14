@@ -175,11 +175,12 @@
                 <div class="form-inline">
 
                   <div class="form-group">
-                    <select class="form-control" name="rolesListSelected" ng-model="rolesListSelected"
-                            ng-change="updateUserRole(rolesListSelected, value.userEmail)">
-                      <option ng-repeat="option in rolesList"
-                              ng-selected="{{option.uniqueName == value.role.uniqueName}}"
-                              value="{{option.uniqueName}}">{{option.name}}
+                    <select class="form-control" name="rolesListSelected" ng-model="rolesListSelected" ng-change="updateUserRole(rolesListSelected, value.userEmail)">
+                      <option 
+                        ng-repeat="option in rolesList"
+                        ng-selected="{{option.uniqueName === value.role.uniqueName}}"
+                        value="{{option.uniqueName}}">
+                        {{option.name}}
                       </option>
                     </select>
 

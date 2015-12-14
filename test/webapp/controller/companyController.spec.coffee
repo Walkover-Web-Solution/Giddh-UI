@@ -470,7 +470,7 @@ describe 'companyController', ->
   describe '#onShareCompanySuccess', ->
     it 'should make a blank object, show success message and call getSharedUserList function', ->
       @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
-      data = {}
+      data = {role: 'view_only', user: null}
       res = {"status": "success", "body": "Company 'companyUniqueName' shared successfully with 'name'"}
       spyOn(@toastr, 'success')
       spyOn(@scope, "getSharedUserList")

@@ -497,11 +497,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if $scope.canShare
       unqNamesObj = {
         compUname: $rootScope.selectedCompany.uniqueName
-        selGrpUname: $scope.selectedGroup.uniqueName
+        selGrpUname: $scope.selectedAccount.parentGroups[0].uniqueName
         acntUname: $scope.selectedAccount.uniqueName
       }
-      if _.isEmpty($scope.selectedGroup)
-        unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
       accountService.sharedWith(unqNamesObj).then($scope.onGetAccountSharedListSuccess, $scope.onGetAccountSharedListSuccess)
 
   $scope.onGetAccountSharedListSuccess = (res) ->

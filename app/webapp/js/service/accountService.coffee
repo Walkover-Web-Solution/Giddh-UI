@@ -12,7 +12,10 @@ angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
       update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'}
       share: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/share'}
       unshare: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/unshare'}
-      sharedWith: {method: 'GET', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/shared-with'}
+      sharedWith: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/shared-with'
+      }
       delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'}
       move: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/move'}
     })

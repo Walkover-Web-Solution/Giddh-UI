@@ -1002,10 +1002,16 @@ describe 'groupController', ->
       @scope.canShare = true
       @scope.selectedGroup = {"uniqueName": "1"}
       @rootScope.selectedCompany = {"uniqueName": "2"}
-      @scope.selectedAccount = {uniqueName: "3"}
+      @scope.selectedAccount = {
+        uniqueName: "3"
+        parentGroups: [
+          {uniqueName: "milk"}
+          {uniqueName: "milk2"}
+        ]
+      }
       unqNamesObj = {
         compUname: @rootScope.selectedCompany.uniqueName
-        selGrpUname: @scope.selectedGroup.uniqueName
+        selGrpUname: @scope.selectedAccount.parentGroups[0].uniqueName
         acntUname: @scope.selectedAccount.uniqueName
       }
       deferred = @q.defer()

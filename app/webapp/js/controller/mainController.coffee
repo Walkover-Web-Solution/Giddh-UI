@@ -5,7 +5,6 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
   $rootScope.basicInfo = {}
   $scope.logout = ->
     $http.post('/logout').then ((res) ->
-      #localStorageService.remove("_userDetails")
       localStorageService.clearAll()
       window.location = "/thanks"
     ), (res) ->
@@ -38,6 +37,11 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
 
   $scope.onGetRolesFailure = (response) ->
     console.log "Something went wrong while fetching role"
+
+  $rootScope.setScrollToTop = (val, elem)->
+    if val.length > 0
+      cntBox = document.getElementById(elem)
+      cntBox.scrollTop = 0
 
   $rootScope.$on '$viewContentLoaded', ->
     $scope.getRoles()
