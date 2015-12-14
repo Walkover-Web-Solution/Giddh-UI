@@ -77,8 +77,6 @@ app.run [
       edge = ua.indexOf('Edge/')
       if (msie > 0)
         toastr.error('For Best User Expreince, upgrade to IE 11+')
-      else if (trident > 0)
-        toastr.error('IE 11')
     GetIEVersion()
 ]
 
