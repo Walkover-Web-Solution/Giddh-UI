@@ -2,7 +2,6 @@
 
 trialBalanceController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window) ->
   $scope.expanded = false
-
   #date time picker code starts here
   $scope.today = new Date()
   $scope.fromDate = {date: new Date()}
@@ -11,6 +10,8 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   $scope.toDatePickerIsOpen = false
   $scope.showOptions = false
   $scope.showChildren = false
+  $scope.sendRequest = true
+  $rootScope.cmpViewShow = true
   $scope.dateOptions = {
     'year-format': "'yy'",
     'starting-day': 1,
@@ -91,12 +92,15 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
         $scope.expanded = false
     ), 100
     console.log trialBalanceController.accordion 
+
   $scope.$on '$viewContentLoaded', ->
-    dateObj = {
-      'fromDate': $filter('date')($scope.getDefaultDate().date,'dd-MM-yyyy')
-      'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
-    }
-    $scope.getTrialBal(dateObj)
+    if $scope.sendRequest
+      dateObj = {
+        'fromDate': $filter('date')($scope.getDefaultDate().date,'dd-MM-yyyy')
+        'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+      }
+      $scope.getTrialBal(dateObj)
+      $scope.sendRequest = false
 
   $scope.typeFilter = (input) ->
     switch input

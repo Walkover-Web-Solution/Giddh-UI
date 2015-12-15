@@ -8,6 +8,8 @@ var session = require('express-session');
 var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
+var mongoose = require('mongoose');
+var MongoStore = require('connect-mongo')(session);
 
 //Example POST method invocation 
 var Client = require('node-rest-client').Client; 
@@ -48,7 +50,10 @@ app.use(session({
   cookie: {
     secure: false,
     maxAge: null
-  }
+  },
+  store: new MongoStore({
+      url:'mongodb://localhost/giddhDB',
+  })
 }));
 
 // some global variables

@@ -461,6 +461,10 @@ footer a:hover {
     padding: 0;
 }
 
+a.h2s {
+    color:#fff;
+}
+
 #dasheddiv {
     border-bottom: 5px dashed #ccc;
     height: 20px;

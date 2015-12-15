@@ -89,7 +89,8 @@ app.factory 'appInterceptor', ['$q', '$location', '$log',
       response
 
     responseError: (responseError) ->
-      if responseError.status is 0
+      console.log responseError
+      if responseError.status is 500
         window.location = "/login"
       else
         $q.reject responseError
