@@ -49,7 +49,10 @@
                 <li ng-repeat="(index,accDtl) in value.accountDetails  | filter:acntSrch track by $index"
                     id="ac_{{accDtl.uniqueName}}"
                     >
-                  <a href="#ledger" ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl); getLedgerData(value, accDtl)"
+                  <a
+                    tooltip-placement="top" 
+                    uib-tooltip="{{accDtl.uniqueName}}" 
+                    href="#ledger" ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl); getLedgerData(value, accDtl)"
                      ng-class="{'active': accDtl.uniqueName === selectedAccountUniqueName}" ui-sref="ledger.ledgerContent({unqName:accDtl.uniqueName})">
                     <div class="clearfix">
                       <i ng-class="accDtl.charId ==1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>

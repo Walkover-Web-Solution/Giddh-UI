@@ -1,7 +1,8 @@
 "use strict"
 
 mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices) ->
-  $rootScope.showLedgerBox = false
+  $rootScope.showLedgerBox = true
+  $rootScope.showLedgerLoader = false
   $rootScope.basicInfo = {}
   $scope.logout = ->
     $http.post('/logout').then ((res) ->

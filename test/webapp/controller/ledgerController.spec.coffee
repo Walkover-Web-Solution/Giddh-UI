@@ -120,17 +120,21 @@ describe 'ledgerController', ->
         @scope.fromDate = {
           date: "14-11-2015"
         }
-        deferred = @q.defer()
-        spyOn(@ledgerService, "getLedger").andReturn(deferred.promise)
-        spyOn(@scope, "hasAddAndUpdatePermission").andReturn(true)
         @scope.selectedCompany = {
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
         @scope.selectedAccountUniqueName = "somename"
         data = {groupUniqueName: "somename"}
-        acData = {name: "name", uniqueName: "somename"}
-
+        acData = {
+          name: "name"
+          uniqueName: "somename"
+          parentGroups: [
+            {name: "name0", uniqueName: "somename0"}
+            {name: "name1", uniqueName: "somename1"}
+            {name: "name2", uniqueName: "somename2"}
+          ]
+        }
         udata = {
           compUname: @scope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
@@ -138,8 +142,14 @@ describe 'ledgerController', ->
           fromDate: @scope.toDate.date
           toDate: @scope.fromDate.date
         }
+        deferred = @q.defer()
+        spyOn(@ledgerService, "getLedger").andReturn(deferred.promise)
+        spyOn(@scope, "hasAddAndUpdatePermission").andReturn(true)
+        spyOn(@scope, "showLedgerBreadCrumbs")
+
         @scope.loadLedger(data, acData)
         expect(@scope.showLedgerBox).toBeFalsy()
+        expect(@scope.showLedgerLoader).toBeTruthy()
         expect(@scope.selectedLedgerAccount).toBe(acData)
         expect(@scope.selectedLedgerGroup).toBe(data)
         expect(@scope.accntTitle).toEqual(acData.name)
@@ -148,6 +158,7 @@ describe 'ledgerController', ->
 
         expect(@scope.hasAddAndUpdatePermission).toHaveBeenCalledWith(acData)
         expect(@ledgerService.getLedger).toHaveBeenCalledWith(udata)
+        expect(@scope.showLedgerBreadCrumbs).toHaveBeenCalledWith(acData.parentGroups.reverse())
 
     describe '#loadLedgerSuccess', ->
       it 'should call calculate ledger function with data and set a variable true and push value in ledgerdata', ->
@@ -162,6 +173,7 @@ describe 'ledgerController', ->
         @scope.loadLedgerSuccess(res)
         expect(@scope.ledgerData).toEqual(_.omit(res.body, 'ledgers'))
         expect(@scope.showLedgerBox).toBeTruthy()
+        expect(@scope.showLedgerLoader).toBeFalsy()
         expect(@scope.calculateLedger).toHaveBeenCalledWith(@scope.ledgerData, "server")
 
     describe '#loadLedgerFailure', ->

@@ -22,7 +22,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $rootScope.lItem = []
   #date time picker code starts here
   $scope.today = new Date()
-  $scope.fromDate = {date: new Date()}
+  d = moment(new Date()).subtract(1, 'month')
+  $scope.fromDate = {date: d._d}
   $scope.toDate = {date: new Date()}
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
@@ -90,6 +91,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       return false
     $scope.canAddAndEdit = $scope.hasAddAndUpdatePermission(acData)
     $rootScope.showLedgerBox = false
+    $rootScope.showLedgerLoader = true
     $scope.selectedLedgerAccount = acData
     $scope.selectedLedgerGroup = data
     $scope.accntTitle = acData.name
@@ -105,6 +107,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     ledgerService.getLedger(unqNamesObj).then($scope.loadLedgerSuccess, $scope.loadLedgerFailure)
     $stateParams.unqName = $scope.selectedAccountUniqueName
     $stateParams.grpName = $scope.selectedGroupUname
+
+    $scope.showLedgerBreadCrumbs(acData.parentGroups.reverse())
 
   $scope.loadLedgerSuccess = (res) ->
     data = {}
@@ -134,6 +138,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.ledgerOnlyDebitData.push(angular.copy(dummyValueDebit))
     $scope.ledgerOnlyCreditData.push(angular.copy(dummyValueCredit))
     $rootScope.showLedgerBox = true
+    $rootScope.showLedgerLoader = false
     $scope.ledgerData = angular.copy(_.omit(res.body, 'ledgers'))
     $scope.calculateLedger($scope.ledgerData, "server")
 
@@ -402,20 +407,24 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
           $scope.quantity += 20
 
   $scope.$on '$viewContentLoaded',  ->
-    $scope.fromDate.date.setDate(1)
     ledgerObj = DAServices.LedgerGet()
-
-    if !_.isNull(ledgerObj.ledgerData) or !_.isEmpty(ledgerObj.ledgerData)
+    if !_.isEmpty(ledgerObj.ledgerData)
       $scope.loadLedger(ledgerObj.ledgerData, ledgerObj.selectedAccount)
     else
-      console.log "nothing selected to load"
+      if !_.isNull(localStorageService.get("_ledgerData"))
+        $scope.loadLedger(localStorageService.get("_ledgerData"), localStorageService.get("_selectedAccount"))
+      else
+        console.log "nothing selected to load"
 
   $scope.hasAddAndUpdatePermission = (account) ->
     permissionService.hasPermissionOn(account, "UPDT") and permissionService.hasPermissionOn(account, "ADD")
 
+  #show breadcrumbs on ledger
+  $scope.showLedgerBreadCrumbs = (data) ->
+    $scope.ledgerBreadCrumbList = data
+
   $scope.$on '$reloadLedger',  ->
     $scope.reloadLedger()
-
 
 angular.module('giddhWebApp').controller 'ledgerController', ledgerController
 

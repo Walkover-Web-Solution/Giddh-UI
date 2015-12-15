@@ -289,6 +289,7 @@ angular.module('ledger', [])
       popHtml = angular.element('
           <div class="popover fade bottom ledgerPopDiv" id="popid_{{index}}">
           <div class="arrow"></div>
+          <div class="popover-inner">
           <h3 class="popover-title" ng-if="ftype == \'Update\'">Update entry</h3>
           <h3 class="popover-title" ng-if="ftype == \'Add\'">Add new entry</h3>
           <div class="popover-content">
@@ -339,7 +340,7 @@ angular.module('ledger', [])
               </div>
             </div>
           </div>
-        </div>')
+        </div></div>')
 
       $document.on "click", (event)->
         onDocumentClick(event)
