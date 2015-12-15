@@ -9,8 +9,8 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
   $scope.showOptions = false
-  $scope.showChildren = false
   $scope.sendRequest = true
+  $scope.showChildren = false
   $rootScope.cmpViewShow = true
   $scope.dateOptions = {
     'year-format': "'yy'",
