@@ -91,7 +91,6 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       else
         $scope.expanded = false
     ), 100
-    console.log trialBalanceController.accordion 
 
   $scope.$on '$viewContentLoaded', ->
     if $scope.sendRequest
@@ -108,6 +107,14 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
         input = "Dr."
       when 'CREDIT'
         input = "Cr."
+    input
+
+  $scope.firstCapital = (input) ->
+    s = input.split('')
+    first = s[0].toUpperCase()
+    rest = s.splice(1)
+    i = first + rest.join('')
+    input = i
     input
 
   #format $scope.data to convert into csv
@@ -159,7 +166,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     body = ''
     footer = ''
     companyDetails = $rootScope.selectedCompany
-    header = companyDetails.name + '\r\n' + companyDetails.address + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'CIN: U72400MP2010PTC023806' + '\r\n' + 'Trial Balance' + ': ' + $scope.fromDate.date + ' to ' + $filter('date')($scope.toDate.date,
+    header = companyDetails.name + '\r\n' + '"'+companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'CIN: U72400MP2010PTC023806' + '\r\n' + 'Trial Balance' + ': ' + $scope.fromDate.date + ' to ' + $filter('date')($scope.toDate.date,
         "dd-MM-yyyy") + '\r\n'
 
 
@@ -252,7 +259,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     body = ''
     footer = ''
     companyDetails = $rootScope.selectedCompany
-    header = companyDetails.name + '\r\n' + companyDetails.address + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'CIN: U72400MP2010PTC023806' + '\r\n' + 'Trial Balance' + ': ' + $scope.fromDate.date + ' to ' + $filter('date')($scope.toDate.date,
+    header = companyDetails.name + '\r\n' + '"'+companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'CIN: U72400MP2010PTC023806' + '\r\n' + 'Trial Balance' + ': ' + $scope.fromDate.date + ' to ' + $filter('date')($scope.toDate.date,
         "dd-MM-yyyy") + '\r\n'
 
     $scope.fnCondensed = "Trial_Balance_condensed.csv"
@@ -318,26 +325,26 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       _.each csvObj, (obj) ->
         row = row or
             ''
-        row += obj.Name + ',' + obj.Debit + ',' + obj.Credit + ',' + obj.ClosingBalance + ',' + $scope.typeFilter(obj.closingBalanceType) + '\r\n'
+        row += obj.Name.toUpperCase() + ',' + obj.Debit + ',' + obj.Credit + ',' + obj.ClosingBalance + ',' + $scope.typeFilter(obj.closingBalanceType) + '\r\n'
 
         if obj.accounts.length > 0
           _.each obj.accounts, (acc) ->
-            row += acc.name + ' (' + obj.Name + ')' + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + ',' + $scope.typeFilter(acc.closingBalanceType) +'\r\n'
+            row += $scope.firstCapital(acc.name.toLowerCase()) + ' (' + $scope.firstCapital(obj.Name) + ')' + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + ',' + $scope.typeFilter(acc.closingBalanceType) +'\r\n'
 
         if obj.childGroups.length > 0
           _.each obj.childGroups, (grp) ->
             if grp.closingBalance != 0
-              row += grp.name + ' (' + obj.Name + ')' + ',' + grp.debit + ',' + grp.credit + ',' + grp.closingBalance + ',' + $scope.typeFilter(grp.closingBalanceType) + '\r\n'
+              row += $scope.firstCapital(grp.name.toLowerCase()) + ' (' + obj.Name.toUpperCase() + ')' + ',' + grp.debit + ',' + grp.credit + ',' + grp.closingBalance + ',' + $scope.typeFilter(grp.closingBalanceType) + '\r\n'
 
             if grp.subGroups.length > 0
               _.each grp.subGroups, (subgrp) ->
                 if subgrp.name
-                  row += subgrp.name + ' (' + grp.name + ')' + ',' + subgrp.debit + ',' + subgrp.credit + ',' + subgrp.closingBalance + ',' + $scope.typeFilter(subgrp.closingBalanceType) +'\r\n'
+                  row += subgrp.name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + subgrp.debit + ',' + subgrp.credit + ',' + subgrp.closingBalance + ',' + $scope.typeFilter(subgrp.closingBalanceType) +'\r\n'
                   createCsv(grp.subGroups)
 
             if grp.subAccounts.length > 0
               _.each grp.subAccounts, (acc) ->
-                row += acc.name + ' (' + grp.name + ')' + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + ',' + $scope.typeFilter(acc.closingBalanceType) + '\r\n'
+                row += acc.name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + ',' + $scope.typeFilter(acc.closingBalanceType) + '\r\n'
 
         body += row + '\r\n'
 
