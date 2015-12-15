@@ -2,7 +2,7 @@
 
 trialBalanceController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window) ->
   $scope.expanded = false
-
+  $rootScope.cmpViewShow = true
   #date time picker code starts here
   $scope.today = new Date()
   $scope.fromDate = {date: new Date()}

@@ -1,6 +1,6 @@
 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent">
 
-  <div class="loader" ng-hide="showLedgerBox">
+  <div class="loader" ng-show="showLedgerLoader">
     <span></span>
     <span></span>
     <span></span>
@@ -9,8 +9,19 @@
 
     <h1>loading ledger</h1>
   </div>
+  <div class="pdL2 pdR2 pdT2" ng-hide="showLedgerBox">
+    <div class="alert alert-info" role="alert">Click on any Account to load <strong>ledger</strong></div>
+  </div>
 
   <div class="pdL2 pdR2 pdT2" ng-show="showLedgerBox">
+    <div class="mrB2">
+      <ol class="breadcrumb mrB2">
+        <li ng-repeat="(key,value) in ledgerBreadCrumbList"
+            ng-class="{active:$last}">
+          <a href="javascript:void(0)">{{value.name}}</a>
+        </li>
+      </ol>
+    </div>
     <div class="form-inline pdB1">
       <form name="fromToDateForm" novalidate>
         <div class="form-group mrR1">
@@ -100,9 +111,10 @@
 
             <tr class="greyBg"
                 ng-if="ledgerData.forwardedBalance.type == 'DEBIT' && ledgerData.forwardedBalance.amount > 0 ">
-              <th colspan="100%">
-                B/F Balance: {{ledgerData.forwardedBalance.amount | number:2}}
+              <th colspan="2" class="alR">
+                B/F Balance
               </th>
+              <th class="alR">{{ledgerData.forwardedBalance.amount | number:2}}</th>
             </tr>
             <tr class="greyBg"
                 ng-if="ledgerData.forwardedBalance.type == 'CREDIT' && ledgerData.forwardedBalance.amount > 0">
@@ -158,9 +170,10 @@
             </tr>
             <tr class="greyBg"
                 ng-if="ledgerData.forwardedBalance.type == 'CREDIT' && ledgerData.forwardedBalance.amount > 0">
-              <th colspan="100%">
-                B/F Balance: {{ledgerData.forwardedBalance.amount | number:2}}
+              <th colspan="2" class="alR">
+                B/F Balance
               </th>
+              <th class="alR">{{ledgerData.forwardedBalance.amount | number:2}}</th>
             </tr>
             <tr class="greyBg"
                 ng-if="ledgerData.forwardedBalance.type == 'DEBIT' && ledgerData.forwardedBalance.amount > 0">
@@ -211,7 +224,7 @@
       <tr class="fw600 dgreyBg">
         <td colspan="2" class="bdrL" style="width:36%">
           <div class="pull-right" ng-if="ledgBalType == 'CREDIT'">
-            Balance
+            C/F Balance
           </div>
         </td>
         <td style="width:14%" class="bdrR alR">
@@ -219,7 +232,7 @@
         </td>
         <td colspan="2" style="width:36%" class="bdrL">
           <div class="pull-right" ng-if="ledgBalType == 'DEBIT'">
-            Balance
+            C/F Balance
           </div>
         </td>
         <td style="width:14%" class="bdrR alR">
