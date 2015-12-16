@@ -102,6 +102,7 @@ var users = require('./public/routes/webapp/users');
 var roles = require('./public/routes/webapp/roles');
 var trialBalance = require('./public/routes/webapp/trialBal');
 var upload = require('./public/routes/webapp/upload');
+var profitLoss = require('./public/routes/webapp/profitLoss')
 
 app.use('/currency', currency);
 app.use('/users', users);
@@ -114,6 +115,8 @@ app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountUn
 app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
+app.use('/company/:companyUniqueName/profit-loss', profitLoss);
+
 
 app.listen(port, function () {
   console.log('Express Server running at port', this.address().port);

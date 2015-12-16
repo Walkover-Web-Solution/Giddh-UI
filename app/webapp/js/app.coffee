@@ -55,6 +55,12 @@ app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl:'/public/webapp/views/trialBalance.html',
     controller:'trialBalanceController'
     )
+  .state('Profit-and-Loss',
+    url:'/profit-and-loss',
+    templateUrl:'/public/webapp/views/profitLoss.html',
+    controller:'profitLossController'
+    )
+
   $locationProvider.html5Mode(false)
   return
 
@@ -90,7 +96,7 @@ app.factory 'appInterceptor', ['$q', '$location', '$log',
 
     responseError: (responseError) ->
       if responseError.status is 500
-        window.location = "/login"
+        #window.location = "/login"
       else
         $q.reject responseError
 ]

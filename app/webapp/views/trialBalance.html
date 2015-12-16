@@ -14,7 +14,14 @@
     </div>
     <!-- middle body -->
     <div class="col-md-10 col-sm-7">
-      <div class="middleBody bdrR bdrL row">
+      <div class="loader mrT4" ng-hide="showLedgerBox">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <div class="middleBody bdrR bdrL row"  ng-show="showLedgerBox">
         <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
                            auto-height>
           <ul class="list-inline color-codes">
@@ -72,7 +79,7 @@
               <input type="search" class="form-control" placeholder="Search" aria-describedby="sizing-addon3"
                      ng-model="keyWord" ng-keydown="accordion.expandAll()" str-length>
             </div>
-            <div class="pull-right export" ng-show="showLedgerBox">
+            <div class="pull-right export">
               <a href="" title="" download="" ng-click="formatData($event)"><img src="/public/webapp/images/csv.png" class="csv"/></a>
               <div class="export-options" ng-show="showOptions">
                 <span class="arrow"></span>
@@ -110,14 +117,7 @@
               </tr>
               </thead>
             </table>
-            <div class="loader" ng-hide="showLedgerBox">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-            <v-accordion class="vAccordion--default root" ng-show="showLedgerBox"
+            <v-accordion class="vAccordion--default root"
                          control="accordion" multiple onexpand="addData()">
               <v-pane ng-repeat="grp in data.groupDetails | filter:keyWord" expanded="expanded" ng-class="grp.category">
                 <v-pane-header ng-class="{'show-pseudo' : !grp.childGroups.length && !grp.accounts.length}">
