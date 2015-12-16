@@ -366,7 +366,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #fire function after page fully loaded
   $scope.$on '$viewContentLoaded', ->
-    console.log "viewContentLoaded"
     $scope.getCompanyList()
     $scope.getCurrencyList()
     $scope.getUserDetails()
