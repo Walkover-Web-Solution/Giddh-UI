@@ -30,7 +30,8 @@
             <li><span class="circle income"></span>Income</li>
             <li><span class="circle expenses"></span>Expenses</li>
           </ul>
-          <div class="form-inline pdB1 mrT2 mrL3">
+          <div class="pd2">
+          <div class="form-inline clearfix">
             <form class=" pull-left" name="fromToDateForm" novalidate>
               <div class="form-group mrR1">
                 <label>From date</label>
@@ -74,7 +75,7 @@
                 </button>
               </div>
             </form>
-            <div class="input-group input-group-md pull-right mrR3">
+            <div class="input-group input-group-md pull-right">
               <span class="input-group-addon" id="sizing-addon3"><i class="glyphicon glyphicon-search"></i></span>
               <input type="search" class="form-control" placeholder="Search" aria-describedby="sizing-addon3"
                      ng-model="keyWord" ng-keydown="accordion.expandAll()" str-length>
@@ -96,7 +97,11 @@
             <button class="btn btn-primary pull-left mrL1" ng-click="accordion.expandAll()" ng-show="showChildren" ng-class="{'fadeIn':showChildren}">Expand All</button>
             <button class="btn btn-danger pull-left mrL1" ng-click="accordion.collapseAll()" ng-show="showChildren" ng-class="{'fadeIn':showChildren}">Collapse All</button>
           </div>
-          <div class="table-container">
+        </div>
+        <!-- end of clearfix and pd -->
+
+
+          <div class="table-container mrL2 mrR2">
             <table class="col-sm-12 tb-head" ng-show="showLedgerBox">
               <thead>
               <tr>
