@@ -19,6 +19,7 @@ app = angular.module("giddhWebApp",
     "vAccordion"
     "trialBalance"
     'ngFileUpload'
+    "exportDirectives"
   ]
 )
 
