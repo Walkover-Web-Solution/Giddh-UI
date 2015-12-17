@@ -12,6 +12,7 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
     getCmpRolesList: {method: 'GET', url: '/company/:uniqueName/shareable-roles'}
     unSharedUser: {method: 'PUT', url: '/company/:uniqueName/unshare'}
     getUploadListDetails: {method: 'GET', url: '/company/:uniqueName/imports'}
+    getProfitLoss: {method:'GET', url: '/company/:companyUniqueName/profit-loss'}
   })
 
   companyServices =
@@ -61,5 +62,8 @@ angular.module('giddhWebApp').service 'companyServices', ($resource, $q) ->
 
     getUploadsList: (uniqueName) ->
       @handlePromise((onSuccess, onFailure) -> Company.getUploadListDetails({uniqueName: uniqueName}, onSuccess, onFailure))
+
+    getPL :(reqParam) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getProfitLoss({companyUniqueName: reqParam.companyUniqueName, from: reqParam.fromDate, to:reqParam.toDate}, onSuccess, onFailure))
 
   companyServices

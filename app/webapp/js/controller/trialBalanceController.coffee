@@ -326,10 +326,9 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
         row = row or
             ''
         row += obj.Name.toUpperCase() + ',' + obj.Debit + ',' + obj.Credit + ',' + obj.ClosingBalance + ',' + $scope.typeFilter(obj.closingBalanceType) + '\r\n'
-
         if obj.accounts.length > 0
           _.each obj.accounts, (acc) ->
-            row += $scope.firstCapital(acc.name.toLowerCase()) + ' (' + $scope.firstCapital(obj.Name) + ')' + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + ',' + $scope.typeFilter(acc.closingBalanceType) +'\r\n'
+            row += $scope.firstCapital(acc.name.toLowerCase()) + ' (' + $scope.firstCapital(obj.Name) + ')' + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + ',' + $scope.typeFilter(acc.closingBalanceType) + '\r\n'
 
         if obj.childGroups.length > 0
           _.each obj.childGroups, (grp) ->
@@ -339,7 +338,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
             if grp.subGroups.length > 0
               _.each grp.subGroups, (subgrp) ->
                 if subgrp.name
-                  row += subgrp.name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + subgrp.debit + ',' + subgrp.credit + ',' + subgrp.closingBalance + ',' + $scope.typeFilter(subgrp.closingBalanceType) +'\r\n'
+                  row += subgrp.name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + subgrp.debit + ',' + subgrp.credit + ',' + subgrp.closingBalance + ',' + $scope.typeFilter(subgrp.closingBalanceType) + '\r\n'
                   createCsv(grp.subGroups)
 
             if grp.subAccounts.length > 0

@@ -22,13 +22,70 @@
       				Profit and Loss
       			</h1>
       			<p class="sub-title inline">
-      				(1st April 2015 to 15 Dec 2015)
+      				(1 April {{year}} to {{date | date:'d'}} {{month | date:'MMMM'}} {{year | date:'yyyy'}})
       			</p>
       		</div>
       	</div>
 
-        <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
-                           auto-height>
+        <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+            <div class="table-title">
+              <div class="col-sm-6">
+                Income
+              </div>
+              <div class="col-sm-6">
+                Expenses
+              </div>
+            </div>
+            <div class="table-container">
+              <div class="col-sm-6 table-l">
+                <table class="col-sm-12">
+                  <thead class="tb-head">
+                    <tr>
+                       <th>
+                          Particular
+                       </th> 
+                       <th>
+                          Amount
+                       </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="inc in data.incomeGroups">
+                      <td class="col-sm-6">{{inc.name}}</td>
+                      <td class="col-sm-6">{{inc.closingBalance}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="col-sm-6 table-r">
+                <table class="col-sm-12">
+                  <thead class="tb-head">
+                    <tr>
+                       <th>
+                          Particular
+                       </th> 
+                       <th>
+                          Amount
+                       </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="exp in data.expenseGroups">
+                       <td class="col-sm-6">{{exp.name}}</td>
+                       <td class="col-sm-6">{{exp.closingBalance}}</td>   
+                    </tr>
+                  </tbody>  
+                </table>
+              </div>
+              <div class="col-sm-12 total">
+                <div class="col-sm-6">
+                  Net Profit
+                </div>
+                <div class="text-right">
+                  {{data.closingBalance}}
+                </div>
+              </div>
+            </div>
 
         </perfect-scrollbar>
       </div>
