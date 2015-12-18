@@ -336,7 +336,7 @@ angular.module('ledger', [])
 
                 <button ng-click="closeAllEntry()" ng-show="canAddAndEdit" class="btn btn-default mrL1" type="button">close All</button>
 
-                <button ng-show="item.sharedData.uniqueName != undefined" ng-show="canAddAndEdit" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
+                <button ng-if="canAddAndEdit" ng-show="item.sharedData.uniqueName != undefined" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
               </div>
             </div>
           </div>
