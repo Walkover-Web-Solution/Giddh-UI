@@ -49,11 +49,12 @@
             </div>
             <div class="row">
               <div class="col-md-6 col-sm-12">
-                <select name="openingBalanceType" ng-model="selectedAccount.openingBalanceType" class="form-control" required>
-                  <option ng-repeat="value in openingBalType"
-                          ng-selected="{{value.val == selectedAccount.openingBalanceType}}" value="{{value.val}}">
-                    {{value.name}}
-                  </option>
+                <select 
+                  class="form-control"
+                  name="openingBalanceType" 
+                  ng-model="selectedAccount.openingBalanceType" 
+                  ng-options="item.val as item.name for item in openingBalType">
+                  <option value="">--Please select--</option>
                 </select>
               </div>
               <div class="col-md-6 col-sm-12">
@@ -113,11 +114,11 @@
       <div class="row pdL pdR mrT2">
         <div class="form-group col-md-12">
           <button ng-if="acntCase == 'Update'" class="btn btn-success" ng-click="updateAccount()"
-                  ng-disabled="addAccountForm.$invalid">{{acntCase}}
+                  ng-disabled="addAccountForm.$invalid || selectedAccount.openingBalanceType == null">{{acntCase}}
           </button>
 
           <button ng-if="acntCase == 'Add'" class="btn btn-success" ng-click="addAccount()"
-                  ng-disabled="addAccountForm.$invalid">{{acntCase}}
+                  ng-disabled="addAccountForm.$invalid || selectedAccount.openingBalanceType == null">{{acntCase}}
           </button>
 
         </div>

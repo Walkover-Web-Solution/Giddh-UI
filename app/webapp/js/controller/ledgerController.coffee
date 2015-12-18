@@ -423,6 +423,14 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.showLedgerBreadCrumbs = (data) ->
     $scope.ledgerBreadCrumbList = data
 
+  #import ledger
+  $scope.importLedger = ()->
+    console.log "importLedger"
+
+  #export ledger
+  $scope.exportLedger = ()->
+    console.log "exportLedger"
+
   $scope.$on '$reloadLedger',  ->
     $scope.reloadLedger()
 

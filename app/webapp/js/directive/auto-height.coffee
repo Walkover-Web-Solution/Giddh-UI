@@ -302,14 +302,12 @@ angular.module('ledger', [])
               <div class="row">
                 <div class="col-md-6 col-sm-12">
                   <div class="form-group">
-                    <select class="form-control" ng-readonly="!canAddAndEdit"
-                    name="voucherType" ng-model="item.sharedData.voucher.shortCode">
-                      <option
-                        ng-repeat="option in voucherTypeList"
-                        ng-selected="{{option.shortCode == item.sharedData.voucher.shortCode}}"
-                        value="{{option.shortCode}}">
-                        {{option.name}}
-                      </option>
+                    <select 
+                      class="form-control"
+                      ng-readonly="!canAddAndEdit"
+                      name="voucherType"
+                      ng-model="item.sharedData.voucher.shortCode" 
+                      ng-options="item.shortCode as item.name for item in voucherTypeList">
                     </select>
                   </div>
                   <div class="form-group">
