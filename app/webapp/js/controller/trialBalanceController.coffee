@@ -1,6 +1,7 @@
 "use strict"
 
 trialBalanceController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window) ->
+  tb = this
   $scope.expanded = false
   #date time picker code starts here
   $scope.today = new Date()

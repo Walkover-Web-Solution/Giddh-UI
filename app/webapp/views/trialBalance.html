@@ -80,7 +80,9 @@
                      ng-model="keyWord" ng-keydown="accordion.expandAll()" str-length>
             </div>
             <div class="pull-right export">
-              <button type="" class="btn btn-sm btn-warning" export-pdf>PDF</button>
+              <button type="" class="btn btn-sm btn-warning" export-pdfgroupwise>PDF - Group Wise</button>
+              <button type="" class="btn btn-sm btn-warning" export-pdfaccountwise>PDF - Account Wise</button>
+              <button class="btn btn-sm btn-warning" export-pdfcondensed>PDF - Condensed</button>
               <a href="" title="" download="" ng-click="formatData($event)"><img src="/public/webapp/images/csv.png" class="csv"/></a>
               <div class="export-options" ng-show="showOptions">
                 <span class="arrow"></span>
@@ -94,8 +96,8 @@
                 </ul>
               </div>
             </div>
-            <button class="btn btn-primary pull-left mrL1" ng-click="accordion.expandAll()" ng-show="showChildren" ng-class="{'fadeIn':showChildren}">Expand All</button>
-            <button class="btn btn-danger pull-left mrL1" ng-click="accordion.collapseAll()" ng-show="showChildren" ng-class="{'fadeIn':showChildren}">Collapse All</button>
+            <button class="btn btn-primary pull-left mrL1" ng-click="accordion.expandAll()"  ng-class="{'fadeIn':showChildren}">Expand All</button>
+            <button class="btn btn-danger pull-left mrL1" ng-click="accordion.collapseAll()" ng-class="{'fadeIn':showChildren}">Collapse All</button>
           </div>
           <div class="table-container">
             <table class="col-sm-12 tb-head" ng-show="showLedgerBox">
@@ -125,7 +127,7 @@
                   <table class="col-sm-12 fl-none">
                     <tbody>
                     <tr>
-                      <td class="col-sm-4">{{ ::grp.groupName }}</td>
+                      <td class="col-sm-4"><b>{{ ::grp.groupName | uppercase }}</b></td>
                       <td class="col-sm-2 text-right">{{ grp.forwardedBalance.amount | number:2 }} {{
                         grp.forwardedBalance.type | recType }}
                       </td>
@@ -154,7 +156,7 @@
                         <table class="col-sm-12 fl-none">
                           <tbody>
                           <tr>
-                            <td class="col-sm-4">{{ ::account.name }}</td>
+                            <td class="col-sm-4">{{ ::account.name | uppercase }}</td>
                             <td class="col-sm-2  text-right">{{ account.openingBalance.amount | number:2 }}
                               {{account.openingBalance.type | recType}}
                             </td>
@@ -219,7 +221,7 @@
       <table class="col-sm-12 fl-none">
         <tbody>
         <tr>
-          <td class="col-sm-4">{{ ::grp.groupName }}</td>
+          <td class="col-sm-4">{{ ::grp.groupName | uppercase : (grp.childGroups.length && grp.accounts.length)}}</td>
           <td class="col-sm-2  text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type |
             recType }}
           </td>
@@ -249,7 +251,7 @@
             <table class="col-sm-12 fl-none">
               <tbody>
               <tr>
-                <td class="col-sm-4">{{ ::account.name }}</td>
+                <td class="col-sm-4">{{ ::account.name | lowercase }}</td>
                 <td class="col-sm-2  text-right">{{ account.openingBalance.amount | number:2 }} {{
                   account.openingBalance.type | recType }}
                 </td>
