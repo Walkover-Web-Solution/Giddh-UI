@@ -649,7 +649,7 @@ describe 'ledgerController', ->
         expect(@accountService.exportLedger).toHaveBeenCalledWith(udata)
 
     describe '#exportLedgerSuccess', ->
-      it 'should show error message with toastr', ->
+      xit 'should show error message with toastr', ->
         res =
           body:
             status: "Success"

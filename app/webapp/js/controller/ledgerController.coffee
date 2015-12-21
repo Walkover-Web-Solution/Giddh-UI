@@ -435,8 +435,38 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     }
     accountService.exportLedger(unqNamesObj).then($scope.exportLedgerSuccess, $scope.exportLedgerFailure)
 
+  # get IE version
+  GetIEVersion = ->
+    sAgent = window.navigator.userAgent
+    Idx = sAgent.indexOf('MSIE')
+    if Idx > 0
+      parseInt sAgent.substring(Idx + 5, sAgent.indexOf('.', Idx))
+    else if ! !navigator.userAgent.match(/Trident\/7\./)
+      11
+    else
+      0
+
+
+
   $scope.exportLedgerSuccess = (res)->
-    window.open(res.body.filePath)
+    #window.open(res.body.filePath)
+    isIE = false
+    if GetIEVersion() > 0
+      isIE = true
+    else
+      isIe = false
+
+    if !isIE
+      window.open(res.body.filePath)
+    else
+      win = window.open()
+      win.document.write('sep=,\r\n',res.body.filePath)
+      win.document.close()
+      win.document.execCommand('SaveAs',true, 'abc' + ".xls")
+      win.close()
+
+
+
 
   $scope.exportLedgerFailure = (res)->
     toastr.error(res.data.message, res.data.status)

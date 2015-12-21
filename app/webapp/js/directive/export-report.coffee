@@ -21,7 +21,7 @@ angular.module('trialBalance', []).directive('exportReport', [
         if GetIEVersion() > 0
           isIE = true
         else
-          isIe = false
+          isIE = false
 
         elem.on 'click', (e) ->
           switch attr.report
