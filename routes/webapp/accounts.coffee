@@ -120,4 +120,23 @@ router.put '/:accountUniqueName/unshare', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/:accountUniqueName/export-ledger', (req, res) ->
+  console.log req.query, "ledgers export by date", new Date()
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName + '/export-ledger'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      to: req.query.fromDate
+      from: req.query.toDate
+  console.log args, hUrl
+  settings.client.get hUrl, args, (data, response) ->
+    console.log "ledgers export by date completed", new Date()
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 module.exports = router

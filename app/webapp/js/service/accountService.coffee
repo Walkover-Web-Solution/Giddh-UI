@@ -3,9 +3,11 @@
 angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
   Account = $resource('/company/:companyUniqueName/groups/:groupUniqueName/accounts',
     {
-      'companyUniqueName': @companyUniqueName,
-      'groupUniqueName': @groupUniqueName,
+      'companyUniqueName': @companyUniqueName
+      'groupUniqueName': @groupUniqueName
       'accountsUniqueName': @accountsUniqueName
+      'toDate': @toDate
+      'fromDate': @fromDate
     },
     {
       create: {method: 'POST'}
@@ -18,6 +20,10 @@ angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
       }
       delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName'}
       move: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/move'}
+      export: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/export-ledger'
+      }
     })
 
   accountService =
@@ -75,5 +81,14 @@ angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
         groupUniqueName: unqNamesObj.selGrpUname,
         accountsUniqueName: unqNamesObj.acntUname
       }, data, onSuccess, onFailure))
+
+    exportLedger: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> Account.export({
+        companyUniqueName: unqNamesObj.compUname
+        groupUniqueName: unqNamesObj.selGrpUname
+        accountsUniqueName: unqNamesObj.acntUname
+        toDate: unqNamesObj.toDate
+        fromDate: unqNamesObj.fromDate
+      }, onSuccess, onFailure))
 
   accountService

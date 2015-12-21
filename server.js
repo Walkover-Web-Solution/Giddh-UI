@@ -84,9 +84,15 @@ global.mStorage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     console.log("In Multer")
-    cb(null, Date.now() + '.xml')
+    if (file.mimetype === "application/vnd.ms-excel"){
+      console.log ("xls file")
+      cb(null, Date.now() + '.xls')
+    }
+    else{
+      console.log ("xml file")
+      cb(null, Date.now() + '.xml')
+    }
   }
-
 })
 
 var parseUploads = multer({storage: mStorage}).single('file');

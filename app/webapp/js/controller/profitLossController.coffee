@@ -1,6 +1,6 @@
 "use strict"
 
-profitLossController = ($scope, $rootScope, companyServices, localStorageService, $filter, toastr, $timeout, $window) ->
+profitLossController = ($scope, $rootScope, companyServices, localStorageService, $filter, toastr, $timeout) ->
   pl = this
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
   $scope.sendRequest = true

@@ -91,6 +91,8 @@ app.config ($httpProvider) ->
 
 app.factory 'appInterceptor', ['$q', '$location', '$log',
   ($q, $location, $log) ->
+    request: (request) ->
+      request
     response: (response) ->
       response
 

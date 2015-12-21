@@ -9,7 +9,6 @@ describe 'ledgerController', ->
       @rootScope = $rootScope
       @localStorageService = localStorageService
       spyOn(@localStorageService, 'get').andReturn({name: "walkover"})
-
       @ledgerController = $controller('ledgerController',
         {$scope: @scope, $rootScope: @rootScope, localStorageService: @localStorageService})
 
@@ -64,15 +63,17 @@ describe 'ledgerController', ->
       expect(@scope.voucherTypeList).toEqual(vouchDat)
 
   describe 'controller methods', ->
-    beforeEach inject ($rootScope, $controller, localStorageService, toastr, ledgerService, $q, modalService, DAServices, permissionService) ->
+    beforeEach inject ($rootScope, $controller, localStorageService, toastr, ledgerService, $q, modalService, DAServices, permissionService, accountService, Upload) ->
       @scope = $rootScope.$new()
       @rootScope = $rootScope
       @localStorageService = localStorageService
       @ledgerService = ledgerService
       @DAServices = DAServices
       @toastr = toastr
+      @accountService = accountService
       @permissionService = permissionService
       @modalService = modalService
+      @Upload = Upload
       @q = $q
       @ledgerController = $controller('ledgerController',
         {
@@ -80,8 +81,10 @@ describe 'ledgerController', ->
           $rootScope: @rootScope,
           localStorageService: @localStorageService
           ledgerService: @ledgerService
+          accountService: @accountService
           DAServices: @DAServices
           modalService: @modalService
+          Upload: @Upload
           permissionService: @permissionService
         })
 
@@ -619,3 +622,79 @@ describe 'ledgerController', ->
         expect(result).toBeFalsy()
         expect(@permissionService.hasPermissionOn).not.toHaveBeenCalledWith(account, "ADD")
         expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(account, "UPDT")
+
+    describe '#exportLedger', ->
+      it 'should call account service exportLedger method with unqObj', ->
+        @scope.toDate = {
+          date: "14-11-2015"
+        }
+        @scope.fromDate = {
+          date: "14-11-2015"
+        }
+        @scope.selectedCompany = {
+          uniqueName: "giddh"
+        }
+        @scope.selectedGroupUname = "somename"
+        @scope.selectedAccountUniqueName = "somename"
+        udata = {
+          compUname: @scope.selectedCompany.uniqueName
+          selGrpUname: @scope.selectedGroupUname
+          acntUname: @scope.selectedAccountUniqueName
+          fromDate: @scope.toDate.date
+          toDate: @scope.fromDate.date
+        }
+        deferred = @q.defer()
+        spyOn(@accountService, "exportLedger").andReturn(deferred.promise)
+        @scope.exportLedger()
+        expect(@accountService.exportLedger).toHaveBeenCalledWith(udata)
+
+    describe '#exportLedgerSuccess', ->
+      it 'should show error message with toastr', ->
+        res =
+          body:
+            status: "Success"
+            filePath: "abc/example.com"
+        spyOn(window, "open")
+        @scope.exportLedgerSuccess(res)
+        expect(window.open).toHaveBeenCalled()
+
+    describe '#exportLedgerFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.exportLedgerFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+    describe '#importLedger', ->
+    it 'should make variable false set values in a scope variable, then call upload service with upload method', ->
+      @scope.selectedCompany = {
+        uniqueName: "giddh"
+      }
+      @scope.selectedGroupUname = "somename"
+      @scope.selectedAccountUniqueName = "somename"
+      result = ''
+      files = [{ 
+        fieldname: 'file',
+        originalname: 'master-small.xml',
+        encoding: '7bit',
+        mimetype: 'text/xml',
+        destination: './uploads/',
+        filename: '1449894122205.xml',
+        path: 'uploads/1449894122205.xml',
+        size: 1288072 
+      }]
+      errFiles = []
+      deferred = @q.defer()
+      spyOn(@Upload, "upload").andReturn(deferred.promise)
+      @scope.importLedger(files, errFiles)
+      expect(@Upload.upload).toHaveBeenCalled()
+      expect(@scope.impLedgBar).toBeFalsy()
+      expect(@scope.impLedgFiles).toBe(files)
+      expect(@scope.impLedgErrFiles).toBe(errFiles)
+      expect(angular.forEach).toBeDefined()
+
+
+

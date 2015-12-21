@@ -23,7 +23,7 @@
       </ol>
     </div>
     <div class="form-inline pdB1">
-      <form name="fromToDateForm" novalidate>
+      <form name="fromToDateForm" novalidate class="form-group mrR1">
         <div class="form-group mrR1">
           <label>From date</label>
 
@@ -65,16 +65,27 @@
             GO
           </button>
         </div>
-        <div class="form-group pull-right">
-          <button type="button" class="btn btn-default" ng-click="exportLedger()">
-            Export
-          </button>
-          <button type="button" class="btn btn-default mrL1" ng-click="importLedger()">
-            Import
-          </button>
-        </div>
+        
       </form>
+
+      <form class="form-group pull-right" enctype="multipart/form-data">
+        <button type="file" class="btn btn-default mrL1" ngf-select="importLedger($files, $invalidFiles)" accept=".xls" ngf-max-size="100MB">
+          <i class="glyphicon glyphicon-folder-open"></i> 
+          &nbsp; Import</button>
+      </form>
+      <div class="form-group pull-right">
+        <button type="button" class="btn btn-default" ng-click="exportLedger()" ng-disabled="fromToDateForm.$invalid">
+          Export
+        </button>
+      </div>
+
     </div>
+
+
+    <div class="mrB1" ng-repeat="f in impLedgFiles" style="font:smaller" ng-hide="impLedgBar">
+      <uib-progressbar class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</uib-progressbar>
+    </div>
+
 
 
     <table class="table ledgerTable">

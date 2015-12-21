@@ -1,6 +1,6 @@
 "use strict"
 
-ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService) ->
+ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload) ->
   $scope.ledgerData = undefined 
   $scope.accntTitle = undefined
   $scope.selectedAccountUniqueName = undefined
@@ -423,13 +423,51 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.showLedgerBreadCrumbs = (data) ->
     $scope.ledgerBreadCrumbList = data
 
-  #import ledger
-  $scope.importLedger = ()->
-    console.log "importLedger"
-
   #export ledger
   $scope.exportLedger = ()->
     console.log "exportLedger"
+    unqNamesObj = {
+      compUname: $scope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroupUname
+      acntUname: $scope.selectedAccountUniqueName
+      fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+    }
+    accountService.exportLedger(unqNamesObj).then($scope.exportLedgerSuccess, $scope.exportLedgerFailure)
+
+  $scope.exportLedgerSuccess = (res)->
+    window.open(res.body.filePath)
+
+  $scope.exportLedgerFailure = (res)->
+    toastr.error(res.data.message, res.data.status)
+
+  # upload by progressbar
+  $scope.importLedger = (files, errFiles) ->
+    unqNamesObj = {
+      compUname: $scope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroupUname
+      acntUname: $scope.selectedAccountUniqueName
+    }
+    $scope.impLedgBar = false
+    $scope.impLedgFiles = files
+    $scope.impLedgErrFiles = errFiles
+    angular.forEach files, (file) ->
+      file.upload = Upload.upload(
+        url: '/upload/' + $scope.selectedCompany.uniqueName + '/import-ledger'
+        file: file
+        data:{
+          'urlObj': unqNamesObj
+        }
+      )
+      file.upload.then ((res) ->
+        $timeout ->
+          $scope.impLedgBar = true
+          file.result = res.data
+          toastr.success(res.data.body.message, res.data.status)
+      ), ((res) ->
+        console.log res, "error"
+      ), (evt) ->
+        file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
 
   $scope.$on '$reloadLedger',  ->
     $scope.reloadLedger()
