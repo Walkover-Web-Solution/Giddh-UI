@@ -74,16 +74,27 @@ app.run [
   ($rootScope, $state, $stateParams, $location, $window, toastr) ->
     $rootScope.$on '$stateChangeStart', ->
       $rootScope.showLedgerBox = false
-    isIE = false
-
-    GetIEVersion = ->
+    
+    # check IE browser version
+    $rootScope.GetIEVersion =() ->
       ua = window.navigator.userAgent
       msie = ua.indexOf('MSIE ')
       trident = ua.indexOf('Trident/')
       edge = ua.indexOf('Edge/')
       if (msie > 0)
         toastr.error('For Best User Expreince, upgrade to IE 11+')
-    GetIEVersion()
+    $rootScope.GetIEVersion()
+
+    # check browser
+    $rootScope.msieBrowser = ()->
+      ua = window.navigator.userAgent
+      msie = ua.indexOf('MSIE')
+      if msie > 0 or ! !navigator.userAgent.match(/Trident.*rv\:11\./)
+        console.log parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)))
+        return true
+      else
+        console.log window.navigator.userAgent, 'otherbrowser', msie
+        return false
 ]
 
 app.config ($httpProvider) ->
