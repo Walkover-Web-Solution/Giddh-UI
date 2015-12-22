@@ -436,11 +436,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.exportLedgerSuccess = (res)->
     if $scope.msieBrowser()
-      win = window.open()
-      win.document.write('sep=,\r\n',res.body.filePath)
-      win.document.close()
-      win.document.execCommand('SaveAs',true, 'abc' + ".xls")
-      win.close()
+      $scope.openWindow(res.body.filePath)
     else
       window.open(res.body.filePath)
 

@@ -84,7 +84,6 @@ app.run [
       if (msie > 0)
         toastr.error('For Best User Expreince, upgrade to IE 11+')
     $rootScope.GetIEVersion()
-
     # check browser
     $rootScope.msieBrowser = ()->
       ua = window.navigator.userAgent
@@ -95,6 +94,13 @@ app.run [
       else
         console.log window.navigator.userAgent, 'otherbrowser', msie
         return false
+    # open window for IE
+    $rootScope.openWindow = (url) ->
+      win = window.open()
+      win.document.write('sep=,\r\n',url)
+      win.document.close()
+      win.document.execCommand('SaveAs',true, 'abc' + ".xls")
+      win.close()
 ]
 
 app.config ($httpProvider) ->
