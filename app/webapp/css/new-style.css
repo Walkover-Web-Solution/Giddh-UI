@@ -1596,4 +1596,5 @@ table.borderless td, table.borderless th{
     right:10px;
     top:9px;
     z-index: 9;
+    cursor:pointer;
 }
