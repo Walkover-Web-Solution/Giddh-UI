@@ -1,6 +1,7 @@
 "use strict"
 
-trialBalanceController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout) ->
+trialBalanceController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window) ->
+  tb = this
   $scope.expanded = false
   #date time picker code starts here
   $scope.today = new Date()
@@ -11,7 +12,10 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   $scope.showOptions = false
   $scope.sendRequest = true
   $scope.showChildren = false
+  $scope.showpdf = false
+  $scope.showNLevel = false
   $rootScope.cmpViewShow = true
+  $scope.showClearSearch = false
   $scope.dateOptions = {
     'year-format': "'yy'",
     'starting-day': 1,
@@ -83,14 +87,29 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     $scope.getTrialBal dateObj
 
   #expand accordion on search
-  $scope.expandAccordion = (e) ->
+  $scope.expandAccordionOnSearch = (e) ->
     $timeout (->
       l = e.currentTarget.value.length
       if l > 0
         $scope.expanded = true
+        #$scope.showNLevel = true
+        $scope.showChildren = true
       else
         $scope.expanded = false
-    ), 100
+        $scope.showChildren = false
+        #$scope.showNLevel = false
+    ), 50
+
+  $scope.expandAccordion = (e) ->
+    console.log $scope.expanded, $scope.showChildren, $scope.showNLevel
+    $scope.expanded = true
+    $scope.showChildren = true
+    $scope.showNLevel = true
+
+  $scope.collapseAccordion = (e) ->
+    $scope.expanded = false
+    $scope.showChildren = false
+    $scope.showNLevel = false
 
   $scope.$on '$viewContentLoaded', ->
     if $scope.sendRequest
@@ -100,14 +119,6 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       }
       $scope.getTrialBal(dateObj)
       $scope.sendRequest = false
-
-  $scope.typeFilter = (input) ->
-    switch input
-      when 'DEBIT'
-        input = "Dr."
-      when 'CREDIT'
-        input = "Cr."
-    input
 
   $scope.firstCapital = (input) ->
     s = input.split('')
@@ -144,7 +155,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       groups.push group
 
     _.each groups, (obj) ->
-      row += obj.name + ',' + obj.openingBalance + ' ' + $scope.typeFilter(obj.openingBalanceType) + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + ',' + $scope.typeFilter(obj.closingBalanceType) + '\r\n'
+      row += obj.name + ',' + obj.openingBalance + ' ' + $filter('recType')(obj.openingBalanceType,obj.openingBalance) + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + ',' + $filter('recType')(obj.closingBalanceType,obj.closingBalance) + '\r\n'
 
     csv += row + '\r\n';
     csv += '\r\n' + 'Total' + ',' + $scope.data.forwardedBalance.amount + ',' + $scope.data.debitTotal + ',' + $scope.data.creditTotal + ',' + $scope.data.closingBalance.amount + '\n'
@@ -238,7 +249,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       _.each data, (obj) ->
         row = row or
           ''
-        row += obj.name + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + ',' + $scope.typeFilter(obj.closingBalanceType) + '\r\n'
+        row += obj.name + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + ',' + $filter('recType')(obj.closingBalanceType,obj.closingBalance) + '\r\n'
       body += row + '\r\n'
 
     createCsv(accounts)
@@ -325,25 +336,25 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       _.each csvObj, (obj) ->
         row = row or
             ''
-        row += obj.Name.toUpperCase() + ',' + obj.Debit + ',' + obj.Credit + ',' + obj.ClosingBalance + ',' + $scope.typeFilter(obj.closingBalanceType) + '\r\n'
+        row += obj.Name.toUpperCase() + ',' + obj.Debit + ',' + obj.Credit + ',' + obj.ClosingBalance + ',' + $filter('recType')(obj.closingBalanceType,obj.ClosingBalance) + '\r\n'
         if obj.accounts.length > 0
           _.each obj.accounts, (acc) ->
-            row += $scope.firstCapital(acc.name.toLowerCase()) + ' (' + $scope.firstCapital(obj.Name) + ')' + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + ',' + $scope.typeFilter(acc.closingBalanceType) + '\r\n'
+            row += $scope.firstCapital(acc.name.toLowerCase()) + ' (' + $scope.firstCapital(obj.Name) + ')' + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + ',' + $filter('recType')(acc.closingBalanceType,acc.closingBalance) + '\r\n'
 
         if obj.childGroups.length > 0
           _.each obj.childGroups, (grp) ->
             if grp.closingBalance != 0
-              row += $scope.firstCapital(grp.name.toLowerCase()) + ' (' + obj.Name.toUpperCase() + ')' + ',' + grp.debit + ',' + grp.credit + ',' + grp.closingBalance + ',' + $scope.typeFilter(grp.closingBalanceType) + '\r\n'
+              row += $scope.firstCapital(grp.name.toLowerCase()) + ' (' + obj.Name.toUpperCase() + ')' + ',' + grp.debit + ',' + grp.credit + ',' + grp.closingBalance + ',' + $filter('recType')(grp.closingBalanceType,grp.closingBalance) + '\r\n'
 
             if grp.subGroups.length > 0
               _.each grp.subGroups, (subgrp) ->
                 if subgrp.name
-                  row += subgrp.name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + subgrp.debit + ',' + subgrp.credit + ',' + subgrp.closingBalance + ',' + $scope.typeFilter(subgrp.closingBalanceType) + '\r\n'
+                  row += subgrp.name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + subgrp.debit + ',' + subgrp.credit + ',' + subgrp.closingBalance + ',' + $filter('recType')(subgrp.closingBalanceType,subgrp.closingBalance) + '\r\n'
                   createCsv(grp.subGroups)
 
             if grp.subAccounts.length > 0
               _.each grp.subAccounts, (acc) ->
-                row += acc.name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + ',' + $scope.typeFilter(acc.closingBalanceType) + '\r\n'
+                row += acc.name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + ',' + $filter('recType')(acc.closingBalanceType,acc.closingBalance) + '\r\n'
 
         body += row + '\r\n'
 
@@ -364,16 +375,25 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   $scope.hideOptions = (e) ->
     $timeout (->
       $scope.showOptions = false
+      $scope.showpdf = false
     ), 100
     e.stopPropagation()
     
   $(document).on 'click', (e) ->
     $timeout (->
       $scope.showOptions = false
+      $scope.showpdf = false
     ), 100
 
   $scope.addData = ->
-    if $scope.showChildren == false
-      $scope.showChildren = true
+    $scope.showChildren = true
+
+  $scope.showPdfOptions = (e) ->
+    $scope.showpdf = true
+    e.stopPropagation()
+
+  $scope.showNLevelList = (e) ->
+    $scope.showNLevel = true
+
 
 angular.module('giddhWebApp').controller 'trialBalanceController', trialBalanceController

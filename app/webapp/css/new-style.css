@@ -1128,6 +1128,13 @@ li:last-child .angular-ui-tree-handle {
     margin:10px 0 0 10px;
 }
 
+
+.table-container{
+    display:block;
+    margin: 10px 0 0 0;
+    padding:0 20px;
+}
+
 .table-container tr > td:first-child{
     padding-right:20px;
 }
@@ -1368,7 +1375,7 @@ v-pane-header.show-pseudo{
 }
 
 .export{
-    margin-right:20px;
+    margin-right:10px;
     min-height:34px;
     position:relative;
 }
@@ -1519,6 +1526,15 @@ table.borderless td, table.borderless th{
     padding-right:2px !important;
 }
 
+.table-l tr:nth-last-child(2){
+    border-bottom:0;
+}
+
+.table-l tr:last-child{
+    border-top:1px solid #fff;
+    font-weight:bold;
+}
+
 .table-r{
     padding-left: 2px !important;
 }
@@ -1550,4 +1566,34 @@ table.borderless td, table.borderless th{
     border-bottom:1px solid;
     background:#fff;
     font-weight:600;
+}
+
+.pdf-export{
+    position:relative;
+    margin-right:10px;
+}
+
+.toggle-btns{
+    margin:0;
+    padding-left:10px;
+}
+
+.ui-match{
+    background:#FFD800;
+    padding:2px;
+}
+
+.close-icon{
+    position: absolute;
+    right:10px;
+    top:9px;
+    z-index: 9;
+    cursor: pointer;
+}
+
+.input-group .glyphicon.glyphicon-remove{
+    position: absolute;
+    right:10px;
+    top:9px;
+    z-index: 9;
 }
