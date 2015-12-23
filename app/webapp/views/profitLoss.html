@@ -30,10 +30,10 @@
         <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
             <div class="table-title">
               <div class="col-sm-6">
-                Income
+                Expenses
               </div>
               <div class="col-sm-6">
-                Expenses
+                Income
               </div>
             </div>
             <div class="table-container">
@@ -50,11 +50,15 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr ng-repeat="inc in data.incomeGroups">
-                      <td class="col-sm-6">{{inc.name}}</td>
-                      <td class="col-sm-6">{{inc.closingBalance}}</td>
+                    <tr ng-repeat="exp in data.expenseGroups">
+                       <td class="col-sm-7">{{exp.name}}</td>
+                       <td class="col-sm-5 text-right">{{exp.closingBalance}}</td>   
                     </tr>
-                  </tbody>
+                    <tr>
+                        <td class="col-sm-7">Net Profit</td>
+                        <td class="col-sm-5 text-right">{{data.closingBalance}}</td>
+                    </tr>
+                  </tbody>  
                 </table>
               </div>
               <div class="col-sm-6 table-r">
@@ -70,20 +74,12 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr ng-repeat="exp in data.expenseGroups">
-                       <td class="col-sm-6">{{exp.name}}</td>
-                       <td class="col-sm-6">{{exp.closingBalance}}</td>   
+                    <tr ng-repeat="inc in data.incomeGroups">
+                      <td class="col-sm-7">{{inc.name}}</td>
+                      <td class="col-sm-5 text-right">{{inc.closingBalance}}</td>
                     </tr>
-                  </tbody>  
+                  </tbody>
                 </table>
-              </div>
-              <div class="col-sm-12 total">
-                <div class="col-sm-6">
-                  Net Profit
-                </div>
-                <div class="text-right">
-                  {{data.closingBalance}}
-                </div>
               </div>
             </div>
 

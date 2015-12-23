@@ -1,70 +1,5 @@
-angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
-  '$rootScope'
-  '$compile'
-  '$filter'
-  ($rootScope, $compile, $filter) ->
-    {
-      restrict: 'A'
-      link: (scope, elem, attr) ->
-  
-        elem.on 'click', (e) ->
-          
-          pdf = new jsPDF('p','pt')
-          groups = []
-          rawData = scope.data.groupDetails
-          companyDetails = $rootScope.selectedCompany
-
-          _.each rawData, (obj) ->
-            group = {}
-            group.name = obj.groupName
-            group.openingBalance = obj.forwardedBalance.amount + $filter('recType')(obj.forwardedBalance.type)
-            #group.openingBalanceType = obj.forwardedBalance.type
-            group.credit = obj.creditTotal
-            group.debit = obj.debitTotal
-            group.closingBalance = obj.closingBalance.amount + $filter('recType')(obj.closingBalance.type)
-            #group.closingBalanceType = obj.closingBalance.type
-            groups.push group
-
-          columns = [
-            {
-              title:'Particular'
-              dataKey:'name'
-            }
-            {
-              title: 'Opening Balance'
-              dataKey: 'openingBalance'
-            }
-            {
-              title: 'Debit'
-              dataKey: 'debit'
-            }
-            {
-              title: 'Credit'
-              dataKey: 'credit'
-            }
-            {
-              title: 'Closing Balance'
-              dataKey: 'closingBalance'
-            }
-          ]
-
-          rows = groups
-
-          pdf.autoTable(columns,rows,
-              margin: {
-                  top: 100
-                },
-              beforePageContent: () ->
-                pdf.setFontSize(16)
-                pdf.text(40,50,companyDetails.name)
-                pdf.setFontSize(10)
-                pdf.text(40,65,companyDetails.address)
-                pdf.text(40,90, "Trial Balance: " + $filter('date')(scope.fromDate.date,'dd/MM/yyyy') + '-' + $filter('date')(scope.toDate.date,'dd/MM/yyyy'))
-            )
-
-          pdf.save('Trial Balance-Group Wise.pdf')
-    }
-]).directive('exportPdfaccountwise', [
+angular.module('exportDirectives', [])
+.directive('exportPdfaccountwise', [
   '$rootScope'
   '$compile'
   '$filter'
@@ -104,8 +39,8 @@ angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
                 _.each obj.accounts, (acc) ->
                   account = {}
                   account.name = acc.name
-                  account.openingBalance = acc.openingBalance.amount + $filter('recType')(acc.openingBalance.type)
-                  account.openingBalanceType = acc.openingBalance.type + $filter('recType')(acc.closingBalance.type)
+                  account.openingBalance = acc.openingBalance.amount + $filter('recType')(acc.openingBalance.type, acc.openingBalance.amount)
+                  account.openingBalanceType = acc.openingBalance.type + $filter('recType')(acc.closingBalance.type, acc.openingBalance.amount)
                   account.credit = acc.creditTotal
                   account.debit = acc.debitTotal
                   account.closingBalance = acc.closingBalance.amount
@@ -127,11 +62,11 @@ angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
                     _.each chld.accounts, (acc) ->
                       account = {}
                       account.name = acc.name
-                      account.openingBalance = acc.openingBalance.amount + $filter('recType')(acc.openingBalance.type)
+                      account.openingBalance = acc.openingBalance.amount + $filter('recType')(acc.openingBalance.type, acc.openingBalance.amount)
                       account.openingBalanceType = acc.openingBalance.type
                       account.credit = acc.creditTotal
                       account.debit = acc.debitTotal
-                      account.closingBalance = acc.closingBalance.amount + $filter('recType')(acc.closingBalance.type)
+                      account.closingBalance = acc.closingBalance.amount + $filter('recType')(acc.closingBalance.type, acc.closingBalance.amount)
                       account.closingBalanceType = acc.closingBalance.type
                       accounts.push account
 
@@ -176,6 +111,7 @@ angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
           rows = accounts
 
           pdf.autoTable(columns,rows,
+              theme: "plain"
               margin: {
                   top: 100
                 },
@@ -187,9 +123,10 @@ angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
                 pdf.text(40,90, "Trial Balance: " + $filter('date')(scope.fromDate.date,'dd/MM/yyyy') + '-' + $filter('date')(scope.toDate.date,'dd/MM/yyyy'))
             )
 
-          pdf.save('tb.pdf')
+          pdf.save('TrialBalance-AccountWise.pdf')
     }
-]).directive('exportPdfgroupwise', [
+])
+.directive('exportPdfgroupwise', [
   '$rootScope'
   '$compile'
   '$filter'
@@ -199,7 +136,6 @@ angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
       link: (scope, elem, attr) ->
   
         elem.on 'click', (e) ->
-          
           pdf = new jsPDF('p','pt')
           groups = []
           rawData = scope.data.groupDetails
@@ -208,11 +144,11 @@ angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
           _.each rawData, (obj) ->
             group = {}
             group.name = obj.groupName
-            group.openingBalance = obj.forwardedBalance.amount + $filter('recType')(obj.forwardedBalance.type)
+            group.openingBalance = obj.forwardedBalance.amount + $filter('recType')(obj.forwardedBalance.type, obj.forwardedBalance.amount)
             #group.openingBalanceType = obj.forwardedBalance.type
             group.credit = obj.creditTotal
             group.debit = obj.debitTotal
-            group.closingBalance = obj.closingBalance.amount + $filter('recType')(obj.closingBalance.type)
+            group.closingBalance = obj.closingBalance.amount + $filter('recType')(obj.closingBalance.type, obj.closingBalance.amount)
             #group.closingBalanceType = obj.closingBalance.type
             groups.push group
 
@@ -242,6 +178,7 @@ angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
           rows = groups
 
           pdf.autoTable(columns,rows,
+              theme: "plain"
               margin: {
                   top: 100
                 },
@@ -253,9 +190,10 @@ angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
                 pdf.text(40,90, "Trial Balance: " + $filter('date')(scope.fromDate.date,'dd/MM/yyyy') + '-' + $filter('date')(scope.toDate.date,'dd/MM/yyyy'))
             )
 
-          pdf.save('Trial Balance-Account Wise.pdf')
+          pdf.save('TrialBalance-GroupWise.pdf')
     }
-]).directive('exportPdfcondensed', [
+])
+.directive('exportPdfcondensed', [
   '$rootScope'
   '$compile'
   '$filter'
@@ -265,73 +203,74 @@ angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
       link: (scope, elem, attr) ->
         pdf = new jsPDF()
         # initial coordinates
-          
+        companyDetails = $rootScope.selectedCompany 
         colX = 10
-        colY = 10
+        colY = 50
 
         # assign object values
         setObjVal = (obj) ->
           val = {}
-          val.name = obj.Name.toString()
+          val.name = $filter('truncate')(obj.Name.toString(),true,25,"...")
           val.ob = obj.OpeningBalance.toString()
           val.dr = obj.Debit.toString()
           val.cr = obj.Credit.toString()
           val. cl = obj.ClosingBalance.toString()
           val
 
-          # write text to pdf with arguments
+
+        # write text to pdf with arguments
         writeText = (obj) ->
-          val = obj
+          pageHeight = pdf.internal.pageSize.height
+          val = setObjVal(obj)
           pdf.text(colX, colY, val.name) 
-          pdf.text(colX + 50, colY, val.ob)
-          pdf.text(colX + 90, colY, val.dr)
-          pdf.text(colX + 130, colY, val.cr)
-          pdf.text(colX + 170, colY, val.cl)
-          pdf.addPage()
-        
-        createPDF = (dataObj) ->
-            _.each dataObj, (obj) ->
-              pdf.setFontSize(10)
+          pdf.text(70, colY, val.ob)
+          pdf.text(105, colY, val.dr)
+          pdf.text(140, colY, val.cr)
+          pdf.text(170, colY, val.cl)
+          y = colY % pageHeight
+          if colY > 247
+            pdf.addPage()
+            colY = 20
+          else
+          colY += 5
+        # create pdf 
+        createPDF = (dataArray) ->
+          pageHeight = pdf.internal.pageSize.height
+          # Loop over data array and write values 
+          _.each dataArray, (dataObj) ->
+            #assign accounts and childgroups
+            accounts = dataObj.accounts
+            childgroups = dataObj.childGroups
+            pdf.setFontSize(10)           
+            #write dataObj values
+            writeText(dataObj)
 
-              grp = setObjVal(obj)
-
-              writeText(grp)
-
-              if obj.accounts.length > 0
-                acc = setObjVal(obj.accounts)
-                colX += 2
-                coly += 5
+            if dataObj.accounts.length > 0
+              #loop over accounts and write values
+              colX += 5
+              _.each accounts, (acc) ->
                 writeText(acc)
+              colX -= 5
+            if childgroups.length > 0
+              #loop over childgroups and write values
+              colX += 5
+              _.each childgroups, (childGrp) ->
+                writeText(childGrp)
 
-              if obj.childGroups.length > 0
-                childGroups = obj.childGroups
-                colX += 2
-                _.each childGroups, (chldrn) ->
-                  colY = colY + 5
-                  chld = setObjVal(chldrn)
-                  writeText(chld)
-                  if chldrn.subAccounts.length > 0
-                    subAccounts = chldrn.subAccounts
-                    colX += 2
-                    _.each subAccounts, (account) ->
-                      colY += 5
-                      acc = setObjVal(account)
-                      writeText(acc)
-                    colX -= 2 
-                  if chldrn.subGroups.length > 0
-                    console.log 'call recursive'
-
-
-
-              colY = colY + 10
-              colX = 10
-              pageSize = pdf.internal.pageSize.height
-              console.log pageSize
-             #pdf.save('tb.pdf')
-
-
+                if childGrp.subAccounts.length > 0
+                  colX += 5
+                  _.each childGrp.accounts, (acc) ->
+                    writeText(acc)
+                  colX -= 5
+                    
+                if childGrp.subGroups.length > 0
+                  colX += 5
+                  createPDF(childGrp.subGroups)
+                  colX -= 5
+              colX -= 5
+        # on element click  
         elem.on 'click', (e) ->
-         
+        
           rawData = scope.data.groupDetails
           groupData = []
           companyDetails = $rootScope.selectedCompany 
@@ -340,22 +279,22 @@ angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
               group = group or
                 accounts: []
                 childGroups: []
-              group.Name = obj.groupName
-              group.OpeningBalance = obj.forwardedBalance.amount
+              group.Name = obj.groupName.toUpperCase()
+              group.OpeningBalance = obj.forwardedBalance.amount + $filter('recType')(obj.forwardedBalance.type, obj.forwardedBalance.amount)
               group.Credit = obj.creditTotal
               group.Debit = obj.debitTotal
-              group.ClosingBalance = obj.closingBalance.amount
+              group.ClosingBalance = obj.closingBalance.amount + $filter('recType')(obj.closingBalance.type, obj.closingBalance.amount)
               group.ClosingBalanceType = obj.closingBalance.type
               if obj.accounts.length > 0
                 #group.accounts = obj.accounts
                 _.each obj.accounts, (acc) ->
                   account = {}
-                  account.Name = acc.name
+                  account.Name = acc.name.toLowerCase()
                   account.Credit = acc.creditTotal
                   account.Debit = acc.debitTotal
-                  account.ClosingBalance = acc.closingBalance.amount
+                  account.ClosingBalance = acc.closingBalance.amount + $filter('recType')(acc.closingBalance.type, acc.closingBalance.amount)
                   account.ClosingBalanceType = acc.closingBalance.type
-                  account.OpeningBalance = acc.openingBalance.amount
+                  account.OpeningBalance = acc.openingBalance.amount + $filter('recType')(acc.openingBalance.type, acc.openingBalance.amount)
                   group.accounts.push account
 
               if obj.childGroups.length > 0
@@ -364,12 +303,12 @@ angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
                   childGroup = childGroup or
                     subGroups: []
                     subAccounts: []
-                  childGroup.Name = grp.groupName
+                  childGroup.Name = grp.groupName.toUpperCase()
                   childGroup.Credit = grp.creditTotal
                   childGroup.Debit = grp.debitTotal
-                  childGroup.ClosingBalance = grp.closingBalance.amount
+                  childGroup.ClosingBalance = grp.closingBalance.amount + $filter('recType')(grp.closingBalance.type, grp.closingBalance.amount)
                   childGroup.DlosingBalanceType = grp.closingBalance.type
-                  childGroup.OpeningBalance = grp.forwardedBalance.amount
+                  childGroup.OpeningBalance = grp.forwardedBalance.amount + $filter('recType')(grp.forwardedBalance.type, grp.forwardedBalance.amount)
                   group.childGroups.push childGroup
 
                   if grp.accounts.length > 0
@@ -377,12 +316,12 @@ angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
                       childGroup.subAccounts = childGroup.subAccounts or
                         []
                       account = {}
-                      account.Name = acc.name
+                      account.Name = acc.name.toLowerCase()
                       account.Credit = acc.creditTotal
                       account.Debit = acc.debitTotal
-                      account.ClosingBalance = acc.closingBalance.amount
+                      account.ClosingBalance = acc.closingBalance.amount + $filter('recType')(acc.closingBalance.type, acc.closingBalance.amount)
                       account.ClosingBalanceType = acc.closingBalance.type
-                      account.OpeningBalance = acc.openingBalance.amount
+                      account.OpeningBalance = acc.openingBalance.amount + $filter('recType')(acc.openingBalance.type, acc.openingBalance.amount)
                       childGroup.subAccounts.push account
 
                   if grp.childGroups.length > 0
@@ -391,7 +330,123 @@ angular.module('exportDirectives', []).directive('exportPdfgroupwise', [
               groups.push group
           sortData(rawData, groupData)
 
-          createPDF(groupData)
+          #write header
+          pdf.setFontSize(16)
+          pdf.text(10,20,companyDetails.name)
+          pdf.setFontSize(10)
+          pdf.text(10,25,companyDetails.address)
+          pdf.text(10,30, "Trial Balance: " + $filter('date')(scope.fromDate.date,'dd/MM/yyyy') + '-' + $filter('date')(scope.toDate.date,'dd/MM/yyyy'))
+          pdf.line(10,35,200,35)
 
+          #write table header
+          pdf.setFontSize(9)
+          pdf.text(10, 40, 'PARTICULAR')
+          pdf.text(70,40, 'OPENING BALANCE')
+          pdf.text(105, 40, 'DEBIT')
+          pdf.text(140, 40, 'CREDIT')
+          pdf.text(170, 40, 'CLOSING BALANCE')
+          pdf.line(10, 42,200,42)
+
+          createPDF(groupData)
+          
+          # write table footer
+          pdf.line(10, colY, 200, colY)
+          pdf.text(10, colY + 5, "TOTAL")
+          pdf.text(70, colY + 5, scope.data.forwardedBalance.amount.toString())
+          pdf.text(105, colY + 5, scope.data.debitTotal.toString())
+          pdf.text(140, colY + 5, scope.data.creditTotal.toString())
+          pdf.text(170, colY + 5, scope.data.closingBalance.amount.toString())
+
+          # save to pdf
+          pdf.save('TrialBalance-Condensed.pdf')
+    }
+])
+.directive('clearTbsearch', [
+  '$rootScope'
+  '$compile'
+  '$filter'
+  '$timeout'
+  ($rootScope, $compile, $filter, $timeout) ->
+    {
+      restrict: 'A'
+      link: (scope, elem, attr) ->
+        elem.on 'keydown',()->
+          
+          clear = () ->
+            elem[0].value = ''
+            scope.showClearSearch = false
+            scope.keyWord = null
+            scope.accordion.collapseAll()
+
+
+          $timeout (->
+            
+            if elem.val().length > 1
+              scope.showClearSearch = true
+            else
+              scope.showClearSearch = false
+
+          ), 10
+
+          elem.next('.close-icon').on 'click', ()->
+            $timeout (->
+              clear()
+            ), 10
+
+          # elem.on 'blur',() ->
+          #   $timeout (->
+          #   ), 20
+    }
+])
+.directive('accordionControls',[
+  '$rootScope'
+  '$compile'
+  '$filter'
+  '$timeout'
+  ($rootScope, $compile, $filter, $timeout) ->
+    {
+      restrict: 'A'
+      link: (scope, elem, attr) ->
+        action = attr.action
+        elem.on 'click', () ->
+          if action == 'expandAll'
+            scope.accordion.expandAll()
+          else if action == 'closeAll'
+            scope.accordion.collapseAll()
+    }
+])
+.directive('clearSearch',[
+  '$rootScope'
+  '$compile'
+  '$filter'
+  '$timeout'
+  ($rootScope, $compile, $filter, $timeout) ->
+    {
+      restrict: 'A'
+      link: (scope, elem, attr) ->
+
+        scope.isNotEmpty = false
+        model = attr.ngModel
+        initModel = model
+        remove = $compile("<i class='glyphicon glyphicon-remove clear' ng-show='isNotEmpty'></i>")(scope)
+
+        elem.after(remove)
+
+        elem.on 'keydown', (e) ->
+          $timeout (->
+            console.log model
+            if elem.val().length > 1
+              scope.isNotEmpty = true
+            else
+              scope.isNotEmpty = false
+          ), 10
+
+        $('.clear').on 'click', () ->
+          $timeout ( ->
+            elem[0].value = ''
+            scope.acntSrch = null
+            scope.isNotEmpty = false
+            
+          ), 10  
     }
 ])

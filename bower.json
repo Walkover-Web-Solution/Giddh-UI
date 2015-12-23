@@ -51,6 +51,7 @@
     "angular-animate": "~1.4.8",
     "jspdf-autotable": "~2.0.17",
     "jspdf": "~1.1.135",
-    "html2canvas": "~0.4.1"
+    "html2canvas": "~0.4.1",
+    "angular-sanitize": "~1.4.8"
   }
 }

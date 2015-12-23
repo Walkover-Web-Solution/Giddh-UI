@@ -63,10 +63,42 @@ angular.module('trialBalance', []).directive('exportReport', [
 
     }
 ]).filter 'recType', ->
-  (input) ->
-    switch input
-      when 'DEBIT'
-        input = " Dr."
-      when 'CREDIT'
-        input = " Cr."
-    input
+  (input, value) ->
+    if value != 0
+      switch input
+        when 'DEBIT'
+          input = " Dr."
+        when 'CREDIT'
+          input = " Cr."
+      input
+    else
+      input = ""
+      input
+
+.filter 'truncate', ->
+  (value, wordwise, max, tail) ->
+    if !value
+      return ''
+    max = parseInt(max, 10)
+    if !max
+      return value
+    if value.length <= max
+      return value
+    value = value.substr(0, max)
+    if wordwise
+      lastspace = value.lastIndexOf(' ')
+      if lastspace != -1
+        value = value.substr(0, lastspace)
+    value + (tail or ' …')
+
+.filter 'highlight', ->
+  (text, search, caseSensitive) ->
+    if text and (search or angular.isNumber(search))
+      text = text.toString()
+      search = search.toString()
+      if caseSensitive
+        text.split(search).join '<span class="ui-match">' + search + '</span>'
+      else
+        text.replace new RegExp(search, 'gi'), '<span class="ui-match">$&</span>'
+    else
+      text
