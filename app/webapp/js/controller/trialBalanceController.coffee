@@ -92,16 +92,13 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       l = e.currentTarget.value.length
       if l > 0
         $scope.expanded = true
-        #$scope.showNLevel = true
         $scope.showChildren = true
       else
         $scope.expanded = false
         $scope.showChildren = false
-        #$scope.showNLevel = false
     ), 50
 
   $scope.expandAccordion = (e) ->
-    console.log $scope.expanded, $scope.showChildren, $scope.showNLevel
     $scope.expanded = true
     $scope.showChildren = true
     $scope.showNLevel = true

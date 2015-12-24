@@ -33,7 +33,6 @@
     "angular-filter": "~0.5.1",
     "moment": "~2.10.6",
     "ng-file-upload": "10.1.9",
-    "jasmine-dom": "https://github.com/jeffwatkins/jasmine-dom.git",
     "angular-bootstrap": "~0.14.3"
   },
   "resolutions": {

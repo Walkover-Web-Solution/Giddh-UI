@@ -51,13 +51,11 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     else
       console.log "not on ledger page"
 
-  # Collapse all account menus
-  $scope.collapseAllSubMenus = () ->
-    $rootScope.showSubMenus = true
-
-  # Expand all account menus
-  $scope.expandAllSubMenus = () ->
-    $rootScope.showSubMenus = false
+  #Expand or  Collapse all account menus
+  $scope.toggleAcMenus = (state) ->
+    $scope.flatAccntWGroupsList.forEach (e) ->
+      e.open = state
+      $scope.showSubMenus = state
 
   $scope.$on '$reloadAccount', ->
     $scope.getAccountsGroups()

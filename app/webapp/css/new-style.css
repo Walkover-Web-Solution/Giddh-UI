@@ -142,26 +142,19 @@ header .navbar-nav > li.active {
 .dshUl > li {
     background: rgba(25, 25, 25, .85);
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    float: left;
 }
 
 .dshUl > li > a {
     display: block;
     width: 240px;
-    padding: 22px;
+    padding: 12px;
     color: #fff;
     text-decoration: none;
-    border-right: 1px solid rgba(256, 256, 256, .2)
-
+    border-bottom: 1px solid rgba(256, 256, 256, .2)
 }
 
 .dshUl > li:hover {
     background: rgba(63, 63, 63, .9);
-}
-
-.dshUl li .icon48 {
-    float: left;
-    margin-right: 15px
 }
 
 .dshUl li .title {
@@ -1084,7 +1077,7 @@ li:last-child .angular-ui-tree-handle {
 }
 
 .ledgerBodyContent .highlightRow input.nobdr{
-    background-color: #FFFEE6
+    background-color: #ffffcc
 }
 
 .ledgerBodyContent .newMultiEntryRow input.nobdr{

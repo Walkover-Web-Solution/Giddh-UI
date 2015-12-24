@@ -105,13 +105,6 @@ describe 'trialBalanceController', ->
         @scope.getTrialBal(dateObj)
         expect(@scope.getTrialBal).toHaveBeenCalledWith(dateObj)
 
-    describe '#typeFilter', ->
-      it 'should be called with input', ->
-        input = ''
-        spyOn(@scope, "typeFilter")
-        @scope.typeFilter(input)
-        expect(@scope.typeFilter).toHaveBeenCalledWith(input)
-
     describe '#formatData', ->
       it 'should call formatDataGroupWise , formatDataAccountWise and formatDataCondensed', ->
         spyOn(@scope, "formatData").andCallThrough()

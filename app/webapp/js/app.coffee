@@ -20,7 +20,6 @@ app = angular.module("giddhWebApp",
     "trialBalance"
     'ngFileUpload'
     "exportDirectives"
-    "ngSanitize"
   ]
 )
 

@@ -434,7 +434,6 @@ angular.module('exportDirectives', [])
 
         elem.on 'keydown', (e) ->
           $timeout (->
-            console.log model
             if elem.val().length > 1
               scope.isNotEmpty = true
             else
