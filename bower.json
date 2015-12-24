@@ -37,7 +37,7 @@
   },
   "resolutions": {
     "angular": "~1.4.4",
-    "perfect-scrollbar": "~0.5.1"
+    "jspdf": "~1.1.135"
   },
   "description": "",
   "main": "",
