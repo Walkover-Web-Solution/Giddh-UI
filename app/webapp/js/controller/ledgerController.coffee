@@ -55,6 +55,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       name: "Journal"
       shortCode: "jr"
     }
+    {
+      name: "Contra"
+      shortCode: "cntr"
+    }
   ]
 
   $scope.dynamicPopover = {

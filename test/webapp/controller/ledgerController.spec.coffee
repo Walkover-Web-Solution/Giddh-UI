@@ -59,6 +59,10 @@ describe 'ledgerController', ->
           name: "Journal"
           shortCode: "jr"
         }
+        {
+          name: "Contra"
+          shortCode: "cntr"
+        }
       ]
       expect(@scope.voucherTypeList).toEqual(vouchDat)
 
