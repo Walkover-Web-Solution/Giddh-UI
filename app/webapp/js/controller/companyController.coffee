@@ -1,12 +1,12 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService, userServices, Upload, DAServices) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state) ->
 
 #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
 
   #make sure manage company detail not load
   $rootScope.cmpViewShow = false
-  $rootScope.selectedCompany = {}
+  $scope.selectedCompany = {}
   $rootScope.nowShowAccounts = false
   $scope.mHideBar = false
   $scope.dHideBar = false
@@ -37,10 +37,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.onCompanyCreateModalCloseFailure = () ->
     $scope.checkCmpCretedOrNot()
-
-  #check if user is admin
-  $scope.ifHavePermission = (data) ->
-    $scope.canManageUser = permissionService.hasPermissionOn(data, "MNG_USR")
 
   #for make sure
   $scope.checkCmpCretedOrNot = ->
@@ -78,7 +74,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #Get company list
   $scope.getCompanyList = ->
-#    $rootScope.nowShowAccounts = false
     companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
 
   #Get company list
@@ -95,6 +90,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         $scope.goToCompany(cdt, cdt.index)
       else
         $scope.goToCompany($scope.companyList[0], 0)
+
 
   #get company list failure
   $scope.getCompanyListFailure = (res)->
@@ -136,32 +132,46 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #making a detail company view
   $scope.goToCompany = (data, index) ->
-    $scope.showUpdTbl = false
-    $scope.mFiles = []
-    $scope.dFiles = []
-    $scope.mErrFiles = []
-    $scope.dErrFiles = []
+    $scope.canEdit = true
+    $scope.canEdit = $rootScope.ifHavePermission(data, "UPDT")
+    $scope.canManageUser = $rootScope.ifHavePermission(data, "MNG_USR")
+    if data.shared
+      if data.role.uniqueName is "shared"
+        console.info "redirection process should start here"
+        $scope.companySelectionProcess(data, index)
+        $state.go("dummyledger")
+      else
+        console.log "else", data.role.uniqueName
+        $scope.goToCompanyProcess(data, index)
+    else
+      console.log "Own company"
+      $scope.goToCompanyProcess(data, index)
 
-    $scope.ifHavePermission(data)
-    $rootScope.cmpViewShow = true
-    $scope.selectedCmpLi = index
+  $scope.companySelectionProcess = (data, index) ->
     angular.extend($scope.selectedCompany, data)
     $scope.selectedCompany.index = index
-
     contactnumber = $scope.selectedCompany.contactNo
     if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
       SplitNumber = contactnumber.split('-')
       $scope.selectedCompany.mobileNo = SplitNumber[1]
       $scope.selectedCompany.cCode = SplitNumber[0]
+    localStorageService.set("_selectedCompany", $scope.selectedCompany)
 
+  $scope.goToCompanyProcess = (data, index) ->
+    $scope.showUpdTbl = false
+    $scope.mFiles = []
+    $scope.dFiles = []
+    $scope.mErrFiles = []
+    $scope.dErrFiles = []
+    $rootScope.cmpViewShow = true
+    $scope.selectedCmpLi = index
     previousCompany = localStorageService.get("_selectedCompany")
     if(_.isEmpty(previousCompany) || previousCompany.uniqueName != data.uniqueName)
       DAServices.LedgerSet(null, null)
       localStorageService.set("_ledgerData", null)
       localStorageService.set("_selectedAccount", null)
-
-    localStorageService.set("_selectedCompany", $scope.selectedCompany)
-
+    # don't remove this line from this position
+    $scope.companySelectionProcess(data, index)
     if $scope.canManageUser is true
       $scope.getSharedUserList($scope.selectedCompany.uniqueName)
       $scope.getRolesList()
@@ -208,7 +218,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, res.data.status)
 
   $scope.getState = (val) ->
-    locationService.searchState(val, $rootScope.selectedCompany.country).then($scope.onGetStateSuccess,
+    locationService.searchState(val, $scope.selectedCompany.country).then($scope.onGetStateSuccess,
       $scope.onGetStateFailure)
 
   $scope.onGetStateSuccess = (data) ->
@@ -221,7 +231,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, res.data.status)
 
   $scope.getCity = (val) ->
-    locationService.searchCity(val, $rootScope.selectedCompany.state).then($scope.onGetCitySuccess,
+    locationService.searchCity(val, $scope.selectedCompany.state).then($scope.onGetCitySuccess,
       $scope.onGetCityFailure)
 
   $scope.onGetCitySuccess = (data) ->
@@ -330,7 +340,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.mErrFiles = errFiles
     angular.forEach files, (file) ->
       file.upload = Upload.upload(
-        url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/master'
+        url: '/upload/' + $scope.selectedCompany.uniqueName + '/master'
         file: file
       )
       file.upload.then ((res) ->
@@ -350,7 +360,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.dErrFiles = errFiles
     angular.forEach files, (file) ->
       file.upload = Upload.upload(
-        url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/daybook'
+        url: '/upload/' + $scope.selectedCompany.uniqueName + '/daybook'
         file: file
       )
       file.upload.then ((res) ->

@@ -2,6 +2,7 @@
   <uib-tabset justified="true">
     <uib-tab heading="Basic Information">
       <div class="pd2">
+        <fieldset ng-disabled="!canEdit">
         <form id="cmpnyBascFrm" name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
           <p ng-hide="cmpnyBascFrm.$submitted || !ecmpnyBascFrm.cCountry.$invalid" class="bg-warning pd1 mrB1">
             For better experience fill all details of form
@@ -124,11 +125,11 @@
           </div>
           <!-- end of row -->
           <div class="clearfix">
-            <button tabindex="10" ng-click="updateCompanyInfo(selectedCompany)" class="btn btn-primary"
-                    ng-disabled="cmpnyBascFrm.$invalid">Update
+            <button ng-hide="!canEdit" tabindex="10" ng-click="updateCompanyInfo(selectedCompany)" class="btn btn-primary" ng-disabled="cmpnyBascFrm.$invalid">Update
             </button>
           </div>
         </form>
+        </fieldset>
         <!-- end of change basic info -->
       </div>
     </uib-tab>
