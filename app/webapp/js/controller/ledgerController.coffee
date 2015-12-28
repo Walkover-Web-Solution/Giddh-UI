@@ -9,10 +9,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.selectedLedgerGroup = undefined
   $scope.ledgerOnlyDebitData = []
   $scope.ledgerOnlyCreditData = []
-  $scope.selectedCompany = {}
-  lsKeys = localStorageService.get("_selectedCompany")
-  if not _.isNull(lsKeys) && not _.isEmpty(lsKeys) && not _.isUndefined(lsKeys)
-    $scope.selectedCompany = lsKeys
+  # $rootScope.selectedCompany = {}
+  # lsKeys = localStorageService.get("_selectedCompany")
+  # if not _.isNull(lsKeys) && not _.isEmpty(lsKeys) && not _.isUndefined(lsKeys)
+  #   $rootScope.selectedCompany = lsKeys
   $scope.creditTotal = undefined
   $scope.debitTotal = undefined
   $scope.creditBalanceAmount = undefined
@@ -102,7 +102,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.selectedAccountUniqueName = acData.uniqueName
     $scope.selectedGroupUname = data.groupUniqueName
     unqNamesObj = {
-      compUname: $scope.selectedCompany.uniqueName
+      compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
       acntUname: $scope.selectedAccountUniqueName
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
@@ -150,7 +150,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.addNewAccount = () ->
-    if _.isEmpty($scope.selectedCompany)
+    if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
       modalService.openManageGroupsModal()
@@ -172,7 +172,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       _.extend(edata.transactions, data.transactions)
     edata.voucherType = data.sharedData.voucher.shortCode
     unqNamesObj = {
-      compUname: $scope.selectedCompany.uniqueName
+      compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
       acntUname: $scope.selectedAccountUniqueName
     }
@@ -207,7 +207,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     )
     
     unqNamesObj = {
-      compUname: $scope.selectedCompany.uniqueName
+      compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
       acntUname: $scope.selectedAccountUniqueName
       entUname: edata.uniqueName
@@ -263,7 +263,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.deleteEntry = (item) ->
     unqNamesObj = {
-      compUname: $scope.selectedCompany.uniqueName
+      compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
       acntUname: $scope.selectedAccountUniqueName
       entUname: item.sharedData.uniqueName
@@ -430,7 +430,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   #export ledger
   $scope.exportLedger = ()->
     unqNamesObj = {
-      compUname: $scope.selectedCompany.uniqueName
+      compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
       acntUname: $scope.selectedAccountUniqueName
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
@@ -450,7 +450,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   # upload by progressbar
   $scope.importLedger = (files, errFiles) ->
     unqNamesObj = {
-      compUname: $scope.selectedCompany.uniqueName
+      compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
       acntUname: $scope.selectedAccountUniqueName
     }
@@ -459,7 +459,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.impLedgErrFiles = errFiles
     angular.forEach files, (file) ->
       file.upload = Upload.upload(
-        url: '/upload/' + $scope.selectedCompany.uniqueName + '/import-ledger'
+        url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/import-ledger'
         file: file
         data:{
           'urlObj': unqNamesObj

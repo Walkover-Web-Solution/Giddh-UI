@@ -6,7 +6,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #make sure manage company detail not load
   $rootScope.cmpViewShow = false
-  $scope.selectedCompany = {}
+  $rootScope.selectedCompany = {}
   $rootScope.nowShowAccounts = false
   $scope.mHideBar = false
   $scope.dHideBar = false
@@ -114,12 +114,21 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #delete company
   $scope.deleteCompany = (uniqueName, index, name) ->
-    modalService.openConfirmModal(
+    modalInstance = $uibModal.open(
       title: 'Are you sure you want to delete? ' + name,
       ok: 'Yes',
       cancel: 'No'
-    ).then ->
+      scope: $scope
+    )
+    modalInstance.result.then ->
       companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
+
+    # modalService.openConfirmModal(
+    #   title: 'Are you sure you want to delete? ' + name,
+    #   ok: 'Yes',
+    #   cancel: 'No'
+    # ).then ->
+    #   companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
 
   #delete company success
   $scope.delCompanySuccess = (res) ->
@@ -139,7 +148,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       if data.role.uniqueName is "shared"
         console.info "redirection process should start here"
         $scope.companySelectionProcess(data, index)
-        $state.go("dummyledger")
+        # $state.go("dummyledger")
+        if $scope.companyList.length < 1
+          console.log "only one company"
+          $state.go("dummyledger")
+        else
+          console.log "more than one company"
+          $scope.goToCompanyProcess(data, index)
       else
         console.log "else", data.role.uniqueName
         $scope.goToCompanyProcess(data, index)
@@ -148,14 +163,14 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.goToCompanyProcess(data, index)
 
   $scope.companySelectionProcess = (data, index) ->
-    angular.extend($scope.selectedCompany, data)
-    $scope.selectedCompany.index = index
-    contactnumber = $scope.selectedCompany.contactNo
+    angular.extend($rootScope.selectedCompany, data)
+    $rootScope.selectedCompany.index = index
+    contactnumber = $rootScope.selectedCompany.contactNo
     if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
       SplitNumber = contactnumber.split('-')
-      $scope.selectedCompany.mobileNo = SplitNumber[1]
-      $scope.selectedCompany.cCode = SplitNumber[0]
-    localStorageService.set("_selectedCompany", $scope.selectedCompany)
+      $rootScope.selectedCompany.mobileNo = SplitNumber[1]
+      $rootScope.selectedCompany.cCode = SplitNumber[0]
+    localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
 
   $scope.goToCompanyProcess = (data, index) ->
     $scope.showUpdTbl = false
@@ -173,7 +188,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     # don't remove this line from this position
     $scope.companySelectionProcess(data, index)
     if $scope.canManageUser is true
-      $scope.getSharedUserList($scope.selectedCompany.uniqueName)
+      $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
       $scope.getRolesList()
 
     if not $rootScope.nowShowAccounts
@@ -218,7 +233,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, res.data.status)
 
   $scope.getState = (val) ->
-    locationService.searchState(val, $scope.selectedCompany.country).then($scope.onGetStateSuccess,
+    locationService.searchState(val, $rootScope.selectedCompany.country).then($scope.onGetStateSuccess,
       $scope.onGetStateFailure)
 
   $scope.onGetStateSuccess = (data) ->
@@ -231,7 +246,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, res.data.status)
 
   $scope.getCity = (val) ->
-    locationService.searchCity(val, $scope.selectedCompany.state).then($scope.onGetCitySuccess,
+    locationService.searchCity(val, $rootScope.selectedCompany.state).then($scope.onGetCitySuccess,
       $scope.onGetCityFailure)
 
   $scope.onGetCitySuccess = (data) ->
@@ -263,7 +278,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   #update user role
   $scope.updateUserRole = (role, userEmail) ->
     sData = {role: role, user: userEmail}
-    companyServices.share($scope.selectedCompany.uniqueName, sData).then($scope.onShareCompanySuccess,
+    companyServices.share($rootScope.selectedCompany.uniqueName, sData).then($scope.onShareCompanySuccess,
       $scope.onShareCompanyFailure)
 
   #share and manage permission in manage company
@@ -271,13 +286,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     if _.isEqual($scope.shareRequest.user, $rootScope.basicInfo.email)
       toastr.error("You cannot add yourself.", "Error")
       return
-    companyServices.share($scope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess,
+    companyServices.share($rootScope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess,
       $scope.onShareCompanyFailure)
 
   $scope.onShareCompanySuccess = (res) ->
     $scope.shareRequest = {role: 'view_only', user: null}
     toastr.success(res.body, res.status)
-    $scope.getSharedUserList($scope.selectedCompany.uniqueName)
+    $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
 
 
   $scope.onShareCompanyFailure = (res) ->
@@ -285,7 +300,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #get roles and set it in local storage
   $scope.getRolesList = () ->
-    cUname = $scope.selectedCompany.uniqueName
+    cUname = $rootScope.selectedCompany.uniqueName
     companyServices.getRoles(cUname).then($scope.getRolesSuccess, $scope.getRolesFailure)
 
   $scope.getRolesSuccess = (res) ->
@@ -307,12 +322,12 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   #delete shared user
   $scope.unSharedUser = (uNqame, id) ->
     data = {user: uNqame}
-    companyServices.unSharedComp($scope.selectedCompany.uniqueName, data).then($scope.unSharedCompSuccess,
+    companyServices.unSharedComp($rootScope.selectedCompany.uniqueName, data).then($scope.unSharedCompSuccess,
       $scope.unSharedCompFailure)
 
   $scope.unSharedCompSuccess = (res) ->
     toastr.success("Company unshared successfully", "Success")
-    $scope.getSharedUserList($scope.selectedCompany.uniqueName)
+    $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
 
   $scope.unSharedCompFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -321,7 +336,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $rootScope.basicInfo.email isnt email.userEmail
 
   $scope.getUploadsList = ->
-    companyServices.getUploadsList($scope.selectedCompany.uniqueName).then($scope.getUploadsListSuccess, $scope.getUploadsListFailure)
+    companyServices.getUploadsList($rootScope.selectedCompany.uniqueName).then($scope.getUploadsListSuccess, $scope.getUploadsListFailure)
 
   $scope.getUploadsListSuccess = (res) ->
     if res.body.length > 0
@@ -340,7 +355,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.mErrFiles = errFiles
     angular.forEach files, (file) ->
       file.upload = Upload.upload(
-        url: '/upload/' + $scope.selectedCompany.uniqueName + '/master'
+        url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/master'
         file: file
       )
       file.upload.then ((res) ->
@@ -360,7 +375,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.dErrFiles = errFiles
     angular.forEach files, (file) ->
       file.upload = Upload.upload(
-        url: '/upload/' + $scope.selectedCompany.uniqueName + '/daybook'
+        url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/daybook'
         file: file
       )
       file.upload.then ((res) ->

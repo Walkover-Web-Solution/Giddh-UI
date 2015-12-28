@@ -9,12 +9,13 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.selectedAccountUniqueName = undefined
 
   $scope.getAccountsGroups = ()->
-    $scope.selectedCompany = localStorageService.get("_selectedCompany")
+    console.log $rootScope.selectedCompany
+    # $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.showAccountList = false
-    if _.isEmpty($scope.selectedCompany)
+    if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
-      groupService.getAllWithAccountsFor($scope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
+      groupService.getAllWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
         $scope.getGroupListFailure)
 
   $scope.getGroupListSuccess = (res) ->

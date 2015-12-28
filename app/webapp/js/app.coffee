@@ -42,10 +42,8 @@ app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/views/userDetails.html'
     controller: 'userController')
   .state( 'dummyledger',
-    abstract: false
     url: '/ledger'
     templateUrl: '/public/webapp/views/ledger.html'
-    # controller: 'ledgerController'
     )
   .state( 'ledger',
     abstract: true
