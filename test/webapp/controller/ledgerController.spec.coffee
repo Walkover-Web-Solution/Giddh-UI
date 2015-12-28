@@ -63,6 +63,14 @@ describe 'ledgerController', ->
           name: "Contra"
           shortCode: "cntr"
         }
+        {
+          name: "Debit Note"
+          shortCode: "debit note"
+        }
+        {
+          name: "Credit Note"
+          shortCode: "credit note"
+        }
       ]
       expect(@scope.voucherTypeList).toEqual(vouchDat)
 

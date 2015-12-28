@@ -60,6 +60,14 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       name: "Contra"
       shortCode: "cntr"
     }
+    {
+      name: "Debit Note"
+      shortCode: "debit note"
+    }
+    {
+      name: "Credit Note"
+      shortCode: "credit note"
+    }
   ]
 
   $scope.dynamicPopover = {
@@ -241,6 +249,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
             sharedData = _.omit(uLedger, 'transactions')
             ledger.sharedData = sharedData
             if _.isEqual(ledger.transactions[0], transaction)
+              ledger.transactions[0] = transaction
         )
       if transaction.type is "CREDIT"
         _.filter($scope.ledgerOnlyCreditData, (ledger) ->
