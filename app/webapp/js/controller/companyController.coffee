@@ -148,13 +148,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       if data.role.uniqueName is "shared"
         console.info "redirection process should start here"
         $scope.companySelectionProcess(data, index)
-        # $state.go("dummyledger")
-        if $scope.companyList.length < 1
-          console.log "only one company"
-          $state.go("dummyledger")
-        else
-          console.log "more than one company"
-          $scope.goToCompanyProcess(data, index)
+        $state.go("dummyledger")
       else
         console.log "else", data.role.uniqueName
         $scope.goToCompanyProcess(data, index)
