@@ -94,6 +94,7 @@ angular.module('giddhWebApp').service 'groupService', ($resource, $q) ->
       listGA = _.map(groupList, (groupItem) ->
         if groupItem.accounts.length > 0
           addThisGroup = {}
+          addThisGroup.open = false
           addThisGroup.groupName = groupItem.name
           addThisGroup.groupUniqueName = groupItem.uniqueName
           addThisGroup.accountDetails = groupItem.accounts

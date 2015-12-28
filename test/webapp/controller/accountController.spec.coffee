@@ -97,12 +97,28 @@ describe 'accountController', ->
       expect(@scope.selectedAccountUniqueName).toEqual(acData.uniqueName)
       expect(@DAServices.LedgerSet).toHaveBeenCalledWith(data, acData)
 
-  describe '#collapseAllSubMenus', ->
-    it 'should collapseAllSubMenus and set a variable value to true', ->
-      @scope.collapseAllSubMenus()
-      expect(@rootScope.showSubMenus).toBeTruthy()
+  describe '#toggleAcMenus', ->
+    varx = [{
+        open: false,
+        name: "group1"
+        uniqueName: "g1"
+        accounts: []
+      }
+      {
+        open: false,
+        name: "group1"
+        uniqueName: "g1"
+        accounts: []
+    }]
+    it 'should expand menus', ->
+      @scope.flatAccntWGroupsList = varx
+      @scope.toggleAcMenus(true)
+      expect(angular.forEach).toBeDefined()
+      expect(@scope.showSubMenus).toBeTruthy()
+    it 'should collapse all menus', ->
+      @scope.flatAccntWGroupsList = varx
+      @scope.toggleAcMenus(false)
+      expect(angular.forEach).toBeDefined()
+      expect(@scope.showSubMenus).toBeFalsy()
 
-  describe '#expandAllSubMenus', ->
-    it 'should expandAllSubMenus and set a variable value to false', ->
-      @scope.expandAllSubMenus()
-      expect(@rootScope.showSubMenus).toBeFalsy()
+

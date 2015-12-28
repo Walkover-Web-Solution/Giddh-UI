@@ -9,7 +9,8 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.selectedAccountUniqueName = undefined
 
   $scope.getAccountsGroups = ()->
-    $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+    console.log $rootScope.selectedCompany
+    # $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.showAccountList = false
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
@@ -51,13 +52,11 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     else
       console.log "not on ledger page"
 
-  # Collapse all account menus
-  $scope.collapseAllSubMenus = () ->
-    $rootScope.showSubMenus = true
-
-  # Expand all account menus
-  $scope.expandAllSubMenus = () ->
-    $rootScope.showSubMenus = false
+  #Expand or  Collapse all account menus
+  $scope.toggleAcMenus = (state) ->
+    $scope.flatAccntWGroupsList.forEach (e) ->
+      e.open = state
+      $scope.showSubMenus = state
 
   $scope.$on '$reloadAccount', ->
     $scope.getAccountsGroups()

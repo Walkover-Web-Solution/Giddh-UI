@@ -20,7 +20,6 @@ app = angular.module("giddhWebApp",
     "trialBalance"
     'ngFileUpload'
     "exportDirectives"
-    "ngSanitize"
   ]
 )
 
@@ -42,6 +41,10 @@ app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/user'
     templateUrl: '/public/webapp/views/userDetails.html'
     controller: 'userController')
+  .state( 'dummyledger',
+    url: '/ledger'
+    templateUrl: '/public/webapp/views/ledger.html'
+    )
   .state( 'ledger',
     abstract: true
     url: '/ledger:uniqueName'

@@ -215,15 +215,17 @@ describe "Group Service", ->
 
     describe '#flattenGroupsWithAccounts', ->
       it 'should filter out all groups that contains account', ->
-        groupList = [{
-          "name": "group1",
-          "uniqueName": "g1",
-          "accounts": [{"name": "a1"}]
-        },
-          {"name": "group2", "uniqueName": "g2", "accounts": []},
-          {"name": "group3", "uniqueName": "g3", "accounts": []}]
+        groupList = [
+          {
+            "open": false,
+            "name": "group1",
+            "uniqueName": "g1",
+            "accounts": [{"name": "a1"}]
+          }
+          {"open": false, "name": "group2", "uniqueName": "g2", "accounts": []},
+          {"open": false, "name": "group3", "uniqueName": "g3", "accounts": []}]
         result = @groupService.flattenGroupsWithAccounts(groupList)
-        expect(result).toEqual([{"groupName": "group1", "groupUniqueName": "g1", "accountDetails": [{"name": "a1"}]}])
+        expect(result).toEqual([{"open": false, "groupName": "group1", "groupUniqueName": "g1", "accountDetails": [{"name": "a1"}]}])
 
     describe '#flattenAccount', ->
       it 'should take list of groups and flatten them and filter out accounts', ->

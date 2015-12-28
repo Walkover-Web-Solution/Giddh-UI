@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, permissionService, userServices, Upload, DAServices) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state) ->
 
 #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
@@ -38,10 +38,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.onCompanyCreateModalCloseFailure = () ->
     $scope.checkCmpCretedOrNot()
 
-  #check if user is admin
-  $scope.ifHavePermission = (data) ->
-    $scope.canManageUser = permissionService.hasPermissionOn(data, "MNG_USR")
-
   #for make sure
   $scope.checkCmpCretedOrNot = ->
     if $scope.companyList.length <= 0
@@ -78,7 +74,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #Get company list
   $scope.getCompanyList = ->
-#    $rootScope.nowShowAccounts = false
     companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
 
   #Get company list
@@ -95,6 +90,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         $scope.goToCompany(cdt, cdt.index)
       else
         $scope.goToCompany($scope.companyList[0], 0)
+
 
   #get company list failure
   $scope.getCompanyListFailure = (res)->
@@ -118,12 +114,21 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #delete company
   $scope.deleteCompany = (uniqueName, index, name) ->
-    modalService.openConfirmModal(
+    modalInstance = $uibModal.open(
       title: 'Are you sure you want to delete? ' + name,
       ok: 'Yes',
       cancel: 'No'
-    ).then ->
+      scope: $scope
+    )
+    modalInstance.result.then ->
       companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
+
+    # modalService.openConfirmModal(
+    #   title: 'Are you sure you want to delete? ' + name,
+    #   ok: 'Yes',
+    #   cancel: 'No'
+    # ).then ->
+    #   companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
 
   #delete company success
   $scope.delCompanySuccess = (res) ->
@@ -136,34 +141,54 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #making a detail company view
   $scope.goToCompany = (data, index) ->
+    $scope.canEdit = true
+    $scope.canEdit = $rootScope.ifHavePermission(data, "UPDT")
+    $scope.canManageUser = $rootScope.ifHavePermission(data, "MNG_USR")
+    if data.shared
+      if data.role.uniqueName is "shared"
+        console.info "redirection process should start here"
+        $scope.companySelectionProcess(data, index)
+        # $state.go("dummyledger")
+        if $scope.companyList.length < 1
+          console.log "only one company"
+          $state.go("dummyledger")
+        else
+          console.log "more than one company"
+          $scope.goToCompanyProcess(data, index)
+      else
+        console.log "else", data.role.uniqueName
+        $scope.goToCompanyProcess(data, index)
+    else
+      console.log "Own company"
+      $scope.goToCompanyProcess(data, index)
+
+  $scope.companySelectionProcess = (data, index) ->
+    angular.extend($rootScope.selectedCompany, data)
+    $rootScope.selectedCompany.index = index
+    contactnumber = $rootScope.selectedCompany.contactNo
+    if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
+      SplitNumber = contactnumber.split('-')
+      $rootScope.selectedCompany.mobileNo = SplitNumber[1]
+      $rootScope.selectedCompany.cCode = SplitNumber[0]
+    localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
+
+  $scope.goToCompanyProcess = (data, index) ->
     $scope.showUpdTbl = false
     $scope.mFiles = []
     $scope.dFiles = []
     $scope.mErrFiles = []
     $scope.dErrFiles = []
-
-    $scope.ifHavePermission(data)
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
-    angular.extend($scope.selectedCompany, data)
-    $scope.selectedCompany.index = index
-
-    contactnumber = $scope.selectedCompany.contactNo
-    if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
-      SplitNumber = contactnumber.split('-')
-      $scope.selectedCompany.mobileNo = SplitNumber[1]
-      $scope.selectedCompany.cCode = SplitNumber[0]
-
     previousCompany = localStorageService.get("_selectedCompany")
     if(_.isEmpty(previousCompany) || previousCompany.uniqueName != data.uniqueName)
       DAServices.LedgerSet(null, null)
       localStorageService.set("_ledgerData", null)
       localStorageService.set("_selectedAccount", null)
-
-    localStorageService.set("_selectedCompany", $scope.selectedCompany)
-
+    # don't remove this line from this position
+    $scope.companySelectionProcess(data, index)
     if $scope.canManageUser is true
-      $scope.getSharedUserList($scope.selectedCompany.uniqueName)
+      $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
       $scope.getRolesList()
 
     if not $rootScope.nowShowAccounts
@@ -253,7 +278,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   #update user role
   $scope.updateUserRole = (role, userEmail) ->
     sData = {role: role, user: userEmail}
-    companyServices.share($scope.selectedCompany.uniqueName, sData).then($scope.onShareCompanySuccess,
+    companyServices.share($rootScope.selectedCompany.uniqueName, sData).then($scope.onShareCompanySuccess,
       $scope.onShareCompanyFailure)
 
   #share and manage permission in manage company
@@ -261,13 +286,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     if _.isEqual($scope.shareRequest.user, $rootScope.basicInfo.email)
       toastr.error("You cannot add yourself.", "Error")
       return
-    companyServices.share($scope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess,
+    companyServices.share($rootScope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess,
       $scope.onShareCompanyFailure)
 
   $scope.onShareCompanySuccess = (res) ->
     $scope.shareRequest = {role: 'view_only', user: null}
     toastr.success(res.body, res.status)
-    $scope.getSharedUserList($scope.selectedCompany.uniqueName)
+    $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
 
 
   $scope.onShareCompanyFailure = (res) ->
@@ -275,7 +300,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #get roles and set it in local storage
   $scope.getRolesList = () ->
-    cUname = $scope.selectedCompany.uniqueName
+    cUname = $rootScope.selectedCompany.uniqueName
     companyServices.getRoles(cUname).then($scope.getRolesSuccess, $scope.getRolesFailure)
 
   $scope.getRolesSuccess = (res) ->
@@ -297,12 +322,12 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   #delete shared user
   $scope.unSharedUser = (uNqame, id) ->
     data = {user: uNqame}
-    companyServices.unSharedComp($scope.selectedCompany.uniqueName, data).then($scope.unSharedCompSuccess,
+    companyServices.unSharedComp($rootScope.selectedCompany.uniqueName, data).then($scope.unSharedCompSuccess,
       $scope.unSharedCompFailure)
 
   $scope.unSharedCompSuccess = (res) ->
     toastr.success("Company unshared successfully", "Success")
-    $scope.getSharedUserList($scope.selectedCompany.uniqueName)
+    $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
 
   $scope.unSharedCompFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -311,7 +336,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $rootScope.basicInfo.email isnt email.userEmail
 
   $scope.getUploadsList = ->
-    companyServices.getUploadsList($scope.selectedCompany.uniqueName).then($scope.getUploadsListSuccess, $scope.getUploadsListFailure)
+    companyServices.getUploadsList($rootScope.selectedCompany.uniqueName).then($scope.getUploadsListSuccess, $scope.getUploadsListFailure)
 
   $scope.getUploadsListSuccess = (res) ->
     if res.body.length > 0
