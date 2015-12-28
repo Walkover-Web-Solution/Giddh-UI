@@ -91,7 +91,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       else
         $scope.goToCompany($scope.companyList[0], 0)
 
-
   #get company list failure
   $scope.getCompanyListFailure = (res)->
     toastr.error(res.data.message, res.data.status)
