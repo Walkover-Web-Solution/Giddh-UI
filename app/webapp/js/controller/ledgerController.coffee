@@ -242,19 +242,21 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     else
       uLedger.multiEntry = false
 
+    sharedData = _.omit(uLedger, 'transactions')
+    sharedData.total = 0
     _.each(uLedger.transactions, (transaction) ->
       if transaction.type is "DEBIT"
+        sharedData.total = sharedData.total - parseFloat(transaction.amount)
         _.filter($scope.ledgerOnlyDebitData, (ledger) ->
           if ledger.sharedData.uniqueName is uLedger.uniqueName
-            sharedData = _.omit(uLedger, 'transactions')
             ledger.sharedData = sharedData
             if _.isEqual(ledger.transactions[0], transaction)
               ledger.transactions[0] = transaction
         )
       if transaction.type is "CREDIT"
+        sharedData.total = sharedData.total + parseFloat(transaction.amount)
         _.filter($scope.ledgerOnlyCreditData, (ledger) ->
           if ledger.sharedData.uniqueName is uLedger.uniqueName
-            sharedData = _.omit(uLedger, 'transactions')
             ledger.sharedData = sharedData
             if _.isEqual(ledger.transactions[0], transaction)
               ledger.transactions[0] = transaction
