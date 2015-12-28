@@ -1136,7 +1136,7 @@ li:last-child .angular-ui-tree-handle {
 }
 
 .table-container tr > td:first-child{
-    padding-right:20px;
+    padding:0 20px 0 25px;
 }
 
 .table-container tr td table tr td:nth-child(2){
@@ -1373,6 +1373,37 @@ v-pane-header.noChild {
 v-pane-header.show-pseudo{
     border-bottom:1px solid #D8D8D8 !important;
 }
+
+
+.vAccordion--default v-pane-header::after, .vAccordion--default v-pane-header::before {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 50%;
+    left: 8px;
+    width: 10px;
+    height: 2px;
+    background-color: #d35f29;
+    -webkit-transform-origin: 50% 50%;
+        -ms-transform-origin: 50% 50%;
+            transform-origin: 50% 50%;
+    -webkit-transition: all 0.25s;
+            transition: all 0.25s; }
+  .vAccordion--default v-pane-header::before {
+    -webkit-transform: rotate(-90deg);
+        -ms-transform: rotate(-90deg);
+            transform: rotate(-90deg); }
+
+
+.vAccordion--default v-pane-header.no-child::after, .vAccordion--default v-pane-header.no-child::before {
+    visibility: hidden;
+}
+
+
+.vAccordion--default v-pane-header.no-data::after, .vAccordion--default v-pane-header.no-data::before {
+    visibility: hidden;
+}
+
 
 .export{
     margin-right:10px;

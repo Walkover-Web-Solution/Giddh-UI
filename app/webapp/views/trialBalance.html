@@ -139,7 +139,7 @@
             <v-accordion class="vAccordion--default root"
                          control="accordion" multiple onexpand="addData()">
               <v-pane ng-repeat="grp in data.groupDetails | filter:keyWord" expanded="expanded" ng-class="grp.category" >
-                <v-pane-header ng-class="{'show-pseudo' : !grp.childGroups.length && !grp.accounts.length}">
+                <v-pane-header ng-class="{'show-pseudo' : !grp.childGroups.length && !grp.accounts.length, 'no-child' : !grp.childGroups.length && !grp.accounts.length, 'no-data': grp.closingBalance.amount == 0}" >
                   <table class="col-sm-12 fl-none">
                     <tbody>
                     <tr>
