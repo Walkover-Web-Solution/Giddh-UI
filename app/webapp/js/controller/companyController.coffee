@@ -128,21 +128,22 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #delete company
   $scope.deleteCompany = (uniqueName, index, name) ->
-    modalInstance = $uibModal.open(
+    # modalInstance = $uibModal.open(
+    #   templateUrl: '/public/webapp/views/confirmModal.html'
+    #   title: 'Are you sure you want to delete? ' + name
+    #   ok: 'Yes'
+    #   cancel: 'No'
+    #   scope: $scope
+    # )
+    # modalInstance.result.then ->
+    #   companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
+
+    modalService.openConfirmModal(
       title: 'Are you sure you want to delete? ' + name,
       ok: 'Yes',
       cancel: 'No'
-      scope: $scope
-    )
-    modalInstance.result.then ->
+    ).then ->
       companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
-
-    # modalService.openConfirmModal(
-    #   title: 'Are you sure you want to delete? ' + name,
-    #   ok: 'Yes',
-    #   cancel: 'No'
-    # ).then ->
-    #   companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
 
   #delete company success
   $scope.delCompanySuccess = (res) ->

@@ -12,7 +12,16 @@ angular.module('giddhWebApp').service('modalService',
           data: () ->
             data
         $uibModal.open(settings).result
-
+      # openConfirmModal: () ->
+      #   $uibModal.open(
+      #     templateUrl: '/public/webapp/views/confirmModal.html'
+      #     size: "sm"
+      #     backdrop: 'static'
+      #     controller: 'ConfirmModalController'
+      #     resolve: 
+      #       data: () ->
+      #         data
+      #   )
       openManageGroupsModal: () ->
         $uibModal.open(
           templateUrl: '/public/webapp/views/addManageGroupModal.html'

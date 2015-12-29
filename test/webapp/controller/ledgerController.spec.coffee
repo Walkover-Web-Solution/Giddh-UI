@@ -15,7 +15,7 @@ describe 'ledgerController', ->
     it 'should check scope variables set by default', ->
       expect(@scope.ledgerdata).toBeUndefined()
       expect(@scope.accntTitle).toBeUndefined()
-      expect(@scope.selectedAccountUniqueName).toBeUndefined()
+      expect(@scope.selAcntUname).toBeUndefined()
       expect(@scope.selectedGroupUname).toBeUndefined()
       expect(@scope.selectedLedgerAccount).toBeUndefined()
       expect(@scope.ledgerOnlyDebitData).toEqual([])
@@ -139,7 +139,7 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
-        @scope.selectedAccountUniqueName = "somename"
+        @scope.selAcntUname = "somename"
         data = {groupUniqueName: "somename"}
         acData = {
           name: "name"
@@ -153,7 +153,7 @@ describe 'ledgerController', ->
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUniqueName
+          acntUname: @scope.selAcntUname
           fromDate: @scope.toDate.date
           toDate: @scope.fromDate.date
         }
@@ -168,7 +168,7 @@ describe 'ledgerController', ->
         expect(@scope.selectedLedgerAccount).toBe(acData)
         expect(@scope.selectedLedgerGroup).toBe(data)
         expect(@scope.accntTitle).toEqual(acData.name)
-        expect(@scope.selectedAccountUniqueName).toEqual(acData.uniqueName)
+        expect(@scope.selAcntUname).toEqual(acData.uniqueName)
         expect(@scope.selectedGroupUname).toEqual(data.groupUniqueName)
 
         expect(@scope.hasAddAndUpdatePermission).toHaveBeenCalledWith(acData)
@@ -221,11 +221,11 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "groupname"
-        @scope.selectedAccountUniqueName = "accountname"
+        @scope.selAcntUname = "accountname"
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUniqueName
+          acntUname: @scope.selAcntUname
         }
         deferred = @q.defer()
         spyOn(@ledgerService, "createEntry").andReturn(deferred.promise)
@@ -278,7 +278,7 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "groupname"
-        @scope.selectedAccountUniqueName = "accountname"
+        @scope.selAcntUname = "accountname"
         data = {
           sharedData: {
             uniqueName: "uniqueName"
@@ -296,7 +296,7 @@ describe 'ledgerController', ->
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUniqueName
+          acntUname: @scope.selAcntUname
           entUname: data.sharedData.uniqueName
         }
         deferred = @q.defer()
@@ -352,13 +352,13 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
-        @scope.selectedAccountUniqueName = "somename"
+        @scope.selAcntUname = "somename"
         item = {sharedData: {name: "name", uniqueName: "somename"}}
 
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUniqueName
+          acntUname: @scope.selAcntUname
           entUname: item.sharedData.uniqueName
         }
         @scope.deleteEntry(item)
@@ -647,11 +647,11 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
-        @scope.selectedAccountUniqueName = "somename"
+        @scope.selAcntUname = "somename"
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUniqueName
+          acntUname: @scope.selAcntUname
           fromDate: @scope.toDate.date
           toDate: @scope.fromDate.date
         }
@@ -693,7 +693,7 @@ describe 'ledgerController', ->
         uniqueName: "giddh"
       }
       @scope.selectedGroupUname = "somename"
-      @scope.selectedAccountUniqueName = "somename"
+      @scope.selAcntUname = "somename"
       result = ''
       files = [{ 
         fieldname: 'file',

@@ -21,14 +21,14 @@ describe 'accountController', ->
       })
 
   describe '#getAccountsGroups', ->
-    it 'should show a toastr informing user to select company first when no company selected', ->
+    xit 'should show a toastr informing user to select company first when no company selected', ->
       spyOn(@toastr, 'error')
       spyOn(@localStorageService, 'get').andReturn({})
       @scope.getAccountsGroups()
       expect(@toastr.error).toHaveBeenCalledWith('Select company first.', 'Error')
       expect(@scope.showAccountList).toBeFalsy()
 
-    it 'should call groups from route after getting company unique name', ->
+    xit 'should call groups from route after getting company unique name', ->
       spyOn(@localStorageService, 'get').andReturn({"data": "Got it", "uniqueName": "soniravi"})
       deferred = @q.defer()
       spyOn(@groupService, 'getAllWithAccountsFor').andReturn(deferred.promise)

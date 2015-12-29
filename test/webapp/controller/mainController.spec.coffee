@@ -3,21 +3,42 @@
 describe 'mainController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, $uibModal, roleServices) ->
+  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, $uibModal, roleServices, permissionService) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @roleServices = roleServices
     @localStorageService = localStorageService
     @toastr = toastr
     @uibModal = $uibModal
+    @permissionService = permissionService
     @q = $q
     @mainController = $controller('mainController',
         {
           $scope: @scope,
           $rootScope: @rootScope,
           localStorageService: @localStorageService
+          permissionService: @permissionService
           roleServices: @roleServices
         })
+
+  describe '#ifHavePermission', ->
+    it 'should return true if user have permissions', ->
+      data = {
+        role:
+          permissions: [{code: "MNG_USR"}]
+      }
+      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
+      @scope.ifHavePermission(data, "MNG_USR")
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "MNG_USR")
+
+    it 'should return false if user don\'t have permissions', ->
+      data = {
+        role:
+          permissions: [{code: "MNG_USR"}]
+      }
+      spyOn(@permissionService, 'hasPermissionOn').andReturn(false)
+      @scope.ifHavePermission(data, "MNG_USR")
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "MNG_USR")
 
   describe '#goToManageGroups', ->
     it 'should show a toastr error message if object is blank', ->
