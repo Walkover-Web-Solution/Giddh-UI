@@ -1,4 +1,4 @@
-giddh.webApp.service 'trialBalService', ($resource, $q) ->
+giddh.serviceModule.service 'trialBalService', ($resource, $q) ->
   trialBal = $resource('/company/:companyUniqueName/trial-balance',
     {
       'companyUniqueName': @companyUniqueName,

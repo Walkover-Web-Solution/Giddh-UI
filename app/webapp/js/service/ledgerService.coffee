@@ -1,6 +1,6 @@
 'use strict'
 
-giddh.webApp.service 'ledgerService', ($resource, $q) ->
+giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
   Ledger = $resource('/company/:companyUniqueName/groups/:groupUniqueName/accounts',
     {
       'companyUniqueName': @companyUniqueName,

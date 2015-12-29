@@ -1,6 +1,6 @@
 'use strict'
 
-giddh.webApp.service 'groupService', ($resource, $q) ->
+giddh.serviceModule.service 'groupService', ($resource, $q) ->
   Group = $resource('/company/:companyUniqueName/groups',
     {'companyUniqueName': @companyUniqueName, 'groupUniqueName': @groupUniqueName},
     {

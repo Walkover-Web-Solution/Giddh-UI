@@ -1,6 +1,6 @@
 'use strict'
 
-giddh.webApp.service 'roleServices', ($resource, $q) ->
+giddh.serviceModule.service 'roleServices', ($resource, $q) ->
   Role = $resource('/roles', {}
     {
       all: {

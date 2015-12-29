@@ -1,6 +1,6 @@
 'use strict'
 
-giddh.webApp.service 'currencyService', ($resource) ->
+giddh.serviceModule.service 'currencyService', ($resource) ->
   currencyGetResource = $resource('/currency', {}, {
     currencyList: {method: 'GET'}
   })

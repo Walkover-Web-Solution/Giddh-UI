@@ -1,12 +1,12 @@
 'use strict'
 
 describe 'Trial Balance Service', ->
-  beforeEach module ("giddhWebApp")
+  beforeEach module("serviceModule")
+
   beforeEach ->
     inject ($injector) ->
       @httpBackend = $injector.get('$httpBackend')
       @trialBalService = $injector.get('trialBalService')
-      @httpBackend.when('GET', '/public/webapp/views/home.html').respond(200)
 
   describe "#httpRequestMethods", ->
     afterEach(->

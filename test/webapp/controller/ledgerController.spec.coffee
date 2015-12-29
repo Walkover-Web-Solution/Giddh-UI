@@ -221,11 +221,11 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "groupname"
-        @scope.selAcntUname = "accountname"
+        @rootScope.selAcntUname = "accountname"
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selAcntUname
+          acntUname: @rootScope.selAcntUname
         }
         deferred = @q.defer()
         spyOn(@ledgerService, "createEntry").andReturn(deferred.promise)
@@ -278,7 +278,7 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "groupname"
-        @scope.selAcntUname = "accountname"
+        @rootScope.selAcntUname = "accountname"
         data = {
           sharedData: {
             uniqueName: "uniqueName"
@@ -296,7 +296,7 @@ describe 'ledgerController', ->
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selAcntUname
+          acntUname: @rootScope.selAcntUname
           entUname: data.sharedData.uniqueName
         }
         deferred = @q.defer()
@@ -352,13 +352,13 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
-        @scope.selAcntUname = "somename"
+        @rootScope.selAcntUname = "somename"
         item = {sharedData: {name: "name", uniqueName: "somename"}}
 
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selAcntUname
+          acntUname: @rootScope.selAcntUname
           entUname: item.sharedData.uniqueName
         }
         @scope.deleteEntry(item)
@@ -647,11 +647,11 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
-        @scope.selAcntUname = "somename"
+        @rootScope.selAcntUname = "somename"
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selAcntUname
+          acntUname: @rootScope.selAcntUname
           fromDate: @scope.toDate.date
           toDate: @scope.fromDate.date
         }

@@ -1,6 +1,16 @@
 'use strict'
 
-giddh.webApp.service('modalService',
+# confirm modal settings
+giddh.serviceModule.value('$confirmModalDefaults',
+  templateUrl: '/public/webapp/views/confirmModal.html',
+  controller: 'ConfirmModalController',
+  defaultLabels:
+    title: 'Confirm'
+    ok: 'OK'
+    cancel: 'Cancel')
+
+
+giddh.serviceModule.service('modalService',
   ($uibModal, $confirmModalDefaults) ->
     modalService =
       openConfirmModal: (data, settings) ->

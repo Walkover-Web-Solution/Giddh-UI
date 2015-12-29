@@ -1,6 +1,6 @@
 'use strict'
 
-giddh.webApp.service 'userServices', ($resource, $q) ->
+giddh.serviceModule.service 'userServices', ($resource, $q) ->
   UserSET = $resource('/users',
       {
         'uniqueName': @uniqueName,

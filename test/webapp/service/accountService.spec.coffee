@@ -1,13 +1,12 @@
 'use strict'
 
 describe "Account Service", ->
-  beforeEach module("giddhWebApp")
+  beforeEach module("serviceModule")
 
   beforeEach ->
     inject ($injector) ->
       @httpBackend = $injector.get('$httpBackend')
       @accountService = $injector.get('accountService')
-    @httpBackend.when('GET', '/public/webapp/views/home.html').respond(200)
 
   afterEach ->
     @httpBackend.flush()

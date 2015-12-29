@@ -1,6 +1,6 @@
 'use strict'
 
-giddh.webApp.service 'companyServices', ($resource, $q) ->
+giddh.serviceModule.service 'companyServices', ($resource, $q) ->
   Company = $resource('/company', {'uniqueName': @uniqueName}, {
     addCompany: {method: 'POST'}
     getCompanyDetails: {method: 'GET', url: '/company/:uniqueName'}
