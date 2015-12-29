@@ -135,6 +135,7 @@ angular.module('ledger', [])
     ftype: '=ftype'
     formClass: '@formClass'
     canAddAndEdit: '=canAddAndEdit'
+    selAcntUname: '=selAcntUname'
     updateLedger: '&'
     addLedger: '&'
     removeLedgdialog: '&'
@@ -159,7 +160,7 @@ angular.module('ledger', [])
                   tabindex='-1'  class='nobdr ledgInpt' required
                   name='trnsName_{{index}}'
                   ng-model='item.transactions[0].particular'
-                  uib-typeahead='obj as obj.name for obj in aclist | filter:$viewValue | limitTo:8'
+                  uib-typeahead='obj as obj.name for obj in aclist | omit: isCurrentAc | filter:{name: $viewValue} | limitTo:8'
                   class='form-control' autocomplete='off'
                   typeahead-no-results='noResults'
                   typeahead-on-select='addCrossFormField($item, $model, $label)'>
@@ -223,6 +224,9 @@ angular.module('ledger', [])
         if e.shiftKey and (keycode1 is 0 or keycode1 is 9)
           e.preventDefault()
           scope.moveBackward(e, ths)
+    
+    scope.isCurrentAc =(acnt) ->
+      acnt.uniqueName is scope.selAcntUname
 
     scope.addCrossFormField = (i, d, c) ->
       # scope.item.transactions[0].particular.uniqueName = i.uName
@@ -284,7 +288,6 @@ angular.module('ledger', [])
 
     scope.setTotalVal = (item) ->
       if _.isNumber(item.sharedData.total)
-        console.log "hey number"
         if item.sharedData.total > 0
           scope.ttlValD = item.sharedData.total
           scope.ttlValDType = " CR"
@@ -292,7 +295,7 @@ angular.module('ledger', [])
           scope.ttlValD = Math.abs(item.sharedData.total)
           scope.ttlValDType = " DR"
       else
-        console.log "not a number"
+        console.info "not a number"
 
     scope.openDialog = (item, indexs, ftype, parentForm) ->
       # $document.off 'click'

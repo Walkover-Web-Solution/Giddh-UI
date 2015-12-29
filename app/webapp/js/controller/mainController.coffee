@@ -26,6 +26,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
     obj = _.map(data, (item) ->
       obj = {}
       obj.name = item.name
+      # obj.uName = item.uniqueName
       obj.uniqueName = item.uniqueName
       obj
     )

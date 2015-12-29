@@ -3,7 +3,7 @@
 ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload) ->
   $scope.ledgerData = undefined 
   $scope.accntTitle = undefined
-  $scope.selectedAccountUniqueName = undefined
+  # $scope.selAcntUname = undefined
   $scope.selectedGroupUname = undefined
   $scope.selectedLedgerAccount = undefined
   $scope.selectedLedgerGroup = undefined
@@ -108,17 +108,17 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.selectedLedgerAccount = acData
     $scope.selectedLedgerGroup = data
     $scope.accntTitle = acData.name
-    $scope.selectedAccountUniqueName = acData.uniqueName
+    $scope.selAcntUname = acData.uniqueName
     $scope.selectedGroupUname = data.groupUniqueName
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
-      acntUname: $scope.selectedAccountUniqueName
+      acntUname: $scope.selAcntUname
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
     }
     ledgerService.getLedger(unqNamesObj).then($scope.loadLedgerSuccess, $scope.loadLedgerFailure)
-    $stateParams.unqName = $scope.selectedAccountUniqueName
+    $stateParams.unqName = $scope.selAcntUname
     $stateParams.grpName = $scope.selectedGroupUname
 
     $scope.showLedgerBreadCrumbs(acData.parentGroups.reverse())
@@ -186,7 +186,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
-      acntUname: $scope.selectedAccountUniqueName
+      acntUname: $scope.selAcntUname
     }
     ledgerService.createEntry(unqNamesObj, edata).then($scope.addEntrySuccess, $scope.addEntryFailure)
 
@@ -221,7 +221,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
-      acntUname: $scope.selectedAccountUniqueName
+      acntUname: $scope.selAcntUname
       entUname: edata.uniqueName
     }
     ledgerService.updateEntry(unqNamesObj, edata).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
@@ -278,7 +278,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
-      acntUname: $scope.selectedAccountUniqueName
+      acntUname: $scope.selAcntUname
       entUname: item.sharedData.uniqueName
     }
     ledgerService.deleteEntry(unqNamesObj).then((res) ->
@@ -445,7 +445,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
-      acntUname: $scope.selectedAccountUniqueName
+      acntUname: $scope.selAcntUname
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
     }
@@ -465,7 +465,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroupUname
-      acntUname: $scope.selectedAccountUniqueName
+      acntUname: $scope.selAcntUname
     }
     $scope.impLedgBar = false
     $scope.impLedgFiles = files
