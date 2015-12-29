@@ -507,8 +507,9 @@ describe 'groupController', ->
       ]
     }
 
-    it 'should check if selectedGroup is empty and copy data to selAcntPrevObj, set showGroupDetails variable to false, showAccountDetails to true and set value for selected account variable and set breadcrumb', ->
+    it 'should check if selectedGroup is empty and copy data to selAcntPrevObj, set showGroupDetails variable to false, showAccountDetails to true and set value for selected account variable and set breadcrumb and set value cantUpdate variable to true', ->
       @scope.selectedGroup = {}
+      @rootScope.selAcntUname = "cashinhand"
       spyOn(@scope, "checkPermissions")
       spyOn(@scope, "showBreadCrumbs")
       spyOn(@scope, 'breakMobNo')
@@ -519,6 +520,7 @@ describe 'groupController', ->
       expect(@scope.checkPermissions).toHaveBeenCalledWith(data)
       expect(@scope.showGroupDetails).toBeFalsy()
       expect(@scope.showAccountDetails).toBeTruthy()
+      expect(@scope.cantUpdate).toBeTruthy()
       expect(@scope.selAcntPrevObj).toEqual(data)
       expect(@scope.selectedAccount).toEqual(data)
 
@@ -530,6 +532,7 @@ describe 'groupController', ->
 
     it 'should copy data to selAcntPrevObj, set showGroupDetails variable to false, showAccountDetails to true and set value for selected account variable and set breadcrumb', ->
       @scope.selectedGroup = {name: "some"}
+      @rootScope.selAcntUname = "some"
       spyOn(@scope, "checkPermissions")
       spyOn(@scope, "showBreadCrumbs")
       spyOn(@scope, 'breakMobNo')
@@ -540,6 +543,7 @@ describe 'groupController', ->
       expect(@scope.checkPermissions).toHaveBeenCalledWith(data)
       expect(@scope.showGroupDetails).toBeFalsy()
       expect(@scope.showAccountDetails).toBeTruthy()
+      expect(@scope.cantUpdate).toBeFalsy()
       expect(@scope.selAcntPrevObj).toEqual(data)
       expect(@scope.selectedAccount).toEqual(data)
       expect(@scope.getAccountSharedList).toHaveBeenCalled()

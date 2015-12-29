@@ -308,10 +308,13 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #show account
   $scope.showAccountDtl = (data) ->
+    $scope.cantUpdate = false
     pGroups = []
     $scope.checkPermissions(data)
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
+    if data.uniqueName is $rootScope.selAcntUname
+      $scope.cantUpdate = true
     angular.copy(data, $scope.selAcntPrevObj)
     _.extend($scope.selectedAccount, data)
     _.extend(pGroups, data.parentGroups)
