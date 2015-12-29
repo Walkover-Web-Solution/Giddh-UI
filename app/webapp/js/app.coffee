@@ -45,8 +45,12 @@ app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
           cdt = localStorageService.get("_selectedCompany")
           if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
             cst = _.findWhere(companyList, {uniqueName: cdt.uniqueName})
-            console.info "data from localstorage match"
-            checkRole(cst)
+            if !_.isUndefined(cst)
+              console.info "data from localstorage match"
+              checkRole(cst)
+            else
+              console.info "data not match in localstorage reason  login user changed"
+              checkRole(companyList[0])  
           else
             console.info "direct from api"
             checkRole(companyList[0])

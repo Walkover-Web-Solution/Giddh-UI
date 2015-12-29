@@ -803,7 +803,7 @@ describe 'groupController', ->
       spyOn(@toastr, "success")
       spyOn(@rootScope, "$broadcast")
       @scope.updateAccountSuccess(res)
-      expect(@toastr.success).toHaveBeenCalledWith("Group updated successfully", res.status)
+      expect(@toastr.success).toHaveBeenCalledWith("Account updated successfully", res.status)
       expect(@scope.selectedAccount).toEqual(dobj)
       expect(@scope.selAcntPrevObj).toEqual(dobj)
       expect(@scope.groupAccntList[1].uniqueName).toEqual(@scope.selectedAccount.uniqueName)
