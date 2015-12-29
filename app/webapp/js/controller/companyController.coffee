@@ -1,5 +1,20 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, getState) ->
+  self = this
+
+  self.goToLedgerState = () ->
+    if getState == 'fromLocalStorage'
+      company = localStorageService.get('_selectedCompany')
+      $rootScope.selectedCompany = company
+      $state.go('ledger.ledgerContent')
+    else
+      $rootScope.selectedCompany = getState[0]
+      localStorageService.set('_selectedCompany', getState[0])
+      $state.go('ledger.ledgerContent')
+
+  if $rootScope.firstLogin
+    self.goToLedgerState()
+    $rootScope.firstLogin = false
 
 #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false

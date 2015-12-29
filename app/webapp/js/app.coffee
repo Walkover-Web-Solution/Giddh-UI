@@ -31,6 +31,22 @@ app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   $urlRouterProvider.otherwise('/home')
   $stateProvider.state('/home',
     url: '/home'
+    resolve:{
+      companyServices : 'companyServices'
+      localStorageService : 'localStorageService'
+      getState: (companyServices, localStorageService) ->
+        company = localStorageService.get('_selectedCompany')
+        if not _.isEmpty(company)
+          return 'fromLocalStorage'
+        else
+          onSuccess = (res) ->
+            companyList = _.sortBy(res.body, 'shared')
+            return companyList
+          onFailure = (res) ->
+            toastr.error('Failed to retrieve company list' + res.data.message)
+
+        companyServices.getAll().then(onSuccess, onFailure)
+    }
     templateUrl: '/public/webapp/views/home.html'
     controller: 'companyController')
   .state('/thankyou',
@@ -106,6 +122,8 @@ app.run [
       win.document.close()
       win.document.execCommand('SaveAs',true, 'abc' + ".xls")
       win.close()
+
+    $rootScope.firstLogin = true
 ]
 
 app.config ($httpProvider) ->

@@ -9,8 +9,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.selectedAccountUniqueName = undefined
 
   $scope.getAccountsGroups = ()->
-    console.log $rootScope.selectedCompany
-    # $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+    $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.showAccountList = false
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
