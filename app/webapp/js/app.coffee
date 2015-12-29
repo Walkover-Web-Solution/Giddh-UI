@@ -34,19 +34,30 @@ app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     resolve:{
       companyServices : 'companyServices'
       localStorageService : 'localStorageService'
-      getState: (companyServices, localStorageService) ->
-        company = localStorageService.get('_selectedCompany')
-        if not _.isEmpty(company)
-          return 'fromLocalStorage'
-        else
-          onSuccess = (res) ->
-            companyList = _.sortBy(res.body, 'shared')
-            return companyList
-          onFailure = (res) ->
-            toastr.error('Failed to retrieve company list' + res.data.message)
-
+      getLedgerState: (companyServices, localStorageService) ->
+        checkRole = (data) ->
+          return {
+            type: data.role.uniqueName
+            data: data
+          }
+        onSuccess = (res) ->
+          companyList = _.sortBy(res.body, 'shared')
+          cdt = localStorageService.get("_selectedCompany")
+          if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
+            cst = _.findWhere(companyList, {uniqueName: cdt.uniqueName})
+            console.info "data from localstorage match"
+            checkRole(cst)
+          else
+            console.info "direct from api"
+            checkRole(companyList[0])
+        onFailure = (res) ->
+          toastr.error('Failed to retrieve company list' + res.data.message)
         companyServices.getAll().then(onSuccess, onFailure)
     }
+    templateUrl: '/public/webapp/views/demo.html'
+    controller: 'homeController')
+  .state('manage-company',
+    url: '/manage-company'
     templateUrl: '/public/webapp/views/home.html'
     controller: 'companyController')
   .state('/thankyou',
@@ -57,10 +68,6 @@ app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/user'
     templateUrl: '/public/webapp/views/userDetails.html'
     controller: 'userController')
-  .state( 'dummyledger',
-    url: '/ledger'
-    templateUrl: '/public/webapp/views/ledger.html'
-    )
   .state( 'ledger',
     abstract: true
     url: '/ledger:uniqueName'
@@ -110,10 +117,9 @@ app.run [
       ua = window.navigator.userAgent
       msie = ua.indexOf('MSIE')
       if msie > 0 or ! !navigator.userAgent.match(/Trident.*rv\:11\./)
-        console.log parseInt(ua.substring(msie + 5, ua.indexOf('.', msie)))
         return true
       else
-        console.log window.navigator.userAgent, 'otherbrowser', msie
+        console.info window.navigator.userAgent, 'otherbrowser', msie
         return false
     # open window for IE
     $rootScope.openWindow = (url) ->
