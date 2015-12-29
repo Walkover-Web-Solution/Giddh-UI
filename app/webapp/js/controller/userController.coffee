@@ -28,4 +28,4 @@ userController = ($scope, $rootScope, toastr, userServices) ->
     $scope.getUserAuthKey()
 
 #init angular app
-angular.module('giddhWebApp').controller 'userController', userController
+giddh.webApp.controller 'userController', userController

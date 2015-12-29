@@ -41,4 +41,4 @@ profitLossController = ($scope, $rootScope, companyServices, localStorageService
 
 
 
-angular.module('giddhWebApp').controller 'profitLossController', profitLossController
+giddh.webApp.controller 'profitLossController', profitLossController

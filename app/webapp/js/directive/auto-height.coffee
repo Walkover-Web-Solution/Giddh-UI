@@ -19,13 +19,13 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
     , 1000
 ]
 # capitalize first letter of a string
-angular.module('giddhWebApp').filter 'capitalize', ->
+giddh.webApp.filter 'capitalize', ->
   (input) ->
     if ! !input then input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() else ''
 
 # for date time filter for usage
 # http://stackoverflow.com/questions/20662140/using-angularjs-date-filter-with-utc-date
-angular.module('giddhWebApp').filter 'moment', ->
+giddh.webApp.filter 'moment', ->
   (input, momentFn) ->
     args = Array::slice.call(arguments, 2)
     momentObj = moment(input, "DD-MM-YYYY HH:mm:ss")

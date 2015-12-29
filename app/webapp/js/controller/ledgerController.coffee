@@ -496,7 +496,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   # ), true
   # $rootScope.selAcntUname = acData.uniqueName
 
-angular.module('giddhWebApp').controller 'ledgerController', ledgerController
+giddh.webApp.controller 'ledgerController', ledgerController
 
 class angular.Ledger
   constructor: (type)->

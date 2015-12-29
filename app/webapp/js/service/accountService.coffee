@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('giddhWebApp').service 'accountService', ($resource, $q) ->
+giddh.webApp.service 'accountService', ($resource, $q) ->
   Account = $resource('/company/:companyUniqueName/groups/:groupUniqueName/accounts',
     {
       'companyUniqueName': @companyUniqueName

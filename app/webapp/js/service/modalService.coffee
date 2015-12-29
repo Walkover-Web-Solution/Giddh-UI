@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('giddhWebApp').service('modalService',
+giddh.webApp.service('modalService',
   ($uibModal, $confirmModalDefaults) ->
     modalService =
       openConfirmModal: (data, settings) ->

@@ -1,4 +1,7 @@
-app = angular.module("giddhWebApp",
+'use strict'
+window.giddh = {}
+
+giddh.webApp = angular.module("giddhWebApp",
   [
     "satellizer"
     "LocalStorageModule"
@@ -23,11 +26,11 @@ app = angular.module("giddhWebApp",
   ]
 )
 
-app.config (localStorageServiceProvider) ->
+giddh.webApp.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
 
 
-app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
+giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   $urlRouterProvider.otherwise('/home')
   $stateProvider.state('/home',
     url: '/home'
@@ -96,7 +99,7 @@ app.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   $locationProvider.html5Mode(false)
   return
 
-app.run [
+giddh.webApp.run [
   '$rootScope'
   '$state'
   '$stateParams'
@@ -106,7 +109,7 @@ app.run [
   ($rootScope, $state, $stateParams, $location, $window, toastr) ->
     $rootScope.$on '$stateChangeStart', ->
       $rootScope.showLedgerBox = false
-    
+
     # check IE browser version
     $rootScope.GetIEVersion =() ->
       ua = window.navigator.userAgent
@@ -136,10 +139,10 @@ app.run [
     $rootScope.firstLogin = true
 ]
 
-app.config ($httpProvider) ->
+giddh.webApp.config ($httpProvider) ->
   $httpProvider.interceptors.push('appInterceptor')
 
-app.factory 'appInterceptor', ['$q', '$location', '$log',
+giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log',
   ($q, $location, $log) ->
     request: (request) ->
       request
@@ -154,7 +157,7 @@ app.factory 'appInterceptor', ['$q', '$location', '$log',
 ]
 
 # toastr setting
-app.config (toastrConfig) ->
+giddh.webApp.config (toastrConfig) ->
   angular.extend toastrConfig,
     maxOpened: 3
     closeButton: true
@@ -164,7 +167,7 @@ app.config (toastrConfig) ->
   return
 
 # confirm modal settings
-app.value('$confirmModalDefaults',
+giddh.webApp.value('$confirmModalDefaults',
   templateUrl: '/public/webapp/views/confirmModal.html',
   controller: 'ConfirmModalController',
   defaultLabels:

@@ -63,4 +63,4 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
 
 #init angular app
-angular.module('giddhWebApp').controller 'accountController', accountController
+giddh.webApp.controller 'accountController', accountController

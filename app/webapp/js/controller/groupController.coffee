@@ -516,4 +516,4 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.canShare = permissionService.hasPermissionOn(entity, "MNG_USR")
 
 #init angular app
-angular.module('giddhWebApp').controller 'groupController', groupController
+giddh.webApp.controller 'groupController', groupController

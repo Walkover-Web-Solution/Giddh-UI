@@ -53,4 +53,4 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
     $scope.getRoles()
     $rootScope.basicInfo = localStorageService.get("_userDetails")
 
-angular.module('giddhWebApp').controller 'mainController', mainController
+giddh.webApp.controller 'mainController', mainController

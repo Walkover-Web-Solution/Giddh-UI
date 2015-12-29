@@ -14,4 +14,4 @@ homeController = ($scope, $rootScope, getLedgerState, $state, localStorageServic
 
 
 #init angular app
-angular.module('giddhWebApp').controller 'homeController', homeController
+giddh.webApp.controller 'homeController', homeController

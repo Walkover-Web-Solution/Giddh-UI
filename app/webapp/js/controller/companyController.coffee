@@ -382,4 +382,4 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.getUserDetails()
 
 #init angular app
-angular.module('giddhWebApp').controller 'companyController', companyController
+giddh.webApp.controller 'companyController', companyController
