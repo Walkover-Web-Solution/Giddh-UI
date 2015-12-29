@@ -231,17 +231,17 @@ describe 'companyController', ->
       index = 0
       @scope.canManageUser = true
 
-      spyOn(@scope, "ifHavePermission")
+      spyOn(@rootScope, "ifHavePermission")
       spyOn(@scope, "getSharedUserList")
       spyOn(@localStorageService, "get").andReturn({uniqueName: "some-other-company"})
       spyOn(@localStorageService, "set")
       spyOn(@DAServices, "LedgerSet")
 
       @scope.goToCompany(data, index)
-      expect(@scope.ifHavePermission).toHaveBeenCalledWith(data)
+      expect(@rootScope.ifHavePermission).toHaveBeenCalledWith(data)
       expect(@scope.cmpViewShow).toBeTruthy()
       expect(@scope.selectedCmpLi).toEqual(index)
-      expect(@scope.selectedCompany).toEqual(data)
+      expect(@rootScope.selectedCompany).toEqual(data)
       expect(@scope.getSharedUserList).toHaveBeenCalledWith("afafafafaf1443520197325007bgo")
       expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
       expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)
@@ -255,16 +255,16 @@ describe 'companyController', ->
         cCode: ""
       index = 0
 
-      spyOn(@scope, "ifHavePermission")
+      spyOn(@rootScope, "ifHavePermission")
       spyOn(@scope, "getSharedUserList")
       spyOn(@DAServices, "LedgerSet")
       spyOn(@localStorageService, "get").andReturn({uniqueName: "afafafafaf1443520197325007bgo"})
 
       @scope.goToCompany(data, index)
-      expect(@scope.ifHavePermission).toHaveBeenCalledWith(data)
+      expect(@rootScope.ifHavePermission).toHaveBeenCalledWith(data)
       expect(@scope.cmpViewShow).toBeTruthy()
       expect(@scope.selectedCmpLi).toEqual(index)
-      expect(@scope.selectedCompany).toEqual(data)
+      expect(@rootScope.selectedCompany).toEqual(data)
       expect(@scope.getSharedUserList).not.toHaveBeenCalledWith("afafafafaf1443520197325007bgo")
       expect(@DAServices.LedgerSet).not.toHaveBeenCalledWith(null, null)
 
@@ -440,36 +440,36 @@ describe 'companyController', ->
       role = "view_only"
       userEmail = "s@g.com"
       sData = {role: role, user: userEmail}
-      @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
+      @rootScope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
       deferred = @q.defer()
       spyOn(@companyServices, "share").andReturn(deferred.promise)
       @scope.updateUserRole(role, userEmail)
-      expect(@companyServices.share).toHaveBeenCalledWith(@scope.selectedCompany.uniqueName, sData)
+      expect(@companyServices.share).toHaveBeenCalledWith(@rootScope.selectedCompany.uniqueName, sData)
 
   describe '#shareCompanyWithUser', ->
     it 'should call companyServices.share service with role or json object contains email', ->
       @rootScope.basicInfo = {email: "s@f.com"}
       @scope.shareRequest = {role: "view_only", user: "s@g.com"}
-      @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
+      @rootScope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
       deferred = @q.defer()
       spyOn(@companyServices, "share").andReturn(deferred.promise)
       @scope.shareCompanyWithUser()
-      expect(@companyServices.share).toHaveBeenCalledWith(@scope.selectedCompany.uniqueName, @scope.shareRequest)
+      expect(@companyServices.share).toHaveBeenCalledWith(@rootScope.selectedCompany.uniqueName, @scope.shareRequest)
 
     it 'should not call service if email matched and show a toastr', ->
       @rootScope.basicInfo = {email: "s@g.com"}
       @scope.shareRequest = {role: "view_only", user: "s@g.com"}
-      @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
+      @rootScope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
       deferred = @q.defer()
       spyOn(@toastr, 'error')
       spyOn(@companyServices, "share").andReturn(deferred.promise)
       @scope.shareCompanyWithUser()
-      expect(@companyServices.share).not.toHaveBeenCalledWith(@scope.selectedCompany.uniqueName, @scope.shareRequest)
+      expect(@companyServices.share).not.toHaveBeenCalledWith(@rootScope.selectedCompany.uniqueName, @scope.shareRequest)
       expect(@toastr.error).toHaveBeenCalledWith('You cannot add yourself.', 'Error')
 
   describe '#onShareCompanySuccess', ->
     it 'should make a blank object, show success message and call getSharedUserList function', ->
-      @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
+      @rootScope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
       data = {role: 'view_only', user: null}
       res = {"status": "success", "body": "Company 'companyUniqueName' shared successfully with 'name'"}
       spyOn(@toastr, 'success')
@@ -479,7 +479,7 @@ describe 'companyController', ->
       expect(@scope.shareRequest).toEqual(data)
       expect(@toastr.success).toHaveBeenCalledWith("Company 'companyUniqueName' shared successfully with 'name'",
           "success")
-      expect(@scope.getSharedUserList).toHaveBeenCalledWith(@scope.selectedCompany.uniqueName)
+      expect(@scope.getSharedUserList).toHaveBeenCalledWith(@rootScope.selectedCompany.uniqueName)
 
   describe '#onShareCompanyFailure', ->
     it 'should show toastr with error message', ->
@@ -493,11 +493,11 @@ describe 'companyController', ->
 
   describe '#getRolesList', ->
     it 'should call companyService with getRoles method', ->
-      @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
+      @rootScope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
       deferred = @q.defer()
       spyOn(@companyServices, "getRoles").andReturn(deferred.promise)
       @scope.getRolesList()
-      expect(@companyServices.getRoles).toHaveBeenCalledWith(@scope.selectedCompany.uniqueName)
+      expect(@companyServices.getRoles).toHaveBeenCalledWith(@rootScope.selectedCompany.uniqueName)
 
   describe '#getRolesSuccess', ->
     it 'should set data in scope variable rolesList', ->
@@ -553,22 +553,22 @@ describe 'companyController', ->
     it 'should call companyService with unSharedComp method', ->
       id = 0
       data = {user: "uNqame"}
-      @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
+      @rootScope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
 
       deferred = @q.defer()
       spyOn(@companyServices, "unSharedComp").andReturn(deferred.promise)
       @scope.unSharedUser(data.user, id)
-      expect(@companyServices.unSharedComp).toHaveBeenCalledWith(@scope.selectedCompany.uniqueName, data)
+      expect(@companyServices.unSharedComp).toHaveBeenCalledWith(@rootScope.selectedCompany.uniqueName, data)
 
   describe '#unSharedCompSuccess', ->
     it 'should show success toastr and call getSharedUserList function', ->
-      @scope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
+      @rootScope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
       res = {"status": "success", "body": "Company unshared successfully"}
       spyOn(@toastr, 'success')
       spyOn(@scope, "getSharedUserList")
       @scope.unSharedCompSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith("Company unshared successfully", "Success")
-      expect(@scope.getSharedUserList).toHaveBeenCalledWith(@scope.selectedCompany.uniqueName)
+      expect(@scope.getSharedUserList).toHaveBeenCalledWith(@rootScope.selectedCompany.uniqueName)
 
   describe '#unSharedCompFailure', ->
     it 'should show toastr with error message', ->

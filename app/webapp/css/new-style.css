@@ -1075,6 +1075,21 @@ li:last-child .angular-ui-tree-handle {
 .popover.ledgerPopDiv{
     z-index: 3 !important
 }
+.popover.ledgerPopDiv > .arrow {
+    border-width: 21px;
+}
+.popover.ledgerPopDiv.bottom > .arrow::after{
+    margin-left: -20px;
+    top: -19px;
+}
+.popover.ledgerPopDiv > .arrow::after {
+    border-width: 20px
+}
+.popover.ledgerPopDiv.bottom > .arrow {
+    margin-left: -21px;
+    top: -42px;
+}
+
 
 .ledgerBodyContent .highlightRow input.nobdr{
     background-color: #ffffcc

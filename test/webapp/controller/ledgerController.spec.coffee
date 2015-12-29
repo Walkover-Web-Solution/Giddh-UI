@@ -20,7 +20,7 @@ describe 'ledgerController', ->
       expect(@scope.selectedLedgerAccount).toBeUndefined()
       expect(@scope.ledgerOnlyDebitData).toEqual([])
       expect(@scope.ledgerOnlyCreditData).toEqual([])
-      expect(@scope.selectedCompany).toEqual({name: "walkover"})
+      expect(@rootScope.selectedCompany).toEqual({name: "walkover"})
       expect(@scope.creditTotal).toBeUndefined()
       expect(@scope.debitTotal).toBeUndefined()
       expect(@scope.creditBalanceAmount).toBeUndefined()
@@ -62,6 +62,14 @@ describe 'ledgerController', ->
         {
           name: "Contra"
           shortCode: "cntr"
+        }
+        {
+          name: "Debit Note"
+          shortCode: "debit note"
+        }
+        {
+          name: "Credit Note"
+          shortCode: "credit note"
         }
       ]
       expect(@scope.voucherTypeList).toEqual(vouchDat)
@@ -127,7 +135,7 @@ describe 'ledgerController', ->
         @scope.fromDate = {
           date: "14-11-2015"
         }
-        @scope.selectedCompany = {
+        @rootScope.selectedCompany = {
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
@@ -143,7 +151,7 @@ describe 'ledgerController', ->
           ]
         }
         udata = {
-          compUname: @scope.selectedCompany.uniqueName
+          compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
           acntUname: @scope.selectedAccountUniqueName
           fromDate: @scope.toDate.date
@@ -195,12 +203,12 @@ describe 'ledgerController', ->
 
     describe '#addNewAccount', ->
       it 'should check if selectedCompany is empty then it will show alert', ->
-        @scope.selectedCompany = {}
+        @rootScope.selectedCompany = {}
         spyOn(@toastr, "error")
         @scope.addNewAccount()
         expect(@toastr.error).toHaveBeenCalledWith("Select company first.", "Error")
       it 'should call modalService and not show error', ->
-        @scope.selectedCompany = {
+        @rootScope.selectedCompany = {
           uniqueName: "giddh"
         }
         spyOn(@modalService, "openManageGroupsModal")
@@ -209,13 +217,13 @@ describe 'ledgerController', ->
 
     describe '#addNewEntry', ->
       it 'should add a entry to ledger, copy data to a variable, call ledgerService createEntry method', ->
-        @scope.selectedCompany = {
+        @rootScope.selectedCompany = {
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "groupname"
         @scope.selectedAccountUniqueName = "accountname"
         udata = {
-          compUname: @scope.selectedCompany.uniqueName
+          compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
           acntUname: @scope.selectedAccountUniqueName
         }
@@ -266,7 +274,7 @@ describe 'ledgerController', ->
 
     describe '#updateEntry', ->
       it 'should update a entry to ledger, copy data to a variable, call ledgerService createEntry method', ->
-        @scope.selectedCompany = {
+        @rootScope.selectedCompany = {
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "groupname"
@@ -286,7 +294,7 @@ describe 'ledgerController', ->
           transactions: [{particular: "particular"}]
         }
         udata = {
-          compUname: @scope.selectedCompany.uniqueName
+          compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
           acntUname: @scope.selectedAccountUniqueName
           entUname: data.sharedData.uniqueName
@@ -340,7 +348,7 @@ describe 'ledgerController', ->
       it 'should call ledgerService deleteEntry method with object', ->
         deferred = @q.defer()
         spyOn(@ledgerService, "deleteEntry").andReturn(deferred.promise)
-        @scope.selectedCompany = {
+        @rootScope.selectedCompany = {
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
@@ -348,7 +356,7 @@ describe 'ledgerController', ->
         item = {sharedData: {name: "name", uniqueName: "somename"}}
 
         udata = {
-          compUname: @scope.selectedCompany.uniqueName
+          compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
           acntUname: @scope.selectedAccountUniqueName
           entUname: item.sharedData.uniqueName
@@ -635,13 +643,13 @@ describe 'ledgerController', ->
         @scope.fromDate = {
           date: "14-11-2015"
         }
-        @scope.selectedCompany = {
+        @rootScope.selectedCompany = {
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
         @scope.selectedAccountUniqueName = "somename"
         udata = {
-          compUname: @scope.selectedCompany.uniqueName
+          compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
           acntUname: @scope.selectedAccountUniqueName
           fromDate: @scope.toDate.date
@@ -681,7 +689,7 @@ describe 'ledgerController', ->
 
     describe '#importLedger', ->
     it 'should make variable false set values in a scope variable, then call upload service with upload method', ->
-      @scope.selectedCompany = {
+      @rootScope.selectedCompany = {
         uniqueName: "giddh"
       }
       @scope.selectedGroupUname = "somename"

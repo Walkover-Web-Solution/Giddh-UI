@@ -9,10 +9,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.selectedLedgerGroup = undefined
   $scope.ledgerOnlyDebitData = []
   $scope.ledgerOnlyCreditData = []
-  # $rootScope.selectedCompany = {}
-  # lsKeys = localStorageService.get("_selectedCompany")
-  # if not _.isNull(lsKeys) && not _.isEmpty(lsKeys) && not _.isUndefined(lsKeys)
-  #   $rootScope.selectedCompany = lsKeys
+  lsKeys = localStorageService.get("_selectedCompany")
+  if not _.isNull(lsKeys) && not _.isEmpty(lsKeys) && not _.isUndefined(lsKeys)
+    $rootScope.selectedCompany = lsKeys
+  else
+    $rootScope.selectedCompany = {}
   $scope.creditTotal = undefined
   $scope.debitTotal = undefined
   $scope.creditBalanceAmount = undefined
@@ -58,6 +59,14 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     {
       name: "Contra"
       shortCode: "cntr"
+    }
+    {
+      name: "Debit Note"
+      shortCode: "debit note"
+    }
+    {
+      name: "Credit Note"
+      shortCode: "credit note"
     }
   ]
 
@@ -126,16 +135,19 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         ledger.multiEntry = false
       
       sharedData = _.omit(ledger, 'transactions')
+      sharedData.total = 0
       _.each(ledger.transactions, (transaction, index) ->
         transaction.amount = parseFloat(transaction.amount).toFixed(2)
         newEntry = {sharedData: sharedData}
         newEntry.id = sharedData.uniqueName + "_" + index
         if transaction.type is "DEBIT"
           newEntry.transactions = [transaction]
+          sharedData.total = sharedData.total - parseFloat(transaction.amount)
           $scope.ledgerOnlyDebitData.push(newEntry)
 
         if transaction.type is "CREDIT"
           newEntry.transactions = [transaction]
+          sharedData.total = sharedData.total + parseFloat(transaction.amount)
           $scope.ledgerOnlyCreditData.push(newEntry)
       )
     )
@@ -230,20 +242,21 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     else
       uLedger.multiEntry = false
 
+    sharedData = _.omit(uLedger, 'transactions')
+    sharedData.total = 0
     _.each(uLedger.transactions, (transaction) ->
       if transaction.type is "DEBIT"
+        sharedData.total = sharedData.total - parseFloat(transaction.amount)
         _.filter($scope.ledgerOnlyDebitData, (ledger) ->
           if ledger.sharedData.uniqueName is uLedger.uniqueName
-            sharedData = _.omit(uLedger, 'transactions')
             ledger.sharedData = sharedData
             if _.isEqual(ledger.transactions[0], transaction)
               ledger.transactions[0] = transaction
-
         )
       if transaction.type is "CREDIT"
+        sharedData.total = sharedData.total + parseFloat(transaction.amount)
         _.filter($scope.ledgerOnlyCreditData, (ledger) ->
           if ledger.sharedData.uniqueName is uLedger.uniqueName
-            sharedData = _.omit(uLedger, 'transactions')
             ledger.sharedData = sharedData
             if _.isEqual(ledger.transactions[0], transaction)
               ledger.transactions[0] = transaction

@@ -190,7 +190,11 @@ angular.module('ledger', [])
         parentForm = angular.element(this).parents('form')
         if !parentForm.hasClass('open')
           $timeout ->
-            scope.openDialog(scope.item, scope.index, scope.ftype, parentForm)
+            if scope.canAddAndEdit
+              scope.openDialog(scope.item, scope.index, scope.ftype, parentForm)
+            else
+              scope.highlightMultiEntry(scope.item)
+              console.info "You don\'t have appropriate permission"
           , 300
       i++
 
@@ -278,12 +282,25 @@ angular.module('ledger', [])
       scope.forwardtoCntrlScope(angular.element(scope.el), scope.item)
       return false
 
+    scope.setTotalVal = (item) ->
+      if _.isNumber(item.sharedData.total)
+        console.log "hey number"
+        if item.sharedData.total > 0
+          scope.ttlValD = item.sharedData.total
+          scope.ttlValDType = " CR"
+        else
+          scope.ttlValD = Math.abs(item.sharedData.total)
+          scope.ttlValDType = " DR"
+      else
+        console.log "not a number"
+
     scope.openDialog = (item, indexs, ftype, parentForm) ->
       # $document.off 'click'
       scope.removeClassInAllEle("ledgEntryForm", "open")
       elem.addClass('open')
       scope.highlightMultiEntry(item)
       scope.checkDateField(item)
+      scope.setTotalVal(item)
       rect = parentForm[0].getBoundingClientRect()
       childCount = parentForm[0].childElementCount
       popHtml = angular.element('
@@ -323,6 +340,9 @@ angular.module('ledger', [])
                     <textarea class="form-control" ng-readonly="!canAddAndEdit" name="description" ng-model="item.sharedData.description" placeholder="Description"></textarea>
                   </div>
                 </div>
+              </div>
+              <div class="mrB">
+                <label>Total: {{ttlValD + ttlValDType}}</label>
               </div>
               <div class="">
                 <button ng-if="ftype == \'Update\'" ng-show="canAddAndEdit" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults"
@@ -370,7 +390,7 @@ angular.module('ledger', [])
         parentForm.append(popHtml)
         popHtml.css({
           display: "block",
-          top: rect.height,
+          top: rect.height + 13,
           left: "0px",
           visibility: "visible",
           maxWidth: rect.width,
