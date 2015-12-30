@@ -21,24 +21,6 @@ describe 'mainController', ->
           roleServices: @roleServices
         })
 
-  describe '#ifHavePermission', ->
-    it 'should return true if user have permissions', ->
-      data = {
-        role:
-          permissions: [{code: "MNG_USR"}]
-      }
-      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
-      @scope.ifHavePermission(data, "MNG_USR")
-      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "MNG_USR")
-
-    it 'should return false if user don\'t have permissions', ->
-      data = {
-        role:
-          permissions: [{code: "MNG_USR"}]
-      }
-      spyOn(@permissionService, 'hasPermissionOn').andReturn(false)
-      @scope.ifHavePermission(data, "MNG_USR")
-      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "MNG_USR")
 
   describe '#goToManageGroups', ->
     it 'should show a toastr error message if object is blank', ->

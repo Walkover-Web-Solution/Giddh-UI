@@ -3,16 +3,18 @@
 describe 'companyController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $uibModal, modalService, $timeout, permissionService, DAServices, Upload) ->
+  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $uibModal, modalService, $timeout, permissionService, DAServices, Upload, userServices, $state) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @currencyService = currencyService
     @permissionService = permissionService
     @locationService = locationService
     @uibModal = $uibModal
+    @state = $state
     @modalService = modalService
     @toastr = toastr
     @companyServices = companyServices
+    @userServices = userServices
     @q = $q
     @timeout = $timeout
     @localStorageService = localStorageService
@@ -29,23 +31,13 @@ describe 'companyController', ->
           companyServices: @companyServices,
           modalService: @modalService,
           permissionService: @permissionService
+          userServices: @userServices
           $timeout: @timeout
+          $uibModal: @uibModal
+          $state: @state
           DAServices: @DAServices
           Upload: @Upload
         })
-
-  describe '#checkCmpCretedOrNot', ->
-    it 'should check if user created company or not after company modal open', ->
-      @scope.companyList = []
-      spyOn(@scope, 'openFirstTimeUserModal')
-      @scope.checkCmpCretedOrNot()
-      expect(@scope.openFirstTimeUserModal).toHaveBeenCalled()
-
-    it 'should not open company create modal', ->
-      @scope.companyList = ["1", "2"]
-      spyOn(@scope, 'openFirstTimeUserModal')
-      @scope.checkCmpCretedOrNot()
-      expect(@scope.openFirstTimeUserModal).not.toHaveBeenCalledWith()
 
   describe '#openFirstTimeUserModal', ->
     it 'should open a model to create company', ->
@@ -73,6 +65,19 @@ describe 'companyController', ->
       @spyOn(@scope, 'checkCmpCretedOrNot')
       @scope.onCompanyCreateModalCloseFailure()
       expect(@scope.checkCmpCretedOrNot).toHaveBeenCalled()
+
+  describe '#checkCmpCretedOrNot', ->
+    it 'should check if user created company or not after company modal open', ->
+      @scope.companyList = []
+      spyOn(@scope, 'openFirstTimeUserModal')
+      @scope.checkCmpCretedOrNot()
+      expect(@scope.openFirstTimeUserModal).toHaveBeenCalled()
+
+    it 'should not open company create modal', ->
+      @scope.companyList = ["1", "2"]
+      spyOn(@scope, 'openFirstTimeUserModal')
+      @scope.checkCmpCretedOrNot()
+      expect(@scope.openFirstTimeUserModal).not.toHaveBeenCalledWith()
 
   describe '#getOnlyCity', ->
     it 'should call search only city service', ->
@@ -141,19 +146,22 @@ describe 'companyController', ->
       expect(@companyServices.getAll).toHaveBeenCalled()
 
   describe '#getCompanyListSuccess', ->
-    it 'should show error if result have error and call a function to open modal', ->
+    it 'should call a function to open modal', ->
       spyOn(@scope, "openFirstTimeUserModal")
       res = {"body": []}
       @scope.getCompanyListSuccess(res)
       expect(@scope.openFirstTimeUserModal).toHaveBeenCalled()
 
-    it 'should set true to a variable and push data in company list, and by default click on first child to get company details', ->
-      res = {"body": [{"email": "abc@def", "contactNo": "9104120", "baseCurrency": "INR", "index": 0}]}
+    it 'should set true to a variable and push data in company list, and call goToCompany function with last company with the help of localStorageService', ->
+      res = {
+        body: [
+          {"email": "abc@def", "contactNo": "9104120", "baseCurrency": "INR", "index": 0}
+          {"email": "data@def", "contactNo": "3242", "baseCurrency": "INR", "index": 1}
+        ]
+      }
       spyOn(@scope, "goToCompany")
       spyOn(@localStorageService, "get").andReturn(res.body[0])
-
       @scope.getCompanyListSuccess(res)
-
       expect(@scope.mngCompDataFound).toBeTruthy()
       expect(@scope.companyList).toEqual(res.body)
       expect(@scope.goToCompany).toHaveBeenCalledWith(res.body[0], 0)
@@ -168,6 +176,43 @@ describe 'companyController', ->
       @scope.getCompanyListFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
+  describe '#getUserDetails', ->
+    it 'should call user service get method with basicInfo variable', ->
+      @rootScope.basicInfo = {
+        uniqueName: "somename"
+      }
+      deferred = @q.defer()
+      spyOn(@userServices, "get").andReturn(deferred.promise)
+      @scope.getUserDetails()
+      expect(@userServices.get).toHaveBeenCalledWith(@rootScope.basicInfo.uniqueName)
+    it 'should call user service get method with basicInfo variable after fetching it from localStorageService', ->
+      @rootScope.basicInfo = {}
+      deferred = @q.defer()
+      spyOn(@userServices, "get").andReturn(deferred.promise)
+      spyOn(@localStorageService, "get").andReturn({uniqueName: "somename"})
+      @scope.getUserDetails()
+      expect(@localStorageService.get).toHaveBeenCalledWith("_userDetails")
+      expect(@userServices.get).toHaveBeenCalledWith(@rootScope.basicInfo.uniqueName)
+  
+  describe '#getUserDetailSuccess', ->
+    it 'should set data in basicInfo variable', ->
+      res = {
+        body: "somename"
+      }
+      @scope.getUserDetailSuccess(res)
+      expect(@rootScope.basicInfo).toBe(res.body)
+
+  describe '#getUserDetailFailure', ->
+    it 'should show alert with toastr', ->
+      res ={
+        data:
+          message: "hey dude"
+          status: "Error"
+      }
+      spyOn(@toastr,"error")
+      @scope.getUserDetailFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
   describe '#deleteCompany', ->
     it 'should Open Confirm Popup', ->
       deferred = @q.defer()
@@ -178,7 +223,6 @@ describe 'companyController', ->
         ok: 'Yes',
         cancel: 'No'
       })
-
 
   describe '#delCompanySuccess', ->
     it 'should show success message and call get companyList function', ->
@@ -202,49 +246,85 @@ describe 'companyController', ->
       @scope.delCompanyFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
-  describe '#goToCompany', ->
-    xit 'should make a call for check permissions, set a variable true, put data in scope variable and set data in localStorage, and add active class in li', ->
+  describe '#goToCompanyCheck', ->
+    it 'should check if user have shared permissions then redirect to ledger page and set selectedCompany', ->
       data = 
         uniqueName: "afafafafaf1443520197325007bgo"
-        index: 0
-        cCode: ""
+        name: "dude"
+        role: 
+          uniqueName: "shared"
+          name: "shared"
       index = 0
-      @scope.canManageUser = true
-
-      spyOn(@rootScope, "ifHavePermission")
+      spyOn(@state, "go")
+      spyOn(@localStorageService, "set")
+      @scope.goToCompanyCheck(data, index)
+      expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)
+      expect(@rootScope.selectedCompany).toEqual(data)
+      expect(@state.go).toHaveBeenCalledWith('ledger.ledgerContent')
+    it 'should call goToCompany function', ->
+      data = 
+        uniqueName: "afafafafaf1443520197325007bgo"
+        name: "dude"
+        role: 
+          uniqueName: "admin"
+          name: "admin"
+      index = 0
+      spyOn(@scope, "goToCompany")
+      @scope.goToCompanyCheck(data, index)
+      expect(@scope.goToCompany).toHaveBeenCalledWith(data, index)
+      
+    
+  describe '#goToCompany', ->
+    it 'should make a call for check permissions, set a variable true, put data in scope variable and set data in localStorage, and add active class in li', ->
+      data = 
+        uniqueName: "afafafafaf1443520197325007bgo"
+        name: "dude"
+        contactNo: "91-1234567890"
+        role: 
+          uniqueName: "admin"
+          name: "admin"
+      index = 0
+      dbd = data
+      dbd.index = index
+      dbd.cCode = "91"
+      dbd.mobileNo = "1234567890"
+      deferred = @q.defer()
+      spyOn(@permissionService, "hasPermissionOn").andReturn(true)
+      spyOn(@localStorageService, "get").andReturn({uniqueName: "some"})
       spyOn(@scope, "getSharedUserList")
-      spyOn(@localStorageService, "get").andReturn({uniqueName: "some-other-company"})
       spyOn(@localStorageService, "set")
       spyOn(@DAServices, "LedgerSet")
+      spyOn(@scope, 'getRolesList')
 
       @scope.goToCompany(data, index)
-      expect(@rootScope.ifHavePermission).toHaveBeenCalledWith(data, "UPDT")
+      expect(@scope.showUpdTbl).toBeFalsy()
+      expect(@scope.canEdit).toBeTruthy()
+      expect(@scope.canManageUser).toBeTruthy()
       expect(@scope.cmpViewShow).toBeTruthy()
       expect(@scope.selectedCmpLi).toEqual(index)
-      expect(@rootScope.selectedCompany).toEqual(data)
-      expect(@scope.getSharedUserList).toHaveBeenCalledWith("afafafafaf1443520197325007bgo")
-      expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
-      expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)
+      expect(@scope.selectedCompany).toEqual(dbd)
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalled()
       expect(@DAServices.LedgerSet).toHaveBeenCalledWith(null, null)
-
-    xit 'should not call getSharedUserList and DAService', ->
-      @scope.canManageUser = false
+      expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
+      expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", dbd)
+      expect(@scope.getSharedUserList).toHaveBeenCalledWith("afafafafaf1443520197325007bgo")
+      expect(@scope.getRolesList).toHaveBeenCalled()
+      
+    it 'should not call getSharedUserList and DAService', ->
       data = 
         uniqueName: "afafafafaf1443520197325007bgo"
         index: 0
         cCode: ""
       index = 0
 
-      spyOn(@rootScope, "ifHavePermission")
+      spyOn(@permissionService, "hasPermissionOn").andReturn(false)
       spyOn(@scope, "getSharedUserList")
+      spyOn(@localStorageService, "set")
       spyOn(@DAServices, "LedgerSet")
+      spyOn(@scope, 'getRolesList')
       spyOn(@localStorageService, "get").andReturn({uniqueName: "afafafafaf1443520197325007bgo"})
 
       @scope.goToCompany(data, index)
-      expect(@rootScope.ifHavePermission).toHaveBeenCalledWith(data)
-      expect(@scope.cmpViewShow).toBeTruthy()
-      expect(@scope.selectedCmpLi).toEqual(index)
-      expect(@rootScope.selectedCompany).toEqual(data)
       expect(@scope.getSharedUserList).not.toHaveBeenCalledWith("afafafafaf1443520197325007bgo")
       expect(@DAServices.LedgerSet).not.toHaveBeenCalledWith(null, null)
 

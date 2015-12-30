@@ -1,14 +1,10 @@
 "use strict"
 
-mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService) ->
+mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices) ->
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
   $rootScope.basicInfo = {}
   
-  #check if user is admin
-  $rootScope.ifHavePermission = (data, chkr) ->
-    return permissionService.hasPermissionOn(data, chkr)
-
   $scope.logout = ->
     $http.post('/logout').then ((res) ->
       # localStorageService.clearAll()

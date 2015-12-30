@@ -3,7 +3,6 @@
 ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload) ->
   $scope.ledgerData = undefined 
   $scope.accntTitle = undefined
-  # $rootScope.selAcntUname = undefined
   $scope.selectedGroupUname = undefined
   $scope.selectedLedgerAccount = undefined
   $scope.selectedLedgerGroup = undefined
@@ -430,8 +429,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     else
       if !_.isNull(localStorageService.get("_ledgerData"))
         $scope.loadLedger(localStorageService.get("_ledgerData"), localStorageService.get("_selectedAccount"))
-      else
-        console.log "nothing selected to load"
 
   $scope.hasAddAndUpdatePermission = (account) ->
     permissionService.hasPermissionOn(account, "UPDT") and permissionService.hasPermissionOn(account, "ADD")

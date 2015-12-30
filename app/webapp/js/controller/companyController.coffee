@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService) ->
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -106,9 +106,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.getUserDetailFailure = (res)->
     toastr.error(res.data.message, res.data.status)
 
-  $scope.getCompany = (uniqueName)->
-    companyServices.get(uniqueName).then((->), (->))
-
   #delete company
   $scope.deleteCompany = (uniqueName, index, name) ->
     # modalInstance = $uibModal.open(
@@ -153,8 +150,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.mErrFiles = []
     $scope.dErrFiles = []
     $scope.canEdit = true
-    $scope.canEdit = $rootScope.ifHavePermission(data, "UPDT")
-    $scope.canManageUser = $rootScope.ifHavePermission(data, "MNG_USR")
+    $scope.canEdit = permissionService.hasPermissionOn(data, "UPDT")
+    $scope.canManageUser = permissionService.hasPermissionOn(data, "MNG_USR")
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
     angular.extend($scope.selectedCompany, data)
