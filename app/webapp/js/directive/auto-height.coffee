@@ -147,6 +147,12 @@ angular.module('ledger', [])
   controller: 'ledgerController'
   template: "<form novalidate tabindex='-1'>
       <div>
+        <script type='text/ng-template' id='customTemplate.html'>
+          <a>
+            <span ng-bind-html='match.label'></span>
+            <span class='small'>({{match.model.uniqueName}})</span>
+          </a>
+        </script>
           <table class='table ldgrInnerTbl'>
             <tr>
               <td width='28%'>
@@ -162,7 +168,7 @@ angular.module('ledger', [])
                   ng-model='item.transactions[0].particular'
                   uib-typeahead='obj as obj.name for obj in aclist | omit: isCurrentAc | filter:{name: $viewValue} | limitTo:8'
                   class='form-control' autocomplete='off'
-                  typeahead-no-results='noResults'
+                  typeahead-no-results='noResults' typeahead-template-url='customTemplate.html'
                   typeahead-on-select='addCrossFormField($item, $model, $label)'>
                 <input type='hidden'
                   name='trnsUniq_{{index}}'
@@ -229,6 +235,7 @@ angular.module('ledger', [])
       acnt.uniqueName is scope.selAcntUname
 
     scope.addCrossFormField = (i, d, c) ->
+      console.log i, d, c
       # scope.item.transactions[0].particular.uniqueName = i.uName
 
     scope.closeEntry = ()->
@@ -369,7 +376,7 @@ angular.module('ledger', [])
       scopeExpression = attrs.removeLedgdialog
 
       onDocumentClick = (event) ->
-        isChild = elem.find(event.target).length > 0 || event.target.parentNode.nodeName is "LI"
+        isChild = elem.find(event.target).length > 0 || event.target.parentNode.nodeName is "LI" || event.target.parentNode.nodeName is "A"
         splCond = event.target.nodeName is "INPUT" || event.target.nodeName is "BUTTON"
         if !isChild
           if item.sharedData.multiEntry || item.sharedData.addType
