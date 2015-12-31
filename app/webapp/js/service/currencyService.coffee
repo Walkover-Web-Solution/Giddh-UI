@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('giddhWebApp').service 'currencyService', ($resource) ->
+giddh.serviceModule.service 'currencyService', ($resource) ->
   currencyGetResource = $resource('/currency', {}, {
     currencyList: {method: 'GET'}
   })

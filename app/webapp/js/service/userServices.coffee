@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('giddhWebApp').service 'userServices', ($resource, $q) ->
+giddh.serviceModule.service 'userServices', ($resource, $q) ->
   UserSET = $resource('/users',
       {
         'uniqueName': @uniqueName,

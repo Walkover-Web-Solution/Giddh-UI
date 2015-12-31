@@ -374,4 +374,4 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     $scope.showNLevel = true
 
 
-angular.module('giddhWebApp').controller 'trialBalanceController', trialBalanceController
+giddh.webApp.controller 'trialBalanceController', trialBalanceController

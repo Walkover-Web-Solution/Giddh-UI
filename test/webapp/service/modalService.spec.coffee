@@ -1,7 +1,7 @@
 'use strict'
 
 describe 'modal Service', ->
-  beforeEach module("giddhWebApp")
+  beforeEach module("serviceModule")
 
   beforeEach inject ($injector) ->
     @service = $injector.get('modalService')

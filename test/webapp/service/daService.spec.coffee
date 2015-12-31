@@ -1,7 +1,7 @@
 'use strict'
 
 describe "Data Access Service", ->
-  beforeEach module("giddhWebApp")
+  beforeEach module("serviceModule")
 
   beforeEach ->
     inject ($injector) ->

@@ -15,7 +15,6 @@ describe 'ledgerController', ->
     it 'should check scope variables set by default', ->
       expect(@scope.ledgerdata).toBeUndefined()
       expect(@scope.accntTitle).toBeUndefined()
-      expect(@scope.selectedAccountUniqueName).toBeUndefined()
       expect(@scope.selectedGroupUname).toBeUndefined()
       expect(@scope.selectedLedgerAccount).toBeUndefined()
       expect(@scope.ledgerOnlyDebitData).toEqual([])
@@ -139,7 +138,7 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
-        @scope.selectedAccountUniqueName = "somename"
+        @rootScope.selAcntUname = "somename"
         data = {groupUniqueName: "somename"}
         acData = {
           name: "name"
@@ -153,7 +152,7 @@ describe 'ledgerController', ->
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUniqueName
+          acntUname: @rootScope.selAcntUname
           fromDate: @scope.toDate.date
           toDate: @scope.fromDate.date
         }
@@ -168,7 +167,7 @@ describe 'ledgerController', ->
         expect(@scope.selectedLedgerAccount).toBe(acData)
         expect(@scope.selectedLedgerGroup).toBe(data)
         expect(@scope.accntTitle).toEqual(acData.name)
-        expect(@scope.selectedAccountUniqueName).toEqual(acData.uniqueName)
+        expect(@rootScope.selAcntUname).toEqual(acData.uniqueName)
         expect(@scope.selectedGroupUname).toEqual(data.groupUniqueName)
 
         expect(@scope.hasAddAndUpdatePermission).toHaveBeenCalledWith(acData)
@@ -221,11 +220,11 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "groupname"
-        @scope.selectedAccountUniqueName = "accountname"
+        @rootScope.selAcntUname = "accountname"
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUniqueName
+          acntUname: @rootScope.selAcntUname
         }
         deferred = @q.defer()
         spyOn(@ledgerService, "createEntry").andReturn(deferred.promise)
@@ -278,7 +277,7 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "groupname"
-        @scope.selectedAccountUniqueName = "accountname"
+        @rootScope.selAcntUname = "accountname"
         data = {
           sharedData: {
             uniqueName: "uniqueName"
@@ -296,7 +295,7 @@ describe 'ledgerController', ->
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUniqueName
+          acntUname: @rootScope.selAcntUname
           entUname: data.sharedData.uniqueName
         }
         deferred = @q.defer()
@@ -352,13 +351,13 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
-        @scope.selectedAccountUniqueName = "somename"
+        @rootScope.selAcntUname = "somename"
         item = {sharedData: {name: "name", uniqueName: "somename"}}
 
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUniqueName
+          acntUname: @rootScope.selAcntUname
           entUname: item.sharedData.uniqueName
         }
         @scope.deleteEntry(item)
@@ -480,15 +479,6 @@ describe 'ledgerController', ->
         spyOn(@scope, "sameMethodForDrCr")
         @scope.addEntryInDebit(data)
         expect(@scope.sameMethodForDrCr).toHaveBeenCalledWith(1, ".drLedgerEntryForm")
-
-    describe '#sameMethodForDrCr', ->
-      xit 'should call removeLedgerDialog function and removeClassInAllEle with parameters', ->
-        spyOn(@scope, "removeLedgerDialog")
-        spyOn(@scope, "removeClassInAllEle")
-        
-        loadFixtures('myfixture.html');
-        node=document.getElementById('my-fixture')
-        @scope.sameMethodForDrCr(1, ".drLedgerEntryForm")
 
     describe '#calculateLedger', ->
       it 'should calculate data and set some variables to according in this credit is greater', ->
@@ -613,10 +603,31 @@ describe 'ledgerController', ->
         expect(@scope.creditTotal).toBe(100)
 
     describe '#viewContentLoaded event', ->
-      xit 'should set date and call da service ledgerget method and call localStorageService and call loadLedger', ->
-        spyOn(@DAServices, 'LedgerGet')
+      data ={
+        ledgerData:
+          groupName: "CPU"
+          groupUniqueName: "cpu"
+          open: true
+        selectedAccount:
+          address: "null"
+          companyName: "null"
+          description: "null"
+          mobileNo: "123433"
+          name: "mother board"
+      }
+      it 'if condition work and it should call da service LedgerGet method and after fetch data it will call loadLedger function with data', ->
+        spyOn(@DAServices, 'LedgerGet').andReturn(data)
+        spyOn(@scope, "loadLedger")
         @rootScope.$broadcast('$viewContentLoaded')
         expect(@DAServices.LedgerGet).toHaveBeenCalled()
+        expect(@scope.loadLedger).toHaveBeenCalledWith(data.ledgerData, data.selectedAccount)
+      it 'should go in else if condition and check if data is in localStorageService and then call loadLedger function with data', ->
+        spyOn(@scope, "loadLedger")
+        spyOn(@DAServices, 'LedgerGet').andReturn({})
+        spyOn(@localStorageService, 'get').andReturn(data.ledgerData)
+        @rootScope.$broadcast('$viewContentLoaded')
+        expect(@DAServices.LedgerGet).toHaveBeenCalled()
+        expect(@scope.loadLedger).toHaveBeenCalledWith(data.ledgerData, data.ledgerData)      
 
     describe '#hasAddAndUpdatePermission', ->
       it 'should return true if user has add and update permission on account', ->
@@ -635,6 +646,12 @@ describe 'ledgerController', ->
         expect(@permissionService.hasPermissionOn).not.toHaveBeenCalledWith(account, "ADD")
         expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(account, "UPDT")
 
+    describe '#showLedgerBreadCrumbs', ->
+      it 'should set data in ledgerBreadCrumbList', ->
+        data ={}
+        @scope.showLedgerBreadCrumbs(data)
+        expect(@scope.ledgerBreadCrumbList).toEqual({})
+
     describe '#exportLedger', ->
       it 'should call account service exportLedger method with unqObj', ->
         @scope.toDate = {
@@ -647,11 +664,11 @@ describe 'ledgerController', ->
           uniqueName: "giddh"
         }
         @scope.selectedGroupUname = "somename"
-        @scope.selectedAccountUniqueName = "somename"
+        @rootScope.selAcntUname = "somename"
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           selGrpUname: @scope.selectedGroupUname
-          acntUname: @scope.selectedAccountUniqueName
+          acntUname: @rootScope.selAcntUname
           fromDate: @scope.toDate.date
           toDate: @scope.fromDate.date
         }
@@ -693,7 +710,7 @@ describe 'ledgerController', ->
         uniqueName: "giddh"
       }
       @scope.selectedGroupUname = "somename"
-      @scope.selectedAccountUniqueName = "somename"
+      @rootScope.selAcntUname = "somename"
       result = ''
       files = [{ 
         fieldname: 'file',

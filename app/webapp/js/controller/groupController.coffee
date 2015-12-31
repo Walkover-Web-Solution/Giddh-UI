@@ -308,10 +308,13 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #show account
   $scope.showAccountDtl = (data) ->
+    $scope.cantUpdate = false
     pGroups = []
     $scope.checkPermissions(data)
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
+    if data.uniqueName is $rootScope.selAcntUname
+      $scope.cantUpdate = true
     angular.copy(data, $scope.selAcntPrevObj)
     _.extend($scope.selectedAccount, data)
     _.extend(pGroups, data.parentGroups)
@@ -412,8 +415,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $rootScope.$broadcast('$reloadAccount')
 
   $scope.updateAccountSuccess = (res) ->
+    toastr.success("Account updated successfully", res.status)
     $rootScope.$broadcast('$reloadLedger')
-    toastr.success("Group updated successfully", res.status)
     angular.merge($scope.selectedAccount, res.body)
     angular.merge($scope.selAcntPrevObj, res.body)
     getTrueIndex = 0
@@ -423,6 +426,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     )
     if !_.isEmpty($scope.selectedGroup)
       angular.merge($scope.groupAccntList[getTrueIndex], $scope.selectedAccount)
+    
 
   $scope.updateAccountFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -515,4 +519,4 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.canShare = permissionService.hasPermissionOn(entity, "MNG_USR")
 
 #init angular app
-angular.module('giddhWebApp').controller 'groupController', groupController
+giddh.webApp.controller 'groupController', groupController

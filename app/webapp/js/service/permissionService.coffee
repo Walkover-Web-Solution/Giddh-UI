@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('giddhWebApp').service 'permissionService', (localStorageService) ->
+giddh.serviceModule.service 'permissionService', (localStorageService) ->
   permissionService =
     hasPermissionOn: (entity, permissionCode) ->
       roles = localStorageService.get("_roles")

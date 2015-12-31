@@ -49,8 +49,6 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
         angular.element(parentSib).trigger('click')
         angular.element(acEle).children().trigger('click')
       , 500
-    else
-      console.log "not on ledger page"
 
   #Expand or  Collapse all account menus
   $scope.toggleAcMenus = (state) ->
@@ -63,4 +61,4 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
 
 #init angular app
-angular.module('giddhWebApp').controller 'accountController', accountController
+giddh.webApp.controller 'accountController', accountController

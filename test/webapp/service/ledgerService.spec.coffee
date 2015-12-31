@@ -1,13 +1,12 @@
 'use strict'
 
 describe "Ledger Service", ->
-  beforeEach module("giddhWebApp")
+  beforeEach module("serviceModule")
 
   beforeEach ->
     inject ($injector) ->
       @httpBackend = $injector.get('$httpBackend')
       @ledgerService = $injector.get('ledgerService')
-    @httpBackend.when('GET', '/public/webapp/views/home.html').respond(200)
 
   afterEach ->
     @httpBackend.flush()

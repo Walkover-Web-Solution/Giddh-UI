@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('giddhWebApp').service 'DAServices', ($resource, $q) ->
+giddh.serviceModule.service 'DAServices', ($resource, $q) ->
   ledgerData = {}
   ledgerAccount = {}
 

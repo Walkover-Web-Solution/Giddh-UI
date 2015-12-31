@@ -26,8 +26,6 @@ module.exports = (config) ->
       "bower_components/angular-animate/angular-animate.min.js",
       "bower_components/angular-translate/angular-translate.min.js",
       "bower_components/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js",
-      "bower_components/jasmine-dom/lib/jasmine-dom-matchers.js",
-      "bower_components/jasmine-dom/lib/jasmine-dom-fixtures.js",
       "bower_components/ng-file-upload/ng-file-upload.min.js",
       "app/website/**/*.coffee",
       "app/webapp/**/*.coffee",

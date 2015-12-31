@@ -1,24 +1,7 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, getState) ->
-  self = this
-
-  self.goToLedgerState = () ->
-    if getState == 'fromLocalStorage'
-      company = localStorageService.get('_selectedCompany')
-      $rootScope.selectedCompany = company
-      $state.go('ledger.ledgerContent')
-    else
-      $rootScope.selectedCompany = getState[0]
-      localStorageService.set('_selectedCompany', getState[0])
-      $state.go('ledger.ledgerContent')
-
-  if $rootScope.firstLogin
-    self.goToLedgerState()
-    $rootScope.firstLogin = false
-
-#make sure managecompanylist page not load
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService) ->
+  #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
-
   #make sure manage company detail not load
   $rootScope.cmpViewShow = false
   $rootScope.selectedCompany = {}
@@ -123,26 +106,24 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.getUserDetailFailure = (res)->
     toastr.error(res.data.message, res.data.status)
 
-  $scope.getCompany = (uniqueName)->
-    companyServices.get(uniqueName).then((->), (->))
-
   #delete company
   $scope.deleteCompany = (uniqueName, index, name) ->
-    modalInstance = $uibModal.open(
+    # modalInstance = $uibModal.open(
+    #   templateUrl: '/public/webapp/views/confirmModal.html'
+    #   title: 'Are you sure you want to delete? ' + name
+    #   ok: 'Yes'
+    #   cancel: 'No'
+    #   scope: $scope
+    # )
+    # modalInstance.result.then ->
+    #   companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
+
+    modalService.openConfirmModal(
       title: 'Are you sure you want to delete? ' + name,
       ok: 'Yes',
       cancel: 'No'
-      scope: $scope
-    )
-    modalInstance.result.then ->
+    ).then ->
       companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
-
-    # modalService.openConfirmModal(
-    #   title: 'Are you sure you want to delete? ' + name,
-    #   ok: 'Yes',
-    #   cancel: 'No'
-    # ).then ->
-    #   companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
 
   #delete company success
   $scope.delCompanySuccess = (res) ->
@@ -153,50 +134,44 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.delCompanyFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+  $scope.goToCompanyCheck = (data, index) ->
+    if data.role.uniqueName is 'shared'
+      localStorageService.set("_selectedCompany", data)
+      $rootScope.selectedCompany = data
+      $state.go('ledger.ledgerContent')
+    else
+      $scope.goToCompany(data, index)
+
   #making a detail company view
   $scope.goToCompany = (data, index) ->
-    $scope.canEdit = true
-    $scope.canEdit = $rootScope.ifHavePermission(data, "UPDT")
-    $scope.canManageUser = $rootScope.ifHavePermission(data, "MNG_USR")
-    if data.shared
-      if data.role.uniqueName is "shared"
-        console.info "redirection process should start here"
-        $scope.companySelectionProcess(data, index)
-        $state.go("dummyledger")
-      else
-        console.log "else", data.role.uniqueName
-        $scope.goToCompanyProcess(data, index)
-    else
-      console.log "Own company"
-      $scope.goToCompanyProcess(data, index)
-
-  $scope.companySelectionProcess = (data, index) ->
-    angular.extend($rootScope.selectedCompany, data)
-    $rootScope.selectedCompany.index = index
-    contactnumber = $rootScope.selectedCompany.contactNo
-    if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
-      SplitNumber = contactnumber.split('-')
-      $rootScope.selectedCompany.mobileNo = SplitNumber[1]
-      $rootScope.selectedCompany.cCode = SplitNumber[0]
-    localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
-
-  $scope.goToCompanyProcess = (data, index) ->
     $scope.showUpdTbl = false
     $scope.mFiles = []
     $scope.dFiles = []
     $scope.mErrFiles = []
     $scope.dErrFiles = []
+    $scope.canEdit = true
+    $scope.canEdit = permissionService.hasPermissionOn(data, "UPDT")
+    $scope.canManageUser = permissionService.hasPermissionOn(data, "MNG_USR")
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
+    angular.extend($scope.selectedCompany, data)
+    $scope.selectedCompany.index = index
+    contactnumber = $scope.selectedCompany.contactNo
+    if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
+      SplitNumber = contactnumber.split('-')
+      $scope.selectedCompany.mobileNo = SplitNumber[1]
+      $scope.selectedCompany.cCode = SplitNumber[0]
+
     previousCompany = localStorageService.get("_selectedCompany")
     if(_.isEmpty(previousCompany) || previousCompany.uniqueName != data.uniqueName)
       DAServices.LedgerSet(null, null)
       localStorageService.set("_ledgerData", null)
       localStorageService.set("_selectedAccount", null)
-    # don't remove this line from this position
-    $scope.companySelectionProcess(data, index)
+
+    localStorageService.set("_selectedCompany", $scope.selectedCompany)
+
     if $scope.canManageUser is true
-      $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
+      $scope.getSharedUserList($scope.selectedCompany.uniqueName)
       $scope.getRolesList()
 
     if not $rootScope.nowShowAccounts
@@ -404,4 +379,4 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.getUserDetails()
 
 #init angular app
-angular.module('giddhWebApp').controller 'companyController', companyController
+giddh.webApp.controller 'companyController', companyController

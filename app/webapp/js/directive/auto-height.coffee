@@ -19,13 +19,13 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
     , 1000
 ]
 # capitalize first letter of a string
-angular.module('giddhWebApp').filter 'capitalize', ->
+giddh.webApp.filter 'capitalize', ->
   (input) ->
     if ! !input then input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() else ''
 
 # for date time filter for usage
 # http://stackoverflow.com/questions/20662140/using-angularjs-date-filter-with-utc-date
-angular.module('giddhWebApp').filter 'moment', ->
+giddh.webApp.filter 'moment', ->
   (input, momentFn) ->
     args = Array::slice.call(arguments, 2)
     momentObj = moment(input, "DD-MM-YYYY HH:mm:ss")
@@ -135,6 +135,7 @@ angular.module('ledger', [])
     ftype: '=ftype'
     formClass: '@formClass'
     canAddAndEdit: '=canAddAndEdit'
+    selAcntUname: '=selAcntUname'
     updateLedger: '&'
     addLedger: '&'
     removeLedgdialog: '&'
@@ -146,6 +147,12 @@ angular.module('ledger', [])
   controller: 'ledgerController'
   template: "<form novalidate tabindex='-1'>
       <div>
+        <script type='text/ng-template' id='customTemplate.html'>
+          <a>
+            <span ng-bind-html='match.label'></span>
+            <span class='small'>({{match.model.uniqueName}})</span>
+          </a>
+        </script>
           <table class='table ldgrInnerTbl'>
             <tr>
               <td width='28%'>
@@ -159,9 +166,9 @@ angular.module('ledger', [])
                   tabindex='-1'  class='nobdr ledgInpt' required
                   name='trnsName_{{index}}'
                   ng-model='item.transactions[0].particular'
-                  uib-typeahead='obj as obj.name for obj in aclist | filter:$viewValue | limitTo:8'
+                  uib-typeahead='obj as obj.name for obj in aclist | omit: isCurrentAc | filter:{name: $viewValue} | limitTo:8'
                   class='form-control' autocomplete='off'
-                  typeahead-no-results='noResults'
+                  typeahead-no-results='noResults' typeahead-template-url='customTemplate.html'
                   typeahead-on-select='addCrossFormField($item, $model, $label)'>
                 <input type='hidden'
                   name='trnsUniq_{{index}}'
@@ -223,8 +230,12 @@ angular.module('ledger', [])
         if e.shiftKey and (keycode1 is 0 or keycode1 is 9)
           e.preventDefault()
           scope.moveBackward(e, ths)
+    
+    scope.isCurrentAc =(acnt) ->
+      acnt.uniqueName is scope.selAcntUname
 
     scope.addCrossFormField = (i, d, c) ->
+      console.log i, d, c
       # scope.item.transactions[0].particular.uniqueName = i.uName
 
     scope.closeEntry = ()->
@@ -284,7 +295,6 @@ angular.module('ledger', [])
 
     scope.setTotalVal = (item) ->
       if _.isNumber(item.sharedData.total)
-        console.log "hey number"
         if item.sharedData.total > 0
           scope.ttlValD = item.sharedData.total
           scope.ttlValDType = " CR"
@@ -292,7 +302,7 @@ angular.module('ledger', [])
           scope.ttlValD = Math.abs(item.sharedData.total)
           scope.ttlValDType = " DR"
       else
-        console.log "not a number"
+        console.info "not a number"
 
     scope.openDialog = (item, indexs, ftype, parentForm) ->
       # $document.off 'click'
@@ -366,7 +376,7 @@ angular.module('ledger', [])
       scopeExpression = attrs.removeLedgdialog
 
       onDocumentClick = (event) ->
-        isChild = elem.find(event.target).length > 0 || event.target.parentNode.nodeName is "LI"
+        isChild = elem.find(event.target).length > 0 || event.target.parentNode.nodeName is "LI" || event.target.parentNode.nodeName is "A"
         splCond = event.target.nodeName is "INPUT" || event.target.nodeName is "BUTTON"
         if !isChild
           if item.sharedData.multiEntry || item.sharedData.addType

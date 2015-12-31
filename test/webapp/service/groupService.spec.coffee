@@ -1,13 +1,12 @@
 'use strict'
 
 describe "Group Service", ->
-  beforeEach module("giddhWebApp")
+  beforeEach module("serviceModule")
 
   beforeEach ->
     inject ($injector) ->
       @httpBackend = $injector.get('$httpBackend')
       @groupService = $injector.get('groupService')
-    @httpBackend.when('GET', '/public/webapp/views/home.html').respond(200)
 
   describe "#httpRequestMethods", ->
     afterEach(->

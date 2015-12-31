@@ -9,7 +9,7 @@ ConfirmModalController = ($scope, $modalInstance, data) ->
   $scope.cancelPop = () ->
     $modalInstance.dismiss('cancel')
 
-angular.module('giddhWebApp').controller 'ConfirmModalController', ConfirmModalController
+giddh.webApp.controller 'ConfirmModalController', ConfirmModalController
 
 
 

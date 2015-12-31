@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('giddhWebApp').service 'locationService', ($resource, $q) ->
+giddh.serviceModule.service 'locationService', ($resource, $q) ->
   Search = $resource('/location/search',
     {
       "queryString": @queryString,
