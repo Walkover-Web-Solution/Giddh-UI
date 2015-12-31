@@ -20,7 +20,6 @@ giddh.webApp = angular.module("giddhWebApp",
     "angular.filter"
     "unique-name"
     "ui.router"
-    "vAccordion"
     "trialBalance"
     'ngFileUpload'
     "exportDirectives"

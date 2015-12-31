@@ -136,78 +136,6 @@
               </tr>
               </thead>
             </table>
-<<<<<<< HEAD
-            <v-accordion class="vAccordion--default root"
-                         control="accordion" multiple onexpand="addData()">
-              <v-pane ng-repeat="grp in data.groupDetails | filter:keyWord" expanded="expanded" ng-class="grp.category" >
-                <v-pane-header ng-class="{'show-pseudo' : !grp.childGroups.length && !grp.accounts.length, 'no-child' : !grp.childGroups.length && !grp.accounts.length, 'no-data': grp.closingBalance.amount == 0}" >
-                  <table class="col-sm-12 fl-none">
-                    <tbody>
-                    <tr>
-                      <td class="col-sm-4"><b ng-bind-html=" grp.groupName | uppercase | highlight: keyWord"></b></td>
-                      <td class="col-sm-2 text-right">{{ grp.forwardedBalance.amount | number:2 }} {{
-                        grp.forwardedBalance.type | recType:grp.forwardedBalance.amount }}
-                      </td>
-                      <td class="col-sm-4  text-right">
-                        <table class="col-sm-12 fl-none">
-                          <tbody>
-                          <tr>
-                            <td class="col-sm-6 text-right">{{ grp.debitTotal | number:2 }}</td>
-                            <td class="col-sm-6 text-right">{{ grp.creditTotal | number:2 }}</td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </td>
-                      <td class="col-sm-2 text-right">{{ grp.closingBalance.amount | number:2 }}
-                        {{grp.closingBalance.type | recType:grp.closingBalance.amount}}
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </v-pane-header>
-                <v-pane-content>
-                  <!--account-->
-                  <v-accordion ng-if="grp.accounts.length" multiple>
-                    <v-pane ng-repeat="account in grp.accounts  | filter:keyWord" expanded="expanded">
-                      <v-pane-header>
-                        <table class="col-sm-12 fl-none">
-                          <tbody>
-                          <tr>
-                            <td class="col-sm-4" ng-bind-html=" account.name | uppercase | highlight: keyWord"></td>
-                            <td class="col-sm-2  text-right">{{ account.openingBalance.amount | number:2 }}
-                              {{account.openingBalance.type | recType:account.openingBalance.amount}}
-                            </td>
-                            <td class="col-sm-4">
-                              <table class="col-sm-12 fl-none">
-                                <tbody>
-                                <tr>
-                                  <td class="col-sm-6 text-right">{{ account.debitTotal | number:2 }}</td>
-                                  <td class="col-sm-6 text-right">{{ account.creditTotal | number:2 }}</td>
-                                </tr>
-                                </tbody>
-                              </table>
-                            </td>
-                            <td class="col-sm-2  text-right">{{ account.closingBalance.amount | number:2 }}
-                              {{account.closingBalance.type | recType:account.closingBalance.amount}}
-                            </td>
-                          </tr>
-                          </tbody>
-                        </table>
-                      </v-pane-header>
-                      <v-pane-content>
-                      </v-pane-content>
-                    </v-pane>
-                  </v-accordion>
-                  <!--subgroup-->
-                  <v-accordion ng-if="grp.childGroups.length && showChildren" multiple>
-                    <div ng-include="'trialBalSubGroup'"></div>
-                  </v-accordion>
-                </v-pane-content>
-              </v-pane>
-            </v-accordion>
-            <table class="col-sm-12 tb-foot" ng-show="showLedgerBox">
-=======
-
             <!--Grid-->
 
             <section class="row row-1" ng-repeat="grp in data.groupDetails | filter:{$:keyWord}" ng-class="grp.category">
@@ -235,13 +163,9 @@
               </section>
 
             </section>
-
-
-
             <!--/Grid-->
 
             <table class="col-sm-12 tb-foot">
->>>>>>> newDev-yash
               <thead>
               <tr>
                 <th class="col-sm-4">Grand Total</th>
