@@ -493,6 +493,18 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   # ), true
   # $rootScope.selAcntUname = acData.uniqueName
 
+  #watch for date changes
+  $scope.$watch('fromDate.date', (newVal,oldVal) ->
+    oldDate = new Date(oldVal).getTime()
+    newDate = new Date(newVal).getTime()
+
+    toDate = new Date($scope.toDate.date).getTime()
+
+    if newDate > toDate
+      $scope.toDate.date =  $filter('date')(newDate, 'dd-MM-yyyy')
+  )
+
+
 giddh.webApp.controller 'ledgerController', ledgerController
 
 class angular.Ledger

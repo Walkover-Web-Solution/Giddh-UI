@@ -21,7 +21,11 @@
         <span></span>
         <span></span>
       </div>
-      <div class="middleBody bdrR bdrL row"  ng-show="showLedgerBox">
+      <div class="col-xs-12 no-data" ng-show="noData">
+        <h1>Sorry, No Data Found!</h1>
+        <img src="/public/webapp/images/no-data.png" alt="">
+      </div>
+      <div class="middleBody bdrR bdrL row"  ng-show="showLedgerBox && !noData">
         <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
                            auto-height>
           <ul class="list-inline color-codes">
@@ -42,7 +46,7 @@
                          is-open="fromDatePickerIsOpen"
                          ng-click="fromDatePickerOpen()"
                          ng-model="fromDate.date"
-                         max-date="toDate.date"
+                         max-date="today"
                          placeholder="from date"
                       />
                      <span class="input-group-btn">

@@ -1695,3 +1695,14 @@ table.borderless td, table.borderless th{
 .table-container > section.expenses{
      border-left: 10px solid #E86850;
 }
+
+.no-data{
+    text-align: center;
+    margin-top: 150px;
+    font-size: 36px;
+    color:#9E9A9A;
+}
+
+.no-data > img{
+    max-height:200px;
+}

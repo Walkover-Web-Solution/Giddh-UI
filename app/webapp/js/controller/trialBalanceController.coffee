@@ -16,6 +16,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   $scope.showNLevel = false
   $rootScope.cmpViewShow = true
   $scope.showClearSearch = false
+  $scope.noData = false
   $scope.dateOptions = {
     'year-format': "'yy'",
     'starting-day': 1,
@@ -71,6 +72,8 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   $scope.getTrialBalSuccess = (res) ->
     $scope.data = res.body
     $rootScope.showLedgerBox = true
+    if $scope.data.closingBalance.amount == 0
+      $scope.noData = true
 
   $scope.getTrialBalFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -372,6 +375,16 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
 
   $scope.showNLevelList = (e) ->
     $scope.showNLevel = true
+
+  $scope.$watch('fromDate.date', (newVal,oldVal) ->
+    oldDate = new Date(oldVal).getTime()
+    newDate = new Date(newVal).getTime()
+
+    toDate = new Date($scope.toDate.date).getTime()
+
+    if newDate > toDate
+      $scope.toDate.date =  $filter('date')(newDate, 'dd-MM-yyyy')
+  )
 
 
 giddh.webApp.controller 'trialBalanceController', trialBalanceController
