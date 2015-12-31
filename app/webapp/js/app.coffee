@@ -16,11 +16,11 @@ app = angular.module("giddhWebApp",
     "angular.filter"
     "unique-name"
     "ui.router"
-    "vAccordion"
     "trialBalance"
     'ngFileUpload'
     "exportDirectives"
     "ngSanitize"
+    "angular.filter"
   ]
 )
 

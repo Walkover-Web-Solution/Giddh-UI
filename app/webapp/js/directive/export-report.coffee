@@ -102,3 +102,61 @@ angular.module('trialBalance', []).directive('exportReport', [
         text.replace new RegExp(search, 'gi'), '<span class="ui-match">$&</span>'
     else
       text
+
+.directive('trialAccordion', [
+  '$rootScope'
+  '$compile'
+  '$timeout'
+  ($rootScope, $compile, $timeout) ->
+    {
+      restrict: 'A'
+      link: (scope, elem, attr) ->
+
+        # padding value
+        scope.padLeft = 20
+
+        showChild = ->
+            if elem.siblings().hasClass('isHidden') 
+                elem.siblings().removeClass('isHidden')
+                elem.siblings().fadeIn(100)
+            else 
+                elem.siblings().fadeOut(100)
+                elem.siblings().addClass('isHidden')
+              
+        # expand all
+        expandAll = ->
+          angular.element('.table-container').find('.isHidden').show().removeClass('isHidden')
+          scope.expanded = true
+
+        #collapse all
+        collapseAll = ->
+          $timeout (->
+            angular.element('.table-container').find("[trial-accordion]").not("[trial-accordion = 'expandAll']").siblings().hide().addClass('isHidden')
+            scope.expanded = false
+          ),100
+
+        elem.on 'click', (e) ->
+          if attr.trialAccordion != 'expandAll' && attr.trialAccordion != 'collapseAll' && attr.trialAccordion != 'search'
+            showChild()
+
+          if attr.trialAccordion == 'expandAll'
+            expandAll()
+          else if attr.trialAccordion == 'collapseAll'
+            collapseAll()
+
+        #watch search
+        watchSearch = () ->
+          $timeout (->
+            l = elem.val().length
+            if l > 2
+              expandAll()
+            else
+              collapseAll()
+
+          ), 100
+
+        elem.on 'keydown', () ->
+          if attr.trialAccordion = 'search'
+            watchSearch()
+    }
+])
