@@ -374,10 +374,9 @@ angular.module('exportDirectives', [])
           
           clear = () ->
             elem[0].value = ''
+            elem.val().length = 0
             scope.showClearSearch = false
             scope.keyWord = null
-            scope.accordion.collapseAll()
-
 
           $timeout (->
             
@@ -391,11 +390,9 @@ angular.module('exportDirectives', [])
           elem.next('.close-icon').on 'click', ()->
             $timeout (->
               clear()
+
             ), 10
 
-          # elem.on 'blur',() ->
-          #   $timeout (->
-          #   ), 20
     }
 ])
 .directive('accordionControls',[

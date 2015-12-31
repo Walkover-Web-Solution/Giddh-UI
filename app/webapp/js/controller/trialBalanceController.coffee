@@ -86,28 +86,6 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     dateObj.toDate = $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
     $scope.getTrialBal dateObj
 
-  #expand accordion on search
-  $scope.expandAccordionOnSearch = (e) ->
-    $timeout (->
-      l = e.currentTarget.value.length
-      if l > 0
-        $scope.expanded = true
-        $scope.showChildren = true
-      else
-        $scope.expanded = false
-        $scope.showChildren = false
-    ), 50
-
-  $scope.expandAccordion = (e) ->
-    $scope.expanded = true
-    $scope.showChildren = true
-    $scope.showNLevel = true
-
-  $scope.collapseAccordion = (e) ->
-    $scope.expanded = false
-    $scope.showChildren = false
-    $scope.showNLevel = false
-
   $scope.$on '$viewContentLoaded', ->
     if $scope.sendRequest
       dateObj = {
@@ -383,7 +361,10 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     ), 100
 
   $scope.addData = ->
-    $scope.showChildren = true
+    if $scope.showChildren
+      $scope.showChildren = false
+    else
+      $scope.showChildren = true
 
   $scope.showPdfOptions = (e) ->
     $scope.showpdf = true

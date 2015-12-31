@@ -77,7 +77,7 @@
             <div class="input-group input-group-md pull-right mrR3">
               <span class="input-group-addon" id="sizing-addon3"><i class="glyphicon glyphicon-search"></i></span>
               <input type="search" class="form-control" placeholder="Search" aria-describedby="sizing-addon3"
-                     ng-model="keyWord" ng-keydown="expandAccordionOnSearch($event)" str-length clear-tbsearch>
+                     ng-model="keyWord" trial-accordion='search'>
               <i class="glyphicon glyphicon-remove close-icon" ng-show="showClearSearch"></i>
             </div>
 
@@ -112,11 +112,11 @@
             </div>
           </div>
           <div class="row toggle-btns">
-            <button class="btn btn-primary pull-left mrL1" ng-class="{'fadeIn':showChildren}" accordion-controls data-action="expandAll">Expand All</button>
-            <button class="btn btn-danger pull-left mrL1" ng-class="{'fadeIn':showChildren}" accordion-controls data-action="closeAll">Collapse All</button>
+            <button class="btn btn-primary pull-left mrL1" trial-accordion="expandAll">Expand All</button>
+            <button class="btn btn-danger pull-left mrL1" trial-accordion="collapseAll">Collapse All</button>
           </div>
           <div class="table-container">
-            <table class="col-sm-12 tb-head" ng-show="showLedgerBox">
+            <table class="col-sm-12 tb-head">
               <thead>
               <tr>
                 <th class="col-sm-4">Particular</th>
@@ -136,6 +136,7 @@
               </tr>
               </thead>
             </table>
+<<<<<<< HEAD
             <v-accordion class="vAccordion--default root"
                          control="accordion" multiple onexpand="addData()">
               <v-pane ng-repeat="grp in data.groupDetails | filter:keyWord" expanded="expanded" ng-class="grp.category" >
@@ -205,6 +206,42 @@
               </v-pane>
             </v-accordion>
             <table class="col-sm-12 tb-foot" ng-show="showLedgerBox">
+=======
+
+            <!--Grid-->
+
+            <section class="row row-1" ng-repeat="grp in data.groupDetails | filter:{$:keyWord}" ng-class="grp.category">
+              <div class="row"  trial-accordion>  
+                <div class="col-xs-4 group" ng-bind-html=" grp.groupName | uppercase | highlight: keyWord "></div>
+                <div class="col-xs-2 group text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type | recType:grp.forwardedBalance.amount }}</div>
+                <div class="col-xs-2 group text-right">{{ grp.debitTotal | number:2 }}</div>
+                <div class="col-xs-2 group text-right">{{ grp.creditTotal | number:2 }}</div>
+                <div class="col-xs-2 group text-right">{{ grp.closingBalance.amount | number:2 }} {{grp.closingBalance.type | recType:grp.closingBalance.amount}}</div>
+              </div>
+
+              <section class="row row-2 isHidden" ng-repeat="account in grp.accounts  | filter:keyWord">
+                <div class="row">
+                  <div class="col-xs-4 account" ng-style="{'padding-left':padLeft}" ng-bind-html=" account.name | lowercase | highlight: keyWord">
+                  </div>
+                  <div class="col-xs-2 account text-right">{{ account.openingBalance.amount | number:2 }} {{account.openingBalance.type | recType:account.openingBalance.amount}}</div>
+                  <div class="col-xs-2 account text-right">{{ account.debitTotal | number:2 }}</div>
+                  <div class="col-xs-2 account text-right">{{ account.creditTotal | number:2 }}</div>
+                  <div class="col-xs-2 account text-right">{{ account.closingBalance.amount | number:2 }} {{account.closingBalance.type | recType:account.closingBalance.amount}}</div>
+                </div>
+              </section>
+
+              <section class="row isHidden" ng-if="grp.childGroups.length">
+                <div ng-include="'trialBalSubGroup'"></div>
+              </section>
+
+            </section>
+
+
+
+            <!--/Grid-->
+
+            <table class="col-sm-12 tb-foot">
+>>>>>>> newDev-yash
               <thead>
               <tr>
                 <th class="col-sm-4">Grand Total</th>
@@ -231,72 +268,31 @@
   <!-- end of row -->
 </div>
 
+
 <script type="text/ng-template" id="trialBalSubGroup">
-  <v-pane ng-repeat="grp in grp.childGroups  | filter:keyWord" expanded="expanded">
-    <v-pane-header ng-class="{'noChild' : !grp.childGroups.length && !grp.accounts.length}" ng-click="showNLevelList($event)">
-      <table class="col-sm-12 fl-none">
-        <tbody>
-        <tr>
-          <td class="col-sm-4" ng-bind-html="grp.groupName | uppercase : (grp.childGroups.length && grp.accounts.length) | highlight: keyWord"></td>
-          <td class="col-sm-2  text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type |
-            recType: grp.forwardedBalance.amount}}
-          </td>
-          <td class="col-sm-4  text-right">
-            <table class="col-sm-12 fl-none">
-              <tbody>
-              <tr>
-                <td class="col-sm-6 text-right">{{ grp.debitTotal | number:2 }}</td>
-                <td class="col-sm-6 text-right">{{ grp.creditTotal | number:2 }}</td>
-              </tr>
-              </tbody>
-            </table>
-          </td>
-          <td class="col-sm-2  text-right">{{ grp.closingBalance.amount | number:2 }} {{ grp.closingBalance.type |
-            recType: grp.closingBalance.amount }}
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </v-pane-header>
-    <v-pane-content>
+  <section class="row row-2" ng-repeat="grp in grp.childGroups  | filter:keyWord">
+    <div class="row" trial-accordion>
+      <div class="col-xs-4 group" ng-style="{'padding-left':padLeft + 10}" ng-bind-html="grp.groupName | uppercase : (grp.childGroups.length && grp.accounts.length) | highlight: keyWord"></div>
+      <div class="col-xs-2 group text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type | recType: grp.forwardedBalance.amount}}</div>
+      <div class="col-xs-2 group text-right">{{ grp.debitTotal | number:2 }}</div>
+      <div class="col-xs-2 group text-right">{{ grp.creditTotal | number:2 }}</div>
+      <div class="col-xs-2 group text-right">{{ grp.closingBalance.amount | number:2 }} {{ grp.closingBalance.type | recType: grp.closingBalance.amount }}</div>
+    </div>  
+    <section class="row isHidden" ng-if="grp.accounts.length" ng-repeat="account in grp.accounts">
+      <div class="row">
+        <div class="col-xs-4" ng-style="{'padding-left':padLeft + 20}" ng-bind-html=" account.name | lowercase | highlight: keyWord">
+        </div>
+        <div class="col-xs-2 account text-right">{{ account.openingBalance.amount | number:2 }} {{account.openingBalance.type | recType:account.openingBalance.amount }}</div>
+        <div class="col-xs-2 account text-right">{{ account.debitTotal | number:2 }}</div>
+        <div class="col-xs-2 account text-right">{{ account.creditTotal | number:2 }}</div>
+        <div class="col-xs-2 account text-right">{{ account.closingBalance.amount | number:2 }} {{account.closingBalance.type | recType:account.closingBalance.amount }}</div>
+      </div>
+    </section>
 
-      <!--subgroup/account-->
-      <v-accordion ng-if="grp.accounts.length && showNLevel"  multiple>
-        <v-pane ng-repeat="account in grp.accounts" disabled expanded="expanded" >
-          <v-pane-header>
-            <table class="col-sm-12 fl-none">
-              <tbody>
-              <tr>
-                <td class="col-sm-4" ng-bind-html=" account.name | lowercase | highlight: keyWord"></td>
-                <td class="col-sm-2  text-right">{{ account.openingBalance.amount | number:2 }} {{
-                  account.openingBalance.type | recType:account.openingBalance.amount }}
-                </td>
-                <td class="col-sm-4">
-                  <table class="col-sm-12 fl-none">
-                    <tbody>
-                    <tr>
-                      <td class="col-sm-6 text-right">{{ account.debitTotal | number:2 }}</td>
-                      <td class="col-sm-6 text-right">{{ account.creditTotal | number:2 }}</td>
-                    </tr>
-                    </tbody>
-                  </table>
-                </td>
-                <td class="col-sm-2 text-right">{{ account.closingBalance.amount | number:2 }} {{
-                  account.closingBalance.type | recType:account.closingBalance.amount }}
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </v-pane-header>
-          <v-pane-content>
-          </v-pane-content>
-        </v-pane>
-      </v-accordion>
+    <section class="subGroups isHidden" ng-if="grp.childGroups.length">
+      <div ng-include="'trialBalSubGroup'"></div>
+    </section>
 
-      <!--subgroup/group-->
-      <v-accordion ng-if="grp.childGroups.length" multiple>
-        <div ng-include="'trialBalSubGroup'"></div>
-      </v-accordion>
-    </v-pane-content>
-  </v-pane>
+  </section>
+
 </script>

@@ -1159,7 +1159,7 @@ li:last-child .angular-ui-tree-handle {
 }
 
 .tb-head{
-    margin:0 0 20px;
+    margin:0;
     background:#337ab7;
     color:#fff;
     z-index:999;
@@ -1635,5 +1635,60 @@ table.borderless td, table.borderless th{
     right:10px;
     top:9px;
     z-index: 9;
-    cursor:pointer;
+}
+
+.table-container .row{
+    margin:0px;
+}
+
+.table-container section {
+    min-width:100%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.table-container > section > div.row > div:first-child{
+    padding-left:10px;
+    font-weight: bold;
+}
+
+.table-container > section div.row > div{
+    padding-right:20px;
+}
+
+
+.table-container section div{
+    margin:0;
+    padding:0;
+}
+
+.table-container > .row{
+  margin:0;
+  padding:0;
+  line-height: 40px;
+  overflow:hidden;
+}
+
+.table-container div.row{
+      border-bottom:1px solid #e0e0e0;
+}
+
+.table-container .isHidden{
+    display: none;
+}
+
+.table-container > section.assets{
+     border-left: 10px solid #FFD800;
+}
+
+.table-container > section.liabilities{
+     border-left: 10px solid #587058;
+}
+
+.table-container > section.income{
+     border-left: 10px solid #6495ED;
+}
+
+.table-container > section.expenses{
+     border-left: 10px solid #E86850;
 }
