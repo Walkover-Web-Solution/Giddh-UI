@@ -7,13 +7,13 @@
           <i class="glyphicon glyphicon-search"></i>
         </div>
 
-        <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList')" clear-search>
-
-        <div ng-if="!acntSrch.length > 0" ng-hide="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(true)" tooltip-placement="right" uib-tooltip="Expand all" >
+        <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList')" buzzy>
+<!-- ng-if="!acntSrch.length > 0"  -->
+        <div ng-hide="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(true)" tooltip-placement="right" uib-tooltip="Expand all" >
           <i class="glyphicon glyphicon-list"></i>
         </div>
 
-        <div ng-if="!acntSrch.length > 0" ng-show="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(false)" tooltip-placement="right" uib-tooltip="Collapse all">
+        <div ng-show="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(false)" tooltip-placement="right" uib-tooltip="Collapse all">
           <i class="glyphicon glyphicon-menu-hamburger"></i>
         </div>
 
@@ -37,8 +37,9 @@
       </div>
       <ul class="acntAccordion" ng-if="showAccountList">
         <li>
-          <ul id="ul_0" class="accBox" style="border-left:none">
-            <li ng-repeat="value in flatAccntWGroupsList | filter:acntSrch" id="li_{{value.groupUniqueName}}">
+          <!-- filter:acntSrch | buzzy: acntSrch -->
+          <ul id="ul_0" class="mainUl accBox" style="border-left:none">
+            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList" id="li_{{value.groupUniqueName}}">
               <div 
                 class="title  LIB{{value.groupUniqueName}}" 
                 ng-click="value.open = !value.open"

@@ -219,8 +219,10 @@ header .navbar-nav > li.active {
 .icon-user {
     background-position: 0 -360px
 }
-
+.showAclist{display: block}
+.hideAclist{display: none}
 /*universal styles*/
+
 .db {
     display: block
 }
