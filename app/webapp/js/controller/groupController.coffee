@@ -10,7 +10,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.selAcntPrevObj = {}
   $scope.datePicker = {accountOpeningBalanceDate: ""}
   $scope.selectedGroupUName = ""
-
+  $scope.cantUpdate = false
   $scope.showGroupDetails = false
   $scope.subGroupVisible = false
   $scope.showListGroupsNow = false

@@ -18,7 +18,7 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
       angular.element($window).triggerHandler('resize')
     , 1000
 ]
-.directive 'buzzy', ()->
+.directive 'buzzy', ['$timeout', ($timeout)->
   {
     restrict: 'A'
     require: 'ngModel'
@@ -51,6 +51,7 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
               angular.element(obj).parents('li.mainLiAclist').removeClass('hideAclist')
       
       element.on 'keyup', (e) ->
+        code = if window.event then e.keyCode else e.which
         val = element.val()
         if _.isUndefined(val) || _.isNull(val) || _.isEmpty(val)
           _.each(target[0].children, (li) ->
@@ -58,12 +59,20 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
           )
           return false
         liList = target[0].children
-        _.each(liList, (li) ->
-          angular.element(li).addClass('hideAclist')
-          _downToTag(li)
-        )
+        if code is 8
+          $timeout (->
+            _.each(liList, (li) ->
+              angular.element(li).addClass('hideAclist')
+              _downToTag(li)
+            )
+          ), 600
+        else
+          _.each(liList, (li) ->
+            angular.element(li).addClass('hideAclist')
+            _downToTag(li)
+          )
   }
-
+]
 # capitalize first letter of a string
 giddh.webApp.filter 'capitalize', ->
   (input) ->
