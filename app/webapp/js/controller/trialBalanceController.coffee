@@ -72,7 +72,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   $scope.getTrialBalSuccess = (res) ->
     $scope.data = res.body
     $rootScope.showLedgerBox = true
-    if $scope.data.closingBalance.amount == 0
+    if $scope.data.closingBalance.amount is 0
       $scope.noData = true
 
   $scope.getTrialBalFailure = (res) ->

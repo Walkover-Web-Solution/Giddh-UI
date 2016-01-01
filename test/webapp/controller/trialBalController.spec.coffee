@@ -75,13 +75,26 @@ describe 'trialBalanceController', ->
         expect(@trialBalService.getAllFor).toHaveBeenCalledWith(reqParam)
 
     describe '#getTrialBalSuccess', ->
-      it 'should set value of showLedgerContent to true', ->
-       res = {
-          body: {}
-       }
-       @scope.getTrialBalSuccess(res)
-       expect(@scope.data).toEqual(res.body)
-       expect(@rootScope.showLedgerBox).toBeTruthy()
+      it 'should set value of showLedgerContent to true and set nodata var to Falsy', ->
+        res = {
+          body:
+            closingBalance:
+              amount: 10
+        }
+        @scope.getTrialBalSuccess(res)
+        expect(@scope.data).toEqual(res.body)
+        expect(@rootScope.showLedgerBox).toBeTruthy()
+        expect(@scope.noData).toBeFalsy()
+      it 'should set value of showLedgerContent to true and set nodata var to truthy', ->
+        res = {
+          body:
+            closingBalance:
+              amount: 0
+        }
+        @scope.getTrialBalSuccess(res)
+        expect(@scope.data).toEqual(res.body)
+        expect(@rootScope.showLedgerBox).toBeTruthy()
+        expect(@scope.noData).toBeTruthy()
 
     describe '#getTrialBalFailure', ->
       it 'should show error message with toastr', ->
