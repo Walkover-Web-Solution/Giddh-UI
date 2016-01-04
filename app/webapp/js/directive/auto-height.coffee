@@ -27,21 +27,17 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
       _hasPattern = (word, pattern) ->
         if pattern == ''
           return word
-        index = word.indexOf(pattern.charAt(0))
+        index = word.indexOf(pattern)
         if index is -1
           return false
-        # if index is 0
-        #   if word is pattern
-        #     return true
-        _hasPattern word.substr(index + 1), pattern.substr(1)
-        
+        _hasPattern word, pattern.substr(1)
 
       _downToTag =(obj) ->
         obj = angular.element(obj)
         obj = obj[0]
         len =  obj.childElementCount
         if len > 0
-          _.each(obj.children, (item) ->
+          _.each(obj.children, (item) ->            
             _downToTag(item)
           )
         else 

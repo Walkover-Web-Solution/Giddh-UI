@@ -9,7 +9,6 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.selectedAccountUniqueName = undefined
 
   $scope.getAccountsGroups = ()->
-    # console.log $rootScope.selectedCompany
     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.showAccountList = false
     if _.isEmpty($rootScope.selectedCompany)
@@ -55,6 +54,13 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.flatAccntWGroupsList.forEach (e) ->
       e.open = state
       $scope.showSubMenus = state
+
+  # trigger expand or collapse func
+  $scope.checkLength = (val)->
+    if val.length >= 4
+      $scope.toggleAcMenus(true)
+    else
+      $scope.toggleAcMenus(false)
 
   $scope.$on '$reloadAccount', ->
     $scope.getAccountsGroups()

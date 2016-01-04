@@ -7,7 +7,7 @@
           <i class="glyphicon glyphicon-search"></i>
         </div>
 
-        <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList')" buzzy>
+        <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList'); checkLength(acntSrch)" buzzy>
 <!-- ng-if="!acntSrch.length > 0" clear-search  -->
         <div ng-hide="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(true)" tooltip-placement="right" uib-tooltip="Expand all" >
           <i class="glyphicon glyphicon-list"></i>
@@ -39,24 +39,24 @@
         <li>
           <!-- filter:acntSrch | buzzy: acntSrch -->
           <ul id="ul_0" class="mainUl accBox" style="border-left:none">
-            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList" id="li_{{value.groupUniqueName}}">
+            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList track by $index" id="li_{{value.groupUniqueName}}">
               <div 
                 class="title  LIB{{value.groupUniqueName}}" 
                 ng-click="value.open = !value.open"
                 ng-class="{'active' : value.open || value.groupUniqueName === selectedGroupUname}">
-                <a>{{::value.groupName}}</a>
+                <a ng-bind-html="value.groupName | highlight: acntSrch"></a>
               </div>
               <ul class="accBox subAccBox" ng-show="value.open || value.groupUniqueName === selectedGroupUname"
                   id="ul_{{value.groupUniqueName}}">
-                <li ng-repeat="(index,accDtl) in value.accountDetails  | filter:acntSrch track by $index" id="ac_{{accDtl.uniqueName}}"
+                <li class="inrPrnt" ng-repeat="(index,accDtl) in value.accountDetails track by $index | highlight: acntSrch" id="ac_{{accDtl.uniqueName}}"
                   tooltip-placement="top" uib-tooltip="{{accDtl.uniqueName}}">
                   <a
                     href="#ledger" ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl); getLedgerData(value, accDtl)"
                      ng-class="{'active': accDtl.uniqueName === selectedAccountUniqueName}" ui-sref="ledger.ledgerContent({unqName:accDtl.uniqueName})">
                     <div class="clearfix">
                       <i ng-class="accDtl.charId ==1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
-                      <span class="ellp max100">{{::accDtl.name}}</span>
-                      <span class="dn">{{accDtl.uniqueName}}</span>
+                      <span ng-bind-html="accDtl.name | highlight: acntSrch" class="ellp max100"></span>
+                      <span class="ng-hide">{{accDtl.uniqueName}}</span>
                     </div>
                   </a>
                 </li>

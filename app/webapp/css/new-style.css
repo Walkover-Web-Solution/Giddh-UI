@@ -1624,7 +1624,7 @@ table.borderless td, table.borderless th{
 
 .ui-match{
     background:#FFD800;
-    padding:2px;
+    padding:0;
 }
 
 .close-icon{
