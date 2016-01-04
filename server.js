@@ -11,6 +11,9 @@ var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(session);
 
+//set ttl for session expiry, format : milliseconds * seconds * minutes
+var sessionTTL = 1000 * 60 * 10 
+
 //Example POST method invocation 
 var Client = require('node-rest-client').Client; 
 var client = new Client();
@@ -49,10 +52,11 @@ app.use(session({
   saveUninitialized: true,
   cookie: {
     secure: false,
-    maxAge: null
+    maxAge: sessionTTL
   },
   store: new MongoStore({
       url:'mongodb://localhost/giddhDB',
+      ttl: sessionTTL
   })
 }));
 

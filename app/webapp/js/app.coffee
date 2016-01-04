@@ -139,8 +139,8 @@ giddh.webApp.run [
 giddh.webApp.config ($httpProvider) ->
   $httpProvider.interceptors.push('appInterceptor')
 
-giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log',
-  ($q, $location, $log) ->
+giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$timeout' 
+  ($q, $location, $log, toastr, $timeout) ->
     request: (request) ->
       request
     response: (response) ->
@@ -148,7 +148,15 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log',
 
     responseError: (responseError) ->
       if responseError.status is 500
-        #window.location = "/login"
+        #check if responseError.data contains error regarding Auth-Key
+        isError = responseError.data.indexOf("`value` required in setHeader") 
+        isAuthKeyError = responseError.data.indexOf("Auth-Key")
+        #if Auth-Key Error found, redirect to login
+        if isError != -1 and isAuthKeyError != -1
+          toastr.error('Your Session has Expired, Please Login Again.')
+          $timeout ( ->
+            window.location.assign('/login')
+          ), 2000
       else
         $q.reject responseError
 ]
