@@ -219,8 +219,10 @@ header .navbar-nav > li.active {
 .icon-user {
     background-position: 0 -360px
 }
-
+.showAclist{display: block}
+.dn, .hideAclist{display: none}
 /*universal styles*/
+
 .db {
     display: block
 }
@@ -1622,7 +1624,7 @@ table.borderless td, table.borderless th{
 
 .ui-match{
     background:#FFD800;
-    padding:2px;
+    padding:0;
 }
 
 .close-icon{

@@ -7,7 +7,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
   
   $scope.logout = ->
     $http.post('/logout').then ((res) ->
-      # localStorageService.clearAll()
+      localStorageService.clearAll()
       window.location = "/thanks"
     ), (res) ->
 
