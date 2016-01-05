@@ -130,8 +130,8 @@ router.get '/:accountUniqueName/export-ledger', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
     parameters:
-      to: req.query.fromDate
-      from: req.query.toDate
+      to: req.query.toDate
+      from: req.query.fromDate
   console.log args, hUrl
   settings.client.get hUrl, args, (data, response) ->
     console.log "ledgers export by date completed", new Date()

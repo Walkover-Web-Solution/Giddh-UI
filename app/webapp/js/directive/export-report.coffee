@@ -97,9 +97,9 @@ angular.module('trialBalance', []).directive('exportReport', [
       text = text.toString()
       search = search.toString()
       if caseSensitive
-        text.split(search).join '<span class="ui-match">' + search + '</span>'
+        text.split(search).join '<mark class="ui-match">' + search + '</mark>'
       else
-        text.replace new RegExp(search, 'gi'), '<span class="ui-match">$&</span>'
+        text.replace new RegExp(search, 'gi'), '<mark class="ui-match">$&</mark>'
     else
       text
 
