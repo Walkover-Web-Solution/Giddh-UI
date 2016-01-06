@@ -10,10 +10,7 @@ var request = require('request');
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(session);
-
-//set ttl for session expiry, format : milliseconds * seconds * minutes
-var sessionTTL = 1000 * 60 * 10 
-
+global.sessionTTL = 1000 * 60 * 10
 //Example POST method invocation 
 var Client = require('node-rest-client').Client; 
 var client = new Client();
@@ -45,6 +42,16 @@ app.use(settings.express.static(settings.path.join(__dirname, 'public')));
 app.use('/bower_components', settings.express.static(__dirname + '/bower_components'));
 app.use('/public', settings.express.static(__dirname + '/public'));
 
+//set ttl for session expiry, format : milliseconds * seconds * minutes
+if (app.get('env') === 'development') {
+  // one hour
+  sessionTTL = 1000 * 60 * 60
+}
+else{
+  // ten minutes
+  sessionTTL = 1000 * 60 * 10
+}
+console.log (app.get('env'), sessionTTL)
 app.use(session({
   secret: "keyboardcat",
   name: "userVerified",
