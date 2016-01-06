@@ -427,16 +427,10 @@ angular.module('ledger', [])
       scopeExpression = attrs.removeLedgdialog
 
       onDocumentClick = (event) ->
-        isChild = elem.find(event.target).length > 0 || event.target.parentNode.nodeName is "LI" || event.target.parentNode.nodeName is "A"
-        splCond = event.target.nodeName is "INPUT" || event.target.nodeName is "BUTTON"
-        if !isChild
+        inBox = angular.element(event.target).parents('.ledgerPopDiv').length is 1 || event.target.parentNode.nodeName is "LI" || event.target.parentNode.nodeName is "A" || event.target.nodeName is "INPUT"
+        if !inBox
           if item.sharedData.multiEntry || item.sharedData.addType
             console.log "is child and multiEntry"
-          else if splCond
-            if event.target.nodeName is "BUTTON"
-              console.log "by button click"
-            if event.target.nodeName is "INPUT"
-              scope.resetEntry(item, $rootScope.lItem)
           else
             scope.resetEntry(item, $rootScope.lItem)
           scope.$apply(scopeExpression)
