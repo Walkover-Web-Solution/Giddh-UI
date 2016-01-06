@@ -22,68 +22,113 @@
       				Profit and Loss
       			</h1>
       			<p class="sub-title inline">
-      				(1 April {{year}} to {{date | date:'d'}} {{month | date:'MMMM'}} {{year | date:'yyyy'}})
+      				( {{data.from | date: longDate}} to {{data.to | date: longDate}})
       			</p>
       		</div>
       	</div>
+        <div class="col-xs-12 no-data" ng-show="noData">
+          <h1>Sorry, No Data Found!</h1>
+          <img src="/public/webapp/images/no-data.png" alt="">
+        </div>
+        <div class="loader mrT4" ng-hide="showLedgerBox">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <div ng-show="showLedgerBox && !noData">
+          <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+            <div class="col-sm-12">
+              <div class="table-title">
+                <div class="col-sm-6">
+                  Expenses
+                </div>
+                <div class="col-sm-6">
+                  Income
+                </div>
+              </div>
+              <div class="expenses col-sm-6">
+                <div class="table-container">
+                  <table class="col-sm-12 tb-head">
+                    <thead>
+                    <tr>
+                      <th class="col-sm-6">Particular</th>
+                      <th class="col-sm-6">Amount</th>
+                    </tr>
+                    </thead>
+                  </table>
+                  <!--Grid-->
 
-        <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
-            <div class="table-title">
-              <div class="col-sm-6">
-                Expenses
+                  <section class="row row-1 col-sm-12" ng-repeat="expGrp in data.expenseGroups">
+                    <div class="row" trial-accordion>  
+                      <div class="col-sm-6 group" ng-bind-html=" expGrp.name | uppercase"></div>
+                      <div class="col-sm-6 group text-right" ng-bind-html=" expGrp.closingBalance | uppercase"></div>
+                    </div>
+                    <section class="row row-2 isHidden" ng-repeat="subGrp in expGrp.subGroups">
+                      <div class="row" trial-accordion>
+                        <div class="col-sm-6 account" ng-style="{'padding-left':padLeft}" ng-bind-html=" subGrp.name | uppercase">
+                        </div>
+                        <div class="col-sm-6 account text-right" ng-bind-html=" subGrp.closingBalance | uppercase"></div>
+                      </div>
+                      <section class="row row-2 isHidden" ng-repeat="acc in subGrp.accounts">
+                        <div class="row">
+                          <div class="col-sm-6 account" ng-style="{'padding-left':padLeft + 10}" ng-bind-html=" acc.name | lowercase">
+                          </div>
+                          <div class="col-sm-6 account text-right" ng-bind-html=" acc.closingBalance.amount | lowercase"></div>
+                        </div>
+                      </section>
+                    </section>
+                  </section>
+                  <!--/Grid-->
+                </div>
               </div>
-              <div class="col-sm-6">
-                Income
-              </div>
-            </div>
-            <div class="table-container">
-              <div class="col-sm-6 table-l">
-                <table class="col-sm-12">
-                  <thead class="tb-head">
+              <div class="income col-sm-6">
+                <div class="table-container">
+                  <table class="col-sm-12 tb-head">
+                    <thead>
                     <tr>
-                       <th>
-                          Particular
-                       </th> 
-                       <th>
-                          Amount
-                       </th>
+                      <th class="col-sm-6">Particular</th>
+                      <th class="col-sm-6">Amount</th>
                     </tr>
-                  </thead>
-                  <tbody>
-                    <tr ng-repeat="exp in data.expenseGroups">
-                       <td class="col-sm-7">{{exp.name}}</td>
-                       <td class="col-sm-5 text-right">{{exp.closingBalance}}</td>   
-                    </tr>
-                    <tr>
-                        <td class="col-sm-7">Net Profit</td>
-                        <td class="col-sm-5 text-right">{{data.closingBalance}}</td>
-                    </tr>
-                  </tbody>  
-                </table>
-              </div>
-              <div class="col-sm-6 table-r">
-                <table class="col-sm-12">
-                  <thead class="tb-head">
-                    <tr>
-                       <th>
-                          Particular
-                       </th> 
-                       <th>
-                          Amount
-                       </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr ng-repeat="inc in data.incomeGroups">
-                      <td class="col-sm-7">{{inc.name}}</td>
-                      <td class="col-sm-5 text-right">{{inc.closingBalance}}</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                    </thead>
+                  </table>
+                  <!--Grid-->
 
-        </perfect-scrollbar>
+                  <section class="row row-1 col-sm-12" ng-repeat="incGrp in data.incomeGroups">
+                    <div class="row"  trial-accordion>  
+                      <div class="col-sm-6 group" ng-bind-html=" incGrp.name | uppercase"></div>
+                      <div class="col-sm-6 group text-right" ng-bind-html=" incGrp.closingBalance | uppercase"></div>
+                    </div>
+                    <section class="row row-2 isHidden" ng-repeat="subGrp in incGrp.subGroups">
+                      <div class="row" trial-accordion>
+                        <div class="col-sm-6 account" ng-style="{'padding-left':padLeft}" ng-bind-html=" subGrp.name | uppercase">
+                        </div>
+                        <div class="col-sm-6 account text-right" ng-bind-html=" subGrp.closingBalance | uppercase"></div>
+                      </div>
+                      <section class="row row-2 isHidden" ng-repeat="acc in subGrp.accounts">
+                        <div class="row">
+                          <div class="col-sm-6 account" ng-style="{'padding-left':padLeft + 10}" ng-bind-html=" acc.name | lowercase">
+                          </div>
+                          <div class="col-sm-6 account text-right" ng-bind-html=" acc.closingBalance.amount | lowercase"></div>
+                        </div>
+                      </section>
+                    </section>
+                  </section>
+                  <!--/Grid-->
+                </div>
+              </div>
+              <table class="col-sm-12 tb-foot">
+                <thead>
+                <tr>
+                  <th class="col-sm-6">Profit</th>
+                  <th class="col-sm-6  text-right">{{ data.closingBalance | number:2 }}</th>
+                </tr>
+                </thead>
+              </table>
+            </div>
+          </perfect-scrollbar>
+        </div>
       </div>
     </div>
   </div>

@@ -8,6 +8,8 @@ profitLossController = ($scope, $rootScope, companyServices, localStorageService
   $scope.year = moment().get('year')
   $scope.month = moment().get('month')
   $scope.date = moment().get('date')
+  $scope.noData = false
+
 
   $scope.getPl = (data) ->
     reqParam = {
@@ -19,6 +21,9 @@ profitLossController = ($scope, $rootScope, companyServices, localStorageService
 
   $scope.getPlSuccess = (res) ->
     $scope.data = res.body
+    $rootScope.showLedgerBox = true
+    if $scope.data.closingBalance is 0
+      $scope.noData = true
     console.log $scope.data
 
   $scope.getPlFailure = (res) ->

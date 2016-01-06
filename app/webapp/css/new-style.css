@@ -1549,7 +1549,8 @@ table.borderless td, table.borderless th{
 }
 
 .table-title{
-    padding:0 20px;
+    padding:0;
+    margin-top:20px;
 }
 
 .table-title div{
@@ -1707,4 +1708,24 @@ table.borderless td, table.borderless th{
 
 .no-data > img{
     max-height:200px;
+}
+
+.expenses, .income{
+    padding:0;
+}
+
+.expenses{
+    padding-right: 5px;
+}
+
+.income{
+    padding-left:5px;
+}
+
+.expenses > .table-container{
+    padding:0;
+}
+
+.income > .table-container{
+    padding:0;
 }
