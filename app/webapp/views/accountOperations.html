@@ -129,71 +129,76 @@
       </div>
     </form>
   </div>
-
-
-
-<!-- end row first -->
-<div class="clearfix bdrB">
-  <div class="col-sm-12 col-md-6" ng-show="canUpdate">
-    <div class="row">
-      <form name="moveAccntForm" novalidate class="pd2 form-inline">
-        <div>
-          <label class="mrR">Move to account</label>
-        </div>
-        <div class="form-group">
-          <input ng-model="moveacto" type="text" placeholder="Group name" class="form-control" required
-            uib-typeahead="groups as groups.name for groups in flattenGroupList | omit: isCurrentGroup | filter:{name: $viewValue} | limitTo:4"/>
-        </div>
-        <div class="form-group">
-          <button class="btn btn-info mrL" ng-click="moveAccnt(moveacto)" ng-disabled="moveAccntForm.$invalid">Move</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="col-md-6 col-sm-12 bdrL" ng-show="canShare">
-    <div class="row">
-      <form name="shareAccountForm" novalidate class="form-inline pd2">
-        <div>
-          <label class="mrR">Share Account</label>
-        </div>
-        <div class="form-group">
-          <input required name="userEmail" type="email" ng-model="shareAccountObj.user" placeholder="Enter Email ID"
-                 class="form-control"/>
-        </div>
-        <div class="form-group">
-          <button ng-disabled="shareAccountForm.$invalid" class="btn btn-info mrL" ng-click="shareAccount()">Share</button>
-        </div>
-      </form>
-    </div>
-     <!--end of row -->
-    <div class="row" ng-if="accountSharedUserList.length">
-      <div class="pd2">
-        <ul class="list-group ln">
-          <li ng-repeat="(key,value) in accountSharedUserList track by $index" class="list-group-item">
-
-            <div class="form-inline clearfix">
-              <div class="form-group">
-                <i class="glyphicon glyphicon-user"></i>
-                {{value.userEmail}}
-              </div>
-              <div class="form-group">
-                {{option.role}}
-              </div>
-              <span class="delIcon">
-                <i class="glyphicon glyphicon-trash" ng-click="unShareAccount(value.userUniqueName)"></i>
-              </span>
-            </div>
-
-          </li>
-        </ul>
-      </div>
-    </div>
-    <!-- end of row -->
-  </div>
-</div>
-
-  <div class="pd2">
-    <button class="btn btn-danger" ng-click="deleteAccount()">Delete {{selectedAccount.name}} account</button>
-  </div>
 </fieldset>
+<!-- end row first -->
+
+<section ng-if="acntCase == 'Update'">
+  <div class="clearfix bdrB">
+    <div class="col-sm-12 col-md-6" ng-show="canUpdate">
+      <fieldset ng-disabled="cantUpdate">
+        <div class="row">
+          <form name="moveAccntForm" novalidate class="pd2 form-inline">
+            <div>
+              <label class="mrR">Move to account</label>
+            </div>
+            <div class="form-group">
+              <input ng-model="moveacto" type="text" placeholder="Group name" class="form-control" required
+                uib-typeahead="groups as groups.name for groups in flattenGroupList | omit: isCurrentGroup | filter:{name: $viewValue} | limitTo:4"/>
+            </div>
+            <div class="form-group">
+              <button class="btn btn-info mrL" ng-click="moveAccnt(moveacto)" ng-disabled="moveAccntForm.$invalid">Move</button>
+            </div>
+          </form>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="col-md-6 col-sm-12 bdrL" ng-show="canShare">
+      <fieldset ng-disabled="!canUpdate">
+        <div class="row">
+          <form name="shareAccountForm" novalidate class="form-inline pd2">
+            <div>
+              <label class="mrR">Share Account</label>
+            </div>
+            <div class="form-group">
+              <input required name="userEmail" type="email" ng-model="shareAccountObj.user" placeholder="Enter Email ID" class="form-control"/>
+            </div>
+            <div class="form-group">
+              <button ng-disabled="shareAccountForm.$invalid" class="btn btn-info mrL" ng-click="shareAccount()">Share</button>
+            </div>
+          </form>
+        </div>
+      </fieldset>
+       <!--end of row -->
+      <div class="row" ng-if="accountSharedUserList.length">
+        <div class="pd2">
+          <ul class="list-group ln">
+            <li ng-repeat="(key,value) in accountSharedUserList track by $index" class="list-group-item">
+
+              <div class="form-inline clearfix">
+                <div class="form-group">
+                  <i class="glyphicon glyphicon-user"></i>
+                  {{value.userEmail}}
+                </div>
+                <div class="form-group">
+                  {{option.role}}
+                </div>
+                <span class="delIcon">
+                  <i class="glyphicon glyphicon-trash" ng-click="unShareAccount(value.userUniqueName)"></i>
+                </span>
+              </div>
+
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- end of row -->
+    </div>
+  </div>
+  <!-- end row second -->
+  <div class="pd2">
+    <fieldset ng-disabled="!canUpdate || cantUpdate">
+      <button class="btn btn-danger" ng-click="deleteAccount()">Delete {{selectedAccount.name}} account</button>
+    </fieldset>
+  </div>
+</section>
