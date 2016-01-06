@@ -20,7 +20,7 @@ describe 'profitLossController', ->
       expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
 
   describe 'controller methods', ->
-    beforeEach inject ($scope, $rootScope, companyServices, localStorageService, $filter, toastr, $timeout, $q) ->
+    beforeEach inject ($rootScope, $controller, companyServices, localStorageService, $filter, toastr, $timeout, $q) ->
       @scope = $rootScope.$new()
       @rootScope = $rootScope
       @localStorageService = localStorageService
@@ -39,15 +39,17 @@ describe 'profitLossController', ->
           $timeout: @timeout
         })
     describe '#getPl', ->
-      it 'should call companyServices getPl method with reqparam obj', ->
+      it 'should call companyServices getPL method with reqparam obj', ->
         deferred = @q.defer()
-        spyOn(@companyServices, "getPl").andReturn(deferred.promise)
+        spyOn(@companyServices, "getPL").andReturn(deferred.promise)
+        @rootScope.selectedCompany = {}
         reqParam = {
           companyUniqueName: "uniqueName"
           fromDate: ''
           toDate: ''
         }
-        @scope.getPl(data)
-        expect(@companyServices.getPl).toHaveBeenCalledWith(reqParam)
+        @rootScope.selectedCompany.uniqueName = reqParam.companyUniqueName
+        @scope.getPl(reqParam)
+        expect(@companyServices.getPL).toHaveBeenCalledWith(reqParam)
 
     
