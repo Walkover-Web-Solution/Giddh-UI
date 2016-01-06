@@ -5,16 +5,13 @@ profitLossController = ($scope, $rootScope, companyServices, localStorageService
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
   $scope.sendRequest = true
   $scope.today = $filter('date')(new Date(),'dd-MM-yyyy')
-  $scope.year = moment().get('year')
-  $scope.month = moment().get('month')
-  $scope.date = moment().get('date')
   $scope.noData = false
 
 
   $scope.getPl = (data) ->
     reqParam = {
       'companyUniqueName': $rootScope.selectedCompany.uniqueName
-      'toDate': $scope.today
+      'toDate': ''
       'fromDate':''
     }
     companyServices.getPL(reqParam).then $scope.getPlSuccess, $scope.getPlFailure
@@ -24,16 +21,10 @@ profitLossController = ($scope, $rootScope, companyServices, localStorageService
     $rootScope.showLedgerBox = true
     if $scope.data.closingBalance is 0
       $scope.noData = true
-    console.log $scope.data
 
   $scope.getPlFailure = (res) ->
-     console.log res
+     toastr.error(res.data.message, res.data.status)
 
-     
-     
-
-
-  
   $scope.$on '$viewContentLoaded', ->
     if $scope.sendRequest
       reqParam = {
