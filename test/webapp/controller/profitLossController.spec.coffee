@@ -51,5 +51,24 @@ describe 'profitLossController', ->
         @rootScope.selectedCompany.uniqueName = reqParam.companyUniqueName
         @scope.getPl(reqParam)
         expect(@companyServices.getPL).toHaveBeenCalledWith(reqParam)
-
+    describe '#getPlSuccess', ->
+      it 'should set value of showLedgerBox to true and set nodata var to Falsy', ->
+        res = {
+          body:
+            closingBalance:
+              amount: 10
+        }
+        @scope.getPlSuccess(res)
+        expect(@scope.data).toEqual(res.body)
+        expect(@rootScope.showLedgerBox).toBeTruthy()
+        expect(@scope.noData).toBeFalsy()
+    describe '#getPlFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.getPlFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)     
     
