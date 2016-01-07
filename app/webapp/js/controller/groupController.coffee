@@ -366,7 +366,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.addAccountSuccess = (res) ->
     toastr.success("Account created successfully", res.status)
     $rootScope.$broadcast('$reloadAccount')
-    res.body.parentGroups = $scope.selectedGroup.parentGroups
+    res.body.parentGroups = $scope.selectedGroup.parentGroups.reverse()
     $scope.selectedAccount = {}
     $scope.selectedGroup.accounts.push(res.body)
     $scope.groupAccntList = $scope.selectedGroup.accounts
