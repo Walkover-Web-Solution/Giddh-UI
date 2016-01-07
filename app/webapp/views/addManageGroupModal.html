@@ -39,13 +39,8 @@
             </div>
           </div>
           <!-- searchbar end -->
-
-          <div class="loader" ng-hide="showListGroupsNow">
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
-            <span></span>
+          <div class="search-loading" ng-hide="showListGroupsNow">
+            <span class="spinner small"></span> Loading…
           </div>
 
           <perfect-scrollbar id="addMngGrpScrBar" class="scrClass" wheel-propagation="true" wheel-speed="1"
@@ -114,18 +109,14 @@
             </div>
           </div>
 
-        <section style="height: 378px">
-            <div class="loader" ng-hide="showAccountListDetails || showListGroupsNow">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
+        <section class="pr" style="height: 378px">
+            <div class="search-loading" ng-hide="showAccountListDetails || showListGroupsNow">
+              <span class="spinner small"></span> Loading…
             </div>
             <div ng-if="showAccountListDetails">
 
               <div class="pdL1 pdR1 mrB1" ng-if="groupAccntList.length == 0">
-                <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{selectedGroup.name}}</strong>
+                <h4 class="list-group-item-heading small">Oops, there are no accounts in <strong>{{selectedGroup.name}}</strong>
                 </h4>
 
                 <div class="mrB1 mrT1" ng-show="canAdd && !selectedGroup.fixed">
@@ -137,7 +128,7 @@
 
               <div ng-hide="groupAccntList.length == 0">
 
-                <h3 class="mrB1 mrL1">Accounts from <strong>{{selectedGroup.name}}</strong></h3>
+                <h3 class="mrB1 mrL1 small">Accounts from <strong>{{selectedGroup.name}}</strong></h3>
 
                 <div class="mrB1 mrT1 pdL1 pdR1" ng-show="canAdd && !selectedGroup.fixed">
                   <button class="btn btn-success btn-block" ng-click="addNewAccountShow(selectedGroup)"
@@ -145,7 +136,8 @@
                   </button>
                 </div>
 
-                <perfect-scrollbar id="selAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20">
+                <perfect-scrollbar id="selAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
+                ng-class="{'minimizeBoth': accountsSearch.length > 0}">
                   <div class="list-group">
                     <a ng-repeat="(key,value) in groupAccntList | filter:accountsSearch track by $index"
                        href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)"
@@ -159,8 +151,9 @@
             </div>
 
             <div ng-if="accountsSearch.length > 0 || isEmptyObject(selectedGroup)">
-              <h3 class="mrB1 mrL1">Accounts from <strong>all group</strong></h3>
-              <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20">
+              <h3 class="mrB1 mrL1 small">Accounts from <strong>all group</strong></h3>
+              <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
+              ng-class="{'minimizeBoth': accountsSearch.length > 0}">
                 <div class="list-group">
                   <a ng-repeat="(key,value) in flatAccntList | filter:accountsSearch track by $index"
                      href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)"
