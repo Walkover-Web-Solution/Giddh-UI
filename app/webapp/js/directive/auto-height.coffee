@@ -286,7 +286,6 @@ angular.module('ledger', [])
       acnt.uniqueName is scope.selAcntUname
 
     scope.addCrossFormField = (i, d, c) ->
-      console.log i, d, c
       # scope.item.transactions[0].particular.uniqueName = i.uName
 
     scope.closeEntry = ()->
@@ -356,7 +355,6 @@ angular.module('ledger', [])
         console.info "not a number"
 
     scope.openDialog = (item, indexs, ftype, parentForm) ->
-      # $document.off 'click'
       scope.removeClassInAllEle("ledgEntryForm", "open")
       elem.addClass('open')
       scope.highlightMultiEntry(item)
@@ -373,8 +371,8 @@ angular.module('ledger', [])
           <div class="popover-content">
             <div class="mrT">
               <div class="form-group">
-                <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh()" ng-show="canAddAndEdit">Add in DR</button>
-                <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh()" ng-show="canAddAndEdit">Add in CR</button>
+                <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh();" ng-show="canAddAndEdit">Add in DR</button>
+                <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh();" ng-show="canAddAndEdit">Add in CR</button>
                 <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResults">Add new account</a>
               </div>
               <div class="row">
@@ -429,8 +427,9 @@ angular.module('ledger', [])
       onDocumentClick = (event) ->
         inBox = angular.element(event.target).parents('.ledgerPopDiv').length is 1 || event.target.parentNode.nodeName is "LI" || event.target.parentNode.nodeName is "A" || event.target.nodeName is "INPUT"
         if !inBox
-          if item.sharedData.multiEntry || item.sharedData.addType
-            console.log "is child and multiEntry"
+          if !_.isUndefined(item.sharedData.multiEntry) || !_.isUndefined(item.sharedData.addType)
+            if item.sharedData.multiEntry || item.sharedData.addType
+              console.log "is child and multiEntry"
           else
             scope.resetEntry(item, $rootScope.lItem)
           scope.$apply(scopeExpression)

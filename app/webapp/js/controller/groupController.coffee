@@ -65,7 +65,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     scope.expandAll()
     $scope.subGroupVisible = false
 
-  $scope.getGroups = ->
+  $scope.getGroups =() ->
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
@@ -200,6 +200,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.success("Sub group added successfully", "Success")
     $scope.selectedSubGroup = {}
     $scope.getGroups()
+    $rootScope.$broadcast('$reloadAccount')
 
   $scope.onCreateGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -249,6 +250,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onMoveGroupSuccess = (res) ->
     toastr.success("Group moved successfully.", "Success")
     $scope.getGroups()
+    $rootScope.$broadcast('$reloadAccount')
     $scope.moveto = undefined
 
   $scope.onMoveGroupFailure = (res) ->
@@ -393,6 +395,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onDeleteAccountSuccess = (res) ->
     toastr.success("Account deleted successfully.", "Success")
     $scope.getGroups()
+    $rootScope.$broadcast('$reloadAccount')
     $scope.selectedAccount = {}
 
   $scope.onDeleteAccountFailure = (res) ->
@@ -454,6 +457,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.moveAccntSuccess = (res) ->
     toastr.success(res.body, res.status)
     $scope.getGroups()
+    $rootScope.$broadcast('$reloadAccount')
     $scope.showAccountDetails = false
 
   $scope.moveAccntFailure = (res) ->
