@@ -60,7 +60,7 @@
 <!-- end row first -->
 <div class="clearfix bdrB">
 
-  <div class="col-sm-12 col-md-6" ng-hide="selectedGroup.isFixed || !canUpdate">
+  <div class="col-sm-12 col-md-6" ng-hide="selectedGroup.fixed || !canUpdate">
     <div class="row">
       <form name="moveGroupForm" novalidate class="pd2 form-inline">
         <div>
@@ -122,6 +122,6 @@
   </div>
 </div>
   
-<div class="pd2" ng-hide="selectedGroup.isFixed || !canDelete">
+<div class="pd2" ng-hide="selectedGroup.fixed || !canDelete">
   <button class="btn btn-danger" ng-click="deleteGroup()">Delete {{selectedGroup.name}} group</button>
 </div>

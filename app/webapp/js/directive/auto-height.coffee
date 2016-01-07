@@ -18,57 +18,6 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
       angular.element($window).triggerHandler('resize')
     , 1000
 ]
-.directive 'buzzy', ['$timeout', ($timeout)->
-  {
-    restrict: 'A'
-    require: 'ngModel'
-    link: (scope, element, attrs, ngModel) ->
-      target = document.getElementsByClassName('mainUl')
-      _hasPattern = (word, pattern) ->
-        if pattern == ''
-          return word
-        index = word.indexOf(pattern)
-        if index is -1
-          return false
-        _hasPattern word, pattern.substr(1)
-
-      _downToTag =(obj) ->
-        obj = angular.element(obj)
-        obj = obj[0]
-        len =  obj.childElementCount
-        if len > 0
-          _.each(obj.children, (item) ->            
-            _downToTag(item)
-          )
-        else 
-          if obj.nodeName is "A" || obj.nodeName is "SPAN"
-            content = if obj.text then obj.text else obj.textContent
-            if _hasPattern(content.toLowerCase(), scope.acntSrch.toLowerCase())
-              angular.element(obj).parents('li.mainLiAclist').removeClass('hideAclist')
-      
-      element.on 'keyup', (e) ->
-        code = if window.event then e.keyCode else e.which
-        val = element.val()
-        if _.isUndefined(val) || _.isNull(val) || _.isEmpty(val)
-          _.each(target[0].children, (li) ->
-            angular.element(li).removeClass('hideAclist')
-          )
-          return false
-        liList = target[0].children
-        if code is 8
-          $timeout (->
-            _.each(liList, (li) ->
-              angular.element(li).addClass('hideAclist')
-              _downToTag(li)
-            )
-          ), 600
-        else
-          _.each(liList, (li) ->
-            angular.element(li).addClass('hideAclist')
-            _downToTag(li)
-          )
-  }
-]
 # capitalize first letter of a string
 giddh.webApp.filter 'capitalize', ->
   (input) ->

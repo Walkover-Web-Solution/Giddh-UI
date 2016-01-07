@@ -16,11 +16,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.showListGroupsNow = false
   $scope.showAccountDetails = false
   $scope.showAccountListDetails = false
-
   $scope.canUpdate = false
   $scope.canDelete = false
   $scope.canAdd = false
-
   #set a object for share group
   $scope.shareGroupObj ={role: "view_only"}
   $scope.shareAccountObj ={role: "view_only"}
@@ -367,10 +365,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.addAccountSuccess = (res) ->
     toastr.success("Account created successfully", res.status)
+    $rootScope.$broadcast('$reloadAccount')
+    res.body.parentGroups = $scope.selectedGroup.parentGroups
     $scope.selectedAccount = {}
     $scope.selectedGroup.accounts.push(res.body)
     $scope.groupAccntList = $scope.selectedGroup.accounts
-    $rootScope.$broadcast('$reloadAccount')
 
   $scope.addAccountFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -397,6 +396,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.getGroups()
     $rootScope.$broadcast('$reloadAccount')
     $scope.selectedAccount = {}
+    $scope.showAccountDetails = false
 
   $scope.onDeleteAccountFailure = (res) ->
     toastr.error(res.data.message, res.data.status)

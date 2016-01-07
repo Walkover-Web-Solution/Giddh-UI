@@ -795,7 +795,8 @@ li:last-child .angular-ui-tree-handle {
     border-right: 0;
 }
 .acntListDiv .list-group-item-heading, .acntListDiv .list-group {
-    margin-bottom: 0
+    margin-bottom: 0;
+    line-height: 20px;
 }
 .acntListDiv .list-group-item:first-child, .acntListDiv .list-group-item:last-child{
     border-radius: 0
