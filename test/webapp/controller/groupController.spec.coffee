@@ -657,9 +657,15 @@ describe 'groupController', ->
       spyOn(@rootScope, "$broadcast")
       res = {
         status: "Success"
-        body: {some: "name"}
+        body:
+          some: "name"
       }
-      @scope.selectedGroup = {accounts: []}
+      @scope.selectedGroup = {
+        accounts: []
+        parentGroups: [
+          {a: "a"}, {a: "b"}
+        ]
+      }
       @scope.addAccountSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith("Account created successfully", res.status)
       expect(@scope.selectedAccount).toEqual({})
