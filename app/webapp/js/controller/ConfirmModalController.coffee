@@ -1,15 +1,12 @@
 "use strict"
 
-ConfirmModalController = ($scope, $modalInstance, data) ->
+ConfirmModalController = ($scope, $uibModalInstance, data) ->
   $scope.data = angular.copy(data)
   
   $scope.closePop = ()->
-    $modalInstance.close()
+    $uibModalInstance.close()
 
   $scope.cancelPop = () ->
-    $modalInstance.dismiss('cancel')
+    $uibModalInstance.dismiss('cancel')
 
 giddh.webApp.controller 'ConfirmModalController', ConfirmModalController
-
-
-

@@ -9,7 +9,6 @@ giddh.serviceModule.value('$confirmModalDefaults',
     ok: 'OK'
     cancel: 'Cancel')
 
-
 giddh.serviceModule.service('modalService',
   ($uibModal, $confirmModalDefaults) ->
     modalService =
@@ -22,16 +21,7 @@ giddh.serviceModule.service('modalService',
           data: () ->
             data
         $uibModal.open(settings).result
-      # openConfirmModal: () ->
-      #   $uibModal.open(
-      #     templateUrl: '/public/webapp/views/confirmModal.html'
-      #     size: "sm"
-      #     backdrop: 'static'
-      #     controller: 'ConfirmModalController'
-      #     resolve: 
-      #       data: () ->
-      #         data
-      #   )
+
       openManageGroupsModal: () ->
         $uibModal.open(
           templateUrl: '/public/webapp/views/addManageGroupModal.html'
@@ -39,6 +29,5 @@ giddh.serviceModule.service('modalService',
           backdrop: 'static'
           controller: 'groupController'
         )
-
     modalService
 )
