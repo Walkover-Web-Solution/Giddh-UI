@@ -94,6 +94,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/views/profitLoss.html',
     controller: 'profitLossController'
   )
+  .state('Reports',
+    url: '/reports',
+    templateUrl: '/public/webapp/views/reports.html',
+    controller: 'reportsController'
+  )
 
   $locationProvider.html5Mode(false)
   return

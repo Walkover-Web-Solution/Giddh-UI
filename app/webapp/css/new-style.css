@@ -1762,3 +1762,38 @@ table.borderless td, table.borderless th{
 .income > .table-container{
     padding:0;
 }
+
+/* reports */
+.ui-select-multiple.ui-select-bootstrap, .ui-select-bootstrap.dropdown, .ui-select-bootstrap.dropdown span.ui-select-toggle, .ui-select-bootstrap.dropdown input{
+    min-width:100%;
+}
+
+.ui-select-multiple.ui-select-bootstrap > div {
+  min-width:100%;
+  min-height: 100%;
+}
+
+.ui-select-multiple.ui-select-bootstrap > div input{
+  min-width:100%;
+  min-height: 100%;
+}
+
+.graph-filters > div:not(:nth-child(1)){
+    margin-top:20px;
+}
+
+.graph-filters > div .input-group{
+    width:100%;
+}
+
+.graph-filters .input-group-btn{
+    width:34px !important;
+}
+
+table:focus{
+    outline:0;
+}
+
+.chart-container{
+    margin:20px auto;
+}
