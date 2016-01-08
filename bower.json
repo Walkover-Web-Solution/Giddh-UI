@@ -33,7 +33,9 @@
     "angular-filter": "~0.5.8",
     "moment": "~2.10.6",
     "ng-file-upload": "10.1.9",
-    "angular-bootstrap": "~0.14.3"
+    "angular-bootstrap": "~0.14.3",
+    "ui-select": "angular-ui-select#~0.13.2",
+    "angular-chart.js": "~0.8.8"
   },
   "resolutions": {
     "angular": "~1.4.4",
