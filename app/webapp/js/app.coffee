@@ -24,6 +24,8 @@ giddh.webApp = angular.module("giddhWebApp",
     'ngFileUpload'
     "exportDirectives"
     "serviceModule"
+    "chart.js"
+    "ui.select"
   ]
 )
 
