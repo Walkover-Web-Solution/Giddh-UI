@@ -27,6 +27,9 @@ module.exports = (config) ->
       "bower_components/angular-translate/angular-translate.min.js",
       "bower_components/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js",
       "bower_components/ng-file-upload/ng-file-upload.min.js",
+      "bower_components/Chart.js/Chart.min.js",
+      "bower_components/angular-chart.js/dist/angular-chart.min.js",
+      "bower_components/ui-select/dist/select.min.js",
       "app/website/**/*.coffee",
       "app/webapp/**/*.coffee",
       "test/**/*.coffee"
