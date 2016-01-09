@@ -111,7 +111,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.selectedGroupUname = data.groupUniqueName
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: $scope.selectedGroupUname
       acntUname: $rootScope.selAcntUname
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
@@ -184,7 +183,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     edata.voucherType = data.sharedData.voucher.shortCode
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: $scope.selectedGroupUname
       acntUname: $rootScope.selAcntUname
     }
     ledgerService.createEntry(unqNamesObj, edata).then($scope.addEntrySuccess, $scope.addEntryFailure)
@@ -219,7 +217,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: $scope.selectedGroupUname
       acntUname: $rootScope.selAcntUname
       entUname: edata.uniqueName
     }
@@ -276,7 +273,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.deleteEntry = (item) ->
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: $scope.selectedGroupUname
       acntUname: $rootScope.selAcntUname
       entUname: item.sharedData.uniqueName
     }

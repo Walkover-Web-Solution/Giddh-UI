@@ -151,7 +151,6 @@ describe 'ledgerController', ->
         }
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
-          selGrpUname: @scope.selectedGroupUname
           acntUname: @rootScope.selAcntUname
           fromDate: @scope.toDate.date
           toDate: @scope.fromDate.date
@@ -223,7 +222,6 @@ describe 'ledgerController', ->
         @rootScope.selAcntUname = "accountname"
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
-          selGrpUname: @scope.selectedGroupUname
           acntUname: @rootScope.selAcntUname
         }
         deferred = @q.defer()
@@ -294,7 +292,6 @@ describe 'ledgerController', ->
         }
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
-          selGrpUname: @scope.selectedGroupUname
           acntUname: @rootScope.selAcntUname
           entUname: data.sharedData.uniqueName
         }
@@ -356,7 +353,6 @@ describe 'ledgerController', ->
 
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
-          selGrpUname: @scope.selectedGroupUname
           acntUname: @rootScope.selAcntUname
           entUname: item.sharedData.uniqueName
         }
