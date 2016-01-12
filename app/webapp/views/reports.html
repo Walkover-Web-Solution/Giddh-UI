@@ -1,0 +1,154 @@
+<!-- structure -->
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- left side -->
+    <div class="col-md-2 col-sm-5 greyBg">
+      <div auto-height>
+        <div id="left" >
+            <div class="loader mrT4" ng-hide="showLedgerBox">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <div ng-show="showLedgerBox">
+              <div class="pdT1 pdB1 form-inline">
+                <perfect-scrollbar id="accountList" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+                <div class="graph-filters">
+                  <h1 class="page-title">Generate Graph</h1>
+                  <div class="">
+                    <label>Create Chart By</label>
+                    <ui-select ng-model="selected.createChartBy" theme="bootstrap">
+                        <ui-select-match>
+                            <span>{{$select.selected}}</span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="param in chartParams">
+                            <span ng-bind="param"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                  </div>
+                  <div class="">
+                    <label>Select Groups</label>
+                    <ui-select multiple ng-model="selected.groups" theme="bootstrap">
+                        <ui-select-match placeholder="Select Groups">
+                            <span  ng-click="removeGroup($item)">{{$item.name}}</span>
+                        </ui-select-match >
+                        <ui-select-choices repeat="grp in groups| filter: $select.search ">
+                            <span ng-bind="grp.name"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                  </div>
+                  <div class="">
+                    <label>Select Accounts</label>
+                    <ui-select multiple ng-model="selected.accounts" theme="bootstrap">
+                        <ui-select-match>
+                            <span>{{$item.name}}</span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="acc in accounts | filter: $select.search ">
+                            <span ng-bind="acc.name"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                  </div>
+                  <div class="">
+                    <label>From date</label>
+                    <p class="input-group">
+                      <input type="text" class="form-control"
+                           uib-datepicker-popup="{{format}}" required
+                           datepicker-options="dateOptions"
+                           is-open="fromDatePickerIsOpen"
+                           ng-click="fromDatePickerOpen()"
+                           ng-model="fromDate.date"
+                           max-date="today"
+                           placeholder="from date"
+                        />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="fromDatePickerOpen()"><i class="glyphicon glyphicon-calendar"></i></button>
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="">
+                    <label>To date</label>
+                    <p class="input-group">
+                      <input type="text" class="form-control"
+                             uib-datepicker-popup="{{format}}" required
+                             datepicker-options="dateOptions"
+                             is-open="toDatePickerIsOpen"
+                             ng-click="toDatePickerOpen()"
+                             ng-model="toDate.date" min-date="" max-date="today" placeholder="to date"
+                          />
+                      <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i
+                          class="glyphicon glyphicon-calendar"></i></button>
+                      </span>
+                    </p>
+                  </div>
+
+                  <div class="">
+                    <label>Select Interval</label>
+                    <ui-select ng-model="selected.interval" theme="bootstrap">
+                        <ui-select-match>
+                            <span>{{$select.selected}} Days</span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="int in intervalVals">
+                            <span ng-bind="int"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                  </div>
+                  <div>
+                    <button class="btn btn-success pull-left" ng-click="generateGraph()">Go</button>
+                  </div>
+
+                </div>
+                </perfect-scrollbar>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- middle body -->
+    <div class="col-md-10 col-sm-7">
+      <div class="middleBody bdrR bdrL row" auto-height> 
+        <div class="loader mrT4" ng-hide="showLedgerBox">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+        </div>
+        <div class="title-bar" ng-show="showLedgerBox">
+          <div class="pull-left">
+            <h1 class="page-title inline">
+              Historical Data <span ng-show="chartDataAvailable">for</span>
+            </h1>
+            <p class="sub-title inline pdR" ng-show="chartDataAvailable" ng-repeat="group in series">
+                {{ group }}<span ng-hide="$last">, </span>  
+            </p>
+          </div>
+        </div>
+
+        <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+          <div class="loader mrT4" ng-hide="chartDataAvailable">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+          </div>
+          <div class="col-sm-10 col-sm-offset-1">
+            <div class="chart-container" ng-show="chartDataAvailable">
+              <canvas id="line" class="chart chart-line" chart-data="chartData"
+                chart-labels="labels" chart-legend="true" chart-series="series"
+                chart-click="onClick" chart-options="chartOptions">
+              </canvas> 
+            </div>
+          </div>
+        </perfect-scrollbar>
+      </div>
+    </div>
+  </div>
+  <!-- end of row -->
+</div>
+

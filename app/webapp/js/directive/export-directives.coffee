@@ -446,3 +446,15 @@ angular.module('exportDirectives', [])
           ), 10  
     }
 ])
+.directive('resetChart',[
+  '$rootScope'
+  '$compile'
+  '$filter'
+  '$timeout'
+  ($rootScope, $compile, $filter, $timeout) ->
+    {
+      restrict: 'A'
+      link: (scope, elem, attr) ->
+
+    }
+])

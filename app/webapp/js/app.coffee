@@ -24,6 +24,9 @@ giddh.webApp = angular.module("giddhWebApp",
     'ngFileUpload'
     "exportDirectives"
     "serviceModule"
+    "chart.js"
+    "ui.select"
+    "chartDirectives"
   ]
 )
 
@@ -91,6 +94,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/profit-and-loss',
     templateUrl: '/public/webapp/views/profitLoss.html',
     controller: 'profitLossController'
+  )
+  .state('Reports',
+    url: '/reports',
+    templateUrl: '/public/webapp/views/reports.html',
+    controller: 'reportsController'
   )
 
   $locationProvider.html5Mode(false)
