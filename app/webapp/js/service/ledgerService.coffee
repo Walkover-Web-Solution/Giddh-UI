@@ -1,10 +1,9 @@
 'use strict'
 
 giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
-  Ledger = $resource('/company/:companyUniqueName/groups/:groupUniqueName/accounts',
+  Ledger = $resource('/company/:companyUniqueName/accounts',
     {
       'companyUniqueName': @companyUniqueName,
-      'groupUniqueName': @groupUniqueName,
       'accountsUniqueName': @accountsUniqueName
       'date1': @date1
       'date2': @date2
@@ -13,19 +12,19 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
     {
       get: {
         method: 'GET',
-        url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/ledgers?fromDate=:date1&toDate=:date2'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers?fromDate=:date1&toDate=:date2'
       }
       create: {
         method: 'POST'
-        url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/ledgers/'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/'
       }
       update: {
         method: 'PUT'
-        url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/ledgers/:entryUniqueName'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/:entryUniqueName'
       }
       delete: {
         method: 'DELETE',
-        url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/ledgers/:entryUniqueName'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/:entryUniqueName'
       }
     })
 
@@ -40,7 +39,6 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
     getLedger: (unqNamesObj) ->
       @handlePromise((onSuccess, onFailure) -> Ledger.get({
         companyUniqueName: unqNamesObj.compUname,
-        groupUniqueName: unqNamesObj.selGrpUname,
         accountsUniqueName: unqNamesObj.acntUname
         date1: unqNamesObj.fromDate
         date2: unqNamesObj.toDate
@@ -49,14 +47,12 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
     createEntry: (unqNamesObj, data) ->
       @handlePromise((onSuccess, onFailure) -> Ledger.create({
         companyUniqueName: unqNamesObj.compUname,
-        groupUniqueName: unqNamesObj.selGrpUname,
         accountsUniqueName: unqNamesObj.acntUname
       }, data, onSuccess, onFailure))
 
     updateEntry: (unqNamesObj, data) ->
       @handlePromise((onSuccess, onFailure) -> Ledger.update({
         companyUniqueName: unqNamesObj.compUname,
-        groupUniqueName: unqNamesObj.selGrpUname,
         accountsUniqueName: unqNamesObj.acntUname
         entryUniqueName: unqNamesObj.entUname
       }, data, onSuccess, onFailure))
@@ -64,7 +60,6 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
     deleteEntry: (unqNamesObj) ->
       @handlePromise((onSuccess, onFailure) -> Ledger.delete({
         companyUniqueName: unqNamesObj.compUname,
-        groupUniqueName: unqNamesObj.selGrpUname,
         accountsUniqueName: unqNamesObj.acntUname
         entryUniqueName: unqNamesObj.entUname
       }, onSuccess, onFailure))

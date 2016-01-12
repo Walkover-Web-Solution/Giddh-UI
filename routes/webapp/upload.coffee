@@ -41,7 +41,8 @@ router.post '/:companyName/daybook', (req, res) ->
 # import ledger
 router.post '/:companyName/import-ledger', (req, res) ->
   console.log "import-ledger file is: ", req.file
-  url = settings.envUrl + 'company/' + req.body.urlObj.compUname + '/groups/' + req.body.urlObj.selGrpUname + '/accounts/' + req.body.urlObj.acntUname + '/import-ledger-xls'
+  url = settings.envUrl + 'company/' + req.body.urlObj.compUname + '/groups/' +
+      req.body.urlObj.selGrpUname + '/accounts/' + req.body.urlObj.acntUname + '/import-ledger-xls'
 
   console.log url, "actual URL"
   rest.post(url,

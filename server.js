@@ -96,11 +96,12 @@ global.mStorage = multer.diskStorage({
   filename: function (req, file, cb) {
     console.log("In Multer")
     if (file.mimetype === "application/vnd.ms-excel"){
-      console.log ("xls file")
       cb(null, Date.now() + '.xls')
     }
+    else if (file.mimetype === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"){
+      cb(null, Date.now() + '.xlsx')
+    }
     else{
-      console.log ("xml file")
       cb(null, Date.now() + '.xml')
     }
   }
@@ -129,7 +130,7 @@ app.use('/location', location);
 app.use('/company', company);
 app.use('/company/:companyUniqueName/groups', groups);
 app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts', accounts);
-app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
+app.use('/company/:companyUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
 app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);

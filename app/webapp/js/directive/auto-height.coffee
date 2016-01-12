@@ -295,10 +295,10 @@ angular.module('ledger', [])
     scope.setTotalVal = (item) ->
       if _.isNumber(item.sharedData.total)
         if item.sharedData.total > 0
-          scope.ttlValD = item.sharedData.total
+          scope.ttlValD = item.sharedData.total.toFixed(2)
           scope.ttlValDType = " CR"
         else
-          scope.ttlValD = Math.abs(item.sharedData.total)
+          scope.ttlValD = Math.abs(item.sharedData.total).toFixed(2)
           scope.ttlValDType = " DR"
       else
         console.info "not a number"

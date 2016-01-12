@@ -12,7 +12,7 @@ router.get '/', (req, res) ->
       to: req.query.toDate
       from: req.query.fromDate
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName + '/ledgers'
+      '/accounts/' + req.params.accountUniqueName + '/ledgers'
   settings.client.get hUrl, args, (data, response) ->
     console.log new Date(), "req completed"
     if data.status == 'error'
@@ -26,7 +26,7 @@ router.delete '/', (req, res) ->
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName + '/ledgers'
+      '/accounts/' + req.params.accountUniqueName + '/ledgers'
   settings.client.delete hUrl, authHead, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
@@ -39,8 +39,7 @@ router.get '/:ledgerUniqueName', (req, res) ->
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName +
-      '/ledgers/' + req.params.ledgerUniqueName
+      '/accounts/' + req.params.accountUniqueName + '/ledgers/' + req.params.ledgerUniqueName
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
@@ -49,7 +48,7 @@ router.get '/:ledgerUniqueName', (req, res) ->
 #Create ledgers
 router.post '/', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName + '/ledgers'
+      '/accounts/' + req.params.accountUniqueName + '/ledgers'
   req.body.uniqueName = settings.stringUtil.getRandomString(req.params.accountUniqueName, req.params.companyUniqueName)
   args =
     headers:
@@ -65,8 +64,7 @@ router.post '/', (req, res) ->
 #Update ledgers
 router.put '/:ledgerUniqueName', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName +
-      '/ledgers/' + req.params.ledgerUniqueName
+      '/accounts/' + req.params.accountUniqueName + '/ledgers/' + req.params.ledgerUniqueName
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -85,14 +83,10 @@ router.delete '/:ledgerUniqueName', (req, res) ->
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/groups/' + req.params.groupUniqueName + '/accounts/' + req.params.accountUniqueName +
-      '/ledgers/' + req.params.ledgerUniqueName
+      '/accounts/' + req.params.accountUniqueName + '/ledgers/' + req.params.ledgerUniqueName
   settings.client.delete hUrl, authHead, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
-
-
-
 
 module.exports = router
