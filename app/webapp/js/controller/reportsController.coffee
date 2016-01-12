@@ -1,5 +1,5 @@
 "use strict"
-reportsController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter) ->
+reportsController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService) ->
 
   $scope.today = new Date()
   $scope.fromDate = {date: new Date()}
@@ -16,8 +16,14 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.series = []
   $scope.data = []
   $scope.labels = []
+  $scope.chartOptions = {
+    datasetFill:false
+  }
+  $scope.chartTypes = ['Bar', 'Line']
+  $scope.chartType = $scope.chartTypes[1]
 
 
+  $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
 
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
@@ -27,7 +33,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
   $scope.intervalVals = [1, 3, 7, 30, 90, 180, 365]
 
-  $scope.graphInterval = $scope.intervalVals[2]
+  $scope.graphInterval = $scope.intervalVals[0]
 
   $scope.getAccountsGroupsList = ()->
     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -44,7 +50,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
     $scope.showLedgerBox = true
     $scope.sortGroupsAndAccounts($scope.flatAccntWGroupsList)
-    $scope.selectedGroups = [$scope.groups[0]]
+    #$scope.selectedGroups = [$scope.groups[0]]
     $scope.selectedAccounts = [$scope.accounts[0]]
     $rootScope.showLedgerBox = true
 
@@ -78,7 +84,10 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.getAccountsGroupsList()
   
   $scope.formatGraphData = (graphData) ->
-    data = graphData.body
+    $scope.series = []
+    $scope.data = []
+    $scope.labels = []
+    data = graphData
     groups = []
     accounts = []
     $scope.series = []
@@ -93,6 +102,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
         }
         group.name = grp.name
         _.each grp.intervalBalances, (bal) ->
+          console.log bal
           group.values.push(bal.closingBalance.amount)
           group.to.push(bal.to)
         groups.push(group)
@@ -114,22 +124,32 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.chartDataAvailable = true
 
 
+  $scope.getGraphData  = (reqParam,graphParam) ->
+    reportService.historicData(reqParam, graphParam).then $scope.getGraphDataSuccess, $scope.getGraphDataFailure
 
+  $scope.getGraphDataSuccess = (res) ->
+    $scope.graphData = res.body
+    $scope.formatGraphData($scope.graphData)
+
+  $scope.getGraphDataFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
 
   $scope.generateGraph = () ->
     reqParam = {
-      fromDate: $filter('date')($scope.fromDate.date,'dd-MM-yyyy')
-      toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
-      intreval: $scope.graphInterval
+      'cUname': $rootScope.selectedCompany.uniqueName
+      'fromDate': $filter('date')($scope.fromDate.date,'dd-MM-yyyy')
+      'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+      'interval': $scope.graphInterval
     }
-    reqBody = {
-      groups : createArrayWithUniqueName($scope.selectedGroups)
-      accounts : createArrayWithUniqueName($scope.selectedAccounts)
+    graphParam = {
+      'groups' : createArrayWithUniqueName($scope.selectedGroups)
+      'accounts' : createArrayWithUniqueName($scope.selectedAccounts)
     }
-
+    $scope.getGraphData(reqParam, graphParam)
+    
     #method to get grpah data here
-    $scope.formatGraphData($scope.graphData)
+    
 
 
 
@@ -149,512 +169,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.addAccount = (item) ->
     $scope.selectedAccounts.push(item)
 
-
-
-
-
-    
-
-
-  $scope.graphData = {
-    "status": "success",
-    "body": {
-      "groups": [
-        {
-          "name": "group2",
-          "uniqueName": "group2",
-          "intervalBalances": [
-            {
-              "to": "2015-12-08",
-              "from": "2015-12-06",
-              "openingBalance": {
-                "amount":0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 2000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-11",
-              "from": "2015-12-09",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 3000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-14",
-              "from": "2015-12-12",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 1000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-17",
-              "from": "2015-12-15",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 500,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-20",
-              "from": "2015-12-18",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 4000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-23",
-              "from": "2015-12-21",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 6000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-26",
-              "from": "2015-12-24",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 2000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-29",
-              "from": "2015-12-27",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 2500,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2016-01-01",
-              "from": "2015-12-30",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 7000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2016-01-04",
-              "from": "2016-01-02",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 0,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2016-01-06",
-              "from": "2016-01-05",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 8000,
-              "debitTotal": 15000,
-              "closingBalance": {
-                "amount": 7000,
-                "type": "CREDIT"
-              }
-            }
-          ]
-        },
-        {
-          "name": "group1",
-          "uniqueName": "group1",
-          "intervalBalances": [
-            {
-              "to": "2015-12-08",
-              "from": "2015-12-06",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 3000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-11",
-              "from": "2015-12-09",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 2000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-14",
-              "from": "2015-12-12",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 6000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-17",
-              "from": "2015-12-15",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 9000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-20",
-              "from": "2015-12-18",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 2500,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-23",
-              "from": "2015-12-21",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 2200,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-26",
-              "from": "2015-12-24",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 1000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-29",
-              "from": "2015-12-27",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 5500,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2016-01-01",
-              "from": "2015-12-30",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 6500,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2016-01-04",
-              "from": "2016-01-02",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 0,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2016-01-06",
-              "from": "2016-01-05",
-              "openingBalance": {
-                "amount": 3000,
-                "type": "CREDIT"
-              },
-              "creditTotal": 16000,
-              "debitTotal": 18000,
-              "closingBalance": {
-                "amount": 2000,
-                "type": "CREDIT"
-              }
-            }
-          ]
-        },
-        {
-          "name": "group",
-          "uniqueName": "group",
-          "intervalBalances": [
-            {
-              "to": "2015-12-08",
-              "from": "2015-12-06",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 1000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-11",
-              "from": "2015-12-09",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 2000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-14",
-              "from": "2015-12-12",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 3000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-17",
-              "from": "2015-12-15",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 1500,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-20",
-              "from": "2015-12-18",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 12000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-23",
-              "from": "2015-12-21",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 2000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-26",
-              "from": "2015-12-24",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 0,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2015-12-29",
-              "from": "2015-12-27",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 3000,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2016-01-01",
-              "from": "2015-12-30",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 1500,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2016-01-04",
-              "from": "2016-01-02",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 0,
-              "debitTotal": 0,
-              "closingBalance": {
-                "amount": 2400,
-                "type": "DEBIT"
-              }
-            },
-            {
-              "to": "2016-01-06",
-              "from": "2016-01-05",
-              "openingBalance": {
-                "amount": 0,
-                "type": "CREDIT"
-              },
-              "creditTotal": 24000,
-              "debitTotal": 15000,
-              "closingBalance": {
-                "amount": 9000,
-                "type": "DEBIT"
-              }
-            }
-          ]
-        }
-      ],
-      "accounts": []
-    }
-  }
-
-
-
-
-
-
-
-
-
-
-
+  $scope.removeGroup = (item) ->
+    console.log item
 
 
 

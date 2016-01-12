@@ -6,11 +6,12 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
       'companyUniqueName': @companyUniqueName
       'date1': @date1
       'date2': @date2
+      'interval': @interval
     },
     {
       historicData: {
         method: 'POST',
-        url: '/company/:companyUniqueName/history?fromDate=:date1&toDate=:date2'
+        url: '/company/:companyUniqueName/history?fromDate=:date1&toDate=:date2&interval=:interval'
       }
       # historicData: {
       #   method: 'PUT'
@@ -26,9 +27,11 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
       deferred.promise
 
     historicData: (argData, data, onSuccess, onFailure) ->
-      @handlePromise((onSuccess, onFailure) -> Report.historicData({companyUniqueName: argData.cUname
+      @handlePromise((onSuccess, onFailure) -> Report.historicData({
+        companyUniqueName: argData.cUname
         date1: argData.fromDate
         date2: argData.toDate
+        interval: argData.interval
       }, data, onSuccess,  onFailure))
 
   reportService

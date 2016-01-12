@@ -2,8 +2,6 @@ settings = require('../util/settings')
 router = settings.express.Router({mergeParams: true})
 
 router.post '/', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/history/'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -12,8 +10,10 @@ router.post '/', (req, res) ->
     parameters:
       to: req.query.toDate
       from: req.query.fromDate
+      interval: req.query.interval
     data: req.body
-
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/history'
   console.log args, hUrl
   settings.client.post hUrl, args, (data, response) ->
     console.log "get graph data by date", new Date()

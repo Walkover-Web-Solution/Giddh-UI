@@ -4,8 +4,8 @@
   <div class="row">
     <!-- left side -->
     <div class="col-md-2 col-sm-5 greyBg">
-      <div>
-        <div id="left" auto-height>
+      <div auto-height>
+        <div id="left" >
             <div class="loader mrT4" ng-hide="showLedgerBox">
               <span></span>
               <span></span>
@@ -21,15 +21,15 @@
                   <div class="">
                     <label>Select Groups</label>
                     <ui-select multiple ng-model="selectedGroups" theme="bootstrap" on-select="addGroup($item)">
-                        <ui-select-match>
-                            <span>{{$item.name}}</span>
-                        </ui-select-match>
+                        <ui-select-match placeholder="Select Groups">
+                            <span  ng-click="removeGroup($item)">{{$item.name}}</span>
+                        </ui-select-match >
                         <ui-select-choices repeat="grp in groups| filter: $select.search ">
                             <span ng-bind="grp.name"></span>
                         </ui-select-choices>
                     </ui-select>
                   </div>
-
+                  {{selectedGroups}}
                   <div class="">
                     <label>Select Accounts</label>
                     <ui-select multiple ng-model="selectedAccounts" theme="bootstrap" on-select="addAccount($item)">
@@ -68,7 +68,7 @@
                              datepicker-options="dateOptions"
                              is-open="toDatePickerIsOpen"
                              ng-click="toDatePickerOpen()"
-                             ng-model="toDate.date" min-date="fromDate.date" max-date="today" placeholder="to date"
+                             ng-model="toDate.date" min-date="" max-date="today" placeholder="to date"
                           />
                       <span class="input-group-btn">
                         <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i
@@ -88,7 +88,7 @@
                         </ui-select-choices>
                     </ui-select>
                   </div>
-
+                    {{graphInterval}}
                   <div>
                     <button class="btn btn-success pull-left" ng-click="generateGraph()">Go</button>
                   </div>
@@ -102,7 +102,7 @@
     </div>
     <!-- middle body -->
     <div class="col-md-10 col-sm-7">
-      <div class="middleBody bdrR bdrL row">
+      <div class="middleBody bdrR bdrL row" auto-height> 
         <div class="loader mrT4" ng-hide="showLedgerBox">
               <span></span>
               <span></span>
@@ -127,7 +127,7 @@
             <div class="chart-container" ng-show="chartDataAvailable">
               <canvas id="line" class="chart chart-line" chart-data="data"
                 chart-labels="labels" chart-legend="true" chart-series="series"
-                chart-click="onClick">
+                chart-click="onClick" chart-options="chartOptions">
               </canvas> 
             </div>
           </div>
