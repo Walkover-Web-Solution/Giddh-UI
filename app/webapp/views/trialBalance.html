@@ -142,11 +142,11 @@
             </table>
             <!--Grid-->
 
-            <section class="row row-1" ng-repeat="grp in data.groupDetails | filter:{$:keyWord}" ng-class="grp.category">
+            <section class="row row-1" ng-repeat="grp in data.groupDetails | filter:{$:keyWord} | orderBy: grp.category" ng-class="grp.category">
               <div class="row"  trial-accordion>  
                 <div class="col-xs-4 group" ng-bind-html=" grp.groupName | uppercase | highlight: keyWord "></div>
                 <div class="col-xs-2 group text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type | recType:grp.forwardedBalance.amount }}</div>
-                <div class="col-xs-2 group text-right">{{ grp.debitTotal | number:2 }}</div>
+                <div class="col-xs-2 group text-right">{{ grp.debitTotal | number:2 }}</div> 
                 <div class="col-xs-2 group text-right">{{ grp.creditTotal | number:2 }}</div>
                 <div class="col-xs-2 group text-right">{{ grp.closingBalance.amount | number:2 }} {{grp.closingBalance.type | recType:grp.closingBalance.amount}}</div>
               </div>

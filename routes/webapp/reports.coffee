@@ -14,7 +14,6 @@ router.post '/', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/history'
-  console.log args, hUrl
   settings.client.post hUrl, args, (data, response) ->
     console.log "get graph data by date", new Date()
     if data.status == 'error'

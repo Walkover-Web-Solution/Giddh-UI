@@ -56,7 +56,7 @@ module.exports = function (grunt) {
           expand: true,
           dot: true,
           cwd: srcDir,
-          src: ['**/images/*', '**/css/*', '**/fonts/*', '**/views/*', "**/js/newRelic.js", "**/js/jspdf.debug.js"],
+          src: ['**/images/*', '**/css/*', '**/fonts/*', '**/views/*', "**/js/newRelic.js", "**/js/jspdf.debug.js",  "**/js/angular-charts.js"],
           dest: destDir
         }]
       }

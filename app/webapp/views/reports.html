@@ -19,8 +19,19 @@
                 <div class="graph-filters">
                   <h1 class="page-title">Generate Graph</h1>
                   <div class="">
+                    <label>Create Chart By</label>
+                    <ui-select ng-model="selected.createChartBy" theme="bootstrap">
+                        <ui-select-match>
+                            <span>{{$select.selected}}</span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="param in chartParams">
+                            <span ng-bind="param"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                  </div>
+                  <div class="">
                     <label>Select Groups</label>
-                    <ui-select multiple ng-model="selectedGroups" theme="bootstrap" on-select="addGroup($item)">
+                    <ui-select multiple ng-model="selected.groups" theme="bootstrap">
                         <ui-select-match placeholder="Select Groups">
                             <span  ng-click="removeGroup($item)">{{$item.name}}</span>
                         </ui-select-match >
@@ -29,10 +40,9 @@
                         </ui-select-choices>
                     </ui-select>
                   </div>
-                  {{selectedGroups}}
                   <div class="">
                     <label>Select Accounts</label>
-                    <ui-select multiple ng-model="selectedAccounts" theme="bootstrap" on-select="addAccount($item)">
+                    <ui-select multiple ng-model="selected.accounts" theme="bootstrap">
                         <ui-select-match>
                             <span>{{$item.name}}</span>
                         </ui-select-match>
@@ -41,7 +51,6 @@
                         </ui-select-choices>
                     </ui-select>
                   </div>
-
                   <div class="">
                     <label>From date</label>
                     <p class="input-group">
@@ -79,7 +88,7 @@
 
                   <div class="">
                     <label>Select Interval</label>
-                    <ui-select ng-model="graphInterval" theme="bootstrap">
+                    <ui-select ng-model="selected.interval" theme="bootstrap">
                         <ui-select-match>
                             <span>{{$select.selected}} Days</span>
                         </ui-select-match>
@@ -88,7 +97,6 @@
                         </ui-select-choices>
                     </ui-select>
                   </div>
-                    {{graphInterval}}
                   <div>
                     <button class="btn btn-success pull-left" ng-click="generateGraph()">Go</button>
                   </div>
@@ -122,10 +130,16 @@
         </div>
 
         <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
-          
+          <div class="loader mrT4" ng-hide="chartDataAvailable">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+          </div>
           <div class="col-sm-10 col-sm-offset-1">
             <div class="chart-container" ng-show="chartDataAvailable">
-              <canvas id="line" class="chart chart-line" chart-data="data"
+              <canvas id="line" class="chart chart-line" chart-data="chartData"
                 chart-labels="labels" chart-legend="true" chart-series="series"
                 chart-click="onClick" chart-options="chartOptions">
               </canvas> 

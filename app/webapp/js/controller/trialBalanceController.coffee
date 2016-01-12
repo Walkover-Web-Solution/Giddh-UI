@@ -71,7 +71,9 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
 
   $scope.getTrialBalSuccess = (res) ->
     $scope.data = res.body
+    $scope.data.groupDetails = $scope.orderGroups($scope.data.groupDetails)
     $rootScope.showLedgerBox = true
+    $scope.orderGroups(res.body.groupDetails)
     if $scope.data.closingBalance.amount is 0
       $scope.noData = true
 
@@ -375,6 +377,32 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
 
   $scope.showNLevelList = (e) ->
     $scope.showNLevel = true
+
+  $scope.orderGroups = (data) ->
+    orderedGroups = []
+    assets = []
+    liabilities = []
+    income = []
+    expenses = []
+    _.each data, (grp) ->
+      switch grp.category
+        when 'assets'
+          assets.push(grp)
+        when 'liabilities'
+          liabilities.push(grp)
+        when 'income'
+          income.push(grp)
+        when 'expenses'
+          expenses.push(grp)  
+    _.each liabilities, (liability) ->
+      orderedGroups.push(liability)
+    _.each assets, (asset) ->
+      orderedGroups.push(asset) 
+    _.each income, (inc) ->
+      orderedGroups.push(inc)
+    _.each expenses, (exp) ->
+      orderedGroups.push(exp)
+    orderedGroups
 
   $scope.$watch('fromDate.date', (newVal,oldVal) ->
     oldDate = new Date(oldVal).getTime()

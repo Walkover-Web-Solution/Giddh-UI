@@ -6,22 +6,28 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.toDate = {date: new Date()}
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
-  $scope.selectedGroups = []
-  $scope.selectedAccounts = []
-  $scope.selected = {}
+  $scope.selected = {
+    groups: []
+    accounts: []
+    interval: 1
+    createChartBy : 'Closing Balance'
+  }
   $scope.format = "dd-MM-yyyy"
   # variable to show chart on ui
-  $scope.chartDataAvailable = false
+  $scope.chartDataAvailable = true
   # parameters required to create graph
   $scope.series = []
-  $scope.data = []
+  $scope.chartData = []
   $scope.labels = []
   $scope.chartOptions = {
     datasetFill:false
   }
   $scope.chartTypes = ['Bar', 'Line']
   $scope.chartType = $scope.chartTypes[1]
-
+  $scope.listBeforeLimit = {
+    groups: []
+    accounts: []
+  }
 
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
 
@@ -32,8 +38,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     this.toDatePickerIsOpen = true
 
   $scope.intervalVals = [1, 3, 7, 30, 90, 180, 365]
+  $scope.chartParams = ['Opening Balance', 'Closing Balance', 'Credit Total', 'Debit Total']
 
-  $scope.graphInterval = $scope.intervalVals[0]
 
   $scope.getAccountsGroupsList = ()->
     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -50,8 +56,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
     $scope.showLedgerBox = true
     $scope.sortGroupsAndAccounts($scope.flatAccntWGroupsList)
-    #$scope.selectedGroups = [$scope.groups[0]]
-    $scope.selectedAccounts = [$scope.accounts[0]]
+    $scope.selected.groups = [$scope.groups[0]]
+    $scope.selected.accounts = [$scope.accounts[0]]
     $rootScope.showLedgerBox = true
 
   $scope.getGroupsFailure = (res) ->
@@ -67,12 +73,14 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
       group.name = obj.groupName
       group.uniqueName = obj.groupUniqueName
       $scope.groups.push(group)
+      $scope.listBeforeLimit.groups.push(group)
       if obj.accountDetails.length > 0
         _.each obj.accountDetails, (acc) ->
           account = {}
           account.name = acc.name
           account.uniqueName = acc.uniqueName
           $scope.accounts.push(account)
+          $scope.listBeforeLimit.accounts.push(account)
 
   createArrayWithUniqueName = (dataArray) ->
     finalArray = []
@@ -84,8 +92,14 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.getAccountsGroupsList()
   
   $scope.formatGraphData = (graphData) ->
+    
     $scope.series = []
-    $scope.data = []
+    $scope.sortedChartData = {
+      cb: [] #closingBalance
+      op: [] #openingBalance
+      ct: [] #creditTotal
+      dt: [] #debitTotal
+    }
     $scope.labels = []
     data = graphData
     groups = []
@@ -97,13 +111,18 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
       _.each data.groups, (grp) ->
         group = {
           name :''
-          values: []
+          cbs: []
+          op: []
+          ct: []
+          dt: []
           to: []
         }
         group.name = grp.name
         _.each grp.intervalBalances, (bal) ->
-          console.log bal
-          group.values.push(bal.closingBalance.amount)
+          group.cbs.push(bal.closingBalance.amount)
+          group.op.push(bal.openingBalance.amount)
+          group.ct.push(bal.creditTotal)
+          group.dt.push(bal.debitTotal)
           group.to.push(bal.to)
         groups.push(group)
 
@@ -111,12 +130,59 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     _.each groups, (grp) ->
       # add names to $scope.series
       $scope.series.push(grp.name)
-      # add data array to $scope.data
-      $scope.data.push(grp.values)
+      # add data array to $scope.chartData
+      $scope.sortedChartData.cb.push(grp.cbs)
+      $scope.sortedChartData.op.push(grp.op)
+      $scope.sortedChartData.ct.push(grp.ct)
+      $scope.sortedChartData.dt.push(grp.dt)
+
+    if data.accounts.length > 0
+        _.each data.accounts, (acc) ->
+          account = {
+            name :''
+            cbs: []
+            op: []
+            ct: []
+            dt: []
+            to: []
+          }
+          account.name = acc.name
+          _.each acc.intervalBalances, (bal) ->
+            account.cbs.push(bal.closingBalance.amount)
+            account.op.push(bal.openingBalance.amount)
+            account.ct.push(bal.creditTotal)
+            account.dt.push(bal.debitTotal)
+            account.to.push(bal.to)
+          accounts.push(account)
+
+    _.each accounts, (acc) ->
+      # add names to $scope.series
+      $scope.series.push(acc.name)
+      # add data array to $scope.chartData
+      $scope.sortedChartData.cb.push(acc.cbs)
+      $scope.sortedChartData.op.push(acc.op)
+      $scope.sortedChartData.ct.push(acc.ct)
+      $scope.sortedChartData.dt.push(acc.dt)
     
+    switch $scope.selected.createChartBy
+      when 'Closing Balance'
+        $scope.chartData = $scope.sortedChartData.cb
+      when 'Opening Balance'
+        $scope.chartData = $scope.sortedChartData.op
+      when 'Credit Total'
+        $scope.chartData = $scope.sortedChartData.ct
+      when 'Debit Total'
+        $scope.chartData = $scope.sortedChartData.dt
+
+
     # add dates to $scope.labels
-    _.each groups[0].to, (date) ->
-      $scope.labels.push(date)
+    if groups.length > 0
+      _.each groups[0].to, (date) ->
+        $scope.labels.push(date)
+    else
+      _.each accounts[0].to, (date) ->
+        $scope.labels.push(date)
+
 
     $scope.series = $scope.series.reverse()
 
@@ -136,21 +202,38 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
 
   $scope.generateGraph = () ->
+    $scope.chartDataAvailable = false
     reqParam = {
       'cUname': $rootScope.selectedCompany.uniqueName
       'fromDate': $filter('date')($scope.fromDate.date,'dd-MM-yyyy')
       'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
-      'interval': $scope.graphInterval
+      'interval': $scope.selected.interval
     }
     graphParam = {
-      'groups' : createArrayWithUniqueName($scope.selectedGroups)
-      'accounts' : createArrayWithUniqueName($scope.selectedAccounts)
+      'groups' : createArrayWithUniqueName($scope.selected.groups)
+      'accounts' : createArrayWithUniqueName($scope.selected.accounts)
     }
-    $scope.getGraphData(reqParam, graphParam)
+    if $scope.selected.groups.length > 0 || $scope.selected.accounts.length > 0
+      $scope.getGraphData(reqParam, graphParam)
+    else
+      toastr.error('Please select atleast one group or account to create graph')
+      $scope.chartDataAvailable = true
     
-    #method to get grpah data here
-    
+  $scope.$watch('selected.groups', (newVal, oldVal)->
+    if newVal != oldVal
+      if newVal.length > 9
+        $scope.groups = []
+      else if newVal.length < 10
+        $scope.groups = $scope.listBeforeLimit.groups
+  ) 
 
+  $scope.$watch('selected.accounts', (newVal, oldVal)->
+    if newVal != oldVal
+      if newVal.length > 9
+        $scope.accounts = []
+      else if newVal.length < 10
+        $scope.accounts = $scope.listBeforeLimit.accounts
+  )
 
 
   $scope.$watch('fromDate.date', (newVal,oldVal) ->
@@ -163,16 +246,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
       $scope.toDate.date =  $filter('date')(newDate, 'dd-MM-yyyy')
   )
 
-  $scope.addGroup = (item) ->
-    $scope.selectedGroups.push(item)
-
-  $scope.addAccount = (item) ->
-    $scope.selectedAccounts.push(item)
-
-  $scope.removeGroup = (item) ->
-    console.log item
-
-
+  
 
 #init angular app
 giddh.webApp.controller 'reportsController', reportsController
