@@ -4,8 +4,8 @@
   <div class="row">
     <!-- left side -->
     <div class="col-md-2 col-sm-5 greyBg">
-      <div auto-height>
-        <div id="left" >
+      <div class="row">
+        <div id="left">
             <div class="loader mrT4" ng-hide="showLedgerBox">
               <span></span>
               <span></span>
@@ -14,11 +14,10 @@
               <span></span>
             </div>
             <div ng-show="showLedgerBox">
-              <div class="pdT1 pdB1 form-inline">
-                <perfect-scrollbar id="accountList" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
-                <div class="graph-filters">
-                  <h1 class="page-title">Generate Graph</h1>
-                  <div class="">
+              <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+                <h1 class="page-title" style="margin-left:15px; margin-bottom:15px;">Generate Graph</h1>
+                <div class="graph-filters col-sm-12 col-md-12">
+                  <div class="clearfix">
                     <label>Create Chart By</label>
                     <ui-select ng-model="selected.createChartBy" theme="bootstrap">
                         <ui-select-match>
@@ -29,7 +28,7 @@
                         </ui-select-choices>
                     </ui-select>
                   </div>
-                  <div class="">
+                  <div class="clearfix">
                     <label>Select Groups</label>
                     <ui-select multiple ng-model="selected.groups" theme="bootstrap">
                         <ui-select-match placeholder="Select Groups">
@@ -40,7 +39,7 @@
                         </ui-select-choices>
                     </ui-select>
                   </div>
-                  <div class="">
+                  <div class="clearfix">
                     <label>Select Accounts</label>
                     <ui-select multiple ng-model="selected.accounts" theme="bootstrap">
                         <ui-select-match>
@@ -51,7 +50,7 @@
                         </ui-select-choices>
                     </ui-select>
                   </div>
-                  <div class="">
+                  <div class="clearfix">
                     <label>From date</label>
                     <p class="input-group">
                       <input type="text" class="form-control"
@@ -69,7 +68,7 @@
                     </p>
                   </div>
 
-                  <div class="">
+                  <div class="clearfix">
                     <label>To date</label>
                     <p class="input-group">
                       <input type="text" class="form-control"
@@ -86,7 +85,7 @@
                     </p>
                   </div>
 
-                  <div class="">
+                  <div class="clearfix">
                     <label>Select Interval</label>
                     <ui-select ng-model="selected.interval" theme="bootstrap">
                         <ui-select-match>
@@ -97,14 +96,13 @@
                         </ui-select-choices>
                     </ui-select>
                   </div>
-                  <div>
-                    <button class="btn btn-success pull-left" ng-click="generateGraph()">Go</button>
+                  <div class="mrB4">
+                    <button class="btn btn-success" ng-click="generateGraph()">Go</button>
                   </div>
-
                 </div>
-                </perfect-scrollbar>
-              </div>
+              </perfect-scrollbar>
             </div>
+            <!-- end of showLedgerBox -->
         </div>
       </div>
     </div>
