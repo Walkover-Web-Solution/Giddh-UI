@@ -24,6 +24,10 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         method: 'GET',
         url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/export-ledger'
       }
+      getImportList: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/groups/:groupUniqueName/accounts/:accountsUniqueName/xls-imports'
+      }
     })
 
   accountService =
@@ -89,6 +93,13 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         accountsUniqueName: unqNamesObj.acntUname
         toDate: unqNamesObj.toDate
         fromDate: unqNamesObj.fromDate
+      }, onSuccess, onFailure))
+
+    ledgerImportList: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> Account.getImportList({
+        companyUniqueName: unqNamesObj.compUname
+        groupUniqueName: unqNamesObj.selGrpUname
+        accountsUniqueName: unqNamesObj.acntUname
       }, onSuccess, onFailure))
 
   accountService

@@ -1,0 +1,43 @@
+<section>
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title">Import List</h3>
+  </div>
+  <!-- end header -->
+
+  <div class="modal-body">
+
+    <div class="clearfix">
+
+      <div class="search-loading" ng-hide="showImportListData">
+        <span class="spinner small"></span> Loading…
+      </div>
+      <!-- end of loader -->
+
+      <table ng-show="showImportListData" class="table table-bordered table-striped">
+        <thead>
+          <th>Req. ID</th>
+          <th>Status</th>
+          <th>User</th>
+        </thead>
+        <tbody>
+          <tr ng-repeat="value in importList track by $index">
+            <td>{{value.requestId}}</td>
+            <td class="alC">
+              <i ng-if="value.status === 'COMPLETED'" class="glyphicon glyphicon-ok-sign success"></i>
+              <i ng-if="value.status === 'FAILED'" class="glyphicon glyphicon-remove-sign error"></i>
+              <i ng-if="value.status === 'PENDING'" class="glyphicon glyphicon-info-sign"></i>
+            </td>
+            <td>{{value.user.name}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- end of table -->
+      
+    </div>
+    <!-- end of clearfix -->
+
+  </div>
+  <!-- end modal body -->
+</section>

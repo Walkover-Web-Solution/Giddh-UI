@@ -10,7 +10,7 @@ giddh.serviceModule.value('$confirmModalDefaults',
     cancel: 'Cancel')
 
 giddh.serviceModule.service('modalService',
-  ($uibModal, $confirmModalDefaults) ->
+  ($uibModal, $confirmModalDefaults, $rootScope) ->
     modalService =
       openConfirmModal: (data, settings) ->
         settings = angular.extend($confirmModalDefaults, settings or {})
@@ -28,6 +28,13 @@ giddh.serviceModule.service('modalService',
           size: "liq90"
           backdrop: 'static'
           controller: 'groupController'
+        )
+      openImportListModal: (data, showImportListData) ->
+        $uibModal.open(
+          templateUrl: '/public/webapp/views/openImportListModal.html'
+          size: "md"
+          backdrop: 'static'
+          controller: 'accountController'
         )
     modalService
 )

@@ -139,4 +139,19 @@ router.get '/:accountUniqueName/export-ledger', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+# get ledger import list
+router.get '/:accountUniqueName/xls-imports', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/accounts/' + req.params.accountUniqueName + '/xls-imports'
+  console.log "get all ledgers list", new Date()
+  settings.client.get hUrl, args, (data, response) ->
+    console.log new Date(), "req completed"
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 module.exports = router
