@@ -1130,7 +1130,10 @@ li:last-child .angular-ui-tree-handle {
     margin-left: -21px;
     top: -42px;
 }
-
+.ui-select-highlight{
+    background-color: #F9F08B;
+    display: inline-block;
+}
 
 .ledgerBodyContent .highlightRow input.nobdr{
     background-color: #ffffcc

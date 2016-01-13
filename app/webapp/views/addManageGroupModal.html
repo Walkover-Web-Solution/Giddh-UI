@@ -23,7 +23,7 @@
                   <i class="glyphicon glyphicon-search"></i>
                 </div>
 
-                <input type="text" name="grpSrch" class="form-control" ng-model="grpSrch" placeholder="Search groups" ng-keyup="setScrollToTop(grpSrch, 'addMngGrpScrBar')">
+                <input type="text" name="grpSrch" class="form-control" ng-model="grpSrch" placeholder="Search groups" ng-keyup="setScrollToTop(grpSrch, 'addMngGrpScrBar')" ng-model-options="{debounce: 700}">
 
               
                 <div class="input-group-addon cp" ng-show="!grpSrch.length > 0 && !subGroupVisible" ng-click="collapseAll()">
@@ -105,7 +105,7 @@
               <div class="input-group-addon">
                 <i class="glyphicon glyphicon-search"></i>
               </div>
-              <input type="text" name="accountsSearch" ng-model="accountsSearch" class="form-control" placeholder="Search accounts" ng-keyup="setScrollToTop(accountsSearch, 'allAcntWrap')">
+              <input type="text" name="accountsSearch" ng-model="accountsSearch" class="form-control" placeholder="Search accounts" ng-keyup="setScrollToTop(accountsSearch, 'allAcntWrap')" ng-model-options="{debounce: 700}">
             </div>
           </div>
 
@@ -142,8 +142,7 @@
                     <a ng-repeat="(key,value) in groupAccntList | filter:accountsSearch track by $index"
                        href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)"
                        class="list-group-item" ng-class="{'active': selectedAccntMenu === value}">
-                      <h4 tooltip-placement="bottom" uib-tooltip="{{value.pName[0]}}" class="list-group-item-heading">
-                        {{value.name}}</h4>
+                      <h4 tooltip-placement="bottom" uib-tooltip="{{value.pName[0]}}" class="list-group-item-heading" ng-bind-html="value.name | highlight: accountsSearch"></h4>
                     </a>
                   </div>
                 </perfect-scrollbar>
@@ -159,8 +158,11 @@
                      href="javascript:void(0)" ng-click="showAccountDtl(value); selectAcMenu(value)"
                      class="list-group-item" ng-if="value.parentGroups[0].name!=selectedGroup.name"
                      ng-class="{'active': selectedAccntMenu === value}">
-                    <h4 tooltip-placement="bottom" uib-tooltip="{{value.parentGroups[0].name}}"
-                        class="list-group-item-heading ellp max200">{{value.name}}</h4>
+                    <h4 
+                      tooltip-placement="bottom" 
+                      uib-tooltip="{{value.parentGroups[0].name}}"
+                      class="list-group-item-heading ellp max200" 
+                      ng-bind-html="value.name | highlight: accountsSearch"></h4>
                   </a>
                 </div>
               </perfect-scrollbar>

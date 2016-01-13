@@ -58,7 +58,7 @@ accountController = ($scope, $rootScope, localStorageService, toastr, groupServi
   # trigger expand or collapse func
   $scope.checkLength = (val)->
     if val is '' || _.isUndefined(val)
-      return false
+      $scope.toggleAcMenus(false)
     else if val.length >= 4
       $scope.toggleAcMenus(true)
     else
