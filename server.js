@@ -10,7 +10,7 @@ var request = require('request');
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(session);
-global.sessionTTL = 1000 * 60 * 10
+//global.sessionTTL = 1000 * 60
 //Example POST method invocation 
 var Client = require('node-rest-client').Client; 
 var client = new Client();
