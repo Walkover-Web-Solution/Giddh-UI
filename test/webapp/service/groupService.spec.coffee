@@ -74,6 +74,46 @@ describe "Group Service", ->
             expect(data.status).toBe(400)
         )
 
+    describe "#getAllFor", ->
+      companyUniqueName = 'giddh'
+      it 'should call success callback when get group for company return success', ->
+        @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups').respond(200, {"status": "success"})
+
+        @groupService.getAllCroppedFor(companyUniqueName).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+
+      it 'should call failure callback when get group for company fails', ->
+        @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups').respond(400, {"status": "error"})
+
+        @groupService.getAllCroppedFor(companyUniqueName).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+
+    describe "#getAllWithAccountsFor", ->
+      companyUniqueName = 'giddh'
+      it 'should call success callback when get all group for company return success', ->
+        @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups/with-accounts').respond(200, {"status": "success"})
+
+        @groupService.getAllCroppedWithAccountsFor(companyUniqueName).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+
+      it 'should call failure callback when get all group for company fails', ->
+        @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups/with-accounts').respond(400, {"status": "error"})
+
+        @groupService.getAllCroppedWithAccountsFor(companyUniqueName).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+
     describe "#update", ->
       companyUniqueName = 'giddh'
       group = {oldUName: "name"}

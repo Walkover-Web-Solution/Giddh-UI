@@ -43,6 +43,14 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccountsInDetail({companyUniqueName: companyUniqueName},
         onSuccess, onFailure))
 
+    getAllCroppedFor: (companyUniqueName, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Group.getAll({companyUniqueName: companyUniqueName}, onSuccess,
+        onFailure))
+
+    getAllCroppedWithAccountsFor: (companyUniqueName, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccounts({companyUniqueName: companyUniqueName},
+        onSuccess, onFailure))
+
     update: (companyUniqueName, group) ->
       @handlePromise((onSuccess, onFailure) -> Group.update({
         companyUniqueName: companyUniqueName,
