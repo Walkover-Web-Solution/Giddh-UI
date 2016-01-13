@@ -175,3 +175,48 @@ describe "Account Service", ->
           expect(data.data.status).toBe("error")
           expect(data.status).toBe(400)
       )
+
+  describe '#export', ->
+    it 'should call success callback', ->
+      @httpBackend.when('GET',
+        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/export-ledger').respond(200,
+        {"status": "success"})
+
+      @accountService.exportLedger(unqNamesObj).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call failure callback', ->
+      @httpBackend.when('GET',
+        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/export-ledger').respond(400,
+        {"status": "error"})
+
+      @accountService.exportLedger(unqNamesObj).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+          expect(data.status).toBe(400)
+      )
+
+  describe '#export', ->
+    it 'should call success callback', ->
+      @httpBackend.when('GET',
+        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/xls-imports').respond(200,
+        {"status": "success"})
+
+      @accountService.ledgerImportList(unqNamesObj).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call failure callback', ->
+      @httpBackend.when('GET',
+        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/xls-imports').respond(400,
+        {"status": "error"})
+
+      @accountService.ledgerImportList(unqNamesObj).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+          expect(data.status).toBe(400)
+      )
+  
