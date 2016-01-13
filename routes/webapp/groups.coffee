@@ -23,6 +23,28 @@ router.get '/with-accounts', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/detailed-groups', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/detailed-groups'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+router.get '/detailed-groups-with-accounts', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/detailed-groups-with-accounts'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 router.put '/:groupUniqueName', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName
   args =

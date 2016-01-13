@@ -10,6 +10,11 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         method: 'GET',
         url: '/company/:companyUniqueName/groups/with-accounts'
       }
+      getAllInDetail: {method: 'GET', url: '/company/:companyUniqueName/groups/detailed-groups'}
+      getAllWithAccountsInDetail: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/groups/detailed-groups-with-accounts'
+      }
       update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
       delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
       move: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/move'}
@@ -31,11 +36,11 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         onFailure))
 
     getAllFor: (companyUniqueName, onSuccess, onFailure) ->
-      @handlePromise((onSuccess, onFailure) -> Group.getAll({companyUniqueName: companyUniqueName}, onSuccess,
+      @handlePromise((onSuccess, onFailure) -> Group.getAllInDetail({companyUniqueName: companyUniqueName}, onSuccess,
         onFailure))
 
     getAllWithAccountsFor: (companyUniqueName, onSuccess, onFailure) ->
-      @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccounts({companyUniqueName: companyUniqueName},
+      @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccountsInDetail({companyUniqueName: companyUniqueName},
         onSuccess, onFailure))
 
     update: (companyUniqueName, group) ->
