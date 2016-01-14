@@ -81,8 +81,16 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   )
   .state('ledger.ledgerContent',
     url: '/:unqName',
-    templateUrl: '/public/webapp/views/ledgerContent.html'
-    controller: 'ledgerController'
+    views: {
+      'accounts':{
+        templateUrl: '/public/webapp/views/accounts.html'
+        controller: 'accountController'
+      }
+      'ledgerContent':{
+        templateUrl: '/public/webapp/views/ledgerContent.html'
+        controller: 'ledgerController'
+      }
+    }
   )
   .state('Trial-Balance',
     url: '/trial-balance',
@@ -99,6 +107,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/views/reports.html',
     controller: 'reportsController'
   )
+
 
   $locationProvider.html5Mode(false)
   return
