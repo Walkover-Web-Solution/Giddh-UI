@@ -41,6 +41,8 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
     console.log "Something went wrong while fetching role"
 
   $rootScope.setScrollToTop = (val, elem)->
+    if val is '' || _.isUndefined(val)
+      return false
     if val.length > 0
       cntBox = document.getElementById(elem)
       cntBox.scrollTop = 0

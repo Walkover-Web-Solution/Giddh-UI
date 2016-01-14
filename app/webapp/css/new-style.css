@@ -654,6 +654,9 @@ header .navbar-nav > li.active {
 .success.glyphicon{
     color: green
 }
+.warning.glyphicon{
+    color: orange
+}
 .error.glyphicon{
     color: red
 }
@@ -1127,7 +1130,10 @@ li:last-child .angular-ui-tree-handle {
     margin-left: -21px;
     top: -42px;
 }
-
+.ui-select-highlight{
+    background-color: #F9F08B;
+    display: inline-block;
+}
 
 .ledgerBodyContent .highlightRow input.nobdr{
     background-color: #ffffcc
@@ -1559,16 +1565,8 @@ v-pane-header.show-pseudo{
     background:#f5f5f5;
     border-bottom: 1px solid #e0e0e0;
     width:100%;
-    line-height:18px;
-    padding:14px;
+    line-height: 50px;
 }
-
-.page-title{
-    font-size:18px;
-    margin:0;
-    color:#464444;
-}
-
 .sub-title{
     color:#929090;
 }
@@ -1778,8 +1776,8 @@ table.borderless td, table.borderless th{
   min-height: 100%;
 }
 
-.graph-filters > div:not(:nth-child(1)){
-    margin-top:20px;
+.graph-filters > div{
+    margin-bottom:15px;
 }
 
 .graph-filters > div .input-group{

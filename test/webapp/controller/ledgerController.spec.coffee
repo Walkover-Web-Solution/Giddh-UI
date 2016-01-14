@@ -728,5 +728,45 @@ describe 'ledgerController', ->
       expect(@scope.impLedgErrFiles).toBe(errFiles)
       expect(angular.forEach).toBeDefined()
 
+    describe '#showImportList', ->
+      it 'should open madal and call accountService ledgerImportList method', ->
+        @rootScope.selectedCompany = {
+          uniqueName: "giddh"
+        }
+        @scope.selectedGroupUname = "somename"
+        @rootScope.selAcntUname = "somename"
+        data = {
+          compUname: @rootScope.selectedCompany.uniqueName
+          selGrpUname: @scope.selectedGroupUname
+          acntUname: @rootScope.selAcntUname
+        }
+        spyOn(@modalService, "openImportListModal")
+        deferred = @q.defer()
+        spyOn(@accountService, "ledgerImportList").andReturn(deferred.promise)
+        @scope.showImportList()
+        expect(@modalService.openImportListModal).toHaveBeenCalled()
+        expect(@accountService.ledgerImportList).toHaveBeenCalledWith(data)
 
+    describe '#ledgerImportListSuccess', ->
+      it 'should call calculate ledger function with data and set a variable true and push value in ledgerdata', ->
+        spyOn(@scope, "calculateLedger")
+        res = {
+          status: "success"
+          body: {
+            key: "value"
+            ledgers: []
+          }
+        }
+        @scope.ledgerImportListSuccess(res)
+        expect(@rootScope.importList).toEqual(res.body)
+        expect(@rootScope.showImportListData).toBeTruthy()
 
+    describe '#ledgerImportListFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.ledgerImportListFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)

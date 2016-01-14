@@ -8,6 +8,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.selectedLedgerGroup = undefined
   $scope.ledgerOnlyDebitData = []
   $scope.ledgerOnlyCreditData = []
+  $rootScope.showImportListData = false
+  $rootScope.importList = []
   lsKeys = localStorageService.get("_selectedCompany")
   if not _.isNull(lsKeys) && not _.isEmpty(lsKeys) && not _.isUndefined(lsKeys)
     $rootScope.selectedCompany = lsKeys
@@ -499,7 +501,22 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     if newDate > toDate
       $scope.toDate.date =  $filter('date')(newDate, 'dd-MM-yyyy')
   )
+  
+  $scope.showImportList =() ->
+    modalService.openImportListModal()
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.selectedGroupUname
+      acntUname: $rootScope.selAcntUname
+    }
+    accountService.ledgerImportList(unqNamesObj).then($scope.ledgerImportListSuccess, $scope.ledgerImportListFailure)
+    
+  $scope.ledgerImportListSuccess = (res) ->
+    $rootScope.showImportListData = true
+    $rootScope.importList = res.body
 
+  $scope.ledgerImportListFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
 giddh.webApp.controller 'ledgerController', ledgerController
 
