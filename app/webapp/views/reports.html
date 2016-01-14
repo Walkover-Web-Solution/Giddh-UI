@@ -17,17 +17,7 @@
               <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
                 <h1 class="page-title" style="margin-left:15px; margin-bottom:15px;">Generate Graph</h1>
                 <div class="graph-filters col-sm-12 col-md-12">
-                  <div class="clearfix">
-                    <label>Create Chart By</label>
-                    <ui-select ng-model="selected.createChartBy" theme="bootstrap">
-                        <ui-select-match>
-                            <span>{{$select.selected}}</span>
-                        </ui-select-match>
-                        <ui-select-choices repeat="param in chartParams">
-                            <span ng-bind="param"></span>
-                        </ui-select-choices>
-                    </ui-select>
-                  </div>
+
                   <div class="clearfix">
                     <label>Select Groups</label>
                     <ui-select multiple ng-model="selected.groups" theme="bootstrap">
@@ -47,6 +37,28 @@
                         </ui-select-match>
                         <ui-select-choices repeat="acc in accounts | filter: $select.search ">
                             <span ng-bind="acc.name"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                  </div>
+                  <div class="clearfix" ng-hide="selected.groups.length == 1 && selected.accounts.length == 0 || selected.groups.length == 0 && selected.accounts.length == 1">
+                    <label>Create Chart By</label>
+                    <ui-select ng-model="selected.createChartBy" theme="bootstrap">
+                        <ui-select-match>
+                            <span>{{$select.selected}}</span>
+                        </ui-select-match>
+                        <ui-select-choices repeat="param in chartParams">
+                            <span ng-bind="param"></span>
+                        </ui-select-choices>
+                    </ui-select>
+                  </div>
+                  <div class="clearfix" ng-show="selected.groups.length == 1 && selected.accounts.length == 0 || selected.groups.length == 0 && selected.accounts.length == 1">
+                    <label>Create Chart With</label>
+                    <ui-select multiple ng-model="selected.createChartByMultiple" theme="bootstrap">
+                        <ui-select-match  placeholder="Select Chart Parameters..">
+                            <span>{{$item}}</span> 
+                        </ui-select-match>
+                        <ui-select-choices repeat="param in chartParams | filter: $select.search ">
+                            <span ng-bind="param"></span>
                         </ui-select-choices>
                     </ui-select>
                   </div>
@@ -121,9 +133,10 @@
             <h1 class="page-title inline">
               Historical Data <span ng-show="chartDataAvailable">for</span>
             </h1>
-            <p class="sub-title inline pdR" ng-show="chartDataAvailable" ng-repeat="group in series">
+            <p class="sub-title inline pdR" ng-show="chartDataAvailable" ng-repeat="group in series track by $index" ng-show="selected.groups.length == 1 && selected.accounts.length == 0 || selected.groups.length == 0 && selected.accounts.length == 1">
                 {{ group }}<span ng-hide="$last">, </span>  
             </p>
+
           </div>
         </div>
 
