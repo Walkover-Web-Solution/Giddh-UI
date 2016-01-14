@@ -54,7 +54,6 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.groupList = res.body
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
-    $scope.showLedgerBox = true
     $scope.sortGroupsAndAccounts($scope.flatAccntWGroupsList)
     $scope.selected.groups = [$scope.groups[0]]
     $scope.selected.accounts = [$scope.accounts[0]]
@@ -91,6 +90,18 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
   $scope.getAccountsGroupsList()
   
+  $scope.createChartWithParam = (param) ->
+    switch param
+      when 'Closing Balance'
+        $scope.chartData = $scope.sortedChartData.cb
+      when 'Opening Balance'
+        $scope.chartData = $scope.sortedChartData.op
+      when 'Credit Total'
+        $scope.chartData = $scope.sortedChartData.ct
+      when 'Debit Total'
+        $scope.chartData = $scope.sortedChartData.dt
+
+
   $scope.formatGraphData = (graphData) ->
     
     $scope.series = []
@@ -164,16 +175,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
       $scope.sortedChartData.ct.push(acc.ct)
       $scope.sortedChartData.dt.push(acc.dt)
     
-    switch $scope.selected.createChartBy
-      when 'Closing Balance'
-        $scope.chartData = $scope.sortedChartData.cb
-      when 'Opening Balance'
-        $scope.chartData = $scope.sortedChartData.op
-      when 'Credit Total'
-        $scope.chartData = $scope.sortedChartData.ct
-      when 'Debit Total'
-        $scope.chartData = $scope.sortedChartData.dt
-
+    $scope.createChartWithParam($scope.selected.createChartBy)
 
     # add dates to $scope.labels
     if groups.length > 0
