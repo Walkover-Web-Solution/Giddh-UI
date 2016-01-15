@@ -7,27 +7,22 @@
   </div>
   <perfect-scrollbar id="restMngCompRit" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" suppressScrollX="true" auto-height>
     <ul class="companyList ln">
-      <li ng-repeat="value in companyList track by $index" class="clearfix"
-          ng-class="{'active': value.uniqueName === selectedCompany.uniqueName}">
+      <li ng-repeat="value in companyList track by $index" class="clearfix" ng-class="{'active': value.uniqueName === selectedCompany.uniqueName}">
         <span class="ui-icon ui-icon-flag"></span>
         <a id="cmpnyli_{{$index}}" href="javascript:;"
            ng-click="goToCompanyCheck(value, $index)">
           <h3 class="txtUpc ellp">{{value.name}}</h3>
-
-          <!-- <p class="date">
-            <span class="startDate mrR">2015-05-26</span>
-            <span>to</span>
-            <span class="endDate mrL">2015-12-26</span>
-          </p> -->
         </a>
-
         <div class="action">
-          <span ng-click="deleteCompany(value.uniqueName, $index, value.name)" ng-hide="value.shared"
-                class="glyphicon glyphicon-trash"></span>
+          <span ng-click="deleteCompany(value.uniqueName, $index, value.name)" ng-hide="value.shared" class="glyphicon glyphicon-trash"></span>
         </div>
       </li>
 
     </ul>
   </perfect-scrollbar>
 </div>
-
+<!-- <p class="date">
+  <span class="startDate mrR">2015-05-26</span>
+  <span>to</span>
+  <span class="endDate mrL">2015-12-26</span>
+</p> -->
