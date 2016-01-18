@@ -25,6 +25,17 @@ var rest = require('restler');
 
 var app = settings.express();
 
+//// Require and setup mashape analytics
+//var analytics = require('mashape-analytics')
+//var agent = analytics('5628ae08593b00f7098a3b3d', 'giddh-ui', {
+//  queue: {
+//    batch: 1, // turn batching on
+//    entries: 1 // number of entries per batch
+//  }
+//})
+//
+//app.use(agent)
+
 var port = process.env.PORT || 8000;
 //enabling cors
 app.use(cors())
@@ -131,7 +142,7 @@ app.use('/roles', roles);
 app.use('/location', location);
 app.use('/company', company);
 app.use('/company/:companyUniqueName/groups', groups);
-app.use('/company/:companyUniqueName/groups/:groupUniqueName/accounts', accounts);
+app.use('/company/:companyUniqueName/accounts', accounts);
 app.use('/company/:companyUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
 app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/upload', parseUploads, upload);
