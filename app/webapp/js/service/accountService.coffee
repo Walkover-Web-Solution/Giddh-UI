@@ -19,7 +19,6 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       'fromDate': @fromDate
     },
     {
-      create: {method: 'POST'}
       update: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName'}
       share: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/share'}
       unshare: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/unshare'}
