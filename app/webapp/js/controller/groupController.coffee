@@ -1,6 +1,6 @@
 'use strict'
 
-groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, $filter, permissionService) ->
+groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService, DAServices, $location, $uibModal) ->
   $scope.groupList = {}
   $scope.flattenGroupList = {}
   $scope.moveto = undefined
@@ -19,6 +19,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.canUpdate = false
   $scope.canDelete = false
   $scope.canAdd = false
+
   #set a object for share group
   $scope.shareGroupObj ={role: "view_only"}
   $scope.shareAccountObj ={role: "view_only"}
@@ -49,6 +50,56 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   }
   $scope.format = "dd-MM-yyyy"
 
+  # acCntrl func
+  $scope.flatAccntWGroupsList = {}
+  $scope.showAccountList = false
+  $scope.selectedAccountUniqueName = undefined
+
+  $scope.goToManageGroups =() ->
+    if _.isEmpty($rootScope.selectedCompany)
+      toastr.error("Select company first.", "Error")
+    else
+      $uibModal.open(
+        templateUrl: '/public/webapp/views/addManageGroupModal.html'
+        size: "liq90"
+        backdrop: 'static'
+        scope: $scope
+      )
+
+  $scope.setLedgerData = (data, acData) ->
+    $scope.selectedAccountUniqueName = acData.uniqueName
+    DAServices.LedgerSet(data, acData)
+    localStorageService.set("_ledgerData", data)
+    localStorageService.set("_selectedAccount", acData)
+
+  $scope.highlightAcMenu = () ->
+    url = $location.path().split("/")
+    if url[1] is "ledger"
+      $timeout ->
+        acEle = document.getElementById("ac_" + url[2])
+        if acEle is null
+          return false
+        parentSib = acEle.parentElement.previousElementSibling
+        angular.element(parentSib).trigger('click')
+        angular.element(acEle).children().trigger('click')
+      , 500
+
+  #Expand or  Collapse all account menus
+  $scope.toggleAcMenus = (state) ->
+    $scope.flatAccntWGroupsList.forEach (e) ->
+      e.open = state
+      $scope.showSubMenus = state
+
+  # trigger expand or collapse func
+  $scope.checkLength = (val)->
+    if val is '' || _.isUndefined(val)
+      $scope.toggleAcMenus(false)
+    else if val.length >= 4
+      $scope.toggleAcMenus(true)
+    else
+      $scope.toggleAcMenus(false)
+  # end acCntrl
+
   # expand and collapse all tree structure
   getRootNodesScope = ->
     angular.element(document.getElementById('tree-root')).scope()
@@ -74,7 +125,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.groupList = res.body
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntList = groupService.flattenAccount($scope.groupList)
+    $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
     $scope.showListGroupsNow = true
+    $scope.showAccountList = true
+    $rootScope.makeAccountFlatten(groupService.flattenAccount($scope.groupList))
+    $scope.highlightAcMenu()
     if not _.isEmpty($scope.selectedGroup)
       $scope.selectedGroup = _.find($scope.flattenGroupList, (item) ->
         item.uniqueName == $scope.selectedGroup.uniqueName
@@ -522,5 +577,13 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.canAdd = permissionService.hasPermissionOn(entity, "ADD")
     $scope.canShare = permissionService.hasPermissionOn(entity, "MNG_USR")
 
+  $scope.$on '$reloadAccount', ->
+    $scope.getGroups()
+
+  $scope.$on '$viewContentLoaded', ->
+    console.log "hey groups groupController"
+    if !$rootScope.nowShowAccounts and !_.isEmpty($rootScope.selectedCompany)
+      $rootScope.nowShowAccounts = true
+      $rootScope.$broadcast('$reloadAccount')
 #init angular app
 giddh.webApp.controller 'groupController', groupController

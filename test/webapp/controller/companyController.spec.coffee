@@ -260,7 +260,7 @@ describe 'companyController', ->
       @scope.goToCompanyCheck(data, index)
       expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)
       expect(@rootScope.selectedCompany).toEqual(data)
-      expect(@state.go).toHaveBeenCalledWith('ledger.ledgerContent')
+      expect(@state.go).toHaveBeenCalledWith('company.ledgerContent')
     it 'should call goToCompany function', ->
       data = 
         uniqueName: "afafafafaf1443520197325007bgo"

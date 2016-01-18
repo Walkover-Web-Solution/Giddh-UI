@@ -21,31 +21,6 @@ describe 'mainController', ->
           roleServices: @roleServices
         })
 
-
-  describe '#goToManageGroups', ->
-    it 'should show a toastr error message if object is blank', ->
-      @rootScope.selectedCompany = {}
-      spyOn(@toastr, 'error')
-      deferred = @q.defer()
-      spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
-
-      @scope.goToManageGroups()
-      expect(@toastr.error).toHaveBeenCalledWith('Select company first.', 'Error')
-      expect(@uibModal.open).not.toHaveBeenCalled()
-
-    it 'should call modal service', ->
-      @rootScope.selectedCompany = {something: "something"}
-      modalData = {
-        templateUrl: '/public/webapp/views/addManageGroupModal.html'
-        size: "liq90"
-        backdrop: 'static'
-        controller: 'groupController'
-      }
-      deferred = @q.defer()
-      spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
-      @scope.goToManageGroups()
-      expect(@uibModal.open).toHaveBeenCalledWith(modalData)
-
   describe '#getRoles', ->
     it 'should call service method to fetch roles if roles is undefined', ->
       deferred = @q.defer()

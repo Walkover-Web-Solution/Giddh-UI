@@ -1,3 +1,8 @@
+<!-- start middle section -->
+<div class="col-md-9 col-sm-9">
+  <div class="middleBody bdrR bdrL row" auto-height>
+    <div ng-if="cmpViewShow">
+
 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
   <uib-tabset justified="true">
     <uib-tab heading="Basic Information">
@@ -289,3 +294,36 @@
     </uib-tab>
   </uib-tabset>
 </perfect-scrollbar>
+
+    </div>
+  </div>
+</div>
+
+<!-- end of middle section -->
+
+<!-- right side -->
+<div class="col-md-3 col-sm-3" id="right">
+  <div class="row" ng-if="mngCompDataFound">
+    <div>
+      <div class="pd15 bdrB">
+        <button class="btn btn-primary" ng-click="openFirstTimeUserModal()">Create New Company</button>
+      </div>
+      <div class="pdBth1510 bdrB pdB1 gryClr thead">My Companies</div>
+    </div>
+    <perfect-scrollbar id="restMngCompRit" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" suppressScrollX="true" auto-height>
+      <ul class="companyList ln">
+        <li ng-repeat="value in companyList track by $index" class="clearfix" ng-class="{'active': value.uniqueName === selectedCompany.uniqueName}">
+          <span class="ui-icon ui-icon-flag"></span>
+          <a id="cmpnyli_{{$index}}" href="javascript:;"
+             ng-click="goToCompanyCheck(value, $index)">
+            <h3 class="txtUpc ellp">{{value.name}}</h3>
+          </a>
+          <div class="action">
+            <span ng-click="deleteCompany(value.uniqueName, $index, value.name)" ng-hide="value.shared" class="glyphicon glyphicon-trash"></span>
+          </div>
+        </li>
+
+      </ul>
+    </perfect-scrollbar>
+  </div>
+</div>

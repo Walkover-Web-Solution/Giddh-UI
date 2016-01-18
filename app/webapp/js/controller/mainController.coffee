@@ -3,6 +3,7 @@
 mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices) ->
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
+  $rootScope.nowShowAccounts = false
   $rootScope.basicInfo = {}
   
   $scope.logout = ->
@@ -10,12 +11,6 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
       localStorageService.clearAll()
       window.location = "/thanks"
     ), (res) ->
-
-  $scope.goToManageGroups = ->
-    if _.isEmpty($rootScope.selectedCompany)
-      toastr.error("Select company first.", "Error")
-    else
-      modalService.openManageGroupsModal()
 
   # for ledger
   $rootScope.makeAccountFlatten = (data) ->
