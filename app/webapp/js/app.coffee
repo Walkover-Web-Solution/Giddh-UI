@@ -64,19 +64,29 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     controller: 'homeController')
 
   .state('company',
-    url: '/company'
+    url: ''
     abstract: true
     templateUrl: '/public/webapp/views/home.html'
     controller:'groupController'
   )
   .state('company.manage',
     url: '/manage'
-    templateUrl: '/public/webapp/views/manageCompany.html'
-    controller: 'companyController')
+    views:{
+      '':{
+        templateUrl: '/public/webapp/views/manageCompany.html'
+        controller: 'companyController'
+      }
+      'accounts':{
+        templateUrl: '/public/webapp/views/accounts.html'
+        #controller: 'groupController'
+      }
+    }
+  )
   .state('company.user',
     url: '/user'
     templateUrl: '/public/webapp/views/userDetails.html'
-    controller: 'userController')
+    controller: 'userController'
+  )
   .state('company.trialBalance',
     url: '/trial-balance',
     templateUrl: '/public/webapp/views/trialBalance.html',
@@ -87,29 +97,29 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/views/profitLoss.html',
     controller: 'profitLossController'
   )
-  .state('company.ledgerContent',
-    url: '/:unqName',
-    templateUrl: '/public/webapp/views/ledgerContent.html',
-    controller: 'ledgerController'
-  )
+  # .state('company.ledgerContent',
+  #   url: '/:unqName',
+  #   templateUrl: '/public/webapp/views/ledgerContent.html',
+  #   controller: 'ledgerController'
+  # )
   # .state('ledger',
   #   abstract: true
   #   url: '/ledger:uniqueName'
   #   templateUrl: '/public/webapp/views/ledger.html'
   # )
-  # .state('company.ledgerContent',
-  #   url: '/:unqName',
-  #   views: {
-  #     'accounts':{
-  #       templateUrl: '/public/webapp/views/accounts.html'
-  #       controller: 'accountController'
-  #     }
-  #     'ledgerContent':{
-  #       templateUrl: '/public/webapp/views/ledgerContent.html'
-  #       controller: 'ledgerController'
-  #     }
-  #   }
-  # )
+  .state('company.ledgerContent',
+    url: '/:unqName',
+    views: {
+      'accounts':{
+        templateUrl: '/public/webapp/views/accounts.html'
+        #controller: 'groupController'
+      }
+      '':{
+        templateUrl: '/public/webapp/views/ledgerContent.html'
+        controller: 'ledgerController'
+      }
+    }
+  )
   .state('Reports',
     url: '/reports',
     templateUrl: '/public/webapp/views/reports.html',
@@ -166,6 +176,10 @@ giddh.webApp.run [
       win.close()
 
     $rootScope.firstLogin = true
+
+    $rootScope.$on('companyChanged', ->
+      $rootScope.$emit('reloadAccounts')
+    )
 ]
 
 giddh.webApp.config ($httpProvider) ->

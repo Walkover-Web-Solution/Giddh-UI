@@ -140,6 +140,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $state.go('company.ledgerContent')
     else
       $scope.goToCompany(data, index)
+    $rootScope.$broadcast('companyChanged')
 
   #making a detail company view
   $scope.goToCompany = (data, index) ->

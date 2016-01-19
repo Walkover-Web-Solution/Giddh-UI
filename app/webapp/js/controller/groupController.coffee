@@ -577,13 +577,22 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.canAdd = permissionService.hasPermissionOn(entity, "ADD")
     $scope.canShare = permissionService.hasPermissionOn(entity, "MNG_USR")
 
-  $scope.$on '$reloadAccount', ->
+  $scope.loadAccountsList = () ->
+    if !_.isEmpty($rootScope.selectedCompany)
+      $scope.getGroups()
+    else
+      console.log  $rootScope.selectedCompany
+
+  $rootScope.$on 'reloadAccounts', ->
+    $scope.showAccountList = false
     $scope.getGroups()
 
+
+
   $scope.$on '$viewContentLoaded', ->
-    console.log "hey groups groupController"
     if !$rootScope.nowShowAccounts and !_.isEmpty($rootScope.selectedCompany)
       $rootScope.nowShowAccounts = true
       $rootScope.$broadcast('$reloadAccount')
+    $scope.loadAccountsList()
 #init angular app
 giddh.webApp.controller 'groupController', groupController
