@@ -104,6 +104,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
 
   $scope.formatGraphData = (graphData) ->
+    console.log graphData
     if $scope.selected.groups.length == 1 && $scope.selected.accounts.length == 0 || $scope.selected.groups.length == 0 && $scope.selected.accounts.length == 1
       $scope.series = []
       $scope.labels = []
@@ -147,9 +148,6 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
               $scope.chartData.push(sortedChartData.dt)
       else
         toastr.error('Please select atleast one parameter for chart')
-
-
-
 
     else
       $scope.series = []
@@ -232,7 +230,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
         _.each accounts[0].to, (date) ->
           $scope.labels.push(date)
 
-      $scope.series = $scope.series.reverse()
+      #$scope.series = $scope.series.reverse()
 
     # set variable to show chart on ui
     $scope.chartDataAvailable = true
