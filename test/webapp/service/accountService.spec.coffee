@@ -44,7 +44,7 @@ describe "Account Service", ->
   describe '#update', ->
     it 'should call success callback when account updated', ->
       @httpBackend.when('PUT',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname).respond(200,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname).respond(200,
         {"status": "success"})
 
       @accountService.updateAc(unqNamesObj, data).then(
@@ -53,7 +53,7 @@ describe "Account Service", ->
       )
     it 'should call failure callback when account update failed', ->
       @httpBackend.when('PUT',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname).respond(400,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname).respond(400,
         {"status": "error"})
 
       @accountService.updateAc(unqNamesObj, data).then(
@@ -66,7 +66,7 @@ describe "Account Service", ->
   describe '#share', ->
     it 'should call success callback when account shared', ->
       @httpBackend.when('PUT',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/share').respond(200,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/share').respond(200,
         {"status": "success"})
 
       @accountService.share(unqNamesObj, data).then(
@@ -75,7 +75,7 @@ describe "Account Service", ->
       )
     it 'should call failure callback when account sharing failed', ->
       @httpBackend.when('PUT',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/share').respond(400,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/share').respond(400,
         {"status": "error"})
 
       @accountService.share(unqNamesObj, data).then(
@@ -88,7 +88,7 @@ describe "Account Service", ->
   describe '#unshare', ->
     it 'should call success callback when account unsared', ->
       @httpBackend.when('PUT',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/unshare').respond(200,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/unshare').respond(200,
         {"status": "success"})
 
       @accountService.unshare(unqNamesObj, data).then(
@@ -97,7 +97,7 @@ describe "Account Service", ->
       )
     it 'should call failure callback when account unsaring failed', ->
       @httpBackend.when('PUT',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/unshare').respond(400,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/unshare').respond(400,
         {"status": "error"})
 
       @accountService.unshare(unqNamesObj, data).then(
@@ -110,7 +110,7 @@ describe "Account Service", ->
   describe '#delete', ->
     it 'should call success callback when account deleted', ->
       @httpBackend.when('DELETE',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname).respond(200,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname).respond(200,
         {"status": "success"})
 
       @accountService.deleteAc(unqNamesObj, data).then(
@@ -119,7 +119,7 @@ describe "Account Service", ->
       )
     it 'should call failure callback when account delete failed', ->
       @httpBackend.when('DELETE',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname).respond(400,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname).respond(400,
         {"status": "error"})
 
       @accountService.deleteAc(unqNamesObj, data).then(
@@ -135,7 +135,7 @@ describe "Account Service", ->
     }
     it 'should call success callback when group moved', ->
       @httpBackend.when('PUT',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/move').respond(200,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/move').respond(200,
         {"status": "success"})
 
       @accountService.move(unqNamesObj, data).then(
@@ -144,7 +144,7 @@ describe "Account Service", ->
       )
     it 'should call failure callback when group moved', ->
       @httpBackend.when('PUT',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/move').respond(400,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/move').respond(400,
         {"status": "error"})
 
       @accountService.move(unqNamesObj, data).then(
@@ -157,7 +157,7 @@ describe "Account Service", ->
   describe '#sharedWith', ->
     it 'should call success callback', ->
       @httpBackend.when('GET',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/shared-with').respond(200,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/shared-with').respond(200,
         {"status": "success"})
 
       @accountService.sharedWith(unqNamesObj).then(
@@ -166,7 +166,7 @@ describe "Account Service", ->
       )
     it 'should call failure callback', ->
       @httpBackend.when('GET',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/shared-with').respond(400,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/shared-with').respond(400,
         {"status": "error"})
 
       @accountService.sharedWith(unqNamesObj).then(
@@ -179,7 +179,7 @@ describe "Account Service", ->
   describe '#export', ->
     it 'should call success callback', ->
       @httpBackend.when('GET',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/export-ledger').respond(200,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/export-ledger').respond(200,
         {"status": "success"})
 
       @accountService.exportLedger(unqNamesObj).then(
@@ -188,7 +188,7 @@ describe "Account Service", ->
       )
     it 'should call failure callback', ->
       @httpBackend.when('GET',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/export-ledger').respond(400,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/export-ledger').respond(400,
         {"status": "error"})
 
       @accountService.exportLedger(unqNamesObj).then(
@@ -201,7 +201,7 @@ describe "Account Service", ->
   describe '#export', ->
     it 'should call success callback', ->
       @httpBackend.when('GET',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/xls-imports').respond(200,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/xls-imports').respond(200,
         {"status": "success"})
 
       @accountService.ledgerImportList(unqNamesObj).then(
@@ -210,7 +210,7 @@ describe "Account Service", ->
       )
     it 'should call failure callback', ->
       @httpBackend.when('GET',
-        '/company/' + unqNamesObj.compUname + '/groups/' + unqNamesObj.selGrpUname + '/accounts/' + unqNamesObj.acntUname + '/xls-imports').respond(400,
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/xls-imports').respond(400,
         {"status": "error"})
 
       @accountService.ledgerImportList(unqNamesObj).then(
