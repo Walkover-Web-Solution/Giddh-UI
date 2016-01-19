@@ -17,6 +17,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       }
       update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
       delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
+      get: {method: 'GET', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
       move: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/move'}
       share: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/share'}
       unshare: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/unshare'}
@@ -57,6 +58,11 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         groupUniqueName: group.oldUName
       }, group, onSuccess, onFailure))
 
+    get: (companyUniqueName, group, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Group.get({
+        companyUniqueName: companyUniqueName,
+        groupUniqueName: group.uniqueName
+      }, onSuccess, onFailure))
 
     delete: (companyUniqueName, group, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.delete({
@@ -111,6 +117,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
           addThisGroup.groupName = groupItem.name
           addThisGroup.groupUniqueName = groupItem.uniqueName
           addThisGroup.accountDetails = groupItem.accounts
+          addThisGroup.groupSynonyms = groupItem.synonyms
           addThisGroup
         else
           #do nothing
@@ -123,24 +130,24 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
           uniqueList = groupService.flattenAccount(listItem.groups)
           _.each(listItem.accounts, (accntItem) ->
             if _.isUndefined(accntItem.parentGroups)
-              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role}]
+              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName}]
             else
-              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role})
+              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName})
           )
           uniqueList.push(listItem.accounts)
           _.each(uniqueList, (accntItem) ->
             if _.isUndefined(accntItem.parentGroups)
-              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role}]
+              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName}]
             else
-              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role})
+              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName})
           )
           uniqueList
         else
           _.each(listItem.accounts, (accntItem) ->
             if _.isUndefined(accntItem.parentGroups)
-              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role}]
+              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName}]
             else
-              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role})
+              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName})
           )
           listItem.accounts
       )

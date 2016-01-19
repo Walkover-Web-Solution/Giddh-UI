@@ -118,11 +118,13 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
-      groupService.getAllWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
+      groupService.getAllCroppedWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
           $scope.getGroupListFailure)
+
 
   $scope.getGroupListSuccess = (res) ->
     $scope.groupList = res.body
+    #console.log $scope.groupList
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntList = groupService.flattenAccount($scope.groupList)
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
@@ -140,6 +142,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error("Unable to get group details.", "Error")
 
   $scope.selectGroupToEdit = (group) ->
+    console.log group
     $scope.selectedGroup = group
     if _.isEmpty($scope.selectedGroup.oldUName)
       $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
@@ -313,9 +316,23 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     e.stopPropagation()
 
   $scope.selectItem = (item) ->
+    $scope.getDetails(item)
     $scope.selectedItem = item
     $scope.selectedAccntMenu = undefined
     $scope.selectGroupToEdit(item)
+
+  # get grouped details
+  $scope.getDetails = (group) ->
+    groupService.get($rootScope.selectedCompany.uniqueName, group.uniqueName).then($scope.getDetailsSuccess,
+          $scope.getDetailsFailure)
+
+  $scope.getDetailsSuccess = (res) ->
+    console.log res
+
+  $scope.getDetailsFailure = (res) ->
+    console.log res
+
+
 
   #show breadcrumbs
   $scope.showBreadCrumbs = (data) ->
@@ -363,6 +380,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #show account
   $scope.showAccountDtl = (data) ->
+
     $scope.cantUpdate = false
     pGroups = []
     $scope.checkPermissions(data)
@@ -379,6 +397,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.getAccountSharedList()
     # for play between update and add
     $scope.acntCase = "Update"
+    
 
   # prepare date object
   $scope.setOpeningBalanceDate = () ->
