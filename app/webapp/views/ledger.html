@@ -4,9 +4,9 @@
 		<!-- left side -->
 		<div class="col-md-2 col-sm-2 greyBg">
 			<div>
-        <div id="left" auto-height>
-          <!-- <div ng-include="'/public/webapp/views/accounts.html'"></div> -->
-          <div ui-view="accounts"></div>
+        <div ng-controller="accountController" id="left" auto-height>
+          <div ng-include="'/public/webapp/views/accounts.html'"></div>
+          <ui-view="ledger.accounts"></ui-view>
         </div>
       </div>
 		</div>
@@ -14,7 +14,7 @@
 		<!-- middle body -->
 		<div class="col-md-10 col-sm-7">
 			<div class="middleBody bdrR bdrL row" auto-height>
-				<div ui-view="ledgerContent"></div>
+				<ui-view></ui-view>
 			</div>
 		</div>
 
