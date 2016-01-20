@@ -499,7 +499,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toDate = new Date($scope.toDate.date).getTime()
 
     if newDate > toDate
-      $scope.toDate.date =  $filter('date')(newDate, 'dd-MM-yyyy')
+      $scope.toDate.date =  newDate
   )
   
   $scope.showImportList =() ->

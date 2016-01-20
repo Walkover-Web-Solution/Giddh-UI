@@ -11,6 +11,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     accounts: []
     interval: 1
     createChartBy : 'Closing Balance'
+    createChartByMultiple: []
   }
   $scope.format = "dd-MM-yyyy"
   # variable to show chart on ui
@@ -54,7 +55,6 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.groupList = res.body
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
-    $scope.showLedgerBox = true
     $scope.sortGroupsAndAccounts($scope.flatAccntWGroupsList)
     $scope.selected.groups = [$scope.groups[0]]
     $scope.selected.accounts = [$scope.accounts[0]]
@@ -91,80 +91,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
   $scope.getAccountsGroupsList()
   
-  $scope.formatGraphData = (graphData) ->
-    
-    $scope.series = []
-    $scope.sortedChartData = {
-      cb: [] #closingBalance
-      op: [] #openingBalance
-      ct: [] #creditTotal
-      dt: [] #debitTotal
-    }
-    $scope.labels = []
-    data = graphData
-    groups = []
-    accounts = []
-    $scope.series = []
-
-    # sort data.groups
-    if data.groups.length > 0
-      _.each data.groups, (grp) ->
-        group = {
-          name :''
-          cbs: []
-          op: []
-          ct: []
-          dt: []
-          to: []
-        }
-        group.name = grp.name
-        _.each grp.intervalBalances, (bal) ->
-          group.cbs.push(bal.closingBalance.amount)
-          group.op.push(bal.openingBalance.amount)
-          group.ct.push(bal.creditTotal)
-          group.dt.push(bal.debitTotal)
-          group.to.push(bal.to)
-        groups.push(group)
-
-    # add details to graph params 
-    _.each groups, (grp) ->
-      # add names to $scope.series
-      $scope.series.push(grp.name)
-      # add data array to $scope.chartData
-      $scope.sortedChartData.cb.push(grp.cbs)
-      $scope.sortedChartData.op.push(grp.op)
-      $scope.sortedChartData.ct.push(grp.ct)
-      $scope.sortedChartData.dt.push(grp.dt)
-
-    if data.accounts.length > 0
-        _.each data.accounts, (acc) ->
-          account = {
-            name :''
-            cbs: []
-            op: []
-            ct: []
-            dt: []
-            to: []
-          }
-          account.name = acc.name
-          _.each acc.intervalBalances, (bal) ->
-            account.cbs.push(bal.closingBalance.amount)
-            account.op.push(bal.openingBalance.amount)
-            account.ct.push(bal.creditTotal)
-            account.dt.push(bal.debitTotal)
-            account.to.push(bal.to)
-          accounts.push(account)
-
-    _.each accounts, (acc) ->
-      # add names to $scope.series
-      $scope.series.push(acc.name)
-      # add data array to $scope.chartData
-      $scope.sortedChartData.cb.push(acc.cbs)
-      $scope.sortedChartData.op.push(acc.op)
-      $scope.sortedChartData.ct.push(acc.ct)
-      $scope.sortedChartData.dt.push(acc.dt)
-    
-    switch $scope.selected.createChartBy
+  $scope.createChartWithParam = (param) ->
+    switch param
       when 'Closing Balance'
         $scope.chartData = $scope.sortedChartData.cb
       when 'Opening Balance'
@@ -175,16 +103,136 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
         $scope.chartData = $scope.sortedChartData.dt
 
 
-    # add dates to $scope.labels
-    if groups.length > 0
-      _.each groups[0].to, (date) ->
-        $scope.labels.push(date)
+  $scope.formatGraphData = (graphData) ->
+    if $scope.selected.groups.length == 1 && $scope.selected.accounts.length == 0 || $scope.selected.groups.length == 0 && $scope.selected.accounts.length == 1
+      $scope.series = []
+      $scope.labels = []
+      $scope.chartData = []
+      data = graphData
+      chartParams = $scope.selected.createChartByMultiple
+      sortedChartData = {
+        cb: [] #closingBalance
+        op: [] #openingBalance
+        ct: [] #creditTotal
+        dt: [] #debitTotal
+      }
+
+      if data.groups.length == 1
+        group = data.groups[0]
+      if data.accounts.length == 1
+        account = data.accounts[0]
+      intBal = group.intervalBalances || account.intervalBalances
+
+      _.each intBal, (obj) ->
+        $scope.labels.push(obj.to)
+        sortedChartData.cb.push(obj.closingBalance.amount)
+        sortedChartData.op.push(obj.openingBalance.amount)
+        sortedChartData.ct.push(obj.creditTotal)
+        sortedChartData.dt.push(obj.debitTotal)
+      
+      if chartParams.length > 0
+        _.each chartParams, (param) ->
+          switch param
+            when 'Closing Balance'
+              $scope.series.push('Closing Balance')
+              $scope.chartData.push(sortedChartData.cb)
+            when 'Opening Balance'
+              $scope.series.push('Opening Balance')
+              $scope.chartData.push(sortedChartData.op)
+            when 'Credit Total'
+              $scope.series.push('Credit Total')
+              $scope.chartData.push(sortedChartData.ct)
+            when 'Debit Total'
+              $scope.series.push('Debit Total')
+              $scope.chartData.push(sortedChartData.dt)
+      else
+        toastr.error('Please select atleast one parameter for chart')
+
+
+
+
     else
-      _.each accounts[0].to, (date) ->
-        $scope.labels.push(date)
+      $scope.series = []
+      $scope.sortedChartData = {
+        cb: [] #closingBalance
+        op: [] #openingBalance
+        ct: [] #creditTotal
+        dt: [] #debitTotal
+      }
+      $scope.labels = []
+      data = graphData
+      groups = []
+      accounts = []
 
+      # sort data.groups
+      if data.groups.length > 0
+        _.each data.groups, (grp) ->
+          group = {
+            name :''
+            cbs: []
+            op: []
+            ct: []
+            dt: []
+            to: []
+          }
+          group.name = grp.name
+          _.each grp.intervalBalances, (bal) ->
+            group.cbs.push(bal.closingBalance.amount)
+            group.op.push(bal.openingBalance.amount)
+            group.ct.push(bal.creditTotal)
+            group.dt.push(bal.debitTotal)
+            group.to.push(bal.to)
+          groups.push(group)
 
-    $scope.series = $scope.series.reverse()
+      # add details to graph params 
+      _.each groups, (grp) ->
+        # add names to $scope.series
+        $scope.series.push(grp.name)
+        # add data array to $scope.chartData
+        $scope.sortedChartData.cb.push(grp.cbs)
+        $scope.sortedChartData.op.push(grp.op)
+        $scope.sortedChartData.ct.push(grp.ct)
+        $scope.sortedChartData.dt.push(grp.dt)
+
+      if data.accounts.length > 0
+          _.each data.accounts, (acc) ->
+            account = {
+              name :''
+              cbs: []
+              op: []
+              ct: []
+              dt: []
+              to: []
+            }
+            account.name = acc.name
+            _.each acc.intervalBalances, (bal) ->
+              account.cbs.push(bal.closingBalance.amount)
+              account.op.push(bal.openingBalance.amount)
+              account.ct.push(bal.creditTotal)
+              account.dt.push(bal.debitTotal)
+              account.to.push(bal.to)
+            accounts.push(account)
+
+      _.each accounts, (acc) ->
+        # add names to $scope.series
+        $scope.series.push(acc.name)
+        # add data array to $scope.chartData
+        $scope.sortedChartData.cb.push(acc.cbs)
+        $scope.sortedChartData.op.push(acc.op)
+        $scope.sortedChartData.ct.push(acc.ct)
+        $scope.sortedChartData.dt.push(acc.dt)
+      
+      $scope.createChartWithParam($scope.selected.createChartBy)
+
+      # add dates to $scope.labels
+      if groups.length > 0
+        _.each groups[0].to, (date) ->
+          $scope.labels.push(date)
+      else
+        _.each accounts[0].to, (date) ->
+          $scope.labels.push(date)
+
+      $scope.series = $scope.series.reverse()
 
     # set variable to show chart on ui
     $scope.chartDataAvailable = true
@@ -243,7 +291,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     toDate = new Date($scope.toDate.date).getTime()
 
     if newDate > toDate
-      $scope.toDate.date =  $filter('date')(newDate, 'dd-MM-yyyy')
+      $scope.toDate.date =  newDate
   )
 
   
