@@ -3,7 +3,6 @@
 giddh.serviceModule.service 'permissionService', (localStorageService) ->
   permissionService =
     hasPermissionOn: (entity, permissionCode) ->
-      #console.log entity
       roles = localStorageService.get("_roles")
       if(_.isUndefined(roles) or _.isEmpty(roles))
         return false

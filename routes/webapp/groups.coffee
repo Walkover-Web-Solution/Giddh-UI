@@ -120,6 +120,17 @@ router.delete '/:groupUniqueName', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/:groupUniqueName', (req, res) ->
+  authHead = 
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 router.post '/', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups'
   args =

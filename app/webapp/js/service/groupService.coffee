@@ -58,10 +58,10 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         groupUniqueName: group.oldUName
       }, group, onSuccess, onFailure))
 
-    get: (companyUniqueName, group, onSuccess, onFailure) ->
+    get: (companyUniqueName, groupUniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.get({
         companyUniqueName: companyUniqueName,
-        groupUniqueName: group.uniqueName
+        groupUniqueName: groupUniqueName
       }, onSuccess, onFailure))
 
     delete: (companyUniqueName, group, onSuccess, onFailure) ->

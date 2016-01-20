@@ -124,7 +124,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.getGroupListSuccess = (res) ->
     $scope.groupList = res.body
-    #console.log $scope.groupList
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntList = groupService.flattenAccount($scope.groupList)
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
@@ -142,18 +141,20 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error("Unable to get group details.", "Error")
 
   $scope.selectGroupToEdit = (group) ->
-    console.log group
     $scope.selectedGroup = group
     if _.isEmpty($scope.selectedGroup.oldUName)
       $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
     $scope.selectedSubGroup = {}
+    $scope.checkPermissions(group)
+    $scope.getGroupSharedList(group)
+  
+
+  $scope.populateAccountList = (item) ->
+    $scope.groupAccntList = item.accounts
+    $scope.accountsSearch = undefined
     $scope.showGroupDetails = true
     $scope.showAccountListDetails = true
     $scope.showAccountDetails = false
-    $scope.checkPermissions(group)
-    $scope.getGroupSharedList(group)
-    $scope.groupAccntList = group.accounts
-    $scope.accountsSearch = undefined
 
   $scope.getGroupSharedList = () ->
     if $scope.canShare
@@ -317,9 +318,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.selectItem = (item) ->
     $scope.getDetails(item)
-    $scope.selectedItem = item
-    $scope.selectedAccntMenu = undefined
-    $scope.selectGroupToEdit(item)
+    $scope.populateAccountList(item)
 
   # get grouped details
   $scope.getDetails = (group) ->
@@ -327,11 +326,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
           $scope.getDetailsFailure)
 
   $scope.getDetailsSuccess = (res) ->
-    console.log res
+    item = res.body
+    $scope.selectedItem = item
+    $scope.selectedAccntMenu = undefined
+    $scope.selectGroupToEdit(item)
+   
 
   $scope.getDetailsFailure = (res) ->
-    console.log res
-
+    toastr.error(res.data.message)
 
 
   #show breadcrumbs
@@ -380,10 +382,20 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #show account
   $scope.showAccountDtl = (data) ->
+    $scope.getCroppedAccDetail(data)
 
+
+  $scope.getCroppedAccDetail = (data) ->
+    reqParams = {}
+    reqParams.compUname = $rootScope.selectedCompany.uniqueName
+    reqParams.acntUname = data.uniqueName
+    accountService.get(reqParams).then($scope.getCroppedAccDetailSuccess, $scope.getCroppedAccDetailFailure)
+
+  $scope.getCroppedAccDetailSuccess = (res) ->
+    data = res.body
+    $scope.checkPermissions(data)
     $scope.cantUpdate = false
     pGroups = []
-    $scope.checkPermissions(data)
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
     if data.uniqueName is $rootScope.selAcntUname
@@ -397,7 +409,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.getAccountSharedList()
     # for play between update and add
     $scope.acntCase = "Update"
-    
+
+  $scope.getCroppedAccDetailFailure = (res) ->
+    toastr.error(res.data.message)
 
   # prepare date object
   $scope.setOpeningBalanceDate = () ->
