@@ -74,7 +74,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     $scope.data.groupDetails = $scope.orderGroups($scope.data.groupDetails)
     $rootScope.showLedgerBox = true
     $scope.orderGroups(res.body.groupDetails)
-    if $scope.data.closingBalance.amount is 0
+    if $scope.data.closingBalance.amount is 0 and $scope.data.creditTotal is 0 and $scope.data.debitTotal is 0 and $scope.data.forwardedBalance.amount is 0
       $scope.noData = true
 
   $scope.getTrialBalFailure = (res) ->
