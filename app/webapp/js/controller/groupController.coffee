@@ -118,7 +118,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
-      groupService.getAllCroppedWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
+      groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
           $scope.getGroupListFailure)
 
 

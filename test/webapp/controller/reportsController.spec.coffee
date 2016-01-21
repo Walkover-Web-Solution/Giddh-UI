@@ -29,9 +29,9 @@ describe 'reportsController', ->
     it 'should call groups from route after getting company unique name', ->
       spyOn(@localStorageService, 'get').andReturn({"data": "Got it", "uniqueName": "soniravi"})
       deferred = @q.defer()
-      spyOn(@groupService, 'getAllWithAccountsFor').andReturn(deferred.promise)
+      spyOn(@groupService, 'getGroupsWithAccountsInDetail').andReturn(deferred.promise)
       @scope.getAccountsGroupsList()
-      expect(@groupService.getAllWithAccountsFor).toHaveBeenCalledWith("soniravi")
+      expect(@groupService.getGroupsWithAccountsInDetail).toHaveBeenCalledWith("soniravi")
       expect(@scope.showAccountList).toBeFalsy()
 
   describe '#getGroupsFailure', ->

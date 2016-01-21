@@ -54,9 +54,9 @@ describe 'groupController', ->
     it 'should call groups from route after getting company unique name', ->
       @rootScope.selectedCompany = {"data": "Got it", "uniqueName": "soniravi"}
       deferred = @q.defer()
-      spyOn(@groupService, 'getAllWithAccountsFor').andReturn(deferred.promise)
+      spyOn(@groupService, 'getGroupsWithAccountsCropped').andReturn(deferred.promise)
       @scope.getGroups()
-      expect(@groupService.getAllWithAccountsFor).toHaveBeenCalledWith("soniravi")
+      expect(@groupService.getGroupsWithAccountsCropped).toHaveBeenCalledWith("soniravi")
 
   describe '#getGroupListSuccess', ->
     xit 'should set group list', ->

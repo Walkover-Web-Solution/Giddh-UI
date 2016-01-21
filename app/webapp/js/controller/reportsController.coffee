@@ -47,7 +47,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
-      groupService.getAllWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupsSuccess,
+      groupService.getGroupsWithAccountsInDetail($rootScope.selectedCompany.uniqueName).then($scope.getGroupsSuccess,
         $scope.getGroupsFailure)
 
   $scope.getGroupsSuccess = (res) ->
