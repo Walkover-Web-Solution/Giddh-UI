@@ -62,7 +62,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     }
     templateUrl: '/public/webapp/views/demo.html'
     controller: 'homeController')
-
+  .state('Reports',
+    url: '/reports',
+    templateUrl: '/public/webapp/views/reports.html',
+    controller: 'reportsController'
+  )
   .state('company',
     url: ''
     abstract: true
@@ -89,13 +93,29 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   )
   .state('company.trialBalance',
     url: '/trial-balance',
-    templateUrl: '/public/webapp/views/trialBalance.html',
-    controller: 'trialBalanceController'
+    views:{
+      '':{
+        templateUrl: '/public/webapp/views/trialBalance.html',
+        controller: 'trialBalanceController'
+      }
+      'accounts':{
+        templateUrl: '/public/webapp/views/accounts.html'
+        #controller: 'groupController'
+      }
+    }
   )
   .state('company.profitAndLoss',
     url: '/profit-and-loss',
-    templateUrl: '/public/webapp/views/profitLoss.html',
-    controller: 'profitLossController'
+    views:{
+      '':{
+        templateUrl: '/public/webapp/views/profitLoss.html',
+        controller: 'profitLossController'
+      }
+      'accounts':{
+        templateUrl: '/public/webapp/views/accounts.html'
+        #controller: 'groupController'
+      }
+    }
   )
   # .state('company.ledgerContent',
   #   url: '/:unqName',
@@ -112,18 +132,13 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     views: {
       'accounts':{
         templateUrl: '/public/webapp/views/accounts.html'
-        #controller: 'groupController'
+        controller: 'groupController'
       }
       '':{
         templateUrl: '/public/webapp/views/ledgerContent.html'
         controller: 'ledgerController'
       }
     }
-  )
-  .state('Reports',
-    url: '/reports',
-    templateUrl: '/public/webapp/views/reports.html',
-    controller: 'reportsController'
   )
   .state('/thankyou',
     url: '/thankyou'
@@ -180,6 +195,7 @@ giddh.webApp.run [
     $rootScope.$on('companyChanged', ->
       $rootScope.$emit('reloadAccounts')
     )
+
 ]
 
 giddh.webApp.config ($httpProvider) ->

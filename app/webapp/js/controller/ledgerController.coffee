@@ -105,6 +105,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       acntUname : acData.uniqueName
     }
     $scope.getAccountRole(unqObj)
+    acData.role = {
+      uniqueName: $scope.accountRole
+    }
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
       return false
@@ -527,8 +530,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     accountService.get(unqNamesObj).then($scope.getAccountRoleSuccess, $scope.getAccountRoleFailure)
 
   $scope.getAccountRoleSuccess = (res) ->
-    $scope.accountRole = res.body.role
-    console.log res
+    $scope.accountRole = res.body.role.uniqueName
 
   $scope.getAccountRoleFailure = (res) ->
     console.log res
