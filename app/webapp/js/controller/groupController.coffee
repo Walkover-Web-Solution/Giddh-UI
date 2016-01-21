@@ -613,8 +613,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.loadAccountsList = () ->
     if !_.isEmpty($rootScope.selectedCompany)
       $scope.getGroups()
-    else
-      console.log  $rootScope.selectedCompany
+    
 
   $rootScope.$on 'reloadAccounts', ->
     $scope.showAccountList = false

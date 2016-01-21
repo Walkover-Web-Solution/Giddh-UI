@@ -100,6 +100,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $scope.loadLedger($scope.selectedLedgerGroup, $scope.selectedLedgerAccount)
 
   $scope.loadLedger = (data, acData) ->
+    unqObj = {
+      compUname : $rootScope.selectedCompany.uniqueName
+      acntUname : acData.uniqueName
+    }
+    $scope.getAccountRole(unqObj)
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
       return false
@@ -517,6 +522,17 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.ledgerImportListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
+
+  $scope.getAccountRole = (unqNamesObj) ->
+    accountService.get(unqNamesObj).then($scope.getAccountRoleSuccess, $scope.getAccountRoleFailure)
+
+  $scope.getAccountRoleSuccess = (res) ->
+    $scope.accountRole = res.body.role
+    console.log res
+
+  $scope.getAccountRoleFailure = (res) ->
+    console.log res
+
 
 giddh.webApp.controller 'ledgerController', ledgerController
 
