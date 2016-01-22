@@ -132,7 +132,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     views: {
       'accounts':{
         templateUrl: '/public/webapp/views/accounts.html'
-        controller: 'groupController'
       }
       '':{
         templateUrl: '/public/webapp/views/ledgerContent.html'

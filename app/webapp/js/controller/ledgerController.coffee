@@ -1,6 +1,6 @@
 "use strict"
 
-ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload) ->
+ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService) ->
   $scope.ledgerData = undefined 
   $scope.accntTitle = undefined
   $scope.selectedGroupUname = undefined
@@ -99,26 +99,35 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     if not _.isUndefined($scope.selectedLedgerGroup)
       $scope.loadLedger($scope.selectedLedgerGroup, $scope.selectedLedgerAccount)
 
-  $scope.loadLedger = (data, acData) ->
+  $scope.loadLedger = (gData, acData) ->
+    if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
+      toastr.error("Date should be in proper format", "Error")
+      return false
     unqObj = {
       compUname : $rootScope.selectedCompany.uniqueName
       acntUname : acData.uniqueName
     }
-    $scope.getAccountRole(unqObj)
-    acData.role = {
-      uniqueName: $scope.accountRole
-    }
-    if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
-      toastr.error("Date should be in proper format", "Error")
-      return false
+    accountService.get(unqObj)
+      .then(
+        (res)->
+          $scope.getAcDtlDataSuccess(res, gData, acData)
+        ,(error)->
+          $scope.getAcDtlDataFailure(error)
+      )
+
+  $scope.getAcDtlDataFailure = (res) ->
+    console.log res
+
+  $scope.getAcDtlDataSuccess = (res, gData, acData) ->
+    _.extend(acData, res.body)
     $scope.canAddAndEdit = $scope.hasAddAndUpdatePermission(acData)
     $rootScope.showLedgerBox = false
     $rootScope.showLedgerLoader = true
     $scope.selectedLedgerAccount = acData
-    $scope.selectedLedgerGroup = data
+    $scope.selectedLedgerGroup = gData
     $scope.accntTitle = acData.name
     $rootScope.selAcntUname = acData.uniqueName
-    $scope.selectedGroupUname = data.groupUniqueName
+    $scope.selectedGroupUname = gData.groupUniqueName
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $rootScope.selAcntUname
@@ -129,7 +138,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $stateParams.unqName = $rootScope.selAcntUname
     $stateParams.grpName = $scope.selectedGroupUname
 
-    $scope.showLedgerBreadCrumbs(acData.parentGroups.reverse())
+    # if !_.isEmpty($rootScope.flatGroupsList)
+    #   resObj = groupService.matchAndReturnObj(acData, $rootScope.flatGroupsList)
+    #   $scope.showLedgerBreadCrumbs(resObj.parentGroups)
+    
 
   $scope.loadLedgerSuccess = (res) ->
     data = {}
@@ -526,14 +538,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.ledgerImportListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  $scope.getAccountRole = (unqNamesObj) ->
-    accountService.get(unqNamesObj).then($scope.getAccountRoleSuccess, $scope.getAccountRoleFailure)
-
-  $scope.getAccountRoleSuccess = (res) ->
-    $scope.accountRole = res.body.role.uniqueName
-
-  $scope.getAccountRoleFailure = (res) ->
-    console.log res
 
 
 giddh.webApp.controller 'ledgerController', ledgerController
