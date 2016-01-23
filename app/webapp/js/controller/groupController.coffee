@@ -65,12 +65,18 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         backdrop: 'static'
         scope: $scope
       )
+  #show breadcrumbs on ledger
+  $scope.showLedgerBreadCrumbs = (data) ->
+    $rootScope.ledgerBreadCrumbList = data
 
   $scope.setLedgerData = (data, acData) ->
     $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
+    if !_.isEmpty($rootScope.flatGroupsList)
+      resObj = groupService.matchAndReturnObj(data, $rootScope.flatGroupsList)
+      $scope.showLedgerBreadCrumbs(resObj.parentGroups)
 
   $scope.highlightAcMenu = () ->
     url = $location.path().split("/")
@@ -131,7 +137,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $rootScope.flatGroupsList = groupService.flattenGroup(a, [])
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
     $scope.showAccountList = true
-    # console.log $scope.flatAccntWGroupsList, "$scope.flatAccntWGroupsList"
+
 
   $scope.getGroupListSuccess = (res) ->
     # console.log res.body, "getGroupListSuccess"
