@@ -137,10 +137,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     ledgerService.getLedger(unqNamesObj).then($scope.loadLedgerSuccess, $scope.loadLedgerFailure)
     $stateParams.unqName = $rootScope.selAcntUname
     $stateParams.grpName = $scope.selectedGroupUname
-
-    # if !_.isEmpty($rootScope.flatGroupsList)
-    #   resObj = groupService.matchAndReturnObj(acData, $rootScope.flatGroupsList)
-    #   $scope.showLedgerBreadCrumbs(resObj.parentGroups)
     
 
   $scope.loadLedgerSuccess = (res) ->
@@ -451,9 +447,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.hasAddAndUpdatePermission = (account) ->
     permissionService.hasPermissionOn(account, "UPDT") and permissionService.hasPermissionOn(account, "ADD")
 
-  #show breadcrumbs on ledger
-  $scope.showLedgerBreadCrumbs = (data) ->
-    $scope.ledgerBreadCrumbList = data
 
   #export ledger
   $scope.exportLedger = ()->
