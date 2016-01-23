@@ -136,6 +136,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         item.uniqueName == $scope.selectedGroup.uniqueName
       )
       $scope.selectItem($scope.selectedGroup)
+    console.log $scope.flatAccntWGroupsList
 
   $scope.getGroupListFailure = (res) ->
     toastr.error("Unable to get group details.", "Error")
