@@ -44,6 +44,10 @@ body, textarea, input, button {
     font-weight: 400
 }
 
+textarea{
+    resize:none;
+}
+
 /*imp for fixed navigation*/
 body {
     padding-top: 54px;
@@ -227,6 +231,11 @@ header .navbar-nav > li.active {
     display: block
 }
 
+.pdLR0{
+    padding-left:0;
+    padding-right:0;
+}
+    
 .pd {
     padding: 5px
 }
@@ -1795,4 +1804,17 @@ table:focus{
 
 .chart-container{
     margin:20px auto;
+}
+
+.maxW250{
+    max-width:250px;
+}
+
+.mart100{
+    margin-top:100px;
+}
+
+.margLR0 {
+    margin-left:0;
+    margin-right:0;
 }

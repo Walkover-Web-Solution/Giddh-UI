@@ -149,7 +149,7 @@ angular.module('ledger', [])
       <div>
         <script type='text/ng-template' id='customTemplate.html'>
           <a>
-            <span ng-bind-html='match.label'></span>
+            <span ng-bind-html='match.model.name'></span>
             <span class='small'>({{match.model.uniqueName}})</span>
           </a>
         </script>
@@ -166,7 +166,7 @@ angular.module('ledger', [])
                   tabindex='-1'  class='nobdr ledgInpt' required
                   name='trnsName_{{index}}'
                   ng-model='item.transactions[0].particular'
-                  uib-typeahead='obj as obj.name for obj in aclist | omit: isCurrentAc | filter:{name: $viewValue} | limitTo:8'
+                  uib-typeahead='obj.name as obj.uniqueName for obj in aclist | omit: isCurrentAc | filter:$viewValue | limitTo:8'
                   class='form-control' autocomplete='off'
                   typeahead-no-results='noResults' typeahead-template-url='customTemplate.html'
                   typeahead-on-select='addCrossFormField($item, $model, $label)'>

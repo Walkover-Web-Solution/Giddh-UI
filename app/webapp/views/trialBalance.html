@@ -21,20 +21,16 @@
         <span></span>
         <span></span>
       </div>
-      <div class="col-xs-12 no-data" ng-show="noData">
-        <h1>Sorry, No Data Found!</h1>
-        <img src="/public/webapp/images/no-data.png" alt="">
-      </div>
-      <div class="middleBody bdrR bdrL row"  ng-show="showLedgerBox && !noData">
+      <div class="middleBody bdrR bdrL row">
         <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
                            auto-height>
-          <ul class="list-inline color-codes">
+          <ul class="list-inline color-codes" ng-show="showLedgerBox && !noData">
             <li><span class="circle liabilities"></span>Liabilities</span></li>
             <li><span class="circle assets"></span> Assets</li>
             <li><span class="circle income"></span>Income</li>
             <li><span class="circle expenses"></span>Expenses</li>
           </ul>
-          <div class="form-inline pdB1 mrT2 mrL3 clearfix">
+          <div class="form-inline pdB1 mrT2 mrL3 clearfix" ng-show="showLedgerBox">
             <form class=" pull-left" name="fromToDateForm" novalidate>
               <div class="form-group mrR1">
                 <label>From date</label>
@@ -78,14 +74,14 @@
                 </button>
               </div>
             </form>
-            <div class="input-group input-group-md pull-right mrR3">
+            <div class="input-group input-group-md pull-right mrR3" ng-show="showLedgerBox && !noData">
               <span class="input-group-addon" id="sizing-addon3"><i class="glyphicon glyphicon-search"></i></span>
               <input type="search" class="form-control" placeholder="Search" aria-describedby="sizing-addon3"
                      ng-model="keyWord" trial-accordion='search'>
               <i class="glyphicon glyphicon-remove close-icon" ng-show="showClearSearch"></i>
             </div>
 
-            <div class="pull-right export">  
+            <div class="pull-right export" ng-show="showLedgerBox && !noData">  
               <a href="" title="" download="" ng-click="formatData($event)"><img src="/public/webapp/images/csv.png" class="csv"/></a>
               <div class="export-options" ng-show="showOptions">
                 <span class="arrow"></span>
@@ -100,7 +96,7 @@
               </div>
             </div>
 
-            <div class="pull-right pdf-export">
+            <div class="pull-right pdf-export" ng-show="showLedgerBox && !noData">
               <a href="" ng-click="showPdfOptions($event)"><img src="/public/webapp/images/pdf-icon.png" /></a>
               <div class="export-options" ng-show="showpdf">
                 <span class="arrow"></span>
@@ -115,11 +111,11 @@
               </div>
             </div>
           </div>
-          <div class="row toggle-btns">
+          <div class="row toggle-btns" ng-show="showLedgerBox && !noData">
             <button class="btn btn-primary pull-left mrL1" trial-accordion="expandAll">Expand All</button>
             <button class="btn btn-danger pull-left mrL1" trial-accordion="collapseAll">Collapse All</button>
           </div>
-          <div class="table-container">
+          <div class="table-container" ng-show="showLedgerBox && !noData">
             <table class="col-sm-12 tb-head">
               <thead>
               <tr>
@@ -188,6 +184,10 @@
               </tr>
               </thead>
             </table>
+          </div>
+          <div class="col-xs-12 no-data" ng-show="noData">
+            <h1>Sorry, No Data Found!</h1>
+            <img src="/public/webapp/images/no-data.png" alt="">
           </div>
         </perfect-scrollbar>
       </div>

@@ -312,7 +312,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     pGroups = []
     $scope.checkPermissions(data)
     $scope.showGroupDetails = false
-    $scope.showAccountDetails = true
+    # $scope.showAccountDetails = true
     if data.uniqueName is $rootScope.selAcntUname
       $scope.cantUpdate = true
     angular.copy(data, $scope.selAcntPrevObj)
