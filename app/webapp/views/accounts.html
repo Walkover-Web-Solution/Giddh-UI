@@ -12,7 +12,7 @@
           <i class="glyphicon glyphicon-search"></i>
         </div>
 
-        <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList');" ng-change="checkLength(acntSrch)" ng-model-options="{debounce: 700}">
+        <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList');" ng-change="checkLength(acntSrch)" ng-model-options="{debounce: 200}">
 
         <div ng-hide="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(true)" tooltip-placement="right" uib-tooltip="Expand all" >
           <i class="glyphicon glyphicon-list"></i>

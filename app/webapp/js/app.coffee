@@ -82,7 +82,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
       'accounts':{
         templateUrl: '/public/webapp/views/accounts.html'
-        #controller: 'groupController'
       }
     }
   )
@@ -100,7 +99,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
       'accounts':{
         templateUrl: '/public/webapp/views/accounts.html'
-        #controller: 'groupController'
       }
     }
   )
@@ -113,26 +111,14 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
       'accounts':{
         templateUrl: '/public/webapp/views/accounts.html'
-        #controller: 'groupController'
       }
     }
   )
-  # .state('company.ledgerContent',
-  #   url: '/:unqName',
-  #   templateUrl: '/public/webapp/views/ledgerContent.html',
-  #   controller: 'ledgerController'
-  # )
-  # .state('ledger',
-  #   abstract: true
-  #   url: '/ledger:uniqueName'
-  #   templateUrl: '/public/webapp/views/ledger.html'
-  # )
   .state('company.ledgerContent',
     url: '/:unqName',
     views: {
       'accounts':{
         templateUrl: '/public/webapp/views/accounts.html'
-        controller: 'groupController'
       }
       '':{
         templateUrl: '/public/webapp/views/ledgerContent.html'
