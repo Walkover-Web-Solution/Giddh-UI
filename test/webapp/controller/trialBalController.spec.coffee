@@ -80,6 +80,10 @@ describe 'trialBalanceController', ->
           body:
             closingBalance:
               amount: 10
+            forwardedBalance:
+              amount: 10
+            debitTotal: 10
+            creditTotal: 10
         }
         @scope.getTrialBalSuccess(res)
         expect(@scope.data).toEqual(res.body)
@@ -90,6 +94,10 @@ describe 'trialBalanceController', ->
           body:
             closingBalance:
               amount: 0
+            forwardedBalance:
+              amount: 0
+            debitTotal: 0
+            creditTotal: 0
         }
         @scope.getTrialBalSuccess(res)
         expect(@scope.data).toEqual(res.body)
