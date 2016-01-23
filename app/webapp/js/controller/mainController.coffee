@@ -5,6 +5,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
   $rootScope.showLedgerLoader = false
   $rootScope.nowShowAccounts = false
   $rootScope.basicInfo = {}
+  $rootScope.flatAccntListWithParents = []
   
   $scope.logout = ->
     $http.post('/logout').then ((res) ->
@@ -14,10 +15,12 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
 
   # for ledger
   $rootScope.makeAccountFlatten = (data) ->
+    angular.copy(data, $rootScope.flatAccntListWithParents)
     obj = _.map(data, (item) ->
       obj = {}
       obj.name = item.name
       obj.uniqueName = item.uniqueName
+      obj.mergedAccounts = item.mergedAccounts
       obj
     )
     $rootScope.fltAccntList = obj

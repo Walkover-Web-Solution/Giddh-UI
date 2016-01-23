@@ -47,9 +47,7 @@
                  ng-model="selectedSubGroup.uniqueName" required/>
           <textarea maxlength="200" class="form-control form-group" placeholder="Enter description"
                     ng-model="selectedSubGroup.desc"></textarea>
-          <button class="btn btn-primary" ng-click="addNewSubGroup()" ng-disabled="subGroupForm.$invalid">Add
-            Subgroup
-          </button>
+          <button class="btn btn-primary" ng-click="addNewSubGroup()" ng-disabled="subGroupForm.$invalid">Add Subgroup</button>
         </form>
       </div>
     </div>
@@ -69,8 +67,7 @@
 
         <div class="form-group">
           <input ng-model="moveto" type="text" placeholder="Group name" class="form-control" required
-            uib-typeahead="groups as groups.name for groups in flattenGroupList | 
-            omit: isChildGroup | filter:{name: $viewValue}"/>
+            uib-typeahead="groups as groups.name for groups in flattenGroupList | omit: isChildGroup | filter:{name: $viewValue} | limitTo:8"/>
         </div>
         <div class="form-group">
           <button class="btn btn-info mrL" ng-click="moveGroup(moveto)" ng-disabled="moveGroupForm.$invalid">Move</button>
