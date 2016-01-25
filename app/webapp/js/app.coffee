@@ -62,43 +62,79 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     }
     templateUrl: '/public/webapp/views/demo.html'
     controller: 'homeController')
-  .state('manage-company',
-    url: '/manage-company'
-    templateUrl: '/public/webapp/views/home.html'
-    controller: 'companyController')
-  .state('/thankyou',
-    url: '/thankyou'
-    templateUrl: '/public/webapp/views/thanks.html'
-    controller: 'thankyouController')
-  .state('/user',
-    url: '/user'
-    templateUrl: '/public/webapp/views/userDetails.html'
-    controller: 'userController')
-  .state('ledger',
-    abstract: true
-    url: '/ledger:uniqueName'
-    templateUrl: '/public/webapp/views/ledger.html'
-  )
-  .state('ledger.ledgerContent',
-    url: '/:unqName',
-    templateUrl: '/public/webapp/views/ledgerContent.html'
-    controller: 'ledgerController'
-  )
-  .state('Trial-Balance',
-    url: '/trial-balance',
-    templateUrl: '/public/webapp/views/trialBalance.html',
-    controller: 'trialBalanceController'
-  )
-  .state('Profit-and-Loss',
-    url: '/profit-and-loss',
-    templateUrl: '/public/webapp/views/profitLoss.html',
-    controller: 'profitLossController'
-  )
   .state('Reports',
     url: '/reports',
     templateUrl: '/public/webapp/views/reports.html',
     controller: 'reportsController'
   )
+  .state('company',
+    url: ''
+    abstract: true
+    templateUrl: '/public/webapp/views/home.html'
+    controller:'groupController'
+  )
+  .state('company.manage',
+    url: '/manage'
+    views:{
+      '':{
+        templateUrl: '/public/webapp/views/manageCompany.html'
+        controller: 'companyController'
+      }
+      'accounts':{
+        templateUrl: '/public/webapp/views/accounts.html'
+      }
+    }
+  )
+  .state('company.user',
+    url: '/user'
+    templateUrl: '/public/webapp/views/userDetails.html'
+    controller: 'userController'
+  )
+  .state('company.trialBalance',
+    url: '/trial-balance',
+    views:{
+      '':{
+        templateUrl: '/public/webapp/views/trialBalance.html',
+        controller: 'trialBalanceController'
+      }
+      'accounts':{
+        templateUrl: '/public/webapp/views/accounts.html'
+      }
+    }
+  )
+  .state('company.profitAndLoss',
+    url: '/profit-and-loss',
+    views:{
+      '':{
+        templateUrl: '/public/webapp/views/profitLoss.html',
+        controller: 'profitLossController'
+      }
+      'accounts':{
+        templateUrl: '/public/webapp/views/accounts.html'
+      }
+    }
+  )
+  .state('company.ledgerContent',
+    url: '/:unqName',
+<<<<<<< HEAD
+    templateUrl: '/public/webapp/views/ledgerContent.html'
+    controller: 'ledgerController'
+=======
+    views: {
+      'accounts':{
+        templateUrl: '/public/webapp/views/accounts.html'
+      }
+      '':{
+        templateUrl: '/public/webapp/views/ledgerContent.html'
+        controller: 'ledgerController'
+      }
+    }
+>>>>>>> playingWithRoutes
+  )
+  .state('/thankyou',
+    url: '/thankyou'
+    templateUrl: '/public/webapp/views/thanks.html'
+    controller: 'thankyouController')
 
   $locationProvider.html5Mode(false)
   return
@@ -111,6 +147,10 @@ giddh.webApp.run [
   '$window'
   'toastr'
   ($rootScope, $state, $stateParams, $location, $window, toastr) ->
+    $rootScope.$state = $state
+    $rootScope.$stateParams = $stateParams
+    # $state.transitionTo('company.manage')
+
     $rootScope.$on '$stateChangeStart', ->
       $rootScope.showLedgerBox = false
 
@@ -141,6 +181,11 @@ giddh.webApp.run [
       win.close()
 
     $rootScope.firstLogin = true
+
+    $rootScope.$on('companyChanged', ->
+      $rootScope.$emit('reloadAccounts')
+    )
+
 ]
 
 giddh.webApp.config ($httpProvider) ->
@@ -156,8 +201,8 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$t
     responseError: (responseError) ->
       if responseError.status is 500
         #check if responseError.data contains error regarding Auth-Key
-        isError = responseError.data.indexOf("`value` required in setHeader") 
-        isAuthKeyError = responseError.data.indexOf("Auth-Key")
+        isError = responseError.data.code.indexOf("`value` required in setHeader")
+        isAuthKeyError = responseError.data.code.indexOf("Auth-Key")
         #if Auth-Key Error found, redirect to login
         if isError != -1 and isAuthKeyError != -1
           toastr.error('Your Session has Expired, Please Login Again.')

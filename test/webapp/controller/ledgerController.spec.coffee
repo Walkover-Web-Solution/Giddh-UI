@@ -127,7 +127,7 @@ describe 'ledgerController', ->
         @scope.loadLedger(data, acData)
         expect(@toastr.error).toHaveBeenCalledWith('Date should be in proper format', 'Error')
 
-      it 'should call service and set some variables value', ->
+      xit 'should call service and set some variables value', ->
         @scope.toDate = {
           date: "14-11-2015"
         }
@@ -158,8 +158,6 @@ describe 'ledgerController', ->
         deferred = @q.defer()
         spyOn(@ledgerService, "getLedger").andReturn(deferred.promise)
         spyOn(@scope, "hasAddAndUpdatePermission").andReturn(true)
-        spyOn(@scope, "showLedgerBreadCrumbs")
-
         @scope.loadLedger(data, acData)
         expect(@scope.showLedgerBox).toBeFalsy()
         expect(@scope.showLedgerLoader).toBeTruthy()
@@ -171,7 +169,6 @@ describe 'ledgerController', ->
 
         expect(@scope.hasAddAndUpdatePermission).toHaveBeenCalledWith(acData)
         expect(@ledgerService.getLedger).toHaveBeenCalledWith(udata)
-        expect(@scope.showLedgerBreadCrumbs).toHaveBeenCalledWith(acData.parentGroups.reverse())
 
     describe '#loadLedgerSuccess', ->
       it 'should call calculate ledger function with data and set a variable true and push value in ledgerdata', ->
@@ -641,12 +638,6 @@ describe 'ledgerController', ->
         expect(result).toBeFalsy()
         expect(@permissionService.hasPermissionOn).not.toHaveBeenCalledWith(account, "ADD")
         expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(account, "UPDT")
-
-    describe '#showLedgerBreadCrumbs', ->
-      it 'should set data in ledgerBreadCrumbList', ->
-        data ={}
-        @scope.showLedgerBreadCrumbs(data)
-        expect(@scope.ledgerBreadCrumbList).toEqual({})
 
     describe '#exportLedger', ->
       it 'should call account service exportLedger method with unqObj', ->

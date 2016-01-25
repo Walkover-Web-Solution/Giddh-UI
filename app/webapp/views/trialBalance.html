@@ -1,15 +1,45 @@
-<!-- structure -->
+<div class="loader mrT4" ng-hide="showLedgerBox">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+<div class="no-data" ng-show="noData">
+  <h1>Sorry, No Data Found!</h1>
+  <img src="/public/webapp/images/no-data.png" alt="">
+</div>
+<div class="middleBody bdrR bdrL"  ng-show="showLedgerBox && !noData">
+  <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
+                     auto-height>
+    <ul class="list-inline color-codes">
+      <li><span class="circle liabilities"></span>Liabilities</span></li>
+      <li><span class="circle assets"></span> Assets</li>
+      <li><span class="circle income"></span>Income</li>
+      <li><span class="circle expenses"></span>Expenses</li>
+    </ul>
+    <div class="form-inline pdB1 mrT2 mrL3 clearfix">
+      <form class=" pull-left" name="fromToDateForm" novalidate>
+        <div class="form-group mrR1">
+          <label>From date</label>
 
-<div class="container-fluid">
-  <div class="row">
-    <!-- left side -->
-<!--     <div class="col-md-2 col-sm-2 greyBg">
-      <div>
-        <div ng-controller="accountController" id="left" auto-height>
-          <div ng-include="'/public/webapp/views/accounts.html'"></div>
-          <ui-view
-          ="ledger.accounts"></ui-view>
+          <p class="input-group max150">
+            <input type="text" class="form-control"
+                   uib-datepicker-popup="{{format}}" required
+                   datepicker-options="dateOptions"
+                   is-open="fromDatePickerIsOpen"
+                   ng-click="fromDatePickerOpen()"
+                   ng-model="fromDate.date"
+                   max-date="today"
+                   placeholder="from date"
+                />
+               <span class="input-group-btn">
+               <button type="button" class="btn btn-default" ng-click="fromDatePickerOpen()"><i
+                   class="glyphicon glyphicon-calendar"></i></button>
+               </span>
+          </p>
         </div>
+<<<<<<< HEAD
       </div>
     </div> -->
     <!-- middle body -->
@@ -117,73 +147,137 @@
           </div>
           <div class="table-container" ng-show="showLedgerBox && !noData">
             <table class="col-sm-12 tb-head">
+=======
+        <div class="form-group">
+          <label>To date</label>
+
+          <p class="input-group max150">
+            <input type="text" class="form-control"
+                   uib-datepicker-popup="{{format}}" required
+                   datepicker-options="dateOptions"
+                   is-open="toDatePickerIsOpen"
+                   ng-click="toDatePickerOpen()"
+                   ng-model="toDate.date" min-date="fromDate.date" max-date="today" placeholder="to date"
+                />
+                <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+          </p>
+        </div>
+        <div class="form-group">
+          <button type="button" class="btn btn-success mrL1" ng-click="filterBydate()">
+            Apply
+          </button>
+        </div>
+      </form>
+      <div class="input-group input-group-md pull-right mrR3">
+        <span class="input-group-addon" id="sizing-addon3"><i class="glyphicon glyphicon-search"></i></span>
+        <input type="search" class="form-control" placeholder="Search" aria-describedby="sizing-addon3"
+               ng-model="keyWord" trial-accordion='search'>
+        <i class="glyphicon glyphicon-remove close-icon" ng-show="showClearSearch"></i>
+      </div>
+
+      <div class="pull-right export">  
+        <a href="" title="" download="" ng-click="formatData($event)"><img src="/public/webapp/images/csv.png" class="csv"/></a>
+        <div class="export-options" ng-show="showOptions">
+          <span class="arrow"></span>
+          <ul class="list-unstyled">
+            <li><a href="" ng-click="hideOptions($event)" export-report data-report="group-wise">Group Wise
+              Report</a></li>
+            <li><a href="" ng-click="hideOptions($event)" export-report data-report="condensed">Condensed
+              Report</a></li>
+            <li><a href="" ng-click="hideOptions($event)" export-report data-report="account-wise">Account Wise
+              Report</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pull-right pdf-export">
+        <a href="" ng-click="showPdfOptions($event)"><img src="/public/webapp/images/pdf-icon.png" /></a>
+        <div class="export-options" ng-show="showpdf">
+          <span class="arrow"></span>
+          <ul class="list-unstyled">
+            <li><a href="" ng-click="hideOptions($event)" export-pdfgroupwise>Group Wise
+              Report</a></li>
+            <li><a href="" ng-click="hideOptions($event)" export-pdfcondensed>Condensed
+              Report</a></li>
+            <li><a href="" ng-click="hideOptions($event)" export-pdfaccountwise>Account Wise
+              Report</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="row toggle-btns">
+      <button class="btn btn-primary pull-left mrL1" trial-accordion="expandAll">Expand All</button>
+      <button class="btn btn-danger pull-left mrL1" trial-accordion="collapseAll">Collapse All</button>
+    </div>
+    <div class="table-container">
+      <table class="col-sm-12 tb-head">
+        <thead>
+        <tr>
+          <th class="col-sm-4">Particular</th>
+          <th class="col-sm-2">Opening Bal</th>
+          <th class="col-sm-4 text-center">
+            Transactions
+            <table class="col-sm-12">
+>>>>>>> playingWithRoutes
               <thead>
               <tr>
-                <th class="col-sm-4">Particular</th>
-                <th class="col-sm-2">Opening Bal</th>
-                <th class="col-sm-4 text-center">
-                  Transactions
-                  <table class="col-sm-12">
-                    <thead>
-                    <tr>
-                      <th class="col-sm-6 text-left">Debit(Dr.)</th>
-                      <th class="col-sm-6 text-left">Credit(Cr.)</th>
-                    </tr>
-                    </thead>
-                  </table>
-                </th>
-                <th class="col-sm-2">Closing Bal</th>
+                <th class="col-sm-6 text-left">Debit(Dr.)</th>
+                <th class="col-sm-6 text-left">Credit(Cr.)</th>
               </tr>
               </thead>
             </table>
-            <!--Grid-->
+          </th>
+          <th class="col-sm-2">Closing Bal</th>
+        </tr>
+        </thead>
+      </table>
+      <!--Grid-->
 
-            <section class="row row-1" ng-repeat="grp in data.groupDetails | filter:{$:keyWord} | orderBy: grp.category" ng-class="grp.category">
-              <div class="row"  trial-accordion>  
-                <div class="col-xs-4 group" ng-bind-html=" grp.groupName | uppercase | highlight: keyWord "></div>
-                <div class="col-xs-2 group text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type | recType:grp.forwardedBalance.amount }}</div>
-                <div class="col-xs-2 group text-right">{{ grp.debitTotal | number:2 }}</div> 
-                <div class="col-xs-2 group text-right">{{ grp.creditTotal | number:2 }}</div>
-                <div class="col-xs-2 group text-right">{{ grp.closingBalance.amount | number:2 }} {{grp.closingBalance.type | recType:grp.closingBalance.amount}}</div>
-              </div>
+      <section class="row row-1" ng-repeat="grp in data.groupDetails | filter:{$:keyWord} | orderBy: grp.category" ng-class="grp.category">
+        <div class="row"  trial-accordion>  
+          <div class="col-xs-4 group" ng-bind-html=" grp.groupName | uppercase | highlight: keyWord "></div>
+          <div class="col-xs-2 group text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type | recType:grp.forwardedBalance.amount }}</div>
+          <div class="col-xs-2 group text-right">{{ grp.debitTotal | number:2 }}</div> 
+          <div class="col-xs-2 group text-right">{{ grp.creditTotal | number:2 }}</div>
+          <div class="col-xs-2 group text-right">{{ grp.closingBalance.amount | number:2 }} {{grp.closingBalance.type | recType:grp.closingBalance.amount}}</div>
+        </div>
 
-              <section class="row row-2 isHidden" ng-repeat="account in grp.accounts  | filter:keyWord">
-                <div class="row">
-                  <div class="col-xs-4 account" ng-style="{'padding-left':padLeft}" ng-bind-html=" account.name | lowercase | highlight: keyWord">
-                  </div>
-                  <div class="col-xs-2 account text-right">{{ account.openingBalance.amount | number:2 }} {{account.openingBalance.type | recType:account.openingBalance.amount}}</div>
-                  <div class="col-xs-2 account text-right">{{ account.debitTotal | number:2 }}</div>
-                  <div class="col-xs-2 account text-right">{{ account.creditTotal | number:2 }}</div>
-                  <div class="col-xs-2 account text-right">{{ account.closingBalance.amount | number:2 }} {{account.closingBalance.type | recType:account.closingBalance.amount}}</div>
-                </div>
-              </section>
+        <section class="row row-2 isHidden" ng-repeat="account in grp.accounts  | filter:keyWord">
+          <div class="row">
+            <div class="col-xs-4 account" ng-style="{'padding-left':padLeft}" ng-bind-html=" account.name | lowercase | highlight: keyWord">
+            </div>
+            <div class="col-xs-2 account text-right">{{ account.openingBalance.amount | number:2 }} {{account.openingBalance.type | recType:account.openingBalance.amount}}</div>
+            <div class="col-xs-2 account text-right">{{ account.debitTotal | number:2 }}</div>
+            <div class="col-xs-2 account text-right">{{ account.creditTotal | number:2 }}</div>
+            <div class="col-xs-2 account text-right">{{ account.closingBalance.amount | number:2 }} {{account.closingBalance.type | recType:account.closingBalance.amount}}</div>
+          </div>
+        </section>
 
-              <section class="row isHidden" ng-if="grp.childGroups.length">
-                <div ng-include="'trialBalSubGroup'"></div>
-              </section>
+        <section class="row isHidden" ng-if="grp.childGroups.length">
+          <div ng-include="'trialBalSubGroup'"></div>
+        </section>
 
-            </section>
-            <!--/Grid-->
+      </section>
+      <!--/Grid-->
 
-            <table class="col-sm-12 tb-foot">
+      <table class="col-sm-12 tb-foot">
+        <thead>
+        <tr>
+          <th class="col-sm-4">Grand Total</th>
+          <th class="col-sm-2  text-right">{{ data.forwardedBalance.amount | number:2 }}</th>
+          <th class="col-sm-4">
+            <table class="col-sm-12">
               <thead>
               <tr>
-                <th class="col-sm-4">Grand Total</th>
-                <th class="col-sm-2  text-right">{{ data.forwardedBalance.amount | number:2 }}</th>
-                <th class="col-sm-4">
-                  <table class="col-sm-12">
-                    <thead>
-                    <tr>
-                      <th class="col-sm-6 text-right">{{ data.debitTotal | number:2 }}</th>
-                      <th class="col-sm-6 text-right">{{ data.creditTotal | number:2 }}</th>
-                    </tr>
-                    </thead>
-                  </table>
-                </th>
-                <th class="col-sm-2  text-right">{{ data.closingBalance.amount | number:2 }}</th>
+                <th class="col-sm-6 text-right">{{ data.debitTotal | number:2 }}</th>
+                <th class="col-sm-6 text-right">{{ data.creditTotal | number:2 }}</th>
               </tr>
               </thead>
             </table>
+<<<<<<< HEAD
           </div>
           <div class="col-xs-12 no-data" ng-show="noData">
             <h1>Sorry, No Data Found!</h1>
@@ -191,10 +285,17 @@
           </div>
         </perfect-scrollbar>
       </div>
+=======
+          </th>
+          <th class="col-sm-2  text-right">{{ data.closingBalance.amount | number:2 }}</th>
+        </tr>
+        </thead>
+      </table>
+>>>>>>> playingWithRoutes
     </div>
-  </div>
-  <!-- end of row -->
+  </perfect-scrollbar>
 </div>
+
 
 
 <script type="text/ng-template" id="trialBalSubGroup">

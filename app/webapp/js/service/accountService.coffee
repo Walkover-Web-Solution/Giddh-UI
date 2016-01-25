@@ -8,12 +8,17 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       'accountsUniqueName': @accountsUniqueName
       'toDate': @toDate
       'fromDate': @fromDate
-    }, { create: {method: 'POST'} })
+    },
+    { 
+      create: {
+        method: 'POST'
+      } 
+    }
+  )
 
   Account = $resource('/company/:companyUniqueName/accounts',
     {
       'companyUniqueName': @companyUniqueName
-      'groupUniqueName': @groupUniqueName
       'accountsUniqueName': @accountsUniqueName
       'toDate': @toDate
       'fromDate': @fromDate
@@ -27,6 +32,7 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/shared-with'
       }
       delete: {method: 'DELETE', url: '/company/:companyUniqueName/accounts/:accountsUniqueName'}
+      get: {method: 'GET', url: '/company/:companyUniqueName/accounts/:accountsUniqueName'}
       move: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/move'}
       export: {
         method: 'GET',
@@ -63,6 +69,12 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         companyUniqueName: unqNamesObj.compUname,
         accountsUniqueName: unqNamesObj.acntUname
       }, data, onSuccess, onFailure))
+
+    get: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> Account.get({
+        companyUniqueName: unqNamesObj.compUname,
+        accountsUniqueName: unqNamesObj.acntUname
+      }, onSuccess, onFailure))
 
     share: (unqNamesObj, data) ->
       @handlePromise((onSuccess, onFailure) -> Account.share({

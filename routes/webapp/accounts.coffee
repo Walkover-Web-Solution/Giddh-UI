@@ -14,6 +14,7 @@ router.get '/', (req, res) ->
     res.send data
 
 router.get '/:accountUniqueName', (req, res) ->
+  console.log req
   authHead =
     headers:
       'Auth-Key': req.session.authKey
@@ -23,6 +24,7 @@ router.get '/:accountUniqueName', (req, res) ->
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
+    console.log res
     res.send data
 
 router.put '/:accountUniqueName', (req, res) ->

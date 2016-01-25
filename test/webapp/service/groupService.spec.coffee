@@ -39,7 +39,7 @@ describe "Group Service", ->
       it 'should call success callback when get group for company return success', ->
         @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups/detailed-groups').respond(200, {"status": "success"})
 
-        @groupService.getAllFor(companyUniqueName).then(
+        @groupService.getGroupsWithoutAccountsInDetail(companyUniqueName).then(
           (data) -> expect(data.status).toBe("success")
           (data) -> expect(true).toBeFalsy()
         )
@@ -47,19 +47,19 @@ describe "Group Service", ->
       it 'should call failure callback when get group for company fails', ->
         @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups/detailed-groups').respond(400, {"status": "error"})
 
-        @groupService.getAllFor(companyUniqueName).then(
+        @groupService.getGroupsWithoutAccountsInDetail(companyUniqueName).then(
           (data) -> expect(true).toBeFalsy()
           (data) ->
             expect(data.data.status).toBe("error")
             expect(data.status).toBe(400)
         )
 
-    describe "#getAllWithAccountsFor", ->
+    describe "#getGroupsWithAccountsInDetail", ->
       companyUniqueName = 'giddh'
       it 'should call success callback when get all group for company return success', ->
         @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups/detailed-groups-with-accounts').respond(200, {"status": "success"})
 
-        @groupService.getAllWithAccountsFor(companyUniqueName).then(
+        @groupService.getGroupsWithAccountsInDetail(companyUniqueName).then(
           (data) -> expect(data.status).toBe("success")
           (data) -> expect(true).toBeFalsy()
         )
@@ -67,19 +67,19 @@ describe "Group Service", ->
       it 'should call failure callback when get all group for company fails', ->
         @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups/detailed-groups-with-accounts').respond(400, {"status": "error"})
 
-        @groupService.getAllWithAccountsFor(companyUniqueName).then(
+        @groupService.getGroupsWithAccountsInDetail(companyUniqueName).then(
           (data) -> expect(true).toBeFalsy()
           (data) ->
             expect(data.data.status).toBe("error")
             expect(data.status).toBe(400)
         )
 
-    describe "#getAllFor", ->
+    describe "#getGroupsWithoutAccountsCropped", ->
       companyUniqueName = 'giddh'
       it 'should call success callback when get group for company return success', ->
         @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups').respond(200, {"status": "success"})
 
-        @groupService.getAllCroppedFor(companyUniqueName).then(
+        @groupService.getGroupsWithoutAccountsCropped(companyUniqueName).then(
           (data) -> expect(data.status).toBe("success")
           (data) -> expect(true).toBeFalsy()
         )
@@ -87,19 +87,19 @@ describe "Group Service", ->
       it 'should call failure callback when get group for company fails', ->
         @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups').respond(400, {"status": "error"})
 
-        @groupService.getAllCroppedFor(companyUniqueName).then(
+        @groupService.getGroupsWithoutAccountsCropped(companyUniqueName).then(
           (data) -> expect(true).toBeFalsy()
           (data) ->
             expect(data.data.status).toBe("error")
             expect(data.status).toBe(400)
         )
 
-    describe "#getAllWithAccountsFor", ->
+    describe "#getGroupsWithAccountsCropped", ->
       companyUniqueName = 'giddh'
       it 'should call success callback when get all group for company return success', ->
         @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups/with-accounts').respond(200, {"status": "success"})
 
-        @groupService.getAllCroppedWithAccountsFor(companyUniqueName).then(
+        @groupService.getGroupsWithAccountsCropped(companyUniqueName).then(
           (data) -> expect(data.status).toBe("success")
           (data) -> expect(true).toBeFalsy()
         )
@@ -107,7 +107,7 @@ describe "Group Service", ->
       it 'should call failure callback when get all group for company fails', ->
         @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups/with-accounts').respond(400, {"status": "error"})
 
-        @groupService.getAllCroppedWithAccountsFor(companyUniqueName).then(
+        @groupService.getGroupsWithAccountsCropped(companyUniqueName).then(
           (data) -> expect(true).toBeFalsy()
           (data) ->
             expect(data.data.status).toBe("error")
@@ -238,17 +238,22 @@ describe "Group Service", ->
   describe "nonHttpRequestMethods", ->
     describe '#flattenGroup', ->
       it 'should take list of group and flatten them', ->
-        groupList = [{
-          "name": "group1",
-          "uniqueName": "g1",
-          "groups": [{"name": "group2", "uniqueName": "g2", "groups": []}]
-        },
-          {"name": "group3", "uniqueName": "g3", "groups": []}]
+        groupList = [
+          {
+            name: "group1",
+            uniqueName: "g1",
+            groups: [{"name": "group2", "uniqueName": "g2", "groups": []}]
+          },
+          {
+            name: "group3"
+            uniqueName: "g3"
+            groups: []
+          }
+        ]
         result = @groupService.flattenGroup(groupList)
         expect(result).toContain({
           "name": "group2",
           "uniqueName": "g2",
-          "groups": [],
           parentGroups: [undefined, {name: 'group1', uniqueName: 'g1'}, {name: 'group2', uniqueName: 'g2'}]
         })
 

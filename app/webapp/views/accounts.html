@@ -1,5 +1,10 @@
-<div ng-init="getAccountsGroups()">
+<div>
   <div class="pdT1 pdB1 form-inline">
+
+    <button type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()">
+      <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add &amp; Manage
+    </button>
+
     <div class="form-group">
       <div class="input-group">
         
@@ -7,7 +12,7 @@
           <i class="glyphicon glyphicon-search"></i>
         </div>
 
-        <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList');" ng-change="checkLength(acntSrch)" ng-model-options="{debounce: 700}">
+        <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList');" ng-change="checkLength(acntSrch)" ng-model-options="{debounce: 200}">
 
         <div ng-hide="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(true)" tooltip-placement="right" uib-tooltip="Expand all" >
           <i class="glyphicon glyphicon-list"></i>
@@ -24,7 +29,7 @@
 
   <div class="pdL1 pdR1 mrB1" ng-if="flatAccntWGroupsList.length == 0 && showAccountList">
     <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{::selectedCompany.name}}</strong> <a
-        href="" ng-click="showManageGroups()">+ add new</a></h4>
+        href="" ng-click="goToManageGroups()">+ add new</a></h4>
   </div>
   <perfect-scrollbar id="accountList" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
     <div class="menu acList">
@@ -48,11 +53,12 @@
               </div>
               <ul class="accBox subAccBox" ng-show="value.open || value.groupUniqueName === selectedGroupUname"
                   id="ul_{{value.groupUniqueName}}">
-                <li class="inrPrnt" ng-repeat="(index,accDtl) in value.accountDetails track by accDtl.uniqueName" id="ac_{{accDtl.uniqueName}}"
+                <li class="inrPrnt" ng-repeat="(index,accDtl) in value.accountDetails  | filter:acntSrch" id="ac_{{accDtl.uniqueName}}"
                   tooltip-placement="top" uib-tooltip="{{accDtl.uniqueName}}">
                   <a
-                    href="#ledger" ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl); getLedgerData(value, accDtl)"
-                     ng-class="{'active': accDtl.uniqueName === selectedAccountUniqueName}" ui-sref="ledger.ledgerContent({unqName:accDtl.uniqueName})">
+                    ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl); getLedgerData(value, accDtl)"
+                     ng-class="{'active': accDtl.uniqueName === selectedAccountUniqueName}" 
+                     ui-sref="company.ledgerContent({unqName:accDtl.uniqueName})">
                     <div class="clearfix">
                       <i ng-class="accDtl.charId ==1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
                       <span ng-bind-html="accDtl.name | highlight: acntSrch" class="ellp max100"></span>

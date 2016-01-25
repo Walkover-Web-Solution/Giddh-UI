@@ -17,6 +17,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       }
       update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
       delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
+      get: {method: 'GET', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
       move: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/move'}
       share: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/share'}
       unshare: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/unshare'}
@@ -35,19 +36,23 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Group.add({companyUniqueName: companyUniqueName}, data, onSuccess,
         onFailure))
 
-    getAllFor: (companyUniqueName, onSuccess, onFailure) ->
+#   All groups with full detail, without account
+    getGroupsWithoutAccountsInDetail: (companyUniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.getAllInDetail({companyUniqueName: companyUniqueName}, onSuccess,
         onFailure))
 
-    getAllWithAccountsFor: (companyUniqueName, onSuccess, onFailure) ->
+#   All groups with full detail, with account
+    getGroupsWithAccountsInDetail: (companyUniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccountsInDetail({companyUniqueName: companyUniqueName},
         onSuccess, onFailure))
 
-    getAllCroppedFor: (companyUniqueName, onSuccess, onFailure) ->
+#   All groups with less detail, without account
+    getGroupsWithoutAccountsCropped: (companyUniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.getAll({companyUniqueName: companyUniqueName}, onSuccess,
         onFailure))
 
-    getAllCroppedWithAccountsFor: (companyUniqueName, onSuccess, onFailure) ->
+#   All groups with less detail, with account
+    getGroupsWithAccountsCropped: (companyUniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccounts({companyUniqueName: companyUniqueName},
         onSuccess, onFailure))
 
@@ -57,6 +62,11 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         groupUniqueName: group.oldUName
       }, group, onSuccess, onFailure))
 
+    get: (companyUniqueName, groupUniqueName, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Group.get({
+        companyUniqueName: companyUniqueName,
+        groupUniqueName: groupUniqueName
+      }, onSuccess, onFailure))
 
     delete: (companyUniqueName, group, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.delete({
@@ -88,17 +98,47 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         groupUniqueName: unqNamesObj.selGrpUname
       }, onSuccess, onFailure))
 
+    matchAndReturnObj: (src, dest)->
+      _.find(dest, (key)->
+        return key.uniqueName is src.groupUniqueName
+      )
+
+    matchAndReturnGroupObj: (src, dest)->
+      _.find(dest, (key)->
+        return key.uniqueName is src.uniqueName
+      )
+
+    makeGroupListFlatwithLessDtl: (rawList) ->
+      obj = _.map(rawList, (item) ->
+        obj = {}
+        obj.name = item.name
+        obj.uniqueName = item.uniqueName
+        obj.synonyms = item.synonyms
+        obj.parentGroups = item.parentGroups
+        obj
+      )
+      return obj
+
+    makeAcListWithLessDtl: (rawList) ->
+      obj = _.map(rawList, (item) ->
+        obj = {}
+        obj.name = item.name
+        obj.uniqueName = item.uniqueName
+        obj.mergedAccounts = item.mergedAccounts
+        obj
+      )
+      return obj
 
     flattenGroup: (rawList, parents) ->
       listofUN = _.map(rawList, (listItem) ->
         newParents = _.union([], parents)
-        newParents.push({name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role})
+        newParents.push({name: listItem.name, uniqueName: listItem.uniqueName})
+        listItem.parentGroups = newParents
         if listItem.groups.length > 0
           result = groupService.flattenGroup(listItem.groups, newParents)
-          result.push(listItem)
+          result.push(_.omit(listItem, "groups"))
         else
-          result = listItem
-        listItem.parentGroups = newParents
+          result = _.omit(listItem, "groups")
         result
       )
       _.flatten(listofUN)
@@ -111,9 +151,8 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
           addThisGroup.groupName = groupItem.name
           addThisGroup.groupUniqueName = groupItem.uniqueName
           addThisGroup.accountDetails = groupItem.accounts
+          addThisGroup.groupSynonyms = groupItem.synonyms
           addThisGroup
-        else
-          #do nothing
       )
       _.without(_.flatten(listGA), undefined)
 
@@ -123,24 +162,24 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
           uniqueList = groupService.flattenAccount(listItem.groups)
           _.each(listItem.accounts, (accntItem) ->
             if _.isUndefined(accntItem.parentGroups)
-              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role}]
+              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName}]
             else
-              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role})
+              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName})
           )
           uniqueList.push(listItem.accounts)
           _.each(uniqueList, (accntItem) ->
             if _.isUndefined(accntItem.parentGroups)
-              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role}]
+              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName}]
             else
-              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role})
+              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName})
           )
           uniqueList
         else
           _.each(listItem.accounts, (accntItem) ->
             if _.isUndefined(accntItem.parentGroups)
-              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role}]
+              accntItem.parentGroups = [{name: listItem.name, uniqueName: listItem.uniqueName}]
             else
-              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role})
+              accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName})
           )
           listItem.accounts
       )

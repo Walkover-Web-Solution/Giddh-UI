@@ -21,6 +21,35 @@ describe 'groupController', ->
         permissionService: @permissionService
         accountService: @accountService
       })
+  describe '#goToManageGroups', ->
+    xit 'should show a toastr error message if object is blank', ->
+      @rootScope.selectedCompany = {}
+      spyOn(@toastr, 'error')
+      deferred = @q.defer()
+      spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
+
+      @scope.goToManageGroups()
+      expect(@toastr.error).toHaveBeenCalledWith('Select company first.', 'Error')
+      expect(@uibModal.open).not.toHaveBeenCalled()
+
+    xit 'should call modal service', ->
+      @rootScope.selectedCompany = {something: "something"}
+      modalData = {
+        templateUrl: '/public/webapp/views/addManageGroupModal.html'
+        size: "liq90"
+        backdrop: 'static'
+      }
+      deferred = @q.defer()
+      spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
+      @scope.goToManageGroups()
+      expect(@uibModal.open).toHaveBeenCalledWith(modalData)
+
+  describe '#showLedgerBreadCrumbs', ->
+    it 'should set data in ledgerBreadCrumbList', ->
+      data ={}
+      @scope.showLedgerBreadCrumbs(data)
+      expect(@scope.ledgerBreadCrumbList).toEqual({})
+
   describe '#getGroups', ->
     it 'should show a toastr informing user to select company first when no company selected', ->
       @rootScope.selectedCompany = {}
@@ -31,12 +60,12 @@ describe 'groupController', ->
     it 'should call groups from route after getting company unique name', ->
       @rootScope.selectedCompany = {"data": "Got it", "uniqueName": "soniravi"}
       deferred = @q.defer()
-      spyOn(@groupService, 'getAllWithAccountsFor').andReturn(deferred.promise)
+      spyOn(@groupService, 'getGroupsWithAccountsCropped').andReturn(deferred.promise)
       @scope.getGroups()
-      expect(@groupService.getAllWithAccountsFor).toHaveBeenCalledWith("soniravi")
+      expect(@groupService.getGroupsWithAccountsCropped).toHaveBeenCalledWith("soniravi")
 
   describe '#getGroupListSuccess', ->
-    it 'should set group list', ->
+    xit 'should set group list', ->
       result = ["body": {"name": "fixed assets"}, {"name": "capital account"}]
       @scope.getGroupListSuccess(result)
       expect(@scope.groupList).toBe(result.body)
@@ -49,24 +78,30 @@ describe 'groupController', ->
       expect(@toastr.error).toHaveBeenCalledWith("Unable to get group details.", "Error")
 
   describe '#selectGroupToEdit', ->
+    group = {
+      name: "Fixed Assets"
+      uniqueName: "fixed"
+    }
     it 'should check if variable is empty then set value according to condition', ->
       spyOn(@scope, "getGroupSharedList")
       spyOn(@scope, "checkPermissions")
-      @scope.selectedGroup.oldUName = ''
-      group = {"name": "Fixed Assets"}
-      @scope.selectGroupToEdit(group)
-      expect(@scope.selectedGroup.oldUName).toEqual(@scope.selectedGroup.uniqueName)
-      expect(@scope.checkPermissions).toHaveBeenCalledWith(group)
-
-    it 'should set group as selected and a variable to true and make a call to fuction with group variable', ->
-      spyOn(@scope, "getGroupSharedList")
-      spyOn(@scope, "checkPermissions")
-      group = {"name": "Fixed Assets"}
+      @scope.selectedGroup.oldUName = 'Hey dude'
       @scope.selectGroupToEdit(group)
       expect(@scope.selectedGroup).toEqual(group)
-      expect(@scope.showGroupDetails).toBeTruthy()
+      expect(@scope.selectedSubGroup).toEqual({})
       expect(@scope.getGroupSharedList).toHaveBeenCalledWith(group)
       expect(@scope.checkPermissions).toHaveBeenCalledWith(group)
+
+    it 'should check if oldUName is empty then set value in oldUName', ->
+      spyOn(@scope, "getGroupSharedList")
+      spyOn(@scope, "checkPermissions")
+      @scope.selectedGroup.oldUName = ''
+      @scope.selectGroupToEdit(group)
+      expect(@scope.selectedGroup).toEqual(group)
+      expect(@scope.selectedSubGroup).toEqual({})
+      expect(@scope.getGroupSharedList).toHaveBeenCalledWith(group)
+      expect(@scope.checkPermissions).toHaveBeenCalledWith(group)
+      expect(@scope.selectedGroup.oldUName).toEqual(@scope.selectedGroup.uniqueName)
 
   describe '#getGroupSharedList', ->
     it 'should call a service with a obj var to get data if user has share permission', ->
@@ -363,12 +398,17 @@ describe 'groupController', ->
       expect(e.stopPropagation).toHaveBeenCalled()
 
   describe '#selectItem', ->
-    it 'should make group menus highlight set active class', ->
-      item = "item"
-      spyOn(@scope, "selectGroupToEdit")
-      @scope.selectItem(item)
-      expect(@scope.selectedItem).toBe(item)
-      expect(@scope.selectGroupToEdit).toHaveBeenCalled()
+    it 'should call groupService get method with data.uniqueName and rootScope selectedCompany uniqueName', ->
+      data = {
+        uniqueName: "item"
+      }
+      @rootScope.selectedCompany = {
+        uniqueName: "somename"
+      }
+      deferred = @q.defer()
+      spyOn(@groupService, 'get').andReturn(deferred.promise)
+      @scope.selectItem(data)
+      expect(@groupService.get).toHaveBeenCalledWith(@rootScope.selectedCompany.uniqueName, data.uniqueName)
 
   describe '#showBreadCrumbs', ->
     it 'should set showBreadCrumbs variable to true & set value in breadCrumbList', ->
@@ -438,11 +478,6 @@ describe 'groupController', ->
       result = @scope.isEmptyObject(data)
       expect(result).toBeFalsy()
 
-  describe '#selectAcMenu', ->
-    it 'should set value for account menu variable', ->
-      data = {"name"}
-      @scope.selectAcMenu(data)
-      expect(@scope.selectedAccntMenu).toBe(data)
 
   describe '#mergeNum', ->
     it 'should return null', ->
@@ -477,80 +512,25 @@ describe 'groupController', ->
       expect(@scope.acntExt.onlyMobileNo).toEqual(undefined)
 
   describe '#showAccountDtl', ->
-    data = {
-      address: null
-      companyName: null
-      description: null
-      email: null
-      mergedAccounts: []
-      mobileNo: null
-      name: "cash in hand"
-      openingBalance: 50000
-      openingBalanceDate: "01-11-2015"
-      openingBalanceType: "DEBIT"
-      uniqueName: "cashinhand"
-      parentGroups: [
-        {
-          name: "cash"
-          uniqueName: "cash"
-          role: {
-            name: "Admin"
-            uniqueName: "admin"
-            permissions: [
-              {code: "VW", description: "View"}
-              {code: "DLT", description: "Delete"}
-              {code: "UPDT", description: "Update"}
-              {code: "ADD", description: "Add"}
-            ]
-          }
-        }
-      ]
-    }
-
-    it 'should check if selectedGroup is empty and copy data to selAcntPrevObj, set showGroupDetails variable to false, showAccountDetails to true and set value for selected account variable and set breadcrumb and set value cantUpdate variable to true', ->
-      @scope.selectedGroup = {}
-      @rootScope.selAcntUname = "cashinhand"
-      spyOn(@scope, "checkPermissions")
-      spyOn(@scope, "showBreadCrumbs")
-      spyOn(@scope, 'breakMobNo')
-      spyOn(@scope, 'setOpeningBalanceDate')
-      spyOn(@scope, 'getAccountSharedList')
-
+    
+    it 'should highlight accounts menu and call accountService get method', ->
+      data =
+        name: "somename"
+        uniqname: "somename"
+        mergedAccounts: "somename"
+      @rootScope.selectedCompany = {
+        uniqueName: "somename"
+      }
+      reqParams = {
+        compUname: @rootScope.selectedCompany.uniqueName
+        acntUname: data.uniqueName
+      }
+      deferred = @q.defer()
+      spyOn(@accountService, 'get').andReturn(deferred.promise)
       @scope.showAccountDtl(data)
-      expect(@scope.checkPermissions).toHaveBeenCalledWith(data)
-      expect(@scope.showGroupDetails).toBeFalsy()
-      expect(@scope.showAccountDetails).toBeTruthy()
-      expect(@scope.cantUpdate).toBeTruthy()
-      expect(@scope.selAcntPrevObj).toEqual(data)
-      expect(@scope.selectedAccount).toEqual(data)
-
-      expect(@scope.showBreadCrumbs).toHaveBeenCalledWith(data.parentGroups.reverse())
-      expect(@scope.breakMobNo).toHaveBeenCalledWith(data)
-      expect(@scope.setOpeningBalanceDate).toHaveBeenCalled()
-      expect(@scope.acntCase).toBe("Update")
-      expect(@scope.getAccountSharedList).toHaveBeenCalled()
-
-    it 'should copy data to selAcntPrevObj, set showGroupDetails variable to false, showAccountDetails to true and set value for selected account variable and set breadcrumb', ->
-      @scope.selectedGroup = {name: "some"}
-      @rootScope.selAcntUname = "some"
-      spyOn(@scope, "checkPermissions")
-      spyOn(@scope, "showBreadCrumbs")
-      spyOn(@scope, 'breakMobNo')
-      spyOn(@scope, 'setOpeningBalanceDate')
-      spyOn(@scope, 'getAccountSharedList')
-
-      @scope.showAccountDtl(data)
-      expect(@scope.checkPermissions).toHaveBeenCalledWith(data)
-      expect(@scope.showGroupDetails).toBeFalsy()
-      expect(@scope.showAccountDetails).toBeTruthy()
-      expect(@scope.cantUpdate).toBeFalsy()
-      expect(@scope.selAcntPrevObj).toEqual(data)
-      expect(@scope.selectedAccount).toEqual(data)
-      expect(@scope.getAccountSharedList).toHaveBeenCalled()
-      expect(@scope.showBreadCrumbs).toHaveBeenCalledWith(data.parentGroups.reverse())
-      expect(@scope.breakMobNo).toHaveBeenCalledWith(data)
-      expect(@scope.setOpeningBalanceDate).toHaveBeenCalled()
-      expect(@scope.acntCase).toBe("Update")
+      expect(@scope.selectedAccntMenu).toEqual(data)
+      expect(@accountService.get).toHaveBeenCalledWith(reqParams)
+      
 
   describe '#setOpeningBalanceDate', ->
     it 'should check if openingBalanceDate is defined then set value according to condition', ->
@@ -638,7 +618,7 @@ describe 'groupController', ->
       expect(res).toEqual(unqNamesObj)
 
   describe '#addAccount', ->
-    it 'should call accountservice create method with obj', ->
+    it 'should call accountService create method with obj', ->
       data = {
         compUname: "Cname"
         selGrpUname: "Gname"
@@ -652,9 +632,9 @@ describe 'groupController', ->
       expect(@accountService.createAc).toHaveBeenCalledWith(data, @scope.selectedAccount)
 
   describe '#addAccountSuccess', ->
-    it 'should show success message through toastr, set selectedAccount to blank object, and push data in selectedGroup.accounts variable, set value to groupAccntList and check reload account broadcast', ->
+    it 'should show success message through toastr, set selectedAccount to blank object, and push data in selectedGroup.accounts variable, set value to groupAccntList and call getGroups function', ->
       spyOn(@toastr, "success")
-      spyOn(@rootScope, "$broadcast")
+      spyOn(@scope, "getGroups")
       res = {
         status: "Success"
         body:
@@ -668,10 +648,11 @@ describe 'groupController', ->
       }
       @scope.addAccountSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith("Account created successfully", res.status)
+      expect(@scope.getGroups).toHaveBeenCalled()
       expect(@scope.selectedAccount).toEqual({})
       expect(@scope.selectedGroup.accounts).toContain(res.body)
       expect(@scope.groupAccntList).toEqual([res.body])
-      expect(@rootScope.$broadcast).toHaveBeenCalledWith('$reloadAccount')
+      
 
   describe '#addAccountFailure', ->
     it 'should show error message through toastr', ->
@@ -706,7 +687,7 @@ describe 'groupController', ->
       })
 
   describe '#deleteAccountConfirm', ->
-    it 'should call accountservice delete method with two parameters', ->
+    it 'should call accountService delete method with two parameters', ->
       data = {
         compUname: "Cname"
         selGrpUname: "Gname"
@@ -763,6 +744,7 @@ describe 'groupController', ->
       @scope.updateAccount()
       expect(@scope.setAdditionalAccountDetails).toHaveBeenCalled()
       expect(@toastr.info).toHaveBeenCalledWith("Nothing to update", "Info")
+    
     it 'should call accountService updateAc method and check prev uniqueName value is same like new or selected group is empty ', ->
       data = {
         compUname: "Cname"
@@ -778,46 +760,67 @@ describe 'groupController', ->
       spyOn(@scope, "setAdditionalAccountDetails").andReturn(data)
       deferred = @q.defer()
       spyOn(@accountService, 'updateAc').andReturn(deferred.promise)
-      spyOn(@rootScope, "$broadcast")
+      
       @scope.updateAccount()
       expect(@accountService.updateAc).toHaveBeenCalledWith(data, @scope.selectedAccount)
-      expect(@rootScope.$broadcast).toHaveBeenCalledWith('$reloadAccount')
+      
 
   describe '#updateAccountSuccess', ->
-    it 'should show success message and call getGroups function and set selectedAccount variable to blank object', ->
-      res = {
-        status: "Success"
-        body: {
-          uniqueName: "name"
-          parentGroups: [{uniqueName: "pUnqName"}]
-        }
-      }
-      dobj = {
+    res = {
+      status: "Success"
+      body: {
         uniqueName: "name"
-        parentGroups: [{uniqueName: "pUnqName"}]
+        mergedAccounts: ""
+        uniqname: "dsdd"
       }
+    }    
+    it 'should show success message and call getGroups function and merge selectedAccount, selAcntPrevObj variables to response object', ->
+      @scope.selectedAccount = {}
+      @scope.selAcntPrevObj = {}
+      spyOn(@toastr, "success")
+      spyOn(@rootScope, "$broadcast")
+      spyOn(@scope, "getGroups")
+      @scope.updateAccountSuccess(res)
+      expect(@toastr.success).toHaveBeenCalledWith("Account updated successfully", res.status)
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith("$reloadLedger")
+      expect(@scope.selectedAccount).toEqual(res.body)
+      expect(@scope.getGroups).toHaveBeenCalled()
+      expect(@scope.selAcntPrevObj).toEqual(res.body)
+
+    it 'should show success message and call getGroups function and merge selectedAccount, selAcntPrevObj variables to response object and if selectedGroup is not empty then it will merge groupAccntList array by find index', ->
       @scope.selectedAccount = {}
       @scope.selAcntPrevObj = {}
       @scope.selectedGroup = {
-        accounts: [
-          {uniqueName: "ss"}
-          {uniqueName: "name"}
-          {uniqueName: "dsdd"}
-        ]
+        uniqueName: "ss"
       }
       @scope.groupAccntList = [
-        {uniqueName: "ss"}
-        {uniqueName: "d"}
-        {uniqueName: "dsdd"}
+        {
+          uniqueName: "ss"
+          mergedAccounts: ""
+          uniqname: "ss"
+        }
+        {
+          uniqueName: "d"
+          mergedAccounts: ""
+          uniqname: "d"
+        }
+        {
+          uniqueName: "name"
+          mergedAccounts: ""
+          uniqname: "dsdd"
+        }
       ]
       spyOn(@toastr, "success")
       spyOn(@rootScope, "$broadcast")
+      spyOn(@scope, "getGroups")
       @scope.updateAccountSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith("Account updated successfully", res.status)
-      expect(@scope.selectedAccount).toEqual(dobj)
-      expect(@scope.selAcntPrevObj).toEqual(dobj)
-      expect(@scope.groupAccntList[1].uniqueName).toEqual(@scope.selectedAccount.uniqueName)
       expect(@rootScope.$broadcast).toHaveBeenCalledWith("$reloadLedger")
+      expect(@scope.selectedAccount).toEqual(res.body)
+      expect(@scope.getGroups).toHaveBeenCalled()
+      expect(@scope.selAcntPrevObj).toEqual(res.body)
+      expect(@scope.groupAccntList[2]).toEqual(res.body)
+      
 
   describe '#updateAccountFailure', ->
     it 'should show error message through toastr', ->
@@ -850,7 +853,7 @@ describe 'groupController', ->
       @scope.moveAccnt(data)
       expect(@toastr.error).toHaveBeenCalledWith("Select group only from list", "Error")
 
-    it 'should call accountservice move method with object', ->
+    it 'should call accountService move method with object', ->
       data = {
         uniqueName: "name"
       }
@@ -873,7 +876,7 @@ describe 'groupController', ->
       @scope.moveAccnt(data)
       expect(@accountService.move).toHaveBeenCalledWith(obj, data)
 
-    it 'should call accountservice move method with object and also check if selectedGroup uniqname is undefined', ->
+    it 'should call accountService move method with object and also check if selectedGroup uniqname is undefined', ->
       data = {
         uniqueName: "name"
       }

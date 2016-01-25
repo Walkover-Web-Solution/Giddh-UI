@@ -3,7 +3,9 @@
 mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices) ->
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
+  $rootScope.nowShowAccounts = false
   $rootScope.basicInfo = {}
+  $rootScope.flatAccntListWithParents = []
   
   $scope.logout = ->
     $http.post('/logout').then ((res) ->
@@ -11,18 +13,14 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
       window.location = "/thanks"
     ), (res) ->
 
-  $scope.goToManageGroups = ->
-    if _.isEmpty($rootScope.selectedCompany)
-      toastr.error("Select company first.", "Error")
-    else
-      modalService.openManageGroupsModal()
-
   # for ledger
   $rootScope.makeAccountFlatten = (data) ->
+    angular.copy(data, $rootScope.flatAccntListWithParents)
     obj = _.map(data, (item) ->
       obj = {}
       obj.name = item.name
       obj.uniqueName = item.uniqueName
+      obj.mergedAccounts = item.mergedAccounts
       obj
     )
     $rootScope.fltAccntList = obj

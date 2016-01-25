@@ -120,6 +120,17 @@ router.delete '/:groupUniqueName', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/:groupUniqueName', (req, res) ->
+  authHead = 
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 router.post '/', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups'
   args =
@@ -133,16 +144,17 @@ router.post '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.post '/accounts', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/groups/' + req.params.groupUniqueName + '/accounts'
+router.post '/:groupUniqueName/accounts', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName + '/accounts'
   args =
     headers:
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
+  console.log "in creating account", args, hUrl
   settings.client.post hUrl, args, (data, response) ->
+    console.log "creating account completed", args, hUrl
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data

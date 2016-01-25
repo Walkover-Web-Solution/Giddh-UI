@@ -1,8 +1,8 @@
 'use strict'
 
-groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, $filter, permissionService) ->
+groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService, DAServices, $location, $uibModal) ->
   $scope.groupList = {}
-  $scope.flattenGroupList = {}
+  $scope.flattenGroupList = []
   $scope.moveto = undefined
   $scope.selectedGroup = {}
   $scope.selectedSubGroup = {}
@@ -19,6 +19,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.canUpdate = false
   $scope.canDelete = false
   $scope.canAdd = false
+
   #set a object for share group
   $scope.shareGroupObj ={role: "view_only"}
   $scope.shareAccountObj ={role: "view_only"}
@@ -49,6 +50,62 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   }
   $scope.format = "dd-MM-yyyy"
 
+  # acCntrl func
+  $scope.flatAccntWGroupsList = {}
+  $scope.showAccountList = false
+  $scope.selectedAccountUniqueName = undefined
+
+  $scope.goToManageGroups =() ->
+    if _.isEmpty($rootScope.selectedCompany)
+      toastr.error("Select company first.", "Error")
+    else
+      $uibModal.open(
+        templateUrl: '/public/webapp/views/addManageGroupModal.html'
+        size: "liq90"
+        backdrop: 'static'
+        scope: $scope
+      )
+  #show breadcrumbs on ledger
+  $scope.showLedgerBreadCrumbs = (data) ->
+    $rootScope.ledgerBreadCrumbList = data
+
+  $scope.setLedgerData = (data, acData) ->
+    $scope.selectedAccountUniqueName = acData.uniqueName
+    DAServices.LedgerSet(data, acData)
+    localStorageService.set("_ledgerData", data)
+    localStorageService.set("_selectedAccount", acData)
+    if !_.isEmpty($rootScope.flatGroupsList)
+      resObj = groupService.matchAndReturnObj(data, $rootScope.flatGroupsList)
+      $scope.showLedgerBreadCrumbs(resObj.parentGroups)
+
+  $scope.highlightAcMenu = () ->
+    url = $location.path().split("/")
+    if url[1] is "ledger"
+      $timeout ->
+        acEle = document.getElementById("ac_" + url[2])
+        if acEle is null
+          return false
+        parentSib = acEle.parentElement.previousElementSibling
+        angular.element(parentSib).trigger('click')
+        angular.element(acEle).children().trigger('click')
+      , 500
+
+  #Expand or  Collapse all account menus
+  $scope.toggleAcMenus = (state) ->
+    $scope.flatAccntWGroupsList.forEach (e) ->
+      e.open = state
+      $scope.showSubMenus = state
+
+  # trigger expand or collapse func
+  $scope.checkLength = (val)->
+    if val is '' || _.isUndefined(val)
+      $scope.toggleAcMenus(false)
+    else if val.length >= 4
+      $scope.toggleAcMenus(true)
+    else
+      $scope.toggleAcMenus(false)
+  # end acCntrl
+
   # expand and collapse all tree structure
   getRootNodesScope = ->
     angular.element(document.getElementById('tree-root')).scope()
@@ -67,36 +124,36 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
-      groupService.getAllWithAccountsFor($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
-          $scope.getGroupListFailure)
+      # with accounts, group data
+      groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.getGroupListFailure)
+      # without accounts only groups
+      groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess, $scope.getGroupListFailure)
+
+  $scope.makeAccountsList = (res) ->
+    # flatten all groups with accounts and only accounts flatten
+    a =[]
+    angular.copy(res.body, a)
+    $rootScope.flatGroupsList = groupService.flattenGroup(a, [])
+    $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
+    $scope.showAccountList = true
+    b = groupService.flattenAccount(a)
+    $rootScope.makeAccountFlatten(b)
+    $scope.flattenGroupList = groupService.makeGroupListFlatwithLessDtl($rootScope.flatGroupsList)
+
 
   $scope.getGroupListSuccess = (res) ->
     $scope.groupList = res.body
-    $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
-    $scope.flatAccntList = groupService.flattenAccount($scope.groupList)
     $scope.showListGroupsNow = true
-    if not _.isEmpty($scope.selectedGroup)
-      $scope.selectedGroup = _.find($scope.flattenGroupList, (item) ->
-        item.uniqueName == $scope.selectedGroup.uniqueName
-      )
-      $scope.selectItem($scope.selectedGroup)
+    $scope.highlightAcMenu()
+    # if not _.isEmpty($scope.selectedGroup)
+    #   $scope.selectedGroup = _.find($scope.flattenGroupList, (item) ->
+    #     item.uniqueName == $scope.selectedGroup.uniqueName
+    #   )
+    #   $scope.selectItem($scope.selectedGroup)
 
   $scope.getGroupListFailure = (res) ->
     toastr.error("Unable to get group details.", "Error")
-
-  $scope.selectGroupToEdit = (group) ->
-    $scope.selectedGroup = group
-    if _.isEmpty($scope.selectedGroup.oldUName)
-      $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
-    $scope.selectedSubGroup = {}
-    $scope.showGroupDetails = true
-    $scope.showAccountListDetails = true
-    $scope.showAccountDetails = false
-    $scope.checkPermissions(group)
-    $scope.getGroupSharedList(group)
-    $scope.groupAccntList = group.accounts
-    $scope.accountsSearch = undefined
-
+  
   $scope.getGroupSharedList = () ->
     if $scope.canShare
       unqNamesObj = {
@@ -159,7 +216,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.selectedItem = $scope.selectedGroup
     toastr.success("Group has been updated successfully.", "Success")
     $scope.getGroups()
-    $rootScope.$broadcast('$reloadAccount')
 
   $scope.onUpdateGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -198,7 +254,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.success("Sub group added successfully", "Success")
     $scope.selectedSubGroup = {}
     $scope.getGroups()
-    $rootScope.$broadcast('$reloadAccount')
 
   $scope.onCreateGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -222,7 +277,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showGroupDetails = false
     $scope.showAccountListDetails = false
     $scope.getGroups()
-    $rootScope.$broadcast('$reloadAccount')
 
   $scope.onDeleteGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -246,10 +300,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     groupService.move(unqNamesObj, body).then($scope.onMoveGroupSuccess, $scope.onMoveGroupFailure)
 
   $scope.onMoveGroupSuccess = (res) ->
+    $scope.moveto = undefined
     toastr.success("Group moved successfully.", "Success")
     $scope.getGroups()
-    $rootScope.$broadcast('$reloadAccount')
-    $scope.moveto = undefined
 
   $scope.onMoveGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -258,9 +311,34 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     e.stopPropagation()
 
   $scope.selectItem = (item) ->
+    groupService.get($rootScope.selectedCompany.uniqueName, item.uniqueName).then($scope.getGrpDtlSuccess,
+          $scope.getGrpDtlFailure)
+
+  $scope.getGrpDtlSuccess = (res) ->
+    item = res.body
     $scope.selectedItem = item
     $scope.selectedAccntMenu = undefined
     $scope.selectGroupToEdit(item)
+    $scope.accountsSearch = undefined
+    $scope.showGroupDetails = true
+    $scope.showAccountListDetails = true
+    $scope.showAccountDetails = false
+    $scope.populateAccountList(item)
+
+  $scope.getGrpDtlFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.selectGroupToEdit = (group) ->
+    $scope.selectedGroup = group
+    if _.isEmpty($scope.selectedGroup.oldUName)
+      $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
+    $scope.selectedSubGroup = {}
+    $scope.checkPermissions(group)
+    $scope.getGroupSharedList(group)
+
+  $scope.populateAccountList = (item) ->
+    result = groupService.matchAndReturnGroupObj(item, $rootScope.flatGroupsList)
+    $scope.groupAccntList = groupService.makeAcListWithLessDtl(result.accounts, $rootScope.flatGroupsList)
 
   #show breadcrumbs
   $scope.showBreadCrumbs = (data) ->
@@ -279,10 +357,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   #check if object is empty on client side by mechanic
   $scope.isEmptyObject = (obj) ->
     return _.isEmpty(obj)
-
-  #highlight account menus
-  $scope.selectAcMenu = (item) ->
-    $scope.selectedAccntMenu = item
 
   $scope.mergeNum = (num) ->
     if _.isUndefined(num.Ccode) || _.isUndefined(num.onlyMobileNo) || _.isEmpty(num.Ccode) || _.isEmpty(num.onlyMobileNo)
@@ -308,22 +382,39 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #show account
   $scope.showAccountDtl = (data) ->
+    #highlight account menus
+    $scope.selectedAccntMenu = data
+    reqParams = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: data.uniqueName
+    }
+    accountService.get(reqParams).then($scope.getAcDtlSuccess, $scope.getAcDtlFailure)
+
+  $scope.getAcDtlSuccess = (res) ->
+    getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.flatAccntListWithParents)
+    data = res.body
+    data.parentGroups = []
+    bcd = getPgrps.parentGroups.reverse()
+    _.extend(data.parentGroups, bcd)
+    $scope.checkPermissions(data)
     $scope.cantUpdate = false
     pGroups = []
-    $scope.checkPermissions(data)
     $scope.showGroupDetails = false
     # $scope.showAccountDetails = true
     if data.uniqueName is $rootScope.selAcntUname
       $scope.cantUpdate = true
     angular.copy(data, $scope.selAcntPrevObj)
     _.extend($scope.selectedAccount, data)
-    _.extend(pGroups, data.parentGroups)
-    $scope.showBreadCrumbs(pGroups.reverse())
     $scope.breakMobNo(data)
     $scope.setOpeningBalanceDate()
     $scope.getAccountSharedList()
     # for play between update and add
     $scope.acntCase = "Update"
+    $scope.showBreadCrumbs(data.parentGroups)
+    
+
+  $scope.getAcDtlFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   # prepare date object
   $scope.setOpeningBalanceDate = () ->
@@ -365,7 +456,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.addAccountSuccess = (res) ->
     toastr.success("Account created successfully", res.status)
-    $rootScope.$broadcast('$reloadAccount')
+    $scope.getGroups()
     res.body.parentGroups = $scope.selectedGroup.parentGroups.reverse()
     $scope.selectedAccount = {}
     $scope.selectedGroup.accounts.push(res.body)
@@ -394,7 +485,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onDeleteAccountSuccess = (res) ->
     toastr.success("Account deleted successfully.", "Success")
     $scope.getGroups()
-    $rootScope.$broadcast('$reloadAccount')
     $scope.selectedAccount = {}
     $scope.showAccountDetails = false
 
@@ -411,24 +501,26 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       unqNamesObj.acntUname = $scope.selAcntPrevObj.uniqueName
       
     if _.isEmpty($scope.selectedGroup)
-      unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
+      lastVal = _.last($scope.selectedAccount.parentGroups)
+      unqNamesObj.selGrpUname = lastVal.uniqueName
 
     accountService.updateAc(unqNamesObj, $scope.selectedAccount).then($scope.updateAccountSuccess,
         $scope.updateAccountFailure)
-    $rootScope.$broadcast('$reloadAccount')
+    
 
   $scope.updateAccountSuccess = (res) ->
     toastr.success("Account updated successfully", res.status)
     $rootScope.$broadcast('$reloadLedger')
     angular.merge($scope.selectedAccount, res.body)
-    angular.merge($scope.selAcntPrevObj, res.body)
-    getTrueIndex = 0
-    getIndex = _.find($scope.selectedGroup.accounts, (item, index) ->
-      if item.uniqueName == $scope.selectedAccount.uniqueName
-        getTrueIndex = index
-    )
+    $scope.getGroups()
+    abc = _.pick($scope.selectedAccount, 'name', 'uniqueName', 'mergedAccounts')
     if !_.isEmpty($scope.selectedGroup)
-      angular.merge($scope.groupAccntList[getTrueIndex], $scope.selectedAccount)
+      _.find($scope.groupAccntList, (item, index) ->
+        if item.uniqueName == $scope.selAcntPrevObj.uniqueName
+          angular.merge($scope.groupAccntList[index], abc)
+      )
+    # end if
+    angular.merge($scope.selAcntPrevObj, res.body)      
     
 
   $scope.updateAccountFailure = (res) ->
@@ -447,7 +539,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       acntUname: $scope.selectedAccount.uniqueName
     }
     if _.isUndefined($scope.selectedGroup.uniqueName)
-      unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
+      lastVal = _.last($scope.selectedAccount.parentGroups)
+      unqNamesObj.selGrpUname = lastVal.uniqueName
 
     body = {
       "uniqueName": group.uniqueName
@@ -457,8 +550,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.moveAccntSuccess = (res) ->
     toastr.success(res.body, res.status)
     $scope.getGroups()
-    $rootScope.$broadcast('$reloadAccount')
     $scope.showAccountDetails = false
+    if !_.isEmpty($scope.selectedGroup)
+      $scope.groupAccntList = _.reject($scope.groupAccntList, (item) ->
+        return item.uniqueName == $scope.selectedAccount.uniqueName
+      )
+    # end if
+    $scope.selectedAccount = {}
+    $scope.selAcntPrevObj = {}
+
 
   $scope.moveAccntFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -522,5 +622,24 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.canAdd = permissionService.hasPermissionOn(entity, "ADD")
     $scope.canShare = permissionService.hasPermissionOn(entity, "MNG_USR")
 
+  $scope.loadAccountsList = () ->
+    if !_.isEmpty($rootScope.selectedCompany)
+      $scope.getGroups()
+    
+
+  $rootScope.$on 'reloadAccounts', ->
+    $scope.showAccountList = false
+    $scope.getGroups()
+
+  $timeout(->
+    $scope.loadAccountsList()
+  ,2000)
+  
+
+  $scope.$on '$viewContentLoaded', ->
+    # if !$rootScope.nowShowAccounts and !_.isEmpty($rootScope.selectedCompany)
+    #   $rootScope.nowShowAccounts = true
+    #   $scope.getGroups()
+    
 #init angular app
 giddh.webApp.controller 'groupController', groupController

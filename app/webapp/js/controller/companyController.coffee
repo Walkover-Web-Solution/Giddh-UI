@@ -5,7 +5,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   #make sure manage company detail not load
   $rootScope.cmpViewShow = false
   $rootScope.selectedCompany = {}
-  $rootScope.nowShowAccounts = false
   $scope.mHideBar = false
   $scope.dHideBar = false
   $scope.showUpdTbl = false
@@ -138,9 +137,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     if data.role.uniqueName is 'shared'
       localStorageService.set("_selectedCompany", data)
       $rootScope.selectedCompany = data
-      $state.go('ledger.ledgerContent')
+      $state.go('company.ledgerContent')
     else
       $scope.goToCompany(data, index)
+    $rootScope.$broadcast('companyChanged')
 
   #making a detail company view
   $scope.goToCompany = (data, index) ->
@@ -174,9 +174,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.getSharedUserList($scope.selectedCompany.uniqueName)
       $scope.getRolesList()
 
-    if not $rootScope.nowShowAccounts
+    if !$rootScope.nowShowAccounts 
       $rootScope.nowShowAccounts = true
-    else
       $rootScope.$broadcast('$reloadAccount')
 
   #update company details
