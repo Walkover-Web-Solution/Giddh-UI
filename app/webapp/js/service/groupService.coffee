@@ -98,15 +98,11 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         groupUniqueName: unqNamesObj.selGrpUname
       }, onSuccess, onFailure))
 
-    matchAndReturnObj: (src, dest)->
-      _.find(dest, (key)->
-        return key.uniqueName is src.groupUniqueName
-      )
 
     flattenGroup: (rawList, parents) ->
       listofUN = _.map(rawList, (listItem) ->
         newParents = _.union([], parents)
-        newParents.push({name: listItem.name, uniqueName: listItem.uniqueName})
+        newParents.push({name: listItem.name, uniqueName: listItem.uniqueName, role: listItem.role})
         if listItem.groups.length > 0
           result = groupService.flattenGroup(listItem.groups, newParents)
           result.push(listItem)

@@ -65,18 +65,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         backdrop: 'static'
         scope: $scope
       )
-  #show breadcrumbs on ledger
-  $scope.showLedgerBreadCrumbs = (data) ->
-    $rootScope.ledgerBreadCrumbList = data
 
   $scope.setLedgerData = (data, acData) ->
     $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
-    if !_.isEmpty($rootScope.flatGroupsList)
-      resObj = groupService.matchAndReturnObj(data, $rootScope.flatGroupsList)
-      $scope.showLedgerBreadCrumbs(resObj.parentGroups)
 
   $scope.highlightAcMenu = () ->
     url = $location.path().split("/")
@@ -124,27 +118,18 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
-      # without accounts only groups
-      groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess, $scope.getGroupListFailure)
-      # with accounts, group data
-      groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.getGroupListFailure)
-
-  $scope.makeAccountsList = (res) ->
-    # console.log res.body, "makeAccountsList"
-    # flatten all groups with accounts
-    a =[]
-    angular.copy(res.body, a)
-    $rootScope.flatGroupsList = groupService.flattenGroup(a, [])
-    $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
-    $scope.showAccountList = true
+      groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess,
+          $scope.getGroupListFailure)
 
 
   $scope.getGroupListSuccess = (res) ->
-    # console.log res.body, "getGroupListSuccess"
-    # $scope.flatAccntList = groupService.flattenAccount($scope.groupList)
     $scope.groupList = res.body
+    $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
+    $scope.flatAccntList = groupService.flattenAccount($scope.groupList)
+    $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
     $scope.showListGroupsNow = true
-    # $rootScope.makeAccountFlatten(groupService.flattenAccount($scope.groupList))
+    $scope.showAccountList = true
+    $rootScope.makeAccountFlatten(groupService.flattenAccount($scope.groupList))
     $scope.highlightAcMenu()
     if not _.isEmpty($scope.selectedGroup)
       $scope.selectedGroup = _.find($scope.flattenGroupList, (item) ->
@@ -635,15 +620,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showAccountList = false
     $scope.getGroups()
 
-  $timeout(->
-    $scope.loadAccountsList()
-  ,2000)
-  
+
 
   $scope.$on '$viewContentLoaded', ->
     if !$rootScope.nowShowAccounts and !_.isEmpty($rootScope.selectedCompany)
       $rootScope.nowShowAccounts = true
       $rootScope.$broadcast('$reloadAccount')
-    
+    $scope.loadAccountsList()
 #init angular app
 giddh.webApp.controller 'groupController', groupController
