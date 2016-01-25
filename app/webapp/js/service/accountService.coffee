@@ -8,7 +8,13 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       'accountsUniqueName': @accountsUniqueName
       'toDate': @toDate
       'fromDate': @fromDate
-    }, { create: {method: 'POST'} })
+    },
+    { 
+      create: {
+        method: 'POST'
+      } 
+    }
+  )
 
   Account = $resource('/company/:companyUniqueName/accounts',
     {
