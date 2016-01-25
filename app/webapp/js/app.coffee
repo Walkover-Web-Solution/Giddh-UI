@@ -63,11 +63,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/views/demo.html'
     controller: 'homeController')
   .state('Reports',
-    url: '/reports',
+    url: '/reports'
     templateUrl: '/public/webapp/views/reports.html',
     controller: 'reportsController'
   )
-  .state('company',
+  .state('company'
     url: ''
     abstract: true
     templateUrl: '/public/webapp/views/home.html'
@@ -103,7 +103,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     }
   )
   .state('company.profitAndLoss',
-    url: '/profit-and-loss',
+    url: '/profit-and-loss'
     views:{
       '':{
         templateUrl: '/public/webapp/views/profitLoss.html',
@@ -115,11 +115,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     }
   )
   .state('company.ledgerContent',
-    url: '/:unqName',
-<<<<<<< HEAD
-    templateUrl: '/public/webapp/views/ledgerContent.html'
-    controller: 'ledgerController'
-=======
+    url: '/:unqName'
     views: {
       'accounts':{
         templateUrl: '/public/webapp/views/accounts.html'
@@ -129,7 +125,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
         controller: 'ledgerController'
       }
     }
->>>>>>> playingWithRoutes
   )
   .state('/thankyou',
     url: '/thankyou'
