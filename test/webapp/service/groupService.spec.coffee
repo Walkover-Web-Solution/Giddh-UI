@@ -238,17 +238,22 @@ describe "Group Service", ->
   describe "nonHttpRequestMethods", ->
     describe '#flattenGroup', ->
       it 'should take list of group and flatten them', ->
-        groupList = [{
-          "name": "group1",
-          "uniqueName": "g1",
-          "groups": [{"name": "group2", "uniqueName": "g2", "groups": []}]
-        },
-          {"name": "group3", "uniqueName": "g3", "groups": []}]
+        groupList = [
+          {
+            name: "group1",
+            uniqueName: "g1",
+            groups: [{"name": "group2", "uniqueName": "g2", "groups": []}]
+          },
+          {
+            name: "group3"
+            uniqueName: "g3"
+            groups: []
+          }
+        ]
         result = @groupService.flattenGroup(groupList)
         expect(result).toContain({
           "name": "group2",
           "uniqueName": "g2",
-          "groups": [],
           parentGroups: [undefined, {name: 'group1', uniqueName: 'g1'}, {name: 'group2', uniqueName: 'g2'}]
         })
 
