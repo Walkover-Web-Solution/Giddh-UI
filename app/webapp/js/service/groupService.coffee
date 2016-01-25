@@ -119,6 +119,16 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       )
       return obj
 
+    makeAcListWithLessDtl: (rawList) ->
+      obj = _.map(rawList, (item) ->
+        obj = {}
+        obj.name = item.name
+        obj.uniqueName = item.uniqueName
+        obj.mergedAccounts = item.mergedAccounts
+        obj
+      )
+      return obj
+
     flattenGroup: (rawList, parents) ->
       listofUN = _.map(rawList, (listItem) ->
         newParents = _.union([], parents)
@@ -143,8 +153,6 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
           addThisGroup.accountDetails = groupItem.accounts
           addThisGroup.groupSynonyms = groupItem.synonyms
           addThisGroup
-        else
-          #do nothing
       )
       _.without(_.flatten(listGA), undefined)
 
