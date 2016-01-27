@@ -19,6 +19,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.canUpdate = false
   $scope.canDelete = false
   $scope.canAdd = false
+  $scope.groupAccntList = []
 
   #set a object for share group
   $scope.shareGroupObj ={role: "view_only"}
@@ -65,18 +66,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         backdrop: 'static'
         scope: $scope
       )
-  #show breadcrumbs on ledger
-  $scope.showLedgerBreadCrumbs = (data) ->
-    $rootScope.ledgerBreadCrumbList = data
-
+  
   $scope.setLedgerData = (data, acData) ->
     $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
-    if !_.isEmpty($rootScope.flatGroupsList)
-      resObj = groupService.matchAndReturnObj(data, $rootScope.flatGroupsList)
-      $scope.showLedgerBreadCrumbs(resObj.parentGroups)
 
   $scope.highlightAcMenu = () ->
     url = $location.path().split("/")
@@ -92,9 +87,13 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #Expand or  Collapse all account menus
   $scope.toggleAcMenus = (state) ->
-    $scope.flatAccntWGroupsList.forEach (e) ->
-      e.open = state
-      $scope.showSubMenus = state
+    if !_.isEmpty($scope.flatAccntWGroupsList)
+      _.each($scope.flatAccntWGroupsList, (e) ->
+        e.open = state
+        $scope.showSubMenus = state
+      )
+    else
+      console.info "Unable to toggleAcMenus"
 
   # trigger expand or collapse func
   $scope.checkLength = (val)->
@@ -145,11 +144,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.groupList = res.body
     $scope.showListGroupsNow = true
     $scope.highlightAcMenu()
-    # if not _.isEmpty($scope.selectedGroup)
-    #   $scope.selectedGroup = _.find($scope.flattenGroupList, (item) ->
-    #     item.uniqueName == $scope.selectedGroup.uniqueName
-    #   )
-    #   $scope.selectItem($scope.selectedGroup)
 
   $scope.getGroupListFailure = (res) ->
     toastr.error("Unable to get group details.", "Error")
@@ -400,7 +394,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.cantUpdate = false
     pGroups = []
     $scope.showGroupDetails = false
-    # $scope.showAccountDetails = true
+    $scope.showAccountDetails = true
     if data.uniqueName is $rootScope.selAcntUname
       $scope.cantUpdate = true
     angular.copy(data, $scope.selAcntPrevObj)
@@ -457,10 +451,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.addAccountSuccess = (res) ->
     toastr.success("Account created successfully", res.status)
     $scope.getGroups()
-    res.body.parentGroups = $scope.selectedGroup.parentGroups.reverse()
     $scope.selectedAccount = {}
-    $scope.selectedGroup.accounts.push(res.body)
-    $scope.groupAccntList = $scope.selectedGroup.accounts
+    abc = _.pick(res.body, 'name', 'uniqueName', 'mergedAccounts')
+    $scope.groupAccntList.push(abc)
 
   $scope.addAccountFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -480,13 +473,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if _.isEmpty($scope.selectedGroup)
       unqNamesObj.selGrpUname = $scope.selectedAccount.parentGroups[0].uniqueName
 
-    accountService.deleteAc(unqNamesObj, $scope.selectedAccount).then($scope.onDeleteAccountSuccess, $scope.onDeleteAccountFailure)
-
-  $scope.onDeleteAccountSuccess = (res) ->
-    toastr.success("Account deleted successfully.", "Success")
-    $scope.getGroups()
-    $scope.selectedAccount = {}
-    $scope.showAccountDetails = false
+    accountService.deleteAc(unqNamesObj, $scope.selectedAccount).then($scope.moveAccntSuccess, $scope.onDeleteAccountFailure)
 
   $scope.onDeleteAccountFailure = (res) ->
     toastr.error(res.data.message, res.data.status)

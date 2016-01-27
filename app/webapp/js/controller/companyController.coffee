@@ -174,9 +174,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.getSharedUserList($scope.selectedCompany.uniqueName)
       $scope.getRolesList()
 
-    if !$rootScope.nowShowAccounts 
-      $rootScope.nowShowAccounts = true
-      $rootScope.$broadcast('$reloadAccount')
+    
+    # $rootScope.$broadcast('$reloadAccount')
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
@@ -376,6 +375,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.getCompanyList()
     $scope.getCurrencyList()
     $scope.getUserDetails()
+    $timeout( ->
+      $scope.toggleAcMenus(false)
+      $scope.selectedAccountUniqueName = undefined
+    ,2000)
 
 #init angular app
 giddh.webApp.controller 'companyController', companyController

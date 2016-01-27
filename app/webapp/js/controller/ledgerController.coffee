@@ -9,6 +9,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.ledgerOnlyDebitData = []
   $scope.ledgerOnlyCreditData = []
   $rootScope.showImportListData = false
+  $scope.unableToShowBrdcrmb  = false
   $rootScope.importList = []
   lsKeys = localStorageService.get("_selectedCompany")
   if not _.isNull(lsKeys) && not _.isEmpty(lsKeys) && not _.isUndefined(lsKeys)
@@ -99,6 +100,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     if not _.isUndefined($scope.selectedLedgerGroup)
       $scope.loadLedger($scope.selectedLedgerGroup, $scope.selectedLedgerAccount)
 
+  #show breadcrumbs on ledger
+  $scope.showLedgerBreadCrumbs = (data) ->
+    $scope.ledgerBreadCrumbList = data
+
   $scope.loadLedger = (gData, acData) ->
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
@@ -114,6 +119,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         ,(error)->
           $scope.getAcDtlDataFailure(error)
       )
+    if !_.isEmpty($rootScope.flatGroupsList)
+      $scope.unableToShowBrdcrmb  = false
+      resObj = groupService.matchAndReturnObj(gData, $rootScope.flatGroupsList)
+      $scope.showLedgerBreadCrumbs(resObj.parentGroups)
+    else
+      $scope.unableToShowBrdcrmb  = true
 
   $scope.getAcDtlDataFailure = (res) ->
     console.log res
@@ -135,8 +146,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
     }
     ledgerService.getLedger(unqNamesObj).then($scope.loadLedgerSuccess, $scope.loadLedgerFailure)
-    $stateParams.unqName = $rootScope.selAcntUname
-    $stateParams.grpName = $scope.selectedGroupUname
+    console.log $location, $location.path()    
+    if $location.path() isnt "/"+$rootScope.selAcntUname
+      $location.path("/"+$rootScope.selAcntUname)
+    else
+      console.info "same url", $location.path(), "is", $rootScope.selAcntUname
+
     
 
   $scope.loadLedgerSuccess = (res) ->
@@ -436,14 +451,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
           event.stopPropagation()
           $scope.quantity += 20
 
-  $scope.$on '$viewContentLoaded',  ->
-    ledgerObj = DAServices.LedgerGet()
-    if !_.isEmpty(ledgerObj.ledgerData)
-      $scope.loadLedger(ledgerObj.ledgerData, ledgerObj.selectedAccount)
-    else
-      if !_.isNull(localStorageService.get("_ledgerData"))
-        $scope.loadLedger(localStorageService.get("_ledgerData"), localStorageService.get("_selectedAccount"))
-
   $scope.hasAddAndUpdatePermission = (account) ->
     permissionService.hasPermissionOn(account, "UPDT") and permissionService.hasPermissionOn(account, "ADD")
 
@@ -496,14 +503,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       ), (evt) ->
         file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
 
-  $scope.$on '$reloadLedger',  ->
-    $scope.reloadLedger()
-
-  # $scope.$watch 'selAcntUname', ((newVal, oldVal) ->
-  #   console.log newVal, oldVal
-  # ), true
-  # $rootScope.selAcntUname = acData.uniqueName
-
   #watch for date changes
   $scope.$watch('fromDate.date', (newVal,oldVal) ->
     oldDate = new Date(oldVal).getTime()
@@ -531,7 +530,19 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.ledgerImportListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+  $scope.$on '$reloadLedger',  ->
+    $scope.reloadLedger()
 
+  $scope.$on '$viewContentLoaded',  ->
+    ledgerObj = DAServices.LedgerGet()
+    if !_.isEmpty(ledgerObj.ledgerData)
+      $scope.loadLedger(ledgerObj.ledgerData, ledgerObj.selectedAccount)
+    else
+      if !_.isNull(localStorageService.get("_ledgerData"))
+        lgD = localStorageService.get("_ledgerData")
+        acD = localStorageService.get("_selectedAccount")
+        # $stateParams.unqName = acD.uniqueName
+        $scope.loadLedger(lgD, acD)
 
 giddh.webApp.controller 'ledgerController', ledgerController
 

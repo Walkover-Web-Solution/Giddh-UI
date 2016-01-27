@@ -14,7 +14,7 @@
   </div>
 
   <div class="pdL2 pdR2 pdT2" ng-show="showLedgerBox">
-    <div class="mrB2">
+    <div class="mrB2" ng-hide="unableToShowBrdcrmb">
       <ol class="breadcrumb mrB2">
         <li ng-repeat="(key,value) in ledgerBreadCrumbList"
             ng-class="{active:$last}">

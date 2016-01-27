@@ -112,6 +112,12 @@ describe 'ledgerController', ->
         spyOn(@scope, 'loadLedger')
         @scope.reloadLedger()
         expect(@scope.loadLedger).toHaveBeenCalledWith(@scope.selectedLedgerGroup, @scope.selectedLedgerAccount)
+    
+    describe '#showLedgerBreadCrumbs', ->
+      it 'should set data in ledgerBreadCrumbList', ->
+        data ={}
+        @scope.showLedgerBreadCrumbs(data)
+        expect(@scope.ledgerBreadCrumbList).toEqual({})
 
     describe '#loadLedger', ->
       it 'should show alert if date format is wrong', ->

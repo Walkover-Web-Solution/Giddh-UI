@@ -3,7 +3,7 @@
 describe 'groupController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, permissionService, modalService, accountService) ->
+  beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, permissionService, modalService, accountService, $uibModal, DAServices) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @localStorageService = localStorageService
@@ -11,7 +11,9 @@ describe 'groupController', ->
     @groupService = groupService
     @permissionService = permissionService
     @q = $q
+    @uibModal = $uibModal
     @modalService = modalService
+    @DAServices = DAServices
     @accountService = accountService
     @groupController = $controller('groupController',
       {
@@ -20,9 +22,11 @@ describe 'groupController', ->
         localStorageService: @localStorageService,
         permissionService: @permissionService
         accountService: @accountService
+        $uibModal: @$uibModal
+        DAServices: @DAServices
       })
   describe '#goToManageGroups', ->
-    xit 'should show a toastr error message if object is blank', ->
+    it 'should show a toastr error message if object is blank', ->
       @rootScope.selectedCompany = {}
       spyOn(@toastr, 'error')
       deferred = @q.defer()
@@ -38,17 +42,26 @@ describe 'groupController', ->
         templateUrl: '/public/webapp/views/addManageGroupModal.html'
         size: "liq90"
         backdrop: 'static'
+        scope: @scope
       }
       deferred = @q.defer()
       spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
       @scope.goToManageGroups()
       expect(@uibModal.open).toHaveBeenCalledWith(modalData)
 
-  describe '#showLedgerBreadCrumbs', ->
-    it 'should set data in ledgerBreadCrumbList', ->
-      data ={}
-      @scope.showLedgerBreadCrumbs(data)
-      expect(@scope.ledgerBreadCrumbList).toEqual({})
+  describe '#setLedgerData', ->
+    it 'should set value in a variable and call DAServices ledgerset method and set value in localStorageService', ->
+      data = {}
+      acData = {uniqueName: "name"}
+      @rootScope.flatGroupsList = []
+      spyOn(@DAServices, "LedgerSet")
+      spyOn(@localStorageService, "set")
+      @scope.setLedgerData(data, acData)
+      expect(@scope.selectedAccountUniqueName).toEqual(acData.uniqueName)
+      expect(@DAServices.LedgerSet).toHaveBeenCalledWith(data, acData)
+      expect(@localStorageService.set).toHaveBeenCalledWith("_ledgerData", data)
+      expect(@localStorageService.set).toHaveBeenCalledWith("_selectedAccount", acData)
+    
 
   describe '#getGroups', ->
     it 'should show a toastr informing user to select company first when no company selected', ->
@@ -638,7 +651,9 @@ describe 'groupController', ->
       res = {
         status: "Success"
         body:
-          some: "name"
+          name: "name"
+          uniqueName: "name"
+          mergedAccounts: "name"
       }
       @scope.selectedGroup = {
         accounts: []
@@ -646,12 +661,13 @@ describe 'groupController', ->
           {a: "a"}, {a: "b"}
         ]
       }
+      @scope.groupAccntList =[]
       @scope.addAccountSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith("Account created successfully", res.status)
       expect(@scope.getGroups).toHaveBeenCalled()
       expect(@scope.selectedAccount).toEqual({})
-      expect(@scope.selectedGroup.accounts).toContain(res.body)
-      expect(@scope.groupAccntList).toEqual([res.body])
+      expect(@scope.groupAccntList).toContain(res.body)
+
       
 
   describe '#addAccountFailure', ->
@@ -704,15 +720,6 @@ describe 'groupController', ->
       spyOn(@scope, "setAdditionalAccountDetails").andReturn(data)
       @scope.deleteAccountConfirm()
       expect(@accountService.deleteAc).toHaveBeenCalledWith(data, @scope.selectedAccount)
-
-  describe '#onDeleteAccountSuccess', ->
-    it 'should show success message and call getGroups function and set selectedAccount variable to blank object', ->
-      spyOn(@toastr, "success")
-      spyOn(@scope, "getGroups")
-      @scope.onDeleteAccountSuccess()
-      expect(@toastr.success).toHaveBeenCalledWith("Account deleted successfully.", "Success")
-      expect(@scope.getGroups).toHaveBeenCalled()
-      expect(@scope.selectedAccount).toEqual({})
 
   describe '#onDeleteAccountFailure', ->
     it 'should show error message through toastr', ->
