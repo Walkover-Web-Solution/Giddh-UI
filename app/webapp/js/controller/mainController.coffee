@@ -3,9 +3,9 @@
 mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices) ->
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
-  $rootScope.nowShowAccounts = false
   $rootScope.basicInfo = {}
   $rootScope.flatAccntListWithParents = []
+  $rootScope.canManageComp = true
   
   $scope.logout = ->
     $http.post('/logout').then ((res) ->

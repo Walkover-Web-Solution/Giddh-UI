@@ -952,11 +952,11 @@ describe 'groupController', ->
       expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "DLT")
 
     it 'should call permission service hasPermissionOn method and set value true to canDelete variable', ->
-      data = {role: {permissions: [{code: "MNG_USR"}]}}
+      data = {role: {permissions: [{code: "SHR"}]}}
       spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
       @scope.checkPermissions(data)
       expect(@scope.canShare).toBeTruthy()
-      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "MNG_USR")
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "SHR")
 
   describe '#shareAccount', ->
     it 'should call service share method with obj var when group is selected', ->

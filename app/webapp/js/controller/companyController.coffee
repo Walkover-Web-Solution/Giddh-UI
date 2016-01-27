@@ -135,6 +135,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.goToCompanyCheck = (data, index) ->
     if data.role.uniqueName is 'shared'
+      if data.sharedEntity is 'accounts'
+        $rootScope.canManageComp = false
       localStorageService.set("_selectedCompany", data)
       $rootScope.selectedCompany = data
       $state.go('company.ledgerContent')

@@ -607,7 +607,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.canUpdate = permissionService.hasPermissionOn(entity, "UPDT")
     $scope.canDelete = permissionService.hasPermissionOn(entity, "DLT")
     $scope.canAdd = permissionService.hasPermissionOn(entity, "ADD")
-    $scope.canShare = permissionService.hasPermissionOn(entity, "MNG_USR")
+    $scope.canShare = permissionService.hasPermissionOn(entity, "SHR")
 
   $scope.loadAccountsList = () ->
     if !_.isEmpty($rootScope.selectedCompany)
@@ -621,12 +621,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $timeout(->
     $scope.loadAccountsList()
   ,2000)
-  
-
-  $scope.$on '$viewContentLoaded', ->
-    # if !$rootScope.nowShowAccounts and !_.isEmpty($rootScope.selectedCompany)
-    #   $rootScope.nowShowAccounts = true
-    #   $scope.getGroups()
     
 #init angular app
 giddh.webApp.controller 'groupController', groupController
