@@ -3,6 +3,22 @@
 describe 'groupController', ->
   beforeEach module('giddhWebApp')
 
+  describe 'local variables', ->
+    beforeEach inject ($rootScope, $controller, localStorageService) ->
+      @scope = $rootScope.$new()
+      @rootScope = $rootScope
+      @groupController = $controller('groupController',
+        {
+          $scope: @scope, 
+          $rootScope: @rootScope
+        }
+      )
+
+    it 'should check scope variables set by default', ->
+      expect(@scope.groupList).toEqual({})
+      expect(@scope.flattenGroupList).toEqual([])
+      expect(@scope.moveto).toBeUndefined()
+
   beforeEach inject ($rootScope, $controller, localStorageService, toastr, groupService, $q, permissionService, modalService, accountService, $uibModal, DAServices) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
