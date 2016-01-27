@@ -151,6 +151,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
           addThisGroup.groupName = groupItem.name
           addThisGroup.groupUniqueName = groupItem.uniqueName
           addThisGroup.accountDetails = groupItem.accounts
+          addThisGroup.beforeFilter = groupItem.accounts
           addThisGroup.groupSynonyms = groupItem.synonyms
           addThisGroup
       )

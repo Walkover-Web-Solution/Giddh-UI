@@ -20,6 +20,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.canDelete = false
   $scope.canAdd = false
   $scope.groupAccntList = []
+  $scope.acntSrch = ''
 
   #set a object for share group
   $scope.shareGroupObj ={role: "view_only"}

@@ -160,3 +160,63 @@ angular.module('trialBalance', []).directive('exportReport', [
             watchSearch()
     }
 ])
+.filter 'accntsrch', ->
+  (input, search) ->
+    srch = search.toLowerCase()
+    result = []
+
+    checkIndex = (src, str) ->
+      if src.indexOf(str) != -1
+        true
+      else 
+        false 
+
+        
+
+    if _.isEmpty(srch)
+      _.each input, (grp) ->
+        grp.accountDetails = grp.beforeFilter
+      input
+    else
+
+      _.each input, (grp) ->
+        grp.accountDetails = grp.beforeFilter
+        matchCase = ''
+        grpName = grp.groupName.toLowerCase()
+        grpUnq = grp.groupUniqueName.toLowerCase()
+        grpSyn = if !_.isEmpty(grp.groupSynonyms) then grp.groupSynonyms.toLowerCase() else ''
+        accounts = []
+
+        if checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
+          matchCase = 'Group'
+          if grp.beforeFilter.length > 0
+            _.each grp.beforeFilter, (acc) ->
+              accName = acc.name.toLowerCase()
+              accUnq = acc.uniqueName.toLowerCase()
+              if checkIndex(accName, srch) || checkIndex(accUnq, srch)
+                matchCase = 'Account'
+              if checkIndex(accName, srch) || checkIndex(accUnq, srch) && checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
+                matchCase = 'Group and Account'
+
+              if matchCase == 'Account'
+                accounts.push(acc)
+                
+        else  
+          if grp.beforeFilter.length > 0
+            _.each grp.beforeFilter, (acc) ->
+              accName = acc.name.toLowerCase()
+              accUnq = acc.uniqueName.toLowerCase()
+              if checkIndex(accName, srch) || checkIndex(accUnq, srch) 
+                matchCase = 'Account'
+                accounts.push(acc)
+              grp.accountDetails = accounts
+
+        switch matchCase
+          when 'Group'
+            result.push(grp)
+          when 'Account'
+            result.push(grp)
+          when 'Group and Account'
+            result.push(grp)
+
+      result
