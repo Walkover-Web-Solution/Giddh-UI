@@ -137,10 +137,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     if data.role.uniqueName is 'shared'
       if data.sharedEntity is 'accounts'
         $rootScope.canManageComp = false
+      else
+        $rootScope.canManageComp = true
       localStorageService.set("_selectedCompany", data)
       $rootScope.selectedCompany = data
       $state.go('company.ledgerContent')
     else
+      $rootScope.canManageComp = true
       $scope.goToCompany(data, index)
     $rootScope.$broadcast('companyChanged')
 
