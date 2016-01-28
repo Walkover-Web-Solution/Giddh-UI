@@ -112,7 +112,6 @@ global.mStorage = multer.diskStorage({
     cb(null, './uploads/')
   },
   filename: function (req, file, cb) {
-    console.log("In Multer")
     if (file.mimetype === "application/vnd.ms-excel"){
       cb(null, Date.now() + '.xls')
     }

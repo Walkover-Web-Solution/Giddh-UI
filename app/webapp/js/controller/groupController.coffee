@@ -21,8 +21,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.canAdd = false
   $scope.groupAccntList = []
   $scope.acntSrch = ''
-
-  #set a object for share group
   $scope.shareGroupObj ={role: "view_only"}
   $scope.shareAccountObj ={role: "view_only"}
   $scope.openingBalType = [
@@ -33,15 +31,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     Ccode: undefined,
     onlyMobileNo: undefined
   }
-  
-  #date time picker code starts here
   $scope.today = new Date()
-
   $scope.valuationDatePickerIsOpen = false
-
-  $scope.valuationDatePickerOpen = ->
-    this.valuationDatePickerIsOpen = true
-
   $scope.dateOptions = {
     'year-format': "'yy'",
     'starting-day': 1,
@@ -51,11 +42,40 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     'todayBtn': false
   }
   $scope.format = "dd-MM-yyyy"
-
-  # acCntrl func
   $scope.flatAccntWGroupsList = {}
   $scope.showAccountList = false
   $scope.selectedAccountUniqueName = undefined
+
+  $scope.valuationDatePickerOpen = ()->
+    this.valuationDatePickerIsOpen = true
+
+  # dom method function
+  $scope.highlightAcMenu = () ->
+    url = $location.path().split("/")
+    if url[1] is "ledger"
+      $timeout ->
+        acEle = document.getElementById("ac_" + url[2])
+        if acEle is null
+          return false
+        parentSib = acEle.parentElement.previousElementSibling
+        angular.element(parentSib).trigger('click')
+        angular.element(acEle).children().trigger('click')
+      , 500
+
+  # expand and collapse all tree structure
+  getRootNodesScope = ->
+    angular.element(document.getElementById('tree-root')).scope()
+
+  $scope.collapseAll = () ->
+    scope = getRootNodesScope()
+    scope.collapseAll()
+    $scope.subGroupVisible = true
+
+  $scope.expandAll = () ->
+    scope = getRootNodesScope()
+    scope.expandAll()
+    $scope.subGroupVisible = false
+  # dom method functions end
 
   $scope.goToManageGroups =() ->
     if _.isEmpty($rootScope.selectedCompany)
@@ -74,17 +94,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
 
-  $scope.highlightAcMenu = () ->
-    url = $location.path().split("/")
-    if url[1] is "ledger"
-      $timeout ->
-        acEle = document.getElementById("ac_" + url[2])
-        if acEle is null
-          return false
-        parentSib = acEle.parentElement.previousElementSibling
-        angular.element(parentSib).trigger('click')
-        angular.element(acEle).children().trigger('click')
-      , 500
 
   #Expand or  Collapse all account menus
   $scope.toggleAcMenus = (state) ->
@@ -93,8 +102,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         e.open = state
         $scope.showSubMenus = state
       )
-    else
-      console.info "Unable to toggleAcMenus"
 
   # trigger expand or collapse func
   $scope.checkLength = (val)->
@@ -105,20 +112,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     else
       $scope.toggleAcMenus(false)
   # end acCntrl
-
-  # expand and collapse all tree structure
-  getRootNodesScope = ->
-    angular.element(document.getElementById('tree-root')).scope()
-
-  $scope.collapseAll = () ->
-    scope = getRootNodesScope()
-    scope.collapseAll()
-    $scope.subGroupVisible = true
-
-  $scope.expandAll = () ->
-    scope = getRootNodesScope()
-    scope.expandAll()
-    $scope.subGroupVisible = false
 
   $scope.getGroups =() ->
     if _.isEmpty($rootScope.selectedCompany)
@@ -310,15 +303,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
           $scope.getGrpDtlFailure)
 
   $scope.getGrpDtlSuccess = (res) ->
-    item = res.body
-    $scope.selectedItem = item
+    $scope.selectedItem = res.body
     $scope.selectedAccntMenu = undefined
-    $scope.selectGroupToEdit(item)
+    $scope.selectGroupToEdit(res.body)
     $scope.accountsSearch = undefined
     $scope.showGroupDetails = true
     $scope.showAccountListDetails = true
     $scope.showAccountDetails = false
-    $scope.populateAccountList(item)
+    $scope.populateAccountList(res.body)
 
   $scope.getGrpDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -398,12 +390,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showAccountDetails = true
     if data.uniqueName is $rootScope.selAcntUname
       $scope.cantUpdate = true
-    angular.copy(data, $scope.selAcntPrevObj)
+    _.extend($scope.selAcntPrevObj, data)
     _.extend($scope.selectedAccount, data)
     $scope.breakMobNo(data)
     $scope.setOpeningBalanceDate()
     $scope.getAccountSharedList()
-    # for play between update and add
     $scope.acntCase = "Update"
     $scope.showBreadCrumbs(data.parentGroups)
     
