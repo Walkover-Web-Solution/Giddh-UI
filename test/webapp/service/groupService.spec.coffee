@@ -266,10 +266,28 @@ describe "Group Service", ->
             "uniqueName": "g1",
             "accounts": [{"name": "a1"}]
           }
-          {"open": false, "name": "group2", "uniqueName": "g2", "accounts": []},
-          {"open": false, "name": "group3", "uniqueName": "g3", "accounts": []}]
+          {
+            "open": false, "name": "group2", "uniqueName": "g2", "accounts": []
+          }
+          {
+            "open": false, "name": "group3", "uniqueName": "g3", "accounts": []
+          }
+        ]
+        resResp = [
+          {
+            "open": false,
+            "groupName": "group1",
+            "groupUniqueName": "g1",
+            "accountDetails": [
+              {"name": "a1"}
+            ]
+            "beforeFilter": [
+              {"name": "a1"}
+            ]
+          }
+        ]
         result = @groupService.flattenGroupsWithAccounts(groupList)
-        expect(result).toEqual([{"open": false, "groupName": "group1", "groupUniqueName": "g1", "accountDetails": [{"name": "a1"}]}])
+        expect(result).toEqual(resResp)
 
     describe '#flattenAccount', ->
       it 'should take list of groups and flatten them and filter out accounts', ->
