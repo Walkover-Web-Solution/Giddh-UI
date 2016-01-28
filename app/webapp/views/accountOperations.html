@@ -70,7 +70,7 @@
         </div>
         <div class="col-md-6 col-sm-12">
 
-          <script type="text/ng-template" id="customTemplate.html">
+          <script type="text/ng-template" id="countryList.html">
             <a>
               <span ng-bind-html="match.label"></span>
               <span ng-bind-html="match.model.countryName"></span>
@@ -84,7 +84,7 @@
 
               <input type="text" ng-model="acntExt.Ccode"
                      uib-typeahead="country as country.value for country in countryCodesList | filter:$viewValue | limitTo:8"
-                     class="form-control" typeahead-template-url="customTemplate.html" placeholder="91"/>
+                     class="form-control" typeahead-template-url="countryList.html" placeholder="91"/>
 
             </div>
             <div class="col-md-9 col-sm-12">

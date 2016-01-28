@@ -1818,3 +1818,8 @@ table:focus{
     margin-left:0;
     margin-right:0;
 }
+
+.dropdown-parent .dropdown-menu {
+    max-height:250px;
+    overflow-y:scroll;
+}

@@ -161,12 +161,12 @@ angular.module('ledger', [])
                   name='entryDate_{{index}}' ng-readonly='!canAddAndEdit'
                   ng-model='item.sharedData.entryDate' valid-date/>
               </td>
-              <td width=44%'>
+              <td width=44%' class='dropdown-parent'>
                 <input pos='2' type='text' ng-readonly='!canAddAndEdit'
                   tabindex='-1'  class='nobdr ledgInpt' required
                   name='trnsName_{{index}}'
                   ng-model='item.transactions[0].particular'
-                  uib-typeahead='obj.name as obj.uniqueName for obj in aclist | omit: isCurrentAc | filter:$viewValue | limitTo:8'
+                  uib-typeahead='obj.name as obj.uniqueName for obj in aclist | omit: isCurrentAc | filter:$viewValue'
                   class='form-control' autocomplete='off'
                   typeahead-no-results='noResults' typeahead-template-url='customTemplate.html'
                   typeahead-on-select='addCrossFormField($item, $model, $label)'>

@@ -25,6 +25,8 @@ var rest = require('restler');
 
 var app = settings.express();
 
+
+
 //// Require and setup mashape analytics
 //var analytics = require('mashape-analytics')
 //var agent = analytics('5628ae08593b00f7098a3b3d', 'giddh-ui', {
@@ -83,6 +85,7 @@ app.use(session({
 // some global variables
 global.clientIp = "";
 app.use(function (req, res, next) {
+
   clientIp = requestIp.getClientIp(req);
   res.locales = {
     "siteTitle": "Giddh ~ Accounting at its Rough!",
@@ -90,6 +93,8 @@ app.use(function (req, res, next) {
     "description": "Giddh App description",
     "remoteIp": requestIp.getClientIp(req),
   }
+  req.session._garbage = Date();
+  req.session.touch();
   next();
 })
 
