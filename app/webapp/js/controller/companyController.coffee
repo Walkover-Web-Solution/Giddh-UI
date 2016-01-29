@@ -156,7 +156,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.dErrFiles = []
     $scope.canEdit = true
     $scope.canEdit = permissionService.hasPermissionOn(data, "UPDT")
-    $scope.canManageUser = permissionService.hasPermissionOn(data, "MNG_USR")
+    $scope.canManageUser = permissionService.hasPermissionOn(data, "SHR")
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
     angular.extend($scope.selectedCompany, data)

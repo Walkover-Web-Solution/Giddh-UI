@@ -81,6 +81,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
+      $scope.selectedGroup = {}
+      $scope.selectedAccntMenu = undefined
+      $scope.selectedItem = undefined
+      $scope.showGroupDetails = false
+      $scope.showAccountDetails = false
+      $scope.showAccountListDetails = false
       $uibModal.open(
         templateUrl: '/public/webapp/views/addManageGroupModal.html'
         size: "liq90"

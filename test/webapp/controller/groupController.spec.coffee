@@ -33,6 +33,7 @@ describe 'groupController', ->
       expect(@scope.canDelete).toBeFalsy()
       expect(@scope.canAdd).toBeFalsy()
       expect(@scope.groupAccntList).toEqual([])
+      expect(@scope.acntSrch).toBe('')
       expect(@scope.shareGroupObj).toEqual({role: "view_only"})
       expect(@scope.shareAccountObj).toEqual({role: "view_only"})
       openingBalType_resp = [
@@ -92,12 +93,19 @@ describe 'groupController', ->
         templateUrl: '/public/webapp/views/addManageGroupModal.html'
         size: "liq90"
         backdrop: 'static'
-        scope: @scope
+        # scope: @scope
       }
-      deferred = @q.defer()
-      spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
+      # deferred = @q.defer()
+      spyOn(@uibModal, 'open')
+      # spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
       @scope.goToManageGroups()
-      expect(@uibModal.open).toHaveBeenCalledWith(modalData)
+      expect(@scope.selectedGroup).toEqual({})
+      expect(@scope.selectedAccntMenu).toBeUndefined()
+      expect(@scope.selectedItem).toBeUndefined()
+      expect(@scope.showGroupDetails).toBeFalsy()
+      expect(@scope.showAccountDetails).toBeFalsy()
+      expect(@scope.showAccountListDetails).toBeFalsy()
+      # expect(@uibModal.open).toHaveBeenCalledWith(modalData)
 
   describe '#setLedgerData', ->
     it 'should set value in a variable and call DAServices ledgerset method and set value in localStorageService', ->
