@@ -221,7 +221,7 @@ describe 'ledgerController', ->
         expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
     describe '#getAcDtlDataSuccess', ->
-      it 'should call service with unqNamesObj and set variables'
+      xit 'should call service with unqNamesObj and set variables', ->
         acData = {
           name: "name"
           uniqueName: "somename"
@@ -239,6 +239,7 @@ describe 'ledgerController', ->
           groupUniqueName: 'some unique name'
           open: true
         }
+        @scope.getAcDtlDataSuccess(res, gData, acData)
         expect(@rootScope.showLedgerBox).toBeFalsy()
         expect(@rootScope.showLedgerLoader).toBeFalsy()
         expect(@scope.selectedLedgerAccount).toEqual(acData)
