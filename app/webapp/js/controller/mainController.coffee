@@ -28,15 +28,14 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
   $rootScope.countryCodesList = locationService.getCountryCode()
 
   $scope.getRoles = () ->
-    roles = localStorageService.get("_roles")
-    if(_.isUndefined(roles) or _.isEmpty(roles))
-      roleServices.getAll().then($scope.onGetRolesSuccess, $scope.onGetRolesFailure)
+    roleServices.getAll().then($scope.onGetRolesSuccess, $scope.onGetRolesFailure)
 
-  $scope.onGetRolesSuccess = (response) ->
-    localStorageService.set("_roles", response.body)
+  $scope.onGetRolesSuccess = (res) ->
+    localStorageService.set("_roles", res.body)
 
-  $scope.onGetRolesFailure = (response) ->
-    console.log "Something went wrong while fetching role"
+  $scope.onGetRolesFailure = (res) ->
+    console.info "Something went wrong while fetching role"
+    toastr.error(res.data.message, res.data.status)
 
   $rootScope.setScrollToTop = (val, elem)->
     if val is '' || _.isUndefined(val)
@@ -44,9 +43,8 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
     if val.length > 0
       cntBox = document.getElementById(elem)
       cntBox.scrollTop = 0
-
-  $rootScope.$on '$viewContentLoaded', ->
-    $scope.getRoles()
-    $rootScope.basicInfo = localStorageService.get("_userDetails")
+  
+  $scope.getRoles()
+  $rootScope.basicInfo = localStorageService.get("_userDetails")
 
 giddh.webApp.controller 'mainController', mainController

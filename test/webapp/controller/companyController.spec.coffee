@@ -3,6 +3,30 @@
 describe 'companyController', ->
   beforeEach module('giddhWebApp')
 
+  describe 'local variables', ->
+    beforeEach inject ($rootScope, $controller, localStorageService) ->
+      @scope = $rootScope.$new()
+      @rootScope = $rootScope
+      @companyController = $controller('companyController',
+        {
+          $scope: @scope, 
+          $rootScope: @rootScope
+        }
+      )
+
+    it 'should check scope variables set by default', ->
+      expect(@rootScope.mngCompDataFound).toBeFalsy()
+      expect(@rootScope.cmpViewShow).toBeFalsy()
+      expect(@rootScope.selectedCompany).toEqual({})
+      expect(@scope.mHideBar).toBeFalsy()
+      expect(@scope.dHideBar).toBeFalsy()
+      expect(@scope.showUpdTbl).toBeFalsy()
+      expect(@scope.companyList).toEqual([])
+      expect(@scope.companyDetails).toEqual({})
+      expect(@scope.currencyList).toEqual([])
+      expect(@scope.currencySelected).toBeUndefined()
+      expect(@scope.shareRequest).toEqual({role: 'view_only', user: null})
+
   beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $uibModal, modalService, $timeout, permissionService, DAServices, Upload, userServices, $state) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
@@ -49,7 +73,6 @@ describe 'companyController', ->
       }
       deferred = @q.defer()
       spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
-
       @scope.openFirstTimeUserModal()
       expect(@uibModal.open).toHaveBeenCalledWith(modalData)
 
@@ -247,8 +270,9 @@ describe 'companyController', ->
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#goToCompanyCheck', ->
-    it 'should check if user have shared permissions then redirect to ledger page and set selectedCompany', ->
-      data = 
+    it 'should check if user have shared permissions, and sharedEntity is accounts then make a variable falsy then call localStorageService set method and call state service go method for change page and set rootScope variable', ->
+      data =
+        sharedEntity: "accounts"
         uniqueName: "afafafafaf1443520197325007bgo"
         name: "dude"
         role: 
@@ -257,10 +281,31 @@ describe 'companyController', ->
       index = 0
       spyOn(@state, "go")
       spyOn(@localStorageService, "set")
+      spyOn(@rootScope, "$broadcast")
       @scope.goToCompanyCheck(data, index)
+      expect(@rootScope.canManageComp).toBeFalsy()
       expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)
       expect(@rootScope.selectedCompany).toEqual(data)
       expect(@state.go).toHaveBeenCalledWith('company.ledgerContent')
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith('companyChanged')
+    it 'should check if user have shared permissions, and sharedEntity is not accounts then make a variable truthy then call localStorageService set method and call state service go method for change page and set rootScope variable', ->
+      data =
+        sharedEntity: "groups"
+        uniqueName: "afafafafaf1443520197325007bgo"
+        name: "dude"
+        role: 
+          uniqueName: "shared"
+          name: "shared"
+      index = 0
+      spyOn(@state, "go")
+      spyOn(@localStorageService, "set")
+      spyOn(@rootScope, "$broadcast")
+      @scope.goToCompanyCheck(data, index)
+      expect(@rootScope.canManageComp).toBeTruthy()
+      expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)
+      expect(@rootScope.selectedCompany).toEqual(data)
+      expect(@state.go).toHaveBeenCalledWith('company.ledgerContent')
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith('companyChanged')
     it 'should call goToCompany function', ->
       data = 
         uniqueName: "afafafafaf1443520197325007bgo"
@@ -269,9 +314,12 @@ describe 'companyController', ->
           uniqueName: "admin"
           name: "admin"
       index = 0
+      spyOn(@rootScope, "$broadcast")
       spyOn(@scope, "goToCompany")
       @scope.goToCompanyCheck(data, index)
+      expect(@rootScope.canManageComp).toBeTruthy()
       expect(@scope.goToCompany).toHaveBeenCalledWith(data, index)
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith('companyChanged')
       
     
   describe '#goToCompany', ->
@@ -294,8 +342,6 @@ describe 'companyController', ->
       spyOn(@scope, "getSharedUserList")
       spyOn(@localStorageService, "set")
       spyOn(@DAServices, "LedgerSet")
-      spyOn(@scope, 'getRolesList')
-
       @scope.goToCompany(data, index)
       expect(@scope.showUpdTbl).toBeFalsy()
       expect(@scope.canEdit).toBeTruthy()
@@ -308,7 +354,6 @@ describe 'companyController', ->
       expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
       expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", dbd)
       expect(@scope.getSharedUserList).toHaveBeenCalledWith("afafafafaf1443520197325007bgo")
-      expect(@scope.getRolesList).toHaveBeenCalled()
       
     it 'should not call getSharedUserList and DAService', ->
       data = 
@@ -321,9 +366,7 @@ describe 'companyController', ->
       spyOn(@scope, "getSharedUserList")
       spyOn(@localStorageService, "set")
       spyOn(@DAServices, "LedgerSet")
-      spyOn(@scope, 'getRolesList')
       spyOn(@localStorageService, "get").andReturn({uniqueName: "afafafafaf1443520197325007bgo"})
-
       @scope.goToCompany(data, index)
       expect(@scope.getSharedUserList).not.toHaveBeenCalledWith("afafafafaf1443520197325007bgo")
       expect(@DAServices.LedgerSet).not.toHaveBeenCalledWith(null, null)
@@ -551,36 +594,6 @@ describe 'companyController', ->
       @scope.onShareCompanyFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
-  describe '#getRolesList', ->
-    it 'should call companyService with getRoles method', ->
-      @rootScope.selectedCompany = {uniqueName: "afafafafaf1443520197325007bgo"}
-      deferred = @q.defer()
-      spyOn(@companyServices, "getRoles").andReturn(deferred.promise)
-      @scope.getRolesList()
-      expect(@companyServices.getRoles).toHaveBeenCalledWith(@rootScope.selectedCompany.uniqueName)
-
-  describe '#getRolesSuccess', ->
-    it 'should set data in scope variable rolesList', ->
-      res = {
-        "status": "success"
-        "body": [{
-          "name": "Some Name"
-          "uniqueName": "some_name"
-        }]
-      }
-      @scope.getRolesSuccess(res)
-      expect(@scope.rolesList).toEqual(res.body)
-
-  describe '#getRolesFailure', ->
-    it 'should show toastr with error message', ->
-      res =
-        data:
-          status: "Error"
-          message: "some-message"
-      spyOn(@toastr, 'error')
-      @scope.getRolesFailure(res)
-      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
-
   describe '#getSharedUserList', ->
     it 'should call companyService with shredList method', ->
       uniqueName = "afafafafaf1443520197325007bgo"
@@ -588,7 +601,6 @@ describe 'companyController', ->
       spyOn(@companyServices, "shredList").andReturn(deferred.promise)
       @scope.getSharedUserList(uniqueName)
       expect(@companyServices.shredList).toHaveBeenCalledWith(uniqueName)
-
 
   describe '#getSharedUserListSuccess', ->
     it 'should set data in scope variable sharedUsersList', ->

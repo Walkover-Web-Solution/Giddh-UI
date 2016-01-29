@@ -81,18 +81,24 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
-      $scope.selectedGroup = {}
-      $scope.selectedAccntMenu = undefined
-      $scope.selectedItem = undefined
-      $scope.showGroupDetails = false
-      $scope.showAccountDetails = false
-      $scope.showAccountListDetails = false
-      $uibModal.open(
+      modalInstance = $uibModal.open(
         templateUrl: '/public/webapp/views/addManageGroupModal.html'
         size: "liq90"
         backdrop: 'static'
         scope: $scope
       )
+      modalInstance.result.then($scope.goToManageGroupsOpen, $scope.goToManageGroupsClose)
+
+  $scope.goToManageGroupsOpen = (res) ->
+    console.log "opened", res
+  
+  $scope.goToManageGroupsClose = () ->
+    $scope.selectedGroup = {}
+    $scope.selectedAccntMenu = undefined
+    $scope.selectedItem = undefined
+    $scope.showGroupDetails = false
+    $scope.showAccountDetails = false
+    $scope.showAccountListDetails = false
   
   $scope.setLedgerData = (data, acData) ->
     $scope.selectedAccountUniqueName = acData.uniqueName
@@ -124,7 +130,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       toastr.error("Select company first.", "Error")
     else
       # with accounts, group data
-      groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.getGroupListFailure)
+      groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
       # without accounts only groups
       groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess, $scope.getGroupListFailure)
 
@@ -139,6 +145,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $rootScope.makeAccountFlatten(b)
     $scope.flattenGroupList = groupService.makeGroupListFlatwithLessDtl($rootScope.flatGroupsList)
 
+  $scope.makeAccountsListFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.getGroupListSuccess = (res) ->
     $scope.groupList = res.body
@@ -146,7 +154,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.highlightAcMenu()
 
   $scope.getGroupListFailure = (res) ->
-    toastr.error("Unable to get group details.", "Error")
+    toastr.error(res.data.message, res.data.status)
+    $rootScope.canManageComp = false
   
   $scope.getGroupSharedList = () ->
     if $scope.canShare

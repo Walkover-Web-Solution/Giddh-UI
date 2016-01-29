@@ -73,7 +73,7 @@ describe 'groupController', ->
         localStorageService: @localStorageService,
         permissionService: @permissionService
         accountService: @accountService
-        $uibModal: @$uibModal
+        $uibModal: @uibModal
         DAServices: @DAServices
       })
   describe '#goToManageGroups', ->
@@ -87,25 +87,30 @@ describe 'groupController', ->
       expect(@toastr.error).toHaveBeenCalledWith('Select company first.', 'Error')
       expect(@uibModal.open).not.toHaveBeenCalled()
 
-    xit 'should call modal service', ->
+    it 'should call modal service', ->
       @rootScope.selectedCompany = {something: "something"}
       modalData = {
-        templateUrl: '/public/webapp/views/addManageGroupModal.html'
-        size: "liq90"
-        backdrop: 'static'
-        # scope: @scope
+        templateUrl: '/public/webapp/views/addManageGroupModal.html',
+        size: "liq90",
+        backdrop: 'static',
+        scope: @scope
       }
-      # deferred = @q.defer()
-      spyOn(@uibModal, 'open')
-      # spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
+      deferred = @q.defer()
+      spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
       @scope.goToManageGroups()
+      expect(@uibModal.open).toHaveBeenCalledWith(modalData)
+
+  describe '#goToManageGroupsClose', ->
+    it 'should reset variables', ->
+      @scope.goToManageGroupsClose()
       expect(@scope.selectedGroup).toEqual({})
       expect(@scope.selectedAccntMenu).toBeUndefined()
       expect(@scope.selectedItem).toBeUndefined()
       expect(@scope.showGroupDetails).toBeFalsy()
       expect(@scope.showAccountDetails).toBeFalsy()
       expect(@scope.showAccountListDetails).toBeFalsy()
-      # expect(@uibModal.open).toHaveBeenCalledWith(modalData)
+      
+    
 
   describe '#setLedgerData', ->
     it 'should set value in a variable and call DAServices ledgerset method and set value in localStorageService', ->
@@ -198,6 +203,18 @@ describe 'groupController', ->
       expect(@rootScope.makeAccountFlatten).toHaveBeenCalledWith([])
       expect(@scope.flattenGroupList).toEqual([])
 
+  describe '#makeAccountsListFailure', ->
+    it 'should show a toastr for error', ->
+      res = {
+        data: {
+          "message": "Unable to get group details."
+          "status": "Error"
+        }
+      }
+      spyOn(@toastr, 'error')
+      @scope.makeAccountsListFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
   describe '#getGroupListSuccess', ->
     it 'should set group list', ->
       result = ["body": {"name": "fixed assets"}, {"name": "capital account"}]
@@ -209,9 +226,16 @@ describe 'groupController', ->
 
   describe '#getGroupListFailure', ->
     it 'should show a toastr for error', ->
+      res = {
+        data: {
+          "message": "Unable to get group details."
+          "status": "Error"
+        }
+      }
       spyOn(@toastr, 'error')
-      @scope.getGroupListFailure()
-      expect(@toastr.error).toHaveBeenCalledWith("Unable to get group details.", "Error")
+      @scope.getGroupListFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+      expect(@rootScope.canManageComp).toBeFalsy()
 
   describe '#getGroupSharedList', ->
     it 'should call a service with a obj var to get data if user has share permission', ->

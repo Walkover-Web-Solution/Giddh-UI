@@ -144,8 +144,6 @@ giddh.webApp.run [
   ($rootScope, $state, $stateParams, $location, $window, toastr) ->
     $rootScope.$state = $state
     $rootScope.$stateParams = $stateParams
-    # $state.transitionTo('company.manage')
-
     $rootScope.$on '$stateChangeStart', ->
       $rootScope.showLedgerBox = false
 

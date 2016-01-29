@@ -126,8 +126,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #delete company success
   $scope.delCompanySuccess = (res) ->
+    $rootScope.selectedCompany = {}
+    localStorageService.remove("_selectedCompany")
     toastr.success("Company deleted successfully", "Success")
     $scope.getCompanyList()
+    console.log "hey deleted"
 
   #delete company failure
   $scope.delCompanyFailure = (res) ->
@@ -177,7 +180,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
     if $scope.canManageUser is true
       $scope.getSharedUserList($scope.selectedCompany.uniqueName)
-      $scope.getRolesList()
+      
 
     
     # $rootScope.$broadcast('$reloadAccount')
@@ -282,17 +285,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
 
   $scope.onShareCompanyFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
-
-  #get roles and set it in local storage
-  $scope.getRolesList = () ->
-    cUname = $rootScope.selectedCompany.uniqueName
-    companyServices.getRoles(cUname).then($scope.getRolesSuccess, $scope.getRolesFailure)
-
-  $scope.getRolesSuccess = (res) ->
-    $scope.rolesList = res.body
-
-  $scope.getRolesFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
   #get shared user list
