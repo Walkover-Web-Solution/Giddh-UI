@@ -34,7 +34,7 @@ describe "Group Service", ->
             expect(data.status).toBe(400)
         )
 
-    describe "#getAllFor", ->
+    describe "#getGroupsWithoutAccountsInDetail", ->
       companyUniqueName = 'giddh'
       it 'should call success callback when get group for company return success', ->
         @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups/detailed-groups').respond(200, {"status": "success"})
@@ -119,15 +119,31 @@ describe "Group Service", ->
       group = {oldUName: "name"}
       it 'should call success callback when group updated', ->
         @httpBackend.when('PUT', '/company/' + companyUniqueName + '/groups/'+group.oldUName).respond(200, {"status": "success"})
-
         @groupService.update(companyUniqueName, group).then(
           (data) -> expect(data.status).toBe("success")
           (data) -> expect(true).toBeFalsy()
         )
       it 'should call failure callback when group updated', ->
         @httpBackend.when('PUT', '/company/' + companyUniqueName + '/groups/'+group.oldUName).respond(400, {"status": "error"})
-
         @groupService.update(companyUniqueName, group).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+
+    describe "#get", ->
+      companyUniqueName = 'company'
+      groupUniqueName = "groups"
+      it 'should call success callback when group updated', ->
+        @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups/'+groupUniqueName).respond(200, {"status": "success"})
+        @groupService.get(companyUniqueName, groupUniqueName).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+      it 'should call failure callback when group updated', ->
+        @httpBackend.when('GET', '/company/' + companyUniqueName + '/groups/'+groupUniqueName).respond(400, {"status": "error"})
+        @groupService.get(companyUniqueName, groupUniqueName).then(
           (data) -> expect(true).toBeFalsy()
           (data) ->
             expect(data.data.status).toBe("error")
@@ -236,6 +252,72 @@ describe "Group Service", ->
         )
 
   describe "nonHttpRequestMethods", ->
+    describe '#matchAndReturnObj', ->
+      it 'should match and return object', ->
+        a = {
+          groupUniqueName: "d123"
+        }
+        b = [
+          {
+            name: "abc"
+            uniqueName: "abc123"
+          }
+          {
+            name: "abcd"
+            uniqueName: "d123"
+          }
+        ]
+        result = @groupService.matchAndReturnObj(a, b)
+        expect(result).toEqual({name: 'abcd', uniqueName: 'd123'})
+    
+    describe '#matchAndReturnGroupObj', ->
+      it 'should match and return object', ->
+        a = {
+          uniqueName: "abc123"
+        }
+        b = [
+          {
+            name: "abc"
+            uniqueName: "abc123"
+          }
+          {
+            name: "abcd"
+            uniqueName: "d123"
+          }
+        ]
+        result = @groupService.matchAndReturnGroupObj(a, b)
+        expect(result).toEqual({name: 'abc', uniqueName: 'abc123'})
+
+    describe '#makeGroupListFlatwithLessDtl', ->
+      it 'should make flat groupList with less details', ->
+        data = [
+          {
+            name: "abc"
+            uniqueName: "abc123"
+            groups: []
+            parentGroups: []
+            updated: ""
+            synonyms: ""
+          }
+        ]
+        result = @groupService.makeGroupListFlatwithLessDtl(data)
+        expect(result).toEqual([{name: 'abc', uniqueName: 'abc123', synonyms: "", parentGroups: []}])
+
+    describe '#makeAcListWithLessDtl', ->
+      it 'should make flat groupList with less details', ->
+        data = [
+          {
+            name: "abc"
+            uniqueName: "abc123"
+            groups: []
+            mergedAccounts: ""
+            updated: ""
+            synonyms: ""
+          }
+        ]
+        result = @groupService.makeAcListWithLessDtl(data)
+        expect(result).toEqual([{name: 'abc', uniqueName: 'abc123', mergedAccounts: ""}])
+        
     describe '#flattenGroup', ->
       it 'should take list of group and flatten them', ->
         groupList = [

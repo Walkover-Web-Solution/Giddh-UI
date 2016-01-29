@@ -34,8 +34,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
     localStorageService.set("_roles", res.body)
 
   $scope.onGetRolesFailure = (res) ->
-    console.info "Something went wrong while fetching role"
-    toastr.error(res.data.message, res.data.status)
+    toastr.error("Something went wrong while fetching role", "Error")
 
   $rootScope.setScrollToTop = (val, elem)->
     if val is '' || _.isUndefined(val)

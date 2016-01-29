@@ -36,10 +36,7 @@ describe 'mainController', ->
 
   describe '#onGetRolesFailure', ->
     it 'should show toastr with error message', ->
-      res =
-        data:
-          status: "Error"
-          message: "some-message"
-      spyOn(@toastr, 'error')
+      res = {}
+      spyOn(@toastr, "error")
       @scope.onGetRolesFailure(res)
-      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+      expect(@toastr.error).toHaveBeenCalledWith("Something went wrong while fetching role", "Error")

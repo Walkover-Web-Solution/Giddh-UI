@@ -4,24 +4,52 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
   Group = $resource('/company/:companyUniqueName/groups',
     {'companyUniqueName': @companyUniqueName, 'groupUniqueName': @groupUniqueName},
     {
-      add: {method: 'POST'}
-      getAll: {method: 'GET'}
+      add: {
+        method: 'POST'
+      }
+      getAll: {
+        method: 'GET'
+      }
       getAllWithAccounts: {
         method: 'GET',
         url: '/company/:companyUniqueName/groups/with-accounts'
       }
-      getAllInDetail: {method: 'GET', url: '/company/:companyUniqueName/groups/detailed-groups'}
+      getAllInDetail: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/groups/detailed-groups'
+      }
       getAllWithAccountsInDetail: {
         method: 'GET',
         url: '/company/:companyUniqueName/groups/detailed-groups-with-accounts'
       }
-      update: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
-      delete: {method: 'DELETE', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
-      get: {method: 'GET', url: '/company/:companyUniqueName/groups/:groupUniqueName'}
-      move: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/move'}
-      share: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/share'}
-      unshare: {method: 'PUT', url: '/company/:companyUniqueName/groups/:groupUniqueName/unshare'}
-      sharedWith: {method: 'GET', url: '/company/:companyUniqueName/groups/:groupUniqueName/shared-with'}
+      update: {
+        method: 'PUT'
+        url: '/company/:companyUniqueName/groups/:groupUniqueName'
+      }
+      delete: {
+        method: 'DELETE'
+        url: '/company/:companyUniqueName/groups/:groupUniqueName'
+      }
+      get: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/groups/:groupUniqueName'
+      }
+      move: {
+        method: 'PUT'
+        url: '/company/:companyUniqueName/groups/:groupUniqueName/move'
+      }
+      share: {
+        method: 'PUT'
+        url: '/company/:companyUniqueName/groups/:groupUniqueName/share'
+      }
+      unshare: {
+        method: 'PUT'
+        url: '/company/:companyUniqueName/groups/:groupUniqueName/unshare'
+      }
+      sharedWith: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/groups/:groupUniqueName/shared-with'
+      }
     })
 
   groupService =

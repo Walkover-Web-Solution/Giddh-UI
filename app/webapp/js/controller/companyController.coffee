@@ -86,7 +86,9 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         localStorageService.set("_selectedCompany", cdt)
         $scope.goToCompany(cdt, cdt.index)
       else
+        localStorageService.set("_selectedCompany", $scope.companyList[0])
         $scope.goToCompany($scope.companyList[0], 0)
+      $rootScope.$broadcast('companyChanged')
 
   #get company list failure
   $scope.getCompanyListFailure = (res)->
@@ -130,7 +132,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     localStorageService.remove("_selectedCompany")
     toastr.success("Company deleted successfully", "Success")
     $scope.getCompanyList()
-    console.log "hey deleted"
 
   #delete company failure
   $scope.delCompanyFailure = (res) ->
@@ -162,13 +163,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.canManageUser = permissionService.hasPermissionOn(data, "SHR")
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
-    angular.extend($scope.selectedCompany, data)
-    $scope.selectedCompany.index = index
-    contactnumber = $scope.selectedCompany.contactNo
+    angular.extend($rootScope.selectedCompany, data)
+    $rootScope.selectedCompany.index = index
+    contactnumber = $rootScope.selectedCompany.contactNo
     if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
       SplitNumber = contactnumber.split('-')
-      $scope.selectedCompany.mobileNo = SplitNumber[1]
-      $scope.selectedCompany.cCode = SplitNumber[0]
+      $rootScope.selectedCompany.mobileNo = SplitNumber[1]
+      $rootScope.selectedCompany.cCode = SplitNumber[0]
 
     previousCompany = localStorageService.get("_selectedCompany")
     if(_.isEmpty(previousCompany) || previousCompany.uniqueName != data.uniqueName)
@@ -176,13 +177,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       localStorageService.set("_ledgerData", null)
       localStorageService.set("_selectedAccount", null)
 
-    localStorageService.set("_selectedCompany", $scope.selectedCompany)
+    localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
 
     if $scope.canManageUser is true
-      $scope.getSharedUserList($scope.selectedCompany.uniqueName)
-      
-
-    
+      $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
     # $rootScope.$broadcast('$reloadAccount')
 
   #update company details
