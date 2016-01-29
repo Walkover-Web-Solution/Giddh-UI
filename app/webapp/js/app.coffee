@@ -144,6 +144,8 @@ giddh.webApp.run [
   ($rootScope, $state, $stateParams, $location, $window, toastr) ->
     $rootScope.$state = $state
     $rootScope.$stateParams = $stateParams
+    # $state.transitionTo('company.manage')
+
     $rootScope.$on '$stateChangeStart', ->
       $rootScope.showLedgerBox = false
 
@@ -192,7 +194,7 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$t
       response
 
     responseError: (responseError) ->
-      if responseError.status is 500
+      if responseError.status is 500 and responseError.data != undefined
         #check if responseError.data contains error regarding Auth-Key
         isError = responseError.data.indexOf("`value` required in setHeader")
         isAuthKeyError = responseError.data.indexOf("Auth-Key")

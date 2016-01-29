@@ -8,18 +8,22 @@ describe 'ledgerController', ->
       @scope = $rootScope.$new()
       @rootScope = $rootScope
       @localStorageService = localStorageService
-      spyOn(@localStorageService, 'get').andReturn({name: "walkover"})
+      spyOn(@localStorageService, 'get').andReturn({name: "walkover"} )
       @ledgerController = $controller('ledgerController',
-        {$scope: @scope, $rootScope: @rootScope, localStorageService: @localStorageService})
+        {$scope: @scope, $rootScope: @rootScope, localStorageService: @localStorageService} )
 
     it 'should check scope variables set by default', ->
       expect(@scope.ledgerdata).toBeUndefined()
       expect(@scope.accntTitle).toBeUndefined()
       expect(@scope.selectedGroupUname).toBeUndefined()
       expect(@scope.selectedLedgerAccount).toBeUndefined()
+      expect(@scope.selectedLedgerGroup).toBeUndefined()
       expect(@scope.ledgerOnlyDebitData).toEqual([])
       expect(@scope.ledgerOnlyCreditData).toEqual([])
-      expect(@rootScope.selectedCompany).toEqual({name: "walkover"})
+      expect(@rootScope.selectedCompany).toEqual({name: "walkover"} )
+      expect(@rootScope.showImportListData).toBeFalsy()
+      expect(@rootScope.unableToShowBrdcrmb).toBeFalsy()
+      expect(@rootScope.importList).toEqual([])
       expect(@scope.creditTotal).toBeUndefined()
       expect(@scope.debitTotal).toBeUndefined()
       expect(@scope.creditBalanceAmount).toBeUndefined()
@@ -32,7 +36,7 @@ describe 'ledgerController', ->
       expect(@scope.toDate.date).toBeDefined()
       expect(@scope.fromDatePickerIsOpen).toBeFalsy()
       expect(@scope.fromDatePickerIsOpen).toBeFalsy
-      expect(@scope.dateOptions).toEqual({'year-format': "'yy'", 'starting-day': 1, 'showWeeks': false, 'show-button-bar': false, 'year-range': 1, 'todayBtn': false})
+      expect(@scope.dateOptions).toEqual({'year-format': "'yy'", 'starting-day': 1, 'showWeeks': false, 'show-button-bar': false, 'year-range': 1, 'todayBtn': false} )
       expect(@scope.format).toBe("dd-MM-yyyy")
       expect(@scope.ftypeAdd).toBe("add")
       expect(@scope.ftypeUpdate).toBe("update")
@@ -97,7 +101,7 @@ describe 'ledgerController', ->
           modalService: @modalService
           Upload: @Upload
           permissionService: @permissionService
-        })
+        } )
 
     describe '#reloadLedger', ->
       it 'should not call load ledger', ->
@@ -112,12 +116,12 @@ describe 'ledgerController', ->
         spyOn(@scope, 'loadLedger')
         @scope.reloadLedger()
         expect(@scope.loadLedger).toHaveBeenCalledWith(@scope.selectedLedgerGroup, @scope.selectedLedgerAccount)
-    
+
     describe '#showLedgerBreadCrumbs', ->
       it 'should set data in ledgerBreadCrumbList', ->
-        data ={}
+        data = {}
         @scope.showLedgerBreadCrumbs(data)
-        expect(@scope.ledgerBreadCrumbList).toEqual({})
+        expect(@scope.ledgerBreadCrumbList).toEqual({} )
 
     describe '#loadLedger', ->
       it 'should show alert if date format is wrong', ->
@@ -134,12 +138,12 @@ describe 'ledgerController', ->
         expect(@toastr.error).toHaveBeenCalledWith('Date should be in proper format', 'Error')
 
       xit 'should call service and set some variables value', ->
-        @scope.toDate = {
-          date: "14-11-2015"
-        }
-        @scope.fromDate = {
-          date: "14-11-2015"
-        }
+        # @scope.toDate = {
+        #   date: "14-11-2015"
+        # }
+        # @scope.fromDate = {
+        #   date: "14-11-2015"
+        # }
         @rootScope.selectedCompany = {
           uniqueName: "giddh"
         }
@@ -155,6 +159,10 @@ describe 'ledgerController', ->
             {name: "name2", uniqueName: "somename2"}
           ]
         }
+        unqObj = {
+          compUname : $rootScope.selectedCompany.uniqueName
+          acntUname : acData.uniqueName
+        }
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
           acntUname: @rootScope.selAcntUname
@@ -162,19 +170,19 @@ describe 'ledgerController', ->
           toDate: @scope.fromDate.date
         }
         deferred = @q.defer()
-        spyOn(@ledgerService, "getLedger").andReturn(deferred.promise)
-        spyOn(@scope, "hasAddAndUpdatePermission").andReturn(true)
-        @scope.loadLedger(data, acData)
-        expect(@scope.showLedgerBox).toBeFalsy()
-        expect(@scope.showLedgerLoader).toBeTruthy()
-        expect(@scope.selectedLedgerAccount).toBe(acData)
-        expect(@scope.selectedLedgerGroup).toBe(data)
-        expect(@scope.accntTitle).toEqual(acData.name)
-        expect(@rootScope.selAcntUname).toEqual(acData.uniqueName)
-        expect(@scope.selectedGroupUname).toEqual(data.groupUniqueName)
+        spyOn(@accountService, "get").andReturn(deferred.promise)
+        # spyOn(@scope, "hasAddAndUpdatePermission").andReturn(true)
+        # @scope.loadLedger(data, acData)
+        # expect(@scope.showLedgerBox).toBeFalsy()
+        # expect(@scope.showLedgerLoader).toBeTruthy()
+        # expect(@scope.selectedLedgerAccount).toBe(acData)
+        # expect(@scope.selectedLedgerGroup).toBe(data)
+        # expect(@scope.accntTitle).toEqual(acData.name)
+        # expect(@rootScope.selAcntUname).toEqual(acData.uniqueName)
+        # expect(@scope.selectedGroupUname).toEqual(data.groupUniqueName)
 
-        expect(@scope.hasAddAndUpdatePermission).toHaveBeenCalledWith(acData)
-        expect(@ledgerService.getLedger).toHaveBeenCalledWith(udata)
+        # expect(@scope.hasAddAndUpdatePermission).toHaveBeenCalledWith(acData)
+        # expect(@ledgerService.getLedger).toHaveBeenCalledWith(udata)
 
     describe '#loadLedgerSuccess', ->
       it 'should call calculate ledger function with data and set a variable true and push value in ledgerdata', ->
@@ -187,7 +195,7 @@ describe 'ledgerController', ->
           }
         }
         @scope.loadLedgerSuccess(res)
-        expect(@scope.ledgerData).toEqual(_.omit(res.body, 'ledgers'))
+        expect(@scope.ledgerData).toEqual(_.omit(res.body, 'ledgers') )
         expect(@scope.showLedgerBox).toBeTruthy()
         expect(@scope.showLedgerLoader).toBeFalsy()
         expect(@scope.calculateLedger).toHaveBeenCalledWith(@scope.ledgerData, "server")
@@ -201,6 +209,43 @@ describe 'ledgerController', ->
         spyOn(@toastr, "error")
         @scope.loadLedgerFailure(res)
         expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+    describe '#getAcDtlDataFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.loadLedgerFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+    describe '#getAcDtlDataSuccess', ->
+      it 'should call service with unqNamesObj and set variables'
+        acData = {
+          name: "name"
+          uniqueName: "somename"
+          parentGroups: [
+            {name: "name0", uniqueName: "somename0"}
+            {name: "name1", uniqueName: "somename1"}
+            {name: "name2", uniqueName: "somename2"}
+          ]
+        }
+        gData = {
+          accountDetails: []
+          beforeFilter: []
+          groupName: 'some name'
+          groupSynonyms: 'some,name,sysnonyms'
+          groupUniqueName: 'some unique name'
+          open: true
+        }
+        expect(@rootScope.showLedgerBox).toBeFalsy()
+        expect(@rootScope.showLedgerLoader).toBeFalsy()
+        expect(@scope.selectedLedgerAccount).toEqual(acData)
+        expect(@scope.selectedLedgerGroup).toEqual(gData)
+        expect(@scope.accntTitle).toEqual(acData.name)
+        expect(@rootScope.selAcntUname).toEqual(acData.uniqueName)
+        expect(@scope.selectedGroupUname).toEqual(gData.groupUniqueName)
 
     describe '#addNewAccount', ->
       it 'should check if selectedCompany is empty then it will show alert', ->
@@ -230,7 +275,7 @@ describe 'ledgerController', ->
         deferred = @q.defer()
         spyOn(@ledgerService, "createEntry").andReturn(deferred.promise)
         data = {
-          sharedData: {voucher: {shortcode: "12345"}}
+          sharedData: {voucher: {shortcode: "12345"} }
           transactions: [
             {
               particular: "particular"
@@ -254,7 +299,7 @@ describe 'ledgerController', ->
         spyOn(@scope, "removeClassInAllEle")
         spyOn(@scope, "$broadcast")
         spyOn(@toastr, "success")
-        @scope.addEntrySuccess({})
+        @scope.addEntrySuccess({} )
         expect(@rootScope.lItem).toEqual([])
         expect(@toastr.success).toHaveBeenCalledWith("Entry created successfully", "Success")
         expect(@scope.removeLedgerDialog).toHaveBeenCalled()
@@ -284,14 +329,14 @@ describe 'ledgerController', ->
             uniqueName: "uniqueName"
             voucher: {shortCode: "12345"}
           }
-          transactions: [{particular: "particular"}]
+          transactions: [{particular: "particular"} ]
         }
         @scope.ledgerOnlyDebitData = [data]
         eData = {
           uniqueName: "uniqueName"
           voucher: {shortCode: "12345"}
           voucherType: "12345"
-          transactions: [{particular: "particular"}]
+          transactions: [{particular: "particular"} ]
         }
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
@@ -352,7 +397,7 @@ describe 'ledgerController', ->
         }
         @scope.selectedGroupUname = "somename"
         @rootScope.selAcntUname = "somename"
-        item = {sharedData: {name: "name", uniqueName: "somename"}}
+        item = {sharedData: {name: "name", uniqueName: "somename"} }
 
         udata = {
           compUname: @rootScope.selectedCompany.uniqueName
@@ -397,7 +442,7 @@ describe 'ledgerController', ->
 
     describe '#addEntryInCredit', ->
       data = {
-        sharedData:{
+        sharedData: {
           uniqueName: "somename"
           entryDate: "01-12-2015"
         }
@@ -406,14 +451,14 @@ describe 'ledgerController', ->
       it 'should check array length and set value in local variable, then it should check if entryDate isnot blank and amount is not blank then it should call sameMethodForDrCr function with two parameters and it should check if uniqueName is undefined then it will add one more key {addType} in object after all this it will perform some underscore action {omit, last and extend}', ->
         @scope.ledgerOnlyCreditData = [
           {
-            sharedData:{
+            sharedData: {
               uniqueName: "somename1"
               entryDate: "01-12-2015"
             }
             transactions: [ {type: "CREDIT", amount: 30} ]
           }
           {
-            sharedData:{
+            sharedData: {
               uniqueName: "somename2"
               entryDate: "02-12-2015"
             }
@@ -427,14 +472,14 @@ describe 'ledgerController', ->
       it 'timeout test', ->
         @scope.ledgerOnlyCreditData = [
           {
-            sharedData:{
+            sharedData: {
               uniqueName: ""
               entryDate: ""
             }
             transactions: [ {type: "", amount: ""} ]
           }
           {
-            sharedData:{
+            sharedData: {
               uniqueName: ""
               entryDate: ""
             }
@@ -449,10 +494,10 @@ describe 'ledgerController', ->
         ), 200
         runs ->
           expect(@scope.sameMethodForDrCr).toHaveBeenCalledWith(1, ".crLedgerEntryForm")
-    
+
     describe '#addEntryInDebit', ->
       data = {
-        sharedData:{
+        sharedData: {
           uniqueName: "somename"
           entryDate: "01-12-2015"
         }
@@ -461,14 +506,14 @@ describe 'ledgerController', ->
       it 'should check array length and set value in local variable, then it should check if entryDate isnot blank and amount is not blank then it should call sameMethodForDrCr function with two parameters and it should check if uniqueName is undefined then it will add one more key {addType} in object after all this it will perform some underscore action {omit, last and extend}', ->
         @scope.ledgerOnlyDebitData = [
           {
-            sharedData:{
+            sharedData: {
               uniqueName: "somename1"
               entryDate: "01-12-2015"
             }
             transactions: [ {type: "DEBIT", amount: 30} ]
           }
           {
-            sharedData:{
+            sharedData: {
               uniqueName: "somename2"
               entryDate: "02-12-2015"
             }
@@ -602,7 +647,7 @@ describe 'ledgerController', ->
         expect(@scope.creditTotal).toBe(100)
 
     describe '#viewContentLoaded event', ->
-      data ={
+      data = {
         ledgerData:
           groupName: "CPU"
           groupUniqueName: "cpu"
@@ -622,15 +667,15 @@ describe 'ledgerController', ->
         expect(@scope.loadLedger).toHaveBeenCalledWith(data.ledgerData, data.selectedAccount)
       it 'should go in else if condition and check if data is in localStorageService and then call loadLedger function with data', ->
         spyOn(@scope, "loadLedger")
-        spyOn(@DAServices, 'LedgerGet').andReturn({})
+        spyOn(@DAServices, 'LedgerGet').andReturn({} )
         spyOn(@localStorageService, 'get').andReturn(data.ledgerData)
         @rootScope.$broadcast('$viewContentLoaded')
         expect(@DAServices.LedgerGet).toHaveBeenCalled()
-        expect(@scope.loadLedger).toHaveBeenCalledWith(data.ledgerData, data.ledgerData)      
+        expect(@scope.loadLedger).toHaveBeenCalledWith(data.ledgerData, data.ledgerData)
 
     describe '#hasAddAndUpdatePermission', ->
       it 'should return true if user has add and update permission on account', ->
-        account = {parentGroups: [{role: {permissions: [{"code": "UPDT"}, {"code": "ADD"}]}}]}
+        account = {parentGroups: [{role: {permissions: [{"code": "UPDT"}, {"code": "ADD"} ]} } ]}
         spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
         result = @scope.hasAddAndUpdatePermission(account)
         expect(result).toBeTruthy()
@@ -638,7 +683,7 @@ describe 'ledgerController', ->
         expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(account, "UPDT")
 
       it 'should return false if user has only add permission on account not update', ->
-        account = {parentGroups: [{role: {permissions: [{"code": "ADD"}]}}]}
+        account = {parentGroups: [{role: {permissions: [{"code": "ADD"} ]} } ]}
         spyOn(@permissionService, 'hasPermissionOn').andReturn(false)
         result = @scope.hasAddAndUpdatePermission(account)
         expect(result).toBeFalsy()
@@ -685,7 +730,7 @@ describe 'ledgerController', ->
         spyOn(@scope, "msieBrowser").andReturn(true)
         @scope.exportLedgerSuccess(res)
         expect(@scope.openWindow).toHaveBeenCalledWith(res.body.filePath)
-        
+
 
     describe '#exportLedgerFailure', ->
       it 'should show error message with toastr', ->
@@ -705,7 +750,7 @@ describe 'ledgerController', ->
       @scope.selectedGroupUname = "somename"
       @rootScope.selAcntUname = "somename"
       result = ''
-      files = [{ 
+      files = [{
         fieldname: 'file',
         originalname: 'master-small.xml',
         encoding: '7bit',
@@ -713,8 +758,8 @@ describe 'ledgerController', ->
         destination: './uploads/',
         filename: '1449894122205.xml',
         path: 'uploads/1449894122205.xml',
-        size: 1288072 
-      }]
+        size: 1288072
+      } ]
       errFiles = []
       deferred = @q.defer()
       spyOn(@Upload, "upload").andReturn(deferred.promise)

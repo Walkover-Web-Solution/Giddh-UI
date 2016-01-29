@@ -127,7 +127,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $scope.unableToShowBrdcrmb  = true
 
   $scope.getAcDtlDataFailure = (res) ->
-    console.log res
+    toastr.error(res.data.message, res.data.status)
 
   $scope.getAcDtlDataSuccess = (res, gData, acData) ->
     _.extend(acData, res.body)

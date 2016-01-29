@@ -35,8 +35,11 @@ describe 'mainController', ->
       expect(@localStorageService.set).toHaveBeenCalledWith('_roles', [{name: 'admin'}])
 
   describe '#onGetRolesFailure', ->
-    it 'should show toastr with error message', ->
-      res = {}
-      spyOn(@toastr, "error")
+    xit 'should show toastr with error message', ->
+      res =
+        data:
+          status: "Error"
+          message: "some-message"
+      spyOn(@toastr, 'error')
       @scope.onGetRolesFailure(res)
-      expect(@toastr.error).toHaveBeenCalledWith("Something went wrong while fetching role", "Error")
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
