@@ -426,6 +426,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.datePicker.accountOpeningBalanceDate = new Date()
 
   $scope.addNewAccountShow = (groupData)  ->
+    $scope.cantUpdate = false
     # make blank for new
     $scope.selectedAccount = {}
     $scope.acntExt = {

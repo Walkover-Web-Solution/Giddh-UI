@@ -853,6 +853,7 @@ describe 'groupController', ->
       spyOn(@scope, "showBreadCrumbs")
       spyOn(@scope, "setOpeningBalanceDate")
       @scope.addNewAccountShow(@scope.selectedGroup)
+      expect(@scope.cantUpdate).toBeFalsy()
       expect(@scope.selectedAccount).toEqual({})
       expect(@scope.acntExt.Ccode).toBe (undefined)
       expect(@scope.acntExt.onlyMobileNo).toBe (undefined)
