@@ -363,8 +363,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         console.log res, "error"
       ), (evt) ->
         file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
-
-
   #fire function after page fully loaded
   $scope.$on '$viewContentLoaded', ->
     $scope.getCompanyList()
@@ -373,6 +371,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $timeout( ->
       $scope.toggleAcMenus(false)
       $scope.selectedAccountUniqueName = undefined
+      $scope.rolesList = localStorageService.get("_roles")
     ,2000)
 
 #init angular app
