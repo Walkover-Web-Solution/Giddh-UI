@@ -88,7 +88,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       else
         localStorageService.set("_selectedCompany", $scope.companyList[0])
         $scope.goToCompany($scope.companyList[0], 0)
-      $rootScope.$broadcast('companyChanged')
 
   #get company list failure
   $scope.getCompanyListFailure = (res)->
@@ -181,7 +180,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
     if $scope.canManageUser is true
       $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
-    # $rootScope.$broadcast('$reloadAccount')
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
@@ -365,6 +363,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
   #fire function after page fully loaded
   $scope.$on '$viewContentLoaded', ->
+    $rootScope.selAcntUname = undefined
     $scope.getCompanyList()
     $scope.getCurrencyList()
     $scope.getUserDetails()

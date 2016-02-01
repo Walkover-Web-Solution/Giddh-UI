@@ -146,7 +146,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
     }
     ledgerService.getLedger(unqNamesObj).then($scope.loadLedgerSuccess, $scope.loadLedgerFailure)
-    console.log $location, $location.path()    
     if $location.path() isnt "/"+$rootScope.selAcntUname
       $location.path("/"+$rootScope.selAcntUname)
     else

@@ -99,6 +99,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showGroupDetails = false
     $scope.showAccountDetails = false
     $scope.showAccountListDetails = false
+    $scope.cantUpdate = false
   
   $scope.setLedgerData = (data, acData) ->
     $scope.selectedAccountUniqueName = acData.uniqueName
@@ -384,6 +385,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #show account
   $scope.showAccountDtl = (data) ->
+    $scope.cantUpdate = false
     #highlight account menus
     $scope.selectedAccntMenu = data
     reqParams = {
@@ -399,7 +401,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     bcd = getPgrps.parentGroups.reverse()
     _.extend(data.parentGroups, bcd)
     $scope.checkPermissions(data)
-    $scope.cantUpdate = false
+    # $scope.cantUpdate = false
     pGroups = []
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true

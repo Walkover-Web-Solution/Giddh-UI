@@ -78,7 +78,7 @@ describe 'ledgerController', ->
       expect(@scope.voucherTypeList).toEqual(vouchDat)
 
   describe 'controller methods', ->
-    beforeEach inject ($rootScope, $controller, localStorageService, toastr, ledgerService, $q, modalService, DAServices, permissionService, accountService, Upload) ->
+    beforeEach inject ($rootScope, $controller, localStorageService, toastr, ledgerService, $q, modalService, DAServices, permissionService, accountService, Upload, groupService) ->
       @scope = $rootScope.$new()
       @rootScope = $rootScope
       @localStorageService = localStorageService
@@ -88,6 +88,7 @@ describe 'ledgerController', ->
       @accountService = accountService
       @permissionService = permissionService
       @modalService = modalService
+      @groupService = groupService
       @Upload = Upload
       @q = $q
       @ledgerController = $controller('ledgerController',
@@ -101,7 +102,9 @@ describe 'ledgerController', ->
           modalService: @modalService
           Upload: @Upload
           permissionService: @permissionService
-        } )
+          groupService: @groupService
+        }
+      )
 
     describe '#reloadLedger', ->
       it 'should not call load ledger', ->
@@ -137,52 +140,128 @@ describe 'ledgerController', ->
         @scope.loadLedger(data, acData)
         expect(@toastr.error).toHaveBeenCalledWith('Date should be in proper format', 'Error')
 
-      xit 'should call service and set some variables value', ->
-        # @scope.toDate = {
-        #   date: "14-11-2015"
-        # }
-        # @scope.fromDate = {
-        #   date: "14-11-2015"
-        # }
+      it 'should call accountService get method and if success then it will call getAcDtlDataSuccess with data and set unableToShowBrdcrmb variable falsy', ->
+        @scope.toDate = {
+          date: "14-11-2015"
+        }
+        @scope.fromDate = {
+          date: "14-11-2015"
+        }
         @rootScope.selectedCompany = {
           uniqueName: "giddh"
         }
-        @scope.selectedGroupUname = "somename"
-        @rootScope.selAcntUname = "somename"
-        data = {groupUniqueName: "somename"}
         acData = {
-          name: "name"
-          uniqueName: "somename"
+          mergedAccounts: ""
+          name: "abcdef"
+          uniqueName: "a333r3dge"
           parentGroups: [
-            {name: "name0", uniqueName: "somename0"}
-            {name: "name1", uniqueName: "somename1"}
-            {name: "name2", uniqueName: "somename2"}
+            {name: "test", uniqueName: "jalgjlakjlgn"}
+            {name: "Capital", uniqueName: "capital"}
           ]
         }
+        gData = {
+          accountDetails: [
+            mergedAccounts: ""
+            name: "abcdef"
+            parentGroups: [
+              {name: "test", uniqueName: "jalgjlakjlgn"}
+              {name: "Capital", uniqueName: "capital"}
+            ]
+            uniqueName: "a333r3dge"
+          ]
+          groupName: "test"
+          groupSynonyms: null
+          groupUniqueName: "jalgjlakjlgn"
+          open: true
+        }
         unqObj = {
-          compUname : $rootScope.selectedCompany.uniqueName
+          compUname : @rootScope.selectedCompany.uniqueName
           acntUname : acData.uniqueName
         }
-        udata = {
+        @rootScope.flatGroupsList = []
+        deferred = @q.defer()
+        spyOn(@accountService, 'get').andReturn(deferred.promise)
+        spyOn(@scope, "getAcDtlDataSuccess")
+        spyOn(@scope, "showLedgerBreadCrumbs")
+        spyOn(@groupService, "matchAndReturnObj")
+        @scope.loadLedger(gData, acData)
+        expect(@scope.unableToShowBrdcrmb).toBeTruthy()
+        expect(@accountService.get).toHaveBeenCalledWith(unqObj)
+
+    describe '#getAcDtlDataFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.loadLedgerFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+    describe '#getAcDtlDataSuccess', ->
+      it 'should assigne values in variables and call ledgerService getLedger method', ->
+        @rootScope.selectedCompany = {
+          uniqueName: "giddh"
+        }
+        acData = {
+          mergedAccounts: ""
+          name: "abcdef"
+          uniqueName: "a333r3dge"
+          parentGroups: [
+            {name: "test", uniqueName: "jalgjlakjlgn"}
+            {name: "Capital", uniqueName: "capital"}
+          ]
+        }
+        gData = {
+          accountDetails: [
+            mergedAccounts: ""
+            name: "abcdef"
+            parentGroups: [
+              {name: "test", uniqueName: "jalgjlakjlgn"}
+              {name: "Capital", uniqueName: "capital"}
+            ]
+            uniqueName: "a333r3dge"
+          ]
+          groupName: "test"
+          groupSynonyms: null
+          groupUniqueName: "jalgjlakjlgn"
+          open: true
+        }
+        unqNamesObj = {
           compUname: @rootScope.selectedCompany.uniqueName
           acntUname: @rootScope.selAcntUname
-          fromDate: @scope.toDate.date
-          toDate: @scope.fromDate.date
+          fromDate: "14-11-2015"
+          toDate: "14-11-2015"
         }
+        res = {
+          status: "success"
+          body: {
+            address: null
+            city: null
+            companyName: null
+            country: null
+            createdAt: "01-02-2016 13:54:50"
+            description: null
+            email: null
+            mergedAccounts: ""
+            mobileNo: null
+            name: "abcdef"
+            openingBalance: 0
+            openingBalanceDate: "01-02-2016"
+            openingBalanceType: "CREDIT"
+            pincode: null
+            role: {
+              name: "Super Admin"
+              uniqueName: "super_admin"
+            }
+            state: null
+            uniqueName: "a333r3dge"
+            updatedAt: "01-02-2016 13:54:50"
+          }
+        }
+        spyOn(@scope, "hasAddAndUpdatePermission")
         deferred = @q.defer()
-        spyOn(@accountService, "get").andReturn(deferred.promise)
-        # spyOn(@scope, "hasAddAndUpdatePermission").andReturn(true)
-        # @scope.loadLedger(data, acData)
-        # expect(@scope.showLedgerBox).toBeFalsy()
-        # expect(@scope.showLedgerLoader).toBeTruthy()
-        # expect(@scope.selectedLedgerAccount).toBe(acData)
-        # expect(@scope.selectedLedgerGroup).toBe(data)
-        # expect(@scope.accntTitle).toEqual(acData.name)
-        # expect(@rootScope.selAcntUname).toEqual(acData.uniqueName)
-        # expect(@scope.selectedGroupUname).toEqual(data.groupUniqueName)
-
-        # expect(@scope.hasAddAndUpdatePermission).toHaveBeenCalledWith(acData)
-        # expect(@ledgerService.getLedger).toHaveBeenCalledWith(udata)
+        spyOn(@ledgerService, 'getLedger').andReturn(deferred.promise)
 
     describe '#loadLedgerSuccess', ->
       it 'should call calculate ledger function with data and set a variable true and push value in ledgerdata', ->
@@ -209,44 +288,6 @@ describe 'ledgerController', ->
         spyOn(@toastr, "error")
         @scope.loadLedgerFailure(res)
         expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
-
-    describe '#getAcDtlDataFailure', ->
-      it 'should show error message with toastr', ->
-        res =
-          data:
-            status: "Error"
-            message: "message"
-        spyOn(@toastr, "error")
-        @scope.loadLedgerFailure(res)
-        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
-
-    describe '#getAcDtlDataSuccess', ->
-      xit 'should call service with unqNamesObj and set variables', ->
-        acData = {
-          name: "name"
-          uniqueName: "somename"
-          parentGroups: [
-            {name: "name0", uniqueName: "somename0"}
-            {name: "name1", uniqueName: "somename1"}
-            {name: "name2", uniqueName: "somename2"}
-          ]
-        }
-        gData = {
-          accountDetails: []
-          beforeFilter: []
-          groupName: 'some name'
-          groupSynonyms: 'some,name,sysnonyms'
-          groupUniqueName: 'some unique name'
-          open: true
-        }
-        @scope.getAcDtlDataSuccess(res, gData, acData)
-        expect(@rootScope.showLedgerBox).toBeFalsy()
-        expect(@rootScope.showLedgerLoader).toBeFalsy()
-        expect(@scope.selectedLedgerAccount).toEqual(acData)
-        expect(@scope.selectedLedgerGroup).toEqual(gData)
-        expect(@scope.accntTitle).toEqual(acData.name)
-        expect(@rootScope.selAcntUname).toEqual(acData.uniqueName)
-        expect(@scope.selectedGroupUname).toEqual(gData.groupUniqueName)
 
     describe '#addNewAccount', ->
       it 'should check if selectedCompany is empty then it will show alert', ->

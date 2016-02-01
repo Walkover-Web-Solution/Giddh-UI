@@ -109,6 +109,7 @@ describe 'groupController', ->
       expect(@scope.showGroupDetails).toBeFalsy()
       expect(@scope.showAccountDetails).toBeFalsy()
       expect(@scope.showAccountListDetails).toBeFalsy()
+      expect(@scope.cantUpdate).toBeFalsy()
       
     
 
