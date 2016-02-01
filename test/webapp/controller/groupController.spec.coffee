@@ -175,15 +175,72 @@ describe 'groupController', ->
       @scope.getGroups()
       expect(@toastr.error).toHaveBeenCalledWith('Select company first.', 'Error')
 
-    it 'should call groupService getGroupsWithAccountsCropped method and getGroupsWithoutAccountsCropped method', ->
+    it 'should call groupService getGroupsWithAccountsCropped method and not call getGroupsWithoutAccountsCropped method and set canManageComp variable to false', ->
+      cData = {
+        address: "sasd"
+        baseCurrency: "INR"
+        city: "Indore"
+        companyIdentity: []
+        country: "India"
+        createdAt: "02-12-2015 11:27:33"
+        email: "dsfdsf@asd.com"
+        name: "testComapany - yash"
+        pincode: "452010"
+        role: {
+          name: "Shared"
+          uniqueName: "shared"
+        }
+        shared: true
+        sharedEntity: "accounts"
+        state: "Madhya Pradesh"
+        uniqueName: "testcoindore144903585841105rgap"
+        updatedAt: "02-12-2015 11:28:46"
+      }
       @rootScope.selectedCompany = {"data": "Got it", "uniqueName": "soniravi"}
       deferred = @q.defer()
       spyOn(@groupService, 'getGroupsWithAccountsCropped').andReturn(deferred.promise)
       deferred = @q.defer()
       spyOn(@groupService, 'getGroupsWithoutAccountsCropped').andReturn(deferred.promise)
+      spyOn(@localStorageService, "get").andReturn(cData)
+      @scope.getGroups()
+      expect(@groupService.getGroupsWithAccountsCropped).toHaveBeenCalledWith("soniravi")
+      expect(@groupService.getGroupsWithoutAccountsCropped).not.toHaveBeenCalledWith("soniravi")
+      expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
+      expect(@rootScope.canManageComp).toBeFalsy()
+
+    it 'should call groupService getGroupsWithAccountsCropped method and getGroupsWithoutAccountsCropped method and set canManageComp variable to true', ->
+      cData = {
+        address: "sasd"
+        baseCurrency: "INR"
+        city: "Indore"
+        companyIdentity: []
+        country: "India"
+        createdAt: "02-12-2015 11:27:33"
+        email: "dsfdsf@asd.com"
+        name: "testComapany - yash"
+        pincode: "452010"
+        role: {
+          name: "Shared"
+          uniqueName: "shared"
+        }
+        shared: true
+        sharedEntity: "groups"
+        state: "Madhya Pradesh"
+        uniqueName: "testcoindore144903585841105rgap"
+        updatedAt: "02-12-2015 11:28:46"
+      }
+      @rootScope.selectedCompany = {"data": "Got it", "uniqueName": "soniravi"}
+      deferred = @q.defer()
+      spyOn(@groupService, 'getGroupsWithAccountsCropped').andReturn(deferred.promise)
+      deferred = @q.defer()
+      spyOn(@groupService, 'getGroupsWithoutAccountsCropped').andReturn(deferred.promise)
+      spyOn(@localStorageService, "get").andReturn(cData)
       @scope.getGroups()
       expect(@groupService.getGroupsWithAccountsCropped).toHaveBeenCalledWith("soniravi")
       expect(@groupService.getGroupsWithoutAccountsCropped).toHaveBeenCalledWith("soniravi")
+      expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
+      expect(@rootScope.canManageComp).toBeTruthy()
+    
 
   describe '#makeAccountsList', ->
     it 'should copy response into a local variable call groupService multiple methods and assign values in scope or rootScope variables', ->

@@ -132,8 +132,13 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     else
       # with accounts, group data
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
-      # without accounts only groups
-      groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess, $scope.getGroupListFailure)
+      # without accounts only groups conditionally
+      cData = localStorageService.get("_selectedCompany")
+      if cData.sharedEntity is 'accounts'
+        $rootScope.canManageComp = false
+      else
+        $rootScope.canManageComp = true
+        groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess, $scope.getGroupListFailure)
 
   $scope.makeAccountsList = (res) ->
     # flatten all groups with accounts and only accounts flatten
@@ -156,7 +161,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.getGroupListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
-    $rootScope.canManageComp = false
   
   $scope.getGroupSharedList = () ->
     if $scope.canShare
