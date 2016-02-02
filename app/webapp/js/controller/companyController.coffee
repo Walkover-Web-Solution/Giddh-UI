@@ -83,8 +83,12 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       cdt = localStorageService.get("_selectedCompany")
       if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
         cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName})
-        localStorageService.set("_selectedCompany", cdt)
-        $scope.goToCompany(cdt, cdt.index)
+        if _.isUndefined(cdt)
+          localStorageService.set("_selectedCompany", $scope.companyList[0])
+          $scope.goToCompany($scope.companyList[0], 0)
+        else
+          localStorageService.set("_selectedCompany", cdt)
+          $scope.goToCompany(cdt, cdt.index)
       else
         localStorageService.set("_selectedCompany", $scope.companyList[0])
         $scope.goToCompany($scope.companyList[0], 0)

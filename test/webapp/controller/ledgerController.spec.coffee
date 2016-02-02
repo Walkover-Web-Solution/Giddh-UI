@@ -203,6 +203,7 @@ describe 'ledgerController', ->
         @rootScope.selectedCompany = {
           uniqueName: "giddh"
         }
+        @rootScope.selAcntUname = "giddh"
         acData = {
           mergedAccounts: ""
           name: "abcdef"
@@ -262,6 +263,7 @@ describe 'ledgerController', ->
         spyOn(@scope, "hasAddAndUpdatePermission")
         deferred = @q.defer()
         spyOn(@ledgerService, 'getLedger').andReturn(deferred.promise)
+        @scope.getAcDtlDataSuccess(res, gData, acData)
 
     describe '#loadLedgerSuccess', ->
       it 'should call calculate ledger function with data and set a variable true and push value in ledgerdata', ->

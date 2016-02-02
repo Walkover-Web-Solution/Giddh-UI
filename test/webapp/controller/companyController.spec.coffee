@@ -175,19 +175,68 @@ describe 'companyController', ->
       @scope.getCompanyListSuccess(res)
       expect(@scope.openFirstTimeUserModal).toHaveBeenCalled()
 
-    it 'should set true to a variable and push data in company list, and call goToCompany function with last company with the help of localStorageService', ->
-      res = {
-        body: [
-          {"email": "abc@def", "contactNo": "9104120", "baseCurrency": "INR", "index": 0}
-          {"email": "data@def", "contactNo": "3242", "baseCurrency": "INR", "index": 1}
-        ]
+    res = {
+      body: [
+        {
+          baseCurrency: "INR"
+          city: "Indore"
+          name: "dude's"
+          uniqueName: "dudesindore14543150802480qgzih"
+          updatedAt: "01-02-2016 13:53:42"
+          index: 0
+        }
+        {
+          baseCurrency: "INR"
+          city: "Mumbai"
+          name: "Hey dude"
+          uniqueName: "dudesindore"
+          index: 1
+        }
+      ]
+    }
+    it 'should set true to a variable and push data in company list, and call goToCompany function with matched company with the help of localStorageService', ->
+      locRes = {
+        baseCurrency: "INR"
+        city: "Indore"
+        name: "dude's"
+        uniqueName: "dudesindore14543150802480qgzih"
+        updatedAt: "01-02-2016 13:53:42"
+        index: 0
       }
       spyOn(@scope, "goToCompany")
-      spyOn(@localStorageService, "get").andReturn(res.body[0])
+      spyOn(@localStorageService, "get").andReturn(locRes)
+      spyOn(@localStorageService, "set")
       @scope.getCompanyListSuccess(res)
-      expect(@scope.mngCompDataFound).toBeTruthy()
-      expect(@scope.companyList).toEqual(res.body)
-      expect(@scope.goToCompany).toHaveBeenCalledWith(res.body[0], 0)
+      expect(@rootScope.mngCompDataFound).toBeTruthy()
+      expect(@scope.companyList).toContain(locRes)
+      expect(@scope.goToCompany).toHaveBeenCalledWith(locRes, 0)
+      expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", locRes)
+
+    it 'should set true to a variable and push data in company list, and call goToCompany function with companyList first company, due to mismatch of uniqueName', ->
+      locRes = {
+        baseCurrency: "INR"
+        city: "Indore"
+        name: "dude's"
+        uniqueName: "dudduuudududu"
+        index: 0
+      }
+      spyOn(@scope, "goToCompany")
+      spyOn(@localStorageService, "get").andReturn(locRes)
+      spyOn(@localStorageService, "set")
+      @scope.getCompanyListSuccess(res)
+      expect(@rootScope.mngCompDataFound).toBeTruthy()
+      expect(@scope.goToCompany).toHaveBeenCalledWith(@scope.companyList[0], 0)
+      expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", @scope.companyList[0])
+
+    it 'should set true to a variable and push data in company list, and call goToCompany function with companyList first company, due to nothing in localStorage', ->
+      spyOn(@scope, "goToCompany")
+      spyOn(@localStorageService, "get").andReturn(undefined)
+      spyOn(@localStorageService, "set")
+      @scope.getCompanyListSuccess(res)
+      expect(@rootScope.mngCompDataFound).toBeTruthy()
+      expect(@scope.goToCompany).toHaveBeenCalledWith(@scope.companyList[0], 0)
+      expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", @scope.companyList[0])
+
 
   describe '#getCompanyListFailure', ->
     it 'should show a toastr with error message', ->
