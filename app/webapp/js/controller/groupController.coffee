@@ -135,9 +135,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       # without accounts only groups conditionally
       cData = localStorageService.get("_selectedCompany")
       if cData.sharedEntity is 'accounts'
-        $rootScope.canManageComp = false
+        console.info "sharedEntity:"+ cData.sharedEntity
       else
-        $rootScope.canManageComp = true
         groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess, $scope.getGroupListFailure)
 
   $scope.makeAccountsList = (res) ->
@@ -626,7 +625,16 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.loadAccountsList = () ->
     if !_.isEmpty($rootScope.selectedCompany)
       $scope.getGroups()
-    
+
+  $scope.assignValues = () ->
+    data = localStorageService.get("_selectedCompany")
+    $rootScope.canViewSpecificItems = false
+    if data.role.uniqueName is 'shared'
+      $rootScope.canManageComp = false
+      if data.sharedEntity is 'groups'
+        $rootScope.canViewSpecificItems = true
+    else
+      $rootScope.canManageComp = true
 
   $rootScope.$on 'reloadAccounts', ->
     $scope.showAccountList = false
@@ -635,6 +643,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $timeout(->
     $scope.loadAccountsList()
   ,2000)
+  $timeout(->
+    $scope.assignValues()
+  ,700)
     
 #init angular app
 giddh.webApp.controller 'groupController', groupController

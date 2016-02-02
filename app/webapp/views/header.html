@@ -3,7 +3,7 @@
     <div class="container-fluid">
 
       <ul class="nav navbar-nav">
-        <li uib-dropdown style="margin-left:-15px;" ng-show="canManageComp">
+        <li uib-dropdown style="margin-left:-15px;" ng-show="canManageComp || canViewSpecificItems">
           <a href id="page-dropdown" uib-dropdown-toggle>
             <i class="gic-24 icon-menu-w"></i>
           </a>
@@ -32,17 +32,17 @@
                       </div>
                     </a>
                 </li>
-                 <li class="dmLi" ui-sref="company.trialBalance">
-                    <a href="" >
-                      <div class="media">
-                        <div class="media-body">
-                          <div class="title">Trial Balance</div>
-                          <div class="subTitle">View and edit all your <b>done</b> entries.</div>
-                        </div>
+                <li class="dmLi" ui-sref="company.trialBalance">
+                  <a href="" >
+                    <div class="media">
+                      <div class="media-body">
+                        <div class="title">Trial Balance</div>
+                        <div class="subTitle">View and edit all your <b>done</b> entries.</div>
                       </div>
-                    </a>
+                    </div>
+                  </a>
                 </li>
-                <li class="dmLi" ui-sref="company.profitAndLoss">
+                <li ng-hide="canViewSpecificItems" class="dmLi" ui-sref="company.profitAndLoss">
                     <a href="" >
                       <div class="media">
                         <div class="media-body">

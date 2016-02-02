@@ -6,6 +6,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
   $rootScope.basicInfo = {}
   $rootScope.flatAccntListWithParents = []
   $rootScope.canManageComp = true
+  $rootScope.canViewSpecificItems = false
   
   $scope.logout = ->
     $http.post('/logout').then ((res) ->

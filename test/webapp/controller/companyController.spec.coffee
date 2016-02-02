@@ -319,7 +319,7 @@ describe 'companyController', ->
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#goToCompanyCheck', ->
-    it 'should check if user have shared permissions, and sharedEntity is accounts then make a variable falsy then call localStorageService set method and call state service go method for change page and set rootScope variable', ->
+    xit 'should check if user have shared permissions, and sharedEntity is accounts then make a variable falsy then call localStorageService set method and call state service go method for change page and set rootScope variable', ->
       data =
         sharedEntity: "accounts"
         uniqueName: "afafafafaf1443520197325007bgo"
@@ -337,7 +337,7 @@ describe 'companyController', ->
       expect(@rootScope.selectedCompany).toEqual(data)
       expect(@state.go).toHaveBeenCalledWith('company.ledgerContent')
       expect(@rootScope.$broadcast).toHaveBeenCalledWith('companyChanged')
-    it 'should check if user have shared permissions, and sharedEntity is not accounts then make a variable truthy then call localStorageService set method and call state service go method for change page and set rootScope variable', ->
+    xit 'should check if user have shared permissions, and sharedEntity is not accounts then make a variable truthy then call localStorageService set method and call state service go method for change page and set rootScope variable', ->
       data =
         sharedEntity: "groups"
         uniqueName: "afafafafaf1443520197325007bgo"

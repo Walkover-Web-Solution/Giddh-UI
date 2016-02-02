@@ -51,11 +51,18 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
           cdt = localStorageService.get("_selectedCompany")
           if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
             cst = _.findWhere(companyList, {uniqueName: cdt.uniqueName})
-            console.info "data from localstorage match"
-            checkRole(cst)
+            if _.isUndefined(cst)
+              console.info "data from localstorage mismatch"
+              checkRole(companyList[0])
+              localStorageService.set("_selectedCompany", companyList[0])
+            else
+              console.info "data from localstorage match"
+              checkRole(cst)
+              localStorageService.set("_selectedCompany", cst)
           else
             console.info "direct from api"
             checkRole(companyList[0])
+            localStorageService.set("_selectedCompany", companyList[0])
         onFailure = (res) ->
           toastr.error('Failed to retrieve company list' + res.data.message)
         companyServices.getAll().then(onSuccess, onFailure)

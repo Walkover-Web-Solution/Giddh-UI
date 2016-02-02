@@ -206,7 +206,6 @@ describe 'groupController', ->
       expect(@groupService.getGroupsWithAccountsCropped).toHaveBeenCalledWith("soniravi")
       expect(@groupService.getGroupsWithoutAccountsCropped).not.toHaveBeenCalledWith("soniravi")
       expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
-      expect(@rootScope.canManageComp).toBeFalsy()
 
     it 'should call groupService getGroupsWithAccountsCropped method and getGroupsWithoutAccountsCropped method and set canManageComp variable to true', ->
       cData = {
@@ -239,7 +238,6 @@ describe 'groupController', ->
       expect(@groupService.getGroupsWithAccountsCropped).toHaveBeenCalledWith("soniravi")
       expect(@groupService.getGroupsWithoutAccountsCropped).toHaveBeenCalledWith("soniravi")
       expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
-      expect(@rootScope.canManageComp).toBeTruthy()
     
 
   describe '#makeAccountsList', ->

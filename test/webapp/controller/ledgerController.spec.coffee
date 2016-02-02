@@ -139,7 +139,36 @@ describe 'ledgerController', ->
         spyOn(@toastr, 'error')
         @scope.loadLedger(data, acData)
         expect(@toastr.error).toHaveBeenCalledWith('Date should be in proper format', 'Error')
-
+      acData = {
+        mergedAccounts: ""
+        name: "abcdef"
+        uniqueName: "a333r3dge"
+        parentGroups: [
+          {name: "test", uniqueName: "jalgjlakjlgn"}
+          {name: "Capital", uniqueName: "capital"}
+        ]
+      }
+      gData = {
+        accountDetails: [
+          mergedAccounts: ""
+          name: "abcdef"
+          parentGroups: [
+            {name: "test", uniqueName: "jalgjlakjlgn"}
+            {name: "Capital", uniqueName: "capital"}
+          ]
+          uniqueName: "a333r3dge"
+        ]
+        groupName: "test"
+        groupSynonyms: null
+        groupUniqueName: "jalgjlakjlgn"
+        open: true
+      }
+      matchData = {
+        parentGroups:[
+          {name: "test", uniqueName: "jalgjlakjlgn"}
+          {name: "Capital", uniqueName: "capital"}
+        ]
+      }
       it 'should call accountService get method and if success then it will call getAcDtlDataSuccess with data and set unableToShowBrdcrmb variable falsy', ->
         @scope.toDate = {
           date: "14-11-2015"
@@ -150,43 +179,49 @@ describe 'ledgerController', ->
         @rootScope.selectedCompany = {
           uniqueName: "giddh"
         }
-        acData = {
-          mergedAccounts: ""
-          name: "abcdef"
-          uniqueName: "a333r3dge"
-          parentGroups: [
-            {name: "test", uniqueName: "jalgjlakjlgn"}
-            {name: "Capital", uniqueName: "capital"}
-          ]
-        }
-        gData = {
-          accountDetails: [
-            mergedAccounts: ""
-            name: "abcdef"
-            parentGroups: [
-              {name: "test", uniqueName: "jalgjlakjlgn"}
-              {name: "Capital", uniqueName: "capital"}
-            ]
-            uniqueName: "a333r3dge"
-          ]
-          groupName: "test"
-          groupSynonyms: null
-          groupUniqueName: "jalgjlakjlgn"
-          open: true
-        }
         unqObj = {
           compUname : @rootScope.selectedCompany.uniqueName
           acntUname : acData.uniqueName
         }
         @rootScope.flatGroupsList = []
+        # @rootScope.flatGroupsList = undefined
+        # @rootScope.flatGroupsList = null
         deferred = @q.defer()
         spyOn(@accountService, 'get').andReturn(deferred.promise)
         spyOn(@scope, "getAcDtlDataSuccess")
         spyOn(@scope, "showLedgerBreadCrumbs")
-        spyOn(@groupService, "matchAndReturnObj")
+        spyOn(@groupService, "matchAndReturnObj").andReturn(matchData)
         @scope.loadLedger(gData, acData)
         expect(@scope.unableToShowBrdcrmb).toBeTruthy()
         expect(@accountService.get).toHaveBeenCalledWith(unqObj)
+        expect(@groupService.matchAndReturnObj).not.toHaveBeenCalled()
+      it 'should call accountService get method and if success then it will call getAcDtlDataSuccess with data and set unableToShowBrdcrmb variable falsy and call groupService method matchAndReturnObj and call showLedgerBreadCrumbs with matchData object', ->
+        @scope.toDate = {
+          date: "14-11-2015"
+        }
+        @scope.fromDate = {
+          date: "14-11-2015"
+        }
+        @rootScope.selectedCompany = {
+          uniqueName: "giddh"
+        }
+        unqObj = {
+          compUname : @rootScope.selectedCompany.uniqueName
+          acntUname : acData.uniqueName
+        }
+        @rootScope.flatGroupsList = [
+          {hey: "ddue"}
+        ]
+        deferred = @q.defer()
+        spyOn(@accountService, 'get').andReturn(deferred.promise)
+        spyOn(@scope, "getAcDtlDataSuccess")
+        spyOn(@scope, "showLedgerBreadCrumbs")
+        spyOn(@groupService, "matchAndReturnObj").andReturn(matchData)
+        @scope.loadLedger(gData, acData)
+        expect(@scope.unableToShowBrdcrmb).toBeFalsy()
+        expect(@accountService.get).toHaveBeenCalledWith(unqObj)
+        expect(@groupService.matchAndReturnObj).toHaveBeenCalledWith(gData, @rootScope.flatGroupsList)
+        expect(@scope.showLedgerBreadCrumbs).toHaveBeenCalledWith(matchData.parentGroups)
 
     describe '#getAcDtlDataFailure', ->
       it 'should show error message with toastr', ->

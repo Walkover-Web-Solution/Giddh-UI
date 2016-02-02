@@ -119,12 +119,13 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         ,(error)->
           $scope.getAcDtlDataFailure(error)
       )
-    if !_.isEmpty($rootScope.flatGroupsList)
+    if _.isEmpty($rootScope.flatGroupsList) || _.isNull($rootScope.flatGroupsList) || _.isUndefined($rootScope.flatGroupsList)
+      $scope.unableToShowBrdcrmb  = true
+    else
       $scope.unableToShowBrdcrmb  = false
       resObj = groupService.matchAndReturnObj(gData, $rootScope.flatGroupsList)
       $scope.showLedgerBreadCrumbs(resObj.parentGroups)
-    else
-      $scope.unableToShowBrdcrmb  = true
+      
 
   $scope.getAcDtlDataFailure = (res) ->
     toastr.error(res.data.message, res.data.status)

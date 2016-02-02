@@ -141,11 +141,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, res.data.status)
 
   $scope.goToCompanyCheck = (data, index) ->
+    $rootScope.canViewSpecificItems = false
     if data.role.uniqueName is 'shared'
-      if data.sharedEntity is 'accounts'
-        $rootScope.canManageComp = false
-      else
-        $rootScope.canManageComp = true
+      $rootScope.canManageComp = false
+      if data.sharedEntity is 'groups'
+        $rootScope.canViewSpecificItems = true
       localStorageService.set("_selectedCompany", data)
       $rootScope.selectedCompany = data
       $state.go('company.ledgerContent')
