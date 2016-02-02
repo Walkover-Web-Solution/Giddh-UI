@@ -319,25 +319,7 @@ describe 'companyController', ->
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#goToCompanyCheck', ->
-    xit 'should check if user have shared permissions, and sharedEntity is accounts then make a variable falsy then call localStorageService set method and call state service go method for change page and set rootScope variable', ->
-      data =
-        sharedEntity: "accounts"
-        uniqueName: "afafafafaf1443520197325007bgo"
-        name: "dude"
-        role: 
-          uniqueName: "shared"
-          name: "shared"
-      index = 0
-      spyOn(@state, "go")
-      spyOn(@localStorageService, "set")
-      spyOn(@rootScope, "$broadcast")
-      @scope.goToCompanyCheck(data, index)
-      expect(@rootScope.canManageComp).toBeFalsy()
-      expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)
-      expect(@rootScope.selectedCompany).toEqual(data)
-      expect(@state.go).toHaveBeenCalledWith('company.ledgerContent')
-      expect(@rootScope.$broadcast).toHaveBeenCalledWith('companyChanged')
-    xit 'should check if user have shared permissions, and sharedEntity is not accounts then make a variable truthy then call localStorageService set method and call state service go method for change page and set rootScope variable', ->
+    it 'should check if user have shared permissions, and sharedEntity is groups then make a variable truthy then call localStorageService set method and call state service go method for change page and set rootScope variable', ->
       data =
         sharedEntity: "groups"
         uniqueName: "afafafafaf1443520197325007bgo"
@@ -350,7 +332,8 @@ describe 'companyController', ->
       spyOn(@localStorageService, "set")
       spyOn(@rootScope, "$broadcast")
       @scope.goToCompanyCheck(data, index)
-      expect(@rootScope.canManageComp).toBeTruthy()
+      expect(@rootScope.canManageComp).toBeFalsy()
+      expect(@rootScope.canViewSpecificItems).toBeTruthy()
       expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)
       expect(@rootScope.selectedCompany).toEqual(data)
       expect(@state.go).toHaveBeenCalledWith('company.ledgerContent')
@@ -366,11 +349,11 @@ describe 'companyController', ->
       spyOn(@rootScope, "$broadcast")
       spyOn(@scope, "goToCompany")
       @scope.goToCompanyCheck(data, index)
+      expect(@rootScope.canViewSpecificItems).toBeFalsy()
       expect(@rootScope.canManageComp).toBeTruthy()
       expect(@scope.goToCompany).toHaveBeenCalledWith(data, index)
       expect(@rootScope.$broadcast).toHaveBeenCalledWith('companyChanged')
       
-    
   describe '#goToCompany', ->
     it 'should make a call for check permissions, set a variable true, put data in scope variable and set data in localStorage, and add active class in li', ->
       data = 
