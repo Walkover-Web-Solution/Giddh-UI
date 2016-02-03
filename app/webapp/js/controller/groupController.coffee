@@ -640,6 +640,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showAccountList = false
     $scope.getGroups()
 
+  $scope.$on 'callManageGroups', ->
+    $scope.goToManageGroups()
+
   $timeout(->
     $scope.loadAccountsList()
   ,2000)

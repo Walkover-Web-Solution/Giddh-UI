@@ -328,17 +328,10 @@ describe 'ledgerController', ->
 
     describe '#addNewAccount', ->
       it 'should check if selectedCompany is empty then it will show alert', ->
-        @rootScope.selectedCompany = {}
-        spyOn(@toastr, "error")
+        spyOn(@rootScope, "$broadcast")
         @scope.addNewAccount()
-        expect(@toastr.error).toHaveBeenCalledWith("Select company first.", "Error")
-      it 'should call modalService and not show error', ->
-        @rootScope.selectedCompany = {
-          uniqueName: "giddh"
-        }
-        spyOn(@modalService, "openManageGroupsModal")
-        @scope.addNewAccount()
-        expect(@modalService.openManageGroupsModal).toHaveBeenCalled()
+        expect(@rootScope.$broadcast).toHaveBeenCalledWith('callManageGroups')
+     
 
     describe '#addNewEntry', ->
       it 'should add a entry to ledger, copy data to a variable, call ledgerService createEntry method', ->

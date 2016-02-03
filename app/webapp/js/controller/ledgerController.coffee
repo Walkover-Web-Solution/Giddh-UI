@@ -193,10 +193,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.addNewAccount = () ->
-    if _.isEmpty($rootScope.selectedCompany)
-      toastr.error("Select company first.", "Error")
-    else
-      modalService.openManageGroupsModal()
+    $rootScope.$broadcast('callManageGroups')
 
   $scope.addNewEntry = (data) ->
     edata = {}
@@ -343,9 +340,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     
   $scope.addEntryInCredit =(data)->
     arLen = $scope.ledgerOnlyCreditData.length-1
-    lastRow = $scope.ledgerOnlyCreditData[arLen]
-
-    if lastRow.sharedData.entryDate isnt "" and  not _.isEmpty(lastRow.transactions[0].amount) and not _.isEmpty(lastRow.transactions[0].particular.uniqueName)
+    lastRow  = _.last($scope.ledgerOnlyCreditData)
+    if !_.isEmpty(lastRow.sharedData.entryDate) and  not _.isEmpty(lastRow.transactions[0].amount) and not _.isEmpty(lastRow.transactions[0].particular.uniqueName)
       $scope.ledgerOnlyCreditData.push(angular.copy(dummyValueCredit))
       $timeout ->
         $scope.sameMethodForDrCr(arLen+1, ".crLedgerEntryForm")
@@ -363,9 +359,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   
   $scope.addEntryInDebit =(data)->
     arLen = $scope.ledgerOnlyDebitData.length-1
-    lastRow = $scope.ledgerOnlyDebitData[arLen]
-
-    if lastRow.sharedData.entryDate isnt "" and  not _.isEmpty(lastRow.transactions[0].amount) and not _.isEmpty(lastRow.transactions[0].particular.uniqueName)
+    lastRow  = _.last($scope.ledgerOnlyDebitData)
+    if !_.isEmpty(lastRow.sharedData.entryDate) and  !_.isEmpty(lastRow.transactions[0].amount) and !_.isEmpty(lastRow.transactions[0].particular.uniqueName)
       $scope.ledgerOnlyDebitData.push(angular.copy(dummyValueDebit))
       $timeout ->
         $scope.sameMethodForDrCr(arLen+1, ".drLedgerEntryForm")
@@ -382,13 +377,14 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     
   $scope.sameMethodForDrCr =(arLen, name)->
     formEle =  document.querySelectorAll(name)
-    inp = angular.element(formEle[arLen]).find('td')[1].children
+    tdEle = angular.element(formEle[arLen]).find('td')[1]
+    inpEle = angular.element(tdEle).find('input')
     $scope.removeLedgerDialog()
     $scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
     $scope.removeClassInAllEle("ledgEntryForm", "open")
     $timeout ->
-      angular.element(inp).focus()
-    , 300
+      angular.element(inpEle).focus()
+    , 700
     return false
 
   $scope.removeLedgerDialog = () ->

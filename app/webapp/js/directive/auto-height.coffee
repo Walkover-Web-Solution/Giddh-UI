@@ -166,13 +166,10 @@ angular.module('ledger', [])
                   tabindex='-1'  class='nobdr ledgInpt' required
                   name='trnsName_{{index}}'
                   ng-model='item.transactions[0].particular'
-                  uib-typeahead='obj.name as obj.uniqueName for obj in aclist | omit: isCurrentAc | filter:$viewValue'
+                  uib-typeahead='obj as obj.name for obj in aclist | omit: isCurrentAc | filter:$viewValue'
                   class='form-control' autocomplete='off'
                   typeahead-no-results='noResults' typeahead-template-url='customTemplate.html'
                   typeahead-on-select='addCrossFormField($item, $model, $label)'>
-                <input type='hidden'
-                  name='trnsUniq_{{index}}'
-                  ng-model='item.transactions[0].particular.uniqueName'>
               </td>
               <td width='28%'>
                 <input pos='3' type='text' class='alR nobdr ledgInpt'
@@ -235,7 +232,7 @@ angular.module('ledger', [])
       acnt.uniqueName is scope.selAcntUname
 
     scope.addCrossFormField = (i, d, c) ->
-      # scope.item.transactions[0].particular.uniqueName = i.uName
+      # console.log i, d, c
 
     scope.closeEntry = ()->
       scope.removeLedgdialog()
@@ -293,6 +290,8 @@ angular.module('ledger', [])
       return false
 
     scope.setTotalVal = (item) ->
+      # if _.isUndefined(item.sharedData.total)
+      #   item.sharedData.total = 0
       if _.isNumber(item.sharedData.total)
         if item.sharedData.total > 0
           scope.ttlValD = item.sharedData.total.toFixed(2)
@@ -378,7 +377,7 @@ angular.module('ledger', [])
         if !inBox
           if !_.isUndefined(item.sharedData.multiEntry) || !_.isUndefined(item.sharedData.addType)
             if item.sharedData.multiEntry || item.sharedData.addType
-              console.log "is child and multiEntry"
+              console.info "is child and multiEntry"
           else
             scope.resetEntry(item, $rootScope.lItem)
           scope.$apply(scopeExpression)
