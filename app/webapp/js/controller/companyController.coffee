@@ -149,10 +149,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       localStorageService.set("_selectedCompany", data)
       $rootScope.selectedCompany = data
       $state.go('company.ledgerContent')
+      $rootScope.$broadcast('companyChanged')
     else
       $rootScope.canManageComp = true
       $scope.goToCompany(data, index)
-    $rootScope.$broadcast('companyChanged')
+    
 
   #making a detail company view
   $scope.goToCompany = (data, index) ->
@@ -184,6 +185,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
     if $scope.canManageUser is true
       $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
+    $rootScope.$broadcast('companyChanged')
 
   #update company details
   $scope.updateCompanyInfo = (data) ->

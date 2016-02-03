@@ -148,10 +148,10 @@ giddh.webApp.run [
   '$location'
   '$window'
   'toastr'
-  ($rootScope, $state, $stateParams, $location, $window, toastr) ->
+  'localStorageService'
+  ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService) ->
     $rootScope.$state = $state
     $rootScope.$stateParams = $stateParams
-    # $state.transitionTo('company.manage')
 
     $rootScope.$on '$stateChangeStart', ->
       $rootScope.showLedgerBox = false
@@ -185,6 +185,8 @@ giddh.webApp.run [
     $rootScope.firstLogin = true
 
     $rootScope.$on('companyChanged', ->
+      localStorageService.remove("_ledgerData")
+      localStorageService.remove("_selectedAccount")
       $rootScope.$emit('reloadAccounts')
     )
 

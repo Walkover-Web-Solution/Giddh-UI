@@ -537,7 +537,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       if !_.isNull(localStorageService.get("_ledgerData"))
         lgD = localStorageService.get("_ledgerData")
         acD = localStorageService.get("_selectedAccount")
-        # $stateParams.unqName = acD.uniqueName
         $scope.loadLedger(lgD, acD)
 
 giddh.webApp.controller 'ledgerController', ledgerController

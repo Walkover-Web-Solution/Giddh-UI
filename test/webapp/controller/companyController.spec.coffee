@@ -352,7 +352,7 @@ describe 'companyController', ->
       expect(@rootScope.canViewSpecificItems).toBeFalsy()
       expect(@rootScope.canManageComp).toBeTruthy()
       expect(@scope.goToCompany).toHaveBeenCalledWith(data, index)
-      expect(@rootScope.$broadcast).toHaveBeenCalledWith('companyChanged')
+      expect(@rootScope.$broadcast).not.toHaveBeenCalledWith('companyChanged')
       
   describe '#goToCompany', ->
     it 'should make a call for check permissions, set a variable true, put data in scope variable and set data in localStorage, and add active class in li', ->
@@ -374,6 +374,7 @@ describe 'companyController', ->
       spyOn(@scope, "getSharedUserList")
       spyOn(@localStorageService, "set")
       spyOn(@DAServices, "LedgerSet")
+      spyOn(@rootScope, "$broadcast")
       @scope.goToCompany(data, index)
       expect(@scope.showUpdTbl).toBeFalsy()
       expect(@scope.canEdit).toBeTruthy()
@@ -386,6 +387,7 @@ describe 'companyController', ->
       expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
       expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", dbd)
       expect(@scope.getSharedUserList).toHaveBeenCalledWith("afafafafaf1443520197325007bgo")
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith('companyChanged')
       
     it 'should not call getSharedUserList and DAService', ->
       data = 
