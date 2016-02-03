@@ -361,28 +361,26 @@ describe 'companyController', ->
         name: "dude"
         contactNo: "91-1234567890"
         role: 
-          uniqueName: "admin"
-          name: "admin"
+          uniqueName: "Super Admin"
+          name: "super_admin"
       index = 0
       dbd = data
       dbd.index = index
       dbd.cCode = "91"
       dbd.mobileNo = "1234567890"
       deferred = @q.defer()
-      spyOn(@permissionService, "hasPermissionOn").andReturn(true)
+      @rootScope.canManageUser = true
       spyOn(@localStorageService, "get").andReturn({uniqueName: "some"})
       spyOn(@scope, "getSharedUserList")
       spyOn(@localStorageService, "set")
       spyOn(@DAServices, "LedgerSet")
       spyOn(@rootScope, "$broadcast")
       @scope.goToCompany(data, index)
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith('callCheckPermissions', data)
       expect(@scope.showUpdTbl).toBeFalsy()
-      expect(@scope.canEdit).toBeTruthy()
-      expect(@scope.canManageUser).toBeTruthy()
       expect(@scope.cmpViewShow).toBeTruthy()
       expect(@scope.selectedCmpLi).toEqual(index)
       expect(@scope.selectedCompany).toEqual(dbd)
-      expect(@permissionService.hasPermissionOn).toHaveBeenCalled()
       expect(@DAServices.LedgerSet).toHaveBeenCalledWith(null, null)
       expect(@localStorageService.get).toHaveBeenCalledWith("_selectedCompany")
       expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", dbd)
@@ -395,7 +393,7 @@ describe 'companyController', ->
         index: 0
         cCode: ""
       index = 0
-
+      @rootScope.canManageUser = false
       spyOn(@permissionService, "hasPermissionOn").andReturn(false)
       spyOn(@scope, "getSharedUserList")
       spyOn(@localStorageService, "set")

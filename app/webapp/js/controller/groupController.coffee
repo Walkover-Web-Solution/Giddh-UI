@@ -16,9 +16,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.showListGroupsNow = false
   $scope.showAccountDetails = false
   $scope.showAccountListDetails = false
-  $scope.canUpdate = false
-  $scope.canDelete = false
-  $scope.canAdd = false
+  
   $scope.groupAccntList = []
   $scope.acntSrch = ''
   $scope.shareGroupObj ={role: "view_only"}
@@ -339,7 +337,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if _.isEmpty($scope.selectedGroup.oldUName)
       $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
     $scope.selectedSubGroup = {}
-    $scope.checkPermissions(group)
+    $rootScope.$broadcast('callCheckPermissions', group)
     $scope.getGroupSharedList(group)
 
   $scope.populateAccountList = (item) ->
@@ -403,7 +401,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     data.parentGroups = []
     bcd = getPgrps.parentGroups.reverse()
     _.extend(data.parentGroups, bcd)
-    $scope.checkPermissions(data)
+    $rootScope.$broadcast('callCheckPermissions', data)
     # $scope.cantUpdate = false
     pGroups = []
     $scope.showGroupDetails = false
@@ -616,12 +614,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.onGetAccountSharedListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  $scope.checkPermissions = (entity) ->
-    $scope.canUpdate = permissionService.hasPermissionOn(entity, "UPDT")
-    $scope.canDelete = permissionService.hasPermissionOn(entity, "DLT")
-    $scope.canAdd = permissionService.hasPermissionOn(entity, "ADD")
-    $scope.canShare = permissionService.hasPermissionOn(entity, "SHR")
-
   $scope.loadAccountsList = () ->
     if !_.isEmpty($rootScope.selectedCompany)
       $scope.getGroups()
@@ -645,10 +637,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $timeout(->
     $scope.loadAccountsList()
-  ,2000)
-  $timeout(->
     $scope.assignValues()
-  ,700)
+  ,2000)
     
 #init angular app
 giddh.webApp.controller 'groupController', groupController

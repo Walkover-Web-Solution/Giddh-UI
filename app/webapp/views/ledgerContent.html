@@ -73,10 +73,12 @@
           Show list
         </button>
       </div>
-      <form class="form-group pull-right" enctype="multipart/form-data">
-        <button type="file" class="btn btn-default mrL1" ngf-select="importLedger($files, $invalidFiles)" accept=".xls, .xlsx" ngf-max-size="100MB">
+      
+      <form ng-show="canManageComp" class="form-group pull-right" enctype="multipart/form-data">
+        <button type="file" class="btn btn-default mrL1" ngf-select="importLedger($files, $invalidFiles)" accept=".xls, .xlsx" ngf-max-size="100MB" ng-disabled="!canUpdate">
           &nbsp; Import</button>
       </form>
+      
       <div class="form-group pull-right">
         <button type="button" class="btn btn-default" ng-click="exportLedger()" ng-disabled="fromToDateForm.$invalid">
           Export

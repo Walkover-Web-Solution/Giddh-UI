@@ -43,3 +43,39 @@ describe 'mainController', ->
       spyOn(@toastr, 'error')
       @scope.onGetRolesFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+  describe '#checkPermissions', ->
+    it 'should call permission service hasPermissionOn method and set value true to canUpdate variable', ->
+      data = {role: {permissions: [{code: "UPDT"}]}}
+      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
+      @scope.checkPermissions(data)
+      expect(@scope.canUpdate).toBeTruthy()
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "UPDT")
+
+    it 'should call permission service hasPermissionOn method and set value true to canAdd variable', ->
+      data = {role: {permissions: [{code: "ADD"}]}}
+      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
+      @scope.checkPermissions(data)
+      expect(@scope.canAdd).toBeTruthy()
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "ADD")
+
+    it 'should call permission service hasPermissionOn method and set value true to canDelete variable', ->
+      data = {role: {permissions: [{code: "DLT"}]}}
+      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
+      @scope.checkPermissions(data)
+      expect(@scope.canDelete).toBeTruthy()
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "DLT")
+
+    it 'should call permission service hasPermissionOn method and set value true to canDelete variable', ->
+      data = {role: {permissions: [{code: "SHR"}]}}
+      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
+      @scope.checkPermissions(data)
+      expect(@scope.canShare).toBeTruthy()
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "SHR")
+
+    it 'should call permission service hasPermissionOn method and set value true to canDelete variable', ->
+      data = {role: {permissions: [{code: "MNG_USR"}]}}
+      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
+      @scope.checkPermissions(data)
+      expect(@scope.canManageUser).toBeTruthy()
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "MNG_USR")

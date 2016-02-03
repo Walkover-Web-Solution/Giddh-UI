@@ -634,23 +634,23 @@ describe 'groupController', ->
     }
     it 'should check if variable is empty then set value according to condition', ->
       spyOn(@scope, "getGroupSharedList")
-      spyOn(@scope, "checkPermissions")
+      spyOn(@rootScope, "$broadcast")
       @scope.selectedGroup.oldUName = 'Hey dude'
       @scope.selectGroupToEdit(group)
       expect(@scope.selectedGroup).toEqual(group)
       expect(@scope.selectedSubGroup).toEqual({})
       expect(@scope.getGroupSharedList).toHaveBeenCalledWith(group)
-      expect(@scope.checkPermissions).toHaveBeenCalledWith(group)
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith('callCheckPermissions', group)
 
     it 'should check if oldUName is empty then set value in oldUName', ->
       spyOn(@scope, "getGroupSharedList")
-      spyOn(@scope, "checkPermissions")
+      spyOn(@rootScope, "$broadcast")
       @scope.selectedGroup.oldUName = ''
       @scope.selectGroupToEdit(group)
       expect(@scope.selectedGroup).toEqual(group)
       expect(@scope.selectedSubGroup).toEqual({})
       expect(@scope.getGroupSharedList).toHaveBeenCalledWith(group)
-      expect(@scope.checkPermissions).toHaveBeenCalledWith(group)
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith('callCheckPermissions', group)
       expect(@scope.selectedGroup.oldUName).toEqual(@scope.selectedGroup.uniqueName)
 
   describe '#populateAccountList', ->
@@ -836,14 +836,14 @@ describe 'groupController', ->
       @rootScope.flatAccntListWithParents = []
       @rootScope.selAcntUname = "cashinhand"
       spyOn(@groupService, "matchAndReturnGroupObj").andReturn(getPgrps)
-      spyOn(@scope, "checkPermissions")
+      spyOn(@rootScope, "$broadcast")
       spyOn(@scope, "breakMobNo")
       spyOn(@scope, "setOpeningBalanceDate")
       spyOn(@scope, "getAccountSharedList")
       spyOn(@scope, "showBreadCrumbs")
       @scope.getAcDtlSuccess(res)
       expect(@groupService.matchAndReturnGroupObj).toHaveBeenCalledWith(res.body, @rootScope.flatAccntListWithParents)
-      expect(@scope.checkPermissions).toHaveBeenCalledWith(res.body)
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith('callCheckPermissions', res.body)
       expect(@scope.cantUpdate).toBeFalsy()
       expect(@scope.showGroupDetails).toBeFalsy()
       expect(@scope.showAccountDetails).toBeTruthy()
@@ -1401,34 +1401,6 @@ describe 'groupController', ->
       @scope.onGetAccountSharedListFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
-  describe '#checkPermissions', ->
-    it 'should call permission service hasPermissionOn method and set value true to canUpdate variable', ->
-      data = {role: {permissions: [{code: "UPDT"}]}}
-      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
-      @scope.checkPermissions(data)
-      expect(@scope.canUpdate).toBeTruthy()
-      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "UPDT")
-
-    it 'should call permission service hasPermissionOn method and set value true to canAdd variable', ->
-      data = {role: {permissions: [{code: "ADD"}]}}
-      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
-      @scope.checkPermissions(data)
-      expect(@scope.canAdd).toBeTruthy()
-      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "ADD")
-
-    it 'should call permission service hasPermissionOn method and set value true to canDelete variable', ->
-      data = {role: {permissions: [{code: "DLT"}]}}
-      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
-      @scope.checkPermissions(data)
-      expect(@scope.canDelete).toBeTruthy()
-      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "DLT")
-
-    it 'should call permission service hasPermissionOn method and set value true to canDelete variable', ->
-      data = {role: {permissions: [{code: "SHR"}]}}
-      spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
-      @scope.checkPermissions(data)
-      expect(@scope.canShare).toBeTruthy()
-      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "SHR")
 
   
 

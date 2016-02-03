@@ -157,14 +157,12 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #making a detail company view
   $scope.goToCompany = (data, index) ->
+    $rootScope.$broadcast('callCheckPermissions', data)
     $scope.showUpdTbl = false
     $scope.mFiles = []
     $scope.dFiles = []
     $scope.mErrFiles = []
     $scope.dErrFiles = []
-    $scope.canEdit = true
-    $scope.canEdit = permissionService.hasPermissionOn(data, "UPDT")
-    $scope.canManageUser = permissionService.hasPermissionOn(data, "MNG_USR")
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
     angular.extend($rootScope.selectedCompany, data)
@@ -183,7 +181,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
 
-    if $scope.canManageUser is true
+    if $rootScope.canManageUser
       $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
     $rootScope.$broadcast('companyChanged')
 
