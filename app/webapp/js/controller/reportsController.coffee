@@ -13,6 +13,16 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     createChartBy : 'Closing Balance'
     createChartByMultiple: []
   }
+  $scope.dateOptions = {
+    'year-format': "'yy'",
+    'starting-day': 1,
+    'showWeeks': false,
+    'show-button-bar': false,
+    'year-range': 1,
+    'todayBtn': false,
+    'container': "body"
+    'minViewMode': 0
+  }
   $scope.format = "dd-MM-yyyy"
   # variable to show chart on ui
   $scope.chartDataAvailable = true

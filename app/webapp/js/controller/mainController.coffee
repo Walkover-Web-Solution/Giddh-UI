@@ -45,6 +45,10 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
       cntBox.scrollTop = 0
   
   $scope.getRoles()
-  $rootScope.basicInfo = localStorageService.get("_userDetails")
+  $timeout(->
+    $rootScope.basicInfo = localStorageService.get("_userDetails")
+    if !_.isEmpty($rootScope.selectedCompany)
+      $rootScope.cmpViewShow = true
+  ,1000)
 
 giddh.webApp.controller 'mainController', mainController
