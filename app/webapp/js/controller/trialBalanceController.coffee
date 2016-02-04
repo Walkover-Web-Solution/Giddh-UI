@@ -71,9 +71,8 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
 
   $scope.getTrialBalSuccess = (res) ->
     $scope.data = res.body
-    $scope.data.groupDetails = $scope.orderGroups($scope.data.groupDetails)
+    $scope.data.groupDetails = $scope.orderGroups(res.body.groupDetails)
     $rootScope.showLedgerBox = true
-    $scope.orderGroups(res.body.groupDetails)
     if $scope.data.closingBalance.amount is 0 and $scope.data.creditTotal is 0 and $scope.data.debitTotal is 0 and $scope.data.forwardedBalance.amount is 0
       $scope.noData = true
 
@@ -393,7 +392,9 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
         when 'income'
           income.push(grp)
         when 'expenses'
-          expenses.push(grp)  
+          expenses.push(grp)
+        else
+          assets.push(grp)
     _.each liabilities, (liability) ->
       orderedGroups.push(liability)
     _.each assets, (asset) ->
@@ -407,9 +408,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   $scope.$watch('fromDate.date', (newVal,oldVal) ->
     oldDate = new Date(oldVal).getTime()
     newDate = new Date(newVal).getTime()
-
     toDate = new Date($scope.toDate.date).getTime()
-
     if newDate > toDate
       $scope.toDate.date =  newDate
   )

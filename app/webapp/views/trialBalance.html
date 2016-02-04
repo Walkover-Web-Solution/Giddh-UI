@@ -95,7 +95,7 @@
         <button class="btn btn-primary" trial-accordion="expandAll">Expand All</button>
         <button class="btn btn-danger mrL1" trial-accordion="collapseAll">Collapse All</button>
       </div>
-      <div class="table-container clearfix">
+      <div class="table-container clearfix trial-balance">
         <table class="col-sm-12 tb-head">
           <thead>
           <tr>
@@ -116,7 +116,7 @@
           </tr>
           </thead>
         </table>
-        <!--Grid-->
+        <!--Start Grid-->
 
         <section class="row row-1" ng-repeat="grp in data.groupDetails | filter:{$:keyWord} | orderBy: grp.category" ng-class="grp.category">
           <div class="row"  trial-accordion>  
@@ -143,7 +143,7 @@
           </section>
 
         </section>
-        <!--/Grid-->
+        <!--End Grid-->
 
         <table class="col-sm-12 tb-foot">
           <thead>
