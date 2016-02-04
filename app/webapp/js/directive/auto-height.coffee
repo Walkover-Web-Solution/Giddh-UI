@@ -290,8 +290,6 @@ angular.module('ledger', [])
       return false
 
     scope.setTotalVal = (item) ->
-      # if _.isUndefined(item.sharedData.total)
-      #   item.sharedData.total = 0
       if _.isNumber(item.sharedData.total)
         if item.sharedData.total > 0
           scope.ttlValD = item.sharedData.total.toFixed(2)

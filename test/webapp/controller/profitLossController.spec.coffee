@@ -51,17 +51,46 @@ describe 'profitLossController', ->
         @rootScope.selectedCompany.uniqueName = reqParam.companyUniqueName
         @scope.getPl(reqParam)
         expect(@companyServices.getPL).toHaveBeenCalledWith(reqParam)
+    
     describe '#getPlSuccess', ->
-      it 'should set value of showLedgerBox to true and set nodata var to Falsy', ->
+      it 'should set showLedgerBox to true and assign data in scope variable and call calCulateTotal function', ->
         res = {
           body:
-            closingBalance:
-              amount: 10
+            closingBalance:10
+            expenseGroups: [
+              {closingBalance: 100}
+              {closingBalance: 400}
+            ]
+            incomeGroups: [
+              {closingBalance: 500}
+              {closingBalance: 600}
+            ]
         }
+        spyOn(@scope, "calCulateTotal")
         @scope.getPlSuccess(res)
+        expect(@scope.calCulateTotal).toHaveBeenCalledWith(res.body.expenseGroups)
+        expect(@scope.calCulateTotal).toHaveBeenCalledWith(res.body.incomeGroups)
         expect(@scope.data).toEqual(res.body)
         expect(@rootScope.showLedgerBox).toBeTruthy()
-        expect(@scope.noData).toBeFalsy()
+    
+      it 'should set noData to falsy, and not call calCulateTotal function and assign data', ->
+        res = {
+          body:
+            closingBalance: 0
+            expenseGroups: []
+            incomeGroups: []
+        }
+        spyOn(@scope, "calCulateTotal")
+        @scope.getPlSuccess(res)
+        expect(@scope.calCulateTotal).not.toHaveBeenCalledWith(res.body.expenseGroups)
+        expect(@scope.calCulateTotal).not.toHaveBeenCalledWith(res.body.incomeGroups)
+        expect(@scope.data).toEqual(res.body)
+        expect(@rootScope.showLedgerBox).toBeTruthy()
+        expect(@scope.noData).toBeTruthy()
+        expect(@scope.expenseTotal).toBe(0)
+        expect(@scope.incomeTotal).toBe(0) 
+        
+
     describe '#getPlFailure', ->
       it 'should show error message with toastr', ->
         res =
@@ -70,5 +99,17 @@ describe 'profitLossController', ->
             message: "message"
         spyOn(@toastr, "error")
         @scope.getPlFailure(res)
-        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)     
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status) 
+
+    describe '#calCulateTotal', ->
+      it 'should calCulate Total and andReturn total amount', ->
+        data = [
+          {closingBalance: 100}
+          {closingBalance: 400}
+        ]
+        d = 0
+        d = @scope.calCulateTotal(data)
+        expect(d).toBe("500.00") 
+
+              
     

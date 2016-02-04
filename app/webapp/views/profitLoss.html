@@ -4,9 +4,6 @@
 			<h1 class="page-title inline">
 				Profit and Loss
 			</h1>
-			<p class="sub-title inline" ng-show="showLedgerBox">
-				( {{data.from | date: longDate}} to {{data.to | date: longDate}})
-			</p>
 		</div>
 	</div>
   <div class="no-data" ng-show="noData">
@@ -22,6 +19,7 @@
   </div>
   <div ng-show="showLedgerBox && !noData">
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+    <div class="clearfix">
       <div class="col-sm-12">
         <div class="table-title">
           <div class="col-sm-6">
@@ -32,7 +30,7 @@
           </div>
         </div>
         <div class="expenses col-sm-6">
-          <div class="table-container">
+          <div class="table-container clearfix profitLoss">
             <table class="col-sm-12 tb-head">
               <thead>
               <tr>
@@ -67,7 +65,7 @@
           </div>
         </div>
         <div class="income col-sm-6">
-          <div class="table-container">
+          <div class="table-container clearfix profitLoss">
             <table class="col-sm-12 tb-head">
               <thead>
               <tr>
@@ -101,15 +99,35 @@
             <!--/Grid-->
           </div>
         </div>
+        <table class="col-sm-12 tb-foot-lite">
+          <thead>
+          <tr>
+            <th class="col-sm-6">
+              Profit
+              <span class="pull-right">{{ data.closingBalance | number:2 }}</span>
+            </th>
+            <th class="col-sm-6">&nbsp;</th>
+          </tr>
+          </thead>
+        </table>
         <table class="col-sm-12 tb-foot">
           <thead>
           <tr>
-            <th class="col-sm-6">Profit</th>
-            <th class="col-sm-6  text-right">{{ data.closingBalance | number:2 }}</th>
+            <th class="col-sm-6">
+              Total
+              <span class="pull-right" ng-bind-html="expenseTotal"></span>
+            </th>
+            <th class="col-sm-6">
+              Total
+              <span class="pull-right" ng-bind-html="incomeTotal"></span>
+            </th>
           </tr>
           </thead>
         </table>
       </div>
+    </div>
+    <!-- end of clearfix -->
+      <div style="height:100px;"></div>
     </perfect-scrollbar>
   </div>
 </div>

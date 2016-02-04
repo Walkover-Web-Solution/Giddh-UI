@@ -1238,19 +1238,22 @@ li:last-child .angular-ui-tree-handle {
     float:none;
 }
 
-.tb-foot thead{
+.tb-foot thead, .tb-foot-lite thead{
     line-height: 50px;
     height: 50px;
     color: #000;
-    background: #e0e0e0;
     font-size: 16px;
     font-weight: 400 !important;
 }
-
+.tb-foot thead{
+    background: #e0e0e0;
+}
+.tb-foot-lite thead{
+    background: #F7F7F7;
+}
 .tb-foot thead tr th:nth-child(2){
     padding-right:10px;
 }
-
 .tb-foot tr th table tr th:nth-child(2){
     padding-right:0;
 }
@@ -1704,6 +1707,9 @@ table.borderless td, table.borderless th{
 
 .table-container .isHidden{
     display: none;
+}
+.profitLoss.table-container > section{
+     border-left: 1px solid #e0e0e0;
 }
 .trial-balance.table-container > section{
      border-left: 10px solid #e0e0e0;
