@@ -70,7 +70,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, "Error")
 
   #Get company list
-  $scope.getCompanyList = ->
+  $scope.getCompanyList = ()->
     companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
 
   #Get company list
@@ -148,8 +148,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         $rootScope.canViewSpecificItems = true
       localStorageService.set("_selectedCompany", data)
       $rootScope.selectedCompany = data
-      $state.go('company.ledgerContent')
       $rootScope.$broadcast('companyChanged')
+      $state.go('company.ledgerContent')
     else
       $rootScope.canManageComp = true
       $scope.goToCompany(data, index)
@@ -172,12 +172,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       SplitNumber = contactnumber.split('-')
       $rootScope.selectedCompany.mobileNo = SplitNumber[1]
       $rootScope.selectedCompany.cCode = SplitNumber[0]
-
-    previousCompany = localStorageService.get("_selectedCompany")
-    if(_.isEmpty(previousCompany) || previousCompany.uniqueName != data.uniqueName)
-      DAServices.LedgerSet(null, null)
-      localStorageService.set("_ledgerData", null)
-      localStorageService.set("_selectedAccount", null)
 
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
 

@@ -15,6 +15,8 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
   
   $scope.logout = ->
     $http.post('/logout').then ((res) ->
+      # don't need to clear below
+      # _userDetails, _currencyList
       localStorageService.clearAll()
       window.location = "/thanks"
     ), (res) ->

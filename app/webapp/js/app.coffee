@@ -149,7 +149,8 @@ giddh.webApp.run [
   '$window'
   'toastr'
   'localStorageService'
-  ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService) ->
+  'DAServices'
+  ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices) ->
     $rootScope.$state = $state
     $rootScope.$stateParams = $stateParams
 
@@ -185,6 +186,7 @@ giddh.webApp.run [
     $rootScope.firstLogin = true
 
     $rootScope.$on('companyChanged', ->
+      DAServices.ClearData()
       localStorageService.remove("_ledgerData")
       localStorageService.remove("_selectedAccount")
       $rootScope.$emit('reloadAccounts')

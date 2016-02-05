@@ -636,7 +636,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.goToManageGroups()
 
   $timeout(->
-    $scope.loadAccountsList()
+    # $scope.loadAccountsList()
+    if !_.isEmpty($rootScope.selectedCompany)
+      $rootScope.$emit('reloadAccounts')
     $scope.assignValues()
   ,2000)
     

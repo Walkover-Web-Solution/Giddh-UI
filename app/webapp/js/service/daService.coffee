@@ -12,4 +12,7 @@ giddh.serviceModule.service 'DAServices', ($resource, $q) ->
       ledgerData = data
       ledgerAccount = account
 
+    ClearData: () ->
+    	ledgerData = {}
+    	ledgerAccount = {}
   DAServices
