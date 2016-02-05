@@ -11,7 +11,7 @@ var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
-var MongoStore = require('connect-mongo')(session);
+var MongoStore = require(' ')(session);
 //global.sessionTTL = 1000 * 60
 //Example POST method invocation 
 var Client = require('node-rest-client').Client; 
@@ -78,6 +78,8 @@ app.use(session({
   },
   store: new MongoStore({
       url:'mongodb://localhost/giddhDB',
+      autoRemove: 'interval',
+      autoRemoveInterval: sessionTTL
       ttl: sessionTTL
   })
 }));

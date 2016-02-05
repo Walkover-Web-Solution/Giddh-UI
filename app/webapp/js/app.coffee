@@ -215,6 +215,12 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$t
           $timeout ( ->
             window.location.assign('/login')
           ), 2000
+      else if responseError.status is 401
+        if _.isObject(responseError.data) and responseError.data.code is "INVALID_AUTH_KEY"
+          toastr.error('INVALID_AUTH_KEY:- Provided auth key is not valid')
+          $timeout ( ->
+            window.location.assign('/login')
+          ), 2000
       else
         $q.reject responseError
 ]
