@@ -1,4 +1,4 @@
-require('newrelic');
+// require('newrelic');
 // comment it while developement
 var settings = require('./public/routes/util/settings');
 var favicon = require('serve-favicon');
