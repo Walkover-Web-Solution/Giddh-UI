@@ -97,24 +97,12 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/views/userDetails.html'
     controller: 'userController'
   )
-  .state('company.trialBalance',
-    url: '/trial-balance',
+  .state('company.tbpl',
+    url: '/trial-balance-and-profit-loss',
     views:{
       '':{
-        templateUrl: '/public/webapp/views/trialBalance.html',
-        controller: 'trialBalanceController'
-      }
-      'accounts':{
-        templateUrl: '/public/webapp/views/accounts.html'
-      }
-    }
-  )
-  .state('company.profitAndLoss',
-    url: '/profit-and-loss'
-    views:{
-      '':{
-        templateUrl: '/public/webapp/views/profitLoss.html',
-        controller: 'profitLossController'
+        templateUrl: '/public/webapp/views/tbpl.html',
+        controller: 'tbplController'
       }
       'accounts':{
         templateUrl: '/public/webapp/views/accounts.html'

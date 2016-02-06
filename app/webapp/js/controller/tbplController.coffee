@@ -1,9 +1,10 @@
 "use strict"
 
-trialBalanceController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window) ->
+tbplController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window) ->
   tb = this
+  $scope.showTbplLoader = true
+  $scope.inProfit = true
   $scope.expanded = false
-  #date time picker code starts here
   $scope.today = new Date()
   $scope.fromDate = {date: new Date()}
   $scope.toDate = {date: new Date()}
@@ -25,8 +26,13 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     'year-range': 1,
     'todayBtn': false
   }
-
+  $scope.plData = {
+    closingBalance: 0
+    incomeTotal: 0
+    expenseTotal: 0
+  }
   $scope.format = "dd-MM-yyyy"
+  
 
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
@@ -35,6 +41,57 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     this.toDatePickerIsOpen = true
 
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+
+  # p&l functions
+  $scope.calCulateTotal = (data) ->
+    eTtl = 0
+    _.each(data, (item) ->
+      eTtl += Number(item.closingBalance.amount)
+    )
+    return Number((eTtl).toFixed(2))
+
+
+  $scope.filterPlData = (data) ->
+    filterPlData = {}
+    filterPlData.incArr = []
+    filterPlData.expArr = []
+    filterPlData.othArr = []
+    income = []
+    expenses = []
+    others = []
+    _.each data, (grp) ->
+      switch grp.category
+        when 'income'
+          income.push(grp)
+        when 'expenses'
+          expenses.push(grp)
+        else
+          others.push(grp)
+    _.each others, (obj) ->
+      filterPlData.othArr.push(obj) 
+    _.each income, (inc) ->
+      filterPlData.incArr.push(inc)
+    _.each expenses, (exp) ->
+      filterPlData.expArr.push(exp)
+    filterPlData
+
+  $scope.makeDataForPl = (data) ->
+    fData = $scope.filterPlData(data.groupDetails)
+    $scope.plData = _.omit(fData, "othArr")
+    $scope.plData.expenseTotal = $scope.calCulateTotal(fData.expArr)
+    $scope.plData.incomeTotal = $scope.calCulateTotal(fData.incArr)
+    clB = $scope.plData.incomeTotal - $scope.plData.expenseTotal
+
+    $scope.plData.closingBalance = Math.abs(clB)
+
+    if $scope.plData.incomeTotal >= $scope.plData.expenseTotal
+      console.info "Income is Greater"
+      $scope.inProfit = true
+    if $scope.plData.incomeTotal < $scope.plData.expenseTotal
+      console.info "expenses is Greater"
+      $scope.inProfit = false
+
+  # P&l functions end
 
   $scope.getDefaultDate = ->
     date = undefined
@@ -58,6 +115,7 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   }
 
   $scope.getTrialBal = (data) ->
+    $scope.showTbplLoader = true
     if _.isNull(data.fromDate) || _.isNull(data.toDate)
       toastr.error("Date should be in proper format", "Error")
       return false
@@ -70,11 +128,13 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
     trialBalService.getAllFor(reqParam).then $scope.getTrialBalSuccess, $scope.getTrialBalFailure
 
   $scope.getTrialBalSuccess = (res) ->
+    $scope.makeDataForPl(res.body)
     $scope.data = res.body
     $scope.data.groupDetails = $scope.orderGroups(res.body.groupDetails)
-    $rootScope.showLedgerBox = true
+    # $rootScope.showLedgerBox = true
     if $scope.data.closingBalance.amount is 0 and $scope.data.creditTotal is 0 and $scope.data.debitTotal is 0 and $scope.data.forwardedBalance.amount is 0
       $scope.noData = true
+    $scope.showTbplLoader = false
 
   $scope.getTrialBalFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -85,10 +145,10 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
       'toDate': $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
     $scope.expanded = false
 
-    $rootScope.showLedgerBox = false
+    # $rootScope.showLedgerBox = false
     dateObj.fromDate = $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
     dateObj.toDate = $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
-    $scope.getTrialBal dateObj
+    $scope.getTrialBal(dateObj)
 
   $scope.$on '$viewContentLoaded', ->
     if $scope.sendRequest
@@ -414,4 +474,4 @@ trialBalanceController = ($scope, $rootScope, trialBalService, localStorageServi
   )
 
 
-giddh.webApp.controller 'trialBalanceController', trialBalanceController
+giddh.webApp.controller 'tbplController', tbplController

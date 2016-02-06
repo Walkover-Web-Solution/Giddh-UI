@@ -235,7 +235,18 @@ header .navbar-nav > li.active {
     padding-left:0;
     padding-right:0;
 }
-    
+.pdL25{
+    padding-left: 25px
+}
+.pdR25{
+    padding-right: 25px
+}
+.pdL-5{
+    padding-left: 5px
+}
+.pdR-5{
+    padding-right: 5px
+}
 .pd {
     padding: 5px
 }
@@ -727,6 +738,9 @@ header .navbar-nav > li.active {
     font-size: 15px;
     font-weight: 600;
     padding: 9px 20px;
+}
+.fs20{
+    font-size: 20px
 }
 
 
@@ -1238,25 +1252,18 @@ li:last-child .angular-ui-tree-handle {
     float:none;
 }
 
-.tb-foot thead, .tb-foot-lite thead{
-    line-height: 50px;
-    height: 50px;
+.plBtTbl th{
     color: #000;
     font-size: 16px;
     font-weight: 400 !important;
 }
-.tb-foot thead{
+.plBtTbl thead{
     background: #e0e0e0;
 }
-.tb-foot-lite thead{
+.plBtTbl tfoot{
     background: #F7F7F7;
 }
-.tb-foot thead tr th:nth-child(2){
-    padding-right:10px;
-}
-.tb-foot tr th table tr th:nth-child(2){
-    padding-right:0;
-}
+
 
 .circle{
     width:15px;
@@ -1582,21 +1589,6 @@ table.borderless td, table.borderless th{
     padding:0;
     margin-top:20px;
 }
-
-.table-title div{
-    font-size:20px;
-    font-weight:500;
-    padding:0;
-}
-
-.table-title div:nth-child(1){
-    padding-right:2px;
-}
-
-.table-title div:nth-child(2){
-    padding-left:2px;
-}
-
 .table-l{
     padding-right:2px !important;
 }
@@ -1741,26 +1733,6 @@ table.borderless td, table.borderless th{
     max-height:200px;
 }
 
-.expenses, .income{
-    padding:0;
-}
-
-.expenses{
-    padding-right: 5px;
-}
-
-.income{
-    padding-left:5px;
-}
-
-.expenses > .table-container{
-    padding:0;
-}
-
-.income > .table-container{
-    padding:0;
-}
-
 /* reports */
 .ui-select-multiple.ui-select-bootstrap, .ui-select-bootstrap.dropdown, .ui-select-bootstrap.dropdown span.ui-select-toggle, .ui-select-bootstrap.dropdown input{
     min-width:100%;
@@ -1814,4 +1786,11 @@ table:focus{
     overflow-y:scroll;
     margin: 0;
     padding: 0;
+}
+/*tbpl list*/
+.tbplList .list-inline{
+    line-height: 34px;
+}
+.tbplList .circle{
+    vertical-align: sub
 }

@@ -29,7 +29,7 @@ profitLossController = ($scope, $rootScope, companyServices, localStorageService
     else
       $scope.incomeTotal = $scope.calCulateTotal(res.body.incomeGroups)
     $scope.data = res.body
-    $rootScope.showLedgerBox = true
+    # $rootScope.showLedgerBox = true
     if $scope.data.closingBalance is 0
       $scope.noData = true
 

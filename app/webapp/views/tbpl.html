@@ -1,0 +1,376 @@
+<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  suppress-scroll-x="true">
+<div class="row pd15">
+  <div class="col-md-8 col-sm-8">
+    <form class="form-inline" name="fromToDateForm" novalidate>
+      <div class="form-group mrR1">
+        <label>From date</label>
+
+        <p class="input-group max150">
+          <input type="text" class="form-control"
+                 uib-datepicker-popup="{{format}}" required
+                 datepicker-options="dateOptions"
+                 is-open="fromDatePickerIsOpen"
+                 ng-click="fromDatePickerOpen()"
+                 ng-model="fromDate.date"
+                 max-date="today"
+                 placeholder="from date"
+              />
+             <span class="input-group-btn">
+             <button type="button" class="btn btn-default" ng-click="fromDatePickerOpen()"><i
+                 class="glyphicon glyphicon-calendar"></i></button>
+             </span>
+        </p>
+      </div>
+      <div class="form-group">
+        <label>To date</label>
+
+        <p class="input-group max150">
+          <input type="text" class="form-control"
+                 uib-datepicker-popup="{{format}}" required
+                 datepicker-options="dateOptions"
+                 is-open="toDatePickerIsOpen"
+                 ng-click="toDatePickerOpen()"
+                 ng-model="toDate.date" min-date="fromDate.date" max-date="today" placeholder="to date"
+              />
+              <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i
+                  class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+        </p>
+      </div>
+      <div class="form-group">
+        <button type="button" class="btn btn-success mrL1" ng-click="filterBydate()">
+          Apply
+        </button>
+      </div>
+    </form>
+  </div>
+  <!-- end of coloumn -->
+  <div class="col-md-4 col-sm-4 tbplList">
+    <ul class="list-inline color-codes pull-right">
+      <li><span class="circle liabilities"></span>Liabilities</span></li>
+      <li><span class="circle assets"></span> Assets</li>
+      <li><span class="circle income"></span>Income</li>
+      <li><span class="circle expenses"></span>Expenses</li>
+    </ul>
+  </div>
+  <!-- end of second coloumn -->
+</div>
+<!-- end of row -->
+
+<!-- no data start -->
+<div class="no-data" ng-show="noData">
+  <h1>Sorry, No Data Found!</h1>
+  <img src="/public/webapp/images/no-data.png" alt="">
+</div>
+<!-- nodata end -->
+
+<!-- loader -->
+<div class="loader" ng-show="showTbplLoader">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <h1>loading Trial Balance</h1>
+</div>
+<!--  -->
+
+<!-- active="tab.active" disable="tab.disabled" -->
+<uib-tabset ng-if="!noData" ng-hide="showTbplLoader">
+  <uib-tab heading="Trial Balance" active="true">
+    <div class="pd15">
+      <div class="row mrB2">
+        <div class="form-inline col-md-6 col-sm-6">
+          <div class="form-group mrR2">
+            <div class="input-group input-group-md">
+              <span class="input-group-addon" id="sizing-addon3"><i class="glyphicon glyphicon-search"></i></span>
+              <input type="search" class="form-control" placeholder="Search" aria-describedby="sizing-addon3"
+                     ng-model="keyWord" trial-accordion='search'>
+              <i class="glyphicon glyphicon-remove close-icon" ng-show="showClearSearch"></i>
+            </div>
+          </div>
+          <div class="form-group export">  
+            <a href="" title="" download="" ng-click="formatData($event)"><img src="/public/webapp/images/csv.png" class="csv"/></a>
+            <div class="export-options" ng-show="showOptions">
+              <span class="arrow"></span>
+              <ul class="list-unstyled">
+                <li><a href="" ng-click="hideOptions($event)" export-report data-report="group-wise">Group Wise
+                  Report</a></li>
+                <li><a href="" ng-click="hideOptions($event)" export-report data-report="condensed">Condensed
+                  Report</a></li>
+                <li><a href="" ng-click="hideOptions($event)" export-report data-report="account-wise">Account Wise
+                  Report</a></li>
+              </ul>
+            </div>
+          </div>
+          <!-- end form-group -->
+
+          <div class="form-group pdf-export">
+            <a href="" ng-click="showPdfOptions($event)"><img src="/public/webapp/images/pdf-icon.png" /></a>
+            <div class="export-options" ng-show="showpdf">
+              <span class="arrow"></span>
+              <ul class="list-unstyled">
+                <li><a href="" ng-click="hideOptions($event)" export-pdfgroupwise>Group Wise
+                  Report</a></li>
+                <li><a href="" ng-click="hideOptions($event)" export-pdfcondensed>Condensed
+                  Report</a></li>
+                <li><a href="" ng-click="hideOptions($event)" export-pdfaccountwise>Account Wise
+                  Report</a></li>
+              </ul>
+            </div>
+          </div>
+          <!-- end form-group -->
+        </div>
+        <!-- end of column -->
+        <div class="col-md-6 col-sm-6">
+          <div class="pull-right">
+            <button class="btn btn-default" trial-accordion="expandAll">Expand All</button>
+            <button class="btn btn-default mrL1" trial-accordion="collapseAll">Collapse All</button>
+          </div>
+        </div>
+        <!-- end of column -->
+      </div>
+      <!-- end of row -->
+      <!-- End Head -->
+      <!-- start main content -->
+      <div class="table-container clearfix trial-balance">
+        <table class="col-sm-12 tb-head">
+          <thead>
+          <tr>
+            <th class="col-sm-4">Particular</th>
+            <th class="col-sm-2">Opening Bal</th>
+            <th class="col-sm-4 text-center">
+              Transactions
+              <table class="col-sm-12">
+                <thead>
+                <tr>
+                  <th class="col-sm-6 text-left">Debit(Dr.)</th>
+                  <th class="col-sm-6 text-left">Credit(Cr.)</th>
+                </tr>
+                </thead>
+              </table>
+            </th>
+            <th class="col-sm-2">Closing Bal</th>
+          </tr>
+          </thead>
+        </table>
+        <!--Start Grid-->
+
+        <section class="row row-1" ng-repeat="grp in data.groupDetails | filter:{$:keyWord} | orderBy: grp.category" ng-class="grp.category">
+          <div class="row"  trial-accordion>  
+            <div class="col-xs-4 group" ng-bind-html=" grp.groupName | uppercase | highlight: keyWord "></div>
+            <div class="col-xs-2 group text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type | recType:grp.forwardedBalance.amount }}</div>
+            <div class="col-xs-2 group text-right">{{ grp.debitTotal | number:2 }}</div> 
+            <div class="col-xs-2 group text-right">{{ grp.creditTotal | number:2 }}</div>
+            <div class="col-xs-2 group text-right">{{ grp.closingBalance.amount | number:2 }} {{grp.closingBalance.type | recType:grp.closingBalance.amount}}</div>
+          </div>
+
+          <section class="row row-2 isHidden" ng-repeat="account in grp.accounts  | filter:keyWord">
+            <div class="row">
+              <div class="col-xs-4 account" ng-style="{'padding-left':padLeft}" ng-bind-html=" account.name | lowercase | highlight: keyWord">
+              </div>
+              <div class="col-xs-2 account text-right">{{ account.openingBalance.amount | number:2 }} {{account.openingBalance.type | recType:account.openingBalance.amount}}</div>
+              <div class="col-xs-2 account text-right">{{ account.debitTotal | number:2 }}</div>
+              <div class="col-xs-2 account text-right">{{ account.creditTotal | number:2 }}</div>
+              <div class="col-xs-2 account text-right">{{ account.closingBalance.amount | number:2 }} {{account.closingBalance.type | recType:account.closingBalance.amount}}</div>
+            </div>
+          </section>
+
+          <section class="row isHidden" ng-if="grp.childGroups.length">
+            <div ng-include="'trialBalSubGroup'"></div>
+          </section>
+
+        </section>
+        <!--End Grid-->
+        <div class="table-responsive">
+          <table class="table bdrL bdrR">
+            <thead>
+              <tr>
+                <th class="col-sm-4">
+                  <span class="pdL1">Grand Total</span>
+                </th>
+                <th class="col-sm-2  text-right">{{ data.forwardedBalance.amount | number:2 }}</th>
+                <th class="col-sm-4">
+                  <table class="col-sm-12">
+                    <thead>
+                    <tr>
+                      <th class="col-sm-6 text-right">{{ data.debitTotal | number:2 }}</th>
+                      <th class="col-sm-6 text-right">{{ data.creditTotal | number:2 }}</th>
+                    </tr>
+                    </thead>
+                  </table>
+                </th>
+                <th class="col-sm-2  text-right">
+                  <span class="pdR1">{{ data.closingBalance.amount | number:2 }}</span>
+                </th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+      </div>
+
+      <!-- end main content -->
+
+      <!-- start template trial bal -->
+      <script type="text/ng-template" id="trialBalSubGroup">
+        <section class="row row-2" ng-repeat="grp in grp.childGroups  | filter:keyWord">
+          <div class="row" trial-accordion>
+            <div class="col-xs-4 group" ng-style="{'padding-left':padLeft + 10}" ng-bind-html="grp.groupName | uppercase : (grp.childGroups.length && grp.accounts.length) | highlight: keyWord"></div>
+            <div class="col-xs-2 group text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type | recType: grp.forwardedBalance.amount}}</div>
+            <div class="col-xs-2 group text-right">{{ grp.debitTotal | number:2 }}</div>
+            <div class="col-xs-2 group text-right">{{ grp.creditTotal | number:2 }}</div>
+            <div class="col-xs-2 group text-right">{{ grp.closingBalance.amount | number:2 }} {{ grp.closingBalance.type | recType: grp.closingBalance.amount }}</div>
+          </div>  
+          <section class="row isHidden" ng-if="grp.accounts.length" ng-repeat="account in grp.accounts">
+            <div class="row">
+              <div class="col-xs-4" ng-style="{'padding-left':padLeft + 20}" ng-bind-html=" account.name | lowercase | highlight: keyWord">
+              </div>
+              <div class="col-xs-2 account text-right">{{ account.openingBalance.amount | number:2 }} {{account.openingBalance.type | recType:account.openingBalance.amount }}</div>
+              <div class="col-xs-2 account text-right">{{ account.debitTotal | number:2 }}</div>
+              <div class="col-xs-2 account text-right">{{ account.creditTotal | number:2 }}</div>
+              <div class="col-xs-2 account text-right">{{ account.closingBalance.amount | number:2 }} {{account.closingBalance.type | recType:account.closingBalance.amount }}</div>
+            </div>
+          </section>
+          <section class="subGroups isHidden" ng-if="grp.childGroups.length">
+            <div ng-include="'trialBalSubGroup'"></div>
+          </section>
+        </section>
+      </script>      
+      <!-- end template -->
+    </div>
+    <!-- tab Content Main box end -->
+  </uib-tab>
+  <uib-tab heading="Profit &amp; Loss" ng-hide="canViewSpecificItems">
+    <div class="pd15">
+      <div class="clearfix">
+          <div class="row mrB1">
+            <div class="col-sm-6 col-md-6">
+              <h3 class="fs20">Expenses</h3>
+            </div>
+            <div class="col-sm-6 col-md-6">
+              <h3 class="fs20">Income</h3>
+            </div>
+          </div>
+          <div class="row">
+            <div class="expenses col-sm-6 col-md-6">
+              <div class="table-container clearfix profitLoss table-responsive">
+                <table class="table tb-head">
+                  <thead>
+                  <tr>
+                    <th class="col-sm-6 col-md-6">Particular</th>
+                    <th class="col-sm-6 col-md-6">Amount</th>
+                  </tr>
+                  </thead>
+                </table>
+                <!--Grid-->
+
+                <section class="row row-1" ng-repeat="expGrp in plData.expArr">
+                  <div class="row" trial-accordion>  
+                    <div class="col-sm-6 col-md-6 group" ng-bind-html=" expGrp.groupName | uppercase"></div>
+                    <div class="col-sm-6 col-md-6 group text-right" ng-bind-html=" expGrp.closingBalance.amount | uppercase"></div>
+                  </div>
+                  <section class="row row-2 isHidden" ng-repeat="subGrp in expGrp.childGroups">
+                    <div class="row" trial-accordion>
+                      <div class="col-sm-6 col-md-6 account" ng-style="{'padding-left':padLeft}" ng-bind-html=" subGrp.groupName | uppercase">
+                      </div>
+                      <div class="col-sm-6 col-md-6 account text-right" ng-bind-html=" subGrp.closingBalance.amount | uppercase"></div>
+                    </div>
+                    <section class="row row-2 isHidden" ng-repeat="acc in subGrp.accounts">
+                      <div class="row">
+                        <div class="col-sm-6 col-md-6 account" ng-style="{'padding-left':padLeft + 10}" ng-bind-html=" acc.name | lowercase">
+                        </div>
+                        <div class="col-sm-6 col-md-6 account text-right" ng-bind-html=" acc.closingBalance.amount | lowercase"></div>
+                      </div>
+                    </section>
+                  </section>
+                </section>
+                <!--/Grid-->
+              </div>
+            </div>
+          <!-- end of expenses -->
+            <div class="income col-sm-6 col-md-6">
+              <div class="table-container clearfix profitLoss">
+                <table class="col-sm-12 tb-head">
+                  <thead>
+                  <tr>
+                    <th class="col-sm-6 col-md-6">Particular</th>
+                    <th class="col-sm-6 col-md-6">Amount</th>
+                  </tr>
+                  </thead>
+                </table>
+                <!--Grid-->
+
+                <section class="row row-1" ng-repeat="incGrp in plData.incArr">
+                  <div class="row"  trial-accordion>  
+                    <div class="col-sm-6 col-md-6 group" ng-bind-html=" incGrp.groupName | uppercase"></div>
+                    <div class="col-sm-6 col-md-6 group text-right" ng-bind-html=" incGrp.closingBalance.amount | uppercase"></div>
+                  </div>
+                  <section class="row row-2 isHidden" ng-repeat="subGrp in incGrp.childGroups">
+                    <div class="row" trial-accordion>
+                      <div class="col-sm-6 col-md-6 account" ng-style="{'padding-left':padLeft}" ng-bind-html=" subGrp.groupName | uppercase">
+                      </div>
+                      <div class="col-sm-6 col-md-6 account text-right" ng-bind-html=" subGrp.closingBalance.amount | uppercase"></div>
+                    </div>
+                    <section class="row row-2 isHidden" ng-repeat="acc in subGrp.accounts">
+                      <div class="row">
+                        <div class="col-sm-6 col-md-6 account" ng-style="{'padding-left':padLeft + 10}" ng-bind-html=" acc.name | lowercase">
+                        </div>
+                        <div class="col-sm-6 col-md-6 account text-right" ng-bind-html=" acc.closingBalance.amount | lowercase"></div>
+                      </div>
+                    </section>
+                  </section>
+                </section>
+                <!--/Grid-->
+              </div>
+            </div>
+          </div>
+          <!-- end row -->
+          <!-- table start -->
+          <div class="table-responsive">
+            <table class="table plBtTbl">
+              <thead>
+                <tr>
+                  <th class="col-sm-6">
+                    <div class="pdR25 pdL-5" ng-show="inProfit">
+                      Profit
+                      <span class="pull-right">{{ plData.closingBalance | number:2 }}</span>
+                    </div>
+                  </th>
+                  <th class="col-sm-6">
+                    <div class="pdL2 pdR1" ng-hide="inProfit">
+                      Loss
+                      <span class="pull-right">{{ plData.closingBalance | number:2 }}</span>
+                    </div>
+                  </th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th class="col-sm-6">
+                    <div class="pdR25 pdL-5">
+                      Total
+                      <span class="pull-right" ng-bind-html="plData.expenseTotal"></span>
+                    </div>
+                  </th>
+                  <th class="col-sm-6">
+                    <div class="pdL2 pdR1">
+                      Total
+                      <span class="pull-right" ng-bind-html="plData.incomeTotal"></span>
+                    </div>
+                  </th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+      </div>
+      <!-- end of clearfix -->
+    </div>
+    <!-- tab Content Main box end -->
+  </uib-tab>
+  <!-- End of first tab -->
+</uib-tabset>
+<div class="clearfix" style="height:150px;"></div>
+
+
+</perfect-scrollbar>
