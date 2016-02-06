@@ -1,6 +1,6 @@
 'use strict'
 
-describe 'trialBalanceController', ->
+describe 'tbplController', ->
   beforeEach module('giddhWebApp')
 
   describe 'local variables', ->
@@ -10,7 +10,7 @@ describe 'trialBalanceController', ->
       @localStorageService = localStorageService
       spyOn(@localStorageService, 'get').andReturn({name: "walkover"})
 
-      @trialBalanceController = $controller('trialBalanceController',
+      @tbplController = $controller('tbplController',
         {$scope: @scope, $rootScope: @rootScope, localStorageService: @localStorageService})
 
     it 'should check scope variables set by default', ->
@@ -32,7 +32,7 @@ describe 'trialBalanceController', ->
       @filter = $filter
       @trialBalService = trialBalService
       @q = $q
-      @trialBalanceController = $controller('trialBalanceController',
+      @tbplController = $controller('tbplController',
         {
           $scope: @scope,
           $rootScope: @rootScope,
@@ -41,6 +41,25 @@ describe 'trialBalanceController', ->
           $timeout: @timeout
           $filter: @filter
         })
+
+    describe '#calCulateTotal', ->
+      it 'should calCulate Total and andReturn total amount', ->
+        data = [
+          {
+            closingBalance: {
+              amount: 100
+            }
+          }
+          {
+            closingBalance: {
+              amount: 400
+            }
+          }
+        ]
+        d = 0
+        d = @scope.calCulateTotal(data)
+        expect(d).toBe(500.00) 
+
     describe '#getTrialBal', ->
       it 'should show alert with toastr error if date is null ', ->
         spyOn(@toastr, "error")
@@ -87,9 +106,9 @@ describe 'trialBalanceController', ->
         }
         @scope.getTrialBalSuccess(res)
         expect(@scope.data).toEqual(res.body)
-        expect(@rootScope.showLedgerBox).toBeTruthy()
         expect(@scope.noData).toBeFalsy()
-      it 'should set value of showLedgerContent to true and set nodata var to truthy', ->
+        expect(@scope.showTbplLoader).toBeFalsy()
+      it 'should set value of showTbplLoader to false and set nodata var to truthy', ->
         res = {
           body:
             closingBalance:
@@ -101,8 +120,8 @@ describe 'trialBalanceController', ->
         }
         @scope.getTrialBalSuccess(res)
         expect(@scope.data).toEqual(res.body)
-        expect(@rootScope.showLedgerBox).toBeTruthy()
         expect(@scope.noData).toBeTruthy()
+        expect(@scope.showTbplLoader).toBeFalsy()
 
     describe '#getTrialBalFailure', ->
       it 'should show error message with toastr', ->
@@ -114,14 +133,13 @@ describe 'trialBalanceController', ->
         @scope.getTrialBalFailure(res)
         expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)   
 
-    describe '#filterByDate', ->
+    describe '#filterBydate', ->
       it 'should call getTrialBal with filtered dates', ->
         dateObj = {
             fromDate: '15/01/2015'
             toDate: '08/12/2015'
           }
         expect(@scope.expanded).toBeFalsy()
-        expect(@rootScope.showLedgerBox).toBeFalsy()
         spyOn(@scope, "getTrialBal")
         @scope.getTrialBal(dateObj)
         expect(@scope.getTrialBal).toHaveBeenCalledWith(dateObj)

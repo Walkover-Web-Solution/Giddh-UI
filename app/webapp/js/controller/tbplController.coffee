@@ -131,7 +131,6 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     $scope.makeDataForPl(res.body)
     $scope.data = res.body
     $scope.data.groupDetails = $scope.orderGroups(res.body.groupDetails)
-    # $rootScope.showLedgerBox = true
     if $scope.data.closingBalance.amount is 0 and $scope.data.creditTotal is 0 and $scope.data.debitTotal is 0 and $scope.data.forwardedBalance.amount is 0
       $scope.noData = true
     $scope.showTbplLoader = false
