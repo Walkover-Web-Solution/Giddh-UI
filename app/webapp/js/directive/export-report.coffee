@@ -171,6 +171,8 @@ angular.module('trialBalance', []).directive('exportReport', [
       else 
         false 
 
+        
+
     if _.isEmpty(srch)
       _.each input, (grp) ->
         grp.accountDetails = grp.beforeFilter
