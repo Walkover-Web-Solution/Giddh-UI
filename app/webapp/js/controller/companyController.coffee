@@ -149,7 +149,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       localStorageService.set("_selectedCompany", data)
       $rootScope.selectedCompany = data
       $rootScope.$broadcast('companyChanged')
-      $state.go('company.ledgerContent')
+      $state.go('company.content.ledgerContent')
     else
       $rootScope.canManageComp = true
       $scope.goToCompany(data, index)

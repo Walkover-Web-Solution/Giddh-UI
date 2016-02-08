@@ -80,46 +80,38 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/views/home.html'
     controller:'groupController'
   )
-  .state('company.manage',
-    url: '/manage'
+  .state('company.content'
+    url: ''
     views:{
-      '':{
-        templateUrl: '/public/webapp/views/manageCompany.html'
-        controller: 'companyController'
-      }
       'accounts':{
         templateUrl: '/public/webapp/views/accounts.html'
+        controller: 'acCtrl'
+      }
+      'rightPanel':{
+        abstract:true
+        templateUrl: '/public/webapp/views/rightPanel.html'
       }
     }
+  )
+  .state('company.content.manage',
+    url: '/manage'
+    templateUrl: '/public/webapp/views/manageCompany.html'
+    controller: 'companyController'
   )
   .state('company.user',
     url: '/user'
     templateUrl: '/public/webapp/views/userDetails.html'
     controller: 'userController'
   )
-  .state('company.tbpl',
+  .state('company.content.tbpl',
     url: '/trial-balance-and-profit-loss',
-    views:{
-      '':{
-        templateUrl: '/public/webapp/views/tbpl.html',
-        controller: 'tbplController'
-      }
-      'accounts':{
-        templateUrl: '/public/webapp/views/accounts.html'
-      }
-    }
+    templateUrl: '/public/webapp/views/tbpl.html',
+    controller: 'tbplController'
   )
-  .state('company.ledgerContent',
+  .state('company.content.ledgerContent',
     url: '/:unqName'
-    views: {
-      'accounts':{
-        templateUrl: '/public/webapp/views/accounts.html'
-      }
-      '':{
-        templateUrl: '/public/webapp/views/ledgerContent.html'
-        controller: 'ledgerController'
-      }
-    }
+    templateUrl: '/public/webapp/views/ledgerContent.html'
+    controller: 'ledgerController'
   )
   .state('/thankyou',
     url: '/thankyou'
@@ -230,3 +222,6 @@ giddh.webApp.config (toastrConfig) ->
 #toastr = https://github.com/Foxandxss/angular-toastr
 #angular filter - https://github.com/a8m/angular-filter#filterby
 #file upload - https://github.com/danialfarid/ng-file-upload
+
+giddh.webApp.controller 'acCtrl', ($scope) ->
+  console.log 'acc loaded'
