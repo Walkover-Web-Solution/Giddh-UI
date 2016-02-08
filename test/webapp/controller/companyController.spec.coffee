@@ -336,7 +336,7 @@ describe 'companyController', ->
       expect(@rootScope.canViewSpecificItems).toBeTruthy()
       expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)
       expect(@rootScope.selectedCompany).toEqual(data)
-      expect(@state.go).toHaveBeenCalledWith('company.ledgerContent')
+      expect(@state.go).toHaveBeenCalledWith('company.content.ledgerContent')
       expect(@rootScope.$broadcast).toHaveBeenCalledWith('companyChanged')
     it 'should call goToCompany function', ->
       data = 

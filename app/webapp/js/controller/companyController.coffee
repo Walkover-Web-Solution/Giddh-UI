@@ -1,6 +1,5 @@
 "use strict"
 companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService) ->
-  console.log 'from companyController'
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -346,6 +345,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.dHideBar = false
     $scope.dFiles = files
     $scope.dErrFiles = errFiles
+    angular.forEach files, (file) ->
     angular.forEach files, (file) ->
       file.upload = Upload.upload(
         url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/daybook'
