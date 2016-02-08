@@ -6,11 +6,11 @@ homeController = ($scope, $rootScope, getLedgerState, $state, localStorageServic
     localStorageService.set("_selectedCompany", getLedgerState.data)
     if getLedgerState.type is'shared'
       $rootScope.selectedCompany = getLedgerState.data
-      $state.go('company.ledgerContent')
+      $state.go('company.content.ledgerContent')
     else
-      $state.go('company.manage')
-  
+      $state.go('company.content.manage')
   $scope.goToLedgerState()
+
 
 
 #init angular app

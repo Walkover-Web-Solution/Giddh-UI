@@ -621,7 +621,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.assignValues = () ->
     data = localStorageService.get("_selectedCompany")
     $rootScope.canViewSpecificItems = false
-    if data.role.uniqueName is 'shared'
+    if _.isUndefined(data) || _.isEmpty(data)
+      
+    else if data.role.uniqueName is 'shared'
       $rootScope.canManageComp = false
       if data.sharedEntity is 'groups'
         $rootScope.canViewSpecificItems = true

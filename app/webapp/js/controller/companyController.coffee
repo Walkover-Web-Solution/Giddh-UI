@@ -1,5 +1,6 @@
 "use strict"
 companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService) ->
+  console.log 'from companyController'
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -149,11 +150,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       localStorageService.set("_selectedCompany", data)
       $rootScope.selectedCompany = data
       $rootScope.$broadcast('companyChanged')
-      $state.go('company.ledgerContent')
+      $state.go('company.content.ledgerContent')
     else
       $rootScope.canManageComp = true
       $scope.goToCompany(data, index)
-    
+    $rootScope.$emit('reloadAccounts')
 
   #making a detail company view
   $scope.goToCompany = (data, index) ->
@@ -366,10 +367,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.getCurrencyList()
     $scope.getUserDetails()
     $timeout( ->
-      $scope.toggleAcMenus(false)
+      #$scope.toggleAcMenus(false)
       $scope.selectedAccountUniqueName = undefined
       $scope.rolesList = localStorageService.get("_roles")
     ,2000)
+
 
 #init angular app
 giddh.webApp.controller 'companyController', companyController

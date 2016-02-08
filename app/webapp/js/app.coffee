@@ -80,46 +80,38 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/views/home.html'
     controller:'groupController'
   )
-  .state('company.manage',
-    url: '/manage'
+  .state('company.content',
+    url: ''
     views:{
-      '':{
-        templateUrl: '/public/webapp/views/manageCompany.html'
-        controller: 'companyController'
-      }
       'accounts':{
         templateUrl: '/public/webapp/views/accounts.html'
       }
+      'rightPanel':{
+        abstract:true
+        templateUrl: '/public/webapp/views/rightPanel.html'
+        controller: 'companyController'
+      }
     }
+  )
+  .state('company.content.manage',
+    url: '/manage'
+    templateUrl: '/public/webapp/views/manageCompany.html'
+    controller: 'companyController'
   )
   .state('company.user',
     url: '/user'
     templateUrl: '/public/webapp/views/userDetails.html'
     controller: 'userController'
   )
-  .state('company.tbpl',
+  .state('company.content.tbpl',
     url: '/trial-balance-and-profit-loss',
-    views:{
-      '':{
-        templateUrl: '/public/webapp/views/tbpl.html',
-        controller: 'tbplController'
-      }
-      'accounts':{
-        templateUrl: '/public/webapp/views/accounts.html'
-      }
-    }
+    templateUrl: '/public/webapp/views/tbpl.html',
+    controller: 'tbplController'
   )
-  .state('company.ledgerContent',
+  .state('company.content.ledgerContent',
     url: '/:unqName'
-    views: {
-      'accounts':{
-        templateUrl: '/public/webapp/views/accounts.html'
-      }
-      '':{
-        templateUrl: '/public/webapp/views/ledgerContent.html'
-        controller: 'ledgerController'
-      }
-    }
+    templateUrl: '/public/webapp/views/ledgerContent.html'
+    controller: 'ledgerController'
   )
   .state('/thankyou',
     url: '/thankyou'
@@ -177,7 +169,7 @@ giddh.webApp.run [
       DAServices.ClearData()
       localStorageService.remove("_ledgerData")
       localStorageService.remove("_selectedAccount")
-      $rootScope.$emit('reloadAccounts')
+      #$rootScope.$emit('reloadAccounts')
     )
 
 ]

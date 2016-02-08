@@ -15,7 +15,7 @@ loginBackController = ($scope, $rootScope, $http, $timeout, $auth, localStorageS
       else
 #user is registered and redirect it to app
         localStorageService.set("_userDetails", response.data.userDetails)
-        window.location = "/app/"
+        window.location = "/app/#/home/"
     ).catch (response) ->
       console.log response
       $scope.loginIsProcessing = false
