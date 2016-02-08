@@ -87,9 +87,11 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     if $scope.plData.incomeTotal >= $scope.plData.expenseTotal
       console.info "Income is Greater"
       $scope.inProfit = true
+      $scope.plData.expenseTotal += $scope.plData.closingBalance
     if $scope.plData.incomeTotal < $scope.plData.expenseTotal
       console.info "expenses is Greater"
       $scope.inProfit = false
+      $scope.plData.incomeTotal += $scope.plData.closingBalance
 
   # P&l functions end
 

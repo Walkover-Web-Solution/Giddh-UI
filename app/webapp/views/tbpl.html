@@ -350,13 +350,13 @@
                   <th class="col-sm-6">
                     <div class="pdR25 pdL-5">
                       Total
-                      <span class="pull-right" ng-bind-html="plData.expenseTotal"></span>
+                      <span class="pull-right" ng-bind-html="plData.expenseTotal | number:2 "></span>
                     </div>
                   </th>
                   <th class="col-sm-6">
                     <div class="pdL2 pdR1">
                       Total
-                      <span class="pull-right" ng-bind-html="plData.incomeTotal"></span>
+                      <span class="pull-right" ng-bind-html="plData.incomeTotal | number:2 "></span>
                     </div>
                   </th>
                 </tr>
