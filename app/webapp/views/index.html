@@ -10,19 +10,19 @@
   <!-- LIBRARIES INCLUDE -->
   
   <!-- @if NODE_ENV='PRODUCTION' -->
-  <script src='/public/webapp/js/newRelic.js'></script>
+  <script data-cfasync="false" type="text/javascript" src='/public/webapp/js/newRelic.js'></script>
   <!-- @endif -->
 
-  <script src='/public/webapp/core_bower.min.js'></script>
+  <script data-cfasync="false" type="text/javascript" src='/public/webapp/core_bower.min.js'></script>
   <!-- including app Js Files -->
   <!-- @if NODE_ENV='DEVELOPMENT' -->
-  <script src="/public/webapp/app.js"></script>
+  <script data-cfasync="false" type="text/javascript" src="/public/webapp/app.js"></script>
   <!-- @endif -->
   <!-- @if NODE_ENV='PRODUCTION' -->
-  <script src="/public/webapp/app.min.js"></script>
+  <script data-cfasync="false" type="text/javascript" src="/public/webapp/app.min.js"></script>
   <!-- @endif -->
 
-  <script src="/public/webapp/_extras.js"></script>
+  <script data-cfasync="false" type="text/javascript" src="/public/webapp/_extras.js"></script>
 
 
   <!-- lib styles include -->
