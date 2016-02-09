@@ -361,10 +361,12 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       ), (evt) ->
         file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
 
-  $rootScope.selAcntUname = undefined
-  $scope.getCompanyList()
-  $scope.getCurrencyList()
-  $scope.getUserDetails()
+  $timeout( ->
+    $rootScope.selAcntUname = undefined
+    $scope.getCompanyList()
+    $scope.getCurrencyList()
+    $scope.getUserDetails()
+  ,200)
   #fire function after page fully loaded
   $scope.$on '$viewContentLoaded', ->
     $timeout( ->

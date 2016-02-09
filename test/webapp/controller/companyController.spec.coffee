@@ -763,7 +763,7 @@ describe 'companyController', ->
       expect(angular.forEach).toBeDefined()
 
   describe '#test to check for viewContentLoaded event', ->
-    it 'should call a getAccountsGroups method', ->
+    xit 'should call a getAccountsGroups method', ->
       spyOn(@scope, 'getCompanyList')
       spyOn(@scope, 'getCurrencyList')
       spyOn(@scope, 'getUserDetails')
