@@ -95,7 +95,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('company.content.manage',
     url: '/manage'
     templateUrl: '/public/webapp/views/manageCompany.html'
-    controller: 'companyController'
   )
   .state('company.user',
     url: '/user'

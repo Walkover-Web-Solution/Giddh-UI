@@ -86,11 +86,16 @@ module.exports = function (grunt) {
         reporters: 'dots'
       }
     },
+    pkg: grunt.file.readJSON('package.json'),
     concat: {
       js:{
         files:{
           'public/webapp/app.js': ['public/webapp/js/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/angular-charts.js']
         }
+      },
+      extras: {
+        src: ['public/webapp/js/angular-charts.js', 'public/webapp/js/jspdf.debug.js'],
+        dest: 'public/webapp/_extras.js',
       }
     },
     clean: {
@@ -195,7 +200,6 @@ module.exports = function (grunt) {
           'angular-toastr': 'dist/angular-toastr.min.js'
         },
         callback: function(mainFiles, component) {
-          console.log (component)
           return _.map(mainFiles, function(filepath) {
             var min = filepath.replace(/\.js$/, '.min.js');
             return grunt.file.exists(min) ? min : filepath;
