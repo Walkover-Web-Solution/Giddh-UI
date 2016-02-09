@@ -4,6 +4,8 @@ module.exports = function (grunt) {
   'use strict';
   var testDir, srcDir, destDir, routeSrcDir, routeDestDir;
 
+  var _ = require('underscore');
+  grunt.loadNpmTasks('grunt-bower-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-coffee');
@@ -87,7 +89,7 @@ module.exports = function (grunt) {
     concat: {
       js:{
         files:{
-          'public/webapp/app.js': ['public/webapp/**/*.js', '!public/**/newRelic.js']
+          'public/webapp/app.js': ['public/webapp/js/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/angular-charts.js']
         }
       }
     },
@@ -123,6 +125,86 @@ module.exports = function (grunt) {
           'public/webapp/views/index.html': ['public/webapp/views/index.html']
         }
       }
+    },
+    bower_concat: {
+      onlyCss: {
+        cssDest: 'public/webapp/css/all_bower.min.css',
+        bowerOptions: {
+          relative: false
+        },
+        exclude: [
+          'v-accordion'
+        ],
+        mainFiles: {
+          'bootstrap': 'dist/css/bootstrap.min.css',
+          'perfect-scrollbar': 'css/perfect-scrollbar.min.css',
+          'angular-toastr': 'dist/angular-toastr.min.css',
+          'ui-select': 'dist/select.min.css'
+        },
+        callback: function(mainFiles, component) {
+          return _.map(mainFiles, function(filepath) {
+            // Use minified css files if available 
+            var min = filepath.replace(/\.css$/, '.min.css');
+            return grunt.file.exists(min) ? min : filepath;
+          });
+        }
+      },
+      coreJs: {
+        dest: 'public/webapp/core_bower.min.js',
+        bowerOptions: {
+          relative: false
+        },
+        include: [
+          'modernizr',
+          'jquery',
+          'angular',
+          'bootstrap',
+          'angular-bootstrap',
+          'underscore',
+          'angular-sanitize',
+          'satellizer',
+          'angular-animate',
+          'angular-resource',
+          'angular-ui-router',
+          'angular-translate',
+          'angular-filter',
+          'angular-mocks',
+          'angular-local-storage',
+          'perfect-scrollbar',
+          'moment',
+          'angular-toastr',
+          'angular-ui-tree',
+          'ng-file-upload',
+          'angular-filter',
+          'ui-select',
+          'html2canvas',
+          'Chart.js'
+        ],
+        dependencies: {
+          'jquery': 'modernizr',
+          'angular': 'jquery',
+          'bootstrap': 'angular',
+          'angular-bootstrap': 'bootstrap',
+          'underscore': 'angular-bootstrap'
+        },
+        mainFiles: {
+          'underscore': 'underscore-min.js',
+          'angular-bootstrap': 'ui-bootstrap-tpls.min.js',
+          'perfect-scrollbar': 'js/min/perfect-scrollbar.jquery.min.js',
+          'moment': 'min/moment-with-locales.min.js',
+          'angular-toastr': 'dist/angular-toastr.min.js'
+        },
+        callback: function(mainFiles, component) {
+          console.log (component)
+          return _.map(mainFiles, function(filepath) {
+            var min = filepath.replace(/\.js$/, '.min.js');
+            return grunt.file.exists(min) ? min : filepath;
+          });
+        },
+        process: function(src) {
+          return "\n" + src + "\n\n";
+        }
+      }
     }
   });
 
@@ -130,14 +212,18 @@ module.exports = function (grunt) {
     grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
   });
 
-  grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch'])
+  grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch', 'bower_concat'])
 
-  grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean', 'concat', 'preprocess:dev'])
+  grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean', 'concat', 'preprocess:dev', 'bower_concat'])
 
-  grunt.registerTask('init-prod', ['copy', 'coffee', 'clean', 'env:prod', 'concat', 'uglify', 'preprocess:prod'])
+  grunt.registerTask('init-prod', ['copy', 'coffee', 'clean', 'env:prod', 'concat', 'uglify', 'bower_concat', 'preprocess:prod'])
 
   grunt.registerTask('test', [
     'coffee',
     'karma:unit'
+  ]);
+
+  grunt.registerTask('bowerconcat', [
+    'bower_concat'
   ]);
 };

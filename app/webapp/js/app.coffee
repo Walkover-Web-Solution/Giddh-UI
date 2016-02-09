@@ -7,7 +7,6 @@ giddh.webApp = angular.module("giddhWebApp",
   [
     "satellizer"
     "LocalStorageModule"
-    "ngRoute"
     "perfect_scrollbar"
     "ngSanitize"
     "ui.bootstrap"
@@ -88,7 +87,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
       'rightPanel':{
         abstract:true
-        templateUrl: '/public/webapp/views/rightPanel.html'
+        template: '<div ui-view></div>'
         controller: 'companyController'
       }
     }
