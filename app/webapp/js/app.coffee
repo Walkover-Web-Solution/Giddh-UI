@@ -42,8 +42,8 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       getLedgerState: (companyServices, localStorageService) ->
         checkRole = (data) ->
           return {
-            type: data.role.uniqueName
-            data: data
+          type: data.role.uniqueName
+          data: data
           }
         onSuccess = (res) ->
           companyList = _.sortBy(res.body, 'shared')
@@ -52,15 +52,18 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
             cst = _.findWhere(companyList, {uniqueName: cdt.uniqueName})
             if _.isUndefined(cst)
               console.info "data from localstorage mismatch"
-              checkRole(companyList[0])
+              a = checkRole(companyList[0])
+              return a
               localStorageService.set("_selectedCompany", companyList[0])
             else
               console.info "data from localstorage match"
-              checkRole(cst)
+              a = checkRole(cst)
+              return a
               localStorageService.set("_selectedCompany", cst)
           else
             console.info "direct from api"
-            checkRole(companyList[0])
+            a = checkRole(companyList[0])
+            return a
             localStorageService.set("_selectedCompany", companyList[0])
         onFailure = (res) ->
           toastr.error('Failed to retrieve company list' + res.data.message)
