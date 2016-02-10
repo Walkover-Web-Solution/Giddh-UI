@@ -5,6 +5,7 @@ module.exports = function (grunt) {
   var testDir, srcDir, destDir, routeSrcDir, routeDestDir;
 
   var _ = require('underscore');
+  grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-bower-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -71,7 +72,7 @@ module.exports = function (grunt) {
         files: [
           srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '/**/*.css', routeSrcDir + "/**/*.coffee"
         ],
-        tasks: ['coffee', 'copy', 'clean', 'concat', 'env:dev', 'preprocess:dev']
+        tasks: ['coffee', 'copy', 'cssmin', 'clean', 'concat', 'env:dev', 'preprocess:dev']
       }
     },
     karma: {
@@ -87,6 +88,17 @@ module.exports = function (grunt) {
       }
     },
     pkg: grunt.file.readJSON('package.json'),
+    cssmin: {
+      minifyCss: {
+        files: [{
+          expand: true,
+          cwd: 'public/webapp/css',
+          src: ['*.css'],
+          dest: 'public/webapp/css',
+          ext: '.css'
+        }]
+      }
+    },
     concat: {
       js:{
         files:{
@@ -96,10 +108,14 @@ module.exports = function (grunt) {
       extras: {
         src: ['public/webapp/js/angular-charts.js', 'public/webapp/js/jspdf.debug.js'],
         dest: 'public/webapp/_extras.js',
+      },
+      css: {
+        src: ['public/webapp/css/all_bower.css', 'public/webapp/css/new-style.css'],
+        dest: 'public/webapp/css/giddh.min.css',
       }
     },
     clean: {
-      js: ["public/webapp/app.js"]
+      js: ["public/webapp/app.js", "public/webapp/css/giddh.min.css"]
     },
     uglify: {
       options: {
@@ -133,7 +149,7 @@ module.exports = function (grunt) {
     },
     bower_concat: {
       onlyCss: {
-        cssDest: 'public/webapp/css/all_bower.min.css',
+        cssDest: 'public/webapp/css/all_bower.css',
         bowerOptions: {
           relative: false
         },
@@ -218,9 +234,9 @@ module.exports = function (grunt) {
 
   grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch', 'bower_concat'])
 
-  grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean', 'concat', 'preprocess:dev', 'bower_concat'])
+  grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean', 'cssmin', 'concat', 'preprocess:dev', 'bower_concat'])
 
-  grunt.registerTask('init-prod', ['copy', 'coffee', 'clean', 'env:prod', 'concat', 'uglify', 'bower_concat', 'preprocess:prod'])
+  grunt.registerTask('init-prod', ['copy', 'coffee', 'clean', 'env:prod', 'cssmin', 'concat', 'uglify', 'bower_concat', 'preprocess:prod'])
 
   grunt.registerTask('test', [
     'coffee',
