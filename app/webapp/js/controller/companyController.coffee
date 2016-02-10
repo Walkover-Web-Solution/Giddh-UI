@@ -141,6 +141,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, res.data.status)
 
   $scope.goToCompanyCheck = (data, index) ->
+    $rootScope.$broadcast('callCheckPermissions', data)
     $rootScope.canViewSpecificItems = false
     if data.role.uniqueName is 'shared'
       $rootScope.canManageComp = false

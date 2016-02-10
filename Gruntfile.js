@@ -197,7 +197,7 @@ module.exports = function (grunt) {
           'angular-bootstrap': 'ui-bootstrap-tpls.min.js',
           'perfect-scrollbar': 'js/min/perfect-scrollbar.jquery.min.js',
           'moment': 'min/moment-with-locales.min.js',
-          'angular-toastr': 'dist/angular-toastr.min.js'
+          'angular-toastr': 'dist/angular-toastr.tpls.min.js'
         },
         callback: function(mainFiles, component) {
           return _.map(mainFiles, function(filepath) {
