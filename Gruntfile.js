@@ -232,7 +232,7 @@ module.exports = function (grunt) {
     grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
   });
 
-  grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch', 'bower_concat'])
+  grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch', 'bower_concat', 'cssmin'])
 
   grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean', 'cssmin', 'concat', 'preprocess:dev', 'bower_concat'])
 
