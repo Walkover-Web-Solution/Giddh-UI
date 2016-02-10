@@ -87,13 +87,12 @@ module.exports = function (grunt) {
         reporters: 'dots'
       }
     },
-    pkg: grunt.file.readJSON('package.json'),
     cssmin: {
       minifyCss: {
         files: [{
           expand: true,
           cwd: 'public/webapp/css',
-          src: ['*.css'],
+          src: ['*.css', '!*.min.css'],
           dest: 'public/webapp/css',
           ext: '.css'
         }]
@@ -164,7 +163,7 @@ module.exports = function (grunt) {
         },
         callback: function(mainFiles, component) {
           return _.map(mainFiles, function(filepath) {
-            // Use minified css files if available 
+            // Use minified css files if available
             var min = filepath.replace(/\.css$/, '.min.css');
             return grunt.file.exists(min) ? min : filepath;
           });
@@ -232,7 +231,7 @@ module.exports = function (grunt) {
     grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
   });
 
-  grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch', 'bower_concat', 'cssmin'])
+  grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch', 'cssmin', 'bower_concat'])
 
   grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean', 'cssmin', 'concat', 'preprocess:dev', 'bower_concat'])
 
@@ -241,9 +240,5 @@ module.exports = function (grunt) {
   grunt.registerTask('test', [
     'coffee',
     'karma:unit'
-  ]);
-
-  grunt.registerTask('bowerconcat', [
-    'bower_concat'
   ]);
 };
