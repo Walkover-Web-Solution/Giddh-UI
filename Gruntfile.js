@@ -90,7 +90,7 @@ module.exports = function (grunt) {
     concat: {
       js:{
         files:{
-          'public/webapp/app.js': ['public/webapp/js/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/angular-charts.js']
+          'public/webapp/app.js': ['public/webapp/js/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/jspdf.debug.js']
         }
       },
       extras: {

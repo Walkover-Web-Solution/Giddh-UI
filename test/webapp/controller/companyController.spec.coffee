@@ -332,6 +332,7 @@ describe 'companyController', ->
       spyOn(@localStorageService, "set")
       spyOn(@rootScope, "$broadcast")
       @scope.goToCompanyCheck(data, index)
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith('callCheckPermissions', data)
       expect(@rootScope.canManageComp).toBeFalsy()
       expect(@rootScope.canViewSpecificItems).toBeTruthy()
       expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)

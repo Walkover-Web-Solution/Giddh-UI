@@ -42,8 +42,8 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       getLedgerState: (companyServices, localStorageService) ->
         checkRole = (data) ->
           return {
-          type: data.role.uniqueName
-          data: data
+            type: data.role.uniqueName
+            data: data
           }
         onSuccess = (res) ->
           companyList = _.sortBy(res.body, 'shared')
