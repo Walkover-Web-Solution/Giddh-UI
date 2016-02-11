@@ -25,6 +25,7 @@ module.exports = function (grunt) {
   testDir = 'test/';
 
   grunt.initConfig({
+    pkg: grunt.file.readJSON('package.json'),
     coffeelint: {
       app: ['karma.conf.coffee', "" + srcDir + "/**/*.coffee", "" + testDir + "/**/*.coffee", routeSrcDir + "/**/*.coffee"],
       options: {
@@ -54,15 +55,24 @@ module.exports = function (grunt) {
       }
     },
     copy: {
-      dist: {
+      all: {
         files: [{
           expand: true,
           dot: true,
           cwd: srcDir,
-          src: ['**/images/*', '**/css/*', '**/fonts/*', '**/views/*', "**/js/newRelic.js", "**/js/jspdf.debug.js",  "**/js/angular-charts.js"],
+          src: ['**/images/*', '**/css/*', '**/fonts/*', '**/views/*'],
           dest: destDir
         }]
       }
+      // spl: {
+      //   files: [{
+      //     expand: true,
+      //     dot: true,
+      //     cwd: srcDir,
+      //     src: ['**/modified_lib/*'],
+      //     dest: destDir
+      //   }]
+      // }
     },
     watch: {
       options: {
@@ -72,7 +82,7 @@ module.exports = function (grunt) {
         files: [
           srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '/**/*.css', routeSrcDir + "/**/*.coffee"
         ],
-        tasks: ['coffee', 'copy', 'cssmin', 'clean', 'concat', 'env:dev', 'preprocess:dev']
+        tasks: ['coffee', 'copy', 'clean', 'cssmin', 'concat', 'env:dev', 'preprocess:dev']
       }
     },
     karma: {
@@ -98,25 +108,28 @@ module.exports = function (grunt) {
         }]
       }
     },
-    // concat_css: {
-    //   options: {},
-    //   files: {
-    //     'public/webapp/css/giddh.min.css': ['public/webapp/css/all_bower.css', 'public/webapp/css/new-style.css'],
-    //   },
-    // },
     concat: {
+      options: {
+        stripBanners: true,
+        banner: '/*! <%= pkg.name %> - v<%= pkg.version %> - ' +
+          '<%= grunt.template.today("yyyy-mm-dd") %> */',
+      },
       js:{
         files:{
-          'public/webapp/app.js': ['public/webapp/js/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/jspdf.debug.js']
+          'public/webapp/app.js': ['public/webapp/js/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/jspdf.debug.js'],
+          'public/webapp/newRelic.js': ['app/webapp/modified_lib/newRelic.js'],
+          'public/webapp/_extras.js': ['app/webapp/modified_lib/angular-charts.js', 'app/webapp/modified_lib/jspdf.debug.js'],
+          'public/webapp/css/giddh.min.css': ['public/webapp/css/all_bower.css', 'public/webapp/css/new-style.css']
         }
-      },
-      extras: {
-        src: ['public/webapp/js/angular-charts.js', 'public/webapp/js/jspdf.debug.js'],
-        dest: 'public/webapp/_extras.js',
       }
     },
     clean: {
-      js: ["public/webapp/app.js"]
+      js: [
+        "public/webapp/app.js",
+        "public/webapp/newRelic.js",
+        "public/webapp/_extras.js",
+        "public/webapp/css/giddh.min.css"
+      ]
     },
     uglify: {
       options: {
@@ -233,11 +246,11 @@ module.exports = function (grunt) {
     grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
   });
 
-  grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch', 'cssmin', 'bower_concat'])
+  grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
 
-  grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean', 'cssmin', 'concat', 'preprocess:dev', 'bower_concat'])
+  grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean','bower_concat', 'cssmin', 'concat', 'preprocess:dev'])
 
-  grunt.registerTask('init-prod', ['copy', 'coffee', 'clean', 'env:prod', 'cssmin', 'concat', 'uglify', 'bower_concat', 'preprocess:prod'])
+  grunt.registerTask('init-prod', ['copy', 'coffee', 'env:prod', 'clean', 'bower_concat',  'cssmin', 'concat', 'uglify', 'preprocess:prod'])
 
   grunt.registerTask('test', [
     'coffee',
