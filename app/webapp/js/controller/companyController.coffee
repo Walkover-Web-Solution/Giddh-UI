@@ -38,7 +38,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   #for make sure
   $scope.checkCmpCretedOrNot = ->
     if $scope.companyList.length <= 0
-      $scope.openFirstTimeUserModal()
+      # $scope.openFirstTimeUserModal()
+      console.info "do nothing"
 
   #get only city for create company
   $scope.getOnlyCity = (val) ->
@@ -77,7 +78,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.getCompanyListSuccess = (res) ->
     $scope.companyList = _.sortBy(res.body, 'shared')
     if _.isEmpty($scope.companyList)
-      $scope.openFirstTimeUserModal()
+      # $scope.openFirstTimeUserModal()
+      console.info "do nothing"
     else
       $rootScope.mngCompDataFound = true
       cdt = localStorageService.get("_selectedCompany")
@@ -85,13 +87,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName})
         if _.isUndefined(cdt)
           localStorageService.set("_selectedCompany", $scope.companyList[0])
-          $scope.goToCompany($scope.companyList[0], 0)
+          $scope.goToCompany($scope.companyList[0], 0, "CHANGED")
         else
           localStorageService.set("_selectedCompany", cdt)
-          $scope.goToCompany(cdt, cdt.index)
+          $scope.goToCompany(cdt, cdt.index, "NOCHANGED")
       else
         localStorageService.set("_selectedCompany", $scope.companyList[0])
-        $scope.goToCompany($scope.companyList[0], 0)
+        $scope.goToCompany($scope.companyList[0], 0, "CHANGED")
 
   #get company list failure
   $scope.getCompanyListFailure = (res)->
@@ -153,11 +155,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $state.go('company.content.ledgerContent')
     else
       $rootScope.canManageComp = true
-      $scope.goToCompany(data, index)
+      $scope.goToCompany(data, index, "CHANGED")
     $rootScope.$emit('reloadAccounts')
 
   #making a detail company view
-  $scope.goToCompany = (data, index) ->
+  $scope.goToCompany = (data, index, type) ->
     $rootScope.$broadcast('callCheckPermissions', data)
     $scope.showUpdTbl = false
     $scope.mFiles = []
@@ -178,7 +180,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
     if $rootScope.canManageUser
       $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
-    $rootScope.$broadcast('companyChanged')
+    if type is 'CHANGED'
+      $rootScope.$broadcast('companyChanged')
+    else
+      console.info "Same Company loaded"
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
