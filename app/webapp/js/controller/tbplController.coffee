@@ -18,6 +18,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $rootScope.cmpViewShow = true
   $scope.showClearSearch = false
   $scope.noData = false
+  $scope.enableDownload = true
   $scope.dateOptions = {
     'year-format': "'yy'",
     'starting-day': 1,
@@ -145,6 +146,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       'fromDate': $filter('date')($scope.getDefaultDate().date,'dd-MM-yyyy')
       'toDate': $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
     $scope.expanded = false
+    $scope.enableDownload = true
 
     # $rootScope.showLedgerBox = false
     dateObj.fromDate = $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
@@ -472,6 +474,8 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     toDate = new Date($scope.toDate.date).getTime()
     if newDate > toDate
       $scope.toDate.date =  newDate
+    if newVal != oldVal
+      $scope.enableDownload = false
   )
 
 

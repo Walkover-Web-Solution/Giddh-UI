@@ -29,7 +29,6 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.format = "dd-MM-yyyy"
   # variable to show chart on ui
   $scope.chartDataAvailable = true
-  $scope.showFilter = false
   # parameters required to create graph
   $scope.series = []
   $scope.chartData = []
@@ -364,10 +363,6 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
                 $scope.series.splice(removeAtIdx, 1)
                 $scope.chartData.splice(removeAtIdx, 1)                 
 
-
-
-
-
   $scope.getGraphData  = (reqParam,graphParam) ->
     reportService.historicData(reqParam, graphParam).then $scope.getGraphDataSuccess, $scope.getGraphDataFailure
 
@@ -377,7 +372,6 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
   $scope.getGraphDataFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
-
 
   $scope.generateGraph = () ->
     $scope.chartDataAvailable = false
