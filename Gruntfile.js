@@ -107,14 +107,10 @@ module.exports = function (grunt) {
       extras: {
         src: ['public/webapp/js/angular-charts.js', 'public/webapp/js/jspdf.debug.js'],
         dest: 'public/webapp/_extras.js',
-      },
-      css: {
-        src: ['public/webapp/css/all_bower.css', 'public/webapp/css/new-style.css'],
-        dest: 'public/webapp/css/giddh.min.css',
       }
     },
     clean: {
-      js: ["public/webapp/app.js", "public/webapp/css/giddh.min.css"]
+      js: ["public/webapp/app.js"]
     },
     uglify: {
       options: {

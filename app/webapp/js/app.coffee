@@ -99,7 +99,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/manage'
     templateUrl: '/public/webapp/views/manageCompany.html'
   )
-  .state('company.user',
+  .state('company.content.user',
     url: '/user'
     templateUrl: '/public/webapp/views/userDetails.html'
     controller: 'userController'
