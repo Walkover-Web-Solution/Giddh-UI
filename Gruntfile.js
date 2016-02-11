@@ -98,6 +98,12 @@ module.exports = function (grunt) {
         }]
       }
     },
+    // concat_css: {
+    //   options: {},
+    //   files: {
+    //     'public/webapp/css/giddh.min.css': ['public/webapp/css/all_bower.css', 'public/webapp/css/new-style.css'],
+    //   },
+    // },
     concat: {
       js:{
         files:{

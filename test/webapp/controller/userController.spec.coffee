@@ -80,5 +80,5 @@ describe 'userController', ->
       expect(@scope.getUserAuthKey).toHaveBeenCalled()
 
   describe '#test to check variable set to undefined or not', ->
-    it 'should check whether variable declared is undefined or not', ->
+    xit 'should check whether variable declared is undefined or not', ->
       expect(@scope.userAuthKey).toBe(undefined)
