@@ -1,6 +1,5 @@
 "use strict"
 companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService) ->
-  console.log 'from companyController'
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -142,6 +141,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, res.data.status)
 
   $scope.goToCompanyCheck = (data, index) ->
+    $rootScope.$broadcast('callCheckPermissions', data)
     $rootScope.canViewSpecificItems = false
     if data.role.uniqueName is 'shared'
       $rootScope.canManageComp = false
@@ -347,6 +347,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.dFiles = files
     $scope.dErrFiles = errFiles
     angular.forEach files, (file) ->
+    angular.forEach files, (file) ->
       file.upload = Upload.upload(
         url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/daybook'
         file: file
@@ -360,14 +361,16 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         console.log res, "error"
       ), (evt) ->
         file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
-  #fire function after page fully loaded
-  $scope.$on '$viewContentLoaded', ->
+
+  $timeout( ->
     $rootScope.selAcntUname = undefined
     $scope.getCompanyList()
     $scope.getCurrencyList()
     $scope.getUserDetails()
+  ,200)
+  #fire function after page fully loaded
+  $scope.$on '$viewContentLoaded', ->
     $timeout( ->
-      #$scope.toggleAcMenus(false)
       $scope.selectedAccountUniqueName = undefined
       $scope.rolesList = localStorageService.get("_roles")
     ,2000)

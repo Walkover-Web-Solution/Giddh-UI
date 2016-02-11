@@ -1,10 +1,8 @@
 "use strict"
-homeController = ($scope, $rootScope, getLedgerState, $state, localStorageService) ->
+homeController = ($scope, $rootScope, getLedgerState, $state) ->
 
   $scope.goToLedgerState = () ->
-    console.log "in goToLedgerState"
-    localStorageService.set("_selectedCompany", getLedgerState.data)
-    if getLedgerState.type is'shared'
+    if getLedgerState.data.shared
       $rootScope.selectedCompany = getLedgerState.data
       $state.go('company.content.ledgerContent')
     else

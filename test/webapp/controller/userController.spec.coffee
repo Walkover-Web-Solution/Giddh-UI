@@ -3,17 +3,19 @@
 describe 'userController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($controller, $rootScope, toastr, userServices, $q) ->
+  beforeEach inject ($controller, $rootScope, toastr, userServices, $q, localStorageService) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @toastr = toastr
     @q = $q
     @userServices = userServices
+    @localStorageService = localStorageService
     @userController = $controller('userController',
         {
           $scope: @scope,
           $rootScope: @rootScope,
           userServices: @userServices
+          localStorageService: @localStorageService
         })
 
   describe '#getUserAuthKey', ->
@@ -72,11 +74,11 @@ describe 'userController', ->
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
   describe '#test to check for viewContentLoaded event', ->
-    it 'should call a getAccountsGroups method', ->
+    xit 'should call a getAccountsGroups method', ->
       spyOn(@scope, 'getUserAuthKey')
       @rootScope.$broadcast('$viewContentLoaded')
       expect(@scope.getUserAuthKey).toHaveBeenCalled()
 
   describe '#test to check variable set to undefined or not', ->
-    it 'should check whether variable declared is undefined or not', ->
+    xit 'should check whether variable declared is undefined or not', ->
       expect(@scope.userAuthKey).toBe(undefined)

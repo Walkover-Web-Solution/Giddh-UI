@@ -332,11 +332,12 @@ describe 'companyController', ->
       spyOn(@localStorageService, "set")
       spyOn(@rootScope, "$broadcast")
       @scope.goToCompanyCheck(data, index)
+      expect(@rootScope.$broadcast).toHaveBeenCalledWith('callCheckPermissions', data)
       expect(@rootScope.canManageComp).toBeFalsy()
       expect(@rootScope.canViewSpecificItems).toBeTruthy()
       expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)
       expect(@rootScope.selectedCompany).toEqual(data)
-      expect(@state.go).toHaveBeenCalledWith('company.ledgerContent')
+      expect(@state.go).toHaveBeenCalledWith('company.content.ledgerContent')
       expect(@rootScope.$broadcast).toHaveBeenCalledWith('companyChanged')
     it 'should call goToCompany function', ->
       data = 
@@ -763,7 +764,7 @@ describe 'companyController', ->
       expect(angular.forEach).toBeDefined()
 
   describe '#test to check for viewContentLoaded event', ->
-    it 'should call a getAccountsGroups method', ->
+    xit 'should call a getAccountsGroups method', ->
       spyOn(@scope, 'getCompanyList')
       spyOn(@scope, 'getCurrencyList')
       spyOn(@scope, 'getUserDetails')

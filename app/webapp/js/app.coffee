@@ -7,7 +7,6 @@ giddh.webApp = angular.module("giddhWebApp",
   [
     "satellizer"
     "LocalStorageModule"
-    "ngRoute"
     "perfect_scrollbar"
     "ngSanitize"
     "ui.bootstrap"
@@ -53,15 +52,18 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
             cst = _.findWhere(companyList, {uniqueName: cdt.uniqueName})
             if _.isUndefined(cst)
               console.info "data from localstorage mismatch"
-              checkRole(companyList[0])
+              a = checkRole(companyList[0])
+              return a
               localStorageService.set("_selectedCompany", companyList[0])
             else
               console.info "data from localstorage match"
-              checkRole(cst)
+              a = checkRole(cst)
+              return a
               localStorageService.set("_selectedCompany", cst)
           else
             console.info "direct from api"
-            checkRole(companyList[0])
+            a = checkRole(companyList[0])
+            return a
             localStorageService.set("_selectedCompany", companyList[0])
         onFailure = (res) ->
           toastr.error('Failed to retrieve company list' + res.data.message)
@@ -88,7 +90,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
       'rightPanel':{
         abstract:true
-        templateUrl: '/public/webapp/views/rightPanel.html'
+        template: '<div ui-view></div>'
         controller: 'companyController'
       }
     }
@@ -96,9 +98,8 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('company.content.manage',
     url: '/manage'
     templateUrl: '/public/webapp/views/manageCompany.html'
-    controller: 'companyController'
   )
-  .state('company.user',
+  .state('company.content.user',
     url: '/user'
     templateUrl: '/public/webapp/views/userDetails.html'
     controller: 'userController'

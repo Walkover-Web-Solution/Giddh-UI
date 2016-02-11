@@ -9,63 +9,32 @@
   <title>Giddh ~ Accounting at its Rough!</title>
   <!-- LIBRARIES INCLUDE -->
   
+  
   <!-- @if NODE_ENV='PRODUCTION' -->
-  <script src='/public/webapp/js/newRelic.js'></script>
+  <script  type="text/javascript" src='/public/webapp/js/newRelic.js'></script>
   <!-- @endif -->
-
-  <script src='/bower_components/modernizr/modernizr.js'></script>
-  <script src='/bower_components/jquery/jquery.min.js'></script>
-  <script src="/bower_components/angular/angular.min.js"></script>
-  <script src="/bower_components/angular-sanitize/angular-sanitize.js"></script>
-  <script src="/bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-  <script src='/bower_components/underscore/underscore-min.js'></script>
-  <script src="/bower_components/satellizer/satellizer.js"></script>
-  <script src="/bower_components/angular-animate/angular-animate.min.js"></script>
-  <script src="/bower_components/angular-resource/angular-resource.min.js"></script>
-  <script src="/bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-  <script src="/bower_components/angular-route/angular-route.min.js"></script>
-  <script src="/bower_components/angular-sanitize/angular-sanitize.min.js"></script>
-  <script src="/bower_components/angular-translate/angular-translate.min.js"></script>
-  <script src="/bower_components/angular-filter/dist/angular-filter.min.js"></script>
-  <script src="/bower_components/moment/min/moment-with-locales.min.js"></script>
-  <script src="/bower_components/angular-mocks/angular-mocks.js"></script>
-  <script src="/bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
-  <script src="/bower_components/perfect-scrollbar/js/min/perfect-scrollbar.jquery.min.js"></script>
-  <script src="/bower_components/angular-local-storage/dist/angular-local-storage.min.js"></script>
-  <script src="/bower_components/ng-file-upload/ng-file-upload.min.js"></script>
-  <script src="/bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
-  <script src="/bower_components/angular-ui-tree/dist/angular-ui-tree.min.js"></script>
-  <script src="/public/webapp/js/jspdf.debug.js"></script>
-  <script src="/bower_components/html2canvas/build/html2canvas.js"></script>
-  <script src="/bower_components/angular-filter/dist/angular-filter.js"></script>
-
-  <script src="/bower_components/Chart.js/Chart.min.js"></script>
-  <script src="/public/webapp/js/angular-charts.js"></script>
-  <script src="/bower_components/ui-select/dist/select.min.js"></script>
-
-
-
+ <!--data-cfasync="false" -->
+  <script  type="text/javascript" src='/public/webapp/core_bower.min.js'></script>
   <!-- including app Js Files -->
   <!-- @if NODE_ENV='DEVELOPMENT' -->
-  <script src="/public/webapp/app.js"></script>
+  <script  type="text/javascript" src="/public/webapp/app.js"></script>
   <!-- @endif -->
   <!-- @if NODE_ENV='PRODUCTION' -->
-  <script src="/public/webapp/app.min.js"></script>
+  <script  type="text/javascript" src="/public/webapp/app.min.js"></script>
   <!-- @endif -->
-  
-  <!-- lib styles include -->
-  <link rel="stylesheet" type="text/css" href="/bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" type="text/css" href="/bower_components/perfect-scrollbar/css/perfect-scrollbar.min.css">
-  <link rel="stylesheet" type="text/css" href="/bower_components/angular-toastr/dist/angular-toastr.min.css">
 
-  <link rel="stylesheet" type="text/css" href="/bower_components/angular-ui-tree/dist/angular-ui-tree.min.css">
-  <link rel="stylesheet" type="text/css" href="/bower_components/ui-select/dist/select.min.css">
-  <link rel="stylesheet" type="text/css" href="/bower_components/angular-chart.js/dist/angular-chart.css">
+  <script  type="text/javascript" src="/public/webapp/_extras.js"></script>
 
-  <!-- manual styles include-->
+  <!-- lib styles include
+  <link rel="stylesheet" type="text/css" href="/public/webapp/css/giddh.min.css"> -->
+
+  <link rel="stylesheet" type="text/css" href="/public/webapp/css/all_bower.css">
   <link rel="stylesheet" type="text/css" href="/public/webapp/css/new-style.css">
-  <!-- @if NODE_ENV='DEVELOPMENT' -->
+
+  <!-- @if NODE_ENV='PRODUCTION' -->
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
+
+
   <!-- @endif -->
 </head>
 <body ng-controller="mainController">
@@ -74,13 +43,15 @@
   <ui-view></ui-view>
 
   <!-- Google Tag Manager -->
+  <!-- @if NODE_ENV='PRODUCTION' -->
   <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  <script   type="text/javascript">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-K2L9QG');</script>
+  <!-- @endif -->
   <!-- End Google Tag Manager -->
 </body>
 </html>
