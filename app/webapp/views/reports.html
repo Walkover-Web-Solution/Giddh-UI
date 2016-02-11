@@ -3,7 +3,7 @@
 <div class="container-fluid">
   <div class="row">
     <!-- left side -->
-    <div class="col-md-2 col-sm-5 greyBg">
+    <div class="col-sm-3 col-md-4 col-lg-2 greyBg">
       <div class="row">
         <div id="left">
             <div class="loader mrT4" ng-hide="showLedgerBox">
@@ -40,7 +40,7 @@
                         </ui-select-choices>
                     </ui-select>
                   </div>
-                  <div class="clearfix" ng-hide="selected.groups.length == 1 && selected.accounts.length == 0 || selected.groups.length == 0 && selected.accounts.length == 1">
+<!--                   <div class="clearfix" ng-hide="selected.groups.length == 1 && selected.accounts.length == 0 || selected.groups.length == 0 && selected.accounts.length == 1">
                     <label>Create Chart By</label>
                     <ui-select ng-model="selected.createChartBy" theme="bootstrap">
                         <ui-select-match>
@@ -61,7 +61,7 @@
                             <span ng-bind="param"></span>
                         </ui-select-choices>
                     </ui-select>
-                  </div>
+                  </div> -->
                   <div class="clearfix">
                     <label>From date</label>
                     <p class="input-group">
@@ -129,19 +129,43 @@
               <span></span>
               <span></span>
         </div>
-        <div class="title-bar" ng-show="showLedgerBox">
-          <div class="pull-left">
-            <h1 class="page-title inline">
-              Historical Data <span ng-show="chartDataAvailable">for</span>
-            </h1>
-            <p class="sub-title inline pdR" ng-show="chartDataAvailable" ng-repeat="group in series track by $index" ng-show="selected.groups.length == 1 && selected.accounts.length == 0 || selected.groups.length == 0 && selected.accounts.length == 1">
-                {{ group }}<span ng-hide="$last">, </span>  
-            </p>
-
-          </div>
-        </div>
-
         <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+          <div class="filter-bar col-sm-12" ng-show="chartDataAvailable && showLedgerBox">
+            <!--<div class="pull-left">
+              <h1 class="page-title inline">
+                Historical Data <span ng-show="chartDataAvailable">for</span>
+              </h1>
+              <p class="sub-title inline pdR" ng-show="chartDataAvailable" ng-repeat="group in series track by $index" ng-show="selected.groups.length == 1 && selected.accounts.length == 0 || selected.groups.length == 0 && selected.accounts.length == 1">
+                  {{ group }}<span ng-hide="$last">, </span>  
+              </p>
+            </div> -->
+            <div class="col-sm-2">
+              <label>Select Group/Account</label>
+              <ui-select ng-model="selected.filteredGroupsAndAccounts" theme="bootstrap" >
+                  <ui-select-match placeholder="Select Group/Account to filter">
+                      <span>{{$select.selected.name}}</span>
+                  </ui-select-match>
+                  <ui-select-choices repeat="unit in GroupsAndAccounts">
+                      <span ng-bind="unit.name"></span>
+                  </ui-select-choices>
+              </ui-select>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" ng-model="selected.filteredGroupsAndAccounts.forfilter.cb.val" ng-change="filterGraph(selected.filteredGroupsAndAccounts.forfilter.cb)"> Closing Balance
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" ng-model="selected.filteredGroupsAndAccounts.forfilter.cr.val" ng-change="filterGraph(selected.filteredGroupsAndAccounts.forfilter.cr)"> Credit Total
+              </label>
+            </div>
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" ng-model="selected.filteredGroupsAndAccounts.forfilter.dr.val" ng-change="filterGraph(selected.filteredGroupsAndAccounts.forfilter.dr)"> Debit Total
+              </label>
+            </div>
+          </div>
           <div class="loader mrT4" ng-hide="chartDataAvailable">
               <span></span>
               <span></span>

@@ -1572,9 +1572,22 @@ v-pane-header.show-pseudo{
     border-bottom: 1px solid #e0e0e0;
     width:100%;
     line-height: 50px;
+    overflow: hidden;
 }
 .sub-title{
     color:#929090;
+}
+
+.filter-bar{
+    padding:10px 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.filter-bar .checkbox {
+    white-space:nowrap;
+    display: inline-block;
+    margin-right: 20px;
+    margin-top: 25px;
 }
 
 .inline{
@@ -1765,7 +1778,7 @@ table:focus{
 }
 
 .chart-container{
-    margin:20px auto;
+    margin:20px auto 20px;
 }
 
 .maxW250{
@@ -1794,3 +1807,4 @@ table:focus{
 .tbplList .circle{
     vertical-align: sub
 }
+

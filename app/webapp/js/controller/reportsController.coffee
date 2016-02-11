@@ -6,12 +6,15 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.toDate = {date: new Date()}
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
+  $scope.GroupsAndAccounts = []
   $scope.selected = {
     groups: []
     accounts: []
     interval: 1
+    filterBy: 'Closing Balance'
     createChartBy : 'Closing Balance'
     createChartByMultiple: []
+    filteredGroupsAndAccounts: {}
   }
   $scope.dateOptions = {
     'year-format': "'yy'",
@@ -26,6 +29,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.format = "dd-MM-yyyy"
   # variable to show chart on ui
   $scope.chartDataAvailable = true
+  $scope.showFilter = false
   # parameters required to create graph
   $scope.series = []
   $scope.chartData = []
@@ -39,7 +43,6 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     groups: []
     accounts: []
   }
-
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
 
   $scope.fromDatePickerOpen = ->
@@ -49,7 +52,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     this.toDatePickerIsOpen = true
 
   $scope.intervalVals = [1, 3, 7, 30, 90, 180, 365]
-  $scope.chartParams = ['Opening Balance', 'Closing Balance', 'Credit Total', 'Debit Total']
+  $scope.chartParams = ['Closing Balance', 'Credit Total', 'Debit Total']
 
 
   $scope.getAccountsGroupsList = ()->
@@ -101,151 +104,268 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
   $scope.getAccountsGroupsList()
   
-  $scope.createChartWithParam = (param) ->
-    switch param
-      when 'Closing Balance'
-        $scope.chartData = $scope.sortedChartData.cb
-      when 'Opening Balance'
-        $scope.chartData = $scope.sortedChartData.op
-      when 'Credit Total'
-        $scope.chartData = $scope.sortedChartData.ct
-      when 'Debit Total'
-        $scope.chartData = $scope.sortedChartData.dt
-
-
   $scope.formatGraphData = (graphData) ->
-    if $scope.selected.groups.length == 1 && $scope.selected.accounts.length == 0 || $scope.selected.groups.length == 0 && $scope.selected.accounts.length == 1
-      $scope.series = []
-      $scope.labels = []
-      $scope.chartData = []
-      data = graphData
-      chartParams = $scope.selected.createChartByMultiple
-      sortedChartData = {
-        cb: [] #closingBalance
-        op: [] #openingBalance
-        ct: [] #creditTotal
-        dt: [] #debitTotal
-      }
-
-      if data.groups.length == 1
-        group = data.groups[0]
-      if data.accounts.length == 1
-        account = data.accounts[0]
-      intBal = group.intervalBalances || account.intervalBalances
-
-      _.each intBal, (obj) ->
-        $scope.labels.push(obj.to)
-        sortedChartData.cb.push(obj.closingBalance.amount)
-        sortedChartData.op.push(obj.openingBalance.amount)
-        sortedChartData.ct.push(obj.creditTotal)
-        sortedChartData.dt.push(obj.debitTotal)
-      
-      if chartParams.length > 0
-        _.each chartParams, (param) ->
-          switch param
-            when 'Closing Balance'
-              $scope.series.push('Closing Balance')
-              $scope.chartData.push(sortedChartData.cb)
-            when 'Opening Balance'
-              $scope.series.push('Opening Balance')
-              $scope.chartData.push(sortedChartData.op)
-            when 'Credit Total'
-              $scope.series.push('Credit Total')
-              $scope.chartData.push(sortedChartData.ct)
-            when 'Debit Total'
-              $scope.series.push('Debit Total')
-              $scope.chartData.push(sortedChartData.dt)
-      else
-        toastr.error('Please select atleast one parameter for chart')
+    $scope.series = []
+    $scope.chartData = []
+    $scope.labels = []
+    $scope.GroupsAndAccounts = []
+    data = graphData
+    groups = []
+    accounts = []
 
 
+    if data.groups.length > 0
+      _.each data.groups ,(grp) ->
+        groups.push(grp)
 
+    if data.accounts.length > 0
+      _.each data.accounts, (acc) ->
+        accounts.push(acc)
 
-    else
-      $scope.series = []
-      $scope.sortedChartData = {
-        cb: [] #closingBalance
-        op: [] #openingBalance
-        ct: [] #creditTotal
-        dt: [] #debitTotal
-      }
-      $scope.labels = []
-      data = graphData
-      groups = []
-      accounts = []
-
-      # sort data.groups
-      if data.groups.length > 0
-        _.each data.groups, (grp) ->
-          group = {
-            name :''
-            cbs: []
-            op: []
-            ct: []
-            dt: []
-            to: []
-          }
-          group.name = grp.name
-          _.each grp.intervalBalances, (bal) ->
-            group.cbs.push(bal.closingBalance.amount)
-            group.op.push(bal.openingBalance.amount)
-            group.ct.push(bal.creditTotal)
-            group.dt.push(bal.debitTotal)
-            group.to.push(bal.to)
-          groups.push(group)
-
-      # add details to graph params 
+    if groups.length > 0
       _.each groups, (grp) ->
-        # add names to $scope.series
-        $scope.series.push(grp.name)
-        # add data array to $scope.chartData
-        $scope.sortedChartData.cb.push(grp.cbs)
-        $scope.sortedChartData.op.push(grp.op)
-        $scope.sortedChartData.ct.push(grp.ct)
-        $scope.sortedChartData.dt.push(grp.dt)
-
-      if data.accounts.length > 0
-          _.each data.accounts, (acc) ->
-            account = {
-              name :''
-              cbs: []
-              op: []
-              ct: []
-              dt: []
-              to: []
+        grpObj = {
+          category: ''
+          forSeries:{
+            dr: ''
+            cr: ''
+            cb: ''
+          }
+          forData: {
+            dr: []
+            cr: []
+            cb: []
+          }
+          forLabels: []
+        }
+        fgrp = {
+          name: ''
+          category: ''
+          forfilter:{
+            cb: {
+              type: 'cb'
+              val: false
             }
-            account.name = acc.name
-            _.each acc.intervalBalances, (bal) ->
-              account.cbs.push(bal.closingBalance.amount)
-              account.op.push(bal.openingBalance.amount)
-              account.ct.push(bal.creditTotal)
-              account.dt.push(bal.debitTotal)
-              account.to.push(bal.to)
-            accounts.push(account)
+            cr: {
+              type: 'cr'
+              val: false
+            }
+            dr: {
+              type: 'dr'
+              val: false
+            }
+          }
+        }
+        grpObj.category = grp.category
+        grpObj.forSeries.dr = grp.name + " (DR)"
+        grpObj.forSeries.cr = grp.name + " (CR)"
+        grpObj.forSeries.cb = grp.name + " (C/B)"
+        fgrp.name = grp.name
+        fgrp.category = grp.category
+        
+        if grp.intervalBalances.length > 0
+          _.each grp.intervalBalances, (bal) ->
+            grpObj.forData.dr.push(bal.debitTotal)
+            grpObj.forData.cr.push(bal.creditTotal)
+            grpObj.forData.cb.push(bal.closingBalance.amount)
+            grpObj.forLabels.push(bal.to)
 
+        switch grpObj.category.toLowerCase()
+          when "assets"
+            $scope.series.push(grpObj.forSeries.dr)
+            $scope.series.push(grpObj.forSeries.cb)
+            $scope.chartData.push(grpObj.forData.dr)
+            $scope.chartData.push(grpObj.forData.cb)
+            fgrp.forfilter.cb.val = true
+            fgrp.forfilter.dr.val = true
+
+          when "liabilities"
+            $scope.series.push(grpObj.forSeries.cr)
+            $scope.series.push(grpObj.forSeries.cb)
+            $scope.chartData.push(grpObj.forData.cr)
+            $scope.chartData.push(grpObj.forData.cb)
+            fgrp.forfilter.cb.val = true
+            fgrp.forfilter.cr.val = true
+          when "income"
+            $scope.series.push(grpObj.forSeries.cr)
+            $scope.series.push(grpObj.forSeries.cb)
+            $scope.chartData.push(grpObj.forData.cr)
+            $scope.chartData.push(grpObj.forData.cb)
+            fgrp.forfilter.cb.val = true
+            fgrp.forfilter.cr.val = true
+
+          when "expenses"
+            $scope.series.push(grpObj.forSeries.dr)
+            $scope.series.push(grpObj.forSeries.cb)
+            $scope.chartData.push(grpObj.forData.dr)
+            $scope.chartData.push(grpObj.forData.cb)
+            fgrp.forfilter.cb.val = true
+            fgrp.forfilter.dr.val = true
+
+        $scope.labels = grpObj.forLabels
+        $scope.GroupsAndAccounts.push(fgrp)
+
+    if accounts.length > 0
       _.each accounts, (acc) ->
-        # add names to $scope.series
-        $scope.series.push(acc.name)
-        # add data array to $scope.chartData
-        $scope.sortedChartData.cb.push(acc.cbs)
-        $scope.sortedChartData.op.push(acc.op)
-        $scope.sortedChartData.ct.push(acc.ct)
-        $scope.sortedChartData.dt.push(acc.dt)
-      
-      $scope.createChartWithParam($scope.selected.createChartBy)
+        accObj = {
+          category: ''
+          forSeries:{
+            dr: ''
+            cr: ''
+            cb: ''
+          }
+          forData: {
+            dr: []
+            cr: []
+            cb: []
+          }
+          forLabels: []
+        }
+        facc = {
+          name: ''
+          category: ''
+          forfilter:{
+            cb: {
+              type: 'cb'
+              val: false
+            }
+            cr: {
+              type: 'cr'
+              val: false
+            }
+            dr: {
+              type: 'dr'
+              val: false
+            }
+          }
+        }
+        accObj.category = acc.category
+        accObj.forSeries.dr = acc.name + " (DB)"
+        accObj.forSeries.cr = acc.name + " (CR)"
+        accObj.forSeries.cb = acc.name + " (C/B)"
+        facc.name = acc.name
+        facc.category = acc.category
+        
+        if acc.intervalBalances.length > 0
+          _.each acc.intervalBalances, (bal) ->
+            accObj.forData.dr.push(bal.debitTotal)
+            accObj.forData.cr.push(bal.creditTotal)
+            accObj.forData.cb.push(bal.closingBalance.amount)
+            accObj.forLabels.push(bal.to)
 
-      # add dates to $scope.labels
-      if groups.length > 0
-        _.each groups[0].to, (date) ->
-          $scope.labels.push(date)
-      else
-        _.each accounts[0].to, (date) ->
-          $scope.labels.push(date)
+        switch accObj.category.toLowerCase()
+          when "assets"
+            $scope.series.push(accObj.forSeries.dr)
+            $scope.series.push(accObj.forSeries.cb)
+            $scope.chartData.push(accObj.forData.dr)
+            $scope.chartData.push(accObj.forData.cb)
+            facc.forfilter.cb.val = true
+            facc.forfilter.dr.val = true
 
-      $scope.series = $scope.series.reverse()
+          when "liabilities"
+            $scope.series.push(accObj.forSeries.cr)
+            $scope.series.push(accObj.forSeries.cb)
+            $scope.chartData.push(accObj.forData.cr)
+            $scope.chartData.push(accObj.forData.cb)
+            facc.forfilter.cb.val = true
+            facc.forfilter.cr.val = true
+
+          when "income"
+            $scope.series.push(accObj.forSeries.cr)
+            $scope.series.push(accObj.forSeries.cb)
+            $scope.chartData.push(accObj.forData.cr)
+            $scope.chartData.push(accObj.forData.cb)
+            facc.forfilter.cb.val = true
+            facc.forfilter.cr.val = true
+
+          when "expenses"
+            $scope.series.push(accObj.forSeries.dr)
+            $scope.series.push(accObj.forSeries.cb)
+            $scope.chartData.push(accObj.forData.dr)
+            $scope.chartData.push(accObj.forData.cb)
+            facc.forfilter.cb.val = true
+            facc.forfilter.dr.val = true
+
+        $scope.GroupsAndAccounts.push(facc)
 
     # set variable to show chart on ui
     $scope.chartDataAvailable = true
+
+  $scope.filterGraph = (arg) ->
+    seriesIdc = []
+    series = $scope.series
+    idx = 0
+    chartData = $scope.chartData
+    targetData = {}
+    groups = $scope.graphData.groups
+    accounts = $scope.graphData.accounts
+    grpacc = []
+    filteredObj = {}
+    selectedValue = $scope.selected.filteredGroupsAndAccounts
+
+    _.each groups, (grp) ->
+      grpacc.push(grp)
+    _.each accounts, (acc) ->
+      grpacc.push(acc)
+
+    if !_.isEmpty(selectedValue)
+      while idx < series.length
+        if series[idx].indexOf(selectedValue.name) != -1
+          seriesIdc.push(idx)
+        idx++
+
+      _.each grpacc, (obj) ->
+        if obj.name == selectedValue.name
+          dataObj = {
+            forSeries: {
+              dr: obj.name + ' (DR)'
+              cr: obj.name + ' (CR)'
+              cb: obj.name + ' (C/B)'
+            }
+            forData: {
+              dr: []
+              cr: []
+              cb: []
+            }
+          }  
+          _.each obj.intervalBalances, (bal) ->
+            dataObj.forData.cb.push(bal.closingBalance.amount)
+            dataObj.forData.cr.push(bal.creditTotal)
+            dataObj.forData.dr.push(bal.debitTotal)
+
+          filteredObj = dataObj
+
+          switch arg.type
+            when "cr"
+              if arg.val == true && $scope.series.indexOf(filteredObj.forSeries.cr) == -1
+                addAtIdx = seriesIdc[seriesIdc.length-1]
+                $scope.series.splice(addAtIdx, 0, filteredObj.forSeries.cr)
+                $scope.chartData.splice(addAtIdx, 0, filteredObj.forData.cr)
+              else if arg.val == false && $scope.series.indexOf(filteredObj.forSeries.cr) != -1
+                removeAtIdx = seriesIdc[seriesIdc.length-1] - 1 
+                $scope.series.splice(removeAtIdx, 1)
+                $scope.chartData.splice(removeAtIdx, 1)
+            when "dr"
+              if arg.val == true && $scope.series.indexOf(filteredObj.forSeries.dr) == -1             
+                addAtIdx = seriesIdc[seriesIdc.length-1]
+                $scope.series.splice(addAtIdx, 0, filteredObj.forSeries.dr)
+                $scope.chartData.splice(addAtIdx, 0, filteredObj.forData.dr)
+              else if arg.val == false && $scope.series.indexOf(filteredObj.forSeries.dr) != -1
+                removeAtIdx = $scope.series.indexOf(filteredObj.forSeries.dr) 
+                $scope.series.splice(removeAtIdx, 1)
+                $scope.chartData.splice(removeAtIdx, 1)
+            when "cb"
+              if arg.val == true && $scope.series.indexOf(filteredObj.forSeries.cb) == -1             
+                addAtIdx = seriesIdc[seriesIdc.length-1]
+                $scope.series.splice(addAtIdx, 0, filteredObj.forSeries.cb)
+                $scope.chartData.splice(addAtIdx, 0, filteredObj.forData.cb)
+              else if arg.val == false && $scope.series.indexOf(filteredObj.forSeries.cb) != -1
+                removeAtIdx = $scope.series.indexOf(filteredObj.forSeries.cb) 
+                $scope.series.splice(removeAtIdx, 1)
+                $scope.chartData.splice(removeAtIdx, 1)                 
+
+
+
 
 
   $scope.getGraphData  = (reqParam,graphParam) ->
@@ -265,7 +385,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
       'cUname': $rootScope.selectedCompany.uniqueName
       'fromDate': $filter('date')($scope.fromDate.date,'dd-MM-yyyy')
       'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
-      'interval': $scope.selected.interval
+      'interval': $scope.selected.interval 
     }
     graphParam = {
       'groups' : createArrayWithUniqueName($scope.selected.groups)
@@ -279,17 +399,17 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     
   $scope.$watch('selected.groups', (newVal, oldVal)->
     if newVal != oldVal
-      if newVal.length > 9
+      if newVal.length > 3
         $scope.groups = []
-      else if newVal.length < 10
+      else if newVal.length < 4
         $scope.groups = $scope.listBeforeLimit.groups
   ) 
 
   $scope.$watch('selected.accounts', (newVal, oldVal)->
     if newVal != oldVal
-      if newVal.length > 9
+      if newVal.length > 3
         $scope.accounts = []
-      else if newVal.length < 10
+      else if newVal.length < 4
         $scope.accounts = $scope.listBeforeLimit.accounts
   )
 
