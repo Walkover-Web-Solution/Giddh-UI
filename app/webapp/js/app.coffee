@@ -170,7 +170,6 @@ giddh.webApp.run [
       DAServices.ClearData()
       localStorageService.remove("_ledgerData")
       localStorageService.remove("_selectedAccount")
-      #$rootScope.$emit('reloadAccounts')
     )
 
 ]
