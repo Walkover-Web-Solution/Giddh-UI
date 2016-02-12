@@ -1,4 +1,4 @@
-require('newrelic');
+//require('newrelic');
 // comment it while developement
 var settings = require('./public/routes/util/settings');
 var favicon = require('serve-favicon');
@@ -66,7 +66,6 @@ else{
   // ten minutes
   sessionTTL = 1000 * 60 * 10
 }
-console.log (app.get('env'), sessionTTL)
 app.use(session({
   secret: "keyboardcat",
   name: "userVerified",
@@ -87,7 +86,6 @@ app.use(session({
 // some global variables
 global.clientIp = "";
 app.use(function (req, res, next) {
-
   clientIp = requestIp.getClientIp(req);
   res.locales = {
     "siteTitle": "Giddh ~ Accounting at its Rough!",

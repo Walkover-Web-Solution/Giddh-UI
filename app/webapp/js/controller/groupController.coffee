@@ -16,7 +16,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.showListGroupsNow = false
   $scope.showAccountDetails = false
   $scope.showAccountListDetails = false
-  
+  $scope.showMergeDescription = true
+  $scope.mergedAccounts = ''
+
   $scope.groupAccntList = []
   $scope.acntSrch = ''
   $scope.shareGroupObj ={role: "view_only"}
@@ -398,6 +400,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.getAcDtlSuccess = (res) ->
     getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.flatAccntListWithParents)
     data = res.body
+    $scope.getMergedAccounts(data)
     data.parentGroups = []
     bcd = getPgrps.parentGroups.reverse()
     _.extend(data.parentGroups, bcd)
@@ -644,5 +647,51 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.assignValues()
   ,2000)
     
+  ############################ for merge/unmerge accounts ############################
+  $scope.toMerge = {
+    mergeTo:''
+    mergedAcc: []
+
+  }
+
+  $scope.getMergedAccounts = (accData) ->
+    $scope.toMerge.mergeTo = accData.uniqueName
+    mergedAcc = accData.mergedAccounts
+    mList = []
+    mObj = {
+      uniqueName: ''
+    }
+    $scope.prePopulate = []
+    if !_.isEmpty(mergedAcc) && !_.isUndefined(mergedAcc)
+      mList = mergedAcc.split(',')
+      _.each mList, (mAcc) ->
+        mObj.uniqueName = mAcc
+        $scope.prePopulate.push(mObj)
+        $scope.toMerge.mergedAcc = $scope.prePopulate
+    else
+      toastr.error('There are no accounts merged with ' + accData.name)
+
+  $scope.mergeAccounts = () ->
+    accToMerge = []
+    _.each $scope.prePopulate,(pre) ->
+      _.each $scope.toMerge.mergedAcc, (acc) ->
+        accToSend = {}
+        if acc.uniqueName != pre.uniqueName
+          accToSend.uniqueName = acc.uniqueName
+          accToMerge.push(accToSend)    
+    unqNamesObj = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      accountsUniqueName: $scope.toMerge.mergeTo
+    }
+    accountService.merge(unqNamesObj).then( $scope.mergeSuccess, $scope.mergeFailure)
+
+  $scope.mergeSuccess = (res) ->
+    console.log res
+
+  $scope.mergeFailure = (res) ->
+    console.log res
+    
+
+
 #init angular app
 giddh.webApp.controller 'groupController', groupController

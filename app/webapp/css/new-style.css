@@ -335,6 +335,10 @@ header .navbar-nav > li.active {
     padding-top: 30px
 }
 
+.pdT5 {
+    padding-top: 30px
+}
+
 .pdB4 {
     padding-bottom: 40px
 }
@@ -588,6 +592,10 @@ header .navbar-nav > li.active {
 
 .oxHid {
     overflow-x: hidden
+}
+
+.pad0{
+    padding:0 !important;
 }
 
 /*structure style*/
@@ -1808,3 +1816,41 @@ table:focus{
     vertical-align: sub
 }
 
+.fixScroll{
+    height:150px;
+}
+
+.merge-q{
+    font-size: 20px;
+    margin-left: 10px;
+    vertical-align: sub;
+    cursor: pointer;
+}
+
+.select-accounts{
+    padding:20px 5px;
+}
+
+.select-accounts > label, .move-account > label{
+    font-weight: 300;
+    margin:0 0 10px;
+}
+
+.select-accounts > .ui-select-bootstrap.dropdown, .select-accounts .ui-select-bootstrap.dropdown input, .select-accounts .ui-select-bootstrap.dropdown span.ui-select-toggle, .select-accounts .ui-select-multiple.ui-select-bootstrap{
+    min-height:60px;
+}
+
+.delete-account, .move-account{
+    padding:20px;
+}
+
+.delete-account > button.btn-danger, .move-account > button.btn-info{
+    min-width:100%;
+}
+
+i.cls-alert{
+    position:absolute;
+    right:25px;
+    top:10px;
+    font-size: 18px;
+}

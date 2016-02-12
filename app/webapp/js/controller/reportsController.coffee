@@ -29,6 +29,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.format = "dd-MM-yyyy"
   # variable to show chart on ui
   $scope.chartDataAvailable = true
+  $scope.showFilters = false
   # parameters required to create graph
   $scope.series = []
   $scope.chartData = []
@@ -289,6 +290,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
     # set variable to show chart on ui
     $scope.chartDataAvailable = true
+    $scope.showFilters = true
 
   $scope.filterGraph = (arg) ->
     seriesIdc = []
@@ -375,6 +377,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
   $scope.generateGraph = () ->
     $scope.chartDataAvailable = false
+    $scope.showFilters = false
     reqParam = {
       'cUname': $rootScope.selectedCompany.uniqueName
       'fromDate': $filter('date')($scope.fromDate.date,'dd-MM-yyyy')

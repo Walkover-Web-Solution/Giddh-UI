@@ -196,6 +196,14 @@
     </div>
   </div>
   <!-- end row second -->
+
+  <!--merge/unmerge section-->
+  <div class="clearfix bdrB">
+    <div class="dGryHead">Account Merge/Unmerge Settings <i class="glyphicon glyphicon-question-sign merge-q" ng-click=" showMergeDescription = false"></i></div>
+    <div ng-include="'/public/webapp/views/mergeAccounts.html'"></div>
+  </div>
+
+
   <div class="pd2">
     <fieldset ng-disabled="!canUpdate || cantUpdate">
       <button class="btn btn-danger" ng-click="deleteAccount()">Delete {{selectedAccount.name}} account</button>

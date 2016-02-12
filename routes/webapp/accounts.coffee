@@ -14,7 +14,6 @@ router.get '/', (req, res) ->
     res.send data
 
 router.get '/:accountUniqueName', (req, res) ->
-  console.log req
   authHead =
     headers:
       'Auth-Key': req.session.authKey
@@ -24,7 +23,7 @@ router.get '/:accountUniqueName', (req, res) ->
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
-    console.log res
+    #console.log res
     res.send data
 
 router.put '/:accountUniqueName', (req, res) ->
@@ -42,6 +41,21 @@ router.put '/:accountUniqueName', (req, res) ->
     res.send data
 
 router.put '/:accountUniqueName/move', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/accounts/' + req.params.accountUniqueName + '/move'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+router.put '/:accountUniqueName/merge', (req, res) ->
+  console.log req.params
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/move'
   args =
@@ -109,7 +123,7 @@ router.put '/:accountUniqueName/unshare', (req, res) ->
     res.send data
 
 router.get '/:accountUniqueName/export-ledger', (req, res) ->
-  console.log req.query, "ledgers export by date", new Date()
+  #console.log req.query, "ledgers export by date", new Date()
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/export-ledger'
   args =
@@ -120,9 +134,9 @@ router.get '/:accountUniqueName/export-ledger', (req, res) ->
     parameters:
       to: req.query.toDate
       from: req.query.fromDate
-  console.log args, hUrl
+  #console.log args, hUrl
   settings.client.get hUrl, args, (data, response) ->
-    console.log "ledgers export by date completed", new Date()
+    #console.log "ledgers export by date completed", new Date()
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
@@ -135,9 +149,9 @@ router.get '/:accountUniqueName/xls-imports', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/xls-imports'
-  console.log "get all ledgers list", new Date()
+  #console.log "get all ledgers list", new Date()
   settings.client.get hUrl, args, (data, response) ->
-    console.log new Date(), "req completed"
+    #console.log new Date(), "req completed"
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data

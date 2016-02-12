@@ -3,7 +3,7 @@
 <div class="container-fluid">
   <div class="row">
     <!-- left side -->
-    <div class="col-sm-3 col-md-4 col-lg-2 greyBg">
+    <div class="col-sm-3 col-md-3 col-lg-2 greyBg">
       <div class="row">
         <div id="left">
             <div class="loader mrT4" ng-hide="showLedgerBox">
@@ -120,7 +120,7 @@
       </div>
     </div>
     <!-- middle body -->
-    <div class="col-md-10 col-sm-7">
+    <div class=" col-sm-9 col-md-9 col-lg-10">
       <div class="middleBody bdrR bdrL row" auto-height> 
         <div class="loader mrT4" ng-hide="showLedgerBox">
               <span></span>
@@ -130,16 +130,8 @@
               <span></span>
         </div>
         <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
-          <div class="filter-bar col-sm-12" ng-show="chartDataAvailable && showLedgerBox">
-            <!--<div class="pull-left">
-              <h1 class="page-title inline">
-                Historical Data <span ng-show="chartDataAvailable">for</span>
-              </h1>
-              <p class="sub-title inline pdR" ng-show="chartDataAvailable" ng-repeat="group in series track by $index" ng-show="selected.groups.length == 1 && selected.accounts.length == 0 || selected.groups.length == 0 && selected.accounts.length == 1">
-                  {{ group }}<span ng-hide="$last">, </span>  
-              </p>
-            </div> -->
-            <div class="col-sm-2">
+          <div class="filter-bar col-sm-12" ng-show="showFilters">
+            <div class="col-sm-4 col-md-3 col-lg-2">
               <label>Select Group/Account</label>
               <ui-select ng-model="selected.filteredGroupsAndAccounts" theme="bootstrap" >
                   <ui-select-match placeholder="Select Group/Account to filter">
@@ -181,6 +173,7 @@
               </canvas> 
             </div>
           </div>
+          <div class="fixScroll"></div>
         </perfect-scrollbar>
       </div>
     </div>

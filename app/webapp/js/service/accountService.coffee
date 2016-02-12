@@ -27,6 +27,7 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       update: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName'}
       share: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/share'}
       unshare: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/unshare'}
+      merge: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/merge'}
       sharedWith: {
         method: 'GET'
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/shared-with'
@@ -110,6 +111,12 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
 
     ledgerImportList: (unqNamesObj) ->
       @handlePromise((onSuccess, onFailure) -> Account.getlist({
+        companyUniqueName: unqNamesObj.compUname
+        accountsUniqueName: unqNamesObj.acntUname
+      }, onSuccess, onFailure))
+
+    merge: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> Account.merge({
         companyUniqueName: unqNamesObj.compUname
         accountsUniqueName: unqNamesObj.acntUname
       }, onSuccess, onFailure))
