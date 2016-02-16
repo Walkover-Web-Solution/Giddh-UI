@@ -193,7 +193,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.addNewAccount = () ->
-    $rootScope.$broadcast('callManageGroups')
+    $rootScope.$emit('callManageGroups')
 
   $scope.addNewEntry = (data) ->
     edata = {}
@@ -222,7 +222,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.success("Entry created successfully", "Success")
     $scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
     $scope.removeClassInAllEle("ledgEntryForm", "open")
-    $scope.$broadcast('$reloadLedger')
+    $rootScope.$emit('$reloadLedger')
     $scope.removeLedgerDialog()
 
   $scope.addEntryFailure = (res) ->
@@ -526,7 +526,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.ledgerImportListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  $scope.$on '$reloadLedger',  ->
+  $rootScope.$on '$reloadLedger',  ->
     $scope.reloadLedger()
 
   $scope.$on '$viewContentLoaded',  ->

@@ -339,7 +339,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if _.isEmpty($scope.selectedGroup.oldUName)
       $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
     $scope.selectedSubGroup = {}
-    $rootScope.$broadcast('callCheckPermissions', group)
+    $rootScope.$emit('callCheckPermissions', group)
     $scope.getGroupSharedList(group)
 
   $scope.populateAccountList = (item) ->
@@ -402,10 +402,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     data = res.body
     $scope.getMergedAccounts(data)
     data.parentGroups = []
-    bcd = getPgrps.parentGroups.reverse()
-    _.extend(data.parentGroups, bcd)
-    $rootScope.$broadcast('callCheckPermissions', data)
-    # $scope.cantUpdate = false
+    _.extend(data.parentGroups, getPgrps.parentGroups)
+    $rootScope.$emit('callCheckPermissions', data)
     pGroups = []
     $scope.showGroupDetails = false
     $scope.showAccountDetails = true
@@ -417,7 +415,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.setOpeningBalanceDate()
     $scope.getAccountSharedList()
     $scope.acntCase = "Update"
-    $scope.showBreadCrumbs(data.parentGroups)
+    $scope.showBreadCrumbs(data.parentGroups.reverse())
     
 
   $scope.getAcDtlFailure = (res) ->
@@ -511,7 +509,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.updateAccountSuccess = (res) ->
     toastr.success("Account updated successfully", res.status)
-    $rootScope.$broadcast('$reloadLedger')
+    $rootScope.$emit('$reloadLedger')
     angular.merge($scope.selectedAccount, res.body)
     $scope.getGroups()
     abc = _.pick($scope.selectedAccount, 'name', 'uniqueName', 'mergedAccounts')
@@ -637,7 +635,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showAccountList = false
     $scope.getGroups()
 
-  $scope.$on 'callManageGroups', ->
+  $rootScope.$on 'callManageGroups', ->
     $scope.goToManageGroups()
 
   $timeout(->

@@ -143,7 +143,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, res.data.status)
 
   $scope.goToCompanyCheck = (data, index) ->
-    $rootScope.$broadcast('callCheckPermissions', data)
+    $rootScope.$emit('callCheckPermissions', data)
     $rootScope.canViewSpecificItems = false
     if data.role.uniqueName is 'shared'
       $rootScope.canManageComp = false
@@ -151,7 +151,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         $rootScope.canViewSpecificItems = true
       localStorageService.set("_selectedCompany", data)
       $rootScope.selectedCompany = data
-      $rootScope.$broadcast('companyChanged')
+      $rootScope.$emit('companyChanged')
       $state.go('company.content.ledgerContent')
     else
       $rootScope.canManageComp = true
@@ -160,7 +160,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #making a detail company view
   $scope.goToCompany = (data, index, type) ->
-    $rootScope.$broadcast('callCheckPermissions', data)
+    $rootScope.$emit('callCheckPermissions', data)
     $scope.showUpdTbl = false
     $scope.mFiles = []
     $scope.dFiles = []
@@ -181,7 +181,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     if $rootScope.canManageUser
       $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
     if type is 'CHANGED'
-      $rootScope.$broadcast('companyChanged')
+      $rootScope.$emit('companyChanged')
     else
       console.info "Same Company loaded"
 
