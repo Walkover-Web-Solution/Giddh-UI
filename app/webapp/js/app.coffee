@@ -183,18 +183,21 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$t
       request
     response: (response) ->
       response
-
     responseError: (responseError) ->
-      if responseError.status is 500 and responseError.data != undefined
-        #check if responseError.data contains error regarding Auth-Key
-        isError = responseError.data.indexOf("`value` required in setHeader")
-        isAuthKeyError = responseError.data.indexOf("Auth-Key")
-        #if Auth-Key Error found, redirect to login
-        if isError != -1 and isAuthKeyError != -1
-          toastr.error('Your Session has Expired, Please Login Again.')
-          $timeout ( ->
-            window.location.assign('/login')
-          ), 2000
+      if responseError.status is 500 and responseError.data isnt undefined
+        if _.isObject(responseError.data)
+          console.info "isObject"
+          $q.reject responseError
+        else
+          #check if responseError.data contains error regarding Auth-Key
+          isError = responseError.data.indexOf("`value` required in setHeader")
+          isAuthKeyError = responseError.data.indexOf("Auth-Key")
+          #if Auth-Key Error found, redirect to login
+          if isError != -1 and isAuthKeyError != -1
+            toastr.error('Your Session has Expired, Please Login Again.')
+            $timeout ( ->
+              window.location.assign('/login')
+            ), 2000
       else if responseError.status is 401
         if _.isObject(responseError.data) and responseError.data.code is "INVALID_AUTH_KEY"
           toastr.error('INVALID_AUTH_KEY:- Provided auth key is not valid')
