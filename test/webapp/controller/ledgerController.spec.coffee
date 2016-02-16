@@ -328,9 +328,9 @@ describe 'ledgerController', ->
 
     describe '#addNewAccount', ->
       it 'should check if selectedCompany is empty then it will show alert', ->
-        spyOn(@rootScope, "$broadcast")
+        spyOn(@rootScope, "$emit")
         @scope.addNewAccount()
-        expect(@rootScope.$broadcast).toHaveBeenCalledWith('callManageGroups')
+        expect(@rootScope.$emit).toHaveBeenCalledWith('callManageGroups')
      
 
     describe '#addNewEntry', ->
@@ -369,14 +369,14 @@ describe 'ledgerController', ->
       it 'should show success message, call removeLedgerDialog function, and push data to main object and push data according to type in ledger Object, and call calculateLedger function', ->
         spyOn(@scope, "removeLedgerDialog")
         spyOn(@scope, "removeClassInAllEle")
-        spyOn(@scope, "$broadcast")
+        spyOn(@rootScope, "$emit")
         spyOn(@toastr, "success")
         @scope.addEntrySuccess({} )
         expect(@rootScope.lItem).toEqual([])
         expect(@toastr.success).toHaveBeenCalledWith("Entry created successfully", "Success")
         expect(@scope.removeLedgerDialog).toHaveBeenCalled()
         expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "newMultiEntryRow")
-        expect(@scope.$broadcast).toHaveBeenCalledWith('$reloadLedger')
+        expect(@rootScope.$emit).toHaveBeenCalledWith('$reloadLedger')
         expect(@rootScope.lItem).toEqual([])
 
     describe '#addEntryFailure', ->
