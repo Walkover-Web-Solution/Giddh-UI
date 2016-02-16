@@ -338,7 +338,7 @@ angular.module('ledger', [])
                 </div>
                 <div class="col-md-6 col-sm-12">
                   <div class="form-group" ng-if="ftype == \'Update\'">
-                    <label>Vouher no. </label>
+                    <label>Voucher no. </label>
                     {{item.sharedData.voucher.shortCode}}-{{item.sharedData.voucherNo}}
                   </div>
                   <div class="form-group">
