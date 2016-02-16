@@ -144,20 +144,12 @@ angular.module('trialBalance', []).directive('exportReport', [
           else if attr.trialAccordion == 'collapseAll'
             collapseAll()
 
-        #watch search
-        watchSearch = () ->
-          $timeout (->
-            l = elem.val().length
-            if l > 2
+        elem.on 'keyup', (e) ->
+          if !_.isUndefined(scope.keyWord)
+            if scope.keyWord.length > 2
               expandAll()
             else
               collapseAll()
-
-          ), 100
-
-        elem.on 'keydown', () ->
-          if attr.trialAccordion = 'search'
-            watchSearch()
     }
 ])
 .filter 'accntsrch', ->
