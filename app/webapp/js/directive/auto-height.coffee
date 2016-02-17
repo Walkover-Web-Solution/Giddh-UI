@@ -165,6 +165,7 @@ angular.module('ledger', [])
                 <input pos='2' type='text' ng-readonly='!canAddAndEdit'
                   tabindex='-1'  class='nobdr ledgInpt' required
                   name='trnsName_{{index}}'
+                  ng-model-options='{debounce: 400}''
                   ng-model='item.transactions[0].particular'
                   uib-typeahead='obj as obj.name for obj in aclist | omit: isCurrentAc | filter:$viewValue'
                   class='form-control' autocomplete='off'
