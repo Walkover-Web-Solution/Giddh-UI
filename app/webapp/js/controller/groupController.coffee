@@ -714,7 +714,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   
   #delete account
   $scope.unmerge = (item) ->
-    item.uniqueName = item.uniqueName.replace(/ /g,"");
+    item.uniqueName = item.uniqueName.replace(RegExp(' ', 'g'), '')
     $scope.toMerge.toUnMerge.uniqueNames = []
     $scope.toMerge.toUnMerge.uniqueNames.push(item.uniqueName)
     $scope.showDeleteMove = true
