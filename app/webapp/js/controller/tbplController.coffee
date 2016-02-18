@@ -492,13 +492,6 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       $scope.addToExportNow = true
     else if input.length == 0
       $scope.addToExportNow = false
-
-  $scope.filterTBSearch = (grp) ->
-    name = grp.groupName
-    uName = grp.uniqueName
-    isPresent = false
-    
-    return grp
  
   $scope.$watch('fromDate.date', (newVal,oldVal) ->
     oldDate = new Date(oldVal).getTime()
