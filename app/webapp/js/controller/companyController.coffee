@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams) ->
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -380,6 +380,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.rolesList = localStorageService.get("_roles")
     ,2000)
 
+  $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
+    if _.isEmpty(toParams)
+      $rootScope.selAcntUname = undefined
+  )
 
 #init angular app
 giddh.webApp.controller 'companyController', companyController
