@@ -18,7 +18,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.showAccountListDetails = false
   $scope.showMergeDescription = true
   $scope.mergedAccounts = ''
-
+  $scope.showDeleteMove = false
+  $scope.AccountsList = []
   $scope.groupAccntList = []
   $scope.acntSrch = ''
   $scope.shareGroupObj ={role: "view_only"}
@@ -651,46 +652,135 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.toMerge = {
     mergeTo:''
     mergedAcc: []
-
+    toUnMerge : {
+      name: ''
+      uniqueNames: []
+      moveTo: ''
+    }
+    moveToAcc: ''
   }
-
   $scope.getMergedAccounts = (accData) ->
+    $scope.showDeleteMove = false
+    _.extend($scope.AccountsList ,$rootScope.fltAccntList)
+    $scope.prePopulate = []
     $scope.toMerge.mergeTo = accData.uniqueName
     mergedAcc = accData.mergedAccounts
     mList = []
-    mObj = {
-      uniqueName: ''
-    }
-    $scope.prePopulate = []
+    splitIdx = 0
     if !_.isEmpty(mergedAcc) && !_.isUndefined(mergedAcc)
       mList = mergedAcc.split(',')
       _.each mList, (mAcc) ->
+        mObj = {
+          uniqueName: ''
+        }
         mObj.uniqueName = mAcc
         $scope.prePopulate.push(mObj)
-        $scope.toMerge.mergedAcc = $scope.prePopulate
+      $scope.toMerge.mergedAcc = $scope.prePopulate
     else
-      toastr.error('There are no accounts merged with ' + accData.name)
-
+      $scope.prePopulate = []
+      $scope.toMerge.mergedAcc = []
+      toastr.info('There are no accounts merged with ' + accData.name)
+  
+  #merge account
   $scope.mergeAccounts = () ->
     accToMerge = []
-    _.each $scope.prePopulate,(pre) ->
+    if $scope.prePopulate.length > 0
+      _.each $scope.prePopulate,(pre) ->
+        _.each $scope.toMerge.mergedAcc, (acc) ->
+          accToSend = {
+            "uniqueName": ""
+          }
+          if acc.uniqueName != pre.uniqueName
+            accToSend.uniqueName = acc.uniqueName
+            accToMerge.push(accToSend)
+    else
       _.each $scope.toMerge.mergedAcc, (acc) ->
-        accToSend = {}
-        if acc.uniqueName != pre.uniqueName
-          accToSend.uniqueName = acc.uniqueName
-          accToMerge.push(accToSend)    
+        accToSend = {
+          "uniqueName": ""
+        }
+        accToSend.uniqueName = acc.uniqueName
+        accToMerge.push(accToSend)  
     unqNamesObj = {
-      companyUniqueName: $rootScope.selectedCompany.uniqueName
-      accountsUniqueName: $scope.toMerge.mergeTo
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $scope.toMerge.mergeTo
     }
-    accountService.merge(unqNamesObj).then( $scope.mergeSuccess, $scope.mergeFailure)
+    if accToMerge.length > 0 
+      accountService.merge(unqNamesObj, accToMerge).then( $scope.mergeSuccess, $scope.mergeFailure)
+    else
+      toastr.error("Please select at least one account.")
 
   $scope.mergeSuccess = (res) ->
-    console.log res
+    toastr.success(res.body)
+
 
   $scope.mergeFailure = (res) ->
-    console.log res
-    
+    toastr.error(res.data.message)
+  
+  #delete account
+  $scope.unmerge = (item) ->
+    item.uniqueName = item.uniqueName.replace(/ /g,"");
+    $scope.toMerge.toUnMerge.uniqueNames = []
+    $scope.toMerge.toUnMerge.uniqueNames.push(item.uniqueName)
+    $scope.showDeleteMove = true
+
+  $scope.deleteMergedAccount = () ->
+    $scope.toMerge.toUnMerge.moveTo = null
+    modalService.openConfirmModal(
+      title: 'Delete Merged Account',
+      body: 'Are you sure you want to delete ' + $scope.toMerge.toUnMerge.uniqueNames[0] + ' ?',
+      ok: 'Yes',
+      cancel: 'No').then($scope.deleteMergedAccountConfirm)
+
+  $scope.deleteMergedAccountConfirm = () ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $scope.toMerge.mergeTo
+    }
+    accTosend = {
+      "uniqueNames": $scope.toMerge.toUnMerge.uniqueNames
+      "moveTo": $scope.toMerge.toUnMerge.moveTo
+    }
+    accountService.unMerge(unqNamesObj, accTosend).then( $scope.deleteMergedAccountSuccess, $scope.deleteMergedAccountFailure)
+
+  $scope.deleteMergedAccountSuccess = (res) ->
+    toastr.success(res.body)
+    $scope.toMerge.mergedAcc = []
+
+  $scope.deleteMergedAccountFailure = (res) ->
+    toastr.error(res.body)
+
+  # move to account
+  $scope.moveToAccount = () ->
+    modalService.openConfirmModal(
+      title: 'Move Merged Account',
+      body: 'Are you sure you want to move ' + $scope.toMerge.toUnMerge.uniqueNames[0] + ' to ' + $scope.toMerge.moveToAcc.uniqueName,
+      ok: 'Yes',
+      cancel: 'No').then($scope.moveToAccountConfirm)
+
+  $scope.moveToAccountConfirm = () ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $scope.toMerge.mergeTo
+    }
+    accTosend = {
+      uniqueNames: $scope.toMerge.toUnMerge.uniqueNames
+      moveTo: $scope.toMerge.moveToAcc.uniqueName
+    }
+    accountService.unMerge(unqNamesObj, accTosend).then( $scope.moveToAccountConfirmSuccess, $scope.moveToAccountConfirmFailure)
+
+  $scope.moveToAccountConfirmSuccess = (res) ->
+    toastr.success(res.body)
+    updatedMergedAccList = []
+    _.each $scope.toMerge.mergedAcc, (obj) ->
+      toRemove = {}
+      if obj.uniqueName != $scope.toMerge.toUnMerge.uniqueNames[0]
+        toRemove.uniqueName = obj.uniqueName
+        updatedMergedAccList.push(toRemove)
+
+    $scope.toMerge.mergedAcc = updatedMergedAccList
+
+  $scope.moveToAccountConfirmFailure = (res) ->
+    toastr.error(res.body)
 
 
 #init angular app

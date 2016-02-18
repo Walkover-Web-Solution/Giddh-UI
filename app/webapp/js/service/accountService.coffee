@@ -28,6 +28,7 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       share: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/share'}
       unshare: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/unshare'}
       merge: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/merge'}
+      unMerge : {method: 'POST', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/un-merge'}
       sharedWith: {
         method: 'GET'
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/shared-with'
@@ -115,10 +116,16 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         accountsUniqueName: unqNamesObj.acntUname
       }, onSuccess, onFailure))
 
-    merge: (unqNamesObj) ->
+    merge: (unqNamesObj, data) ->
       @handlePromise((onSuccess, onFailure) -> Account.merge({
         companyUniqueName: unqNamesObj.compUname
         accountsUniqueName: unqNamesObj.acntUname
-      }, onSuccess, onFailure))
+      }, data, onSuccess, onFailure))
+
+    unMerge: (unqNamesObj, data) ->
+      @handlePromise((onSuccess, onFailure) -> Account.unMerge({
+        companyUniqueName: unqNamesObj.compUname
+        accountsUniqueName: unqNamesObj.acntUname
+      }, data, onSuccess, onFailure))
 
   accountService

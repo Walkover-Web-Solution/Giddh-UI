@@ -33,7 +33,9 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     expenseTotal: 0
   }
   $scope.format = "dd-MM-yyyy"
-  
+  $scope.exportData = []
+  $scope.filteredExportData = []
+  $scope.addToExportNow = false
 
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
@@ -133,6 +135,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.getTrialBalSuccess = (res) ->
     $scope.makeDataForPl(res.body)
     $scope.data = res.body
+    $scope.exportData = $scope.data.groupDetails
     $scope.data.groupDetails = $scope.orderGroups(res.body.groupDetails)
     if $scope.data.closingBalance.amount is 0 and $scope.data.creditTotal is 0 and $scope.data.debitTotal is 0 and $scope.data.forwardedBalance.amount is 0
       $scope.noData = true
@@ -173,14 +176,14 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   #format $scope.data to convert into csv
   $scope.formatDataGroupWise = (e) ->
     groups = []
-    rawData = $scope.data.groupDetails
+    rawData = $scope.exportData
     csv = ''
     row = ''
     header = ''
     title = '' + ',' + 'Opening Balance' + ',' + 'Debit' + ',' + 'Credit' + ',' + 'Closing Balance' + '\n'
     $scope.fnGroupWise = "Trial_Balance.csv"
     companyDetails = $rootScope.selectedCompany
-    header = companyDetails.name + '\r\n' + '"'+companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'CIN: U72400MP2010PTC023806' + '\r\n' + 'Trial Balance' + ': ' + $filter('date')($scope.fromDate.date,'dd-MM-yyyy') + ' to ' + $filter('date')($scope.toDate.date,
+    header = companyDetails.name + '\r\n' + '"'+companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'Trial Balance' + ': ' + $filter('date')($scope.fromDate.date,'dd-MM-yyyy') + ' to ' + $filter('date')($scope.toDate.date,
       "dd-MM-yyyy") + '\r\n'
     csv += header + '\r\n' + title
 
@@ -197,7 +200,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       groups.push group
 
     _.each groups, (obj) ->
-      row += obj.name + ',' + obj.openingBalance + ' ' + $filter('recType')(obj.openingBalanceType,obj.openingBalance) + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + ',' + $filter('recType')(obj.closingBalanceType,obj.closingBalance) + '\r\n'
+      row += obj.name + ',' + obj.openingBalance + ' ' + $filter('recType')(obj.openingBalanceType,obj.openingBalance) + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + $filter('recType')(obj.closingBalanceType,obj.closingBalance) + '\r\n'
 
     csv += row + '\r\n';
     csv += '\r\n' + 'Total' + ',' + $scope.data.forwardedBalance.amount + ',' + $scope.data.debitTotal + ',' + $scope.data.creditTotal + ',' + $scope.data.closingBalance.amount + '\n'
@@ -212,40 +215,45 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     groups = []
     accounts = []
     childGroups = []
-    rawData = $scope.data.groupDetails
+    rawData = $scope.exportData
     $scope.fnAccountWise = "Trial_Balance_account-wise.csv"
     row = ''
     title = ''
     body = ''
     footer = ''
     companyDetails = $rootScope.selectedCompany
-    header = companyDetails.name + '\r\n' + '"'+companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'CIN: U72400MP2010PTC023806' + '\r\n' + 'Trial Balance' + ': ' + $scope.fromDate.date + ' to ' + $filter('date')($scope.toDate.date,
+    header = companyDetails.name + '\r\n' + '"'+companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'Trial Balance' + ': ' + $filter('date')($scope.fromDate.date,
+        "dd-MM-yyyy") + ' to ' + $filter('date')($scope.toDate.date,
         "dd-MM-yyyy") + '\r\n'
 
 
     _.each rawData, (obj) ->
       group = {}
       group.Name = obj.groupName
-      #group.openingBalance = obj.forwardedBalance.amount
+      group.openingBalance = obj.forwardedBalance.amount
       group.Credit = obj.creditTotal
       group.Debit = obj.debitTotal
       group.ClosingBalance = obj.closingBalance.amount
-      #group.accounts = obj.accounts
-      #group.childGroups = obj.childGroups
+      group.accounts = obj.accounts
+      group.childGroups = obj.childGroups
       groups.push group
 
 
     sortChildren = (parent) ->
       #push account to accounts if accounts.length > 0
       _.each parent, (obj) ->
+        parentGroup = obj.groupName
         if obj.accounts.length > 0
           _.each obj.accounts, (acc) ->
             account = {}
             account.name = acc.name
+            account.openingBalance = acc.openingBalance.amount
+            account.openingBalanceType = acc.openingBalance.type
             account.credit = acc.creditTotal
             account.debit = acc.debitTotal
             account.closingBalance = acc.closingBalance.amount
             account.closingBalanceType = acc.closingBalance.type
+            account.parent = parentGroup
             accounts.push account
 
       #push childgroup to childGroups if childGroups.length > 0
@@ -263,17 +271,21 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
               _.each chld.accounts, (acc) ->
                 account = {}
                 account.name = acc.name
+                account.openingBalance = acc.openingBalance.amount
+                account.openingBalanceType = acc.openingBalance.type
                 account.credit = acc.creditTotal
                 account.debit = acc.debitTotal
                 account.closingBalance = acc.closingBalance.amount
                 account.closingBalanceType = acc.closingBalance.type
+                account.parent = childGroup.name
                 accounts.push account
 
             if chld.childGroups.length > 0
               _.each chld.childGroups, (obj) ->
                 group = {}
                 group.Name = obj.groupName
-                #group.openingBalance = obj.forwardedBalance.amount
+                group.openingBalance = obj.forwardedBalance.amount
+                group.openingBalanceType = obj.forwardedBalance.type
                 group.Credit = obj.creditTotal
                 group.Debit = obj.debitTotal
                 group.Closing - Balance = obj.closingBalance.amount
@@ -284,14 +296,14 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
 
     sortChildren(rawData)
 
-    title += 'Name' + ',' + 'Debit' + ',' + 'Credit' + ',' + 'Closing Balance' + '\r\n'
-    footer += 'Total' + ',' + $scope.data.debitTotal + ',' + $scope.data.creditTotal + ',' + $scope.data.closingBalance.amount + '\r\n'
+    title += 'Name' + ',' + 'Opening Balance' + ',' + 'Debit' + ',' + 'Credit' + ',' + 'Closing Balance' + '\r\n'
+    footer += 'Total' + ',' + $scope.data.forwardedBalance.amount + ',' + $scope.data.debitTotal + ',' + $scope.data.creditTotal + ',' + $scope.data.closingBalance.amount + '\r\n'
 
     createCsv = (data)->
       _.each data, (obj) ->
         row = row or
           ''
-        row += obj.name + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + ',' + $filter('recType')(obj.closingBalanceType,obj.closingBalance) + '\r\n'
+        row += obj.name + ' (' + obj.parent  + ')' + ',' + obj.openingBalance + $filter('recType')(obj.openingBalanceType ,obj.openingBalance) +  ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + $filter('recType')(obj.closingBalanceType,obj.closingBalance) + '\r\n'
       body += row + '\r\n'
 
     createCsv(accounts)
@@ -305,14 +317,15 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     e.stopPropagation()
 
   $scope.formatDataCondensed = (e) ->
-    rawData = $scope.data.groupDetails
+    rawData = $scope.exportData
     groupData = []
     csv = ''
     title = ''
     body = ''
     footer = ''
     companyDetails = $rootScope.selectedCompany
-    header = companyDetails.name + '\r\n' + '"'+companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'CIN: U72400MP2010PTC023806' + '\r\n' + 'Trial Balance' + ': ' + $scope.fromDate.date + ' to ' + $filter('date')($scope.toDate.date,
+    header = companyDetails.name + '\r\n' + '"'+companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'Trial Balance' + ': ' + $filter('date')($scope.fromDate.date,
+        "dd-MM-yyyy") + ' to ' + $filter('date')($scope.toDate.date,
         "dd-MM-yyyy") + '\r\n'
 
     $scope.fnCondensed = "Trial_Balance_condensed.csv"
@@ -322,7 +335,8 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
           accounts: []
           childGroups: []
         group.Name = obj.groupName
-        #group.openingBalance = obj.forwardedBalance.amount
+        group.openingBalance = obj.forwardedBalance.amount
+        group.openingBalanceType = obj.forwardedBalance.type
         group.Credit = obj.creditTotal
         group.Debit = obj.debitTotal
         group.ClosingBalance = obj.closingBalance.amount
@@ -332,12 +346,13 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
           _.each obj.accounts, (acc) ->
             account = {}
             account.name = acc.name
+            account.openingBalance = acc.openingBalance.amount
+            account.openingBalanceType = acc.openingBalance.type
             account.credit = acc.creditTotal
             account.debit = acc.debitTotal
             account.closingBalance = acc.closingBalance.amount
             account.closingBalanceType = acc.closingBalance.type
             group.accounts.push account
-        #console.log group.accounts
 
         if obj.childGroups.length > 0
           #group.childGroups = obj.childGroups
@@ -346,6 +361,8 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
               subGroups: []
               subAccounts: []
             childGroup.name = grp.groupName
+            childGroup.openingBalance = grp.forwardedBalance.amount
+            childGroup.openingBalanceType = grp.forwardedBalance.type
             childGroup.credit = grp.creditTotal
             childGroup.debit = grp.debitTotal
             childGroup.closingBalance = grp.closingBalance.amount
@@ -358,6 +375,8 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
                   []
                 account = {}
                 account.name = acc.name
+                account.openingBalance = acc.openingBalance.amount
+                account.openingBalanceType = acc.openingBalance.type
                 account.credit = acc.creditTotal
                 account.debit = acc.debitTotal
                 account.closingBalance = acc.closingBalance.amount
@@ -371,32 +390,32 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
 
     sortData(rawData, groupData)
 
-    title += 'Name' + ',' + 'Debit' + ',' + 'Credit' + ',' + 'Closing Balance' + '\r\n'
-    footer += 'Total' + ',' + $scope.data.debitTotal + ',' + $scope.data.creditTotal + ',' + $scope.data.closingBalance.amount + '\r\n'
+    title += 'Name' + ',' + 'Opening Balance' + ',' + 'Debit' + ',' + 'Credit' + ',' + 'Closing Balance' + '\r\n'
+    footer += 'Total' + ',' + $scope.data.forwardedBalance.amount + ',' + $scope.data.debitTotal + ',' + $scope.data.creditTotal + ',' + $scope.data.closingBalance.amount + '\r\n'
 
     createCsv = (csvObj) ->
       _.each csvObj, (obj) ->
         row = row or
             ''
-        row += obj.Name.toUpperCase() + ',' + obj.Debit + ',' + obj.Credit + ',' + obj.ClosingBalance + ',' + $filter('recType')(obj.closingBalanceType,obj.ClosingBalance) + '\r\n'
+        row += obj.Name.toUpperCase() + ',' + obj.openingBalance + $filter('recType')(obj.openingBalanceType,obj.openingBalance) + ',' + obj.Debit + ',' + obj.Credit + ',' + obj.ClosingBalance + $filter('recType')(obj.closingBalanceType,obj.ClosingBalance) + '\r\n'
         if obj.accounts.length > 0
           _.each obj.accounts, (acc) ->
-            row += $scope.firstCapital(acc.name.toLowerCase()) + ' (' + $scope.firstCapital(obj.Name) + ')' + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + ',' + $filter('recType')(acc.closingBalanceType,acc.closingBalance) + '\r\n'
+            row += $scope.firstCapital(acc.name.toLowerCase()) + ' (' + $scope.firstCapital(obj.Name) + ')' + ',' + acc.openingBalance + $filter('recType')(acc.openingBalanceType,acc.openingBalance) + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + $filter('recType')(acc.closingBalanceType,acc.closingBalance) + '\r\n'
 
         if obj.childGroups.length > 0
           _.each obj.childGroups, (grp) ->
             if grp.closingBalance != 0
-              row += $scope.firstCapital(grp.name.toLowerCase()) + ' (' + obj.Name.toUpperCase() + ')' + ',' + grp.debit + ',' + grp.credit + ',' + grp.closingBalance + ',' + $filter('recType')(grp.closingBalanceType,grp.closingBalance) + '\r\n'
+              row += $scope.firstCapital(grp.name.toLowerCase()) + ' (' + obj.Name.toUpperCase() + ')' + ',' + grp.openingBalance + $filter('recType')(grp.openingBalanceType,grp.openingBalance) + ',' + grp.debit + ',' + grp.credit + ',' + grp.closingBalance + $filter('recType')(grp.closingBalanceType,grp.closingBalance) + '\r\n'
 
             if grp.subGroups.length > 0
               _.each grp.subGroups, (subgrp) ->
                 if subgrp.name
-                  row += subgrp.name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + subgrp.debit + ',' + subgrp.credit + ',' + subgrp.closingBalance + ',' + $filter('recType')(subgrp.closingBalanceType,subgrp.closingBalance) + '\r\n'
+                  row += subgrp.name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + subgrp.openingBalance + $filter('recType')(subgrp.openingBalanceType,subgrp.openingBalance) + ',' + subgrp.debit + ',' + subgrp.credit + ',' + subgrp.closingBalance + $filter('recType')(subgrp.closingBalanceType,subgrp.closingBalance) + '\r\n'
                   createCsv(grp.subGroups)
 
             if grp.subAccounts.length > 0
               _.each grp.subAccounts, (acc) ->
-                row += acc.name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + ',' + $filter('recType')(acc.closingBalanceType,acc.closingBalance) + '\r\n'
+                row += acc.name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + acc.openingBalance + $filter('recType')(acc.openingBalanceType,acc.openingBalance) + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + $filter('recType')(acc.closingBalanceType,acc.closingBalance) + '\r\n'
 
         body += row + '\r\n'
 
@@ -468,6 +487,30 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       orderedGroups.push(exp)
     orderedGroups
 
+  $scope.logInputLength = (input) ->
+    if input.length > 0
+      $scope.addToExportNow = true
+    else if input.length == 0
+      $scope.addToExportNow = false
+
+  $scope.filterTBSearch = (grp) ->
+    name = grp.groupName
+    uName = grp.uniqueName
+    isPresent = false
+    
+    if $scope.addToExportNow 
+      if $scope.filteredExportData.length == 0
+        $scope.filteredExportData.push(grp)
+      else if $scope.filteredExportData.length > 0
+        hasName = _.findWhere($scope.filteredExportData, {groupName: name})
+        hasUniqueName = _.findWhere($scope.filteredExportData, {uniqueName: uName})
+        if !_.isUndefined(hasName) && !_.isUndefined(hasUniqueName)
+          $scope.filteredExportData.push(grp)
+        console.log $scope.filteredExportData
+        #console.log hasName, hasUniqueName
+
+    return grp
+ 
   $scope.$watch('fromDate.date', (newVal,oldVal) ->
     oldDate = new Date(oldVal).getTime()
     newDate = new Date(newVal).getTime()

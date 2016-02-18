@@ -199,11 +199,53 @@
 
   <!--merge/unmerge section-->
   <div class="clearfix bdrB">
-    <div class="dGryHead">Account Merge/Unmerge Settings <i class="glyphicon glyphicon-question-sign merge-q" ng-click=" showMergeDescription = false"></i></div>
-    <div ng-include="'/public/webapp/views/mergeAccounts.html'"></div>
+    <div class="dGryHead">Account Merge/Unmerge Settings <i class="glyphicon glyphicon-question-sign merge-q" ng-click=" showMergeDescription = !showMergeDescription"></i></div>
+    <div ng-show="showMergeDescription">
+      <div class="col-sm-6">
+        <div class="select-accounts">
+          <label>Merge Accounts</label>
+              <ui-select multiple='true' ng-model="toMerge.mergedAcc" theme="bootstrap" on-select="removeAccFromfltAccntList($item)" on-remove="addAccTofltAccntList($item)">
+                  <ui-select-match placeholder="Select Accounts">
+                    <span ng-click="unmerge($item)">{{$item.uniqueName}}</span>
+                  </ui-select-match >
+                  <ui-select-choices repeat="acc in AccountsList | filter: $select.search">
+                    <span ng-bind="acc.name"></span>
+                  </ui-select-choices>
+              </ui-select>
+              <button class="btn btn-success mrT2" ng-click="mergeAccounts()">Merge</button>
+        </div>
+      </div>
+      <div class="col-sm-6 pad0 bdrL" ng-show="showDeleteMove">
+        <div class="delete-account">
+          <div class="alert alert-warning">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac      
+          </div>
+          <button class="btn btn-danger w100" ng-click="deleteMergedAccount()">Delete Account</button>
+        </div>
+        <div class="move-account bdrT">
+          <label>Move to Other Account</label>
+              <ui-select ng-model="toMerge.moveToAcc" theme="bootstrap">
+                  <ui-select-match placeholder="Select Accounts">
+                    <span>{{$select.selected.name}}</span>
+                  </ui-select-match >
+                  <ui-select-choices repeat="acc in AccountsList | filter: $select.search">
+                    <span ng-bind="acc.name"></span>
+                  </ui-select-choices>
+              </ui-select>
+              <button class="btn btn-info mrT2" ng-click="moveToAccount()" ng-disabled="toMerge.moveToAcc.length < 1">Move Account</button>
+        </div>
+      </div>
+    </div>
+    <!--merge/unmerge description-->
+    <div class="col-sm-12 mrT2" ng-hide="showMergeDescription">
+      <div class="alert alert-warning pdT5">
+        <i class="glyphicon glyphicon-remove-circle cls-alert" ng-click="showMergeDescription = !showMergeDescription"></i>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam nec dui. Quisque nec mauris sit amet elit iaculis pretium sit amet quis magna. Aenean velit odio, elementum in tempus ut, vehicula eu diam. Pellentesque rhoncus aliquam mattis. Ut vulputate eros sed felis sodales nec vulputate justo hendrerit. Vivamus varius pretium ligula, a aliquam odio euismod sit amet. Quisque laoreet sem sit amet orci ullamcorper at ultricies metus viverra. Pellentesque arcu mauris, malesuada quis ornare accumsan, blandit sed diam.
+      </div>
+    </div>
   </div>
-
-
+  <!--merge/unmerge section end-->
+  
   <div class="pd2">
     <fieldset ng-disabled="!canUpdate || cantUpdate">
       <button class="btn btn-danger" ng-click="deleteAccount()">Delete {{selectedAccount.name}} account</button>

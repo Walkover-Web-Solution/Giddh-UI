@@ -16,7 +16,6 @@ angular.module('exportDirectives', [])
           childGroups = []
           rawData = scope.data.groupDetails
           companyDetails = $rootScope.selectedCompany
-         
 
           rawData = scope.data.groupDetails
 
@@ -113,15 +112,32 @@ angular.module('exportDirectives', [])
           pdf.autoTable(columns,rows,
               theme: "plain"
               margin: {
-                  top: 100
+                  top: 110
                 },
               beforePageContent: () ->
                 pdf.setFontSize(16)
                 pdf.text(40,50,companyDetails.name)
                 pdf.setFontSize(10)
                 pdf.text(40,65,companyDetails.address)
-                pdf.text(40,90, "Trial Balance: " + $filter('date')(scope.fromDate.date,'dd/MM/yyyy') + '-' + $filter('date')(scope.toDate.date,'dd/MM/yyyy'))
+                pdf.text(40,80,companyDetails.city + '-' + companyDetails.pincode)
+                pdf.text(40,95, "Trial Balance: " + $filter('date')(scope.fromDate.date,'dd/MM/yyyy') + '-' + $filter('date')(scope.toDate.date,'dd/MM/yyyy'))
             )
+
+          # write footer
+          OBT = scope.data.forwardedBalance.amount.toString()
+          DBT = scope.data.debitTotal.toString()
+          CDT = scope.data.creditTotal.toString()
+          CBT = scope.data.closingBalance.amount.toString()
+          footerX = 45
+          lastY = pdf.autoTableEndPosY()
+          pageWidth = pdf.internal.pageSize.width - 40
+          pdf.setFontSize(8)
+          pdf.line(40, lastY, pageWidth, lastY)
+          pdf.text(footerX,lastY+20,"Total")
+          pdf.text(footerX+210, lastY+20, OBT)
+          pdf.text(footerX+302, lastY+20, DBT)
+          pdf.text(footerX+365, lastY+20, CDT)
+          pdf.text(footerX+430, lastY+20, CBT)
 
           pdf.save('TrialBalance-AccountWise.pdf')
     }
@@ -146,11 +162,11 @@ angular.module('exportDirectives', [])
             group.name = obj.groupName
             group.openingBalance = obj.forwardedBalance.amount + $filter('recType')(obj.forwardedBalance.type, obj.forwardedBalance.amount)
             #group.openingBalanceType = obj.forwardedBalance.type
-            group.credit = obj.creditTotal
             group.debit = obj.debitTotal
+            group.credit = obj.creditTotal
             group.closingBalance = obj.closingBalance.amount + $filter('recType')(obj.closingBalance.type, obj.closingBalance.amount)
             #group.closingBalanceType = obj.closingBalance.type
-            groups.push group
+            groups.push(group)
 
           columns = [
             {
@@ -176,19 +192,35 @@ angular.module('exportDirectives', [])
           ]
 
           rows = groups
-
           pdf.autoTable(columns,rows,
               theme: "plain"
               margin: {
-                  top: 100
+                  top: 110
                 },
               beforePageContent: () ->
                 pdf.setFontSize(16)
                 pdf.text(40,50,companyDetails.name)
                 pdf.setFontSize(10)
                 pdf.text(40,65,companyDetails.address)
-                pdf.text(40,90, "Trial Balance: " + $filter('date')(scope.fromDate.date,'dd/MM/yyyy') + '-' + $filter('date')(scope.toDate.date,'dd/MM/yyyy'))
+                pdf.text(40,80, companyDetails.city + ' - '+companyDetails.pincode)
+                pdf.text(40,95, "Trial Balance: " + $filter('date')(scope.fromDate.date,'dd/MM/yyyy') + '-' + $filter('date')(scope.toDate.date,'dd/MM/yyyy'))
             )
+
+          # write footer
+          OBT = scope.data.forwardedBalance.amount.toString()
+          DBT = scope.data.debitTotal.toString()
+          CDT = scope.data.creditTotal.toString()
+          CBT = scope.data.closingBalance.amount.toString()
+          footerX = 45
+          lastY = pdf.autoTableEndPosY()
+          pageWidth = pdf.internal.pageSize.width - 40
+          pdf.setFontSize(10)
+          pdf.line(40, lastY, pageWidth, lastY)
+          pdf.text(footerX,lastY+20,"Total")
+          pdf.text(footerX+150, lastY+20, OBT)
+          pdf.text(footerX+260, lastY+20, DBT)
+          pdf.text(footerX+335, lastY+20, CDT)
+          pdf.text(footerX+415, lastY+20, CBT)
 
           pdf.save('TrialBalance-GroupWise.pdf')
     }
@@ -335,17 +367,18 @@ angular.module('exportDirectives', [])
           pdf.text(10,20,companyDetails.name)
           pdf.setFontSize(10)
           pdf.text(10,25,companyDetails.address)
-          pdf.text(10,30, "Trial Balance: " + $filter('date')(scope.fromDate.date,'dd/MM/yyyy') + '-' + $filter('date')(scope.toDate.date,'dd/MM/yyyy'))
-          pdf.line(10,35,200,35)
+          pdf.text(10,30,companyDetails.city + '-' + companyDetails.pincode)
+          pdf.text(10,35, "Trial Balance: " + $filter('date')(scope.fromDate.date,'dd/MM/yyyy') + '-' + $filter('date')(scope.toDate.date,'dd/MM/yyyy'))
+          pdf.line(10,38,200,38)
 
           #write table header
           pdf.setFontSize(9)
-          pdf.text(10, 40, 'PARTICULAR')
-          pdf.text(70,40, 'OPENING BALANCE')
-          pdf.text(105, 40, 'DEBIT')
-          pdf.text(140, 40, 'CREDIT')
-          pdf.text(170, 40, 'CLOSING BALANCE')
-          pdf.line(10, 42,200,42)
+          pdf.text(10, 43, 'PARTICULAR')
+          pdf.text(70,43, 'OPENING BALANCE')
+          pdf.text(105, 43, 'DEBIT')
+          pdf.text(140, 43, 'CREDIT')
+          pdf.text(170, 43, 'CLOSING BALANCE')
+          pdf.line(10, 45,200,45)
 
           createPDF(groupData)
           

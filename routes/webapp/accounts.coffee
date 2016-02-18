@@ -55,9 +55,8 @@ router.put '/:accountUniqueName/move', (req, res) ->
     res.send data
 
 router.put '/:accountUniqueName/merge', (req, res) ->
-  console.log req.params
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/move'
+      '/accounts/' + req.params.accountUniqueName + '/merge'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -68,6 +67,23 @@ router.put '/:accountUniqueName/merge', (req, res) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
+
+router.post '/:accountUniqueName/un-merge', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/accounts/' + req.params.accountUniqueName + '/un-merge'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+
+
 
 router.put '/:accountUniqueName/share', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
