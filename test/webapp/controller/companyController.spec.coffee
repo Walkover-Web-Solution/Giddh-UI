@@ -330,15 +330,15 @@ describe 'companyController', ->
       index = 0
       spyOn(@state, "go")
       spyOn(@localStorageService, "set")
-      spyOn(@rootScope, "$broadcast")
+      spyOn(@rootScope, "$emit")
       @scope.goToCompanyCheck(data, index)
-      expect(@rootScope.$broadcast).toHaveBeenCalledWith('callCheckPermissions', data)
+      expect(@rootScope.$emit).toHaveBeenCalledWith('callCheckPermissions', data)
       expect(@rootScope.canManageComp).toBeFalsy()
       expect(@rootScope.canViewSpecificItems).toBeTruthy()
       expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", data)
       expect(@rootScope.selectedCompany).toEqual(data)
       expect(@state.go).toHaveBeenCalledWith('company.content.ledgerContent')
-      expect(@rootScope.$broadcast).toHaveBeenCalledWith('companyChanged')
+      expect(@rootScope.$emit).toHaveBeenCalledWith('companyChanged')
     it 'should call goToCompany function', ->
       data = 
         uniqueName: "afafafafaf1443520197325007bgo"
@@ -347,13 +347,13 @@ describe 'companyController', ->
           uniqueName: "admin"
           name: "admin"
       index = 0
-      spyOn(@rootScope, "$broadcast")
+      spyOn(@rootScope, "$emit")
       spyOn(@scope, "goToCompany")
       @scope.goToCompanyCheck(data, index)
       expect(@rootScope.canViewSpecificItems).toBeFalsy()
       expect(@rootScope.canManageComp).toBeTruthy()
       expect(@scope.goToCompany).toHaveBeenCalledWith(data, index, "CHANGED")
-      expect(@rootScope.$broadcast).not.toHaveBeenCalledWith('companyChanged')
+      expect(@rootScope.$emit).not.toHaveBeenCalledWith('companyChanged')
       
   describe '#goToCompany', ->
     it 'should make a call for check permissions, set a variable true, put data in scope variable and set data in localStorage, and add active class in li', ->
@@ -374,16 +374,16 @@ describe 'companyController', ->
       spyOn(@localStorageService, "get").andReturn({uniqueName: "some"})
       spyOn(@scope, "getSharedUserList")
       spyOn(@localStorageService, "set")
-      spyOn(@rootScope, "$broadcast")
+      spyOn(@rootScope, "$emit")
       @scope.goToCompany(data, index, "CHANGED")
-      expect(@rootScope.$broadcast).toHaveBeenCalledWith('callCheckPermissions', data)
+      expect(@rootScope.$emit).toHaveBeenCalledWith('callCheckPermissions', data)
       expect(@scope.showUpdTbl).toBeFalsy()
       expect(@scope.cmpViewShow).toBeTruthy()
       expect(@scope.selectedCmpLi).toEqual(index)
       expect(@scope.selectedCompany).toEqual(dbd)
       expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", dbd)
       expect(@scope.getSharedUserList).toHaveBeenCalledWith("afafafafaf1443520197325007bgo")
-      expect(@rootScope.$broadcast).toHaveBeenCalledWith('companyChanged')
+      expect(@rootScope.$emit).toHaveBeenCalledWith('companyChanged')
       
     it 'should not call getSharedUserList and DAService', ->
       data = 

@@ -165,6 +165,7 @@ angular.module('ledger', [])
                 <input pos='2' type='text' ng-readonly='!canAddAndEdit'
                   tabindex='-1'  class='nobdr ledgInpt' required
                   name='trnsName_{{index}}'
+                  ng-model-options='{debounce: 400}''
                   ng-model='item.transactions[0].particular'
                   uib-typeahead='obj as obj.name for obj in aclist | omit: isCurrentAc | filter:$viewValue'
                   class='form-control' autocomplete='off'
@@ -236,14 +237,18 @@ angular.module('ledger', [])
 
     scope.closeEntry = ()->
       scope.removeLedgdialog()
+      scope.removeClassInAllEle("ledgEntryForm", "open")
+      scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
+      scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
       scope.resetEntry(scope.item, $rootScope.lItem)
 
     scope.closeAllEntry =()->
       $rootScope.lItem = []
       scope.removeLedgdialog()
+      scope.removeClassInAllEle("ledgEntryForm", "open")
       scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
       scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
-      $rootScope.$broadcast('$reloadLedger')
+      scope.reloadLedger()
 
 
     scope.resetEntry = (item, lItem) ->
@@ -338,7 +343,7 @@ angular.module('ledger', [])
                 </div>
                 <div class="col-md-6 col-sm-12">
                   <div class="form-group" ng-if="ftype == \'Update\'">
-                    <label>Vouher no. </label>
+                    <label>Voucher no. </label>
                     {{item.sharedData.voucher.shortCode}}-{{item.sharedData.voucherNo}}
                   </div>
                   <div class="form-group">

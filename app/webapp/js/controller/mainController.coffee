@@ -65,8 +65,8 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
       $rootScope.cmpViewShow = true
   ,1000)
 
-  $scope.$on 'callCheckPermissions', (event, data)->
+  $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
-    # $rootScope.$broadcast('callCheckPermissions', data)
+    # $rootScope.$emit('callCheckPermissions', data)
 
 giddh.webApp.controller 'mainController', mainController

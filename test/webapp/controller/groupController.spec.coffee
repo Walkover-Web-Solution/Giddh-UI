@@ -634,23 +634,23 @@ describe 'groupController', ->
     }
     it 'should check if variable is empty then set value according to condition', ->
       spyOn(@scope, "getGroupSharedList")
-      spyOn(@rootScope, "$broadcast")
+      spyOn(@rootScope, "$emit")
       @scope.selectedGroup.oldUName = 'Hey dude'
       @scope.selectGroupToEdit(group)
       expect(@scope.selectedGroup).toEqual(group)
       expect(@scope.selectedSubGroup).toEqual({})
       expect(@scope.getGroupSharedList).toHaveBeenCalledWith(group)
-      expect(@rootScope.$broadcast).toHaveBeenCalledWith('callCheckPermissions', group)
+      expect(@rootScope.$emit).toHaveBeenCalledWith('callCheckPermissions', group)
 
     it 'should check if oldUName is empty then set value in oldUName', ->
       spyOn(@scope, "getGroupSharedList")
-      spyOn(@rootScope, "$broadcast")
+      spyOn(@rootScope, "$emit")
       @scope.selectedGroup.oldUName = ''
       @scope.selectGroupToEdit(group)
       expect(@scope.selectedGroup).toEqual(group)
       expect(@scope.selectedSubGroup).toEqual({})
       expect(@scope.getGroupSharedList).toHaveBeenCalledWith(group)
-      expect(@rootScope.$broadcast).toHaveBeenCalledWith('callCheckPermissions', group)
+      expect(@rootScope.$emit).toHaveBeenCalledWith('callCheckPermissions', group)
       expect(@scope.selectedGroup.oldUName).toEqual(@scope.selectedGroup.uniqueName)
 
   describe '#populateAccountList', ->
@@ -836,14 +836,14 @@ describe 'groupController', ->
       @rootScope.flatAccntListWithParents = []
       @rootScope.selAcntUname = "cashinhand"
       spyOn(@groupService, "matchAndReturnGroupObj").andReturn(getPgrps)
-      spyOn(@rootScope, "$broadcast")
+      spyOn(@rootScope, "$emit")
       spyOn(@scope, "breakMobNo")
       spyOn(@scope, "setOpeningBalanceDate")
       spyOn(@scope, "getAccountSharedList")
       spyOn(@scope, "showBreadCrumbs")
       @scope.getAcDtlSuccess(res)
       expect(@groupService.matchAndReturnGroupObj).toHaveBeenCalledWith(res.body, @rootScope.flatAccntListWithParents)
-      expect(@rootScope.$broadcast).toHaveBeenCalledWith('callCheckPermissions', res.body)
+      expect(@rootScope.$emit).toHaveBeenCalledWith('callCheckPermissions', res.body)
       expect(@scope.cantUpdate).toBeFalsy()
       expect(@scope.showGroupDetails).toBeFalsy()
       expect(@scope.showAccountDetails).toBeTruthy()
@@ -854,7 +854,7 @@ describe 'groupController', ->
       expect(@scope.setOpeningBalanceDate).toHaveBeenCalled()
       expect(@scope.getAccountSharedList).toHaveBeenCalled()
       expect(@scope.acntCase).toBe("Update")
-      expect(@scope.showBreadCrumbs).toHaveBeenCalledWith(getPgrps.parentGroups)
+      expect(@scope.showBreadCrumbs).toHaveBeenCalledWith(getPgrps.parentGroups.reverse())
 
   describe '#getAcDtlFailure', ->
     it 'should show error message with toastr', ->
@@ -1104,11 +1104,9 @@ describe 'groupController', ->
       @scope.selectedAccount = {}
       @scope.selAcntPrevObj = {}
       spyOn(@toastr, "success")
-      spyOn(@rootScope, "$broadcast")
       spyOn(@scope, "getGroups")
       @scope.updateAccountSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith("Account updated successfully", res.status)
-      expect(@rootScope.$broadcast).toHaveBeenCalledWith("$reloadLedger")
       expect(@scope.selectedAccount).toEqual(res.body)
       expect(@scope.getGroups).toHaveBeenCalled()
       expect(@scope.selAcntPrevObj).toEqual(res.body)
@@ -1137,11 +1135,9 @@ describe 'groupController', ->
         }
       ]
       spyOn(@toastr, "success")
-      spyOn(@rootScope, "$broadcast")
       spyOn(@scope, "getGroups")
       @scope.updateAccountSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith("Account updated successfully", res.status)
-      expect(@rootScope.$broadcast).toHaveBeenCalledWith("$reloadLedger")
       expect(@scope.selectedAccount).toEqual(res.body)
       expect(@scope.getGroups).toHaveBeenCalled()
       expect(@scope.selAcntPrevObj).toEqual(res.body)
