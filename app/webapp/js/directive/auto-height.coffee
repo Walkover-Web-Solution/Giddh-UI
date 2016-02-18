@@ -248,7 +248,7 @@ angular.module('ledger', [])
       scope.removeClassInAllEle("ledgEntryForm", "open")
       scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
       scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
-      $rootScope.$emit('$reloadLedger')
+      scope.reloadLedger()
 
 
     scope.resetEntry = (item, lItem) ->

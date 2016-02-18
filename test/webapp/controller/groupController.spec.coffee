@@ -1104,11 +1104,9 @@ describe 'groupController', ->
       @scope.selectedAccount = {}
       @scope.selAcntPrevObj = {}
       spyOn(@toastr, "success")
-      spyOn(@rootScope, "$emit")
       spyOn(@scope, "getGroups")
       @scope.updateAccountSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith("Account updated successfully", res.status)
-      expect(@rootScope.$emit).toHaveBeenCalledWith("$reloadLedger")
       expect(@scope.selectedAccount).toEqual(res.body)
       expect(@scope.getGroups).toHaveBeenCalled()
       expect(@scope.selAcntPrevObj).toEqual(res.body)
@@ -1137,11 +1135,9 @@ describe 'groupController', ->
         }
       ]
       spyOn(@toastr, "success")
-      spyOn(@rootScope, "$emit")
       spyOn(@scope, "getGroups")
       @scope.updateAccountSuccess(res)
       expect(@toastr.success).toHaveBeenCalledWith("Account updated successfully", res.status)
-      expect(@rootScope.$emit).toHaveBeenCalledWith("$reloadLedger")
       expect(@scope.selectedAccount).toEqual(res.body)
       expect(@scope.getGroups).toHaveBeenCalled()
       expect(@scope.selAcntPrevObj).toEqual(res.body)

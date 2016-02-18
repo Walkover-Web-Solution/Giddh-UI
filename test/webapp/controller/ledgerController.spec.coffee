@@ -369,14 +369,14 @@ describe 'ledgerController', ->
       it 'should show success message, call removeLedgerDialog function, and push data to main object and push data according to type in ledger Object, and call calculateLedger function', ->
         spyOn(@scope, "removeLedgerDialog")
         spyOn(@scope, "removeClassInAllEle")
-        spyOn(@rootScope, "$emit")
+        spyOn(@scope, "reloadLedger")
         spyOn(@toastr, "success")
         @scope.addEntrySuccess({} )
         expect(@rootScope.lItem).toEqual([])
         expect(@toastr.success).toHaveBeenCalledWith("Entry created successfully", "Success")
         expect(@scope.removeLedgerDialog).toHaveBeenCalled()
         expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("ledgEntryForm", "newMultiEntryRow")
-        expect(@rootScope.$emit).toHaveBeenCalledWith('$reloadLedger')
+        expect(@scope.reloadLedger).toHaveBeenCalled()
         expect(@rootScope.lItem).toEqual([])
 
     describe '#addEntryFailure', ->

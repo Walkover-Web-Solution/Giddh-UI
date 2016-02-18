@@ -509,7 +509,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.updateAccountSuccess = (res) ->
     toastr.success("Account updated successfully", res.status)
-    $rootScope.$emit('$reloadLedger')
     angular.merge($scope.selectedAccount, res.body)
     $scope.getGroups()
     abc = _.pick($scope.selectedAccount, 'name', 'uniqueName', 'mergedAccounts')

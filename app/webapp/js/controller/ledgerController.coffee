@@ -222,7 +222,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.success("Entry created successfully", "Success")
     $scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
     $scope.removeClassInAllEle("ledgEntryForm", "open")
-    $rootScope.$emit('$reloadLedger')
+    $scope.reloadLedger()
     $scope.removeLedgerDialog()
 
   $scope.addEntryFailure = (res) ->
@@ -525,9 +525,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.ledgerImportListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
-
-  $rootScope.$on '$reloadLedger',  ->
-    $scope.reloadLedger()
 
   $scope.$on '$viewContentLoaded',  ->
     ledgerObj = DAServices.LedgerGet()
