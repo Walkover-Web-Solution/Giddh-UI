@@ -498,17 +498,6 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     uName = grp.uniqueName
     isPresent = false
     
-    if $scope.addToExportNow 
-      if $scope.filteredExportData.length == 0
-        $scope.filteredExportData.push(grp)
-      else if $scope.filteredExportData.length > 0
-        hasName = _.findWhere($scope.filteredExportData, {groupName: name})
-        hasUniqueName = _.findWhere($scope.filteredExportData, {uniqueName: uName})
-        if !_.isUndefined(hasName) && !_.isUndefined(hasUniqueName)
-          $scope.filteredExportData.push(grp)
-        console.log $scope.filteredExportData
-        #console.log hasName, hasUniqueName
-
     return grp
  
   $scope.$watch('fromDate.date', (newVal,oldVal) ->

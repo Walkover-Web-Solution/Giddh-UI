@@ -744,7 +744,13 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.deleteMergedAccountSuccess = (res) ->
     toastr.success(res.body)
-    $scope.toMerge.mergedAcc = []
+    updatedMergedAccList = []
+    _.each $scope.toMerge.mergedAcc, (obj) ->
+      toRemove = {}
+      if obj.uniqueName != $scope.toMerge.toUnMerge.uniqueNames[0]
+        toRemove.uniqueName = obj.uniqueName
+        updatedMergedAccList.push(toRemove)
+    $scope.toMerge.mergedAcc = updatedMergedAccList
 
   $scope.deleteMergedAccountFailure = (res) ->
     toastr.error(res.body)
