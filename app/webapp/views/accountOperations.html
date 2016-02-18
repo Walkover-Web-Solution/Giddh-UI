@@ -209,7 +209,7 @@
                     <span ng-click="unmerge($item)">{{$item.uniqueName}}</span>
                   </ui-select-match >
                   <ui-select-choices repeat="acc in AccountsList | filter: $select.search">
-                    <span ng-bind="acc.name"></span>
+                    <span>{{acc.name}} ({{acc.uniqueName}})</span>
                   </ui-select-choices>
               </ui-select>
               <button class="btn btn-success mrT2" ng-click="mergeAccounts()">Merge</button>

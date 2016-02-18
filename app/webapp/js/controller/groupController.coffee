@@ -676,7 +676,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     else
       $scope.prePopulate = []
       $scope.toMerge.mergedAcc = []
-      toastr.info('There are no accounts merged with ' + accData.name)
   
   #merge account
   $scope.mergeAccounts = () ->
