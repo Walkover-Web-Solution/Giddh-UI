@@ -222,7 +222,7 @@
           <div class="alert alert-warning">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac      
           </div>
-          <button class="btn btn-danger w100" ng-click="deleteMergedAccount()">Delete Account</button>
+          <button class="btn btn-danger btn-block" ng-click="deleteMergedAccount()">Delete Account</button>
         </div>
         <div class="move-account bdrT">
           <label>Move to Other Account</label>
@@ -236,7 +236,7 @@
                     <span ng-bind="acc.name"></span>
                   </ui-select-choices>
               </ui-select>
-              <button class="btn btn-info mrT2" ng-click="moveToAccount()" ng-disabled="toMerge.moveToAcc.length < 1">Move Account</button>
+              <button class="btn btn-info mrT2  btn-block" ng-click="moveToAccount()" ng-disabled="toMerge.moveToAcc.length < 1">Move Account</button>
         </div>
       </div>
     </div>

@@ -1844,10 +1844,6 @@ table:focus{
     padding:20px;
 }
 
-.delete-account > button.btn-danger, .move-account > button.btn-info{
-    min-width:100%;
-}
-
 i.cls-alert{
     position:absolute;
     right:25px;
