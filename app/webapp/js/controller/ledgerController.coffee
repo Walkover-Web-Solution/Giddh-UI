@@ -533,7 +533,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   someEventHandle = $scope.$on('reloadFromAuto', ->
-    console.log "event called reloadFromAuto"
     $scope.reloadLedger()
   )
 
