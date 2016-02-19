@@ -196,6 +196,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $rootScope.$emit('callManageGroups')
 
   $scope.addNewEntry = (data) ->
+    if _.isUndefined($rootScope.selAcntUname)
+      toastr.info("Something went wrong please reload page")
+      $scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
+      $scope.removeClassInAllEle("ledgEntryForm", "open")
+      $scope.removeLedgerDialog()
+      return false
     edata = {}
     edata.transactions = []
     _.extend(edata, data.sharedData)
@@ -525,6 +531,13 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.ledgerImportListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
+
+  someEventHandle = $scope.$on('reloadFromAuto', ->
+    console.log "event called reloadFromAuto"
+    $scope.reloadLedger()
+  )
+
+  $scope.$on('$destroy', someEventHandle)
 
   $scope.$on '$viewContentLoaded',  ->
     ledgerObj = DAServices.LedgerGet()
