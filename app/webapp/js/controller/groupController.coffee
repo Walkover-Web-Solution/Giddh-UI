@@ -755,12 +755,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.success(res.body)
     updatedMergedAccList = []
     _.each $scope.toMerge.mergedAcc, (obj) ->
-      toRemove = {}
+      toRemove = {
+        noRemove: true
+      }
       if obj.uniqueName != $scope.toMerge.toUnMerge.uniqueNames[0]
         toRemove.uniqueName = obj.uniqueName
         updatedMergedAccList.push(toRemove)
     $scope.toMerge.mergedAcc = updatedMergedAccList
     $scope.toMerge.toUnMerge.uniqueNames = []
+    $scope.toMerge.moveToAcc = ''
 
   $scope.deleteMergedAccountFailure = (res) ->
     toastr.error(res.body)
@@ -791,15 +794,19 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.success(res.body)
     updatedMergedAccList = []
     _.each $scope.toMerge.mergedAcc, (obj) ->
-      toRemove = {}
+      toRemove = {
+        noRemove: true
+      }
       if obj.uniqueName != $scope.toMerge.toUnMerge.uniqueNames[0]
         toRemove.uniqueName = obj.uniqueName
         updatedMergedAccList.push(toRemove)
 
     $scope.toMerge.mergedAcc = updatedMergedAccList
     $scope.toMerge.toUnMerge.uniqueNames = []
-    
+    $scope.toMerge.moveToAcc = ''
+
   $scope.moveToAccountConfirmFailure = (res) ->
+    console.log res
     toastr.error(res.body)
 
 
