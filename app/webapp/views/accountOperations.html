@@ -208,7 +208,7 @@
                   <ui-select-match placeholder="Select Accounts">
                     <span ng-click="unmerge($item)">{{$item.uniqueName}}</span>
                   </ui-select-match >
-                  <ui-select-choices repeat="acc in AccountsList | filter: $select.search">
+                  <ui-select-choices repeat="acc in AccountsList | filter: $select.search | omit: isCurrentAccount">
                     <span>{{acc.name}} ({{acc.uniqueName}})</span>
                   </ui-select-choices>
               </ui-select>
@@ -228,7 +228,7 @@
                   <ui-select-match placeholder="Select Accounts">
                     <span>{{$select.selected.name}}</span>
                   </ui-select-match >
-                  <ui-select-choices repeat="acc in AccountsList | filter: $select.search">
+                  <ui-select-choices repeat="acc in AccountsList | filter: $select.search | omit: isCurrentAccount">
                     <span ng-bind="acc.name"></span>
                   </ui-select-choices>
               </ui-select>

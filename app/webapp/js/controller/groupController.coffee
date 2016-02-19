@@ -528,6 +528,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.isCurrentGroup =(group) ->
     group.uniqueName is $scope.selectedAccount.parentGroups[0].uniqueName
 
+  $scope.isCurrentAccount =(acnt) ->
+    acnt.uniqueName is $rootScope.selAcntUname
+
   $scope.moveAccnt = (group) ->
     if _.isUndefined(group.uniqueName)
       toastr.error("Select group only from list", "Error")
