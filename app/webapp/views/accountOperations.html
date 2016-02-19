@@ -204,9 +204,9 @@
       <div class="col-sm-6">
         <div class="select-accounts">
           <label>Merge Accounts</label>
-              <ui-select multiple='true' ng-model="toMerge.mergedAcc" theme="bootstrap" on-select="removeAccFromfltAccntList($item)" on-remove="addAccTofltAccntList($item)">
-                  <ui-select-match placeholder="Select Accounts">
-                    <span ng-click="unmerge($item)">{{$item.uniqueName}}</span>
+              <ui-select multiple='true' ng-model="toMerge.mergedAcc" theme="bootstrap" on-select="removeAccFromfltAccntList($item)" on-remove="addAccTofltAccntList($item)" ng-click="$select.activate()">
+                  <ui-select-match placeholder="Select Accounts" ui-lock-choice="$item.noRemove == true">
+                    <span ng-click="unmerge($item); $event.stopPropagation()">{{$item.uniqueName}}</span>
                   </ui-select-match >
                   <ui-select-choices 
                     ui-disable-choice="acc.uniqueName === selAcntUname"

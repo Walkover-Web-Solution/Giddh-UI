@@ -662,6 +662,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.getMergedAccounts = (accData) ->
     $scope.showDeleteMove = false
     _.extend($scope.AccountsList ,$rootScope.fltAccntList)
+    #remove selected account from AccountsList
+    accToRemove = {
+      uniqueName: accData.uniqueName
+    }
+    $scope.AccountsList = _.without($scope.AccountsList, _.findWhere($scope.AccountsList, accToRemove))
+
     $scope.prePopulate = []
     $scope.toMerge.mergeTo = accData.uniqueName
     mergedAcc = accData.mergedAccounts
@@ -672,6 +678,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       _.each mList, (mAcc) ->
         mObj = {
           uniqueName: ''
+          noRemove : true
         }
         mObj.uniqueName = mAcc
         $scope.prePopulate.push(mObj)
@@ -710,7 +717,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.mergeSuccess = (res) ->
     toastr.success(res.body)
-
+    $scope.getGroups()
 
   $scope.mergeFailure = (res) ->
     toastr.error(res.data.message)
@@ -739,7 +746,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       "uniqueNames": $scope.toMerge.toUnMerge.uniqueNames
       "moveTo": $scope.toMerge.toUnMerge.moveTo
     }
-    accountService.unMerge(unqNamesObj, accTosend).then( $scope.deleteMergedAccountSuccess, $scope.deleteMergedAccountFailure)
+    if $scope.toMerge.toUnMerge.uniqueNames.length != 0
+      accountService.unMerge(unqNamesObj, accTosend).then( $scope.deleteMergedAccountSuccess, $scope.deleteMergedAccountFailure)
+    else
+      toastr.error('Please Select an Account to delete')
 
   $scope.deleteMergedAccountSuccess = (res) ->
     toastr.success(res.body)
@@ -750,6 +760,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         toRemove.uniqueName = obj.uniqueName
         updatedMergedAccList.push(toRemove)
     $scope.toMerge.mergedAcc = updatedMergedAccList
+    $scope.toMerge.toUnMerge.uniqueNames = []
 
   $scope.deleteMergedAccountFailure = (res) ->
     toastr.error(res.body)
@@ -771,7 +782,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       uniqueNames: $scope.toMerge.toUnMerge.uniqueNames
       moveTo: $scope.toMerge.moveToAcc.uniqueName
     }
-    accountService.unMerge(unqNamesObj, accTosend).then( $scope.moveToAccountConfirmSuccess, $scope.moveToAccountConfirmFailure)
+    if $scope.toMerge.toUnMerge.uniqueNames.length != 0
+      accountService.unMerge(unqNamesObj, accTosend).then( $scope.moveToAccountConfirmSuccess, $scope.moveToAccountConfirmFailure)
+    else
+      toastr.error('Please Select an account to move.')
 
   $scope.moveToAccountConfirmSuccess = (res) ->
     toastr.success(res.body)
@@ -783,7 +797,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         updatedMergedAccList.push(toRemove)
 
     $scope.toMerge.mergedAcc = updatedMergedAccList
-
+    $scope.toMerge.toUnMerge.uniqueNames = []
+    
   $scope.moveToAccountConfirmFailure = (res) ->
     toastr.error(res.body)
 

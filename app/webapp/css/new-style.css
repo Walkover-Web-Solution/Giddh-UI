@@ -1836,10 +1836,6 @@ table:focus{
     margin:0 0 10px;
 }
 
-.select-accounts > .ui-select-bootstrap.dropdown, .select-accounts .ui-select-bootstrap.dropdown input, .select-accounts .ui-select-bootstrap.dropdown span.ui-select-toggle, .select-accounts .ui-select-multiple.ui-select-bootstrap{
-    min-height:60px;
-}
-
 .delete-account, .move-account{
     padding:20px;
 }
