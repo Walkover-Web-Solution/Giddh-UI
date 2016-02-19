@@ -36,7 +36,13 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.exportData = []
   $scope.filteredExportData = []
   $scope.addToExportNow = false
-
+  $scope.filteredTotal = {
+    exportingFiltered: false
+    openingBalance: 0
+    creditTotal: 0
+    debitTotal: 0
+    closingBalance: 0
+  }
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
 
@@ -311,7 +317,6 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     csv = header + '\r\n\r\n' + title + '\r\n' + body + footer
 
     $scope.csvAW = csv
-
     $scope.uriAccountWise = 'data:text/csv;charset=utf-8,' + escape(csv)
     $scope.showOptions = true
     e.stopPropagation()
@@ -492,6 +497,18 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       $scope.addToExportNow = true
     else if input.length == 0
       $scope.addToExportNow = false
+
+  # $scope.filterTBSearch = (grp,index, data) ->
+  #   if $scope.filteredTotal.openingBalance == 0 && $scope.filteredTotal.closingBalance == 0 && $scope.filteredTotal.creditTotal == 0 && $scope.filteredTotal.debitTotal == 0
+  #     $scope.filteredTotal.exportingFiltered = true
+  #     _.each data, (grp) ->
+  #       $scope.filteredTotal.openingBalance += grp.forwardedBalance.amount
+  #       $scope.filteredTotal.closingBalance += grp.closingBalance.amount
+  #       $scope.filteredTotal.creditTotal += grp.creditTotal
+  #       $scope.filteredTotal.debitTotal += grp.debitTotal
+  #   else
+  #     $scope.filteredTotal.exportingFiltered = true
+  #   $scope.exportData = data
  
   $scope.$watch('fromDate.date', (newVal,oldVal) ->
     oldDate = new Date(oldVal).getTime()

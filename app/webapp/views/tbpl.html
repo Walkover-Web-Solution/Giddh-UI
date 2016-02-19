@@ -158,6 +158,7 @@
         <!--Start Grid-->
 
         <section class="row row-1" ng-repeat="grp in data.groupDetails | filter:{$:keyWord} | orderBy: grp.category" ng-class="grp.category">
+          <!-- filter:filterTBSearch:index:data  -->
           <div class="row"  trial-accordion>  
             <div class="col-xs-4 group" ng-bind-html=" grp.groupName | uppercase | highlight: keyWord "></div>
             <div class="col-xs-2 group text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type | recType:grp.forwardedBalance.amount }}</div>
@@ -190,7 +191,7 @@
                 <th class="col-sm-4">
                   <span class="pdL1">Grand Total</span>
                 </th>
-                <th class="col-sm-2  text-right">{{ data.forwardedBalance.amount | number:2 }}</th>
+                <th class="col-sm-2  text-right">{{ data.forwardedBalance.amount | number:2 }},{{filteredTotal.openingBalance}}</th>
                 <th class="col-sm-4">
                   <table class="col-sm-12">
                     <thead>
