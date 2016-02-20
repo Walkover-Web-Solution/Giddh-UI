@@ -672,7 +672,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.toMerge.mergeTo = accData.uniqueName
     mergedAcc = accData.mergedAccounts
     mList = []
-    splitIdx = 0
     if !_.isEmpty(mergedAcc) && !_.isUndefined(mergedAcc)
       mList = mergedAcc.split(',')
       _.each mList, (mAcc) ->
@@ -687,18 +686,36 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.prePopulate = []
       $scope.toMerge.mergedAcc = []
   
+  $scope.enableMergeButton = () -> 
+    if $scope.prePopulate.length == 0 && $scope.toMerge.mergedAcc.length == 0
+      true
+    else if  $scope.prePopulate.length > 0 && $scope.toMerge.mergedAcc.length == $scope.prePopulate.length
+      true
+    else if $scope.prePopulate.length > 0 && $scope.toMerge.mergedAcc.length > $scope.prePopulate.length
+      false
+
+
   #merge account
   $scope.mergeAccounts = () ->
     accToMerge = []
+    withoutMerged = []
     if $scope.prePopulate.length > 0
-      _.each $scope.prePopulate,(pre) ->
-        _.each $scope.toMerge.mergedAcc, (acc) ->
-          accToSend = {
-            "uniqueName": ""
-          }
-          if acc.uniqueName != pre.uniqueName
-            accToSend.uniqueName = acc.uniqueName
-            accToMerge.push(accToSend)
+      # _.each $scope.prePopulate,(pre) ->
+      #   _.each $scope.toMerge.mergedAcc, (acc) ->
+      #     console.log pre.uniqueName, acc.uniqueName
+      #     accToSend = {
+      #       "uniqueName": ""
+      #     }
+      #     if pre.uniqueName != acc.uniqueName
+      #       accToSend.uniqueName = acc.uniqueName
+      #       accToMerge.push(accToSend)
+      withoutMerged = _.difference($scope.toMerge.mergedAcc, $scope.prePopulate)
+      _.each withoutMerged, (acc) ->
+        accToSend = {
+          "uniqueName": ""
+        }
+        accToSend.uniqueName = acc.uniqueName
+        accToMerge.push(accToSend)
     else
       _.each $scope.toMerge.mergedAcc, (acc) ->
         accToSend = {
@@ -710,14 +727,17 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $scope.toMerge.mergeTo
     }
-    if accToMerge.length > 0 
+    if accToMerge.length > 0
       accountService.merge(unqNamesObj, accToMerge).then( $scope.mergeSuccess, $scope.mergeFailure)
     else
       toastr.error("Please select at least one account.")
 
   $scope.mergeSuccess = (res) ->
     toastr.success(res.body)
+    _.each $scope.toMerge.mergedAcc, (acc) ->
+      acc.noRemove = true
     $scope.getGroups()
+    $scope.prePopulate = $scope.toMerge.mergedAcc
 
   $scope.mergeFailure = (res) ->
     toastr.error(res.data.message)
@@ -727,7 +747,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     item.uniqueName = item.uniqueName.replace(RegExp(' ', 'g'), '')
     $scope.toMerge.toUnMerge.uniqueNames = []
     $scope.toMerge.toUnMerge.uniqueNames.push(item.uniqueName)
-    $scope.showDeleteMove = true
+    if item.noRemove == true then ($scope.showDeleteMove = true) else ($scope.showDeleteMove = false)
 
   $scope.deleteMergedAccount = () ->
     $scope.toMerge.toUnMerge.moveTo = null

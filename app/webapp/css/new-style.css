@@ -1589,6 +1589,7 @@ v-pane-header.show-pseudo{
 .filter-bar{
     padding:10px 10px;
     border-bottom: 1px solid #e0e0e0;
+    width:100%;
 }
 
 .filter-bar .checkbox {
@@ -1845,4 +1846,7 @@ i.cls-alert{
     right:25px;
     top:10px;
     font-size: 18px;
+}
+.width100{
+    width:100%;
 }

@@ -130,7 +130,7 @@
               <span></span>
         </div>
         <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
-          <div class="filter-bar col-sm-12" ng-show="showFilters">
+          <div class="filter-bar" ng-show="showFilters">
             <div class="col-sm-4 col-md-3 col-lg-2">
               <label>Select Group/Account</label>
               <ui-select ng-model="selected.filteredGroupsAndAccounts" theme="bootstrap" >
@@ -165,12 +165,14 @@
               <span></span>
               <span></span>
           </div>
-          <div class="col-sm-10 col-sm-offset-1">
-            <div class="chart-container" ng-show="chartDataAvailable">
-              <canvas id="line" class="chart chart-line" chart-data="chartData"
-                chart-labels="labels" chart-legend="true" chart-series="series"
-                chart-click="onClick" chart-options="chartOptions">
-              </canvas> 
+          <div class="width100 clearfix">
+            <div class="col-sm-10 col-sm-offset-1">
+              <div class="chart-container" ng-show="chartDataAvailable">
+                <canvas id="line" class="chart chart-line" chart-data="chartData"
+                  chart-labels="labels" chart-legend="true" chart-series="series"
+                  chart-click="onClick" chart-options="chartOptions">
+                </canvas>
+              </div>
             </div>
           </div>
           <div class="fixScroll"></div>

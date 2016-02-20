@@ -161,9 +161,7 @@ angular.module('trialBalance', []).directive('exportReport', [
       if src.indexOf(str) != -1
         true
       else 
-        false 
-
-        
+        false     
 
     if _.isEmpty(srch)
       _.each input, (grp) ->

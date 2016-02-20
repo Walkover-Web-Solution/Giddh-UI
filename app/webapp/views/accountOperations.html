@@ -204,17 +204,17 @@
       <div class="col-sm-6">
         <div class="select-accounts">
           <label>Merge Accounts</label>
-              <ui-select multiple='true' ng-model="toMerge.mergedAcc" theme="bootstrap" on-select="removeAccFromfltAccntList($item)" on-remove="addAccTofltAccntList($item)" ng-click="$select.activate()">
+              <ui-select multiple='true' ng-model="toMerge.mergedAcc" theme="bootstrap" ng-click="$select.activate()">
                   <ui-select-match placeholder="Select Accounts" ui-lock-choice="$item.noRemove == true">
                     <span ng-click="unmerge($item); $event.stopPropagation()">{{$item.uniqueName}}</span>
                   </ui-select-match >
-                  <ui-select-choices 
+                  <ui-select-choices
                     ui-disable-choice="acc.uniqueName === selAcntUname"
                     repeat="acc in AccountsList | filter: $select.search">
                     <span>{{acc.name}} ({{acc.uniqueName}})</span>
                   </ui-select-choices>
               </ui-select>
-              <button class="btn btn-success mrT2" ng-click="mergeAccounts()">Merge</button>
+              <button class="btn btn-success mrT2" ng-click="mergeAccounts()" ng-disabled="enableMergeButton()">Merge</button>
         </div>
       </div>
       <div class="col-sm-6 pad0 bdrL" ng-show="showDeleteMove">
