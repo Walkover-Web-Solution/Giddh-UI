@@ -174,18 +174,18 @@ angular.module('trialBalance', []).directive('exportReport', [
         matchCase = ''
         grpName = grp.groupName.toLowerCase()
         grpUnq = grp.groupUniqueName.toLowerCase()
-        grpSyn = if !_.isEmpty(grp.groupSynonyms) then grp.groupSynonyms.toLowerCase() else ''
+        grpSyn = if !_.isNull(grp.groupSynonyms) then grp.groupSynonyms.toLowerCase() else ''
         accounts = []
-
-        if checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
+        if checkIndex(grpName, srch) || checkIndex(grpUnq, srch) || checkIndex(grpSyn, srch) 
           matchCase = 'Group'
           if grp.beforeFilter.length > 0
             _.each grp.beforeFilter, (acc) ->
               accName = acc.name.toLowerCase()
               accUnq = acc.uniqueName.toLowerCase()
-              if checkIndex(accName, srch) || checkIndex(accUnq, srch)
+              accMergeAcc = acc.mergedAccounts.toLowerCase()
+              if checkIndex(accName, srch) || checkIndex(accUnq, srch) || checkIndex(accMergeAcc, srch)
                 matchCase = 'Account'
-              if checkIndex(accName, srch) || checkIndex(accUnq, srch) && checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
+              if checkIndex(accName, srch) || checkIndex(accUnq, srch) || checkIndex(accMergeAcc, srch) && checkIndex(grpName, srch) || checkIndex(grpUnq, srch) || checkIndex(grpSyn, srch) 
                 matchCase = 'Group and Account'
 
               if matchCase == 'Account'
@@ -196,7 +196,8 @@ angular.module('trialBalance', []).directive('exportReport', [
             _.each grp.beforeFilter, (acc) ->
               accName = acc.name.toLowerCase()
               accUnq = acc.uniqueName.toLowerCase()
-              if checkIndex(accName, srch) || checkIndex(accUnq, srch) 
+              accMergeAcc = acc.mergedAccounts.toLowerCase()
+              if checkIndex(accName, srch) || checkIndex(accUnq, srch) || checkIndex(accMergeAcc, srch)
                 matchCase = 'Account'
                 accounts.push(acc)
               grp.accountDetails = accounts
