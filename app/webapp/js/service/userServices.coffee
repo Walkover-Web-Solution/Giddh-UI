@@ -7,14 +7,24 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
       },
       {
         getUserDetails: {
-          method: 'GET', url: '/users/:uniqueName'
+          method: 'GET' 
+          url: '/users/:uniqueName'
         }
         getSetAuthKey: {
-          method: 'GET', url: '/users/auth-key/:uniqueName'
+          method: 'GET' 
+          url: '/users/auth-key/:uniqueName'
         }
         generateAuthKey: {
-          method: 'PUT',
+          method: 'PUT'
           url: '/users/:uniqueName/generate-auth-key'
+        }
+        getSubList: {
+          method: 'GET'
+          url: '/users/:uniqueName/subscribed-companies'
+        }
+        getUserSubList: {
+          method: 'GET'
+          url: '/users/:uniqueName/transactions'
         }
       }
   )
@@ -38,6 +48,16 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
     generateKey: (name) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.generateAuthKey({uniqueName: name}, {}, onSuccess, onFailure)
+      )
+
+    getsublist: (name) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.getSubList({uniqueName: name}, {}, onSuccess, onFailure)
+      )
+
+    getUserSublist: (name) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.getUserSubList({uniqueName: name}, {}, onSuccess, onFailure)
       )
 
   userServices

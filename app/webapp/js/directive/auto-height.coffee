@@ -25,6 +25,9 @@ giddh.webApp.filter 'capitalize', ->
 
 # for date time filter for usage
 # http://stackoverflow.com/questions/20662140/using-angularjs-date-filter-with-utc-date
+#  usage
+# {{ anyDateObjectOrString | moment: 'format': 'MMM DD, YYYY' }}
+# {{ anyDateObjectOrString | moment: 'fromNow' }}
 giddh.webApp.filter 'moment', ->
   (input, momentFn) ->
     args = Array::slice.call(arguments, 2)

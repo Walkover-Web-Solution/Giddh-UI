@@ -1,16 +1,108 @@
 <div class="container-fluid">
   <div class="row">
 
-    <form name="authKeyForm" novalidate class="pd2" role="form">
-      <div class="form-group">
-        <label>Auth Key</label>
-      </div>
-      <div class="form-group">
-        <input type="text" placeholder="Auth Key" class="form-control" ng-model="userAuthKey"/>
-      </div>
-      <div class="form-group">
-        <button class="btn btn-info" ng-click="regenerateKey()">Regenerate Auth Key</button>
-      </div>
-    </form>
+    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+      <uib-tabset justified="true">
+        <uib-tab heading="Auth Key">
+          <div class="pd2">
+            <form name="authKeyForm" novalidate role="form">
+              <div class="form-group">
+                <input type="text" placeholder="Auth Key" class="form-control" ng-model="userAuthKey"/>
+              </div>
+              <div class="form-group">
+                <button class="btn btn-info" ng-click="regenerateKey()">Regenerate Auth Key</button>
+              </div>
+            </form>
+          </div>
+        </uib-tab>
+        <!-- end of auth tab tab -->
+
+        <uib-tab heading="Wallet" active="true">
+          <div class="pd2">
+            <h3 class="fs16 mrB1">Payment details</h3>
+            <label class="mrB1">Current Balance {{basicInfo.availableCredit}} &#x20B9;</label>
+            <p class="mrB1"><a href="javascript:void(0)" ng-click="getUserTransaction()">Previous transaction details</a></p>
+
+            <!-- modal start -->
+            <script type="text/ng-template" id="prevTransDetail.html">
+              <div class="modal-header themeBg">
+                <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h3 class="modal-title">Transaction details</h3>
+              </div>
+              <div class="modal-body">
+                <!-- no data start -->
+                <div class="no-data" ng-show="noData" style="margin-top:0">
+                  <h1>Sorry, No Data Found!</h1>
+                  <img src="/public/webapp/images/no-data.png" alt="">
+                </div>
+                <!-- nodata end -->
+                <table class="table table-striped table-bordered" ng-hide="noData">
+                  <thead>
+                    <tr>
+                      <th>Amount</th>
+                      <th>Date</th>
+                      <th>Status</th>
+                      <th>Description</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="value in uTransData">
+                      <td ng-bind-html="value.amount"></td>
+                      <td ng-bind-html="value.paymentDate | moment: 'format': 'MMM DD, YYYY' "></td>
+                      <td ng-bind-html="value.paymentStatus"></td>
+                      <td>
+                        {{value.companyName}}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </script>
+
+            <!-- modal end -->
+
+            <!-- form start -->
+            <form name="" novalidate role="" class="form-inline">
+              <div class="form-group mrR1 ">
+                <input type="text" placeholder="Amount" class="form-control"/>
+              </div>
+              <div class="form-group">
+                <button class="btn btn-success">Add money in wallet</button>
+              </div>
+            </form>
+            <!-- form end -->
+          </div>
+        </uib-tab>
+        <!-- end of wallet tab -->
+
+        <uib-tab heading="Subscription list" ng-click="getSubscriptionList()">
+          <div class="pd2">
+            <table class="table table-striped table-bordered">
+              <thead>
+                <tr>
+                  <th>Company Name</th>
+                  <th>Auto deduct</th>
+                  <th>Plan type</th>
+                  <th>Subscription Date</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="value in subListData">
+                  <td ng-bind-html="value.companyName"></td>
+                  <td>
+                    <switch name="autopay" on="On" off="Off" ng-model="value.autoDeduct" ng-change="autoPayChange(value)" class="wide"></switch>
+                  </td>
+                  <td ng-bind-html="value.servicePlan.amount"></td>
+                  <td ng-bind-html="value.subscriptionDate | moment: 'format': 'MMM DD, YYYY' "></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </uib-tab>
+        <!-- end of subscription list tab -->
+
+      </uib-tabset>
+    </perfect-scrollbar>
+
   </div>
 </div>

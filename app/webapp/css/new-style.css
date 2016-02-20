@@ -747,11 +747,9 @@ header .navbar-nav > li.active {
     font-weight: 600;
     padding: 9px 20px;
 }
-.fs20{
-    font-size: 20px
-}
-
-
+.fs16{font-size: 16px}
+.fs18{font-size: 18px}
+.fs20{font-size: 20px}
 
 /*manage company ui tree*/
 .angular-ui-tree-node {

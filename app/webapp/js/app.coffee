@@ -25,6 +25,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "serviceModule"
     "chart.js"
     "ui.select"
+    "uiSwitch"
   ]
 )
 

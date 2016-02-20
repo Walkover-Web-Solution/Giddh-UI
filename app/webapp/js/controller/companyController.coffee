@@ -8,6 +8,9 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.mHideBar = false
   $scope.dHideBar = false
   $scope.showUpdTbl = false
+  $scope.compSetBtn = true
+  $scope.compDataFound = false
+  $scope.compTransData = []
 
   #contains company list
   $scope.companyList = []
@@ -106,6 +109,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #Get user details
   $scope.getUserDetailSuccess = (res) ->
+    localStorageService.set("_userDetails", res.body)
     $rootScope.basicInfo = res.body
 
   #get company list failure
@@ -161,6 +165,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   #making a detail company view
   $scope.goToCompany = (data, index, type) ->
     $rootScope.$emit('callCheckPermissions', data)
+    $scope.compDataFound = false
     $scope.showUpdTbl = false
     $scope.mFiles = []
     $scope.dFiles = []
@@ -366,6 +371,31 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         console.log res, "error"
       ), (evt) ->
         file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
+
+  # payment details related func
+  $scope.primPayeeChange = (a, b) ->
+    $scope.compSetBtn = false
+
+  $scope.$watch('selectedCompany.companySubscription.autoDeduct', (newVal,oldVal) ->
+    if !_.isUndefined(oldVal)
+      if newVal isnt oldVal
+        $scope.compSetBtn = false
+  )
+  $scope.getCompanyTransactions = ()->
+    companyServices.getCompTrans($rootScope.selectedCompany.uniqueName).then($scope.getCompanyTransactionsSuccess, $scope.getCompanyTransactionsFailure)
+
+  #create company success
+  $scope.getCompanyTransactionsSuccess = (res) ->
+    angular.copy(res.body, $scope.compTransData)
+    if res.body.length > 0
+      $scope.compDataFound = true
+    else
+      $scope.compDataFound = false
+      toastr.info("Don\'t have any transactions yet.", "Info")
+
+  #create company failure
+  $scope.getCompanyTransactionsFailure = (res) ->
+    toastr.error(res.data.message, "Error")
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

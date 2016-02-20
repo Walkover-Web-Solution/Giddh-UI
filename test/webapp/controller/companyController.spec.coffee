@@ -271,8 +271,10 @@ describe 'companyController', ->
       res = {
         body: "somename"
       }
+      spyOn(@localStorageService, "set")
       @scope.getUserDetailSuccess(res)
       expect(@rootScope.basicInfo).toBe(res.body)
+      expect(@localStorageService.set).toHaveBeenCalledWith("_userDetails", res.body)
 
   describe '#getUserDetailFailure', ->
     it 'should show alert with toastr', ->

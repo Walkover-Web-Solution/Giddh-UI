@@ -64,15 +64,6 @@ module.exports = function (grunt) {
           dest: destDir
         }]
       }
-      // spl: {
-      //   files: [{
-      //     expand: true,
-      //     dot: true,
-      //     cwd: srcDir,
-      //     src: ['**/modified_lib/*'],
-      //     dest: destDir
-      //   }]
-      // }
     },
     watch: {
       options: {
@@ -213,7 +204,8 @@ module.exports = function (grunt) {
           'angular-filter',
           'ui-select',
           'html2canvas',
-          'Chart.js'
+          'Chart.js',
+          'angular-ui-switch'
         ],
         dependencies: {
           'jquery': 'modernizr',

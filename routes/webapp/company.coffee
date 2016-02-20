@@ -123,4 +123,18 @@ router.put '/:uniqueName/unshare', (req, res) ->
     else
       res.send data
 
+#get company transaction list
+router.get '/:uniqueName/transactions', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.uniqueName + '/transactions'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode).send(data)
+    else
+      res.send data
+
 module.exports = router

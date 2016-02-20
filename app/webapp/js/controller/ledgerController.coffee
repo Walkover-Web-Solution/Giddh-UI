@@ -535,7 +535,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   someEventHandle = $scope.$on('reloadFromAuto', ->
     $scope.reloadLedger()
   )
-
+  
   $scope.$on('$destroy', someEventHandle)
 
   $scope.$on '$viewContentLoaded',  ->

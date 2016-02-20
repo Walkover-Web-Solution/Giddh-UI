@@ -292,6 +292,112 @@
       </div>
       <!--end of clearfix  -->
     </uib-tab>
+
+    <!-- start transaction tab -->
+    <uib-tab ng-if="canManageUser" heading="Payment details">
+      <div class="pd2">
+        <div class="clearfix mrB1 form-inline">
+          <div class="form-group mrR1">
+            <h3 class="fs16">Invoice amount {{selectedCompany.companySubscription.servicePlan.amount}} &#x20B9;</h3>
+          </div>
+          <div class="form-group">
+            <button class="btn btn-success">Pay Now</button>
+          </div>
+        </div>
+
+        <table class="mrT2 table table-bordered table-striped">
+          <thead>
+            <th>Subs. date</th>
+            <th>Plan</th>
+            <th>Auto pay</th>
+            <th>Prim. payee</th>
+            <th>Sec. payee</th>
+            <th>Action</th>
+          </thead>
+          <tbody>
+            <tr>
+              <td ng-bind-html="selectedCompany.companySubscription.subscriptionDate | moment: 'format': 'MMM DD, YYYY' "></td>
+              <td>
+                {{selectedCompany.companySubscription.servicePlan.planName}}
+              </td>
+              <td>
+                <switch name="autopay" on="On" off="Off" ng-model="selectedCompany.companySubscription.autoDeduct" class="wide"></switch>
+              </td>
+              
+              <td>
+                <ui-select 
+                  ng-model="selectedCompany.companySubscription.primaryBiller"
+                  theme="bootstrap"
+                  ng-disabled="disabled"
+                  reset-search-input="false"
+                  on-select="primPayeeChange($item, $model)"
+                >
+                  <ui-select-match placeholder="Select...">{{$select.selected.userName}}</ui-select-match>
+                  <ui-select-choices 
+                    ui-disable-choice="person.userUniqueName === selectedCompany.companySubscription.createdBy.uniqueName"
+                    repeat="person in sharedUsersList">
+                    <div ng-bind-html="person.userName"></div>
+                    <small>
+                      email: {{person.userEmail}}
+                      age: {{person.userUniqueName}}
+                    </small>
+                  </ui-select-choices>
+                </ui-select>
+              </td>
+              <td>
+                <input type="text" class="form-control" ng-disabled="true" 
+                tooltip-placement="top" uib-tooltip="{{selectedCompany.companySubscription.createdBy.email}}"
+                ng-model="selectedCompany.companySubscription.createdBy.name">
+              </td>
+              <td>
+                <button ng-disabled="compSetBtn" class="btn btn-sm btn-info">Update</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        
+        <section ng-hide="compDataFound" class="mrT2">
+          <a href="javascript:void(0)" ng-click="getCompanyTransactions()">
+            Show Transaction logs
+          </a>
+        </section>
+        <section ng-if="compDataFound">
+          <div class="bdrB mrT2 mrB2"></div>
+
+          <p class="lead mrB2">Transaction logs</p>
+          <table class="table table-striped table-bordered" ng-hide="noData">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>User</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="value in compTransData">
+                <td ng-bind-html="value.paymentDate | moment: 'format': 'MMM DD, YYYY' "></td>
+                <td>
+                  <span class="mrR" ng-bind-html="value.balance.amount"></span>
+                  <span class="text-success" ng-if="value.balance.type == 'CREDIT'">
+                    (CR)
+                  </span>
+                  <span class="text-danger" ng-if="value.balance.type == 'DEBIT'">
+                    (CR)
+                  </span>
+                </td>
+                <td>
+                  <div ng-bind-html="value.user.name" tooltip-placement="top" uib-tooltip="{{value.user.email}}"></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+      </div>
+    </uib-tab>
+    <!-- end transaction tab -->
+
   </uib-tabset>
 </perfect-scrollbar>
 
