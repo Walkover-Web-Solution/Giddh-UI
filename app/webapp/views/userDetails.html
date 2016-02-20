@@ -2,7 +2,7 @@
   <div class="row">
 
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
-      <uib-tabset justified="true">
+      <uib-tabset justified="false">
         <uib-tab heading="Auth Key">
           <div class="pd2">
             <form name="authKeyForm" novalidate role="form">
@@ -61,16 +61,37 @@
 
             <!-- modal end -->
 
-            <!-- form start -->
-            <form name="" novalidate role="" class="form-inline">
-              <div class="form-group mrR1 ">
-                <input type="text" placeholder="Amount" class="form-control"/>
-              </div>
-              <div class="form-group">
-                <button class="btn btn-success">Add money in wallet</button>
-              </div>
-            </form>
-            <!-- form end -->
+            <section>
+              <form name="walletForm" novalidate class="form-inline">
+                <div class="form-group mrR1 " ng-class="(walletForm.amount.$valid  && walletForm.amount.$touched) ? 'has-success' : (walletForm.amount.$touched) ? 'has-error' : '' ">
+                  <input type="text" name="amount" placeholder="Amount" class="form-control max100" ng-model="wlt.Amnt" required valid-number/>
+                </div>
+                <div class="form-group">
+                  <button ng-disabled="walletForm.$invalid" class="btn btn-success" ng-click="addMoneyInWallet()">Add money in wallet</button>
+                </div>
+              </form>
+            </section>
+            <!-- section one end -->
+
+            <section ng-show="payStep2">
+              <div class="bdrT mrT2 mrB2"></div>
+              <p class="lead mrB2">
+                You are making a payment of {{wlt.Amnt}}  &#x20B9;
+                <small class="mrL1" style="font-size:14px">
+                  <a href="javascript:void(0)" ng-click="resetSteps()">Edit</a>
+                </small>
+              </p>
+              <form class="form-inline" name="couponForm" novalidate >
+                <div class="form-group mrR1" ng-class="(couponForm.couponcode.$valid  && couponForm.couponcode.$touched) ? 'has-success' : (couponForm.couponcode.$touched) ? 'has-error' : '' ">
+                  <label for="couponcode" class="mrR1">Have a coupon code:</label>
+                  <input type="text" name="couponcode" class="form-control max150" id="couponcode" ng-model="couponcode" placeholder="Coupon code" required>
+                </div>
+                <button ng-disabled="couponForm.$invalid" class="btn btn-primary" ng-click="redeemCoupon(couponcode)">Redeem</button>
+              </form>
+              {{coupRes}}
+            </section>
+
+
           </div>
         </uib-tab>
         <!-- end of wallet tab -->

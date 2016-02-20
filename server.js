@@ -139,6 +139,7 @@ var trialBalance = require('./public/routes/webapp/trialBal');
 var upload = require('./public/routes/webapp/upload');
 var profitLoss = require('./public/routes/webapp/profitLoss')
 var reports = require('./public/routes/webapp/reports')
+var coupon = require('./public/routes/webapp/coupon')
 
 app.use('/currency', currency);
 app.use('/users', users);
@@ -153,6 +154,7 @@ app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/profit-loss', profitLoss);
 app.use('/company/:companyUniqueName/history', reports);
+app.use('/coupon', coupon)
 
 
 app.listen(port, function () {
