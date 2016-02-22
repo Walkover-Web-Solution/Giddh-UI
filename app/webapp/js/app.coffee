@@ -26,6 +26,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "chart.js"
     "ui.select"
     "uiSwitch"
+    "razor-pay"
   ]
 )
 

@@ -81,7 +81,50 @@ directive 'validNumber', ->
     return
 
   }
+# payment method razorpay
+angular.module('razor-pay', []).
+directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope', '$timeout', 'toastr', ($compile, $filter, $document, $parse, $rootScope, $timeout, toastr) ->
+  {
+    restrict: 'A'
+    scope: false
+    transclude: false
+    controller: "userController"
+    link: (scope, element, attrs) ->
+      scope.proceedToPay = (e, amount) ->
+        options = {
+          key: "rzp_test_nLNKGERgu2VVV1"
+          amount: amount
+          name: "Giddh"
+          description: "Purchase Description"
+          image: "/public/website/images/logo.png"
+          handler: (response)->
+            # hit api after success
+            console.log response, "response after success"
+          prefill:
+            name: $rootScope.basicInfo.name
+            email: $rootScope.basicInfo.email
+          notes:
+            address: $rootScope.selectedCompany.address
+          theme:
+            color: "#449d44"
+        }
+        rzp1 = new Razorpay(options)
+        rzp1.open()
+        e.preventDefault()
 
+      element.on 'click', (e) ->
+        if scope.isHaveCoupon
+          if scope.amount > scope.discount
+            diff = scope.amount-scope.discount
+            scope.proceedToPay(e, diff*100)
+          else
+            toastr.warning("Actual amount cannot be less than discount amount", "Warning")
+            return false
+        else
+          diff = scope.removeDotFromString(scope.wlt.Amnt)
+          scope.proceedToPay(e, diff*100)
+  }
+]
 # only for ledger
 angular.module('valid-date', []).
 directive 'validDate', (toastr, $filter) ->
