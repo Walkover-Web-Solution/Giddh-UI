@@ -384,7 +384,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.getCompanyTransactions = ()->
     companyServices.getCompTrans($rootScope.selectedCompany.uniqueName).then($scope.getCompanyTransactionsSuccess, $scope.getCompanyTransactionsFailure)
 
-  #create company success
   $scope.getCompanyTransactionsSuccess = (res) ->
     angular.copy(res.body, $scope.compTransData)
     if res.body.length > 0
@@ -393,9 +392,22 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.compDataFound = false
       toastr.info("Don\'t have any transactions yet.", "Info")
 
-  #create company failure
   $scope.getCompanyTransactionsFailure = (res) ->
-    toastr.error(res.data.message, "Error")
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.updateCompSubs = (resObj) ->
+    data = {
+      uniqueName: $rootScope.selectedCompany.uniqueName
+      autoDeduct: resObj.autoDeduct
+      primaryBiller: resObj.primaryBiller
+    }
+    companyServices.updtCompSubs(data).then($scope.updateCompSubsSuccess, $scope.updateCompSubsFailure)
+
+  $scope.updateCompSubsSuccess = (res) ->
+    console.log res, "updateCompSubsSuccess"
+
+  $scope.updateCompSubsFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

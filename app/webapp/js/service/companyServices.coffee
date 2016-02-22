@@ -18,6 +18,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       method:'GET'
       url: '/company/:uniqueName/transactions'
     }
+    updtCompSubs: {
+      method: 'PUT'
+      url: '/company/:uniqueName/subscription-update'
+    }
   })
 
   companyServices =
@@ -73,5 +77,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
 
     getCompTrans: (uniqueName) ->
       @handlePromise((onSuccess, onFailure) -> Company.getCompTrans({uniqueName: uniqueName}, onSuccess, onFailure))
+
+    updtCompSubs: (data, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.updtCompSubs({
+        uniqueName: data.uniqueName
+      }, data, onSuccess, onFailure))
 
   companyServices
