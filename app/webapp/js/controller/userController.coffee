@@ -1,16 +1,12 @@
 "use strict"
 
-userController = ($scope, $rootScope, toastr, userServices, localStorageService, $timeout, $uibModal, couponServices) ->
+userController = ($scope, $rootScope, toastr, userServices, localStorageService, $timeout, $uibModal) ->
   $scope.userAuthKey = undefined
   $scope.noData = false
   $scope.subListData = []
   $scope.uTransData = []
   $rootScope.basicInfo = localStorageService.get("_userDetails")
   
-
-
-
-
   $scope.getUserAuthKey = () ->
     if !_.isEmpty($rootScope.basicInfo)
       userServices.getKey($rootScope.basicInfo.uniqueName).then($scope.getUserAuthKeySuccess,
@@ -60,7 +56,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     
   $scope.getUserSublistSuccess = (res) ->
     $scope.uTransData = res.body
-    if $scope.uTransData.length >= 0
+    if $scope.uTransData.length is 0
       $scope.noData = true
 
   $scope.getUserSubListFailure = (res) ->
