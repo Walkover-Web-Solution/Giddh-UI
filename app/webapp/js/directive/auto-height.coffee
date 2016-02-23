@@ -95,7 +95,7 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
           key: "rzp_test_nLNKGERgu2VVV1"
           amount: amount
           name: "Giddh"
-          description: "Purchase Description"
+          description: $rootScope.selectedCompany.name+ " Subscription for Giddh"
           image: "/public/website/images/logo.png"
           handler: (response)->
             # hit api after success

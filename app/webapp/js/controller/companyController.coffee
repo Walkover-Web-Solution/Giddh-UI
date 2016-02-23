@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices) ->
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -11,13 +11,28 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.compSetBtn = true
   $scope.compDataFound = false
   $scope.compTransData = []
-
+  $scope.compDiffAmount = 0
+  $scope.showPayOptns = false
   #contains company list
   $scope.companyList = []
   $scope.companyDetails = {}
   $scope.currencyList = []
   $scope.currencySelected = undefined
   $scope.shareRequest = {role: 'view_only', user: null}
+
+  # userController methods
+  $scope.payStep2 = false
+  $scope.payStep3 = false
+  $scope.directPay = false
+  $scope.disableRazorPay = false
+  $scope.payAlert = []
+  $scope.wlt = {}
+  $scope.wlt.status = false
+  $scope.coupRes = {}
+  $scope.coupon = {}
+  $scope.discount = 0
+  $scope.amount = 0
+  $scope.calCulatedDiscount = 0
 
   #dialog for first time user
   $scope.openFirstTimeUserModal = () ->
@@ -408,6 +423,110 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.updateCompSubsFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
+
+  $scope.getWltBal=()->
+    userServices.getWltBal($rootScope.basicInfo.uniqueName).then($scope.getWltBalSuccess, $scope.getWltBalFailure)
+
+  $scope.getWltBalSuccess = (res) ->
+    $scope.disableRazorPay = false
+    avlB = Number(res.body.availableCredit)
+    invB = Number($rootScope.selectedCompany.companySubscription.servicePlan.amount)
+    if avlB >= invB
+      $scope.showPayOptns = false
+      console.log "hit api for deduct subs"
+    else if avlB > 0 and avlB < invB
+      # hit api with avlB and go through wallet with compDiffAmount
+      $scope.wlt.Amnt = Math.abs(invB - avlB)
+      $scope.showPayOptns = true
+    else
+      console.log "no bal found or bal is zero"
+
+  $scope.getWltBalFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+
+  # child functions here for userController
+  # add money in wallet
+  $scope.addMoneyInWallet = () ->
+    if Number($scope.wlt.Amnt) < 100
+      $scope.wlt = angular.copy({})
+      toastr.warning("You cannot make payment")
+    else
+      $scope.payStep2 = true
+      $scope.wlt.status = true
+
+  # redeem coupon
+  $scope.redeemCoupon = (code) ->
+    couponServices.couponDetail(code).then($scope.redeemCouponSuccess, $scope.redeemCouponFailure)
+
+  $scope.removeDotFromString = (str) ->
+    return Math.floor(Number(str))
+
+  $scope.redeemCouponSuccess = (res) ->
+    $scope.payAlert = []
+    $scope.calCulatedDiscount = 0
+    $scope.coupRes = res.body
+    toastr.success("Hurray your coupon code is redeemed", res.status)
+    
+    if res.body.type is "balance_add"
+      $scope.directPay = true
+      $scope.disableRazorPay = true
+      console.info "we will hit api"
+      # hit api from here
+
+    else if $scope.coupRes.type is "cashback"
+      $scope.directPay = false
+      $scope.disableRazorPay = false
+      $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
+      $scope.discount = 0
+      console.info "we will give cashback"
+      $scope.payAlert.push({msg: "Your cashback amount will be credited in your account withing 48 hours after payment has been done."})
+
+    else if $scope.coupRes.type is "discount"
+      console.info "calculating discount"
+      $scope.directPay = false
+
+      $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
+
+      $scope.calCulatedDiscount = Number($scope.coupRes.value * $scope.amount/100)
+
+      if $scope.calCulatedDiscount > $scope.coupRes.maxAmount
+        $scope.discount = Number($scope.coupRes.maxAmount)
+        diff = $scope.amount-$scope.discount
+        if diff < 100
+          $scope.disableRazorPay = true
+          $scope.payAlert.push({msg: "After discount amount cannot be less than 100 Rs. you have to add more money"})
+        else
+          $scope.disableRazorPay = false
+          $scope.payAlert.push({msg: "You can only avail max discount of Rs. "+$scope.coupRes.maxAmount+ ". After discount, you have to pay Rs. "+ diff})
+      else
+        $scope.disableRazorPay = false
+        $scope.discount = $scope.calCulatedDiscount
+        $scope.payAlert.push({msg: "Hurray you have availed a discount of Rs. "+ $scope.discount})
+      
+
+  $scope.redeemCouponFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  # remove alert
+  $scope.closeAlert = (index) ->
+    $scope.payAlert.splice(index, 1)
+
+  # reset steps
+  $scope.resetSteps = () ->
+    $scope.isHaveCoupon = false
+    $scope.payAlert = []
+    $scope.wlt = angular.copy({})
+    $scope.coupon = angular.copy({})
+    $scope.wlt.status = false
+    $scope.coupRes = {}
+    $scope.payStep2 = false
+    $scope.payStep3 = false
+
+  $scope.resetDiscount = () ->
+    if !$scope.isHaveCoupon
+      $scope.payAlert = []
+      $scope.coupon = angular.copy({})
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

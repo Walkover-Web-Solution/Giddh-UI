@@ -54,4 +54,15 @@ router.get '/:uniqueName/transactions', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/:uniqueName/available-credit', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'users/' + req.params.uniqueName + '/available-credit'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 module.exports = router

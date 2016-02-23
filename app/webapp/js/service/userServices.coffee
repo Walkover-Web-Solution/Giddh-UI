@@ -26,6 +26,10 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
           method: 'GET'
           url: '/users/:uniqueName/transactions'
         }
+        getWltBal: {
+          method: 'GET'
+          url: '/users/:uniqueName/available-credit'
+        }
       }
   )
 
@@ -47,17 +51,22 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
 
     generateKey: (name) ->
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.generateAuthKey({uniqueName: name}, {}, onSuccess, onFailure)
+        UserSET.generateAuthKey({uniqueName: name}, onSuccess, onFailure)
       )
 
     getsublist: (name) ->
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.getSubList({uniqueName: name}, {}, onSuccess, onFailure)
+        UserSET.getSubList({uniqueName: name}, onSuccess, onFailure)
       )
 
     getUserSublist: (name) ->
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.getUserSubList({uniqueName: name}, {}, onSuccess, onFailure)
+        UserSET.getUserSubList({uniqueName: name}, onSuccess, onFailure)
+      )
+
+    getWltBal: (name) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.getWltBal({uniqueName: name}, onSuccess, onFailure)
       )
 
   userServices
