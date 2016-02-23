@@ -51,7 +51,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
 
     generateKey: (name) ->
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.generateAuthKey({uniqueName: name}, onSuccess, onFailure)
+        UserSET.generateAuthKey({uniqueName: name}, {}, onSuccess, onFailure)
       )
 
     getsublist: (name) ->

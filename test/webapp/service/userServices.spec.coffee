@@ -76,3 +76,69 @@ describe "User Service", ->
             expect(data.data.status).toBe("error")
             expect(data.status).toBe(400)
         )
+
+    describe '#get subscription list', ->
+      it 'shpuld call success callback', ->
+        uniqueName = "uniqueName"
+        @httpBackend.when('GET', '/users/' + uniqueName+'/subscribed-companies').respond(200, {"status": "success"})
+
+        @userServices.getsublist(uniqueName).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+
+      it 'should call failure callback', ->
+        uniqueName = "uniqueName"
+        @httpBackend.when('GET', '/users/' + uniqueName+'/subscribed-companies').respond(400, {"status": "error"})
+
+        @userServices.getsublist(uniqueName).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+
+    describe '#get user subscription list', ->
+      it 'shpuld call success callback', ->
+        uniqueName = "uniqueName"
+        @httpBackend.when('GET', '/users/' + uniqueName+'/transactions').respond(200, {"status": "success"})
+
+        @userServices.getUserSublist(uniqueName).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+
+      it 'should call failure callback', ->
+        uniqueName = "uniqueName"
+        @httpBackend.when('GET', '/users/' + uniqueName+'/transactions').respond(400, {"status": "error"})
+
+        @userServices.getUserSublist(uniqueName).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+
+    describe '#get user wallet balance', ->
+      it 'shpuld call success callback', ->
+        uniqueName = "uniqueName"
+        @httpBackend.when('GET', '/users/' + uniqueName+'/available-credit').respond(200, {"status": "success"})
+
+        @userServices.getWltBal(uniqueName).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+
+      it 'should call failure callback', ->
+        uniqueName = "uniqueName"
+        @httpBackend.when('GET', '/users/' + uniqueName+'/available-credit').respond(400, {"status": "error"})
+
+        @userServices.getWltBal(uniqueName).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+
+
+
