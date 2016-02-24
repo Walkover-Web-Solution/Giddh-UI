@@ -41,8 +41,23 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.getSubscriptionListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  $scope.autoPayChange = (data) ->
-    console.log data.autoDeduct, "autoPayChange", data
+  $scope.changeCallback = () ->
+    result =  _.findWhere($scope.subListData, {autoDeduct: false})
+    if _.isUndefined(result) || _.isEmpty(result)
+      console.log "do nothing"
+    else
+      console.log result
+      obj = {
+        uUname: $rootScope.basicInfo.uniqueName
+        companyUniqueName: result.companyUniqueName
+      }
+      userServices.cancelAutoPay(obj).then($scope.autoPayChangeSuccess, $scope.autoPayChangeFailure)
+    
+  $scope.autoPayChangeSuccess = (res) ->
+    $scope.getSubscriptionList()
+
+  $scope.autoPayChangeFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.getUserTransaction = () -> 
     modalInstance = $uibModal.open(

@@ -65,4 +65,17 @@ router.get '/:uniqueName/available-credit', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.put '/:uniqueName/delete-payee', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+      'Content-Type': 'application/json'
+    data: req.body
+  hUrl = settings.envUrl + 'users/' + req.params.uniqueName + '/delete-payee'
+  settings.client.put hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 module.exports = router

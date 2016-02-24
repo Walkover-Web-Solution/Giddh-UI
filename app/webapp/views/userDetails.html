@@ -127,7 +127,7 @@
                 <tr ng-repeat="value in subListData">
                   <td ng-bind-html="value.companyName"></td>
                   <td>
-                    <switch name="autopay" on="On" off="Off" ng-model="value.autoDeduct" ng-change="autoPayChange(value)" class="wide"></switch>
+                    <switch ng-change="changeCallback" name="autopay" on="On" off="Off" ng-model="value.autoDeduct" class="wide"></switch>
                   </td>
                   <td ng-bind-html="value.servicePlan.amount"></td>
                   <td ng-bind-html="value.subscriptionDate | moment: 'format': 'MMM DD, YYYY' "></td>
