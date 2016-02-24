@@ -433,7 +433,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     invB = Number($rootScope.selectedCompany.companySubscription.servicePlan.amount)
     if avlB >= invB
       $scope.showPayOptns = false
-      console.log "hit api for deduct subs"
+      $scope.deductSubsViaWallet(invB)
     else if avlB > 0 and avlB < invB
       # hit api with avlB and go through wallet with compDiffAmount
       $scope.wlt.Amnt = Math.abs(invB - avlB)
@@ -442,6 +442,19 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       console.log "no bal found or bal is zero"
 
   $scope.getWltBalFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.deductSubsViaWallet = (num) ->
+    obj = {
+      uniqueName: $rootScope.selectedCompany.uniqueName
+      billAmount: num
+    }
+    companyServices.payBillViaWallet(obj).then($scope.subsWltSuccess, $scope.subsWltFailure)
+
+  $scope.subsWltSuccess = (res) ->
+    console.log "subsWltSuccess", res
+
+  $scope.subsWltFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
 
