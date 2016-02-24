@@ -449,12 +449,37 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       uniqueName: $rootScope.selectedCompany.uniqueName
       billAmount: num
     }
-    companyServices.payBillViaWallet(obj).then($scope.subsWltSuccess, $scope.subsWltFailure)
+    companyServices.payBillViaWallet(obj).then($scope.subsViaWltSuccess, $scope.subsWltFailure)
 
-  $scope.subsWltSuccess = (res) ->
-    console.log "subsWltSuccess", res
+  $scope.subsViaWltSuccess = (res) ->
+    console.log "subsViaWltSuccess", res
 
   $scope.subsWltFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+
+  $scope.deductSubsViaRazor = (razorObj) ->
+    console.log $scope.wlt.Amnt, razorObj
+    if _.isEmpty($scope.coupRes)
+      obj = {
+        uniqueName: $rootScope.basicInfo.uniqueName
+        paymentId: razorObj.razorpay_payment_id
+        amount: $scope.wlt.Amnt
+        coupanCode: null
+      }
+    else
+      obj = {
+        uniqueName: $rootScope.basicInfo.uniqueName
+        paymentId: razorObj.razorpay_payment_id
+        amount: $scope.wlt.Amnt
+        coupanCode: 
+      }
+    # companyServices.payBillViaRazor(obj).then($scope.subsViaRzrSuccess, $scope.subsRzrFailure)
+
+  $scope.subsViaRzrSuccess = (res) ->
+    console.log "subsViaRzrSuccess", res
+
+  $scope.subsRzrFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
 

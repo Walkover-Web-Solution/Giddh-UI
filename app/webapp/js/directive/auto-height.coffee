@@ -100,6 +100,7 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
           handler: (response)->
             # hit api after success
             console.log response, "response after success"
+            scope.deductSubsViaRazor(response)
           prefill:
             name: $rootScope.basicInfo.name
             email: $rootScope.basicInfo.email
