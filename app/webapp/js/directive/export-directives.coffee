@@ -7,17 +7,13 @@ angular.module('exportDirectives', [])
     {
       restrict: 'A'
       link: (scope, elem, attr) ->
-  
         elem.on 'click', (e) ->
-          
           pdf = new jsPDF('p','pt')
           groups = []
           accounts = []
           childGroups = []
-          rawData = scope.data.groupDetails
+          rawData = scope.exportData
           companyDetails = $rootScope.selectedCompany
-
-          rawData = scope.data.groupDetails
 
           _.each rawData, (obj) ->
             group = {}
@@ -30,7 +26,7 @@ angular.module('exportDirectives', [])
             #group.childGroups = obj.childGroups
             groups.push group
 
-
+          scope.calculateFilteredExportTotal(rawData)
           sortChildren = (parent) ->
             #push account to accounts if accounts.length > 0
             _.each parent, (obj) ->
@@ -124,10 +120,10 @@ angular.module('exportDirectives', [])
             )
 
           # write footer
-          OBT = scope.data.forwardedBalance.amount.toString()
-          DBT = scope.data.debitTotal.toString()
-          CDT = scope.data.creditTotal.toString()
-          CBT = scope.data.closingBalance.amount.toString()
+          OBT = scope.filteredTotal.openingBalance.toString()
+          DBT = scope.filteredTotal.debitTotal.toString()
+          CDT = scope.filteredTotal.creditTotal.toString()
+          CBT = scope.filteredTotal.closingBalance.toString()
           footerX = 45
           lastY = pdf.autoTableEndPosY()
           pageWidth = pdf.internal.pageSize.width - 40
@@ -154,9 +150,9 @@ angular.module('exportDirectives', [])
         elem.on 'click', (e) ->
           pdf = new jsPDF('p','pt')
           groups = []
-          rawData = scope.data.groupDetails
+          rawData = scope.exportData
           companyDetails = $rootScope.selectedCompany
-
+          scope.calculateFilteredExportTotal(rawData)
           _.each rawData, (obj) ->
             group = {}
             group.name = obj.groupName
@@ -207,10 +203,10 @@ angular.module('exportDirectives', [])
             )
 
           # write footer
-          OBT = scope.data.forwardedBalance.amount.toString()
-          DBT = scope.data.debitTotal.toString()
-          CDT = scope.data.creditTotal.toString()
-          CBT = scope.data.closingBalance.amount.toString()
+          OBT = scope.filteredTotal.openingBalance.toString()
+          DBT = scope.filteredTotal.debitTotal.toString()
+          CDT = scope.filteredTotal.creditTotal.toString()
+          CBT = scope.filteredTotal.closingBalance.toString()
           footerX = 45
           lastY = pdf.autoTableEndPosY()
           pageWidth = pdf.internal.pageSize.width - 40
@@ -303,9 +299,11 @@ angular.module('exportDirectives', [])
         # on element click  
         elem.on 'click', (e) ->
         
-          rawData = scope.data.groupDetails
+          rawData = scope.exportData
+          console.log rawData
           groupData = []
           companyDetails = $rootScope.selectedCompany 
+          scope.calculateFilteredExportTotal(rawData)
           sortData = (parent, groups) ->
             _.each parent, (obj) ->
               group = group or
@@ -385,10 +383,10 @@ angular.module('exportDirectives', [])
           # write table footer
           pdf.line(10, colY, 200, colY)
           pdf.text(10, colY + 5, "TOTAL")
-          pdf.text(70, colY + 5, scope.data.forwardedBalance.amount.toString())
-          pdf.text(105, colY + 5, scope.data.debitTotal.toString())
-          pdf.text(140, colY + 5, scope.data.creditTotal.toString())
-          pdf.text(170, colY + 5, scope.data.closingBalance.amount.toString())
+          pdf.text(70, colY + 5, scope.filteredTotal.openingBalance.toString())
+          pdf.text(105, colY + 5, scope.filteredTotal.debitTotal.toString())
+          pdf.text(140, colY + 5, scope.filteredTotal.creditTotal.toString())
+          pdf.text(170, colY + 5, scope.filteredTotal.closingBalance.toString())
 
           # save to pdf
           pdf.save('TrialBalance-Condensed.pdf')
@@ -479,3 +477,101 @@ angular.module('exportDirectives', [])
           ), 10  
     }
 ])
+.filter('tbsearch', ->
+  (input, search) ->
+    
+    srch = search
+
+    checkIndex = (src, str) ->
+      if src.indexOf(str) != -1
+        true
+      else 
+        false      
+
+    performSearch = (input) -> 
+      if !_.isUndefined(srch)
+        _.each input, (grp) ->
+          grpName = grp.groupName.toLowerCase()
+          grpUnq = grp.uniqueName.toLowerCase()
+
+          if checkIndex(grpName, srch) || checkIndex(grpUnq, srch) 
+            grp.isVisible = true
+          else
+            grp.isVisible = false
+
+          if grp.accounts.length > 0
+            _.each grp.accounts, (acc) ->
+              accName = acc.name.toLowerCase()
+              accUnq = acc.uniqueName.toLowerCase()
+
+              if checkIndex(accName, srch) || checkIndex(accUnq, srch) || checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
+                grp.isVisible = true
+                acc.isVisible = true
+              # else
+              #   acc.isVisible = false
+
+          if grp.childGroups.length > 0
+            _.each grp.childGroups, (chld) ->
+              chldName = chld.groupName.toLowerCase()
+              chldUnq = chld.uniqueName.toLowerCase()
+
+              if checkIndex(chldName, srch) || checkIndex(chldUnq, srch) || checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
+                grp.isVisible = true
+                chld.isVisible = true
+              # else
+              #   chld.isVisible = false
+
+                if chld.accounts.length > 0
+                  _.each chld.accounts, (acc) ->
+                    accName = acc.name.toLowerCase()
+                    accUnq = acc.uniqueName.toLowerCase()
+
+                    if checkIndex(accName, srch) || checkIndex(accUnq, srch) || checkIndex(chldName, srch) || checkIndex(chldUnq, srch) || checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
+                      grp.isVisible = true
+                      chld.isVisible = true
+                      acc.isVisible = true
+
+                if grp.childGroups.length > 0
+                  performSearch(grp.childGroups)
+              else
+              # else
+              #   chld.isVisible = false
+                if chld.accounts.length > 0
+                  _.each chld.accounts, (acc) ->
+                    accName = acc.name.toLowerCase()
+                    accUnq = acc.uniqueName.toLowerCase()
+
+                    if checkIndex(accName, srch) || checkIndex(accUnq, srch) || checkIndex(chldName, srch) || checkIndex(chldUnq, srch) || checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
+                      grp.isVisible = true
+                      chld.isVisible = true
+                      acc.isVisible = true
+
+                if grp.childGroups.length > 0
+                  performSearch(grp.childGroups)
+      input
+    resetSearch = (input) -> 
+      if !_.isUndefined(srch)
+        _.each input, (grp) ->
+            grp.isVisible = true
+          if grp.accounts.length > 0
+            _.each grp.accounts, (acc) ->
+                acc.isVisible = true
+
+          if grp.childGroups.length > 0
+            _.each grp.childGroups, (chld) ->
+                chld.isVisible
+
+                if chld.accounts.length > 0
+                  _.each chld.accounts, (acc) ->
+                    acc.isVisible = true
+
+                if chld.childGroups.length > 0
+                  resetSearch(chld.childGroups)
+      input
+    
+    if _.isUndefined(srch)
+      resetSearch(input)
+    else      
+      performSearch(input)                 
+      
+)

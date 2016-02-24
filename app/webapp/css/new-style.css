@@ -1848,3 +1848,7 @@ i.cls-alert{
 .width100{
     width:100%;
 }
+
+.ui-select-match-item.btn > span > span{
+    padding:4px;
+}

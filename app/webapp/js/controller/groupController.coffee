@@ -661,7 +661,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   }
   $scope.getMergedAccounts = (accData) ->
     $scope.showDeleteMove = false
-    _.extend($scope.AccountsList ,$rootScope.fltAccntList)
+    $scope.AccountsList = $rootScope.fltAccntList
     #remove selected account from AccountsList
     accToRemove = {
       uniqueName: accData.uniqueName
@@ -693,7 +693,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       true
     else if $scope.prePopulate.length > 0 && $scope.toMerge.mergedAcc.length > $scope.prePopulate.length
       false
-
 
   #merge account
   $scope.mergeAccounts = () ->
@@ -826,7 +825,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.toMerge.moveToAcc = ''
 
   $scope.moveToAccountConfirmFailure = (res) ->
-    console.log res
     toastr.error(res.body)
 
 
