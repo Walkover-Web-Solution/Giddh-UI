@@ -301,7 +301,8 @@
             <h3 class="fs16">Invoice amount {{selectedCompany.companySubscription.servicePlan.amount}} &#x20B9;</h3>
           </div>
           <div class="form-group">
-            <button ng-click="getWltBal()" class="btn btn-success">Pay Now</button>
+            <button ng-disabled="selectedCompany.companySubscription.paymentDue" ng-click="getWltBal()" class="btn btn-success">Pay Now</button>
+            <!--  -->
           </div>
         </div>
 

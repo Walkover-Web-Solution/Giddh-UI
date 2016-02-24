@@ -3,19 +3,21 @@
 describe 'userController', ->
   beforeEach module('giddhWebApp')
 
-  beforeEach inject ($controller, $rootScope, toastr, userServices, $q, localStorageService) ->
+  beforeEach inject ($controller, $rootScope, toastr, userServices, $q, localStorageService, $uibModal) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @toastr = toastr
     @q = $q
     @userServices = userServices
     @localStorageService = localStorageService
+    @uibModal = $uibModal
     @userController = $controller('userController',
         {
           $scope: @scope,
           $rootScope: @rootScope,
           userServices: @userServices
           localStorageService: @localStorageService
+          $uibModal: @uibModal
         })
 
   describe '#getUserAuthKey', ->
@@ -73,12 +75,47 @@ describe 'userController', ->
       @scope.getUserAuthKeyFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
-  describe '#test to check for viewContentLoaded event', ->
-    xit 'should call a getAccountsGroups method', ->
-      spyOn(@scope, 'getUserAuthKey')
-      @rootScope.$broadcast('$viewContentLoaded')
-      expect(@scope.getUserAuthKey).toHaveBeenCalled()
+  describe '#getUserTransaction', ->
+    xit 'should call modal service', ->
+      @rootScope.selectedCompany = {something: "something"}
+      modalData = {
+        templateUrl: 'prevTransDetail.html',
+        size: "liq90",
+        backdrop: 'static',
+        scope: @scope
+      }
+      deferred = @q.defer()
+      spyOn(@uibModal, 'open').andReturn({result: deferred.opened})
+      @scope.getUserTransaction()
+      expect(@uibModal.open).toHaveBeenCalledWith(modalData)
 
-  describe '#test to check variable set to undefined or not', ->
-    xit 'should check whether variable declared is undefined or not', ->
-      expect(@scope.userAuthKey).toBe(undefined)
+  describe '#getUserSublistSuccess', ->
+    it 'should set uTransData data and set noData variable to false', ->
+      res = {
+        body: [
+          {name: "somename", userUniqueName: "somename"}
+        ]
+      }
+      @scope.getUserSublistSuccess(res)
+      expect(@scope.uTransData).toEqual(res.body)
+      expect(@scope.noData).toBeFalsy()
+
+    it 'should set uTransData data and set noData variable to true', ->
+      res = {
+        body: []
+      }
+      @scope.getUserSublistSuccess(res)
+      expect(@scope.uTransData).toEqual(res.body)
+      expect(@scope.noData).toBeTruthy()
+
+  describe '#getUserSubListFailure', ->
+    it 'should show toastr with error message', ->
+      res = 
+        data: 
+          message: "Unable to generate auth key"
+          status: "Error"
+      spyOn(@toastr, 'error')
+      @scope.getUserSubListFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+  

@@ -433,7 +433,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     invB = Number($rootScope.selectedCompany.companySubscription.servicePlan.amount)
     if avlB >= invB
       $scope.showPayOptns = false
-      console.log "hit api for deduct subs"
+      $scope.deductSubsViaWallet(invB)
     else if avlB > 0 and avlB < invB
       # hit api with avlB and go through wallet with compDiffAmount
       $scope.wlt.Amnt = Math.abs(invB - avlB)
@@ -442,6 +442,44 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       console.log "no bal found or bal is zero"
 
   $scope.getWltBalFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.deductSubsViaWallet = (num) ->
+    obj = {
+      uniqueName: $rootScope.selectedCompany.uniqueName
+      billAmount: num
+    }
+    companyServices.payBillViaWallet(obj).then($scope.subsViaWltSuccess, $scope.subsWltFailure)
+
+  $scope.subsViaWltSuccess = (res) ->
+    console.log "subsViaWltSuccess", res
+
+  $scope.subsWltFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+
+  $scope.deductSubsViaRazor = (razorObj) ->
+    console.log $scope.wlt.Amnt, razorObj
+    if _.isEmpty($scope.coupRes)
+      obj = {
+        uniqueName: $rootScope.basicInfo.uniqueName
+        paymentId: razorObj.razorpay_payment_id
+        amount: $scope.wlt.Amnt
+        coupanCode: null
+      }
+    else
+      obj = {
+        uniqueName: $rootScope.basicInfo.uniqueName
+        paymentId: razorObj.razorpay_payment_id
+        amount: $scope.wlt.Amnt
+        coupanCode: $scope.wlt.Amnt
+      }
+    # companyServices.payBillViaRazor(obj).then($scope.subsViaRzrSuccess, $scope.subsRzrFailure)
+
+  $scope.subsViaRzrSuccess = (res) ->
+    console.log "subsViaRzrSuccess", res
+
+  $scope.subsRzrFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
 

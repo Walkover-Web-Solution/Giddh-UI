@@ -22,6 +22,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       method: 'PUT'
       url: '/company/:uniqueName/subscription-update'
     }
+    payBillViaWallet: {
+      method: 'PUT'
+      url: '/company/:uniqueName/pay-via-wallet'
+    }
   })
 
   companyServices =
@@ -80,6 +84,11 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
 
     updtCompSubs: (data, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Company.updtCompSubs({
+        uniqueName: data.uniqueName
+      }, data, onSuccess, onFailure))
+      
+    payBillViaWallet: (data, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.payBillViaWallet({
         uniqueName: data.uniqueName
       }, data, onSuccess, onFailure))
 

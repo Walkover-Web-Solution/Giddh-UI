@@ -30,6 +30,14 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
           method: 'GET'
           url: '/users/:uniqueName/available-credit'
         }
+        cancelAutoPay: {
+          method: 'PUT'
+          url: '/users/:uniqueName/delete-payee'
+        }
+        payBillViaRazor: {
+          method: 'POST'
+          url: '/users/:uniqueName/balance'
+        }
       }
   )
 
@@ -67,6 +75,16 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
     getWltBal: (name) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.getWltBal({uniqueName: name}, onSuccess, onFailure)
+      )
+
+    cancelAutoPay: (data) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.cancelAutoPay({uniqueName: data.uUname}, data, onSuccess, onFailure)
+      )
+
+    payBillViaRazor: (data) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.payBillViaRazor({uniqueName: data.uUname}, data, onSuccess, onFailure)
       )
 
   userServices

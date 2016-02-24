@@ -92,7 +92,7 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
     link: (scope, element, attrs) ->
       scope.proceedToPay = (e, amount) ->
         options = {
-          key: "rzp_test_nLNKGERgu2VVV1"
+          key: "rzp_test_6SDWNz3uMF944l"
           amount: amount
           name: "Giddh"
           description: $rootScope.selectedCompany.name+ " Subscription for Giddh"
@@ -100,6 +100,7 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
           handler: (response)->
             # hit api after success
             console.log response, "response after success"
+            scope.deductSubsViaRazor(response)
           prefill:
             name: $rootScope.basicInfo.name
             email: $rootScope.basicInfo.email
