@@ -20,4 +20,17 @@ router.post '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/', (req, res) ->
+  authHead = 
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/profit-loss-history'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+
+
 module.exports = router

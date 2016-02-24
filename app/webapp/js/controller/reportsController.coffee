@@ -4,6 +4,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.today = new Date()
   $scope.fromDate = {date: new Date()}
   $scope.toDate = {date: new Date()}
+  $scope.fromPLDate = {date: new Date()}
+  $scope.toPLDate = {date: new Date()}
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
   $scope.GroupsAndAccounts = []
@@ -34,6 +36,9 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.series = []
   $scope.chartData = []
   $scope.labels = []
+  $scope.plSeries = []
+  $scope.plChartData = []
+  $scope.plLabels = []
   $scope.chartOptions = {
     datasetFill:false
   }
@@ -410,7 +415,6 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
         $scope.accounts = $scope.listBeforeLimit.accounts
   )
 
-
   $scope.$watch('fromDate.date', (newVal,oldVal) ->
     oldDate = new Date(oldVal).getTime()
     newDate = new Date(newVal).getTime()
@@ -421,7 +425,71 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
       $scope.toDate.date =  newDate
   )
 
+  # for profit and loss graphs
+  $scope.showPLGraphFilters = false
+
+  $scope.showPLFilter = () ->
+    $scope.showPLGraphFilters = true
+
+  $scope.hidePLFilter = () ->
+    $scope.showPLGraphFilters = false
   
+  $scope.getPLgraphData = (reqParam) ->
+    reportService.plGraphData(reqParam).then $scope.getPLgraphDataSuccess, $scope.getPLgraphDataFailure
+
+  $scope.getPLgraphDataSuccess = (res) ->
+    $scope.plGraphData = res.body
+    $scope.formatPLgraphData($scope.plGraphData)
+
+  $scope.getPLgraphDataFailure = (res) ->
+    console.log res
+
+  $scope.generatePLgraph = () ->
+    reqParam = {
+      'cUname': $rootScope.selectedCompany.uniqueName
+      'fromDate': $filter('date')($scope.fromDate.date,'dd-MM-yyyy')
+      'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+      'interval': $scope.selected.interval 
+    }
+    $scope.getPLgraphData(reqParam) 
+    $scope.chartDataAvailable = false
+
+  $scope.formatPLgraphData = (plData) ->
+    $scope.plSeries = []
+    $scope.plChartData = []
+    $scope.plLabels = []
+
+    monthlyBalances = []
+    yearlyBalances = []
+
+    _.each plData.periodBalances, (pl) ->
+      $scope.plLabels.push(pl.to)
+      monthlyBalances.push(pl.monthlyBalance)
+      $scope.plSeries.push('Monthly Balances')
+      yearlyBalances.push(pl.yearlyBalance)
+      $scope.plSeries.push('Yearly Balances')
+
+    $scope.plChartData.push(monthlyBalances, yearlyBalances)
+    $scope.chartDataAvailable = true
+
+    # console.log $scope.plSeries, $scope.plLabels, $scope.plChartData
+
+
+
+  # $scope.$watch('fromPLDate.date', (newVal,oldVal) ->
+  #   oldDate = new Date(oldVal).getTime()
+  #   newDate = new Date(newVal).getTime()
+
+  #   toDate = new Date($scope.toDate.date).getTime()
+
+  #   if newDate > toDate
+  #     $scope.toDate.date =  newDate
+  # )
+  
+
+
+
+
 
 #init angular app
 giddh.webApp.controller 'reportsController', reportsController

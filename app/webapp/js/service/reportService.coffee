@@ -12,6 +12,10 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
       historicData: {
         method: 'POST',
         url: '/company/:companyUniqueName/history?fromDate=:date1&toDate=:date2&interval=:interval'
+      },
+      plHistoricData: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/profit-loss-history?fromDate=:date1&toDate=:date2&interval=:interval'
       }
       # historicData: {
       #   method: 'PUT'
@@ -33,5 +37,13 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
         date2: argData.toDate
         interval: argData.interval
       }, data, onSuccess,  onFailure))
+
+    plGraphData: (argData, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Report.plHistoricData({
+        companyUniqueName: argData.cUname
+        date1: argData.fromDate
+        date2: argData.toDate
+        interval: argData.interval
+      }, onSuccess,  onFailure))
 
   reportService

@@ -504,7 +504,8 @@ header .navbar-nav > li.active {
 }
 
 .greyBg {
-    background: #f5f5f5
+    background: #f5f5f5;
+    min-width:320px;
 }
 
 .witBg {
