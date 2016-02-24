@@ -472,7 +472,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         uniqueName: $rootScope.basicInfo.uniqueName
         paymentId: razorObj.razorpay_payment_id
         amount: $scope.wlt.Amnt
-        coupanCode: 
+        coupanCode: $scope.wlt.Amnt
       }
     # companyServices.payBillViaRazor(obj).then($scope.subsViaRzrSuccess, $scope.subsRzrFailure)
 
