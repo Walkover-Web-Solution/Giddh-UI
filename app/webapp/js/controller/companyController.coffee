@@ -479,7 +479,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.resetSteps()
     $rootScope.selectedCompany.companySubscription.paymentDue = false
     $scope.showPayOptns = false
-    toastr.success(res.message, res.status)
+    toastr.success(res.body, res.status)
 
   $scope.subsRzrFailure = (res) ->
     console.log "subsRzrFailure", res
