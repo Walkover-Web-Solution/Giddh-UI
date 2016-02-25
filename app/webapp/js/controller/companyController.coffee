@@ -475,11 +475,12 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     userServices.payBillViaRazor(obj).then($scope.subsViaRzrSuccess, $scope.subsRzrFailure)
 
   $scope.subsViaRzrSuccess = (res) ->
-    console.log "subsViaRzrSuccess", res
-    $scope.resetSteps()
+    $rootScope.basicInfo.availableCredit =  $rootScope.basicInfo.availableCredit + Number($scope.wlt.Amnt)
     $rootScope.selectedCompany.companySubscription.paymentDue = false
     $scope.showPayOptns = false
+    $scope.resetSteps()
     toastr.success(res.body, res.status)
+
 
   $scope.subsRzrFailure = (res) ->
     console.log "subsRzrFailure", res
