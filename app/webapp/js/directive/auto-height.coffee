@@ -104,6 +104,7 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
           prefill:
             name: $rootScope.basicInfo.name
             email: $rootScope.basicInfo.email
+            contact: $rootScope.selectedCompany.mobileNo
           notes:
             address: $rootScope.selectedCompany.address
           theme:

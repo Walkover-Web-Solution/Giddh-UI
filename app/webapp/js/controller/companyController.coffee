@@ -440,6 +440,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.showPayOptns = true
     else
       console.log "no bal found or bal is zero"
+      $scope.showPayOptns = true
+      $scope.wlt.Amnt = invB
 
   $scope.getWltBalFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -459,27 +461,29 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
 
   $scope.deductSubsViaRazor = (razorObj) ->
-    console.log $scope.wlt.Amnt, razorObj
+    obj = {
+      uUname: $rootScope.basicInfo.uniqueName
+      paymentId: razorObj.razorpay_payment_id
+      amount: Number($scope.wlt.Amnt)
+    }
     if _.isEmpty($scope.coupRes)
-      obj = {
-        uniqueName: $rootScope.basicInfo.uniqueName
-        paymentId: razorObj.razorpay_payment_id
-        amount: $scope.wlt.Amnt
-        coupanCode: null
-      }
+      obj.couponCode = null
     else
-      obj = {
-        uniqueName: $rootScope.basicInfo.uniqueName
-        paymentId: razorObj.razorpay_payment_id
-        amount: $scope.wlt.Amnt
-        coupanCode: $scope.wlt.Amnt
-      }
-    # companyServices.payBillViaRazor(obj).then($scope.subsViaRzrSuccess, $scope.subsRzrFailure)
+      obj.couponCode = $scope.coupRes.couponCode
+
+    console.log obj, "obj"
+    userServices.payBillViaRazor(obj).then($scope.subsViaRzrSuccess, $scope.subsRzrFailure)
 
   $scope.subsViaRzrSuccess = (res) ->
-    console.log "subsViaRzrSuccess", res
+    $rootScope.basicInfo.availableCredit =  $rootScope.basicInfo.availableCredit + Number($scope.wlt.Amnt)
+    $rootScope.selectedCompany.companySubscription.paymentDue = false
+    $scope.showPayOptns = false
+    $scope.resetSteps()
+    toastr.success(res.body, res.status)
+
 
   $scope.subsRzrFailure = (res) ->
+    console.log "subsRzrFailure", res
     toastr.error(res.data.message, res.data.status)
 
 
