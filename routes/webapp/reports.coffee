@@ -25,6 +25,10 @@ router.get '/', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      to: req.query.toDate
+      from: req.query.fromDate
+      interval: req.query.interval 
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/profit-loss-history'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error'

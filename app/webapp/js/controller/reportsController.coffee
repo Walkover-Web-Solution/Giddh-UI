@@ -447,8 +447,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.generatePLgraph = () ->
     reqParam = {
       'cUname': $rootScope.selectedCompany.uniqueName
-      'fromDate': $filter('date')($scope.fromDate.date,'dd-MM-yyyy')
-      'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+      'fromDate': $filter('date')($scope.fromPLDate.date,'dd-MM-yyyy')
+      'toDate': $filter('date')($scope.toPLDate.date, "dd-MM-yyyy")
       'interval': $scope.selected.interval 
     }
     $scope.getPLgraphData(reqParam) 

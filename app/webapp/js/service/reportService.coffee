@@ -39,6 +39,7 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
       }, data, onSuccess,  onFailure))
 
     plGraphData: (argData, onSuccess, onFailure) ->
+      console.log argData
       @handlePromise((onSuccess, onFailure) -> Report.plHistoricData({
         companyUniqueName: argData.cUname
         date1: argData.fromDate
