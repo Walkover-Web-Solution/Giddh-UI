@@ -1853,3 +1853,7 @@ i.cls-alert{
 .ui-select-match-item.btn > span > span{
     padding:4px;
 }
+
+.min320{
+    min-width:320px;
+}
