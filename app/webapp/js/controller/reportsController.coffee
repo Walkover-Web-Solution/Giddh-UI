@@ -442,7 +442,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.formatPLgraphData($scope.plGraphData)
 
   $scope.getPLgraphDataFailure = (res) ->
-    console.log res
+    toastr.error(res.body)
 
   $scope.generatePLgraph = () ->
     reqParam = {
@@ -472,19 +472,17 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.plChartData.push(monthlyBalances, yearlyBalances)
     $scope.chartDataAvailable = true
 
-    # console.log $scope.plSeries, $scope.plLabels, $scope.plChartData
+  $scope.$watch('fromPLDate.date', (newVal,oldVal) ->
+    oldDate = new Date(oldVal).getTime()
+    newDate = new Date(newVal).getTime()
 
+    toDate = new Date($scope.toDate.date).getTime()
 
+    if newDate > toDate
+      $scope.toDate.date =  newDate
+  )
 
-  # $scope.$watch('fromPLDate.date', (newVal,oldVal) ->
-  #   oldDate = new Date(oldVal).getTime()
-  #   newDate = new Date(newVal).getTime()
-
-  #   toDate = new Date($scope.toDate.date).getTime()
-
-  #   if newDate > toDate
-  #     $scope.toDate.date =  newDate
-  # )
+  
   
 
 

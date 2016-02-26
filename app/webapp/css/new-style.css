@@ -1861,3 +1861,7 @@ i.cls-alert{
 .min320{
     min-width:320px;
 }
+
+.graph-filters td > .btn,.graph-filters td > .btn-sm{
+    padding:0;
+}
