@@ -4,6 +4,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
   UserSET = $resource('/users',
       {
         'uniqueName': @uniqueName,
+        'page': @page
       },
       {
         getUserDetails: {
@@ -24,7 +25,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         }
         getUserSubList: {
           method: 'GET'
-          url: '/users/:uniqueName/transactions'
+          url: '/users/:uniqueName/transactions?page=:page'
         }
         getWltBal: {
           method: 'GET'
@@ -67,9 +68,9 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         UserSET.getSubList({uniqueName: name}, onSuccess, onFailure)
       )
 
-    getUserSublist: (name) ->
+    getUserSublist: (obj) ->
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.getUserSubList({uniqueName: name}, onSuccess, onFailure)
+        UserSET.getUserSubList({uniqueName: obj.name, page: obj.num}, onSuccess, onFailure)
       )
 
     getWltBal: (name) ->

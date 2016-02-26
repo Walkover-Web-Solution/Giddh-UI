@@ -10,7 +10,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.showUpdTbl = false
   $scope.compSetBtn = true
   $scope.compDataFound = false
-  $scope.compTransData = []
+  $scope.compTransData = {}
   $scope.compDiffAmount = 0
   $scope.showPayOptns = false
   #contains company list
@@ -33,6 +33,9 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.discount = 0
   $scope.amount = 0
   $scope.calCulatedDiscount = 0
+
+  $scope.currentPageComp = 1
+  $scope.pagiMaxSizeComp = 5
 
   #dialog for first time user
   $scope.openFirstTimeUserModal = () ->
@@ -396,12 +399,31 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       if newVal isnt oldVal
         $scope.compSetBtn = false
   )
+  $scope.pageChangedComp = (num) ->
+    obj = {
+      name: $rootScope.selectedCompany.uniqueName
+      num: num
+    }
+    companyServices.getCompTrans(obj).then($scope.pageChangedCompSuccess, $scope.pageChangedCompFailure)
+
+  $scope.pageChangedCompSuccess =(res)->
+    $scope.compTransData.paymentDetail = []
+    $scope.compTransData.paymentDetail = $scope.compTransData.paymentDetail.concat(res.body.paymentDetail)
+
+  $scope.pageChangedCompFailure =(res)->
+    toastr.error(res.data.message, res.data.status)
+
   $scope.getCompanyTransactions = ()->
-    companyServices.getCompTrans($rootScope.selectedCompany.uniqueName).then($scope.getCompanyTransactionsSuccess, $scope.getCompanyTransactionsFailure)
+    obj = {
+      name: $rootScope.selectedCompany.uniqueName
+      num: 1
+    }
+    companyServices.getCompTrans(obj).then($scope.getCompanyTransactionsSuccess, $scope.getCompanyTransactionsFailure)
 
   $scope.getCompanyTransactionsSuccess = (res) ->
     angular.copy(res.body, $scope.compTransData)
-    if res.body.length > 0
+    $scope.totalItemsComp = res.body.totalPages*10
+    if res.body.paymentDetail.length > 0
       $scope.compDataFound = true
     else
       $scope.compDataFound = false
@@ -471,7 +493,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     else
       obj.couponCode = $scope.coupRes.couponCode
 
-    console.log obj, "obj"
     userServices.payBillViaRazor(obj).then($scope.subsViaRzrSuccess, $scope.subsRzrFailure)
 
   $scope.subsViaRzrSuccess = (res) ->

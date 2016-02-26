@@ -99,20 +99,22 @@ describe "User Service", ->
         )
 
     describe '#get user subscription list', ->
+      obj = {
+        name: "uniqueName"
+        num: 1
+      }
       it 'shpuld call success callback', ->
-        uniqueName = "uniqueName"
-        @httpBackend.when('GET', '/users/' + uniqueName+'/transactions').respond(200, {"status": "success"})
+        @httpBackend.when('GET', '/users/' + obj.name+'/transactions?page='+obj.num).respond(200, {"status": "success"})
 
-        @userServices.getUserSublist(uniqueName).then(
+        @userServices.getUserSublist(obj).then(
           (data) -> expect(data.status).toBe("success")
           (data) -> expect(true).toBeFalsy()
         )
 
       it 'should call failure callback', ->
-        uniqueName = "uniqueName"
-        @httpBackend.when('GET', '/users/' + uniqueName+'/transactions').respond(400, {"status": "error"})
+        @httpBackend.when('GET', '/users/' + obj.name+'/transactions?page='+obj.num).respond(400, {"status": "error"})
 
-        @userServices.getUserSublist(uniqueName).then(
+        @userServices.getUserSublist(obj).then(
           (data) -> expect(true).toBeFalsy()
           (data) ->
             expect(data.data.status).toBe("error")

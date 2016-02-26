@@ -196,16 +196,19 @@ describe 'Company Service', ->
       )
 
   describe '#getCompTrans by company uniquename', ->
-    uniqueName = "uniquename"
+    obj = {
+      name: "Somename"
+      num: 1
+    }
     it 'should call success callback after service called', ->
-      @httpBackend.when('GET', '/company/'+uniqueName+'/transactions').respond(200, {"status": "success"})
-      @companyServices.getCompTrans(uniqueName).then(
+      @httpBackend.when('GET', '/company/'+obj.name+'/transactions?page='+obj.num).respond(200, {"status": "success"})
+      @companyServices.getCompTrans(obj).then(
         (data) -> expect(data.status).toBe("success")
         (data) -> expect(true).toBeFalsy()
       )
     it 'should call error callback after service called', ->
-      @httpBackend.when('GET', '/company/'+uniqueName+'/transactions').respond(401, {"status": "error"})
-      @companyServices.getCompTrans(uniqueName).then(
+      @httpBackend.when('GET', '/company/'+obj.name+'/transactions?page='+obj.num).respond(401, {"status": "error"})
+      @companyServices.getCompTrans(obj).then(
         (data) -> expect(true).toBeFalsy()
         (data) -> expect(data.data.status).toBe("error")
       )

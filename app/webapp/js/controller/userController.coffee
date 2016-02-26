@@ -4,9 +4,11 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.userAuthKey = undefined
   $scope.noData = false
   $scope.subListData = []
-  $scope.uTransData = []
+  $scope.uTransData = {}
   $scope.cSubsData = false
   $rootScope.basicInfo = localStorageService.get("_userDetails")
+  $scope.currentPage = 1
+  $scope.pagiMaxSize = 5
   
   $scope.getUserAuthKey = () ->
     if !_.isEmpty($rootScope.basicInfo)
@@ -49,9 +51,8 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.changeCallback = () ->
     result =  _.findWhere($scope.subListData, {autoDeduct: false})
     if _.isUndefined(result) || _.isEmpty(result)
-      console.log "do nothing"
+      console.info "do nothing"
     else
-      console.log result
       obj = {
         uUname: $rootScope.basicInfo.uniqueName
         companyUniqueName: result.companyUniqueName
@@ -71,10 +72,15 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       backdrop: 'static'
       scope: $scope
     )
+    obj = {
+      name: $rootScope.basicInfo.uniqueName
+      num: 1
+    }
     modalInstance.opened.then ->
-      userServices.getUserSublist($rootScope.basicInfo.uniqueName).then($scope.getUserSublistSuccess, $scope.getUserSubListFailure)
+      userServices.getUserSublist(obj).then($scope.getUserSublistSuccess, $scope.getUserSubListFailure)
     
   $scope.getUserSublistSuccess = (res) ->
+    $scope.totalItems = res.body.totalPages*10
     $scope.uTransData = res.body
     if $scope.uTransData.length is 0
       $scope.noData = true
@@ -82,7 +88,19 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.getUserSubListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  
+  $scope.pageChanged = (num) ->
+    obj = {
+      name: $rootScope.basicInfo.uniqueName
+      num: num
+    }
+    userServices.getUserSublist(obj).then($scope.pageChangedSuccess, $scope.pageChangedFailure)
+
+  $scope.pageChangedSuccess =(res)->
+    $scope.uTransData.paymentDetail = []
+    $scope.uTransData.paymentDetail = $scope.uTransData.paymentDetail.concat(res.body.paymentDetail)
+
+  $scope.pageChangedFailure =(res)->
+    toastr.error(res.data.message, res.data.status)
 
 #init angular app
 giddh.webApp.controller 'userController', userController

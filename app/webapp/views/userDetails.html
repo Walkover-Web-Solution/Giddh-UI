@@ -21,7 +21,7 @@
           <div class="pd2">
             <h3 class="fs16 mrB1">Payment details</h3>
             <label class="mrB1">Current Balance {{basicInfo.availableCredit}} &#x20B9;</label>
-            <p class="mrB1"><a href="javascript:void(0)" ng-click="getUserTransaction()">Previous transaction details</a></p>
+            <p class="mrB1"><a href="javascript:void(0)" ng-click="getUserTransaction()">Transaction details</a></p>
 
             <!-- modal start -->
             <script type="text/ng-template" id="prevTransDetail.html">
@@ -36,35 +36,40 @@
                   <img src="/public/webapp/images/no-data.png" alt="">
                 </div>
                 <!-- nodata end -->
-                <table class="table table-striped table-bordered" ng-hide="noData">
-                  <thead>
-                    <tr>
-                      <th>Amount</th>
-                      <th>Date</th>
-                      <th>Status</th>
-                      <th>Description</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr ng-repeat="value in uTransData.paymentDetail">
-                      <td>
-                        <span ng-bind-html="value.balance.amount"></span>
-                        <span class="text-success" ng-if="value.balance.type == 'CREDIT'">
-                          (CR)
-                        </span>
-                        <span class="text-danger" ng-if="value.balance.type == 'DEBIT'">
-                          (CR)
-                        </span>
-                      </td>
-                      <td ng-bind-html="value.paymentDate | moment: 'format': 'MMM DD, YYYY' "></td>
-                      <td ng-bind-html="value.paymentStatus"></td>
-                      <td>
-                        {{value.companyName}}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <small>* Latest 5 transactions</small>
+                <div ng-hide="noData">
+                  <table class="table table-striped table-bordered"  style="margin-bottom:0">
+                    <thead>
+                      <tr>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Status</th>
+                        <th>Description</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr ng-repeat="value in uTransData.paymentDetail">
+                        <td>
+                          <span ng-bind-html="value.balance.amount"></span>
+                          <span class="text-success" ng-if="value.balance.type == 'CREDIT'">
+                            (CR)
+                          </span>
+                          <span class="text-danger" ng-if="value.balance.type == 'DEBIT'">
+                            (CR)
+                          </span>
+                        </td>
+                        <td ng-bind-html="value.paymentDate | moment: 'format': 'MMM DD, YYYY' "></td>
+                        <td ng-bind-html="value.paymentStatus"></td>
+                        <td>
+                          {{value.companyName}}
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  
+                  <uib-pagination ng-hide="uTransData.totalElements <= 1" boundary-links="true" class="pagination-sm" boundary-link-numbers="true" rotate="false" max-size="pagiMaxSize" total-items="totalItems" ng-model="currentPage" ng-change="pageChanged(currentPage)"></uib-pagination>
+                  
+
+                </div>
               </div>
             </script>
 
