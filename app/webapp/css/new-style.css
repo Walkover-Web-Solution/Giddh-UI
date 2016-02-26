@@ -1850,8 +1850,12 @@ i.cls-alert{
     width:100%;
 }
 
+.ui-select-match-item.btn{
+    padding:0;
+}
+
 .ui-select-match-item.btn > span > span{
-    padding:4px;
+    padding:5px;
 }
 
 .min320{

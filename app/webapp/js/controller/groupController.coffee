@@ -693,6 +693,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       true
     else if $scope.prePopulate.length > 0 && $scope.toMerge.mergedAcc.length > $scope.prePopulate.length
       false
+    else if $scope.prePopulate.length > 0 && $scope.toMerge.mergedAcc.length < $scope.prePopulate.length
+      true
+
 
   #merge account
   $scope.mergeAccounts = () ->
@@ -728,6 +731,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     }
     if accToMerge.length > 0
       accountService.merge(unqNamesObj, accToMerge).then( $scope.mergeSuccess, $scope.mergeFailure)
+      _.each accToMerge, (acc) ->
+        removeMerged = {
+          uniqueName: acc.uniqueName
+        }
+        $scope.AccountsList = _.without($scope.AccountsList, _.findWhere($scope.AccountsList, removeMerged))
     else
       toastr.error("Please select at least one account.")
 
@@ -747,6 +755,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.toMerge.toUnMerge.uniqueNames = []
     $scope.toMerge.toUnMerge.uniqueNames.push(item.uniqueName)
     if item.noRemove == true then ($scope.showDeleteMove = true) else ($scope.showDeleteMove = false)
+
 
   $scope.deleteMergedAccount = () ->
     $scope.toMerge.toUnMerge.moveTo = null
@@ -806,6 +815,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     }
     if $scope.toMerge.toUnMerge.uniqueNames.length != 0
       accountService.unMerge(unqNamesObj, accTosend).then( $scope.moveToAccountConfirmSuccess, $scope.moveToAccountConfirmFailure)
+      _.each $scope.toMerge.toUnMerge.uniqueNames, (accUnq) ->
+        removeFromPrePopulate = {
+          uniqueName: accUnq
+        }
+        $scope.prePopulate = _.without($scope.prePopulate, _.findWhere($scope.prePopulate, removeFromPrePopulate))
     else
       toastr.error('Please Select an account to move.')
 
@@ -819,7 +833,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       if obj.uniqueName != $scope.toMerge.toUnMerge.uniqueNames[0]
         toRemove.uniqueName = obj.uniqueName
         updatedMergedAccList.push(toRemove)
-
     $scope.toMerge.mergedAcc = updatedMergedAccList
     $scope.toMerge.toUnMerge.uniqueNames = []
     $scope.toMerge.moveToAcc = ''
