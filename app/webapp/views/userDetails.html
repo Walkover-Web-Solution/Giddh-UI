@@ -46,8 +46,16 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr ng-repeat="value in uTransData">
-                      <td ng-bind-html="value.amount"></td>
+                    <tr ng-repeat="value in uTransData.paymentDetail">
+                      <td>
+                        <span ng-bind-html="value.balance.amount"></span>
+                        <span class="text-success" ng-if="value.balance.type == 'CREDIT'">
+                          (CR)
+                        </span>
+                        <span class="text-danger" ng-if="value.balance.type == 'DEBIT'">
+                          (CR)
+                        </span>
+                      </td>
                       <td ng-bind-html="value.paymentDate | moment: 'format': 'MMM DD, YYYY' "></td>
                       <td ng-bind-html="value.paymentStatus"></td>
                       <td>
@@ -56,6 +64,7 @@
                     </tr>
                   </tbody>
                 </table>
+                <small>* Latest 5 transactions</small>
               </div>
             </script>
 
@@ -114,7 +123,14 @@
 
         <uib-tab heading="Subscription list" ng-click="getSubscriptionList()">
           <div class="pd2">
-            <table class="table table-striped table-bordered">
+            <!-- no data start -->
+            <div class="no-data" ng-hide="cSubsData" style="margin-top:0">
+              <h1>Sorry, No Data Found!</h1>
+              <img src="/public/webapp/images/no-data.png" alt="">
+            </div>
+            <!-- nodata end -->
+
+            <table ng-show="cSubsData" class="table table-striped table-bordered">
               <thead>
                 <tr>
                   <th>Company Name</th>

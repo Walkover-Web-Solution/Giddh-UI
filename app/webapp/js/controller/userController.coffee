@@ -5,6 +5,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.noData = false
   $scope.subListData = []
   $scope.uTransData = []
+  $scope.cSubsData = false
   $rootScope.basicInfo = localStorageService.get("_userDetails")
   
   $scope.getUserAuthKey = () ->
@@ -37,6 +38,10 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   
   $scope.getSubscriptionListSuccess = (res) ->
     $scope.subListData = res.body
+    if res.body.length > 0
+      $scope.cSubsData = true
+    else
+      $scope.cSubsData = false
 
   $scope.getSubscriptionListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
