@@ -477,6 +477,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.subsViaWltSuccess = (res) ->
     console.log "subsViaWltSuccess", res
+    $rootScope.basicInfo.availableCredit =  $rootScope.basicInfo.availableCredit - Number(res.body.billAmount)
+    $rootScope.selectedCompany.companySubscription.paymentDue = false
+    $scope.showPayOptns = false
+    $scope.resetSteps()
 
   $scope.subsWltFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -569,7 +573,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       
 
   $scope.redeemCouponFailure = (res) ->
+    $scope.payAlert = []
+    $scope.calCulatedDiscount = 0
+    $scope.discount = 0
+    $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
+    $scope.coupRes = {}
     toastr.error(res.data.message, res.data.status)
+    $scope.payAlert.push({msg: res.data.message})
 
   # remove alert
   $scope.closeAlert = (index) ->
