@@ -131,6 +131,8 @@ router.get '/:uniqueName/transactions', (req, res) ->
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      page: req.query.page
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode).send(data)

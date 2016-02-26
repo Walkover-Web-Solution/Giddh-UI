@@ -1,7 +1,10 @@
 'use strict'
 
 giddh.serviceModule.service 'companyServices', ($resource, $q) ->
-  Company = $resource('/company', {'uniqueName': @uniqueName}, {
+  Company = $resource('/company', {
+    'uniqueName': @uniqueName
+    'page': @page
+    },{
     addCompany: {method: 'POST'}
     getCompanyDetails: {method: 'GET', url: '/company/:uniqueName'}
     getCompanyList: {method: 'GET', url: '/company/all'}
@@ -16,7 +19,7 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
 
     getCompTrans: {
       method:'GET'
-      url: '/company/:uniqueName/transactions'
+      url: '/company/:uniqueName/transactions?page=:page'
     }
     updtCompSubs: {
       method: 'PUT'
@@ -79,8 +82,8 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     getPL :(reqParam) ->
       @handlePromise((onSuccess, onFailure) -> Company.getProfitLoss({companyUniqueName: reqParam.companyUniqueName, from: reqParam.fromDate, to:reqParam.toDate}, onSuccess, onFailure))
 
-    getCompTrans: (uniqueName) ->
-      @handlePromise((onSuccess, onFailure) -> Company.getCompTrans({uniqueName: uniqueName}, onSuccess, onFailure))
+    getCompTrans: (obj) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getCompTrans({uniqueName: obj.name, page: obj.num}, onSuccess, onFailure))
 
     updtCompSubs: (data, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Company.updtCompSubs({

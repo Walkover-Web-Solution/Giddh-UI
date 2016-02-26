@@ -48,6 +48,8 @@ router.get '/:uniqueName/transactions', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      page: req.query.page
   hUrl = settings.envUrl + 'users/' + req.params.uniqueName + '/transactions'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error'
