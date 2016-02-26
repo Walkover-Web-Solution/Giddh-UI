@@ -16,6 +16,10 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
       plHistoricData: {
         method: 'GET',
         url: '/company/:companyUniqueName/profit-loss-history?fromDate=:date1&toDate=:date2&interval=:interval'
+      },
+      nwHistoricData: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/networth-history?fromDate=:date1&toDate=:date2&interval=:interval'
       }
       # historicData: {
       #   method: 'PUT'
@@ -39,8 +43,15 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
       }, data, onSuccess,  onFailure))
 
     plGraphData: (argData, onSuccess, onFailure) ->
-      console.log argData
       @handlePromise((onSuccess, onFailure) -> Report.plHistoricData({
+        companyUniqueName: argData.cUname
+        date1: argData.fromDate
+        date2: argData.toDate
+        interval: argData.interval
+      }, onSuccess,  onFailure))
+
+    nwGraphData: (argData, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Report.nwHistoricData({
         companyUniqueName: argData.cUname
         date1: argData.fromDate
         date2: argData.toDate

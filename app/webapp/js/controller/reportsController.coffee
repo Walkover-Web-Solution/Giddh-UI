@@ -6,6 +6,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.toDate = {date: new Date()}
   $scope.fromPLDate = {date: new Date()}
   $scope.toPLDate = {date: new Date()}
+  $scope.fromNWDate = {date: new Date()}
+  $scope.toNWDate = {date: new Date()}
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
   $scope.GroupsAndAccounts = []
@@ -39,6 +41,9 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.plSeries = []
   $scope.plChartData = []
   $scope.plLabels = []
+  $scope.nwSeries = []
+  $scope.nwChartData = []
+  $scope.nwLabels = []
   $scope.chartOptions = {
     datasetFill:false
   }
@@ -426,14 +431,26 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   )
 
   # for profit and loss graphs
+  $scope.showHistoryFilters = true
   $scope.showPLGraphFilters = false
+  $scope.showNWfilters = false
 
   $scope.showPLFilter = () ->
     $scope.showPLGraphFilters = true
+    $scope.showNWfilters = false
+    $scope.showHistoryFilters = false
 
-  $scope.hidePLFilter = () ->
+  $scope.showHistoryFilter = () ->
     $scope.showPLGraphFilters = false
+    $scope.showNWfilters = false
+    $scope.showHistoryFilters = true
+
+  $scope.showNWfilter = () ->
+    $scope.showPLGraphFilters = false
+    $scope.showNWfilters = true
+    $scope.showHistoryFilters = false
   
+
   $scope.getPLgraphData = (reqParam) ->
     reportService.plGraphData(reqParam).then $scope.getPLgraphDataSuccess, $scope.getPLgraphDataFailure
 
@@ -482,9 +499,58 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
       $scope.toDate.date =  newDate
   )
 
-  
+  # for networth graph
   
 
+  $scope.getNWgraphData = (reqParam) ->
+    reportService.nwGraphData(reqParam).then $scope.getNWgraphDataSuccess, $scope.getNWgraphDataFailure
+
+  $scope.getNWgraphDataSuccess = (res) ->
+    $scope.nwGraphData = res.body
+    $scope.formatNWgraphData ($scope.nwGraphData)
+
+  $scope.getNWgraphDataFailure = (res) ->
+    toastr.error(res.body)
+
+  $scope.generateNWgraph = () ->
+    reqParam = {
+      'cUname': $rootScope.selectedCompany.uniqueName
+      'fromDate': $filter('date')($scope.fromNWDate.date,'dd-MM-yyyy')
+      'toDate': $filter('date')($scope.toNWDate.date, "dd-MM-yyyy")
+      'interval': $scope.selected.interval 
+    }
+    $scope.getNWgraphData(reqParam) 
+    $scope.chartDataAvailable = false
+
+
+  $scope.formatNWgraphData = (nwData) ->
+    console.log nwData
+    $scope.nwSeries = []
+    $scope.nwChartData = []
+    $scope.nwLabels = []
+
+    monthlyBalances = []
+    yearlyBalances = []
+
+    _.each nwData.periodBalances, (nw) ->
+      $scope.nwLabels.push(nw.to)
+      monthlyBalances.push(nw.monthlyBalance)
+      $scope.nwSeries.push('Monthly Balances')
+      yearlyBalances.push(nw.yearlyBalance)
+      $scope.nwSeries.push('Yearly Balances')
+
+    $scope.nwChartData.push(monthlyBalances, yearlyBalances)
+    $scope.chartDataAvailable = true
+
+  $scope.$watch('fromNWDate.date', (newVal,oldVal) ->
+    oldDate = new Date(oldVal).getTime()
+    newDate = new Date(newVal).getTime()
+
+    toDate = new Date($scope.toDate.date).getTime()
+
+    if newDate > toDate
+      $scope.toDate.date =  newDate
+  )
 
 
 

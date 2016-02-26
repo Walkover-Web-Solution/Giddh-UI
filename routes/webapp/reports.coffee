@@ -35,6 +35,21 @@ router.get '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/', (req, res) ->
+  authHead = 
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      to: req.query.toDate
+      from: req.query.fromDate
+      interval: req.query.interval 
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/networth-history'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 
 
 module.exports = router

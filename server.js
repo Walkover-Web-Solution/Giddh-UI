@@ -155,6 +155,7 @@ app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/profit-loss', profitLoss);
 app.use('/company/:companyUniqueName/history', reports);
 app.use('/company/:companyUniqueName/profit-loss-history', reports);
+app.use('/company/:companyUniqueName/networth-history', reports);
 app.use('/coupon', coupon)
 
 
