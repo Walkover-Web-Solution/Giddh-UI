@@ -551,17 +551,12 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.disableRazorPay = false
       $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
       $scope.discount = 0
-      console.info "we will give cashback"
       $scope.payAlert.push({msg: "Your cashback amount will be credited in your account withing 48 hours after payment has been done."})
 
     else if $scope.coupRes.type is "discount"
-      console.info "calculating discount"
       $scope.directPay = false
-
       $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
-
-      $scope.calCulatedDiscount = Number($scope.coupRes.value * $scope.amount/100)
-
+      $scope.calCulatedDiscount = Math.floor(Number($scope.coupRes.value * $scope.amount/100))
       if $scope.calCulatedDiscount > $scope.coupRes.maxAmount
         $scope.discount = Number($scope.coupRes.maxAmount)
         diff = $scope.amount-$scope.discount
@@ -572,9 +567,14 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
           $scope.disableRazorPay = false
           $scope.payAlert.push({msg: "You can only avail max discount of Rs. "+$scope.coupRes.maxAmount+ ". After discount, you have to pay Rs. "+ diff})
       else
-        $scope.disableRazorPay = false
         $scope.discount = $scope.calCulatedDiscount
-        $scope.payAlert.push({msg: "Hurray you have availed a discount of Rs. "+ $scope.discount})
+        diff = $scope.amount-$scope.discount
+        if diff < 100
+          $scope.disableRazorPay = true
+          $scope.payAlert.push({msg: "Hurray you have availed a discount of Rs. "+ $scope.discount+ ". But After discount, amount cannot be less than 100 Rs. so you have to add more money."})
+        else
+          $scope.disableRazorPay = false
+          $scope.payAlert.push({msg: "Hurray you have availed a discount of Rs. "+ $scope.discount})
       
 
   $scope.redeemCouponFailure = (res) ->

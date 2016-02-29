@@ -118,6 +118,9 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
         if scope.isHaveCoupon
           if scope.amount > scope.discount
             diff = scope.amount-scope.discount
+            if diff < 100
+              toastr.warning("Sorry you cannot make payment less than Rs. 100. You just need to add "+(100-diff)+ "Rs. more." , "Warning")
+              return
             scope.proceedToPay(e, diff*100)
           else
             toastr.warning("Actual amount cannot be less than discount amount", "Warning")
