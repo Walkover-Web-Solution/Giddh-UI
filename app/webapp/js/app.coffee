@@ -177,8 +177,8 @@ giddh.webApp.run [
       localStorageService.remove("_ledgerData")
       localStorageService.remove("_selectedAccount")
     )
-
-]
+    $rootScope.canChangeCompany = false
+] 
 
 giddh.webApp.config ($httpProvider) ->
   $httpProvider.interceptors.push('appInterceptor')

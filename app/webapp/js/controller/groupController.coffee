@@ -142,11 +142,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.makeAccountsList = (res) ->
     # flatten all groups with accounts and only accounts flatten
-    a =[]
+    a = []
     angular.copy(res.body, a)
     $rootScope.flatGroupsList = groupService.flattenGroup(a, [])
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
     $scope.showAccountList = true
+    $rootScope.canChangeCompany = true
     b = groupService.flattenAccount(a)
     $rootScope.makeAccountFlatten(b)
     $scope.flattenGroupList = groupService.makeGroupListFlatwithLessDtl($rootScope.flatGroupsList)
@@ -635,6 +636,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $rootScope.canManageComp = true
 
   $rootScope.$on 'reloadAccounts', ->
+    $rootScope.canChangeCompany = false
     $scope.showAccountList = false
     $scope.getGroups()
 

@@ -37,6 +37,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.currentPageComp = 1
   $scope.pagiMaxSizeComp = 5
 
+  #disable change company option
+
+
+
   #dialog for first time user
   $scope.openFirstTimeUserModal = () ->
     modalInstance = $uibModal.open(

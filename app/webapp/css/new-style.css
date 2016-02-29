@@ -1862,6 +1862,11 @@ i.cls-alert{
     min-width:320px;
 }
 
+.graph-filters td > .btn, .graph-filters td{
+    max-width: 30px;
+    min-width: 30px;
+}
+
 .graph-filters td > .btn, .graph-filters td > .btn-sm{
     padding:0;
 }
