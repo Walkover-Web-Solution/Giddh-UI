@@ -500,7 +500,6 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   )
 
   # for networth graph
-  
 
   $scope.getNWgraphData = (reqParam) ->
     reportService.nwGraphData(reqParam).then $scope.getNWgraphDataSuccess, $scope.getNWgraphDataFailure
@@ -524,7 +523,6 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
 
   $scope.formatNWgraphData = (nwData) ->
-    console.log nwData
     $scope.nwSeries = []
     $scope.nwChartData = []
     $scope.nwLabels = []

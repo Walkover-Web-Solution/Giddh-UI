@@ -840,6 +840,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.moveToAccountConfirmFailure = (res) ->
     toastr.error(res.body)
 
+  $scope.$watch('toMerge.mergedAcc', (newVal,oldVal) ->
+    if newVal != oldVal && newVal < 1
+      $scope.showDeleteMove = false
+  )
+
+  $scope.$watch('toMerge.toUnMerge.uniqueNames', (newVal, oldVal)->
+    if newVal != oldVal && newVal.length < 1
+      $scope.showDeleteMove = false
+  )
 
 #init angular app
 giddh.webApp.controller 'groupController', groupController
