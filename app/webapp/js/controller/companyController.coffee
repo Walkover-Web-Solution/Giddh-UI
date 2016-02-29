@@ -539,6 +539,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     return Math.floor(Number(str))
 
   $scope.redeemCouponSuccess = (res) ->
+    console.log res.body, "redeemCouponSuccess"
     $scope.payAlert = []
     $scope.calCulatedDiscount = 0
     $scope.coupRes = res.body
@@ -548,14 +549,20 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.directPay = true
       $scope.disableRazorPay = true
       console.info "we will hit api"
-      # hit api from here
+      razorObj = {}
+      razorObj.razorpay_payment_id = null
+      # $scope.deductSubsViaRazor(razorObj)
 
     else if $scope.coupRes.type is "cashback"
       $scope.directPay = false
-      $scope.disableRazorPay = false
-      $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
       $scope.discount = 0
-      $scope.payAlert.push({msg: "Your cashback amount will be credited in your account withing 48 hours after payment has been done."})
+      $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
+      if $scope.amount < $scope.coupRes.value
+        $scope.payAlert.push({msg: "Your coupon is redeemed but to avail coupon, You need to make a payment of Rs. "+$scope.coupRes.value})
+        $scope.disableRazorPay = true
+      else
+        $scope.disableRazorPay = false
+        $scope.payAlert.push({msg: "Your cashback amount will be credited in your account withing 48 hours after payment has been done. Your will get a refund of Rs. "+$scope.coupRes.value})
 
     else if $scope.coupRes.type is "discount"
       $scope.directPay = false
