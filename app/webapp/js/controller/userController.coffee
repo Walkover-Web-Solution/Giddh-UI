@@ -80,24 +80,29 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       userServices.getUserSublist(obj).then($scope.getUserSublistSuccess, $scope.getUserSubListFailure)
     
   $scope.getUserSublistSuccess = (res) ->
-    $scope.totalItems = res.body.totalPages*10
     $scope.uTransData = res.body
+    $scope.uTransData.startPage = 1
+    $scope.nothingToLoadUser = false
     if $scope.uTransData.length is 0
       $scope.noData = true
 
   $scope.getUserSubListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  $scope.pageChanged = (num) ->
+  $scope.pageChanged = (data) ->
+    if data.totalPages is data.startPage
+      $scope.nothingToLoadUser = true
+      toastr.info("Nothing to load, all transactions are loaded", "Info")
+      return
     obj = {
       name: $rootScope.basicInfo.uniqueName
-      num: num
+      num: data.startPage
     }
     userServices.getUserSublist(obj).then($scope.pageChangedSuccess, $scope.pageChangedFailure)
 
   $scope.pageChangedSuccess =(res)->
-    $scope.uTransData.paymentDetail = []
     $scope.uTransData.paymentDetail = $scope.uTransData.paymentDetail.concat(res.body.paymentDetail)
+    $scope.uTransData.startPage += 1
 
   $scope.pageChangedFailure =(res)->
     toastr.error(res.data.message, res.data.status)

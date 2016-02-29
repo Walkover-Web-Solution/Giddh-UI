@@ -399,16 +399,20 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       if newVal isnt oldVal
         $scope.compSetBtn = false
   )
-  $scope.pageChangedComp = (num) ->
+  $scope.pageChangedComp = (data) ->
+    if data.totalPages is data.startPage
+      $scope.nothingToLoadComp = true
+      toastr.info("Nothing to load, all transactions are loaded", "Info")
+      return
     obj = {
       name: $rootScope.selectedCompany.uniqueName
-      num: num
+      num: data.startPage
     }
     companyServices.getCompTrans(obj).then($scope.pageChangedCompSuccess, $scope.pageChangedCompFailure)
 
   $scope.pageChangedCompSuccess =(res)->
-    $scope.compTransData.paymentDetail = []
     $scope.compTransData.paymentDetail = $scope.compTransData.paymentDetail.concat(res.body.paymentDetail)
+    $scope.compTransData.startPage += 1 
 
   $scope.pageChangedCompFailure =(res)->
     toastr.error(res.data.message, res.data.status)
@@ -422,7 +426,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.getCompanyTransactionsSuccess = (res) ->
     angular.copy(res.body, $scope.compTransData)
-    $scope.totalItemsComp = res.body.totalPages*10
+    $scope.compTransData.startPage = 1
+    $scope.nothingToLoadComp = false
     if res.body.paymentDetail.length > 0
       $scope.compDataFound = true
     else
@@ -476,10 +481,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     companyServices.payBillViaWallet(obj).then($scope.subsViaWltSuccess, $scope.subsWltFailure)
 
   $scope.subsViaWltSuccess = (res) ->
-    console.log "subsViaWltSuccess", res
     $rootScope.basicInfo.availableCredit =  $rootScope.basicInfo.availableCredit - Number(res.body.billAmount)
     $rootScope.selectedCompany.companySubscription.paymentDue = false
     $scope.showPayOptns = false
+    toastr.success("Payment completed", "Success")
     $scope.resetSteps()
 
   $scope.subsWltFailure = (res) ->
@@ -614,9 +619,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.rolesList = localStorageService.get("_roles")
     ,2000)
 
-  $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
-    if _.isEmpty(toParams)
-      $rootScope.selAcntUname = undefined
+  $scope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
+    $scope.resetSteps()
   )
 
 #init angular app

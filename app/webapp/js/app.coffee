@@ -41,7 +41,8 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     resolve: {
       companyServices: 'companyServices'
       localStorageService: 'localStorageService'
-      getLedgerState: (companyServices, localStorageService) ->
+      toastr: 'toastr'
+      getLedgerState: (companyServices, localStorageService, toastr) ->
         checkRole = (data) ->
           return {
           type: data.role.uniqueName
@@ -137,8 +138,11 @@ giddh.webApp.run [
     $rootScope.$state = $state
     $rootScope.$stateParams = $stateParams
 
-    $rootScope.$on '$stateChangeStart', ->
+    $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
       $rootScope.showLedgerBox = false
+      if _.isEmpty(toParams)
+        $rootScope.selAcntUname = undefined
+    )
 
     # check IE browser version
     $rootScope.GetIEVersion = () ->
