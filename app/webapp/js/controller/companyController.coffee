@@ -32,7 +32,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.coupon = {}
   $scope.discount = 0
   $scope.amount = 0
-  $rootScope.isHaveCoupon = false
+  $scope.isHaveCoupon = false
 
   $scope.currentPageComp = 1
   $scope.pagiMaxSizeComp = 5
@@ -470,7 +470,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.wlt.Amnt = Math.abs(invB - avlB)
       $scope.showPayOptns = true
     else
-      console.log "no bal found or bal is zero"
       $scope.showPayOptns = true
       $scope.wlt.Amnt = invB
 
@@ -485,7 +484,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     companyServices.payBillViaWallet(obj).then($scope.subsViaWltSuccess, $scope.subsWltFailure)
 
   $scope.subsViaWltSuccess = (res) ->
-    console.log "subsViaWltSuccess", res.body
     $rootScope.basicInfo.availableCredit =  $rootScope.basicInfo.availableCredit - res.body.amountPayed
     $rootScope.selectedCompany.companySubscription.paymentDue = false
     $rootScope.selectedCompany.companySubscription.billAmount = 0
@@ -510,9 +508,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     userServices.addBalInWallet(obj).then($scope.addBalRzrSuccess, $scope.addBalRzrFailure)
 
   $scope.addBalRzrSuccess = (res) ->
-    $rootScope.basicInfo.availableCredit =  $rootScope.basicInfo.availableCredit + Number($scope.wlt.Amnt)
     if $scope.wlt.status
-      console.log "from wallet"
+      if $scope.isHaveCoupon and !_.isEmpty($scope.coupRes)
+        $rootScope.basicInfo.availableCredit += Number($scope.amount)
+      else
+        $rootScope.basicInfo.availableCredit += Number($scope.wlt.Amnt)
       $scope.showPayOptns = false
       $scope.resetSteps()
       toastr.success(res.body, res.status)
@@ -638,7 +638,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   # reset steps
   $scope.resetSteps = () ->
-    $rootScope.isHaveCoupon = false
+    $scope.isHaveCoupon = false
     $scope.payAlert = []
     $scope.wlt = angular.copy({})
     $scope.coupon = angular.copy({})
@@ -648,7 +648,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.payStep3 = false
 
   $scope.resetDiscount = () ->
-    if !$rootScope.isHaveCoupon
+    if !$scope.isHaveCoupon
       $scope.payAlert = []
       $scope.coupon = angular.copy({})
 
