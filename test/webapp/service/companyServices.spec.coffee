@@ -238,14 +238,14 @@ describe 'Company Service', ->
       uniqueName: "uniquename"
     }
     it 'should call success callback after service called', ->
-      @httpBackend.when('PUT', '/company/'+data.uniqueName+'/pay-via-wallet').respond(200, {"status": "success"})
+      @httpBackend.when('POST', '/company/'+data.uniqueName+'/pay-via-wallet').respond(200, {"status": "success"})
 
       @companyServices.payBillViaWallet(data).then(
         (data) -> expect(data.status).toBe("success")
         (data) -> expect(true).toBeFalsy()
       )
     it 'should call error callback after service called', ->
-      @httpBackend.when('PUT', '/company/'+data.uniqueName+'/pay-via-wallet').respond(401, {"status": "error"})
+      @httpBackend.when('POST', '/company/'+data.uniqueName+'/pay-via-wallet').respond(401, {"status": "error"})
       @companyServices.payBillViaWallet(data).then(
         (data) -> expect(true).toBeFalsy()
         (data) ->

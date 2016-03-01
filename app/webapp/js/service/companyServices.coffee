@@ -26,7 +26,7 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       url: '/company/:uniqueName/subscription-update'
     }
     payBillViaWallet: {
-      method: 'PUT'
+      method: 'POST'
       url: '/company/:uniqueName/pay-via-wallet'
     }
   })

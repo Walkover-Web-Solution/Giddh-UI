@@ -32,7 +32,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.coupon = {}
   $scope.discount = 0
   $scope.amount = 0
-  $scope.calCulatedDiscount = 0
+  $rootScope.isHaveCoupon = false
 
   $scope.currentPageComp = 1
   $scope.pagiMaxSizeComp = 5
@@ -461,7 +461,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.getWltBalSuccess = (res) ->
     $scope.disableRazorPay = false
     avlB = Number(res.body.availableCredit)
-    invB = Number($rootScope.selectedCompany.companySubscription.servicePlan.amount)
+    invB = Number($rootScope.selectedCompany.companySubscription.billAmount)
     if avlB >= invB
       $scope.showPayOptns = false
       $scope.deductSubsViaWallet(invB)
@@ -485,7 +485,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     companyServices.payBillViaWallet(obj).then($scope.subsViaWltSuccess, $scope.subsWltFailure)
 
   $scope.subsViaWltSuccess = (res) ->
-    $rootScope.basicInfo.availableCredit =  $rootScope.basicInfo.availableCredit - Number(res.body.billAmount)
+    console.log "subsViaWltSuccess", res.body
+    $rootScope.basicInfo.availableCredit =  $rootScope.basicInfo.availableCredit - res.body.amountPayed
     $rootScope.selectedCompany.companySubscription.paymentDue = false
     $scope.showPayOptns = false
     toastr.success("Payment completed", "Success")
@@ -515,11 +516,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.resetSteps()
     toastr.success(res.body, res.status)
 
-
   $scope.subsRzrFailure = (res) ->
-    console.log "subsRzrFailure", res
     toastr.error(res.data.message, res.data.status)
-
+    $scope.directPay = true
+    $scope.showPayOptns = false
+    $scope.resetSteps()
 
   # child functions here for userController
   # add money in wallet
@@ -541,56 +542,85 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.redeemCouponSuccess = (res) ->
     console.log res.body, "redeemCouponSuccess"
     $scope.payAlert = []
-    $scope.calCulatedDiscount = 0
+    $scope.discount = 0
     $scope.coupRes = res.body
     toastr.success("Hurray your coupon code is redeemed", res.status)
-    
-    if res.body.type is "balance_add"
-      $scope.directPay = true
-      $scope.disableRazorPay = true
-      console.info "we will hit api"
-      razorObj = {}
-      razorObj.razorpay_payment_id = null
-      # $scope.deductSubsViaRazor(razorObj)
-
-    else if $scope.coupRes.type is "cashback"
-      $scope.directPay = false
-      $scope.discount = 0
-      $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
-      if $scope.amount < $scope.coupRes.value
-        $scope.payAlert.push({msg: "Your coupon is redeemed but to avail coupon, You need to make a payment of Rs. "+$scope.coupRes.value})
+    $scope.payAlert.push({type: 'success', msg: "Coupon code is redeemed. You can get a max discount of Rs. "+$scope.coupRes.maxAmount})
+    $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
+    switch res.body.type
+      when 'balance_add'
+        $scope.directPay = true
         $scope.disableRazorPay = true
+        razorObj = {}
+        razorObj.razorpay_payment_id = null
+        console.info "we will hit api", razorObj
+        $scope.deductSubsViaRazor(razorObj)
+      when 'cashback'
+        $scope.checkDiffAndAlert('cashback')
+      when 'cashback_discount'
+        $scope.discount = 0
+        $scope.cbDiscount = $scope.calCulateDiscount()
+        $scope.checkDiffAndAlert('cashback_discount')
+      when 'discount'
+        $scope.discount = $scope.calCulateDiscount()
+        $scope.checkDiffAndAlert('discount')
+      when 'discount_amount'
+        $scope.discount =  $scope.coupRes.maxAmount
+        $scope.checkDiffAndAlert('discount_amount')
       else
-        $scope.disableRazorPay = false
-        $scope.payAlert.push({msg: "Your cashback amount will be credited in your account withing 48 hours after payment has been done. Your will get a refund of Rs. "+$scope.coupRes.value})
+        toastr.warning("Something went wrong", "Warning")
+    
+  
+  $scope.calCulateDiscount = () ->
+    val = Math.floor(Number($scope.coupRes.value * $scope.amount/100))
+    if val > $scope.coupRes.maxAmount
+      console.log "if", Number($scope.coupRes.maxAmount)
+      return Number($scope.coupRes.maxAmount)
+    else
+      console.log "else", val
+      return val
 
-    else if $scope.coupRes.type is "discount"
-      $scope.directPay = false
-      $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
-      $scope.calCulatedDiscount = Math.floor(Number($scope.coupRes.value * $scope.amount/100))
-      if $scope.calCulatedDiscount > $scope.coupRes.maxAmount
-        $scope.discount = Number($scope.coupRes.maxAmount)
+  $scope.reduceDiscount = () ->
+    console.log "reduceDiscount"
+      
+  $scope.checkDiffAndAlert = (type)->
+    $scope.directPay = false
+    switch type
+      when 'cashback_discount'
+        $scope.disableRazorPay = false
+        $scope.payAlert.push({msg: "Your cashback amount will be credited in your account withing 48 hours after payment has been done. Your will get a refund of Rs. "+$scope.cbDiscount})
+      when 'cashback'
+        if $scope.amount < $scope.coupRes.value
+          $scope.disableRazorPay = true
+          $scope.payAlert.push({msg: "Your coupon is redeemed but to avail coupon, You need to make a payment of Rs. "+$scope.coupRes.value})
+        else
+          $scope.disableRazorPay = false
+          $scope.payAlert.push({type: 'success', msg: "Your cashback amount will be credited in your account withing 48 hours after payment has been done. Your will get a refund of Rs. "+$scope.coupRes.value})
+      
+      when 'discount'
         diff = $scope.amount-$scope.discount
         if diff < 100
           $scope.disableRazorPay = true
-          $scope.payAlert.push({msg: "After discount amount cannot be less than 100 Rs. you have to add more money"})
+          $scope.payAlert.push({msg: "After discount amount cannot be less than 100 Rs. To avail coupon you have to add more money. Currently payable amount is Rs. "+diff})
         else
           $scope.disableRazorPay = false
-          $scope.payAlert.push({msg: "You can only avail max discount of Rs. "+$scope.coupRes.maxAmount+ ". After discount, you have to pay Rs. "+ diff})
-      else
-        $scope.discount = $scope.calCulatedDiscount
+          $scope.payAlert.push({type: 'success', msg: "Hurray you have availed a discount of Rs. "+$scope.discount+ ". Now payable amount is Rs. "+diff})
+      when 'discount_amount'
         diff = $scope.amount-$scope.discount
         if diff < 100
           $scope.disableRazorPay = true
-          $scope.payAlert.push({msg: "Hurray you have availed a discount of Rs. "+ $scope.discount+ ". But After discount, amount cannot be less than 100 Rs. so you have to add more money."})
+          $scope.payAlert.push({msg: "After discount amount cannot be less than 100 Rs. To avail coupon you have to add more money. Currently payable amount is Rs. "+diff})
+        else if $scope.amount < $scope.coupRes.value
+          $scope.disableRazorPay = true
+          $scope.payAlert.push({msg: "Your coupon is redeemed but to avail coupon, You need to make a payment of Rs. "+$scope.coupRes.value})
         else
           $scope.disableRazorPay = false
-          $scope.payAlert.push({msg: "Hurray you have availed a discount of Rs. "+ $scope.discount})
+          $scope.payAlert.push({type: 'success', msg: "Hurray you have availed a discount of Rs. "+$scope.discount+ ". Now payable amount is Rs. "+diff})
+      
       
 
   $scope.redeemCouponFailure = (res) ->
     $scope.payAlert = []
-    $scope.calCulatedDiscount = 0
     $scope.discount = 0
     $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
     $scope.coupRes = {}
@@ -603,7 +633,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   # reset steps
   $scope.resetSteps = () ->
-    $scope.isHaveCoupon = false
+    $rootScope.isHaveCoupon = false
     $scope.payAlert = []
     $scope.wlt = angular.copy({})
     $scope.coupon = angular.copy({})
@@ -613,7 +643,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.payStep3 = false
 
   $scope.resetDiscount = () ->
-    if !$scope.isHaveCoupon
+    if !$rootScope.isHaveCoupon
       $scope.payAlert = []
       $scope.coupon = angular.copy({})
 

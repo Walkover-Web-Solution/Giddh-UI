@@ -154,7 +154,7 @@ router.put '/:uniqueName/subscription-update', (req, res) ->
     res.send data
 
 #pay bill via wallet
-router.put '/:uniqueName/pay-via-wallet', (req, res) ->
+router.post '/:uniqueName/pay-via-wallet', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.uniqueName + '/pay-via-wallet'
   args =
     headers:
@@ -162,7 +162,7 @@ router.put '/:uniqueName/pay-via-wallet', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
-  settings.client.put hUrl, args, (data, response) ->
+  settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
