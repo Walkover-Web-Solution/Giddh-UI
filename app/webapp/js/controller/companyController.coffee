@@ -488,6 +488,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     console.log "subsViaWltSuccess", res.body
     $rootScope.basicInfo.availableCredit =  $rootScope.basicInfo.availableCredit - res.body.amountPayed
     $rootScope.selectedCompany.companySubscription.paymentDue = false
+    $rootScope.selectedCompany.companySubscription.billAmount = 0
     $scope.showPayOptns = false
     toastr.success("Payment completed", "Success")
     $scope.resetSteps()
@@ -495,8 +496,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.subsWltFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-
-  $scope.deductSubsViaRazor = (razorObj) ->
+  $scope.addBalViaRazor = (razorObj) ->
     obj = {
       uUname: $rootScope.basicInfo.uniqueName
       paymentId: razorObj.razorpay_payment_id
@@ -507,16 +507,21 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     else
       obj.couponCode = $scope.coupRes.couponCode
 
-    userServices.payBillViaRazor(obj).then($scope.subsViaRzrSuccess, $scope.subsRzrFailure)
+    userServices.addBalInWallet(obj).then($scope.addBalRzrSuccess, $scope.addBalRzrFailure)
 
-  $scope.subsViaRzrSuccess = (res) ->
+  $scope.addBalRzrSuccess = (res) ->
     $rootScope.basicInfo.availableCredit =  $rootScope.basicInfo.availableCredit + Number($scope.wlt.Amnt)
-    $rootScope.selectedCompany.companySubscription.paymentDue = false
-    $scope.showPayOptns = false
-    $scope.resetSteps()
-    toastr.success(res.body, res.status)
+    if $scope.wlt.status
+      console.log "from wallet"
+      $scope.showPayOptns = false
+      $scope.resetSteps()
+      toastr.success(res.body, res.status)
+    else
+      console.log "from direct company"
+      $scope.deductSubsViaWallet(Number($rootScope.selectedCompany.companySubscription.billAmount))
+    
 
-  $scope.subsRzrFailure = (res) ->
+  $scope.addBalRzrFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
     $scope.directPay = true
     $scope.showPayOptns = false
@@ -554,7 +559,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         razorObj = {}
         razorObj.razorpay_payment_id = null
         console.info "we will hit api", razorObj
-        $scope.deductSubsViaRazor(razorObj)
+        $scope.addBalViaRazor(razorObj)
       when 'cashback'
         $scope.checkDiffAndAlert('cashback')
       when 'cashback_discount'
