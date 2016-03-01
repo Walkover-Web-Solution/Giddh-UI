@@ -215,7 +215,7 @@
 
       <!-- start template trial bal -->
       <script type="text/ng-template" id="trialBalSubGroup">
-        <section class="row row-2" ng-repeat="grp in grp.childGroups">
+        <section class="row row-2" ng-repeat="grp in grp.childGroups | filter:keyWord">
           <div class="row" trial-accordion>
             <div class="col-xs-4 group" ng-style="{'padding-left':padLeft + 10}" ng-bind-html="grp.groupName | uppercase : (grp.childGroups.length && grp.accounts.length) | highlight: keyWord"></div>
             <div class="col-xs-2 group text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type | recType: grp.forwardedBalance.amount}}</div>

@@ -778,6 +778,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     }
     if $scope.toMerge.toUnMerge.uniqueNames.length != 0
       accountService.unMerge(unqNamesObj, accTosend).then( $scope.deleteMergedAccountSuccess, $scope.deleteMergedAccountFailure)
+      _.each $scope.toMerge.toUnMerge.uniqueNames, (accUnq) ->
+        removeFromPrePopulate = {
+          uniqueName: accUnq
+        }
+        $scope.prePopulate = _.without($scope.prePopulate, _.findWhere($scope.prePopulate, removeFromPrePopulate))
     else
       toastr.error('Please Select an Account to delete')
 
@@ -794,6 +799,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.toMerge.mergedAcc = updatedMergedAccList
     $scope.toMerge.toUnMerge.uniqueNames = []
     $scope.toMerge.moveToAcc = ''
+    
 
   $scope.deleteMergedAccountFailure = (res) ->
     toastr.error(res.body)
