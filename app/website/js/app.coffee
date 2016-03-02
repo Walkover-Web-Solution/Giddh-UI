@@ -11,7 +11,8 @@ app.config [
   '$authProvider'
   ($authProvider) ->
 #    $authProvider.google clientId: '40342793-h9vu599ed13f54kb673t2ltbc713vad7.apps.googleusercontent.com'
-    $authProvider.google clientId: '932165600137-9nd18nvvkq9uqnaffkh5b41u62jmhrl1.apps.googleusercontent.com'
+#    $authProvider.google clientId: '932165600137-9nd18nvvkq9uqnaffkh5b41u62jmhrl1.apps.googleusercontent.com'
+    $authProvider.google clientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com'
 ]
 
 app.config (localStorageServiceProvider) ->
