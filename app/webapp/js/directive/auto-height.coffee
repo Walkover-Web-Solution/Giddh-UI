@@ -92,7 +92,8 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
     link: (scope, element, attrs) ->
       scope.proceedToPay = (e, amount) ->
         options = {
-          key: "rzp_test_6SDWNz3uMF944l"
+          # key: "rzp_test_6SDWNz3uMF944l"
+          key: "rzp_live_xGAsAZIdwkmLJW"
           amount: amount
           name: "Giddh"
           description: $rootScope.selectedCompany.name+ " Subscription for Giddh"
