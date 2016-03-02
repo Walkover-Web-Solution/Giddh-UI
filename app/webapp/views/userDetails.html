@@ -44,6 +44,7 @@
                       <tr>
                         <th>Amount</th>
                         <th>Date</th>
+                        <th>Transaction ID</th>
                         <th>Status</th>
                         <th>Description</th>
                       </tr>
@@ -60,6 +61,7 @@
                           </span>
                         </td>
                         <td ng-bind-html="value.paymentDate | moment: 'format': 'MMM DD, YYYY' "></td>
+                        <td ng-bind-html="value.paymentId"></td>
                         <td ng-bind-html="value.paymentStatus"></td>
                         <td>
                           {{value.companyName}}

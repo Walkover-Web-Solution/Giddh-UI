@@ -484,7 +484,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     companyServices.payBillViaWallet(obj).then($scope.subsViaWltSuccess, $scope.subsWltFailure)
 
   $scope.subsViaWltSuccess = (res) ->
-    $rootScope.basicInfo.availableCredit =  $rootScope.basicInfo.availableCredit - res.body.amountPayed
+    $rootScope.basicInfo.availableCredit -= res.body.amountPayed
     $rootScope.selectedCompany.companySubscription.paymentDue = false
     $rootScope.selectedCompany.companySubscription.billAmount = 0
     $scope.showPayOptns = false
@@ -508,16 +508,16 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     userServices.addBalInWallet(obj).then($scope.addBalRzrSuccess, $scope.addBalRzrFailure)
 
   $scope.addBalRzrSuccess = (res) ->
+    if $scope.isHaveCoupon and !_.isEmpty($scope.coupRes)
+      $rootScope.basicInfo.availableCredit += Number($scope.amount)
+    else
+      $rootScope.basicInfo.availableCredit += Number($scope.wlt.Amnt)
+    # end
     if $scope.wlt.status
-      if $scope.isHaveCoupon and !_.isEmpty($scope.coupRes)
-        $rootScope.basicInfo.availableCredit += Number($scope.amount)
-      else
-        $rootScope.basicInfo.availableCredit += Number($scope.wlt.Amnt)
       $scope.showPayOptns = false
       $scope.resetSteps()
       toastr.success(res.body, res.status)
     else
-      console.log "from direct company"
       $scope.deductSubsViaWallet(Number($rootScope.selectedCompany.companySubscription.billAmount))
     
 
@@ -558,7 +558,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         $scope.disableRazorPay = true
         razorObj = {}
         razorObj.razorpay_payment_id = null
-        console.info "we will hit api", razorObj
         $scope.addBalViaRazor(razorObj)
       when 'cashback'
         $scope.checkDiffAndAlert('cashback')
@@ -585,8 +584,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       console.log "else", val
       return val
 
-  $scope.reduceDiscount = () ->
-    console.log "reduceDiscount"
       
   $scope.checkDiffAndAlert = (type)->
     $scope.directPay = false
