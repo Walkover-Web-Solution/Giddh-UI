@@ -142,5 +142,47 @@ describe "User Service", ->
             expect(data.status).toBe(400)
         )
 
+    describe '#cancelAutoPay for user', ->
+      data = {}
+      data.uUname = "uniqueName"
+      it 'should call success callback', ->
+        @httpBackend.when('PUT', '/users/' + data.uUname + '/delete-payee').respond(200, {"status": "success"})
+
+        @userServices.cancelAutoPay(data).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+
+      it 'should call failure callback', ->
+        @httpBackend.when('PUT', '/users/' + data.uUname + '/delete-payee').respond(400, {"status": "error"})
+
+        @userServices.cancelAutoPay(data).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+
+    describe '#addBalInWallet for user', ->
+      data = {}
+      data.uUname = "uniqueName"
+      it 'should call success callback', ->
+        @httpBackend.when('POST', '/users/' + data.uUname + '/balance').respond(200, {"status": "success"})
+
+        @userServices.addBalInWallet(data).then(
+          (data) -> expect(data.status).toBe("success")
+          (data) -> expect(true).toBeFalsy()
+        )
+
+      it 'should call failure callback', ->
+        @httpBackend.when('POST', '/users/' + data.uUname + '/balance').respond(400, {"status": "error"})
+
+        @userServices.addBalInWallet(data).then(
+          (data) -> expect(true).toBeFalsy()
+          (data) ->
+            expect(data.data.status).toBe("error")
+            expect(data.status).toBe(400)
+        )
+
 
 
