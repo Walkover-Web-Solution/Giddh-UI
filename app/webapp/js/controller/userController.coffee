@@ -6,7 +6,6 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.subListData = []
   $scope.uTransData = {}
   $scope.cSubsData = false
-  # $rootScope.basicInfo = localStorageService.get("_userDetails")
   $scope.currentPage = 1
   $scope.pagiMaxSize = 5
   

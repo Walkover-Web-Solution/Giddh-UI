@@ -499,7 +499,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       uUname: $rootScope.basicInfo.uniqueName
       paymentId: razorObj.razorpay_payment_id
       amount: Number($scope.wlt.Amnt)
-      discount: $scope.discount
+      discount: Number($scope.discount)
     }
     if _.isEmpty($scope.coupRes)
       obj.couponCode = null
@@ -577,11 +577,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     
   
   $scope.calCulateDiscount = () ->
-    val = Math.floor(Number($scope.coupRes.value * $scope.amount/100))
+    val = Math.floor($scope.coupRes.value * $scope.amount/100)
     if val > $scope.coupRes.maxAmount
       return Number($scope.coupRes.maxAmount)
     else
-      return val
+      return Number(val)
 
       
   $scope.checkDiffAndAlert = (type)->
