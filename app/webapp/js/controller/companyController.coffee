@@ -522,7 +522,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.resetSteps()
       toastr.success(res.body, res.status)
     else
-      $scope.deductSubsViaWallet(Number($rootScope.selectedCompany.companySubscription.billAmount))
+      if $rootScope.basicInfo.availableCredit >= $rootScope.selectedCompany.companySubscription.billAmount
+        $scope.deductSubsViaWallet(Number($rootScope.selectedCompany.companySubscription.billAmount))
+      else
+        $scope.directPay = false
+        $scope.disableRazorPay = false
     
 
   $scope.addBalRzrFailure = (res) ->
@@ -582,7 +586,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.calCulateDiscount = () ->
     val = Math.floor($scope.coupRes.value * $scope.amount/100)
     if val > $scope.coupRes.maxAmount
-      return Number($scope.coupRes.maxAmount)
+      return Number(Math.floor($scope.coupRes.maxAmount))
     else
       return Number(val)
 

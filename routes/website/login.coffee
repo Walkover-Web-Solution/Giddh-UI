@@ -4,7 +4,7 @@ qs = require('qs')
 router = settings.express.Router()
 accessTokenUrl = 'https://accounts.google.com/o/oauth2/token'
 googleLoginUrl = settings.envUrl + 'login-with-google'
-
+linkedinLoginUrl =  settings.envUrl + 'login-with-linkedIn'
 ###
  |--------------------------------------------------------------------------
  | login with google
@@ -123,20 +123,22 @@ router.post '/linkedin', (req, res) ->
     `var params`
     if response.statusCode != 200
       return res.status(response.statusCode).send(message: body.error_description)
-    params = 
-      oauth2_access_token: body.access_token
-      format: 'json'
+    args =
+      headers:
+        'Content-Type': 'application/json'
+        'Access-Token': body.access_token
     # Step 2. Retrieve profile information about the current user.
-    settings.request.get {
-      url: peopleApiUrl
-      qs: params
-      json: true
-    }, (err, response, profile) ->
-      console.log "profile", profile
-      res.send 
-        token: params.oauth2_access_token
-        userDetailObj: response.body
-        result: response
+    settings.client.get linkedinLoginUrl, args, (data, response) ->
+      if data.status == 'error'
+        res.status(response.statusCode)
+      else
+        userDetailObj = data.body.user
+        req.session.name = data.body.user.uniqueName
+        req.session.authKey = data.body.authKey
+      res.send
+        token: token
+        userDetails: userDetailObj
+        result: data
             
 
 module.exports = router
