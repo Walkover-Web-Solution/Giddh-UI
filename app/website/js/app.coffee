@@ -18,7 +18,8 @@ app.config [
     $authProvider.linkedin({
       url: '/auth/linkedin'
       authorizationEndpoint: 'https://www.linkedin.com/uas/oauth2/authorization'
-      redirectUri: "http://localhost:8000/login/"
+      # redirectUri: "http://localhost:8000/login/"
+      redirectUri: window.location.origin+"/login/"
       requiredUrlParams: ['state']
       scope: ['r_emailaddress']
       scopeDelimiter: ' '
@@ -32,6 +33,8 @@ app.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
 
 app.run ()->
+  console.log window.location, "app run", window.location.origin
+
 
 do ->
   angular.module('giddhApp').directive 'autoActive', [
