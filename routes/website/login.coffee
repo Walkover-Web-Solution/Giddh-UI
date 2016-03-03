@@ -136,7 +136,7 @@ router.post '/linkedin', (req, res) ->
         req.session.name = data.body.user.uniqueName
         req.session.authKey = data.body.authKey
       res.send
-        token: token
+        token: body.access_token
         userDetails: userDetailObj
         result: data
             
