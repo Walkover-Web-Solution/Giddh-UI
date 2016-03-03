@@ -381,8 +381,8 @@
               </td>
               <td>
                 <input type="text" class="form-control" ng-disabled="true" 
-                tooltip-placement="top" uib-tooltip="{{selectedCompany.companySubscription.createdBy.email}}"
-                ng-model="selectedCompany.companySubscription.createdBy.name">
+                tooltip-placement="top" uib-tooltip="{{selectedCompany.createdBy.email}}"
+                ng-model="selectedCompany.createdBy.name">
               </td>
               <td>
                 <button ng-disabled="compSetBtn" class="btn btn-sm btn-info" ng-click="updateCompSubs(selectedCompany.companySubscription)">Update</button>
