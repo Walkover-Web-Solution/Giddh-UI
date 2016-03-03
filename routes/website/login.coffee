@@ -1,8 +1,15 @@
 settings = require('../util/settings')
 jwt = require('jwt-simple')
+qs = require('qs')
 router = settings.express.Router()
 accessTokenUrl = 'https://accounts.google.com/o/oauth2/token'
-loginUrl = settings.envUrl + 'login-with-google'
+googleLoginUrl = settings.envUrl + 'login-with-google'
+
+###
+ |--------------------------------------------------------------------------
+ | login with google
+ |--------------------------------------------------------------------------
+####
 
 router.post '/google', (req, res, next) ->
   params =
@@ -23,7 +30,7 @@ router.post '/google', (req, res, next) ->
         'Content-Type': 'application/json'
         'Access-Token': accessToken
     # Step 2. Retrieve profile information about the current user.
-    settings.client.get loginUrl, args, (data, response) ->
+    settings.client.get googleLoginUrl, args, (data, response) ->
       if data.status == 'error'
         res.status(response.statusCode)
       else
@@ -34,5 +41,102 @@ router.post '/google', (req, res, next) ->
         token: token
         userDetails: userDetailObj
         result: data
+
+###
+ |--------------------------------------------------------------------------
+ | Login with Twitter
+ |--------------------------------------------------------------------------
+###
+
+router.post '/twitter', (req, res) ->
+  requestTokenUrl = 'https://api.twitter.com/oauth/request_token'
+  accessTokenUrl = 'https://api.twitter.com/oauth/access_token'
+  profileUrl = 'https://api.twitter.com/1.1/users/show.json?screen_name='
+  # Part 1 of 2: Initial request from Satellizer.
+  if !req.body.oauth_token or !req.body.oauth_verifier
+    requestTokenOauth = 
+      consumer_key: settings.twitterKey
+      consumer_secret: settings.twitterSecret
+      callback: req.body.redirectUri
+    # Step 1. Obtain request token for the authorization popup.
+    settings.request.post {
+      url: requestTokenUrl
+      oauth: requestTokenOauth
+    }, (err, response, body) ->
+      oauthToken = qs.parse(body)
+      # Step 2. Send OAuth token back to open the authorization screen.
+      res.send oauthToken
+  else
+    # Part 2 of 2: Second request after Authorize app is clicked.
+    accessTokenOauth = 
+      consumer_key: settings.twitterKey
+      consumer_secret: settings.twitterSecret
+      token: req.body.oauth_token
+      verifier: req.body.oauth_verifier
+    # Step 3. Exchange oauth token and oauth verifier for access token.
+    settings.request.post {
+      url: accessTokenUrl
+      oauth: accessTokenOauth
+    }, (err, response, accessToken) ->
+      accessToken = qs.parse(accessToken)
+      userDetailObj = {}
+      profileOauth = 
+        consumer_key: settings.twitterKey
+        consumer_secret: settings.twitterSecret
+        oauth_token: accessToken.oauth_token
+      # Step 4. Retrieve profile information about the current user.
+      settings.request.get {
+        url: profileUrl + accessToken.screen_name
+        oauth: profileOauth
+        json: true
+      }, (err, response, profile) ->
+        console.log "profile", profile
+        res.send 
+          token: accessToken.oauth_token
+          userDetailObj: response.body
+          result: response
+
+
+###
+ |--------------------------------------------------------------------------
+ | Login with LinkedIn
+ |--------------------------------------------------------------------------
+###
+router.post '/linkedin/callback', (req, res) ->
+  console.log req, "callback"
+
+
+router.post '/linkedin', (req, res) ->
+  accessTokenUrl = 'https://www.linkedin.com/uas/oauth2/accessToken'
+  peopleApiUrl = 'https://api.linkedin.com/v1/people/~:(id,first-name,last-name,email-address,picture-url)'
+  params = 
+    code: req.body.code
+    client_id: req.body.clientId
+    client_secret: settings.linkedinSecret
+    redirect_uri: req.body.redirectUri
+    grant_type: 'authorization_code'
+  # Step 1. Exchange authorization code for access token.
+  settings.request.post accessTokenUrl, {
+    form: params
+    json: true
+  }, (err, response, body) ->
+    `var params`
+    if response.statusCode != 200
+      return res.status(response.statusCode).send(message: body.error_description)
+    params = 
+      oauth2_access_token: body.access_token
+      format: 'json'
+    # Step 2. Retrieve profile information about the current user.
+    settings.request.get {
+      url: peopleApiUrl
+      qs: params
+      json: true
+    }, (err, response, profile) ->
+      console.log "profile", profile
+      res.send 
+        token: params.oauth2_access_token
+        userDetailObj: response.body
+        result: response
+            
 
 module.exports = router

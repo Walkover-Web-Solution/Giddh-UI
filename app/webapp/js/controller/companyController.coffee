@@ -13,6 +13,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.compTransData = {}
   $scope.compDiffAmount = 0
   $scope.showPayOptns = false
+  $scope.isHaveCoupon = false
   #contains company list
   $scope.companyList = []
   $scope.companyDetails = {}
@@ -32,14 +33,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.coupon = {}
   $scope.discount = 0
   $scope.amount = 0
-  $scope.isHaveCoupon = false
-
-  $scope.currentPageComp = 1
-  $scope.pagiMaxSizeComp = 5
-
-  #disable change company option
-
-
+  
 
   #dialog for first time user
   $scope.openFirstTimeUserModal = () ->
@@ -453,6 +447,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.updateCompSubsSuccess = (res) ->
     console.log res, "updateCompSubsSuccess"
+    $scope.selectedCompany.companySubscription = res.body
+    toastr.success("Updates successfully", res.status)
 
   $scope.updateCompSubsFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -512,11 +508,16 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.addBalRzrSuccess = (res) ->
     if $scope.isHaveCoupon and !_.isEmpty($scope.coupRes)
-      $rootScope.basicInfo.availableCredit += Number($scope.amount)
+      if $scope.coupRes.type is 'balance_add'
+        $rootScope.basicInfo.availableCredit += Number($scope.coupRes.maxAmount)
+      else
+        $rootScope.basicInfo.availableCredit += Number($scope.amount)
     else
       $rootScope.basicInfo.availableCredit += Number($scope.wlt.Amnt)
     # end
     if $scope.wlt.status
+      $scope.directPay = false
+      $scope.disableRazorPay = false
       $scope.showPayOptns = false
       $scope.resetSteps()
       toastr.success(res.body, res.status)
@@ -647,7 +648,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.payStep3 = false
     $scope.disableRazorPay = false
 
-  $scope.resetDiscount = () ->
+  $scope.resetDiscount = (status) ->
+    $scope.isHaveCoupon = status
     if !$scope.isHaveCoupon
       $scope.payAlert = []
       $scope.coupon = angular.copy({})

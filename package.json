@@ -34,6 +34,7 @@
     "newrelic": "~1.24.1",
     "node-rest-client": "~1.4.3",
     "npid": "*",
+    "qs": "^6.1.0",
     "request": "~2.61.0",
     "request-ip": "^1.1.4",
     "restler": "^3.4.0",

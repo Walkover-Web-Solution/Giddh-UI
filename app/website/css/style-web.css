@@ -848,4 +848,53 @@ textarea.form-control {
     -webkit-animation-delay: 0.4s;
 }
 
+#newButtonWraps{
+    width: 300px;
+    padding: 20px;
+    background-color: rgba(41, 37, 31, 0.3);
+    margin: 0 auto;
+}
+#newButtonWraps button{
+    margin-bottom: 15px;
+}
+#newButtonWraps button:last-child{
+    margin-bottom: 0
+}
+/*button styles*/
+.btn-google-plus {
+  color: #fff;
+  background-color: #dd4b39;
+  border: 1px solid #d54331;
+}
+
+.btn-google-plus:hover,
+.btn-google-plus:focus {
+  color: #fff;
+  background-color: #cb3927;
+}
+
+.btn-linkedin {
+  color: #fff;
+  background-color: #007bb6;
+  border: 1px solid #0073ae;
+}
+
+.btn-linkedin:hover,
+.btn-linkedin:focus {
+  color: #fff;
+  background-color: #0069a4;
+}
+
+.btn-twitter {
+  color: #fff;
+  background-color: #00aced;
+  border: 1px solid #009fdb;
+}
+
+.btn-twitter:hover,
+.btn-twitter:focus {
+  color: #fff;
+  background-color: #0090c7;
+}
+
 

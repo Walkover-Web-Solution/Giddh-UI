@@ -10,9 +10,22 @@ app = angular.module("giddhApp", [
 app.config [
   '$authProvider'
   ($authProvider) ->
-#    $authProvider.google clientId: '40342793-h9vu599ed13f54kb673t2ltbc713vad7.apps.googleusercontent.com'
-#    $authProvider.google clientId: '932165600137-9nd18nvvkq9uqnaffkh5b41u62jmhrl1.apps.googleusercontent.com'
     $authProvider.google clientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com'
+    $authProvider.twitter clientId: 'w64afk3ZflEsdFxd6jyB9wt5j'
+    $authProvider.linkedin clientId: '75urm0g3386r26'
+
+    # LinkedIn
+    $authProvider.linkedin({
+      url: '/auth/linkedin'
+      authorizationEndpoint: 'https://www.linkedin.com/uas/oauth2/authorization'
+      redirectUri: "http://localhost:8000/login/"
+      requiredUrlParams: ['state']
+      scope: ['r_emailaddress']
+      scopeDelimiter: ' '
+      state: 'STATE'
+      type: '2.0'
+      popupOptions: { width: 527, height: 582 }
+    })
 ]
 
 app.config (localStorageServiceProvider) ->
