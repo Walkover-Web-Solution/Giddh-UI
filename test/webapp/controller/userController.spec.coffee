@@ -3,6 +3,32 @@
 describe 'userController', ->
   beforeEach module('giddhWebApp')
 
+  describe 'local variables', ->
+    beforeEach inject ($rootScope, $controller) ->
+      @scope = $rootScope.$new()
+      @rootScope = $rootScope
+      @userController = $controller('userController',
+        {
+          $scope: @scope, 
+          $rootScope: @rootScope
+        }
+      )
+
+    it 'should check scope variables set by default', ->
+      expect(@scope.userAuthKey).toBeUndefined()
+      expect(@scope.noData).toBeFalsy()
+      expect(@scope.subListData).toEqual([])
+      expect(@scope.uTransData).toEqual({})
+      expect(@scope.cSubsData).toBeFalsy()
+      spyOn(@scope, "getUserAuthKey")
+      runs ->
+        expect(@scope.getUserAuthKey).not.toHaveBeenCalled()
+      # waitsFor (->
+      #   @scope.getUserAuthKey()
+      # ), 200
+      # runs ->
+      #   expect(@scope.getUserAuthKey).toHaveBeenCalled()
+
   beforeEach inject ($controller, $rootScope, toastr, userServices, $q, localStorageService, $uibModal) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
@@ -203,7 +229,7 @@ describe 'userController', ->
     it 'should show toastr with error message', ->
       res = 
         data: 
-          message: "Unable to generate auth key"
+          message: "some message"
           status: "Error"
       spyOn(@toastr, 'error')
       @scope.getUserSubListFailure(res)
@@ -213,15 +239,52 @@ describe 'userController', ->
     it 'should not call userServices getUserSublist method and set variable to nothingToLoadUser', ->
       data = {
         totalPages: 1
-        startPage: 1
+        startPage: 2
       }
       spyOn(@toastr, "info")
       @scope.pageChanged(data)
       expect(@scope.nothingToLoadUser).toBeTruthy()
       expect(@toastr.info).toHaveBeenCalledWith("Nothing to load, all transactions are loaded", "Info")
+
+    it 'should call userServices getUserSublist method', ->
+      @rootScope.basicInfo = {}
+      @rootScope.basicInfo.uniqueName= "something"
+      data = {
+        totalPages: 1
+        startPage: 1
+      }
+      obj = {
+        name: @rootScope.basicInfo.uniqueName
+        num: 2
+      }
+      deferred = @q.defer()
+      spyOn(@userServices, 'getUserSublist').andReturn(deferred.promise)
+      @scope.pageChanged(data)
+      expect(@userServices.getUserSublist).toHaveBeenCalledWith(obj)
       
-    
-    
+  describe '#pageChangedSuccess', ->
+    it 'should concatinate two arrays and create plus one count to variable', ->
+      res = 
+        body: 
+          paymentDetail: [
+            {some: "thing"}
+          ]
+      @scope.uTransData = 
+        startPage: 1
+        paymentDetail: []
+      @scope.pageChangedSuccess(res)
+      expect(@scope.uTransData.startPage).toBe(2)
+      expect(@scope.uTransData.paymentDetail).toEqual(res.body.paymentDetail)
+
+  describe '#pageChangedFailure', ->
+    it 'should show toastr with error message', ->
+      res = 
+        data: 
+          message: "Some message"
+          status: "Error"
+      spyOn(@toastr, 'error')
+      @scope.pageChangedFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
 
 

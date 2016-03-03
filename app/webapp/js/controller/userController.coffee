@@ -6,8 +6,6 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.subListData = []
   $scope.uTransData = {}
   $scope.cSubsData = false
-  $scope.currentPage = 1
-  $scope.pagiMaxSize = 5
   
   $scope.getUserAuthKey = () ->
     if !_.isEmpty($rootScope.basicInfo)
@@ -89,10 +87,12 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     toastr.error(res.data.message, res.data.status)
 
   $scope.pageChanged = (data) ->
-    if data.totalPages is data.startPage
+    if data.startPage > data.totalPages
       $scope.nothingToLoadUser = true
       toastr.info("Nothing to load, all transactions are loaded", "Info")
       return
+    if data.startPage is 1
+      data.startPage = 2
     obj = {
       name: $rootScope.basicInfo.uniqueName
       num: data.startPage

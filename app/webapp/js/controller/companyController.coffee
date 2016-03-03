@@ -404,10 +404,12 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         $scope.compSetBtn = false
   )
   $scope.pageChangedComp = (data) ->
-    if data.totalPages is data.startPage
+    if data.startPage > data.totalPages
       $scope.nothingToLoadComp = true
       toastr.info("Nothing to load, all transactions are loaded", "Info")
       return
+    if data.startPage is 1
+      data.startPage = 2
     obj = {
       name: $rootScope.selectedCompany.uniqueName
       num: data.startPage
@@ -621,6 +623,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       
 
   $scope.redeemCouponFailure = (res) ->
+    $scope.disableRazorPay = false
     $scope.payAlert = []
     $scope.discount = 0
     $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
@@ -642,11 +645,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.coupRes = {}
     $scope.payStep2 = false
     $scope.payStep3 = false
+    $scope.disableRazorPay = false
 
   $scope.resetDiscount = () ->
     if !$scope.isHaveCoupon
       $scope.payAlert = []
       $scope.coupon = angular.copy({})
+      $scope.disableRazorPay = false
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

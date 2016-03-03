@@ -324,7 +324,7 @@
           </div>
           <form class="form-inline mrB2" name="couponForm" novalidate ng-show="isHaveCoupon">
             <div class="form-group mrR1" ng-class="(couponForm.couponcode.$valid  && couponForm.couponcode.$touched) ? 'has-success' : (couponForm.couponcode.$touched) ? 'has-error' : '' ">
-              <input type="text" name="couponcode" class="form-control max150" ng-model="coupon.code" placeholder="Coupon code" required autocomplete="off">
+              <input type="text" name="couponcode" class="form-control max200" ng-model="coupon.code" placeholder="Coupon code" required autocomplete="off">
             </div>
             <button ng-disabled="couponForm.$invalid" class="btn btn-primary" ng-click="redeemCoupon(coupon.code)">Redeem</button>
           </form>
