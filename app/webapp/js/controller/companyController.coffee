@@ -500,6 +500,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     else
       if $scope.coupRes.type is 'balance_add'
         obj.couponCode = null
+        obj.amount= Number($scope.amount)
+        $scope.coupRes.extra = true
       else  
         obj.couponCode = $scope.coupRes.couponCode
 
@@ -507,7 +509,9 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.addBalRzrSuccess = (res) ->
     if $scope.isHaveCoupon and !_.isEmpty($scope.coupRes)
-      if $scope.coupRes.type is 'balance_add'
+      if $scope.coupRes.type is 'balance_add' and $scope.coupRes.extra
+        $rootScope.basicInfo.availableCredit += Number($scope.amount)
+      else if $scope.coupRes.type is 'balance_add'
         $rootScope.basicInfo.availableCredit += Number($scope.coupRes.maxAmount)
       else
         $rootScope.basicInfo.availableCredit += Number($scope.amount)
@@ -527,6 +531,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         $scope.amount -= Number($scope.coupRes.maxAmount)
         $scope.directPay = false
         $scope.disableRazorPay = false
+        $scope.payAlert.push({msg: "Coupon is redeemed. But for complete subscription, you have to add Rs. "+$scope.amount+ " more in your wallet."})
     
 
   $scope.addBalRzrFailure = (res) ->
