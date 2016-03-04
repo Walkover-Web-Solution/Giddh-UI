@@ -351,6 +351,10 @@ header .navbar-nav > li.active {
     padding-right: 40px
 }
 
+.pd0{
+    padding:0;
+}
+
 .mr {
     margin: 5px
 }
@@ -1202,6 +1206,9 @@ li:last-child .angular-ui-tree-handle {
     max-width:200px;
 }
 
+.max350{
+    max-width:350px;
+}
 /* styles for trial-balance */
 
 .page-title{
@@ -1869,4 +1876,82 @@ i.cls-alert{
 
 .graph-filters td > .btn, .graph-filters td > .btn-sm{
     padding:0;
+}
+
+.account-card{
+    width:300px;
+    min-height:150px;
+    float:left;
+    display: inline-block;
+    position: relative;
+    margin: 10px 10px 0 0;
+    padding:10px;
+    color:#333;
+    background: #fff;
+    border-radius: 2px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.2s ease-in-out;
+}
+
+.account-card:hover{
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+}
+
+.account-card > h1{
+    font-size: 16px;
+    padding-bottom: 5px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #337ab7;
+    text-overflow: ellipsis;
+    max-width: 325px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.account-card > .balances > span.title{
+    font-weight: bold;
+    display: block;
+    color:#444;
+}
+
+.account-card > .balance{
+    color:#444;
+    font-size:24px;
+    padding:5px 0;
+
+}
+
+.account-card > .with{
+    max-width: 325px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.account-card > .balances ul li{
+    font-size:10px;
+    list-style-type: disc;
+    margin-left:15px;
+}
+
+.linked-accounts{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #e0e0e0;
+    margin-bottom:20px;
+}
+
+.linked-accounts:nth-child(odd) > .title{
+    border-bottom: 2px solid #337ab7;
+}
+
+.linked-accounts:nth-child(odd) .account-card > h1{
+    border-bottom: 1px solid #d35f29;
+}
+
+.linked-accounts > .title{
+    margin-bottom: 5px;
+    padding-bottom: 1px;
+    border-bottom: 2px solid #d35f29;
+    font-size:18px;
 }

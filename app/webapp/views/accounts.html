@@ -62,7 +62,7 @@
                      ui-sref="company.content.ledgerContent({unqName:accDtl.uniqueName})">
                     <div class="clearfix">
                       <i ng-class="accDtl.charId ==1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
-                      <span ng-bind-html="accDtl.name | highlight: acntSrch" class="ellp max100"></span>
+                      <span ng-bind-html="accDtl.name" class="ellp max100"></span>
                       <span class="ng-hide">{{accDtl.uniqueName}}</span>
                     </div>
                   </a>

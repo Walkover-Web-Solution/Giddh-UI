@@ -140,6 +140,7 @@ var upload = require('./public/routes/webapp/upload');
 var profitLoss = require('./public/routes/webapp/profitLoss')
 var reports = require('./public/routes/webapp/reports')
 var coupon = require('./public/routes/webapp/coupon')
+var yodlee = require('./public/routes/webapp/yodlee')
 
 app.use('/currency', currency);
 app.use('/users', users);
@@ -157,6 +158,7 @@ app.use('/company/:companyUniqueName/history', reports);
 app.use('/company/:companyUniqueName/profit-loss-history', reports);
 app.use('/company/:companyUniqueName/networth-history', reports);
 app.use('/coupon', coupon)
+app.use('/yodlee', yodlee)
 
 
 app.listen(port, function () {
