@@ -963,8 +963,33 @@ describe 'companyController', ->
       @scope.getWltBal()
       expect(@userServices.getWltBal).toHaveBeenCalledWith('hey')
 
+  describe '#getWltBalSuccess', ->
+    it 'should check if available balance is greater or equal to companySubscription they set showPayOptns var to false and call deductSubsViaWallet function and default false a variable', ->
+      @rootScope.selectedCompany = {
+        companySubscription:
+          billAmount: 40
+      }
+      res = 
+        body: 
+          availableCredit: 100
+      spyOn(@scope, "deductSubsViaWallet")
+      @scope.getWltBalSuccess(res)
+      expect(@scope.disableRazorPay).toBeFalsy()
+      expect(@scope.showPayOptns).toBeFalsy()
+      expect(@scope.deductSubsViaWallet).toHaveBeenCalledWith(40)
 
+      
+    
 
+  describe '#getWltBalFailure', ->
+    it 'should show toastr with error message', ->
+      res = 
+        data: 
+          message: "Some message"
+          status: "Error"
+      spyOn(@toastr, 'error')
+      @scope.getWltBalFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
     
 

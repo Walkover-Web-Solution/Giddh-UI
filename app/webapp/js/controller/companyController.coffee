@@ -478,6 +478,16 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.subsWltFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+  $scope.addBalViaDirectCoupon = () ->
+    obj = {
+      uUname: $rootScope.basicInfo.uniqueName
+      paymentId: null
+      amount: Number($scope.wlt.Amnt)
+      discount: Number($scope.discount)
+      couponCode: $scope.coupRes.couponCode
+    }
+    userServices.addBalInWallet(obj).then($scope.addBalRzrSuccess, $scope.addBalRzrFailure)
+
   $scope.addBalViaRazor = (razorObj) ->
     obj = {
       uUname: $rootScope.basicInfo.uniqueName
@@ -490,7 +500,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     else
       if $scope.coupRes.type is 'balance_add'
         obj.couponCode = null
-      else
+      else  
         obj.couponCode = $scope.coupRes.couponCode
 
     userServices.addBalInWallet(obj).then($scope.addBalRzrSuccess, $scope.addBalRzrFailure)
@@ -554,9 +564,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       when 'balance_add'
         $scope.directPay = true
         $scope.disableRazorPay = true
-        razorObj = {}
-        razorObj.razorpay_payment_id = null
-        $scope.addBalViaRazor(razorObj)
+        $scope.addBalViaDirectCoupon()
       when 'cashback'
         $scope.checkDiffAndAlert('cashback')
       when 'cashback_discount'
