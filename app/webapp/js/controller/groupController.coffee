@@ -791,10 +791,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     updatedMergedAccList = []
     _.each $scope.toMerge.mergedAcc, (obj) ->
       toRemove = {
-        noRemove: true
+        noRemove: false
       }
       if obj.uniqueName != $scope.toMerge.toUnMerge.uniqueNames[0]
         toRemove.uniqueName = obj.uniqueName
+        if !obj.hasOwnProperty('mergedAccounts')
+          toRemove.noRemove = true
         updatedMergedAccList.push(toRemove)
     $scope.toMerge.mergedAcc = updatedMergedAccList
     $scope.toMerge.toUnMerge.uniqueNames = []
@@ -836,10 +838,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     updatedMergedAccList = []
     _.each $scope.toMerge.mergedAcc, (obj) ->
       toRemove = {
-        noRemove: true
+        noRemove: false
       }
       if obj.uniqueName != $scope.toMerge.toUnMerge.uniqueNames[0]
         toRemove.uniqueName = obj.uniqueName
+        if !obj.hasOwnProperty('mergedAccounts')
+          toRemove.noRemove = true
         updatedMergedAccList.push(toRemove)
     $scope.toMerge.mergedAcc = updatedMergedAccList
     $scope.toMerge.toUnMerge.uniqueNames = []
