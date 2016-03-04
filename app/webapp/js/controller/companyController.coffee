@@ -525,6 +525,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       if $rootScope.basicInfo.availableCredit >= $rootScope.selectedCompany.companySubscription.billAmount
         $scope.deductSubsViaWallet(Number($rootScope.selectedCompany.companySubscription.billAmount))
       else
+        $scope.amount -= Number($scope.coupRes.maxAmount)
         $scope.directPay = false
         $scope.disableRazorPay = false
     
@@ -642,6 +643,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   # reset steps
   $scope.resetSteps = () ->
+    $scope.showPayOptns = false
     $scope.isHaveCoupon = false
     $scope.payAlert = []
     $scope.wlt = angular.copy({})
