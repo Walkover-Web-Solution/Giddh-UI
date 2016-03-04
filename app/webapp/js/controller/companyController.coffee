@@ -11,7 +11,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.compSetBtn = true
   $scope.compDataFound = false
   $scope.compTransData = {}
-  $scope.compDiffAmount = 0
   $scope.showPayOptns = false
   $scope.isHaveCoupon = false
   #contains company list
@@ -20,17 +19,16 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.currencyList = []
   $scope.currencySelected = undefined
   $scope.shareRequest = {role: 'view_only', user: null}
-
   # userController methods
+  $scope.payAlert = []
+  $scope.wlt = {}
+  $scope.coupRes = {}
+  $scope.coupon = {}
   $scope.payStep2 = false
   $scope.payStep3 = false
   $scope.directPay = false
-  $scope.disableRazorPay = false
-  $scope.payAlert = []
-  $scope.wlt = {}
   $scope.wlt.status = false
-  $scope.coupRes = {}
-  $scope.coupon = {}
+  $scope.disableRazorPay = false
   $scope.discount = 0
   $scope.amount = 0
   
@@ -134,16 +132,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #delete company
   $scope.deleteCompany = (uniqueName, index, name) ->
-    # modalInstance = $uibModal.open(
-    #   templateUrl: '/public/webapp/views/confirmModal.html'
-    #   title: 'Are you sure you want to delete? ' + name
-    #   ok: 'Yes'
-    #   cancel: 'No'
-    #   scope: $scope
-    # )
-    # modalInstance.result.then ->
-    #   companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
-
     modalService.openConfirmModal(
       title: 'Are you sure you want to delete? ' + name,
       ok: 'Yes',
@@ -446,7 +434,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     companyServices.updtCompSubs(data).then($scope.updateCompSubsSuccess, $scope.updateCompSubsFailure)
 
   $scope.updateCompSubsSuccess = (res) ->
-    console.log res, "updateCompSubsSuccess"
     $scope.selectedCompany.companySubscription = res.body
     toastr.success("Updates successfully", res.status)
 
@@ -464,7 +451,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.showPayOptns = false
       $scope.deductSubsViaWallet(invB)
     else if avlB > 0 and avlB < invB
-      # hit api with avlB and go through wallet with compDiffAmount
       $scope.wlt.Amnt = Math.abs(invB - avlB)
       $scope.showPayOptns = true
     else
@@ -502,7 +488,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     if _.isEmpty($scope.coupRes)
       obj.couponCode = null
     else
-      obj.couponCode = $scope.coupRes.couponCode
+      if $scope.coupRes.type is 'balance_add'
+        obj.couponCode = null
+      else
+        obj.couponCode = $scope.coupRes.couponCode
 
     userServices.addBalInWallet(obj).then($scope.addBalRzrSuccess, $scope.addBalRzrFailure)
 

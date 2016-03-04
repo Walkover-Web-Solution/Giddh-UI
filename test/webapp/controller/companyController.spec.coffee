@@ -21,11 +21,28 @@ describe 'companyController', ->
       expect(@scope.mHideBar).toBeFalsy()
       expect(@scope.dHideBar).toBeFalsy()
       expect(@scope.showUpdTbl).toBeFalsy()
+      expect(@scope.compSetBtn).toBeTruthy()
+      expect(@scope.compDataFound).toBeFalsy()
+      expect(@scope.compTransData).toEqual({})
+      expect(@scope.showPayOptns).toBeFalsy()
+      expect(@scope.isHaveCoupon).toBeFalsy()
+      # contains company list
       expect(@scope.companyList).toEqual([])
       expect(@scope.companyDetails).toEqual({})
       expect(@scope.currencyList).toEqual([])
       expect(@scope.currencySelected).toBeUndefined()
       expect(@scope.shareRequest).toEqual({role: 'view_only', user: null})
+      # userController methods
+      expect(@scope.payAlert).toEqual([])
+      expect(@scope.coupRes).toEqual({})
+      expect(@scope.coupon).toEqual({})
+      expect(@scope.payStep2).toBeFalsy()
+      expect(@scope.payStep3).toBeFalsy()
+      expect(@scope.directPay).toBeFalsy()
+      expect(@scope.wlt.status).toBeFalsy()
+      expect(@scope.disableRazorPay).toBeFalsy()
+      expect(@scope.discount).toBe(0)
+      expect(@scope.amount).toBe(0)
 
   beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $uibModal, modalService, $timeout, permissionService, DAServices, Upload, userServices, $state) ->
     @scope = $rootScope.$new()
@@ -774,4 +791,180 @@ describe 'companyController', ->
       expect(@scope.getCompanyList).toHaveBeenCalled()
       expect(@scope.getCurrencyList).toHaveBeenCalled()
       expect(@scope.getUserDetails).toHaveBeenCalled()
+
+  # payment details related func cases
+  describe '#primPayeeChange', ->
+    it 'should set a compSetBtn variable to false', ->
+      @scope.primPayeeChange("a", "b")
+      expect(@scope.compSetBtn).toBeFalsy()
+  
+  describe '#pageChangedComp', ->
+    it 'should check if startPage is greater than totalPages then set variable to true and show message with toastr', ->
+      data = {
+        startPage: 2
+        totalPages: 1
+      }
+      spyOn(@toastr, "info")
+      @scope.pageChangedComp(data)
+      expect(@scope.nothingToLoadComp).toBeTruthy() 
+      expect(@toastr.info).toHaveBeenCalledWith("Nothing to load, all transactions are loaded", "Info")
+
+    it 'should exaggerate startPage var and call companyServices getCompTrans method', ->
+      deferred = @q.defer()
+      spyOn(@companyServices, "getCompTrans").andReturn(deferred.promise)
+      data = {
+        startPage: 1
+        totalPages: 1
+      }
+      @rootScope.selectedCompany = {
+        uniqueName: "hey"
+      }
+      obj = {
+        name: @rootScope.selectedCompany.uniqueName
+        num: data.startPage+1
+      }
+      @scope.pageChangedComp(data)
+      expect(@companyServices.getCompTrans).toHaveBeenCalledWith(obj)
+
+  describe '#pageChangedCompSuccess', ->
+    it 'should concatinate two arrays and create plus one count to variable', ->
+      res = 
+        body: 
+          paymentDetail: [
+            {some: "thing"}
+          ]
+      @scope.compTransData = 
+        startPage: 1
+        paymentDetail: []
+      @scope.pageChangedCompSuccess(res)
+      expect(@scope.compTransData.startPage).toBe(2)
+      expect(@scope.compTransData.paymentDetail).toEqual(res.body.paymentDetail)
+
+  describe '#pageChangedCompFailure', ->
+    it 'should show toastr with error message', ->
+      res = 
+        data: 
+          message: "Some message"
+          status: "Error"
+      spyOn(@toastr, 'error')
+      @scope.pageChangedCompFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+      
+  describe '#getCompanyTransactions', ->
+    it 'should call companyServices getCompTrans method', ->
+      deferred = @q.defer()
+      spyOn(@companyServices, "getCompTrans").andReturn(deferred.promise)
+      @rootScope.selectedCompany = {
+        uniqueName: "hey"
+      }
+      obj = {
+        name: @rootScope.selectedCompany.uniqueName
+        num: 1
+      }
+      @scope.getCompanyTransactions()
+      expect(@companyServices.getCompTrans).toHaveBeenCalledWith(obj)
+  
+  describe '#getCompanyTransactionsSuccess', ->
+    it 'should set value in compTransData variable, and set nothingToLoadComp to toBeFalsy  and set compDataFound variable to truthy', ->
+      res = 
+        body: 
+          paymentDetail: [
+            {some: "thing"}
+          ]
+      @scope.compTransData = 
+        startPage: 1
+        paymentDetail: []
+      @scope.getCompanyTransactionsSuccess(res)
+      expect(@scope.compTransData.startPage).toBe(1)
+      expect(@scope.compTransData.paymentDetail).toEqual(res.body.paymentDetail)
+      expect(@scope.nothingToLoadComp).toBeFalsy()
+      expect(@scope.compDataFound).toBeTruthy()
+
+    it 'should set value in compTransData variable, and set nothingToLoadComp to toBeFalsy  and set compDataFound variable to toBeFalsy and show message with toastr', ->
+      res = 
+        body: 
+          paymentDetail: []
+      @scope.compTransData = 
+        startPage: 1
+        paymentDetail: []
+      spyOn(@toastr, "info")
+      @scope.getCompanyTransactionsSuccess(res)
+      expect(@scope.compTransData.startPage).toBe(1)
+      expect(@scope.compTransData.paymentDetail).toEqual(res.body.paymentDetail)
+      expect(@scope.nothingToLoadComp).toBeFalsy()
+      expect(@scope.compDataFound).toBeFalsy()
+      expect(@toastr.info).toHaveBeenCalledWith("Don\'t have any transactions yet.", "Info")
+
+  describe '#getCompanyTransactionsFailure', ->
+    it 'should show toastr with error message', ->
+      res = 
+        data: 
+          message: "Some message"
+          status: "Error"
+      spyOn(@toastr, 'error')
+      @scope.getCompanyTransactionsFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+
+  describe '#updateCompSubs', ->
+    it 'should call companyServices updtCompSubs method', ->
+      deferred = @q.defer()
+      spyOn(@companyServices, "updtCompSubs").andReturn(deferred.promise)
+      @rootScope.selectedCompany = {
+        uniqueName: "hey"
+      }
+      resObj = {
+        autoDeduct: true
+        primaryBiller:
+          userEmail: "someemail"
+          userName: "Some"
+          userUniqueName: "user"
+      }
+      data = {
+        uniqueName: @rootScope.selectedCompany.uniqueName
+        autoDeduct: resObj.autoDeduct
+        primaryBiller: resObj.primaryBiller
+      }
+      @scope.updateCompSubs(resObj)
+      expect(@companyServices.updtCompSubs).toHaveBeenCalledWith(data)
+
+  describe '#updateCompSubsSuccess', ->
+    it 'should set value in companySubscription variable, and show message with toastr', ->
+      res = 
+        status: "Success"
+        body: {
+          some: "some"
+        }
+      @scope.selectedCompany = 
+        companySubscription: {}
+      spyOn(@toastr, "success")
+      @scope.updateCompSubsSuccess(res)
+      expect(@scope.selectedCompany.companySubscription).toEqual(res.body)
+      expect(@toastr.success).toHaveBeenCalledWith("Updates successfully", res.status)
+      
+
+  describe '#updateCompSubsFailure', ->
+    it 'should show toastr with error message', ->
+      res = 
+        data: 
+          message: "Some message"
+          status: "Error"
+      spyOn(@toastr, 'error')
+      @scope.updateCompSubsFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+  describe '#getWltBal', ->
+    it 'should call userServices getWltBal method', ->
+      deferred = @q.defer()
+      spyOn(@userServices, "getWltBal").andReturn(deferred.promise)
+      @rootScope.basicInfo = {
+        uniqueName: "hey"
+      }
+      @scope.getWltBal()
+      expect(@userServices.getWltBal).toHaveBeenCalledWith('hey')
+
+
+
+
+    
 
