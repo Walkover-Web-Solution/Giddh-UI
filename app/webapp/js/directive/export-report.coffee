@@ -211,3 +211,8 @@ angular.module('trialBalance', []).directive('exportReport', [
             result.push(grp)
 
       result
+
+.filter 'addmanagesrch', ->
+  (input, search) ->
+    console.log input
+    input
