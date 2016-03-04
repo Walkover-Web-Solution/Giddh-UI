@@ -369,7 +369,7 @@
                 >
                   <ui-select-match placeholder="Select...">{{$select.selected.userName}}</ui-select-match>
                   <ui-select-choices 
-                    ui-disable-choice="person.userUniqueName === selectedCompany.companySubscription.createdBy.uniqueName"
+                    ui-disable-choice="person.userUniqueName === selectedCompany.createdBy.uniqueName"
                     repeat="person in sharedUsersList">
                     <div ng-bind-html="person.userName"></div>
                     <small>
