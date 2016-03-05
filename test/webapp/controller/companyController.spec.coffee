@@ -978,8 +978,35 @@ describe 'companyController', ->
       expect(@scope.showPayOptns).toBeFalsy()
       expect(@scope.deductSubsViaWallet).toHaveBeenCalledWith(40)
 
-      
-    
+    it 'should check if available balance is less than to companySubscription then set showPayOptns variable to true and set value in wlt variable', ->
+      @rootScope.selectedCompany = {
+        companySubscription:
+          billAmount: 50
+      }
+      res = 
+        body: 
+          availableCredit: 40
+      spyOn(@scope, "deductSubsViaWallet")
+      @scope.getWltBalSuccess(res)
+      expect(@scope.disableRazorPay).toBeFalsy()
+      expect(@scope.showPayOptns).toBeTruthy()
+      expect(@scope.deductSubsViaWallet).not.toHaveBeenCalledWith(40)
+      expect(@scope.wlt.Amnt).toBe(10)
+
+    it 'should check if available balance is 0. then set showPayOptns variable to true and set value in wlt variable', ->
+      @rootScope.selectedCompany = {
+        companySubscription:
+          billAmount: 50
+      }
+      res = 
+        body: 
+          availableCredit: 0
+      spyOn(@scope, "deductSubsViaWallet")
+      @scope.getWltBalSuccess(res)
+      expect(@scope.disableRazorPay).toBeFalsy()
+      expect(@scope.showPayOptns).toBeTruthy()
+      expect(@scope.deductSubsViaWallet).not.toHaveBeenCalledWith(0)
+      expect(@scope.wlt.Amnt).toBe(50)
 
   describe '#getWltBalFailure', ->
     it 'should show toastr with error message', ->
@@ -990,6 +1017,60 @@ describe 'companyController', ->
       spyOn(@toastr, 'error')
       @scope.getWltBalFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+  describe '#deductSubsViaWallet', ->
+    it 'should call companyServices payBillViaWallet method', ->
+      deferred = @q.defer()
+      spyOn(@companyServices, "payBillViaWallet").andReturn(deferred.promise)
+      @rootScope.selectedCompany = {
+        uniqueName: "hey"
+      }
+      num = 100
+      obj = {
+        uniqueName: @rootScope.selectedCompany.uniqueName
+        billAmount: num
+      }
+      @scope.deductSubsViaWallet(num)
+      expect(@companyServices.payBillViaWallet).toHaveBeenCalledWith(obj)
+
+  describe '#subsWltFailure', ->
+    it 'should show toastr with error message', ->
+      res = 
+        body:
+          amountPayed: 100
+
+      @rootScope.selectedCompany = {
+        uniqueName: "hey"
+      }
+      @rootScope.selectedCompany = {
+        companySubscription:
+          billAmount: 100
+      }
+  
+  describe '#subsWltFailure', ->
+    it 'should show toastr with error message', ->
+      res = 
+        data: 
+          message: "Some message"
+          status: "Error"
+      spyOn(@toastr, 'error')
+      @scope.subsWltFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     
 

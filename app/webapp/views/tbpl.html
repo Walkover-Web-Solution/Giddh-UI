@@ -268,19 +268,43 @@
               <section class="row row-1" ng-repeat="expGrp in plData.expArr">
                 <div class="row" trial-accordion>  
                   <div class="col-sm-6 col-md-6 group" ng-bind-html=" expGrp.groupName | uppercase"></div>
-                  <div class="col-sm-6 col-md-6 group text-right" ng-bind-html=" expGrp.closingBalance.amount | uppercase"></div>
+                  <!-- ng-bind-html="expGrp.closingBalance.amount | uppercase" -->
+                  <div class="col-sm-6 col-md-6 group text-right">
+                    <span ng-if="expGrp.closingBalance.type === 'CREDIT'" class="text-danger">
+                      {{expGrp.closingBalance.amount * -1}}
+                    </span>
+                    <span ng-if="expGrp.closingBalance.type === 'DEBIT'">
+                      {{expGrp.closingBalance.amount}}
+                    </span>
+                  </div>
                 </div>
                 <section class="row row-2 isHidden" ng-repeat="subGrp in expGrp.childGroups">
                   <div class="row" trial-accordion>
                     <div class="col-sm-6 col-md-6 account" ng-style="{'padding-left':padLeft}" ng-bind-html=" subGrp.groupName | uppercase">
                     </div>
-                    <div class="col-sm-6 col-md-6 account text-right" ng-bind-html=" subGrp.closingBalance.amount | uppercase"></div>
+                    <!-- ng-bind-html=" subGrp.closingBalance.amount | uppercase" -->
+                    <div class="col-sm-6 col-md-6 account text-right">
+                      <span ng-if="subGrp.closingBalance.type === 'CREDIT'" class="text-danger">
+                        {{subGrp.closingBalance.amount * -1}}
+                      </span>
+                      <span ng-if="subGrp.closingBalance.type === 'DEBIT'">
+                        {{subGrp.closingBalance.amount}}
+                      </span>
+                    </div>
                   </div>
                   <section class="row row-2 isHidden" ng-repeat="acc in subGrp.accounts">
                     <div class="row">
                       <div class="col-sm-6 col-md-6 account" ng-style="{'padding-left':padLeft + 10}" ng-bind-html=" acc.name | lowercase">
                       </div>
-                      <div class="col-sm-6 col-md-6 account text-right" ng-bind-html=" acc.closingBalance.amount | lowercase"></div>
+                      <!--  ng-bind-html=" acc.closingBalance.amount | lowercase" -->
+                      <div class="col-sm-6 col-md-6 account text-right">
+                        <span ng-if="acc.closingBalance.type === 'CREDIT'" class="text-danger">
+                          {{acc.closingBalance.amount * -1}}
+                        </span>
+                        <span ng-if="acc.closingBalance.type === 'DEBIT'">
+                          {{acc.closingBalance.amount}}
+                        </span>
+                      </div>
                     </div>
                   </section>
                 </section>
@@ -304,19 +328,43 @@
               <section class="row row-1" ng-repeat="incGrp in plData.incArr">
                 <div class="row"  trial-accordion>  
                   <div class="col-sm-6 col-md-6 group" ng-bind-html=" incGrp.groupName | uppercase"></div>
-                  <div class="col-sm-6 col-md-6 group text-right" ng-bind-html=" incGrp.closingBalance.amount | uppercase"></div>
+                  <div class="col-sm-6 col-md-6 group text-right">
+                    <!-- ng-bind-html=" incGrp.closingBalance.amount | uppercase" -->
+                    <span ng-if="incGrp.closingBalance.type === 'DEBIT'" class="text-danger">
+                      {{incGrp.closingBalance.amount * -1}}
+                    </span>
+                    <span ng-if="incGrp.closingBalance.type === 'CREDIT'">
+                      {{incGrp.closingBalance.amount}}
+                    </span>
+                  </div>
                 </div>
                 <section class="row row-2 isHidden" ng-repeat="subGrp in incGrp.childGroups">
                   <div class="row" trial-accordion>
                     <div class="col-sm-6 col-md-6 account" ng-style="{'padding-left':padLeft}" ng-bind-html=" subGrp.groupName | uppercase">
                     </div>
-                    <div class="col-sm-6 col-md-6 account text-right" ng-bind-html=" subGrp.closingBalance.amount | uppercase"></div>
+                    <div class="col-sm-6 col-md-6 account text-right">
+                      <!--  ng-bind-html=" subGrp.closingBalance.amount | uppercase" -->
+                      <span ng-if="subGrp.closingBalance.type === 'DEBIT'" class="text-danger">
+                        {{subGrp.closingBalance.amount * -1}}
+                      </span>
+                      <span ng-if="subGrp.closingBalance.type === 'CREDIT'">
+                        {{subGrp.closingBalance.amount}}
+                      </span>
+                    </div>
                   </div>
                   <section class="row row-2 isHidden" ng-repeat="acc in subGrp.accounts">
                     <div class="row">
                       <div class="col-sm-6 col-md-6 account" ng-style="{'padding-left':padLeft + 10}" ng-bind-html=" acc.name | lowercase">
                       </div>
-                      <div class="col-sm-6 col-md-6 account text-right" ng-bind-html=" acc.closingBalance.amount | lowercase"></div>
+                      <div class="col-sm-6 col-md-6 account text-right">
+                        <!-- ng-bind-html=" acc.closingBalance.amount | lowercase" -->
+                        <span ng-if="acc.closingBalance.type === 'DEBIT'" class="text-danger">
+                          {{acc.closingBalance.amount * -1}}
+                        </span>
+                        <span ng-if="acc.closingBalance.type === 'CREDIT'">
+                          {{acc.closingBalance.amount}}
+                        </span>
+                      </div>
                     </div>
                   </section>
                 </section>

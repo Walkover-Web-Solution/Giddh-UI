@@ -52,10 +52,23 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
 
   # p&l functions
-  $scope.calCulateTotal = (data) ->
+  $scope.calCulateTotalIncome = (data) ->
     eTtl = 0
     _.each(data, (item) ->
-      eTtl += Number(item.closingBalance.amount)
+      if item.closingBalance.type is 'DEBIT'
+        eTtl -= Number(item.closingBalance.amount)
+      else
+        eTtl += Number(item.closingBalance.amount)
+    )
+    return Number((eTtl).toFixed(2))
+
+  $scope.calCulateTotalExpense = (data) ->
+    eTtl = 0
+    _.each(data, (item) ->
+      if item.closingBalance.type is 'CREDIT'
+        eTtl -= Number(item.closingBalance.amount)
+      else
+        eTtl += Number(item.closingBalance.amount)
     )
     return Number((eTtl).toFixed(2))
 
@@ -87,8 +100,9 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.makeDataForPl = (data) ->
     fData = $scope.filterPlData(data.groupDetails)
     $scope.plData = _.omit(fData, "othArr")
-    $scope.plData.expenseTotal = $scope.calCulateTotal(fData.expArr)
-    $scope.plData.incomeTotal = $scope.calCulateTotal(fData.incArr)
+    console.log $scope.plData
+    $scope.plData.expenseTotal = $scope.calCulateTotalExpense(fData.expArr)
+    $scope.plData.incomeTotal = $scope.calCulateTotalIncome(fData.incArr)
     clB = $scope.plData.incomeTotal - $scope.plData.expenseTotal
 
     $scope.plData.closingBalance = Math.abs(clB)
