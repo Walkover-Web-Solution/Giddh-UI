@@ -718,8 +718,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         accToSend = {
           "uniqueName": ""
         }
-        accToSend.uniqueName = acc.uniqueName
-        accToMerge.push(accToSend)
+        if acc.hasOwnProperty('mergedAccounts')
+          accToSend.uniqueName = acc.uniqueName
+          accToMerge.push(accToSend)
     else
       _.each $scope.toMerge.mergedAcc, (acc) ->
         accToSend = {
@@ -740,6 +741,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         $scope.AccountsList = _.without($scope.AccountsList, _.findWhere($scope.AccountsList, removeMerged))
     else
       toastr.error("Please select at least one account.")
+  
 
   $scope.mergeSuccess = (res) ->
     toastr.success(res.body)
