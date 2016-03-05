@@ -117,6 +117,11 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     linked: []
     toLink:''
     toLinkObj: {}
+    mfaForm: {
+      form:{}
+      showForm: false
+    }
+    requestSent: false
   }
 
   $scope.bankDetails = {}
@@ -133,7 +138,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
 
   $scope.getAccountsFailure = (res) ->
-    console.log res
+    toastr.error(res.data.message)
 
 
   
@@ -187,6 +192,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       reqBody.loginFormDetail.push(toSend)
 
     userServices.addSiteAccount(reqBody, companyUniqueName).then($scope.addSiteAccountSuccess, $scope.addSiteAccountFailure)
+    $scope.banks.requestSent = true
 
   $scope.addSiteAccountSuccess = (res) ->
     companyUniqueName =  {
@@ -198,11 +204,21 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       toastr.success('Account added successfully!')
     else
       console.log res
+      $scope.banks.mfaForm.form = siteData.yodleeMfaResponse
+      modalInstance = $uibModal.open(
+        templateUrl: '/public/webapp/views/addManageGroupModal.html'
+        size: "liq90"
+        backdrop: 'static'
+        scope: $scope
+      )
+      $scope.banks.mfaForm.showForm = true
     userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
+    $scope.banks.requestSent = false
       
 
   $scope.addSiteAccountFailure = (res) ->
-    toastr.error(res.message)
+    toastr.error(res.code)
+    $scope.banks.requestSent = false
 
   $scope.showAccountsList = (card) ->
     card.showAccList = true

@@ -181,7 +181,17 @@
                     <div class="form-group" ng-repeat="field in banks.components">
                       <input type="{{field.name}}" ng-model="bankDetails[field.displayName]" placeholder="{{field.displayName}}" class="form-control" name="{{field.name}}" maxlength="{{field.maxlength}}" ng-required="!field.isOptional"/>
                     </div>
-                    <button class="btn btn-success" ng-click="submitForm(bankDetails)">Submit</button>
+                    <button class="btn btn-success" ng-click="submitForm(bankDetails)" ng-disabled="banks.requestSent">Submit</button>
+                    <div class="absolute-loader" ng-if="banks.requestSent">
+                      <div class="loader">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <h1>Please wait, this may take a while</h1>
+                      </div>
+                    </div>
                   </section>
                 </div>
               </div>

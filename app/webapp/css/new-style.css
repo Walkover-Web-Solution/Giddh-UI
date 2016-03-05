@@ -1960,3 +1960,18 @@ i.cls-alert{
     border-bottom: 2px solid #d35f29;
     font-size:18px;
 }
+
+.absolute-loader{
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left:0;
+    right:0;
+    background: #000;
+    opacity: 0.5;
+    z-index: 9;
+}
+
+.absolute-loader .loader span{
+    background: #fff;
+}
