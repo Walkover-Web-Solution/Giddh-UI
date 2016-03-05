@@ -17,11 +17,11 @@
               <div ng-if="showHistoryFilters">
                 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height suppress-  scroll-x="true">
                   <h1 class="page-title" style="margin-left:15px; margin-bottom:15px;">Generate Graph</h1>
-                  <div class="graph-filters col-sm-12 col-md-12">
+                  <div class="graph-filters col-sm-12">
 
                     <div class="clearfix">
                       <label>Select Groups</label>
-                      <ui-select multiple ng-model="selected.groups" theme="bootstrap">
+                      <ui-select multiple ng-model="selected.groups" theme="bootstrap" ng-disabled=" groups.legnth < 1">
                           <ui-select-match placeholder="Select Groups">
                             <span  ng-click="removeGroup($item)">{{$item.name}}</span>
                           </ui-select-match >
@@ -32,8 +32,8 @@
                     </div>
                     <div class="clearfix">
                       <label>Select Accounts</label>
-                      <ui-select multiple ng-model="selected.accounts" theme="bootstrap">
-                          <ui-select-match>
+                      <ui-select multiple ng-model="selected.accounts" theme="bootstrap"  ng-disabled=" accounts.legnth < 1">
+                          <ui-select-match placeholder="Select Accounts">
                               <span>{{$item.name}}</span>
                           </ui-select-match>
                           <ui-select-choices repeat="acc in accounts | filter: $select.search ">
@@ -91,6 +91,9 @@
                       <button class="btn btn-success" ng-click="generateGraph()">Go</button>
                     </div>
                   </div>
+<!--                   <div class="empty-graph col-sm-12 col-md-12" ng-if="groups.length < 1 || accounts.length < 1">
+                    <h1>There are no groups or accounts in this company.</h1>
+                  </div> -->
                   <div style="height: 50px;"></div>
                 </perfect-scrollbar>
               </div>
@@ -224,7 +227,11 @@
     <!-- middle body -->
     <div class=" col-sm-9 col-md-9 col-lg-10" >
       <div class="middleBody bdrR bdrL row" auto-height> 
-        <uib-tabset>
+        <div class="no-data" ng-if="noData">
+          <h1>Sorry, No Data Found!</h1>
+          <img src="/public/webapp/images/no-data.png" alt="">
+        </div>
+        <uib-tabset ng-if="!noData">
           <uib-tab heading="Historical Comparision" select="showHistoryFilter()">
             <div class="clearfix">
               <div class="loader mrT4" ng-hide="showLedgerBox">
@@ -279,6 +286,10 @@
                       </canvas>
                     </div>
                   </div>
+                </div>
+                <div class="no-data" ng-if="noData">
+                  <h1>Sorry, No Data Found!</h1>
+                  <img src="/public/webapp/images/no-data.png" alt="">
                 </div>
                 <div class="fixScroll"></div>
               </perfect-scrollbar>

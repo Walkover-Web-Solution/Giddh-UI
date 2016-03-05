@@ -53,6 +53,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     groups: []
     accounts: []
   }
+  $scope.noData = false
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
 
   $scope.fromDatePickerOpen = ->
@@ -79,8 +80,11 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
     $scope.sortGroupsAndAccounts($scope.flatAccntWGroupsList)
-    $scope.selected.groups = [$scope.groups[0]]
-    $scope.selected.accounts = [$scope.accounts[0]]
+    # $scope.selected.groups = [$scope.groups[0]]
+    # $scope.selected.accounts = [$scope.accounts[0]]
+    console.log $scope.accounts.length, $scope.groups.length
+    if $scope.groups.length < 1 && $scope.accounts.length < 1
+      $scope.noData = true
     $rootScope.showLedgerBox = true
 
   $scope.getGroupsFailure = (res) ->
@@ -250,7 +254,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
           }
         }
         accObj.category = acc.category
-        accObj.forSeries.dr = acc.name + " (DB)"
+        accObj.forSeries.dr = acc.name + " (DR)"
         accObj.forSeries.cr = acc.name + " (CR)"
         accObj.forSeries.cb = acc.name + " (C/B)"
         facc.name = acc.name
@@ -295,7 +299,9 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
             $scope.chartData.push(accObj.forData.cb)
             facc.forfilter.cb.val = true
             facc.forfilter.dr.val = true
-
+        if groups.length < 1    
+          $scope.labels = accObj.forLabels
+          
         $scope.GroupsAndAccounts.push(facc)
 
     # set variable to show chart on ui
@@ -383,6 +389,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.formatGraphData($scope.graphData)
 
   $scope.getGraphDataFailure = (res) ->
+    $scope.chartDataAvailable = true
     toastr.error(res.data.message, res.data.status)
 
   $scope.generateGraph = () ->
