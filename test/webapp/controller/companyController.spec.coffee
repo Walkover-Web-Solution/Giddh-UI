@@ -44,7 +44,7 @@ describe 'companyController', ->
       expect(@scope.discount).toBe(0)
       expect(@scope.amount).toBe(0)
 
-  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $uibModal, modalService, $timeout, permissionService, DAServices, Upload, userServices, $state) ->
+  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $uibModal, modalService, $timeout, permissionService, DAServices, Upload, userServices, $state, couponServices) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @currencyService = currencyService
@@ -61,6 +61,7 @@ describe 'companyController', ->
     @localStorageService = localStorageService
     @DAServices = DAServices
     @Upload = Upload
+    @couponServices = couponServices
     @companyController = $controller('companyController',
         {
           $scope: @scope,
@@ -78,6 +79,7 @@ describe 'companyController', ->
           $state: @state
           DAServices: @DAServices
           Upload: @Upload
+          couponServices: @couponServices
         })
 
   describe '#openFirstTimeUserModal', ->
@@ -1033,19 +1035,29 @@ describe 'companyController', ->
       @scope.deductSubsViaWallet(num)
       expect(@companyServices.payBillViaWallet).toHaveBeenCalledWith(obj)
 
-  describe '#subsWltFailure', ->
-    it 'should show toastr with error message', ->
+  describe '#subsViaWltSuccess', ->
+    it 'should set values in variables and show success message with toastr and call resetSteps func', ->
       res = 
         body:
           amountPayed: 100
 
-      @rootScope.selectedCompany = {
-        uniqueName: "hey"
+      @rootScope.basicInfo = {
+        availableCredit: 200
       }
       @rootScope.selectedCompany = {
         companySubscription:
           billAmount: 100
+          paymentDue: false
       }
+      spyOn(@toastr, "success")
+      spyOn(@scope, "resetSteps")
+      @scope.subsViaWltSuccess(res)
+      expect(@rootScope.basicInfo.availableCredit).toBe(100)
+      expect(@rootScope.selectedCompany.companySubscription.paymentDue).toBeFalsy()
+      expect(@rootScope.selectedCompany.companySubscription.billAmount).toBe(0)
+      expect(@scope.showPayOptns).toBeFalsy()
+      expect(@toastr.success).toHaveBeenCalledWith("Payment completed", "Success")
+      expect(@scope.resetSteps).toHaveBeenCalled()
   
   describe '#subsWltFailure', ->
     it 'should show toastr with error message', ->
@@ -1056,6 +1068,490 @@ describe 'companyController', ->
       spyOn(@toastr, 'error')
       @scope.subsWltFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+  describe '#addBalViaDirectCoupon', ->
+    it 'should call userServices addBalInWallet method', ->
+      deferred = @q.defer()
+      spyOn(@userServices, "addBalInWallet").andReturn(deferred.promise)
+      @rootScope.selectedCompany = {
+        uniqueName: "hey"
+      }
+      @rootScope.basicInfo = {
+        uniqueName: "some"
+      }
+      @scope.wlt ={
+        Amnt: 200
+      }
+      @scope.discount = 100
+      @scope.coupRes ={
+        couponCode: "e343g34t"
+      }
+      obj = {
+        uUname: @rootScope.basicInfo.uniqueName
+        paymentId: null
+        amount: Number(@scope.wlt.Amnt)
+        discount: Number(@scope.discount)
+        couponCode: @scope.coupRes.couponCode
+      }
+      @scope.addBalViaDirectCoupon()
+      expect(@userServices.addBalInWallet).toHaveBeenCalledWith(obj)
+
+
+  describe '#addBalViaRazor', ->
+    it 'should call userServices addBalInWallet method with empty coupRes object', ->
+      deferred = @q.defer()
+      spyOn(@userServices, "addBalInWallet").andReturn(deferred.promise)
+
+      @rootScope.selectedCompany = {
+        uniqueName: "hey"
+      }
+      @rootScope.basicInfo = {
+        uniqueName: "some"
+      }
+      @scope.wlt ={
+        Amnt: 200
+      }
+      @scope.discount = 100
+      razorObj = {
+        razorpay_payment_id: "12awe23eef42"
+      }
+      obj = {
+        uUname: @rootScope.basicInfo.uniqueName
+        paymentId: razorObj.razorpay_payment_id
+        amount: Number(@scope.wlt.Amnt)
+        discount: Number(@scope.discount)
+        couponCode: null
+      }
+      @scope.coupRes = {}
+      
+      @scope.addBalViaRazor(razorObj)
+      expect(@userServices.addBalInWallet).toHaveBeenCalledWith(obj)
+
+    it 'should call userServices addBalInWallet method with coupRes object but type will be balance_add so again couponCode will be null and it will add one more key in coupRes object', ->
+      deferred = @q.defer()
+      spyOn(@userServices, "addBalInWallet").andReturn(deferred.promise)
+      @rootScope.selectedCompany = {
+        uniqueName: "hey"
+      }
+      @rootScope.basicInfo = {
+        uniqueName: "some"
+      }
+      @scope.wlt ={
+        Amnt: 200
+      }
+      @scope.discount = 100
+      @scope.amount = 100
+      razorObj = {
+        razorpay_payment_id: "12awe23eef42"
+      }
+      afterObj = {
+        uUname: @rootScope.basicInfo.uniqueName
+        paymentId: razorObj.razorpay_payment_id
+        couponCode: null
+        amount: 100
+        discount: 100
+      }
+      @scope.coupRes = {
+        extra: false
+        couponCode: "abc"
+        type: "balance_add"
+      }
+      @scope.addBalViaRazor(razorObj)
+      expect(@userServices.addBalInWallet).toHaveBeenCalledWith(afterObj)
+      expect(@scope.coupRes.extra).toBeTruthy()
+
+    it 'should call userServices addBalInWallet method with coupRes object but type will not be balance_add so  couponCode will not be null', ->
+      deferred = @q.defer()
+      spyOn(@userServices, "addBalInWallet").andReturn(deferred.promise)
+      @rootScope.selectedCompany = {
+        uniqueName: "hey"
+      }
+      @rootScope.basicInfo = {
+        uniqueName: "some"
+      }
+      @scope.wlt ={
+        Amnt: 200
+      }
+      @scope.discount = 100
+      @scope.amount = 100
+      razorObj = {
+        razorpay_payment_id: "12awe23eef42"
+      }
+      afterObj = {
+        uUname: @rootScope.basicInfo.uniqueName
+        paymentId: razorObj.razorpay_payment_id
+        amount: 200
+        discount: 100
+        couponCode: "abc"
+      }
+      @scope.coupRes = {
+        extra: false
+        couponCode: "abc"
+        type: "discount"
+      }
+      @scope.addBalViaRazor(razorObj)
+      expect(@userServices.addBalInWallet).toHaveBeenCalledWith(afterObj)
+      expect(@scope.coupRes.extra).toBeFalsy()
+
+  describe '#addBalRzrSuccess', ->
+    it 'should check if isHaveCoupon variable is true and coupRes obj is not empty and underneath coupRes type is balance_add and extra key is true then it will set value according to condition in availableCredit after this it will check if wlt.status is true then it will set false to some variables call resetSteps func and show message with toastr', ->
+      res =
+        body: "Balance added successfully"
+        status: "success"
+      @scope.coupRes = {
+        extra: true
+        couponCode: "abc"
+        type: "balance_add"
+        maxAmount: 50
+        value: 50
+      }
+      @scope.amount = 100
+      @rootScope.basicInfo = {
+        availableCredit: 50
+      }
+      @scope.wlt = {
+        status: true
+      }
+      @scope.isHaveCoupon = true
+      spyOn(@scope, "resetSteps")
+      spyOn(@toastr, "success")
+      @scope.addBalRzrSuccess(res)
+      expect(@rootScope.basicInfo.availableCredit).toEqual(150)
+      expect(@scope.directPay).toBeFalsy()
+      expect(@scope.disableRazorPay).toBeFalsy()
+      expect(@scope.showPayOptns).toBeFalsy()
+      expect(@scope.resetSteps).toHaveBeenCalled()
+      expect(@toastr.success).toHaveBeenCalledWith(res.body, res.status)
+
+    it 'should check if isHaveCoupon variable is true and coupRes obj is not empty and underneath coupRes type is balance_add and extra key is undefined then it will set value according to condition in availableCredit after this it will check if wlt.status is false then it will check if availableCredit is greater or equal to billAmount amount then it will call deductSubsViaWallet func', ->
+      res =
+        body: "Balance added successfully"
+        status: "success"
+      @scope.coupRes = {
+        couponCode: "abc"
+        type: "balance_add"
+        maxAmount: 50
+        value: 50
+      }
+      @rootScope.basicInfo = {
+        availableCredit: 50
+      }
+      @rootScope.selectedCompany = {
+        companySubscription:
+          billAmount: 70
+      }
+      @scope.wlt = {
+        status: false
+      }
+      @scope.isHaveCoupon = true
+      spyOn(@scope, "deductSubsViaWallet")
+      @scope.addBalRzrSuccess(res)
+      expect(@rootScope.basicInfo.availableCredit).toEqual(100)
+      expect(@scope.deductSubsViaWallet).toHaveBeenCalledWith(70)
+      
+    it 'should check if isHaveCoupon variable is true and coupRes obj is not empty and underneath coupRes type is not balance_add and extra key is undefined then it will set value according to condition in availableCredit. After this it will check if wlt.status is false and availableCredit is less than billAmount then it will set value according to condition', ->
+      res =
+        body: "Balance added successfully"
+        status: "success"
+      @scope.coupRes = {
+        couponCode: "abc"
+        type: "discount"
+        maxAmount: 50
+        value: 50
+      }
+      @scope.amount = 100
+      @rootScope.basicInfo = {
+        availableCredit: 70
+      }
+      @rootScope.selectedCompany = {
+        companySubscription:
+          billAmount: 270
+      }
+      @scope.wlt = {
+        status: false
+      }
+      @scope.isHaveCoupon = true
+      @scope.addBalRzrSuccess(res)
+      expect(@rootScope.basicInfo.availableCredit).toEqual(170)
+      expect(@scope.amount).toBe(50)
+      expect(@scope.directPay).toBeFalsy()
+      expect(@scope.disableRazorPay).toBeFalsy()
+      expect(@scope.payAlert).toContain({msg: "Coupon is redeemed. But for complete subscription, you have to add Rs. "+@scope.amount+ " more in your wallet."})
+
+    it 'should check if isHaveCoupon variable is false and coupRes obj is empty then it will set value according to condition in availableCredit. After this it will check if wlt.status is false and availableCredit is less than billAmount then it will set value according to condition', ->
+      res =
+        body: "Balance added successfully"
+        status: "success"
+      @scope.coupRes = {}
+      @scope.amount = 100
+      @rootScope.basicInfo = {
+        availableCredit: 70
+      }
+      @rootScope.selectedCompany = {
+        companySubscription:
+          billAmount: 270
+      }
+      @scope.wlt = {
+        status: true
+        Amnt: 100
+      }
+      @scope.isHaveCoupon = true
+      spyOn(@scope, "resetSteps")
+      spyOn(@toastr, "success")
+      @scope.addBalRzrSuccess(res)
+      expect(@rootScope.basicInfo.availableCredit).toEqual(170)
+      expect(@scope.directPay).toBeFalsy()
+      expect(@scope.disableRazorPay).toBeFalsy()
+      expect(@scope.showPayOptns).toBeFalsy()
+      expect(@scope.resetSteps).toHaveBeenCalled()
+      expect(@toastr.success).toHaveBeenCalledWith(res.body, res.status)
+
+  describe '#addBalRzrFailure', ->
+    it 'should show toastr with error message and set values in variables and call resetSteps func', ->
+      res = 
+        data: 
+          message: "Some message"
+          status: "Error"
+      spyOn(@toastr, 'error')
+      spyOn(@scope, "resetSteps")
+      @scope.addBalRzrFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+      expect(@scope.resetSteps).toHaveBeenCalled()
+      expect(@scope.directPay).toBeTruthy()
+      expect(@scope.showPayOptns).toBeFalsy()
+
+
+  describe '#addMoneyInWallet', ->
+    it 'should check if amount is less than 100 then reset variable and show warning message with toastr', ->
+      @scope.wlt = {
+        Amnt: 10
+      }
+      spyOn(@toastr, 'warning')
+      @scope.addMoneyInWallet()
+      expect(@scope.wlt).toEqual({})
+      expect(@toastr.warning).toHaveBeenCalledWith("You cannot make payment", "Warning")
+    it 'should check if amount is greater than 100 then set payStep2 var to true and add status key in wlt obj', ->
+      @scope.wlt = {
+        Amnt: 105
+      }
+      spyOn(@toastr, 'warning')
+      @scope.addMoneyInWallet()
+      expect(@scope.payStep2).toBeTruthy()
+      expect(@scope.wlt).toEqual({Amnt: 105, status: true})
+      expect(@toastr.warning).not.toHaveBeenCalledWith("You cannot make payment", "Warning")
+      
+      
+  describe '#redeemCoupon', ->
+    it 'should call couponServices couponDetail method with code', ->
+      code = "abc"
+      deferred = @q.defer()
+      spyOn(@couponServices, "couponDetail").andReturn(deferred.promise)
+      @scope.redeemCoupon(code)
+      expect(@couponServices.couponDetail).toHaveBeenCalledWith('abc')
+
+  describe '#removeDotFromString', ->
+    it 'should remove decimal from Number', ->
+      result = @scope.removeDotFromString(100.87)
+      expect(result).toBe(100)
+
+  describe '#redeemCouponSuccess', ->
+    it 'should reset variable and set value in variables show success message with toastr and call removeDotFromString func and after it will go in switch balance_add condition', ->
+      res =
+        status: "success"
+        body:
+          value: 20
+          maxAmount: 40
+          type: "balance_add"
+          couponCode: "abc123"
+      @scope.wlt =
+        Amnt: 10.16
+
+      spyOn(@toastr, "success")
+      spyOn(@scope, "removeDotFromString")
+      spyOn(@scope, "addBalViaDirectCoupon")
+      @scope.redeemCouponSuccess(res)
+      expect(@scope.discount).toBe(0)
+      expect(@scope.coupRes).toEqual(res.body)
+      expect(@toastr.success).toHaveBeenCalledWith("Hurray your coupon code is redeemed", res.status)
+      expect(@scope.removeDotFromString).toHaveBeenCalledWith(@scope.wlt.Amnt)
+      # switch case check
+      expect(@scope.directPay).toBeTruthy()
+      expect(@scope.disableRazorPay).toBeTruthy()
+      expect(@scope.addBalViaDirectCoupon).toHaveBeenCalled()
+
+    it 'should reset variable and set value in variables show success message with toastr and call removeDotFromString func and after it will go in switch cashback condition', ->
+      res =
+        status: "success"
+        body:
+          value: 20
+          maxAmount: 40
+          type: "cashback"
+          couponCode: "abc123"
+      @scope.wlt =
+        Amnt: 10.16
+        
+      spyOn(@toastr, "success")
+      spyOn(@scope, "removeDotFromString")
+      spyOn(@scope, "checkDiffAndAlert")
+      @scope.redeemCouponSuccess(res)
+      expect(@scope.discount).toBe(0)
+      expect(@scope.coupRes).toEqual(res.body)
+      expect(@toastr.success).toHaveBeenCalledWith("Hurray your coupon code is redeemed", res.status)
+      expect(@scope.removeDotFromString).toHaveBeenCalledWith(@scope.wlt.Amnt)
+      # switch case check
+      expect(@scope.checkDiffAndAlert).toHaveBeenCalledWith(res.body.type)
+
+    it 'should reset variable and set value in variables show success message with toastr and call removeDotFromString func and after it will go in switch cashback_discount condition', ->
+      res =
+        status: "success"
+        body:
+          value: 20
+          maxAmount: 40
+          type: "cashback_discount"
+          couponCode: "abc123"
+      @scope.wlt =
+        Amnt: 10.16
+        
+      spyOn(@toastr, "success")
+      spyOn(@scope, "removeDotFromString")
+      spyOn(@scope, "checkDiffAndAlert")
+      spyOn(@scope, "calCulateDiscount")
+      @scope.redeemCouponSuccess(res)
+      expect(@scope.discount).toBe(0)
+      expect(@scope.coupRes).toEqual(res.body)
+      expect(@toastr.success).toHaveBeenCalledWith("Hurray your coupon code is redeemed", res.status)
+      expect(@scope.removeDotFromString).toHaveBeenCalledWith(@scope.wlt.Amnt)
+      # switch case check
+      expect(@scope.discount).toBe(0)
+      expect(@scope.calCulateDiscount).toHaveBeenCalled()
+      expect(@scope.cbDiscount).toBeUndefined()
+      expect(@scope.checkDiffAndAlert).toHaveBeenCalledWith(res.body.type)
+
+    it 'should reset variable and set value in variables show success message with toastr and call removeDotFromString func and after it will go in switch discount condition', ->
+      res =
+        status: "success"
+        body:
+          value: 20
+          maxAmount: 40
+          type: "discount"
+          couponCode: "abc123"
+      @scope.wlt =
+        Amnt: 10.16
+        
+      spyOn(@toastr, "success")
+      spyOn(@scope, "removeDotFromString")
+      spyOn(@scope, "checkDiffAndAlert")
+      spyOn(@scope, "calCulateDiscount")
+      @scope.redeemCouponSuccess(res)
+      expect(@scope.coupRes).toEqual(res.body)
+      expect(@toastr.success).toHaveBeenCalledWith("Hurray your coupon code is redeemed", res.status)
+      expect(@scope.removeDotFromString).toHaveBeenCalledWith(@scope.wlt.Amnt)
+      # switch case check
+      expect(@scope.discount).toBeUndefined()
+      expect(@scope.calCulateDiscount).toHaveBeenCalled()
+      expect(@scope.checkDiffAndAlert).toHaveBeenCalledWith(res.body.type)
+
+    it 'should reset variable and set value in variables show success message with toastr and call removeDotFromString func and after it will go in switch discount_amount condition', ->
+      res =
+        status: "success"
+        body:
+          value: 20
+          maxAmount: 40
+          type: "discount_amount"
+          couponCode: "abc123"
+      @scope.wlt =
+        Amnt: 10.16
+        
+      spyOn(@toastr, "success")
+      spyOn(@scope, "removeDotFromString")
+      spyOn(@scope, "checkDiffAndAlert")
+      @scope.redeemCouponSuccess(res)
+      
+      expect(@scope.coupRes).toEqual(res.body)
+      expect(@toastr.success).toHaveBeenCalledWith("Hurray your coupon code is redeemed", res.status)
+      expect(@scope.removeDotFromString).toHaveBeenCalledWith(@scope.wlt.Amnt)
+      # switch case check
+      expect(@scope.discount).toBe(40)
+      expect(@scope.checkDiffAndAlert).toHaveBeenCalledWith(res.body.type)
+  
+  describe '#calCulateDiscount', ->
+    it 'should calculate discount and if discount is greater than maxAmount it will return maxAmount as discount', ->
+      @scope.coupRes =
+        value: 20
+        maxAmount: 30
+      @scope.amount = 200
+      result = @scope.calCulateDiscount()
+      expect(result).toBe(30)
+
+    it 'should calculate discount and if discount is less than maxAmount it will return discount', ->
+      @scope.coupRes =
+        value: 20
+        maxAmount: 30
+      @scope.amount = 100
+      result = @scope.calCulateDiscount()
+      expect(result).toBe(20)
+
+  describe '#checkDiffAndAlert', ->
+    xit 'should show different types of alert', ->
+      
+    
+
+  describe '#redeemCouponFailure', ->
+    it 'should show toastr with error message and set values in variables and call resetSteps func', ->
+      res = 
+        data: 
+          message: "Some message"
+          status: "Error"
+      @scope.wlt ={
+        Amnt: 20.90
+      }
+      spyOn(@toastr, 'error')
+      @scope.redeemCouponFailure(res)
+      expect(@scope.disableRazorPay).toBeFalsy()
+      expect(@scope.discount).toBe(0)
+      expect(@scope.amount).toBe(20)
+      expect(@scope.coupRes).toEqual({})
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+      expect(@scope.payAlert).toContain({msg: res.data.message})
+
+  describe '#closeAlert', ->
+    it 'should remove value from an array', ->
+      @scope.payAlert = [0,1,2,3]
+      @scope.closeAlert(2)
+      expect(@scope.payAlert).toEqual([0,1,3])
+      
+    
+      
+  describe '#resetSteps', ->
+    it 'should make variables false and reset variables', ->
+      @scope.resetSteps()
+      expect(@scope.showPayOptns).toBeFalsy()
+      expect(@scope.isHaveCoupon).toBeFalsy()
+      expect(@scope.payAlert).toEqual([])
+      # expect(@scope.wlt).toEqual({})
+      expect(@scope.coupon).toEqual({})
+      expect(@scope.wlt.status).toBeFalsy()
+      expect(@scope.coupRes).toEqual({})
+      expect(@scope.payStep2).toBeFalsy()
+      expect(@scope.payStep3).toBeFalsy()
+      expect(@scope.disableRazorPay).toBeFalsy()
+
+
+  describe '#resetDiscount', ->
+    it 'should remove decimal from Number', ->
+      @scope.resetDiscount(true)
+      expect(@scope.isHaveCoupon).toBeTruthy()
+    it 'should reset variables and false a variable', ->
+      @scope.resetDiscount(false)
+      expect(@scope.isHaveCoupon).toBeFalsy()
+      expect(@scope.payAlert).toEqual([])
+      expect(@scope.coupon).toEqual({})
+      expect(@scope.disableRazorPay).toBeFalsy()
+      
+    
+      
+    
+    
 
 
 
