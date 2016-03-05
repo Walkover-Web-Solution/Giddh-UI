@@ -415,6 +415,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     if newVal != oldVal
       if newVal.length > 3
         $scope.groups = []
+        toastr.info('You can only select 4 Groups at a time.')
       else if newVal.length < 4
         $scope.groups = $scope.listBeforeLimit.groups
   ) 
@@ -423,6 +424,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     if newVal != oldVal
       if newVal.length > 3
         $scope.accounts = []
+        toastr.info('You can only select 4 Accounts at a time.')
       else if newVal.length < 4
         $scope.accounts = $scope.listBeforeLimit.accounts
   )
