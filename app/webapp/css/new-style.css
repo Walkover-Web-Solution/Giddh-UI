@@ -1967,11 +1967,13 @@ i.cls-alert{
     bottom: 0;
     left:0;
     right:0;
-    background: #000;
-    opacity: 0.5;
+    background:#fff;
+    opacity: 0.75;
     z-index: 9;
+    color:#444;
 }
 
-.absolute-loader .loader span{
-    background: #fff;
+#yodleeModal{
+    min-height:200px;
+    overflow:hidden;
 }
