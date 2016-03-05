@@ -715,6 +715,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       #       accToMerge.push(accToSend)
       withoutMerged = _.difference($scope.toMerge.mergedAcc, $scope.prePopulate)
       _.each withoutMerged, (acc) ->
+        console.log acc
         accToSend = {
           "uniqueName": ""
         }
@@ -792,11 +793,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.success(res.body)
     updatedMergedAccList = []
     _.each $scope.toMerge.mergedAcc, (obj) ->
-      toRemove = {
-        noRemove: false
-      }
+      toRemove = {}
       if obj.uniqueName != $scope.toMerge.toUnMerge.uniqueNames[0]
-        toRemove.uniqueName = obj.uniqueName
+        toRemove = obj
+        toRemove.noRemove = false
         if !obj.hasOwnProperty('mergedAccounts')
           toRemove.noRemove = true
         updatedMergedAccList.push(toRemove)
@@ -839,11 +839,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.success(res.body)
     updatedMergedAccList = []
     _.each $scope.toMerge.mergedAcc, (obj) ->
-      toRemove = {
-        noRemove: false
-      }
+      toRemove = {}
       if obj.uniqueName != $scope.toMerge.toUnMerge.uniqueNames[0]
-        toRemove.uniqueName = obj.uniqueName
+        toRemove = obj
+        toRemove.noRemove = false
         if !obj.hasOwnProperty('mergedAccounts')
           toRemove.noRemove = true
         updatedMergedAccList.push(toRemove)
