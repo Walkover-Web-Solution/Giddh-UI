@@ -159,7 +159,7 @@
 
         <uib-tab heading="Linked Accounts" select="loadYodlee()">
           <div class="pd2 clearfix">
-            <h1>Add Bank Account <i class="glyphicon glyphicon-question-sign"></i></h1>
+            <h1>Add Bank Account<!--  <i class="glyphicon glyphicon-question-sign"></i> --></h1>
             <div class="max350 mrT1">
               <ui-select ng-model="banks.list" theme="bootstrap" on-select="selectBank($select.selected)">
                 <ui-select-match placeholder="Select Accounts">
@@ -199,7 +199,7 @@
                         {{card.currentBalanceCurrencyCode}} {{card.currentBalance}}
                       </div>
                       <div class="with" ng-if="card.giddhAccount != null">
-                        Linked with: {{card.giddhAccount.name}} ({{card.giddhAccount.}})
+                        Linked with: {{card.giddhAccount.name}} ({{card.giddhAccount.uniqueName}})
                       </div>
                       <button class="btn btn-sm btn-info" ng-if="card.giddhAccount == null" ng-click="linkGiddhAccount(card)">Link Account</button>
                       <div class="mrT1">

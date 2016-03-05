@@ -250,7 +250,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
           }
         }
         accObj.category = acc.category
-        accObj.forSeries.dr = acc.name + " (DB)"
+        accObj.forSeries.dr = acc.name + " (DR)"
         accObj.forSeries.cr = acc.name + " (CR)"
         accObj.forSeries.cb = acc.name + " (C/B)"
         facc.name = acc.name

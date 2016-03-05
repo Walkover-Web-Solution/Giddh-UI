@@ -1939,6 +1939,11 @@ i.cls-alert{
     padding: 10px;
     border: 1px solid #e0e0e0;
     margin-bottom:20px;
+    background: #FFFFFE;
+}
+
+.linked-accounts:nth-child(odd){
+    background: #f5f5f5;
 }
 
 .linked-accounts:nth-child(odd) > .title{

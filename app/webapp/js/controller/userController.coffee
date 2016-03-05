@@ -151,7 +151,6 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     toastr.error(res.message)
 
   $scope.selectBank = (bank) ->
-    console.log bank
     $scope.banks.siteID = bank.siteId
     if bank.yodleeSiteLoginFormDetailList.length > 1
       toastr.error('Something went wrong')
@@ -190,8 +189,16 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     userServices.addSiteAccount(reqBody, companyUniqueName).then($scope.addSiteAccountSuccess, $scope.addSiteAccountFailure)
 
   $scope.addSiteAccountSuccess = (res) ->
+    companyUniqueName =  {
+      cUnq: $rootScope.selectedCompany.uniqueName
+    }
     siteData = res.body
-    if siteData.isMfa == true
+    if siteData.isMfa == false
+      $scope.banks.list = undefined
+      toastr.success('Account added successfully!')
+    else
+      console.log res
+    userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
       
 
   $scope.addSiteAccountFailure = (res) ->
@@ -224,7 +231,12 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     userServices.addGiddhAccount(companyUniqueName, $scope.banks.toLinkObj).then($scope.LinkGiddhAccountConfirmSuccess, $scope.LinkGiddhAccountConfirmFailure)
 
   $scope.LinkGiddhAccountConfirmSuccess = (res) ->
-    console.log res
+    linkAccData = res.body
+    toastr.success('Account linked successfully with ' + linkAccData.giddhAccount.name)
+    companyUniqueName =  {
+      cUnq: $rootScope.selectedCompany.uniqueName
+    }
+    userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
 
   $scope.LinkGiddhAccountConfirmFailure = (res) ->
     console.log res
