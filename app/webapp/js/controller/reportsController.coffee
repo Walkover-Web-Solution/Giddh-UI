@@ -466,7 +466,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.formatPLgraphData($scope.plGraphData)
 
   $scope.getPLgraphDataFailure = (res) ->
-    toastr.error(res.body)
+    $scope.chartDataAvailable = true
+    toastr.error(res.data.message)
 
   $scope.generatePLgraph = () ->
     reqParam = {
@@ -516,7 +517,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.formatNWgraphData ($scope.nwGraphData)
 
   $scope.getNWgraphDataFailure = (res) ->
-    toastr.error(res.body)
+    $scope.chartDataAvailable = true
+    toastr.error(res.data.message)
 
   $scope.generateNWgraph = () ->
     reqParam = {
