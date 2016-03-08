@@ -917,4 +917,8 @@ textarea.form-control {
   background-color: #0090c7;
 }
 
+/* helper classes */
 
+.pdB2{
+    padding-bottom:20px;
+}

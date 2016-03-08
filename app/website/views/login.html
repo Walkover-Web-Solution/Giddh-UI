@@ -20,6 +20,7 @@
   html, body{
     background: #56bc8a;
     color: #fff;
+    height:100%;
   }
   .loginBtn{
     background-color: #fff;
@@ -27,18 +28,29 @@
     font-weight: 700;
     float: right;
   }
+  .borderbottom{
+    border-bottom: 1px solid #3FAD77;
+  }
+  .login-wrapper{
+    height:100%;
+  }
   </style>
 </head>
 <body>
 <div ng-controller="loginBackController">
-  <section class="container">
+  <section id="top" class="container"> 
     <div class="row" style="padding: 50px 0">
       <a class="btn loginBtn">Home</a>
     </div>
     <div class="row">
-      <div id="tipscnt" class="tipcnt mocha" style="margin-top:0">
+      <div id="tipscnt" class="tipcnt mocha borderbottom pdB2" style="margin-top:0">
         Tip : "Every transaction has a statement."
       </div>
+    </div>
+  </section>
+  <section id="bottom" class="container">
+    <div class="login-wrapper">
+
     </div>
   </section>
 
@@ -58,5 +70,22 @@
     
   </div>
 </div>
+
+<script>
+  (function(){
+    var bodyHeight = $('body,html').height();
+    var top = $('#top').height();
+    var bottom = $('#bottom');
+
+    $(window).on('resize', function(){
+      bottom.css('min-height', bodyHeight - top);
+    })
+    
+    $(document).ready(function(){
+      bottom.css('min-height', bodyHeight - top);
+    })
+
+  })();
+</script>
 </body>
 </html>

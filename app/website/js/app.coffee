@@ -32,8 +32,14 @@ app.config [
 app.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
 
-# app.run ()->
-#   console.log window.location, "app run", window.location.origin
+app.run [
+  '$rootScope'
+  '$window'
+  ($rootScope, $window)->
+    
+    #console.log window.location, "app run", window.location.origin
+]
+  
 
 
 do ->
