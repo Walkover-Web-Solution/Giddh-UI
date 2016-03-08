@@ -1,0 +1,30 @@
+<div id="yodleeModal">
+
+  <div class="modal-header themeBg">
+    <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title">Confirm Details</h3>
+  </div>
+  <!-- end header -->
+
+  <div class="modal-body noPad">
+
+
+    <div class="col-sm-12">
+      <div class="form-group mrT2" ng-if="banks.showToken">
+        <label>{{banks.mfaForm.displayString}}</label>
+        <img ng-src="data:image/png;base64,{{banks.mfaForm.image}}" ng-if="banks.mfaForm.image.length > 0">
+        <input type="{{banks.mfaForm.responseFieldType}}" ng-model="banks.mfaResponse.imgOrToken" placeholder="{{banks.mfaForm.displayString}}" class="form-control" name="{{banks.mfaForm.fieldType}}" maxlength="{{banks.mfaForm.maximumLength}}" required/>
+      </div>
+      <div class="form-group mrT2" ng-if="!banks.showToken">
+        <fieldset class="form-group" ng-repeat="q in banks.mfaForm.questionsAndAns">
+          <label>{{q.question}}</label>
+          <input class="form-control" type="{{q.responseFieldType}}" ng-model="banks.mfaResponse.questions[q.metaData]" placeholder="Answer" name="{{q.metaData}}" ng-required="q.isRequired">
+        </fieldset>
+      </div>
+      <button class="btn btn-success pull-right mrB1" ng-click="addMfaAccount(banks.mfaResponse)">Submit</button>
+    </div>
+
+  </div>
+  <!-- end modal body -->
+</div>
