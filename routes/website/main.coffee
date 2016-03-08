@@ -32,7 +32,7 @@ router.get '/why-giddh', (req, res) ->
   res.sendFile 'whyGiddh.html', options
 
 router.get '/login', (req, res) ->
-  res.sendFile 'login_back.html', options
+  res.sendFile 'login.html', options
 
 router.get '/google87e474bb481dae55.html',(req, res) ->
   res.sendFile('google87e474bb481dae55.html', options)
