@@ -749,12 +749,14 @@ textarea.form-control {
     bottom: 0;
     right: 0;
     z-index: 99;
-    background: rgba(0, 0, 0, 0.3);
+    background: rgba(0, 0, 0, 0.8);
 }
 
 .loading h1 {
     text-align: center;
     color: white;
+    font-size: 18px;
+    margin-top: 115px;
 }
 
 .loader {
@@ -921,4 +923,8 @@ textarea.form-control {
 
 .pdB2{
     padding-bottom:20px;
+}
+
+.pdT2{
+    padding-top:20px;
 }

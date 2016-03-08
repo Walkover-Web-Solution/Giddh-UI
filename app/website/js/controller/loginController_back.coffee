@@ -11,7 +11,7 @@ loginBackController = ($scope, $rootScope, $http, $timeout, $auth, localStorageS
         toastr.error(response.data.result.message, "Error")
         $timeout (->
           window.location = "/beta"
-        ), 3000
+        ),3000
       else
 #user is registered and redirect it to app
         localStorageService.set("_userDetails", response.data.userDetails)

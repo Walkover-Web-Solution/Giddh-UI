@@ -27,20 +27,93 @@
     color: #56bc8a;
     font-weight: 700;
     float: right;
+    border-radius: 0;
   }
   .borderbottom{
     border-bottom: 1px solid #3FAD77;
   }
   .login-wrapper{
     height:100%;
+    background: url('/public/website/images/login_icons_bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
   }
-  </style>
+  .login-box{
+    height:300px;
+    width: 300px;
+    text-align: center;
+    background: #fff;
+    position: relative;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    margin:0 auto;
+    padding:25px; 
+    transform:translateY(50%);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    transition: all 0.2s ease-in-out;
+
+  }
+  .login-box:hover{
+    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
+  }
+
+  .login-box > ul{
+    width:100%;
+    position: absolute;
+    top:0px;
+    left:0;
+    padding:0;
+    margin:0;
+    line-height: 0;
+  }
+  .login-box > ul > li{
+    height:5px;
+    width:36.4px;
+    margin:0;
+    padding:0;
+    margin-left:-3px;
+  }
+  .login-box > ul > li:first-child{
+    margin-left:0;
+  }
+  .giddh-logo{
+      background: #221F1F none repeat scroll 0 0;
+      border: 7px solid #C63B13;
+      border-radius: 50%;
+      box-shadow: 0 10px 0 14px #fff inset;
+      box-sizing: border-box;
+      height: 60px;
+      width: 60px;
+      margin:0 auto;
+  }
+  .btn-login{
+    width:210px;
+    margin:20px auto 0;
+    height:36px;
+  }
+  .btn-login:hover, .btn-login:focus, .btn-login:active{
+    outline: 0;
+    border:0;
+    color:#fff;
+    box-shadow: none;
+  }
+  .twitter{
+    background: #11B1E5;
+  }
+  .google{
+    background:#DE4D3C;
+  }
+  .linkedin{
+    background: #0E78AA;
+  }
+
+</style>
 </head>
 <body>
 <div ng-controller="loginBackController">
   <section id="top" class="container"> 
     <div class="row" style="padding: 50px 0">
-      <a class="btn loginBtn">Home</a>
+      <a class="btn loginBtn" href="/">Home</a>
     </div>
     <div class="row">
       <div id="tipscnt" class="tipcnt mocha borderbottom pdB2" style="margin-top:0">
@@ -48,18 +121,36 @@
       </div>
     </div>
   </section>
-  <section id="bottom" class="container">
+  <section id="bottom" class="container pdT2">
     <div class="login-wrapper">
-
+      <div class="login-box">
+        <ul class="list-inline">
+          <li style="background:#08ACDC"></li>
+          <li style="background:#191D19"></li>
+          <li style="background:#E84219"></li>
+          <li style="background:#F0C114"></li>
+          <li style="background:#0C2141"></li>
+          <li style="background:#22BAB8"></li>
+          <li style="background:#2A76B9"></li>
+          <li style="background:#B10F24"></li>
+        </ul>
+        <div ng-class="loginIsProcessing ? 'giddh-spinner': 'giddh-logo'" ></div>
+        <div class="loading" ng-if="loginIsProcessing">
+          <h1>Logging in please wait...</h1>
+        </div>
+        <button type="login" class="btn btn-login twitter" ng-click="authenticate('twitter')">Sign in with Twitter</button>
+        <button type="login" class="btn btn-login linkedin" ng-click="authenticate('linkedinr')">Sign in with LinkedIn</button>
+        <button type="login" class="btn btn-login google" ng-click="authenticate('google')">Sign in with Google</button>
+      </div>
     </div>
   </section>
 
 
-  <div ng-if="loginIsProcessing" class="loading">
+<!--   <div ng-if="loginIsProcessing" class="loading">
     <div class="giddh-spinner"></div>
     <h1>Loging in please wait...</h1>
   </div>
-  <div>
+  <div> -->
   <!-- <section id="newButtonWraps" class="clearfix" ng-disabled="loginIsProcessing">
     <button class="btn btn-lg btn-block btn-google-plus" ng-click="authenticate('google')">Sign in with Google</button>
     <button class="btn btn-lg btn-block btn-twitter" ng-click="authenticate('twitter')">Sign in with Twitter</button>
@@ -76,15 +167,15 @@
     var bodyHeight = $('body,html').height();
     var top = $('#top').height();
     var bottom = $('#bottom');
-
     $(window).on('resize', function(){
       bottom.css('min-height', bodyHeight - top);
     })
-    
     $(document).ready(function(){
-      bottom.css('min-height', bodyHeight - top);
+      bottom.css({
+        'min-height': bodyHeight - top,
+        'height': bodyHeight - top
+      });
     })
-
   })();
 </script>
 </body>
