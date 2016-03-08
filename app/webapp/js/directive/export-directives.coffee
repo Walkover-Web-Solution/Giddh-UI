@@ -575,3 +575,16 @@ angular.module('exportDirectives', [])
       performSearch(input)                 
       
 )
+
+.directive 'dynamicName', ($compile) ->
+  {
+    restrict: 'A'
+    terminal: true
+    priority: 1000
+    link: (scope, element, attrs) ->
+      element.attr 'name', scope.$eval(attrs.dynamicName)
+      element.removeAttr 'dynamic-name'
+      $compile(element) scope
+      return
+
+  }

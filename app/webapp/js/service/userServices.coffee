@@ -60,6 +60,14 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
           method: 'POST'
           url: '/yodlee/company/:companyUniqueName/add-giddh-account'
         }
+        verifyMfa: {
+          method: 'POST'
+          url: '/yodlee/company/:companyUniqueName/verify-mfa'
+        }
+        refreshAll: {
+          method: 'GET'
+          url: '/yodlee/company/:companyUniqueName/all-site-account'
+        }
       }
   )
 
@@ -128,7 +136,14 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.addGiddhAccount({companyUniqueName: companyUniqueName.cUnq}, data, onSuccess, onFailure)
     )
-
+    verifyMfa: (companyUniqueName, data) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.verifyMfa({companyUniqueName: companyUniqueName.cUnq}, data, onSuccess, onFailure)
+    )
+    refreshAll: (companyUniqueName) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.refreshAll({companyUniqueName: companyUniqueName.cUnq},onSuccess, onFailure)
+    )
 
   userServices
 

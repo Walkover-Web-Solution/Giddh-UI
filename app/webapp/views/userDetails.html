@@ -171,7 +171,7 @@
                 </ui-select-choices>
               </ui-select>
             </div>
-            <form class="col-sm-12" name="addAccountForm" novalidate ng-if="banks.list != undefined">
+            <form class="col-sm-12" name="addAccountForm" novalidate ng-if="banks.list != undefined" ng-submit="addAccountForm.$valid && submitForm(bankDetails)">
               <div class="row pdT2 pdR">
                 <div class="col-md-4 col-sm-4 pd0">
                   <section class="greyBox">
@@ -179,17 +179,17 @@
                     <p class="form-group">Submit Form to Add Bank</p>
 
                     <div class="form-group" ng-repeat="field in banks.components">
-                      <input type="{{field.name}}" ng-model="bankDetails[field.displayName]" placeholder="{{field.displayName}}" class="form-control" name="{{field.name}}" maxlength="{{field.maxlength}}" ng-required="!field.isOptional"/>
+                      <ng-form name="innerform">
+                        <input id="{{field.name}}" type="{{field.name}}" ng-model="bankDetails[field.displayName]" placeholder="{{field.displayName}}" class="form-control" name="input" maxlength="{{field.maxlength}}" ng-required="!field.isOptional"/>
+                        <div class="error-msg" ng-show="innerform.input.$error.required">Required</div>
+                      </ng-form>
                     </div>
-                    <button class="btn btn-success" ng-click="submitForm(bankDetails)" ng-disabled="banks.requestSent">Submit</button>
+                    <button type="submit" class="btn btn-success" ng-disabled="banks.requestSent || addAccountForm.$invalid">Submit</button>
                     <div class="absolute-loader" ng-if="banks.requestSent">
-                      <div class="loader">
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                        <h1>Please wait, this may take more than a minute..</h1>
+                      <div class="loading-bar"></div>
+                      <div class="mrT5">
+                        Connecting with Bank.</br>
+                        Please Wait, this may take a while.
                       </div>
                     </div>
                   </section>
@@ -198,7 +198,8 @@
             </form>
             <hr class="mrT2 col-sm-11">
             <div class="mrT2 col-sm-12 pd0">
-              <h1>Added Accounts</h1>
+              <h1 class="pull-left">Added Accounts</h1>
+              <button class="btn btn-primary btn-sm pull-right" ng-click="refreshAccounts()">Refresh</button>
               <div class="col-sm-12 mrT1 pd0" ng-if="banks.linked.length > 0">
                 <section class="linked-accounts clearfix" ng-repeat="account in banks.linked">
                   <aside class="title" ng-bind="account.siteName"></aside>

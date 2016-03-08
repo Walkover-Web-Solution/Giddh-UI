@@ -114,14 +114,20 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     banksList: []
     components : []
     siteID: ''
+    itemId: ''
     linked: []
     toLink:''
     toLinkObj: {}
     mfaForm: {}
+    fieldType: ''
     mfaResponse: {
-      token: ''
+      imgOrToken: ''
+      questions:{}
     }
     requestSent: false
+    captcha: ''
+    showToken: false
+    modalInstance: undefined
   }
 
   $scope.bankDetails = {}
@@ -138,8 +144,11 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
 
   $scope.getAccountsFailure = (res) ->
-    toastr.error(res.data.message)
-
+    companyUniqueName =  {
+      cUnq: $rootScope.selectedCompany.uniqueName
+    }
+    #toastr.error(res.statusText)
+    userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
 
   
   $scope.fetchSiteList = (str) ->
@@ -161,7 +170,6 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       toastr.error('Something went wrong')
     else
       $scope.banks.components = bank.yodleeSiteLoginFormDetailList[0].componentList
-
 
   $scope.submitForm = (bankDetails) ->
     det = bankDetails
@@ -193,34 +201,86 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
     userServices.addSiteAccount(reqBody, companyUniqueName).then($scope.addSiteAccountSuccess, $scope.addSiteAccountFailure)
     $scope.banks.requestSent = true
+    
 
   $scope.addSiteAccountSuccess = (res) ->
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
     }
     siteData = res.body
-    if siteData.isMfa == false
+    $scope.banks.itemId = siteData.itemId
+    $scope.banks.fieldType = siteData.yodleeMfaResponse.fieldType
+    if siteData.mfa == false
       $scope.banks.list = undefined
       toastr.success('Account added successfully!')
     else
-      console.log res
-      $scope.banks.mfaForm = siteData.yodleeMfaResponse
-      modalInstance = $uibModal.open(
+      $scope.banks.mfaForm.fieldType = siteData.yodleeMfaResponse.fieldType
+      switch siteData.yodleeMfaResponse.fieldType
+        when "TOKEN"
+          $scope.banks.mfaForm = siteData.yodleeMfaResponse.fieldInfo.token
+          $scope.banks.showToken = true
+        when "IMAGE"
+          $scope.banks.mfaForm = siteData.yodleeMfaResponse.fieldInfo.image
+          $scope.banks.showToken = true
+        when "QUESTIONS"
+          $scope.banks.mfaForm = siteData.yodleeMfaResponse.fieldInfo.questionAns
+          $scope.banks.showToken = false
+      $scope.banks.modalInstance = $uibModal.open(
         templateUrl: '/public/webapp/views/yodleeMfaModal.html'
         size: "sm"
         backdrop: 'static'
         scope: $scope
       )
     userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
+
     $scope.banks.requestSent = false
-      
+    $scope.bankDetails = {}  
 
   $scope.addSiteAccountFailure = (res) ->
-    toastr.error(res.code)
+    toastr.error(res.data.code, res.data.message)
     $scope.banks.requestSent = false
+    $scope.bankDetails = {}
 
   $scope.addMfaAccount = (mfa) ->
-    console.lo mfa
+    companyUniqueName =  {
+      cUnq: $rootScope.selectedCompany.uniqueName
+    }
+    newMfa = {}
+    newMfa.itemId = $scope.banks.itemId
+    newMfa.type = $scope.banks.fieldType
+    if newMfa.type == 'IMAGE' || newMfa.type == 'TOKEN'
+      newMfa.token = mfa.imgOrToken
+      newMfa.questionAnswerses = []
+    else if newMfa.type == 'QUESTIONS'
+      mfaForm = $scope.banks.mfaForm
+      newMfa.token = mfa.imgOrToken
+      newMfa.questionAnswerses = []
+      _.each mfaForm.questionsAndAns, (pQ) ->
+        question = {}
+        for property of mfa.questions
+          if pQ.metaData == property
+            question.answer = mfa.questions[property]
+            question.answerFieldType = pQ.responseFieldType
+            question.metaData = pQ.metaData
+            question.question = pQ.question
+            question.questionFieldType = pQ.questionFieldType
+            newMfa.questionAnswerses.push(question)
+
+    userServices.verifyMfa(companyUniqueName, newMfa).then($scope.verifyMfaSuccess, $scope.verifyMfaFailure)
+
+  $scope.verifyMfaSuccess = (res) ->
+    companyUniqueName =  {
+      cUnq: $rootScope.selectedCompany.uniqueName
+    }
+    toastr.success('Account added successfully!')
+    userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
+    $scope.banks.modalInstance.close()
+    $scope.banks.list = undefined
+
+  $scope.verifyMfaFailure = (res) ->
+    $scope.banks.modalInstance.close()
+    toastr.error(res.data.code, res.data.message, 'Please try again.')
+    
 
   $scope.showAccountsList = (card) ->
     card.showAccList = true
@@ -257,7 +317,20 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
 
   $scope.LinkGiddhAccountConfirmFailure = (res) ->
-    console.log res
+    toastr.error(res.data.message)
+
+  $scope.refreshAccounts = () ->
+    companyUniqueName =  {
+      cUnq: $rootScope.selectedCompany.uniqueName
+    }
+    userServices.refreshAll(companyUniqueName).then($scope.refreshAllSuccess, $scope.refreshAllFailure)
+
+  $scope.refreshAllSuccess = (res) ->
+    refreshedAccounts = res.body
+    $scope.banks.linked = refreshedAccounts
+
+  $scope.refreshAllFailure = (res) ->
+    toastr.error(res.statusMessage)
 
 #init angular app
 giddh.webApp.controller 'userController', userController
