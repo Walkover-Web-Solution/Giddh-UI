@@ -533,7 +533,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         $scope.disableRazorPay = false
         $scope.payAlert.push({msg: "Coupon is redeemed. But for complete subscription, you have to add Rs. "+$scope.amount+ " more in your wallet."})
     
-
   $scope.addBalRzrFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
     $scope.directPay = true
@@ -545,7 +544,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.addMoneyInWallet = () ->
     if Number($scope.wlt.Amnt) < 100
       $scope.wlt = angular.copy({})
-      toastr.warning("You cannot make payment")
+      toastr.warning("You cannot make payment", "Warning")
     else
       $scope.payStep2 = true
       $scope.wlt.status = true
@@ -556,9 +555,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.removeDotFromString = (str) ->
     return Math.floor(Number(str))
-
+# test cases done insomuch
   $scope.redeemCouponSuccess = (res) ->
-    console.log res.body, "redeemCouponSuccess"
     $scope.payAlert = []
     $scope.discount = 0
     $scope.coupRes = res.body
