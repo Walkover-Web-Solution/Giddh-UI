@@ -591,15 +591,15 @@ angular.module('exportDirectives', [])
 
 .filter('grpsrch', ->
   (input, search) ->
-    # if !_.isUndefined(search)
-    #   srch = search.toLowerCase()
-    # initial = input
+    if !_.isUndefined(search)
+      srch = search.toLowerCase()
+    initial = input
 
-    # checkIndex = (src, str) ->
-    #   if src.indexOf(str) != -1
-    #     true
-    #   else 
-    #     false      
+    checkIndex = (src, str) ->
+      if src.indexOf(str) != -1
+        true
+      else 
+        false      
 
     # performSearch = (input) ->
     #   _.each input, (grp) ->
@@ -643,8 +643,75 @@ angular.module('exportDirectives', [])
     # else if search.length < 1
     #   initial
 
-    console.log input search
 
-    search
+    performSearch  = (input) ->
+      _.each input, (grp) ->
+        grpName = grp.name.toLowerCase()
+        grpUnq = grp.uniqueName.toLowerCase()
+        if !checkIndex(grpName, srch) && !checkIndex(grpUnq, srch)
+          grp.isVisible = false
+          if grp.groups.length > 0
+            _.each grp.groups, (sub) ->
+              subName = sub.name.toLowerCase()
+              subUnq = sub.uniqueName.toLowerCase()
+
+              if !checkIndex(subName, srch) && !checkIndex(subUnq, srch)
+                sub.isVisible = false
+                if sub.groups.length
+                  _.each sub.groups, (child) ->
+                    childName = child.name.toLowerCase()
+                    childUnq = child.uniqueName.toLowerCase()
+                    if !checkIndex(childName, srch) && !checkIndex(childUnq, srch)
+                      child.isVisible = false
+                      if child.groups.length > 0
+                        _.each child.groups, (subChild) ->
+                          subChildName = subChild.name.toLowerCase()
+                          subChildUnq = subChild.uniqueName.toLowerCase()
+                          if !checkIndex(subChildName, srch) && !checkIndex(subChildUnq, srch)
+                            subChild.isVisible = false
+                            if subChild.groups.length > 0
+                              _.each child.groups, (subChild2) ->
+                                subChild2Name = subChild2.name.toLowerCase()
+                                subChild2Unq = subChild2.uniqueName.toLowerCase()
+                                if !checkIndex(subChild2Name, srch) && !checkIndex(subChild2Unq, srch)
+                                  subChild2.isVisible = false
+                                  if subChild2.groups.length > 0
+                                    performSearch(subChild.groups)
+                                else
+                                  grp.isVisible = true
+                                  child.isVisible = true
+                                  sub.isVisible = true 
+                                  subChild.isVisible = true
+                                  subChild2.isVisible = true
+                          else
+                            grp.isVisible = true
+                            child.isVisible = true
+                            sub.isVisible = true 
+                            subChild.isVisible = true
+                    else if checkIndex(childName, srch) || checkIndex(childUnq, srch)
+                      grp.isVisible = true
+                      child.isVisible = true
+                      sub.isVisible = true
+              else if checkIndex(subName, srch) || checkIndex(subUnq, srch)
+                grp.isVisible = true
+                sub.isVisible = true
+        else if checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
+          grp.isVisible = true
+
+    resetSearch = (input) ->
+      _.each input, (grp) ->
+        grp.isVisible = true
+        if grp.groups.length > 0
+          _.each grp.groups, (sub)->
+            sub.isVisible = true
+            if sub.groups.length > 0
+              resetSearch(sub.groups)
+
+    if !_.isUndefined(srch)
+      performSearch(input)
+      if srch.length < 2
+        resetSearch(input)
+    input
+
                
 )
