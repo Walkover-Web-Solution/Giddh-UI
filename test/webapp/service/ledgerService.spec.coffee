@@ -111,3 +111,26 @@ describe "Ledger Service", ->
           expect(data.data.status).toBe("error")
           expect(data.status).toBe(400)
       )
+
+  describe '#getOtherTransactions', ->
+    unqNamesObj = {
+      compUname: "cname"
+      acntUname: "aname"
+    }
+    it 'should call success callback after ledger get', ->
+      @httpBackend.when('GET', '/yodlee/company/' + unqNamesObj.compUname + '/accounts/'+unqNamesObj.acntUname+'/transactions').respond(200, {"status": "success"})
+
+      @ledgerService.getOtherTransactions(unqNamesObj).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call failure callback when ledger get failed', ->
+      @httpBackend.when('GET', '/yodlee/company/' + unqNamesObj.compUname + '/accounts/'+unqNamesObj.acntUname+'/transactions').respond(400, {"status": "error"})
+
+      @ledgerService.getOtherTransactions(unqNamesObj).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+          expect(data.status).toBe(400)
+      )
+

@@ -1492,7 +1492,74 @@ describe 'companyController', ->
       expect(result).toBe(20)
 
   describe '#checkDiffAndAlert', ->
-    xit 'should show different types of alert', ->
+    it 'should show go in cashback_discount condition push value in payAlert array and set directPay variables false or set disableRazorPay false', ->
+      @scope.cbDiscount = 10
+      @scope.checkDiffAndAlert('cashback_discount')
+      expect(@scope.directPay).toBeFalsy()
+      expect(@scope.disableRazorPay).toBeFalsy()
+      expect(@scope.payAlert).toContain({msg: "Your cashback amount will be credited in your account withing 48 hours after payment has been done. Your will get a refund of Rs. "+@scope.cbDiscount})
+
+    it 'should show go in cashback if condition push value in payAlert array and set directPay variables false or set disableRazorPay true', ->
+      @scope.amount = 10
+      @scope.coupRes ={
+        value: 20
+      }
+      @scope.checkDiffAndAlert('cashback')
+      expect(@scope.directPay).toBeFalsy()
+      expect(@scope.disableRazorPay).toBeTruthy()
+      expect(@scope.payAlert).toContain({msg: "Your coupon is redeemed but to avail coupon, You need to make a payment of Rs. "+@scope.coupRes.value})
+
+    it 'should show go in cashback else condition push value in payAlert array and set directPay variables false or set disableRazorPay false', ->
+      @scope.amount = 20
+      @scope.coupRes ={
+        value: 10
+      }
+      @scope.checkDiffAndAlert('cashback')
+      expect(@scope.directPay).toBeFalsy()
+      expect(@scope.disableRazorPay).toBeFalsy()
+      expect(@scope.payAlert).toContain({type: 'success', msg: "Your cashback amount will be credited in your account withing 48 hours after payment has been done. Your will get a refund of Rs. "+@scope.coupRes.value})
+
+    it 'should show go in discount if condition, push value in payAlert array and set directPay variables false or set disableRazorPay true', ->
+      @scope.amount = 100
+      @scope.discount = 50
+      @scope.checkDiffAndAlert('discount')
+      expect(@scope.directPay).toBeFalsy()
+      expect(@scope.disableRazorPay).toBeTruthy()
+      expect(@scope.payAlert).toContain({msg: "After discount amount cannot be less than 100 Rs. To avail coupon you have to add more money. Currently payable amount is Rs. 50"})
+
+    it 'should show go in discount else condition, push value in payAlert array and set directPay variables false or set disableRazorPay false', ->
+      @scope.amount = 1000
+      @scope.discount = 50
+      @scope.checkDiffAndAlert('discount')
+      expect(@scope.directPay).toBeFalsy()
+      expect(@scope.disableRazorPay).toBeFalsy()
+      expect(@scope.payAlert).toContain({type: 'success', msg: "Hurray you have availed a discount of Rs. "+@scope.discount+ ". Now payable amount is Rs. 950"})
+
+    it 'should show go in discount_amount if condition, push value in payAlert array and set directPay variables false or set disableRazorPay true', ->
+      @scope.amount = 100
+      @scope.discount = 50
+      @scope.checkDiffAndAlert('discount')
+      expect(@scope.directPay).toBeFalsy()
+      expect(@scope.disableRazorPay).toBeTruthy()
+      expect(@scope.payAlert).toContain({msg: "After discount amount cannot be less than 100 Rs. To avail coupon you have to add more money. Currently payable amount is Rs. 50"})
+
+    it 'should show go in discount_amount else if condition, push value in payAlert array and set directPay variables false or set disableRazorPay true', ->
+      @scope.amount = 100
+      @scope.coupRes ={
+        value: 200
+      }
+      @scope.checkDiffAndAlert('discount_amount')
+      expect(@scope.directPay).toBeFalsy()
+      expect(@scope.disableRazorPay).toBeTruthy()
+      expect(@scope.payAlert).toContain({msg: "Your coupon is redeemed but to avail coupon, You need to make a payment of Rs. "+@scope.coupRes.value})
+
+    it 'should show go in discount_amount else condition, push value in payAlert array and set directPay variables false or set disableRazorPay false', ->
+      @scope.amount = 300
+      @scope.discount = 50
+      @scope.checkDiffAndAlert('discount_amount')
+      expect(@scope.directPay).toBeFalsy()
+      expect(@scope.disableRazorPay).toBeFalsy()
+      expect(@scope.payAlert).toContain({type: 'success', msg: "Hurray you have availed a discount of Rs. "+@scope.discount+ ". Now payable amount is Rs. 250"})
       
     
 
