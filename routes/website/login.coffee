@@ -4,6 +4,7 @@ qs = require('qs')
 router = settings.express.Router()
 googleLoginUrl = settings.envUrl + 'login-with-google'
 linkedinLoginUrl =  settings.envUrl + 'login-with-linkedIn'
+twitterLoginUrl =  settings.envUrl + 'login-with-twitter'
 ###
  |--------------------------------------------------------------------------
  | login with google
@@ -80,22 +81,24 @@ router.post '/twitter', (req, res) ->
     }, (err, response, accessToken) ->
       accessToken = qs.parse(accessToken)
       userDetailObj = {}
-      profileOauth = 
-        consumer_key: settings.twitterKey
-        consumer_secret: settings.twitterSecret
-        oauth_token: accessToken.oauth_token
-      # Step 4. Retrieve profile information about the current user.
-      settings.request.get {
-        url: profileUrl + accessToken.screen_name
-        oauth: profileOauth
-        json: true
-      }, (err, response, profile) ->
-        console.log "profile", profile
-        res.send 
+      # Step 4 hit our java api
+      args =
+        headers:
+          'Content-Type': 'application/json'
+          'Access-Token': accessToken.oauth_token
+          'Access-Secret': accessToken.oauth_token_secret
+      settings.client.get twitterLoginUrl, args, (data, response) ->
+        if data.status == 'error'
+          res.status(response.statusCode)
+        else
+          userDetailObj = data.body.user
+          req.session.name = data.body.user.uniqueName
+          req.session.authKey = data.body.authKey
+        res.send
           token: accessToken.oauth_token
-          userDetailObj: response.body
-          result: response
-
+          userDetails: userDetailObj
+          result: data
+      
 
 ###
  |--------------------------------------------------------------------------

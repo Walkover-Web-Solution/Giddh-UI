@@ -147,7 +147,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       cUnq: $rootScope.selectedCompany.uniqueName
     }
     #toastr.error(res.statusText)
-    userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
+    # userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
 
   
   $scope.fetchSiteList = (str) ->

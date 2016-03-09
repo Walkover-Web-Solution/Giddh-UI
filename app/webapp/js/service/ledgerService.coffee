@@ -26,7 +26,21 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
         method: 'DELETE',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/:entryUniqueName'
       }
-    })
+    }
+  )
+
+  otherLedger = $resource('/yodlee/company/:companyUniqueName/accounts/:accountsUniqueName/',
+    {
+      'companyUniqueName': @companyUniqueName
+      'accountsUniqueName': @accountsUniqueName
+    },
+    { 
+      getTransactions: {
+        method: 'GET',
+        url: '/yodlee/company/:companyUniqueName/accounts/:accountsUniqueName/transactions'
+      } 
+    }
+  )
 
   ledgerService =
     handlePromise: (func) ->
@@ -62,6 +76,12 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
         companyUniqueName: unqNamesObj.compUname,
         accountsUniqueName: unqNamesObj.acntUname
         entryUniqueName: unqNamesObj.entUname
+      }, onSuccess, onFailure))
+
+    getOtherTransactions: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> otherLedger.getTransactions({
+        companyUniqueName: unqNamesObj.compUname,
+        accountsUniqueName: unqNamesObj.acntUname
       }, onSuccess, onFailure))
 
   ledgerService

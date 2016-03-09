@@ -94,7 +94,13 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   dummyValueDebit = new angular.Ledger("DEBIT")
   dummyValueCredit = new angular.Ledger("CREDIT")
 
-  # ledger
+  # other ledger
+  $scope.getOtherTransactionsSuccess = (res, gData, acData) ->
+    console.log "getOtherTransactionsSuccess", res, gData, acData
+
+  $scope.getOtherTransactionsFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
   # load ledger start
   $scope.reloadLedger = () ->
     if not _.isUndefined($scope.selectedLedgerGroup)
@@ -125,12 +131,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $scope.unableToShowBrdcrmb  = false
       resObj = groupService.matchAndReturnObj(gData, $rootScope.flatGroupsList)
       $scope.showLedgerBreadCrumbs(resObj.parentGroups)
-      
 
   $scope.getAcDtlDataFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
   $scope.getAcDtlDataSuccess = (res, gData, acData) ->
+    console.log res, "acdetail"
     _.extend(acData, res.body)
     $scope.canAddAndEdit = $scope.hasAddAndUpdatePermission(acData)
     $rootScope.showLedgerBox = false
@@ -151,6 +157,20 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $location.path("/"+$rootScope.selAcntUname)
     else
       console.info "same url", $location.path(), "is", $rootScope.selAcntUname
+
+    if res.body.yodleeAdded
+      unqObj = {
+        compUname : $rootScope.selectedCompany.uniqueName
+        acntUname : acData.uniqueName
+      }
+      # get other ledger transactions
+      ledgerService.getOtherTransactions(unqObj)
+        .then(
+          (res)->
+            $scope.getOtherTransactionsSuccess(res, gData, acData)
+          ,(error)->
+            $scope.getOtherTransactionsFailure(error)
+        )
 
     
 
