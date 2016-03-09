@@ -2017,3 +2017,33 @@ i.cls-alert{
     background-position: 28px 0;
   }
 }
+
+
+
+.add-manage-grouplist .group{
+    height: 42px;
+    background: #fff;
+    line-height: 43px;
+    cursor: pointer;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+
+.add-manage-grouplist .row{
+    margin:0;
+}
+.add-manage-grouplist > section.liabilities{
+    border-left:8px solid #587058;
+}
+.add-manage-grouplist > section.assets{
+    border-left:8px solid #FFD800;
+}
+.add-manage-grouplist > section.income{
+    border-left:8px solid #6495ED;
+}
+.add-manage-grouplist > section.expenses{
+    border-left:8px solid #E86850;
+}
+.add-manage-grouplist .isHidden{
+    display:none;
+}

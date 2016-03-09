@@ -22,16 +22,16 @@
                   <i class="glyphicon glyphicon-search"></i>
                 </div>
 
-                <input type="text" name="grpSrch" class="form-control" ng-model="grpSrch" placeholder="Search groups" ng-keyup="setScrollToTop(grpSrch, 'addMngGrpScrBar')" ng-model-options="{debounce: 700}">
+                <input type="text" name="grpSrch" class="form-control" ng-model="keyWord" placeholder="Search groups" ng-keyup="setScrollToTop(grpSrch, 'addMngGrpScrBar')" trial-accordion="search">
 
               
-                <div class="input-group-addon cp" ng-show="!grpSrch.length > 0 && !subGroupVisible" ng-click="collapseAll()">
+<!--                 <div class="input-group-addon cp" ng-show="!grpSrch.length > 0 && !subGroupVisible" ng-click="collapseAll()">
                   <i class="glyphicon glyphicon-list"></i>
                 </div>
 
                 <div class="input-group-addon cp" ng-show="!grpSrch.length > 0 && subGroupVisible" ng-click="expandAll()">
                   <i class="glyphicon glyphicon-menu-hamburger"></i>
-                </div>
+                </div> -->
                 
 
               </div>
@@ -47,7 +47,7 @@
                              suppressScrollX="false" useBothWheelAxes="false" suppressScrollY="true">
             <div ng-if="showListGroupsNow">
               <!-- Nested node template -->
-              <script type="text/ng-template" id="nodes_renderer.html">
+<!--               <script type="text/ng-template" id="nodes_renderer.html">
                 <div ui-tree-handle class="tree-node tree-node-content"
                      ng-class="{'active': node.uniqueName === selectedItem.uniqueName}" ng-click="selectItem(node)">
                   <div class="clearfix">
@@ -68,21 +68,38 @@
                   <li ng-repeat="node in node.groups" ui-tree-node ng-include="'nodes_renderer.html'">
                   </li>
                 </ol>
-              </script>
+              </script> -->
 
-              <div class="clearfix">
-                <div ui-tree id="tree-root" data-drag-enabled="false" data-nodrop-enabled="true">
+              <div class="clearfix add-manage-grouplist">
+<!--                 <div ui-tree id="tree-root" data-drag-enabled="false" data-nodrop-enabled="true">
                   <ol ui-tree-nodes ng-model="groupList">
                     <li ng-repeat="node in groupList | filter:grpSrch" ui-tree-node
                         ng-include="'nodes_renderer.html'" ng-class="node.category"></li>
                   </ol>
-                </div>
+                </div> -->
+                <section class="row row-1" ng-repeat="grp in groupList | orderBy: grp.category | filter:keyWord | grpsrch:keyWord" ng-class="grp.category">
+                  <div class="" trial-accordion>  
+                    <div class="col-xs-12 group"><span ng-bind-html="grp.name | uppercase" ng-click="selectItem(grp)"></span></div>
+                  </div>
+                  <section class="subGroups isHidden" ng-if="grp.groups.length">
+                    <div ng-include="'childGroupList'"></div>
+                  </section>
+                </section>
               </div>
             </div>
           </perfect-scrollbar>
         </div>
       </div>
-
+      <script type="text/ng-template" id="childGroupList">
+        <section class="row row-2" ng-repeat="grp in grp.groups">
+          <div class="row" trial-accordion>
+            <div class="col-xs-12 group" ng-style="{'padding-left':padLeft + 10}" ><span ng-bind-html="grp.name | capitalize" ng-click="selectItem(grp)"></span></div>
+          </div>  
+          <section class="subGroups isHidden" ng-if="grp.groups.length" ng-style="{'padding-left':padLeft + 10}">
+            <div ng-include="'childGroupList'"></div>
+          </section>
+        </section>
+      </script>
 
       <!-- middle body -->
       <div class="col-md-7 col-sm-12">
