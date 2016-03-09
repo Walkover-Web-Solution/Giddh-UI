@@ -9,7 +9,5 @@ homeController = ($scope, $rootScope, getLedgerState, $state) ->
       $state.go('company.content.manage')
   $scope.goToLedgerState()
 
-
-
 #init angular app
 giddh.webApp.controller 'homeController', homeController
