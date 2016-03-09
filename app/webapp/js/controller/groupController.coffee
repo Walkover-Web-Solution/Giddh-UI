@@ -167,7 +167,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.getGroupListSuccess = (res) ->
     $scope.groupList = $scope.addFilterKey(res.body)
-    console.log $scope.groupList
     $scope.showListGroupsNow = true
     $scope.highlightAcMenu()
 

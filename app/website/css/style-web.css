@@ -749,7 +749,7 @@ textarea.form-control {
     bottom: 0;
     right: 0;
     z-index: 99;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.7);
 }
 
 .loading h1 {

@@ -135,9 +135,9 @@
           <li style="background:#B10F24"></li>
         </ul>
         <div ng-class="loginIsProcessing ? 'giddh-spinner': 'giddh-logo'" ></div>
-        <div class="loading" ng-if="loginIsProcessing">
+        <!-- <div class="loading" ng-if="loginIsProcessing">
           <h1>Logging in please wait...</h1>
-        </div>
+        </div> -->
         <button type="login" class="btn btn-login twitter" ng-click="authenticate('twitter')">Sign in with Twitter</button>
         <button type="login" class="btn btn-login linkedin" ng-click="authenticate('linkedinr')">Sign in with LinkedIn</button>
         <button type="login" class="btn btn-login google" ng-click="authenticate('google')">Sign in with Google</button>
