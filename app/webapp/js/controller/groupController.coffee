@@ -155,8 +155,19 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.makeAccountsListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+  $scope.addFilterKey = (data) ->
+    _.each data, (grp) ->
+      grp.isVisible = true
+      if grp.groups.length > 0
+        _.each grp.groups, (sub) ->
+          sub.isVisible = true
+          if sub.groups.length > 0
+            $scope.addFilterKey(sub.groups)
+    data
+
   $scope.getGroupListSuccess = (res) ->
-    $scope.groupList = res.body
+    $scope.groupList = $scope.addFilterKey(res.body)
+    console.log $scope.groupList
     $scope.showListGroupsNow = true
     $scope.highlightAcMenu()
 

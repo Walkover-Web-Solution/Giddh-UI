@@ -126,12 +126,14 @@ angular.module('trialBalance', []).directive('exportReport', [
         # expand all
         expandAll = ->
           angular.element('.table-container').find('.isHidden').show().removeClass('isHidden')
+          angular.element('.add-manage-grouplist').find('.isHidden').show().removeClass('isHidden')
           scope.expanded = true
 
         #collapse all
         collapseAll = ->
           $timeout (->
             angular.element('.table-container').find("[trial-accordion]").not("[trial-accordion = 'expandAll']").siblings().hide().addClass('isHidden')
+            angular.element('.add-manage-grouplist').find("[trial-accordion]").not("[trial-accordion = 'expandAll']").siblings().hide().addClass('isHidden')
             scope.expanded = false
           ),100
 

@@ -588,3 +588,63 @@ angular.module('exportDirectives', [])
       return
 
   }
+
+.filter('grpsrch', ->
+  (input, search) ->
+    # if !_.isUndefined(search)
+    #   srch = search.toLowerCase()
+    # initial = input
+
+    # checkIndex = (src, str) ->
+    #   if src.indexOf(str) != -1
+    #     true
+    #   else 
+    #     false      
+
+    # performSearch = (input) ->
+    #   _.each input, (grp) ->
+    #     grpName = grp.name.toLowerCase()
+    #     grpUnq = grp.uniqueName.toLowerCase()
+
+    #     groupMatch = false
+    #     subGroupMatch = false
+
+
+    #     if checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
+    #       groupMatch = true
+    #     else if !checkIndex(grpName, srch) && !checkIndex(grpUnq, srch)
+    #       if grp.groups.length > 0
+    #         _.each grp.groups, (sub) ->
+    #           subName = sub.name.toLowerCase()
+    #           subUnq = sub.uniqueName.toLowerCase()
+
+    #           if checkIndex(subName, srch) || checkIndex(subUnq, srch)
+    #             subGroupMatch = true
+    #           else if !checkIndex(subName, srch) && !checkIndex(subUnq, srch)
+    #             subGroupMatch = false
+    #             if sub.groups.length > 0
+    #               performSearch(sub.groups)
+
+    #   input
+
+    # resetSearch = (input) ->
+    #   _.each input, (grp) ->
+    #     grp.isVisible = true
+    #     if grp.groups.length > 0
+    #       _.each grp.groups, (sub)->
+    #         sub.isVisible = true
+    #         if sub.groups.length > 0
+    #           resetSearch(sub.groups)
+    #   input
+    
+    # console.log search
+    # if !_.isUndefined(search)
+    #   performSearch(input)
+    # else if search.length < 1
+    #   initial
+
+    console.log input search
+
+    search
+               
+)
