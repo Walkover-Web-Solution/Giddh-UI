@@ -343,7 +343,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
         row = row or
           ''
         if obj.isVisible == true
-          row += obj.name + ' (' + obj.parent  + ')' + ',' + obj.openingBalance + $filter('recType')(obj.openingBalanceType ,obj.openingBalance) +  ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + $filter('recType')(obj.closingBalanceType,obj.closingBalance) + '\r\n'
+          row += obj.name + ' (' + obj.parent  + ')' + ',' + obj.openingBalance + ',' + $filter('recType')(obj.openingBalanceType ,obj.openingBalance) +  ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + ',' + $filter('recType')(obj.closingBalanceType,obj.closingBalance) + '\r\n'
       body += row + '\r\n'
 
     createCsv(accounts)
