@@ -477,117 +477,6 @@ angular.module('exportDirectives', [])
           ), 10  
     }
 ])
-.filter('tbsearch', ->
-  (input, search) ->
-    
-    srch = search
-
-    checkIndex = (src, str) ->
-      if src.indexOf(str) != -1
-        true
-      else 
-        false      
-
-    performSearch = (input) -> 
-      if !_.isUndefined(srch)
-        _.each input, (grp) ->
-          grpName = grp.groupName.toLowerCase()
-          grpUnq = grp.uniqueName.toLowerCase()
-
-          if checkIndex(grpName, srch) || checkIndex(grpUnq, srch) 
-            grp.isVisible = true
-          else
-            grp.isVisible = false
-
-          if grp.accounts.length > 0
-            _.each grp.accounts, (acc) ->
-              accName = acc.name.toLowerCase()
-              accUnq = acc.uniqueName.toLowerCase()
-
-              if checkIndex(accName, srch) || checkIndex(accUnq, srch) || checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
-                grp.isVisible = true
-                acc.isVisible = true
-              # else
-              #   acc.isVisible = false
-
-          if grp.childGroups.length > 0
-            _.each grp.childGroups, (chld) ->
-              chldName = chld.groupName.toLowerCase()
-              chldUnq = chld.uniqueName.toLowerCase()
-
-              if checkIndex(chldName, srch) || checkIndex(chldUnq, srch) || checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
-                grp.isVisible = true
-                chld.isVisible = true
-              # else
-              #   chld.isVisible = false
-
-                if chld.accounts.length > 0
-                  _.each chld.accounts, (acc) ->
-                    accName = acc.name.toLowerCase()
-                    accUnq = acc.uniqueName.toLowerCase()
-
-                    if checkIndex(accName, srch) || checkIndex(accUnq, srch) || checkIndex(chldName, srch) || checkIndex(chldUnq, srch) || checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
-                      grp.isVisible = true
-                      chld.isVisible = true
-                      acc.isVisible = true
-
-                if grp.childGroups.length > 0
-                  performSearch(grp.childGroups)
-              else
-              # else
-              #   chld.isVisible = false
-                if chld.accounts.length > 0
-                  _.each chld.accounts, (acc) ->
-                    accName = acc.name.toLowerCase()
-                    accUnq = acc.uniqueName.toLowerCase()
-
-                    if checkIndex(accName, srch) || checkIndex(accUnq, srch) || checkIndex(chldName, srch) || checkIndex(chldUnq, srch) || checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
-                      grp.isVisible = true
-                      chld.isVisible = true
-                      acc.isVisible = true
-
-                if grp.childGroups.length > 0
-                  performSearch(grp.childGroups)
-      input
-    resetSearch = (input) -> 
-      if !_.isUndefined(srch)
-        _.each input, (grp) ->
-            grp.isVisible = true
-          if grp.accounts.length > 0
-            _.each grp.accounts, (acc) ->
-                acc.isVisible = true
-
-          if grp.childGroups.length > 0
-            _.each grp.childGroups, (chld) ->
-                chld.isVisible
-
-                if chld.accounts.length > 0
-                  _.each chld.accounts, (acc) ->
-                    acc.isVisible = true
-
-                if chld.childGroups.length > 0
-                  resetSearch(chld.childGroups)
-      input
-    
-    if _.isUndefined(srch)
-      resetSearch(input)
-    else      
-      performSearch(input)                 
-      
-)
-
-.directive 'dynamicName', ($compile) ->
-  {
-    restrict: 'A'
-    terminal: true
-    priority: 1000
-    link: (scope, element, attrs) ->
-      element.attr 'name', scope.$eval(attrs.dynamicName)
-      element.removeAttr 'dynamic-name'
-      $compile(element) scope
-      return
-
-  }
 
 .filter('grpsrch', ->
   (input, search) ->
@@ -714,4 +603,160 @@ angular.module('exportDirectives', [])
     input
 
                
+)
+
+.filter('tbsearch', ->
+  (input, search) ->
+    
+    if !_.isUndefined(search)
+      srch = search.toLowerCase()
+    initial = input
+
+    checkIndex = (src, str) ->
+      if src.indexOf(str) != -1
+        true
+      else 
+        false      
+
+    performSearch  = (input) ->
+      _.each input, (grp) ->
+        grpName = grp.groupName.toLowerCase()
+        grpUnq = grp.uniqueName.toLowerCase()
+
+        if !checkIndex(grpName, srch) && !checkIndex(grpName, srch)
+          grp.isVisible = false
+          if grp.childGroups.length > 0
+            _.each grp.childGroups, (child) ->
+              childName = child.groupName.toLowerCase()
+              childUnq = child.groupName.toLowerCase()
+
+              if !checkIndex(childName, srch) && !checkIndex(childUnq, srch)
+                child.isVisible = false
+                if child.childGroups.length > 0
+                  _.each child.childGroups, (nChild1) ->
+                    nchild1Name = nChild1.groupName.toLowerCase()
+                    nChild1Unq = nChild1.uniqueName.toLowerCase()
+                    if !checkIndex(nchild1Name, srch) && !checkIndex(nChild1Unq, srch)
+                      nChild1.isVisible = false
+                      if nChild1.childGroups.length > 0
+                        _.each nChild1.childGroups, (nChild2) ->
+                          nChild2Name = nChild2.groupName.toLowerCase()
+                          nChild2Unq = nChild2.uniqueName.toLowerCase()
+                          if !checkIndex(nChild2Name, srch) && !checkIndex(nChild2Unq, srch)
+                            nChild2.isVisible = false
+                            if nChild2.childGroups.length > 0
+                              _.each nChild2.childGroups, (nChild3) ->
+                                nChild3Name = nChild3.groupName.toLowerCase()
+                                nChild3Unq = nChild2.uniqueName.toLowerCase()
+                                if !checkIndex(nChild3Name, srch) && !checkIndex(nChild3Unq, srch)
+                                  nChild3.isVisible = false
+                                  if nChild3.childGroups.length > 0
+                                    performSearch(nChild3.childGroups) 
+                                  if nChild3.accounts.length > 0
+
+                                    _.each nChild3.accounts, (acc) ->
+                                      accName = acc.name.toLowerCase()
+                                      accUnq = acc.uniqueName.toLowerCase()
+                                      if !checkIndex(accName, srch) && !checkIndex(accUnq, srch)
+                                        acc.isVisible = false
+                                      else if checkIndex(accName, srch) || checkIndex(accUnq, srch)
+                                        nChild3.isVisible = true
+                                        nChild2.isVisible = true
+                                        nChild1.isVisible = true
+                                        child.isVisible = true
+                                        grp.isVisible = true
+                                        acc.isVisible = true
+                                else if checkIndex(nChild3Name, srch) || checkIndex(nChild3Unq, srch)
+                                  nChild3.isVisible = true
+                                  nChild2.isVisible = true
+                                  nChild1.isVisible = true
+                                  child.isVisible = true
+                                  grp.isVisible = true
+                            if nChild2.accounts.length > 0
+                              _.each nChild2.accounts, (acc) ->
+                                accName = acc.name.toLowerCase()
+                                accUnq = acc.uniqueName.toLowerCase()
+                                if !checkIndex(accName, srch) && !checkIndex(accUnq, srch)
+                                  acc.isVisible = false
+                                else if checkIndex(accName, srch) || checkIndex(accUnq, srch)
+                                  nChild2.isVisible = true
+                                  nChild1.isVisible = true
+                                  child.isVisible = true
+                                  grp.isVisible = true
+                                  acc.isVisible = true
+                          else if checkIndex(nChild2Name, srch) || checkIndex(nChild2Unq, srch)
+                            nChild2.isVisible = true
+                            nChild1.isVisible = true
+                            child.isVisible = true
+                            grp.isVisible = true
+                      if nChild1.accounts.length > 0
+                        _.each nChild1.accounts, (acc) ->
+                          accName = acc.name.toLowerCase()
+                          accUnq = acc.uniqueName.toLowerCase()
+                          if !checkIndex(accName, srch) && !checkIndex(accUnq, srch)
+                            acc.isVisible = false
+                          else if checkIndex(accName, srch) || checkIndex(accUnq, srch)
+                            nChild1.isVisible = true
+                            child.isVisible = true
+                            grp.isVisible = true
+                            acc.isVisible = true
+                    else if checkIndex(nchild1Name, srch) || checkIndex(nChild1Unq, srch)
+                      nChild1.isVisible = true
+                      child.isVisible = true
+                      grp.isVisible = true
+
+                if child.accounts.length > 0
+                  _.each child.accounts, (acc) ->
+                    accName = acc.name.toLowerCase()
+                    accUnq = acc.uniqueName.toLowerCase()
+
+                    if !checkIndex(accName, srch) && !checkIndex(accUnq, srch)
+                      acc.isVisible = false
+                    else if checkIndex(accName, srch) || checkIndex(accUnq, srch)
+                      child.isVisible = true
+                      grp.isVisible = true
+                      acc.isVisible = true 
+
+              else if checkIndex(childName, srch) || checkIndex(childUnq, srch)
+                grp.isVisible = true
+                child.isVisible = true
+
+          if grp.accounts.length > 0
+            _.each grp.accounts, (acc) ->
+              accName = acc.name.toLowerCase()
+              accUnq = acc.uniqueName.toLowerCase()
+
+              if !checkIndex(accName, srch) && !checkIndex(accUnq, srch)
+                acc.isVisible = false
+              else if checkIndex(accName, srch) || checkIndex(accUnq, srch)
+                grp.isVisible = true
+                acc.isVisible = true
+
+
+
+        else if checkIndex(grpName, srch) || checkIndex(grpName, srch)
+          grp.isVisible = true
+
+
+    resetSearch = (input) ->
+      _.each input, (grp) ->
+        grp.isVisible = true
+        if grp.childGroups.length > 0
+          _.each grp.childGroups, (sub)->
+            sub.isVisible = true
+            if sub.childGroups.length > 0
+              resetSearch(sub.childGroups)
+            if sub.accounts.length > 0
+              _.each sub.accounts, (acc) ->
+                acc.isVisible = true
+        if grp.accounts.length > 0
+          _.each grp.accounts, (acc) ->
+            acc.isVisible = true
+    
+    if !_.isUndefined(srch)
+      performSearch(input)
+      if srch.length < 2
+        resetSearch(input)
+    input                
+      
 )

@@ -157,8 +157,9 @@
         </table>
 
         <!--Start Grid-->
-        <section class="row row-1" ng-repeat="grp in data.groupDetails | filter:keyWord |  tbsearch:keyWord | filter:filterTBSearch:tbsearch |  orderBy: grp.category" ng-class="grp.category">
+        <section class="row row-1" ng-repeat="grp in data.groupDetails | tbsearch:keyWord |  orderBy: grp.category" ng-class="grp.category"  ng-if="grp.isVisible">
           <!-- filter:filterTBSearch:index:data  -->
+           <!-- |  tbsearch:keyWord | filter:filterTBSearch:tbsearch -->
           <div class="row"  trial-accordion>  
             <div class="col-xs-4 group" ng-bind-html=" grp.groupName | uppercase | highlight: keyWord "></div>
             <div class="col-xs-2 group text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type | recType:grp.forwardedBalance.amount }}</div>
@@ -167,7 +168,7 @@
             <div class="col-xs-2 group text-right">{{ grp.closingBalance.amount | number:2 }} {{grp.closingBalance.type | recType:grp.closingBalance.amount}}</div>
           </div>
 
-          <section class="row row-2 isHidden" ng-repeat="account in grp.accounts  | filter:keyWord">
+          <section class="row row-2 account isHidden" ng-repeat="account in grp.accounts" ng-if="account.isVisible">
             <div class="row">
               <div class="col-xs-4 account" ng-style="{'padding-left':padLeft}" ng-bind-html=" account.name | lowercase | highlight: keyWord">
               </div>
@@ -215,7 +216,7 @@
 
       <!-- start template trial bal -->
       <script type="text/ng-template" id="trialBalSubGroup">
-        <section class="row row-2" ng-repeat="grp in grp.childGroups | filter:keyWord">
+        <section class="row row-2" ng-repeat="grp in grp.childGroups"  ng-if="grp.isVisible">
           <div class="row" trial-accordion>
             <div class="col-xs-4 group" ng-style="{'padding-left':padLeft + 10}" ng-bind-html="grp.groupName | uppercase : (grp.childGroups.length && grp.accounts.length) | highlight: keyWord"></div>
             <div class="col-xs-2 group text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type | recType: grp.forwardedBalance.amount}}</div>
@@ -223,7 +224,7 @@
             <div class="col-xs-2 group text-right">{{ grp.creditTotal | number:2 }}</div>
             <div class="col-xs-2 group text-right">{{ grp.closingBalance.amount | number:2 }} {{ grp.closingBalance.type | recType: grp.closingBalance.amount }}</div>
           </div>  
-          <section class="row isHidden" ng-if="grp.accounts.length" ng-repeat="account in grp.accounts" >
+          <section class="row account isHidden" ng-if="grp.accounts.length && account.isVisible" ng-repeat="account in grp.accounts">
             <div class="row">
               <div class="col-xs-4" ng-style="{'padding-left':padLeft + 20}" ng-bind-html=" account.name | lowercase | highlight: keyWord">
               </div>

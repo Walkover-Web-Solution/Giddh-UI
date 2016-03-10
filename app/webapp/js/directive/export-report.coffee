@@ -125,8 +125,8 @@ angular.module('trialBalance', []).directive('exportReport', [
               
         # expand all
         expandAll = ->
-          angular.element('.table-container').find('.isHidden').show().removeClass('isHidden')
-          angular.element('.add-manage-grouplist').find('.isHidden').show().removeClass('isHidden')
+          angular.element('.table-container').find('.isHidden').not('.account.isHidden').show().removeClass('isHidden')
+          angular.element('.add-manage-grouplist').find('.isHidden').not('.account.isHidden').show().removeClass('isHidden')
           scope.expanded = true
 
         #collapse all
