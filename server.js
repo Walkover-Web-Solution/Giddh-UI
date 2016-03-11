@@ -142,7 +142,7 @@ var reports = require('./public/routes/webapp/reports')
 var coupon = require('./public/routes/webapp/coupon')
 var yodlee = require('./public/routes/webapp/yodlee')
 var ebanks  = require('./public/routes/webapp/ebanks')
-var ebanksAll  = require('./public/routes/webapp/ebanksAll')
+//var ebanksAll  = require('./public/routes/webapp/ebanksAll')
 
 app.use('/currency', currency);
 app.use('/users', users);
