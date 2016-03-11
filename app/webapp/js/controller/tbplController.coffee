@@ -34,8 +34,8 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   }
   $scope.format = "dd-MM-yyyy"
   $scope.exportData = []
-  $scope.filteredExportData = []
-  $scope.addToExportNow = false
+  # $scope.filteredExportData = []
+  # $scope.addToExportNow = false
   $scope.filteredTotal = {
     exportingFiltered: false
     openingBalance: 0
@@ -100,7 +100,6 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.makeDataForPl = (data) ->
     fData = $scope.filterPlData(data.groupDetails)
     $scope.plData = _.omit(fData, "othArr")
-    console.log $scope.plData
     $scope.plData.expenseTotal = $scope.calCulateTotalExpense(fData.expArr)
     $scope.plData.incomeTotal = $scope.calCulateTotalIncome(fData.incArr)
     clB = $scope.plData.incomeTotal - $scope.plData.expenseTotal
@@ -171,6 +170,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     $scope.data = res.body
     $scope.exportData = []
     $scope.data.groupDetails = $scope.orderGroups(res.body.groupDetails)
+    $scope.exportData = $scope.data.groupDetails
     if $scope.data.closingBalance.amount is 0 and $scope.data.creditTotal is 0 and $scope.data.debitTotal is 0 and $scope.data.forwardedBalance.amount is 0
       $scope.noData = true
     $scope.showTbplLoader = false
@@ -211,6 +211,12 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.formatDataGroupWise = (e) ->
     groups = []
     rawData = $scope.exportData
+    total = {
+      ob: 0
+      cb: 0
+      cr: 0
+      dr: 0
+    }
     csv = ''
     row = ''
     header = ''
@@ -220,7 +226,6 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     header = companyDetails.name + '\r\n' + '"'+companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'Trial Balance' + ': ' + $filter('date')($scope.fromDate.date,'dd-MM-yyyy') + ' to ' + $filter('date')($scope.toDate.date,
       "dd-MM-yyyy") + '\r\n'
     csv += header + '\r\n' + title
-    $scope.calculateFilteredExportTotal(rawData)
 
     _.each rawData, (obj) ->
       group = {}
@@ -231,14 +236,20 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       group.debit = obj.debitTotal
       group.closingBalance = obj.closingBalance.amount
       group.closingBalanceType = obj.closingBalance.type
+      group.isVisible = obj.isVisible
       groups.push group
 
     _.each groups, (obj) ->
-      row += obj.name + ',' + obj.openingBalance + ' ' + $filter('recType')(obj.openingBalanceType,obj.openingBalance) + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + $filter('recType')(obj.closingBalanceType,obj.closingBalance) + '\r\n'
+      if obj.isVisible
+        row += obj.name + ',' + obj.openingBalance + ' ' + $filter('recType')(obj.openingBalanceType,obj.openingBalance) + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + $filter('recType')(obj.closingBalanceType,obj.closingBalance) + '\r\n'
+        total.ob += obj.openingBalance
+        total.cb += obj.closingBalance
+        total.cr += obj.credit
+        total.dr += obj.debit
 
     csv += row + '\r\n';
-    csv += '\r\n' + 'Total' + ',' + $scope.filteredTotal.openingBalance + ',' + $scope.filteredTotal.debitTotal + ',' + $scope.filteredTotal.creditTotal + ',' + $scope.filteredTotal.closingBalance + '\n'
-
+    # csv += '\r\n' + 'Total' + ',' + $scope.filteredTotal.openingBalance + ',' + $scope.filteredTotal.debitTotal + ',' + $scope.filteredTotal.creditTotal + ',' + $scope.filteredTotal.closingBalance + '\n'
+    csv += '\r\n' + 'Total' + ',' + total.ob + ',' + total.dr + ',' + total.cr + ',' + total.cb + '\n'
     $scope.csvGW = csv
 
     $scope.uriGroupWise = 'data:text/csv;charset=utf-8,' + escape(csv)
@@ -250,6 +261,12 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     accounts = []
     childGroups = []
     rawData = $scope.exportData
+    total = {
+      ob: 0
+      cb: 0
+      cr: 0
+      dr: 0
+    }
     $scope.fnAccountWise = "Trial_Balance_account-wise.csv"
     row = ''
     title = ''
@@ -259,7 +276,6 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     header = companyDetails.name + '\r\n' + '"'+companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'Trial Balance' + ': ' + $filter('date')($scope.fromDate.date,
         "dd-MM-yyyy") + ' to ' + $filter('date')($scope.toDate.date,
         "dd-MM-yyyy") + '\r\n'
-    $scope.calculateFilteredExportTotal(rawData)
 
     _.each rawData, (obj) ->
       group = {}
@@ -336,18 +352,22 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     sortChildren(rawData)
 
     title += 'Name' + ',' + 'Opening Balance' + ',' + 'Debit' + ',' + 'Credit' + ',' + 'Closing Balance' + '\r\n'
-    footer += 'Total' + ',' + $scope.filteredTotal.openingBalance + ',' + $scope.filteredTotal.debitTotal + ',' + $scope.filteredTotal.creditTotal + ',' + $scope.filteredTotal.closingBalance + '\n'
 
     createCsv = (data)->
       _.each data, (obj) ->
         row = row or
           ''
         if obj.isVisible == true
-          row += obj.name + ' (' + obj.parent  + ')' + ',' + obj.openingBalance + ',' + $filter('recType')(obj.openingBalanceType ,obj.openingBalance) +  ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + ',' + $filter('recType')(obj.closingBalanceType,obj.closingBalance) + '\r\n'
+          row += obj.name + ' (' + obj.parent  + ')' + ',' + obj.openingBalance+ ' ' + $filter('recType')(obj.openingBalanceType ,obj.openingBalance) +  ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + ',' + $filter('recType')(obj.closingBalanceType,obj.closingBalance) + '\r\n'
+          total.ob += obj.openingBalance
+          total.cb += obj.closingBalance
+          total.cr += obj.credit
+          total.dr += obj.debit
+
       body += row + '\r\n'
 
     createCsv(accounts)
-
+    footer += 'Total' + ',' + total.ob + ',' + total.dr + ',' + total.cr + ',' + total.cb + '\n'
     csv = header + '\r\n\r\n' + title + '\r\n' + body + footer
 
     $scope.csvAW = csv
@@ -358,6 +378,12 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.formatDataCondensed = (e) ->
     rawData = $scope.exportData
     groupData = []
+    total = {
+      ob: 0
+      cb: 0
+      cr: 0
+      dr: 0
+    }
     csv = ''
     title = ''
     body = ''
@@ -366,19 +392,19 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     header = companyDetails.name + '\r\n' + '"'+ companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'Trial Balance' + ': ' + $filter('date')($scope.fromDate.date,
         "dd-MM-yyyy") + ' to ' + $filter('date')($scope.toDate.date,
         "dd-MM-yyyy") + '\r\n'
-    $scope.calculateFilteredExportTotal(rawData)
+
     $scope.fnCondensed = "Trial_Balance_condensed.csv"
     sortData = (parent, groups) ->
       _.each parent, (obj) ->
         group = group or
           accounts: []
           childGroups: []
-        group.Name = obj.groupName
+        group.name = obj.groupName
         group.openingBalance = obj.forwardedBalance.amount
         group.openingBalanceType = obj.forwardedBalance.type
-        group.Credit = obj.creditTotal
-        group.Debit = obj.debitTotal
-        group.ClosingBalance = obj.closingBalance.amount
+        group.credit = obj.creditTotal
+        group.debit = obj.debitTotal
+        group.closingBalance = obj.closingBalance.amount
         group.closingBalanceType = obj.closingBalance.type
         group.isVisible = obj.isVisible
         if obj.accounts.length > 0
@@ -415,7 +441,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
 
             if grp.accounts.length > 0
               _.each grp.accounts, (acc) ->
-                childGroup.subAccounts = childGroup.subAccounts or
+                childGroup.accounts = childGroup.accounts or
                   []
                 account = {}
                 account.name = acc.name
@@ -426,7 +452,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
                 account.closingBalance = acc.closingBalance.amount
                 account.closingBalanceType = acc.closingBalance.type
                 account.isVisible = acc.isVisible
-                childGroup.subAccounts.push account
+                childGroup.accounts.push account
 
             if grp.childGroups.length > 0
               sortData(grp.childGroups, childGroup.childGroups)
@@ -435,38 +461,35 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     sortData(rawData, groupData)
 
     title += 'Name' + ',' + 'Opening Balance' + ',' + 'Debit' + ',' + 'Credit' + ',' + 'Closing Balance' + '\r\n'
-    footer += 'Total' + ',' + $scope.filteredTotal.openingBalance + ',' + $scope.filteredTotal.debitTotal + ',' + $scope.filteredTotal.creditTotal + ',' + $scope.filteredTotal.closingBalance + '\n'
+    # footer += 'Total' + ',' + $scope.filteredTotal.openingBalance + ',' + $scope.filteredTotal.debitTotal + ',' + $scope.filteredTotal.creditTotal + ',' + $scope.filteredTotal.closingBalance + '\n'
 
     createCsv = (csvObj) ->
       #console.log csvObj, 'csvObj'
-      _.each csvObj, (obj) ->
-        row = row or
-            ''
-        row += obj.Name.toUpperCase() + ',' + obj.openingBalance + $filter('recType')(obj.openingBalanceType,obj.openingBalance) + ',' + obj.Debit + ',' + obj.Credit + ',' + obj.ClosingBalance + $filter('recType')(obj.closingBalanceType,obj.ClosingBalance) + '\r\n'
-        if obj.accounts.length > 0
-          _.each obj.accounts, (acc) ->
-            if acc.isVisible == true
-              row += $scope.firstCapital(acc.name.toLowerCase()) + ' (' + $scope.firstCapital(obj.Name) + ')' + ',' + acc.openingBalance + $filter('recType')(acc.openingBalanceType,acc.openingBalance) + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + $filter('recType')(acc.closingBalanceType,acc.closingBalance) + '\r\n'
-
-        if obj.childGroups.length > 0
-          _.each obj.childGroups, (grp) ->
-            if grp.isVisible == true && grp.closingBalance != 0
-              row += $scope.firstCapital(grp.name.toLowerCase()) + ' (' + obj.Name.toUpperCase() + ')' + ',' + grp.openingBalance + $filter('recType')(grp.openingBalanceType,grp.openingBalance) + ',' + grp.debit + ',' + grp.credit + ',' + grp.closingBalance + $filter('recType')(grp.closingBalanceType,grp.closingBalance) + '\r\n'
-
-            if grp.childGroups.length > 0
-              _.each grp.childGroups, (subgrp) ->
-                if subgrp.isVisible == true
-                  row += subgrp.Name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + subgrp.openingBalance + $filter('recType')(subgrp.openingBalanceType,subgrp.openingBalance) + ',' + subgrp.debit + ',' + subgrp.credit + ',' + subgrp.closingBalance + $filter('recType')(subgrp.closingBalanceType,subgrp.closingBalance) + '\r\n'
-                  createCsv(grp.childGroups)
-
-            if grp.subAccounts.length > 0
-              _.each grp.subAccounts, (acc) ->
+      index = 0
+      bodyGen = (csvObj, index) ->
+        bd = ''
+        _.each csvObj, (obj) ->
+          row = '';
+          strIndex = ''
+          (strIndex += '   ' for i in [0...index])
+          if obj.isVisible == true && obj.closingBalance != 0
+            row += strIndex + obj.name.toUpperCase() + ',' + obj.openingBalance + $filter('recType')(obj.openingBalanceType,obj.openingBalance) + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + $filter('recType')(obj.closingBalanceType,obj.ClosingBalance) + '\r\n'
+            if obj.accounts.length > 0
+              _.each obj.accounts, (acc) ->
                 if acc.isVisible == true
-                  row += acc.name.toLowerCase() + ' (' + $scope.firstCapital(grp.name) + ')' + ',' + acc.openingBalance + $filter('recType')(acc.openingBalanceType,acc.openingBalance) + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + $filter('recType')(acc.closingBalanceType,acc.closingBalance) + '\r\n'
-
-        body += row + '\r\n'
-
+                  row += strIndex + '   ' +$scope.firstCapital(acc.name.toLowerCase()) + ' (' + $scope.firstCapital(obj.name) + ')' + ',' + acc.openingBalance + $filter('recType')(acc.openingBalanceType,acc.openingBalance) + ',' + acc.debit + ',' + acc.credit + ',' + acc.closingBalance + $filter('recType')(acc.closingBalanceType,acc.closingBalance) + '\r\n'
+                  total.ob += acc.openingBalance
+                  total.cb += acc.closingBalance
+                  total.cr += acc.credit
+                  total.dr += acc.debit
+            if obj.childGroups.length > 0
+             row += bodyGen(obj.childGroups, ++index)
+          bd += row
+        bd
+      body = bodyGen(csvObj, 0)
+      footer += 'Total' + ',' + total.ob + ',' + total.dr + ',' + total.cr + ',' + total.cb + '\n'
       csv = header + '\r\n\r\n' + title + '\r\n' + body + '\r\n' + footer + '\r\n'
+
     createCsv(groupData)
 
     $scope.csvCond = csv
@@ -534,49 +557,49 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       orderedGroups.push(exp)
     orderedGroups
 
-  $scope.logInputLength = (input) ->
-    if input.length > 0
-      $timeout (->
-        $scope.addToExportNow = true
-      ), 2000
-    else 
-      $scope.addToExportNow = false
+  # $scope.logInputLength = (input) ->
+  #   if input.length > 0
+  #     $timeout (->
+  #       $scope.addToExportNow = true
+  #     ), 2000
+  #   else
+  #     $scope.addToExportNow = false
 
-  $scope.filterTBSearch = (grp) ->
-    isGroupPresentUnq = _.findWhere($scope.filteredExportData, {uniqueName:grp.uniqueName})
-    isGroupPresentName = _.findWhere($scope.filteredExportData, {groupName:grp.groupName})
-    if $scope.addToExportNow && _.isUndefined(isGroupPresentUnq) && _.isUndefined(isGroupPresentName)
-      $scope.filteredExportData.push(grp)
-      $scope.exportData = $scope.filteredExportData
-    else if $scope.addToExportNow == false
-      $scope.filteredExportData = []
-      $scope.exportData = $scope.data.groupDetails
-    grp
+  # $scope.filterTBSearch = (grp) ->
+  #   # isGroupPresentUnq = _.findWhere($scope.filteredExportData, {uniqueName:grp.uniqueName})
+  #   # isGroupPresentName = _.findWhere($scope.filteredExportData, {groupName:grp.groupName})
+  #   # if $scope.addToExportNow && _.isUndefined(isGroupPresentUnq) && _.isUndefined(isGroupPresentName)
+  #   #   $scope.filteredExportData.push(grp)
+  #   #   $scope.exportData = $scope.filteredExportData
+  #   # else if $scope.addToExportNow == false
+  #   #   $scope.filteredExportData = []
+  #   #   $scope.exportData = $scope.data.groupDetails
+  #   grp
 
 
-  $scope.calculateFilteredExportTotal = (data) ->
-    $scope.filteredTotal = {
-      exportingFiltered: false
-      openingBalance: 0
-      creditTotal: 0
-      debitTotal: 0
-      closingBalance: 0
-    }
-    _.each data, (grp) ->
-      #opening balance
-      if grp.forwardedBalance.type == "DEBIT"
-        $scope.filteredTotal.openingBalance -= grp.forwardedBalance.amount
-      else if grp.forwardedBalance.type == "CREDIT"
-        $scope.filteredTotal.openingBalance += grp.forwardedBalance.amount
-      #closing balance
-      if grp.closingBalance.type == "DEBIT"
-        $scope.filteredTotal.closingBalance -= grp.closingBalance.amount
-      else if grp.forwardedBalance.type == "CREDIT"
-        $scope.filteredTotal.closingBalance += grp.closingBalance.amount
-      #debit total
-      $scope.filteredTotal.debitTotal += grp.debitTotal
-      #credit total
-      $scope.filteredTotal.creditTotal += grp.creditTotal
+  # $scope.calculateFilteredExportTotal = (data) ->
+  #   $scope.filteredTotal = {
+  #     exportingFiltered: false
+  #     openingBalance: 0
+  #     creditTotal: 0
+  #     debitTotal: 0
+  #     closingBalance: 0
+  #   }
+  #   _.each data, (grp) ->
+  #     #opening balance
+  #     if grp.forwardedBalance.type == "DEBIT"
+  #       $scope.filteredTotal.openingBalance -= grp.forwardedBalance.amount
+  #     else if grp.forwardedBalance.type == "CREDIT"
+  #       $scope.filteredTotal.openingBalance += grp.forwardedBalance.amount
+  #     #closing balance
+  #     if grp.closingBalance.type == "DEBIT"
+  #       $scope.filteredTotal.closingBalance -= grp.closingBalance.amount
+  #     else if grp.forwardedBalance.type == "CREDIT"
+  #       $scope.filteredTotal.closingBalance += grp.closingBalance.amount
+  #     #debit total
+  #     $scope.filteredTotal.debitTotal += grp.debitTotal
+  #     #credit total
+  #     $scope.filteredTotal.creditTotal += grp.creditTotal
 
       # apply number filters
       # $scope.filteredTotal.openingBalance = $filter('number')($scope.filteredTotal.openingBalance, 2)

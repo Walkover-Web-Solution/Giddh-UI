@@ -113,6 +113,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     banksList: []
     components : []
     siteID: ''
+    type: ''
     itemId: ''
     linked: []
     toLink:''
@@ -132,7 +133,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.bankDetails = {}
 
   $scope.loadYodlee = () ->
-    userServices.loginRegister($scope.loginSuccess, $scope.loginFailure)
+    #userServices.loginRegister($scope.loginSuccess, $scope.loginFailure)
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
     }
@@ -143,10 +144,10 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
 
   $scope.getAccountsFailure = (res) ->
-    companyUniqueName =  {
-      cUnq: $rootScope.selectedCompany.uniqueName
-    }
-    #toastr.error(res.statusText)
+    # companyUniqueName =  {
+    #   cUnq: $rootScope.selectedCompany.uniqueName
+    # }
+    toastr.error(res.data.code, res.data.message)
     # userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
 
   
@@ -154,8 +155,11 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     data = {
       name: str
     }
+    reqParam = {
+      pName: str
+    }
     if data.name.length > 1
-      userServices.searchSite(data).then($scope.searchSiteSuccess, $scope.searchSiteFailure)
+      userServices.searchSite(data, reqParam).then($scope.searchSiteSuccess, $scope.searchSiteFailure)
 
   $scope.searchSiteSuccess = (res) ->
     $scope.banks.banksList = res.body
@@ -165,6 +169,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
   $scope.selectBank = (bank) ->
     $scope.banks.siteID = bank.siteId
+    $scope.banks.type = bank.type
     if bank.yodleeSiteLoginFormDetailList.length > 1
       toastr.error('Something went wrong')
     else
@@ -175,6 +180,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     reqBody = {
       siteId : $scope.banks.siteID.toString()
       loginFormDetail : []
+      type : $scope.banks.type
     }
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
@@ -208,7 +214,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     }
     siteData = res.body
     $scope.banks.itemId = siteData.itemId
-    $scope.banks.fieldType = siteData.yodleeMfaResponse.fieldType
+    #$scope.banks.fieldType = siteData.yodleeMfaResponse.fieldType
     if siteData.mfa == false
       $scope.banks.list = undefined
       toastr.success('Account added successfully!')
@@ -236,7 +242,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     $scope.bankDetails = {}  
 
   $scope.addSiteAccountFailure = (res) ->
-    toastr.error(res.data.code, res.data.message)
+    toastr.error(res.data.message, res.data.code)
     $scope.banks.requestSent = false
     $scope.bankDetails = {}
 
@@ -290,11 +296,11 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     $scope.showAccountsList(card)
     $scope.banks.toLinkObj = {
       itemAccountId: card.itemAccountId
-      giddhAccountUniqueName: ''
+      uniqueName: ''
     }
 
   $scope.LinkGiddhAccountConfirm = (acc) ->
-    $scope.banks.toLinkObj.giddhAccountUniqueName = acc.uniqueName
+    $scope.banks.toLinkObj.uniqueName = acc.uniqueName
     modalService.openConfirmModal(
         title: 'Link Account',
         body: 'Are you sure you want to link ' + acc.name + ' ?',
@@ -304,6 +310,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.LinkGiddhAccountConfirmed = (res) ->
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
+      itemAccountId: $scope.banks.toLinkObj.itemAccountId
     }
     userServices.addGiddhAccount(companyUniqueName, $scope.banks.toLinkObj).then($scope.LinkGiddhAccountConfirmSuccess, $scope.LinkGiddhAccountConfirmFailure)
 
@@ -321,6 +328,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.refreshAccounts = () ->
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
+      refresh: true
     }
     userServices.refreshAll(companyUniqueName).then($scope.refreshAllSuccess, $scope.refreshAllFailure)
 
@@ -329,7 +337,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     $scope.banks.linked = refreshedAccounts
 
   $scope.refreshAllFailure = (res) ->
-    toastr.error(res.statusMessage)
+    toastr.error(res.data.message, res.data.code)
 
 #init angular app
 giddh.webApp.controller 'userController', userController

@@ -12,6 +12,12 @@ angular.module('exportDirectives', [])
           groups = []
           accounts = []
           childGroups = []
+          total = {
+            ob: 0
+            cb: 0
+            cr: 0
+            dr: 0
+          }
           rawData = scope.exportData
           companyDetails = $rootScope.selectedCompany
 
@@ -26,7 +32,7 @@ angular.module('exportDirectives', [])
             #group.childGroups = obj.childGroups
             groups.push group
 
-          scope.calculateFilteredExportTotal(rawData)
+      
           sortChildren = (parent) ->
             #push account to accounts if accounts.length > 0
             _.each parent, (obj) ->
@@ -40,7 +46,12 @@ angular.module('exportDirectives', [])
                   account.debit = acc.debitTotal
                   account.closingBalance = acc.closingBalance.amount
                   account.closingBalanceType = acc.closingBalance.type
-                  accounts.push account
+                  if acc.isVisible
+                    total.ob += acc.openingBalance.amount
+                    total.cb += acc.closingBalance.amount
+                    total.cr += acc.creditTotal
+                    total.dr += acc.debitTotal
+                    accounts.push account
 
             #push childgroup to childGroups if childGroups.length > 0
             _.each parent, (obj) ->
@@ -63,7 +74,12 @@ angular.module('exportDirectives', [])
                       account.debit = acc.debitTotal
                       account.closingBalance = acc.closingBalance.amount + $filter('recType')(acc.closingBalance.type, acc.closingBalance.amount)
                       account.closingBalanceType = acc.closingBalance.type
-                      accounts.push account
+                      if acc.isVisible
+                        total.ob += acc.openingBalance.amount
+                        total.cb += acc.closingBalance.amount
+                        total.cr += acc.creditTotal
+                        total.dr += acc.debitTotal
+                        accounts.push account
 
                   if chld.childGroups.length > 0
                     _.each chld.childGroups, (obj) ->
@@ -120,11 +136,15 @@ angular.module('exportDirectives', [])
             )
 
           # write footer
-          OBT = scope.filteredTotal.openingBalance.toString()
-          DBT = scope.filteredTotal.debitTotal.toString()
-          CDT = scope.filteredTotal.creditTotal.toString()
-          CBT = scope.filteredTotal.closingBalance.toString()
-          footerX = 45
+          total.ob = $filter('number')(total.ob, 2)
+          total.cb = $filter('number')(total.cb, 2)
+          total.dr = $filter('number')(total.dr, 2)
+          total.cr = $filter('number')(total.cr, 2)
+          OBT = total.ob.toString()
+          DBT = total.dr.toString()
+          CDT = total.cr.toString()
+          CBT = total.cb.toString()
+          footerX = 40
           lastY = pdf.autoTableEndPosY()
           pageWidth = pdf.internal.pageSize.width - 40
           pdf.setFontSize(8)
@@ -152,7 +172,13 @@ angular.module('exportDirectives', [])
           groups = []
           rawData = scope.exportData
           companyDetails = $rootScope.selectedCompany
-          scope.calculateFilteredExportTotal(rawData)
+          total = {
+            ob: 0
+            cb: 0
+            cr: 0
+            dr: 0
+          }
+
           _.each rawData, (obj) ->
             group = {}
             group.name = obj.groupName
@@ -162,7 +188,12 @@ angular.module('exportDirectives', [])
             group.credit = obj.creditTotal
             group.closingBalance = obj.closingBalance.amount + $filter('recType')(obj.closingBalance.type, obj.closingBalance.amount)
             #group.closingBalanceType = obj.closingBalance.type
-            groups.push(group)
+            if obj.isVisible
+              total.ob += obj.forwardedBalance.amount
+              total.cb += obj.closingBalance.amount
+              total.cr += obj.creditTotal
+              total.dr += obj.debitTotal
+              groups.push(group)
 
           columns = [
             {
@@ -203,10 +234,14 @@ angular.module('exportDirectives', [])
             )
 
           # write footer
-          OBT = scope.filteredTotal.openingBalance.toString()
-          DBT = scope.filteredTotal.debitTotal.toString()
-          CDT = scope.filteredTotal.creditTotal.toString()
-          CBT = scope.filteredTotal.closingBalance.toString()
+          total.ob = $filter('number')(total.ob, 2)
+          total.cb = $filter('number')(total.cb, 2)
+          total.dr = $filter('number')(total.dr, 2)
+          total.cr = $filter('number')(total.cr, 2)
+          OBT = total.ob.toString()
+          DBT = total.dr.toString()
+          CDT = total.cr.toString()
+          CBT = total.cb.toString()
           footerX = 45
           lastY = pdf.autoTableEndPosY()
           pageWidth = pdf.internal.pageSize.width - 40
@@ -229,11 +264,13 @@ angular.module('exportDirectives', [])
     {
       restrict: 'A'
       link: (scope, elem, attr) ->
-        pdf = new jsPDF()
+
+        pdf = new jsPDF
         # initial coordinates
         companyDetails = $rootScope.selectedCompany 
         colX = 10
         colY = 50
+
 
         # assign object values
         setObjVal = (obj) ->
@@ -242,7 +279,7 @@ angular.module('exportDirectives', [])
           val.ob = obj.OpeningBalance.toString()
           val.dr = obj.Debit.toString()
           val.cr = obj.Credit.toString()
-          val. cl = obj.ClosingBalance.toString()
+          val.cl = obj.ClosingBalance.toString()
           val
 
 
@@ -296,55 +333,42 @@ angular.module('exportDirectives', [])
                   createPDF(childGrp.subGroups)
                   colX -= 5
               colX -= 5
+
         # on element click  
         elem.on 'click', (e) ->
-        
+          colX = 10
+          colY = 50
+          if !_.isUndefined(pdf)
+            pdf = undefined
+            pdf = new jsPDF()
+          else
+            pdf = new jsPDF
           rawData = scope.exportData
-          console.log rawData
           groupData = []
+          total = {
+              ob: 0
+              cb: 0
+              cr: 0
+              dr: 0
+          }
           companyDetails = $rootScope.selectedCompany 
-          scope.calculateFilteredExportTotal(rawData)
+
           sortData = (parent, groups) ->
             _.each parent, (obj) ->
-              group = group or
-                accounts: []
-                childGroups: []
-              group.Name = obj.groupName.toUpperCase()
-              group.OpeningBalance = obj.forwardedBalance.amount + $filter('recType')(obj.forwardedBalance.type, obj.forwardedBalance.amount)
-              group.Credit = obj.creditTotal
-              group.Debit = obj.debitTotal
-              group.ClosingBalance = obj.closingBalance.amount + $filter('recType')(obj.closingBalance.type, obj.closingBalance.amount)
-              group.ClosingBalanceType = obj.closingBalance.type
-              if obj.accounts.length > 0
-                #group.accounts = obj.accounts
-                _.each obj.accounts, (acc) ->
-                  account = {}
-                  account.Name = acc.name.toLowerCase()
-                  account.Credit = acc.creditTotal
-                  account.Debit = acc.debitTotal
-                  account.ClosingBalance = acc.closingBalance.amount + $filter('recType')(acc.closingBalance.type, acc.closingBalance.amount)
-                  account.ClosingBalanceType = acc.closingBalance.type
-                  account.OpeningBalance = acc.openingBalance.amount + $filter('recType')(acc.openingBalance.type, acc.openingBalance.amount)
-                  group.accounts.push account
-
-              if obj.childGroups.length > 0
-                #group.childGroups = obj.childGroups
-                _.each obj.childGroups, (grp) ->
-                  childGroup = childGroup or
-                    subGroups: []
-                    subAccounts: []
-                  childGroup.Name = grp.groupName.toUpperCase()
-                  childGroup.Credit = grp.creditTotal
-                  childGroup.Debit = grp.debitTotal
-                  childGroup.ClosingBalance = grp.closingBalance.amount + $filter('recType')(grp.closingBalance.type, grp.closingBalance.amount)
-                  childGroup.DlosingBalanceType = grp.closingBalance.type
-                  childGroup.OpeningBalance = grp.forwardedBalance.amount + $filter('recType')(grp.forwardedBalance.type, grp.forwardedBalance.amount)
-                  group.childGroups.push childGroup
-
-                  if grp.accounts.length > 0
-                    _.each grp.accounts, (acc) ->
-                      childGroup.subAccounts = childGroup.subAccounts or
-                        []
+              if obj.isVisible
+                group = group or
+                  accounts: []
+                  childGroups: []
+                group.Name = obj.groupName.toUpperCase()
+                group.OpeningBalance = obj.forwardedBalance.amount + $filter('recType')(obj.forwardedBalance.type, obj.forwardedBalance.amount)
+                group.Credit = obj.creditTotal
+                group.Debit = obj.debitTotal
+                group.ClosingBalance = obj.closingBalance.amount + $filter('recType')(obj.closingBalance.type, obj.closingBalance.amount)
+                group.ClosingBalanceType = obj.closingBalance.type
+                if obj.accounts.length > 0
+                  #group.accounts = obj.accounts
+                  _.each obj.accounts, (acc) ->
+                    if acc.isVisible
                       account = {}
                       account.Name = acc.name.toLowerCase()
                       account.Credit = acc.creditTotal
@@ -352,12 +376,50 @@ angular.module('exportDirectives', [])
                       account.ClosingBalance = acc.closingBalance.amount + $filter('recType')(acc.closingBalance.type, acc.closingBalance.amount)
                       account.ClosingBalanceType = acc.closingBalance.type
                       account.OpeningBalance = acc.openingBalance.amount + $filter('recType')(acc.openingBalance.type, acc.openingBalance.amount)
-                      childGroup.subAccounts.push account
+                      group.accounts.push account
+                      total.ob += acc.openingBalance.amount
+                      total.cb += acc.closingBalance.amount
+                      total.cr += acc.creditTotal
+                      total.dr += acc.debitTotal
 
-                  if grp.childGroups.length > 0
-                    sortData(grp.childGroups, childGroup.subGroups)
+                if obj.childGroups.length > 0
+                  #group.childGroups = obj.childGroups
+                  _.each obj.childGroups, (grp) ->
+                    if grp.isVisible
+                      childGroup = childGroup or
+                        subGroups: []
+                        subAccounts: []
+                      childGroup.Name = grp.groupName.toUpperCase()
+                      childGroup.Credit = grp.creditTotal
+                      childGroup.Debit = grp.debitTotal
+                      childGroup.ClosingBalance = grp.closingBalance.amount + $filter('recType')(grp.closingBalance.type, grp.closingBalance.amount)
+                      childGroup.DlosingBalanceType = grp.closingBalance.type
+                      childGroup.OpeningBalance = grp.forwardedBalance.amount + $filter('recType')(grp.forwardedBalance.type, grp.forwardedBalance.amount)
+                      group.childGroups.push childGroup
 
-              groups.push group
+                      if grp.accounts.length > 0
+                        _.each grp.accounts, (acc) ->
+                          if acc.isVisible
+                            childGroup.subAccounts = childGroup.subAccounts or
+                              []
+                            account = {}
+                            account.Name = acc.name.toLowerCase()
+                            account.Credit = acc.creditTotal
+                            account.Debit = acc.debitTotal
+                            account.ClosingBalance = acc.closingBalance.amount + $filter('recType')(acc.closingBalance.type, acc.closingBalance.amount)
+                            account.ClosingBalanceType = acc.closingBalance.type
+                            account.OpeningBalance = acc.openingBalance.amount + $filter('recType')(acc.openingBalance.type, acc.openingBalance.amount)
+                            childGroup.subAccounts.push account
+                            total.ob += acc.openingBalance.amount
+                            total.cb += acc.closingBalance.amount
+                            total.cr += acc.creditTotal
+                            total.dr += acc.debitTotal
+                      
+                      if grp.childGroups.length > 0
+                        sortData(grp.childGroups, childGroup.subGroups)
+
+                groups.push group
+
           sortData(rawData, groupData)
 
           #write header
@@ -379,14 +441,19 @@ angular.module('exportDirectives', [])
           pdf.line(10, 45,200,45)
 
           createPDF(groupData)
+
           
+          total.ob = $filter('number')(total.ob, 2)
+          total.cb = $filter('number')(total.cb, 2)
+          total.dr = $filter('number')(total.dr, 2)
+          total.cr = $filter('number')(total.cr, 2)
           # write table footer
           pdf.line(10, colY, 200, colY)
           pdf.text(10, colY + 5, "TOTAL")
-          pdf.text(70, colY + 5, scope.filteredTotal.openingBalance.toString())
-          pdf.text(105, colY + 5, scope.filteredTotal.debitTotal.toString())
-          pdf.text(140, colY + 5, scope.filteredTotal.creditTotal.toString())
-          pdf.text(170, colY + 5, scope.filteredTotal.closingBalance.toString())
+          pdf.text(70, colY + 5, total.ob.toString())
+          pdf.text(105, colY + 5, total.dr.toString())
+          pdf.text(140, colY + 5, total.cr.toString())
+          pdf.text(170, colY + 5, total.cb.toString())
 
           # save to pdf
           pdf.save('TrialBalance-Condensed.pdf')

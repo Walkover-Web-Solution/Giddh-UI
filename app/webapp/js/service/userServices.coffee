@@ -42,23 +42,23 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         }
         searchSite: {
           method: 'POST'
-          url: '/yodlee/search-site'
+          url: '/ebanks'
         }
-        loginRegister: {
-          method: 'GET'
-          url: '/yodlee/login-register'
-        }
+        # loginRegister: {
+        #   method: 'GET'
+        #   url: '/yodlee/login-register'
+        # }
         addSiteAccount: {
           method: 'POST'
-          url: '/yodlee/company/:companyUniqueName/add-site-account'
+          url: '/company/:companyUniqueName/ebanks'
         }
         getAccounts: {
           method: 'GET'
-          url: '/yodlee/company/:companyUniqueName/accounts'
+          url: '/company/:companyUniqueName/ebanks'
         }
         addGiddhAccount: {
-          method: 'POST'
-          url: '/yodlee/company/:companyUniqueName/add-giddh-account'
+          method: 'PUT'
+          url: '/company/:companyUniqueName/ebanks/:itemAccountId'
         }
         verifyMfa: {
           method: 'POST'
@@ -66,7 +66,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         }
         refreshAll: {
           method: 'GET'
-          url: '/yodlee/company/:companyUniqueName/all-site-account'
+          url: '/company/:companyUniqueName/ebanks'
         }
       }
   )
@@ -116,14 +116,14 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.addBalInWallet({uniqueName: data.uUname}, data, onSuccess, onFailure)
       )
-    searchSite: (data) ->
+    searchSite: (data, reqParam) ->
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.searchSite(data , onSuccess, onFailure)
+        UserSET.searchSite({name: reqParam.pName}, data , onSuccess, onFailure)
     )
-    loginRegister: () ->
-      @handlePromise((onSuccess, onFailure) ->
-        UserSET.loginRegister(onSuccess, onFailure)
-    )
+    # loginRegister: () ->
+    #   @handlePromise((onSuccess, onFailure) ->
+    #     UserSET.loginRegister(onSuccess, onFailure)
+    # )
     addSiteAccount: (data, companyUniqueName) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.addSiteAccount({companyUniqueName: companyUniqueName.cUnq}, data, onSuccess, onFailure)
@@ -134,7 +134,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
     )
     addGiddhAccount: (companyUniqueName, data) ->
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.addGiddhAccount({companyUniqueName: companyUniqueName.cUnq}, data, onSuccess, onFailure)
+        UserSET.addGiddhAccount({companyUniqueName: companyUniqueName.cUnq, itemAccountId:companyUniqueName.itemAccountId}, data, onSuccess, onFailure)
     )
     verifyMfa: (companyUniqueName, data) ->
       @handlePromise((onSuccess, onFailure) ->
@@ -142,7 +142,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
     )
     refreshAll: (companyUniqueName) ->
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.refreshAll({companyUniqueName: companyUniqueName.cUnq},onSuccess, onFailure)
+        UserSET.refreshAll({companyUniqueName: companyUniqueName.cUnq, refresh: companyUniqueName.refresh},onSuccess, onFailure)
     )
 
   userServices

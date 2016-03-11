@@ -101,6 +101,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showAccountDetails = false
     $scope.showAccountListDetails = false
     $scope.cantUpdate = false
+    groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess, $scope.getGroupListFailure)
   
   $scope.setLedgerData = (data, acData) ->
     $scope.selectedAccountUniqueName = acData.uniqueName

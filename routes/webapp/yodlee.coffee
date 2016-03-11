@@ -1,53 +1,28 @@
 settings = require('../util/settings')
 router = settings.express.Router()
 
-router.post '/search-site', (req, res) ->
-  hUrl = settings.envUrl + 'yodlee/search-site'
-  authHead =
-    headers:
-      'Auth-Key': req.session.authKey
-      'Content-Type': 'application/json'
-      'X-Forwarded-For': res.locales.remoteIp
-    data: req.body
-  settings.client.post hUrl, authHead, (data, response) ->
-    if data.status == 'error'
-      res.status(response.statusCode)
-    res.send data
+# router.get '/login-register', (req, res) ->
+#   authHead =
+#     headers:
+#       'Auth-Key': req.session.authKey
+#       'X-Forwarded-For': res.locales.remoteIp
+#   hUrl = settings.envUrl + 'yodlee/login-register'
+#   settings.client.get hUrl, authHead, (data, response) ->
+#     if data.status == 'error'
+#       res.status(response.statusCode)
+#     res.send data
 
-router.get '/login-register', (req, res) ->
-  authHead =
-    headers:
-      'Auth-Key': req.session.authKey
-      'X-Forwarded-For': res.locales.remoteIp
-  hUrl = settings.envUrl + 'yodlee/login-register'
-  settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
-      res.status(response.statusCode)
-    res.send data
 
-router.post '/company/:companyUniqueName/add-site-account', (req, res) ->
-  hUrl = settings.envUrl + 'yodlee/company/' + req.params.companyUniqueName + '/add-site-account'
-  authHead =
-    headers:
-      'Auth-Key': req.session.authKey
-      'Content-Type': 'application/json'
-      'X-Forwarded-For': res.locales.remoteIp
-    data: req.body
-  settings.client.post hUrl, authHead, (data, response) ->
-    if data.status == 'error'
-      res.status(response.statusCode)
-    res.send data
-
-router.get '/company/:companyUniqueName/accounts', (req, res) ->
-  authHead =
-    headers:
-      'Auth-Key': req.session.authKey
-      'X-Forwarded-For': res.locales.remoteIp
-  hUrl = settings.envUrl + 'yodlee/company/' + req.params.companyUniqueName + '/accounts'
-  settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
-      res.status(response.statusCode)
-    res.send data
+# router.get '/company/:companyUniqueName/accounts', (req, res) ->
+#   authHead =
+#     headers:
+#       'Auth-Key': req.session.authKey
+#       'X-Forwarded-For': res.locales.remoteIp
+#   hUrl = settings.envUrl + 'yodlee/company/' + req.params.companyUniqueName + '/accounts'
+#   settings.client.get hUrl, authHead, (data, response) ->
+#     if data.status == 'error'
+#       res.status(response.statusCode)
+#     res.send data
 
 router.post '/company/:companyUniqueName/add-giddh-account', (req, res) ->
   hUrl = settings.envUrl + 'yodlee/company/' + req.params.companyUniqueName + '/add-giddh-account'

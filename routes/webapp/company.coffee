@@ -167,4 +167,56 @@ router.post '/:uniqueName/pay-via-wallet', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+#get added ebanks list
+router.get '/:companyUniqueName/ebanks', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+#refresh added banks list
+router.get '/:companyUniqueName/ebanks', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks' + req.params.refresh
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+#login to ebank
+router.post '/:companyUniqueName/ebanks', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks'
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.post hUrl, authHead, (data, response) ->
+
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+router.put '/:companyUniqueName/ebanks/:ItemAccountId', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/' + req.params.ItemAccountId
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 module.exports = router
