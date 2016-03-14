@@ -172,6 +172,150 @@ directive 'validDate', (toastr, $filter) ->
   }
 
 angular.module('ledger', [])
+.directive 'eLedger', ['$compile', '$filter', '$document', '$parse', '$rootScope', '$timeout', ($compile, $filter, $document, $parse, $rootScope, $timeout) ->
+  {
+    restrict: 'A'
+    replace: true
+    transclude: true
+    scope:
+      index: '=index'
+      item: '=itemdata'
+      aclist: '=acntlist'
+      canAddAndEdit: '=canAddAndEdit'
+      selAcntUname: '=selAcntUname'
+      moveLedger: '&'
+      trashLedger: '&'
+      removeLedgdialog: '&'
+      discardLedger: '&'
+      removeClassInAllEle: '&'
+    controller: 'ledgerController'
+    template: "<form novalidate tabindex='-1'>
+      <div>
+        <script type='text/ng-template' id='customETemp.html'>
+          <a>
+            <span ng-bind-html='match.model.name'></span>
+            <span class='small'>({{match.model.uniqueName}})</span>
+          </a>
+        </script>
+          <table class='table ldgrInnerTbl'>
+            <tr>
+              <td width='28%'>
+                <input pos='1' type='text' class='nobdr eLedgInpt' ng-model='item.sharedData.date' tabindex='-1' ng-readonly='true' />
+              </td>
+              <td width=44%'>
+                <div class='dropdown-parent'>
+                  <input pos='2' type='text'
+                  tabindex='-1' class='nobdr eLedgInpt' required
+                  name='trans_{{item.transactionId}}'
+                  ng-model-options='{debounce: 400}''
+                  ng-model='item.transactions[0].particular'
+                  uib-typeahead='obj as obj.name for obj in aclist | omit: isECurrentAc | filter:$viewValue'
+                  class='form-control' autocomplete='off'
+                  typeahead-no-results='noResultsE' typeahead-template-url='customETemp.html'
+                  >
+                </div>
+              </td>
+              <td width='28%'>
+                <input pos='3' type='text' class='alR nobdr eLedgInpt' tabindex='-1' autocomplete='off'
+                  ng-readonly='true' ng-model='item.transactions[0].amount'/>
+              </td>
+            </tr>
+          </table>
+        </div></form>"
+    link: (scope, elem, attrs) ->
+      index = scope.index
+      scope.el = elem[0]
+      fields = elem[0].getElementsByClassName('eLedgInpt')
+      i = 0
+      while i < fields.length
+        fields[i].addEventListener 'focus', (event) ->
+          eParentForm = angular.element(this).parents('form')
+          if !eParentForm.hasClass('open')
+            $timeout ->
+              scope.openEDialog(scope.item, eParentForm, index)
+            , 300
+        i++
+
+      scope.isECurrentAc =(obj) ->
+        obj.uniqueName is scope.selAcntUname
+
+      scope.highlightEntry =(item)->
+        scope.removeClassInAllEle("eLedgEntryForm", "highlightRow")
+        el = document.getElementsByClassName("entry_"+item.sharedData.transactionId)
+        angular.element(el).addClass('highlightRow')
+
+      scope.openEDialog = (item, eParentForm, index) ->
+        scope.highlightEntry(scope.item)
+        scope.removeClassInAllEle("eLedgEntryForm", "open")
+        elem.addClass('open')
+        rect = eParentForm[0].getBoundingClientRect()
+        childCount = eParentForm[0].childElementCount
+        formEle = "drELedgerEntryForm_"+index
+        popHtml = angular.element('
+          <div class="popover fade bottom eLedgerPopDiv">
+          <div class="arrow"></div>
+          <div class="popover-inner">
+          <h3 class="popover-title">Move entry to Giddh</h3>
+          <div class="popover-content">
+            <div class="form-group">
+              <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResultsE">Add new account</a>
+            </div>
+            <div class="row">
+              <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <select 
+                    class="form-control"
+                    name="voucherType"
+                    ng-model="item.sharedData.voucherType" 
+                    ng-options="item.shortCode as item.name for item in voucherTypeList">
+                  </select>
+                </div>
+                <div class="form-group">
+                  <input type="text" name="tag" class="form-control" ng-model="item.sharedData.tag" placeholder="Tag" />
+                </div>
+              </div>
+              <div class="col-md-6 col-sm-12">
+                <div class="form-group">
+                  <textarea class="form-control" name="description" ng-model="item.transactions[0].remarks.description" placeholder="Description"></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <button ng-init="isMoveDisabled=false" ng-disabled="item.transactions[0].particular.name === undefined || noResultsE || isMoveDisabled" ng-click="isMoveDisabled=true; moveLedger({entry: item})" class="btn btn-success mrR">Move in Giddh</button>
+              <button  ng-init="isTrashDisabled=false" ng-disabled="isTrashDisabled" class="btn btn-danger" ng-click="isTrashDisabled=true; trashLedger({entry: item})">Delete Entry</button>
+            </div>
+          </div>
+          </div>')
+
+        $document.on "click", (event)->
+          onDocumentClick(event)
+
+        onDocumentClick = (event) ->
+          inBox = angular.element(event.target).parents('.eLedgerPopDiv').length is 1 || event.target.parentNode.nodeName is "LI" || event.target.parentNode.nodeName is "A" || event.target.nodeName is "INPUT"
+          if !inBox
+            $document.off 'click'
+            scope.removeLedgerDialog('.eLedgerPopDiv')
+            scope.removeClassInAllEle("eLedgEntryForm", "open")
+            scope.removeClassInAllEle("eLedgEntryForm", "highlightRow")
+
+        if childCount == 1
+          scope.removeLedgerDialog('.eLedgerPopDiv')
+          $compile(popHtml)(scope)
+          eParentForm.append(popHtml)
+          popHtml.css({
+            display: "block",
+            top: rect.height + 13,
+            left: "0px",
+            visibility: "visible",
+            maxWidth: rect.width,
+            width: rect.width
+          })
+          popHtml.addClass('in')
+        else
+          return false
+        return true
+  }
+]
 .directive 'ledgerPop', ['$compile', '$filter', '$document', '$parse', '$rootScope', '$timeout', ($compile, $filter, $document, $parse, $rootScope, $timeout) ->
   {
   restrict: 'A'
@@ -422,7 +566,7 @@ angular.module('ledger', [])
       $document.on "click", (event)->
         onDocumentClick(event)
 
-      scopeExpression = attrs.removeLedgdialog
+      # scopeExpression = attrs.removeLedgdialog
 
       onDocumentClick = (event) ->
         inBox = angular.element(event.target).parents('.ledgerPopDiv').length is 1 || event.target.parentNode.nodeName is "LI" || event.target.parentNode.nodeName is "A" || event.target.nodeName is "INPUT"
@@ -432,14 +576,15 @@ angular.module('ledger', [])
               console.info "is child and multiEntry"
           else
             scope.resetEntry(item, $rootScope.lItem)
-          scope.$apply(scopeExpression)
+          # scope.$apply(scopeExpression)
+          scope.removeLedgerDialog('.ledgerPopDiv')
           scope.removeClassInAllEle("ledgEntryForm", "open")
           scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
           $document.off 'click'
 
       if childCount == 1
         scope.setItemInLocalItemArr(item)
-        scope.removeLedgerDialog("all")
+        scope.removeLedgerDialog('.ledgerPopDiv')
         $compile(popHtml)(scope)
         parentForm.append(popHtml)
         popHtml.css({

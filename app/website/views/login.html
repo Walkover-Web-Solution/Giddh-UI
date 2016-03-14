@@ -34,6 +34,7 @@
   }
   .login-wrapper{
     height:100%;
+    min-height: 556px;
     background: url('/public/website/images/login_icons_bg.png');
     background-size: cover;
     background-repeat: no-repeat;
@@ -68,13 +69,15 @@
   }
   .login-box > ul > li{
     height:5px;
-    width:36.4px;
+    width:12.5%;
     margin:0;
     padding:0;
-    margin-left:-3px;
+    border-right: 1px solid #fff;
+    box-sizing: border-box;
+    float: left;
   }
-  .login-box > ul > li:first-child{
-    margin-left:0;
+  .login-box > ul > li:last-child{
+    border-right:0;
   }
   .giddh-logo{
       background: #221F1F none repeat scroll 0 0;
@@ -124,7 +127,7 @@
   <section id="bottom" class="container pdT2">
     <div class="login-wrapper">
       <div class="login-box">
-        <ul class="list-inline">
+        <ul class="list-inline clearfix">
           <li style="background:#08ACDC"></li>
           <li style="background:#191D19"></li>
           <li style="background:#E84219"></li>

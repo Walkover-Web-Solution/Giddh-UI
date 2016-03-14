@@ -94,9 +94,137 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   dummyValueDebit = new angular.Ledger("DEBIT")
   dummyValueCredit = new angular.Ledger("CREDIT")
 
-  # other ledger
+  $scope.eLedgerDataFound = false
+  $scope.eLedgerDrData = []
+  $scope.eLedgerCrData = []
+
+  # eLedger
+  $scope.trashEntry = (item) ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $rootScope.selAcntUname
+      trId: item.sharedData.transactionId
+    }
+    ledgerService.trashTransaction(unqNamesObj).then($scope.trashEntrySuccess, $scope.trashEntryFailure)
+
+  $scope.trashEntrySuccess = (res) ->
+    toastr.success("Entry deleted successfully", "Success")
+    
+    $scope.eLedgerDrData = _.reject($scope.eLedgerDrData, (entry) ->
+      res.body.transactionId is entry.sharedData.transactionId
+    )
+  
+    $scope.eLedgerCrData = _.reject($scope.eLedgerCrData, (entry) ->
+      res.body.transactionId is entry.sharedData.transactionId
+    )
+
+    $scope.removeClassInAllEle("eLedgEntryForm", "open")
+    $scope.removeClassInAllEle("eLedgEntryForm", "highlightRow")
+    $scope.removeLedgerDialog('.eLedgerPopDiv')
+    $scope.calculateELedger()
+    
+
+  $scope.trashEntryFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.moveEntryInGiddh = (item) ->
+    if _.isUndefined($rootScope.selAcntUname)
+      toastr.info("Something went wrong please reload page")
+      $scope.removeClassInAllEle("ledgEntryForm", "open")
+      $scope.removeLedgerDialog('.eLedgerPopDiv')
+      return false
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $rootScope.selAcntUname
+    }
+    edata = {}
+    edata.transactions = []
+    _.extend(edata, item.sharedData)
+    
+    if item.sharedData.multiEntry
+      _.filter($scope.eLedgerDrData, (obj) ->
+        if edata.transactionId is obj.sharedData.transactionId
+          edata.transactions.push(obj.transactions[0])
+      )
+      _.filter($scope.eLedgerCrData, (obj) ->
+        if edata.transactionId is obj.sharedData.transactionId
+          edata.transactions.push(obj.transactions[0])
+      )
+    else
+      _.extend(edata.transactions, item.transactions)  
+
+    ledgerService.createEntry(unqNamesObj, edata).then($scope.moveEntryInGiddhSuccess, $scope.addEntryFailure)
+
+  $scope.moveEntryInGiddhSuccess = (res) ->
+    toastr.success("Entry created successfully", "Success")
+    $scope.removeClassInAllEle("eLedgEntryForm", "open")
+    $scope.removeClassInAllEle("eLedgEntryForm", "highlightRow")
+    $scope.removeLedgerDialog('.eLedgerPopDiv')
+    $scope.reloadLedger()
+
+
   $scope.getOtherTransactionsSuccess = (res, gData, acData) ->
-    console.log "getOtherTransactionsSuccess", res, gData, acData
+    angular.copy([], $scope.eLedgerDrData)
+    angular.copy([], $scope.eLedgerCrData)
+    $scope.eLedgerDataFound = true
+    
+    _.each(res.body, (obj) ->
+      if obj.transactions.length > 1
+        obj.multiEntry = true
+      else
+        obj.multiEntry = false
+      
+      sharedData = _.omit(obj, 'transactions')
+      sharedData.total = 0
+      sharedData.voucherType = "pay"
+      _.each(obj.transactions, (transaction, index) ->
+        transaction.amount = parseFloat(transaction.amount).toFixed(2)
+        newEntry = {sharedData: sharedData}
+        newEntry.id = sharedData.transactionId + "_" + index
+        if transaction.type is "debit"
+          newEntry.transactions = [transaction]
+          # sharedData.total -= parseFloat(transaction.amount)
+          $scope.eLedgerDrData.push(newEntry)
+
+        if transaction.type is "credit"
+          newEntry.transactions = [transaction]
+          # sharedData.total += parseFloat(transaction.amount)
+          $scope.eLedgerCrData.push(newEntry)
+      )
+    )
+    $scope.calculateELedger()
+
+  $scope.calculateELedger = (data) ->
+    $scope.eLedgType = undefined
+    $scope.eCrBalAmnt = 0
+    $scope.eDrBalAmnt = 0
+    $scope.eDrTotal = 0
+    $scope.eCrTotal = 0
+    crt = 0
+    drt = 0
+    _.each($scope.eLedgerDrData, (entry) ->
+      drt += Number(entry.transactions[0].amount)
+    )
+    _.each($scope.eLedgerCrData, (entry) ->
+      crt += Number(entry.transactions[0].amount)
+    )
+    crt = parseFloat(crt)
+    drt = parseFloat(drt)
+
+    if drt > crt
+      $scope.eLedgType = 'DEBIT'
+      $scope.eCrBalAmnt = drt - crt
+      $scope.eDrTotal = drt
+      $scope.eCrTotal = crt + (drt - crt)
+    else if crt > drt
+      $scope.eLedgType = 'CREDIT'
+      $scope.eDrBalAmnt = crt - drt
+      $scope.eDrTotal = drt + (crt - drt)
+      $scope.eCrTotal = crt
+    else
+      $scope.eCrTotal = crt
+      $scope.eDrTotal = drt
+
 
   $scope.getOtherTransactionsFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -105,6 +233,13 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.reloadLedger = () ->
     if not _.isUndefined($scope.selectedLedgerGroup)
       $scope.loadLedger($scope.selectedLedgerGroup, $scope.selectedLedgerAccount)
+    else
+      if !_.isNull(localStorageService.get("_ledgerData"))
+        lgD = localStorageService.get("_ledgerData")
+        acD = localStorageService.get("_selectedAccount")
+        $scope.loadLedger(lgD, acD)
+      else
+        toastr.warning("Something went wrong, Please reload page", "Warning")
 
   #show breadcrumbs on ledger
   $scope.showLedgerBreadCrumbs = (data) ->
@@ -136,7 +271,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.getAcDtlDataSuccess = (res, gData, acData) ->
-    console.log res, "acdetail"
     _.extend(acData, res.body)
     $scope.canAddAndEdit = $scope.hasAddAndUpdatePermission(acData)
     $rootScope.showLedgerBox = false
@@ -155,8 +289,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     ledgerService.getLedger(unqNamesObj).then($scope.loadLedgerSuccess, $scope.loadLedgerFailure)
     if $location.path() isnt "/"+$rootScope.selAcntUname
       $location.path("/"+$rootScope.selAcntUname)
-    else
-      console.info "same url", $location.path(), "is", $rootScope.selAcntUname
 
     if res.body.yodleeAdded
       unqObj = {
@@ -220,7 +352,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       toastr.info("Something went wrong please reload page")
       $scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
       $scope.removeClassInAllEle("ledgEntryForm", "open")
-      $scope.removeLedgerDialog()
+      $scope.removeLedgerDialog('.ledgerPopDiv')
       return false
     edata = {}
     edata.transactions = []
@@ -249,7 +381,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
     $scope.removeClassInAllEle("ledgEntryForm", "open")
     $scope.reloadLedger()
-    $scope.removeLedgerDialog()
+    $scope.removeLedgerDialog('.ledgerPopDiv')
 
   $scope.addEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -285,7 +417,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
     $scope.removeClassInAllEle("ledgEntryForm", "open")
     toastr.success("Entry updated successfully", "Success")
-    $scope.removeLedgerDialog()
+    $scope.removeLedgerDialog('.ledgerPopDiv')
     uLedger = {}
     _.extend(uLedger, res.body)
 
@@ -339,7 +471,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.deleteEntrySuccess = (item, res) ->
     $scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
     $scope.removeClassInAllEle("ledgEntryForm", "open")
-    $scope.removeLedgerDialog()
+    $scope.removeLedgerDialog('.ledgerPopDiv')
     toastr.success(res.body, res.status)
     $scope.ledgerOnlyDebitData = _.reject($scope.ledgerOnlyDebitData, (entry) ->
       item.sharedData.uniqueName is entry.sharedData.uniqueName
@@ -405,7 +537,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     formEle =  document.querySelectorAll(name)
     tdEle = angular.element(formEle[arLen]).find('td')[1]
     inpEle = angular.element(tdEle).find('input')
-    $scope.removeLedgerDialog()
+    $scope.removeLedgerDialog('.ledgerPopDiv')
     $scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
     $scope.removeClassInAllEle("ledgEntryForm", "open")
     $timeout ->
@@ -413,8 +545,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     , 700
     return false
 
-  $scope.removeLedgerDialog = () ->
-    allPopElem = angular.element(document.querySelector('.ledgerPopDiv'))
+  $scope.removeLedgerDialog = (cls) ->
+    allPopElem = angular.element(document.querySelector(cls))
     allPopElem.remove()
     return true
 

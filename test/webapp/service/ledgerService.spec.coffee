@@ -117,14 +117,14 @@ describe "Ledger Service", ->
       compUname: "cname"
       acntUname: "aname"
     }
-    it 'should call success callback after ledger get', ->
+    xit 'should call success callback after ledger get', ->
       @httpBackend.when('GET', '/yodlee/company/' + unqNamesObj.compUname + '/accounts/'+unqNamesObj.acntUname+'/transactions').respond(200, {"status": "success"})
 
       @ledgerService.getOtherTransactions(unqNamesObj).then(
         (data) -> expect(data.status).toBe("success")
         (data) -> expect(true).toBeFalsy()
       )
-    it 'should call failure callback when ledger get failed', ->
+    xit 'should call failure callback when ledger get failed', ->
       @httpBackend.when('GET', '/yodlee/company/' + unqNamesObj.compUname + '/accounts/'+unqNamesObj.acntUname+'/transactions').respond(400, {"status": "error"})
 
       @ledgerService.getOtherTransactions(unqNamesObj).then(

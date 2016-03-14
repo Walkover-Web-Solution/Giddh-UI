@@ -62,17 +62,4 @@ router.get '/company/:companyUniqueName/all-site-account', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-
-# get ledger transactions
-router.get '/company/:companyUniqueName/accounts/:accountUniqueName/transactions', (req, res) ->
-  authHead =
-    headers:
-      'Auth-Key': req.session.authKey
-      'X-Forwarded-For': res.locales.remoteIp
-  hUrl = settings.envUrl + 'yodlee/company/' + req.params.companyUniqueName + '/accounts/' + req.params.accountUniqueName + '/transactions'
-  settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
-      res.status(response.statusCode)
-    res.send data
-
 module.exports = router

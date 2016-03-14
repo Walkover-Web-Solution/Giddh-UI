@@ -1087,6 +1087,18 @@ li:last-child .angular-ui-tree-handle {
     color: #fff
 }
 /*ledger style*/
+#eledgerwrap .alert-danger{
+    color: inherit;
+    border: 2px dashed #ebccd1;
+    background-color: white
+}
+#eledgerwrap .alert-dismissible .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    /* color: inherit; */
+}
+
 .table .table{margin-bottom: 0;}
 .ledgerTable.table .nopad{
     padding: 0 !important

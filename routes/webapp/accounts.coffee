@@ -165,9 +165,33 @@ router.get '/:accountUniqueName/xls-imports', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/xls-imports'
-  #console.log "get all ledgers list", new Date()
   settings.client.get hUrl, args, (data, response) ->
-    #console.log new Date(), "req completed"
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+# get eledger transactions
+router.get '/:accountUniqueName/eledgers', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/accounts/' + req.params.accountUniqueName + '/eledgers'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+# trash eLedger transaction
+router.delete '/:accountUniqueName/eledgers/:transactionId', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'eledgers/' + req.params.transactionId
+  console.log "actual URL is: ",hUrl
+  settings.client.delete hUrl, authHead, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data

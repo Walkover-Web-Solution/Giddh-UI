@@ -29,16 +29,25 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
     }
   )
 
-  otherLedger = $resource('/yodlee/company/:companyUniqueName/accounts/:accountsUniqueName/',
+  otherLedger = $resource('/company/:companyUniqueName/accounts/:accountsUniqueName/',
     {
       'companyUniqueName': @companyUniqueName
       'accountsUniqueName': @accountsUniqueName
+      'transactionId': @transactionId
     },
     { 
       getTransactions: {
         method: 'GET',
-        url: '/yodlee/company/:companyUniqueName/accounts/:accountsUniqueName/transactions'
-      } 
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/eledgers'
+      }
+      getFreshTransactions: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/eledgers?refresh=true'
+      }
+      trashTransaction: {
+        method: 'DELETE',
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/eledgers/:transactionId'
+      }
     }
   )
 
@@ -82,6 +91,13 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> otherLedger.getTransactions({
         companyUniqueName: unqNamesObj.compUname,
         accountsUniqueName: unqNamesObj.acntUname
+      }, onSuccess, onFailure))
+
+    trashTransaction: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> otherLedger.trashTransaction({
+        companyUniqueName: unqNamesObj.compUname,
+        accountsUniqueName: unqNamesObj.acntUname
+        transactionId: unqNamesObj.trId
       }, onSuccess, onFailure))
 
   ledgerService
