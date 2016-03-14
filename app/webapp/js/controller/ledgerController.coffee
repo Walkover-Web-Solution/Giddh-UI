@@ -162,7 +162,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.removeLedgerDialog('.eLedgerPopDiv')
     $scope.reloadLedger()
 
-
   $scope.getOtherTransactionsSuccess = (res, gData, acData) ->
     angular.copy([], $scope.eLedgerDrData)
     angular.copy([], $scope.eLedgerCrData)

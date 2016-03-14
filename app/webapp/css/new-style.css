@@ -746,6 +746,7 @@ header .navbar-nav > li.active {
     height: 434px;
     overflow-x:hidden;
     overflow-y: auto;
+     -webkit-overflow-scrolling:touch;
 }
 
 /*typography styles*/
@@ -1096,6 +1097,7 @@ li:last-child .angular-ui-tree-handle {
     position: absolute;
     top: 10px;
     right: 10px;
+    opacity: .8
     /* color: inherit; */
 }
 
@@ -1828,6 +1830,7 @@ table:focus{
 .dropdown-parent .dropdown-menu {
     max-height:150px;
     overflow-y:scroll;
+    -webkit-overflow-scrolling:touch;
     margin: 0;
     padding: 0;
 }
