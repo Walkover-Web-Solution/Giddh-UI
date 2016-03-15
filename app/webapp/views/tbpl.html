@@ -224,7 +224,7 @@
             <div class="col-xs-2 group text-right">{{ grp.creditTotal | number:2 }}</div>
             <div class="col-xs-2 group text-right">{{ grp.closingBalance.amount | number:2 }} {{ grp.closingBalance.type | recType: grp.closingBalance.amount }}</div>
           </div>  
-          <section class="row account isHidden" ng-if="grp.accounts.length && account.isVisible" ng-repeat="account in grp.accounts">
+          <section class="row account isHidden" ng-if="grp.accounts.length && account.isVisible" ng-repeat="account in grp.accounts | orderBy: 'name'">
             <div class="row">
               <div class="col-xs-4" ng-style="{'padding-left':padLeft + 20}" ng-bind-html=" account.name | lowercase | highlight: keyWord">
               </div>

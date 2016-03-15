@@ -204,7 +204,7 @@
               <h1 class="pull-left">Added Accounts</h1>
               <button class="btn btn-primary btn-sm pull-right" ng-click="refreshAccounts()">Refresh</button>
               <div class="col-sm-12 mrT1 pd0" ng-if="banks.linked.length > 0">
-                <section class="linked-accounts clearfix" ng-repeat="account in banks.linked">
+                <section class="linked-accounts clearfix" ng-repeat="account in banks.linked | orderBy: 'siteName'">
                   <aside class="title" ng-bind="account.siteName"></aside>
                   <aside class="body">
                     <aside class="account-card" ng-repeat="card in account.yodleeAccounts">

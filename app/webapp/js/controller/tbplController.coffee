@@ -157,7 +157,6 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
 
   $scope.exportPLdataVertical = (e) ->
     plData =  $scope.plData
-    console.log plData
     csv = ''
     incRow = ''
     expRow = ''
@@ -197,7 +196,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     else
       total += 'Loss' + ',' + plData.closingBalance
 
-    csv += header + '\r\n' + incTitle + '\r\n' + incRow + incTotal + '\r\n' + expRow + expTotal + '\r\n' + total
+    csv += header + '\r\n' + incTitle + '\r\n' + incRow + incTotal + '\r\n' + '\r\n' + expTitle + '\r\n' + expRow + expTotal + '\r\n' + total
     
     $scope.csvPL = csv
 

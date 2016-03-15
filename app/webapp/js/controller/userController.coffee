@@ -335,6 +335,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.refreshAllSuccess = (res) ->
     refreshedAccounts = res.body
     $scope.banks.linked = refreshedAccounts
+    toastr.success('SuccessFully Refreshed!')
 
   $scope.refreshAllFailure = (res) ->
     toastr.error(res.data.message, res.data.code)
