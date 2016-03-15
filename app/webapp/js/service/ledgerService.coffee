@@ -34,6 +34,7 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
       'companyUniqueName': @companyUniqueName
       'accountsUniqueName': @accountsUniqueName
       'transactionId': @transactionId
+      # 'refresh': @refresh
     },
     { 
       getTransactions: {

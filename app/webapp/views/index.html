@@ -24,10 +24,10 @@
   <script  type="text/javascript" src="/public/webapp/app.js"></script>
   <!-- @endif -->
   <!-- @if NODE_ENV='PRODUCTION' -->
-  <script  type="text/javascript" src="/public/webapp/app.min.js"></script>
+  <script type="text/javascript" src="/public/webapp/app.min.js"></script>
   <!-- @endif -->
 
-  <script  type="text/javascript" src="/public/webapp/_extras.js"></script>
+  <script type="text/javascript" src="/public/webapp/_extras.js"></script>
 
   <!-- @if NODE_ENV='PRODUCTION' -->
   <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'>
@@ -39,8 +39,9 @@
   <div ng-include="'/public/webapp/views/header.html'"></div>
   <ui-view></ui-view>
 
-  <!-- Google Tag Manager -->
+  
   <!-- @if NODE_ENV='PRODUCTION' -->
+  <!-- Google Tag Manager -->
   <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <script   type="text/javascript">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -48,11 +49,12 @@
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
   })(window,document,'script','dataLayer','GTM-K2L9QG');</script>
-  <!-- @endif -->
   <!-- End Google Tag Manager -->
-
-  <!---->
+  <!-- @endif -->
+  
+  
+  <!-- @if NODE_ENV='PRODUCTION' -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
+  <!-- @endif -->
 </body>
 </html>

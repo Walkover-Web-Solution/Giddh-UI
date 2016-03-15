@@ -161,6 +161,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.removeLedgerDialog('.eLedgerPopDiv')
     $scope.reloadLedger()
 
+  $scope.getOtherTransactionsFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
   $scope.getOtherTransactionsSuccess = (res, gData, acData) ->
     angular.copy([], $scope.eLedgerDrData)
     angular.copy([], $scope.eLedgerCrData)
@@ -199,7 +202,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $scope.eLedgerDataFound = false
 
 
-  $scope.calculateELedger = (data) ->
+  $scope.calculateELedger = () ->
     $scope.eLedgType = undefined
     $scope.eCrBalAmnt = 0
     $scope.eDrBalAmnt = 0
@@ -229,10 +232,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     else
       $scope.eCrTotal = crt
       $scope.eDrTotal = drt
-
-
-  $scope.getOtherTransactionsFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
 
   # load ledger start
   $scope.reloadLedger = () ->
@@ -307,9 +306,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
             $scope.getOtherTransactionsSuccess(res, gData, acData)
           ,(error)->
             $scope.getOtherTransactionsFailure(error)
-        )
-
-    
+        )    
 
   $scope.loadLedgerSuccess = (res) ->
     data = {}

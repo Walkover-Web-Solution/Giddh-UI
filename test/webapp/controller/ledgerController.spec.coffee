@@ -106,19 +106,315 @@ describe 'ledgerController', ->
         }
       )
 
-    describe '#reloadLedger', ->
-      it 'should not call load ledger', ->
-        @scope.selectedLedgerGroup = undefined
-        spyOn(@scope, 'loadLedger')
-        @scope.reloadLedger()
-        expect(@scope.loadLedger).not.toHaveBeenCalled()
+    describe '#trashEntry', ->
+      it 'should call ledgerService trashTransaction method with object', ->
+        @rootScope.selectedCompany = {
+          uniqueName: "12345"
+        }
+        @rootScope.selAcntUname = "abc"
+        item = {
+          sharedData:
+            transactionId: "abc123"
+        }
+        unqNamesObj = {
+          compUname: @rootScope.selectedCompany.uniqueName
+          acntUname: @rootScope.selAcntUname
+          trId: item.sharedData.transactionId
+        }
+        deferred = @q.defer()
+        spyOn(@ledgerService, 'trashTransaction').andReturn(deferred.promise)
+        @scope.trashEntry(item)
+        expect(@ledgerService.trashTransaction).toHaveBeenCalledWith(unqNamesObj)
 
-      it 'should call load ledger by date filter', ->
+    describe 'trashEntrySuccess', ->
+      it 'should remove values from eLedgerData variables and call some functions', ->
+        res = 
+          status: "success"
+          body:
+            transactionId: "abc123"
+
+        @scope.eLedgerDrData = [
+          {
+            sharedData:
+              transactionId: "abc123"
+              entryDate: "09-10-2010"
+          }
+          {
+            sharedData:
+              transactionId: "def"
+              entryDate: "09-10-2010"
+          }
+        ]
+        @scope.eLedgerCrData = [
+          {
+            sharedData:
+              transactionId: "abc123"
+              entryDate: "09-10-2010"
+          }
+          {
+            sharedData:
+              transactionId: "def"
+              entryDate: "09-10-2010"
+          }
+        ]
+        result = [
+          {
+            sharedData:
+              transactionId: "def"
+              entryDate: "09-10-2010"
+          }
+        ]
+        spyOn(@toastr, "success")
+        spyOn(@scope, "removeClassInAllEle")
+        spyOn(@scope, "removeLedgerDialog")
+        spyOn(@scope, "calculateELedger")
+        @scope.trashEntrySuccess(res)
+        expect(@toastr.success).toHaveBeenCalledWith("Entry deleted successfully", "Success")
+        expect(@scope.eLedgerDrData).toEqual(result)
+        expect(@scope.eLedgerCrData).toEqual(result)
+        expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("eLedgEntryForm", "open")
+        expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("eLedgEntryForm", "highlightRow")
+        expect(@scope.removeLedgerDialog).toHaveBeenCalledWith(".eLedgerPopDiv")
+        expect(@scope.calculateELedger).toHaveBeenCalled()
+    
+    describe '#trashEntryFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.trashEntryFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+    
+
+    describe '#moveEntryInGiddh', ->
+      it 'should add a entry to ledger, copy data to a variable, call ledgerService createEntry method', ->
+        @rootScope.selectedCompany = {
+          uniqueName: "giddh"
+        }
+        @scope.selectedGroupUname = "groupname"
+        @rootScope.selAcntUname = "accountname"
+        unqNamesObj = {
+          compUname: @rootScope.selectedCompany.uniqueName
+          acntUname: @rootScope.selAcntUname
+        }
+        deferred = @q.defer()
+        spyOn(@ledgerService, "createEntry").andReturn(deferred.promise)
+        data = {
+          sharedData:
+            multiEntry: false
+            voucher:
+              shortcode: "12345"
+          transactions: [
+            {
+              particular: "particular"
+            }
+          ]
+        }
+        edata = {
+          multiEntry: false
+          voucher:
+            shortcode: "12345"
+          transactions: [
+            {
+              particular: "particular"
+            }
+          ]
+        }
+        @scope.moveEntryInGiddh(data)
+        expect(@ledgerService.createEntry).toHaveBeenCalledWith(unqNamesObj, edata)
+    
+    describe 'moveEntryInGiddhSuccess', ->
+      it 'should call some functions and show message with toastr', ->
+        res = 
+          status: "success"
+          body:
+            transactionId: "abc123"
+        spyOn(@toastr, "success")
+        spyOn(@scope, "removeClassInAllEle")
+        spyOn(@scope, "removeLedgerDialog")
+        spyOn(@scope, "reloadLedger")
+        @scope.moveEntryInGiddhSuccess(res)
+        expect(@toastr.success).toHaveBeenCalledWith("Entry created successfully", "Success")
+        expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("eLedgEntryForm", "open")
+        expect(@scope.removeClassInAllEle).toHaveBeenCalledWith("eLedgEntryForm", "highlightRow")
+        expect(@scope.removeLedgerDialog).toHaveBeenCalledWith(".eLedgerPopDiv")
+        expect(@scope.reloadLedger).toHaveBeenCalled()
+
+    describe '#getOtherTransactionsFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.getOtherTransactionsFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+    describe '#getOtherTransactionsSuccess', ->
+      it 'should make eLedgerDataFound to false and do nothing', ->
+        gData = undefined
+        acData = undefined
+        res =
+          status: "success"
+          body: []
+
+        @scope.getOtherTransactionsSuccess(res, gData, acData)
+        expect(@scope.eLedgerDataFound).toBeFalsy()
+        expect(@scope.eLedgerCrData).toEqual([])
+        expect(@scope.eLedgerDrData).toEqual([])
+
+      it 'should call calculateELedger function and make data from core object and push into eLedgerCrData and eLedgerDrData and make a variable true', ->
+        gData = undefined
+        acData = undefined
+        res =
+          status: "success"
+          body: [
+            {
+              date: "01-12-2015"
+              transactionId: "123"
+              transactions: [
+                {
+                  amount: 130
+                  type: "credit"
+                  remarks:
+                    description: "make"
+                }
+              ]
+            }
+            {
+              date: "01-12-2015"
+              transactionId: "123"
+              transactions: [
+                {
+                  amount: 130
+                  type: "debit"
+                  remarks:
+                    description: "make"
+                }
+              ]
+            }
+          ]
+        convResCr = [
+          {
+            sharedData:
+              date: '01-12-2015'
+              transactionId: '123'
+              multiEntry: false
+              total: 0
+              voucherType: 'pay'
+              entryDate: '01-12-2015'
+              description: 'make'
+            transactions: [
+              {
+                amount: "130.00"
+                type: "credit"
+                remarks:
+                  description: "make"
+              }
+            ]
+          }
+        ]
+        convResDr = [
+          {
+            sharedData:
+              date: '01-12-2015'
+              transactionId: '123'
+              multiEntry: false
+              total: 0
+              voucherType: 'pay'
+              entryDate: '01-12-2015'
+              description: 'make'
+            transactions: [
+              {
+                amount: "130.00"
+                type: "debit"
+                remarks:
+                  description: "make"
+              }
+            ]
+          }
+        ]
+        spyOn(@scope, "calculateELedger")
+        @scope.getOtherTransactionsSuccess(res, gData, acData)
+        expect(@scope.eLedgerDataFound).toBeTruthy()
+        expect(@scope.eLedgerCrData).toEqual(convResCr)
+        expect(@scope.eLedgerDrData).toEqual(convResDr)
+        expect(@scope.calculateELedger).toHaveBeenCalled()
+    
+    describe '#calculateELedger', ->
+      it 'should do some math and calculate data and assign values in some variables', ->
+        @scope.eLedgerDrData = [
+          {
+            transactions: [
+              {
+                amount: "130.00"
+              }
+            ]
+          }
+          {
+            transactions: [
+              {
+                amount: "20.00"
+              }
+            ]
+          }
+        ]
+        @scope.eLedgerCrData = [
+          {
+            transactions: [
+              {
+                amount: "200.00"
+              }
+            ]
+          }
+          {
+            transactions: [
+              {
+                amount: "100.00"
+              }
+            ]
+          }
+        ]
+        @scope.calculateELedger()
+        expect(@scope.eCrTotal).toBe(300) 
+        expect(@scope.eDrTotal).toBe(300)
+        expect(@scope.eCrBalAmnt).toBe(0)
+        expect(@scope.eDrBalAmnt).toBe(150)
+        expect(@scope.eLedgType).toEqual('CREDIT')
+        
+      
+
+    describe '#reloadLedger', ->
+      it 'should call load ledger from scope variables and go in if condition', ->
         @scope.selectedLedgerGroup = {}
         @scope.selectedLedgerAccount = {}
         spyOn(@scope, 'loadLedger')
         @scope.reloadLedger()
         expect(@scope.loadLedger).toHaveBeenCalledWith(@scope.selectedLedgerGroup, @scope.selectedLedgerAccount)
+
+      it 'should call loadLedger from localStorageService data', ->
+        @scope.selectedLedgerGroup = undefined
+        data =
+          ledgerData:
+            groupName: "CPU"
+            groupUniqueName: "cpu"
+            open: true
+        spyOn(@localStorageService, "get").andReturn(data.ledgerData)
+        spyOn(@scope, 'loadLedger')
+        @scope.reloadLedger()
+        expect(@scope.loadLedger).toHaveBeenCalled() 
+
+      it 'should not call load ledger and goes in else else condition and show message with toastr', ->
+        @scope.selectedLedgerGroup = undefined
+        spyOn(@localStorageService, "get").andReturn(null)
+        spyOn(@scope, 'loadLedger')
+        spyOn(@toastr, "warning")
+        @scope.reloadLedger()
+        expect(@scope.loadLedger).not.toHaveBeenCalled()
+        expect(@localStorageService.get).toHaveBeenCalledWith("_ledgerData")
+        expect(@toastr.warning).toHaveBeenCalledWith("Something went wrong, Please reload page", "Warning")
 
     describe '#showLedgerBreadCrumbs', ->
       it 'should set data in ledgerBreadCrumbList', ->
@@ -234,11 +530,11 @@ describe 'ledgerController', ->
         expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
     describe '#getAcDtlDataSuccess', ->
-      it 'should assigne values in variables and call ledgerService getLedger method', ->
+      it 'should assigne values in variables and call ledgerService getLedger method and not call ledgerService getOtherTransactions method', ->
         @rootScope.selectedCompany = {
           uniqueName: "giddh"
         }
-        @rootScope.selAcntUname = "giddh"
+        
         acData = {
           mergedAccounts: ""
           name: "abcdef"
@@ -263,11 +559,14 @@ describe 'ledgerController', ->
           groupUniqueName: "jalgjlakjlgn"
           open: true
         }
+        @rootScope.selAcntUname = acData.uniqueName
+        @scope.fromDate.date = "14-11-2015"
+        @scope.toDate.date = "14-12-2015"
         unqNamesObj = {
           compUname: @rootScope.selectedCompany.uniqueName
           acntUname: @rootScope.selAcntUname
-          fromDate: "14-11-2015"
-          toDate: "14-11-2015"
+          fromDate: @scope.fromDate.date
+          toDate: @scope.toDate.date
         }
         res = {
           status: "success"
@@ -293,12 +592,90 @@ describe 'ledgerController', ->
             state: null
             uniqueName: "a333r3dge"
             updatedAt: "01-02-2016 13:54:50"
+            yodleeAdded: false
           }
         }
         spyOn(@scope, "hasAddAndUpdatePermission")
         deferred = @q.defer()
+        spyOn(@ledgerService, 'getOtherTransactions').andReturn(deferred.promise)
+        deferred = @q.defer()
         spyOn(@ledgerService, 'getLedger').andReturn(deferred.promise)
         @scope.getAcDtlDataSuccess(res, gData, acData)
+        expect(@ledgerService.getLedger).toHaveBeenCalledWith(unqNamesObj)
+        expect(@ledgerService.getOtherTransactions).not.toHaveBeenCalled()
+
+      it 'should assigne values in variables and call ledgerService getLedger method and  call ledgerService getOtherTransactions method', ->
+        @rootScope.selectedCompany = {
+          uniqueName: "giddh"
+        }
+        acData = {
+          mergedAccounts: ""
+          name: "abcdef"
+          uniqueName: "a333r3dge"
+          parentGroups: [
+            {name: "test", uniqueName: "jalgjlakjlgn"}
+            {name: "Capital", uniqueName: "capital"}
+          ]
+        }
+        gData = {
+          accountDetails: [
+            mergedAccounts: ""
+            name: "abcdef"
+            parentGroups: [
+              {name: "test", uniqueName: "jalgjlakjlgn"}
+              {name: "Capital", uniqueName: "capital"}
+            ]
+            uniqueName: "a333r3dge"
+          ]
+          groupName: "test"
+          groupSynonyms: null
+          groupUniqueName: "jalgjlakjlgn"
+          open: true
+        }
+        @rootScope.selAcntUname = acData.uniqueName
+        @scope.fromDate.date = "14-11-2015"
+        @scope.toDate.date = "14-12-2015"
+        unqNamesObj = {
+          compUname: @rootScope.selectedCompany.uniqueName
+          acntUname: @rootScope.selAcntUname
+          fromDate: @scope.fromDate.date
+          toDate: @scope.toDate.date
+        }
+        res = {
+          status: "success"
+          body: {
+            address: null
+            city: null
+            companyName: null
+            country: null
+            createdAt: "01-02-2016 13:54:50"
+            description: null
+            email: null
+            mergedAccounts: ""
+            mobileNo: null
+            name: "abcdef"
+            openingBalance: 0
+            openingBalanceDate: "01-02-2016"
+            openingBalanceType: "CREDIT"
+            pincode: null
+            role: {
+              name: "Super Admin"
+              uniqueName: "super_admin"
+            }
+            state: null
+            uniqueName: "a333r3dge"
+            updatedAt: "01-02-2016 13:54:50"
+            yodleeAdded: true
+          }
+        }
+        spyOn(@scope, "hasAddAndUpdatePermission")
+        deferred = @q.defer()
+        spyOn(@ledgerService, 'getOtherTransactions').andReturn(deferred.promise)
+        deferred = @q.defer()
+        spyOn(@ledgerService, 'getLedger').andReturn(deferred.promise)
+        @scope.getAcDtlDataSuccess(res, gData, acData)
+        expect(@ledgerService.getLedger).toHaveBeenCalledWith(unqNamesObj)
+        expect(@ledgerService.getOtherTransactions).toHaveBeenCalled()
 
     describe '#loadLedgerSuccess', ->
       it 'should call calculate ledger function with data and set a variable true and push value in ledgerdata', ->
