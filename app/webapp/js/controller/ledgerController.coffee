@@ -167,7 +167,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
     if res.body.length > 0
       $scope.eLedgerDataFound = true
-      
       _.each(res.body, (obj) ->
         if obj.transactions.length > 1
           obj.multiEntry = true
@@ -195,6 +194,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         )
       )
       $scope.calculateELedger()
+
+    else
+      $scope.eLedgerDataFound = false
 
 
   $scope.calculateELedger = (data) ->

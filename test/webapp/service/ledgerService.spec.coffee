@@ -117,17 +117,40 @@ describe "Ledger Service", ->
       compUname: "cname"
       acntUname: "aname"
     }
-    xit 'should call success callback after ledger get', ->
-      @httpBackend.when('GET', '/yodlee/company/' + unqNamesObj.compUname + '/accounts/'+unqNamesObj.acntUname+'/transactions').respond(200, {"status": "success"})
+    it 'should call success callback after ledger get', ->
+      @httpBackend.when('GET', '/company/' + unqNamesObj.compUname + '/accounts/'+unqNamesObj.acntUname+'/eledgers').respond(200, {"status": "success"})
 
       @ledgerService.getOtherTransactions(unqNamesObj).then(
         (data) -> expect(data.status).toBe("success")
         (data) -> expect(true).toBeFalsy()
       )
-    xit 'should call failure callback when ledger get failed', ->
-      @httpBackend.when('GET', '/yodlee/company/' + unqNamesObj.compUname + '/accounts/'+unqNamesObj.acntUname+'/transactions').respond(400, {"status": "error"})
+    it 'should call failure callback when ledger get failed', ->
+      @httpBackend.when('GET', '/company/' + unqNamesObj.compUname + '/accounts/'+unqNamesObj.acntUname+'/eledgers').respond(400, {"status": "error"})
 
       @ledgerService.getOtherTransactions(unqNamesObj).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+          expect(data.status).toBe(400)
+      )
+
+  describe '#trashTransaction', ->
+    unqNamesObj = {
+      compUname: "cname"
+      acntUname: "aname"
+      trId: "123"
+    }
+    it 'should call success callback after trashTransaction', ->
+      @httpBackend.when('DELETE', '/company/' + unqNamesObj.compUname + '/accounts/'+unqNamesObj.acntUname+'/eledgers/'+unqNamesObj.trId).respond(200, {"status": "success"})
+
+      @ledgerService.trashTransaction(unqNamesObj).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call failure callback when trashTransaction failed', ->
+      @httpBackend.when('DELETE', '/company/' + unqNamesObj.compUname + '/accounts/'+unqNamesObj.acntUname+'/eledgers/'+unqNamesObj.trId).respond(400, {"status": "error"})
+
+      @ledgerService.trashTransaction(unqNamesObj).then(
         (data) -> expect(true).toBeFalsy()
         (data) ->
           expect(data.data.status).toBe("error")

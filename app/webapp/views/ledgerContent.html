@@ -14,9 +14,11 @@
   </div>
 
   <!-- external ledger code here -->
-  <section id="eledgerwrap" class="pdL2 pdR2 pdT2" ng-if="eLedgerDataFound">
-  <div class="alert alert-danger alert-dismissible fade in pr" role="alert" style="padding-right:15px"> 
-    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span style="font-size:12px;font-weight:normal" aria-hidden="true">Hide</span></button> 
+  <section id="eledgerwrap" class="pdL2 pdR2 pdT2" ng-if="eLedgerDataFound" ng-init="hideELedger=true" ng-show="hideELedger">
+  <div class="alert alert-danger fade in pr" style="padding-right:15px"> 
+    <button type="button" ng-click="hideELedger=false"class="close">
+      <span style="font-size:12px;font-weight:normal">Hide</span>
+    </button> 
     
   
 
@@ -201,7 +203,7 @@
           </p>
         </div>
         <div class="form-group">
-          <button type="button" class="btn btn-info mrL1" ng-click="reloadLedger()" ng-disabled="fromToDateForm.$invalid">
+          <button type="button" class="btn btn-primary mrL1" ng-click="reloadLedger()" ng-disabled="fromToDateForm.$invalid">
             GO
           </button>
         </div>

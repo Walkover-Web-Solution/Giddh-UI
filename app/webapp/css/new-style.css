@@ -1093,12 +1093,11 @@ li:last-child .angular-ui-tree-handle {
     border: 2px dashed #ebccd1;
     background-color: white
 }
-#eledgerwrap .alert-dismissible .close {
+#eledgerwrap .alert .close {
     position: absolute;
     top: 10px;
     right: 10px;
     opacity: .8
-    /* color: inherit; */
 }
 
 .table .table{margin-bottom: 0;}
