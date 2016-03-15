@@ -140,7 +140,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     edata = {}
     edata.transactions = []
     _.extend(edata, item.sharedData)
-    
     if item.sharedData.multiEntry
       _.filter($scope.eLedgerDrData, (obj) ->
         if edata.transactionId is obj.sharedData.transactionId
@@ -178,10 +177,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         sharedData = _.omit(obj, 'transactions')
         sharedData.total = 0
         sharedData.voucherType = "pay"
+        sharedData.entryDate = obj.date
         _.each(obj.transactions, (transaction, index) ->
           transaction.amount = parseFloat(transaction.amount).toFixed(2)
-          newEntry = {sharedData: sharedData}
-          newEntry.id = sharedData.transactionId + "_" + index
+          newEntry = {}
+          newEntry.sharedData= sharedData
+          newEntry.sharedData.description= transaction.remarks.description
           if transaction.type is "debit"
             newEntry.transactions = [transaction]
             # sharedData.total -= parseFloat(transaction.amount)
@@ -195,8 +196,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       )
       $scope.calculateELedger()
 
-    else
-      console.info "No data found"
 
   $scope.calculateELedger = (data) ->
     $scope.eLedgType = undefined

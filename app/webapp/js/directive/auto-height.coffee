@@ -200,7 +200,7 @@ angular.module('ledger', [])
           <table class='table ldgrInnerTbl'>
             <tr>
               <td width='28%'>
-                <input pos='1' type='text' class='nobdr eLedgInpt' ng-model='item.sharedData.date' tabindex='-1' ng-readonly='true' />
+                <input pos='1' type='text' class='nobdr eLedgInpt' ng-model='item.sharedData.entryDate' tabindex='-1' ng-readonly='true' />
               </td>
               <td width=44%'>
                 <div class='dropdown-parent'>
@@ -276,7 +276,7 @@ angular.module('ledger', [])
               </div>
               <div class="col-md-6 col-sm-12">
                 <div class="form-group">
-                  <textarea class="form-control" name="description" ng-model="item.transactions[0].remarks.description" placeholder="Description"></textarea>
+                  <textarea class="form-control" name="description" ng-model="item.sharedData.description" placeholder="Description"></textarea>
                 </div>
               </div>
             </div>
