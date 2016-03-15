@@ -11,6 +11,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
   $scope.showOptions = false
+  $scope.plShowOptions = false
   $scope.sendRequest = true
   $scope.showChildren = false
   $scope.showpdf = false
@@ -114,6 +115,104 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       console.info "expenses is Greater"
       $scope.inProfit = false
       $scope.plData.incomeTotal += $scope.plData.closingBalance
+    
+
+  $scope.exportPLdataHorizontal = (e) ->
+    plData =  $scope.plData
+    zippedData = _.zip($scope.plData.expArr, $scope.plData.incArr)
+    csv = ''
+    row = ''
+    header = ''
+    title = 'EXPENSES' + ',' + '' + ',' + '' + ',' + 'INCOME' + '' + '\r\n' + 'Particular' + ',' + 'Amount' + ',' + '' + ',' + 'Particular' + ',' + 'Amount' + '\r\n' + '\r\n'
+    $scope.fnProfitLoss = "Profit-and-Loss.csv"
+
+    companyDetails = $rootScope.selectedCompany
+    header = companyDetails.name + '\r\n' + '"'+companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'Profit and Loss' + ': ' + $filter('date')($scope.fromDate.date,'dd-MM-yyyy') + ' to ' + $filter('date')($scope.toDate.date,
+      "dd-MM-yyyy") + '\r\n'
+    csv += header + '\r\n' + title
+
+    
+    _.each zippedData, (row) ->
+      index = 1
+      _.each row, (val) ->
+        csv += val.groupName + ',' + val.closingBalance.amount + ',' + '' + ',' 
+        if index % 2 == 0
+          csv += '\r\n'
+        index = index + 1
+
+    if plData.closingBalance > 0
+      csv += '\r\n' + 'Profit' + ',' + plData.closingBalance + '\r\n'
+    else if plData.closingBalance < 0
+      csv += '\r\n' + '' + ',' + '' + ',' + '' + 'Loss' + ',' + plData.closingBalance + '\r\n'
+
+    csv += 'Total' + ',' + plData.expenseTotal + ',' + '' + ',' + 'Total' + ',' +  plData.incomeTotal
+
+    csv += row + '\r\n';
+    
+    $scope.csvPL = csv
+
+    $scope.profitLoss = 'data:text/csv;charset=utf-8,' + escape(csv)
+    $scope.plShowOptions = false
+    e.stopPropagation()
+
+  $scope.exportPLdataVertical = (e) ->
+    plData =  $scope.plData
+    console.log plData
+    csv = ''
+    incRow = ''
+    expRow = ''
+    incTotal = ''
+    expTotal = ''
+    header = ''
+    total = ''
+    expTitle = 'EXPENSES' + '\r\n' + 'Particular' + ',' + 'Amount' +  '\r\n'
+    incTitle = 'INCOME' + '\r\n' + 'Particular' + ',' + 'Amount' +  '\r\n'
+    $scope.fnProfitLoss = "Profit-and-Loss.csv"
+
+    companyDetails = $rootScope.selectedCompany
+    header = companyDetails.name + '\r\n' + '"'+companyDetails.address+'"' + '\r\n' + companyDetails.city + '-' + companyDetails.pincode + '\r\n' + 'Profit and Loss' + ': ' + $filter('date')($scope.fromDate.date,'dd-MM-yyyy') + ' to ' + $filter('date')($scope.toDate.date,
+      "dd-MM-yyyy") + '\r\n'
+    
+    #add income details
+    _.each plData.incArr, (inc) ->
+      incRow += inc.groupName + ',' + inc.closingBalance.amount + '\r\n'
+      if inc.childGroups.length > 0
+        _.each inc.childGroups, (cInc) ->
+          incRow += '          ' + cInc.groupName + ',' + cInc.closingBalance.amount + '\r\n'
+
+    incTotal += 'Total' + ',' + plData.incomeTotal + '\r\n'
+ 
+
+    #add expenses details
+    _.each plData.expArr, (exp) ->
+      expRow += exp.groupName + ',' + exp.closingBalance.amount + '\r\n'
+      if exp.childGroups.length > 0
+        _.each exp.childGroups, (cExp) ->
+          expRow += '          ' + cExp.groupName + ',' + cExp.closingBalance.amount + '\r\n'
+
+    expTotal += 'Total' + ',' + plData.expenseTotal + '\r\n'
+    
+    if plData.closingBalance >= 0
+      total += 'Profit' + ',' + plData.closingBalance
+    else
+      total += 'Loss' + ',' + plData.closingBalance
+
+    csv += header + '\r\n' + incTitle + '\r\n' + incRow + incTotal + '\r\n' + expRow + expTotal + '\r\n' + total
+    
+    $scope.csvPL = csv
+
+    $scope.profitLoss = 'data:text/csv;charset=utf-8,' + escape(csv)
+    $scope.plShowOptions = false
+    e.stopPropagation()
+
+
+  $scope.showPLoptions = (e) ->
+    $scope.plShowOptions = !$scope.plShowOptions
+    e.stopPropagation()
+
+
+
+
 
   # P&l functions end
 
@@ -483,7 +582,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
                   total.cr += acc.credit
                   total.dr += acc.debit
             if obj.childGroups.length > 0
-             row += bodyGen(obj.childGroups, ++index)
+             row += bodyGen(obj.childGroups, index+1)
           bd += row
         bd
       body = bodyGen(csvObj, 0)
@@ -513,6 +612,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $(document).on 'click', (e) ->
     $timeout (->
       $scope.showOptions = false
+      $scope.plShowOptions = false
       $scope.showpdf = false
     ), 100
 

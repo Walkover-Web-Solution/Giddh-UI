@@ -59,6 +59,17 @@ angular.module('trialBalance', []).directive('exportReport', [
                 win.document.close()
                 win.document.execCommand('SaveAs',true, scope.fnAccountWise + ".csv")
                 win.close()
+            when 'profit-and-loss'
+              if !isIE
+                elem.attr
+                  'href': scope.profitLoss
+                  'download': scope.fnProfitLoss
+              else
+                win = window.open()
+                win.document.write('sep=,\r\n',scope.csvPL)
+                win.document.close()
+                win.document.execCommand('SaveAs',true, scope.fnProfitLoss + ".csv")
+                win.close()
           e.stopPropagation()
 
     }

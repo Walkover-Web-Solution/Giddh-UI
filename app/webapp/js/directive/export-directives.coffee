@@ -459,40 +459,128 @@ angular.module('exportDirectives', [])
           pdf.save('TrialBalance-Condensed.pdf')
     }
 ])
-.directive('clearTbsearch', [
+.directive('exportPlpdf', [
   '$rootScope'
   '$compile'
   '$filter'
-  '$timeout'
-  ($rootScope, $compile, $filter, $timeout) ->
+  ($rootScope, $compile, $filter) ->
     {
       restrict: 'A'
       link: (scope, elem, attr) ->
-        elem.on 'keydown',()->
-          
-          clear = () ->
-            elem[0].value = ''
-            elem.val().length = 0
-            scope.showClearSearch = false
-            scope.keyWord = null
+  
+        elem.on 'click', (e) ->
+          pdf = new jsPDF('p','pt')
+          plData = scope.plData
+          incomeTotal = plData.incomeTotal.toString()
+          expenseTotal = plData.expenseTotal.toString()
+          pl = $filter('number')(plData.closingBalance, 3)
+          companyDetails = $rootScope.selectedCompany
+          colX = 20
+          colY = 40
+          pWidth = pdf.internal.pageSize.width
+          pHeight = pdf.internal.pageSize.height
+          col = pWidth/4
+          col2 =  col + 40
+          col3 = 2 * col + 10
+          col4 = 3 * col + 40 
+          pageEnd = 0
+          #write header
+          pdf.setFontSize(14)
+          pdf.setFontStyle('bold')
+          pdf.text(colX,colY, companyDetails.name)
+          colY += 15
+          pdf.setFontSize(10)
+          pdf.text(colX, colY, companyDetails.address)
+          colY+= 15
+          pdf.text(colX,colY,companyDetails.city + '-' + companyDetails.pincode)
+          colY+= 15
+          pdf.text(colX,colY, "Profit and Loss: " + $filter('date')(scope.fromDate.date,'dd/MM/yyyy') + '-' + $filter('date')(scope.toDate.date,'dd/MM/yyyy'))
+          colY+= 15
+          pdf.line(colX,colY,pWidth-20,colY)
+          colY += 20
 
-          $timeout (->
-            
-            if elem.val().length > 1
-              scope.showClearSearch = true
-            else
-              scope.showClearSearch = false
+          #write table header
+          pdf.setFontStyle('normal')
+          pdf.setFontSize(12)
+          pdf.text(colX, colY,'INCOME')
+          pdf.text(col3, colY, 'EXPENSES')
+          colY += 10
+          pdf.line(colX, colY, pWidth-20, colY)
+          colY+= 20
+          #write table 
+          tableStartY = colY
+          _.each plData.incArr, (inc) ->
+            if colY > pHeight - 80
+              pdf.addPage()
+            name = inc.groupName.toString()
+            amount = $filter('number')(inc.closingBalance.amount, 3)
+            amount = amount.toString()
+            pdf.setFontSize(10)
+            pdf.setFontStyle('normal')
+            pdf.text(colX, colY, name)
+            pdf.text(col2,colY, amount)
+            colY += 15
+            if inc.childGroups.length > 0
+              colX += 20
+              _.each inc.childGroups, (cInc) ->
+                if colY > pHeight - 80
+                  pdf.addPage()
+                cName = cInc.groupName.toString()
+                cAmount = $filter('number')(cInc.closingBalance.amount, 3) 
+                cAmount = cAmount.toString()
+                pdf.text(colX, colY, cName)
+                pdf.text(col2 + 10, colY, cAmount)
+                colY += 15
+              colX -= 20
 
-          ), 10
+          colY = tableStartY
+          _.each plData.expArr, (exp) ->
+            if colY > pHeight - 80
+              pdf.addPage()
+            name = exp.groupName.toString()
+            amount = $filter('number')(exp.closingBalance.amount, 3)
+            amount = amount.toString()
+            pdf.setFontSize(10)
+            pdf.text(col3, colY, name)
+            pdf.text(col4,colY, amount)
+            colY += 15
+            if exp.childGroups.length > 0
+              col3 += 20
+              _.each exp.childGroups, (cExp) ->
+                if colY > pHeight - 80
+                  pdf.addPage()
+                cName = cExp.groupName.toString()
+                cAmount = $filter('number')(cExp.closingBalance.amount, 3)
+                cAmount = cAmount.toString()
+                pdf.text(col3, colY, cName)
+                pdf.text(col4 + 10, colY, cAmount)
+                colY += 15
+              col3 -= 20
+          pageEnd = colY
+          pdf.line(pWidth/2, tableStartY - 20 , pWidth/2, pageEnd + 10)
+          pdf.line(20, pageEnd+10, pWidth-20, pageEnd+10)
+          pdf.setFontSize(12)
+          pageEnd += 30
 
-          elem.next('.close-icon').on 'click', ()->
-            $timeout (->
-              clear()
+          if plData.closingBalance >= 0
+            pdf.text(20, pageEnd, 'Profit')
+            pdf.text(col2, pageEnd, pl.toString())
+          else
+            pdf.text(col3, pageEnd, 'Loss')
+            pdf.text(col4, pageEnd, pl.toString())
+          pageEnd += 10
 
-            ), 10
+          pdf.line(20, pageEnd, pWidth-20, pageEnd)
+          pageEnd +=20
+          pdf.text(20, pageEnd, 'TOTAL')
+          pdf.text(col2, pageEnd, incomeTotal)
+          pdf.text(col3, pageEnd, 'TOTAL')
+          pdf.text(col4, pageEnd, expenseTotal)
 
+          pdf.save('Profit-and-Loss.pdf')
     }
 ])
+
 .directive('accordionControls',[
   '$rootScope'
   '$compile'
@@ -556,49 +644,6 @@ angular.module('exportDirectives', [])
         true
       else 
         false      
-
-    # performSearch = (input) ->
-    #   _.each input, (grp) ->
-    #     grpName = grp.name.toLowerCase()
-    #     grpUnq = grp.uniqueName.toLowerCase()
-
-    #     groupMatch = false
-    #     subGroupMatch = false
-
-
-    #     if checkIndex(grpName, srch) || checkIndex(grpUnq, srch)
-    #       groupMatch = true
-    #     else if !checkIndex(grpName, srch) && !checkIndex(grpUnq, srch)
-    #       if grp.groups.length > 0
-    #         _.each grp.groups, (sub) ->
-    #           subName = sub.name.toLowerCase()
-    #           subUnq = sub.uniqueName.toLowerCase()
-
-    #           if checkIndex(subName, srch) || checkIndex(subUnq, srch)
-    #             subGroupMatch = true
-    #           else if !checkIndex(subName, srch) && !checkIndex(subUnq, srch)
-    #             subGroupMatch = false
-    #             if sub.groups.length > 0
-    #               performSearch(sub.groups)
-
-    #   input
-
-    # resetSearch = (input) ->
-    #   _.each input, (grp) ->
-    #     grp.isVisible = true
-    #     if grp.groups.length > 0
-    #       _.each grp.groups, (sub)->
-    #         sub.isVisible = true
-    #         if sub.groups.length > 0
-    #           resetSearch(sub.groups)
-    #   input
-    
-    # console.log search
-    # if !_.isUndefined(search)
-    #   performSearch(input)
-    # else if search.length < 1
-    #   initial
-
 
     performSearch  = (input) ->
       _.each input, (grp) ->
