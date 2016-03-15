@@ -165,33 +165,38 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.getOtherTransactionsSuccess = (res, gData, acData) ->
     angular.copy([], $scope.eLedgerDrData)
     angular.copy([], $scope.eLedgerCrData)
-    $scope.eLedgerDataFound = true
-    
-    _.each(res.body, (obj) ->
-      if obj.transactions.length > 1
-        obj.multiEntry = true
-      else
-        obj.multiEntry = false
-      
-      sharedData = _.omit(obj, 'transactions')
-      sharedData.total = 0
-      sharedData.voucherType = "pay"
-      _.each(obj.transactions, (transaction, index) ->
-        transaction.amount = parseFloat(transaction.amount).toFixed(2)
-        newEntry = {sharedData: sharedData}
-        newEntry.id = sharedData.transactionId + "_" + index
-        if transaction.type is "debit"
-          newEntry.transactions = [transaction]
-          # sharedData.total -= parseFloat(transaction.amount)
-          $scope.eLedgerDrData.push(newEntry)
 
-        if transaction.type is "credit"
-          newEntry.transactions = [transaction]
-          # sharedData.total += parseFloat(transaction.amount)
-          $scope.eLedgerCrData.push(newEntry)
+    if res.body.length > 0
+      $scope.eLedgerDataFound = true
+      
+      _.each(res.body, (obj) ->
+        if obj.transactions.length > 1
+          obj.multiEntry = true
+        else
+          obj.multiEntry = false
+        
+        sharedData = _.omit(obj, 'transactions')
+        sharedData.total = 0
+        sharedData.voucherType = "pay"
+        _.each(obj.transactions, (transaction, index) ->
+          transaction.amount = parseFloat(transaction.amount).toFixed(2)
+          newEntry = {sharedData: sharedData}
+          newEntry.id = sharedData.transactionId + "_" + index
+          if transaction.type is "debit"
+            newEntry.transactions = [transaction]
+            # sharedData.total -= parseFloat(transaction.amount)
+            $scope.eLedgerDrData.push(newEntry)
+
+          if transaction.type is "credit"
+            newEntry.transactions = [transaction]
+            # sharedData.total += parseFloat(transaction.amount)
+            $scope.eLedgerCrData.push(newEntry)
+        )
       )
-    )
-    $scope.calculateELedger()
+      $scope.calculateELedger()
+
+    else
+      console.info "No data found"
 
   $scope.calculateELedger = (data) ->
     $scope.eLedgType = undefined
