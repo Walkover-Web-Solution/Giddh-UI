@@ -830,7 +830,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.moveToAccountConfirm = () ->
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      acntUname: $scope.toMerge.moveToAcc.uniqueNames
+      acntUname: $scope.toMerge.moveToAcc.uniqueName
     }
     accTosend = {
       uniqueName: $scope.toMerge.toUnMerge.uniqueNames
