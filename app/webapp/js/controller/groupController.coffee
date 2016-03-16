@@ -838,7 +838,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     accToSendArray = []
     if $scope.toMerge.toUnMerge.uniqueNames.length != 0
       accToSendArray.push(accTosend)
-      accountService.unMerge(unqNamesObj, accToSendArray).then( $scope.moveToAccountConfirmSuccess, $scope.moveToAccountConfirmFailure)
+      accountService.merge(unqNamesObj, accToSendArray).then( $scope.moveToAccountConfirmSuccess, $scope.moveToAccountConfirmFailure)
       _.each accToSendArray, (accUnq) ->
         removeFromPrePopulate = {
           uniqueName: accUnq
