@@ -859,7 +859,7 @@ textarea.form-control {
     box-sizing: border-box;
     height: 60px;
     width: 60px;
-    margin: 0 auto
+    margin:0 auto 20px;
 }
 @keyframes rotate {
   0% {
