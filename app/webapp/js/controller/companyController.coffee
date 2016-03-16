@@ -55,8 +55,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   #for make sure
   $scope.checkCmpCretedOrNot = ->
     if $scope.companyList.length <= 0
-      # $scope.openFirstTimeUserModal()
-      console.info "do nothing"
+      $scope.openFirstTimeUserModal()
 
   #get only city for create company
   $scope.getOnlyCity = (val) ->
@@ -95,8 +94,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.getCompanyListSuccess = (res) ->
     $scope.companyList = _.sortBy(res.body, 'shared')
     if _.isEmpty($scope.companyList)
-      # $scope.openFirstTimeUserModal()
-      console.info "do nothing"
+      $scope.openFirstTimeUserModal()
     else
       $rootScope.mngCompDataFound = true
       cdt = localStorageService.get("_selectedCompany")
