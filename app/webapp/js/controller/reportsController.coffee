@@ -82,7 +82,6 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.sortGroupsAndAccounts($scope.flatAccntWGroupsList)
     # $scope.selected.groups = [$scope.groups[0]]
     # $scope.selected.accounts = [$scope.accounts[0]]
-    console.log $scope.accounts.length, $scope.groups.length
     if $scope.groups.length < 1 && $scope.accounts.length < 1
       $scope.noData = true
     $rootScope.showLedgerBox = true
@@ -109,7 +108,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
           $scope.accounts.push(account)
           $scope.listBeforeLimit.accounts.push(account)
 
-  createArrayWithUniqueName = (dataArray) ->
+  $scope.createArrayWithUniqueName = (dataArray) ->
     finalArray = []
     _.each dataArray, (obj) ->
       finalArray.push(obj.uniqueName)
@@ -309,6 +308,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.showFilters = true
 
   $scope.filterGraph = (arg) ->
+    console.log arg
     seriesIdc = []
     series = $scope.series
     idx = 0
@@ -402,8 +402,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
       'interval': $scope.selected.interval 
     }
     graphParam = {
-      'groups' : createArrayWithUniqueName($scope.selected.groups)
-      'accounts' : createArrayWithUniqueName($scope.selected.accounts)
+      'groups' : $scope.createArrayWithUniqueName($scope.selected.groups)
+      'accounts' : $scope.createArrayWithUniqueName($scope.selected.accounts)
     }
     if $scope.selected.groups.length > 0 || $scope.selected.accounts.length > 0
       $scope.getGraphData(reqParam, graphParam)

@@ -20,6 +20,9 @@ describe 'userController', ->
       expect(@scope.subListData).toEqual([])
       expect(@scope.uTransData).toEqual({})
       expect(@scope.cSubsData).toBeFalsy()
+      expect(@scope.banks).toBeDefined()
+      expect(@scope.linkedAccountsExist).toBeFalsy()
+      expect(@scope.bankDetails).toBeDefined()
       spyOn(@scope, "getUserAuthKey")
       runs ->
         expect(@scope.getUserAuthKey).not.toHaveBeenCalled()
@@ -85,13 +88,13 @@ describe 'userController', ->
       @scope.regenerateKey()
       expect(@userServices.generateKey).toHaveBeenCalled()
 
-  describe '#getUserAuthKeySuccess', ->
+  describe '#generateKeySuccess', ->
     it 'should set userAuthKey value', ->
       res = {"body": "userUniqueId"}
       @scope.getUserAuthKeySuccess(res)
       expect(@scope.userAuthKey).toEqual(res.body)
 
-  describe '#getUserAuthKeyFailure', ->
+  describe '#generateKeyFailure', ->
     it 'should show toastr with error message', ->
       res = 
         data: 
@@ -286,14 +289,126 @@ describe 'userController', ->
       @scope.pageChangedFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
+  describe '#loadYodlee', ->
+    it 'should call getAccounts method of userServices with companyUniqueName', ->
+      @rootScope.selectedCompany = {}
+      @rootScope.selectedCompany.uniqueName = 'something'
+      companyUniqueName =  {
+        cUnq: @rootScope.selectedCompany.uniqueName
+      }
+      deferred = @q.defer()
+      spyOn(@userServices, 'getAccounts').andReturn(deferred.promise)
+      @scope.loadYodlee()
+      expect(@userServices.getAccounts).toHaveBeenCalledWith(companyUniqueName)
+
+  describe '#getAccountsSuccess' , ->
+    it 'should assign cody of response to variable', ->
+      @scope.banks = {}
+      @scope.banks.linked = {}
+      @scope.banks.linked.length = 1
+      res = {
+        body : []
+      }
+      @scope.getAccountsSuccess(res)
+      expect(@scope.banks.linked ).toEqual(res.body)
+      expect(@scope.linkedAccountsExist).toBeFalsy()
 
 
+  describe '#getAccountsFailure', ->
+    it 'should show toastr with error message', ->
+      res = 
+        data: 
+          code: "Some message"
+          message: "Error"
+      spyOn(@toastr, 'error')
+      @scope.getAccountsFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.code, res.data.message)
 
-
-
-
-
+  describe '#fetchSiteList', ->
+    it 'should call searchSite method of userServices with reqParam and data', ->
+      str = 'name'
+      data = {
+        name: str
+      }
+      reqParam = {
+        pName : str
+      }
+      deferred = @q.defer()
+      spyOn(@userServices, 'searchSite').andReturn(deferred.promise)
+      @scope.fetchSiteList(str)
+      expect(@userServices.searchSite).toHaveBeenCalledWith(data, reqParam)
       
-    
+  describe '#searchSiteSuccess', ->
+    it 'should set body of response to variable', ->
+      res = {
+        body: []
+      }
+      @scope.banks = {}
+      @scope.searchSiteSuccess(res)
+      expect(@scope.banks.banksList).toEqual(res.body)
 
-  
+  describe '#searchSiteFailure', ->
+    it 'should show toastr with error message', ->
+      res = 
+        message: "Error"
+      spyOn(@toastr, 'error')
+      @scope.searchSiteFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.message)
+
+  describe '#selectBank', ->
+    it 'should assign values to bank object variable', ->
+      bank = {
+        siteID: ''
+        type: ''
+        yodleeSiteLoginFormDetailList :[
+          {
+            componentList: []
+          }
+          {
+            componentList: []
+          }
+        ]
+      }
+      @scope.banks = {
+        siteID: bank.siteID
+        type: bank.type
+        components: [
+          bank: {
+            name: ''
+          }
+        ]
+      }
+      @scope.selectBank(bank)
+      #expect(@scope.banks.siteID).toEqual(bank.siteID)
+      expect(@scope.banks.type).toEqual(bank.type)
+
+  describe '#submitForm', ->
+    xit 'should call addSiteAccount method of userServices', ->
+      @rootScope.selectedCompany = {}
+      @rootScope.selectedCompany.uniqueName = 'something'
+      bankDetails = {}
+      @scope.banks = {
+        siteID: ''
+        type: ''
+        components: [
+          bank: {
+            name: ''
+            fieldType: {
+              typeName: ''
+            }
+          }
+        ]
+      }
+      reqBody = {
+        siteId : ''
+        loginFormDetail : []
+        type : ''
+      }
+      companyUniqueName =  {
+        cUnq: ''
+      }
+      components = @scope.banks.components
+      deferred = @q.defer()
+      spyOn(@userServices, 'addSiteAccount').andReturn(deferred.promise)
+      @scope.submitForm(bankDetails)
+      expect(@userServices.addSiteAccount).toHaveBeenCalledWith(reqBody, companyUniqueName)

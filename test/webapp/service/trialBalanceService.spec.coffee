@@ -16,19 +16,23 @@ describe 'Trial Balance Service', ->
     )
 
     describe '#get trial balance', ->
-      xit 'should call success callback to get trial balance', ->
-        companyUniqueName = "companyUniqueName"
-        @httpBackend.when('GET', '/company/:'+companyUniqueName+'/trial-balance').respond(200, {"status": "success"})
+      reqParam = {
+        companyUniqueName: 'uniqueName'
+        fromDate : '04-04-2015'
+        toDate: '01-01-2016'
+      }
+      it 'should call success callback to get trial balance', ->
+        @httpBackend.when('GET', '/company/' + reqParam.companyUniqueName + '/trial-balance?fromDate='+ reqParam.fromDate + '&toDate=' + reqParam.toDate).respond(200, {"status": "success"})
 
-        @trialBalService.getAllFor(companyUniqueName).then(
+        @trialBalService.getAllFor(reqParam).then(
           (data) -> expect(data.status).toBe("success")
           (data) -> expect(true).toBeFalsy()
         )
-      xit 'should call failure callback', ->
-        companyUniqueName = "companyUniqueName"
-        @httpBackend.when('GET', '/company/:'+companyUniqueName+'/trial-balance').respond(400, {"status": "error"})
 
-        @trialBalService.getAllFor(companyUniqueName).then(
+      it 'should call failure callback', ->
+        @httpBackend.when('GET', '/company/'+ reqParam.companyUniqueName + '/trial-balance?fromDate='+ reqParam.fromDate + '&toDate=' + reqParam.toDate).respond(400, {"status": "error"})
+
+        @trialBalService.getAllFor(reqParam).then(
           (data) -> expect(true).toBeFalsy()
           (data) ->
             expect(data.data.status).toBe("error")

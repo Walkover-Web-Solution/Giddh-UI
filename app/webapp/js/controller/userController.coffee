@@ -129,7 +129,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     showToken: false
     modalInstance: undefined
   }
-
+  $scope.linkedAccountsExist = false
   $scope.bankDetails = {}
 
   $scope.loadYodlee = () ->
@@ -141,7 +141,10 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
   $scope.getAccountsSuccess = (res) ->
     $scope.banks.linked = res.body
-
+    if $scope.banks.linked.length < 1
+      $scope.linkedAccountsExist = false
+    else
+      $scope.linkedAccountsExist = true
 
   $scope.getAccountsFailure = (res) ->
     # companyUniqueName =  {
@@ -174,6 +177,9 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       toastr.error('Something went wrong')
     else
       $scope.banks.components = bank.yodleeSiteLoginFormDetailList[0].componentList
+      _.each $scope.banks.components, (bank) ->
+        if bank.name.toLowerCase().indexOf('password') != -1
+          bank.name = "PASSWORD"
 
   $scope.submitForm = (bankDetails) ->
     det = bankDetails
@@ -290,6 +296,15 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.showAccountsList = (card) ->
     card.showAccList = true
     $scope.AccountsList = $rootScope.fltAccntList
+    linkedAccounts = []
+    _.each $scope.banks.linked, (acc) ->
+      _.each acc.yodleeAccounts, (link) ->
+        if link.giddhAccount != null
+          linked = {
+            uniqueName : link.giddhAccount.uniqueName
+          }
+          $scope.AccountsList = _.without($scope.AccountsList, _.findWhere($scope.AccountsList, linked))
+    
 
   $scope.linkGiddhAccount = (card) ->
     card.showAccList = false
