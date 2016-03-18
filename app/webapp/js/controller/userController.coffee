@@ -129,6 +129,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     showToken: false
     modalInstance: undefined
     toDelete : ''
+    toRemove : {}
   }
   $scope.linkedAccountsExist = false
   $scope.bankDetails = {}
@@ -342,24 +343,30 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     toastr.error(res.data.message)
 
   $scope.removeGiddhAccount = (card) ->
-    console.log card
+    $scope.banks.toRemove.linkedAccount = card.giddhAccount.uniqueName
+    $scope.banks.toRemove.ItemAccountId = card.itemAccountId.toString()
+    modalService.openConfirmModal(
+        title: 'Delete Account',
+        body: 'Are you sure you want to unlink ' + card.giddhAccount.uniqueName + ' ?',
+        ok: 'Yes',
+        cancel: 'No').then($scope.removeGiddhAccountConfirmed)
+
+  $scope.removeGiddhAccountConfirmed = () ->
     reqParam =  {
       cUnq: $rootScope.selectedCompany.uniqueName
-      linkedAccount: card.giddhAccount.uniqueName
-      ItemAccountId: card.itemAccountId.toString()
+      linkedAccount: $scope.banks.toRemove.linkedAccount
+      ItemAccountId: $scope.banks.toRemove.ItemAccountId
     }
-    userServices.removeAccount(reqParam).then($scope.removeGiddhAccountSuccess, $scope.removeGiddhAccountFailure)
+    userServices.removeAccount(reqParam).then($scope.removeGiddhAccountConfirmedSuccess, $scope.removeGiddhAccountConfirmedFailure)
 
-  $scope.removeGiddhAccountSuccess = (res) ->
-    console.log res
-    toastr.success(res.body)
+  $scope.removeGiddhAccountConfirmedSuccess = (res) ->
+    toastr.success('Account successFully unlinked' )
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
     }
     userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
 
-  $scope.removeGiddhAccountFailure = (res) ->
-    console.log res
+  $scope.removeGiddhAccountConfirmedFailure = (res) ->
     toastr.error(res.body)
 
   $scope.deleteAddedBank = (card) ->

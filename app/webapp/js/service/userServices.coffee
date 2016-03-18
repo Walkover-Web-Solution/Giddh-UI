@@ -76,7 +76,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         }
         removeGiddhAccount: {
           method: 'DELETE'
-          url: '/company/:companyUniqueName/ebanks/:ItemAccountId'
+          url: '/company/:companyUniqueName/ebanks/:ItemAccountId/:linkedAccount'
         }
       }
   )
@@ -155,9 +155,8 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         UserSET.refreshAll({companyUniqueName: companyUniqueName.cUnq, refresh: companyUniqueName.refresh},onSuccess, onFailure)
     )
     removeAccount: (reqParam) ->
-      console.log reqParam
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.removeGiddhAccount({companyUniqueName: reqParam.cUnq, linkedAccount: reqParam.linkedAccount, ItemAccountId: reqParam.linkedAccount},onSuccess, onFailure)
+        UserSET.removeGiddhAccount({companyUniqueName: reqParam.cUnq, linkedAccount: reqParam.linkedAccount, ItemAccountId: reqParam.ItemAccountId},onSuccess, onFailure)
     )
     deleteBankAccount: (reqParam) ->
       @handlePromise((onSuccess, onFailure) ->
