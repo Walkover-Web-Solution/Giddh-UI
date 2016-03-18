@@ -1099,6 +1099,9 @@ li:last-child .angular-ui-tree-handle {
     right: 10px;
     opacity: .8
 }
+.eLedgEntryForm .popover{
+    z-index: 10
+}
 
 .table .table{margin-bottom: 0;}
 .ledgerTable.table .nopad{
