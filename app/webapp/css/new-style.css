@@ -1991,6 +1991,7 @@ i.cls-alert{
     border: 1px solid #e0e0e0;
     margin-bottom:20px;
     background: #FFFFFE;
+    position: relative;
 }
 
 .linked-accounts:nth-child(odd){
@@ -2010,6 +2011,14 @@ i.cls-alert{
     padding-bottom: 1px;
     border-bottom: 2px solid #d35f29;
     font-size:18px;
+}
+
+.linked-accounts .delete-bank{
+    position: absolute;
+    right:12px;
+    top:10px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
 .absolute-loader{

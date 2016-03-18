@@ -6,6 +6,8 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         'uniqueName': @uniqueName,
         'companyUniqueName' : @companyUniqueName
         'page': @page
+        'memSiteAccId': @memSiteAccId
+        'linkedAccount': @linkedAccount
       },
       {
         getUserDetails: {
@@ -67,6 +69,14 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         refreshAll: {
           method: 'GET'
           url: '/company/:companyUniqueName/ebanks'
+        }
+        deleteAccount: {
+          method: 'DELETE'
+          url: '/company/:companyUniqueName/ebanks/:memSiteAccId/remove'
+        }
+        removeGiddhAccount: {
+          method: 'DELETE'
+          url: '/company/:companyUniqueName/ebanks/:ItemAccountId'
         }
       }
   )
@@ -143,6 +153,15 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
     refreshAll: (companyUniqueName) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.refreshAll({companyUniqueName: companyUniqueName.cUnq, refresh: companyUniqueName.refresh},onSuccess, onFailure)
+    )
+    removeAccount: (reqParam) ->
+      console.log reqParam
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.removeGiddhAccount({companyUniqueName: reqParam.cUnq, linkedAccount: reqParam.linkedAccount, ItemAccountId: reqParam.linkedAccount},onSuccess, onFailure)
+    )
+    deleteBankAccount: (reqParam) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.deleteAccount({companyUniqueName: reqParam.cUnq, memSiteAccId: reqParam.memSiteAccId},onSuccess, onFailure)
     )
 
   userServices

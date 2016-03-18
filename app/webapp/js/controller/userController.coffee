@@ -128,6 +128,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     captcha: ''
     showToken: false
     modalInstance: undefined
+    toDelete : ''
   }
   $scope.linkedAccountsExist = false
   $scope.bankDetails = {}
@@ -339,6 +340,53 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
   $scope.LinkGiddhAccountConfirmFailure = (res) ->
     toastr.error(res.data.message)
+
+  $scope.removeGiddhAccount = (card) ->
+    console.log card
+    reqParam =  {
+      cUnq: $rootScope.selectedCompany.uniqueName
+      linkedAccount: card.giddhAccount.uniqueName
+      ItemAccountId: card.itemAccountId.toString()
+    }
+    userServices.removeAccount(reqParam).then($scope.removeGiddhAccountSuccess, $scope.removeGiddhAccountFailure)
+
+  $scope.removeGiddhAccountSuccess = (res) ->
+    console.log res
+    toastr.success(res.body)
+    companyUniqueName =  {
+      cUnq: $rootScope.selectedCompany.uniqueName
+    }
+    userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
+
+  $scope.removeGiddhAccountFailure = (res) ->
+    console.log res
+    toastr.error(res.body)
+
+  $scope.deleteAddedBank = (card) ->
+    $scope.banks.toDelete = card.siteAccountId
+    modalService.openConfirmModal(
+        title: 'Delete Account',
+        body: 'Are you sure you want to delete ' + card.accountName + ' ?' + '\n' + 'All accounts linked with the same bank will be deleted.',
+        ok: 'Yes',
+        cancel: 'No').then($scope.deleteAddedBankAccountConfirmed)
+
+
+  $scope.deleteAddedBankAccountConfirmed = () ->
+    reqParam = {
+      cUnq : $rootScope.selectedCompany.uniqueName
+      memSiteAccId: $scope.banks.toDelete
+    }
+    userServices.deleteBankAccount(reqParam).then($scope.deleteAddedBankAccountConfirmedSuccess, $scope.deleteAddedBankAccountConfirmedFailure)
+
+  $scope.deleteAddedBankAccountConfirmedSuccess = (res) ->
+    toastr.success(res.body)
+    companyUniqueName =  {
+      cUnq: $rootScope.selectedCompany.uniqueName
+    }
+    userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
+
+  $scope.deleteAddedBankAccountConfirmedFailure = (res) ->
+    toastr.error(res.body)
 
   $scope.refreshAccounts = () ->
     companyUniqueName =  {

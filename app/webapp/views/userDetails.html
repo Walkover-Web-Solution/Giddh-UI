@@ -216,6 +216,7 @@
                         Linked with: {{card.giddhAccount.name}} ({{card.giddhAccount.uniqueName}})
                       </div>
                       <button class="btn btn-sm btn-info" ng-if="card.giddhAccount == null" ng-click="linkGiddhAccount(card)">Link Account</button>
+                      <button class="btn btn-sm btn-danger mrT1" ng-if="card.giddhAccount.name.length > 0" ng-click="removeGiddhAccount(card)">Unlink Account</button>
                       <div class="mrT1">
                         <ui-select ng-model="banks.toLink" theme="bootstrap" ng-if="card.showAccList" on-select="LinkGiddhAccountConfirm($select.selected)">
                           <ui-select-match placeholder="Select Accounts">
@@ -228,6 +229,7 @@
                           </ui-select-choices>
                         </ui-select>
                       </div>
+                      <a class="delete-bank" ng-click="deleteAddedBank(card)" uib-tooltip="Delete Bank" tooltip-placement="left"><i class="glyphicon glyphicon-trash"></i></a>
                     </aside>
                   </aside>
                 </section>
