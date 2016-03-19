@@ -1951,6 +1951,7 @@ i.cls-alert{
 .account-card > h1{
     font-size: 16px;
     padding-bottom: 5px;
+    padding-right:20px;
     margin-bottom: 5px;
     border-bottom: 1px solid #337ab7;
     text-overflow: ellipsis;
