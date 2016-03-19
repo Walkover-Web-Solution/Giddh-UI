@@ -217,6 +217,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     
 
   $scope.addSiteAccountSuccess = (res) ->
+    console.log res , 'res'
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
     }
@@ -227,6 +228,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       $scope.banks.list = undefined
       toastr.success('Account added successfully!')
     else
+      console.log siteData, 'sitedata'
       $scope.banks.mfaForm.fieldType = siteData.yodleeMfaResponse.fieldType
       switch siteData.yodleeMfaResponse.fieldType
         when "TOKEN"

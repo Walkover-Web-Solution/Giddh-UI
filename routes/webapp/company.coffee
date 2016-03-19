@@ -192,6 +192,20 @@ router.get '/:companyUniqueName/ebanks', (req, res) ->
     res.send data
 
 #login to ebank
+
+router.delete '/:companyUniqueName/ebanks/:memSiteAccId/remove', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/' + req.params.memSiteAccId + '/remove'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+
 router.post '/:companyUniqueName/ebanks', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks'
   authHead =
@@ -219,19 +233,6 @@ router.delete '/:companyUniqueName/ebanks/:ItemAccountId/:linkedAccount', (req, 
       res.status(response.statusCode)
     res.send data
 
-router.delete '/:companyUniqueName/ebanks/:memSiteAccId/remove', (req, res) ->
-  console.log req.params
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/' + req.params.memSiteAccId + '/remove'
-  args =
-    headers:
-      'Auth-Key': req.session.authKey
-      'Content-Type': 'application/json'
-      'X-Forwarded-For': res.locales.remoteIp
-  settings.client.delete hUrl, args, (data, response) ->
-    if data.status == 'error'
-      res.status(response.statusCode)
-    res.send data
-
 router.put '/:companyUniqueName/ebanks/:ItemAccountId', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/' + req.params.ItemAccountId
   args =
@@ -244,7 +245,6 @@ router.put '/:companyUniqueName/ebanks/:ItemAccountId', (req, res) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
-
 
 
 module.exports = router
