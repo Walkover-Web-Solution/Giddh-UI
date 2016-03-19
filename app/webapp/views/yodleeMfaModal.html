@@ -16,11 +16,14 @@
         <img ng-src="data:image/png;base64,{{banks.mfaForm.image}}" ng-if="banks.mfaForm.image.length > 0">
         <input type="{{banks.mfaForm.responseFieldType}}" ng-model="banks.mfaResponse.imgOrToken" placeholder="{{banks.mfaForm.displayString}}" class="form-control" name="{{banks.mfaForm.fieldType}}" maxlength="{{banks.mfaForm.maximumLength}}" required/>
       </div>
-      <div class="form-group mrT2" ng-if="!banks.showToken">
+      <div class="form-group mrT2" ng-if="!banks.showToken && banks.mfaForm.questionsAndAns.length > 0">
         <fieldset class="form-group" ng-repeat="q in banks.mfaForm.questionsAndAns">
           <label>{{q.question}}</label>
           <input class="form-control" type="{{q.responseFieldType}}" ng-model="banks.mfaResponse.questions[q.metaData]" placeholder="Answer" name="{{q.metaData}}" ng-required="q.isRequired">
         </fieldset>
+      </div>
+      <div class="no-qa text-center mrT1 mrB1" ng-if="banks.mfaForm.questionsAndAns.length == 0">
+        Click on Submit to continue
       </div>
       <button class="btn btn-success pull-right mrB1" ng-click="addMfaAccount(banks.mfaResponse)">Submit</button>
     </div>
