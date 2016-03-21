@@ -110,7 +110,7 @@ module.exports = function (grunt) {
           'public/webapp/app.js': ['public/webapp/js/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/jspdf.debug.js'],
           'public/webapp/newRelic.js': ['app/webapp/modified_lib/newRelic.js'],
           'public/webapp/_extras.js': ['app/webapp/modified_lib/angular-charts.js', 'app/webapp/modified_lib/jspdf.debug.js'],
-          'public/webapp/css/giddh.min.css': ['public/webapp/css/all_bower.css', 'public/webapp/css/new-style.css']
+          'public/webapp/css/giddh.min.css': ['public/webapp/css/all_bower.css', 'public/webapp/css/modiefied-bootstrap.css', 'public/webapp/css/new-style.css']
         }
       }
     },
@@ -159,10 +159,11 @@ module.exports = function (grunt) {
           relative: false
         },
         exclude: [
-          'v-accordion'
+          'v-accordion',
+          'bootstrap'
         ],
         mainFiles: {
-          'bootstrap': 'dist/css/bootstrap.min.css',
+          // 'bootstrap': 'dist/css/bootstrap.min.css',
           'perfect-scrollbar': 'css/perfect-scrollbar.min.css',
           'angular-toastr': 'dist/angular-toastr.min.css',
           'ui-select': 'dist/select.min.css'

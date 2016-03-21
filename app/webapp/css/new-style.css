@@ -2127,6 +2127,24 @@ body.unresponsive{
         float: right;
         margin: 0;
     }
+    .navbar-nav .open .dropdown-menu {
+         position: absolute; 
+         float: none; 
+         width: auto; 
+         margin-top: 0; 
+         background-color: #080808; 
+        box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    }
+    .navbar-nav>li>a {
+        padding-top: 15px;
+        padding-bottom: 15px;
+    }
+    .navbar-inverse .navbar-nav>li>a{
+        line-height: 24px
+    }
+    .modal-liq90 {
+        width: 900px;
+    }
 }
 /*imp for fixed navigation
 body {

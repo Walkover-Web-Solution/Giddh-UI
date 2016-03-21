@@ -15,7 +15,7 @@
           <input type="hidden" ng-model="selectedCompany.uniqueName" name="cUniqName"/>
 
           <div class="row">
-            <div class="col-md-6 col-sm-12">
+            <div class="col-xs-6">
               <div class="form-group"
                    ng-class="(cmpnyBascFrm.cName.$valid  && cmpnyBascFrm.cName.$touched) ? 'has-success' : (cmpnyBascFrm.cName.$touched) ? 'has-error' : '' ">
                 <label>Name</label>
@@ -38,7 +38,7 @@
                 </script>
                 <div class="row">
 
-                  <div class="col-md-3 col-sm-12">
+                  <div class="col-xs-3">
 
                     <input type="hidden" ng-model="selectedCompany.contactNo">
 
@@ -47,7 +47,7 @@
                            class="form-control" typeahead-template-url="cityTemplate.html" placeholder="91"/>
 
                   </div>
-                  <div class="col-md-9 col-sm-12">
+                  <div class="col-xs-9">
                     <input type="text" placeholder="98XXXXXXXX" class="form-control" name="onlyMobileNo"
                            ng-model="selectedCompany.mobileNo" valid-number/>
                   </div>
@@ -61,7 +61,7 @@
                           tabindex="4"/>
               </div>
             </div>
-            <div class="col-md-6 col-sm-12">
+            <div class="col-xs-6">
               <div class="form-group"
                    ng-class="(cmpnyBascFrm.cCountry.$valid  && cmpnyBascFrm.cCountry.$touched) ? 'has-success' : (cmpnyBascFrm.cCountry.$touched) ? 'has-error' : '' ">
                 <label>Country</label>
@@ -105,7 +105,7 @@
 
               </div>
               <div class="row">
-                <div class="col-md-4 col-sm-12">
+                <div class="col-xs-4">
                   <div class="form-group"
                        ng-class="(cmpnyBascFrm.cCurrency.$valid  && cmpnyBascFrm.cCurrency.$touched) ? 'has-success' : (cmpnyBascFrm.cCurrency.$touched) ? 'has-error' : '' ">
                     <label>Currency</label>
@@ -116,7 +116,7 @@
 
                   </div>
                 </div>
-                <div class="col-md-8 col-sm-12">
+                <div class="col-xs-8">
                   <div class="form-group"
                        ng-class="(cmpnyBascFrm.cPincode.$valid  && cmpnyBascFrm.cPincode.$touched) ? 'has-success' : (cmpnyBascFrm.cPincode.$touched) ? 'has-error' : '' ">
                     <label>Pincode</label>
@@ -171,13 +171,13 @@
 
             <div class="row">
 
-              <div class="col-md-6 col-sm-12">
+              <div class="col-xs-6">
                 <i ng-if="value.role.uniqueName != 'super_admin_off_the_record'" class="glyphicon glyphicon-user"></i>
                 <i ng-if="value.role.uniqueName == 'super_admin_off_the_record'" class="glyphicon glyphicon-star"></i>
                 {{value.userEmail}}
               </div>
 
-              <div class="col-md-6 col-sm-12">
+              <div class="col-xs-6">
 
                 <div class="form-inline">
                   <div class="form-group">
@@ -206,7 +206,7 @@
     <!-- end of second tab ng-if="canManageUser" -->
     <uib-tab ng-if="canManageUser" heading="Tally XML upload">
       <div class="clearfix bdrB">
-        <div class="col-md-6 col-sm-6">
+        <div class="col-xs-6">
           <div class="pdT2">
             <div class="greyBox mrB2">
               <h3 class="mrB1">Upload Master Only</h3>
@@ -233,7 +233,7 @@
           </div>
         </div>
         <!-- end of first sec -->
-        <div class="col-md-6 col-sm-6">
+        <div class="col-xs-6">
           <div class="pdT2">
             <div class="greyBox mrB2">
               <h3 class="mrB1">Upload Daybook Only</h3>

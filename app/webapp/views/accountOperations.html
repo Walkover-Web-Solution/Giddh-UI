@@ -8,17 +8,17 @@
   </ol>
 
   <div class="clearfix">
-    <div class="col-md-12 col-sm-12">
+    <div class="col-xs-12">
       <uib-alert type="warning" ng-show="cantUpdate">For security reasons, you can't update current account</uib-alert>
     </div>
   </div>
   <div class="clearfix bdrB">
     <div class="dGryHead">{{acntCase}} Account</div>
-    <form class="col-md-12 col-sm-12" name="addAccountForm" novalidate>
+    <form class="col-xs-12" name="addAccountForm" novalidate>
 
       <div class="row pdT2 pdL pdR">
 
-        <div class="col-md-6 col-sm-12">
+        <div class="col-xs-6">
           <section class="greyBox">
             <p class="form-group">Basic Info (required)*</p>
 
@@ -49,10 +49,10 @@
             </div>
 
             <div class="row">
-              <p class="mrB col-md-12 small col-sm-12">Opening balance types</p>
+              <p class="mrB small col-xs-12">Opening balance types</p>
             </div>
             <div class="row">
-              <div class="col-md-6 col-sm-12">
+              <div class="col-xs-6">
                 <select 
                   class="form-control"
                   name="openingBalanceType" 
@@ -61,14 +61,14 @@
                   <option value="">--Please select--</option>
                 </select>
               </div>
-              <div class="col-md-6 col-sm-12">
+              <div class="col-xs-6">
                 <input type="text" class="form-control" name="openingBalance" ng-model="selectedAccount.openingBalance" required valid-number/>
               </div>
             </div>
 
           </section>
         </div>
-        <div class="col-md-6 col-sm-12">
+        <div class="col-xs-6">
 
           <script type="text/ng-template" id="countryList.html">
             <a>
@@ -78,7 +78,7 @@
           </script>
 
           <div class="form-group row">
-            <div class="col-md-3 col-sm-12">
+            <div class="col-xs-3">
 
               <input type="hidden" ng-model="selectedAccount.mobileNo">
 
@@ -87,7 +87,7 @@
                      class="form-control" typeahead-template-url="countryList.html" placeholder="91"/>
 
             </div>
-            <div class="col-md-9 col-sm-12">
+            <div class="col-xs-9">
               <input type="text" placeholder="98XXXXXXXX" class="form-control" name="onlyMobileNo"
                      ng-model="acntExt.onlyMobileNo" valid-number/>
             </div>
@@ -116,7 +116,7 @@
       </div>
       <!-- end of clearfix -->
       <div class="row pdL pdR mrT2">
-        <div class="form-group col-md-12" ng-hide="!canUpdate || cantUpdate">
+        <div class="form-group col-xs-12" ng-hide="!canUpdate || cantUpdate">
           <button ng-if="acntCase == 'Update'" class="btn btn-success" ng-click="updateAccount()"
                   ng-disabled="addAccountForm.$invalid || selectedAccount.openingBalanceType == null">{{acntCase}}
           </button>
@@ -134,7 +134,7 @@
 
 <section ng-if="acntCase == 'Update'">
   <div class="clearfix bdrB">
-    <div class="col-sm-12 col-md-6" ng-show="canUpdate">
+    <div class="col-xs-6" ng-show="canUpdate">
       <fieldset ng-disabled="cantUpdate">
         <div class="row">
           <form name="moveAccntForm" novalidate class="pd2 form-inline">
@@ -153,7 +153,7 @@
       </fieldset>
     </div>
 
-    <div class="col-md-6 col-sm-12 bdrL" ng-show="canShare">
+    <div class="col-xs-6 bdrL" ng-show="canShare">
       <fieldset ng-disabled="!canUpdate">
         <div class="row">
           <form name="shareAccountForm" novalidate class="form-inline pd2">
@@ -201,7 +201,7 @@
   <div class="clearfix bdrB">
     <div class="dGryHead">Account Merge/Unmerge Settings <!-- <i class="glyphicon glyphicon-question-sign merge-q" ng-click=" showMergeDescription = !showMergeDescription"></i> --></div>
     <div ng-show="showMergeDescription">
-      <div class="col-sm-6">
+      <div class="col-xs-6">
         <div class="select-accounts">
           <label>Merge Accounts</label>
               <ui-select multiple='true' ng-model="toMerge.mergedAcc" theme="bootstrap">
@@ -217,7 +217,7 @@
               <button class="btn btn-success mrT2" ng-click="mergeAccounts()" ng-disabled="enableMergeButton()">Merge</button>
         </div>
       </div>
-      <div class="col-sm-6 pad0 bdrL" ng-show="showDeleteMove">
+      <div class="col-xs-6 pad0 bdrL" ng-show="showDeleteMove">
         <div class="delete-account">
           <!-- <div class="alert alert-warning">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac      
@@ -241,7 +241,7 @@
       </div>
     </div>
     <!--merge/unmerge description-->
-    <div class="col-sm-12 mrT2" ng-hide="showMergeDescription">
+    <div class="col-xs-12 mrT2" ng-hide="showMergeDescription">
       <div class="alert alert-warning pdT5">
         <i class="glyphicon glyphicon-remove-circle cls-alert" ng-click="showMergeDescription = !showMergeDescription"></i>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam nec dui. Quisque nec mauris sit amet elit iaculis pretium sit amet quis magna. Aenean velit odio, elementum in tempus ut, vehicula eu diam. Pellentesque rhoncus aliquam mattis. Ut vulputate eros sed felis sodales nec vulputate justo hendrerit. Vivamus varius pretium ligula, a aliquam odio euismod sit amet. Quisque laoreet sem sit amet orci ullamcorper at ultricies metus viverra. Pellentesque arcu mauris, malesuada quis ornare accumsan, blandit sed diam.
