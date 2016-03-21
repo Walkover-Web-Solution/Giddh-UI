@@ -167,6 +167,20 @@ router.post '/:uniqueName/pay-via-wallet', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+# verify MFA
+router.post '/:companyUniqueName/ebanks/:ItemAccountId/verify-mfa', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/'+req.params.ItemAccountId+'/verify-mfa'
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.post hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 #get added ebanks list
 router.get '/:companyUniqueName/ebanks', (req, res) ->
   authHead =

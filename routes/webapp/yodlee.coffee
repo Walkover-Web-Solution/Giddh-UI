@@ -37,19 +37,7 @@ router.post '/company/:companyUniqueName/add-giddh-account', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.post '/company/:companyUniqueName/verify-mfa', (req, res) ->
-  hUrl = settings.envUrl + 'yodlee/company/' + req.params.companyUniqueName + '/verify-mfa'
-  authHead =
-    headers:
-      'Auth-Key': req.session.authKey
-      'Content-Type': 'application/json'
-      'X-Forwarded-For': res.locales.remoteIp
-    data: req.body
-  console.log authHead.data 
-  settings.client.post hUrl, authHead, (data, response) ->
-    if data.status == 'error'
-      res.status(response.statusCode)
-    res.send data
+
 
 router.get '/company/:companyUniqueName/all-site-account', (req, res) ->
   authHead =

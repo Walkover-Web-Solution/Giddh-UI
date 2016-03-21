@@ -64,7 +64,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         }
         verifyMfa: {
           method: 'POST'
-          url: '/yodlee/company/:companyUniqueName/verify-mfa'
+          url: '/company/:companyUniqueName/ebanks/:itemAccountId/verify-mfa'
         }
         refreshAll: {
           method: 'GET'
@@ -146,9 +146,9 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.addGiddhAccount({companyUniqueName: companyUniqueName.cUnq, itemAccountId:companyUniqueName.itemAccountId}, data, onSuccess, onFailure)
     )
-    verifyMfa: (companyUniqueName, data) ->
+    verifyMfa: (unqObj, data) ->
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.verifyMfa({companyUniqueName: companyUniqueName.cUnq}, data, onSuccess, onFailure)
+        UserSET.verifyMfa({companyUniqueName: unqObj.cUnq,  itemAccountId: unqObj.itemId}, data, onSuccess, onFailure)
     )
     refreshAll: (companyUniqueName) ->
       @handlePromise((onSuccess, onFailure) ->

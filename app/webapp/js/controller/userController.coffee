@@ -257,8 +257,9 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     $scope.bankDetails = {}
 
   $scope.addMfaAccount = (mfa) ->
-    companyUniqueName =  {
+    unqObj =  {
       cUnq: $rootScope.selectedCompany.uniqueName
+      itemId: $scope.banks.itemId
     }
     newMfa = {}
     newMfa.itemId = $scope.banks.itemId
@@ -281,7 +282,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
             question.questionFieldType = pQ.questionFieldType
             newMfa.questionAnswerses.push(question)
 
-    userServices.verifyMfa(companyUniqueName, newMfa).then($scope.verifyMfaSuccess, $scope.verifyMfaFailure)
+    userServices.verifyMfa(unqObj, newMfa).then($scope.verifyMfaSuccess, $scope.verifyMfaFailure)
 
   $scope.verifyMfaSuccess = (res) ->
     companyUniqueName =  {
