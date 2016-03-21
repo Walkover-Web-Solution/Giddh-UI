@@ -217,28 +217,22 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     
 
   $scope.addSiteAccountSuccess = (res) ->
-    console.log res , 'res'
+    console.log res.body , 'addSiteAccountSuccess'
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
     }
-    siteData = res.body
-    $scope.banks.itemId = siteData.itemId
-    #$scope.banks.fieldType = siteData.yodleeMfaResponse.fieldType
-    if siteData.mfa == false
-      $scope.banks.list = undefined
-      toastr.success('Account added successfully!')
-    else
-      console.log siteData, 'sitedata'
-      $scope.banks.mfaForm.fieldType = siteData.yodleeMfaResponse.fieldType
-      switch siteData.yodleeMfaResponse.fieldType
+    $scope.banks.itemId = res.body.itemId
+    if res.body.mfa
+      $scope.banks.fieldType = res.body.yodleeMfaResponse.fieldType
+      switch res.body.yodleeMfaResponse.fieldType
         when "TOKEN"
-          $scope.banks.mfaForm = siteData.yodleeMfaResponse.fieldInfo.token
+          $scope.banks.mfaForm = res.body.yodleeMfaResponse.fieldInfo.token
           $scope.banks.showToken = true
         when "IMAGE"
-          $scope.banks.mfaForm = siteData.yodleeMfaResponse.fieldInfo.image
+          $scope.banks.mfaForm = res.body.yodleeMfaResponse.fieldInfo.image
           $scope.banks.showToken = true
         when "QUESTIONS"
-          $scope.banks.mfaForm = siteData.yodleeMfaResponse.fieldInfo.questionAns
+          $scope.banks.mfaForm = res.body.yodleeMfaResponse.fieldInfo.questionAns
           $scope.banks.showToken = false
       $scope.banks.modalInstance = $uibModal.open(
         templateUrl: '/public/webapp/views/yodleeMfaModal.html'
@@ -246,6 +240,10 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
         backdrop: 'static'
         scope: $scope
       )
+    else
+      $scope.banks.list = undefined
+      toastr.success('Account added successfully!')
+
     userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
 
     $scope.banks.requestSent = false
@@ -256,7 +254,8 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     $scope.banks.requestSent = false
     $scope.bankDetails = {}
 
-  $scope.addMfaAccount = (mfa) ->
+  $scope.addMfaAccount = (bankData) ->
+    mfa = bankData.mfaResponse
     unqObj =  {
       cUnq: $rootScope.selectedCompany.uniqueName
       itemId: $scope.banks.itemId
