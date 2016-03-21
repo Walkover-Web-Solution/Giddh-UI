@@ -48,17 +48,15 @@ textarea{
     resize:none;
 }
 
-/*imp for fixed navigation*/
-body {
-    padding-top: 54px;
-    overflow: hidden;
-}
+
 /*top menus bar*/
 #topMenusBar.dropdown-menu{
     padding: 0;
     border:0;
 }
-
+header{
+  background-color: #d35f29;
+}
 header .navbar {
     min-height: 54px;
     border: 0;
@@ -2106,3 +2104,32 @@ i.cls-alert{
 .add-manage-grouplist .isHidden{
     display:none;
 }
+/*make un-responsive*/
+body.unresponsive{
+    overflow: hidden;
+}
+.navbar-right.navbar-nav > li > a{
+    border-right: 0
+}
+@media only screen and (max-width: 960px) {
+    body.unresponsive {
+      width: 960px;
+      overflow: auto;
+    }
+    nav > .navbar-nav > li {
+        float: left;
+    }
+    .navbar-nav {
+        float: left;
+        margin: 0;
+    }
+    .navbar-nav.navbar-right {
+        float: right;
+        margin: 0;
+    }
+}
+/*imp for fixed navigation
+body {
+    padding-top: 54px;
+}
+*/
