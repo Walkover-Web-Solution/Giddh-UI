@@ -177,15 +177,30 @@
             <form class="col-xs-12" name="addAccountForm" novalidate ng-if="banks.list != undefined" ng-submit="addAccountForm.$valid && submitForm(bankDetails)">
               <div class="row pdT2 pdR">
                 <div class="col-xs-4 pd0">
-                  <section class="greyBox">
+                 <section class="greyBox">
 
                     <p class="form-group">Submit Form to Add Bank</p>
 
                     <div class="form-group" ng-repeat="field in banks.components">
-                      <ng-form name="innerform">
+
+                      <ng-form name="innerform" ng-if="field.fieldType.typeName != 'OPTIONS'">
                         <input id="{{field.name}}" type="{{field.name}}" ng-model="bankDetails[field.displayName]" placeholder="{{field.displayName}}" class="form-control" name="input" maxlength="{{field.maxlength}}" ng-required="!field.isOptional"/>
                         <div class="error-msg" ng-show="innerform.input.$error.required">Required</div>
                       </ng-form>
+
+                      <ng-form name="innerform" ng-if="field.fieldType.typeName == 'OPTIONS'">
+                          <ui-select ng-model="bankDetails[field.displayName]" theme="bootstrap">
+                            <ui-select-match placeholder="Select Options">
+                              <span>{{$select.selected.name}}</span>
+                            </ui-select-match >
+                            <ui-select-choices 
+                              repeat="val.value as val in field.fieldOptions | filter: $select.search">
+                              <span ng-bind-html="val.name"></span>
+                            </ui-select-choices>
+                          </ui-select>
+                        <div class="error-msg" ng-show="innerform.input.$error.required">Required</div>
+                      </ng-form>
+
                     </div>
                     <button type="submit" class="btn btn-success" ng-disabled="banks.requestSent || addAccountForm.$invalid">Submit</button>
                     <div class="absolute-loader" ng-if="banks.requestSent">

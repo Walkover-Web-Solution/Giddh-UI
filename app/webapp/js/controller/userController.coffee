@@ -180,6 +180,16 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     else
       $scope.banks.components = bank.yodleeSiteLoginFormDetailList[0].componentList
       _.each $scope.banks.components, (bank) ->
+
+        if bank.fieldType.typeName == 'OPTIONS'
+          bank.fieldOptions = []
+          mergedOptions = _.zip(bank.displayValidValues, bank.validValues)
+          _.each mergedOptions, (opt) ->
+            option = {}
+            option.name = opt[0]
+            option.value = opt[1]
+            bank.fieldOptions.push(option)
+
         if bank.name.toLowerCase().indexOf('password') != -1
           bank.name = "PASSWORD"
 
@@ -200,6 +210,9 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       for property of det
         if dn == property
           toSend.value = det[property]
+
+      # for property of cmp
+      #   toSend[property] = cmp[property]
       toSend.name = cmp.name
       toSend.displayName = cmp.displayName
       toSend.isEditable = cmp.isEditable
@@ -211,13 +224,11 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       toSend.helpText = cmp.helpText
       toSend.fieldType = cmp.fieldType.typeName
       reqBody.loginFormDetail.push(toSend)
-
     userServices.addSiteAccount(reqBody, companyUniqueName).then($scope.addSiteAccountSuccess, $scope.addSiteAccountFailure)
     $scope.banks.requestSent = true
     
 
   $scope.addSiteAccountSuccess = (res) ->
-    console.log res.body , 'addSiteAccountSuccess'
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
     }
@@ -414,3 +425,5 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
 #init angular app
 giddh.webApp.controller 'userController', userController
+
+
