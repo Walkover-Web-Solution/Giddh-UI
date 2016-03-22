@@ -308,7 +308,6 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.showFilters = true
 
   $scope.filterGraph = (arg) ->
-    console.log arg
     seriesIdc = []
     series = $scope.series
     idx = 0

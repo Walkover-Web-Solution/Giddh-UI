@@ -140,7 +140,7 @@
     </uib-tab>
     <!-- basic information tab end here -->
 
-    <uib-tab ng-if="canManageUser" heading="Permission">
+    <uib-tab ng-if="canManageCompany" heading="Permission">
       <div class="pd2">
         <div class="greyBox mrB2">
           <form name="addShareEmailForm" novalidate class="form-inline">
@@ -203,8 +203,8 @@
 
       </div>
     </uib-tab>
-    <!-- end of second tab ng-if="canManageUser" -->
-    <uib-tab ng-if="canManageUser" heading="Tally XML upload">
+    <!-- end of second tab ng-if="canManageCompany" -->
+    <uib-tab ng-if="canManageCompany" heading="Tally XML upload">
       <div class="clearfix bdrB">
         <div class="col-md-6 col-sm-6">
           <div class="pdT2">
@@ -294,7 +294,7 @@
     </uib-tab>
 
     <!-- start transaction tab -->
-    <uib-tab ng-if="canManageUser" heading="Payment details">
+    <uib-tab ng-if="canManageCompany" heading="Payment details">
       <div class="pd2">
         <div class="clearfix mrB1 form-inline">
           <div class="form-group mrR1">

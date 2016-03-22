@@ -11,7 +11,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
   $rootScope.canDelete = false
   $rootScope.canAdd = false
   $rootScope.canShare = false
-  $rootScope.canManageUser = false
+  $rootScope.canManageCompany = false
   
   $scope.logout = ->
     $http.post('/logout').then ((res) ->
@@ -49,7 +49,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
     $rootScope.canDelete = permissionService.hasPermissionOn(entity, "DLT")
     $rootScope.canAdd = permissionService.hasPermissionOn(entity, "ADD")
     $rootScope.canShare = permissionService.hasPermissionOn(entity, "SHR")
-    $rootScope.canManageUser = permissionService.hasPermissionOn(entity, "MNG_USR")
+    $rootScope.canManageCompany = permissionService.hasPermissionOn(entity, "MNG_CMPNY")
 
   $rootScope.setScrollToTop = (val, elem)->
     if val is '' || _.isUndefined(val)
