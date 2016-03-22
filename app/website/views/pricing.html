@@ -15,21 +15,21 @@
   <script  type="text/javascript" src='/public/webapp/core_bower.min.js'></script>
 
   <script src="/public/website/js/app.js"></script>
-  <script src="/public/website/js/controller/pricingController.js"></script>
+
   <style type="text/css">
     #topSection {
       min-height: inherit;
     }
   </style>
 </head>
-<body>
-<div ng-controller="pricingController">
+<body class="unresponsive">
+<div>
   <section id="topSection">
     <ng-include src="'public/website/views/header.html'"></ng-include>
     <!-- start of banner -->
     <div class="container othPage" id="banner">
       <div class="row">
-        <div class="col-md-12 col-sm-12 alC">
+        <div class="col-xs-12 alC">
           <h2 class="h2 mocha">
             500Rs./Month
           </h2>
@@ -54,7 +54,7 @@
 
   <section class="container" id="midSection">
     <ul class="ln" id="cmnul">
-      <li class="col-md-4 col-sm-12" ng-repeat="list in pricing.middle.list">
+      <li class="col-xs-4" ng-repeat="list in pricing.middle.list">
         <h4 class="h4">{{list.title}}</h4>
 
         <p class="cmnp">{{list.details}}</p>

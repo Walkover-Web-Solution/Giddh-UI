@@ -643,7 +643,7 @@ textarea.form-control {
         float: none !important
     }
 
-   /* #indul li:nth-child(even) .lSide {
+    /*#indul li:nth-child(even) .lSide {
         float: none !important
     }
 
@@ -655,7 +655,6 @@ textarea.form-control {
 @media only screen and (max-width: 768px), (max-device-width: 768px) {
 
     #banner {
-        text-align: center;
         font-size: 87.5%
     }
 
@@ -927,4 +926,17 @@ textarea.form-control {
 
 .pdT2{
     padding-top:20px;
+}
+/*to make website non-responsive*/
+body.unresponsive {
+  min-width: 970px;
+}
+body.unresponsive .container {
+  max-width: none !important;
+  width: 970px !important;
+}
+@media only screen and (max-width: 960px) {
+    .navbar-brand{
+        margin-left: 15px;
+    }
 }

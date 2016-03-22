@@ -2,8 +2,8 @@
 <html lang="en" ng-app='giddhApp'>
 <head>
   <meta charset="UTF-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"> -->
   <meta name="description"
         content="Do you feel accounting is tough to manage? Giddh will solve all your accounting related needs. Get a free invitation now."/>
   <meta name="keywords" content="Accounting softwares, online accounting software, Web Based Accounting Software"/>
@@ -16,7 +16,7 @@
   <script type="text/javascript" src="/public/website/js/app.js"></script>
   <script type="text/javascript" src="/public/website/js/controller/homeController.js"></script>
 </head>
-<body>
+<body class="unresponsive">
 <div ng-controller="homeController">
 
   <section id="topSection">
@@ -25,7 +25,7 @@
 
     <div class="container" id="banner">
       <div class="row">
-        <div class="col-md-6 col-sm-12">
+        <div class="col-xs-6">
           <div>
             <h2 id="imd" class="h2i mocha white-space-pre-wrap">{{home.banner.mainHead}}</h2>
 
@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <div class="col-md-6 col-sm-12">
+        <div class="col-xs-6">
           <figure class="">
             <img class="img-responsive center-block" ng-src="{{home.banner.imgSrc}}"
                  alt="{{home.banner.imgTitle}}"/>
@@ -57,30 +57,30 @@
   <!-- end of top section -->
 
 
-  <section class="container" id="midSection">
+  <section id="midSection">
+    <div class="container">
+      <ul class="ln" id="indul">
+        <li class="row" ng-repeat="list in home.middle.list">
+          <div class="col-xs-6 lSide">
+            <h4 class="h4">{{list.title}}</h4>
 
-
-    <ul class="ln" id="indul">
-
-      <li class="row" ng-repeat="list in home.middle.list">
-        <div class="col-md-6 col-sm-12 lSide">
-          <h4 class="h4">{{list.title}}</h4>
-
-          <p class="cmnp">{{list.details}}</p>
-        </div>
-        <div class="col-md-6 col-sm-12 rSide">
-          <figure class="">
-            <img class="img-responsive center-block" ng-src="{{list.imgSrc}}" alt="{{list.imgTitle}}"/>
-          </figure>
-        </div>
-      </li>
-
-    </ul>
+            <p class="cmnp">{{list.details}}</p>
+          </div>
+          <div class="col-xs-6 rSide">
+            <figure class="">
+              <img class="img-responsive center-block" ng-src="{{list.imgSrc}}" alt="{{list.imgTitle}}"/>
+            </figure>
+          </div>
+        </li>
+      </ul>
+    </div>
   </section>
 
   <section id="mainline" class="alC mocha">
-    {{home.bottomContent.text}}
-    <img ng-src="{{home.bottomContent.imgSrc}}" alt="{{home.bottomContent.altText}}" align="absmiddle"/>
+    <div class="container">
+      {{home.bottomContent.text}}
+      <img ng-src="{{home.bottomContent.imgSrc}}" alt="{{home.bottomContent.altText}}" align="absmiddle"/>
+    </div>
   </section>
 
   <ng-include src="'/public/website/views/footer.html'"></ng-include>

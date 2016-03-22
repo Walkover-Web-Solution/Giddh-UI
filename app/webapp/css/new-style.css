@@ -2104,6 +2104,7 @@ i.cls-alert{
 .add-manage-grouplist .isHidden{
     display:none;
 }
+
 /*make un-responsive*/
 body.unresponsive{
     overflow: hidden;
@@ -2146,4 +2147,5 @@ body.unresponsive{
         width: 900px;
     }
 }
+
 
