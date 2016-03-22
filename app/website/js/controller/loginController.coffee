@@ -1,51 +1,65 @@
 'use strict'
 
-loginController = ($scope, $rootScope, $http, loginService) ->
-  $scope.notHuman = false
+loginBackController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr) ->
+  $scope.loginIsProcessing = false
+
+  $scope.authenticate = (provider) ->
+    $scope.loginIsProcessing = true
+    $auth.authenticate(provider).then((response) ->
+      if response.data.result.status is "error"
+#user is not registerd with us
+        toastr.error(response.data.result.message, "Error")
+        $timeout (->
+          window.location = "/beta"
+        ),3000
+      else
+#user is registered and redirect it to app
+        localStorageService.set("_userDetails", response.data.userDetails)
+        window.location = "/app/#/home/"
+    ).catch (response) ->
+      console.log response
+      $scope.loginIsProcessing = false
+      #user is not registerd with us
+      if response.data.result.status is "error"
+        toastr.error(response.data.result.message, "Error")
+        $timeout (->
+          window.location = "/beta"
+        ), 3000
+      else if response.status is 502
+        toastr.error("Something went wrong please reload page", "Error")
+      else
+        toastr.error("Something went wrong please reload page", "Error")
+
+
+  #webpage data
   $scope.login =
     'banner':
-      'mainHead': 'Uh, oh!'
-      'mainHead1': 'You can\'t go through because the app is invitation only.'
+      'mainHead': 'Welcome to the world of'
+      'mainHead1': 'secure and online accounting'
 
-  $scope.form = {}
+  rand = Math.random() * 4
+  window.onload = ->
+    alertMsg parseInt(rand)
+    return
 
-  $scope.getRandomInt = (min, max) ->
-    Math.floor(Math.random() * (max - min + 1)) + min
+  alertMsg = ->
+    $timeout alertMsg, 5000
+    id = parseInt(Math.random() * 3)
+    ele = angular.element(document.querySelector('#tipscnt'))
+    switch id
+      when 0
+        ele.html 'Tip : "Every transaction has a statement."'
+      when 1
+        ele.html 'Tip : "Your account book will never contain your name."'
+      when 2
+        ele.html 'Tip : "Every statement will have an entry."'
+      when 3
+        ele.html 'Tip : "Ateast two things will happen in every statement."'
+      when 3
+        ele.html 'Tip : "Accounting works on double entry system"'
+    return
 
-  $scope.rn1 = $scope.getRandomInt(1, 19)
-  $scope.rn2 = $scope.getRandomInt(1, 19)
+    $timeout alertMsg, 5000
 
-  $scope.isHuman = ->
-    parseInt($scope.user.totalSum) == $scope.rn1 + $scope.rn2
 
-  $scope.hasWhiteSpace = (s) ->
-    return /\s/g.test(s)
-
-  $scope.onLoginSuccess = (response) ->
-    if(angular.isUndefined(response.message))
-      $scope.responseMsg = "Thanks! will get in touch with you soon"
-    else
-      $scope.responseMsg = response.message
-
-  $scope.onLoginFailure = (response) ->
-
-  $scope.submitUserForm = ->
-    if $scope.form.$valid
-      if($scope.isHuman())
-        $scope.responseMsg = "loading... Submitting Form"
-        $scope.splitFirstAndLastName($scope.user.name)
-        loginService.submitUserForm($scope.user, $scope.onLoginSuccess, $scope.onLoginFailure)
-      else
-        $scope.notHuman = true
-        $scope.notHumanMessage = "You are not a human being!"
-
-  $scope.splitFirstAndLastName = (name) ->
-    if($scope.hasWhiteSpace(name))
-      unameArr = name.split(" ")
-      $scope.user.uFname = unameArr[0]
-      $scope.user.uLname = unameArr[1]
-    else
-      $scope.user.uFname = name
-      $scope.user.uLname = "   "
-
-angular.module('giddhApp').controller 'loginController', loginController
+angular.module('giddhApp').controller 'loginBackController', loginBackController

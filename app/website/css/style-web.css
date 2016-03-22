@@ -643,13 +643,13 @@ textarea.form-control {
         float: none !important
     }
 
-    #indul li:nth-child(even) .lSide {
+   /* #indul li:nth-child(even) .lSide {
         float: none !important
     }
 
     #indul li:nth-child(odd) .lSide {
         float: none !important
-    }
+    }*/
 }
 
 @media only screen and (max-width: 768px), (max-device-width: 768px) {
