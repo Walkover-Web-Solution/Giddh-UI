@@ -44,6 +44,16 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     debitTotal: 0
     closingBalance: 0
   }
+
+
+  $scope.balSheet = {
+    liabilities : []
+    assets : []
+    assetTotal : 0
+    liabTotal : 0
+  }
+  
+
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
 
@@ -108,11 +118,11 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     $scope.plData.closingBalance = Math.abs(clB)
 
     if $scope.plData.incomeTotal >= $scope.plData.expenseTotal
-      console.info "Income is Greater"
+      #console.info "Income is Greater"
       $scope.inProfit = true
       $scope.plData.expenseTotal += $scope.plData.closingBalance
     if $scope.plData.incomeTotal < $scope.plData.expenseTotal
-      console.info "expenses is Greater"
+      #console.info "expenses is Greater"
       $scope.inProfit = false
       $scope.plData.incomeTotal += $scope.plData.closingBalance
     
@@ -209,10 +219,6 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     $scope.plShowOptions = !$scope.plShowOptions
     e.stopPropagation()
 
-
-
-
-
   # P&l functions end
 
   $scope.addUIKey = (data) ->
@@ -268,6 +274,12 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     $scope.data = res.body
     $scope.exportData = []
     $scope.data.groupDetails = $scope.orderGroups(res.body.groupDetails)
+    $scope.balSheet.assetTotal = $scope.calCulateTotalAssets($scope.balSheet.assets)
+    $scope.balSheet.liabTotal = $scope.calCulateTotalLiab($scope.balSheet.liabilities)
+    if $scope.inProfit == false
+      $scope.balSheet.assetTotal += $scope.plData.closingBalance
+    else if $scope.inProfit == true
+      $scope.balSheet.liabTotal += $scope.plData.closingBalance
     $scope.exportData = $scope.data.groupDetails
     if $scope.data.closingBalance.amount is 0 and $scope.data.creditTotal is 0 and $scope.data.debitTotal is 0 and $scope.data.forwardedBalance.amount is 0
       $scope.noData = true
@@ -638,8 +650,10 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       switch grp.category
         when 'assets'
           assets.push(grp)
+          $scope.balSheet.assets.push(grp)
         when 'liabilities'
           liabilities.push(grp)
+          $scope.balSheet.liabilities.push(grp)
         when 'income'
           income.push(grp)
         when 'expenses'
@@ -655,56 +669,6 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     _.each expenses, (exp) ->
       orderedGroups.push(exp)
     orderedGroups
-
-  # $scope.logInputLength = (input) ->
-  #   if input.length > 0
-  #     $timeout (->
-  #       $scope.addToExportNow = true
-  #     ), 2000
-  #   else
-  #     $scope.addToExportNow = false
-
-  # $scope.filterTBSearch = (grp) ->
-  #   # isGroupPresentUnq = _.findWhere($scope.filteredExportData, {uniqueName:grp.uniqueName})
-  #   # isGroupPresentName = _.findWhere($scope.filteredExportData, {groupName:grp.groupName})
-  #   # if $scope.addToExportNow && _.isUndefined(isGroupPresentUnq) && _.isUndefined(isGroupPresentName)
-  #   #   $scope.filteredExportData.push(grp)
-  #   #   $scope.exportData = $scope.filteredExportData
-  #   # else if $scope.addToExportNow == false
-  #   #   $scope.filteredExportData = []
-  #   #   $scope.exportData = $scope.data.groupDetails
-  #   grp
-
-
-  # $scope.calculateFilteredExportTotal = (data) ->
-  #   $scope.filteredTotal = {
-  #     exportingFiltered: false
-  #     openingBalance: 0
-  #     creditTotal: 0
-  #     debitTotal: 0
-  #     closingBalance: 0
-  #   }
-  #   _.each data, (grp) ->
-  #     #opening balance
-  #     if grp.forwardedBalance.type == "DEBIT"
-  #       $scope.filteredTotal.openingBalance -= grp.forwardedBalance.amount
-  #     else if grp.forwardedBalance.type == "CREDIT"
-  #       $scope.filteredTotal.openingBalance += grp.forwardedBalance.amount
-  #     #closing balance
-  #     if grp.closingBalance.type == "DEBIT"
-  #       $scope.filteredTotal.closingBalance -= grp.closingBalance.amount
-  #     else if grp.forwardedBalance.type == "CREDIT"
-  #       $scope.filteredTotal.closingBalance += grp.closingBalance.amount
-  #     #debit total
-  #     $scope.filteredTotal.debitTotal += grp.debitTotal
-  #     #credit total
-  #     $scope.filteredTotal.creditTotal += grp.creditTotal
-
-      # apply number filters
-      # $scope.filteredTotal.openingBalance = $filter('number')($scope.filteredTotal.openingBalance, 2)
-      # $scope.filteredTotal.closingBalance = $filter('number')($scope.filteredTotal.closingBalance, 2)
-      # $scope.filteredTotal.debitTotal = $filter('number')($scope.filteredTotal.debitTotal, 2)
-      # $scope.filteredTotal.creditTotal = $filter('number')($scope.filteredTotal.creditTotal, 2)
   
   $scope.$watch('fromDate.date', (newVal,oldVal) ->
     oldDate = new Date(oldVal).getTime()
@@ -715,5 +679,27 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     if newVal != oldVal
       $scope.enableDownload = false
   )
+
+  # for Balance sheet
+
+  $scope.calCulateTotalAssets = (data) ->
+    total = 0
+    _.each data, (obj) ->
+      if obj.closingBalance.type == 'CREDIT'
+        total -= obj.closingBalance.amount
+      else
+        total += obj.closingBalance.amount
+    total
+
+  $scope.calCulateTotalLiab = (data) ->
+    total = 0
+    _.each data, (obj) ->
+      if obj.closingBalance.type == 'DEBIT'
+        total -= obj.closingBalance.amount
+      else
+        total += obj.closingBalance.amount
+    total
+
+  
 
 giddh.webApp.controller 'tbplController', tbplController

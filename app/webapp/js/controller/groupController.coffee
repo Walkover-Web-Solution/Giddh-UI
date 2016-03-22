@@ -170,7 +170,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.groupList = $scope.addFilterKey(res.body)
     $scope.showListGroupsNow = true
     $scope.highlightAcMenu()
-    console.log $scope.groupList
 
   $scope.getGroupListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
