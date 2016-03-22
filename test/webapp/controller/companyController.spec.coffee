@@ -391,7 +391,7 @@ describe 'companyController', ->
       dbd.cCode = "91"
       dbd.mobileNo = "1234567890"
       deferred = @q.defer()
-      @rootScope.canManageUser = true
+      @rootScope.canManageCompany = true
       spyOn(@localStorageService, "get").andReturn({uniqueName: "some"})
       spyOn(@scope, "getSharedUserList")
       spyOn(@localStorageService, "set")
@@ -412,7 +412,7 @@ describe 'companyController', ->
         index: 0
         cCode: ""
       index = 0
-      @rootScope.canManageUser = false
+      @rootScope.canManageCompany = false
       spyOn(@permissionService, "hasPermissionOn").andReturn(false)
       spyOn(@scope, "getSharedUserList")
       spyOn(@localStorageService, "set")

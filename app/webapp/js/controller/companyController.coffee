@@ -185,7 +185,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
 
-    if $rootScope.canManageUser
+    if $rootScope.canManageCompany
       $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
     if type is 'CHANGED'
       $rootScope.$emit('companyChanged')

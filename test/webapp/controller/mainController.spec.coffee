@@ -74,8 +74,8 @@ describe 'mainController', ->
       expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "SHR")
 
     it 'should call permission service hasPermissionOn method and set value true to canDelete variable', ->
-      data = {role: {permissions: [{code: "MNG_USR"}]}}
+      data = {role: {permissions: [{code: "MNG_CMPNY"}]}}
       spyOn(@permissionService, 'hasPermissionOn').andReturn(true)
       @scope.checkPermissions(data)
-      expect(@scope.canManageUser).toBeTruthy()
-      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "MNG_USR")
+      expect(@scope.canManageCompany).toBeTruthy()
+      expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "MNG_CMPNY")
