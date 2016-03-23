@@ -1929,7 +1929,7 @@ i.cls-alert{
 
 .account-card{
     width:300px;
-    min-height:165px;
+    min-height:171px;
     float:left;
     display: inline-block;
     position: relative;
@@ -1968,6 +1968,7 @@ i.cls-alert{
     color:#444;
     font-size:24px;
     padding:5px 0;
+    line-height: 24px;
 
 }
 
@@ -1984,6 +1985,20 @@ i.cls-alert{
     margin-left:15px;
 }
 
+.account-card .account-number{
+    font-size: 12px;
+    margin:5px 0;
+}
+
+/*.account-card .btn{
+    position: absolute;
+    bottom: 10px;
+}*/
+
+/*.account-card .select-account{
+    margin-top:45px;
+}
+*/
 .linked-accounts{
     width: 100%;
     padding: 10px;
