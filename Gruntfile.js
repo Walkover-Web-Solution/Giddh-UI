@@ -245,8 +245,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean','bower_concat', 'cssmin', 'concat', 'preprocess:dev'])
 
-  grunt.registerTask('init-prod', ['copy', 'coffee', 'env:prod', 'clean', 'bower_concat',  'cssmin', 'concat', 'uglify', 'preprocess:prod'])
-
+  grunt.registerTask('init-prod', ['copy', 'coffee', 'env:prod', 'clean', 'bower_concat',  'cssmin', 'concat', 'preprocess:prod'])
+  // 'uglify',
   grunt.registerTask('test', [
     'coffee',
     'karma:unit'
