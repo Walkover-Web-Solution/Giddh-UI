@@ -429,7 +429,7 @@ angular.module('ledger', [])
       # console.log i, d, c
 
     scope.closeEntry = ()->
-      scope.removeLedgdialog()
+      scope.removeLedgerDialog('.ledgerPopDiv')
       scope.removeClassInAllEle("ledgEntryForm", "open")
       scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
       scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
@@ -437,7 +437,7 @@ angular.module('ledger', [])
 
     scope.closeAllEntry =()->
       $rootScope.lItem = []
-      scope.removeLedgdialog()
+      scope.removeLedgerDialog('.ledgerPopDiv')
       scope.removeClassInAllEle("ledgEntryForm", "open")
       scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
       scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
