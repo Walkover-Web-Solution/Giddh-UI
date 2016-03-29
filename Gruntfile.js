@@ -71,7 +71,7 @@ module.exports = function (grunt) {
       },
       src: {
         files: [
-          srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '/**/*.css', routeSrcDir + "/**/*.coffee"
+          srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '/**/*.css', routeSrcDir + "/**/*.coffee", srcDir + '/**/*.js'
         ],
         tasks: ['coffee', 'copy', 'clean', 'cssmin', 'concat', 'env:dev', 'preprocess:dev']
       }
@@ -107,7 +107,7 @@ module.exports = function (grunt) {
       },
       js:{
         files:{
-          'public/webapp/app.js': ['public/webapp/js/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/jspdf.debug.js'],
+          'public/webapp/app.js': ['public/webapp/js/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/jspdf.debug.js', 'app/webapp/**/*.js'],
           'public/webapp/newRelic.js': ['app/webapp/modified_lib/newRelic.js'],
           'public/webapp/_extras.js': ['app/webapp/modified_lib/angular-charts.js', 'app/webapp/modified_lib/jspdf.debug.js'],
           'public/webapp/css/giddh.min.css': ['public/webapp/css/all_bower.css', 'public/webapp/css/modiefied-bootstrap.css', 'public/webapp/css/new-style.css'],
