@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html lang="en" ng-app='giddhWebApp'>
+<!-- <html lang="en" ng-app='giddhWebApp'> -->
+<html lang="en">
 <head>
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
@@ -22,6 +23,7 @@
   <!-- including app Js Files -->
   <!-- @if NODE_ENV='DEVELOPMENT' -->
   <script  type="text/javascript" src="/public/webapp/app.js"></script>
+  
   <!-- @endif -->
   <!-- @if NODE_ENV='PRODUCTION' -->
   <script type="text/javascript" src="/public/webapp/app.min.js"></script>
@@ -40,6 +42,19 @@
   <ui-view></ui-view>
 
   
+
+  <script type="text/javascript" src="/node_modules/rxjs/bundles/Rx.umd.js"></script>
+  <script type="text/javascript" src="/node_modules/angular2/bundles/angular2-polyfills.js"></script>
+  <script type="text/javascript" src="/node_modules/angular2/bundles/angular2-all.umd.dev.js"></script>
+  <script>
+    var upgradeAdapter = new ng.upgrade.UpgradeAdapter();
+    angular.element(document.body).ready(function() {
+      upgradeAdapter.bootstrap(document.body, ['giddhWebApp']);
+    });
+  </script>  
+
+
+
   <!-- @if NODE_ENV='PRODUCTION' -->
   <!-- Google Tag Manager -->
   <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
@@ -55,6 +70,11 @@
   
   <!-- @if NODE_ENV='PRODUCTION' -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+
+
+
+
   <!-- @endif -->
 </body>
 </html>
