@@ -204,7 +204,7 @@
       </div>
     </uib-tab>
     <!-- end of second tab ng-if="canManageCompany" -->
-    <uib-tab ng-if="canManageCompany" heading="Tally XML upload">
+    <uib-tab active="true" ng-if="canManageCompany" heading="Tally XML upload">
       <div class="clearfix bdrB">
         <div class="col-xs-6">
           <div class="pdT2">
@@ -271,24 +271,25 @@
           <thead>
             <th>Req. ID</th>
             <th>Start</th>
-            <th>End</th>
             <th>Status</th>
+            <th>Description</th>
             <th>User</th>
           </thead>
           <tbody>
-            <tr ng-repeat="(key, value) in updlist track by $index">
+            <tr ng-repeat="value in updlist track by $index">
               <td>{{value.requestId}}</td>
               <td>{{value.startedAt}}</td>
-              <td>{{value.finishedAt}}</td>
               <td class="alC">
                 <i ng-if="value.status === 'COMPLETED'" class="glyphicon glyphicon-check success"></i>
                 <i ng-if="value.status != 'COMPLETED'" class="glyphicon glyphicon-bell error"></i>
+              </td>
+              <td>
+                <a ng-if="value.isAccountConflict || value.isGroupConflict" href="javascript:void(0)" ng-click="openFixUploadIssues(value)" tooltip-placement="top" uib-tooltip="{{value.description}}">Details</a>
               </td>
               <td>{{value.user.name}}</td>
             </tr>
           </tbody>
         </table>
-
       </div>
       <!--end of clearfix  -->
     </uib-tab>

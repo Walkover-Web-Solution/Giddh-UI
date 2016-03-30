@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService) ->
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -658,6 +658,60 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.payAlert = []
       $scope.coupon = angular.copy({})
       $scope.disableRazorPay = false
+
+  # upload issue fix
+  $scope.openFixUploadIssues = (data) ->
+    $scope.fixUploadData = {}
+    console.log data, "openFixUploadIssues"
+    $scope.fixUploadData = angular.copy(data)
+
+    $scope.fixUploadData.groupConflicts = _.reject($scope.fixUploadData.groupConflicts, (grpC) ->
+        _.some($scope.flattenGroupList, (grp) ->
+          grp.uniqueName == grpC.uniqueName)
+    )
+
+    modalInstance = $uibModal.open(
+      templateUrl: '/public/webapp/views/fixUploadIssueModal.html',
+      size: "lg",
+      backdrop: 'static',
+      scope: $scope
+    )
+    modalInstance.result.then($scope.onFixIssuesSuccess, $scope.onFixIssuesFailure)
+
+  $scope.onFixIssuesSuccess = (data) ->
+    console.log "open: onFixIssuesSuccess"
+
+  $scope.onFixIssuesFailure = () ->
+    console.log "closed: onFixIssuesFailure"
+
+  # omit if group already exist
+  $scope.ifGroupAlreadyExist =(group) ->
+    _.some($scope.flattenGroupList, (grp) ->
+      grp.uniqueName == group.uniqueName)
+
+  # move fix group
+  $scope.fixMoveGroup = (group, togroup) ->
+    body = {
+      "name": group.name,
+      "uniqueName": group.uniqueName.toLowerCase(),
+      "parentGroupUniqueName": togroup.uniqueName,
+      "description": undefined
+    }
+    groupService.create($rootScope.selectedCompany.uniqueName, body).then($scope.fixMoveGroupSuccess, $scope.fixMoveGroupFailure)
+
+  $scope.fixMoveGroupSuccess = (res) ->
+    toastr.success("Sub group added successfully", "Success")
+    $scope.fixUploadData.groupConflicts = _.reject($scope.fixUploadData.groupConflicts, (grp) ->
+      grp.uniqueName is res.body.uniqueName
+    )
+    $scope.getGroups()
+
+  $scope.fixMoveGroupFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.retryUpload = (data) ->
+    console.log data
+
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

@@ -32,7 +32,9 @@ html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pr
     padding: 0;
     font-size: 100%;
 }
-
+.small, small {
+  font-size: 85%;
+}
 a, a:focus, a:hover, a:active {
     text-decoration: none;
     outline: none;

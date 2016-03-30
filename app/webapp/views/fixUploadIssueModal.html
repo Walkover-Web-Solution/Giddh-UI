@@ -1,0 +1,49 @@
+<div class="noBrdRdsModal">
+  
+  <div class="modal-header">
+    <h3 class="modal-title">Fix Upload Issues</h3>
+  </div>
+  
+  <div class="modal-body">
+    <p class="lead">{{fixUploadData.description}}</p>
+    <!-- group conflict -->
+    <section class="fixUpdList" ng-if="fixUploadData.isGroupConflict">
+
+      <table class="mrT2 table table-bordered table-striped">
+        <tr ng-repeat="group in fixUploadData.groupConflicts">
+          <td class="nopad">
+            <form name="moveGroupFormFix" novalidate>
+              <table class="table">
+                <tr>
+                  <td>
+                    <input tooltip-placement="top" uib-tooltip="{{group.uniqueName}}" type="text" ng-model="group.name" ng-disabled="true" class="form-control">
+                  </td>
+                  <td>
+                    <input ng-model="grpMoveFix" type="text" placeholder="Move to group" class="form-control" required
+                  uib-typeahead="groups as groups.name for groups in flattenGroupList | filter:{name: $viewValue} | limitTo:8"/>
+                  </td>
+                  <td>
+                    <button class="btn btn-success mrL" ng-click="fixMoveGroup(group, grpMoveFix)" ng-disabled="moveGroupFormFix.$invalid">Move</button>
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </td>
+        </tr>
+      </table>
+
+      
+    </section>
+    <!-- group conflict end -->
+
+
+  </div>
+  <div class="modal-footer">
+    {{fixUploadData.groupConflicts.length}}
+    <button ng-disabled="fixUploadData.groupConflicts.length > 0" class="btn btn-primary" type="button" ng-click="$close(); retryUpload(value)">
+      Retry
+    </button>
+    <button class="btn btn-default" type="button" ng-click="$dismiss()">Close</button>
+  </div>
+
+</div>
