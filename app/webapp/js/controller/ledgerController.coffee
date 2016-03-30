@@ -152,7 +152,21 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     else
       _.extend(edata.transactions, item.transactions)  
 
+    # change entry direction
+    if edata.transactions.length <= 1
+      edata.transactions[0].type = $scope.reverseDirection(edata.transactions[0].type)
+    else
+      _.each(edata.transactions, (ledgObj) ->
+        ledgObj.type = $scope.reverseDirection(ledgObj.type)
+      )
+
     ledgerService.createEntry(unqNamesObj, edata).then($scope.moveEntryInGiddhSuccess, $scope.addEntryFailure)
+
+  $scope.reverseDirection = (type) ->
+    if type is 'debit'
+      return 'credit'
+    else if type is 'credit'
+      return 'debit'
 
   $scope.moveEntryInGiddhSuccess = (res) ->
     toastr.success("Entry created successfully", "Success")
