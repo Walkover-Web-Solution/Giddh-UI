@@ -1,6 +1,6 @@
 "use strict"
 
-userController = ($scope, $rootScope, toastr, userServices, localStorageService, $timeout, $uibModal, modalService) ->
+userController = ($scope, $rootScope, toastr, userServices, localStorageService, $timeout, $uibModal, modalService, $filter) ->
   $scope.userAuthKey = undefined
   $scope.noData = false
   $scope.subListData = []
@@ -133,6 +133,24 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   }
   $scope.linkedAccountsExist = false
   $scope.bankDetails = {}
+  $scope.transDate = {date: new Date()}
+  $scope.transactionDate = $filter('date')($scope.transDate.date, "dd-MM-yyyy")
+  $scope.format = "dd-MM-yyyy"
+  $scope.newTransDate = {date: new Date()}
+  $scope.dateOptions = {
+    'year-format': "'yy'",
+    'starting-day': 1,
+    'showWeeks': false,
+    'show-button-bar': false,
+    'year-range': 1,
+    'todayBtn': false
+  }
+  $scope.fromDatePickerIsOpen = false
+  $scope.fromDatePickerOpen = ->
+    this.fromDatePickerIsOpen = true
+
+  $scope.toDatePickerOpen = ->
+    this.toDatePickerIsOpen = true
 
   $scope.loadYodlee = () ->
     #userServices.loginRegister($scope.loginSuccess, $scope.loginFailure)
@@ -147,7 +165,12 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       $scope.linkedAccountsExist = false
     else
       $scope.linkedAccountsExist = true
-
+      #add transaction date to cards
+      _.each $scope.banks.linked, (bank) ->
+        _.each bank.yodleeAccounts, (card) ->
+          if card.transactionDate == null
+            card.transactionDate =  $scope.transactionDate
+           
   $scope.getAccountsFailure = (res) ->
     # companyUniqueName =  {
     #   cUnq: $rootScope.selectedCompany.uniqueName
@@ -319,7 +342,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
             uniqueName : link.giddhAccount.uniqueName
           }
           $scope.AccountsList = _.without($scope.AccountsList, _.findWhere($scope.AccountsList, linked))
-    
+        
 
   $scope.linkGiddhAccount = (card) ->
     card.showAccList = false
@@ -422,6 +445,35 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
   $scope.refreshAllFailure = (res) ->
     toastr.error(res.data.message, res.data.code)
+
+  $scope.setItemAccountId = (card) ->
+    $scope.banks.toLinkObj.itemAccountId = card.itemAccountId
+
+  $scope.updateTransactionDate = () ->
+    companyUniqueName =  {
+      cUnq: $rootScope.selectedCompany.uniqueName
+      itemAccountId: $scope.banks.toLinkObj.itemAccountId
+      date: $filter('date')($scope.newTransDate.date, "dd-MM-yyyy")
+    }
+    data = {}
+    userServices.setTransactionDate(companyUniqueName, data).then($scope.updateTransactionDateSuccess, $scope.updateTransactionDateFailure)
+
+  $scope.updateTransactionDateSuccess = (res) ->
+    toastr.success(res.body)
+
+  $scope.updateTransactionDateFailure = (res) ->
+    toastr.error(res.data.code, res.data.message)
+
+  # watch for transaction date change 
+  $scope.$watch('newTransDate.date', (newVal, oldVal) ->
+    if newVal != oldVal
+      date = $filter('date')(newVal, "dd-MM-yyyy")
+      modalService.openConfirmModal(
+        title: 'Update Date',
+        body: 'Do you want to get ledger entries for this account from ' + date + ' ?',
+        ok: 'Yes',
+        cancel: 'No').then($scope.updateTransactionDate)
+  )
 
 #init angular app
 giddh.webApp.controller 'userController', userController

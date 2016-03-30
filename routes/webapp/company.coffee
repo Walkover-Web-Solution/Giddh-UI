@@ -260,5 +260,18 @@ router.put '/:companyUniqueName/ebanks/:ItemAccountId', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.put '/:companyUniqueName/ebanks/:ItemAccountId/eledgers/:date', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/' + req.params.ItemAccountId + '/eledgers?from=' + req.params.date
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 
 module.exports = router

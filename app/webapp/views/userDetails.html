@@ -228,6 +228,19 @@
                       <div class="account-number">
                         <b>Account</b>: {{card.accountNumber}}
                       </div>
+                      <div class="account-date">
+                        <b>Get Entries From</b>: 
+                        <a ng-click="refreshTransactionDate()">{{card.transactionDate}}
+                          <input type="text" class="transaction-date"
+                             uib-datepicker-popup="{{format}}" required
+                             datepicker-options="dateOptions"
+                             is-open="fromDatePickerIsOpen"
+                             ng-click="fromDatePickerOpen(); setItemAccountId(card)"
+                             ng-model="newTransDate.date"
+                             max-date="today"
+                             placeholder="from date"/>
+                        </a>
+                      </div>
                       <div class="balance">
                         {{card.currentBalanceCurrencyCode}} {{card.currentBalance}}
                       </div>

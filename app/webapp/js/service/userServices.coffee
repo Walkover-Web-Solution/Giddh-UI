@@ -62,6 +62,10 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
           method: 'PUT'
           url: '/company/:companyUniqueName/ebanks/:itemAccountId'
         }
+        setTransactionDate: {
+          method: 'PUT'
+          url: '/company/:companyUniqueName/ebanks/:itemAccountId/eledgers/:date'
+        }
         verifyMfa: {
           method: 'POST'
           url: '/company/:companyUniqueName/ebanks/:itemAccountId/verify-mfa'
@@ -145,6 +149,11 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
     addGiddhAccount: (companyUniqueName, data) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.addGiddhAccount({companyUniqueName: companyUniqueName.cUnq, itemAccountId:companyUniqueName.itemAccountId}, data, onSuccess, onFailure)
+    )
+    setTransactionDate: (companyUniqueName, data) ->
+      console.log companyUniqueName
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.setTransactionDate({companyUniqueName: companyUniqueName.cUnq, itemAccountId:companyUniqueName.itemAccountId, date: companyUniqueName.date}, data, onSuccess, onFailure)
     )
     verifyMfa: (unqObj, data) ->
       @handlePromise((onSuccess, onFailure) ->
