@@ -29,6 +29,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       method: 'POST'
       url: '/company/:uniqueName/pay-via-wallet'
     }
+    retryXmlUpload: {
+      method: 'PUT'
+      url: '/company/:uniqueName/retry'
+    }
   })
 
   companyServices =
@@ -94,5 +98,8 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Company.payBillViaWallet({
         uniqueName: data.uniqueName
       }, data, onSuccess, onFailure))
+
+    retryXml: (uniqueName, data, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.retryXmlUpload({uniqueName: uniqueName},data, onSuccess, onFailure))
 
   companyServices

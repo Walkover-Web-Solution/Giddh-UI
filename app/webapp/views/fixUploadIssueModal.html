@@ -5,7 +5,23 @@
   </div>
   
   <div class="modal-body">
-    <p class="lead">{{fixUploadData.description}}</p>
+
+    <section ng-hide="waitXmlUpload">
+
+      <p class="lead">{{fixUploadData.description}}</p>
+
+      <div ng-if="fixUploadData.groupConflicts.length > 0" class="alert alert-warning" role="alert">You have to resolve conflicts first. Move them in other groups</div>
+
+      <!-- message after group conflict resolved -->
+      <div ng-if="!fixUploadData.groupConflicts.length > 0" class="alert alert-warning" role="alert">Hit Retry to see Account conflicts</div>
+
+    </section>
+
+    <!-- loader -->
+    <div class="search-loading" ng-show="waitXmlUpload">
+      <span class="spinner small"></span> Loading…
+    </div>
+
     <!-- group conflict -->
     <section class="fixUpdList" ng-if="fixUploadData.isGroupConflict">
 
@@ -39,8 +55,7 @@
 
   </div>
   <div class="modal-footer">
-    {{fixUploadData.groupConflicts.length}}
-    <button ng-disabled="fixUploadData.groupConflicts.length > 0" class="btn btn-primary" type="button" ng-click="$close(); retryUpload(value)">
+    <button ng-disabled="fixUploadData.groupConflicts.length > 0" class="btn btn-primary" type="button" ng-click="retryUpload(fixUploadData)">
       Retry
     </button>
     <button class="btn btn-default" type="button" ng-click="$dismiss()">Close</button>

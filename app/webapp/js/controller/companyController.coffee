@@ -662,21 +662,19 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   # upload issue fix
   $scope.openFixUploadIssues = (data) ->
     $scope.fixUploadData = {}
-    console.log data, "openFixUploadIssues"
     $scope.fixUploadData = angular.copy(data)
-
     $scope.fixUploadData.groupConflicts = _.reject($scope.fixUploadData.groupConflicts, (grpC) ->
         _.some($scope.flattenGroupList, (grp) ->
           grp.uniqueName == grpC.uniqueName)
     )
-
-    modalInstance = $uibModal.open(
+    $scope.modal = {}
+    $scope.modal.modalInstance = $uibModal.open(
       templateUrl: '/public/webapp/views/fixUploadIssueModal.html',
       size: "lg",
       backdrop: 'static',
       scope: $scope
     )
-    modalInstance.result.then($scope.onFixIssuesSuccess, $scope.onFixIssuesFailure)
+    $scope.modal.modalInstance.result.then($scope.onFixIssuesSuccess, $scope.onFixIssuesFailure)
 
   $scope.onFixIssuesSuccess = (data) ->
     console.log "open: onFixIssuesSuccess"
@@ -710,8 +708,17 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, res.data.status)
 
   $scope.retryUpload = (data) ->
-    console.log data
+    $scope.waitXmlUpload = true
+    companyServices.retryXml($rootScope.selectedCompany.uniqueName, data).then($scope.retryUploadSuccess, $scope.retryUploadFailure)
 
+  $scope.retryUploadSuccess = (res) ->
+    $scope.waitXmlUpload = false
+    toastr.success(res.body.message, res.status)
+    $scope.modal.modalInstance.close()
+
+  $scope.retryUploadFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+    $scope.modal.modalInstance.close()
 
   $timeout( ->
     $rootScope.selAcntUname = undefined
