@@ -468,10 +468,11 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
   # watch date changed
   $scope.changedate =(date)->
+    abc = $filter("date")(date)
     date = $filter('date')(date, "dd-MM-yyyy")
     modalService.openConfirmModal(
       title: 'Update Date',
-      body: 'Do you want to get ledger entries for this account from ' + date + ' ?',
+      body: 'Do you want to get ledger entries for this account from ' + abc + ' ?',
       ok: 'Yes',
       cancel: 'No').then(()->
         $scope.updateTransactionDate(date)
