@@ -231,18 +231,19 @@
                         <b>Account</b>: {{card.accountNumber}}
                       </div>
                       <div class="account-date">
+                        {{newTransDate.date | date}}
                         <b>Get Entries From</b>: 
                         <a href="javascript:void(0)">
-                          <!--
-                            ng-click="refreshTransactionDate()"
-                           {{card.transactionDate}} -->
-                          {{newTransDate.date | date}}
-                          <input type="text" class="transaction-date"
+                          <!-- ng-click="refreshTransactionDate()"-->
+                           {{card.transactionDate | date}} 
+                          <input  
+                            ng-change='changedate(card.transactionDate)'
+                            type="text" class="transaction-date"
                              uib-datepicker-popup="{{format}}" required
                              datepicker-options="dateOptions"
                              is-open="fromDatePickerIsOpen"
                              ng-click="fromDatePickerOpen(); setItemAccountId(card)"
-                             ng-model="newTransDate.date"
+                             ng-model="card.transactionDate"
                              max-date="today"
                              placeholder="from date"/>
                         </a>

@@ -165,11 +165,13 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       $scope.linkedAccountsExist = false
     else
       $scope.linkedAccountsExist = true
-      #add transaction date to cards
+      #add transaction date to cards and assign utc format
       _.each $scope.banks.linked, (bank) ->
         _.each bank.yodleeAccounts, (card) ->
-          if card.transactionDate == null
-            card.transactionDate =  $scope.transactionDate
+          if _.isNull(card.transactionDate) || _.isUndefined(card.transactionDate)
+            card.transactionDate =  new Date()
+          else
+            card.transactionDate = new Date(card.transactionDate)
            
   $scope.getAccountsFailure = (res) ->
     # companyUniqueName =  {
@@ -449,11 +451,11 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.setItemAccountId = (card) ->
     $scope.banks.toLinkObj.itemAccountId = card.itemAccountId
 
-  $scope.updateTransactionDate = () ->
+  $scope.updateTransactionDate = (date) ->
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
       itemAccountId: $scope.banks.toLinkObj.itemAccountId
-      date: $filter('date')($scope.newTransDate.date, "dd-MM-yyyy")
+      date: date
     }
     data = {}
     userServices.setTransactionDate(companyUniqueName, data).then($scope.updateTransactionDateSuccess, $scope.updateTransactionDateFailure)
@@ -464,16 +466,16 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.updateTransactionDateFailure = (res) ->
     toastr.error(res.data.code, res.data.message)
 
-  # watch for transaction date change 
-  $scope.$watch('newTransDate.date', (newVal, oldVal) ->
-    if newVal != oldVal
-      date = $filter('date')(newVal, "dd-MM-yyyy")
-      modalService.openConfirmModal(
-        title: 'Update Date',
-        body: 'Do you want to get ledger entries for this account from ' + date + ' ?',
-        ok: 'Yes',
-        cancel: 'No').then($scope.updateTransactionDate)
-  )
+  # watch date changed
+  $scope.changedate =(date)->
+    date = $filter('date')(date, "dd-MM-yyyy")
+    modalService.openConfirmModal(
+      title: 'Update Date',
+      body: 'Do you want to get ledger entries for this account from ' + date + ' ?',
+      ok: 'Yes',
+      cancel: 'No').then(()->
+        $scope.updateTransactionDate(date)
+      )
 
 #init angular app
 giddh.webApp.controller 'userController', userController
