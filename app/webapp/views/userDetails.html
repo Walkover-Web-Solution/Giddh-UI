@@ -240,11 +240,12 @@
                             ng-change='changedate(card.transactionDate)'
                             type="text" class="transaction-date"
                              uib-datepicker-popup="{{format}}" required
-                             datepicker-options="dateOptions"
+                             datepicker-options="dateOptionsBanks"
                              is-open="fromDatePickerIsOpen"
                              ng-click="fromDatePickerOpen(); setItemAccountId(card)"
                              ng-model="card.transactionDate"
                              max-date="today"
+                             min-date="beforeThreeMonths"
                              placeholder="from date"/>
                         </a>
                       </div>

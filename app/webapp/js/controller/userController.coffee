@@ -145,6 +145,16 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     'year-range': 1,
     'todayBtn': false
   }
+  $scope.dateOptionsBanks = {
+    'year-format': "'yy'",
+    'starting-day': 1,
+    'showWeeks': false,
+    'show-button-bar': false,
+    'year-range': 1,
+    'todayBtn': true
+  }
+  $scope.today = new Date()
+  $scope.beforeThreeMonths =  new Date(moment().subtract(3, 'month').format("dd-MM-yyyy"))
   $scope.fromDatePickerIsOpen = false
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
