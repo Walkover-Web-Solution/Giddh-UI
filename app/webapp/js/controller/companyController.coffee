@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService, accountService) ->
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -663,10 +663,17 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.openFixUploadIssues = (data) ->
     $scope.fixUploadData = {}
     $scope.fixUploadData = angular.copy(data)
-    $scope.fixUploadData.groupConflicts = _.reject($scope.fixUploadData.groupConflicts, (grpC) ->
-        _.some($scope.flattenGroupList, (grp) ->
-          grp.uniqueName == grpC.uniqueName)
-    )
+    if data.isGroupConflict
+      $scope.fixUploadData.groupConflicts = _.reject($scope.fixUploadData.groupConflicts, (grpC) ->
+          _.some($scope.flattenGroupList, (grp) ->
+            grp.uniqueName is grpC.uniqueName)
+      )
+    if data.isAccountConflict
+      $scope.fixUploadData.accountConflicts = _.reject($scope.fixUploadData.accountConflicts, (acObj) ->
+          _.some($scope.fltAccntList, (ac) ->
+            ac.uniqueName is acObj.uniqueName || ac.mergedAccounts.indexOf(acObj.uniqueName) isnt -1
+          ) 
+      )
     $scope.modal = {}
     $scope.modal.modalInstance = $uibModal.open(
       templateUrl: '/public/webapp/views/fixUploadIssueModal.html',
@@ -674,13 +681,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       backdrop: 'static',
       scope: $scope
     )
-    $scope.modal.modalInstance.result.then($scope.onFixIssuesSuccess, $scope.onFixIssuesFailure)
-
-  $scope.onFixIssuesSuccess = (data) ->
-    console.log "open: onFixIssuesSuccess"
-
-  $scope.onFixIssuesFailure = () ->
-    console.log "closed: onFixIssuesFailure"
+    
 
   # omit if group already exist
   $scope.ifGroupAlreadyExist =(group) ->
@@ -707,6 +708,25 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.fixMoveGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+  # account fix
+  $scope.fixMoveAc = (ac, group) ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname : ac.uniqueName
+      selGrpUname: group.uniqueName
+    }
+    accountService.createAc(unqNamesObj, ac).then($scope.fixMoveAcSuccess, $scope.fixMoveAcFailure)
+
+  $scope.fixMoveAcSuccess = (res) ->
+    toastr.success("Account created successfully", res.status)
+    $scope.fixUploadData.accountConflicts = _.reject($scope.fixUploadData.accountConflicts, (acObj) ->
+      acObj.uniqueName is res.body.uniqueName
+    )
+    $scope.getGroups()
+
+  $scope.fixMoveAcFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
   $scope.retryUpload = (data) ->
     $scope.waitXmlUpload = true
     companyServices.retryXml($rootScope.selectedCompany.uniqueName, data).then($scope.retryUploadSuccess, $scope.retryUploadFailure)
@@ -715,6 +735,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.waitXmlUpload = false
     toastr.success(res.body.message, res.status)
     $scope.modal.modalInstance.close()
+    $scope.getUploadsList()
 
   $scope.retryUploadFailure = (res) ->
     toastr.error(res.data.message, res.data.status)

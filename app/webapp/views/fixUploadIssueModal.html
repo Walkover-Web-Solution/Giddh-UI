@@ -8,12 +8,22 @@
 
     <section ng-hide="waitXmlUpload">
 
-      <p class="lead">{{fixUploadData.description}}</p>
+      <p class="lead" ng-hide="!fixUploadData.groupConflicts.length > 0 || !fixUploadData.accountConflicts.length > 0">{{fixUploadData.description}}</p>
 
-      <div ng-if="fixUploadData.groupConflicts.length > 0" class="alert alert-warning" role="alert">You have to resolve conflicts first. Move them in other groups</div>
+      <!-- section for group conflict -->
+      <section ng-if="fixUploadData.isGroupConflict">
+        <div ng-if="fixUploadData.groupConflicts.length > 0" class="alert alert-warning" role="alert">You have to resolve conflicts first. Move them in other groups</div>
 
-      <!-- message after group conflict resolved -->
-      <div ng-if="!fixUploadData.groupConflicts.length > 0" class="alert alert-warning" role="alert">Hit Retry to see Account conflicts</div>
+        <!-- message after group conflict resolved -->
+        <div ng-if="!fixUploadData.groupConflicts.length > 0" class="alert alert-warning" role="alert">Hit Retry to see Account conflicts</div>
+      </section>
+
+
+      <section ng-if="fixUploadData.isAccountConflict">
+        <div ng-if="!fixUploadData.accountConflicts.length > 0" class="alert alert-warning" role="alert">
+          Wow! you have resolved all conflicts. Now just
+          hit Retry to complete xml upload.</div>
+      </section>
 
     </section>
 
@@ -47,6 +57,35 @@
           </td>
         </tr>
       </table>
+    </section>
+    <!-- end group -->
+
+
+    <!-- group conflict -->
+    <section class="fixUpdList" ng-if="fixUploadData.isAccountConflict">
+
+      <table class="mrT2 table table-bordered table-striped">
+        <tr ng-repeat="account in fixUploadData.accountConflicts">
+          <td class="nopad">
+            <form name="moveAccountFormFix" novalidate>
+              <table class="table">
+                <tr>
+                  <td>
+                    <input tooltip-placement="top" uib-tooltip="{{account.uniqueName}}" type="text" ng-model="account.name" ng-disabled="true" class="form-control">
+                  </td>
+                  <td>
+                    <input ng-model="grpMoveFix" type="text" placeholder="Select group" class="form-control" required
+                  uib-typeahead="groups as groups.name for groups in flattenGroupList | filter:{name: $viewValue} | limitTo:8"/>
+                  </td>
+                  <td>
+                    <button class="btn btn-success mrL" ng-click="fixMoveAc(account, grpMoveFix)" ng-disabled="moveAccountFormFix.$invalid">Move</button>
+                  </td>
+                </tr>
+              </table>
+            </form>
+          </td>
+        </tr>
+      </table>
 
       
     </section>
@@ -55,7 +94,7 @@
 
   </div>
   <div class="modal-footer">
-    <button ng-disabled="fixUploadData.groupConflicts.length > 0" class="btn btn-primary" type="button" ng-click="retryUpload(fixUploadData)">
+    <button ng-disabled="fixUploadData.groupConflicts.length > 0 || fixUploadData.accountConflicts.length > 0" class="btn btn-primary" type="button" ng-click="retryUpload(fixUploadData)">
       Retry
     </button>
     <button class="btn btn-default" type="button" ng-click="$dismiss()">Close</button>

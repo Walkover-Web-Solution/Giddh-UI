@@ -284,7 +284,10 @@
                 <i ng-if="value.status != 'COMPLETED'" class="glyphicon glyphicon-bell error"></i>
               </td>
               <td>
-                <a ng-if="value.isAccountConflict || value.isGroupConflict" href="javascript:void(0)" ng-click="openFixUploadIssues(value)" tooltip-placement="top" uib-tooltip="{{value.description}}">Details</a>
+                <span ng-if="value.status === 'COMPLETED'">
+                  {{value.status}}
+                </span>
+                <a ng-if="value.isAccountConflict || value.isGroupConflict" href="javascript:void(0)" ng-click="openFixUploadIssues(value)" tooltip-placement="top" uib-tooltip="{{value.description}}">{{value.status}}</a>
               </td>
               <td>{{value.user.name}}</td>
             </tr>
