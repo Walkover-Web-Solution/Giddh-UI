@@ -231,10 +231,8 @@
                         <b>Account</b>: {{card.accountNumber}}
                       </div>
                       <div class="account-date">
-                        {{newTransDate.date | date}}
                         <b>Get Entries From</b>: 
                         <a href="javascript:void(0)">
-                          <!-- ng-click="refreshTransactionDate()"-->
                            {{card.transactionDate | date}} 
                           <input  
                             ng-change='changedate(card.transactionDate)'
