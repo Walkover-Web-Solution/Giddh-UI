@@ -261,7 +261,7 @@ angular.module('ledger', [])
               <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResultsE">Add new account</a>
             </div>
             <div class="row">
-              <div class="col-md-6 col-sm-12">
+              <div class="col-xs-6">
                 <div class="form-group">
                   <select 
                     class="form-control"
@@ -274,7 +274,7 @@ angular.module('ledger', [])
                   <input type="text" name="tag" class="form-control" ng-model="item.sharedData.tag" placeholder="Tag" />
                 </div>
               </div>
-              <div class="col-md-6 col-sm-12">
+              <div class="col-xs-6">
                 <div class="form-group">
                   <textarea class="form-control" name="description" ng-model="item.sharedData.description" placeholder="Description"></textarea>
                 </div>
@@ -520,7 +520,7 @@ angular.module('ledger', [])
                 <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResults">Add new account</a>
               </div>
               <div class="row">
-                <div class="col-md-6 col-sm-12">
+                <div class="col-xs-6">
                   <div class="form-group">
                     <select 
                       class="form-control"
@@ -534,7 +534,7 @@ angular.module('ledger', [])
                     <input type="text" name="tag" ng-readonly="!canAddAndEdit" class="form-control" ng-model="item.sharedData.tag" placeholder="Tag" />
                   </div>
                 </div>
-                <div class="col-md-6 col-sm-12">
+                <div class="col-xs-6">
                   <div class="form-group" ng-if="ftype == \'Update\'">
                     <label>Voucher no. </label>
                     {{item.sharedData.voucher.shortCode}}-{{item.sharedData.voucherNo}}
