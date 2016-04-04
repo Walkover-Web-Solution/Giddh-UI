@@ -690,13 +690,16 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   # move fix group
   $scope.fixMoveGroup = (group, togroup) ->
-    body = {
-      "name": group.name,
-      "uniqueName": group.uniqueName.toLowerCase(),
-      "parentGroupUniqueName": togroup.uniqueName,
-      "description": undefined
-    }
-    groupService.create($rootScope.selectedCompany.uniqueName, body).then($scope.fixMoveGroupSuccess, $scope.fixMoveGroupFailure)
+    if _.isObject(togroup)
+      body = {
+        "name": group.name,
+        "uniqueName": group.uniqueName.toLowerCase(),
+        "parentGroupUniqueName": togroup.uniqueName,
+        "description": undefined
+      }
+      groupService.create($rootScope.selectedCompany.uniqueName, body).then($scope.fixMoveGroupSuccess, $scope.fixMoveGroupFailure)
+    else
+      toastr.warning("You can only select group from list", "Warning")
 
   $scope.fixMoveGroupSuccess = (res) ->
     toastr.success("Sub group added successfully", "Success")
@@ -710,12 +713,15 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   # account fix
   $scope.fixMoveAc = (ac, group) ->
-    unqNamesObj = {
-      compUname: $rootScope.selectedCompany.uniqueName
-      acntUname : ac.uniqueName
-      selGrpUname: group.uniqueName
-    }
-    accountService.createAc(unqNamesObj, ac).then($scope.fixMoveAcSuccess, $scope.fixMoveAcFailure)
+    if _.isObject(group)
+      unqNamesObj = {
+        compUname: $rootScope.selectedCompany.uniqueName
+        acntUname : ac.uniqueName
+        selGrpUname: group.uniqueName
+      }
+      accountService.createAc(unqNamesObj, ac).then($scope.fixMoveAcSuccess, $scope.fixMoveAcFailure)
+    else
+      toastr.warning("You can only select account from list", "Warning")
 
   $scope.fixMoveAcSuccess = (res) ->
     toastr.success("Account created successfully", res.status)
