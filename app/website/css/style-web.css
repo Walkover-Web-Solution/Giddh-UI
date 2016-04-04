@@ -358,6 +358,16 @@ footer a:hover {
 }
 
 /*pricing page style*/
+.h1 {
+    font-size: 4.5em;
+    letter-spacing: 0.03em;
+    margin: 0 0 15px;
+    padding: 0;
+    text-shadow: -1px 0 0 #F5F6EF,
+    2px 2px 1px rgba(41, 37, 31, 0.06);
+    display: block;
+    line-height: 90px;
+}
 .h2 {
     font-size: 8.5em;
     letter-spacing: 0.03em;
