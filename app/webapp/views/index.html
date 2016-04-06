@@ -44,19 +44,10 @@
   
 
   <script type="text/javascript" src="/node_modules/rxjs/bundles/Rx.umd.js"></script>
+  <script type="text/javascript" src="/node_modules/es6-shim/es6-shim.js"></script>
   <script type="text/javascript" src="/node_modules/angular2/bundles/angular2-polyfills.js"></script>
   <script type="text/javascript" src="/node_modules/angular2/bundles/angular2-all.umd.dev.js"></script>
-  <script>
-    var upgradeAdapter = new ng.upgrade.UpgradeAdapter();
-    angular.element(document.body).ready(function() {
-      upgradeAdapter.bootstrap(document.body, ['giddhWebApp']);
-    });
-
-  </script>  
-
-  <script>
-    console.log(ng.core)
-  </script>
+  <script  type="text/javascript" src="/public/webapp/ng2.js"></script>
 
   <!-- @if NODE_ENV='PRODUCTION' -->
   <!-- Google Tag Manager -->
