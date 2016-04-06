@@ -150,10 +150,9 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.addGiddhAccount({companyUniqueName: companyUniqueName.cUnq, itemAccountId:companyUniqueName.itemAccountId}, data, onSuccess, onFailure)
     )
-    setTransactionDate: (companyUniqueName, data) ->
-      console.log companyUniqueName
+    setTransactionDate: (obj, data) ->
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.setTransactionDate({companyUniqueName: companyUniqueName.cUnq, itemAccountId:companyUniqueName.itemAccountId, date: companyUniqueName.date}, data, onSuccess, onFailure)
+        UserSET.setTransactionDate({companyUniqueName: obj.cUnq, itemAccountId:obj.itemAccountId, date: obj.date}, data, onSuccess, onFailure)
     )
     verifyMfa: (unqObj, data) ->
       @handlePromise((onSuccess, onFailure) ->

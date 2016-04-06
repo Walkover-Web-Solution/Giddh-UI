@@ -192,7 +192,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         
         sharedData = _.omit(obj, 'transactions')
         sharedData.total = 0
-        sharedData.voucherType = "pay"
         sharedData.entryDate = obj.date
         _.each(obj.transactions, (transaction, index) ->
           transaction.amount = parseFloat(transaction.amount).toFixed(2)
@@ -201,12 +200,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
           newEntry.sharedData.description= transaction.remarks.description
           if transaction.type is "debit"
             newEntry.transactions = [transaction]
-            # sharedData.total -= parseFloat(transaction.amount)
+            sharedData.voucherType = "pay"
             $scope.eLedgerDrData.push(newEntry)
 
           if transaction.type is "credit"
             newEntry.transactions = [transaction]
-            # sharedData.total += parseFloat(transaction.amount)
+            sharedData.voucherType = "rcpt"
             $scope.eLedgerCrData.push(newEntry)
         )
       )

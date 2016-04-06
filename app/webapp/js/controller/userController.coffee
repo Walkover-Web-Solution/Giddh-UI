@@ -462,13 +462,13 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     $scope.banks.toLinkObj.itemAccountId = card.itemAccountId
 
   $scope.updateTransactionDate = (date) ->
-    companyUniqueName =  {
+    obj =  {
       cUnq: $rootScope.selectedCompany.uniqueName
       itemAccountId: $scope.banks.toLinkObj.itemAccountId
       date: date
     }
     data = {}
-    userServices.setTransactionDate(companyUniqueName, data).then($scope.updateTransactionDateSuccess, $scope.updateTransactionDateFailure)
+    userServices.setTransactionDate(obj, data).then($scope.updateTransactionDateSuccess, $scope.updateTransactionDateFailure)
 
   $scope.updateTransactionDateSuccess = (res) ->
     toastr.success(res.body)
