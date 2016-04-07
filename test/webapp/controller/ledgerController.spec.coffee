@@ -303,7 +303,7 @@ describe 'ledgerController', ->
               transactionId: '123'
               multiEntry: false
               total: 0
-              voucherType: 'pay'
+              voucherType: 'rcpt'
               entryDate: '01-12-2015'
               description: 'make'
             transactions: [
