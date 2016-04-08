@@ -490,7 +490,6 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
   # manage sub user start
   $scope.cSubUser = {}
-  $scope.cSubUser.role = 'view_only'
 
   # get subuser list
   $scope.getSubUsers = () ->
@@ -503,6 +502,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     userServices.createSubUser($rootScope.basicInfo.uniqueName, udata).then($scope.createSubUserSuccess, $scope.createSubUserFailure)
 
   $scope.createSubUserSuccess = (res) ->
+    $scope.cSubUser = {}
     toastr.success("Sub User successfully created", "Success")
     $scope.getUserDetails()
 

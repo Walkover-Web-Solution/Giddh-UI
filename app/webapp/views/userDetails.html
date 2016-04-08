@@ -26,14 +26,6 @@
                     <input ng-model="cSubUser.name" name="createSubUserForm.name" type="text" class="form-control" placeholder="Uniquename" required/>
                   </div>
                   <div class="form-group">
-                    <select 
-                      class="form-control"
-                      name="createSubUserForm.userRole" 
-                      ng-model="cSubUser.role"
-                      ng-options="item.uniqueName as item.name for item in rolesList">
-                    </select>
-                  </div>
-                  <div class="form-group">
                     <button ng-disabled="createSubUserForm.$invalid" class="btn btn-primary mrL1" ng-click="createSubUser(cSubUser)">Add</button>
                   </div>
                 </form>

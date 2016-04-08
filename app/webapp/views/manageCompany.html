@@ -146,8 +146,7 @@
           <form name="addShareEmailForm" novalidate class="form-inline">
             <div class="form-group">
               <label class="mrR1">Give permission to:</label>
-              <input ng-model="shareRequest.user" name="userEmail" type="text" class="form-control"
-                     placeholder="Enter Email ID" required/>
+              <input ng-model="shareRequest.user" name="userEmail" type="text" class="form-control" placeholder="Uniquename/Email ID" required/>
             </div>
             <div class="form-group">
               <select 
@@ -170,11 +169,16 @@
           <li ng-repeat="(key,value) in sharedUsersList | pick: exceptOwnEmail track by $index" class="list-group-item">
 
             <div class="row">
-
               <div class="col-xs-6">
-                <i ng-if="value.role.uniqueName != 'super_admin_off_the_record'" class="glyphicon glyphicon-user"></i>
-                <i ng-if="value.role.uniqueName == 'super_admin_off_the_record'" class="glyphicon glyphicon-star"></i>
-                {{value.userEmail}}
+                <span class="pull-left mrR1">
+                  <i ng-if="value.role.uniqueName != 'super_admin_off_the_record'" class="glyphicon glyphicon-user"></i>
+                  <i ng-if="value.role.uniqueName == 'super_admin_off_the_record'" class="glyphicon glyphicon-star"></i>
+                </span>
+                <span class="pull-left">
+                  <div ng-bind-html="value.userName">
+                  </div>
+                  <small ng-bind-html="value.userEmail"></small>
+                </span>
               </div>
 
               <div class="col-xs-6">
@@ -188,9 +192,9 @@
                       ng-options="item.uniqueName as item.name for item in rolesList">
                     </select>
                   </div>
-  <span class="delIcon">
-    <i class="glyphicon glyphicon-trash" ng-click="unSharedUser(value.userUniqueName, $index)"></i>
-  </span>
+                  <span class="delIcon">
+                    <i class="glyphicon glyphicon-trash" ng-click="unSharedUser(value.userUniqueName, $index)"></i>
+                  </span>
                 </div>
 
               </div>
