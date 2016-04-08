@@ -5,7 +5,7 @@
 
 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
   <uib-tabset justified="true">
-    <uib-tab heading="Basic Information">
+    <uib-tab heading="Basic Information" id="basic">
       <div class="pd2">
         <fieldset ng-disabled="!canUpdate">
         <form id="cmpnyBascFrm" name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
@@ -140,7 +140,7 @@
     </uib-tab>
     <!-- basic information tab end here -->
 
-    <uib-tab ng-if="canManageCompany" heading="Permission">
+    <uib-tab ng-if="canManageCompany" heading="Permission" id="permission">
       <div class="pd2">
         <div class="greyBox mrB2">
           <form name="addShareEmailForm" novalidate class="form-inline">
@@ -208,7 +208,7 @@
       </div>
     </uib-tab>
     <!-- end of second tab ng-if="canManageCompany" -->
-    <uib-tab active="true" ng-if="canManageCompany" heading="Tally XML upload">
+    <uib-tab active="true" ng-if="canManageCompany" heading="Tally XML upload"  id="tally">
       <div class="clearfix bdrB">
         <div class="col-xs-6">
           <div class="pdT2">
@@ -302,7 +302,7 @@
     </uib-tab>
 
     <!-- start transaction tab -->
-    <uib-tab ng-if="canManageCompany" heading="Payment details">
+    <uib-tab ng-if="canManageCompany" heading="Payment details"  id="payment">
       <div class="pd2">
         <div class="clearfix mrB1 form-inline">
           <div class="form-group mrR1">
