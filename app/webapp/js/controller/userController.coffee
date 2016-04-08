@@ -488,6 +488,55 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
         $scope.updateTransactionDate(date)
       )
 
+  # manage sub user start
+  $scope.cSubUser = {}
+  $scope.cSubUser.role = 'view_only'
+
+  # get subuser list
+  $scope.getSubUsers = () ->
+    console.time "getSubUsers"
+    console.log $rootScope.basicInfo
+    console.timeEnd "getSubUsers"
+
+  # delete sub user
+  $scope.createSubUser =(udata)->
+    userServices.createSubUser($rootScope.basicInfo.uniqueName, udata).then($scope.createSubUserSuccess, $scope.createSubUserFailure)
+
+  $scope.createSubUserSuccess = (res) ->
+    toastr.success("Sub User successfully created", "Success")
+    $scope.getUserDetails()
+
+  $scope.createSubUserFailure = (res) ->
+    toastr.error(res.data.code, res.data.message)
+
+  # delete sub user
+  $scope.deleteSubUser =(data, index)->
+    userServices.deleteSubUser(data.uniqueName).then($scope.deleteSubUserSuccess, $scope.deleteSubUserFailure)
+
+  $scope.deleteSubUserSuccess = (res) ->
+    toastr.success(res.body, res.status)
+    $scope.getUserDetails()
+
+  $scope.deleteSubUserFailure = (res) ->
+    toastr.error(res.data.code, res.data.message)
+
+  # login as
+  $scope.getSubUserAuthKey = (uniqueName) ->
+    userServices.getSubUserAuthKey(uniqueName).then($scope.getSubUserAuthKeySuccess, $scope.getSubUserAuthKeyFailure)
+
+  $scope.getSubUserAuthKeySuccess = (res) ->
+    _.filter($rootScope.basicInfo.subUsers, (user) ->
+      if user.uniqueName is res.body.uniqueName
+        user.authKeyDone = true
+        user.authKey = res.body.authKey
+    )
+
+  $scope.getSubUserAuthKeyFailure = (res) ->
+    toastr.error(res.data.code, res.data.message)
+
+
+  # manage sub user end
+
 #init angular app
 giddh.webApp.controller 'userController', userController
 

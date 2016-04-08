@@ -46,10 +46,6 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
           method: 'POST'
           url: '/ebanks'
         }
-        # loginRegister: {
-        #   method: 'GET'
-        #   url: '/yodlee/login-register'
-        # }
         addSiteAccount: {
           method: 'POST'
           url: '/company/:companyUniqueName/ebanks'
@@ -81,6 +77,18 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         removeGiddhAccount: {
           method: 'DELETE'
           url: '/company/:companyUniqueName/ebanks/:ItemAccountId/:linkedAccount'
+        }
+        createSubUser: {
+          method: 'POST' 
+          url: '/users/:uniqueName/sub-user'
+        }
+        deleteSubUser: {
+          method: 'DELETE' 
+          url: '/users/:uniqueName'
+        }
+        getSubUserAuthKey: {
+          method: 'GET' 
+          url: '/users/:uniqueName/auth-key/sub-user?uniqueName=:uniqueName'
         }
       }
   )
@@ -170,6 +178,18 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.deleteAccount({companyUniqueName: reqParam.cUnq, memSiteAccId: reqParam.memSiteAccId},onSuccess, onFailure)
     )
+    createSubUser: (uUname, data) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.createSubUser({uniqueName: uUname}, data, onSuccess,onFailure)
+      )
+    deleteSubUser: (uUname) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.deleteSubUser({uniqueName: uUname}, onSuccess,onFailure)
+      )
+    getSubUserAuthKey: (uUname) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.getSubUserAuthKey({uniqueName: uUname}, onSuccess, onFailure)
+      )
 
   userServices
 

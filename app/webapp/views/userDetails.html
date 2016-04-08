@@ -3,21 +3,75 @@
 
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
       <uib-tabset justified="false">
-        <uib-tab heading="Auth Key">
+        <uib-tab heading="Auth Key" active="true">
           <div class="pd2">
+            <p class="lead">Main Auth-key</p>
             <form name="authKeyForm" novalidate role="form">
               <div class="form-group">
-                <input type="text" placeholder="Auth Key" class="form-control" ng-model="userAuthKey"/>
+                <textarea class="form-control" ng-model="userAuthKey" ng-readonly="true"></textarea>
               </div>
               <div class="form-group">
-                <button class="btn btn-info" ng-click="regenerateKey()">Regenerate Auth Key</button>
+                <button class="btn btn-primary" ng-click="regenerateKey()">Regenerate Auth Key</button>
               </div>
             </form>
+            <hr class="mrB2">
+            <!-- end of form -->
+
+            <div class="clearfix" ng-if="canManageCompany">
+              <p class="lead">Manage Sub Users</p>
+              <div class="greyBox mrB2">
+                <form name="createSubUserForm" novalidate class="form-inline">
+                  <div class="form-group">
+                    <label class="mrR1">Create Sub User:</label>
+                    <input ng-model="cSubUser.name" name="createSubUserForm.name" type="text" class="form-control" placeholder="Uniquename" required/>
+                  </div>
+                  <div class="form-group">
+                    <select 
+                      class="form-control"
+                      name="createSubUserForm.userRole" 
+                      ng-model="cSubUser.role"
+                      ng-options="item.uniqueName as item.name for item in rolesList">
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <button ng-disabled="createSubUserForm.$invalid" class="btn btn-primary mrL1" ng-click="createSubUser(cSubUser)">Add</button>
+                  </div>
+                </form>
+              </div>
+              <!-- end of grey box and form -->
+
+              <ul class="list-group ln" ng-if="basicInfo.subUsers.length > 0">
+                <li ng-repeat="value in basicInfo.subUsers track by $index" class="list-group-item">
+                  <div class="clearfix">
+                    <div class="col-xs-3">
+                      <i ng-if="value.role.uniqueName != 'super_admin_off_the_record'" class="glyphicon glyphicon-user"></i>
+                      <i ng-if="value.role.uniqueName == 'super_admin_off_the_record'" class="glyphicon glyphicon-star"></i>
+                      {{value.uniqueName}}
+                    </div>
+                    <div class="col-xs-6">
+                      <textarea ng-if="value.authKeyDone" class="form-control" ng-readonly="true">{{value.authKey}}</textarea>
+                    </div>
+                    <div class="col-xs-3">
+                      <span class="delIcon">
+                        <i class="glyphicon glyphicon-trash" ng-click="deleteSubUser(value, $index)"></i>
+                      </span>
+                      <button ng-hide="value.authKeyDone" class="mrR1 pull-right btn btn-sm btn-success" ng-click="getSubUserAuthKey(value.uniqueName)">Show Auth-key</button>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+              <!-- end of subuser list -->
+            </div>
+            <!-- end of manage sub user -->
+
+
           </div>
+
+
         </uib-tab>
         <!-- end of auth tab tab -->
 
-        <uib-tab heading="Wallet" active="true">
+        <uib-tab heading="Wallet">
           <div class="pd2">
             <h3 class="fs16 mrB1">Payment details</h3>
             <label class="mrB1">Current Balance
@@ -276,6 +330,8 @@
             </div>
           </div>
         </uib-tab>
+        <!-- end of yodlee tabs -->
+        
 
       </uib-tabset>
     </perfect-scrollbar>
