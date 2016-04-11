@@ -286,5 +286,18 @@ router.put '/:uniqueName/retry', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+# switch user
+router.patch '/:uniqueName', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.uniqueName
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.patch hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 
 module.exports = router

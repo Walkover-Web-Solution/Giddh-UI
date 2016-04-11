@@ -181,6 +181,7 @@ angular.module('ledger', [])
       index: '=index'
       item: '=itemdata'
       aclist: '=acntlist'
+      canVWDLT: '=canViewAndDelete'
       canAddAndEdit: '=canAddAndEdit'
       selAcntUname: '=selAcntUname'
       moveLedger: '&'
@@ -257,7 +258,12 @@ angular.module('ledger', [])
           <div class="popover-inner">
           <h3 class="popover-title">Move entry to Giddh</h3>
           <div class="popover-content">
-            <div class="form-group">
+            <div class="clearfix form-group">
+              <div style="margin-top:0px" class="checkbox mrR1 pull-left" ng-if="canVWDLT">
+                <label>
+                  <input ng-readonly="!canAddAndEdit" ng-model="item.sharedData.unconfirmedEntry" type="checkbox">Unconfirmed Entry
+                </label>
+              </div>
               <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResultsE">Add new account</a>
             </div>
             <div class="row">
@@ -327,6 +333,7 @@ angular.module('ledger', [])
     aclist: '=acntlist'
     ftype: '=ftype'
     formClass: '@formClass'
+    canVWDLT: '=canViewAndDelete'
     canAddAndEdit: '=canAddAndEdit'
     selAcntUname: '=selAcntUname'
     updateLedger: '&'
@@ -515,6 +522,11 @@ angular.module('ledger', [])
           <div class="popover-content">
             <div class="mrT">
               <div class="form-group">
+                <div style="margin-top:3px" class="checkbox mrR1 pull-left" ng-if="canVWDLT">
+                  <label>
+                    <input ng-readonly="!canAddAndEdit" ng-model="item.sharedData.unconfirmedEntry" type="checkbox">Unconfirmed Entry
+                  </label>
+                </div>
                 <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh();" ng-show="canAddAndEdit">Add in DR</button>
                 <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh();" ng-show="canAddAndEdit">Add in CR</button>
                 <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResults">Add new account</a>

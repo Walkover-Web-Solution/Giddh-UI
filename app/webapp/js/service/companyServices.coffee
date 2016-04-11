@@ -33,6 +33,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       method: 'PUT'
       url: '/company/:uniqueName/retry'
     }
+    switchUser: {
+      method: 'PATCH'
+      url: '/company/:uniqueName'
+    }
   })
 
   companyServices =
@@ -101,5 +105,9 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
 
     retryXml: (uniqueName, data, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Company.retryXmlUpload({uniqueName: uniqueName},data, onSuccess, onFailure))
+
+    switchUser: (uName) ->
+      @handlePromise((onSuccess, onFailure) -> Company.switchUser({uniqueName: uName}, onSuccess,
+          onFailure))
 
   companyServices

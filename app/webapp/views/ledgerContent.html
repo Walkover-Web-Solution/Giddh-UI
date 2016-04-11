@@ -59,6 +59,7 @@
                       e-ledger
                       class='pr eLedgEntryForm entry_{{item.sharedData.transactionId}}'
                       index="$index"
+                      can-view-and-delete="canVWDLT"
                       can-add-and-edit="canAddAndEdit"
                       itemdata="item"
                       sel-acnt-uname = "selAcntUname"
@@ -96,6 +97,7 @@
                       e-ledger
                       class='pr eLedgEntryForm entry_{{item.sharedData.transactionId}}'
                       index="$index"
+                      can-view-and-delete="canVWDLT"
                       can-add-and-edit="canAddAndEdit"
                       itemdata="item"
                       sel-acnt-uname = "selAcntUname"
@@ -317,6 +319,7 @@
                       ng-repeat="(key, value) in ledgerOnlyDebitData | filter:particularSearch | limitTo: quantity track by $index"
                       ledger-pop
                       index="$index"
+                      can-view-and-delete="canVWDLT"
                       can-add-and-edit="canAddAndEdit"
                       form-class='drLedgerEntryForm_{{$index}}'
                       ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"
@@ -378,6 +381,7 @@
                       ng-repeat="(key, value) in ledgerOnlyCreditData | filter:particularSearch | limitTo: quantity track by $index "
                       ledger-pop
                       index="$index"
+                      can-view-and-delete="canVWDLT"
                       can-add-and-edit="canAddAndEdit"
                       form-class='crLedgerEntryForm_{{$index}}'
                       ftype="value.sharedData.uniqueName == undefined ? 'Add' : 'Update'"

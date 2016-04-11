@@ -747,6 +747,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, res.data.status)
     $scope.modal.modalInstance.close()
 
+
   $timeout( ->
     $rootScope.selAcntUname = undefined
     $scope.getCompanyList()
