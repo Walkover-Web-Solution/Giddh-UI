@@ -251,7 +251,7 @@
       
       <span class="pull-right" uib-dropdown  auto-close="outsideClick">
         <a href id="simple-dropdown" uib-dropdown-toggle>
-          <i uib-tooltip="Send Ledger Email" tooltip-placement="right" class="glyphicon glyphicon-envelope" style="font-size:24px;line-height:34px;"></i>
+          <i uib-tooltip="Send Ledger" tooltip-placement="right" class="glyphicon glyphicon-envelope" style="font-size:24px;line-height:34px;"></i>
         </a>
         <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
           <li>
@@ -259,7 +259,7 @@
               <div class="mrB1">
                 <textarea ng-model="ledgerEmailData.email" required name="ledgerEmailSendForm.email" class="form-control" placeholder="Recipents Email Id's"></textarea>
               </div>
-              <button ng-disabled="ledgerEmailSendForm.$invalid" class="btn btn-primary btn-sm" ng-click="sendLedgEmail(ledgerEmailData)">Send Email</button>
+              <button ng-disabled="ledgerEmailSendForm.$invalid" class="btn btn-primary btn-sm" ng-click="sendLedgEmail(ledgerEmailData.email)">Send Email</button>
             </form>
           </li>
         </ul>

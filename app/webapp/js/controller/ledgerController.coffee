@@ -23,6 +23,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.quantity = 50
   $rootScope.cmpViewShow = true
   $rootScope.lItem = []
+  $scope.ledgerEmailData = {}
   #date time picker code starts here
   $scope.today = new Date()
   d = moment(new Date()).subtract(1, 'month')
@@ -700,8 +701,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   # ledger send email
-  $scope.ledgerEmailData = {}
-  $scope.sendLedgEmail = (data) ->
+  $scope.sendLedgEmail = (emailData) ->
+    data = angular.copy(emailData)
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
       return false
@@ -714,22 +715,24 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     sendData = {
       recipients: []
     }
-    data.email = data.email.replace(RegExp(' ', 'g'), '')
-    cdata = data.email.split(',')
+    data = data.replace(RegExp(' ', 'g'), '')
+    cdata = data.split(',')
     _.each(cdata, (str) ->
       if $scope.validateEmail(str)
         sendData.recipients.push(str)
       else
-        console.log "invalid: ", str
+        toastr.warning("Enter valid Email ID", "Warning")
+        data = ''
+        sendData.recipients = []
+        return false
     )
     if sendData.recipients < 1
-      if $scope.validateEmail(data.email)
-        sendData.recipients.push(data.email)
+      if $scope.validateEmail(data)
+        sendData.recipients.push(data)
       else
         toastr.warning("Enter valid Email ID", "Warning")
         return false
 
-    console.log sendData
     accountService.emailLedger(unqNamesObj, sendData).then($scope.emailLedgerSuccess, $scope.emailLedgerFailure)
 
   $scope.validateEmail = (emailStr)->
