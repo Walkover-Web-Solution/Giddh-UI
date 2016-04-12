@@ -1274,7 +1274,37 @@ describe 'ledgerController', ->
         spyOn(@toastr, "error")
         @scope.sendLedgEmail(data)
         expect(@toastr.error).toHaveBeenCalledWith("Date should be in proper format", "Error")
+      it 'should set variables and return false in case of not valid string and not call accountService emailLedger method', ->
+        spyOn(@toastr, "warning")
+        deferred = @q.defer()
+        spyOn(@accountService, "emailLedger").andReturn(deferred.promise)
+        @scope.sendLedgEmail("abc@x y z.in, abc@e")
+        expect(@toastr.warning).toHaveBeenCalledWith("Enter valid Email ID", "Warning")
+        expect(@accountService.emailLedger).not.toHaveBeenCalled()
 
+      it 'should call accountService emailLedger method with desired variables', ->
+        @rootScope.selectedCompany =
+          uniqueName: "somename"
+        @rootScope.selAcntUname = "somename"
+        @scope.toDate = 
+          date: "12-02-2016"
+        @scope.fromDate = 
+          date: "12-01-2016"
+        spyOn(@toastr, "warning")
+        deferred = @q.defer()
+        spyOn(@accountService, "emailLedger").andReturn(deferred.promise)
+        unqNamesObj = {
+          compUname: @rootScope.selectedCompany.uniqueName
+          acntUname: @rootScope.selAcntUname
+          toDate: @scope.toDate.date
+          fromDate: @scope.fromDate.date
+        }
+        sendData = {
+          recipients: ["abc@xyz.in", "abc@ebc.com"]
+        }
+        @scope.sendLedgEmail("abc@x y z.in, abc@ebc.com")
+        expect(@toastr.warning).not.toHaveBeenCalled()
+        expect(@accountService.emailLedger).toHaveBeenCalledWith(unqNamesObj, sendData)
 
     describe '#validateEmail', ->
       it 'should validate string and return true if string is valid email id', ->

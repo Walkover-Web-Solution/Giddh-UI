@@ -44,7 +44,7 @@ describe 'companyController', ->
       expect(@scope.discount).toBe(0)
       expect(@scope.amount).toBe(0)
 
-  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $uibModal, modalService, $timeout, permissionService, DAServices, Upload, userServices, $state, couponServices) ->
+  beforeEach inject ($rootScope, $controller, currencyService, toastr, localStorageService, locationService, $q, companyServices, $uibModal, modalService, $timeout, permissionService, DAServices, Upload, userServices, $state, couponServices, groupService, accountService) ->
     @scope = $rootScope.$new()
     @rootScope = $rootScope
     @currencyService = currencyService
@@ -62,6 +62,8 @@ describe 'companyController', ->
     @DAServices = DAServices
     @Upload = Upload
     @couponServices = couponServices
+    @groupService = groupService
+    @accountService = accountService
     @companyController = $controller('companyController',
         {
           $scope: @scope,
@@ -80,6 +82,8 @@ describe 'companyController', ->
           DAServices: @DAServices
           Upload: @Upload
           couponServices: @couponServices
+          groupService: @groupService
+          accountService: @accountService
         })
 
   describe '#openFirstTimeUserModal', ->
@@ -1615,19 +1619,201 @@ describe 'companyController', ->
       expect(@scope.coupon).toEqual({})
       expect(@scope.disableRazorPay).toBeFalsy()
       
+  describe '#openFixUploadIssues', ->
+    xit 'should check'
     
-      
-    
-    
+
+  describe '#ifGroupAlreadyExist', ->
+    it 'should return true, if group already exist in flattenGroupList', ->
+      group = 
+        uniqueName: "abc"
+
+      @scope.flattenGroupList= [
+        {
+          uniqueName: "123"
+        }
+        {
+          uniqueName: "def"
+        }
+        {
+          uniqueName: "abc"
+        }
+      ]
+      result = @scope.ifGroupAlreadyExist(group)
+      expect(result).toBeTruthy()
+
+    it 'should return false, if group already exist in flattenGroupList', ->
+      group = 
+        uniqueName: "abc"
+
+      @scope.flattenGroupList= [
+        {
+          uniqueName: "123"
+        }
+        {
+          uniqueName: "def"
+        }
+      ]
+      result = @scope.ifGroupAlreadyExist(group)
+      expect(result).toBeFalsy()
 
 
+  describe '#fixMoveGroup', ->
+    it 'should call groupService create method with desired object', ->
+      group = 
+        name: "Alpha"
+        uniqueName: "ajlkagi123"
+      toGroup = 
+        uniqueName: "abc"
+      @rootScope.selectedCompany =
+          uniqueName: "somename"
+      body =
+        "name": group.name,
+        "uniqueName": group.uniqueName.toLowerCase(),
+        "parentGroupUniqueName": toGroup.uniqueName,
+        "description": undefined
+      deferred = @q.defer()
+      spyOn(@groupService, "create").andReturn(deferred.promise)
+      @scope.fixMoveGroup(group, toGroup)
+      expect(@groupService.create).toHaveBeenCalledWith("somename", body)
+
+    it 'should show message through toastr', ->
+      group = "abc"
+      toGroup = "abc"
+      spyOn(@toastr, "warning")
+      @scope.fixMoveGroup(group, toGroup)
+      expect(@toastr.warning).toHaveBeenCalledWith("You can only select group from list", "Warning")
+
+  describe '#fixMoveGroupSuccess', ->
+    it 'should make variable empty and show message with toastr success method', ->
+      @scope.getGroups = ()->
+        console.log "fake function"
+      res = 
+        body:
+          uniqueName: "abc"
+      @scope.fixUploadData =
+        groupConflicts: [
+          {uniqueName: "123"}
+          {uniqueName: "abc"}
+        ]
+      result = [
+          {uniqueName: "123"}
+        ]
+      spyOn(@toastr, "success")
+      spyOn(@scope, "getGroups")
+      @scope.fixMoveGroupSuccess(res)
+      expect(@toastr.success).toHaveBeenCalledWith("Sub group added successfully", "Success")
+      expect(@scope.getGroups).toHaveBeenCalled()
+      expect(@scope.fixUploadData.groupConflicts).toEqual(result)
+
+  describe '#fixMoveGroupFailure', ->
+    it 'should show error message with toastr', ->
+      res =
+        data:
+          status: "Error"
+          message: "message"
+      spyOn(@toastr, "error")
+      @scope.fixMoveGroupFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
 
+  describe '#fixMoveAc', ->
+    it 'should call accountService createAc method with desired object', ->
+      ac = 
+        name: "Alpha"
+        uniqueName: "ajlkagi123"
+      group = 
+        uniqueName: "abc"
+      @rootScope.selectedCompany =
+          uniqueName: "somename"
+      unqNamesObj = {
+        compUname: @rootScope.selectedCompany.uniqueName
+        acntUname : ac.uniqueName
+        selGrpUname: group.uniqueName
+      }
+      deferred = @q.defer()
+      spyOn(@accountService, "createAc").andReturn(deferred.promise)
+      @scope.fixMoveAc(ac, group)
+      expect(@accountService.createAc).toHaveBeenCalledWith(unqNamesObj, ac)
+
+    it 'should show message through toastr', ->
+      ac = "abc"
+      group = "abc"
+      spyOn(@toastr, "warning")
+      @scope.fixMoveAc(ac, group)
+      expect(@toastr.warning).toHaveBeenCalledWith("You can only select account from list", "Warning")
+
+  describe '#fixMoveAcSuccess', ->
+    it 'should make variable empty and show message with toastr success method', ->
+      @scope.getGroups = ()->
+        console.log "fake function"
+      res = 
+        body:
+          uniqueName: "abc"
+        status: "success"
+      @scope.fixUploadData =
+        accountConflicts: [
+          {uniqueName: "123"}
+          {uniqueName: "abc"}
+        ]
+      result = [
+          {uniqueName: "123"}
+        ]
+      spyOn(@toastr, "success")
+      spyOn(@scope, "getGroups")
+      @scope.fixMoveAcSuccess(res)
+      expect(@toastr.success).toHaveBeenCalledWith("Account created successfully", "success")
+      expect(@scope.getGroups).toHaveBeenCalled()
+      expect(@scope.fixUploadData.accountConflicts).toEqual(result)
+
+  describe '#fixMoveAcFailure', ->
+    it 'should show error message with toastr', ->
+      res =
+        data:
+          status: "Error"
+          message: "message"
+      spyOn(@toastr, "error")
+      @scope.fixMoveAcFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+  describe '#retryUpload', ->
+    it 'should call companyServices retryXml method with uniqueNameor data', ->
+      data = {}
+      @rootScope.selectedCompany=
+        uniqueName: "abc"
+      deferred = @q.defer()
+      spyOn(@companyServices, "retryXml").andReturn(deferred.promise)
+      @scope.retryUpload(data)
+      expect(@scope.waitXmlUpload).toBeTruthy()
+      expect(@companyServices.retryXml).toHaveBeenCalledWith("abc", {})
 
 
-
-
-
+  describe '#retryUploadSuccess', ->
+    xit 'should false a variable call getUploadsList function show message with toastr success and close dialog', ->
+      @scope.modal = {}
+      @scope.modal.modalInstance =()->
+        console.log "fake method"
+      res = 
+        body:
+          message: "some message"
+        status: "success"
+      spyOn(@toastr, "success")
+      spyOn(@scope, "getUploadsList")
+      spyOn(@scope, "modal.modalInstance")
+      @scope.retryUploadSuccess(res)
+      expect(@scope.waitXmlUpload).toBeFalsy()
+      expect(@toastr.success).toHaveBeenCalledWith(res.body.message, res.status)
+      expect(@scope.getUploadsList).toHaveBeenCalled()
+        
+  describe '#retryUploadFailure', ->
+    xit 'should show error message with toastr', ->
+      res =
+        data:
+          status: "Error"
+          message: "message"
+      spyOn(@toastr, "error")
+      @scope.retryUploadFailure(res)
+      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
 
 
