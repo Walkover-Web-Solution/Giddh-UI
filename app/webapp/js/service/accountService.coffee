@@ -45,6 +45,10 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         method: 'GET',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/xls-imports'
       }
+      emailLedger: {
+        method: 'POST',
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/mail'
+      }
     })
 
   accountService =
@@ -134,5 +138,13 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
     #     companyUniqueName: unqNamesObj.compUname
     #     accountsUniqueName: unqNamesObj.acntUname
     #   }, data, onSuccess, onFailure))
+
+    emailLedger: (obj, data) ->
+      @handlePromise((onSuccess, onFailure) -> Account.emailLedger({
+        companyUniqueName: obj.compUname
+        accountsUniqueName: obj.acntUname
+        toDate: obj.toDate
+        fromDate: obj.fromDate
+      }, data, onSuccess, onFailure))
 
   accountService

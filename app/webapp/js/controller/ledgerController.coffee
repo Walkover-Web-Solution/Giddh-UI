@@ -699,6 +699,50 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.ledgerImportListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+  # ledger send email
+  $scope.ledgerEmailData = {}
+  $scope.sendLedgEmail = (data) ->
+    if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
+      toastr.error("Date should be in proper format", "Error")
+      return false
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $rootScope.selAcntUname
+      toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+      fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
+    }
+    sendData = {
+      recipients: []
+    }
+    data.email = data.email.replace(/ /g,'')
+    cdata = data.email.split(',')
+    _.each(cdata, (str) ->
+      if $scope.validateEmail(str)
+        sendData.recipients.push(str)
+      else
+        console.log "invalid: ", str
+    )
+    if sendData.recipients < 1
+      if $scope.validateEmail(data.email)
+        sendData.recipients.push(data.email)
+      else
+        toastr.warning("Enter valid Email ID", "Warning")
+        return false
+
+    console.log sendData
+    accountService.emailLedger(unqNamesObj, sendData).then($scope.emailLedgerSuccess, $scope.emailLedgerFailure)
+
+  $scope.validateEmail = (emailStr)->
+    pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return pattern.test(emailStr)
+
+  $scope.emailLedgerSuccess = (res) ->
+    toastr.success(res.body, res.status)
+    $scope.ledgerEmailData = {}
+
+  $scope.emailLedgerFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
   someEventHandle = $scope.$on('reloadFromAuto', ->
     $scope.reloadLedger()
   )

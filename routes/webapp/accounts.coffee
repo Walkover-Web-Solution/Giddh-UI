@@ -152,7 +152,6 @@ router.put '/:accountUniqueName/unshare', (req, res) ->
     res.send data
 
 router.get '/:accountUniqueName/export-ledger', (req, res) ->
-  #console.log req.query, "ledgers export by date", new Date()
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/export-ledger'
   args =
@@ -163,9 +162,7 @@ router.get '/:accountUniqueName/export-ledger', (req, res) ->
     parameters:
       to: req.query.toDate
       from: req.query.fromDate
-  #console.log args, hUrl
   settings.client.get hUrl, args, (data, response) ->
-    #console.log "ledgers export by date completed", new Date()
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
@@ -205,6 +202,25 @@ router.delete '/:accountUniqueName/eledgers/:transactionId', (req, res) ->
   hUrl = settings.envUrl + 'eledgers/' + req.params.transactionId
   console.log "actual URL is: ",hUrl
   settings.client.delete hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+# mail ledger 
+router.post '/:accountUniqueName/ledgers/mail', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      to: req.query.toDate
+      from: req.query.fromDate
+    data: req.body
+
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/accounts/' + req.params.accountUniqueName + '/ledgers/mail'
+  settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
