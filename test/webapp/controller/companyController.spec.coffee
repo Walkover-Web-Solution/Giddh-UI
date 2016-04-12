@@ -113,13 +113,13 @@ describe 'companyController', ->
       expect(@scope.checkCmpCretedOrNot).toHaveBeenCalled()
 
   describe '#checkCmpCretedOrNot', ->
-    xit 'should check if user created company or not after company modal open', ->
+    it 'should open company create modal if company list is empty', ->
       @scope.companyList = []
       spyOn(@scope, 'openFirstTimeUserModal')
       @scope.checkCmpCretedOrNot()
       expect(@scope.openFirstTimeUserModal).toHaveBeenCalled()
 
-    it 'should not open company create modal', ->
+    it 'should not open company create modal if company list is not empty', ->
       @scope.companyList = ["1", "2"]
       spyOn(@scope, 'openFirstTimeUserModal')
       @scope.checkCmpCretedOrNot()
@@ -192,7 +192,7 @@ describe 'companyController', ->
       expect(@companyServices.getAll).toHaveBeenCalled()
 
   describe '#getCompanyListSuccess', ->
-    xit 'should call a function to open modal', ->
+    it 'should call a function to open modal', ->
       spyOn(@scope, "openFirstTimeUserModal")
       res = {"body": []}
       @scope.getCompanyListSuccess(res)
@@ -217,6 +217,7 @@ describe 'companyController', ->
         }
       ]
     }
+
     it 'should set true to a variable and push data in company list, and call goToCompany function with matched company with the help of localStorageService', ->
       locRes = {
         baseCurrency: "INR"
@@ -251,14 +252,14 @@ describe 'companyController', ->
       expect(@scope.goToCompany).toHaveBeenCalledWith(@scope.companyList[0], 0, "CHANGED")
       expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", @scope.companyList[0])
 
-    xit 'should set true to a variable and push data in company list, and call goToCompany function with companyList first company, due to nothing in localStorage', ->
+    it 'should set true to a variable and push data in company list, and call goToCompany function with companyList first company, due to nothing in localStorage', ->
       spyOn(@scope, "goToCompany")
       spyOn(@localStorageService, "get").andReturn(undefined)
       spyOn(@localStorageService, "set")
       @scope.getCompanyListSuccess(res)
       expect(@rootScope.mngCompDataFound).toBeTruthy()
       expect(@scope.goToCompany).toHaveBeenCalledWith(@scope.companyList[0], 0, "CHANGED")
-      expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", @scope.companyList[0], "CHANGED")
+      expect(@localStorageService.set).toHaveBeenCalledWith("_selectedCompany", @scope.companyList[0])
 
 
   describe '#getCompanyListFailure', ->
@@ -1789,37 +1790,35 @@ describe 'companyController', ->
 
 
   describe '#retryUploadSuccess', ->
-    xit 'should false a variable call getUploadsList function show message with toastr success and close dialog', ->
+    it 'should false a variable call getUploadsList function show message with toastr success and close dialog', ->
       @scope.modal = {}
-      @scope.modal.modalInstance =()->
-        console.log "fake method"
-      res = 
+      @scope.modal.modalInstance = @uibModal.open(templateUrl: '/')
+      res =
         body:
           message: "some message"
         status: "success"
       spyOn(@toastr, "success")
       spyOn(@scope, "getUploadsList")
-      spyOn(@scope, "modal.modalInstance")
+      spyOn(@scope.modal.modalInstance, "close")
+
       @scope.retryUploadSuccess(res)
+
       expect(@scope.waitXmlUpload).toBeFalsy()
       expect(@toastr.success).toHaveBeenCalledWith(res.body.message, res.status)
       expect(@scope.getUploadsList).toHaveBeenCalled()
-        
+      expect(@scope.modal.modalInstance.close).toHaveBeenCalled()
+
   describe '#retryUploadFailure', ->
-    xit 'should show error message with toastr', ->
+    it 'should show error message with toastr', ->
+      @scope.modal = {}
+      @scope.modal.modalInstance = @uibModal.open(templateUrl: '/')
       res =
         data:
           status: "Error"
           message: "message"
       spyOn(@toastr, "error")
+      spyOn(@scope.modal.modalInstance, "close")
+
       @scope.retryUploadFailure(res)
       expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
-
-
-
-
-
-
-
-    
-
+      expect(@scope.modal.modalInstance.close).toHaveBeenCalled()
