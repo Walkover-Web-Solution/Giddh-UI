@@ -714,7 +714,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     sendData = {
       recipients: []
     }
-    data.email = data.email.replace(/ /g,'')
+    data.email = data.email.replace(RegExp(' ', 'g'), '')
     cdata = data.email.split(',')
     _.each(cdata, (str) ->
       if $scope.validateEmail(str)
