@@ -1193,32 +1193,32 @@ describe 'ledgerController', ->
         expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
     describe '#importLedger', ->
-    it 'should make variable false set values in a scope variable, then call upload service with upload method', ->
-      @rootScope.selectedCompany = {
-        uniqueName: "giddh"
-      }
-      @scope.selectedGroupUname = "somename"
-      @rootScope.selAcntUname = "somename"
-      result = ''
-      files = [{
-        fieldname: 'file',
-        originalname: 'master-small.xml',
-        encoding: '7bit',
-        mimetype: 'text/xml',
-        destination: './uploads/',
-        filename: '1449894122205.xml',
-        path: 'uploads/1449894122205.xml',
-        size: 1288072
-      } ]
-      errFiles = []
-      deferred = @q.defer()
-      spyOn(@Upload, "upload").andReturn(deferred.promise)
-      @scope.importLedger(files, errFiles)
-      expect(@Upload.upload).toHaveBeenCalled()
-      expect(@scope.impLedgBar).toBeFalsy()
-      expect(@scope.impLedgFiles).toBe(files)
-      expect(@scope.impLedgErrFiles).toBe(errFiles)
-      expect(angular.forEach).toBeDefined()
+      it 'should make variable false set values in a scope variable, then call upload service with upload method', ->
+        @rootScope.selectedCompany = {
+          uniqueName: "giddh"
+        }
+        @scope.selectedGroupUname = "somename"
+        @rootScope.selAcntUname = "somename"
+        result = ''
+        files = [{
+          fieldname: 'file',
+          originalname: 'master-small.xml',
+          encoding: '7bit',
+          mimetype: 'text/xml',
+          destination: './uploads/',
+          filename: '1449894122205.xml',
+          path: 'uploads/1449894122205.xml',
+          size: 1288072
+        } ]
+        errFiles = []
+        deferred = @q.defer()
+        spyOn(@Upload, "upload").andReturn(deferred.promise)
+        @scope.importLedger(files, errFiles)
+        expect(@Upload.upload).toHaveBeenCalled()
+        expect(@scope.impLedgBar).toBeFalsy()
+        expect(@scope.impLedgFiles).toBe(files)
+        expect(@scope.impLedgErrFiles).toBe(errFiles)
+        expect(angular.forEach).toBeDefined()
 
     describe '#showImportList', ->
       it 'should open madal and call accountService ledgerImportList method', ->

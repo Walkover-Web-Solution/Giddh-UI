@@ -497,7 +497,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     console.log $rootScope.basicInfo
     console.timeEnd "getSubUsers"
 
-  # delete sub user
+  # create sub user
   $scope.createSubUser =(udata)->
     userServices.createSubUser($rootScope.basicInfo.uniqueName, udata).then($scope.createSubUserSuccess, $scope.createSubUserFailure)
 
