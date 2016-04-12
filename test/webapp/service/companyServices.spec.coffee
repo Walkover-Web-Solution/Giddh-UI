@@ -272,19 +272,17 @@ describe 'Company Service', ->
 
   describe '#switchUser', ->
     uniqueName= "uniquename"
-    xit 'should call success callback after service called', ->
-      @httpBackend.when('PATCH', '/company/'+uniqueName+'/').respond(200, {"status": "success"})
+    it 'should call success callback after service called', ->
+      @httpBackend.when('GET', '/company/'+uniqueName+'/switchUser').respond(200, {"status": "success"})
 
       @companyServices.switchUser(uniqueName).then(
         (data) -> expect(data.status).toBe("success")
         (data) -> expect(true).toBeFalsy()
       )
-    xit 'should call error callback after service called', ->
-      @httpBackend.when('PATCH', '/company/'+uniqueName+'/').respond(401, {"status": "error"})
+    it 'should call error callback after service called', ->
+      @httpBackend.when('GET', '/company/'+uniqueName+'/switchUser').respond(401, {"status": "error"})
       @companyServices.switchUser(uniqueName).then(
         (data) -> expect(true).toBeFalsy()
         (data) ->
           expect(data.data.status).toBe("error")
       )
-
-	  

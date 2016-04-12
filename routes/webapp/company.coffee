@@ -287,7 +287,7 @@ router.put '/:uniqueName/retry', (req, res) ->
     res.send data
 
 # switch user
-router.patch '/:uniqueName', (req, res) ->
+router.GET '/:uniqueName/switchUser', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.uniqueName
   args =
     headers:
