@@ -31,6 +31,21 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.disableRazorPay = false
   $scope.discount = 0
   $scope.amount = 0
+
+  # manage tax variables
+  $scope.taxTypes = [
+    "MONTHLY"
+    "YEARLY"
+    "QUATERLY"
+    "HALFYEARLY"
+  ]
+  $scope.monthDays = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+  $scope.createTaxData = {
+    duration: "MONTHLY"
+    taxFileDate: 1
+  }
+  
+
   
 
   #dialog for first time user
@@ -746,6 +761,43 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.retryUploadFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
     $scope.modal.modalInstance.close()
+
+  # manage taxes
+  $scope.addNewAccountBytaxes = () ->
+    $rootScope.$emit('callManageGroups')
+
+  $scope.addNewTax = (data) ->
+    console.log "addNewTax:", data
+    $scope.editTax(data)
+
+  #edit tax
+  $scope.editTax = (data) ->
+    console.log "editTax:", data
+    $scope.taxList = []
+    $scope.taxList.push(data)
+    modalInstance = $uibModal.open(
+      templateUrl: 'editTaxModal.html',
+      size: "md",
+      backdrop: 'static',
+      scope: $scope
+    )
+    modalInstance.result.then($scope.editTaxSuccess, $scope.editTaxFailure)
+
+  $scope.editTaxSuccess = (data) ->
+    console.log "editTaxSuccess"
+
+  $scope.editTaxFailure = () ->
+    console.log "editTaxFailure"
+
+
+  #delete tax
+  $scope.deleteTax = (data) ->
+    modalService.openConfirmModal(
+      title: 'Are you sure you want to delete? ' + data.name,
+      ok: 'Yes',
+      cancel: 'No'
+    ).then ->
+      console.log "deleted"
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

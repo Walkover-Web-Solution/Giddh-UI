@@ -208,7 +208,7 @@ angular.module('ledger', [])
                   <input pos='2' type='text'
                   tabindex='-1' class='nobdr eLedgInpt' required
                   name='trans_{{item.transactionId}}'
-                  ng-model-options='{debounce: 400}''
+                  ng-model-options='{debounce: 400}'
                   ng-model='item.transactions[0].particular'
                   uib-typeahead='obj as obj.name for obj in aclist | omit: isECurrentAc | filter:$viewValue'
                   class='form-control' autocomplete='off'
