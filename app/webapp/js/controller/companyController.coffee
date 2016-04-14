@@ -766,6 +766,16 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.addNewAccountBytaxes = () ->
     $rootScope.$emit('callManageGroups')
 
+  # get taxes
+  $scope.getTax=()->
+    companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxSuccess, $scope.getTaxFailure)
+
+  $scope.getTaxSuccess = (res) ->
+    console.log "getTaxSuccess: ", res
+
+  $scope.getTaxFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
   $scope.addNewTax = (data) ->
     console.log "addNewTax:", data
     $scope.editTax(data)
@@ -798,6 +808,19 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       cancel: 'No'
     ).then ->
       console.log "deleted"
+
+  # edit tax slab
+  $scope.addNewSlab=(type)->
+    console.log "addNewSlab:", type
+
+  # remove slab
+  $scope.removeSlab = () ->
+    modalService.openConfirmModal(
+      title: 'Are you sure you want to delete?',
+      ok: 'Yes',
+      cancel: 'No'
+    ).then ->
+      console.log "removeSlab deleted"
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

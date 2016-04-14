@@ -23,6 +23,10 @@
                        tabindex="1">
               </div>
               <div class="form-group">
+                <label>Uniquename</label>
+                <input ng-readonly="true" type="text" ng-model="selectedCompany.uniqueName" class="form-control"  name="cUname">
+              </div>
+              <div class="form-group">
                 <label>Email</label>
                 <input type="email" ng-model="selectedCompany.email" class="form-control" name="cEmail"
                        tabindex="2">
@@ -549,15 +553,46 @@
         <!-- end of table -->
 
         <script type="text/ng-template" id="editTaxModal.html">
-          <div class="modal-header">
+          <div class="modal-header themeBg">
+            <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
             <h3 class="modal-title">Edit Tax</h3>
           </div>
           <div class="modal-body">
             Here content comes
             {{taxList | json}}
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="$dismiss()">Cancel</button>
+
+            <!-- repeat start -->
+
+            <div class="form-inline clearfix">
+              <div class="form-group mrR1">
+                <input type="text" value="08-04-2016" class="form-control" placeholder="dd-mm-yyyy">
+              </div>
+              <div class="form-group mrR1">
+                <input type="text" class="form-control">
+              </div>
+              <div class="form-group mrR1">
+                <a ng-click="removeSlab()" href="javascript:void(0)">
+                  Remove
+                </a>
+              </div>
+              <div class="form-group">
+                <span class="" uib-dropdown  auto-close="outsideClick">
+                  <a href id="slab-dropdown" uib-dropdown-toggle>
+                    Insert new slab <span class="caret"></span>
+                  </a>
+                  <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="slab-dropdown">
+                    <li>
+                      <a ng-click="addNewSlab('before')" href="javascript:void(0)">Before</a>
+                    </li>
+                    <li>
+                      <a ng-click="addNewSlab('after')" href="javascript:void(0)">After</a>
+                    </li>
+                  </ul>
+                </span>
+              </div>
+            </div>
+            <!-- end repeat -->
           </div>
         </script>
 
