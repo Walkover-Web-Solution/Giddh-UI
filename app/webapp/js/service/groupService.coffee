@@ -2,7 +2,12 @@
 
 giddh.serviceModule.service 'groupService', ($resource, $q) ->
   Group = $resource('/company/:companyUniqueName/groups',
-    {'companyUniqueName': @companyUniqueName, 'groupUniqueName': @groupUniqueName},
+    {
+      'companyUniqueName': @companyUniqueName
+      'groupUniqueName': @groupUniqueName
+      'date1': @date1
+      'date2': @date2
+    },
     {
       add: {
         method: 'POST'
@@ -49,6 +54,10 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       sharedWith: {
         method: 'GET'
         url: '/company/:companyUniqueName/groups/:groupUniqueName/shared-with'
+      }
+      getClosingBal: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/groups/:groupUniqueName/closing-balance?fromDate=:date1&toDate=:date2'
       }
     })
 
@@ -124,6 +133,14 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Group.sharedWith({
         companyUniqueName: unqNamesObj.compUname,
         groupUniqueName: unqNamesObj.selGrpUname
+      }, onSuccess, onFailure))
+
+    getClosingBal: (obj) ->
+      @handlePromise((onSuccess, onFailure) -> Group.getClosingBal({
+        companyUniqueName: obj.compUname
+        groupUniqueName: obj.selGrpUname
+        date1: obj.fromDate
+        date2: obj.toDate
       }, onSuccess, onFailure))
 
     matchAndReturnObj: (src, dest)->

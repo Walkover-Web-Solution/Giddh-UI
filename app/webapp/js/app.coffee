@@ -79,6 +79,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/views/reports.html',
     controller: 'reportsController'
   )
+  .state('search',
+    url: '/search'
+    templateUrl: '/public/webapp/views/searchContent.html'
+    controller: 'searchController'
+  )
   .state('company'
     url: ''
     abstract: true

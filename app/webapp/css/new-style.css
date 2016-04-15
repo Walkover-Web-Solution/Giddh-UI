@@ -2187,5 +2187,29 @@ body.unresponsive{
         width: 900px;
     }
 }
-
+/*search query*/
+#searchQueryForm span, #searchQueryForm label{
+    float: left;
+    display: inline-block;
+}
+#searchQueryForm label{
+    font-weight: normal;
+    line-height: 34px;
+    font-size: 16px;
+}
+#searchQueryForm .form-control{
+    padding-left: 0;
+    padding-right: 0;
+    background: transparent;
+    border: transparent;
+    box-shadow: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: '';
+}
+#searchQueryForm span{
+    border-bottom: 2px dashed #ddd;
+    margin:0 10px
+}
 
