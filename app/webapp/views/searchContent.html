@@ -4,7 +4,7 @@
   <div class="row">
     <!-- left side -->
     <div class="col-xs-3 greyBg">
-      <div class="row">
+      <div class="row"  auto-height>
         <div id="left">
           
           <div class="loader mrT4" ng-hide="searchLoader">
@@ -84,12 +84,14 @@
 
     <!-- middle body -->
     <div class=" col-xs-9" >
-      <div class="middleBody bdrR bdrL row" auto-height> 
+      <div class="middleBody bdrR bdrL row" auto-height>
         
-        <div class="no-data" ng-if="noData">
+        <!-- <div class="no-data" ng-if="!srchDataFound">
           <h1>Sorry, No Data Found!</h1>
           <img src="/public/webapp/images/no-data.png" alt="">
-        </div>
+        </div> -->
+
+        <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height ng-if="srchDataFound">
 
         <!-- result -->
         <section class="pd2">
@@ -108,10 +110,10 @@
                     class="form-control"
                     name="queryType" 
                     ng-model="item.queryType"
-                    ng-options="item for item in queryType">
+                    ng-options="item.uniqueName as item.name for item in queryType">
                   </select>
                 </span>
-                <label ng-if="item.queryType === 'Closing' || item.queryType === 'Opening' ">balance  &nbsp;</label>
+                <label ng-if="item.queryType === 'closingBalance' || item.queryType === 'openingBalance' ">balance  &nbsp;</label>
                 <label>is</label>
                 <span>
                   <select 
@@ -125,18 +127,18 @@
                 <label ng-if="item.queryDiffer === 'Less' || item.queryDiffer === 'Greater' ">than  &nbsp;</label>
                 <label ng-if="item.queryDiffer === 'Equals' ">to  &nbsp;</label>
                 <span style="margin-right:0">
-                  <input required style="width:100px" class="form-control" type="text" placeholder="amount">
+                  <input required style="width:100px" class="form-control" type="text" placeholder="amount" ng-model="item.amount">
                 </span>
-                <span style="margin-left:0">
+                <span style="margin-left:0" ng-if="item.queryType === 'closingBalance' || item.queryType === 'openingBalance' ">
                   <select 
                     required
                     class="form-control"
                     name="balType" 
                     ng-model="item.balType"
-                    ng-options="item for item in balType">
+                    ng-options="item.uniqueName as item.name for item in balType">
                   </select>
                 </span>
-                <label ng-if="secondRow_$index">and</label>
+                <label ng-if="$index === 0 && srchDataSet.length > 1">and</label>
               </div>
               <!-- end of clearfix first row -->
               <!-- end repeater -->
@@ -145,8 +147,10 @@
 
 
               <div class="clearfix form-group">
-                <button class="btn btn-default mrR1" ng-click="addSearchRow()">Add New Row</button>
-                <button ng-disabled="searchQueryForm.$invalid" class="btn btn-primary" ng-click="searchQuery(srchDataSet)">Search</button>
+                <button ng-show="srchDataSet.length > 1" class="btn btn-default mrR1" ng-click="removeSearchRow()">Delete Row</button>
+                <button ng-disabled="srchDataSet.length > 1 || searchQueryForm.$invalid" class="btn btn-default mrR1" ng-click="addSearchRow()">Add New Query</button>
+                <button ng-disabled="searchQueryForm.$invalid" class="btn btn-primary mrR1" ng-click="searchQuery(srchDataSet)">Search</button>
+                <button ng-if="inSrchmode" ng-click="resetData()" class="btn btn-info">Reset Data</button>
               </div>
               <!-- end of second row -->
             </form>
@@ -163,19 +167,21 @@
             <th>Closing Bal.</th>
           </thead>
           <tbody>
-            <tr ng-repeat="item in searchResult[0].accounts track by $index">
+            <tr ng-repeat="item in searchResData.accounts track by $index">
               <td>{{item.name}}</td>
-              <td>
+              <td class="alR">
+                <span class="text-success pull-left" ng-if="item.openingBalance.type === 'DEBIT'">DR</span>
+                <span class="text-danger pull-left" ng-if="item.openingBalance.type === 'CREDIT'">CR</span>
+                &nbsp;
                 {{item.openingBalance.amount}}
-                &nbsp;
-                {{item.openingBalance.type}}
               </td>
-              <td>{{item.creditTotal}}</td>
-              <td>{{item.debitTotal}}</td>
-              <td>
-                {{item.closingBalance.amount}}
+              <td class="alR">{{item.creditTotal}}</td>
+              <td class="alR">{{item.debitTotal}}</td>
+              <td class="alR">
+                <span class="text-success pull-left" ng-if="item.closingBalance.type === 'DEBIT'">DR</span>
+                <span class="text-danger pull-left" ng-if="item.closingBalance.type === 'CREDIT'">CR</span>
                 &nbsp;
-                {{item.closingBalance.type}}
+                {{item.closingBalance.amount}}
               </td>
             </tr>
           </tbody>
@@ -183,7 +189,7 @@
 
         </section>
         <!-- end result -->
-        
+        </perfect-scrollbar>
 
       </div>
     </div>

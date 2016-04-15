@@ -20,13 +20,14 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     fromDate: new Date(moment().subtract(1, 'month').utc())
     toDate: new Date()
   }
-  $scope.searchResult = []
+  $scope.searchResData = {}
+  $scope.searchResDataOrig = {}
   # search query parameters
   $scope.queryType = [
-    "Closing"
-    "Opening"
-    "Cr. total"
-    "Dr. total"
+    {name:"Closing", uniqueName: "closingBalance"}
+    {name:"Opening", uniqueName: "openingBalance"}
+    {name:"Cr. total", uniqueName: "creditTotal"}
+    {name:"Dr. total", uniqueName: "debitTotal"}
   ]
   $scope.queryDiffer = [
     "Less"
@@ -34,16 +35,10 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     "Equals"
   ]
   $scope.balType = [
-    "CR"
-    "DR"
+    {name:"CR", uniqueName: "CREDIT"}
+    {name:"DR", uniqueName: "DEBIT"}
   ]
-  $scope.srchDataSet=[
-    {
-      queryType: ""
-      balType: "CR"
-      queryDiffer: ""
-    }
-  ]
+  $scope.srchDataSet=[new angular.srchDataSet()]
     
 
   $scope.fromDatePickerOpen = ->
@@ -66,12 +61,12 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
     $scope.searchLoader = true
 
+
   $scope.getGrpsforSearchFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
   # get selected group closing balance
   $scope.getClosingBalance = (data) ->
-    console.log "getClosingBalance: ", data
     obj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: data.group.uniqueName
@@ -81,38 +76,73 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     groupService.getClosingBal(obj)
       .then(
         (res)->
-          angular.copy(res.body, $scope.searchResult)
-          # $scope.searchResult = res.body
-          console.log "res:", res
+          _.extend($scope.searchResData, res.body[0]) 
+          _.extend($scope.searchResDataOrig, res.body[0])
+          $scope.srchDataFound = true
         ,(error)->
-          console.log "error:", error
+          $scope.srchDataFound = false
       )
 
   # push new value
   $scope.addSearchRow =()->
     if $scope.srchDataSet.length < 2 
-      num = $scope.srchDataSet.length-1
-      abc = {
-        queryType: ""
-        balType: "CR"
-        queryDiffer: ""
-      }
-      $scope.srchDataSet.push(abc)
-      # $scope.secondRow_+num = true
+      $scope.srchDataSet.push(new angular.srchDataSet())
     else
-      console.log "cannot add more query"
       toastr.warning("Cannot add more parameters", "Warning")
 
+  $scope.removeSearchRow = () ->
+    $scope.srchDataSet.splice(-1,1)
 
-  $scope.searchQuery = (data)->
-    console.log "searchQuery:", data
+  $scope.searchQuery = (srchQData)->
+    # show reset data button
+    $scope.inSrchmode = true
+
+    # for each object filter data
+    _.each(srchQData, (query)->
+      console.log "query:", query
+      # logic to search data
+      $scope.searchResData.accounts = _.reject($scope.searchResData.accounts, (account)->
+          switch query.queryDiffer
+            when 'Greater'
+              if query.queryType is 'closingBalance' or query.queryType is 'openingBalance'
+                return not(account[query.queryType].amount > Number(query.amount) and account[query.queryType].type is query.balType)
+              else
+                return not(account[query.queryType] > Number(query.amount))
+            when 'Less'
+              if query.queryType is 'closingBalance' or query.queryType is 'openingBalance'
+                return not(account[query.queryType].amount < Number(query.amount) and account[query.queryType].type is query.balType)
+              else
+                return not(account[query.queryType] < Number(query.amount))
+            when 'Equals'
+              if query.queryType is 'closingBalance' or query.queryType is 'openingBalance'
+                return not(account[query.queryType].amount is Number(query.amount) and account[query.queryType].type is query.balType)
+              else
+                return not(account[query.queryType] is Number(query.amount))
+            else
+              toastr.warning("something went wrong reload page", "Warning")
+        )
+        # end reject
+      )
+      # end each
+
+
+
+  $scope.resetData =()->
+    $scope.inSrchmode = false
+    _.extend($scope.searchResData, $scope.searchResDataOrig)
+
 
 
   # init some func when page load
   $scope.getGrpsforSearch()
 
-
-
-
 #init angular app
 giddh.webApp.controller 'searchController', searchController
+
+# class method
+class angular.srchDataSet
+  constructor: ()->
+    @queryType= ""
+    @balType= "CREDIT"
+    @queryDiffer= ""
+    @amount = ""
