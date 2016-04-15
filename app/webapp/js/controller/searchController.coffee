@@ -20,7 +20,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     fromDate: new Date(moment().subtract(1, 'month').utc())
     toDate: new Date()
   }
-  $scope.searchResData = {}
+  $scope.grp = {}
   $scope.searchResDataOrig = {}
   # search query parameters
   $scope.queryType = [
@@ -76,16 +76,20 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     groupService.getClosingBal(obj)
       .then(
         (res)->
-          _.extend($scope.searchResData, res.body[0]) 
-          _.extend($scope.searchResDataOrig, res.body[0])
+          # $scope.waitForResponse = true
+          console.log res.body
+          $scope.searchResData = groupService.flattenSearchGroupsAndAccounts(res.body)
+          _.extend($scope.searchResDataOrig, $scope.searchResData)
           $scope.srchDataFound = true
+          console.log $scope.searchResData
         ,(error)->
           $scope.srchDataFound = false
+          # $scope.waitForResponse = true
       )
 
   # push new value
   $scope.addSearchRow =()->
-    if $scope.srchDataSet.length < 2 
+    if $scope.srchDataSet.length < 4 
       $scope.srchDataSet.push(new angular.srchDataSet())
     else
       toastr.warning("Cannot add more parameters", "Warning")
@@ -99,9 +103,9 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
     # for each object filter data
     _.each(srchQData, (query)->
-      console.log "query:", query
+      console.log "query:", query, 
       # logic to search data
-      $scope.searchResData.accounts = _.reject($scope.searchResData.accounts, (account)->
+      $scope.searchResData = _.reject($scope.searchResData, (account)->
           switch query.queryDiffer
             when 'Greater'
               if query.queryType is 'closingBalance' or query.queryType is 'openingBalance'
@@ -128,6 +132,8 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
 
   $scope.resetData =()->
+    $scope.srchDataSet = []
+    $scope.srchDataSet = [new angular.srchDataSet()]
     $scope.inSrchmode = false
     _.extend($scope.searchResData, $scope.searchResDataOrig)
 

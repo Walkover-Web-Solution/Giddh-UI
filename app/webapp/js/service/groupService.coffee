@@ -231,4 +231,26 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       )
       _.flatten(listofUN)
 
+
+    flattenSearchGroupsAndAccounts: (rawList) ->
+      listofUN = _.map(rawList, (obj) ->
+        if not(_.isNull(obj.childGroups)) and obj.childGroups.length > 0
+          uniqueList = groupService.flattenSearchGroupsAndAccounts(obj.childGroups)
+          _.each(obj.accounts, (account)->
+            account.parent = obj.name
+          )
+          uniqueList.push(obj.accounts)
+          # leftData = _.omit(obj, "childGroups")
+          # leftData = _.omit(leftData, "accounts")
+          # leftData.openingBalance = leftData.forwardedBalance
+          # uniqueList.push(leftData)
+          uniqueList
+        else
+          _.each(obj.accounts, (account)->
+            account.parent = obj.name
+          )
+          obj.accounts
+      )
+      _.flatten(listofUN)
+
   groupService

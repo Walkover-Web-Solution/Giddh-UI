@@ -71,7 +71,7 @@
               </div>
 
               <div class="mrB4">
-                <button ng-disabled="searchFormClb.$invalid" class="btn btn-primary btn-block" ng-click="getClosingBalance(searchFormData)">Go</button>
+                <button ng-disabled="searchFormClb.$invalid" class="btn btn-primary btn-block" ng-click=" getClosingBalance(searchFormData)">Go</button>
               </div>
 
             </form>      
@@ -139,6 +139,8 @@
                   </select>
                 </span>
                 <label ng-if="$index === 0 && srchDataSet.length > 1">and</label>
+                <label ng-if="$index === 1 && srchDataSet.length > 2">and</label>
+                <label ng-if="$index === 2 && srchDataSet.length > 3">and</label>
               </div>
               <!-- end of clearfix first row -->
               <!-- end repeater -->
@@ -147,8 +149,8 @@
 
 
               <div class="clearfix form-group">
-                <button ng-show="srchDataSet.length > 1" class="btn btn-default mrR1" ng-click="removeSearchRow()">Delete Row</button>
-                <button ng-disabled="srchDataSet.length > 1 || searchQueryForm.$invalid" class="btn btn-default mrR1" ng-click="addSearchRow()">Add New Query</button>
+                <button ng-show="srchDataSet.length > 4" class="btn btn-default mrR1" ng-click="removeSearchRow()">Delete Row</button>
+                <button ng-disabled="srchDataSet.length > 4 || searchQueryForm.$invalid" class="btn btn-default mrR1" ng-click="addSearchRow()">Add New Query</button>
                 <button ng-disabled="searchQueryForm.$invalid" class="btn btn-primary mrR1" ng-click="searchQuery(srchDataSet)">Search</button>
                 <button ng-if="inSrchmode" ng-click="resetData()" class="btn btn-info">Reset Data</button>
               </div>
@@ -159,36 +161,38 @@
           <!-- end of query section grey bg -->
 
           <table class="mrT2 table table-bordered table-striped">
-          <thead>
-            <th>Name</th>
-            <th>Opening Bal.</th>
-            <th>Cr total</th>
-            <th>Dr total</th>
-            <th>Closing Bal.</th>
-          </thead>
-          <tbody>
-            <tr ng-repeat="item in searchResData.accounts track by $index">
-              <td>{{item.name}}</td>
-              <td class="alR">
-                <span class="text-success pull-left" ng-if="item.openingBalance.type === 'DEBIT'">DR</span>
-                <span class="text-danger pull-left" ng-if="item.openingBalance.type === 'CREDIT'">CR</span>
-                &nbsp;
-                {{item.openingBalance.amount}}
-              </td>
-              <td class="alR">{{item.creditTotal}}</td>
-              <td class="alR">{{item.debitTotal}}</td>
-              <td class="alR">
-                <span class="text-success pull-left" ng-if="item.closingBalance.type === 'DEBIT'">DR</span>
-                <span class="text-danger pull-left" ng-if="item.closingBalance.type === 'CREDIT'">CR</span>
-                &nbsp;
-                {{item.closingBalance.amount}}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+            <thead>
+              <th>Name</th>
+              <th>Opening Bal.</th>
+              <th>Cr total</th>
+              <th>Dr total</th>
+              <th>Closing Bal.</th>
+              <th>Parent</th>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in searchResData track by $index">
+                <td>{{item.name}}</td>
+                <td class="alR">
+                  <span class="text-success pull-left" ng-if="item.openingBalance.type === 'DEBIT'">DR</span>
+                  <span class="text-danger pull-left" ng-if="item.openingBalance.type === 'CREDIT'">CR</span>
+                  &nbsp;
+                  {{item.openingBalance.amount}}
+                </td>
+                <td class="alR">{{item.creditTotal}}</td>
+                <td class="alR">{{item.debitTotal}}</td>
+                <td class="alR">
+                  <span class="text-success pull-left" ng-if="item.closingBalance.type === 'DEBIT'">DR</span>
+                  <span class="text-danger pull-left" ng-if="item.closingBalance.type === 'CREDIT'">CR</span>
+                  &nbsp;
+                  {{item.closingBalance.amount}}
+                </td>
+                <td>{{item.parent}}</td>
+              </tr>
+            </tbody>
+          </table>
 
         </section>
-        <!-- end result -->
+        <!-- end pd div -->
         </perfect-scrollbar>
 
       </div>

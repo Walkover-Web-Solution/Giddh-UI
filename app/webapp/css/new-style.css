@@ -2212,4 +2212,15 @@ body.unresponsive{
     border-bottom: 2px dashed #ddd;
     margin:0 10px
 }
+/*div table*/
+.gTbl {display: table;     width: 100%; } 
+.gTblRow {display: table-row; } 
+.gTblHead {display: table-header-group;background-color: #ddd; }
+.gTblCell, .gTblHead {display: table-cell;padding: 8px;border: 1px solid #ddd; } 
+.gTblHead {display: table-header-group;background-color: #ddd;     font-weight: bold; } 
+.gTblFoot {display: table-footer-group;font-weight: bold;      background-color: #ddd; } 
+.gTblBody {display: table-row-group; }
 
+.gTbl .gTblRow:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
