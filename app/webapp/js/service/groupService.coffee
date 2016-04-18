@@ -237,17 +237,21 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         if not(_.isNull(obj.childGroups)) and obj.childGroups.length > 0
           uniqueList = groupService.flattenSearchGroupsAndAccounts(obj.childGroups)
           _.each(obj.accounts, (account)->
-            account.parent = obj.name
+            account.parent = obj.groupName
+            account.closBalType = account.closingBalance.type
+            account.closingBalance = account.closingBalance.amount
+            account.openBalType = account.openingBalance.type
+            account.openingBalance = account.openingBalance.amount
           )
           uniqueList.push(obj.accounts)
-          # leftData = _.omit(obj, "childGroups")
-          # leftData = _.omit(leftData, "accounts")
-          # leftData.openingBalance = leftData.forwardedBalance
-          # uniqueList.push(leftData)
           uniqueList
         else
           _.each(obj.accounts, (account)->
-            account.parent = obj.name
+            account.parent = obj.groupName
+            account.closBalType = account.closingBalance.type
+            account.closingBalance = account.closingBalance.amount
+            account.openBalType = account.openingBalance.type
+            account.openingBalance = account.openingBalance.amount
           )
           obj.accounts
       )

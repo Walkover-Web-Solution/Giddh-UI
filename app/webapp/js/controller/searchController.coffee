@@ -112,17 +112,20 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
           switch query.queryDiffer
             when 'Greater'
               if query.queryType is 'closingBalance' or query.queryType is 'openingBalance'
-                return not(account[query.queryType].amount > Number(query.amount) and account[query.queryType].type is query.balType)
+                return not(account[query.queryType] > Number(query.amount))
+                # and account[query.queryType].type is query.balType
               else
                 return not(account[query.queryType] > Number(query.amount))
             when 'Less'
               if query.queryType is 'closingBalance' or query.queryType is 'openingBalance'
-                return not(account[query.queryType].amount < Number(query.amount) and account[query.queryType].type is query.balType)
+                return not(account[query.queryType] < Number(query.amount))
+                #  and account[query.queryType].type is query.balType
               else
                 return not(account[query.queryType] < Number(query.amount))
             when 'Equals'
               if query.queryType is 'closingBalance' or query.queryType is 'openingBalance'
-                return not(account[query.queryType].amount is Number(query.amount) and account[query.queryType].type is query.balType)
+                return not(account[query.queryType] is Number(query.amount))
+                #  and account[query.queryType].type is query.balType
               else
                 return not(account[query.queryType] is Number(query.amount))
             else
@@ -141,6 +144,9 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     _.extend($scope.searchResData, $scope.searchResDataOrig)
 
 
+  # download CSV
+  $scope.getCSVHeader=()->
+    return ["CR Total", "DR Total", "Opening Bal.", "Closing Bal.", "Uniquename", "Name", "Parent", "Closing Bal. Type", "Opening Bal. Type"]
 
   # init some func when page load
   $scope.getGrpsforSearch()

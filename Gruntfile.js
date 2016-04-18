@@ -208,7 +208,8 @@ module.exports = function (grunt) {
           'ui-select',
           'html2canvas',
           'Chart.js',
-          'angular-ui-switch'
+          'angular-ui-switch',
+          'ng-csv'
         ],
         dependencies: {
           'jquery': 'modernizr',
@@ -226,6 +227,7 @@ module.exports = function (grunt) {
         },
         callback: function(mainFiles, component) {
           return _.map(mainFiles, function(filepath) {
+            console.log(filepath)
             var min = filepath.replace(/\.js$/, '.min.js');
             return grunt.file.exists(min) ? min : filepath;
           });

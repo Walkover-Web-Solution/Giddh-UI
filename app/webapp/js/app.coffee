@@ -27,6 +27,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "ui.select"
     "uiSwitch"
     "razor-pay"
+    "ngCsv"
   ]
 )
 
