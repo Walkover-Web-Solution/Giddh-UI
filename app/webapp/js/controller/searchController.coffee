@@ -39,7 +39,9 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     {name:"DR", uniqueName: "DEBIT"}
   ]
   $scope.srchDataSet=[new angular.srchDataSet()]
-    
+
+  $scope.sortType     = 'name'
+  $scope.sortReverse  = false  
 
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
@@ -67,6 +69,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   # get selected group closing balance
   $scope.getClosingBalance = (data) ->
+    $scope.searchDtCntLdr = true
     obj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: data.group.uniqueName
@@ -76,15 +79,15 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     groupService.getClosingBal(obj)
       .then(
         (res)->
-          # $scope.waitForResponse = true
           console.log res.body
           $scope.searchResData = groupService.flattenSearchGroupsAndAccounts(res.body)
           _.extend($scope.searchResDataOrig, $scope.searchResData)
           $scope.srchDataFound = true
+          $scope.searchDtCntLdr = false
           console.log $scope.searchResData
         ,(error)->
           $scope.srchDataFound = false
-          # $scope.waitForResponse = true
+          $scope.searchDtCntLdr = false
       )
 
   # push new value
