@@ -149,6 +149,8 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
       )
       # end each
 
+      
+
   $scope.resetQuery =()->
     $scope.srchDataSet = []
     $scope.srchDataSet = [new angular.srchDataSet()]

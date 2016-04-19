@@ -168,7 +168,9 @@
           </section>
           <!-- end of query section grey bg -->
 
-          <table class="mrT2 table table-bordered table-striped">
+          <div ng-if="searchResData.length === 0" class="mrT2 alert alert-warning" role="alert">Please select proper filters</div>
+
+          <table class="mrT2 table table-bordered table-striped" ng-hide="searchResData.length === 0">
             <thead>
               <tr>
                 <th class="col-xs-2">
