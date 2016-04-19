@@ -1,0 +1,183 @@
+<div class="col-xs-3 greyBg max350">
+	<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height suppress-  scroll-x="true">
+		<h1 class="page-title" style="margin-left:0; margin-bottom:15px;">Apply Log Filters</h1>
+    
+    <div class="clearfix mrT2">
+      <label>Filter By:</label>
+      <ui-select ng-model="options.selectedDateOption" theme="bootstrap" onselect="">
+          <ui-select-match placeholder="Select Option">
+              <span>{{$select.selected.name}}</span>
+          </ui-select-match>
+          <ui-select-choices repeat="entity in options.dateOptions | filter: $select.search ">
+              <span ng-bind="entity.name"></span>
+          </ui-select-choices>
+      </ui-select>
+    </div>
+
+		<div class="clearfix mrT2" ng-if="options.selectedDateOption.value == 1">
+          <label>From date</label>
+          <p class="input-group">
+            <input type="text" class="form-control"
+                 uib-datepicker-popup="{{format}}" required
+                 datepicker-options="dateOptions"
+                 is-open="fromDatePickerIsOpen"
+                 ng-click="fromDatePickerOpen()"
+                 ng-model="fromDate.date"
+                 max-date="today"
+                 placeholder="from date"
+              />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="fromDatePickerOpen()"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </p>
+		</div>
+
+		<div class="clearfix mrT2" ng-if="options.selectedDateOption.value == 1">
+          <label>To date</label>
+          <p class="input-group">
+            <input type="text" class="form-control"
+                 uib-datepicker-popup="{{format}}" required
+                 datepicker-options="dateOptions"
+                 is-open="toDatePickerIsOpen"
+                 ng-click="toDatePickerOpen()"
+                 ng-model="toDate.date"
+                 max-date="today"
+                 placeholder="to date"
+              />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </p>
+        </div>
+
+       	<div class="clearfix mrT2"  ng-if="options.selectedDateOption.value == 0">
+          <!-- <label>Select Log Date or Entry Date</label> -->
+          <div class="row" style="margin-left:0">
+          	<p class="input-group pull-left" for="entryDate">
+          		<label>Entry Date
+          			<input id="entryDate" type="radio" name="entryDate" ng-model="date.name" value="entryDate"/>
+          		</label>
+          	</p>
+          	<p class="input-group pull-left mrL2" for="logDate">
+          		<label>Log Date
+          			<input id="logDate" type="radio" name="logDate" ng-model="date.name" value="logDate"/>
+          		</label>
+          	</p>
+          	<br/>
+          </div>
+
+          <p class="input-group"  ng-if="options.selectedDateOption.value == 0">
+            <input type="text" class="form-control"
+                 uib-datepicker-popup="{{format}}" required
+                 datepicker-options="dateOptions"
+                 is-open="logDatePickerIsOpen"
+                 ng-click="logDatePickerOpen()"
+                 ng-model="date[date.name]"
+                 max-date="today"
+                 placeholder="Log date"
+              />
+            <span class="input-group-btn">
+              <button type="button" class="btn btn-default" ng-click="logDatePickerOpen()"><i class="glyphicon glyphicon-calendar"></i></button>
+            </span>
+          </p>
+        </div>
+
+	    <div class="clearfix mrT2">
+	      <label>Select Operation</label>
+	      <ui-select ng-model="options.selectedOption" theme="bootstrap">
+	          <ui-select-match placeholder="Select Option">
+	              <span>{{$select.selected}}</span>
+	          </ui-select-match>
+	          <ui-select-choices repeat="option in options.filters | filter: $select.search ">
+	              <span ng-bind="option"></span>
+	          </ui-select-choices>
+	      </ui-select>
+	    </div>
+
+	    <div class="clearfix mrT2">
+	      <label>Select Entity</label>
+	      <ui-select ng-model="options.selectedEntity" theme="bootstrap">
+	          <ui-select-match placeholder="Select Option">
+	              <span>{{$select.selected}}</span>
+	          </ui-select-match>
+	          <ui-select-choices repeat="entity in options.entities | filter: $select.search ">
+	              <span ng-bind="entity"></span>
+	          </ui-select-choices>
+	      </ui-select>
+	    </div>
+
+	    <div class="clearfix mrT2">
+	      <label>Select Account</label>
+	      <ui-select ng-model="options.selectedAccountUnq" theme="bootstrap">
+	          <ui-select-match placeholder="Select Option">
+	              <span>{{$select.selected.name}}</span>
+	          </ui-select-match>
+	          <ui-select-choices repeat="acc in options.accountUniqueNames | filter: $select.search ">
+	              <span ng-bind="acc.name"></span>
+	          </ui-select-choices>
+	      </ui-select>
+	    </div>
+
+	    <div class="clearfix mrT2">
+	      <label>Select Group</label>
+	      <ui-select ng-model="options.selectedGroupUnq" theme="bootstrap">
+	          <ui-select-match placeholder="Select Option">
+	              <span>{{$select.selected.name}}</span>
+	          </ui-select-match>
+	          <ui-select-choices repeat="grp in options.groupUniqueNames | filter: $select.search ">
+	              <span ng-bind="grp.name"></span>
+	          </ui-select-choices>
+	      </ui-select>
+	    </div>
+
+
+	    <div class="clearfix mrT2">
+	      <label>Select User</label>
+	      <ui-select ng-model="options.selectedUserUnq" theme="bootstrap">
+	          <ui-select-match placeholder="Select Option">
+	              <span>{{$select.selected.userName}}</span>
+	          </ui-select-match>
+	          <ui-select-choices repeat="user in users | filter: $select.search ">
+	              <span ng-bind="user.userName"></span>
+	          </ui-select-choices>
+	      </ui-select>
+	    </div>
+
+		<get-logs ng-click="assignLogData()"></get-logs>
+    <button class="btn btn-warning pull-left mrT2 mrL" ng-click="resetFilters()">Reset</button>
+
+    <br/>
+    <h1 class="page-title pull-left" style="margin-left:0; margin-bottom:15px;width:100%;border-top:1px solid #ccc;padding-top:5px;">Delete Logs</h1>
+        <div class="clearfix mrT2">
+              <label>Before date</label>
+              <p class="input-group">
+                <input type="text" class="form-control"
+                     uib-datepicker-popup="{{format}}" required
+                     datepicker-options="dateOptions"
+                     is-open="beforeDatePickerIsOpen"
+                     ng-click="beforeDatePickerOpen()"
+                     ng-model="beforeDate.date"
+                     max-date="today"
+                     placeholder="Delete all logs before date"
+                  />
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="beforeDatePickerOpen()"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+              </p>
+        </div>
+        <button class="btn btn-danger pull-left mrT2" ng-click="deleteLogs()">Delete Logs</button>
+	</perfect-scrollbar>
+</div>
+
+
+<div class="col-xs-9">
+  <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+  	<section class="container audit-logs">
+  			<audit-logs>Loading..</audit-logs>
+        <load-more *ngIf="page > 0">Loading...</load-more>
+  	</section>
+    <div style="margin-bottom::50px;"></div>
+  </perfect-scrollbar>
+</div>
+
+<scrip></script>

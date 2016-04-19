@@ -1,0 +1,106 @@
+<h1 class="page-title" *ngIf="logs.length > 0"> Audit Logs</h1>
+<br/>
+<section class="audit-log" *ngFor = "#log of logs; #i = index">
+	<h1>{{log.operationType}}<span *ngIf="log.accountName != null"> - {{log.accountName}}</span></h1> 
+	<div class="mrT border-top-btm clearfix">
+		<div>
+			<label class="pull-left">Entity:</label>
+			<p class="pull-left mrL">{{log.entityType}}</p>
+		</div>
+		<div>
+			<label class="pull-left mrL2">Date:</label>
+			<p class="pull-left mrL">{{log.createdAt}}</p>
+		</div>
+		<div>
+			<label class="pull-left mrL2">User:</label>
+			<p class="pull-left mrL">{{log.user.name}}</p>
+		</div>
+		<div *ngIf="log.groupName != null">
+			<label class="pull-left mrL2">Group:</label>
+			<p class="pull-left mrL">{{log.groupName}}</p>
+		</div>
+		<div>
+			<label class="pull-left mrL2">Company:</label>
+			<p class="pull-left mrL">{{log.companyName}}</p>
+		</div>
+		<div *ngIf="log.log.sharedWith != undefined && log.log.sharedWith.name.length > 0">
+			<label class="pull-left mrL2">Shared with:</label>
+			<p class="pull-left mrL">{{log.log.sharedWith.name}}</p>
+		</div>
+		<div *ngIf="log.log.description != undefined && log.log.description.length > 0">
+			<label class="pull-left mrL2">Description:</label>
+			<p class="pull-left mrL">{{log.log.description}}</p>
+		</div>
+	</div>
+
+	<div class="mrT" *ngIf="log.log.transactions != undefined && log.log.transactions.length > 0">
+		<table class="table table-bordered ">
+			<thead>
+				<tr>
+					<th class="col-xs-3 text-center">#</th>
+					<th class="col-xs-3 text-center">Particular</th>
+					<th class="col-xs-3 text-center">Amount</th>
+					<th class="col-xs-3 text-center">Type</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor = "#transaction of log.log.transactions; #i = index">
+					<td>{{i + 1}}</td>
+					<td>{{transaction.particular.name}}</td>
+					<td>{{transaction.amount}}</td>
+					<td>{{transaction.type}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="mrT text-center" *ngIf="log.log.old != undefined && log.log.updated != undefined">
+		<label>Updated</label>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="col-xs-3 text-center">#</th>
+					<th class="col-xs-3 text-center">Particular</th>
+					<th class="col-xs-3 text-center">Amount</th>
+					<th class="col-xs-3 text-center">Type</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor = "#transaction of log.log.updated.transactions; #i = index">
+					<td>{{i + 1}}</td>
+					<td>{{transaction.particular.name}}</td>
+					<td>{{transaction.amount}}</td>
+					<td>{{transaction.type}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+		<label>Old</label>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="col-xs-3 text-center">#</th>
+					<th class="col-xs-3 text-center">Particular</th>
+					<th class="col-xs-3 text-center">Amount</th>
+					<th class="col-xs-3 text-center">Type</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor = "#transaction of log.log.old.transactions; #i = index">
+					<td>{{i + 1}}</td>
+					<td>{{transaction.particular.name}}</td>
+					<td>{{transaction.amount}}</td>
+					<td>{{transaction.type}}</td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+</section>
+<section class="no-logs" *ngIf="logs.length < 1">
+	<div class="no-data">
+  		<h1>Sorry, No Logs Found!</h1>
+  		<img src="/public/webapp/images/no-data.png" alt="">
+  		<p>You can use the filters on the left to generate logs.</p>
+	</div>
+</section>
+
