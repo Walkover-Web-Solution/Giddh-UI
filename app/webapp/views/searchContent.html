@@ -159,7 +159,7 @@
                 <button ng-disabled="srchDataSet.length > 4 || searchQueryForm.$invalid" class="btn btn-default mrR1" ng-click="addSearchRow()">Add New Query</button>
                 <button ng-disabled="searchQueryForm.$invalid" class="btn btn-primary mrR1" ng-click="searchQuery(srchDataSet)">Search</button>
                 <button ng-if="inSrchmode" ng-click="resetData()" class="btn btn-info mrR1">Reset Data</button>
-                <button class="btn btn-info" ng-csv="searchResData" csv-header="getCSVHeader()"  filename="{{ searchFormData.group.name }}" field-separator="," decimal-separator=".">Download CSV</button>
+                <button class="btn btn-success" ng-csv="searchResData" csv-header="getCSVHeader()"  filename="{{ searchFormData.group.name }}" field-separator="," decimal-separator=".">Download CSV</button>
               </div>
               <!-- end of second row -->
             </form>

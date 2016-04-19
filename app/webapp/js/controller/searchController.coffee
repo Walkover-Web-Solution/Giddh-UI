@@ -79,12 +79,10 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     groupService.getClosingBal(obj)
       .then(
         (res)->
-          console.log res.body
           $scope.searchResData = groupService.flattenSearchGroupsAndAccounts(res.body)
           _.extend($scope.searchResDataOrig, $scope.searchResData)
           $scope.srchDataFound = true
           $scope.searchDtCntLdr = false
-          console.log $scope.searchResData
         ,(error)->
           $scope.srchDataFound = false
           $scope.searchDtCntLdr = false
@@ -106,26 +104,22 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
     # for each object filter data
     _.each(srchQData, (query)->
-      console.log "query:", query, 
       # logic to search data
       $scope.searchResData = _.reject($scope.searchResData, (account)->
           switch query.queryDiffer
             when 'Greater'
               if query.queryType is 'closingBalance' or query.queryType is 'openingBalance'
-                return not(account[query.queryType] > Number(query.amount))
-                # and account[query.queryType].type is query.balType
+                return not(account[query.queryType] > Number(query.amount) and if query.balType is 'DEBIT' then account["openBalType"] is query.balType else account["closeBalType"] is query.balType)
               else
                 return not(account[query.queryType] > Number(query.amount))
             when 'Less'
               if query.queryType is 'closingBalance' or query.queryType is 'openingBalance'
-                return not(account[query.queryType] < Number(query.amount))
-                #  and account[query.queryType].type is query.balType
+                return not(account[query.queryType] < Number(query.amount) and if query.balType is 'DEBIT' then account["openBalType"] is query.balType else account["closeBalType"] is query.balType)
               else
                 return not(account[query.queryType] < Number(query.amount))
             when 'Equals'
               if query.queryType is 'closingBalance' or query.queryType is 'openingBalance'
-                return not(account[query.queryType] is Number(query.amount))
-                #  and account[query.queryType].type is query.balType
+                return not(account[query.queryType] is Number(query.amount) and if query.balType is 'DEBIT' then account["openBalType"] is query.balType else account["closeBalType"] is query.balType)
               else
                 return not(account[query.queryType] is Number(query.amount))
             else
