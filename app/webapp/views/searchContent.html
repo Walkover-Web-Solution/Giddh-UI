@@ -103,7 +103,7 @@
         <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height ng-if="srchDataFound">
 
         <!-- result -->
-        <section class="pd2">
+        <section class="pd2" ng-if="!searchDtCntLdr">
 
           <section class="greyBg pd2">
             
@@ -186,10 +186,10 @@
                   </div>
                 </th>
                 <th class="col-xs-2">
-                  <div ng-click="sortType = 'closBalType'; sortReverse = !sortReverse">
+                  <div ng-click="sortType = 'closeBalType'; sortReverse = !sortReverse">
                   Closing Bal. 
-                    <span ng-show="sortType=='closBalType' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                    <span ng-show="sortType=='closBalType' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                    <span ng-show="sortType=='closeBalType' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType=='closeBalType' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                   </div>
                 </th>
                 <th class="col-xs-2">
@@ -228,8 +228,8 @@
                 </td>
                 <td class="alR">
                   <span ng-if="item.closingBalance > 0">
-                    <span class="text-success pull-left" ng-if="item.closBalType === 'DEBIT'">DR</span>
-                    <span class="text-danger pull-left" ng-if="item.closBalType === 'CREDIT'">CR</span>
+                    <span class="text-success pull-left" ng-if="item.closeBalType === 'DEBIT'">DR</span>
+                    <span class="text-danger pull-left" ng-if="item.closeBalType === 'CREDIT'">CR</span>
                     &nbsp;
                   </span>
                   {{item.closingBalance}}

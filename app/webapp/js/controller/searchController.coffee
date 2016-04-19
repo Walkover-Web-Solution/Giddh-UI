@@ -20,7 +20,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     fromDate: new Date(moment().subtract(1, 'month').utc())
     toDate: new Date()
   }
-  $scope.grp = {}
+  $scope.searchResData = {}
   $scope.searchResDataOrig = {}
   # search query parameters
   $scope.queryType = [
@@ -69,6 +69,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   # get selected group closing balance
   $scope.getClosingBalance = (data) ->
+    $scope.resetQuery()
     $scope.searchDtCntLdr = true
     obj = {
       compUname: $rootScope.selectedCompany.uniqueName
@@ -107,33 +108,40 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
     # for each object filter data
     _.each(srchQData, (query)->
-      console.log "query:", query
-
-      # logic to search data
-      $scope.searchResData = _.reject($scope.searchResData, (account)->
+      console.log "query:", query,
+      $scope.searchResData = _.filter($scope.searchResData, (account)->
           amount = Number(query.amount)
           switch query.queryDiffer
             when 'Greater'
-              if query.queryType is 'openingBalance' and amount isnt 0
-                return not(account[query.queryType] > amount and account["openBalType"] is query.balType)
-              else if query.queryType is 'closingBalance' and amount isnt 0
-                return not(account[query.queryType] > amount and account["closeBalType"] is query.balType)
+              if amount is 0
+                return account[query.queryType] > amount
               else
-                return not(account[query.queryType] > amount)
+                if query.queryType is 'openingBalance'
+                  return account.openingBalance > amount and account.openBalType is query.balType
+                if query.queryType is 'closingBalance'
+                  return account.closingBalance > amount and account.closeBalType is query.balType
+                else
+                  return account[query.queryType] > amount
             when 'Less'
-              if query.queryType is 'openingBalance' and amount isnt 0
-                return not(account[query.queryType] < amount and account["openBalType"] is query.balType)
-              else if query.queryType is 'closingBalance' and amount isnt 0
-                return not(account[query.queryType] < amount and account["closeBalType"] is query.balType)
+              if amount is 0
+                return account[query.queryType] < amount
               else
-                return not(account[query.queryType] < amount)
+                if query.queryType is 'openingBalance'
+                  return account.openingBalance < amount and account.openBalType is query.balType
+                if query.queryType is 'closingBalance'
+                  return account.closingBalance < amount and account.closeBalType is query.balType
+                else
+                  return account[query.queryType] < amount
             when 'Equals'
-              if query.queryType is 'openingBalance' and amount isnt 0
-                return not(account[query.queryType] is amount and account["openBalType"] is query.balType)
-              else if query.queryType is 'closingBalance' and amount isnt 0
-                return not(account[query.queryType] is amount and account["closeBalType"] is query.balType)
+              if amount is 0
+                return account[query.queryType] is amount
               else
-                return not(account[query.queryType] is amount)
+                if query.queryType is 'openingBalance'
+                  return account.openingBalance is amount and account.openBalType is query.balType
+                if query.queryType is 'closingBalance'
+                  return account.closingBalance is amount and account.closeBalType is query.balType
+                else
+                  return account[query.queryType] is amount
             else
               toastr.warning("something went wrong reload page", "Warning")
         )
@@ -141,12 +149,11 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
       )
       # end each
 
-
-
   $scope.resetQuery =()->
     $scope.srchDataSet = []
     $scope.srchDataSet = [new angular.srchDataSet()]
     $scope.inSrchmode = false
+    _.extend($scope.searchResData, $scope.searchResDataOrig)
 
 
   # download CSV

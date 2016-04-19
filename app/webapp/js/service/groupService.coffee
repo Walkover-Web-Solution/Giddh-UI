@@ -238,7 +238,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
           uniqueList = groupService.flattenSearchGroupsAndAccounts(obj.childGroups)
           _.each(obj.accounts, (account)->
             account.parent = obj.groupName
-            account.closBalType = account.closingBalance.type
+            account.closeBalType = account.closingBalance.type
             account.closingBalance = account.closingBalance.amount
             account.openBalType = account.openingBalance.type
             account.openingBalance = account.openingBalance.amount
@@ -248,7 +248,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         else
           _.each(obj.accounts, (account)->
             account.parent = obj.groupName
-            account.closBalType = account.closingBalance.type
+            account.closeBalType = account.closingBalance.type
             account.closingBalance = account.closingBalance.amount
             account.openBalType = account.openingBalance.type
             account.openingBalance = account.openingBalance.amount
