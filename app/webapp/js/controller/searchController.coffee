@@ -105,10 +105,8 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     _.extend($scope.searchResData, $scope.searchResDataOrig)
     # show reset data button
     $scope.inSrchmode = true
-
     # for each object filter data
     _.each(srchQData, (query)->
-      console.log "query:", query,
       $scope.searchResData = _.filter($scope.searchResData, (account)->
           amount = Number(query.amount)
           switch query.queryDiffer

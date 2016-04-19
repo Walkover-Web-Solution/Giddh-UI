@@ -136,7 +136,7 @@
                 <label ng-if="item.queryDiffer === 'Less' || item.queryDiffer === 'Greater' ">than  &nbsp;</label>
                 <label ng-if="item.queryDiffer === 'Equals' ">to  &nbsp;</label>
                 <span style="margin-right:0">
-                  <input required style="width:100px" class="form-control" type="text" placeholder="amount" ng-model="item.amount">
+                  <input required style="width:100px" class="form-control" type="text" placeholder="amount" ng-model="item.amount" valid-number>
                 </span>
                 <span style="margin-left:0" ng-if="item.queryType === 'closingBalance' || item.queryType === 'openingBalance' ">
                   <select 
@@ -156,8 +156,8 @@
               
               <div class="clearfix form-group">
                 <button ng-disabled="searchQueryForm.$invalid" class="btn btn-primary mrR1" ng-click="searchQuery(srchDataSet)">Search</button>
-                <button ng-show="srchDataSet.length > 4" class="btn btn-default mrR1" ng-click="removeSearchRow()">Delete Row</button>
-                <button ng-disabled="srchDataSet.length > 4 || searchQueryForm.$invalid" class="btn btn-default mrR1" ng-click="addSearchRow()">Add New Query</button>
+                <button ng-disabled="srchDataSet.length > 3 || searchQueryForm.$invalid" class="btn btn-default mrR1" ng-click="addSearchRow()">Add New Query</button>
+                <button ng-show="srchDataSet.length > 1" class="btn btn-default mrR1" ng-click="removeSearchRow()">Delete Row</button>
                 <button ng-if="inSrchmode" ng-click="resetQuery()" class="btn btn-info mrR1">Reset Query</button>
                 
                 <button class="btn btn-success" ng-csv="searchResData" csv-header="getCSVHeader()"  filename="{{ searchFormData.group.name }}" field-separator="," decimal-separator=".">Download CSV</button>
