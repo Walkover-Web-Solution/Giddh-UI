@@ -79,10 +79,12 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     groupService.getClosingBal(obj)
       .then(
         (res)->
+          console.log res.body
           $scope.searchResData = groupService.flattenSearchGroupsAndAccounts(res.body)
           _.extend($scope.searchResDataOrig, $scope.searchResData)
           $scope.srchDataFound = true
           $scope.searchDtCntLdr = false
+          console.log $scope.searchResData
         ,(error)->
           $scope.srchDataFound = false
           $scope.searchDtCntLdr = false
@@ -99,29 +101,39 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     $scope.srchDataSet.splice(-1,1)
 
   $scope.searchQuery = (srchQData)->
+    _.extend($scope.searchResData, $scope.searchResDataOrig)
     # show reset data button
     $scope.inSrchmode = true
 
     # for each object filter data
     _.each(srchQData, (query)->
+      console.log "query:", query
+
       # logic to search data
       $scope.searchResData = _.reject($scope.searchResData, (account)->
+          amount = Number(query.amount)
           switch query.queryDiffer
             when 'Greater'
-              if query.queryType is 'closingBalance' or query.queryType is 'openingBalance'
-                return not(account[query.queryType] > Number(query.amount) and if query.balType is 'DEBIT' then account["openBalType"] is query.balType else account["closeBalType"] is query.balType)
+              if query.queryType is 'openingBalance' and amount isnt 0
+                return not(account[query.queryType] > amount and account["openBalType"] is query.balType)
+              else if query.queryType is 'closingBalance' and amount isnt 0
+                return not(account[query.queryType] > amount and account["closeBalType"] is query.balType)
               else
-                return not(account[query.queryType] > Number(query.amount))
+                return not(account[query.queryType] > amount)
             when 'Less'
-              if query.queryType is 'closingBalance' or query.queryType is 'openingBalance'
-                return not(account[query.queryType] < Number(query.amount) and if query.balType is 'DEBIT' then account["openBalType"] is query.balType else account["closeBalType"] is query.balType)
+              if query.queryType is 'openingBalance' and amount isnt 0
+                return not(account[query.queryType] < amount and account["openBalType"] is query.balType)
+              else if query.queryType is 'closingBalance' and amount isnt 0
+                return not(account[query.queryType] < amount and account["closeBalType"] is query.balType)
               else
-                return not(account[query.queryType] < Number(query.amount))
+                return not(account[query.queryType] < amount)
             when 'Equals'
-              if query.queryType is 'closingBalance' or query.queryType is 'openingBalance'
-                return not(account[query.queryType] is Number(query.amount) and if query.balType is 'DEBIT' then account["openBalType"] is query.balType else account["closeBalType"] is query.balType)
+              if query.queryType is 'openingBalance' and amount isnt 0
+                return not(account[query.queryType] is amount and account["openBalType"] is query.balType)
+              else if query.queryType is 'closingBalance' and amount isnt 0
+                return not(account[query.queryType] is amount and account["closeBalType"] is query.balType)
               else
-                return not(account[query.queryType] is Number(query.amount))
+                return not(account[query.queryType] is amount)
             else
               toastr.warning("something went wrong reload page", "Warning")
         )
@@ -131,11 +143,10 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
 
 
-  $scope.resetData =()->
+  $scope.resetQuery =()->
     $scope.srchDataSet = []
     $scope.srchDataSet = [new angular.srchDataSet()]
     $scope.inSrchmode = false
-    _.extend($scope.searchResData, $scope.searchResDataOrig)
 
 
   # download CSV
