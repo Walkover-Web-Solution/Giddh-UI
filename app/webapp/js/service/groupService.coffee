@@ -50,6 +50,14 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         method: 'GET'
         url: '/company/:companyUniqueName/groups/:groupUniqueName/shared-with'
       }
+      getUserList: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/users'
+      }
+      deleteLogs: {
+        method: 'DELETE'
+        url: '/company/:companyUniqueName/delete-logs/:beforeDate'
+      }
     })
 
   groupService =
@@ -213,5 +221,17 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
           listItem.accounts
       )
       _.flatten(listofUN)
+
+    getUserList: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> Group.getUserList({
+        companyUniqueName: unqNamesObj.compUname
+      }, onSuccess, onFailure))
+
+    deleteLogs: (reqParam, onSuccess, onFailure) ->
+      console.log(reqParam)
+      @handlePromise((onSuccess, onFailure) -> Group.deleteLogs({
+        companyUniqueName: reqParam.companyUniqueName,
+        beforeDate: reqParam.beforeDate
+      }, onSuccess, onFailure))
 
   groupService

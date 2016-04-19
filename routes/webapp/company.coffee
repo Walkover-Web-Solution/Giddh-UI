@@ -51,6 +51,19 @@ router.get '/:uniqueName/imports', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/:companyUniqueName/users', (req, res) ->
+  console.log req.params
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName+ '/users'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 router.post '/', (req, res) ->
   hUrl = settings.envUrl + 'company/'
   req.body.uniqueName = settings.stringUtil.getRandomString(req.body.name, req.body.city)
@@ -260,5 +273,34 @@ router.put '/:companyUniqueName/ebanks/:ItemAccountId', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+#get audit logs
+router.post '/:companyUniqueName/logs/:page', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/logs' + '?page=' + req.params.page
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode).send(data)
+    else
+      res.send data
+
+#delete audit logs
+router.delete '/:companyUniqueName/delete-logs/:beforeDate', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/delete-logs?beforeDate=' + req.params.beforeDate
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.delete hUrl, args, (data, response) ->
+    console.log response
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
 
 module.exports = router
