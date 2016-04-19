@@ -80,12 +80,10 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     groupService.getClosingBal(obj)
       .then(
         (res)->
-          console.log res.body
           $scope.searchResData = groupService.flattenSearchGroupsAndAccounts(res.body)
           _.extend($scope.searchResDataOrig, $scope.searchResData)
           $scope.srchDataFound = true
           $scope.searchDtCntLdr = false
-          console.log $scope.searchResData
         ,(error)->
           $scope.srchDataFound = false
           $scope.searchDtCntLdr = false

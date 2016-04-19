@@ -160,7 +160,7 @@
                 <button ng-show="srchDataSet.length > 1" class="btn btn-default mrR1" ng-click="removeSearchRow()">Delete Row</button>
                 <button ng-if="inSrchmode" ng-click="resetQuery()" class="btn btn-info mrR1">Reset Query</button>
                 
-                <button class="btn btn-success" ng-csv="searchResData" csv-header="getCSVHeader()"  filename="{{ searchFormData.group.name }}" field-separator="," decimal-separator=".">Download CSV</button>
+                <button class="btn btn-success" ng-csv="searchResData" csv-header="getCSVHeader()"  filename="{{ searchFormData.group.name }}.csv" field-separator="," decimal-separator=".">Download CSV</button>
               </div>
               <!-- end of second row -->
             </form>
@@ -168,9 +168,9 @@
           </section>
           <!-- end of query section grey bg -->
 
-          <div ng-if="searchResData.length === 0" class="mrT2 alert alert-warning" role="alert">Please select proper filters</div>
+          
 
-          <table class="mrT2 table table-bordered table-striped" ng-hide="searchResData.length === 0">
+          <table class="mrT2 table table-bordered table-striped">
             <thead>
               <tr>
                 <th class="col-xs-2">
