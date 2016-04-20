@@ -156,7 +156,28 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   # download CSV
   $scope.getCSVHeader=()->
-    return ["CR Total", "DR Total", "Opening Bal.", "Closing Bal.", "Uniquename", "Name", "Parent", "Closing Bal. Type", "Opening Bal. Type"]
+    # return ["CR Total", "DR Total", "Opening Bal.", "Closing Bal.", "Uniquename", "Name", "Parent", "Closing Bal. Type", "Opening Bal. Type"]
+    return  [
+      "Name"
+      "Opening Bal."
+      "Opening Bal. Type"
+      "Closing Bal."
+      "Closing Bal. Type"
+      "CR Total"
+      "DR Total"
+      "UniqueName"
+    ]
+
+  $scope.order = [
+    "name"
+    "closingBalance"
+    "closeBalType"
+    "openingBalance"
+    "openBalType"
+    "creditTotal"
+    "debitTotal"
+    "uniqueName"
+  ]
 
   # init some func when page load
   $scope.getGrpsforSearch()
