@@ -156,7 +156,6 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   # download CSV
   $scope.getCSVHeader=()->
-    # return ["CR Total", "DR Total", "Opening Bal.", "Closing Bal.", "Uniquename", "Name", "Parent", "Closing Bal. Type", "Opening Bal. Type"]
     return  [
       "Name"
       "Opening Bal."
