@@ -674,7 +674,7 @@ describe 'groupController', ->
       @scope.populateAccountList(data)
       expect(@scope.groupAccntList).toEqual([])
       expect(@groupService.matchAndReturnGroupObj).toHaveBeenCalledWith(data, @rootScope.flatGroupsList)
-      expect(@groupService.makeAcListWithLessDtl).toHaveBeenCalledWith(undefined, @rootScope.flatGroupsList)
+      expect(@groupService.makeAcListWithLessDtl).toHaveBeenCalledWith(undefined)
     
 
   describe '#showBreadCrumbs', ->
