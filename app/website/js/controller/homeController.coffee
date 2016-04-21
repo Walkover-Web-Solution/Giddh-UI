@@ -14,7 +14,7 @@ homeController = ($scope, $rootScope, $timeout) ->
       "list": [
         {
           "title": "Pocket accounting - anytime, anywhere",
-          "details": "Giddh is based on cloud computing. So it doesn't matter where you are, you can access your accounts anytime.",
+          "details": "Giddh is an online bookkeeping software, based on cloud computing. So it doesn't matter where you are, you can access your accounts anytime.",
           "imgSrc": "/public/website/images/online_on_cloud.png",
           "imgTitle": "Online on Cloud"
         },
@@ -50,13 +50,14 @@ homeController = ($scope, $rootScope, $timeout) ->
         },
         {
           "title": "Assistance in analysis",
-          "details": "Giddh is not limited to transactions recording. It gives you immense help in analysis of your accounting data by providing you tools for it.",
+          "details": "Giddh, online accounting software is not limited to transactions recording. It gives you immense help in analysis of your accounting data by providing you tools for it.
+",
           "imgSrc": "/public/website/images/assistance_in_analysis.png",
           "imgTitle": "Analysis"
         },
         {
           "title": "Benefits for start-ups",
-          "details": "You have plenty of tasks other than maintaining accounts book, right?\nGo ahead and take up all the tasks that need your attention at first, because accounting is going to be easy with Giddh.",
+          "details": "You have plenty of tasks other than maintaining accounts book, right? Go ahead and take up all the tasks that need your attention at first, because bookkeeping is going to be easy with Giddh.",
           "imgSrc": "/public/website/images/benefits_for_startups.png",
           "imgTitle": "Benefits"
         }

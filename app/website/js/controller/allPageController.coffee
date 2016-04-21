@@ -133,7 +133,7 @@ allPageController = ($scope) ->
       "list": [
         {
           "title": "Why for you?",
-          "details": "Because we all get that tingly feeling when we hear maths, numbers, and accounts. But it's extremely easy when you use Giddh as your accounting tool. We have broken down the complexity of accounts into simple ABCs which readily fits into any type and size of brain and business.",
+          "details": "Because we all get that tingly feeling when we hear maths, numbers, and accounts. But it's extremely easy when you use Giddh as your accounting tool. We have broken down the complexity of accounts into simple ABCs with Giddh simple accounting software, which readily fits into any type and size of brain and business.",
           "imgSrc": "/public/website/images/for_me.png",
           "imgTitle": "Online on Cloud"
         },
@@ -157,7 +157,7 @@ allPageController = ($scope) ->
         },
         {
           "title": "Again your question, why Giddh?",
-          "details": "The basic purpose of any business accounting software is to know the business and its profits state. Finance department is such a big process in any organization that its perfection directly affects the future and profits of the company. Having an online accounting software like Giddh will reduce down your complexity to simple analysis.",
+          "details": "The basic purpose of any business bookkeeping software is to know the business and its profits state. Finance department is such a big process in any organization that its perfection directly affects the future and profits of the company. Having an online accounting software like Giddh will reduce down your complexity to simple analysis. This is the reason why Giddh is considered as the best bookkeeping software for small business.",
           "imgSrc": "/public/website/images/why_me.png",
           "imgTitle": "Recursive Entry"
         }

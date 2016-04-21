@@ -1,7 +1,7 @@
 settings = require('../util/settings')
 router = settings.express.Router({mergeParams: true})
 
-router.post '/', (req, res) ->
+router.post '/history', (req, res) ->
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -20,7 +20,7 @@ router.post '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.get '/', (req, res) ->
+router.get '/profit-loss-history', (req, res) ->
   authHead = 
     headers:
       'Auth-Key': req.session.authKey
@@ -35,7 +35,7 @@ router.get '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.get '/', (req, res) ->
+router.get '/networth-history', (req, res) ->
   authHead = 
     headers:
       'Auth-Key': req.session.authKey

@@ -27,6 +27,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "ui.select"
     "uiSwitch"
     "razor-pay"
+    "ngCsv"
   ]
 )
 
@@ -83,6 +84,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/audit-logs'
     templateUrl: '/public/webapp/views/audit-logs.html',
     controller:'logsController'
+  )
+  .state('search',
+    url: '/search'
+    templateUrl: '/public/webapp/views/searchContent.html'
+    controller: 'searchController'
   )
   .state('company'
     url: ''

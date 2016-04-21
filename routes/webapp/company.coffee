@@ -1,6 +1,6 @@
 settings = require('../util/settings')
 router = settings.express.Router()
-# console.log clientIp, "shareable-role finally got", res.locales.remoteIp
+
 router.get '/all', (req, res) ->
   args =
     headers:
@@ -273,6 +273,33 @@ router.put '/:companyUniqueName/ebanks/:ItemAccountId', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.put '/:companyUniqueName/ebanks/:ItemAccountId/eledgers/:date', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/' + req.params.ItemAccountId + '/eledgers?from=' + req.params.date
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+# retry upload tally xml master
+router.put '/:uniqueName/retry', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.uniqueName+ '/imports/'+req.body.requestId+'/retry'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+# switch user
 #get audit logs
 router.post '/:companyUniqueName/logs/:page', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/logs' + '?page=' + req.params.page
@@ -301,5 +328,18 @@ router.delete '/:companyUniqueName/logs/:beforeDate', (req, res) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
+
+router.get '/:uniqueName/switchUser', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.uniqueName
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.patch hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 
 module.exports = router

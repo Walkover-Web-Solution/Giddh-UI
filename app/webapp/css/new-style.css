@@ -32,7 +32,9 @@ html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pr
     padding: 0;
     font-size: 100%;
 }
-
+.small, small {
+  font-size: 85%;
+}
 a, a:focus, a:hover, a:active {
     text-decoration: none;
     outline: none;
@@ -1853,6 +1855,9 @@ table:focus{
 .maxW250{
     max-width:250px;
 }
+.maxW150{
+    max-width: 150px;
+}
 
 .mart100{
     margin-top:100px;
@@ -1935,7 +1940,7 @@ i.cls-alert{
 
 .account-card{
     width:300px;
-    min-height:171px;
+    min-height:193px;
     float:left;
     display: inline-block;
     position: relative;
@@ -1991,10 +1996,30 @@ i.cls-alert{
     margin-left:15px;
 }
 
-.account-card .account-number{
+.account-card .account-number, .account-card .account-date{
     font-size: 12px;
     margin:5px 0;
 }
+
+.account-card .account-date > a{
+    margin-left: 5px;
+    font-size: 12px;
+    color: green;
+    cursor: pointer;
+    position: relative;
+}
+
+.account-card .account-date > a > input{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    max-width: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
 
 /*.account-card .btn{
     position: absolute;
@@ -2220,8 +2245,43 @@ body.unresponsive{
         width: 900px;
     }
 }
+/*search query*/
+#searchQueryForm span, #searchQueryForm label{
+    float: left;
+    display: inline-block;
+}
+#searchQueryForm label{
+    font-weight: normal;
+    line-height: 34px;
+    font-size: 16px;
+}
+#searchQueryForm .form-control{
+    padding-left: 0;
+    padding-right: 0;
+    background: transparent;
+    border: transparent;
+    box-shadow: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    text-indent: 0.01px;
+    text-overflow: '';
+}
+#searchQueryForm span{
+    border-bottom: 2px dashed #ddd;
+    margin:0 10px
+}
+/*div table*/
+.gTbl {display: table;     width: 100%; } 
+.gTblRow {display: table-row; } 
+.gTblHead {display: table-header-group;background-color: #ddd; }
+.gTblCell, .gTblHead {display: table-cell;padding: 8px;border: 1px solid #ddd; } 
+.gTblHead {display: table-header-group;background-color: #ddd;     font-weight: bold; } 
+.gTblFoot {display: table-footer-group;font-weight: bold;      background-color: #ddd; } 
+.gTblBody {display: table-row-group; }
 
-
+.gTbl .gTblRow:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
 /* ng2 component styles */
 
 .ng2-select-box{

@@ -2,7 +2,12 @@
 
 giddh.serviceModule.service 'groupService', ($resource, $q) ->
   Group = $resource('/company/:companyUniqueName/groups',
-    {'companyUniqueName': @companyUniqueName, 'groupUniqueName': @groupUniqueName},
+    {
+      'companyUniqueName': @companyUniqueName
+      'groupUniqueName': @groupUniqueName
+      'date1': @date1
+      'date2': @date2
+    },
     {
       add: {
         method: 'POST'
@@ -53,6 +58,10 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       getUserList: {
         method: 'GET'
         url: '/company/:companyUniqueName/users'
+      }
+      getClosingBal: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/groups/:groupUniqueName/closing-balance?fromDate=:date1&toDate=:date2'
       }
       deleteLogs: {
         method: 'DELETE'
@@ -132,6 +141,14 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Group.sharedWith({
         companyUniqueName: unqNamesObj.compUname,
         groupUniqueName: unqNamesObj.selGrpUname
+      }, onSuccess, onFailure))
+
+    getClosingBal: (obj) ->
+      @handlePromise((onSuccess, onFailure) -> Group.getClosingBal({
+        companyUniqueName: obj.compUname
+        groupUniqueName: obj.selGrpUname
+        date1: obj.fromDate
+        date2: obj.toDate
       }, onSuccess, onFailure))
 
     matchAndReturnObj: (src, dest)->
@@ -219,6 +236,32 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
               accntItem.parentGroups.push({name: listItem.name, uniqueName: listItem.uniqueName})
           )
           listItem.accounts
+      )
+      _.flatten(listofUN)
+
+
+    flattenSearchGroupsAndAccounts: (rawList) ->
+      listofUN = _.map(rawList, (obj) ->
+        if not(_.isNull(obj.childGroups)) and obj.childGroups.length > 0
+          uniqueList = groupService.flattenSearchGroupsAndAccounts(obj.childGroups)
+          _.each(obj.accounts, (account)->
+            account.parent = obj.groupName
+            account.closeBalType = account.closingBalance.type
+            account.closingBalance = account.closingBalance.amount
+            account.openBalType = account.openingBalance.type
+            account.openingBalance = account.openingBalance.amount
+          )
+          uniqueList.push(obj.accounts)
+          uniqueList
+        else
+          _.each(obj.accounts, (account)->
+            account.parent = obj.groupName
+            account.closeBalType = account.closingBalance.type
+            account.closingBalance = account.closingBalance.amount
+            account.openBalType = account.openingBalance.type
+            account.openingBalance = account.openingBalance.amount
+          )
+          obj.accounts
       )
       _.flatten(listofUN)
 

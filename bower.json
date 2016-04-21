@@ -40,7 +40,8 @@
     "jspdf-autotable": "~2.0.17",
     "jspdf": "~1.1.135",
     "html2canvas": "~0.4.1",
-    "angular-ui-switch": "^0.1.1"
+    "angular-ui-switch": "^0.1.1",
+    "ng-csv": "^0.3.6"
   },
   "resolutions": {
     "angular": "~1.4.4",

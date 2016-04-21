@@ -16,6 +16,7 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     unSharedUser: {method: 'PUT', url: '/company/:uniqueName/unshare'}
     getUploadListDetails: {method: 'GET', url: '/company/:uniqueName/imports'}
     getProfitLoss: {method:'GET', url: '/company/:companyUniqueName/profit-loss'}
+    switchUser: {method: 'GET', url: '/company/:uniqueName/switchUser'}
 
     getCompTrans: {
       method:'GET'
@@ -28,6 +29,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     payBillViaWallet: {
       method: 'POST'
       url: '/company/:uniqueName/pay-via-wallet'
+    }
+    retryXmlUpload: {
+      method: 'PUT'
+      url: '/company/:uniqueName/retry'
     }
   })
 
@@ -94,5 +99,12 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Company.payBillViaWallet({
         uniqueName: data.uniqueName
       }, data, onSuccess, onFailure))
+
+    retryXml: (uniqueName, data, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.retryXmlUpload({uniqueName: uniqueName},data, onSuccess, onFailure))
+
+    switchUser: (uniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Company.switchUser({uniqueName: uniqueName},onSuccess,
+          onFailure))
 
   companyServices

@@ -31,6 +31,7 @@ describe 'ledgerController', ->
       expect(@scope.quantity).toBe(50)
       expect(@rootScope.cmpViewShow).toBeTruthy()
       expect(@rootScope.lItem).toEqual([])
+      expect(@scope.ledgerEmailData).toEqual({})
       expect(@scope.today).toBeDefined()
       expect(@scope.fromDate.date).toBeDefined()
       expect(@scope.toDate.date).toBeDefined()
@@ -303,7 +304,7 @@ describe 'ledgerController', ->
               transactionId: '123'
               multiEntry: false
               total: 0
-              voucherType: 'pay'
+              voucherType: 'rcpt'
               entryDate: '01-12-2015'
               description: 'make'
             transactions: [
@@ -1192,32 +1193,32 @@ describe 'ledgerController', ->
         expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
     describe '#importLedger', ->
-    it 'should make variable false set values in a scope variable, then call upload service with upload method', ->
-      @rootScope.selectedCompany = {
-        uniqueName: "giddh"
-      }
-      @scope.selectedGroupUname = "somename"
-      @rootScope.selAcntUname = "somename"
-      result = ''
-      files = [{
-        fieldname: 'file',
-        originalname: 'master-small.xml',
-        encoding: '7bit',
-        mimetype: 'text/xml',
-        destination: './uploads/',
-        filename: '1449894122205.xml',
-        path: 'uploads/1449894122205.xml',
-        size: 1288072
-      } ]
-      errFiles = []
-      deferred = @q.defer()
-      spyOn(@Upload, "upload").andReturn(deferred.promise)
-      @scope.importLedger(files, errFiles)
-      expect(@Upload.upload).toHaveBeenCalled()
-      expect(@scope.impLedgBar).toBeFalsy()
-      expect(@scope.impLedgFiles).toBe(files)
-      expect(@scope.impLedgErrFiles).toBe(errFiles)
-      expect(angular.forEach).toBeDefined()
+      it 'should make variable false set values in a scope variable, then call upload service with upload method', ->
+        @rootScope.selectedCompany = {
+          uniqueName: "giddh"
+        }
+        @scope.selectedGroupUname = "somename"
+        @rootScope.selAcntUname = "somename"
+        result = ''
+        files = [{
+          fieldname: 'file',
+          originalname: 'master-small.xml',
+          encoding: '7bit',
+          mimetype: 'text/xml',
+          destination: './uploads/',
+          filename: '1449894122205.xml',
+          path: 'uploads/1449894122205.xml',
+          size: 1288072
+        } ]
+        errFiles = []
+        deferred = @q.defer()
+        spyOn(@Upload, "upload").andReturn(deferred.promise)
+        @scope.importLedger(files, errFiles)
+        expect(@Upload.upload).toHaveBeenCalled()
+        expect(@scope.impLedgBar).toBeFalsy()
+        expect(@scope.impLedgFiles).toBe(files)
+        expect(@scope.impLedgErrFiles).toBe(errFiles)
+        expect(angular.forEach).toBeDefined()
 
     describe '#showImportList', ->
       it 'should open madal and call accountService ledgerImportList method', ->
@@ -1260,4 +1261,76 @@ describe 'ledgerController', ->
             message: "message"
         spyOn(@toastr, "error")
         @scope.ledgerImportListFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+    describe '#sendLedgEmail', ->
+      data =
+        email: "abc@gmail.com"
+      it 'should check if date is format is proper or not', ->
+        @scope.toDate = 
+          date: "04-10-2009"
+        @scope.fromDate = 
+          date: null
+        spyOn(@toastr, "error")
+        @scope.sendLedgEmail(data)
+        expect(@toastr.error).toHaveBeenCalledWith("Date should be in proper format", "Error")
+      it 'should set variables and return false in case of not valid string and not call accountService emailLedger method', ->
+        spyOn(@toastr, "warning")
+        deferred = @q.defer()
+        spyOn(@accountService, "emailLedger").andReturn(deferred.promise)
+        @scope.sendLedgEmail("abc@x y z.in, abc@e")
+        expect(@toastr.warning).toHaveBeenCalledWith("Enter valid Email ID", "Warning")
+        expect(@accountService.emailLedger).not.toHaveBeenCalled()
+
+      it 'should call accountService emailLedger method with desired variables', ->
+        @rootScope.selectedCompany =
+          uniqueName: "somename"
+        @rootScope.selAcntUname = "somename"
+        @scope.toDate = 
+          date: "12-02-2016"
+        @scope.fromDate = 
+          date: "12-01-2016"
+        spyOn(@toastr, "warning")
+        deferred = @q.defer()
+        spyOn(@accountService, "emailLedger").andReturn(deferred.promise)
+        unqNamesObj = {
+          compUname: @rootScope.selectedCompany.uniqueName
+          acntUname: @rootScope.selAcntUname
+          toDate: @scope.toDate.date
+          fromDate: @scope.fromDate.date
+        }
+        sendData = {
+          recipients: ["abc@xyz.in", "abc@ebc.com"]
+        }
+        @scope.sendLedgEmail("abc@x y z.in, abc@ebc.com")
+        expect(@toastr.warning).not.toHaveBeenCalled()
+        expect(@accountService.emailLedger).toHaveBeenCalledWith(unqNamesObj, sendData)
+
+    describe '#validateEmail', ->
+      it 'should validate string and return true if string is valid email id', ->
+        result =  @scope.validateEmail("abc@xyz.com")
+        expect(result).toBeTruthy()
+      it 'should return false if string is not valid email id', ->
+        result =  @scope.validateEmail("abc@x")
+        expect(result).toBeFalsy()
+
+    describe '#emailLedgerSuccess', ->
+      it 'should make variable empty and show message with toastr success method', ->
+        res = {
+          body: "Email sent to xyz@gmail.com"
+          status: "success"
+        }
+        spyOn(@toastr, "success")
+        @scope.emailLedgerSuccess(res)
+        expect(@toastr.success).toHaveBeenCalledWith(res.body, res.status)
+        expect(@scope.ledgerEmailData).toEqual({})
+
+    describe '#emailLedgerFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "Error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.emailLedgerFailure(res)
         expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)

@@ -4,10 +4,10 @@
     <div ng-if="cmpViewShow">
 
 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
-  <uib-tabset justified="true">
-    <uib-tab heading="Basic Information">
+  <uib-tabset justified="false">
+    <uib-tab heading="Basic Information" id="basic">
       <div class="pd2">
-        <fieldset ng-disabled="!canUpdate">
+        <fieldset ng-disabled="!canManageCompany">
         <form id="cmpnyBascFrm" name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
           <p ng-hide="cmpnyBascFrm.$submitted || !ecmpnyBascFrm.cCountry.$invalid" class="bg-warning pd1 mrB1">
             For better experience fill all details of form
@@ -21,6 +21,10 @@
                 <label>Name</label>
                 <input type="text" ng-model="selectedCompany.name" class="form-control" required name="cName"
                        tabindex="1">
+              </div>
+              <div class="form-group">
+                <label>Uniquename</label>
+                <input ng-readonly="true" type="text" ng-model="selectedCompany.uniqueName" class="form-control"  name="cUname">
               </div>
               <div class="form-group">
                 <label>Email</label>
@@ -130,7 +134,7 @@
           </div>
           <!-- end of row -->
           <div class="clearfix">
-            <button ng-hide="!canUpdate" tabindex="10" ng-click="updateCompanyInfo(selectedCompany)" class="btn btn-primary" ng-disabled="cmpnyBascFrm.$invalid">Update
+            <button ng-hide="!canManageCompany" tabindex="10" ng-click="updateCompanyInfo(selectedCompany)" class="btn btn-primary" ng-disabled="cmpnyBascFrm.$invalid">Update
             </button>
           </div>
         </form>
@@ -140,14 +144,13 @@
     </uib-tab>
     <!-- basic information tab end here -->
 
-    <uib-tab ng-if="canManageCompany" heading="Permission">
+    <uib-tab ng-if="canManageCompany" heading="Permission" id="permission">
       <div class="pd2">
         <div class="greyBox mrB2">
           <form name="addShareEmailForm" novalidate class="form-inline">
             <div class="form-group">
               <label class="mrR1">Give permission to:</label>
-              <input ng-model="shareRequest.user" name="userEmail" type="text" class="form-control"
-                     placeholder="Enter Email ID" required/>
+              <input ng-model="shareRequest.user" name="userEmail" type="text" class="form-control" placeholder="Uniquename/Email ID" required/>
             </div>
             <div class="form-group">
               <select 
@@ -170,11 +173,16 @@
           <li ng-repeat="(key,value) in sharedUsersList | pick: exceptOwnEmail track by $index" class="list-group-item">
 
             <div class="row">
-
               <div class="col-xs-6">
-                <i ng-if="value.role.uniqueName != 'super_admin_off_the_record'" class="glyphicon glyphicon-user"></i>
-                <i ng-if="value.role.uniqueName == 'super_admin_off_the_record'" class="glyphicon glyphicon-star"></i>
-                {{value.userEmail}}
+                <span class="pull-left mrR1">
+                  <i ng-if="value.role.uniqueName != 'super_admin_off_the_record'" class="glyphicon glyphicon-user"></i>
+                  <i ng-if="value.role.uniqueName == 'super_admin_off_the_record'" class="glyphicon glyphicon-star"></i>
+                </span>
+                <span class="pull-left">
+                  <div ng-bind-html="value.userName">
+                  </div>
+                  <small ng-bind-html="value.userEmail"></small>
+                </span>
               </div>
 
               <div class="col-xs-6">
@@ -188,9 +196,9 @@
                       ng-options="item.uniqueName as item.name for item in rolesList">
                     </select>
                   </div>
-  <span class="delIcon">
-    <i class="glyphicon glyphicon-trash" ng-click="unSharedUser(value.userUniqueName, $index)"></i>
-  </span>
+                  <span class="delIcon">
+                    <i class="glyphicon glyphicon-trash" ng-click="unSharedUser(value.userUniqueName, $index)"></i>
+                  </span>
                 </div>
 
               </div>
@@ -204,7 +212,7 @@
       </div>
     </uib-tab>
     <!-- end of second tab ng-if="canManageCompany" -->
-    <uib-tab ng-if="canManageCompany" heading="Tally XML upload">
+    <uib-tab ng-if="canManageCompany" heading="Tally XML upload"  id="tally">
       <div class="clearfix bdrB">
         <div class="col-xs-6">
           <div class="pdT2">
@@ -271,30 +279,34 @@
           <thead>
             <th>Req. ID</th>
             <th>Start</th>
-            <th>End</th>
             <th>Status</th>
+            <th>Description</th>
             <th>User</th>
           </thead>
           <tbody>
-            <tr ng-repeat="(key, value) in updlist track by $index">
+            <tr ng-repeat="value in updlist track by $index">
               <td>{{value.requestId}}</td>
               <td>{{value.startedAt}}</td>
-              <td>{{value.finishedAt}}</td>
               <td class="alC">
                 <i ng-if="value.status === 'COMPLETED'" class="glyphicon glyphicon-check success"></i>
                 <i ng-if="value.status != 'COMPLETED'" class="glyphicon glyphicon-bell error"></i>
+              </td>
+              <td>
+                <span ng-if="value.status === 'COMPLETED'">
+                  {{value.status}}
+                </span>
+                <a ng-if="value.isAccountConflict || value.isGroupConflict" href="javascript:void(0)" ng-click="openFixUploadIssues(value)" tooltip-placement="top" uib-tooltip="{{value.description}}">{{value.status}}</a>
               </td>
               <td>{{value.user.name}}</td>
             </tr>
           </tbody>
         </table>
-
       </div>
       <!--end of clearfix  -->
     </uib-tab>
 
     <!-- start transaction tab -->
-    <uib-tab ng-if="canManageCompany" heading="Payment details">
+    <uib-tab ng-if="canManageCompany" heading="Payment details"  id="payment">
       <div class="pd2">
         <div class="clearfix mrB1 form-inline">
           <div class="form-group mrR1">
@@ -433,6 +445,8 @@
       </div>
     </uib-tab>
     <!-- end transaction tab -->
+
+    
 
   </uib-tabset>
 </perfect-scrollbar>

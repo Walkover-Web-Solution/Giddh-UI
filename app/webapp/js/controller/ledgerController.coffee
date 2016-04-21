@@ -23,6 +23,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.quantity = 50
   $rootScope.cmpViewShow = true
   $rootScope.lItem = []
+  $scope.ledgerEmailData = {}
   #date time picker code starts here
   $scope.today = new Date()
   d = moment(new Date()).subtract(1, 'month')
@@ -152,7 +153,21 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     else
       _.extend(edata.transactions, item.transactions)  
 
+    # change entry direction
+    if edata.transactions.length <= 1
+      edata.transactions[0].type = $scope.reverseDirection(edata.transactions[0].type)
+    else
+      _.each(edata.transactions, (ledgObj) ->
+        ledgObj.type = $scope.reverseDirection(ledgObj.type)
+      )
+
     ledgerService.createEntry(unqNamesObj, edata).then($scope.moveEntryInGiddhSuccess, $scope.addEntryFailure)
+
+  $scope.reverseDirection = (type) ->
+    if type is 'debit'
+      return 'credit'
+    else if type is 'credit'
+      return 'debit'
 
   $scope.moveEntryInGiddhSuccess = (res) ->
     toastr.success("Entry created successfully", "Success")
@@ -178,7 +193,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         
         sharedData = _.omit(obj, 'transactions')
         sharedData.total = 0
-        sharedData.voucherType = "pay"
         sharedData.entryDate = obj.date
         _.each(obj.transactions, (transaction, index) ->
           transaction.amount = parseFloat(transaction.amount).toFixed(2)
@@ -187,12 +201,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
           newEntry.sharedData.description= transaction.remarks.description
           if transaction.type is "debit"
             newEntry.transactions = [transaction]
-            # sharedData.total -= parseFloat(transaction.amount)
+            sharedData.voucherType = "pay"
             $scope.eLedgerDrData.push(newEntry)
 
           if transaction.type is "credit"
             newEntry.transactions = [transaction]
-            # sharedData.total += parseFloat(transaction.amount)
+            sharedData.voucherType = "rcpt"
             $scope.eLedgerCrData.push(newEntry)
         )
       )
@@ -684,6 +698,52 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $rootScope.importList = res.body
 
   $scope.ledgerImportListFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  # ledger send email
+  $scope.sendLedgEmail = (emailData) ->
+    data = angular.copy(emailData)
+    if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
+      toastr.error("Date should be in proper format", "Error")
+      return false
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $rootScope.selAcntUname
+      toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+      fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
+    }
+    sendData = {
+      recipients: []
+    }
+    data = data.replace(RegExp(' ', 'g'), '')
+    cdata = data.split(',')
+    _.each(cdata, (str) ->
+      if $scope.validateEmail(str)
+        sendData.recipients.push(str)
+      else
+        toastr.warning("Enter valid Email ID", "Warning")
+        data = ''
+        sendData.recipients = []
+        return false
+    )
+    if sendData.recipients < 1
+      if $scope.validateEmail(data)
+        sendData.recipients.push(data)
+      else
+        toastr.warning("Enter valid Email ID", "Warning")
+        return false
+
+    accountService.emailLedger(unqNamesObj, sendData).then($scope.emailLedgerSuccess, $scope.emailLedgerFailure)
+
+  $scope.validateEmail = (emailStr)->
+    pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return pattern.test(emailStr)
+
+  $scope.emailLedgerSuccess = (res) ->
+    toastr.success(res.body, res.status)
+    $scope.ledgerEmailData = {}
+
+  $scope.emailLedgerFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
   someEventHandle = $scope.$on('reloadFromAuto', ->

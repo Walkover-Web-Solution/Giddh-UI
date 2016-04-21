@@ -1,6 +1,6 @@
 "use strict"
 
-mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService) ->
+mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices) ->
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
   $rootScope.basicInfo = {}
@@ -12,6 +12,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
   $rootScope.canAdd = false
   $rootScope.canShare = false
   $rootScope.canManageCompany = false
+  $rootScope.canVWDLT = false
   
   $scope.logout = ->
     $http.post('/logout').then ((res) ->
@@ -44,12 +45,25 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
   $scope.onGetRolesFailure = (res) ->
     toastr.error("Something went wrong while fetching role", "Error")
 
+  # switch user
+  $scope.switchUser =() ->
+    console.log "switchUser"
+    companyServices.switchUser($rootScope.selectedCompany.uniqueName).then($scope.switchUserSuccess, $scope.switchUserFailure)
+
+  $scope.switchUserSuccess = (res) ->
+    console.log "switchUserSuccess:", res
+
+  $scope.switchUserFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
   $scope.checkPermissions = (entity) ->
     $rootScope.canUpdate = permissionService.hasPermissionOn(entity, "UPDT")
     $rootScope.canDelete = permissionService.hasPermissionOn(entity, "DLT")
     $rootScope.canAdd = permissionService.hasPermissionOn(entity, "ADD")
     $rootScope.canShare = permissionService.hasPermissionOn(entity, "SHR")
     $rootScope.canManageCompany = permissionService.hasPermissionOn(entity, "MNG_CMPNY")
+
+    $rootScope.canVWDLT = permissionService.hasPermissionOn(entity, "VWDLT")
 
   $rootScope.setScrollToTop = (val, elem)->
     if val is '' || _.isUndefined(val)

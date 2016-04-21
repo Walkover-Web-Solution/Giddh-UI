@@ -488,7 +488,7 @@ describe 'groupController', ->
       @scope.onCreateGroupSuccess()
       expect(@toastr.success).toHaveBeenCalledWith("Sub group added successfully", "Success")
       expect(@scope.selectedSubGroup).toEqual({})
-      expect(@scope.getGroups)
+      expect(@scope.getGroups).toHaveBeenCalled()
 
   describe '#deleteGroup', ->
     beforeEach ->

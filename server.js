@@ -143,7 +143,7 @@ var reports = require('./public/routes/webapp/reports')
 var coupon = require('./public/routes/webapp/coupon')
 var yodlee = require('./public/routes/webapp/yodlee')
 var ebanks  = require('./public/routes/webapp/ebanks')
-//var ebanksAll  = require('./public/routes/webapp/ebanksAll')
+
 
 app.use('/currency', currency);
 app.use('/users', users);
@@ -157,9 +157,8 @@ app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/profit-loss', profitLoss);
-app.use('/company/:companyUniqueName/history', reports);
-app.use('/company/:companyUniqueName/profit-loss-history', reports);
-app.use('/company/:companyUniqueName/networth-history', reports);
+app.use('/company/:companyUniqueName', reports);
+
 app.use('/coupon', coupon);
 app.use('/yodlee', yodlee);
 app.use('/ebanks', ebanks);

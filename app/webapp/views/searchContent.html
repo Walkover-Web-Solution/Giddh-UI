@@ -1,0 +1,255 @@
+<!-- structure -->
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- left side -->
+    <div class="col-xs-3 greyBg">
+      <div class="row"  auto-height>
+        <div id="left">
+          
+          <div class="loader mrT4" ng-hide="searchLoader">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          
+          <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height suppress-  scroll-x="true">
+            
+            <form name="searchFormClb" novalidate class="col-xs-12" ng-if="searchLoader">
+              <p class="lead mrT2">Search Creditors</p>
+
+              <div class="form-group">
+                <label>Select Groups</label>
+                <input ng-model="searchFormData.group" 
+                type="text" autocomplete="off"
+                name="searchFormClb.group" required
+                placeholder="Group name" class="form-control" required
+                uib-typeahead="groups as groups.name for groups in flattenGroupList | filter:{name: $viewValue} | limitTo:8"/>
+              </div>
+                  
+              <div class="form-group">
+                <label>From date</label>
+                <p class="input-group">
+                  <input type="text" class="form-control"
+                       uib-datepicker-popup="{{format}}" required
+                       datepicker-options="dateOptions"
+                       is-open="fromDatePickerIsOpen"
+                       ng-click="fromDatePickerOpen()"
+                       ng-model="searchFormData.fromDate"
+                       max-date="earchFormData.toDate"
+                       placeholder="from date"
+                       name="searchFormClb.fromDate"
+                    />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="fromDatePickerOpen()"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                </p>
+              </div>
+
+              <div class="form-group">
+                <label>To date</label>
+                <p class="input-group">
+                  <input type="text" class="form-control"
+                         uib-datepicker-popup="{{format}}" required
+                         datepicker-options="dateOptions"
+                         is-open="toDatePickerIsOpen"
+                         ng-click="toDatePickerOpen()"
+                         ng-model="searchFormData.toDate" 
+                         min-date="searchFormData.fromDate" 
+                         max-date="today" 
+                         placeholder="to date"
+                         required
+                         name="searchFormClb.toDate"
+                      />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i
+                      class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+                </p>
+              </div>
+
+              <div class="mrB4">
+                <button ng-disabled="searchFormClb.$invalid || searchDtCntLdr" class="btn btn-primary btn-block" ng-click=" getClosingBalance(searchFormData)">Go</button>
+              </div>
+
+            </form>      
+          </perfect-scrollbar>
+          <!-- end of left content -->
+
+        </div>
+      </div>
+    </div>
+
+    <!-- middle body -->
+    <div class=" col-xs-9" >
+
+      <div class="middleBody bdrR bdrL row" auto-height>
+        
+        <!-- <div class="no-data" ng-if="!srchDataFound">
+          <h1>Sorry, No Data Found!</h1>
+          <img src="/public/webapp/images/no-data.png" alt="">
+        </div> -->
+
+        <div class="loader mrT4" ng-if="searchDtCntLdr">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height ng-if="srchDataFound">
+
+        <!-- result -->
+        <section class="pd2" ng-if="!searchDtCntLdr">
+
+          <section class="greyBg pd2">
+            
+            <p class="lead">Filter by:</p>
+            <form novalidate name="searchQueryForm" id="searchQueryForm" class="">
+
+              <!-- repeater -->
+              <div class="clearfix form-group" ng-repeat="item in srchDataSet track by $index">
+                <label>Get those account whose</label>
+                <span>
+                  <select 
+                    required
+                    class="form-control"
+                    name="queryType" 
+                    ng-model="item.queryType"
+                    ng-options="item.uniqueName as item.name for item in queryType">
+                  </select>
+                </span>
+                <label ng-if="item.queryType === 'closingBalance' || item.queryType === 'openingBalance' ">balance  &nbsp;</label>
+                <label>is</label>
+                <span>
+                  <select 
+                    required
+                    class="form-control"
+                    name="queryDiffer" 
+                    ng-model="item.queryDiffer"
+                    ng-options="item for item in queryDiffer">
+                  </select>
+                </span>
+                <label ng-if="item.queryDiffer === 'Less' || item.queryDiffer === 'Greater' ">than  &nbsp;</label>
+                <label ng-if="item.queryDiffer === 'Equals' ">to  &nbsp;</label>
+                <span style="margin-right:0">
+                  <input required style="width:100px" class="form-control" type="text" placeholder="amount" ng-model="item.amount" valid-number>
+                </span>
+                <span style="margin-left:0" ng-if="item.queryType === 'closingBalance' || item.queryType === 'openingBalance' ">
+                  <select 
+                    required
+                    class="form-control"
+                    name="balType" 
+                    ng-model="item.balType"
+                    ng-options="item.uniqueName as item.name for item in balType">
+                  </select>
+                </span>
+                <label ng-if="$index === 0 && srchDataSet.length > 1">and</label>
+                <label ng-if="$index === 1 && srchDataSet.length > 2">and</label>
+                <label ng-if="$index === 2 && srchDataSet.length > 3">and</label>
+              </div>
+              <!-- end of clearfix first row -->
+              <!-- end repeater -->
+              
+              <div class="clearfix form-group">
+                <button ng-disabled="searchQueryForm.$invalid" class="btn btn-primary mrR1" ng-click="searchQuery(srchDataSet)">Search</button>
+                <button ng-disabled="srchDataSet.length > 3 || searchQueryForm.$invalid" class="btn btn-default mrR1" ng-click="addSearchRow()">Add New Query</button>
+                <button ng-show="srchDataSet.length > 1" class="btn btn-default mrR1" ng-click="removeSearchRow()">Delete Row</button>
+                <button ng-if="inSrchmode" ng-click="resetQuery()" class="btn btn-info mrR1">Reset Query</button>
+                
+                <button type="button" class="btn btn-success" ng-csv="searchResData" csv-header="getCSVHeader()"  filename="{{ searchFormData.group.name }}.csv" field-separator="," decimal-separator="." csv-column-order="order">Download CSV</button>
+              </div>
+              <!-- end of second row -->
+            </form>
+            
+          </section>
+          <!-- end of query section grey bg -->
+
+          
+
+          <table class="mrT2 table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th class="col-xs-2">
+                  <div ng-click="sortType = 'name'; sortReverse = !sortReverse">
+                    Name
+                    <span ng-show="sortType == 'name' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'name' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </div>
+                </th>
+                <th class="col-xs-2">
+                  <div ng-click="sortType = 'openBalType'; sortReverse = !sortReverse">
+                  Opening Bal.
+                    <span ng-show="sortType=='openBalType' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType=='openBalType' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </div>
+                </th>
+                <th class="col-xs-2">
+                  <div ng-click="sortType = 'closeBalType'; sortReverse = !sortReverse">
+                  Closing Bal. 
+                    <span ng-show="sortType=='closeBalType' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType=='closeBalType' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </div>
+                </th>
+                <th class="col-xs-2">
+                  <div ng-click="sortType = 'creditTotal'; sortReverse = !sortReverse">
+                  CR Total
+                    <span ng-show="sortType == 'creditTotal' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'creditTotal' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </div>
+                </th>
+                <th class="col-xs-2">
+                  <div ng-click="sortType = 'debitTotal'; sortReverse = !sortReverse">
+                  DR Total
+                    <span ng-show="sortType == 'debitTotal' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'debitTotal' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </div>
+                </th>
+                <th class="col-xs-2">
+                  <div ng-click="sortType = 'parent'; sortReverse = !sortReverse">
+                  Parent
+                    <span ng-show="sortType == 'parent' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'parent' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in searchResData | orderBy:sortType:sortReverse">
+                <td>{{item.name}}</td>
+                <td class="alR">
+                  <span ng-if="item.openingBalance > 0">
+                    <span class="text-success pull-left" ng-if="item.openBalType === 'DEBIT'">DR</span>
+                    <span class="text-danger pull-left" ng-if="item.openBalType === 'CREDIT'">CR</span>
+                    &nbsp;
+                  </span>
+                  {{item.openingBalance}}
+                </td>
+                <td class="alR">
+                  <span ng-if="item.closingBalance > 0">
+                    <span class="text-success pull-left" ng-if="item.closeBalType === 'DEBIT'">DR</span>
+                    <span class="text-danger pull-left" ng-if="item.closeBalType === 'CREDIT'">CR</span>
+                    &nbsp;
+                  </span>
+                  {{item.closingBalance}}
+                </td>
+                <td class="alR">{{item.creditTotal}}</td>
+                <td class="alR">{{item.debitTotal}}</td>
+                <td>{{item.parent}}</td>
+              </tr>
+            </tbody>
+          </table>
+
+        </section>
+        <!-- end pd div -->
+        </perfect-scrollbar>
+
+      </div>
+    </div>
+  </div>
+  <!-- end of row -->
+</div>
+

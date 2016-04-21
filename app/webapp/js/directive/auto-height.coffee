@@ -181,6 +181,7 @@ angular.module('ledger', [])
       index: '=index'
       item: '=itemdata'
       aclist: '=acntlist'
+      canVWDLT: '=canViewAndDelete'
       canAddAndEdit: '=canAddAndEdit'
       selAcntUname: '=selAcntUname'
       moveLedger: '&'
@@ -207,7 +208,7 @@ angular.module('ledger', [])
                   <input pos='2' type='text'
                   tabindex='-1' class='nobdr eLedgInpt' required
                   name='trans_{{item.transactionId}}'
-                  ng-model-options='{debounce: 400}''
+                  ng-model-options='{debounce: 400}'
                   ng-model='item.transactions[0].particular'
                   uib-typeahead='obj as obj.name for obj in aclist | omit: isECurrentAc | filter:$viewValue'
                   class='form-control' autocomplete='off'
@@ -257,11 +258,16 @@ angular.module('ledger', [])
           <div class="popover-inner">
           <h3 class="popover-title">Move entry to Giddh</h3>
           <div class="popover-content">
-            <div class="form-group">
+            <div class="clearfix form-group">
+              <div style="margin-top:0px" class="checkbox mrR1 pull-left" ng-if="canVWDLT">
+                <label>
+                  <input ng-readonly="!canAddAndEdit" ng-model="item.sharedData.unconfirmedEntry" type="checkbox">Unconfirmed Entry
+                </label>
+              </div>
               <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResultsE">Add new account</a>
             </div>
             <div class="row">
-              <div class="col-md-6 col-sm-12">
+              <div class="col-xs-6">
                 <div class="form-group">
                   <select 
                     class="form-control"
@@ -274,7 +280,7 @@ angular.module('ledger', [])
                   <input type="text" name="tag" class="form-control" ng-model="item.sharedData.tag" placeholder="Tag" />
                 </div>
               </div>
-              <div class="col-md-6 col-sm-12">
+              <div class="col-xs-6">
                 <div class="form-group">
                   <textarea class="form-control" name="description" ng-model="item.sharedData.description" placeholder="Description"></textarea>
                 </div>
@@ -327,6 +333,7 @@ angular.module('ledger', [])
     aclist: '=acntlist'
     ftype: '=ftype'
     formClass: '@formClass'
+    canVWDLT: '=canViewAndDelete'
     canAddAndEdit: '=canAddAndEdit'
     selAcntUname: '=selAcntUname'
     updateLedger: '&'
@@ -429,7 +436,7 @@ angular.module('ledger', [])
       # console.log i, d, c
 
     scope.closeEntry = ()->
-      scope.removeLedgdialog()
+      scope.removeLedgerDialog('.ledgerPopDiv')
       scope.removeClassInAllEle("ledgEntryForm", "open")
       scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
       scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
@@ -437,7 +444,7 @@ angular.module('ledger', [])
 
     scope.closeAllEntry =()->
       $rootScope.lItem = []
-      scope.removeLedgdialog()
+      scope.removeLedgerDialog('.ledgerPopDiv')
       scope.removeClassInAllEle("ledgEntryForm", "open")
       scope.removeClassInAllEle("ledgEntryForm", "highlightRow")
       scope.removeClassInAllEle("ledgEntryForm", "newMultiEntryRow")
@@ -515,12 +522,17 @@ angular.module('ledger', [])
           <div class="popover-content">
             <div class="mrT">
               <div class="form-group">
+                <div style="margin-top:3px" class="checkbox mrR1 pull-left" ng-if="canVWDLT">
+                  <label>
+                    <input ng-readonly="!canAddAndEdit" ng-model="item.sharedData.unconfirmedEntry" type="checkbox">Unconfirmed Entry
+                  </label>
+                </div>
                 <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh();" ng-show="canAddAndEdit">Add in DR</button>
                 <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh();" ng-show="canAddAndEdit">Add in CR</button>
                 <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResults">Add new account</a>
               </div>
               <div class="row">
-                <div class="col-md-6 col-sm-12">
+                <div class="col-xs-6">
                   <div class="form-group">
                     <select 
                       class="form-control"
@@ -534,7 +546,7 @@ angular.module('ledger', [])
                     <input type="text" name="tag" ng-readonly="!canAddAndEdit" class="form-control" ng-model="item.sharedData.tag" placeholder="Tag" />
                   </div>
                 </div>
-                <div class="col-md-6 col-sm-12">
+                <div class="col-xs-6">
                   <div class="form-group" ng-if="ftype == \'Update\'">
                     <label>Voucher no. </label>
                     {{item.sharedData.voucher.shortCode}}-{{item.sharedData.voucherNo}}

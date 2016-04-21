@@ -1,6 +1,6 @@
 "use strict"
 
-userController = ($scope, $rootScope, toastr, userServices, localStorageService, $timeout, $uibModal, modalService) ->
+userController = ($scope, $rootScope, toastr, userServices, localStorageService, $timeout, $uibModal, modalService, $filter) ->
   $scope.userAuthKey = undefined
   $scope.noData = false
   $scope.subListData = []
@@ -133,6 +133,34 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   }
   $scope.linkedAccountsExist = false
   $scope.bankDetails = {}
+  $scope.transDate = {date: new Date()}
+  $scope.transactionDate = $filter('date')($scope.transDate.date, "dd-MM-yyyy")
+  $scope.format = "dd-MM-yyyy"
+  $scope.newTransDate = {date: new Date()}
+  $scope.dateOptions = {
+    'year-format': "'yy'",
+    'starting-day': 1,
+    'showWeeks': false,
+    'show-button-bar': false,
+    'year-range': 1,
+    'todayBtn': false
+  }
+  $scope.dateOptionsBanks = {
+    'year-format': "'yy'",
+    'starting-day': 1,
+    'showWeeks': false,
+    'show-button-bar': false,
+    'year-range': 1,
+    'todayBtn': true
+  }
+  $scope.today = new Date()
+  $scope.beforeThreeMonths =  moment().subtract(3, 'month').utc()
+  $scope.fromDatePickerIsOpen = false
+  $scope.fromDatePickerOpen = ->
+    this.fromDatePickerIsOpen = true
+
+  $scope.toDatePickerOpen = ->
+    this.toDatePickerIsOpen = true
 
   $scope.loadYodlee = () ->
     #userServices.loginRegister($scope.loginSuccess, $scope.loginFailure)
@@ -147,7 +175,14 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       $scope.linkedAccountsExist = false
     else
       $scope.linkedAccountsExist = true
-
+      #add transaction date to cards and assign utc format
+      _.each $scope.banks.linked, (bank) ->
+        _.each bank.yodleeAccounts, (card) ->
+          if _.isNull(card.transactionDate) || _.isUndefined(card.transactionDate)
+            card.transactionDate =  new Date()
+          else
+            card.transactionDate = new Date(card.transactionDate)
+           
   $scope.getAccountsFailure = (res) ->
     # companyUniqueName =  {
     #   cUnq: $rootScope.selectedCompany.uniqueName
@@ -319,7 +354,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
             uniqueName : link.giddhAccount.uniqueName
           }
           $scope.AccountsList = _.without($scope.AccountsList, _.findWhere($scope.AccountsList, linked))
-    
+        
 
   $scope.linkGiddhAccount = (card) ->
     card.showAccList = false
@@ -422,6 +457,85 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
   $scope.refreshAllFailure = (res) ->
     toastr.error(res.data.message, res.data.code)
+
+  $scope.setItemAccountId = (card) ->
+    $scope.banks.toLinkObj.itemAccountId = card.itemAccountId
+
+  $scope.updateTransactionDate = (date) ->
+    obj =  {
+      cUnq: $rootScope.selectedCompany.uniqueName
+      itemAccountId: $scope.banks.toLinkObj.itemAccountId
+      date: date
+    }
+    data = {}
+    userServices.setTransactionDate(obj, data).then($scope.updateTransactionDateSuccess, $scope.updateTransactionDateFailure)
+
+  $scope.updateTransactionDateSuccess = (res) ->
+    toastr.success(res.body)
+
+  $scope.updateTransactionDateFailure = (res) ->
+    toastr.error(res.data.code, res.data.message)
+
+  # watch date changed
+  $scope.changedate =(date)->
+    abc = $filter("date")(date)
+    date = $filter('date')(date, "dd-MM-yyyy")
+    modalService.openConfirmModal(
+      title: 'Update Date',
+      body: 'Do you want to get ledger entries for this account from ' + abc + ' ?',
+      ok: 'Yes',
+      cancel: 'No').then(()->
+        $scope.updateTransactionDate(date)
+      )
+
+  # manage sub user start
+  $scope.cSubUser = {}
+
+  # get subuser list
+  $scope.getSubUsers = () ->
+    console.time "getSubUsers"
+    console.log $rootScope.basicInfo
+    console.timeEnd "getSubUsers"
+
+  # create sub user
+  $scope.createSubUser =(udata)->
+    userServices.createSubUser($rootScope.basicInfo.uniqueName, udata).then($scope.createSubUserSuccess, $scope.createSubUserFailure)
+
+  $scope.createSubUserSuccess = (res) ->
+    $scope.cSubUser = {}
+    toastr.success("Sub User successfully created", "Success")
+    $scope.getUserDetails()
+
+  $scope.createSubUserFailure = (res) ->
+    toastr.error(res.data.code, res.data.message)
+
+  # delete sub user
+  $scope.deleteSubUser =(data, index)->
+    userServices.deleteSubUser(data.uniqueName).then($scope.deleteSubUserSuccess, $scope.deleteSubUserFailure)
+
+  $scope.deleteSubUserSuccess = (res) ->
+    toastr.success(res.body, res.status)
+    $scope.getUserDetails()
+
+  $scope.deleteSubUserFailure = (res) ->
+    toastr.error(res.data.code, res.data.message)
+
+  # login as
+  $scope.getSubUserAuthKey = (uniqueName) ->
+    userServices.getSubUserAuthKey(uniqueName).then($scope.getSubUserAuthKeySuccess, $scope.getSubUserAuthKeyFailure)
+
+  $scope.getSubUserAuthKeySuccess = (res) ->
+    _.filter($rootScope.basicInfo.subUsers, (user) ->
+      if user.uniqueName is res.body.uniqueName
+        user.authKeyDone = true
+        user.authKey = res.body.authKey
+    )
+
+  $scope.getSubUserAuthKeyFailure = (res) ->
+    toastr.error(res.data.code, res.data.message)
+
+
+  # manage sub user end
 
 #init angular app
 giddh.webApp.controller 'userController', userController

@@ -46,10 +46,6 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
           method: 'POST'
           url: '/ebanks'
         }
-        # loginRegister: {
-        #   method: 'GET'
-        #   url: '/yodlee/login-register'
-        # }
         addSiteAccount: {
           method: 'POST'
           url: '/company/:companyUniqueName/ebanks'
@@ -61,6 +57,10 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         addGiddhAccount: {
           method: 'PUT'
           url: '/company/:companyUniqueName/ebanks/:itemAccountId'
+        }
+        setTransactionDate: {
+          method: 'PUT'
+          url: '/company/:companyUniqueName/ebanks/:itemAccountId/eledgers/:date'
         }
         verifyMfa: {
           method: 'POST'
@@ -77,6 +77,18 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         removeGiddhAccount: {
           method: 'DELETE'
           url: '/company/:companyUniqueName/ebanks/:ItemAccountId/:linkedAccount'
+        }
+        createSubUser: {
+          method: 'POST' 
+          url: '/users/:uniqueName/sub-user'
+        }
+        deleteSubUser: {
+          method: 'DELETE' 
+          url: '/users/:uniqueName'
+        }
+        getSubUserAuthKey: {
+          method: 'GET' 
+          url: '/users/:uniqueName/auth-key/sub-user?uniqueName=:uniqueName'
         }
       }
   )
@@ -146,6 +158,10 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.addGiddhAccount({companyUniqueName: companyUniqueName.cUnq, itemAccountId:companyUniqueName.itemAccountId}, data, onSuccess, onFailure)
     )
+    setTransactionDate: (obj, data) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.setTransactionDate({companyUniqueName: obj.cUnq, itemAccountId:obj.itemAccountId, date: obj.date}, data, onSuccess, onFailure)
+    )
     verifyMfa: (unqObj, data) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.verifyMfa({companyUniqueName: unqObj.cUnq,  itemAccountId: unqObj.itemId}, data, onSuccess, onFailure)
@@ -162,6 +178,18 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.deleteAccount({companyUniqueName: reqParam.cUnq, memSiteAccId: reqParam.memSiteAccId},onSuccess, onFailure)
     )
+    createSubUser: (uUname, data) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.createSubUser({uniqueName: uUname}, data, onSuccess,onFailure)
+      )
+    deleteSubUser: (uUname) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.deleteSubUser({uniqueName: uUname}, onSuccess,onFailure)
+      )
+    getSubUserAuthKey: (uUname) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.getSubUserAuthKey({uniqueName: uUname}, onSuccess, onFailure)
+      )
 
   userServices
 

@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService, accountService) ->
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -31,6 +31,21 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.disableRazorPay = false
   $scope.discount = 0
   $scope.amount = 0
+
+  # manage tax variables
+  $scope.taxTypes = [
+    "MONTHLY"
+    "YEARLY"
+    "QUATERLY"
+    "HALFYEARLY"
+  ]
+  $scope.monthDays = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
+  $scope.createTaxData = {
+    duration: "MONTHLY"
+    taxFileDate: 1
+  }
+  
+
   
 
   #dialog for first time user
@@ -658,6 +673,154 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.payAlert = []
       $scope.coupon = angular.copy({})
       $scope.disableRazorPay = false
+
+  # upload issue fix
+  $scope.openFixUploadIssues = (data) ->
+    $scope.fixUploadData = {}
+    $scope.fixUploadData = angular.copy(data)
+    if data.isGroupConflict
+      $scope.fixUploadData.groupConflicts = _.reject($scope.fixUploadData.groupConflicts, (grpC) ->
+          _.some($scope.flattenGroupList, (grp) ->
+            grp.uniqueName is grpC.uniqueName)
+      )
+    if data.isAccountConflict
+      $scope.fixUploadData.accountConflicts = _.reject($scope.fixUploadData.accountConflicts, (acObj) ->
+          _.some($scope.fltAccntList, (ac) ->
+            ac.uniqueName is acObj.uniqueName || ac.mergedAccounts.indexOf(acObj.uniqueName) isnt -1
+          ) 
+      )
+    $scope.modal = {}
+    $scope.modal.modalInstance = $uibModal.open(
+      templateUrl: '/public/webapp/views/fixUploadIssueModal.html',
+      size: "lg",
+      backdrop: 'static',
+      scope: $scope
+    )
+    
+
+  # omit if group already exist
+  $scope.ifGroupAlreadyExist =(group) ->
+    _.some($scope.flattenGroupList, (grp) ->
+      grp.uniqueName == group.uniqueName)
+
+  # move fix group
+  $scope.fixMoveGroup = (group, togroup) ->
+    if _.isObject(togroup)
+      body = {
+        "name": group.name,
+        "uniqueName": group.uniqueName.toLowerCase(),
+        "parentGroupUniqueName": togroup.uniqueName,
+        "description": undefined
+      }
+      groupService.create($rootScope.selectedCompany.uniqueName, body).then($scope.fixMoveGroupSuccess, $scope.fixMoveGroupFailure)
+    else
+      toastr.warning("You can only select group from list", "Warning")
+
+  $scope.fixMoveGroupSuccess = (res) ->
+    toastr.success("Sub group added successfully", "Success")
+    $scope.fixUploadData.groupConflicts = _.reject($scope.fixUploadData.groupConflicts, (grp) ->
+      grp.uniqueName is res.body.uniqueName
+    )
+    $scope.getGroups()
+
+  $scope.fixMoveGroupFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  # account fix
+  $scope.fixMoveAc = (ac, group) ->
+    if _.isObject(group)
+      unqNamesObj = {
+        compUname: $rootScope.selectedCompany.uniqueName
+        acntUname : ac.uniqueName
+        selGrpUname: group.uniqueName
+      }
+      accountService.createAc(unqNamesObj, ac).then($scope.fixMoveAcSuccess, $scope.fixMoveAcFailure)
+    else
+      toastr.warning("You can only select account from list", "Warning")
+
+  $scope.fixMoveAcSuccess = (res) ->
+    toastr.success("Account created successfully", res.status)
+    $scope.fixUploadData.accountConflicts = _.reject($scope.fixUploadData.accountConflicts, (acObj) ->
+      acObj.uniqueName is res.body.uniqueName
+    )
+    $scope.getGroups()
+
+  $scope.fixMoveAcFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.retryUpload = (data) ->
+    $scope.waitXmlUpload = true
+    companyServices.retryXml($rootScope.selectedCompany.uniqueName, data).then($scope.retryUploadSuccess, $scope.retryUploadFailure)
+
+  $scope.retryUploadSuccess = (res) ->
+    $scope.waitXmlUpload = false
+    toastr.success(res.body.message, res.status)
+    $scope.modal.modalInstance.close()
+    $scope.getUploadsList()
+
+  $scope.retryUploadFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+    $scope.modal.modalInstance.close()
+
+  # manage taxes
+  $scope.addNewAccountBytaxes = () ->
+    $rootScope.$emit('callManageGroups')
+
+  # get taxes
+  $scope.getTax=()->
+    companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxSuccess, $scope.getTaxFailure)
+
+  $scope.getTaxSuccess = (res) ->
+    console.log "getTaxSuccess: ", res
+
+  $scope.getTaxFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.addNewTax = (data) ->
+    console.log "addNewTax:", data
+    $scope.editTax(data)
+
+  #edit tax
+  $scope.editTax = (data) ->
+    console.log "editTax:", data
+    $scope.taxList = []
+    $scope.taxList.push(data)
+    modalInstance = $uibModal.open(
+      templateUrl: 'editTaxModal.html',
+      size: "md",
+      backdrop: 'static',
+      scope: $scope
+    )
+    modalInstance.result.then($scope.editTaxSuccess, $scope.editTaxFailure)
+
+  $scope.editTaxSuccess = (data) ->
+    console.log "editTaxSuccess"
+
+  $scope.editTaxFailure = () ->
+    console.log "editTaxFailure"
+
+
+  #delete tax
+  $scope.deleteTax = (data) ->
+    modalService.openConfirmModal(
+      title: 'Are you sure you want to delete? ' + data.name,
+      ok: 'Yes',
+      cancel: 'No'
+    ).then ->
+      console.log "deleted"
+
+  # edit tax slab
+  $scope.addNewSlab=(type)->
+    console.log "addNewSlab:", type
+
+  # remove slab
+  $scope.removeSlab = () ->
+    modalService.openConfirmModal(
+      title: 'Are you sure you want to delete?',
+      ok: 'Yes',
+      cancel: 'No'
+    ).then ->
+      console.log "removeSlab deleted"
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

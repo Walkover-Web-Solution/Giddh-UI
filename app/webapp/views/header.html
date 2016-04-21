@@ -71,6 +71,16 @@
                       </div>
                     </a>
                 </li>
+                <li class="dmLi" ui-sref="search">
+                    <a href="" >
+                      <div class="media">
+                        <div class="media-body">
+                          <div class="title">Search</div>
+                          <div class="subTitle">View all your creditors</div>
+                        </div>
+                      </div>
+                    </a>
+                </li>
               </ul>
               </div> 
             </li>
@@ -107,6 +117,7 @@
             <li><a href="javascript:void(0)">{{basicInfo.email}}</a></li>
             <li><a ui-sref="company.content.user">User Detail</a></li>
             <li><a target="_Blank" href="http://docs.giddh.com/">Documentation</a></li>
+            <li ng-if="selectedCompany.canUserSwitch"><a href="javascript:void(0)" ng-click="switchUser()">Switch User</a></li>
             <li role="separator" class="divider"></li>
             <li><a ng-click="logout()" href="javascript:void(0)">Logout</a></li>
           </ul>

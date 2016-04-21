@@ -252,4 +252,37 @@ describe 'Company Service', ->
           expect(data.data.status).toBe("error")
       )
 
-	  
+  describe '#retryXml', ->
+    uniqueName= "uniquename"
+    data = {}
+    it 'should call success callback after service called', ->
+      @httpBackend.when('PUT', '/company/'+uniqueName+'/retry').respond(200, {"status": "success"})
+
+      @companyServices.retryXml(uniqueName, data).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call error callback after service called', ->
+      @httpBackend.when('PUT', '/company/'+uniqueName+'/retry').respond(401, {"status": "error"})
+      @companyServices.retryXml(uniqueName, data).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+      )
+
+  describe '#switchUser', ->
+    uniqueName= "uniquename"
+    it 'should call success callback after service called', ->
+      @httpBackend.when('GET', '/company/'+uniqueName+'/switchUser').respond(200, {"status": "success"})
+
+      @companyServices.switchUser(uniqueName).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call error callback after service called', ->
+      @httpBackend.when('GET', '/company/'+uniqueName+'/switchUser').respond(401, {"status": "error"})
+      @companyServices.switchUser(uniqueName).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+      )

@@ -5,8 +5,50 @@ router.get '/:uniqueName', (req, res) ->
   authHead =
     headers:
       'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'users/' + req.params.uniqueName
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+#Delete sub user
+router.delete '/:uniqueName', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'users/' + req.params.uniqueName
+  settings.client.delete hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+# create sub user
+router.post '/:uniqueName/sub-user', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  hUrl = settings.envUrl + 'users/' + req.params.uniqueName+ '/sub-user'
+  settings.client.post hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+# get sub user authkey
+router.get '/:uniqueName/auth-key/sub-user', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      uniqueName: req.query.uniqueName
+  hUrl = settings.envUrl + 'users/auth-key'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)

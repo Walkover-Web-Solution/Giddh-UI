@@ -264,22 +264,66 @@ describe "Account Service", ->
           expect(data.status).toBe(400)
       )
 
-  describe '#unMerge', ->
-    xit 'should call success callback when account unshared', ->
+  describe '#unMergeDelete', ->
+    it 'should call success callback when account unsared', ->
       @httpBackend.when('POST',
         '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/un-merge').respond(200,
         {"status": "success"})
 
-      @accountService.unMerge(unqNamesObj, data).then(
+      @accountService.unMergeDelete(unqNamesObj, data).then(
         (data) -> expect(data.status).toBe("success")
         (data) -> expect(true).toBeFalsy()
       )
-    xit 'should call failure callback when account unsharing failed', ->
+    it 'should call failure callback when account unsaring failed', ->
       @httpBackend.when('POST',
         '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/un-merge').respond(400,
         {"status": "error"})
 
-      @accountService.unMerge(unqNamesObj, data).then(
+      @accountService.unMergeDelete(unqNamesObj, data).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+          expect(data.status).toBe(400)
+      )
+
+  # describe '#unMerge', ->
+  #   xit 'should call success callback when account unshared', ->
+  #     @httpBackend.when('POST',
+  #       '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/un-merge').respond(200,
+  #       {"status": "success"})
+
+  #     @accountService.unMerge(unqNamesObj, data).then(
+  #       (data) -> expect(data.status).toBe("success")
+  #       (data) -> expect(true).toBeFalsy()
+  #     )
+  #   xit 'should call failure callback when account unsharing failed', ->
+  #     @httpBackend.when('POST',
+  #       '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/un-merge').respond(400,
+  #       {"status": "error"})
+
+  #     @accountService.unMerge(unqNamesObj, data).then(
+  #       (data) -> expect(true).toBeFalsy()
+  #       (data) ->
+  #         expect(data.data.status).toBe("error")
+  #         expect(data.status).toBe(400)
+  #     )
+  
+  describe '#emailLedger', ->
+    it 'should call success callback when account unshared', ->
+      @httpBackend.when('POST',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/ledgers/mail').respond(200,
+        {"status": "success"})
+
+      @accountService.emailLedger(unqNamesObj, data).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call failure callback when account unsharing failed', ->
+      @httpBackend.when('POST',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/ledgers/mail').respond(400,
+        {"status": "error"})
+
+      @accountService.emailLedger(unqNamesObj, data).then(
         (data) -> expect(true).toBeFalsy()
         (data) ->
           expect(data.data.status).toBe("error")
