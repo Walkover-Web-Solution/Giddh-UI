@@ -357,7 +357,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.populateAccountList = (item) ->
     result = groupService.matchAndReturnGroupObj(item, $rootScope.flatGroupsList)
-    $scope.groupAccntList = groupService.makeAcListWithLessDtl(result.accounts, $rootScope.flatGroupsList)
+    $scope.groupAccntList = groupService.makeAcListWithLessDtl(result.accounts)
 
   #show breadcrumbs
   $scope.showBreadCrumbs = (data) ->
