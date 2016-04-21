@@ -56,7 +56,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       }
       deleteLogs: {
         method: 'DELETE'
-        url: '/company/:companyUniqueName/delete-logs/:beforeDate'
+        url: '/company/:companyUniqueName/logs/:beforeDate'
       }
     })
 

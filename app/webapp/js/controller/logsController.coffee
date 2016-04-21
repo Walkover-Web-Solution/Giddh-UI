@@ -167,19 +167,26 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
     }
 
   $scope.deleteLogs = () ->
+    modalService.openConfirmModal(
+        title: 'Delete Logs',
+        body: 'Are you sure you want to delete all logs before ' + $filter('date')($scope.beforeDate.date,"dd-MM-yyyy") + '?',
+        ok: 'Yes',
+        cancel: 'No').then($scope.deleteLogsConfirm)
+    
+  $scope.deleteLogsConfirm = () ->
     reqParam = {
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       beforeDate: $filter('date')($scope.beforeDate.date,"dd-MM-yyyy")
     }
+    groupService.deleteLogs(reqParam).then($scope.deleteLogsConfirmSuccess, $scope.deleteLogsConfirmFailure)
 
-    groupService.deleteLogs(reqParam).then($scope.deleteLogsSuccess, $scope.deleteLogsFailure)
 
+  $scope.deleteLogsConfirmSuccess = (res) ->
+    console.log res
+    toastr.success(res.body)
 
-  $scope.deleteLogsSuccess = (res) ->
-    console.log(res)
-
-  $scope.deleteLogsFailure = (res) ->
-    console.log(res)
+  $scope.deleteLogsConfirmFailure = (res) ->
+    toastr.error(res.data.message)
 
   window.giddh.webApp.toastr = toastr
 

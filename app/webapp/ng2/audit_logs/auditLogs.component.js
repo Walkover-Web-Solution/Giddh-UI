@@ -34,9 +34,14 @@
       ngOnInit: function(){
         this.subscription = this.shared.update
         .subscribe(function(res){
-          for(i=0;i<res.logs.length;i++){
-            this.logs.push(res.logs[i])
+          if(res.reqBody.page > 1){
+            for(i=0;i<res.logs.length;i++){
+              this.logs.push(res.logs[i]);
+            }    
+          }else{
+            this.logs = res.logs;
           }
+
         }.bind(this),function(error){
           error = JSON.parse(error._body);
           toastr.error(error.code, error.message);
