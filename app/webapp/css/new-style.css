@@ -735,7 +735,9 @@ header .navbar-nav > li.active {
 .modal-liq90 {
     width: 90%;
 }
-
+.modal-liq100 {
+    width: 100%;
+}
 #getGroupModal {
     height: 500px;
     overflow: hidden;
