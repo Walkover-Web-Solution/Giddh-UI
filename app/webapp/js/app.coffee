@@ -90,6 +90,28 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/views/searchContent.html'
     controller: 'searchController'
   )
+  .state('invoice',
+    url: ''
+    abstract: true
+    templateUrl: '/public/webapp/views/home.html'
+    controller: 'invoiceController'
+  )
+  .state('invoice.accounts',
+    url: '/invoice'
+    views:{
+      'accounts':{
+        templateUrl: '/public/webapp/views/invoiveAccounts.html'
+      }
+      'rightPanel':{
+        abstract:true
+        template: '<div ui-view></div>'
+      }
+    }
+  )
+  .state('invoice.accounts.invoiceId',
+    url: '/:invId'
+    templateUrl: '/public/webapp/views/invoiceContent.html'
+  )
   .state('company'
     url: ''
     abstract: true

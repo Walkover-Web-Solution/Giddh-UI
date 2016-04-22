@@ -1,0 +1,419 @@
+<style type="text/css">
+@page {
+  size: 8.5in 11in; 
+  margin: 2cm
+}
+@page :left {
+  margin-left: 3cm;
+}
+
+@page :right {
+  margin-left: 4cm;
+}
+@page :blank {
+  @top-center { content: "This page is intentionally left blank." }
+}
+@page:right{ 
+  @bottom-left {
+    margin: 10pt 0 30pt 0;
+    border-top: .25pt solid #666;
+    content: "Sarfaraz";
+    font-size: 9pt;
+    color: #333;
+  }
+}
+h1 {
+  page-break-before: always;
+}
+/*end of print css*/
+.invoiceContainer .row{
+  margin-bottom: 20px;
+}
+.invoiceContainer .form-control{
+  border: 0;
+  padding-left: 0;
+  padding-right: 0;
+  box-shadow: none;
+}
+.txtAreaWrap .form-control{
+  overflow: hidden;
+  padding: 0
+}
+.txtAreaWrap textarea.form-control{
+  height: 1.1in
+}
+.txtAreaWrap input.form-control{
+  height: 24px
+}
+#one, #two {
+  height: .6in;
+  overflow:hidden;
+}
+#three, #four{
+  height: 2in;
+  overflow:hidden;
+}
+#five{
+  height: 2.5in;
+}
+#six, #seven{
+  height: 1in;
+}
+#eight{
+  height: 2in;
+}
+.vcenter {
+  display: block;
+  vertical-align: middle;
+}
+.modal-dialog{
+  margin: 0;
+  width: 100%;
+}
+.modal-content{
+  border-radius: 0
+}
+.form-control.wid80{
+  width: 80px
+}
+#two label{
+  display: block;
+  text-align: left;
+}
+#two .form-control{
+  padding: 0;
+  height: 20px;
+}
+.modal-header span{
+  position: absolute;
+  left: 15px;
+}
+hr{
+  margin: 10px 0 20px;
+}
+fieldset[disabled] .form-control{
+  cursor: default;
+  background-color: white
+}
+</style>
+<!-- <a onclick="javascript:window.print();"> -->
+<div class="modal-header">
+  <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><i aria-hidden="true">&times;</i></button>
+  <span>
+    <a class="btn btn-default btn-sm" href="javascript:void(0)">View as your data</a>
+  </span>
+  <h3 class="modal-title alC">
+    View Invoice
+  </h3>
+</div>
+<div class="modal-body" auto-height>
+    
+  <div class="invoiceContainer">
+
+    <section ng-if="editMode">
+      Hey edit template will be here soon
+    </section>
+
+    <!-- end of edit template -->
+
+    <!-- sample preview mode start -->
+    <section ng-if="!editMode">
+    <fieldset ng-disabled="!editMode">
+      <div class="row">
+        <section id="one" class="col-xs-6">
+          <h1>
+            <img src="{{templateData.sectionContent[0].imgPath}}" alt="" height="50px">
+          </h1>
+        </section>
+        <section id="two" class="col-xs-6 text-right">
+          <section class="form-inline clearfix">
+            <div class="form-group pull-right mrL2">
+              <label>Invoice #:</label>
+              <input type="text" class="form-control wid80"  ng-model="templateData.sectionContent[1].data.invNo">
+            </div>
+            <div class="form-group pull-right">
+              <label>Date:</label>
+              <input type="text" class="form-control wid80" ng-model="templateData.sectionContent[1].data.date">
+            </div>
+          </section>
+        </section>
+      </div>
+      <hr>
+      <!-- section one or two end -->
+
+      <div class="row">
+        <section class="col-xs-5" id="three">
+          <h4 class="mrB">From:</h4>
+          <div class="txtAreaWrap">
+            <input class="form-control" ng-model="templateData.sectionContent[2].data.firmName">
+            <textarea class="form-control" ng-model="templateData.sectionContent[2].data.otherDetails"></textarea>
+          </div>
+        </section>
+        <section class="col-xs-5 col-xs-offset-2" id="four">
+          <h4 class="mrB">To:</h4>
+          <div class="txtAreaWrap">
+            <input class="form-control" ng-model="templateData.sectionContent[3].data.firmName">
+            <textarea class="form-control" ng-model="templateData.sectionContent[3].data.otherDetails"></textarea>
+          </div>
+        </section>
+      </div>
+      <!-- section three or four end -->
+      
+      <!-- / end client and company details section -->
+
+      <section ng-if="editMode">
+        <div class="row">
+          <div class="greyBg alC"  id="five">
+            <div class="mrT4">Particulars will shown here</div>
+          </div>
+        </div>
+      </section>
+
+      <section ng-if="!editMode">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="col-xs-1">
+                <h4>S No.</h4>
+              </th>
+              <th class="col-xs-9">
+                <h4>Description</h4>
+              </th>
+              <th class="col-xs-2 alR">
+                <h4>Amount</h4>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1.</td>
+              <td>
+                <p>Title of your article here</p>
+              </td>
+              <td class="text-right">$200.00</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><p>Details of project here</p></td>
+              <td class="text-right">$750.00</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><p>WordPress Blogging theme</p></td>
+              <td class="text-right">$250.00</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="row text-right">
+          <div class="col-xs-2 col-xs-offset-8">
+            <p>
+              <strong>
+              Sub Total : <br>
+              TAX : <br>
+              Total : <br>
+              </strong>
+            </p>
+          </div>
+          <div class="col-xs-2">
+            <strong>
+            $1200.00 <br>
+            N/A <br>
+            $1200.00 <br>
+            </strong>
+          </div>
+        </div>
+        <hr>
+      </section>
+       
+      <!-- end of list section entries -->
+
+
+
+      <div class="row">
+        <section class="col-xs-5" id="six">
+          <div class="txtAreaWrap">
+            <textarea class="form-control" ng-model="templateData.sectionContent[5].data"></textarea>
+          </div>
+        </section>
+        <section class="col-xs-7" id="seven">
+          <div class="txtAreaWrap">
+            <input class="form-control mrB alR" ng-model="templateData.sectionContent[6].data.firmName">
+            <input class="form-control alR" ng-model="templateData.sectionContent[6].data.otherDetails">
+          </div>
+        </section>
+      </div>
+      <hr>
+      <!-- end of section six or seven -->
+
+      <div class="row">
+        <section class="col-xs-12" id="eight">
+          <div class="txtAreaWrap">
+            <ol style="list-style: decimal inside;">
+              <li ng-repeat="item in templateData.sectionContent[7].data">{{item.term}}</li>
+            </ol>
+          </div>
+        </section>
+      </div>
+      <!-- end of section eight -->
+    </fieldset>
+    </section>
+    <!-- end of preview mode -->
+
+  </div>
+  <!-- end of invoiceContainer -->
+</div>
+<!-- end of modal body -->
+
+
+
+
+
+<!-- invoice setting -->
+
+<!-- <div class="invoiceContainer">
+  <div class="row">
+    <div class="col-xs-6">
+      <h1>
+        <a href="https://twitter.com/tahirtaous">
+        <img src="logo.png">
+        Logo here
+        </a>
+      </h1>
+    </div>
+    <div class="col-xs-6 text-right">
+      <h1>INVOICE</h1>
+      <h1><small>Invoice #001</small></h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-5">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>From: <a href="javascript:void(0)">Your Name</a></h4>
+        </div>
+        <div class="panel-body">
+          <p>
+            Address <br>
+            details <br>
+            more <br>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-5 col-xs-offset-2 text-right">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h4>To : <a href="javascript:void(0)">Client Name</a></h4>
+        </div>
+        <div class="panel-body">
+          <p>
+            Address <br>
+            details <br>
+            more <br>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>
+          <h4>Service</h4>
+        </th>
+        <th>
+          <h4>Description</h4>
+        </th>
+        <th>
+          <h4>Hrs/Qty</h4>
+        </th>
+        <th>
+          <h4>Rate/Price</h4>
+        </th>
+        <th>
+          <h4>Sub Total</h4>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Article</td>
+        <td><a href="javascript:void(0)">Title of your article here</a></td>
+        <td class="text-right">-</td>
+        <td class="text-right">$200.00</td>
+        <td class="text-right">$200.00</td>
+      </tr>
+      <tr>
+        <td>Template Design</td>
+        <td><a href="javascript:void(0)">Details of project here</a></td>
+        <td class="text-right">10</td>
+        <td class="text-right">75.00</td>
+        <td class="text-right">$750.00</td>
+      </tr>
+      <tr>
+        <td>Development</td>
+        <td><a href="javascript:void(0)">WordPress Blogging theme</a></td>
+        <td class="text-right">5</td>
+        <td class="text-right">50.00</td>
+        <td class="text-right">$250.00</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="row text-right">
+    <div class="col-xs-2 col-xs-offset-8">
+      <p>
+        <strong>
+        Sub Total : <br>
+        TAX : <br>
+        Total : <br>
+        </strong>
+      </p>
+    </div>
+    <div class="col-xs-2">
+      <strong>
+      $1200.00 <br>
+      N/A <br>
+      $1200.00 <br>
+      </strong>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-5">
+      <div class="panel panel-info">
+        <div class="panel-heading">
+          <h4>Bank details</h4>
+        </div>
+        <div class="panel-body">
+          <p>Your Name</p>
+          <p>Bank Name</p>
+          <p>SWIFT : --------</p>
+          <p>Account Number : --------</p>
+          <p>IBAN : --------</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-xs-7">
+      <div class="span7">
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <h4>Contact Details</h4>
+          </div>
+          <div class="panel-body">
+            <p>
+              Email : you@example.com <br><br>
+              Mobile : -------- <br> <br>
+              Twitter : <a href="https://twitter.com/tahirtaous">@TahirTaous</a>
+            </p>
+            <h4>Payment should be made by Bank Transfer</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> -->
+
+
+
+
+
+

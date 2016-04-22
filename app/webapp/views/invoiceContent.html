@@ -1,0 +1,74 @@
+<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+<!-- 
+  on-scroll="onScroll(scrollTop, scrollHeight, event)"
+  ng-show="showInvoiceLoader"
+-->
+
+  <div class="loader" ng-if="!invoiceLoadDone">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <h1>loading Invoice</h1>
+  </div>
+
+  <!-- main content start -->
+  <uib-tabset justified="false" ng-if="invoiceLoadDone">
+    <uib-tab heading="Invoice Setting" id="setting">
+      <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+        <div class="pd2">
+
+          <div class="row">
+
+            <div class="col-xs-3" ng-repeat="value in templateList">
+              <a href="javascript:void(0)" class="thumbnail">
+                <div class="caption">
+                  <h3 class="lead alC" ng-bind-html="value.name"></h3>
+                  <p>
+                    <button ng-click="viewInvTemplate('sample')" class="btn btn-default btn-block mrB1">Sample</button> 
+                    <button class="btn btn-primary btn-block mrB1">Set as default</button>
+                    <button ng-click="viewInvTemplate('edit')" class="btn btn-default btn-block">Edit</button>
+                  </p>
+                </div>
+              </a>
+            </div>
+
+          </div> 
+          <!-- end of row -->
+
+          <!-- start invoice template -->
+          
+          
+          <!-- end of invoice template -->
+
+
+
+        </div> <!-- end of pd div -->
+      </perfect-scrollbar>
+    </uib-tab>
+    <!-- end of setting -->
+    
+
+
+    <uib-tab heading="Generate Invoice" id="generate">
+      <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+        <div class="pd2">
+          Generate Invoice
+        </div>
+      </perfect-scrollbar>
+    </uib-tab>
+    <!-- end of list entries for invoice -->
+
+    <uib-tab heading="View Invoice" id="view">
+      <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+        <div class="pd2">
+          View Invoice
+        </div>
+      </perfect-scrollbar>
+    </uib-tab>
+    <!-- end of view invoice -->
+  </uib-tabset>
+  <!-- main content end -->
+  
+</perfect-scrollbar>
