@@ -154,7 +154,8 @@ header .navbar-nav > li.active {
     padding: 12px;
     color: #fff;
     text-decoration: none;
-    border-bottom: 1px solid rgba(256, 256, 256, .2)
+    border-bottom: 1px solid rgba(256, 256, 256, .2);
+    color:#fff !important;
 }
 
 .dshUl > li:hover {

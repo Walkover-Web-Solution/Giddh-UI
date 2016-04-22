@@ -190,6 +190,7 @@ module.exports = function (grunt) {
           'modernizr',
           'jquery',
           'angular',
+          'angular2',
           'bootstrap',
           'angular-bootstrap',
           'underscore',
