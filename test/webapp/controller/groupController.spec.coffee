@@ -101,7 +101,10 @@ describe 'groupController', ->
       expect(@uibModal.open).toHaveBeenCalledWith(modalData)
 
   describe '#goToManageGroupsClose', ->
-    xit 'should reset variables', ->
+    it 'should reset variables', ->
+      @rootScope.selectedCompany = {uniqueName: 'walkover'}
+      deferred = @q.defer()
+      spyOn(@groupService,'getGroupsWithoutAccountsCropped').andReturn(deferred.promise)
       @scope.goToManageGroupsClose()
       expect(@scope.selectedGroup).toEqual({})
       expect(@scope.selectedAccntMenu).toBeUndefined()
@@ -110,7 +113,7 @@ describe 'groupController', ->
       expect(@scope.showAccountDetails).toBeFalsy()
       expect(@scope.showAccountListDetails).toBeFalsy()
       expect(@scope.cantUpdate).toBeFalsy()
-      
+      expect(@groupService.getGroupsWithoutAccountsCropped).toHaveBeenCalledWith('walkover')
     
 
   describe '#setLedgerData', ->

@@ -35,14 +35,10 @@ describe 'mainController', ->
       expect(@localStorageService.set).toHaveBeenCalledWith('_roles', [{name: 'admin'}])
 
   describe '#onGetRolesFailure', ->
-    xit 'should show toastr with error message', ->
-      res =
-        data:
-          status: "Error"
-          message: "some-message"
+    it 'should show toastr with error message', ->
       spyOn(@toastr, 'error')
-      @scope.onGetRolesFailure(res)
-      expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+      @scope.onGetRolesFailure()
+      expect(@toastr.error).toHaveBeenCalledWith("Something went wrong while fetching role", "Error")
 
   describe '#checkPermissions', ->
     it 'should call permission service hasPermissionOn method and set value true to canUpdate variable', ->

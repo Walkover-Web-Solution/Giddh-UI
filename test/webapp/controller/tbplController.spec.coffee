@@ -42,24 +42,6 @@ describe 'tbplController', ->
           $filter: @filter
         })
 
-    describe '#calCulateTotal', ->
-      xit 'should calCulate Total and andReturn total amount', ->
-        data = [
-          {
-            closingBalance: {
-              amount: 100
-            }
-          }
-          {
-            closingBalance: {
-              amount: 400
-            }
-          }
-        ]
-        d = 0
-        d = @scope.calCulateTotal(data)
-        expect(d).toBe(500.00) 
-
     describe '#getTrialBal', ->
       it 'should show alert with toastr error if date is null ', ->
         spyOn(@toastr, "error")
