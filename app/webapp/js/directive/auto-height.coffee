@@ -384,7 +384,6 @@ angular.module('ledger', [])
         </div></form>"
   link: (scope, elem, attrs) ->
     scope.el = elem[0]
-
     fields = elem[0].getElementsByClassName('ledgInpt')
     i = 0
     while i < fields.length

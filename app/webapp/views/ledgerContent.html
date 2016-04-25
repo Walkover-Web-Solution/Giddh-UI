@@ -344,6 +344,7 @@
                       itemdata="value"
                       acntlist="fltAccntList"
                       class='drLedgerEntryForm pr ledgEntryForm {{value.sharedData.uniqueName}}'
+                      ng-class="{uncEntry : value.sharedData.unconfirmedEntry}"
                       name='drLedgerEntryForm_{{$index}}'
                       sel-acnt-uname = "selAcntUname"
                       update-ledger="updateEntry(entry)"
@@ -406,6 +407,7 @@
                       itemdata="value"
                       acntlist="fltAccntList"
                       class='crLedgerEntryForm pr ledgEntryForm {{value.sharedData.uniqueName}}'
+                      ng-class="{uncEntry : value.sharedData.unconfirmedEntry}"
                       name='crLedgerEntryForm_{{$index}}'
                       sel-acnt-uname = "selAcntUname"
                       update-ledger="updateEntry(entry)"

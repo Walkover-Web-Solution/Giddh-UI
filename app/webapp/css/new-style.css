@@ -2319,3 +2319,7 @@ body.unresponsive{
     top: 12px;
     right: 10px;
 }
+
+.uncEntry{
+    border:1px solid #d35f29;
+}

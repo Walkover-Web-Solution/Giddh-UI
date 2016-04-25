@@ -328,6 +328,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.ledgerOnlyCreditData = []
     $scope.ledgerOnlyDebitData = []
     _.each(data.ledgers, (ledger) ->
+      console.log ledger
       if ledger.transactions.length > 1
         ledger.multiEntry = true
       else
@@ -356,6 +357,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $rootScope.showLedgerLoader = false
     $scope.ledgerData = angular.copy(_.omit(res.body, 'ledgers'))
     $scope.calculateLedger($scope.ledgerData, "server")
+    console.log($scope.ledgerOnlyCreditData, $scope.ledgerOnlyDebitData)
 
   $scope.loadLedgerFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
