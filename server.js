@@ -113,15 +113,29 @@ global.mStorage = multer.diskStorage({
     cb(null, './uploads/')
   },
   filename: function (req, file, cb) {
-    if (file.mimetype === "application/vnd.ms-excel"){
-      cb(null, Date.now() + '.xls')
+    console.log (file)
+    switch (file.mimetype){
+      case 'image/*' :
+        cb(null, file.originalname)
+        break;
+      case'application/vnd.ms-excel' : 
+        cb(null, Date.now() + '.xls')
+        break;
+      case'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' : 
+        cb(null, Date.now() + '.xlsx')
+        break;
+      default:
+        cb(null, Date.now() + '.xml');
     }
-    else if (file.mimetype === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"){
-      cb(null, Date.now() + '.xlsx')
-    }
-    else{
-      cb(null, Date.now() + '.xml')
-    }
+    // if (file.mimetype === "application/vnd.ms-excel"){
+    //   cb(null, Date.now() + '.xls')
+    // }
+    // else if (file.mimetype === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"){
+    //   cb(null, Date.now() + '.xlsx')
+    // }
+    // else{
+    //   cb(null, Date.now() + '.xml')
+    // }
   }
 })
 

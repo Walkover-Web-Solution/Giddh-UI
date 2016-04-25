@@ -2,6 +2,24 @@ settings = require('../util/settings')
 rest = require('restler')
 router = settings.express.Router()
 
+
+# upload logo
+router.post '/:companyName/logo', (req, res) ->
+  console.log "logo file is: ", req.file
+  url = settings.envUrl + 'company/' + req.params.companyName + '/logo'
+  rest.post(url,
+    multipart: true
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+    data:
+      'file': rest.file(req.file.path, req.file.path, req.file.size, null, req.file.mimetype)
+  ).on 'complete', (data) ->
+    console.log 'after upload data is', data
+    res.send data
+
+# end upload logo
+
 # upload master
 router.post '/:companyName/master', (req, res) ->
   console.log "Master file is: ", req.file
