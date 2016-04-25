@@ -29,21 +29,31 @@ h1 {
 .invoiceContainer .row{
   margin-bottom: 20px;
 }
-.invoiceContainer .form-control{
+.previewMode .form-control{
   border: 0;
   padding-left: 0;
   padding-right: 0;
   box-shadow: none;
 }
-.txtAreaWrap .form-control{
-  overflow: hidden;
+.previewMode .txtAreaWrap .form-control{
   padding: 0
 }
-.txtAreaWrap textarea.form-control{
-  height: 1.1in
-}
-.txtAreaWrap input.form-control{
+.previewMode .txtAreaWrap input.form-control{
   height: 24px
+}
+.previewMode #two .form-control{
+  padding: 0;
+  height: 20px;
+}
+.previewMode .form-control.wid80{
+  width: 80px
+}
+.editMode .form-control.wid80{
+  width: 100px
+}
+.txtAreaWrap textarea.form-control{
+  overflow: hidden;
+  height: 1.2in
 }
 #one, #two {
   height: .6in;
@@ -57,10 +67,14 @@ h1 {
   height: 2.5in;
 }
 #six, #seven{
-  height: 1in;
+  height: 1.2in;
 }
 #eight{
   height: 2in;
+}
+#two label{
+  display: block;
+  text-align: left;
 }
 .vcenter {
   display: block;
@@ -73,17 +87,6 @@ h1 {
 .modal-content{
   border-radius: 0
 }
-.form-control.wid80{
-  width: 80px
-}
-#two label{
-  display: block;
-  text-align: left;
-}
-#two .form-control{
-  padding: 0;
-  height: 20px;
-}
 .modal-header span{
   position: absolute;
   left: 15px;
@@ -95,75 +98,126 @@ fieldset[disabled] .form-control{
   cursor: default;
   background-color: white
 }
+.thumb{
+  width: 36px;
+  height: 36px;
+}
 </style>
 <!-- <a onclick="javascript:window.print();"> -->
 <div class="modal-header">
   <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><i aria-hidden="true">&times;</i></button>
-  <span>
-    <a class="btn btn-default btn-sm" href="javascript:void(0)">View as your data</a>
+  
+  <span ng-if="!editMode">
+    <a ng-if="withSampleData" ng-click="switchTempData()" class="btn btn-default btn-sm" href="javascript:void(0)">View as Your data</a>
+    <a ng-if="!withSampleData" ng-click="switchTempData()" class="btn btn-primary btn-sm" href="javascript:void(0)">View as Sample data</a>
   </span>
-  <h3 class="modal-title alC">
+  <h3 class="modal-title alC" ng-if="!editMode">
     View Invoice
   </h3>
+  
+
+  <span ng-if="editMode">
+    <a ng-click="saveTemp()" class="btn btn-success btn-sm" href="javascript:void(0)">Save Changes</a>
+  </span>
+
 </div>
-<div class="modal-body" auto-height>
+<div class="modal-body" auto-height >
     
-  <div class="invoiceContainer">
-
-    <section ng-if="editMode">
-      Hey edit template will be here soon
-    </section>
-
-    <!-- end of edit template -->
+  <div class="invoiceContainer" ng-class="editMode ? 'editMode' : 'previewMode'">
 
     <!-- sample preview mode start -->
-    <section ng-if="!editMode">
+
     <fieldset ng-disabled="!editMode">
-      <div class="row">
-        <section id="one" class="col-xs-6">
-          <h1>
-            <img src="{{templateData.sectionContent[0].imgPath}}" alt="" height="50px">
-          </h1>
-        </section>
-        <section id="two" class="col-xs-6 text-right">
-          <section class="form-inline clearfix">
-            <div class="form-group pull-right mrL2">
-              <label>Invoice #:</label>
-              <input type="text" class="form-control wid80"  ng-model="templateData.sectionContent[1].data.invNo">
-            </div>
-            <div class="form-group pull-right">
-              <label>Date:</label>
-              <input type="text" class="form-control wid80" ng-model="templateData.sectionContent[1].data.date">
-            </div>
+      <section ng-if="tempSet.sections.one && tempSet.sections.two">
+        <div class="row">
+          <section id="one" class="col-xs-6">
+            <h1 ng-if="!editMode">
+              <img src="{{defTempData.sectionContent.one.imgPath}}" alt="" height="50px">
+            </h1>
+            <aside ng-if="editMode">
+              <form ng-if="!defTempData.sectionContent.one.logoUploaded" class="form-inline" enctype="multipart/form-data">
+                <div class="form-group" ng-hide="logoUpldComplt">
+                  <button type="file" 
+                    ng-model="logoFile"
+                    class="btn btn-primary" 
+                    ngf-select="uploadLogo($files)" 
+                    ngf-pattern="image/*"
+                    accept="image/*"
+                    ngf-max-size="200KB"
+                    ngf-multiple="false"
+                  >
+                    <i class="glyphicon glyphicon-folder-open"></i> 
+                    &nbsp; Upload Logo</button><br/>
+                  <small>* Logo size should be max 200KB</small>
+                </div>
+                <div class="form-group" ng-if="logoUpldComplt">
+                  <img ngf-src="logoFile" class="thumb">
+                  <small>* It is a thumbnail Preview</small>
+                  <p class="clearfix">
+                    <a href="javascript:void(0)" ng-click="resetLogo()">Reset Logo</a>
+                  </p>
+                </div>
+              </form>
+
+              <div ng-if="defTempData.sectionContent.one.logoUploaded">
+                <img src="{{defTempData.sectionContent.one.imgPath}}" class="" height="50px">
+                <a href="javascript:void(0)" ng-click="defTempData.sectionContent.one.logoUploaded = false">Change Logo</a>
+              </div>
+            </aside>
           </section>
-        </section>
-      </div>
-      <hr>
+          <section id="two" class="col-xs-6 text-right">
+            <section class="form-inline clearfix">
+              <div class="form-group pull-right mrL2">
+                <label>Invoice #:</label>
+                <input  ng-disabled="editMode" type="text" class="form-control wid80"  ng-model="defTempData.sectionContent.two.invNo">
+              </div>
+              <div class="form-group pull-right">
+                <label>Date:</label>
+                <input ng-disabled="editMode" type="text" class="form-control wid80" ng-model="defTempData.sectionContent.two.date">
+              </div>
+            </section>
+          </section>
+        </div>
+        <hr>
+      </section>
       <!-- section one or two end -->
 
       <div class="row">
         <section class="col-xs-5" id="three">
           <h4 class="mrB">From:</h4>
           <div class="txtAreaWrap">
-            <input class="form-control" ng-model="templateData.sectionContent[2].data.firmName">
-            <textarea class="form-control" ng-model="templateData.sectionContent[2].data.otherDetails"></textarea>
+            <input class="form-control" ng-model="defTempData.sectionContent.three.firmName" placeholder="Your company name">
+            <textarea class="form-control" ng-model="defTempData.sectionContent.three.data" placeholder="Address and other details"></textarea>
           </div>
         </section>
         <section class="col-xs-5 col-xs-offset-2" id="four">
+          <!-- if one or two false then show invoice no -->
+          <section class="form-inline clearfix mrB1" ng-if="!tempSet.sections.one && !tempSet.sections.two">
+            <div class="form-group">
+              <label>Invoice #:</label>
+              <input ng-disabled="editMode" type="text" class="form-control wid80"  ng-model="defTempData.sectionContent.two.invNo">
+            </div>
+            <div class="form-group">
+              <label>Date:</label>
+              <input ng-disabled="editMode" type="text" class="form-control wid80" ng-model="defTempData.sectionContent.two.date" >
+            </div>
+          </section>
+          <!-- end if -->
+
           <h4 class="mrB">To:</h4>
           <div class="txtAreaWrap">
-            <input class="form-control" ng-model="templateData.sectionContent[3].data.firmName">
-            <textarea class="form-control" ng-model="templateData.sectionContent[3].data.otherDetails"></textarea>
+            <input ng-disabled="editMode" class="form-control" ng-model="defTempData.sectionContent.four.firmName" placeholder="Buyer Name">
+            <textarea ng-disabled="editMode" class="form-control" ng-model="defTempData.sectionContent.four.data"  placeholder="Buyer Address and other details"></textarea>
           </div>
         </section>
       </div>
       <!-- section three or four end -->
       
       <!-- / end client and company details section -->
-
+      
       <section ng-if="editMode">
         <div class="row">
-          <div class="greyBg alC"  id="five">
+          <div class="greyBg alC" id="five">
             <div class="mrT4">Particulars will shown here</div>
           </div>
         </div>
@@ -232,188 +286,45 @@ fieldset[disabled] .form-control{
       <div class="row">
         <section class="col-xs-5" id="six">
           <div class="txtAreaWrap">
-            <textarea class="form-control" ng-model="templateData.sectionContent[5].data"></textarea>
+            <textarea class="form-control" ng-model="defTempData.sectionContent.six.data" placeholder="Company other details"></textarea>
           </div>
         </section>
         <section class="col-xs-7" id="seven">
           <div class="txtAreaWrap">
-            <input class="form-control mrB alR" ng-model="templateData.sectionContent[6].data.firmName">
-            <input class="form-control alR" ng-model="templateData.sectionContent[6].data.otherDetails">
+            <input class="form-control mrB alR" ng-model="defTempData.sectionContent.seven.firmName"  placeholder="Your Company name">
+            <input class="form-control alR" ng-model="defTempData.sectionContent.seven.data" placeholder="Signatory slogan">
           </div>
         </section>
       </div>
-      <hr>
       <!-- end of section six or seven -->
+      <section ng-if="tempSet.sections.eight">
+        <hr>
+        <div class="row">
+          <section class="col-xs-12" id="eight">
+            <div class="txtAreaWrap">
+              
+              <div ng-if="editMode">
+                <label class="mrB">Enter your terms or bank details</label>
+                <form name="newTerm" novalidate class="form-group">
+                  <input name="newTerm.term" type="text" class="form-control mrB" ng-model="nterm" required>
+                  <button ng-disabled="newTerm.$invalid" class="btn btn-primary" ng-click="addNewTerm(nterm)">Add Term</button>
+                </form>
+              </div>
+              <!-- end if editmode -->
 
-      <div class="row">
-        <section class="col-xs-12" id="eight">
-          <div class="txtAreaWrap">
-            <ol style="list-style: decimal inside;">
-              <li ng-repeat="item in templateData.sectionContent[7].data">{{item.term}}</li>
-            </ol>
-          </div>
-        </section>
-      </div>
+              <ol style="list-style: decimal inside;">
+                <li ng-repeat="item in defTempData.sectionContent.eight.data track by $index">{{item}}</li>
+              </ol>
+
+            </div>
+          </section>
+        </div>
+      </section>
       <!-- end of section eight -->
     </fieldset>
-    </section>
     <!-- end of preview mode -->
 
   </div>
   <!-- end of invoiceContainer -->
 </div>
 <!-- end of modal body -->
-
-
-
-
-
-<!-- invoice setting -->
-
-<!-- <div class="invoiceContainer">
-  <div class="row">
-    <div class="col-xs-6">
-      <h1>
-        <a href="https://twitter.com/tahirtaous">
-        <img src="logo.png">
-        Logo here
-        </a>
-      </h1>
-    </div>
-    <div class="col-xs-6 text-right">
-      <h1>INVOICE</h1>
-      <h1><small>Invoice #001</small></h1>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-5">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4>From: <a href="javascript:void(0)">Your Name</a></h4>
-        </div>
-        <div class="panel-body">
-          <p>
-            Address <br>
-            details <br>
-            more <br>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="col-xs-5 col-xs-offset-2 text-right">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h4>To : <a href="javascript:void(0)">Client Name</a></h4>
-        </div>
-        <div class="panel-body">
-          <p>
-            Address <br>
-            details <br>
-            more <br>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>
-          <h4>Service</h4>
-        </th>
-        <th>
-          <h4>Description</h4>
-        </th>
-        <th>
-          <h4>Hrs/Qty</h4>
-        </th>
-        <th>
-          <h4>Rate/Price</h4>
-        </th>
-        <th>
-          <h4>Sub Total</h4>
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Article</td>
-        <td><a href="javascript:void(0)">Title of your article here</a></td>
-        <td class="text-right">-</td>
-        <td class="text-right">$200.00</td>
-        <td class="text-right">$200.00</td>
-      </tr>
-      <tr>
-        <td>Template Design</td>
-        <td><a href="javascript:void(0)">Details of project here</a></td>
-        <td class="text-right">10</td>
-        <td class="text-right">75.00</td>
-        <td class="text-right">$750.00</td>
-      </tr>
-      <tr>
-        <td>Development</td>
-        <td><a href="javascript:void(0)">WordPress Blogging theme</a></td>
-        <td class="text-right">5</td>
-        <td class="text-right">50.00</td>
-        <td class="text-right">$250.00</td>
-      </tr>
-    </tbody>
-  </table>
-  <div class="row text-right">
-    <div class="col-xs-2 col-xs-offset-8">
-      <p>
-        <strong>
-        Sub Total : <br>
-        TAX : <br>
-        Total : <br>
-        </strong>
-      </p>
-    </div>
-    <div class="col-xs-2">
-      <strong>
-      $1200.00 <br>
-      N/A <br>
-      $1200.00 <br>
-      </strong>
-    </div>
-  </div>
-  <div class="row">
-    <div class="col-xs-5">
-      <div class="panel panel-info">
-        <div class="panel-heading">
-          <h4>Bank details</h4>
-        </div>
-        <div class="panel-body">
-          <p>Your Name</p>
-          <p>Bank Name</p>
-          <p>SWIFT : --------</p>
-          <p>Account Number : --------</p>
-          <p>IBAN : --------</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-xs-7">
-      <div class="span7">
-        <div class="panel panel-info">
-          <div class="panel-heading">
-            <h4>Contact Details</h4>
-          </div>
-          <div class="panel-body">
-            <p>
-              Email : you@example.com <br><br>
-              Mobile : -------- <br> <br>
-              Twitter : <a href="https://twitter.com/tahirtaous">@TahirTaous</a>
-            </p>
-            <h4>Payment should be made by Bank Transfer</h4>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-
-
-
-
-

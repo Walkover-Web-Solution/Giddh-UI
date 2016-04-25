@@ -2285,6 +2285,7 @@ body.unresponsive{
 .gTbl .gTblRow:nth-of-type(odd) {
     background-color: #f9f9f9;
 }
+
 /* ng2 component styles */
 
 .ng2-select-box{
@@ -2421,3 +2422,13 @@ table td.nopad{
 .inner-table td i{
     cursor: pointer;
 }
+
+/*Invoice*/
+/*highlight table row when selected*/
+.table-striped .selectedForInv {
+    background-color: #CCE7E7 !important
+}
+.table-bordered>tbody>tr.selectedForInv>td{
+    border-color: #b7cfcf
+}
+
