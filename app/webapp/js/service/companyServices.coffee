@@ -22,6 +22,22 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       method:'GET'
       url: '/company/:uniqueName/transactions?page=:page'
     }
+    getTax : {
+      method:'GET'
+      url: '/company/:companyUniqueName/tax'
+    }
+    addTax: {
+      method: 'POST'
+      url: '/company/:companyUniqueName/tax'
+    }
+    deleteTax: {
+      method: 'DELETE',
+      url: '/company/:companyUniqueName/tax/:taxUniqueName'
+    }
+    editTax : {
+      method: 'PUT'
+      url: '/company/:companyUniqueName/tax/:taxUniqueName'
+    }
     updtCompSubs: {
       method: 'PUT'
       url: '/company/:uniqueName/subscription-update'
@@ -106,5 +122,26 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     switchUser: (uniqueName) ->
       @handlePromise((onSuccess, onFailure) -> Company.switchUser({uniqueName: uniqueName},onSuccess,
           onFailure))
+
+    getTax: (companyUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getTax({companyUniqueName: companyUniqueName}, onSuccess,
+          onFailure))
+
+    addTax: (cdata) ->
+      @handlePromise((onSuccess, onFailure) -> Company.addTax({companyUniqueName: cdata.companyUniqueName}, cdata, onSuccess, onFailure))
+
+    deleteTax : (reqParam, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.deleteTax({
+        companyUniqueName: reqParam.companyUniqueName
+        taxUniqueName: reqParam.taxUniqueName
+      }, onSuccess, onFailure))
+    
+    editTax: (reqParam, taxData, onSuccess, onFailure) ->
+      console.log taxData
+      @handlePromise((onSuccess, onFailure) -> Company.editTax({
+        companyUniqueName: reqParam.companyUniqueName
+        taxUniqueName: reqParam.taxUniqueName
+      }, taxData, onSuccess, onFailure))
+
 
   companyServices

@@ -341,5 +341,58 @@ router.get '/:uniqueName/switchUser', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+# get taxes
+router.get '/:companyUniqueName/tax', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/tax'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+# add taxes
+router.post '/:companyUniqueName/tax', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/tax?updateEntries=' + req.body.updateEntries
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+# delete tax
+router.delete '/:companyUniqueName/tax/:taxUniqueName', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/tax/' + req.params.taxUniqueName
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+#edit/update taxe
+router.put '/:companyUniqueName/tax/:taxUniqueName', (req, res) ->
+  console.log req.body, req.params
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/tax/' + req.params.taxUniqueName
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
 
 module.exports = router

@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService, accountService) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService, accountService, $filter) ->
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -45,7 +45,23 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     taxFileDate: 1
   }
   
+  $scope.today = new Date()
+  $scope.fromTaxDate = {date: new Date()}
+  $scope.format = "dd-MM-yyyy"
+  $scope.dateOptions = {
+    'year-format': "'yy'",
+    'starting-day': 1,
+    'showWeeks': false,
+    'show-button-bar': false,
+    'year-range': 1,
+    'todayBtn': false
+  }
 
+  $scope.fromDatePickerOpen = ->
+    this.fromDatePickerIsOpen = true
+
+  $scope.toDatePickerOpen = ->
+    this.toDatePickerIsOpen = true
   
 
   #dialog for first time user
@@ -768,59 +784,136 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   # get taxes
   $scope.getTax=()->
+    $scope.taxList = []
     companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxSuccess, $scope.getTaxFailure)
 
   $scope.getTaxSuccess = (res) ->
-    console.log "getTaxSuccess: ", res
+    $scope.taxList = res.body 
 
   $scope.getTaxFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
+    toastr.error(res.data.message, "No Added Taxes Found.")
 
-  $scope.addNewTax = (data) ->
-    console.log "addNewTax:", data
-    $scope.editTax(data)
+  $scope.addNewTax = (newTax) ->
+    newTax = {
+      companyUniqueName : $rootScope.selectedCompany.uniqueName
+      updateEntries: false
+      taxNumber:newTax.taxNumber,
+      name: newTax.name,
+      account:{
+      uniqueName: newTax.account.uniqueName
+      },
+      duration:newTax.duration,
+      taxFileDate:1,
+      taxDetail:[{
+      date : $filter('date')($scope.fromTaxDate.date, 'dd-MM-yyyy'),
+      value: newTax.value
+      }]
+    }
+    companyServices.addTax(newTax).then($scope.addNewTaxSuccess, $scope.addNewTaxFailure)
+
+  $scope.addNewTaxSuccess = (res) ->
+    $scope.getTax()
+    toastr.success(res.status, "Tax added successfully.")
+
+  $scope.addNewTaxFailure = (res) ->
+    toastr.error(res.statusText, res.data.message)
+
+  #delete tax
+  $scope.deleteTaxconfirmation = (data) ->
+    modalService.openConfirmModal(
+      title: 'Delete Tax' 
+      body: 'Are you sure you want to delete? ' + data.name + ' ?',
+      ok: 'Yes',
+      cancel: 'No').then(->
+        reqParam = {
+          companyUniqueName: $rootScope.selectedCompany.uniqueName
+          taxUniqueName: data.uniqueName
+        }
+        companyServices.deleteTax(reqParam).then($scope.deleteTaxSuccess, $scope.deleteTaxFailure)
+      )
+
+  $scope.deleteTaxSuccess = (res) ->
+    $scope.getTax()
+    toastr.success(res.status, res.body)
+
+  $scope.deleteTaxFailure = (res) ->
+    toastr.error(res.status, res.data.message)
 
   #edit tax
   $scope.editTax = (data) ->
-    console.log "editTax:", data
-    $scope.taxList = []
-    $scope.taxList.push(data)
-    modalInstance = $uibModal.open(
+    $scope.taxEditData = data
+    $scope.preSpliceTaxDetail = $scope.taxEditData.taxDetail
+    $scope.modalInstance = $uibModal.open(
       templateUrl: 'editTaxModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope
     )
-    modalInstance.result.then($scope.editTaxSuccess, $scope.editTaxFailure)
+    #modalInstance.result.then($scope.editTaxSuccess, $scope.editTaxFailure)
 
-  $scope.editTaxSuccess = (data) ->
-    console.log "editTaxSuccess"
+  $scope.updateTax = () ->
+    newTax = {
+      'taxNumber': $scope.taxEditData.taxNumber,
+      'name': $scope.taxEditData.name,
+      'account':{
+        'uniqueName': $scope.taxEditData.account.uniqueName
+      },
+      'duration':"MONTHLY",
+      'taxFileDate': $scope.taxEditData.fileDate,
+      'taxDetail': $scope.taxEditData.taxDetail
+    }
 
-  $scope.editTaxFailure = () ->
-    console.log "editTaxFailure"
+    _.each newTax.taxDetail, (detail) ->
+      detail.value = detail.taxValue.toString()
 
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      taxUniqueName: $scope.taxEditData.uniqueName
+    }
+    companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
 
-  #delete tax
-  $scope.deleteTax = (data) ->
-    modalService.openConfirmModal(
-      title: 'Are you sure you want to delete? ' + data.name,
-      ok: 'Yes',
-      cancel: 'No'
-    ).then ->
-      console.log "deleted"
+  $scope.updateTaxSuccess = (res) ->
+    toastr.success(res.status, "Tax updated successfully.")
+    $timeout( ->
+      $scope.modalInstance.close()
+    )
+    
+
+  $scope.updateTaxFailure = (res) ->
+    toastr.error(res.statusText, res.data.message)
 
   # edit tax slab
-  $scope.addNewSlab=(type)->
-    console.log "addNewSlab:", type
+  $scope.addNewSlabBefore = (tax, index)->
+    tax.taxValue = parseInt(tax.taxValue)
+    newTax = {
+      taxValue: tax.taxValue
+      date: $filter('date')($scope.today, 'dd-MM-yyyy')
+    }
+    $scope.taxEditData.taxDetail.splice(index, 0, newTax)
+
+  $scope.addNewSlabAfter = (tax, index) ->
+    tax.taxValue = parseInt(tax.taxValue)
+    newTax = {
+      taxValue: tax.taxValue
+      date: $filter('date')($scope.today, 'dd-MM-yyyy')
+    }
+    $scope.taxEditData.taxDetail.splice(index+1, 0, newTax)
 
   # remove slab
-  $scope.removeSlab = () ->
+  $scope.removeSlab = (tax, index) ->
     modalService.openConfirmModal(
-      title: 'Are you sure you want to delete?',
+      title: 'Remove Tax',
+      body: 'Are you sure you want to delete?',
       ok: 'Yes',
       cancel: 'No'
-    ).then ->
-      console.log "removeSlab deleted"
+    ).then(->
+      $scope.taxEditData.taxDetail.splice(index, 1)
+    )
+  
+  $scope.cancelUpdateTax = () ->
+    $scope.taxEditData.taxDetail = $scope.preSpliceTaxDetail 
+    $scope.modalInstance.close()
+
 
   $timeout( ->
     $rootScope.selAcntUname = undefined
@@ -828,16 +921,19 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.getCurrencyList()
     $scope.getUserDetails()
   ,200)
+
   #fire function after page fully loaded
   $scope.$on '$viewContentLoaded', ->
     $timeout( ->
       $scope.selectedAccountUniqueName = undefined
       $scope.rolesList = localStorageService.get("_roles")
+      $scope.getTax()
     ,2000)
 
   $scope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
     $scope.resetSteps()
   )
+
 
 #init angular app
 giddh.webApp.controller 'companyController', companyController

@@ -44,7 +44,7 @@
 
         }.bind(this),function(error){
           error = JSON.parse(error._body);
-          toastr.error(error.code, error.message);
+          toastr.error(error.code);
         });
       }
   });
