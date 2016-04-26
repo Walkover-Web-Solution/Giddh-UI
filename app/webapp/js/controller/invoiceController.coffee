@@ -68,6 +68,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     this.toDatePickerIsOpen = true
   # end of date picker
   $scope.showInvLoader= true
+  $scope.onlyCrData = []
+  $scope.onlyDrData = []
 
   # end of page load varialbles
 
@@ -339,8 +341,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
             console.log item
         )
       else
-        $scope.entriesForInvoice = _.reject($scope.entriesForInvoice, (item) ->
-          entry.id is item.id
+        $scope.entriesForInvoice = _.filter($scope.entriesForInvoice, (item) ->
+          not(entry.sharedData.uniqueName is item.sharedData.uniqueName)
         )
     else
       if ths
@@ -350,7 +352,16 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
           entry.id is item.id
         )
 
-    console.log $scope.entriesForInvoice.length
+    console.log $scope.entriesForInvoice.length, $scope.entriesForInvoice
+
+  $scope.prevAndGenInv=()->
+    $scope.prevInProg = true
+    data = []
+    _.each($scope.entriesForInvoice, (entry)->
+      data.push(entry.sharedData.uniqueName)
+    )
+    data = _.uniq(data)
+    console.log "data after", data
 
   # end get ledger entries to generate invoice
 
