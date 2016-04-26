@@ -111,7 +111,8 @@
               this.result = JSON.parse(res._body);
               var logTracker = {
                 logs : this.result.body.logs,
-                reqBody : req
+                reqBody : req,
+                totalPages: this.result.totalPages
               }
               self.shared.updateData(logTracker);
             }, 100)
@@ -119,7 +120,7 @@
 
           function(error){
             error = JSON.parse(error._body);
-            options.toastr.error(error.code, error.message)
+            options.toastr.error(error.message)
           }.bind(self)); //  on Error
       });
       
@@ -130,7 +131,7 @@
   var loadMore = ng.core.Component({
     selector: 'load-more',
     providers: [ng.http.HTTP_PROVIDERS, httpService,sharedService],
-    template: "<button class='btn btn-success pull-right mrT2 mrB2' (click)='loadMoreLogs()' *ngIf='page > 0'>Load More</button>"
+    template: "<button class='btn btn-success pull-right mrT2 mrB2' (click)='loadMoreLogs()' *ngIf='page > 0 && page < totalPages'>Load More</button>"
   }).Class({
     constructor: [ng.http.Http, httpService,sharedService, function (http, service, shared){
         this.result = {};
@@ -139,12 +140,14 @@
         this.req = {};
         this.shared = shared;
         this.page = 0;
+        this.totalPages = 0;
     }],
     ngOnInit : function(){
       this.subscription = this.shared.update
         .subscribe(function(res){
           this.req = res.reqBody;
           this.page = this.req.page;
+          this.totalPages = res.totalPages;
         }.bind(this),function(error){
           error = JSON.parse(error._body);
           //toastr.error(error.code, error.message);
@@ -172,7 +175,7 @@
 
           function(error){
             error = JSON.parse(error._body);
-            options.toastr.error(error.code, error.message)
+            options.toastr.error(error.message)
           }.bind(self)); //  on Error
       },100)
     }

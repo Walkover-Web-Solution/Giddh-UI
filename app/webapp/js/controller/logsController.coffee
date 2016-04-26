@@ -52,15 +52,11 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
       groupService.getGroupsWithAccountsInDetail($rootScope.selectedCompany.uniqueName).then($scope.getGroupsSuccess,
         $scope.getGroupsFailure)
 
-
   $scope.getGroupsSuccess = (res) ->
     $scope.groupList = res.body
     $scope.flattenGroupList = groupService.flattenGroup($scope.groupList, [])
-    $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($scope.flattenGroupList)
+    $scope.flatAccntWGroupsList = groupService.flattenGroupsAndAccounts($scope.flattenGroupList)
     $scope.sortGroupsAndAccounts($scope.flatAccntWGroupsList)
-    if $scope.groups.length < 1 && $scope.accounts.length < 1
-      $scope.noData = true
-    $rootScope.showLedgerBox = true
 
   $scope.getGroupsFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -182,7 +178,6 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
 
 
   $scope.deleteLogsConfirmSuccess = (res) ->
-    console.log res
     toastr.success(res.body)
 
   $scope.deleteLogsConfirmFailure = (res) ->

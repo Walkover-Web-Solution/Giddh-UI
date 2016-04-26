@@ -210,6 +210,19 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       )
       _.without(_.flatten(listGA), undefined)
 
+    flattenGroupsAndAccounts: (groupList) ->
+      listGA = _.map(groupList, (groupItem) ->
+        addThisGroup = {}
+        addThisGroup.open = false
+        addThisGroup.groupName = groupItem.name
+        addThisGroup.groupUniqueName = groupItem.uniqueName
+        addThisGroup.accountDetails = groupItem.accounts
+        addThisGroup.beforeFilter = groupItem.accounts
+        addThisGroup.groupSynonyms = groupItem.synonyms
+        addThisGroup
+      )
+      _.without(_.flatten(listGA), undefined)
+
     flattenAccount: (list) ->
       listofUN = _.map(list, (listItem) ->
         if listItem.groups.length > 0

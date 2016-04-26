@@ -53,7 +53,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="mrT text-center" *ngIf="log.log.old != undefined && log.log.updated != undefined">
+	<div class="mrT text-center" *ngIf="log.log.old != undefined && log.log.updated != undefined && log.log.updated.transactions != undefined">
 		<label>Updated</label>
 		<table class="table table-bordered">
 			<thead>
@@ -93,7 +93,6 @@
 				</tr>
 			</tbody>
 		</table>
-
 	</div>
 </section>
 <section class="no-logs" *ngIf="logs.length < 1">
