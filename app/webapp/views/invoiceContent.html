@@ -70,18 +70,19 @@
         <h1>loading Transactions</h1>
       </div>
 
-      <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height ng-if="!showInvLoader">
-        <div class="pd2">
+      <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+
+        <div class="pd2" ng-hide="showInvLoader">
 
           <div class="row">
             <div class="col-xs-6">
               <section class="clearfix form-inline">
                 <div class="form-group">
-                  <button ng-disabled="entriesForInvoice.length <= 0" class="btn btn-primary mrR1">Generate Invoice</button>
-                  <button ng-disabled="true" class="btn btn-info">Upload Invoice</button>
+                  <button ng-click="prevAndGenInv()" ng-disabled="entriesForInvoice.length == 0 || prevInProg" class="btn btn-primary mrR1">Preview &amp; Generate Invoice</button>
+                  <!-- <button ng-disabled="true" class="btn btn-info">Upload Invoice</button> -->
                 </div>
                 <div class="form-group mrL1">
-                  <input type="search" class="form-control maxW150" placeholder="Search ledger" >
+                  <input type="search" class="form-control maxW150" placeholder="Search ledger" ng-model="searchCrData">
                   <i class="glyphicon glyphicon-search"  style="right:25px;top:3px;"></i>
                 </div>
               </section>
@@ -123,7 +124,7 @@
                   </p>
                 </div>
                 <div class="form-group">
-                  <button type="button" class="btn btn-primary mrL1" ng-click="getLedgerEntriesReload()" ng-disabled="fromToDateForm.$invalid">
+                  <button type="button" class="btn btn-primary mrL1" ng-click="getLedgerEntries()" ng-disabled="fromToDateForm.$invalid">
                     GO
                   </button>
                 </div>
@@ -137,17 +138,17 @@
               <th>&nbsp;</th>
               <th>Date</th>
               <th>Particular</th>
-              <th>Amount</th>
+              <th class="alR">Amount</th>
               <th>Description</th>
             </thead>
             <tbody>
-              <tr ng-class="item.sharedData.itemCheck ? 'selectedForInv' : ''" ng-repeat="item in onlyCrData track by $index">
+              <tr ng-class="item.sharedData.itemCheck ? 'selectedForInv' : ''" ng-repeat="item in onlyCrData | filter:searchCrData track by $index ">
                 <td>
                   <input type="checkbox" ng-model="item.sharedData.itemCheck" ng-change="summationForInvoice(item.sharedData.itemCheck, item, $index)">
                 </td>
                 <td ng-bind-html="item.sharedData.entryDate | date"></td>
                 <td ng-bind-html="item.transactions[0].particular.name"></td>
-                <td ng-bind-html="item.transactions[0].amount"></td>
+                <td class="alR" ng-bind-html="item.transactions[0].amount"></td>
                 <td ng-bind-html="item.sharedData.description"></td>
               </tr>
             </tbody>
