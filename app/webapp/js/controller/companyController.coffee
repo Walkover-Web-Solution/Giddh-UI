@@ -793,7 +793,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.taxList.push(obj)
 
   $scope.getTaxFailure = (res) ->
-    toastr.error(res.data.message, "No Added Taxes Found.")
+    console.error(res.data.message, "No Added Taxes Found.")
 
   $scope.addNewTax = (newTax) ->
     newTax = {
