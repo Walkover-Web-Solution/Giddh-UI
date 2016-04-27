@@ -341,6 +341,7 @@ router.get '/:uniqueName/switchUser', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+
 # get taxes
 router.get '/:companyUniqueName/tax', (req, res) ->
   authHead =
@@ -380,6 +381,19 @@ router.delete '/:companyUniqueName/tax/:taxUniqueName', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+# get Invoice templates
+router.get '/:uniqueName/templates', (req, res) ->
+  hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/templates'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 #edit/update taxe
 router.put '/:companyUniqueName/tax/:taxUniqueName', (req, res) ->
   console.log req.body, req.params
@@ -394,5 +408,6 @@ router.put '/:companyUniqueName/tax/:taxUniqueName', (req, res) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
+
 
 module.exports = router

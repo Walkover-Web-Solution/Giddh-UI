@@ -1,5 +1,5 @@
 "use strict"
-invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices,  Upload, ledgerService) ->
+invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices,  Upload, ledgerService, companyServices) ->
 
   $rootScope.selectedCompany = {}
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -10,38 +10,28 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.invoiceLoadDone = true
   # default Template data
   $scope.tempDataDef=
-    sectionContent:
-      one:
-        imgPath: "/public/website/images/logo.png"
-        logoUploaded: true
-      two:
-        date: "11-12-2016"
-        invNo: "00123"
-      
-      three:
-        firmName: "Walkover Web Solutions Pvt. ltd."
-        data: "405-406 Capt. C.S. Naidu Arcade\n10/2 Old Palasiya\nIndore Madhya Pradesh\nCIN: 02830948209eeri\nEmail: account@giddh.com"
-      
-      four:
-        firmName: "Career Point Ltd."
-        data: "CP Tower Road No. 1\nIndraprashta Industrial Kota\nPAN: 1862842\nEmail: info@career.com"
-      
-      five:
-        data: undefined
-      
-      six:
-        data: "TIN: 14242422\nPAN: kaljfljie"
-      
-      seven:
-        firmName: "Walkover Web Solutions Pvt. ltd."
-        data: "Authorise Signatory"
-      
-      eight:
-        data: [
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit",
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
-          "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
-        ]
+    logo: 
+      path: '/public/website/images/logo.png'
+    invoiceDetails:
+      invoiceNumber: '##########'
+      invoiceDate: '11-12-2016'
+    company:
+      name: 'Walkover Web Solutions Pvt. ltd.'
+      data: '405-406 Capt. C.S. Naidu Arcade\n10/2 Old Palasiya\nIndore Madhya Pradesh\nCIN: 02830948209eeri\nEmail: account@giddh.com'
+    companyIdentities: 
+      data: 'tin:67890, cin:12345'
+    entries: null
+    terms: [
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit",
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
+    ]
+    signature:
+      name: 'Walkover Web Solutions Pvt. ltd.'
+      data: 'Authorised Signatory'
+    buyer:
+      name: 'Career Point Ltd.'
+      data: 'CP Tower Road No. 1\nIndraprashta Industrial Kota\nPAN: 1862842\nEmail: info@career.com'
   # invoice setting end
 
   # datepicker setting end
@@ -136,67 +126,15 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
 
   $scope.getTemplates = ()->
-    res =
-      body:
-        templates:[ 
-          {
-            uniqueName: "alpha"
-            name: "Alpha"
-            isDefault: true
-            sections:
-              one: true
-              two: true
-              three: true
-              four: true
-              five: true
-              six: true
-              seven: true
-              eight: true
-          }
-          {
-            uniqueName: "winterfall"
-            name: "Winter Fall"
-            isDefault: false
-            sections:
-              one: false
-              two: false
-              three: true
-              four: true
-              five: true
-              six: true
-              seven: true
-              eight: false
-          }
-        ]            
-        templateData:
-          sectionContent:
-            one:
-              imgPath: "/public/website/images/logo.png"
-              logoUploaded: true
-            two:
-              date: ""
-              invNo: ""
-            three:
-              firmName: "Walkover Technologies"
-              data: "505 Capt. C.S. Naidu Arcade\n10/2 Old Palasiya\nIndore Madhya Pradesh\nCIN: 02830948209eeri\nEmail: account@giddh.com"
-            four:
-              firmName: ""
-              data: ""
-            five:
-              data: undefined
-            six:
-              data: "TIN: 14242422\nPAN: kaljfljie"
-            seven:
-              firmName: "Walkover Technologies Pvt. ltd."
-              data: "Authorised Signatory"
-            eight:
-              # comma separated values in array
-              data: []
+    companyServices.getInvTemplates($rootScope.selectedCompany.uniqueName).then($scope.getTemplatesSuccess, $scope.getTemplatesFailure)
 
-        
-      
+  $scope.getTemplatesSuccess=(res)->
+    console.log "getTemplatesSuccess:", res
     $scope.templateList = res.body.templates
     $scope.templateData = res.body.templateData
+
+  $scope.getTemplatesFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   # switch sample data with original data
   $scope.switchTempData=()->
@@ -279,8 +217,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   #   print(myWindow)
 
   # init func on dom ready
-  # $scope.getAllGroupsWithAcnt()
-  $scope.getTemplates()
+  $scope.getAllGroupsWithAcnt()
+  # $scope.getTemplates()
 
   
 
@@ -366,6 +304,30 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   # end get ledger entries to generate invoice
 
 
+  # get generated invoice list
+  $scope.getInvList=()->
+    console.log "getInvList"
+    $scope.genInvList = []
+    res =
+      body:[ 
+        {
+          entryId: "apb12345"
+          particular: "Hey dude"
+          description: "IMPS fund transaction"
+        }
+        {
+          entryId: "gpf321"
+          particular: "Just Chill"
+          description: "FD"
+        }
+        {
+          entryId: "t2flag"
+          particular: "Jhakaas"
+          description: "NEFT"
+        }
+      ]
+    _.extend($scope.genInvList , res.body)
+    console.log $scope.genInvList
 
 
 
@@ -376,9 +338,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
 
 
-
-
-
+  # end get generated invoice list
 
 
 
