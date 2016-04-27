@@ -161,10 +161,90 @@
     </uib-tab>
     <!-- end of list entries for invoice -->
 
-    <uib-tab heading="View Invoice" id="view">
+    <uib-tab heading="View Invoice" id="view" ng-click="getInvList()">
       <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
         <div class="pd2">
-          View Invoice
+          <div class="row">
+            <div class="col-xs-6">
+              <section class="clearfix form-inline">
+                <div class="form-group">
+                  <button ng-disabled="true" class="btn btn-primary mrR1">Download</button>
+                  <button ng-disabled="true" class="btn btn-primary mrR1">Send Email</button>
+                  <button ng-disabled="true" class="btn btn-danger">Delete</button>
+                </div>
+                <div class="form-group mrL1">
+                  <input type="search" class="form-control maxW150" placeholder="Search ledger" ng-model="searchInvData">
+                  <i class="glyphicon glyphicon-search"  style="right:25px;top:3px;"></i>
+                </div>
+              </section>
+            </div>
+            <div class="col-xs-6">
+              <form name="fromToDateForm" novalidate class="form-inline pull-right">
+                <div class="form-group">
+                  <p class="input-group maxW150">
+                    <input type="text" class="form-control"
+                      uib-datepicker-popup="{{format}}" required
+                      datepicker-options="dateOptions"
+                      is-open="fromDatePickerIsOpen"
+                      ng-click="fromDatePickerOpen()"
+                      ng-model="dateData.fromDate"
+                      max-date="today" 
+                      placeholder="from date" 
+                    />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="fromDatePickerOpen()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                  </p>
+                </div>
+                <div class="form-group">
+                  <label>To</label>
+                  <p class="input-group maxW150">
+                    <input type="text" class="form-control"
+                      uib-datepicker-popup="{{format}}" required
+                      datepicker-options="dateOptions"
+                      is-open="toDatePickerIsOpen"
+                      ng-click="toDatePickerOpen()"
+                      ng-model="dateData.toDate" 
+                      min-date="dateData.fromDate"
+                      max-date="today" 
+                      placeholder="to date" 
+                    />
+                    <span class="input-group-btn">
+                      <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                  </p>
+                </div>
+                <div class="form-group">
+                  <button type="button" class="btn btn-primary mrL1" ng-click="getLedgerEntries()" ng-disabled="fromToDateForm.$invalid">
+                    GO
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+          <!-- end of top row -->
+
+          <table class="mrT2 table table-bordered table-striped">
+            <thead>
+              <th>&nbsp;</th>
+              <th>Invoice ID</th>
+              <th>Particular</th>
+              <th>Description</th>
+            </thead>
+            <tbody>
+              <tr ng-repeat="item in genInvList | filter:searchInvData track by $index ">
+                <td>
+                  <input type="checkbox" ng-model="item.entryId" ng-change="doSomething(item, $index)">
+                </td>
+                <td>
+                  <a href="javascript:void(0)" ng-bind-html="item.entryId"></a>
+                </td>
+                <td ng-bind-html="item.particular"></td>
+                <td ng-bind-html="item.description"></td>
+              </tr>
+            </tbody>
+          </table>
+
         </div>
       </perfect-scrollbar>
     </uib-tab>

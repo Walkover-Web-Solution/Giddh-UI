@@ -50,6 +50,11 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       method: 'PUT'
       url: '/company/:uniqueName/retry'
     }
+    getInvTemplates: {
+      method: 'GET'
+      url: '/company/:uniqueName/templates'
+    }
+    
   })
 
   companyServices =
@@ -142,5 +147,8 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
         updateEntries: reqParam.updateEntries
       }, taxData, onSuccess, onFailure))
 
+
+    getInvTemplates: (uniqueName, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getInvTemplates({uniqueName: uniqueName}, onSuccess, onFailure))
 
   companyServices
