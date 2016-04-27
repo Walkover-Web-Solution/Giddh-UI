@@ -6,8 +6,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   # invoice setting
   $scope.withSampleData = true
   $scope.logoUpldComplt = false
-  $scope.showAccountList = true
-  $scope.invoiceLoadDone = true
+  $scope.showAccountList = false
+  $scope.invoiceLoadDone = false
   # default Template data
   $scope.tempDataDef=
     logo: 
@@ -85,13 +85,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     result = groupService.matchAndReturnGroupObj(item, res.body)
     $rootScope.flatGroupsList = groupService.flattenGroup([result], [])
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
-
-    # b = groupService.flattenAccount(a)
-    # $rootScope.makeAccountFlatten(b)
-    # $scope.flattenGroupList = groupService.makeGroupListFlatwithLessDtl($rootScope.flatGroupsList)
     $rootScope.canChangeCompany = true
     $scope.showAccountList = true
-    console.log $scope
 
   $scope.makeAccountsListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -120,8 +115,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     DAServices.LedgerSet(data, acData)
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
-    # show invoice page
-    $scope.invoiceLoadDone = true
+    # call invoice load func
     $scope.getTemplates()
 
 
@@ -130,15 +124,34 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   $scope.getTemplatesSuccess=(res)->
     console.log "getTemplatesSuccess:", res
+    $scope.invoiceLoadDone = true
     $scope.templateList = res.body.templates
     $scope.templateData = res.body.templateData
 
   $scope.getTemplatesFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+  # set as default
+  $scope.setDefTemp = (data) ->
+    if data.isDefault
+      obj = 
+        uniqueName: $rootScope.selectedCompany.uniqueName
+        tempUname: data.uniqueName
+      companyServices.setDefltInvTemplt(obj).then(
+        (res)->
+          $scope.templateList = res.body.templates
+          $scope.templateData = res.body.templateData
+          toastr.success("Template changed successfully", "Success")
+        , (res)->
+          data.isDefault = false
+          toastr.error(res.data.message, res.data.status)
+      )
+    else
+      toastr.warning("You have to select atleast one template", "Warning")
+      data.isDefault = true
+
   # switch sample data with original data
   $scope.switchTempData=()->
-    console.log "switch"
     if $scope.withSampleData
       $scope.withSampleData = false
       _.extend($scope.defTempData , $scope.templateData)
@@ -148,39 +161,30 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # view template with sample data
   $scope.viewInvTemplate =(template, mode) ->
+    $scope.tempSet = {}
+    $scope.defTempData = {}
     # set mode
     $scope.editMode = if mode is 'edit' then true else false
-    $scope.tempSet = template
-    $scope.defTempData = {}
+    $scope.tempSet = template.sections[0]
+    
     if $scope.editMode
       _.extend($scope.defTempData , $scope.templateData)
+      $scope.convertIntoOur()
     else
       _.extend($scope.defTempData , $scope.tempDataDef)
 
-
     # open dialog
-    modalInstance = $uibModal.open(
+    $scope.modalInstance = $uibModal.open(
       templateUrl: '/public/webapp/views/prevInvoiceTemp.html'
       size: "liq100"
       backdrop: 'static'
       scope: $scope
     )
-    modalInstance.result.then($scope.viewInvTemplateOpen, $scope.viewInvTemplateClose)
 
-  $scope.viewInvTemplateOpen = (res) ->
-    console.log "opened", res
-  
-  $scope.viewInvTemplateClose = () ->
-    console.log "close"
+    console.log $scope.defTempData
+    
 
-  # set as default
-  $scope.setAsDefaultTemplate = (data) ->
-    console.log data, "setAsDefaultTemplate"
 
-  # add New term
-  $scope.addNewTerm=(term)->
-    console.log term
-    # $scope.defTempData.sectionContent.eight.data.push(term)
 
   # upload logo
   $scope.uploadLogo=(files)->
@@ -193,7 +197,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       )
       file.upload.then ((res) ->
         $timeout ->
-          console.log res, "success"
           toastr.success("Logo Uploaded Successfully", res.data.status)
       ), ((res) ->
         console.log res, "error"
@@ -205,20 +208,75 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.resetLogo=()->
     $scope.logoUpldComplt = false
 
+  # convert data for UI usage
+  $scope.convertIntoOur=()->
+    # company setting
+    if not(_.isEmpty($scope.defTempData.company.data))
+      $scope.defTempData.company.data = $scope.defTempData.company.data.replace(RegExp(',', 'g'), '\n')
+    
+    # companyIdentities setting
+    if not(_.isEmpty($scope.defTempData.companyIdentities.data))
+      $scope.defTempData.companyIdentities.data = $scope.defTempData.companyIdentities.data.replace(RegExp(',', 'g'), '\n')
+
+    # terms setting
+    if $scope.defTempData.terms.length > 0
+      $scope.defTempData.termsStr = $scope.defTempData.terms.toString()
+
+
   # save template data
   $scope.saveTemp=()->
-    console.log $scope.defTempData
+    $scope.updatingTempData = true
+    data = {}
+    angular.copy($scope.defTempData, data)
+
+    # company setting
+    if not(_.isEmpty(data.company.data))
+      data.company.data = data.company.data.replace(RegExp('\n', 'g'), ',')
+    
+    # companyIdentities setting
+    if not(_.isEmpty(data.companyIdentities.data))
+      data.companyIdentities.data = data.companyIdentities.data.replace(RegExp('\n', 'g'), ',')
+
+    # terms setting
+    if not(_.isEmpty(data.termsStr))
+      data.terms = data.termsStr.split('\n')
+    else
+      data.terms = []
+    
+    console.log "finally:", data
+
+    companyServices.updtInvTempData($rootScope.selectedCompany.uniqueName, data).then($scope.saveTempSuccess, $scope.saveTempFailure)
+
+  $scope.saveTempSuccess=(res)->
+    $scope.updatingTempData = false
+    $scope.templateData = res.body
+    toastr.success("Template updated successfully", "Success")
+    $scope.modalInstance.close()
+
+  $scope.saveTempFailure = (res) ->
+    $scope.updatingTempData = false
+    toastr.error(res.data.message, res.data.status)
 
 
-  # $scope.openWin=()->
-  #   myWindow=window.open('','','width=595,height=742')
-  #   myWindow.document.write()
-  #   myWindow.focus()
-  #   print(myWindow)
+
+
+  
 
   # init func on dom ready
+  
+  # get accounts
   $scope.getAllGroupsWithAcnt()
-  # $scope.getTemplates()
+
+  # get inv templates 
+  if not(_.isEmpty($rootScope.$stateParams.invId))
+    ledgerObj = DAServices.LedgerGet()
+    if !_.isEmpty(ledgerObj.ledgerData)
+      $scope.loadInvoice(ledgerObj.ledgerData, ledgerObj.selectedAccount)
+    else
+      if !_.isNull(localStorageService.get("_ledgerData"))
+        lgD = localStorageService.get("_ledgerData")
+        acD = localStorageService.get("_selectedAccount")
+        $scope.loadInvoice(lgD, acD)
 
   
 

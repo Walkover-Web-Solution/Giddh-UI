@@ -1,60 +1,109 @@
 'use strict'
 
 giddh.serviceModule.service 'companyServices', ($resource, $q) ->
-  Company = $resource('/company', {
+  Company = $resource('/company', 
+  {
     'uniqueName': @uniqueName
     'page': @page
-    },{
-    addCompany: {method: 'POST'}
-    getCompanyDetails: {method: 'GET', url: '/company/:uniqueName'}
-    getCompanyList: {method: 'GET', url: '/company/all'}
-    deleteCompany: {method: 'DELETE', url: '/company/:uniqueName'}
-    updateCompany: {method: 'PUT', url: '/company/:uniqueName'}
-    shareCompany: {method: 'PUT', url: '/company/:uniqueName/share'}
-    getSharedList: {method: 'GET', url: '/company/:uniqueName/shared-with'}
-    getCmpRolesList: {method: 'GET', url: '/company/:uniqueName/shareable-roles'}
-    unSharedUser: {method: 'PUT', url: '/company/:uniqueName/unshare'}
-    getUploadListDetails: {method: 'GET', url: '/company/:uniqueName/imports'}
-    getProfitLoss: {method:'GET', url: '/company/:uniqueName/profit-loss'}
-    switchUser: {method: 'GET', url: '/company/:uniqueName/switchUser'}
+    'tempUname': @tempUname
+  },
+  {
+    addCompany:
+      method: 'POST'
+    
+    getCompanyDetails:
+      method: 'GET'
+      url: '/company/:uniqueName'
 
-    getCompTrans: {
+    getCompanyList:
+      method: 'GET'
+      url: '/company/all'
+
+    deleteCompany:
+      method: 'DELETE'
+      url: '/company/:uniqueName'
+
+    updateCompany:
+      method: 'PUT'
+      url: '/company/:uniqueName'
+
+    shareCompany:
+      method: 'PUT'
+      url: '/company/:uniqueName/share'
+
+    getSharedList:
+      method: 'GET'
+      url: '/company/:uniqueName/shared-with'
+
+    getCmpRolesList:
+      method: 'GET'
+      url: '/company/:uniqueName/shareable-roles'
+
+    unSharedUser:
+      method: 'PUT'
+      url: '/company/:uniqueName/unshare'
+
+    getUploadListDetails:
+      method: 'GET'
+      url: '/company/:uniqueName/imports'
+    
+    getProfitLoss:
+      method:'GET'
+      url: '/company/:companyUniqueName/profit-loss'
+
+    switchUser:
+      method: 'GET'
+      url: '/company/:uniqueName/switchUser'
+
+    getCompTrans:
       method:'GET'
       url: '/company/:uniqueName/transactions?page=:page'
-    }
-    getTax : {
-      method:'GET'
-      url: '/company/:uniqueName/tax'
-    }
-    addTax: {
-      method: 'POST'
-      url: '/company/:uniqueName/tax'
-    }
-    deleteTax: {
-      method: 'DELETE',
-      url: '/company/:uniqueName/tax/:taxUniqueName'
-    }
-    editTax : {
-      method: 'PUT'
-      url: '/company/:uniqueName/tax/:taxUniqueName?updateEntries=:updateEntries'
-    }
-    updtCompSubs: {
+    
+    updtCompSubs:
       method: 'PUT'
       url: '/company/:uniqueName/subscription-update'
-    }
-    payBillViaWallet: {
+    
+    payBillViaWallet:
       method: 'POST'
       url: '/company/:uniqueName/pay-via-wallet'
-    }
-    retryXmlUpload: {
+    
+    retryXmlUpload:
       method: 'PUT'
       url: '/company/:uniqueName/retry'
-    }
-    getInvTemplates: {
+    
+    getInvTemplates:
       method: 'GET'
       url: '/company/:uniqueName/templates'
-    }
+
+    setDefltInvTemplt:
+      method: 'PUT'
+      url: '/company/:uniqueName/templates/:tempUname'
+
+    updtInvTempData:
+      method: 'PUT'
+      url: '/company/:uniqueName/templates'
+
+    getCompTrans:
+      method:'GET'
+      url: '/company/:uniqueName/transactions?page=:page'
     
+    getTax:
+      method:'GET'
+      url: '/company/:uniqueName/tax'
+    
+    addTax:
+      method: 'POST'
+      url: '/company/:uniqueName/tax'
+    
+    deleteTax:
+      method: 'DELETE',
+      url: '/company/:uniqueName/tax/:taxUniqueName'
+    
+    editTax:
+      method: 'PUT'
+      url: '/company/:uniqueName/tax/:taxUniqueName?updateEntries=:updateEntries'
+    
+
   })
 
   companyServices =
@@ -150,5 +199,11 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
 
     getInvTemplates: (uniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Company.getInvTemplates({uniqueName: uniqueName}, onSuccess, onFailure))
+
+    setDefltInvTemplt: (obj, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.setDefltInvTemplt({uniqueName: obj.uniqueName, tempUname: obj.tempUname}, {}, onSuccess, onFailure))
+
+    updtInvTempData: (uniqueName, data, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.updtInvTempData({uniqueName: uniqueName}, data, onSuccess, onFailure))
 
   companyServices

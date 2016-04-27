@@ -4,13 +4,17 @@
   ng-show="showInvoiceLoader"
 -->
 
-  <div class="loader" ng-if="!invoiceLoadDone">
+  <!-- <div class="loader" ng-if="">
     <span></span>
     <span></span>
     <span></span>
     <span></span>
     <span></span>
     <h1>loading Invoice</h1>
+  </div> -->
+
+  <div class="pdL2 pdR2 pdT2" ng-if="!invoiceLoadDone">
+    <div class="alert alert-info" role="alert">Click on any Account to load <strong>Invoice</strong></div>
   </div>
 
   <!-- main content start -->
@@ -22,18 +26,20 @@
           <div class="row">
 
             <div class="col-xs-3" ng-repeat="value in templateList">
-              <a href="javascript:void(0)" class="thumbnail">
+              <a href="javascript:void(0)" class="thumbnail" ng-class="value.isDefault? 'active': ''">
                 <div class="caption">
                   <h3 class="lead alC" ng-bind-html="value.name"></h3>
                   <p>
-                    <button ng-click="viewInvTemplate( value, 'sample')" class="btn btn-default btn-block mrB1">Sample</button> 
-                    <button ng-click="viewInvTemplate(value, 'edit')" class="btn btn-default btn-block">Edit</button>
+                    <button ng-click="viewInvTemplate( value, 'sample')" class="btn btn-default btn-block mrB1">Sample</button>
+
+                    <button ng-disabled="!value.isDefault" ng-click="viewInvTemplate(value, 'edit')" class="btn btn-default btn-block">Edit</button>
 
                     <div class="mrT1 alC">
-                      <div>
-                        <switch ng-change="setAsDefaultTemplate(value)" name="setAsDefault" on="On" off="Off" class="wide" ng-model="value.isDefault"></switch>
+                      <div ng-click="setDefTemp(value)">
+                        <switch name="setAsDefault" on="On" off="Off" class="wide" ng-model="value.isDefault"></switch>
                       </div>
-                      <label class="mrT">Set as default</label>
+                      <label ng-if="value.isDefault" class="mrT">Default Selected</label>
+                      <label ng-if="!value.isDefault" class="mrT">Set as default</label>
                     </div>
                     
                   </p>
