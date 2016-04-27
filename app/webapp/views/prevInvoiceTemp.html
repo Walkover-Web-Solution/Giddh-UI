@@ -81,8 +81,11 @@ h1 {
   vertical-align: middle;
 }
 .modal-dialog{
-  margin: 0;
-  width: 100%;
+  /*margin: 0;*/
+  width: 8.5in;
+}
+.modal-body{
+  min-height: 11.5in
 }
 .modal-content{
   border-radius: 0
@@ -99,8 +102,7 @@ fieldset[disabled] .form-control{
   background-color: white
 }
 .thumb{
-  width: 36px;
-  height: 36px;
+  height: 50px;
 }
 </style>
 <!-- <a onclick="javascript:window.print();"> -->
@@ -108,8 +110,8 @@ fieldset[disabled] .form-control{
   <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><i aria-hidden="true">&times;</i></button>
   
   <span ng-if="!editMode">
-    <a ng-if="withSampleData" ng-click="switchTempData()" class="btn btn-default btn-sm" href="javascript:void(0)">View as Your data</a>
-    <a ng-if="!withSampleData" ng-click="switchTempData()" class="btn btn-primary btn-sm" href="javascript:void(0)">View as Sample data</a>
+    <a ng-if="withSampleData" ng-click="switchTempData()" class="btn btn-default btn-sm" href="javascript:void(0)">View as your data</a>
+    <a ng-if="!withSampleData" ng-click="switchTempData()" class="btn btn-primary btn-sm" href="javascript:void(0)">View as sample data</a>
   </span>
   <h3 class="modal-title alC" ng-if="!editMode">
     View Invoice
@@ -117,25 +119,29 @@ fieldset[disabled] .form-control{
   
 
   <span ng-if="editMode">
-    <a ng-click="saveTemp()" class="btn btn-success btn-sm" href="javascript:void(0)">Save Changes</a>
+    <a ng-click="saveTemp()" class="btn btn-success btn-sm" href="javascript:void(0)" ng-disabled="updatingTempData">Save Changes</a>
   </span>
 
 </div>
-<div class="modal-body" auto-height >
+<div class="modal-body">
+
+  <div class="search-loading" ng-if="updatingTempData">
+    <span class="spinner small"></span> Loading…
+  </div>
     
-  <div class="invoiceContainer" ng-class="editMode ? 'editMode' : 'previewMode'">
+  <div class="invoiceContainer" ng-class="editMode ? 'editMode' : 'previewMode'" ng-if="!updatingTempData">
 
     <!-- sample preview mode start -->
 
     <fieldset ng-disabled="!editMode">
-      <section ng-if="tempSet.sections.one && tempSet.sections.two">
+      <section ng-if="tempSet.logo && tempSet.invoiceDetails">
         <div class="row">
           <section id="one" class="col-xs-6">
             <h1 ng-if="!editMode">
               <img src="{{defTempData.logo.path}}" alt="" height="50px">
             </h1>
             <aside ng-if="editMode">
-              <form ng-if="!defTempData.sectionContent.one.logoUploaded" class="form-inline" enctype="multipart/form-data">
+              <form ng-if="defTempData.logo.path === ''" class="form-inline" enctype="multipart/form-data">
                 <div class="form-group" ng-hide="logoUpldComplt">
                   <button type="file" 
                     ng-model="logoFile"
@@ -152,16 +158,12 @@ fieldset[disabled] .form-control{
                 </div>
                 <div class="form-group" ng-if="logoUpldComplt">
                   <img ngf-src="logoFile" class="thumb">
-                  <small>* It is a thumbnail Preview</small>
-                  <p class="clearfix">
-                    <a href="javascript:void(0)" ng-click="resetLogo()">Reset Logo</a>
-                  </p>
+                  <a href="javascript:void(0)" ng-click="resetLogo()">Reset Logo</a>
                 </div>
               </form>
-
-              <div ng-if="defTempData.sectionContent.one.logoUploaded">
-                <img src="{{defTempData.sectionContent.one.imgPath}}" class="" height="50px">
-                <a href="javascript:void(0)" ng-click="defTempData.sectionContent.one.logoUploaded = false">Change Logo</a>
+              <div ng-if="defTempData.logo.path !== ''">
+                <img src="{{defTempData.logo.path}}" class="" height="50px">
+                <a href="javascript:void(0)" ng-click="defTempData.logo.path = ''">Change Logo</a>
               </div>
             </aside>
           </section>
@@ -169,11 +171,11 @@ fieldset[disabled] .form-control{
             <section class="form-inline clearfix">
               <div class="form-group pull-right mrL2">
                 <label>Invoice #:</label>
-                <input  ng-disabled="editMode" type="text" class="form-control wid80"  ng-model="defTempData.sectionContent.two.invNo">
+                <input  ng-disabled="editMode" type="text" class="form-control wid80"  ng-model="defTempData.invoiceDetails.invoiceNumber">
               </div>
               <div class="form-group pull-right">
                 <label>Date:</label>
-                <input ng-disabled="editMode" type="text" class="form-control wid80" ng-model="defTempData.sectionContent.two.date">
+                <input ng-disabled="editMode" type="text" class="form-control wid80" ng-model="defTempData.invoiceDetails.invoiceDate">
               </div>
             </section>
           </section>
@@ -186,28 +188,28 @@ fieldset[disabled] .form-control{
         <section class="col-xs-5" id="three">
           <h4 class="mrB">From:</h4>
           <div class="txtAreaWrap">
-            <input class="form-control" ng-model="defTempData.sectionContent.three.firmName" placeholder="Your company name">
-            <textarea class="form-control" ng-model="defTempData.sectionContent.three.data" placeholder="Address and other details"></textarea>
+            <input class="form-control" ng-model="defTempData.company.name" placeholder="Your company name">
+            <textarea class="form-control" ng-model="defTempData.company.data" placeholder="Address and other details"></textarea>
           </div>
         </section>
         <section class="col-xs-5 col-xs-offset-2" id="four">
-          <!-- if one or two false then show invoice no -->
-          <section class="form-inline clearfix mrB1" ng-if="!tempSet.sections.one && !tempSet.sections.two">
+          <!-- if logo or invoiceDetails false then show invoice no -->
+          <section class="form-inline clearfix mrB1" ng-if="!tempSet.logo && !tempSet.invoiceDetails">
             <div class="form-group">
               <label>Invoice #:</label>
-              <input ng-disabled="editMode" type="text" class="form-control wid80"  ng-model="defTempData.sectionContent.two.invNo">
+              <input ng-disabled="editMode" type="text" class="form-control wid80"  ng-model="defTempData.invoiceDetails.invoiceNumber">
             </div>
             <div class="form-group">
               <label>Date:</label>
-              <input ng-disabled="editMode" type="text" class="form-control wid80" ng-model="defTempData.sectionContent.two.date" >
+              <input ng-disabled="editMode" type="text" class="form-control wid80" ng-model="defTempData.invoiceDetails.invoiceDate" >
             </div>
           </section>
           <!-- end if -->
 
           <h4 class="mrB">To:</h4>
           <div class="txtAreaWrap">
-            <input ng-disabled="editMode" class="form-control" ng-model="defTempData.sectionContent.four.firmName" placeholder="Buyer Name">
-            <textarea ng-disabled="editMode" class="form-control" ng-model="defTempData.sectionContent.four.data"  placeholder="Buyer Address and other details"></textarea>
+            <input ng-disabled="editMode" class="form-control" ng-model="defTempData.buyer.name" placeholder="Buyer Name">
+            <textarea ng-disabled="editMode" class="form-control" ng-model="defTempData.buyer.data"  placeholder="Buyer Address and other details"></textarea>
           </div>
         </section>
       </div>
@@ -286,18 +288,18 @@ fieldset[disabled] .form-control{
       <div class="row">
         <section class="col-xs-5" id="six">
           <div class="txtAreaWrap">
-            <textarea class="form-control" ng-model="defTempData.sectionContent.six.data" placeholder="Company other details"></textarea>
+            <textarea class="form-control" ng-model="defTempData.companyIdentities.data" placeholder="Company other details"></textarea>
           </div>
         </section>
         <section class="col-xs-7" id="seven">
           <div class="txtAreaWrap">
-            <input class="form-control mrB alR" ng-model="defTempData.sectionContent.seven.firmName"  placeholder="Your Company name">
-            <input class="form-control alR" ng-model="defTempData.sectionContent.seven.data" placeholder="Signatory slogan">
+            <input class="form-control mrB alR" ng-model="defTempData.signature.name"  placeholder="Your Company name">
+            <input class="form-control alR" ng-model="defTempData.signature.data" placeholder="Signatory slogan">
           </div>
         </section>
       </div>
       <!-- end of section six or seven -->
-      <section ng-if="tempSet.sections.eight">
+      <section ng-if="tempSet.terms">
         <hr>
         <div class="row">
           <section class="col-xs-12" id="eight">
@@ -305,15 +307,12 @@ fieldset[disabled] .form-control{
               
               <div ng-if="editMode">
                 <label class="mrB">Enter your terms or bank details</label>
-                <form name="newTerm" novalidate class="form-group">
-                  <input name="newTerm.term" type="text" class="form-control mrB" ng-model="nterm" required>
-                  <button ng-disabled="newTerm.$invalid" class="btn btn-primary" ng-click="addNewTerm(nterm)">Add Term</button>
-                </form>
+                <textarea class="form-control" ng-model="defTempData.termsStr" placeholder="Use Enter for line Break"></textarea>
               </div>
               <!-- end if editmode -->
 
-              <ol style="list-style: decimal inside;">
-                <li ng-repeat="item in defTempData.sectionContent.eight.data track by $index">{{item}}</li>
+              <ol  ng-if="!editMode" style="list-style: decimal inside;">
+                <li ng-repeat="item in defTempData.terms track by $index">{{item}}</li>
               </ol>
 
             </div>

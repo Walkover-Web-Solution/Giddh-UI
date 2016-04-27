@@ -403,6 +403,32 @@ router.put '/:companyUniqueName/tax/:taxUniqueName', (req, res) ->
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+# set default template
+router.put '/:uniqueName/templates/:tempUname', (req, res) ->
+  hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/templates/'+req.params.tempUname
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+# set template data
+router.put '/:uniqueName/templates', (req, res) ->
+  hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/templates'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
     if data.status == 'error'
