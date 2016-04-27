@@ -5,7 +5,7 @@
 
 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
   <uib-tabset justified="false">
-    <uib-tab heading="Basic Information" id="basic">
+    <uib-tab heading="Basic Information" active="true" id="basic">
       <div class="pd2">
         <fieldset ng-disabled="!canManageCompany">
         <form id="cmpnyBascFrm" name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
@@ -447,7 +447,7 @@
     <!-- end transaction tab -->
 
     <!-- manage taxes -->
-    <uib-tab ng-if="canManageCompany" heading="Taxes" id="taxes" active="true" select="getTax()">
+    <uib-tab ng-if="canManageCompany" heading="Taxes" id="taxes" select="getTax()">
       <div class="pd2">
         <h3 class="fs16 mrB1">Create New Tax</h3>
         <div class="form-wrapper" style="max-width:340px">
@@ -461,15 +461,15 @@
             <div class="clearfix mrB1">
               <div class="form-inline">
                 <div class="form-group mrR">
-                  <input type="text" name="createTax.value" required ng-model="createTaxData.value" class="form-control" placeholder="Value" style="width:70px" 
-                  valid-number maxlength="3">
-                  <span>0 to 100</span>
+                  <input type="number" name="createTax.value" required ng-model="createTaxData.value" class="form-control" placeholder="Value" style="min-width:258px" 
+                  maxlength="3">
+                  <span>-100 to 100</span>
                 </div>
-                <div class="form-group">
+                <!--<div class="form-group">
                   <label>
                     <input ng-model="createTaxData.valueType" type="checkbox"> Negative
                   </label>
-                </div>
+                </div> -->
               </div>
             </div>
             <div class="form-group">
@@ -533,25 +533,61 @@
         </div>
         <!-- end of form wrapper -->
         <hr class="mrB1">
-        <h3 class="fs16 mrB1">Added Taxes</h3>
-        <table class="table table-bordered table-striped">
+        <h3 class="fs16 mrB1" ng-if="taxList.length > 0">Added Taxes</h3>
+        <table class="table table-bordered table-striped" ng-if="taxList.length > 0">
           <thead>
-            <th>Unique #</th>
-            <th>Name</th>
-            <th>Value</th>
-            <th>Linked account</th>
-            <th>Type &amp; day</th>
-            <th>Action</th>
+            <th class="col-xs-2">Unique #</th>
+            <th class="col-xs-2">Name</th>
+            <th class="col-xs-3">Values</th>
+            <th class="col-xs-2">Linked account</th>
+            <th class="col-xs-1">Type</th>
+            <th class="col-xs-1">Day</th>
+            <th class="col-xs-1">Action</th>
           </thead>
           <tbody>
             <tr ng-repeat="item in taxList track by $index">
-              <td>{{item.taxNumber}}</td>
-              <td>{{item.name}}</td>
-              <td>{{item.value}}</td>
-              <td>{{item.account.name}}</td>
-              <td>{{item.duration}} -- {{item.taxFileDate}}</td>
+              <td><input class="form-control" ng-class="{isNotEditable : !item.isEditable}" tpye="text" ng-model="item.taxNumber" ng-disabled="!item.isEditable"/></td>
+              <td><input class="form-control" ng-class="{isNotEditable : !item.isEditable}" tpye="text" ng-model="item.name" ng-disabled="!item.isEditable"/></td>
               <td>
-                <a ng-click="editTax(item)" href="javascript:void(0)">Edit</a>
+                <table class="table table-bordered">
+                  <thead>
+                    <th class="col-xs-7">Date</th>
+                    <th class="col-xs-4">Value</th>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="tax in item.taxDetail | orderBy: tax.date">
+                      <td class="col-xs-6">
+                        <input class="form-control" ng-class="{isNotEditable : !item.isEditable}" tpye="text" ng-model="tax.date" ng-disabled="!item.isEditable"/>
+                      </td>
+                      <td class="col-xs-6">
+                        <input class="form-control" ng-class="{isNotEditable : !item.isEditable}" tpye="text" ng-model="tax.taxValue" ng-disabled="!item.isEditable"/>
+                      </td>
+                      <td ng-if="item.isEditable">
+                        <i class="glyphicon glyphicon-plus" ng-click="addNewSlabAfter(tax, $index)"></i>
+                        <i class="glyphicon glyphicon-minus" ng-click="removeSlab(tax, $index)"></i>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </td>
+              <td>
+                <select class="form-control" ng-class="{isNotEditable : !item.isEditable}" ng-model="item.account.name" ng-disabled="!item.isEditable" ng-if="item.isEditable">
+                    <option ng-repeat="option in fltAccntList">{{option.name}}</option>
+                </select>
+                <span ng-if="!item.isEditable">{{item.account.name}}</span>
+              <td>
+                  <select class="form-control" ng-class="{isNotEditable : !item.isEditable}" ng-model="item.duration" ng-disabled="!item.isEditable" ng-if="item.isEditable">
+                    <option ng-repeat="option in taxTypes">{{option}}</option>
+                  </select>
+                  <span ng-if="!item.isEditable">{{item.duration}}</span>
+              </td>
+              <td>
+                <input class="form-control" ng-class="{isNotEditable : !item.isEditable}" tpye="text" ng-model="item.taxFileDate" ng-disabled="!item.isEditable"/>
+              </td>
+              <td>
+                <a ng-click="editTax(item)" href="javascript:void(0)" ng-if="!item.isEditable">Edit</a>
+                <a ng-click="updateTax(item)" href="javascript:void(0)" ng-if="item.isEditable">Save</a>
                 <span> | </span>
                 <a ng-click="deleteTaxconfirmation(item)" href="javascript:void(0)">Delete</a>
               </td>

@@ -788,7 +788,9 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxSuccess, $scope.getTaxFailure)
 
   $scope.getTaxSuccess = (res) ->
-    $scope.taxList = res.body 
+    _.each res.body, (obj) ->
+      obj.isEditable = false
+      $scope.taxList.push(obj)
 
   $scope.getTaxFailure = (res) ->
     toastr.error(res.data.message, "No Added Taxes Found.")
@@ -812,8 +814,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     companyServices.addTax(newTax).then($scope.addNewTaxSuccess, $scope.addNewTaxFailure)
 
   $scope.addNewTaxSuccess = (res) ->
+    $scope.createTaxData = {}
     $scope.getTax()
     toastr.success(res.status, "Tax added successfully.")
+
 
   $scope.addNewTaxFailure = (res) ->
     toastr.error(res.statusText, res.data.message)
@@ -840,27 +844,32 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.status, res.data.message)
 
   #edit tax
-  $scope.editTax = (data) ->
-    $scope.taxEditData = data
-    $scope.preSpliceTaxDetail = $scope.taxEditData.taxDetail
-    $scope.modalInstance = $uibModal.open(
-      templateUrl: 'editTaxModal.html',
-      size: "md",
-      backdrop: 'static',
-      scope: $scope
-    )
+  $scope.editTax = (item) ->
+    item.isEditable = true
+    $scope.taxEditData = item
+    _.each $scope.taxList, (tax) ->
+      if tax.uniqueName != item.uniqueName
+        tax.isEditable = false
+    # console.log $scope.taxEditData
+    # $scope.preSpliceTaxDetail = $scope.taxEditData.taxDetail
+    # $scope.modalInstance = $uibModal.open(
+    #   templateUrl: 'editTaxModal.html',
+    #   size: "md",
+    #   backdrop: 'static',
+    #   scope: $scope
+    # )
     #modalInstance.result.then($scope.editTaxSuccess, $scope.editTaxFailure)
 
-  $scope.updateTax = () ->
+  $scope.updateTax = (item) ->
     newTax = {
-      'taxNumber': $scope.taxEditData.taxNumber,
-      'name': $scope.taxEditData.name,
+      'taxNumber': item.taxNumber,
+      'name': item.name,
       'account':{
-        'uniqueName': $scope.taxEditData.account.uniqueName
+        'uniqueName': item.account.uniqueName
       },
-      'duration':"MONTHLY",
-      'taxFileDate': $scope.taxEditData.fileDate,
-      'taxDetail': $scope.taxEditData.taxDetail
+      'duration':item.duration,
+      'taxFileDate': item.taxFileDate,
+      'taxDetail': item.taxDetail
     }
 
     _.each newTax.taxDetail, (detail) ->
@@ -873,12 +882,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
 
   $scope.updateTaxSuccess = (res) ->
+    $scope.taxEditData.isEditable = false
+    $scope.getTax()
     toastr.success(res.status, "Tax updated successfully.")
-    $timeout( ->
-      $scope.modalInstance.close()
-    )
     
-
   $scope.updateTaxFailure = (res) ->
     toastr.error(res.statusText, res.data.message)
 
@@ -927,7 +934,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $timeout( ->
       $scope.selectedAccountUniqueName = undefined
       $scope.rolesList = localStorageService.get("_roles")
-      $scope.getTax()
     ,2000)
 
   $scope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->

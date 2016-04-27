@@ -2323,3 +2323,15 @@ body.unresponsive{
 .uncEntry{
     border:1px solid #d35f29;
 }
+
+.isNotEditable{
+    background: :0 0;
+    border:0;
+    outline: 0;
+    box-shadow: none;
+    border-radius: 0;
+}
+
+input.isNotEditable:disabled{
+    background: :0 0;
+}
