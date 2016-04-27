@@ -131,7 +131,7 @@
 	    </div>
 
 
-	    <div class="clearfix mrT2">
+	    <div class="clearfix mrT2"  ng-if="canManageCompany">
 	      <label>Select User</label>
 	      <ui-select ng-model="options.selectedUserUnq" theme="bootstrap">
 	          <ui-select-match placeholder="Select Option">
@@ -147,8 +147,8 @@
     <button class="btn btn-warning pull-left mrT2 mrL" ng-click="resetFilters()">Reset</button>
 
     <br/>
-    <h1 class="page-title pull-left" style="margin-left:0; margin-bottom:15px;width:100%;border-top:1px solid #ccc;padding-top:5px;">Delete Logs</h1>
-        <div class="clearfix mrT2">
+    <h1 class="page-title pull-left" style="margin-left:0; margin-bottom:15px;width:100%;border-top:1px solid #ccc;padding-top:5px;" ng-if="canVWDLT">Delete Logs</h1>
+        <div class="clearfix mrT2"  ng-if="canVWDLT">
               <label>Before date</label>
               <p class="input-group">
                 <input type="text" class="form-control"
@@ -165,7 +165,7 @@
                 </span>
               </p>
         </div>
-        <button class="btn btn-danger pull-left mrT2" ng-click="deleteLogs()">Delete Logs</button>
+        <button class="btn btn-danger pull-left mrT2" ng-click="deleteLogs()" ng-if="canVWDLT">Delete Logs</button>
 	</perfect-scrollbar>
 </div>
 
