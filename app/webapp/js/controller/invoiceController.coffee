@@ -161,6 +161,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # view template with sample data
   $scope.viewInvTemplate =(template, mode) ->
+    $scope.logoWrapShow = false
+    $scope.logoUpldComplt = false
     $scope.tempSet = {}
     $scope.defTempData = {}
     # set mode
@@ -188,7 +190,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # upload logo
   $scope.uploadLogo=(files)->
-    console.log files,  "uploadLogo"
     $scope.logoUpldComplt = true
     angular.forEach files, (file) ->
       file.upload = Upload.upload(
@@ -208,6 +209,9 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.resetLogo=()->
     $scope.logoUpldComplt = false
 
+  $scope.showUploadWrap=()->
+    $scope.logoWrapShow = true
+
   # convert data for UI usage
   $scope.convertIntoOur=()->
     # company setting
@@ -220,7 +224,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
     # terms setting
     if $scope.defTempData.terms.length > 0
-      $scope.defTempData.termsStr = $scope.defTempData.terms.toString()
+      str = $scope.defTempData.terms.toString()
+      $scope.defTempData.termsStr = str.replace(RegExp(',', 'g'), '\n')
 
 
   # save template data
@@ -249,7 +254,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   $scope.saveTempSuccess=(res)->
     $scope.updatingTempData = false
-    $scope.templateData = res.body
+    abc = _.omit(res.body, "logo")
+    _.extend($scope.templateData , abc)
     toastr.success("Template updated successfully", "Success")
     $scope.modalInstance.close()
 
