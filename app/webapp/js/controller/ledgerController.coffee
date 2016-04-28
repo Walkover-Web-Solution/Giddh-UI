@@ -643,6 +643,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $scope.openWindow(res.body.filePath)
     else
       window.open(res.body.filePath)
+      # for safari
+      # window.open('google.com','Popup', 'height=400,width=400,status=no, toolbar=no,menubar=no,location=no')
 
   $scope.exportLedgerFailure = (res)->
     toastr.error(res.data.message, res.data.status)

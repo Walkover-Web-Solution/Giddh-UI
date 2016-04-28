@@ -178,18 +178,18 @@ describe 'Company Service', ->
 
   describe '#getPL by requested params', ->
     reqParam = {
-      companyUniqueName: "uniquename"
+      uniqueName: "uniquename"
       # fromDate: "12-10-2013"
       # toDate: "12-10-2014"
     }
     it 'should call success callback after service called', ->
-      @httpBackend.when('GET', '/company/'+reqParam.companyUniqueName+'/profit-loss').respond(200, {"status": "success"})
+      @httpBackend.when('GET', '/company/'+reqParam.uniqueName+'/profit-loss').respond(200, {"status": "success"})
       @companyServices.getPL(reqParam).then(
         (data) -> expect(data.status).toBe("success")
         (data) -> expect(true).toBeFalsy()
       )
     it 'should call error callback after service called', ->
-      @httpBackend.when('GET', '/company/'+reqParam.companyUniqueName+'/profit-loss').respond(401, {"status": "error"})
+      @httpBackend.when('GET', '/company/'+reqParam.uniqueName+'/profit-loss').respond(401, {"status": "error"})
       @companyServices.getPL(reqParam).then(
         (data) -> expect(true).toBeFalsy()
         (data) -> expect(data.data.status).toBe("error")
