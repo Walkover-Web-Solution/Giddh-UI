@@ -820,7 +820,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     companyServices.addTax($rootScope.selectedCompany.uniqueName, newTax).then($scope.addNewTaxSuccess, $scope.addNewTaxFailure)
 
   $scope.addNewTaxSuccess = (res) ->
-    $scope.createTaxData = {}
+    # reset tax data
+    $scope.createTaxData = {
+      duration: "MONTHLY"
+      taxFileDate: 1
+    }
     $scope.fromTaxDate = {date: new Date()}
     $scope.getTax()
     toastr.success("Tax added successfully.", "Success")
