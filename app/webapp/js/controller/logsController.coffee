@@ -136,7 +136,7 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
     $scope.users = res.body
 
   $scope.getUsersFailure = (res) ->
-    toastr.error('Unable to fetch user list', res.statusText);
+    console.error('Unable to fetch user list', res.statusText);
 
   $scope.getUsers()
 
@@ -182,6 +182,16 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
 
   $scope.deleteLogsConfirmFailure = (res) ->
     toastr.error(res.data.message)
+
+  $scope.checkPermissions = (entity) ->
+    $rootScope.canUpdate = permissionService.hasPermissionOn(entity, "UPDT")
+    $rootScope.canDelete = permissionService.hasPermissionOn(entity, "DLT")
+    $rootScope.canAdd = permissionService.hasPermissionOn(entity, "ADD")
+    $rootScope.canShare = permissionService.hasPermissionOn(entity, "SHR")
+    $rootScope.canManageCompany = permissionService.hasPermissionOn(entity, "MNG_CMPNY")
+    $rootScope.canVWDLT = permissionService.hasPermissionOn(entity, "VWDLT")
+
+  $scope.checkPermissions($rootScope.selectedCompany)
 
   window.giddh.webApp.toastr = toastr
 

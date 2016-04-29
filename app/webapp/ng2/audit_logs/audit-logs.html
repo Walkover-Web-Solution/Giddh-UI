@@ -27,6 +27,10 @@
 			<label class="pull-left mrL2">Shared with:</label>
 			<p class="pull-left mrL">{{log.log.sharedWith.name}}</p>
 		</div>
+		<div *ngIf="log.log.sharedWith != undefined && log.log.sharedWith.email != null && log.log.sharedWith.email.length > 0">
+			<label class="pull-left mrL2">Shared with:</label>
+			<p class="pull-left mrL">{{log.log.sharedWith.email}}</p>
+		</div>
 		<div *ngIf="log.log.description != undefined && log.log.description.length > 0">
 			<label class="pull-left mrL2">Description:</label>
 			<p class="pull-left mrL">{{log.log.description}}</p>

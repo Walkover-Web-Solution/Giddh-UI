@@ -2340,11 +2340,35 @@ input.isNotEditable:disabled{
     padding-left: 12px;
     padding-right: 6px;
 }
+
+
+.tax-table-wrapper{
+    display: block;
+    clear:both; 
+}
+
+.taxTable{
+    min-width:860px;
+}
+
 .taxTable.table>tbody>tr>td, .taxTable.table>tbody>tr>th{
-    padding-left: 0;
-    padding-right: 0;
     vertical-align: middle;
 }
+
+.taxTable tbody tr td input.form-control{
+    border-radius: 0;
+}
+
+.taxTable tbody tr td select.form-control{
+    border-radius: 0;
+}
+
+.taxTable tbody tr td a{
+    display: block;
+    overflow: hidden;
+    margin: 5px;
+}
+
 table.nopad td, table.nopad th{
     padding: 0 !important
 }
@@ -2359,4 +2383,39 @@ table.nopad td .form-control, .taxTable.table .form-control{
 }
 .tdfsbig i{
     font-size: 18px
+}
+
+table td.nopad{
+    padding: 0 !important;
+}
+
+
+
+.inner-table thead tr, .inner-table tbody tr{
+    border-bottom: 1px solid #f0f0f0;
+    text-align: center;
+}
+
+.inner-table tbody tr:last-child{
+    border-bottom: none;
+}
+
+.inner-table tbody td, .inner-table thead th{
+    border-right:1px solid #f0f0f0;
+}
+
+.inner-table tbody td:last-child, .inner-table thead th:last-child{
+    border-right:none;
+}
+
+.inner-table td input, .inner-table thead th{
+    text-align: center;
+}
+
+.inner-table td input{
+    border-radius: 0;
+}
+
+.inner-table td i{
+    cursor: pointer;
 }

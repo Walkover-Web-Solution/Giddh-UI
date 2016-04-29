@@ -167,7 +167,8 @@
               self.result = JSON.parse(res._body);
               var logTracker = {
                 logs : self.result.body.logs,
-                reqBody : self.req
+                reqBody : self.req,
+                totalPages: this.result.totalPages
               }
               self.shared.updateData(logTracker);
             })
