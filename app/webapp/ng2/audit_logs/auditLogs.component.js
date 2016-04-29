@@ -109,10 +109,11 @@
           function(res){
             setTimeout(function(){
               this.result = JSON.parse(res._body);
+              console.log(this.result)
               var logTracker = {
                 logs : this.result.body.logs,
                 reqBody : req,
-                totalPages: this.result.totalPages
+                totalPages: this.result.body.totalPages
               }
               self.shared.updateData(logTracker);
             }, 100)
@@ -148,6 +149,7 @@
           this.req = res.reqBody;
           this.page = this.req.page;
           this.totalPages = res.totalPages;
+          //console.log(res, this.page, this.totalPages)
         }.bind(this),function(error){
           error = JSON.parse(error._body);
           //toastr.error(error.code, error.message);
@@ -168,7 +170,7 @@
               var logTracker = {
                 logs : self.result.body.logs,
                 reqBody : self.req,
-                totalPages: this.result.totalPages
+                totalPages: this.result.body.totalPages
               }
               self.shared.updateData(logTracker);
             })
