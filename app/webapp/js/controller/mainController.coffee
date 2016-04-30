@@ -13,6 +13,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
   $rootScope.canShare = false
   $rootScope.canManageCompany = false
   $rootScope.canVWDLT = false
+  $rootScope.superLoader = false
   
   $scope.logout = ->
     $http.post('/logout').then ((res) ->

@@ -57,9 +57,9 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.toDatePickerOpen = ->
     this.toDatePickerIsOpen = true
   # end of date picker
-  $scope.showInvLoader= true
   $scope.onlyCrData = []
   $scope.onlyDrData = []
+  $scope.entriesForInvoice = []
 
   # end of page load varialbles
 
@@ -111,6 +111,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   # end acCntrl
 
   $scope.loadInvoice = (data, acData) ->
+    $rootScope.superLoader = true
     $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
     localStorageService.set("_ledgerData", data)
@@ -125,24 +126,29 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.getTemplatesSuccess=(res)->
     console.log "getTemplatesSuccess:", res
     $scope.invoiceLoadDone = true
+    $rootScope.superLoader = false
     $scope.templateList = res.body.templates
     $scope.templateData = res.body.templateData
 
   $scope.getTemplatesFailure = (res) ->
+    $rootScope.superLoader = false
     toastr.error(res.data.message, res.data.status)
 
   # set as default
   $scope.setDefTemp = (data) ->
     if data.isDefault
+      $rootScope.superLoader = true
       obj = 
         uniqueName: $rootScope.selectedCompany.uniqueName
         tempUname: data.uniqueName
       companyServices.setDefltInvTemplt(obj).then(
         (res)->
+          $rootScope.superLoader = false
           $scope.templateList = res.body.templates
           $scope.templateData = res.body.templateData
           toastr.success("Template changed successfully", "Success")
         , (res)->
+          $rootScope.superLoader = false
           data.isDefault = false
           toastr.error(res.data.message, res.data.status)
       )
@@ -290,7 +296,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # get ledger entries to generate invoice
   $scope.getLedgerEntries=()->
-    $scope.showInvLoader= true
+    $rootScope.superLoader = true
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $rootScope.$stateParams.invId
@@ -324,12 +330,13 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     )
     console.log $scope.onlyCrData
     console.log $scope.onlyDrData
-    $scope.showInvLoader= false
+    $rootScope.superLoader = false
 
   $scope.getLedgerEntriesFailure=(res)->
+    $rootScope.superLoader = false
     console.log "getLedgerEntriesFailure: ", res
 
-  $scope.entriesForInvoice = []
+  
 
   $scope.summationForInvoice=(ths, entry, index)->
     console.log ths, entry, index
