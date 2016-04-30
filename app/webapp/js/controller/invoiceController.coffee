@@ -1,5 +1,5 @@
 "use strict"
-invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices,  Upload, ledgerService, companyServices) ->
+invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices,  Upload, ledgerService, companyServices, accountService) ->
 
   $rootScope.selectedCompany = {}
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -87,6 +87,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
     $rootScope.canChangeCompany = true
     $scope.showAccountList = true
+    if not(_.isEmpty($rootScope.$stateParams.invId))
+      $scope.toggleAcMenus(true)
 
   $scope.makeAccountsListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -112,7 +114,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   $scope.loadInvoice = (data, acData) ->
     $rootScope.superLoader = true
-    $scope.selectedAccountUniqueName = acData.uniqueName
     DAServices.LedgerSet(data, acData)
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
@@ -132,6 +133,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   $scope.getTemplatesFailure = (res) ->
     $rootScope.superLoader = false
+    $scope.invoiceLoadDone = true
     toastr.error(res.data.message, res.data.status)
 
   # set as default
@@ -398,9 +400,23 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
         }
       ]
     _.extend($scope.genInvList , res.body)
-    console.log $scope.genInvList
+    
+    obj =
+      uniqueName: $rootScope.selectedCompany.uniqueName
+      acntUname: $rootScope.$stateParams.invId
+      fromDate: $filter('date')($scope.dateData.fromDate, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.dateData.toDate, "dd-MM-yyyy")
 
+    console.log $scope.genInvList, obj
+    # accountService.getInvList(obj).then($scope.getInvListSuccess, $scope.getInvListFailure)
 
+  $scope.getInvListSuccess=(res)->
+    $rootScope.superLoader = true
+    console.log "getInvListSuccess: ", res
+
+  $scope.getInvListFailure=(res)->
+    $rootScope.superLoader = false
+    console.log "getInvListFailure: ", res
 
 
 
@@ -413,8 +429,13 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
 
 
-
-
+  # state change
+  $scope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
+    # close accounts dropdown and false var if going upwords
+    if toState.name is "invoice.accounts"
+      $scope.toggleAcMenus(false)
+      $scope.invoiceLoadDone = false
+  )
 
 
 
