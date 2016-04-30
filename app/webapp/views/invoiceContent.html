@@ -65,20 +65,16 @@
 
 
     <uib-tab heading="Generate Invoice" id="generate" ng-click="getLedgerEntries()">
-      
-        
-      <div class="loader" ng-show="showInvLoader">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <h1>loading Transactions</h1>
-      </div>
 
       <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
 
-        <div class="pd2" ng-hide="showInvLoader">
+
+        <div class="no-data" ng-if="onlyCrData.length == 0">
+          <h1>No CR Entries Found!</h1>
+          <img src="/public/webapp/images/no-data.png" alt="No Data">
+        </div>
+
+        <div class="pd2" ng-if="onlyCrData.length > 0">
 
           <div class="row">
             <div class="col-xs-6">
