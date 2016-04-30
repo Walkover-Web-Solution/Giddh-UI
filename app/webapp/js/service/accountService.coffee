@@ -24,31 +24,57 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       'fromDate': @fromDate
     },
     {
-      update: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName'}
-      share: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/share'}
-      unshare: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/unshare'}
-      merge: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/merge'}
+      update:
+        method: 'PUT'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName'
+      share:
+        method: 'PUT'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/share'
+
+      unshare:
+        method: 'PUT'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/unshare'
+
+      merge:
+        method: 'PUT'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/merge'
+
       # unMerge : {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/merge'}
-      unMergeDelete : {method: 'POST', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/un-merge'}
-      sharedWith: {
+
+      unMergeDelete :
+        method: 'POST'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/un-merge'
+
+      sharedWith:
         method: 'GET'
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/shared-with'
-      }
-      delete: {method: 'DELETE', url: '/company/:companyUniqueName/accounts/:accountsUniqueName'}
-      get: {method: 'GET', url: '/company/:companyUniqueName/accounts/:accountsUniqueName'}
-      move: {method: 'PUT', url: '/company/:companyUniqueName/accounts/:accountsUniqueName/move'}
-      export: {
+      
+      delete:
+        method: 'DELETE'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName'
+      get:
+        method: 'GET'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName'
+      move:
+        method: 'PUT'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/move'
+
+      export:
         method: 'GET',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/export-ledger'
-      }
-      getlist: {
+      
+      getlist:
         method: 'GET',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/xls-imports'
-      }
-      emailLedger: {
+      
+      emailLedger:
         method: 'POST',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/mail'
-      }
+
+      getInvList:
+        method: 'GET',
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices?fromDate=:fromDate&toDate=:toDate'
+      
     })
 
   accountService =
@@ -146,5 +172,13 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         toDate: obj.toDate
         fromDate: obj.fromDate
       }, data, onSuccess, onFailure))
+
+    getInvList: (obj, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Account.getInvList({
+          companyUniqueName: obj.compUname
+          accountsUniqueName: obj.acntUname
+          fromDate: obj.fromDate
+          toDate: obj.toDate
+        }, onSuccess, onFailure))
 
   accountService

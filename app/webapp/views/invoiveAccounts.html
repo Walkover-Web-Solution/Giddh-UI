@@ -50,7 +50,7 @@
                   tooltip-placement="top" uib-tooltip="{{accDtl.uniqueName}}">
                   <a
                     ng-click="loadInvoice(value, accDtl)"
-                     ng-class="{'active': accDtl.uniqueName === selectedAccountUniqueName}" 
+                     ng-class="{'active': accDtl.uniqueName === $stateParams.invId}" 
                      ui-sref="invoice.accounts.invoiceId({invId:accDtl.uniqueName})">
                     <div class="clearfix">
                       <i ng-class="accDtl.charId ==1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
