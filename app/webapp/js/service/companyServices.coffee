@@ -15,7 +15,7 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     getCmpRolesList: {method: 'GET', url: '/company/:uniqueName/shareable-roles'}
     unSharedUser: {method: 'PUT', url: '/company/:uniqueName/unshare'}
     getUploadListDetails: {method: 'GET', url: '/company/:uniqueName/imports'}
-    getProfitLoss: {method:'GET', url: '/company/:companyUniqueName/profit-loss'}
+    getProfitLoss: {method:'GET', url: '/company/:uniqueName/profit-loss'}
     switchUser: {method: 'GET', url: '/company/:uniqueName/switchUser'}
 
     getCompTrans: {
@@ -24,19 +24,19 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     }
     getTax : {
       method:'GET'
-      url: '/company/:companyUniqueName/tax'
+      url: '/company/:uniqueName/tax'
     }
     addTax: {
       method: 'POST'
-      url: '/company/:companyUniqueName/tax'
+      url: '/company/:uniqueName/tax'
     }
     deleteTax: {
       method: 'DELETE',
-      url: '/company/:companyUniqueName/tax/:taxUniqueName'
+      url: '/company/:uniqueName/tax/:taxUniqueName'
     }
     editTax : {
       method: 'PUT'
-      url: '/company/:companyUniqueName/tax/:taxUniqueName'
+      url: '/company/:uniqueName/tax/:taxUniqueName'
     }
     updtCompSubs: {
       method: 'PUT'
@@ -80,9 +80,9 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
         uniqueName: updtData.uniqueName
       }, updtData, onSuccess, onFailure))
 
-    share: (companyUniqueName, shareRequest, onSuccess, onFailure) ->
+    share: (uniqueName, shareRequest, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Company.shareCompany({
-        uniqueName: companyUniqueName
+        uniqueName: uniqueName
       }, shareRequest, onSuccess, onFailure))
 
     shredList: (uniqueName, onSuccess, onFailure) ->
@@ -101,7 +101,7 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Company.getUploadListDetails({uniqueName: uniqueName}, onSuccess, onFailure))
 
     getPL :(reqParam) ->
-      @handlePromise((onSuccess, onFailure) -> Company.getProfitLoss({companyUniqueName: reqParam.companyUniqueName, from: reqParam.fromDate, to:reqParam.toDate}, onSuccess, onFailure))
+      @handlePromise((onSuccess, onFailure) -> Company.getProfitLoss({uniqueName: reqParam.uniqueName, from: reqParam.fromDate, to:reqParam.toDate}, onSuccess, onFailure))
 
     getCompTrans: (obj) ->
       @handlePromise((onSuccess, onFailure) -> Company.getCompTrans({uniqueName: obj.name, page: obj.num}, onSuccess, onFailure))
@@ -123,23 +123,21 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Company.switchUser({uniqueName: uniqueName},onSuccess,
           onFailure))
 
-    getTax: (companyUniqueName) ->
-      @handlePromise((onSuccess, onFailure) -> Company.getTax({companyUniqueName: companyUniqueName}, onSuccess,
-          onFailure))
+    getTax: (uniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getTax({uniqueName: uniqueName}, onSuccess, onFailure))
 
-    addTax: (cdata) ->
-      @handlePromise((onSuccess, onFailure) -> Company.addTax({companyUniqueName: cdata.companyUniqueName}, cdata, onSuccess, onFailure))
+    addTax: (uniqueName, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.addTax({uniqueName: uniqueName}, data, onSuccess, onFailure))
 
     deleteTax : (reqParam, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Company.deleteTax({
-        companyUniqueName: reqParam.companyUniqueName
+        uniqueName: reqParam.uniqueName
         taxUniqueName: reqParam.taxUniqueName
       }, onSuccess, onFailure))
     
     editTax: (reqParam, taxData, onSuccess, onFailure) ->
-      console.log taxData
       @handlePromise((onSuccess, onFailure) -> Company.editTax({
-        companyUniqueName: reqParam.companyUniqueName
+        uniqueName: reqParam.uniqueName
         taxUniqueName: reqParam.taxUniqueName
       }, taxData, onSuccess, onFailure))
 

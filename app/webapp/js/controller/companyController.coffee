@@ -793,30 +793,41 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.taxList.push(obj)
 
   $scope.getTaxFailure = (res) ->
-    console.error(res.data.message, "No Added Taxes Found.")
+    if not(_.isUndefined(res.data))
+      if res.data.message is "tax not found"
+        toastr.warning("No Taxes Found.", "Warning")
+      else
+        console.log res
+    else
+      toastr.error(res.data.message, res.data.status)
 
   $scope.addNewTax = (newTax) ->
     newTax = {
-      companyUniqueName : $rootScope.selectedCompany.uniqueName
       updateEntries: false
       taxNumber:newTax.taxNumber,
       name: newTax.name,
-      account:{
-      uniqueName: newTax.account.uniqueName
-      },
+      account:
+        uniqueName: newTax.account.uniqueName
       duration:newTax.duration,
       taxFileDate:1,
-      taxDetail:[{
-      date : $filter('date')($scope.fromTaxDate.date, 'dd-MM-yyyy'),
-      value: newTax.value
-      }]
+      taxDetail:[
+        {
+          date : $filter('date')($scope.fromTaxDate.date, 'dd-MM-yyyy'),
+          value: newTax.value
+        }
+      ]
     }
-    companyServices.addTax(newTax).then($scope.addNewTaxSuccess, $scope.addNewTaxFailure)
+    companyServices.addTax($rootScope.selectedCompany.uniqueName, newTax).then($scope.addNewTaxSuccess, $scope.addNewTaxFailure)
 
   $scope.addNewTaxSuccess = (res) ->
-    $scope.createTaxData = {}
+    # reset tax data
+    $scope.createTaxData = {
+      duration: "MONTHLY"
+      taxFileDate: 1
+    }
+    $scope.fromTaxDate = {date: new Date()}
     $scope.getTax()
-    toastr.success(res.status, "Tax added successfully.")
+    toastr.success("Tax added successfully.", "Success")
 
 
   $scope.addNewTaxFailure = (res) ->
@@ -830,7 +841,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       ok: 'Yes',
       cancel: 'No').then(->
         reqParam = {
-          companyUniqueName: $rootScope.selectedCompany.uniqueName
+          uniqueName: $rootScope.selectedCompany.uniqueName
           taxUniqueName: data.uniqueName
         }
         companyServices.deleteTax(reqParam).then($scope.deleteTaxSuccess, $scope.deleteTaxFailure)
@@ -876,7 +887,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       detail.value = detail.taxValue.toString()
 
     reqParam = {
-      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      uniqueName: $rootScope.selectedCompany.uniqueName
       taxUniqueName: $scope.taxEditData.uniqueName
     }
     companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
