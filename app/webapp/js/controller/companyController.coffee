@@ -31,7 +31,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.disableRazorPay = false
   $scope.discount = 0
   $scope.amount = 0
-
+  $scope.noTaxes = false
   # manage tax variables
   $scope.taxTypes = [
     "MONTHLY"
@@ -793,13 +793,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.taxList.push(obj)
 
   $scope.getTaxFailure = (res) ->
-    if not(_.isUndefined(res.data))
-      if res.data.message is "tax not found"
-        toastr.warning("No Taxes Found.", "Warning")
-      else
-        console.log res
-    else
-      toastr.error(res.data.message, res.data.status)
+    $scope.noTaxes = true
 
   $scope.addNewTax = (newTax) ->
     newTax = {
@@ -950,7 +944,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
     $scope.resetSteps()
   )
-
 
 #init angular app
 giddh.webApp.controller 'companyController', companyController

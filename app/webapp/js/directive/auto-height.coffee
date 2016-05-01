@@ -271,6 +271,7 @@ angular.module('ledger', [])
         angular.element(el).addClass('highlightRow')
 
       scope.openEDialog = (item, eParentForm, index) ->
+        console.log item
         scope.highlightEntry(scope.item)
         scope.removeClassInAllEle("eLedgEntryForm", "open")
         elem.addClass('open')
@@ -530,6 +531,15 @@ angular.module('ledger', [])
         console.info "not a number"
 
     scope.openDialog = (item, indexs, ftype, parentForm) ->
+      $timeout( ->
+        taxList = scope.taxList
+        _.each item.transactions, (txn)->
+          _.each taxList, (tax) ->
+            if tax.account.uniqueName == txn.particular.uniqueName
+              tax.isSelected = true
+              item.isTax = true
+      )
+
       scope.removeClassInAllEle("ledgEntryForm", "open")
       elem.addClass('open')
       scope.highlightMultiEntry(item)
@@ -554,6 +564,15 @@ angular.module('ledger', [])
                 <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh();" ng-show="canAddAndEdit">Add in DR</button>
                 <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh();" ng-show="canAddAndEdit">Add in CR</button>
                 <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResults">Add new account</a>
+                <div class="row mrT1" ng-show="{{formClass}}.$valid">
+                  <hr>
+                  <ul class="list-inline" style="margin-left:15px" ng-if="!item.isTax">
+                    <li ng-repeat="tax in taxList">
+                       <div class="checkbox"><label><input type="checkbox" ng-model="tax.isSelected" ng-change="addTaxEntry(tax, item)">{{tax.name}}</label></div>
+                    </li>
+                  </ul>
+                  <hr>
+                </div>
               </div>
               <div class="row">
                 <div class="col-xs-6">
@@ -587,7 +606,7 @@ angular.module('ledger', [])
                 <button ng-if="ftype == \'Update\'" ng-show="canAddAndEdit" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults"
                   ng-click="updateLedger({entry: item})">Update</button>
                 <button  ng-if="ftype == \'Add\'" ng-show="canAddAndEdit" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults"
-                  ng-click="addLedger({entry: item})">Add</button>
+                  ng-click="addLedger({entry: item});checkItem(item)">Add</button>
 
                 <button ng-click="closeEntry()" class="btn btn-default mrL1" type="button">close</button>
 

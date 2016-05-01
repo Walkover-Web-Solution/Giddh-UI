@@ -1,6 +1,6 @@
 <h1 class="page-title" *ngIf="logs.length > 0"> Audit Logs</h1>
 <br/>
-<section class="audit-log" *ngFor = "#log of logs; #i = index">
+<section class="audit-log" *ngFor = "let log of logs; let i = index">
 	<h1>{{log.operationType}}<span *ngIf="log.accountName != null"> - {{log.accountName}}</span></h1> 
 	<div class="mrT border-top-btm clearfix">
 		<div>
@@ -25,11 +25,7 @@
 		</div>
 		<div *ngIf="log.log.sharedWith != undefined && log.log.sharedWith.name.length > 0">
 			<label class="pull-left mrL2">Shared with:</label>
-			<p class="pull-left mrL">{{log.log.sharedWith.name}}</p>
-		</div>
-		<div *ngIf="log.log.sharedWith != undefined && log.log.sharedWith.email != null && log.log.sharedWith.email.length > 0">
-			<label class="pull-left mrL2">Shared with:</label>
-			<p class="pull-left mrL">{{log.log.sharedWith.email}}</p>
+			<p class="pull-left mrL">{{log.log.sharedWith.name}}<span ng-if="log.log.sharedWith.email != null && log.log.sharedWith.email.length > 0"> | {{log.log.sharedWith.email}}</span></p>
 		</div>
 		<div *ngIf="log.log.description != undefined && log.log.description.length > 0">
 			<label class="pull-left mrL2">Description:</label>
@@ -48,7 +44,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor = "#transaction of log.log.transactions; #i = index">
+				<tr *ngFor = "let transaction of log.log.transactions; let i = index">
 					<td>{{i + 1}}</td>
 					<td>{{transaction.particular.name}}</td>
 					<td>{{transaction.amount}}</td>
@@ -69,7 +65,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor = "#transaction of log.log.updated.transactions; #i = index">
+				<tr *ngFor = "let transaction of log.log.updated.transactions; let i = index">
 					<td>{{i + 1}}</td>
 					<td>{{transaction.particular.name}}</td>
 					<td>{{transaction.amount}}</td>
@@ -89,7 +85,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr *ngFor = "#transaction of log.log.old.transactions; #i = index">
+				<tr *ngFor = "let transaction of log.log.old.transactions; let i = index">
 					<td>{{i + 1}}</td>
 					<td>{{transaction.particular.name}}</td>
 					<td>{{transaction.amount}}</td>

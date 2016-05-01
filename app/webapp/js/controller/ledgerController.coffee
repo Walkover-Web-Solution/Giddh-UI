@@ -1,6 +1,6 @@
 "use strict"
 
-ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService) ->
+ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, companyServices) ->
   $scope.ledgerData = undefined 
   $scope.accntTitle = undefined
   $scope.selectedGroupUname = undefined
@@ -31,6 +31,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.toDate = {date: new Date()}
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
+  $scope.selectedTaxes = []
 
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
@@ -328,7 +329,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.ledgerOnlyCreditData = []
     $scope.ledgerOnlyDebitData = []
     _.each(data.ledgers, (ledger) ->
-      console.log ledger
       if ledger.transactions.length > 1
         ledger.multiEntry = true
       else
@@ -357,13 +357,82 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $rootScope.showLedgerLoader = false
     $scope.ledgerData = angular.copy(_.omit(res.body, 'ledgers'))
     $scope.calculateLedger($scope.ledgerData, "server")
-    console.log($scope.ledgerOnlyCreditData, $scope.ledgerOnlyDebitData)
 
   $scope.loadLedgerFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
   $scope.addNewAccount = () ->
     $rootScope.$emit('callManageGroups')
+
+  $scope.excludeTaxTxn = (txn) ->
+    _.each $scope.taxList, (tax)->
+      if tax.account.uniqueName == txn.particular.uniqueName
+        txn.isTax = true
+
+  $scope.calculateEntryAmount = (eData, taxData) ->
+    _.each eData.transactions, (txn) ->
+      # exclude tax transactions
+      $scope.excludeTaxTxn(txn)
+      if !txn.isTax
+        taxData.entryAmount += parseInt(txn.amount)
+
+  $scope.addTaxTransactions = (edata, taxes) ->
+    # calculate total entry amount
+    newTaxTransactions = []
+    pTxns = edata.transactions
+    _.each taxes, (tax) ->
+      taxData = {}
+      taxData.entryAmount = 0
+      $scope.calculateEntryAmount(edata, taxData)
+      newTax = {
+        amount: 0
+        particular: {
+          name: ''
+          mergedAccounts: ''
+          uniqueName: ''
+        }
+        type: ''
+      }
+      if tax.account.uniqueName == $stateParams.unqName
+        toastr.error('Tax can not be applied to same account to which it is linked.')
+        return false
+      else
+        newTax.particular.name = tax.account.name
+        newTax.particular.uniqueName = tax.account.uniqueName
+
+        # calculate total tax amount for entry
+        _.each tax.taxDetail, (det) ->
+          taxDate = new Date(det.date).getTime()
+          entryDate = new Date(edata.entryDate).getTime()
+          if (!(taxDate > entryDate))
+            amount = det.taxValue/100 * taxData.entryAmount
+            newTax.amount += amount
+          if det.taxValue < 0
+            newTax.amount = Math.abs(newTax.amount)
+            if edata.transactions[0].type.toLowerCase() == 'credit'
+              newTax.type = 'Debit'
+            else
+              newTax.type = 'Credit'
+          else
+            newTax.type = edata.transactions[0].type
+        
+        # copy newTax 
+        tax_1 = newTax
+        newTax.isLinked = false
+        
+        #check if newTax exits in edata.transactions
+        _.each edata.transactions, (txn) ->
+          if txn.particular.uniqueName == newTax.particular.uniqueName && newTax.isLinked != true
+            newTax.isLinked = true
+
+        if newTax.isLinked == false
+          edata.transactions.push(tax_1)
+
+        #newTaxTransactions.push(tax_1)
+    # parentTxn = []
+    # parentTxn.push(edata.transactions[0])
+    # edata.transactions = parentTxn.concat(newTaxTransactions)
+    
 
   $scope.addNewEntry = (data) ->
     if _.isUndefined($rootScope.selAcntUname)
@@ -391,6 +460,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $rootScope.selAcntUname
     }
+
+    # create transaction for added taxes
+    $scope.addTaxTransactions(edata, data.taxes)
+
     ledgerService.createEntry(unqNamesObj, edata).then($scope.addEntrySuccess, $scope.addEntryFailure)
 
   $scope.addEntrySuccess = (res) ->
@@ -420,7 +493,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       if edata.uniqueName is entry.sharedData.uniqueName
         edata.transactions.push(entry.transactions[0])
     )
-    
+    $scope.addTaxTransactions(edata, data.taxes)
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $rootScope.selAcntUname
@@ -472,6 +545,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     if !_.isUndefined(cdR.sharedData.uniqueName)
       $scope.ledgerOnlyCreditData.push(angular.copy(dummyValueCredit))
     $scope.calculateLedger($scope.ledgerData, "update")
+    $scope.reloadLedger()
 
   $scope.updateEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -749,6 +823,30 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.emailLedgerFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
+
+  # get tax list
+
+  $scope.getTaxList = () ->
+    $scope.taxList = []
+    companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
+
+  $scope.getTaxListSuccess = (res) ->
+    $scope.taxList = res.body
+    _.each $scope.taxList, (tax) ->
+      tax.isSelected = false 
+
+  $scope.getTaxListFailure = (res) ->
+    toastr.error(res.data.message, res.status)
+
+  $scope.getTaxList()
+
+  $scope.addTaxEntry = (tax, item) ->
+    if tax.isSelected
+      $scope.selectedTaxes.push(tax)
+    else
+      $scope.selectedTaxes = _.without($scope.selectedTaxes, tax)
+    item.taxes = $scope.selectedTaxes
+    console.log item.taxes
 
   someEventHandle = $scope.$on('reloadFromAuto', ->
     $scope.reloadLedger()

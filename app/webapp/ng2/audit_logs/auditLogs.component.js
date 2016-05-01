@@ -109,7 +109,6 @@
           function(res){
             setTimeout(function(){
               this.result = JSON.parse(res._body);
-              console.log(this.result)
               var logTracker = {
                 logs : this.result.body.logs,
                 reqBody : req,
