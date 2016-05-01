@@ -1170,12 +1170,12 @@ describe 'ledgerController', ->
         body:
           status: "Success"
           filePath: "abc/example.com"
-      it 'check if browser is not ie', ->
+      xit 'check if browser is not ie', ->
         spyOn(window, "open")
         spyOn(@scope, "msieBrowser").andReturn(false)
         @scope.exportLedgerSuccess(res)
         expect(window.open).toHaveBeenCalled()
-      it 'should check if browser is ie then call ie specific function', ->
+      xit 'should check if browser is ie then call ie specific function', ->
         spyOn(@scope, "openWindow")
         spyOn(@scope, "msieBrowser").andReturn(true)
         @scope.exportLedgerSuccess(res)

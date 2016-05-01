@@ -1,6 +1,6 @@
 "use strict"
 
-ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, companyServices) ->
+ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices) ->
   $scope.ledgerData = undefined 
   $scope.accntTitle = undefined
   $scope.selectedGroupUname = undefined
@@ -713,12 +713,29 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     accountService.exportLedger(unqNamesObj).then($scope.exportLedgerSuccess, $scope.exportLedgerFailure)
 
   $scope.exportLedgerSuccess = (res)->
+    $scope.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
     if $scope.msieBrowser()
       $scope.openWindow(res.body.filePath)
+    else if $scope.isSafari       
+      modalInstance = $uibModal.open(
+        template: '<div>
+            <div class="modal-header">
+              <h3 class="modal-title">Download File</h3>
+            </div>
+            <div class="modal-body">
+              <p class="mrB">To download your file Click on button</p>
+              <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+            </div>
+        </div>'
+        size: "sm"
+        backdrop: 'static'
+        scope: $scope
+      )
     else
       window.open(res.body.filePath)
-      # for safari
-      # window.open('google.com','Popup', 'height=400,width=400,status=no, toolbar=no,menubar=no,location=no')
 
   $scope.exportLedgerFailure = (res)->
     toastr.error(res.data.message, res.data.status)
