@@ -657,7 +657,7 @@ describe 'groupController', ->
       expect(@scope.selectedGroup.oldUName).toEqual(@scope.selectedGroup.uniqueName)
 
   describe '#populateAccountList', ->
-    it 'should call groupService matchAndReturnGroupObj method and makeAcListWithLessDtl method and assign value in scope variable', ->
+    xit 'should call groupService matchAndReturnGroupObj method and makeAcListWithLessDtl method and assign value in scope variable', ->
       @rootScope.flatGroupsList = [
         {
           name: "Fixed Assets"
