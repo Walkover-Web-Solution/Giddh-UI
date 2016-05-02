@@ -22,6 +22,7 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       'accountsUniqueName': @accountsUniqueName
       'toDate': @toDate
       'fromDate': @fromDate
+      'invoiceUniqueID': @invoiceUniqueID
     },
     {
       update:
@@ -74,6 +75,18 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       getInvList:
         method: 'GET',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices?fromDate=:fromDate&toDate=:toDate'
+
+      delInv:
+        method: 'DELETE'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices/:invoiceUniqueID'
+
+      prevInvoice:
+        method: 'POST'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices/preview'
+
+      genInvoice:
+        method: 'POST'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices/generate'
       
     })
 
@@ -180,5 +193,24 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
           fromDate: obj.fromDate
           toDate: obj.toDate
         }, onSuccess, onFailure))
+
+    delInv: (obj, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Account.delInv({
+          companyUniqueName: obj.compUname
+          accountsUniqueName: obj.acntUname
+          invoiceUniqueID: obj.invoiceUniqueID
+        }, onSuccess, onFailure))
+
+    prevInvoice: (obj, data, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Account.prevInvoice({
+          companyUniqueName: obj.compUname
+          accountsUniqueName: obj.acntUname
+        },data, onSuccess, onFailure))
+
+    genInvoice: (obj, data, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Account.genInvoice({
+          companyUniqueName: obj.compUname
+          accountsUniqueName: obj.acntUname
+        },data, onSuccess, onFailure))
 
   accountService

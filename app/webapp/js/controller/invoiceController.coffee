@@ -1,5 +1,5 @@
 "use strict"
-invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices,  Upload, ledgerService, companyServices, accountService) ->
+invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices,  Upload, ledgerService, companyServices, accountService, modalService) ->
 
   $rootScope.selectedCompany = {}
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -8,6 +8,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.logoUpldComplt = false
   $scope.showAccountList = false
   $scope.invoiceLoadDone = false
+  $scope.noDataDR = false
   # default Template data
   $scope.tempDataDef=
     logo: 
@@ -17,21 +18,21 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       invoiceDate: '11-12-2016'
     company:
       name: 'Walkover Web Solutions Pvt. ltd.'
-      data: '405-406 Capt. C.S. Naidu Arcade\n10/2 Old Palasiya\nIndore Madhya Pradesh\nCIN: 02830948209eeri\nEmail: account@giddh.com'
+      data: '405-406 Capt. C.S. Naidu Arcade,10/2 Old Palasiya,Indore Madhya Pradesh,CIN: 02830948209eeri,Email: account@giddh.com'
     companyIdentities: 
       data: 'tin:67890, cin:12345'
     entries: null
     terms: [
-      "Lorem ipsum dolor sit amet, consectetur adipisicing elit",
+      "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
       "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
       "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
     ]
     signature:
       name: 'Walkover Web Solutions Pvt. ltd.'
       data: 'Authorised Signatory'
-    buyer:
+    account:
       name: 'Career Point Ltd.'
-      data: 'CP Tower Road No. 1\nIndraprashta Industrial Kota\nPAN: 1862842\nEmail: info@career.com'
+      data: 'CP Tower Road No. 1,Indraprashta Industrial Kota,PAN: 1862842,Email: info@career.com'
   # invoice setting end
 
   # datepicker setting end
@@ -57,7 +58,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.toDatePickerOpen = ->
     this.toDatePickerIsOpen = true
   # end of date picker
-  $scope.onlyCrData = []
   $scope.onlyDrData = []
   $scope.entriesForInvoice = []
 
@@ -113,7 +113,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   # end acCntrl
 
   $scope.loadInvoice = (data, acData) ->
-    $rootScope.superLoader = true
     DAServices.LedgerSet(data, acData)
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
@@ -127,30 +126,25 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.getTemplatesSuccess=(res)->
     console.log "getTemplatesSuccess:", res
     $scope.invoiceLoadDone = true
-    $rootScope.superLoader = false
     $scope.templateList = res.body.templates
     $scope.templateData = res.body.templateData
 
   $scope.getTemplatesFailure = (res) ->
-    $rootScope.superLoader = false
     $scope.invoiceLoadDone = true
     toastr.error(res.data.message, res.data.status)
 
   # set as default
   $scope.setDefTemp = (data) ->
     if data.isDefault
-      $rootScope.superLoader = true
       obj = 
         uniqueName: $rootScope.selectedCompany.uniqueName
         tempUname: data.uniqueName
       companyServices.setDefltInvTemplt(obj).then(
         (res)->
-          $rootScope.superLoader = false
           $scope.templateList = res.body.templates
           $scope.templateData = res.body.templateData
           toastr.success("Template changed successfully", "Success")
         , (res)->
-          $rootScope.superLoader = false
           data.isDefault = false
           toastr.error(res.data.message, res.data.status)
       )
@@ -166,35 +160,32 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     else
       $scope.withSampleData = true
       _.extend($scope.defTempData , $scope.tempDataDef)
+    $scope.convertIntoOur()
 
   # view template with sample data
-  $scope.viewInvTemplate =(template, mode) ->
+  $scope.viewInvTemplate =(template, mode, data) ->
     $scope.logoWrapShow = false
     $scope.logoUpldComplt = false
     $scope.tempSet = {}
     $scope.defTempData = {}
     # set mode
     $scope.editMode = if mode is 'edit' then true else false
-    $scope.tempSet = template.sections[0]
+    $scope.tempSet = template.sections
     
-    if $scope.editMode
-      _.extend($scope.defTempData , $scope.templateData)
-      $scope.convertIntoOur()
-    else
-      _.extend($scope.defTempData , $scope.tempDataDef)
+    _.extend($scope.defTempData , data)
+    $scope.convertIntoOur()
 
     # open dialog
     $scope.modalInstance = $uibModal.open(
       templateUrl: '/public/webapp/views/prevInvoiceTemp.html'
-      size: "liq100"
+      size: "a4"
       backdrop: 'static'
       scope: $scope
     )
-
-    console.log $scope.defTempData
+    if not(_.isUndefined($scope.defTempData.grandTotal))
+      $scope.numbDigit = window.num2Words.inWords($scope.defTempData.grandTotal)
+      console.log $scope.numbDigit
     
-
-
 
   # upload logo
   $scope.uploadLogo=(files)->
@@ -237,8 +228,9 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
 
   # save template data
-  $scope.saveTemp=()->
+  $scope.saveTemp=(stype, force)->
     $scope.updatingTempData = true
+    dData = {}
     data = {}
     angular.copy($scope.defTempData, data)
 
@@ -255,10 +247,27 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       data.terms = data.termsStr.split('\n')
     else
       data.terms = []
-    
-    console.log "finally:", data
 
-    companyServices.updtInvTempData($rootScope.selectedCompany.uniqueName, data).then($scope.saveTempSuccess, $scope.saveTempFailure)
+    if stype is 'save'
+      companyServices.updtInvTempData($rootScope.selectedCompany.uniqueName, data).then($scope.saveTempSuccess, $scope.saveTempFailure)
+
+    else if stype is 'generate'
+      _.omit(data, 'termsStr')
+      obj=
+        compUname: $rootScope.selectedCompany.uniqueName
+        acntUname: $rootScope.$stateParams.invId
+      dData=
+        uniqueNames: data.ledgerUniqueNames
+        validateTax: true
+        invoice: _.omit(data, 'ledgerUniqueNames')
+      if force
+        dData.validateTax = false
+
+      accountService.genInvoice(obj, dData).then($scope.genInvoiceSuccess, $scope.genInvoiceFailure)
+
+    else
+      console.log "do nothing"
+
 
   $scope.saveTempSuccess=(res)->
     $scope.updatingTempData = false
@@ -272,7 +281,34 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     toastr.error(res.data.message, res.data.status)
 
 
+  $scope.genInvoiceSuccess=(res)->
+    $scope.updatingTempData = false
+    toastr.success(res.body, "Success")
+    $scope.modalInstance.close()
+    _.each($scope.entriesForInvoice, (entry)->
+      $scope.onlyDrData = _.reject($scope.onlyDrData, (item) ->
+        item.id is entry.id
+      )
+    )
+    $scope.entriesForInvoice = []
 
+    
+    # $scope.getLedgerEntries()
+
+  $scope.genInvoiceFailure = (res) ->
+    console.log "genInvoiceFailure", res
+    if res.data.code is "INVALID_TAX"
+      $scope.updatingTempData = false
+      modalService.openConfirmModal(
+        title: 'Something wrong with your invoice data',
+        body: res.data.message+'\\n Do you still want to generate invoice with incorrect data.',
+        ok: 'Generate Anyway',
+        cancel: 'Cancel'
+      ).then ->
+        $scope.saveTemp('generate', true)
+    else
+      $scope.updatingTempData = false
+      toastr.error(res.data.message, res.data.status)
 
   
 
@@ -298,7 +334,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # get ledger entries to generate invoice
   $scope.getLedgerEntries=()->
-    $rootScope.superLoader = true
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $rootScope.$stateParams.invId
@@ -308,8 +343,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     ledgerService.getLedger(unqNamesObj).then($scope.getLedgerEntriesSuccess, $scope.getLedgerEntriesFailure)
 
   $scope.getLedgerEntriesSuccess=(res)->
-    console.log "getLedgerEntriesSuccess:" ,res
-    $scope.onlyCrData = []
     $scope.onlyDrData = []
     _.each(res.body.ledgers, (ledger) ->
       if ledger.transactions.length > 1
@@ -324,32 +357,28 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
         if transaction.type is "DEBIT"
           newEntry.transactions = [transaction]
           $scope.onlyDrData.push(newEntry)
-
-        if transaction.type is "CREDIT"
-          newEntry.transactions = [transaction]
-          $scope.onlyCrData.push(newEntry)
       )
     )
-    console.log $scope.onlyCrData
-    console.log $scope.onlyDrData
-    $rootScope.superLoader = false
-
+    if $scope.onlyDrData.length is 0
+      $scope.noDataDR = true
+    else
+      $scope.noDataDR = false
+    $scope.onlyDrData = _.reject($scope.onlyDrData, (item) ->
+      item.sharedData.invoiceGenerated is true
+    )
+    
   $scope.getLedgerEntriesFailure=(res)->
-    $rootScope.superLoader = false
     console.log "getLedgerEntriesFailure: ", res
-
-  
+    toastr.error(res.data.message, res.data.status)
 
   $scope.summationForInvoice=(ths, entry, index)->
-    console.log ths, entry, index
     if entry.sharedData.multiEntry
       if ths
         # create logic to select all multi Entries
-        _.each($scope.onlyCrData, (item)->
+        _.each($scope.onlyDrData, (item)->
           if item.sharedData.uniqueName is entry.sharedData.uniqueName
             item.sharedData.itemCheck = true
             $scope.entriesForInvoice.push(item)
-            console.log item
         )
       else
         $scope.entriesForInvoice = _.filter($scope.entriesForInvoice, (item) ->
@@ -363,64 +392,75 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
           entry.id is item.id
         )
 
-    console.log $scope.entriesForInvoice.length, $scope.entriesForInvoice
+    console.log $scope.entriesForInvoice
 
   $scope.prevAndGenInv=()->
     $scope.prevInProg = true
-    data = []
+    arr = []
     _.each($scope.entriesForInvoice, (entry)->
-      data.push(entry.sharedData.uniqueName)
+      arr.push(entry.sharedData.uniqueName)
     )
-    data = _.uniq(data)
-    console.log "data after", data
+    data =
+      uniqueNames: _.uniq(arr)
 
-  # end get ledger entries to generate invoice
-
-
-  # get generated invoice list
-  $scope.getInvList=()->
-    console.log "getInvList"
-    $scope.genInvList = []
-    res =
-      body:[ 
-        {
-          entryId: "apb12345"
-          particular: "Hey dude"
-          description: "IMPS fund transaction"
-        }
-        {
-          entryId: "gpf321"
-          particular: "Just Chill"
-          description: "FD"
-        }
-        {
-          entryId: "t2flag"
-          particular: "Jhakaas"
-          description: "NEFT"
-        }
-      ]
-    _.extend($scope.genInvList , res.body)
-    
     obj =
-      uniqueName: $rootScope.selectedCompany.uniqueName
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $rootScope.$stateParams.invId
+
+    accountService.prevInvoice(obj, data).then($scope.prevAndGenInvSuccess, $scope.prevAndGenInvFailure)
+
+  $scope.prevAndGenInvSuccess=(res)->
+    $scope.prevInProg = false
+    console.log "prevAndGenInvSuccess: ", res.body
+    $scope.viewInvTemplate(res.body.template, 'edit', res.body)
+    
+
+  $scope.prevAndGenInvFailure=(res)->
+    $scope.prevInProg = false
+    toastr.error(res.data.message, res.data.status)
+
+
+  # get generated invoices list
+  $scope.getInvList=()->
+    obj =
+      compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $rootScope.$stateParams.invId
       fromDate: $filter('date')($scope.dateData.fromDate, "dd-MM-yyyy")
       toDate: $filter('date')($scope.dateData.toDate, "dd-MM-yyyy")
-
-    console.log $scope.genInvList, obj
-    # accountService.getInvList(obj).then($scope.getInvListSuccess, $scope.getInvListFailure)
+    accountService.getInvList(obj).then($scope.getInvListSuccess, $scope.getInvListFailure)
 
   $scope.getInvListSuccess=(res)->
-    $rootScope.superLoader = true
-    console.log "getInvListSuccess: ", res
+    console.log "getInvListSuccess: ", res.body
+    $scope.genInvList = []
+    _.extend($scope.genInvList , res.body)
+    if $scope.genInvList is 0
+      $scope.noDataGenInv = true
+    else
+      $scope.noDataGenInv = false
+    
 
   $scope.getInvListFailure=(res)->
-    $rootScope.superLoader = false
     console.log "getInvListFailure: ", res
+    toastr.error(res.data.message, res.data.status)
 
 
+  # delete invoice
+  $scope.delInv=(inv)->
+    console.log "delInv", inv
+    obj =
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $rootScope.$stateParams.invId
+      invoiceUniqueID: inv.uniqueName
+    accountService.delInv(obj).then($scope.delInvSuccess, $scope.delInvFailure)
 
+  $scope.delInvSuccess=(res)->
+    console.log "delInvSuccess: ", res
 
+  $scope.delInvFailure=(res)->
+    console.log "delInvFailure: ", res
+
+  $scope.summationForDownload=(entry)->
+    console.log entry
 
 
 

@@ -2476,3 +2476,22 @@ table td.nopad{
     border-color: #b7cfcf
 }
 
+/*no border table*/
+.table.invGenTbl>tfoot>tr>th, .table.invGenTbl>tfoot>tr>td{
+    text-align: right;
+    border: none;
+    padding-top: 3px;
+    padding-bottom: 3px;
+    vertical-align: middle;
+}
+.table.invGenTbl>tfoot>tr>td{
+    text-align: left;
+}
+#splInvInpt{
+    width:60px;
+    padding-left: 5px;
+    padding-right: 0;
+    height: 26px;
+}
+
+

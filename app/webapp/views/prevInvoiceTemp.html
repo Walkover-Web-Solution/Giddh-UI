@@ -80,17 +80,17 @@ h1 {
   display: block;
   vertical-align: middle;
 }
-.modal-dialog{
+.modal-dialog.modal-a4{
   /*margin: 0;*/
   width: 8.5in;
 }
-.modal-body{
+.modal-dialog.modal-a4 .modal-body{
   min-height: 11.5in
 }
-.modal-content{
+.modal-dialog.modal-a4 .modal-content{
   border-radius: 0
 }
-.modal-header span{
+.modal-dialog.modal-a4 .modal-header span{
   position: absolute;
   left: 15px;
 }
@@ -118,8 +118,12 @@ fieldset[disabled] .form-control{
   </h3>
   
 
-  <span ng-if="editMode">
-    <a ng-click="saveTemp()" class="btn btn-success btn-sm" href="javascript:void(0)" ng-disabled="updatingTempData">Save Changes</a>
+  <span ng-if="editMode && defTempData.entries === null">
+    <a ng-click="saveTemp('save', false)" class="btn btn-success btn-sm" href="javascript:void(0)" ng-disabled="updatingTempData">Save Changes</a>
+  </span>
+
+  <span ng-if="editMode && defTempData.entries !== null">
+    <a ng-click="saveTemp('generate', false)" class="btn btn-success btn-sm" href="javascript:void(0)" ng-disabled="updatingTempData">Generate Invoice</a>
   </span>
 
 </div>
@@ -140,7 +144,12 @@ fieldset[disabled] .form-control{
             <h1 ng-if="!editMode">
               <img src="{{defTempData.logo.path}}" alt="" height="50px">
             </h1>
-            <aside ng-if="editMode">
+
+            <h1 ng-if="editMode && defTempData.entries !== null">
+              <img src="{{defTempData.logo.path}}" alt="" height="50px">
+            </h1>
+
+            <aside ng-if="editMode && defTempData.entries === null">
               <form class="form-inline" enctype="multipart/form-data">
                 <div class="form-group" ng-show="logoWrapShow || defTempData.logo.path === ''">
                   <span ng-hide="logoUpldComplt && logoWrapShow">
@@ -210,8 +219,8 @@ fieldset[disabled] .form-control{
 
           <h4 class="mrB">To:</h4>
           <div class="txtAreaWrap">
-            <input ng-disabled="editMode" class="form-control" ng-model="defTempData.buyer.name" placeholder="Buyer Name">
-            <textarea ng-disabled="editMode" class="form-control" ng-model="defTempData.buyer.data"  placeholder="Buyer Address and other details"></textarea>
+            <input ng-disabled="editMode" class="form-control" ng-model="defTempData.account.name" placeholder="Buyer Name">
+            <textarea ng-disabled="editMode" class="form-control" ng-model="defTempData.account.data"  placeholder="Buyer Address and other details"></textarea>
           </div>
         </section>
       </div>
@@ -219,7 +228,106 @@ fieldset[disabled] .form-control{
       
       <!-- / end client and company details section -->
       
-      <section ng-if="editMode">
+      
+
+      <section ng-if="editMode  && defTempData.entries !== null">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th class="col-xs-1">
+                <h4>S No.</h4>
+              </th>
+              <th class="col-xs-9">
+                <h4>Description</h4>
+              </th>
+              <th class="col-xs-2 alR">
+                <h4>Amount</h4>
+              </th>
+            </tr>
+          </thead>
+        
+          <tbody>
+            <tr ng-repeat="item in defTempData.entries track by $index">
+              <td>{{$index}}</td>
+              <td>
+                <input type="text" ng-model="item.transactions[0].description" class="form-control">
+              </td>
+              <td class="text-right">
+                {{item.transactions[0].amount | currency:"&#x20B9;"}}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="table invGenTbl">
+          <tfoot>
+            <tr>
+              <th class="col-xs-1">
+                &nbsp;
+              </th>
+              <th class="col-xs-9">
+                Sub Total :
+              </th>
+              <th class="col-xs-2">
+                {{defTempData.subTotal | currency:"&#x20B9;"}}
+              </th>
+            </tr>
+            <!-- tax repeat -->
+            <tr ng-if="defTempData.taxes.length > 0" ng-repeat="tax in defTempData.taxes">
+              <th class="col-xs-1">
+                &nbsp;
+              </th>
+              <th class="col-xs-9">
+                <div class="form-inline clearfix">
+                  <div class="form-group" ng-class="tax.hasError ? 'has-error' : ''">
+                    <label>{{tax.accountName}}</label>
+                    <input type="text" ng-model="tax.visibleTaxRate" class="form-control" valid-number id="splInvInpt">
+                  </div>
+                  <div class="form-group" ng-if="tax.hasError">
+                    <i style="font-size:18px; cursor:pointer" tooltip-placement="top" uib-tooltip="{{tax.errorMessage}}" class="glyphicon glyphicon-info-sign"></i>
+                  </div>
+                  <div class="form-group">
+                    &nbsp;:
+                  </div>
+                </div>
+              </th>
+              <th class="col-xs-2">
+                {{tax.amount | currency:"&#x20B9;"}}
+              </th>
+            </tr>
+            <!-- end of tax repeat -->
+            <tr>
+              <th class="col-xs-1">
+                &nbsp;
+              </th>
+              <th class="col-xs-9">
+                Grand Total :
+              </th>
+              <th class="col-xs-2">
+                {{defTempData.grandTotal | currency:"&#x20B9;"}}
+              </th>
+            </tr>
+
+            <tr>
+              <td colspan="3">
+                <hr>
+                <p>Amount in words</p>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3" class="text-capitalize">
+                <strong>{{numbDigit}}</strong>
+              </td>
+            </tr>
+            <tr>
+            </tr>
+          </tfoot>
+        </table>
+        
+        <hr>
+      </section>
+
+      <section ng-if="editMode && defTempData.entries === null">
         <div class="row">
           <div class="greyBg alC" id="five">
             <div class="mrT4">Particulars will shown here</div>

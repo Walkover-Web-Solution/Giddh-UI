@@ -216,13 +216,16 @@ giddh.webApp.run [
 giddh.webApp.config ($httpProvider) ->
   $httpProvider.interceptors.push('appInterceptor')
 
-giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$timeout' 
-  ($q, $location, $log, toastr, $timeout) ->
+giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$timeout', '$rootScope' 
+  ($q, $location, $log, toastr, $timeout, $rootScope) ->
     request: (request) ->
-      request
+      $rootScope.superLoader = true
+      return request
     response: (response) ->
-      response
+      $rootScope.superLoader = false
+      return response
     responseError: (responseError) ->
+      $rootScope.superLoader = false
       if responseError.status is 500 and responseError.data isnt undefined
         if _.isObject(responseError.data)
           console.info "isObject"
@@ -243,6 +246,8 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$t
           $timeout ( ->
             window.location.assign('/login')
           ), 2000
+        else
+          $q.reject responseError
       else
         $q.reject responseError
 ]
