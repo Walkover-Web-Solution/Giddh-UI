@@ -214,7 +214,7 @@
           </div>
         </div>
         <!-- end of top row -->
-
+        {{chk | json}}
         <table class="mrT2 table table-bordered table-striped">
           <thead>
             <th>&nbsp;</th>
@@ -225,7 +225,7 @@
           <tbody>
             <tr ng-repeat="item in genInvList | filter:searchInvData track by $index ">
               <td>
-                <input type="checkbox" ng-model="item.entryId" ng-change="summationForDownload(item)">
+                <input type="radio" ng-model="$parent.invoiceNumber" name="invoiceNumber" value="{{item.invoiceNumber}}" ng-change="summationForDownload(item)" />
               </td>
               <td>
                 <a href="javascript:void(0)">
