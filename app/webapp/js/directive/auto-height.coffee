@@ -18,6 +18,9 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
       angular.element($window).triggerHandler('resize')
     , 1000
 ]
+
+
+
 # capitalize first letter of a string
 giddh.webApp.filter 'capitalize', ->
   (input) ->
