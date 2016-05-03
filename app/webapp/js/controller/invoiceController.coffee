@@ -9,6 +9,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.showAccountList = false
   $scope.invoiceLoadDone = false
   $scope.noDataDR = false
+  $scope.radioChecked = false
   # default Template data
   $scope.tempDataDef=
     logo: 
@@ -183,8 +184,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       scope: $scope
     )
     if not(_.isUndefined($scope.defTempData.grandTotal))
-      $scope.numbDigit = window.num2Words.inWords($scope.defTempData.grandTotal)
-      console.log $scope.numbDigit
+      $scope.defTempData.grandTotalInWords = window.num2Words.inWords($scope.defTempData.grandTotal)
+      
     
 
   # upload logo
@@ -461,6 +462,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   $scope.summationForDownload=(entry)->
     console.log entry
+    $scope.radioChecked = true
 
 
 

@@ -2493,5 +2493,7 @@ table td.nopad{
     padding-right: 0;
     height: 26px;
 }
-
+.table.vAlMid>tbody>tr>td{
+    vertical-align: middle;
+}
 

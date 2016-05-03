@@ -231,7 +231,7 @@ fieldset[disabled] .form-control{
       
 
       <section ng-if="editMode  && defTempData.entries !== null">
-        <table class="table table-bordered">
+        <table class="table table-bordered vAlMid">
           <thead>
             <tr>
               <th class="col-xs-1">
@@ -248,7 +248,7 @@ fieldset[disabled] .form-control{
         
           <tbody>
             <tr ng-repeat="item in defTempData.entries track by $index">
-              <td>{{$index}}</td>
+              <td>{{$index+1 | number}}</td>
               <td>
                 <input type="text" ng-model="item.transactions[0].description" class="form-control">
               </td>
@@ -316,7 +316,7 @@ fieldset[disabled] .form-control{
             </tr>
             <tr>
               <td colspan="3" class="text-capitalize">
-                <strong>{{numbDigit}}</strong>
+                <strong>{{defTempData.grandTotalInWords}}</strong>
               </td>
             </tr>
             <tr>
