@@ -383,7 +383,7 @@ router.delete '/:companyUniqueName/tax/:taxUniqueName', (req, res) ->
 #edit/update taxe
 router.put '/:companyUniqueName/tax/:taxUniqueName', (req, res) ->
   console.log req.body, req.params
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/tax/' + req.params.taxUniqueName
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/tax/' + req.params.taxUniqueName + '?updateEntries=' + req.params.updateEntries
   args =
     headers:
       'Auth-Key': req.session.authKey

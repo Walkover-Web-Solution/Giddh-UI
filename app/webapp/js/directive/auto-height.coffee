@@ -271,7 +271,6 @@ angular.module('ledger', [])
         angular.element(el).addClass('highlightRow')
 
       scope.openEDialog = (item, eParentForm, index) ->
-        console.log item
         scope.highlightEntry(scope.item)
         scope.removeClassInAllEle("eLedgEntryForm", "open")
         elem.addClass('open')

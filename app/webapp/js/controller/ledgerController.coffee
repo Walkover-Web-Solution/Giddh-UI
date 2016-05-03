@@ -370,11 +370,16 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         txn.isTax = true
 
   $scope.calculateEntryAmount = (eData, taxData) ->
+    type = eData.transactions[0].type
     _.each eData.transactions, (txn) ->
       # exclude tax transactions
       $scope.excludeTaxTxn(txn)
       if !txn.isTax
-        taxData.entryAmount += parseInt(txn.amount)
+        if type == txn.type
+          taxData.entryAmount += parseInt(txn.amount)
+        else
+          taxData.entryAmount -= parseInt(txn.amount)
+      taxData.entryAmount = Math.abs(taxData.entryAmount)
 
   $scope.addTaxTransactions = (edata, taxes) ->
     # calculate total entry amount
@@ -410,9 +415,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
           if det.taxValue < 0
             newTax.amount = Math.abs(newTax.amount)
             if edata.transactions[0].type.toLowerCase() == 'credit'
-              newTax.type = 'Debit'
+              newTax.type = 'DEBIT'
             else
-              newTax.type = 'Credit'
+              newTax.type = 'CREDIT'
           else
             newTax.type = edata.transactions[0].type
         
@@ -863,7 +868,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     else
       $scope.selectedTaxes = _.without($scope.selectedTaxes, tax)
     item.taxes = $scope.selectedTaxes
-    console.log item.taxes
 
   someEventHandle = $scope.$on('reloadFromAuto', ->
     $scope.reloadLedger()

@@ -22,7 +22,6 @@ angular.module('perfect_scrollbar', []).directive 'perfectScrollbar', [
     link: ($scope, $elem, $attr) ->
       jqWindow = angular.element($window)
       options = {}
-
       update = (event) ->
         $scope.$evalAsync ->
           if $attr.scrollDown == 'true' and event != 'mouseenter'
@@ -41,6 +40,7 @@ angular.module('perfect_scrollbar', []).directive 'perfectScrollbar', [
         if $attr[opt] != undefined
           options[opt] = $parse($attr[opt])()
         i++
+      options.wheelSpeed = 20
       $scope.$evalAsync (event)->
         $elem.perfectScrollbar options
         onScrollHandler = $parse($attr.onScroll)

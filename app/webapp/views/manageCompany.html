@@ -587,19 +587,19 @@
                         <td ng-if="item.isEditable">
                           <div class="form-group" style="margin-bottom:0">
                             <i tooltip-placement="top" uib-tooltip="Add new row" class="glyphicon glyphicon-plus" ng-click="addNewSlabAfter(tax, $index)"></i>
-                            <i tooltip-placement="top" uib-tooltip="Delete row" class="glyphicon glyphicon-minus" ng-click="removeSlab(tax, $index)"></i>
+                            <i tooltip-placement="top" uib-tooltip="Delete row" class="glyphicon glyphicon-minus" ng-click="removeSlab(tax, $index)" ng-if="item.taxDetail.length > 1"></i>
                           </div>
                         </td>
                       </tr>
                     </tbody>
                   </table>
-
                 </td>
                 <td>
                   <select class="form-control" ng-class="{isNotEditable : !item.isEditable}" ng-model="item.account.name" ng-disabled="!item.isEditable" ng-if="item.isEditable">
-                      <option ng-repeat="option in fltAccntList">{{option.name}}</option>
+                      <option ng-repeat="option in fltAccntList" value="{{option.uniqueName}}">{{option.name}}</option>
                   </select>
-                  <div class="pdBth06" ng-if="!item.isEditable">{{item.account.name}}</div>
+                  <div class="pdBth06" ng-if="!item.isEditable && item.hasLinkedAcc">{{item.account.name}}</div>
+                  <span ng-if="!item.hasLinkedAcc && !item.isEditable">No Account Linked</span>
                 <td>
                   <select class="form-control" ng-class="{isNotEditable : !item.isEditable}" ng-model="item.duration" ng-disabled="!item.isEditable" ng-if="item.isEditable">
                     <option ng-repeat="option in taxTypes">{{option}}</option>
