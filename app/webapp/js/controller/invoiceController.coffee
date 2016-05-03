@@ -125,7 +125,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     companyServices.getInvTemplates($rootScope.selectedCompany.uniqueName).then($scope.getTemplatesSuccess, $scope.getTemplatesFailure)
 
   $scope.getTemplatesSuccess=(res)->
-    console.log "getTemplatesSuccess:", res
     $scope.invoiceLoadDone = true
     $scope.templateList = res.body.templates
     $scope.templateData = res.body.templateData
@@ -183,10 +182,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       backdrop: 'static'
       scope: $scope
     )
-    if not(_.isUndefined($scope.defTempData.grandTotal))
-      $scope.defTempData.grandTotalInWords = window.num2Words.inWords($scope.defTempData.grandTotal)
-      
-    
 
   # upload logo
   $scope.uploadLogo=(files)->
@@ -297,7 +292,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     # $scope.getLedgerEntries()
 
   $scope.genInvoiceFailure = (res) ->
-    console.log "genInvoiceFailure", res
     if res.data.code is "INVALID_TAX"
       $scope.updatingTempData = false
       modalService.openConfirmModal(
@@ -369,7 +363,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     )
     
   $scope.getLedgerEntriesFailure=(res)->
-    console.log "getLedgerEntriesFailure: ", res
     toastr.error(res.data.message, res.data.status)
 
   $scope.summationForInvoice=(ths, entry, index)->
@@ -393,8 +386,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
           entry.id is item.id
         )
 
-    console.log $scope.entriesForInvoice
-
   $scope.prevAndGenInv=()->
     $scope.prevInProg = true
     arr = []
@@ -412,7 +403,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   $scope.prevAndGenInvSuccess=(res)->
     $scope.prevInProg = false
-    console.log "prevAndGenInvSuccess: ", res.body
     $scope.viewInvTemplate(res.body.template, 'edit', res.body)
     
 
@@ -431,7 +421,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     accountService.getInvList(obj).then($scope.getInvListSuccess, $scope.getInvListFailure)
 
   $scope.getInvListSuccess=(res)->
-    console.log "getInvListSuccess: ", res.body
     $scope.genInvList = []
     _.extend($scope.genInvList , res.body)
     if $scope.genInvList is 0
@@ -441,7 +430,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     
 
   $scope.getInvListFailure=(res)->
-    console.log "getInvListFailure: ", res
     toastr.error(res.data.message, res.data.status)
 
 
