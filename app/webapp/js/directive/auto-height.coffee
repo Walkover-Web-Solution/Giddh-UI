@@ -19,6 +19,73 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
     , 1000
 ]
 
+# convert digit to words
+giddh.webApp.filter 'numtowords', ->
+
+  frac = (f) ->
+    f % 1
+
+  convert_number = (number) ->
+    ones = Array('', 'ONE', 'TWO', 'THREE', 'FOUR', 'FIVE', 'SIX', 'SEVEN', 'EIGHT', 'NINE', 'TEN', 'ELEVEN', 'TWELVE', 'THIRTEEN', 'FOURTEEN', 'FIFTEEN', 'SIXTEEN', 'SEVENTEEN', 'EIGHTEEN', 'NINETEEN')
+    tens = Array('', '', 'TWENTY', 'THIRTY', 'FOURTY', 'FIFTY', 'SIXTY', 'SEVENTY', 'EIGHTY', 'NINETY')
+    if number < 0 or number > 999999999
+      return 'NUMBER OUT OF RANGE!'
+    Gn = Math.floor(number / 10000000)
+
+    ### Crore ###
+
+    number -= Gn * 10000000
+    kn = Math.floor(number / 100000)
+
+    ### lakhs ###
+
+    number -= kn * 100000
+    Hn = Math.floor(number / 1000)
+
+    ### thousand ###
+
+    number -= Hn * 1000
+    Dn = Math.floor(number / 100)
+
+    ### Tens (deca) ###
+
+    number = number % 100
+
+    ### Ones ###
+
+    tn = Math.floor(number / 10)
+    one = Math.floor(number % 10)
+    res = ''
+    if Gn > 0
+      res += convert_number(Gn) + ' CRORE'
+    if kn > 0
+      res += (if res == '' then '' else ' ') + convert_number(kn) + ' LAKH'
+    if Hn > 0
+      res += (if res == '' then '' else ' ') + convert_number(Hn) + ' THOUSAND'
+    if Dn
+      res += (if res == '' then '' else ' ') + convert_number(Dn) + ' HUNDRED'
+    if tn > 0 or one > 0
+      if !(res == '')
+        res += ' '
+      if tn < 2
+        res += ones[tn * 10 + one]
+      else
+        res += tens[tn]
+        if one > 0
+          res += ' ' + ones[one]
+    return res
+
+  (value) ->
+    fraction = Math.round(frac(value) * 100)
+    f_text = ''
+    if fraction > 0
+      f_text = 'AND ' + convert_number(fraction) + ' PAISE'
+    convertNumber = convert_number(value)
+    if convertNumber == ''
+      ''
+    else
+      convertNumber + ' RUPEE ' + f_text + ' ONLY'
+
 
 
 # capitalize first letter of a string
