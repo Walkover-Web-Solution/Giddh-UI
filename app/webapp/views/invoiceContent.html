@@ -159,9 +159,11 @@
           <div class="col-xs-6">
             <section class="clearfix form-inline">
               <div class="form-group">
-                <button ng-disabled="true" class="btn btn-primary mrR1">Download</button>
-                <button ng-disabled="true" class="btn btn-primary mrR1">Send Email</button>
-                <button ng-disabled="true" class="btn btn-danger">Delete</button>
+                <fieldset ng-disabled="!radioChecked">
+                  <button class="btn btn-primary mrR1">Download</button>
+                  <button class="btn btn-primary mrR1">Send Email</button>
+                  <button class="btn btn-danger">Delete</button>
+                </fieldset>
               </div>
               <div class="form-group mrL1">
                 <input type="search" class="form-control maxW150" placeholder="Search ledger" ng-model="searchInvData">
