@@ -228,7 +228,6 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$t
       $rootScope.superLoader = false
       if responseError.status is 500 and responseError.data isnt undefined
         if _.isObject(responseError.data)
-          console.info "isObject"
           $q.reject responseError
         else
           #check if responseError.data contains error regarding Auth-Key
