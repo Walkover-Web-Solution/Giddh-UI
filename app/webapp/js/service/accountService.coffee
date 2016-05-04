@@ -87,6 +87,14 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       genInvoice:
         method: 'POST'
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices/generate'
+
+      downloadInvoice:
+        method: 'POST'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices/download'
+
+      prevOfGenInvoice:
+        method: 'GET',
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices/:invoiceUniqueID/preview'
       
     })
 
@@ -212,5 +220,18 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
           companyUniqueName: obj.compUname
           accountsUniqueName: obj.acntUname
         },data, onSuccess, onFailure))
+
+    downloadInvoice: (obj, data, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Account.downloadInvoice({
+          companyUniqueName: obj.compUname
+          accountsUniqueName: obj.acntUname
+        },data, onSuccess, onFailure))
+
+    prevOfGenInvoice: (obj, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Account.prevOfGenInvoice({
+          companyUniqueName: obj.compUname
+          accountsUniqueName: obj.acntUname
+          invoiceUniqueID: obj.invoiceUniqueID
+        }, onSuccess, onFailure))
 
   accountService
