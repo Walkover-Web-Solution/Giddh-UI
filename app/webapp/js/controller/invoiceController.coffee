@@ -11,6 +11,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.noDataDR = false
   $scope.radioChecked = false
   $scope.genPrevMode = false
+  $scope.nameForAction = []
   # default Template data
   $scope.tempDataDef=
     logo: 
@@ -23,11 +24,60 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       data: '405-406 Capt. C.S. Naidu Arcade,10/2 Old Palasiya,Indore Madhya Pradesh,CIN: 02830948209eeri,Email: account@giddh.com'
     companyIdentities: 
       data: 'tin:67890, cin:12345'
-    entries: null
+    # entries: null
+    entries: [
+      {
+        "transactions": [
+          {
+            "amount": 54500,
+            "accountName": "John",
+            "accountUniqueName": "john",
+            "description": "Purchase of Macbook"
+          }
+        ],
+        "uniqueName": "d7t1462171597019"
+      }
+      {
+        "transactions": [
+          {
+            "amount": 23700,
+            "accountName": "John",
+            "accountUniqueName": "john",
+            "description": "Purchase of Ipad"
+          }
+        ],
+        "uniqueName": "d7t1462171597030"
+      }
+      {
+        "transactions": [
+          {
+            "amount": 25300,
+            "accountName": "John",
+            "accountUniqueName": "john",
+            "description": "Purchase of Iphone"
+          }
+        ],
+        "uniqueName": "d7t1462171597023"
+      }
+    ]
     terms: [
       "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
       "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
       "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
+    ]
+    grandTotal: 118507.50
+    subTotal: 103500
+    taxTotal: 0
+    taxes:[
+      {
+        "hasError": false,
+        "amount": 15007.50,
+        "accountName": "vat@14.5",
+        "taxRate": 14,
+        "visibleTaxRate": 14,
+        "errorMessage": "",
+        "accountUniqueName": "vat14.5"
+      }
     ]
     signature:
       name: 'Walkover Web Solutions Pvt. ltd.'
@@ -36,6 +86,12 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       name: 'Career Point Ltd.'
       data: 'CP Tower Road No. 1,Indraprashta Industrial Kota,PAN: 1862842,Email: info@career.com'
   # invoice setting end
+
+  # close popup
+  $scope.closePop=()->
+    console.log "closePop"
+    $scope.withSampleData = true
+    $scope.genPrevMode = false
 
   # datepicker setting end
   $scope.dateData = {
@@ -165,6 +221,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # view template with sample data
   $scope.viewInvTemplate =(template, mode, data) ->
+    if mode isnt 'genprev'
+      $scope.genPrevMode = false
     $scope.logoWrapShow = false
     $scope.logoUpldComplt = false
     $scope.tempSet = {}
@@ -355,6 +413,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
           $scope.onlyDrData.push(newEntry)
       )
     )
+    console.log "before", $scope.onlyDrData.length
     if $scope.onlyDrData.length is 0
       $scope.noDataDR = true
     else
@@ -362,6 +421,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.onlyDrData = _.reject($scope.onlyDrData, (item) ->
       item.sharedData.invoiceGenerated is true
     )
+    console.log "after", $scope.onlyDrData.length
     
   $scope.getLedgerEntriesFailure=(res)->
     toastr.error(res.data.message, res.data.status)
@@ -434,9 +494,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     toastr.error(res.data.message, res.data.status)
 
   $scope.summationForDownload=(entry)->
-    console.log entry
-    $scope.nameForAction = []
     $scope.radioChecked = true
+    $scope.nameForAction = []
     $scope.nameForAction.push(entry.invoiceNumber)
 
   # delete invoice
@@ -450,7 +509,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       acntUname: $rootScope.$stateParams.invId
 
     if type is 'delete'
-      console.log "delete api hit"
       obj.invoiceUniqueID= $scope.nameForAction[0]
       accountService.delInv(obj).then($scope.delInvSuccess, $scope.multiActionWithInvFailure)
 
@@ -458,7 +516,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       console.log "email api hit"
 
     if type is 'download'
-      console.log "download api hit"
       data=
         invoiceNumber: $scope.nameForAction
         template: ""
@@ -474,6 +531,11 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     toastr.success("Invoice deleted successfully", "Success")
 
   $scope.downInvSuccess=(res)->
+    # close dialog box
+    if $scope.genPrevMode
+      $scope.modalInstance.close()
+    $scope.genPrevMode = false
+
     $scope.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
     if $scope.msieBrowser()
       $scope.openWindow("data:application/pdf;base64, " + res.body)
@@ -501,6 +563,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # preview of generated invoice
   $scope.prevGenerateInv=(item)->
+    $scope.nameForAction = []
+    $scope.nameForAction.push(item.invoiceNumber)
     obj =
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $rootScope.$stateParams.invId
@@ -508,17 +572,28 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     accountService.prevOfGenInvoice(obj).then($scope.prevGenerateInvSuccess, $scope.prevGenerateInvFailure)
 
   $scope.prevGenerateInvSuccess=(res)->
-    console.log "prevGenerateInvSuccess: ", res
     $scope.genPrevMode = true
-    console.log $scope.templateList
-    $scope.viewInvTemplate( res.body.template, 'sample', res.body)
+    $scope.viewInvTemplate( res.body.template, 'genprev', res.body)
+    $scope.tempType=
+      uniqueName: res.body.template.uniqueName
 
   $scope.prevGenerateInvFailure=(res)->
-    console.log "prevGenerateInvFailure: ", res
     toastr.error(res.data.message, res.data.status)
 
-  # end get generated invoice list
+  $scope.setDiffView=()->
+    even = _.find($scope.templateList, (item)->
+      item.uniqueName is $scope.tempType.uniqueName
+    )
+    $scope.tempSet = even.sections
 
+  $scope.downInv=()->
+    obj =
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $rootScope.$stateParams.invId
+    data=
+      invoiceNumber: $scope.nameForAction
+      template: $scope.tempType.uniqueName
+    accountService.downloadInvoice(obj, data).then($scope.downInvSuccess, $scope.multiActionWithInvFailure)
 
 
   # state change

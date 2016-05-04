@@ -92,10 +92,20 @@ fieldset[disabled] .form-control{
 .thumb{
   height: 50px;
 }
+.modal-header.genPrevMode{
+  height: 80px;
+}
+.genPrevMode span{
+  top: 5px;
+}
+.genPrevMode .form-group{
+  margin-bottom: 0;
+}
+
 </style>
 <!-- <a onclick="javascript:window.print();"> -->
-<div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); genPrevMode = false" aria-label="Close"><i aria-hidden="true">&times;</i></button>
+<div class="modal-header" ng-class="genPrevMode ? 'genPrevMode': ''">
+  <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); closePop()" aria-label="Close"><i aria-hidden="true">&times;</i></button>
   
   <span ng-if="!editMode && !genPrevMode">
     <a ng-if="withSampleData" ng-click="switchTempData()" class="btn btn-default btn-sm" href="javascript:void(0)">View as your data</a>
@@ -107,13 +117,28 @@ fieldset[disabled] .form-control{
 
 
   <span ng-if="!editMode && genPrevMode">
-    <label>View in different templates</label>
-
+    <aside class="form-inline">
+      <p><small>View Invoice in different templates</small></p>
+      <div class="form-group mrR">
+        <select 
+          class="form-control"
+          ng-model="tempType.uniqueName"
+          ng-options="item.uniqueName as item.name for item in templateList"
+          ng-change="setDiffView()"
+          >
+        </select>
+      </div>
+      <div class="form-group mrR1">
+        <button ng-click="downInv()" class="btn btn-primary mrR">Download</button>
+        <button class="btn btn-default">Send Email</button>
+      </div>
+      <div class="form-group">
+        <h3 class="modal-title">Invoice</h3>
+      </div>
+    </aside>
   </span>
 
-  <h3 class="modal-title alC" ng-if="!editMode && genPrevMode">
-    Invoice
-  </h3>
+  
   
 
   <span ng-if="editMode && defTempData.entries === null">
@@ -203,13 +228,13 @@ fieldset[disabled] .form-control{
         </section>
         <section class="col-xs-5 col-xs-offset-2" id="four">
           <!-- if logo or invoiceDetails false then show invoice no -->
-          <section class="form-inline clearfix mrB1" ng-if="!tempSet.logo && !tempSet.invoiceDetails">
-            <div class="form-group">
-              <label>Invoice #:</label>
+          <section class="form-inline clearfix mrB1" ng-if="!tempSet.logo">
+            <div class="form-group mrR">
+              <label>Invoice # :&nbsp;</label>
               <input ng-disabled="editMode" type="text" class="form-control wid80"  ng-model="defTempData.invoiceDetails.invoiceNumber">
             </div>
             <div class="form-group">
-              <label>Date:</label>
+              <label>Date :&nbsp;</label>
               <input ng-disabled="editMode" type="text" class="form-control wid80" ng-model="defTempData.invoiceDetails.invoiceDate" >
             </div>
           </section>
@@ -228,7 +253,7 @@ fieldset[disabled] .form-control{
       
       
 
-      <section ng-if="editMode  && defTempData.entries !== null || !editMode && genPrevMode">
+      <section ng-if="defTempData.entries !== null || !editMode && genPrevMode">
         <table class="table table-bordered vAlMid">
           <thead>
             <tr>
@@ -325,7 +350,7 @@ fieldset[disabled] .form-control{
         <hr>
       </section>
 
-      <section ng-if="editMode && defTempData.entries === null">
+      <section ng-if="editMode && defTempData.entries === null || !editMode && defTempData.entries === null">
         <div class="row">
           <div class="greyBg alC" id="five">
             <div class="mrT4">Particulars will shown here</div>
@@ -333,61 +358,7 @@ fieldset[disabled] .form-control{
         </div>
       </section>
 
-      <section ng-if="!editMode && !genPrevMode">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th class="col-xs-1">
-                <h4>S No.</h4>
-              </th>
-              <th class="col-xs-9">
-                <h4>Description</h4>
-              </th>
-              <th class="col-xs-2 alR">
-                <h4>Amount</h4>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1.</td>
-              <td>
-                <p>Title of your article here</p>
-              </td>
-              <td class="text-right">$200.00</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td><p>Details of project here</p></td>
-              <td class="text-right">$750.00</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td><p>WordPress Blogging theme</p></td>
-              <td class="text-right">$250.00</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="row text-right">
-          <div class="col-xs-2 col-xs-offset-8">
-            <p>
-              <strong>
-              Sub Total : <br>
-              TAX : <br>
-              Total : <br>
-              </strong>
-            </p>
-          </div>
-          <div class="col-xs-2">
-            <strong>
-            $1200.00 <br>
-            N/A <br>
-            $1200.00 <br>
-            </strong>
-          </div>
-        </div>
-        <hr>
-      </section>
+      
        
       <!-- end of list section entries -->
 
