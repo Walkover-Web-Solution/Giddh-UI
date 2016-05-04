@@ -10,6 +10,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.invoiceLoadDone = false
   $scope.noDataDR = false
   $scope.radioChecked = false
+  $scope.genPrevMode = false
   # default Template data
   $scope.tempDataDef=
     logo: 
@@ -432,28 +433,89 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.getInvListFailure=(res)->
     toastr.error(res.data.message, res.data.status)
 
+  $scope.summationForDownload=(entry)->
+    console.log entry
+    $scope.nameForAction = []
+    $scope.radioChecked = true
+    $scope.nameForAction.push(entry.invoiceNumber)
 
   # delete invoice
-  $scope.delInv=(inv)->
-    console.log "delInv", inv
+  $scope.multiActionWithInv=(type)->
+    if $scope.nameForAction.length is 0
+      toastr.warning("Something went wrong", "Warning")
+      return false
+
     obj =
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $rootScope.$stateParams.invId
-      invoiceUniqueID: inv.uniqueName
-    accountService.delInv(obj).then($scope.delInvSuccess, $scope.delInvFailure)
+
+    if type is 'delete'
+      console.log "delete api hit"
+      obj.invoiceUniqueID= $scope.nameForAction[0]
+      accountService.delInv(obj).then($scope.delInvSuccess, $scope.multiActionWithInvFailure)
+
+    if type is 'email'
+      console.log "email api hit"
+
+    if type is 'download'
+      console.log "download api hit"
+      data=
+        invoiceNumber: $scope.nameForAction
+        template: ""
+      accountService.downloadInvoice(obj, data).then($scope.downInvSuccess, $scope.multiActionWithInvFailure)
+
+  # common failure message
+  $scope.multiActionWithInvFailure=(res)->
+    console.log "delInvFailure: ", res
+    toastr.error(res.data.message, res.data.status)
 
   $scope.delInvSuccess=(res)->
     console.log "delInvSuccess: ", res
+    toastr.success("Invoice deleted successfully", "Success")
 
-  $scope.delInvFailure=(res)->
-    console.log "delInvFailure: ", res
+  $scope.downInvSuccess=(res)->
+    $scope.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
+    if $scope.msieBrowser()
+      $scope.openWindow("data:application/pdf;base64, " + res.body)
+    else if $scope.isSafari       
+      modalInstance = $uibModal.open(
+        template: '<div>
+            <div class="modal-header">
+              <h3 class="modal-title">Download File</h3>
+            </div>
+            <div class="modal-body">
+              <p class="mrB">To download your file Click on button</p>
+              <button onClick="window.open(\'data:application/pdf;base64, '+res.body+'\')" class="btn btn-primary">Download</button>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+            </div>
+        </div>'
+        size: "sm"
+        backdrop: 'static'
+        scope: $scope
+      )
+    else
+      window.open("data:application/pdf;base64, " + res.body)
 
-  $scope.summationForDownload=(entry)->
-    console.log entry
-    $scope.radioChecked = true
 
+  # preview of generated invoice
+  $scope.prevGenerateInv=(item)->
+    obj =
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $rootScope.$stateParams.invId
+      invoiceUniqueID: item.invoiceNumber
+    accountService.prevOfGenInvoice(obj).then($scope.prevGenerateInvSuccess, $scope.prevGenerateInvFailure)
 
+  $scope.prevGenerateInvSuccess=(res)->
+    console.log "prevGenerateInvSuccess: ", res
+    $scope.genPrevMode = true
+    console.log $scope.templateList
+    $scope.viewInvTemplate( res.body.template, 'sample', res.body)
 
+  $scope.prevGenerateInvFailure=(res)->
+    console.log "prevGenerateInvFailure: ", res
+    toastr.error(res.data.message, res.data.status)
 
   # end get generated invoice list
 

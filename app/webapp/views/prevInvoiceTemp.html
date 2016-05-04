@@ -10,18 +10,6 @@
 @page :right {
   margin-left: 4cm;
 }
-@page :blank {
-  @top-center { content: "This page is intentionally left blank." }
-}
-@page:right{ 
-  @bottom-left {
-    margin: 10pt 0 30pt 0;
-    border-top: .25pt solid #666;
-    content: "Sarfaraz";
-    font-size: 9pt;
-    color: #333;
-  }
-}
 h1 {
   page-break-before: always;
 }
@@ -107,14 +95,24 @@ fieldset[disabled] .form-control{
 </style>
 <!-- <a onclick="javascript:window.print();"> -->
 <div class="modal-header">
-  <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><i aria-hidden="true">&times;</i></button>
+  <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); genPrevMode = false" aria-label="Close"><i aria-hidden="true">&times;</i></button>
   
-  <span ng-if="!editMode">
+  <span ng-if="!editMode && !genPrevMode">
     <a ng-if="withSampleData" ng-click="switchTempData()" class="btn btn-default btn-sm" href="javascript:void(0)">View as your data</a>
     <a ng-if="!withSampleData" ng-click="switchTempData()" class="btn btn-primary btn-sm" href="javascript:void(0)">View as sample data</a>
   </span>
-  <h3 class="modal-title alC" ng-if="!editMode">
+  <h3 class="modal-title alC" ng-if="!editMode && !genPrevMode">
     View Invoice
+  </h3>
+
+
+  <span ng-if="!editMode && genPrevMode">
+    <label>View in different templates</label>
+
+  </span>
+
+  <h3 class="modal-title alC" ng-if="!editMode && genPrevMode">
+    Invoice
   </h3>
   
 
@@ -230,7 +228,7 @@ fieldset[disabled] .form-control{
       
       
 
-      <section ng-if="editMode  && defTempData.entries !== null">
+      <section ng-if="editMode  && defTempData.entries !== null || !editMode && genPrevMode">
         <table class="table table-bordered vAlMid">
           <thead>
             <tr>
@@ -335,7 +333,7 @@ fieldset[disabled] .form-control{
         </div>
       </section>
 
-      <section ng-if="!editMode">
+      <section ng-if="!editMode && !genPrevMode">
         <table class="table table-bordered">
           <thead>
             <tr>
