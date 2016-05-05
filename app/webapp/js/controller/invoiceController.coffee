@@ -498,6 +498,32 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.nameForAction = []
     $scope.nameForAction.push(entry.invoiceNumber)
 
+  # mail Invoice
+  $scope.sendInvEmail=(emailData)->
+    console.log "sendInvEmail", emailData
+    sendData=
+      recipients: []
+    data = angular.copy(emailData)
+    data = data.replace(RegExp(' ', 'g'), '')
+    cdata = data.split(',')
+    _.each(cdata, (str) ->
+      if $rootScope.validateEmail(str)
+        sendData.recipients.push(str)
+      else
+        toastr.warning("Enter valid Email ID", "Warning")
+        data = ''
+        sendData.recipients = []
+        return false
+    )
+    if sendData.recipients < 1
+      if $rootScope.validateEmail(data)
+        sendData.recipients.push(data)
+      else
+        toastr.warning("Enter valid Email ID", "Warning")
+        return false
+
+    console.log "finally:", sendData
+
   # delete invoice
   $scope.multiActionWithInv=(type)->
     if $scope.nameForAction.length is 0
@@ -510,10 +536,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
     if type is 'delete'
       obj.invoiceUniqueID= $scope.nameForAction[0]
-      accountService.delInv(obj).then($scope.delInvSuccess, $scope.multiActionWithInvFailure)
-
-    if type is 'email'
-      console.log "email api hit"
+      companyServices.delInv(obj).then($scope.delInvSuccess, $scope.multiActionWithInvFailure)
 
     if type is 'download'
       data=

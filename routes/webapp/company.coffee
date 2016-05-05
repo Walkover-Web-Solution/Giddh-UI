@@ -435,5 +435,18 @@ router.put '/:uniqueName/templates', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+# delete invoice
+router.delete '/:uniqueName/invoices/:invoiceUniqueID', (req, res) ->
+  hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/invoices/'+req.params.invoiceUniqueID
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 
 module.exports = router

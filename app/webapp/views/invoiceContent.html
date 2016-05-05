@@ -161,7 +161,13 @@
               <div class="form-group">
                 <fieldset ng-disabled="!radioChecked">
                   <button ng-click="multiActionWithInv('download')" class="btn btn-primary mrR1">Download</button>
-                  <button ng-click="multiActionWithInv('email')" class="btn btn-primary mrR1">Send Email</button>
+                  <!-- send mail -->
+                  <span class="mrR1" uib-dropdown  auto-close="outsideClick">
+                    <button id="button-template-url" type="button" class="btn btn-primary" uib-dropdown-toggle>Send Email</button>
+                    <ul class="dropdown-menu" uib-dropdown-menu template-url="invDropdown.html" aria-labelledby="button-template-url">
+                    </ul>
+                  </span>
+                  <!-- end send email -->
                   <button ng-click="multiActionWithInv('delete')" class="btn btn-danger">Delete</button>
                 </fieldset>
               </div>
@@ -246,3 +252,17 @@
   <!-- end of view invoice -->
 </uib-tabset>
 <!-- main content end -->
+
+<!-- template -->
+<script type="text/ng-template" id="invDropdown.html">
+  <ul class="dropdown-menu" uib-dropdown-menu role="menu" aria-labelledby="button-template-url">
+    <li>
+      <form class="form-group pd1" name="InvEmailForm" novalidate>
+        <div class="mrB1">
+          <textarea ng-model="InvEmailData.email" required name="InvEmailForm.email" class="form-control" placeholder="Recipents Email Id's"></textarea>
+        </div>
+        <button ng-disabled="InvEmailForm.$invalid" class="btn btn-primary btn-sm" ng-click="sendInvEmail(InvEmailData.email)">Send</button>
+      </form>
+    </li>
+  </ul>
+</script>

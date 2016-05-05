@@ -128,9 +128,13 @@ fieldset[disabled] .form-control{
           >
         </select>
       </div>
-      <div class="form-group mrR1">
-        <button ng-click="downInv()" class="btn btn-primary mrR">Download</button>
-        <button class="btn btn-default">Send Email</button>
+      <div class="form-group mrR">
+        <button ng-click="downInv()" class="btn btn-primary">Download</button>
+      </div>
+      <div class="form-group mrR" uib-dropdown  auto-close="outsideClick">
+        <button id="button-template-url" type="button" class="btn btn-primary" uib-dropdown-toggle>Send Email</button>
+        <ul class="dropdown-menu" uib-dropdown-menu template-url="invDropdown.html" aria-labelledby="button-template-url">
+        </ul>
       </div>
       <div class="form-group">
         <h3 class="modal-title">Invoice</h3>
