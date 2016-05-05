@@ -856,7 +856,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.getTaxList = () ->
     $scope.taxList = []
-    companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
+    if $rootScope.canUpdate and $rootScope.canDelete
+      companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
 
   $scope.getTaxListSuccess = (res) ->
     _.each res.body, (tax) ->
