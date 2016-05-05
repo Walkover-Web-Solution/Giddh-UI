@@ -50,7 +50,7 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     
     getProfitLoss:
       method:'GET'
-      url: '/company/:companyUniqueName/profit-loss'
+      url: '/company/:uniqueName/profit-loss'
 
     switchUser:
       method: 'GET'
@@ -158,8 +158,8 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     getUploadsList: (uniqueName) ->
       @handlePromise((onSuccess, onFailure) -> Company.getUploadListDetails({uniqueName: uniqueName}, onSuccess, onFailure))
 
-    getPL :(reqParam) ->
-      @handlePromise((onSuccess, onFailure) -> Company.getProfitLoss({uniqueName: reqParam.uniqueName, from: reqParam.fromDate, to:reqParam.toDate}, onSuccess, onFailure))
+    getPL :(obj) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getProfitLoss({uniqueName: obj.uniqueName, from: obj.fromDate, to:obj.toDate}, onSuccess, onFailure))
 
     getCompTrans: (obj) ->
       @handlePromise((onSuccess, onFailure) -> Company.getCompTrans({uniqueName: obj.name, page: obj.num}, onSuccess, onFailure))
