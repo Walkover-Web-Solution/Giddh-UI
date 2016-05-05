@@ -7,6 +7,7 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     'page': @page
     'tempUname': @tempUname
     'invoiceUniqueID': @invoiceUniqueID
+    'taxUniqueName': @taxUniqueName
   },
   {
     addCompany:
@@ -87,10 +88,6 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     delInv:
       method: 'DELETE'
       url: '/company/:uniqueName/invoices/:invoiceUniqueID'
-
-    getCompTrans:
-      method:'GET'
-      url: '/company/:uniqueName/transactions?page=:page'
     
     getTax:
       method:'GET'
@@ -181,6 +178,21 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Company.switchUser({uniqueName: uniqueName},onSuccess,
           onFailure))
 
+    getInvTemplates: (uniqueName, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getInvTemplates({uniqueName: uniqueName}, onSuccess, onFailure))
+
+    setDefltInvTemplt: (obj, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.setDefltInvTemplt({uniqueName: obj.uniqueName, tempUname: obj.tempUname}, {}, onSuccess, onFailure))
+
+    updtInvTempData: (uniqueName, data, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.updtInvTempData({uniqueName: uniqueName}, data, onSuccess, onFailure))
+
+    delInv: (obj, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.delInv({
+          uniqueName: obj.compUname
+          invoiceUniqueID: obj.invoiceUniqueID
+        }, onSuccess, onFailure))
+
     getTax: (uniqueName) ->
       @handlePromise((onSuccess, onFailure) -> Company.getTax({uniqueName: uniqueName}, onSuccess, onFailure))
 
@@ -199,21 +211,5 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
         taxUniqueName: reqParam.taxUniqueName
         updateEntries: reqParam.updateEntries
       }, taxData, onSuccess, onFailure))
-
-
-    getInvTemplates: (uniqueName, onSuccess, onFailure) ->
-      @handlePromise((onSuccess, onFailure) -> Company.getInvTemplates({uniqueName: uniqueName}, onSuccess, onFailure))
-
-    setDefltInvTemplt: (obj, onSuccess, onFailure) ->
-      @handlePromise((onSuccess, onFailure) -> Company.setDefltInvTemplt({uniqueName: obj.uniqueName, tempUname: obj.tempUname}, {}, onSuccess, onFailure))
-
-    updtInvTempData: (uniqueName, data, onSuccess, onFailure) ->
-      @handlePromise((onSuccess, onFailure) -> Company.updtInvTempData({uniqueName: uniqueName}, data, onSuccess, onFailure))
-
-    delInv: (obj, onSuccess, onFailure) ->
-      @handlePromise((onSuccess, onFailure) -> Company.delInv({
-          uniqueName: obj.compUname
-          invoiceUniqueID: obj.invoiceUniqueID
-        }, onSuccess, onFailure))
 
   companyServices
