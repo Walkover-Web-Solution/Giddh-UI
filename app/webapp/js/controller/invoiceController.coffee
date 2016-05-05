@@ -12,6 +12,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.radioChecked = false
   $scope.genPrevMode = false
   $scope.nameForAction = []
+  $scope.InvEmailData = {}
   # default Template data
   $scope.tempDataDef=
     logo: 
@@ -500,29 +501,36 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # mail Invoice
   $scope.sendInvEmail=(emailData)->
-    console.log "sendInvEmail", emailData
+    obj =
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $rootScope.$stateParams.invId
     sendData=
-      recipients: []
+      emailId: []
+      invoiceNumber: $scope.nameForAction
     data = angular.copy(emailData)
     data = data.replace(RegExp(' ', 'g'), '')
     cdata = data.split(',')
     _.each(cdata, (str) ->
       if $rootScope.validateEmail(str)
-        sendData.recipients.push(str)
+        sendData.emailId.push(str)
       else
         toastr.warning("Enter valid Email ID", "Warning")
         data = ''
-        sendData.recipients = []
+        sendData.emailId = []
         return false
     )
-    if sendData.recipients < 1
+    if sendData.emailId < 1
       if $rootScope.validateEmail(data)
-        sendData.recipients.push(data)
+        sendData.emailId.push(data)
       else
         toastr.warning("Enter valid Email ID", "Warning")
         return false
 
-    console.log "finally:", sendData
+    accountService.mailInvoice(obj, sendData).then($scope.sendInvEmailSuccess, $scope.multiActionWithInvFailure)
+
+  $scope.sendInvEmailSuccess=(res)->
+    toastr.success("Email sent successfully", "Success")
+    $scope.InvEmailData = {}
 
   # delete invoice
   $scope.multiActionWithInv=(type)->
