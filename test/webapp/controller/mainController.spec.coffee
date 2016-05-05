@@ -75,3 +75,11 @@ describe 'mainController', ->
       @scope.checkPermissions(data)
       expect(@scope.canManageCompany).toBeTruthy()
       expect(@permissionService.hasPermissionOn).toHaveBeenCalledWith(data, "MNG_CMPNY")
+
+  describe '#validateEmail', ->
+      it 'should validate string and return true if string is valid email id', ->
+        result =  @scope.validateEmail("abc@xyz.com")
+        expect(result).toBeTruthy()
+      it 'should return false if string is not valid email id', ->
+        result =  @scope.validateEmail("abc@x")
+        expect(result).toBeFalsy()

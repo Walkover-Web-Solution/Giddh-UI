@@ -72,6 +72,10 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
     if val.length > 0
       cntBox = document.getElementById(elem)
       cntBox.scrollTop = 0
+
+  $rootScope.validateEmail = (emailStr)->
+    pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    return pattern.test(emailStr)
   
   $scope.getRoles()
   $timeout(->

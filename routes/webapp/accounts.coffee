@@ -242,20 +242,6 @@ router.get '/:accountUniqueName/invoices', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-# delete invoice
-router.delete '/:accountUniqueName/invoices/:invoiceUniqueID', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/invoices/'+req.params.invoiceUniqueID
-  args =
-    headers:
-      'Auth-Key': req.session.authKey
-      'Content-Type': 'application/json'
-      'X-Forwarded-For': res.locales.remoteIp
-  settings.client.delete hUrl, args, (data, response) ->
-    if data.status == 'error'
-      res.status(response.statusCode)
-    res.send data
-
 # preview Invoice
 router.post '/:accountUniqueName/invoices/preview', (req, res) ->
   args =

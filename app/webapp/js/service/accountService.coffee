@@ -76,10 +76,6 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         method: 'GET',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices?fromDate=:fromDate&toDate=:toDate'
 
-      delInv:
-        method: 'DELETE'
-        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices/:invoiceUniqueID'
-
       prevInvoice:
         method: 'POST'
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices/preview'
@@ -200,13 +196,6 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
           accountsUniqueName: obj.acntUname
           fromDate: obj.fromDate
           toDate: obj.toDate
-        }, onSuccess, onFailure))
-
-    delInv: (obj, onSuccess, onFailure) ->
-      @handlePromise((onSuccess, onFailure) -> Account.delInv({
-          companyUniqueName: obj.compUname
-          accountsUniqueName: obj.acntUname
-          invoiceUniqueID: obj.invoiceUniqueID
         }, onSuccess, onFailure))
 
     prevInvoice: (obj, data, onSuccess, onFailure) ->

@@ -818,7 +818,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     data = data.replace(RegExp(' ', 'g'), '')
     cdata = data.split(',')
     _.each(cdata, (str) ->
-      if $scope.validateEmail(str)
+      if $rootScope.validateEmail(str)
         sendData.recipients.push(str)
       else
         toastr.warning("Enter valid Email ID", "Warning")
@@ -827,7 +827,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         return false
     )
     if sendData.recipients < 1
-      if $scope.validateEmail(data)
+      if $rootScope.validateEmail(data)
         sendData.recipients.push(data)
       else
         toastr.warning("Enter valid Email ID", "Warning")
@@ -835,9 +835,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
     accountService.emailLedger(unqNamesObj, sendData).then($scope.emailLedgerSuccess, $scope.emailLedgerFailure)
 
-  $scope.validateEmail = (emailStr)->
-    pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-    return pattern.test(emailStr)
+  
 
   $scope.emailLedgerSuccess = (res) ->
     toastr.success(res.body, res.status)

@@ -6,6 +6,7 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     'uniqueName': @uniqueName
     'page': @page
     'tempUname': @tempUname
+    'invoiceUniqueID': @invoiceUniqueID
   },
   {
     addCompany:
@@ -83,6 +84,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       method: 'PUT'
       url: '/company/:uniqueName/templates'
 
+    delInv:
+      method: 'DELETE'
+      url: '/company/:uniqueName/invoices/:invoiceUniqueID'
+
     getCompTrans:
       method:'GET'
       url: '/company/:uniqueName/transactions?page=:page'
@@ -102,7 +107,6 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     editTax:
       method: 'PUT'
       url: '/company/:uniqueName/tax/:taxUniqueName?updateEntries=:updateEntries'
-    
 
   })
 
@@ -205,5 +209,11 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
 
     updtInvTempData: (uniqueName, data, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Company.updtInvTempData({uniqueName: uniqueName}, data, onSuccess, onFailure))
+
+    delInv: (obj, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Company.delInv({
+          uniqueName: obj.compUname
+          invoiceUniqueID: obj.invoiceUniqueID
+        }, onSuccess, onFailure))
 
   companyServices

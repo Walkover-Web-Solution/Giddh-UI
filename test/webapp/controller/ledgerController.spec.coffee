@@ -1275,6 +1275,9 @@ describe 'ledgerController', ->
         @scope.sendLedgEmail(data)
         expect(@toastr.error).toHaveBeenCalledWith("Date should be in proper format", "Error")
       it 'should set variables and return false in case of not valid string and not call accountService emailLedger method', ->
+        @rootScope.validateEmail=()->
+          console.log "hey"
+        spyOn(@rootScope, "validateEmail").andReturn(false)
         spyOn(@toastr, "warning")
         deferred = @q.defer()
         spyOn(@accountService, "emailLedger").andReturn(deferred.promise)
@@ -1283,6 +1286,8 @@ describe 'ledgerController', ->
         expect(@accountService.emailLedger).not.toHaveBeenCalled()
 
       it 'should call accountService emailLedger method with desired variables', ->
+        @rootScope.validateEmail=()->
+          console.log "hey"
         @rootScope.selectedCompany =
           uniqueName: "somename"
         @rootScope.selAcntUname = "somename"
@@ -1291,6 +1296,7 @@ describe 'ledgerController', ->
         @scope.fromDate = 
           date: "12-01-2016"
         spyOn(@toastr, "warning")
+        spyOn(@rootScope, "validateEmail").andReturn(true)
         deferred = @q.defer()
         spyOn(@accountService, "emailLedger").andReturn(deferred.promise)
         unqNamesObj = {
@@ -1305,14 +1311,6 @@ describe 'ledgerController', ->
         @scope.sendLedgEmail("abc@x y z.in, abc@ebc.com")
         expect(@toastr.warning).not.toHaveBeenCalled()
         expect(@accountService.emailLedger).toHaveBeenCalledWith(unqNamesObj, sendData)
-
-    describe '#validateEmail', ->
-      it 'should validate string and return true if string is valid email id', ->
-        result =  @scope.validateEmail("abc@xyz.com")
-        expect(result).toBeTruthy()
-      it 'should return false if string is not valid email id', ->
-        result =  @scope.validateEmail("abc@x")
-        expect(result).toBeFalsy()
 
     describe '#emailLedgerSuccess', ->
       it 'should make variable empty and show message with toastr success method', ->
