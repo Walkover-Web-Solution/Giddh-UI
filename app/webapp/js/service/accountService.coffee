@@ -91,6 +91,10 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       prevOfGenInvoice:
         method: 'GET',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices/:invoiceUniqueID/preview'
+
+      mailInvoice:
+        method: 'POST',
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices/mail'
       
     })
 
@@ -222,5 +226,11 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
           accountsUniqueName: obj.acntUname
           invoiceUniqueID: obj.invoiceUniqueID
         }, onSuccess, onFailure))
+
+    mailInvoice: (obj, data, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Account.mailInvoice({
+          companyUniqueName: obj.compUname
+          accountsUniqueName: obj.acntUname
+        },data, onSuccess, onFailure))
 
   accountService
