@@ -903,6 +903,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
       )
     else
+      console.log newTax
       companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
       item.isEditable = false
       

@@ -382,7 +382,7 @@ router.delete '/:companyUniqueName/tax/:taxUniqueName', (req, res) ->
     res.send data
 
 #edit/update taxe
-router.put '/:companyUniqueName/tax/:taxUniqueName', (req, res) ->
+router.put '/:companyUniqueName/tax/:taxUniqueName/:updateEntries', (req, res) ->
   console.log req.body, req.params
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/tax/' + req.params.taxUniqueName + '?updateEntries=' + req.params.updateEntries
   args =
@@ -390,7 +390,9 @@ router.put '/:companyUniqueName/tax/:taxUniqueName', (req, res) ->
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
   settings.client.put hUrl, args, (data, response) ->
+    console.log hUrl
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data

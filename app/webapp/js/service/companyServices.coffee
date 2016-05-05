@@ -103,7 +103,7 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     
     editTax:
       method: 'PUT'
-      url: '/company/:uniqueName/tax/:taxUniqueName?updateEntries=:updateEntries'
+      url: '/company/:uniqueName/tax/:taxUniqueName/:updateEntries'
 
   })
 
@@ -206,6 +206,7 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       }, onSuccess, onFailure))
     
     editTax: (reqParam, taxData, onSuccess, onFailure) ->
+      console.log reqParam, taxData, 'from service'
       @handlePromise((onSuccess, onFailure) -> Company.editTax({
         uniqueName: reqParam.uniqueName
         taxUniqueName: reqParam.taxUniqueName
