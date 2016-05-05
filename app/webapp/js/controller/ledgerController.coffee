@@ -265,6 +265,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.ledgerBreadCrumbList = data
 
   $scope.loadLedger = (gData, acData) ->
+    $scope.getTaxList()
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
       return false
@@ -324,7 +325,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         )    
 
   $scope.loadLedgerSuccess = (res) ->
+    $scope.ledgerDataArray = {}
     data = {}
+    angular.copy(res.body, $scope.ledgerDataArray)
     angular.copy(res.body, data)
     $scope.ledgerOnlyCreditData = []
     $scope.ledgerOnlyDebitData = []
@@ -398,6 +401,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         }
         type: ''
       }
+
+      if tax.account.uniqueName == 0
+        toastr.error('The tax you are trying to add does not have an account linked with it, please link an account.')
+        return false
       if tax.account.uniqueName == $stateParams.unqName
         toastr.error('Tax can not be applied to same account to which it is linked.')
         return false
@@ -426,17 +433,18 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         newTax.isLinked = false
         
         #check if newTax exits in edata.transactions
-        _.each edata.transactions, (txn) ->
-          if txn.particular.uniqueName == newTax.particular.uniqueName && newTax.isLinked != true
-            newTax.isLinked = true
+        # _.each edata.transactions, (txn) ->
+        #   if txn.particular.uniqueName == newTax.particular.uniqueName && newTax.isLinked != true
+        #     newTax.isLinked = true
 
-        if newTax.isLinked == false
-          edata.transactions.push(tax_1)
+        # if newTax.isLinked == false
+          #edata.transactions.push(tax_1)
 
-        #newTaxTransactions.push(tax_1)
-    # parentTxn = []
-    # parentTxn.push(edata.transactions[0])
-    # edata.transactions = parentTxn.concat(newTaxTransactions)
+        newTaxTransactions.push(tax_1)
+    
+    parentTxn = []
+    parentTxn.push(edata.transactions[0])
+    edata.transactions = parentTxn.concat(newTaxTransactions)
     
 
   $scope.addNewEntry = (data) ->
@@ -851,14 +859,16 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
 
   $scope.getTaxListSuccess = (res) ->
-    $scope.taxList = res.body
-    _.each $scope.taxList, (tax) ->
-      tax.isSelected = false 
+    _.each res.body, (tax) ->
+      tax.isSelected = false
+      if tax.account == null
+        tax.account = {}
+        tax.account.uniqueName = 0 
+      $scope.taxList.push(tax)
+
 
   $scope.getTaxListFailure = (res) ->
     toastr.error(res.data.message, res.status)
-
-  $scope.getTaxList()
 
   $scope.addTaxEntry = (tax, item) ->
     if tax.isSelected

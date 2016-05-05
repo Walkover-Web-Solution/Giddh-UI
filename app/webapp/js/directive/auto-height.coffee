@@ -439,6 +439,8 @@ angular.module('ledger', [])
     enterRowdebit: '&'
     enterRowcredit: '&'
     el:'&'
+    ledgerDataArray:'=ledgerDataArray'
+    taxList: '=taxList'
   controller: 'ledgerController'
   template: "<form novalidate tabindex='-1'>
       <div>
@@ -601,12 +603,32 @@ angular.module('ledger', [])
 
     scope.openDialog = (item, indexs, ftype, parentForm) ->
       $timeout( ->
+        unq = item.sharedData.uniqueName
         taxList = scope.taxList
-        _.each item.transactions, (txn)->
+        siblings = []
+
+        _.each scope.ledgerDataArray.ledgers, (ledger) ->
+          if unq == ledger.uniqueName
+            siblings = ledger.transactions
+
+        _.each siblings, (txn)->
+          _.each taxList, (tax) ->
+            if tax.account.uniqueName != 0 && tax.account.uniqueName == txn.particular.uniqueName
+              tax.isSelected = true
+
+        _.each item.transactions, (txn) ->
           _.each taxList, (tax) ->
             if tax.account.uniqueName == txn.particular.uniqueName
-              tax.isSelected = true
-              item.isTax = true
+              tax.isTax = true
+
+        _.each taxList, (tax) ->
+          tax.withinDate = true
+          today = new Date().getTime()
+          _.each tax.taxDetail, (det) ->
+            date = new Date(det.date).getTime()
+            console.log today < date, tax.name
+            if today < date
+              tax.withinDate = false
       )
 
       scope.removeClassInAllEle("ledgEntryForm", "open")
@@ -636,8 +658,8 @@ angular.module('ledger', [])
                 <div class="row mrT1" ng-show="{{formClass}}.$valid">
                   <hr>
                   <ul class="list-inline" style="margin-left:15px" ng-if="!item.isTax">
-                    <li ng-repeat="tax in taxList">
-                       <div class="checkbox"><label><input type="checkbox" ng-model="tax.isSelected" ng-change="addTaxEntry(tax, item)">{{tax.name}}</label></div>
+                    <li ng-repeat="tax in taxList" ng-class="{pad0: tax.account.uniqueName == 0 || !tax.withinDate}">
+                       <div class="checkbox" ng-if="tax.account.uniqueName != 0 && tax.withinDate"><label><input type="checkbox" ng-model="tax.isSelected" ng-change="addTaxEntry(tax, item)">{{tax.name}}</label></div>
                     </li>
                   </ul>
                   <hr>

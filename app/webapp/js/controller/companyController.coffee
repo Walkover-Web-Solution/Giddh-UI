@@ -785,11 +785,15 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   # get taxes
   $scope.getTax=()->
     $scope.taxList = []
-    companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxSuccess, $scope.getTaxFailure)
+    if $rootScope.canUpdate and $rootScope.canDelete
+      companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxSuccess, $scope.getTaxFailure)
 
   $scope.getTaxSuccess = (res) ->
     _.each res.body, (obj) ->
       obj.isEditable = false
+      if obj.account == null
+        obj.account = {}
+        obj.account.uniqueName = ''
       obj.hasLinkedAcc = _.find($scope.fltAccntList, (acc)->
         return acc.uniqueName == obj.account.uniqueName
       ) 
