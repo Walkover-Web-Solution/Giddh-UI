@@ -2435,9 +2435,6 @@ table.nopad td .form-control, .taxTable.table .form-control{
 table td.nopad{
     padding: 0 !important;
 }
-
-
-
 .inner-table thead tr, .inner-table tbody tr{
     border-bottom: 1px solid #f0f0f0;
     text-align: center;
@@ -2462,20 +2459,16 @@ table td.nopad{
 .inner-table td input{
     border-radius: 0;
 }
-
 .inner-table td i{
     cursor: pointer;
 }
-
-/*Invoice*/
-/*highlight table row when selected*/
 .table-striped .selectedForInv {
     background-color: #CCE7E7 !important
 }
 .table-bordered>tbody>tr.selectedForInv>td{
     border-color: #b7cfcf
 }
-
+/*Invoice*/
 /*no border table*/
 .table.invGenTbl>tfoot>tr>th, .table.invGenTbl>tfoot>tr>td{
     text-align: right;
