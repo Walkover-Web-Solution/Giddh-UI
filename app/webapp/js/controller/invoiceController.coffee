@@ -11,8 +11,13 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.noDataDR = false
   $scope.radioChecked = false
   $scope.genPrevMode = false
-  $scope.nameForAction = []
+  $scope.genMode = false
+  $scope.prevInProg = false
   $scope.InvEmailData = {}
+  $scope.nameForAction = []
+  $scope.onlyDrData = []
+  $scope.entriesForInvoice = []
+
   # default Template data
   $scope.tempDataDef=
     logo: 
@@ -88,12 +93,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       data: 'CP Tower Road No. 1,Indraprashta Industrial Kota,PAN: 1862842,Email: info@career.com'
   # invoice setting end
 
-  # close popup
-  $scope.closePop=()->
-    console.log "closePop"
-    $scope.withSampleData = true
-    $scope.genPrevMode = false
-
   # datepicker setting end
   $scope.dateData = {
     fromDate: new Date(moment().subtract(3, 'month').utc())
@@ -117,10 +116,16 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.toDatePickerOpen = ->
     this.toDatePickerIsOpen = true
   # end of date picker
-  $scope.onlyDrData = []
-  $scope.entriesForInvoice = []
+  
 
   # end of page load varialbles
+
+  # close popup
+  $scope.closePop=()->
+    $scope.withSampleData = true
+    $scope.genMode = false
+    $scope.genPrevMode = false
+    $scope.prevInProg = false
 
   $scope.getAllGroupsWithAcnt=()->
     if _.isEmpty($rootScope.selectedCompany)
@@ -128,12 +133,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     else
       # with accounts, group data
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
-      # without accounts only groups conditionally
-      cData = localStorageService.get("_selectedCompany")
-      if cData.sharedEntity is 'accounts'
-        console.info "sharedEntity:"+ cData.sharedEntity
-      else
-        groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess, $scope.getGroupListFailure)
 
   $scope.makeAccountsList = (res) ->
     # flatten all groups with accounts and only accounts flatten
@@ -222,6 +221,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # view template with sample data
   $scope.viewInvTemplate =(template, mode, data) ->
+    $scope.templateClass = template.uniqueName
     if mode isnt 'genprev'
       $scope.genPrevMode = false
     $scope.logoWrapShow = false
@@ -285,6 +285,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # save template data
   $scope.saveTemp=(stype, force)->
+    $scope.genMode = false
     $scope.updatingTempData = true
     dData = {}
     data = {}
@@ -389,6 +390,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # get ledger entries to generate invoice
   $scope.getLedgerEntries=()->
+    $scope.prevInProg = false
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $rootScope.$stateParams.invId
@@ -448,7 +450,13 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
           entry.id is item.id
         )
 
+    if $scope.entriesForInvoice.length > 0
+      $scope.prevInProg= true
+    else
+      $scope.prevInProg= false
+
   $scope.prevAndGenInv=()->
+    $scope.genMode = true
     $scope.prevInProg = true
     arr = []
     _.each($scope.entriesForInvoice, (entry)->
@@ -485,7 +493,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.getInvListSuccess=(res)->
     $scope.genInvList = []
     _.extend($scope.genInvList , res.body)
-    if $scope.genInvList is 0
+    if $scope.genInvList.length is 0
       $scope.noDataGenInv = true
     else
       $scope.noDataGenInv = false
@@ -635,6 +643,11 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $scope.invoiceLoadDone = false
   )
 
+  $timeout(->
+    $rootScope.basicInfo = localStorageService.get("_userDetails")
+    if !_.isEmpty($rootScope.selectedCompany)
+      $rootScope.cmpViewShow = true
+  ,1000)
 
 
 

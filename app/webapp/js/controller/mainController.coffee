@@ -65,6 +65,8 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
     $rootScope.canManageCompany = permissionService.hasPermissionOn(entity, "MNG_CMPNY")
     $rootScope.canVWDLT = permissionService.hasPermissionOn(entity, "VWDLT")
 
+    
+
   $rootScope.setScrollToTop = (val, elem)->
     if val is '' || _.isUndefined(val)
       return false

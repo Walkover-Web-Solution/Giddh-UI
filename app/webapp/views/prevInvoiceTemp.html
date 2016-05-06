@@ -64,6 +64,9 @@ h1 {
   display: block;
   text-align: left;
 }
+.template_b #three, #four{
+  height: 2.3in;
+}
 .vcenter {
   display: block;
   vertical-align: middle;
@@ -101,312 +104,317 @@ fieldset[disabled] .form-control{
 .genPrevMode .form-group{
   margin-bottom: 0;
 }
+textarea{
+  resize:none;
+}
 
 </style>
-<!-- <a onclick="javascript:window.print();"> -->
-<div class="modal-header" ng-class="genPrevMode ? 'genPrevMode': ''">
-  <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); closePop()" aria-label="Close"><i aria-hidden="true">&times;</i></button>
-  
-  <span ng-if="!editMode && !genPrevMode">
-    <a ng-if="withSampleData" ng-click="switchTempData()" class="btn btn-default btn-sm" href="javascript:void(0)">View as your data</a>
-    <a ng-if="!withSampleData" ng-click="switchTempData()" class="btn btn-primary btn-sm" href="javascript:void(0)">View as sample data</a>
-  </span>
-  <h3 class="modal-title alC" ng-if="!editMode && !genPrevMode">
-    View Invoice
-  </h3>
 
-
-  <span ng-if="!editMode && genPrevMode">
-    <aside class="form-inline">
-      <p><small>View Invoice in different templates</small></p>
-      <div class="form-group mrR">
-        <select 
-          class="form-control"
-          ng-model="tempType.uniqueName"
-          ng-options="item.uniqueName as item.name for item in templateList"
-          ng-change="setDiffView()"
-          >
-        </select>
-      </div>
-      <div class="form-group mrR">
-        <button ng-click="downInv()" class="btn btn-primary">Download</button>
-      </div>
-      <div class="form-group mrR" uib-dropdown  auto-close="outsideClick">
-        <button id="button-template-url" type="button" class="btn btn-primary" uib-dropdown-toggle>Send Email</button>
-        <ul class="dropdown-menu" uib-dropdown-menu template-url="invDropdown.html" aria-labelledby="button-template-url">
-        </ul>
-      </div>
-      <div class="form-group">
-        <h3 class="modal-title">Invoice</h3>
-      </div>
-    </aside>
-  </span>
-
-  
-  
-
-  <span ng-if="editMode && defTempData.entries === null">
-    <a ng-click="saveTemp('save', false)" class="btn btn-success btn-sm" href="javascript:void(0)" ng-disabled="updatingTempData">Save Changes</a>
-  </span>
-
-  <span ng-if="editMode && defTempData.entries !== null">
-    <a ng-click="saveTemp('generate', false)" class="btn btn-success btn-sm" href="javascript:void(0)" ng-disabled="updatingTempData">Generate Invoice</a>
-  </span>
-
-</div>
-<div class="modal-body">
-
-  <div class="search-loading" ng-if="updatingTempData">
-    <span class="spinner small"></span> Loading…
-  </div>
+<div class="templateClass">
+  <div class="modal-header" ng-class="genPrevMode ? 'genPrevMode': ''">
+    <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); closePop()" aria-label="Close"><i aria-hidden="true">&times;</i></button>
     
-  <div class="invoiceContainer" ng-class="editMode ? 'editMode' : 'previewMode'" ng-if="!updatingTempData">
+    <span ng-if="!editMode && !genPrevMode">
+      <a ng-if="withSampleData" ng-click="switchTempData()" class="btn btn-default btn-sm" href="javascript:void(0)">View as your data</a>
+      <a ng-if="!withSampleData" ng-click="switchTempData()" class="btn btn-primary btn-sm" href="javascript:void(0)">View as sample data</a>
+    </span>
+    <h3 class="modal-title alC" ng-if="!editMode && !genPrevMode">
+      View Invoice
+    </h3>
 
-    <!-- sample preview mode start -->
 
-    <fieldset ng-disabled="!editMode">
-      <section ng-if="tempSet.logo && tempSet.invoiceDetails">
+    <span ng-if="!editMode && genPrevMode">
+      <aside class="form-inline">
+        <p><small>View Invoice in different templates</small></p>
+        <div class="form-group mrR">
+          <select 
+            class="form-control"
+            ng-model="tempType.uniqueName"
+            ng-options="item.uniqueName as item.name for item in templateList"
+            ng-change="setDiffView()"
+            >
+          </select>
+        </div>
+        <div class="form-group mrR">
+          <button ng-click="downInv()" class="btn btn-primary">Download</button>
+        </div>
+        <div class="form-group mrR" uib-dropdown  auto-close="outsideClick">
+          <button id="button-template-url" type="button" class="btn btn-primary" uib-dropdown-toggle>Send Email</button>
+          <ul class="dropdown-menu" uib-dropdown-menu template-url="invDropdown.html" aria-labelledby="button-template-url">
+          </ul>
+        </div>
+        <div class="form-group">
+          <h3 class="modal-title">Invoice</h3>
+        </div>
+      </aside>
+    </span>
+
+    
+    
+
+    <span ng-if="editMode && defTempData.entries === null">
+      <a ng-click="saveTemp('save', false)" class="btn btn-success btn-sm" href="javascript:void(0)" ng-disabled="updatingTempData">Save Changes</a>
+    </span>
+
+    <span ng-if="editMode && defTempData.entries !== null">
+      <a ng-click="saveTemp('generate', false)" class="btn btn-success btn-sm" href="javascript:void(0)" ng-disabled="updatingTempData">Generate Invoice</a>
+    </span>
+
+  </div>
+  <div class="modal-body">
+
+    <div class="search-loading" ng-if="updatingTempData">
+      <span class="spinner small"></span> Loading…
+    </div>
+      
+    <div class="invoiceContainer" ng-class="editMode ? 'editMode' : 'previewMode'" ng-if="!updatingTempData">
+
+      <!-- sample preview mode start -->
+
+      <fieldset ng-disabled="!editMode">
+        <section ng-if="tempSet.logo && tempSet.invoiceDetails">
+          <div class="row">
+            <section id="one" class="col-xs-6">
+              <h1 ng-if="!editMode">
+                <img src="{{defTempData.logo.path}}" alt="" height="50px">
+              </h1>
+
+              <h1 ng-if="editMode && defTempData.entries !== null">
+                <img src="{{defTempData.logo.path}}" alt="" height="50px">
+              </h1>
+
+              <aside ng-if="editMode && defTempData.entries === null">
+                <form class="form-inline" enctype="multipart/form-data">
+                  <div class="form-group" ng-show="logoWrapShow || defTempData.logo.path === ''">
+                    <span ng-hide="logoUpldComplt && logoWrapShow">
+                      <button type="file" 
+                        ng-model="logoFile"
+                        class="btn btn-primary" 
+                        ngf-select="uploadLogo($files)" 
+                        ngf-pattern="image/*"
+                        accept="image/*"
+                        ngf-max-size="200KB"
+                        ngf-multiple="false"
+                      >
+                        <i class="glyphicon glyphicon-folder-open"></i> 
+                        &nbsp; Upload Logo</button><br/>
+                      <small>* Logo size should be max 200KB</small>
+                    </span>
+                  </div>
+                  <div class="form-group" ng-show="logoUpldComplt">
+                    <img ngf-src="logoFile" class="thumb">
+                    <a href="javascript:void(0)" ng-click="resetLogo()">Reset Logo</a>
+                  </div>
+                </form>
+                <div ng-if="defTempData.logo.path !== ''" ng-hide="logoWrapShow">
+                  <img src="{{defTempData.logo.path}}" class="" height="50px">
+                  <a href="javascript:void(0)" ng-click="showUploadWrap()">Change Logo</a>
+                </div>
+              </aside>
+            </section>
+            <section id="two" class="col-xs-6 text-right">
+              <section class="form-inline clearfix">
+                <div class="form-group pull-right mrL2">
+                  <label>Invoice #:</label>
+                  <input  ng-disabled="editMode" type="text" class="form-control wid80"  ng-model="defTempData.invoiceDetails.invoiceNumber">
+                </div>
+                <div class="form-group pull-right">
+                  <label>Date:</label>
+                  <input ng-disabled="editMode" type="text" class="form-control wid80" ng-model="defTempData.invoiceDetails.invoiceDate">
+                </div>
+              </section>
+            </section>
+          </div>
+          <hr>
+        </section>
+        <!-- section one or two end -->
+        
         <div class="row">
-          <section id="one" class="col-xs-6">
-            <h1 ng-if="!editMode">
-              <img src="{{defTempData.logo.path}}" alt="" height="50px">
-            </h1>
-
-            <h1 ng-if="editMode && defTempData.entries !== null">
-              <img src="{{defTempData.logo.path}}" alt="" height="50px">
-            </h1>
-
-            <aside ng-if="editMode && defTempData.entries === null">
-              <form class="form-inline" enctype="multipart/form-data">
-                <div class="form-group" ng-show="logoWrapShow || defTempData.logo.path === ''">
-                  <span ng-hide="logoUpldComplt && logoWrapShow">
-                    <button type="file" 
-                      ng-model="logoFile"
-                      class="btn btn-primary" 
-                      ngf-select="uploadLogo($files)" 
-                      ngf-pattern="image/*"
-                      accept="image/*"
-                      ngf-max-size="200KB"
-                      ngf-multiple="false"
-                    >
-                      <i class="glyphicon glyphicon-folder-open"></i> 
-                      &nbsp; Upload Logo</button><br/>
-                    <small>* Logo size should be max 200KB</small>
-                  </span>
-                </div>
-                <div class="form-group" ng-show="logoUpldComplt">
-                  <img ngf-src="logoFile" class="thumb">
-                  <a href="javascript:void(0)" ng-click="resetLogo()">Reset Logo</a>
-                </div>
-              </form>
-              <div ng-if="defTempData.logo.path !== ''" ng-hide="logoWrapShow">
-                <img src="{{defTempData.logo.path}}" class="" height="50px">
-                <a href="javascript:void(0)" ng-click="showUploadWrap()">Change Logo</a>
-              </div>
-            </aside>
+          <section class="col-xs-5" id="three">
+            <h4 class="mrB">From:</h4>
+            <div class="txtAreaWrap">
+              <input ng-disabled="genMode" class="form-control" ng-model="defTempData.company.name" placeholder="Your company name">
+              <textarea ng-disabled="genMode" class="form-control" ng-model="defTempData.company.data" placeholder="Address and other details"></textarea>
+            </div>
           </section>
-          <section id="two" class="col-xs-6 text-right">
-            <section class="form-inline clearfix">
-              <div class="form-group pull-right mrL2">
-                <label>Invoice #:</label>
-                <input  ng-disabled="editMode" type="text" class="form-control wid80"  ng-model="defTempData.invoiceDetails.invoiceNumber">
+          <section class="col-xs-5 col-xs-offset-2" id="four">
+            <!-- if logo or invoiceDetails false then show invoice no -->
+            <section class="form-inline clearfix mrB1" ng-if="!tempSet.logo">
+              <div class="form-group mrR">
+                <label>Invoice # :&nbsp;</label>
+                {{defTempData.invoiceDetails.invoiceNumber}}
               </div>
-              <div class="form-group pull-right">
-                <label>Date:</label>
-                <input ng-disabled="editMode" type="text" class="form-control wid80" ng-model="defTempData.invoiceDetails.invoiceDate">
+              <div class="form-group">
+                <label>Date :&nbsp;</label>
+                {{defTempData.invoiceDetails.invoiceDate}}
               </div>
             </section>
-          </section>
-        </div>
-        <hr>
-      </section>
-      <!-- section one or two end -->
+            <!-- end if -->
 
-      <div class="row">
-        <section class="col-xs-5" id="three">
-          <h4 class="mrB">From:</h4>
-          <div class="txtAreaWrap">
-            <input class="form-control" ng-model="defTempData.company.name" placeholder="Your company name">
-            <textarea class="form-control" ng-model="defTempData.company.data" placeholder="Address and other details"></textarea>
-          </div>
-        </section>
-        <section class="col-xs-5 col-xs-offset-2" id="four">
-          <!-- if logo or invoiceDetails false then show invoice no -->
-          <section class="form-inline clearfix mrB1" ng-if="!tempSet.logo">
-            <div class="form-group mrR">
-              <label>Invoice # :&nbsp;</label>
-              <input ng-disabled="editMode" type="text" class="form-control wid80"  ng-model="defTempData.invoiceDetails.invoiceNumber">
-            </div>
-            <div class="form-group">
-              <label>Date :&nbsp;</label>
-              <input ng-disabled="editMode" type="text" class="form-control wid80" ng-model="defTempData.invoiceDetails.invoiceDate" >
-            </div>
-          </section>
-          <!-- end if -->
-
-          <h4 class="mrB">To:</h4>
-          <div class="txtAreaWrap">
-            <input ng-disabled="editMode" class="form-control" ng-model="defTempData.account.name" placeholder="Buyer Name">
-            <textarea ng-disabled="editMode" class="form-control" ng-model="defTempData.account.data"  placeholder="Buyer Address and other details"></textarea>
-          </div>
-        </section>
-      </div>
-      <!-- section three or four end -->
-      
-      <!-- / end client and company details section -->
-      
-      
-
-      <section ng-if="defTempData.entries !== null || !editMode && genPrevMode">
-        <table class="table table-bordered vAlMid">
-          <thead>
-            <tr>
-              <th class="col-xs-1">
-                <h4>S No.</h4>
-              </th>
-              <th class="col-xs-9">
-                <h4>Description</h4>
-              </th>
-              <th class="col-xs-2 alR">
-                <h4>Amount</h4>
-              </th>
-            </tr>
-          </thead>
-        
-          <tbody>
-            <tr ng-repeat="item in defTempData.entries track by $index">
-              <td>{{$index+1 | number}}</td>
-              <td>
-                <input type="text" ng-model="item.transactions[0].description" class="form-control">
-              </td>
-              <td class="text-right">
-                {{item.transactions[0].amount | currency:"&#x20B9;"}}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-        <table class="table invGenTbl">
-          <tfoot>
-            <tr>
-              <th class="col-xs-1">
-                &nbsp;
-              </th>
-              <th class="col-xs-9">
-                Sub Total :
-              </th>
-              <th class="col-xs-2">
-                {{defTempData.subTotal | currency:"&#x20B9;"}}
-              </th>
-            </tr>
-            <!-- tax repeat -->
-            <tr ng-if="defTempData.taxes.length > 0" ng-repeat="tax in defTempData.taxes">
-              <th class="col-xs-1">
-                &nbsp;
-              </th>
-              <th class="col-xs-9">
-                <div class="form-inline clearfix">
-                  <div class="form-group" ng-class="tax.hasError ? 'has-error' : ''">
-                    <label>{{tax.accountName}}</label>
-                    <input type="text" ng-model="tax.visibleTaxRate" class="form-control" valid-number id="splInvInpt">
-                  </div>
-                  <div class="form-group" ng-if="tax.hasError">
-                    <i style="font-size:18px; cursor:pointer" tooltip-placement="top" uib-tooltip="{{tax.errorMessage}}" class="glyphicon glyphicon-info-sign"></i>
-                  </div>
-                  <div class="form-group">
-                    &nbsp;:
-                  </div>
-                </div>
-              </th>
-              <th class="col-xs-2">
-                {{tax.amount | currency:"&#x20B9;"}}
-              </th>
-            </tr>
-            <!-- end of tax repeat -->
-            <tr>
-              <th class="col-xs-1">
-                &nbsp;
-              </th>
-              <th class="col-xs-9">
-                Grand Total :
-              </th>
-              <th class="col-xs-2">
-                {{defTempData.grandTotal | currency:"&#x20B9;"}}
-              </th>
-            </tr>
-
-            <tr>
-              <td colspan="3">
-                <hr>
-                <p>Amount in words</p>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3">
-                <strong class="text-capitalize">{{defTempData.grandTotal | numtowords }}</strong>
-              </td>
-            </tr>
-            <tr>
-            </tr>
-          </tfoot>
-        </table>
-        
-        <hr>
-      </section>
-
-      <section ng-if="editMode && defTempData.entries === null || !editMode && defTempData.entries === null">
-        <div class="row">
-          <div class="greyBg alC" id="five">
-            <div class="mrT4">Particulars will shown here</div>
-          </div>
-        </div>
-      </section>
-
-      
-       
-      <!-- end of list section entries -->
-
-
-
-      <div class="row">
-        <section class="col-xs-5" id="six">
-          <div class="txtAreaWrap">
-            <textarea class="form-control" ng-model="defTempData.companyIdentities.data" placeholder="Company other details"></textarea>
-          </div>
-        </section>
-        <section class="col-xs-7" id="seven">
-          <div class="txtAreaWrap">
-            <input class="form-control mrB alR" ng-model="defTempData.signature.name"  placeholder="Your Company name">
-            <input class="form-control alR" ng-model="defTempData.signature.data" placeholder="Signatory slogan">
-          </div>
-        </section>
-      </div>
-      <!-- end of section six or seven -->
-      <section ng-if="tempSet.terms">
-        <hr>
-        <div class="row">
-          <section class="col-xs-12" id="eight">
+            <h4 class="mrB">To:</h4>
             <div class="txtAreaWrap">
-              
-              <div ng-if="editMode">
-                <label class="mrB">Enter your terms or bank details</label>
-                <textarea class="form-control" ng-model="defTempData.termsStr" placeholder="Use Enter for line Break"></textarea>
-              </div>
-              <!-- end if editmode -->
-
-              <ol  ng-if="!editMode" style="list-style: decimal inside;">
-                <li ng-repeat="item in defTempData.terms track by $index">{{item}}</li>
-              </ol>
-
+              <input ng-disabled="!genMode" class="form-control" ng-model="defTempData.account.name" placeholder="Buyer Name">
+              <textarea ng-disabled="!genMode" class="form-control" ng-model="defTempData.account.data"  placeholder="Buyer Address and other details"></textarea>
             </div>
           </section>
         </div>
-      </section>
-      <!-- end of section eight -->
-    </fieldset>
-    <!-- end of preview mode -->
+        <!-- section three or four end -->
+        
+        <!-- / end client and company details section -->
+        
+        
 
+        <section ng-if="defTempData.entries !== null || !editMode && genPrevMode">
+          <table class="table table-bordered vAlMid">
+            <thead>
+              <tr>
+                <th class="col-xs-1">
+                  <h4>S No.</h4>
+                </th>
+                <th class="col-xs-9">
+                  <h4>Description</h4>
+                </th>
+                <th class="col-xs-2 alR">
+                  <h4>Amount</h4>
+                </th>
+              </tr>
+            </thead>
+          
+            <tbody>
+              <tr ng-repeat="item in defTempData.entries track by $index">
+                <td>{{$index+1 | number}}</td>
+                <td>
+                  <input type="text" ng-model="item.transactions[0].description" class="form-control">
+                </td>
+                <td class="text-right">
+                  {{item.transactions[0].amount | currency:"&#x20B9;"}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table class="table invGenTbl">
+            <tfoot>
+              <tr>
+                <th class="col-xs-1">
+                  &nbsp;
+                </th>
+                <th class="col-xs-9">
+                  Sub Total :
+                </th>
+                <th class="col-xs-2">
+                  {{defTempData.subTotal | currency:"&#x20B9;"}}
+                </th>
+              </tr>
+              <!-- tax repeat -->
+              <tr ng-if="defTempData.taxes.length > 0" ng-repeat="tax in defTempData.taxes">
+                <th class="col-xs-1">
+                  &nbsp;
+                </th>
+                <th class="col-xs-9">
+                  <div class="form-inline clearfix">
+                    <div class="form-group" ng-class="tax.hasError ? 'has-error' : ''">
+                      <label>{{tax.accountName}}</label>
+                      <input type="text" ng-model="tax.visibleTaxRate" class="form-control" valid-number id="splInvInpt">
+                    </div>
+                    <div class="form-group" ng-if="tax.hasError">
+                      <i style="font-size:18px; cursor:pointer" tooltip-placement="top" uib-tooltip="{{tax.errorMessage}}" class="glyphicon glyphicon-info-sign"></i>
+                    </div>
+                    <div class="form-group">
+                      &nbsp;:
+                    </div>
+                  </div>
+                </th>
+                <th class="col-xs-2">
+                  {{tax.amount | currency:"&#x20B9;"}}
+                </th>
+              </tr>
+              <!-- end of tax repeat -->
+              <tr>
+                <th class="col-xs-1">
+                  &nbsp;
+                </th>
+                <th class="col-xs-9">
+                  Grand Total :
+                </th>
+                <th class="col-xs-2">
+                  {{defTempData.grandTotal | currency:"&#x20B9;"}}
+                </th>
+              </tr>
+
+              <tr>
+                <td colspan="3">
+                  <hr>
+                  <p>Amount in words</p>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3">
+                  <strong class="text-capitalize">{{defTempData.grandTotal | numtowords }}</strong>
+                </td>
+              </tr>
+              <tr>
+              </tr>
+            </tfoot>
+          </table>
+          
+          <hr>
+        </section>
+
+        <section ng-if="editMode && defTempData.entries === null || !editMode && defTempData.entries === null">
+          <div class="row">
+            <div class="greyBg alC" id="five">
+              <div class="mrT4">Particulars will shown here</div>
+            </div>
+          </div>
+        </section>
+
+        
+         
+        <!-- end of list section entries -->
+
+
+
+        <div class="row">
+          <section class="col-xs-5" id="six">
+            <div class="txtAreaWrap">
+              <textarea class="form-control" ng-model="defTempData.companyIdentities.data" placeholder="Company other details"></textarea>
+            </div>
+          </section>
+          <section class="col-xs-7" id="seven">
+            <div class="txtAreaWrap">
+              <input class="form-control mrB alR" ng-model="defTempData.signature.name"  placeholder="Your Company name">
+              <input class="form-control alR" ng-model="defTempData.signature.data" placeholder="Signatory slogan">
+            </div>
+          </section>
+        </div>
+        <!-- end of section six or seven -->
+        <section ng-if="tempSet.terms">
+          <hr>
+          <div class="row">
+            <section class="col-xs-12" id="eight">
+              <div class="txtAreaWrap">
+                
+                <div ng-if="editMode">
+                  <label class="mrB">Enter your terms or bank details</label>
+                  <textarea class="form-control" ng-model="defTempData.termsStr" placeholder="Use Enter for line Break"></textarea>
+                </div>
+                <!-- end if editmode -->
+
+                <ol  ng-if="!editMode" style="list-style: decimal inside;">
+                  <li ng-repeat="item in defTempData.terms track by $index">{{item}}</li>
+                </ol>
+
+              </div>
+            </section>
+          </div>
+        </section>
+        <!-- end of section eight -->
+      </fieldset>
+      <!-- end of preview mode -->
+
+    </div>
+    <!-- end of invoiceContainer -->
   </div>
-  <!-- end of invoiceContainer -->
+  <!-- end of modal body -->
 </div>
-<!-- end of modal body -->
