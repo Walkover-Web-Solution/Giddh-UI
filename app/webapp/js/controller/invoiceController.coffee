@@ -13,6 +13,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.genPrevMode = false
   $scope.nameForAction = []
   $scope.InvEmailData = {}
+  $scope.genMode = false
+  $scope.prevInProg = false
   # default Template data
   $scope.tempDataDef=
     logo: 
@@ -90,9 +92,10 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # close popup
   $scope.closePop=()->
-    console.log "closePop"
+    $scope.genMode = false
     $scope.withSampleData = true
     $scope.genPrevMode = false
+    $scope.prevInProg = false
 
   # datepicker setting end
   $scope.dateData = {
@@ -222,6 +225,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # view template with sample data
   $scope.viewInvTemplate =(template, mode, data) ->
+    $scope.templateClass = template.uniqueName
     if mode isnt 'genprev'
       $scope.genPrevMode = false
     $scope.logoWrapShow = false
@@ -285,6 +289,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # save template data
   $scope.saveTemp=(stype, force)->
+    $scope.genMode = false
     $scope.updatingTempData = true
     dData = {}
     data = {}
@@ -389,6 +394,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # get ledger entries to generate invoice
   $scope.getLedgerEntries=()->
+    $scope.prevInProg = false
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $rootScope.$stateParams.invId
@@ -448,7 +454,13 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
           entry.id is item.id
         )
 
+    if $scope.entriesForInvoice.length > 0
+      $scope.prevInProg= true
+    else
+      $scope.prevInProg= false
+
   $scope.prevAndGenInv=()->
+    $scope.genMode = true
     $scope.prevInProg = true
     arr = []
     _.each($scope.entriesForInvoice, (entry)->
@@ -485,7 +497,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.getInvListSuccess=(res)->
     $scope.genInvList = []
     _.extend($scope.genInvList , res.body)
-    if $scope.genInvList is 0
+    if $scope.genInvList.length is 0
       $scope.noDataGenInv = true
     else
       $scope.noDataGenInv = false
@@ -635,6 +647,11 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $scope.invoiceLoadDone = false
   )
 
+  $timeout(->
+    $rootScope.basicInfo = localStorageService.get("_userDetails")
+    if !_.isEmpty($rootScope.selectedCompany)
+      $rootScope.cmpViewShow = true
+  ,1000)
 
 
 
