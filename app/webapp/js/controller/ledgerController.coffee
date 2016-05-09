@@ -449,7 +449,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     # parentTxn.push(edata.transactions[0])
     # edata.transactions = parentTxn.concat(newTaxTransactions)
     
-
   $scope.addNewEntry = (data) ->
     if _.isUndefined($rootScope.selAcntUname)
       toastr.info("Something went wrong please reload page")
