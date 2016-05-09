@@ -73,7 +73,7 @@ describe 'invoiceController', ->
         expect(@scope.withSampleData).toBeTruthy()
         expect(@scope.genMode).toBeFalsy()
         expect(@scope.genPrevMode).toBeFalsy()
-        expect(@scope.prevInProg).toBeFalsy()
+        expect(@scope.prevInProg).toBeTruthy()
 
     describe '#getAllGroupsWithAcnt', ->
       it 'should show error message with toastr', ->
