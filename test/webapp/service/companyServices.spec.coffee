@@ -287,3 +287,167 @@ describe 'Company Service', ->
         (data) ->
           expect(data.data.status).toBe("error")
       )
+
+  describe '#getInvTemplates', ->
+    uniqueName= "uniquename"
+    it 'should call success callback after service called', ->
+      @httpBackend.when('GET', '/company/'+uniqueName+'/templates').respond(200, {"status": "success"})
+
+      @companyServices.getInvTemplates(uniqueName).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call error callback after service called', ->
+      @httpBackend.when('GET', '/company/'+uniqueName+'/templates').respond(401, {"status": "error"})
+      @companyServices.getInvTemplates(uniqueName).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+      )
+
+  describe '#setDefltInvTemplt', ->
+    obj= 
+      uniqueName: "abc"
+      tempUname: "def"
+    it 'should call success callback after service called', ->
+      @httpBackend.when('PUT', '/company/'+obj.uniqueName+'/templates/'+obj.tempUname).respond(200, {"status": "success"})
+      @companyServices.setDefltInvTemplt(obj).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call error callback after service called', ->
+      @httpBackend.when('PUT', '/company/'+obj.uniqueName+'/templates/'+obj.tempUname).respond(401, {"status": "error"})
+      @companyServices.setDefltInvTemplt(obj).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+      )
+
+  describe '#updtInvTempData', ->
+    uniqueName= "uniquename"
+    it 'should call success callback after service called', ->
+      @httpBackend.when('PUT', '/company/'+uniqueName+'/templates').respond(200, {"status": "success"})
+
+      @companyServices.updtInvTempData(uniqueName).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call error callback after service called', ->
+      @httpBackend.when('PUT', '/company/'+uniqueName+'/templates').respond(401, {"status": "error"})
+      @companyServices.updtInvTempData(uniqueName).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+      )
+
+  describe '#delInv', ->
+    obj= 
+      compUname: "uniquename"
+      invoiceUniqueID: "1234"
+
+    it 'should call success callback after service called', ->
+      @httpBackend.when('DELETE', '/company/'+obj.compUname+'/invoices/'+obj.invoiceUniqueID).respond(200, {"status": "success"})
+
+      @companyServices.delInv(obj).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call error callback after service called', ->
+      @httpBackend.when('DELETE', '/company/'+obj.compUname+'/invoices/'+obj.invoiceUniqueID).respond(401, {"status": "error"})
+      @companyServices.delInv(obj).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+      )
+
+  describe '#getTax', ->
+    uniqueName= "uniquename"
+    it 'should call success callback after service called', ->
+      @httpBackend.when('GET', '/company/'+uniqueName+'/tax').respond(200, {"status": "success"})
+
+      @companyServices.getTax(uniqueName).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call error callback after service called', ->
+      @httpBackend.when('GET', '/company/'+uniqueName+'/tax').respond(401, {"status": "error"})
+      @companyServices.getTax(uniqueName).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+      )
+
+  describe '#addTax', ->
+    uniqueName= "uniquename"
+    it 'should call success callback after service called', ->
+      @httpBackend.when('POST', '/company/'+uniqueName+'/tax').respond(200, {"status": "success"})
+
+      @companyServices.addTax(uniqueName).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call error callback after service called', ->
+      @httpBackend.when('POST', '/company/'+uniqueName+'/tax').respond(401, {"status": "error"})
+      @companyServices.addTax(uniqueName).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+      )
+
+  describe '#deleteTax', ->
+    obj= 
+      uniqueName: "uniquename"
+      taxUniqueName: "1234"
+
+    it 'should call success callback after service called', ->
+      @httpBackend.when('DELETE', '/company/'+obj.uniqueName+'/tax/'+obj.taxUniqueName).respond(200, {"status": "success"})
+
+      @companyServices.deleteTax(obj).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call error callback after service called', ->
+      @httpBackend.when('DELETE', '/company/'+obj.uniqueName+'/tax/'+obj.taxUniqueName).respond(401, {"status": "error"})
+      @companyServices.deleteTax(obj).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+      )
+
+  describe '#editTax', ->
+    obj= 
+      uniqueName: "uniquename"
+      taxUniqueName: "1234"
+      updateEntries: "hey"
+
+    it 'should call success callback after service called', ->
+      @httpBackend.when('PUT', '/company/'+obj.uniqueName+'/tax/'+obj.taxUniqueName+'/'+obj.updateEntries).respond(200, {"status": "success"})
+
+      @companyServices.editTax(obj).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call error callback after service called', ->
+      @httpBackend.when('PUT', '/company/'+obj.uniqueName+'/tax/'+obj.taxUniqueName+'/'+obj.updateEntries).respond(401, {"status": "error"})
+      @companyServices.editTax(obj).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+      )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
