@@ -216,11 +216,11 @@ textarea{
               <section class="form-inline clearfix">
                 <div class="form-group pull-right mrL2">
                   <label>Invoice #:</label>
-                  <input  ng-disabled="editMode" type="text" class="form-control wid80"  ng-model="defTempData.invoiceDetails.invoiceNumber">
+                  {{defTempData.invoiceDetails.invoiceNumber}}
                 </div>
                 <div class="form-group pull-right">
                   <label>Date:</label>
-                  <input ng-disabled="editMode" type="text" class="form-control wid80" ng-model="defTempData.invoiceDetails.invoiceDate">
+                  {{defTempData.invoiceDetails.invoiceDate}}
                 </div>
               </section>
             </section>

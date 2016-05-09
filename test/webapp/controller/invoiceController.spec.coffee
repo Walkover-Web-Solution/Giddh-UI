@@ -505,9 +505,115 @@ describe 'invoiceController', ->
         expect(@scope.updatingTempData).toBeFalsy()
         expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
+    describe '#genInvoiceSuccess', ->
+      it 'should make variable falsy and empty a array var and call modal close and show message with toastr success',->
+        res=
+          status: "success"
+          body: "Invoice generated successfully with invoice number: #####"
+        @scope.entriesForInvoice=[
+          {
+            id: "12345"
+          }
+        ]
+        @scope.onlyDrData= [
+          {
+            id: "12311"
+          }
+          {
+            id: "12335"
+          }
+          {
+            id: "12345"
+          }
+        ]
+        @scope.modalInstance = {}
+        @scope.modalInstance = @uibModal.open(templateUrl: '/')
+        spyOn(@toastr, "success")
+        spyOn(@scope.modalInstance, "close")
+
+        @scope.genInvoiceSuccess(res)
+
+        expect(@scope.updatingTempData).toBeFalsy()
+        
+        expect(@toastr.success).toHaveBeenCalledWith(res.body, "Success")
+        expect(@scope.modalInstance.close).toHaveBeenCalled()
+        expect(@scope.entriesForInvoice).toEqual([])
+
+    describe '#genInvoiceFailure', ->
+      it 'should show error message with toastr and make a variable falsy and go in else condition', ->
+        res=
+          data:
+            code: "other"
+            message: "some message"
+            status: "error"
+
+        spyOn(@toastr, "error")
+        @scope.genInvoiceFailure(res)
+        expect(@scope.updatingTempData).toBeFalsy()
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+      it 'should go in if condition', ->
+        res=
+          data:
+            code: "INVALID_TAX"
+            message: "some message"
+            status: "error"
+        obj=
+          title: 'Something wrong with your invoice data',
+          body: res.data.message+'\\n Do you still want to generate invoice with incorrect data.',
+          ok: 'Generate Anyway',
+          cancel: 'Cancel'
+
+        deferred = @q.defer()
+        spyOn(@modalService, 'openConfirmModal').andReturn(deferred.promise)
+        @scope.genInvoiceFailure(res)
+        expect(@scope.updatingTempData).toBeFalsy()
+        expect(@modalService.openConfirmModal).toHaveBeenCalledWith(obj)
+
+    describe '#getLedgerEntries', ->
+      xit 'should call companyServices setDefltInvTemplt method with uniqueName', ->
+
+        @rootScope.selectedCompany=
+          uniqueName: "12345"
+        @rootScope.$stateParams=
+          invId: "def"
+        @scope
+
+        unqNamesObj = {
+          compUname: $rootScope.selectedCompany.uniqueName
+          acntUname: $rootScope.$stateParams.invId
+          fromDate: ""
+          toDate: ""
+        }
+
+        deferred = @q.defer()
+        spyOn(@companyServices, 'setDefltInvTemplt').andReturn(deferred.promise)
+
+        @scope.getLedgerEntries()
+        expect(@companyServices.setDefltInvTemplt).toHaveBeenCalledWith(obj)
+        
 
 
 
     describe '#', ->
       xit '',->
     
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
