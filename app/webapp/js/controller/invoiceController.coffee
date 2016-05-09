@@ -125,7 +125,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.withSampleData = true
     $scope.genMode = false
     $scope.genPrevMode = false
-    $scope.prevInProg = false
+    $scope.prevInProg= true
 
   $scope.getAllGroupsWithAcnt=()->
     if _.isEmpty($rootScope.selectedCompany)
@@ -566,8 +566,10 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     toastr.error(res.data.message, res.data.status)
 
   $scope.delInvSuccess=(res)->
-    console.log "delInvSuccess: ", res
     toastr.success("Invoice deleted successfully", "Success")
+    $scope.radioChecked = false
+    $scope.nameForAction = []
+    $scope.getInvList()
 
   $scope.downInvSuccess=(res)->
     # close dialog box
