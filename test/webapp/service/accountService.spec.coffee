@@ -330,6 +330,143 @@ describe "Account Service", ->
           expect(data.status).toBe(400)
       )
 
+  describe '#getInvList', ->
+    it 'should call success callback when getInvList success', ->
+      unqNamesObj.fromDate = "01-01-2016"
+      unqNamesObj.toDate = "30-04-2016"
+      @httpBackend.when('GET',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/invoices?fromDate='+unqNamesObj.fromDate+'&toDate='+unqNamesObj.toDate).respond(200,
+        {"status": "success"})
+
+      @accountService.getInvList(unqNamesObj).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call failure callback when getInvList failed', ->
+      unqNamesObj.fromDate = "01-01-2016"
+      unqNamesObj.toDate = "30-04-2016"
+      @httpBackend.when('GET',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/invoices?fromDate='+unqNamesObj.fromDate+'&toDate='+unqNamesObj.toDate).respond(400,
+        {"status": "error"})
+
+      @accountService.getInvList(unqNamesObj).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+          expect(data.status).toBe(400)
+      )
+
+  describe '#prevInvoice', ->
+    it 'should call success callback when prevInvoice success', ->
+      @httpBackend.when('POST',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/invoices/preview').respond(200,
+        {"status": "success"})
+
+      @accountService.prevInvoice(unqNamesObj, data).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call failure callback when account prevInvoice failed', ->
+      @httpBackend.when('POST',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/invoices/preview').respond(400,
+        {"status": "error"})
+
+      @accountService.prevInvoice(unqNamesObj, data).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+          expect(data.status).toBe(400)
+      )
+
+  describe '#genInvoice', ->
+    it 'should call success callback when genInvoice success', ->
+      @httpBackend.when('POST',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/invoices/generate').respond(200,
+        {"status": "success"})
+
+      @accountService.genInvoice(unqNamesObj, data).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call failure callback when account genInvoice failed', ->
+      @httpBackend.when('POST',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/invoices/generate').respond(400,
+        {"status": "error"})
+
+      @accountService.genInvoice(unqNamesObj, data).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+          expect(data.status).toBe(400)
+      )
+
+  describe '#downloadInvoice', ->
+    it 'should call success callback when downloadInvoice success', ->
+      @httpBackend.when('POST',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/invoices/download').respond(200,
+        {"status": "success"})
+
+      @accountService.downloadInvoice(unqNamesObj, data).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call failure callback when account downloadInvoice failed', ->
+      @httpBackend.when('POST',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/invoices/download').respond(400,
+        {"status": "error"})
+
+      @accountService.downloadInvoice(unqNamesObj, data).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+          expect(data.status).toBe(400)
+      )
+
+  describe '#prevOfGenInvoice', ->
+    it 'should call success callback when prevOfGenInvoice success', ->
+      unqNamesObj.invoiceUniqueID = "1234"
+      @httpBackend.when('GET',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/invoices/'+unqNamesObj.invoiceUniqueID+'/preview').respond(200,
+        {"status": "success"})
+
+      @accountService.prevOfGenInvoice(unqNamesObj, data).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call failure callback when prevOfGenInvoice failed', ->
+      @httpBackend.when('GET',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/invoices/'+unqNamesObj.invoiceUniqueID+'/preview').respond(400,
+        {"status": "error"})
+
+      @accountService.prevOfGenInvoice(unqNamesObj, data).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+          expect(data.status).toBe(400)
+      )
+
+  describe '#mailInvoice', ->
+    it 'should call success callback when mailInvoice success', ->
+      @httpBackend.when('POST',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/invoices/mail').respond(200,
+        {"status": "success"})
+
+      @accountService.mailInvoice(unqNamesObj, data).then(
+        (data) -> expect(data.status).toBe("success")
+        (data) -> expect(true).toBeFalsy()
+      )
+    it 'should call failure callback when mailInvoice failed', ->
+      @httpBackend.when('POST',
+        '/company/' + unqNamesObj.compUname + '/accounts/' + unqNamesObj.acntUname + '/invoices/mail').respond(400,
+        {"status": "error"})
+
+      @accountService.mailInvoice(unqNamesObj, data).then(
+        (data) -> expect(true).toBeFalsy()
+        (data) ->
+          expect(data.data.status).toBe("error")
+          expect(data.status).toBe(400)
+      )
+
 
 
 
