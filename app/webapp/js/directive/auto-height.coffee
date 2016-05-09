@@ -417,7 +417,7 @@ angular.module('ledger', [])
         return true
   }
 ]
-.directive 'ledgerPop', ['$compile', '$filter', '$document', '$parse', '$rootScope', '$timeout', ($compile, $filter, $document, $parse, $rootScope, $timeout) ->
+.directive 'ledgerPop', ['$compile', '$filter', '$document', '$parse', '$rootScope', '$timeout', 'toastr',($compile, $filter, $document, $parse, $rootScope, $timeout, toastr) ->
   {
   restrict: 'A'
   replace: true
@@ -492,10 +492,7 @@ angular.module('ledger', [])
         if !parentForm.hasClass('open')
           $timeout ->
             if scope.canAddAndEdit
-              if !scope.item.sharedData.invoiceGenerated 
-                scope.openDialog(scope.item, scope.index, scope.ftype, parentForm)
-              else
-                toastr.warning('Invoice for this entry is already created. Please delete Invoice first to edit this entry.')
+              scope.openDialog(scope.item, scope.index, scope.ftype, parentForm)
             else
               scope.highlightMultiEntry(scope.item)
               console.info "You don\'t have appropriate permission"
@@ -640,19 +637,28 @@ angular.module('ledger', [])
               detMmddyy = detArr[1] + '-' + detArr[0] + '-' + detArr[2]
               date = new Date(detMmddyy).getTime()
               dates.push(date)
-              console.log detMmddyy, edMmddyy
             dates = dates.sort()
 
             if entryDate >= dates[0] 
               tax.withinDate = true
-
         )
-
+      
       manageTaxOndialog(item)
 
       scope.$watch('item.sharedData.entryDate', (newVal, oldVal)->
         if newVal != oldVal
           manageTaxOndialog(item)
+      )
+
+      scope.$watch('item.transactions[0].amount', (newVal, oldVal)->
+        if newVal != oldVal
+          taxes_refresh = []
+          _.each scope.taxList, (tax) ->
+            if tax.isSelected
+              taxes_refresh.push(tax)
+
+            if _.isUndefined(item.taxes)
+              item.sharedData.taxes = taxes_refresh
       )
 
       scope.removeClassInAllEle("ledgEntryForm", "open")
@@ -666,24 +672,24 @@ angular.module('ledger', [])
           <div class="popover fade bottom ledgerPopDiv" id="popid_{{index}}">
           <div class="arrow"></div>
           <div class="popover-inner">
-          <h3 class="popover-title" ng-if="ftype == \'Update\'">Update entry</h3>
+          <h3 class="popover-title" ng-if="ftype == \'Update\'">Update entry - <span ng-if="item.sharedData.invoiceGenerated">Invoice for this entry is created, please delete invoice to edit this entry.</span></h3>
           <h3 class="popover-title" ng-if="ftype == \'Add\'">Add new entry</h3>
           <div class="popover-content">
             <div class="mrT">
               <div class="form-group">
-                <div style="margin-top:3px" class="checkbox mrR1 pull-left" ng-if="canVWDLT">
+                <div style="margin-top:3px" class="checkbox mrR1 pull-left" ng-if="canVWDLT && !item.sharedData.invoiceGenerated">
                   <label>
                     <input ng-readonly="!canAddAndEdit" ng-model="item.sharedData.unconfirmedEntry" type="checkbox">Unconfirmed Entry
                   </label>
                 </div>
-                <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh();" ng-show="canAddAndEdit">Add in DR</button>
-                <button ng-disabled="{{formClass}}.$invalid || noResults" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh();" ng-show="canAddAndEdit">Add in CR</button>
+                <button ng-disabled="{{formClass}}.$invalid || noResults || item.sharedData.invoiceGenerated" class="btn btn-sm btn-info mrR1" ng-click="enterRowdebit({entry: item}); makeItHigh();" ng-show="canAddAndEdit">Add in DR</button>
+                <button ng-disabled="{{formClass}}.$invalid || noResults || item.sharedData.invoiceGenerated" class="btn btn-sm btn-primary" ng-click="enterRowcredit({entry: item}); makeItHigh();" ng-show="canAddAndEdit">Add in CR</button>
                 <a class="pull-right" href="javascript:void(0)" ng-click="addNewAccount()" ng-show="noResults">Add new account</a>
                 <div class="row mrT1" ng-show="{{formClass}}.$valid">
                   <hr>
                   <ul class="list-inline" style="margin-left:15px">
                     <li ng-repeat="tax in taxList" ng-class="{pad0: tax.account.uniqueName == 0 || !tax.withinDate}">
-                       <div class="checkbox" ng-if="tax.account.uniqueName != 0 && tax.withinDate"><label><input type="checkbox" ng-model="tax.isSelected" ng-change="addTaxEntry(tax, item)">{{tax.name}}</label></div>
+                       <div class="checkbox" ng-if="tax.account.uniqueName != 0 && tax.withinDate"><label><input type="checkbox" ng-model="tax.isSelected" ng-change="addTaxEntry(tax, item)" ng-disabled="item.sharedData.invoiceGenerated">{{tax.name}}</label></div>
                     </li>
                   </ul>
                   <hr>
@@ -697,11 +703,12 @@ angular.module('ledger', [])
                       ng-readonly="!canAddAndEdit"
                       name="voucherType"
                       ng-model="item.sharedData.voucher.shortCode" 
-                      ng-options="item.shortCode as item.name for item in voucherTypeList">
+                      ng-options="item.shortCode as item.name for item in voucherTypeList"
+                      ng-disabled="item.sharedData.invoiceGenerated">
                     </select>
                   </div>
                   <div class="form-group">
-                    <input type="text" name="tag" ng-readonly="!canAddAndEdit" class="form-control" ng-model="item.sharedData.tag" placeholder="Tag" />
+                    <input type="text" name="tag" ng-readonly="!canAddAndEdit" class="form-control" ng-model="item.sharedData.tag" placeholder="Tag"  ng-disabled="item.sharedData.invoiceGenerated"/>
                   </div>
                 </div>
                 <div class="col-xs-6">
@@ -710,7 +717,7 @@ angular.module('ledger', [])
                     {{item.sharedData.voucher.shortCode}}-{{item.sharedData.voucherNo}}
                   </div>
                   <div class="form-group">
-                    <textarea class="form-control" ng-readonly="!canAddAndEdit" name="description" ng-model="item.sharedData.description" placeholder="Description"></textarea>
+                    <textarea class="form-control" ng-readonly="!canAddAndEdit" name="description" ng-model="item.sharedData.description" placeholder="Description"  ng-disabled="item.sharedData.invoiceGenerated"></textarea>
                   </div>
                 </div>
               </div>
@@ -718,16 +725,16 @@ angular.module('ledger', [])
                 <label>Total: {{ttlValD + ttlValDType}}</label>
               </div>
               <div class="">
-                <button ng-if="ftype == \'Update\'" ng-show="canAddAndEdit" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults"
+                <button ng-if="ftype == \'Update\'" ng-show="canAddAndEdit" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults || item.sharedData.invoiceGenerated"
                   ng-click="updateLedger({entry: item})">Update</button>
-                <button  ng-if="ftype == \'Add\'" ng-show="canAddAndEdit" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults"
+                <button  ng-if="ftype == \'Add\'" ng-show="canAddAndEdit" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults || item.sharedData.invoiceGenerated"
                   ng-click="addLedger({entry: item});checkItem(item)">Add</button>
 
-                <button ng-click="closeEntry()" class="btn btn-default mrL1" type="button">close</button>
+                <button ng-click="closeEntry()" class="btn btn-default mrL1" type="button" ng-disabled="item.sharedData.invoiceGenerated">close</button>
 
-                <button ng-click="closeAllEntry()" ng-show="canAddAndEdit" class="btn btn-default mrL1" type="button">close All</button>
+                <button ng-click="closeAllEntry()" ng-show="canAddAndEdit" class="btn btn-default mrL1" type="button" ng-disabled="item.sharedData.invoiceGenerated">close All</button>
 
-                <button ng-if="canAddAndEdit" ng-show="item.sharedData.uniqueName != undefined" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})">Delete Entry</button>
+                <button ng-if="canAddAndEdit" ng-show="item.sharedData.uniqueName != undefined" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})" ng-disabled="item.sharedData.invoiceGenerated">Delete Entry</button>
               </div>
             </div>
           </div>

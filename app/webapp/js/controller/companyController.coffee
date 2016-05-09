@@ -865,7 +865,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         tax.isEditable = false
 
   $scope.updateTax = (item) ->
-    console.log item
     newTax = {
       'taxNumber': item.taxNumber,
       'name': item.name,

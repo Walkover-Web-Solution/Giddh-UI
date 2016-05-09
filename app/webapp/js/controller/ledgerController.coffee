@@ -432,11 +432,13 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         # copy newTax 
         tax_1 = newTax
         newTax.isLinked = false
-        
+        toRemove = []
         #check if newTax exists in edata.transactions
-        _.each edata.transactions, (txn) ->
-          if txn.particular.uniqueName == newTax.particular.uniqueName && newTax.isLinked != true
+        _.each edata.transactions, (txn, idx) ->
+          if txn.particular.uniqueName == newTax.particular.uniqueName && newTax.isLinked != true 
             newTax.isLinked = true
+          if newTax.isLinked && newTax.amount != txn.amount
+            txn.amount = newTax.amount
 
         if newTax.isLinked == false && newTax.amount != 0
           edata.transactions.push(tax_1)
