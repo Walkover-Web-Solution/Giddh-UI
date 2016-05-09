@@ -391,13 +391,13 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   # get ledger entries to generate invoice
   $scope.getLedgerEntries=()->
     $scope.prevInProg = false
-    unqNamesObj = {
+    obj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $rootScope.$stateParams.invId
       fromDate: $filter('date')($scope.dateData.fromDate, "dd-MM-yyyy")
       toDate: $filter('date')($scope.dateData.toDate, "dd-MM-yyyy")
     }
-    ledgerService.getLedger(unqNamesObj).then($scope.getLedgerEntriesSuccess, $scope.getLedgerEntriesFailure)
+    ledgerService.getLedger(obj).then($scope.getLedgerEntriesSuccess, $scope.getLedgerEntriesFailure)
 
   $scope.getLedgerEntriesSuccess=(res)->
     $scope.onlyDrData = []
@@ -527,13 +527,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
         sendData.emailId = []
         return false
     )
-    if sendData.emailId < 1
-      if $rootScope.validateEmail(data)
-        sendData.emailId.push(data)
-      else
-        toastr.warning("Enter valid Email ID", "Warning")
-        return false
-
     accountService.mailInvoice(obj, sendData).then($scope.sendInvEmailSuccess, $scope.multiActionWithInvFailure)
 
   $scope.sendInvEmailSuccess=(res)->
@@ -562,7 +555,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # common failure message
   $scope.multiActionWithInvFailure=(res)->
-    console.log "delInvFailure: ", res
     toastr.error(res.data.message, res.data.status)
 
   $scope.delInvSuccess=(res)->

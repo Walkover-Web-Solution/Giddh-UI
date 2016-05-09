@@ -571,32 +571,366 @@ describe 'invoiceController', ->
         expect(@modalService.openConfirmModal).toHaveBeenCalledWith(obj)
 
     describe '#getLedgerEntries', ->
-      xit 'should call companyServices setDefltInvTemplt method with uniqueName', ->
+      it 'should call ledgerService getLedger method with uniqueName', ->
 
         @rootScope.selectedCompany=
           uniqueName: "12345"
         @rootScope.$stateParams=
           invId: "def"
-        @scope
+        @scope.dateData=
+          fromDate: "01-02-2016"
+          toDate: "01-04-2016"
 
-        unqNamesObj = {
-          compUname: $rootScope.selectedCompany.uniqueName
-          acntUname: $rootScope.$stateParams.invId
-          fromDate: ""
-          toDate: ""
+        obj = {
+          compUname: @rootScope.selectedCompany.uniqueName
+          acntUname: @rootScope.$stateParams.invId
+          fromDate: @scope.dateData.fromDate
+          toDate: @scope.dateData.toDate
         }
 
         deferred = @q.defer()
-        spyOn(@companyServices, 'setDefltInvTemplt').andReturn(deferred.promise)
+        spyOn(@ledgerService, 'getLedger').andReturn(deferred.promise)
 
         @scope.getLedgerEntries()
-        expect(@companyServices.setDefltInvTemplt).toHaveBeenCalledWith(obj)
+        expect(@ledgerService.getLedger).toHaveBeenCalledWith(obj)
         
+    describe '#getLedgerEntriesSuccess', ->
+      it 'should set a variable true and push value in onlyDrData', ->
+        res = {
+          status: "success"
+          body: {
+            ledgers: []
+          }
+        }
+        @scope.getLedgerEntriesSuccess(res)
+        expect(@scope.onlyDrData).toEqual(_.omit(res.body, 'ledgers') )
+        expect(@scope.noDataDR).toBeTruthy()
+
+    describe '#getLedgerEntriesFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.getLedgerEntriesFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+    describe '#summationForInvoice', ->
+      xit 'should',->
+
+    describe '#prevAndGenInv', ->
+      it 'should call accountService prevInvoice method with obj and data',->
+        @scope.entriesForInvoice=[
+          {
+            id: "123"
+            sharedData:
+              uniqueName: "123"
+          }
+          {
+            id: "1234"
+            sharedData:
+              uniqueName: "1234"
+          }
+          {
+            id: "123"
+            sharedData:
+              uniqueName: "123"
+          }
+        ]
+        @rootScope.selectedCompany=
+          uniqueName: "12345"
+        @rootScope.$stateParams=
+          invId: "def"
+        obj = {
+          compUname: @rootScope.selectedCompany.uniqueName
+          acntUname: @rootScope.$stateParams.invId
+        }
+        result=
+          uniqueNames: ["123", "1234"]
+
+        deferred = @q.defer()
+        spyOn(@accountService, 'prevInvoice').andReturn(deferred.promise)
+        @scope.prevAndGenInv()
+        expect(@accountService.prevInvoice).toHaveBeenCalledWith(obj, result)
+        expect(@scope.genMode).toBeTruthy()
+        expect(@scope.prevInProg).toBeTruthy()
 
 
+    describe '#prevAndGenInvSuccess', ->
+      it 'should call viewInvTemplate function and make a variable falsy',->
+        res=
+          body:
+            template: {}
+            templateData: {}
+        spyOn(@scope, "viewInvTemplate")
+        @scope.prevAndGenInvSuccess(res)
+        expect(@scope.prevInProg).toBeFalsy()
+        expect(@scope.viewInvTemplate).toHaveBeenCalledWith(res.body.template, 'edit', res.body)
 
-    describe '#', ->
+    describe '#prevAndGenInvFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.prevAndGenInvFailure(res)
+        expect(@scope.prevInProg).toBeFalsy()
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+
+    describe '#getInvList', ->
+      it 'should call accountService getInvList method with obj',->
+        @rootScope.selectedCompany=
+          uniqueName: "12345"
+        @rootScope.$stateParams=
+          invId: "def"
+        @scope.dateData=
+          fromDate: "01-02-2016"
+          toDate: "01-04-2016"
+        obj = {
+          compUname: @rootScope.selectedCompany.uniqueName
+          acntUname: @rootScope.$stateParams.invId
+          fromDate: @scope.dateData.fromDate
+          toDate: @scope.dateData.toDate
+        }
+        deferred = @q.defer()
+        spyOn(@accountService, 'getInvList').andReturn(deferred.promise)
+        @scope.getInvList()
+        expect(@accountService.getInvList).toHaveBeenCalledWith(obj)
+
+
+    describe '#getInvListSuccess', ->
+      it 'should set value in a variable and  make a variable falsy',->
+        res=
+          body:[
+            {
+              item: "one"
+            }
+            {
+              item: "two"
+            }
+          ]
+        @scope.getInvListSuccess(res)
+        expect(@scope.noDataGenInv).toBeFalsy()
+        expect(@scope.genInvList).toEqual(res.body)
+
+      it 'should set value in a variable and  make a variable truthy',->
+        res=
+          body:[]
+        @scope.getInvListSuccess(res)
+        expect(@scope.noDataGenInv).toBeTruthy()
+        expect(@scope.genInvList).toEqual(res.body)
+
+    describe '#getInvListFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.getInvListFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+    describe '#summationForDownload', ->
+      it 'should make a variable truthy and push value in a array',->
+        entry=
+          invoiceNumber: "1234"
+        @scope.summationForDownload(entry)
+        expect(@scope.radioChecked).toBeTruthy()
+        expect(@scope.nameForAction).toEqual(["1234"])
+
+    describe '#sendInvEmail', ->
+      xit 'should call accountService mailInvoice method with some rough filters',->
+        @rootScope.validateEmail=()->
+          return true
+        emailData = "abc@xyz.com, xzy@abc.in"
+        @scope.nameForAction= ["1234"]
+        @rootScope.selectedCompany=
+          uniqueName: "12345"
+        @rootScope.$stateParams=
+          invId: "def"
+        obj=
+          compUname: @rootScope.selectedCompany.uniqueName
+          acntUname: @rootScope.$stateParams.invId
+        data=
+          emailId: ["abc@xyz.com", "xzy@abc.in"]
+          invoiceNumber: @scope.nameForAction
+
+        deferred = @q.defer()
+        spyOn(@accountService, 'mailInvoice').andReturn(deferred.promise)
+        spyOn(@rootScope, "validateEmail")
+        @scope.sendInvEmail(emailData)
+        expect(@accountService.downloadInvoice).toHaveBeenCalledWith(obj, data)
+        expect(@rootScope.validateEmail).toHaveBeenCalled()
+
+    describe '#sendInvEmailSuccess', ->
+      it 'should show message with toastr and blank a obj',->
+        res=
+          status: "success"
+          body: "hey"
+        @scope.InvEmailData=
+          inv: "1234" 
+        spyOn(@toastr, "success")
+        @scope.sendInvEmailSuccess(res)
+        expect(@scope.InvEmailData).toEqual({})
+        expect(@toastr.success).toHaveBeenCalledWith("Email sent successfully", "Success")
+
+    describe '#multiActionWithInv', ->
+      it 'should check if array length is 0 then call toastr warning method and andReturn falsy',->
+        @scope.nameForAction=[]
+        spyOn(@toastr, "warning")
+        @scope.multiActionWithInv("edit")
+        expect(@toastr.warning).toHaveBeenCalledWith("Something went wrong", "Warning")
+      
+      it 'should check type and call companyServices delInv method with obj', ->
+        @scope.nameForAction= ["1234", "2345"]
+        @rootScope.selectedCompany=
+          uniqueName: "12345"
+        @rootScope.$stateParams=
+          invId: "def"
+        obj = {
+          compUname: @rootScope.selectedCompany.uniqueName
+          acntUname: @rootScope.$stateParams.invId
+          invoiceUniqueID: @scope.nameForAction[0]
+        }
+        deferred = @q.defer()
+        spyOn(@companyServices, 'delInv').andReturn(deferred.promise)
+        @scope.multiActionWithInv("delete")
+        expect(@companyServices.delInv).toHaveBeenCalledWith(obj)
+
+      it 'should check type and call accountService downloadInvoice method with obj', ->
+        @scope.nameForAction= ["1234", "2345"]
+        @rootScope.selectedCompany=
+          uniqueName: "12345"
+        @rootScope.$stateParams=
+          invId: "def"
+        obj=
+          compUname: @rootScope.selectedCompany.uniqueName
+          acntUname: @rootScope.$stateParams.invId
+        data=
+          invoiceNumber: @scope.nameForAction
+          template: ""
+        deferred = @q.defer()
+        spyOn(@accountService, 'downloadInvoice').andReturn(deferred.promise)
+        @scope.multiActionWithInv("download")
+        expect(@accountService.downloadInvoice).toHaveBeenCalledWith(obj, data)
+
+    describe '#multiActionWithInvFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.multiActionWithInvFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+    describe '#delInvSuccess', ->
+      it 'should call toastr success method, make variable falsy blank a array and call getInvList function',->
+        res=
+          status: "success"
+          body: ""
+
+        @scope.nameForAction = ["1234"]
+        spyOn(@scope, "getInvList")
+        spyOn(@toastr, "success")
+        @scope.delInvSuccess(res)
+        expect(@toastr.success).toHaveBeenCalledWith("Invoice deleted successfully", "Success")
+        expect(@scope.radioChecked).toBeFalsy()
+        expect(@scope.nameForAction).toEqual([])
+        expect(@scope.getInvList).toHaveBeenCalled()
+
+    describe '#downInvSuccess', ->
       xit '',->
+
+    describe '#prevGenerateInv', ->
+      it 'should call accountService prevOfGenInvoice method with obj',->
+        item=
+          invoiceNumber: "1234"
+        @rootScope.selectedCompany=
+          uniqueName: "12345"
+        @rootScope.$stateParams=
+          invId: "def"
+        obj=
+          compUname: @rootScope.selectedCompany.uniqueName
+          acntUname: @rootScope.$stateParams.invId
+          invoiceUniqueID: item.invoiceNumber
+        deferred = @q.defer()
+        spyOn(@accountService, 'prevOfGenInvoice').andReturn(deferred.promise)
+        @scope.prevGenerateInv(item)
+        expect(@accountService.prevOfGenInvoice).toHaveBeenCalledWith(obj)
+        expect(@scope.nameForAction).toEqual([item.invoiceNumber])
+
+    describe '#prevGenerateInvSuccess', ->
+      it 'should make variable truthy, call viewInvTemplate function and assign value in a variable',->
+        @scope.tempType=
+          uniqueName: "123"
+        res=
+          body:
+            templateData: {}
+            template:
+              uniqueName: "alpha"
+        spyOn(@scope, "viewInvTemplate")
+        @scope.prevGenerateInvSuccess(res)
+        expect(@scope.genPrevMode).toBeTruthy()
+        expect(@scope.viewInvTemplate).toHaveBeenCalledWith(res.body.template, 'genprev', res.body)
+        expect(@scope.tempType.uniqueName).toEqual(res.body.template.uniqueName)
+
+    describe '#prevGenerateInvFailure', ->
+      it 'should show error message with toastr', ->
+        res =
+          data:
+            status: "error"
+            message: "message"
+        spyOn(@toastr, "error")
+        @scope.prevGenerateInvFailure(res)
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+
+    describe '#setDiffView', ->
+      it 'should check and assign value in variable',->
+        @scope.templateList=[
+          {
+            uniqueName: "alpha"
+            sections:
+              logo: true
+          }
+          {
+            uniqueName: "beta"
+            sections:
+              logo: false
+          }
+        ]
+        result=
+          sections:
+            logo: true
+
+        @scope.tempType=
+          uniqueName: "alpha"
+        @scope.setDiffView()
+        expect(@scope.tempSet).toEqual(result.sections)
+
+    describe '#downInv', ->
+      it 'should call accountService downloadInvoice method with obj and data',->
+        @scope.tempType=
+          uniqueName: "alpha"
+        @scope.nameForAction= ["1234", "2345"]
+        @rootScope.selectedCompany=
+          uniqueName: "12345"
+        @rootScope.$stateParams=
+          invId: "def"
+        obj=
+          compUname: @rootScope.selectedCompany.uniqueName
+          acntUname: @rootScope.$stateParams.invId
+        data=
+          invoiceNumber: @scope.nameForAction
+          template: @scope.tempType.uniqueName
+        deferred = @q.defer()
+        spyOn(@accountService, 'downloadInvoice').andReturn(deferred.promise)
+        @scope.downInv()
+        expect(@accountService.downloadInvoice).toHaveBeenCalledWith(obj, data)
+
     
 
 
