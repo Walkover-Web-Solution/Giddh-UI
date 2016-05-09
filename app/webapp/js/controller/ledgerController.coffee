@@ -265,7 +265,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.ledgerBreadCrumbList = data
 
   $scope.loadLedger = (gData, acData) ->
-    $scope.getTaxList()
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
       return false
@@ -411,40 +410,42 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       else
         newTax.particular.name = tax.account.name
         newTax.particular.uniqueName = tax.account.uniqueName
-
+        prevDate = 0
         # calculate total tax amount for entry
         _.each tax.taxDetail, (det) ->
           taxDate = new Date(det.date).getTime()
           entryDate = new Date(edata.entryDate).getTime()
-          if (!(taxDate > entryDate))
-            amount = det.taxValue/100 * taxData.entryAmount
-            newTax.amount += amount
+          
+          if entryDate >= taxDate && taxDate >= prevDate
+            newTax.amount = det.taxValue/100 * taxData.entryAmount
+            prevDate = taxDate
+
           if det.taxValue < 0
             newTax.amount = Math.abs(newTax.amount)
             if edata.transactions[0].type.toLowerCase() == 'credit'
               newTax.type = 'DEBIT'
             else
               newTax.type = 'CREDIT'
-          else
+          else 
             newTax.type = edata.transactions[0].type
         
         # copy newTax 
         tax_1 = newTax
         newTax.isLinked = false
         
-        #check if newTax exits in edata.transactions
-        # _.each edata.transactions, (txn) ->
-        #   if txn.particular.uniqueName == newTax.particular.uniqueName && newTax.isLinked != true
-        #     newTax.isLinked = true
+        #check if newTax exists in edata.transactions
+        _.each edata.transactions, (txn) ->
+          if txn.particular.uniqueName == newTax.particular.uniqueName && newTax.isLinked != true
+            newTax.isLinked = true
 
-        # if newTax.isLinked == false
-          #edata.transactions.push(tax_1)
+        if newTax.isLinked == false && newTax.amount != 0
+          edata.transactions.push(tax_1)
 
-        newTaxTransactions.push(tax_1)
+    #     newTaxTransactions.push(tax_1)
     
-    parentTxn = []
-    parentTxn.push(edata.transactions[0])
-    edata.transactions = parentTxn.concat(newTaxTransactions)
+    # parentTxn = []
+    # parentTxn.push(edata.transactions[0])
+    # edata.transactions = parentTxn.concat(newTaxTransactions)
     
 
   $scope.addNewEntry = (data) ->
@@ -475,7 +476,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     }
 
     # create transaction for added taxes
-    $scope.addTaxTransactions(edata, data.taxes)
+    $scope.addTaxTransactions(edata, data.sharedData.taxes)
 
     ledgerService.createEntry(unqNamesObj, edata).then($scope.addEntrySuccess, $scope.addEntryFailure)
 
@@ -506,7 +507,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       if edata.uniqueName is entry.sharedData.uniqueName
         edata.transactions.push(entry.transactions[0])
     )
-    $scope.addTaxTransactions(edata, data.taxes)
+
+    $scope.addTaxTransactions(edata, data.sharedData.taxes)
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $rootScope.selAcntUname
@@ -856,8 +858,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.getTaxList = () ->
     $scope.taxList = []
-    if $rootScope.canUpdate and $rootScope.canDelete
-      companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
+    companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
 
   $scope.getTaxListSuccess = (res) ->
     _.each res.body, (tax) ->
@@ -876,7 +877,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       $scope.selectedTaxes.push(tax)
     else
       $scope.selectedTaxes = _.without($scope.selectedTaxes, tax)
-    item.taxes = $scope.selectedTaxes
+    item.sharedData.taxes = $scope.selectedTaxes
 
   someEventHandle = $scope.$on('reloadFromAuto', ->
     $scope.reloadLedger()
@@ -893,6 +894,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         lgD = localStorageService.get("_ledgerData")
         acD = localStorageService.get("_selectedAccount")
         $scope.loadLedger(lgD, acD)
+
+  $scope.$on('$stateChangeSuccess', () ->
+    $scope.getTaxList()
+  )
+
 
 giddh.webApp.controller 'ledgerController', ledgerController
 

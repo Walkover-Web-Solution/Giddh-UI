@@ -865,11 +865,12 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         tax.isEditable = false
 
   $scope.updateTax = (item) ->
+    console.log item
     newTax = {
       'taxNumber': item.taxNumber,
       'name': item.name,
       'account':{
-        'uniqueName': item.account.name
+        'uniqueName': item.account.uniqueName
       },
       'duration':item.duration,
       'taxFileDate': item.taxFileDate,
@@ -903,7 +904,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
       )
     else
-      console.log newTax
       companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
       item.isEditable = false
       
