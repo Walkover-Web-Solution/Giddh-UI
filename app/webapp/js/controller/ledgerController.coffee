@@ -385,7 +385,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.addTaxTransactions = (edata, taxes) ->
     # calculate total entry amount
-    console.log taxes, 'taxes'
     newTaxTransactions = []
     pTxns = edata.transactions
     _.each taxes, (tax) ->
