@@ -36,7 +36,7 @@ describe 'ledgerController', ->
       expect(@scope.fromDate.date).toBeDefined()
       expect(@scope.toDate.date).toBeDefined()
       expect(@scope.fromDatePickerIsOpen).toBeFalsy()
-      expect(@scope.fromDatePickerIsOpen).toBeFalsy
+      expect(@scope.toDatePickerIsOpen).toBeFalsy()
       expect(@scope.dateOptions).toEqual({'year-format': "'yy'", 'starting-day': 1, 'showWeeks': false, 'show-button-bar': false, 'year-range': 1, 'todayBtn': false} )
       expect(@scope.format).toBe("dd-MM-yyyy")
       expect(@scope.ftypeAdd).toBe("add")

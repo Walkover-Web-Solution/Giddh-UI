@@ -30,7 +30,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       data: '405-406 Capt. C.S. Naidu Arcade,10/2 Old Palasiya,Indore Madhya Pradesh,CIN: 02830948209eeri,Email: account@giddh.com'
     companyIdentities: 
       data: 'tin:67890, cin:12345'
-    # entries: null
     entries: [
       {
         "transactions": [
@@ -110,6 +109,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.today = new Date()
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
+
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
 
@@ -366,13 +366,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $scope.updatingTempData = false
       toastr.error(res.data.message, res.data.status)
 
-  
-
-  # init func on dom ready
-  
-  # get accounts
-  $scope.getAllGroupsWithAcnt()
-
   # get inv templates 
   if not(_.isEmpty($rootScope.$stateParams.invId))
     ledgerObj = DAServices.LedgerGet()
@@ -628,6 +621,9 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       template: $scope.tempType.uniqueName
     accountService.downloadInvoice(obj, data).then($scope.downInvSuccess, $scope.multiActionWithInvFailure)
 
+  # init func on dom ready
+  # get accounts
+  $scope.getAllGroupsWithAcnt()
 
   # state change
   $scope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->

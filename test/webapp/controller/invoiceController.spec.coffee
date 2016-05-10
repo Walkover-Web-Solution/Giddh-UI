@@ -28,9 +28,87 @@ describe 'invoiceController', ->
       expect(@scope.nameForAction).toEqual([])
       expect(@scope.onlyDrData).toEqual([])
       expect(@scope.entriesForInvoice).toEqual([])
+      expect(@scope.today).toBeDefined()
+      expect(@scope.dateData.fromDate).toBeDefined()
+      expect(@scope.dateData.toDate).toBeDefined()
+      expect(@scope.fromDatePickerIsOpen).toBeFalsy()
+      expect(@scope.toDatePickerIsOpen).toBeFalsy()
+      expect(@scope.dateOptions).toEqual({'year-format': "'yy'", 'starting-day': 1, 'showWeeks': false, 'show-button-bar': false, 'year-range': 1, 'todayBtn': false} )
+      expect(@scope.format).toBe("dd-MM-yyyy")
 
+      defaultInvoiceData=
+        logo: 
+          path: '/public/website/images/logo.png'
+        invoiceDetails:
+          invoiceNumber: '##########'
+          invoiceDate: '11-12-2016'
+        company:
+          name: 'Walkover Web Solutions Pvt. ltd.'
+          data: '405-406 Capt. C.S. Naidu Arcade,10/2 Old Palasiya,Indore Madhya Pradesh,CIN: 02830948209eeri,Email: account@giddh.com'
+        companyIdentities: 
+          data: 'tin:67890, cin:12345'
+        entries: [
+          {
+            "transactions": [
+              {
+                "amount": 54500,
+                "accountName": "John",
+                "accountUniqueName": "john",
+                "description": "Purchase of Macbook"
+              }
+            ],
+            "uniqueName": "d7t1462171597019"
+          }
+          {
+            "transactions": [
+              {
+                "amount": 23700,
+                "accountName": "John",
+                "accountUniqueName": "john",
+                "description": "Purchase of Ipad"
+              }
+            ],
+            "uniqueName": "d7t1462171597030"
+          }
+          {
+            "transactions": [
+              {
+                "amount": 25300,
+                "accountName": "John",
+                "accountUniqueName": "john",
+                "description": "Purchase of Iphone"
+              }
+            ],
+            "uniqueName": "d7t1462171597023"
+          }
+        ]
+        terms: [
+          "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
+          "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
+          "Lorem ipsum dolor sit amet, consectetur adipisicing elit"
+        ]
+        grandTotal: 118507.50
+        subTotal: 103500
+        taxTotal: 0
+        taxes:[
+          {
+            "hasError": false,
+            "amount": 15007.50,
+            "accountName": "vat@14.5",
+            "taxRate": 14,
+            "visibleTaxRate": 14,
+            "errorMessage": "",
+            "accountUniqueName": "vat14.5"
+          }
+        ]
+        signature:
+          name: 'Walkover Web Solutions Pvt. ltd.'
+          data: 'Authorised Signatory'
+        account:
+          name: 'Career Point Ltd.'
+          data: 'CP Tower Road No. 1,Indraprashta Industrial Kota,PAN: 1862842,Email: info@career.com'
       
-      
+      expect(@scope.tempDataDef).toEqual(defaultInvoiceData)
       
       # expect(@scope.voucherTypeList).toEqual(vouchDat)
 
