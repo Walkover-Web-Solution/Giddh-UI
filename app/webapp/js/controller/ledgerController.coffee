@@ -385,6 +385,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.addTaxTransactions = (edata, taxes) ->
     # calculate total entry amount
+    console.log taxes, 'taxes'
     newTaxTransactions = []
     pTxns = edata.transactions
     _.each taxes, (tax) ->
@@ -435,20 +436,24 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         toRemove = []
         #check if newTax exists in edata.transactions
         _.each edata.transactions, (txn, idx) ->
+          inTaxes = true
           if txn.particular.uniqueName == newTax.particular.uniqueName && newTax.isLinked != true 
             newTax.isLinked = true
-          if newTax.isLinked && newTax.amount != txn.amount
+          if txn.particular.uniqueName == newTax.particular.uniqueName && newTax.isLinked && newTax.amount != txn.amount
             txn.amount = newTax.amount
 
         if newTax.isLinked == false && newTax.amount != 0
           edata.transactions.push(tax_1)
 
-    #     newTaxTransactions.push(tax_1)
-    
-    # parentTxn = []
-    # parentTxn.push(edata.transactions[0])
-    # edata.transactions = parentTxn.concat(newTaxTransactions)
-    
+    _.each edata.transactions, (txn) ->
+      $scope.excludeTaxTxn(txn)
+      if txn.isTax
+        txn.toRemove = true
+        _.each taxes, (tax) ->
+          if tax.account.uniqueName == txn.particular.uniqueName
+            txn.toRemove = false
+    edata.transactions = _.without(edata.transactions, _.findWhere(edata.transactions, {toRemove: true}))
+
   $scope.addNewEntry = (data) ->
     if _.isUndefined($rootScope.selAcntUname)
       toastr.info("Something went wrong please reload page")

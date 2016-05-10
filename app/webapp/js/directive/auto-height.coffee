@@ -603,6 +603,20 @@ angular.module('ledger', [])
 
     scope.openDialog = (item, indexs, ftype, parentForm) ->
 
+      refreshTaxList = () ->
+        taxes_refresh = []
+        _.each scope.taxList, (tax) ->
+          if tax.isSelected
+            taxes_refresh.push(tax)
+
+          if _.isUndefined(item.taxes)
+            item.sharedData.taxes = taxes_refresh
+
+      $timeout (->
+        if item.taxes = undefined
+          refreshTaxList()
+      )
+
       manageTaxOndialog = (item) ->
         obj = item
         $timeout( ->
@@ -652,13 +666,11 @@ angular.module('ledger', [])
 
       scope.$watch('item.transactions[0].amount', (newVal, oldVal)->
         if newVal != oldVal
-          taxes_refresh = []
-          _.each scope.taxList, (tax) ->
-            if tax.isSelected
-              taxes_refresh.push(tax)
+          refreshTaxList()
+      )
 
-            if _.isUndefined(item.taxes)
-              item.sharedData.taxes = taxes_refresh
+      scope.$watch('item.sharedData.unconfirmedEntry', (newVal, oldVal)->
+        refreshTaxList()
       )
 
       scope.removeClassInAllEle("ledgEntryForm", "open")
