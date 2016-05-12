@@ -1,27 +1,128 @@
-<footer class="pr">
-    <div class="container">
-        <div class="row alC">
-            <div class="col-xs-12">
-                <a href="/" title="Accounting Software">Home
-                </a>|
-                <a href="/pricing">Pricing
-                </a>|
-                <a href="/privacy">Privacy Policy
-                </a>|
-                <a href="/terms">Terms &amp; Condition
-                </a>|
-                <a href="/why-giddh">Why Giddh?
-                </a>
+<!-- footer start -->
+  <section id="footer">
+    <section id="contact">
+      <div class="container">
+        <div class="row pr">
+          <div id="footer-mascot"></div>
+          <div class="col-md-5">
+            <h4 class="headerline">Contact Us</h4>
+            
+            <div class="social">
+              <a ng-repeat="list in socialList" href="{{list.url}}">
+                <div class="scicn {{list.class}}">{{list.name}}</div>
+              </a>
             </div>
+
+            <p>405-406, Capt. C. S. Naidu Arcade, Near Greater</p>
+            <p>Kailash Hospital, 10/2 Old Palasia,</p>
+            <p>Indore, Madhya Pradesh 452018</p>
+            <p class="mrT3">
+              shubhendra@giddh.com<br>
+              +91 9977389948
+            </p>
+            <div id="farzi"></div>
+          </div>
+          <div class="col-md-5 col-md-offset-2" ng-if="formSubmitted">
+            <h4 class="headerline">{{responseMsg}}</h4>
+          </div>
+          <div class="col-md-5 col-md-offset-2" ng-hide="formSubmitted">
+            <h4 class="headerline">Say hello</h4>
+            <form novalidate name="contactForm">
+              <div class="row">
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input name="contactForm.name" ng-model="cForm.name" type="text" required class="form-control">
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input name="contactForm.email" ng-model="cForm.email" type="email" required class="form-control">
+                  </div>
+                </div>
+              </div>
+
+              <div class="control-group">
+                <div class="form-group">
+                  <label for="message">Message</label>
+                  <textarea name="contactForm.message" required ng-model="cForm.message" class="form-control"></textarea>
+                </div>
+              </div>
+              <div id="success"></div>
+              <button ng-click="submitForm(cForm)" class="btn sharp btn-default btn-transparent btn-lg" type="submit" ng-disabled="contactForm.$invalid || formProcess">Submit</button>
+            </form>
+
+          </div>
         </div>
-        <div class="mrT2 alC row">
-            <div class="col-xs-12">
-                All right are reserved © 2020 Walkover
-                <a href="/" title="Online Accounting Software">Giddh.com</a>
-            </div>
-        </div>
-    </div>
-</footer>
+      </div>
+    </section>
+    <!-- end of contact -->
+    <footer class="inconsolata">
+      <div>
+        <a href="javascript:void(0)">About us</a>|
+        <a href="javascript:void(0)">Blog</a>|
+        <a href="javascript:void(0)">Terms of use</a>|
+        <a href="javascript:void(0)">Privacy policy</a>|
+        <a href="javascript:void(0)">Work with us!</a>
+      </div>
+
+      <small>All right are reserved © 2020 Walkover <a href="https://giddh.com/" target="_Blank">Giddh.com</a></small>
+    </footer>
+  </section>
+  <!-- end of footer -->
+
+<script type="text/javascript">
+/*-------------------------------------------------------------------*/
+/*  FULL SCREEN FIRST SECTION
+/*-------------------------------------------------------------------*/
+jQuery(document).ready(function($){
+'use strict';
+  $(window).resize(function(){
+    $('#videoBg').css({ 'height' : $(window).height() });
+  });
+  $(window).trigger('resize');
+});
+/*-----------------------------------------------------------------------------------*/
+/*  SCROLL TO TOP OF PAGE
+/*-----------------------------------------------------------------------------------*/
+jQuery(document).ready(function($){
+'use strict';
+
+  $('.page-scroll').click(function(){
+    var url = $(this).attr('href');
+    $("html, body").animate({ scrollTop: $(url).offset().top}, 500);
+    return false;
+  });
+
+  // onwindow scroll
+  $(window).scroll(function(){
+    
+    var scrollTop = $(window).scrollTop();
+    
+    if( scrollTop > 100 ){
+      $('.navbar').addClass('affix')
+    } 
+    else {
+      $('.navbar').removeClass('affix')
+    }
+    
+    // $('.page-scroll').each(function(){
+    //   var scrollHref = $(this).attr('href');
+    //   if( $(window).scrollTop() > $(scrollHref).offset().top - 100 ) {
+    //     $('.page-scroll').removeClass('active');
+    //     $(this).addClass('active');
+    //   }
+    // });
+    
+  });
+
+
+});
+</script>
+
+
+
 <!-- Google Tag Manager -->
 <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>

@@ -24,7 +24,7 @@ router.post '/submitDetails', (req, res) ->
       }
       {
         'property': 'message',
-        'value': req.body.reason
+        'value': req.body.message
       }
     ]
   args = {

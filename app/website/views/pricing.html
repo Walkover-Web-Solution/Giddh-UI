@@ -8,58 +8,81 @@
   <meta name="keywords" content="bookkeeping software, Accounting softwares, best accounting software"/>
   <title>Pricing Plan for Online Accounting software | Giddh</title>
   <!-- STYLE / THEME -->
-  <link href="/public/website/css/giddh.website.min.css" rel="stylesheet">
+  <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <link href='https://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link href="/public/website/css/new-style.css" rel="stylesheet">
   <!-- LIBRARIES -->
   <script src="/public/webapp/newRelic.js"></script>
   <script  type="text/javascript" src='/public/webapp/core_bower.min.js'></script>
-
-  <script src="/public/website/js/app.js"></script>
-
-  <style type="text/css">
-    #topSection {
-      min-height: inherit;
-    }
-  </style>
+  <script type="text/javascript" src="/public/website/js/app.js"></script>
 </head>
-<body class="unresponsive">
-<div>
-  <section id="topSection">
-    <ng-include src="'public/website/views/header.html'"></ng-include>
-    <!-- start of banner -->
-    <div class="container othPage" id="banner">
-      <div class="row">
-        <div class="col-xs-12 alC">
-          <h1 class="h1 mocha">
-            Giddh Accounting software Pricing is just 500Rs./Month
-          </h1>
+<body ng-controller="homeCtrl" id="page-top">
 
-          <h2 class="h3 trumph">
-            PURE UNLIMITED ACCOUNTING. UNLIMITED USERS. NO HIDDEN CHARGES!
-          </h2>
+  <ng-include src="'public/website/views/header.html'"></ng-include>
 
-          <div id="trywrap">
-            <a href="/beta">
-              <div id="try">
-                <img border="0" ng-src="{{pricing.banner.banBtnImgSrc}}"
-                     alt="{{pricing.banner.banBtnImgTitle}}"/>
-              </div>
-            </a>
+  <section id="videoBg" class="intro pricing">
+    <!-- banner content -->
+    <div class="intro-body">
+      <div class="container">
+        <div class="row">
+          
+          <h1 class="brand-heading arvo">Don’t expect long tables here.<br> We are only <span>₹ 500 a month.</span></h1>
+          <figure>
+            <img class="img-fluid" src="/public/website/images/new/pricing-mascot.png" alt="Pricing Giddh">
+          </figure>
+
+          <div class="text-center pBnrBtm clearfix">
+            <span class="head3 pClr">Still Confused?</span>
+            <button class="btn btn-primary sharp btn-lg btn-transparent">Talk to us</button>
           </div>
+          
         </div>
       </div>
     </div>
-    <!-- End of banner -->
+  </section> <!-- end of intro -->
+
+  <section class="blueBg cmnPd100 pricing">
+    <div class="container">
+      <div class="row">
+        
+        <div class="col-sm-4">
+          <div class="thumbnail">
+            <img src="/public/website/images/new/ledger-sharing.png" alt="Ledger Sharing">
+            <div class="caption">
+              <h3>Ledger Sharing</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-4">
+          <div class="thumbnail">
+            <img src="/public/website/images/new/business-reports.png" alt="Business Reports">
+            <div class="caption">
+              <h3>Business Reports</h3>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-sm-4">
+          <div class="thumbnail">
+            <img src="/public/website/images/new/multiple-person-entry.png" alt="Multiple Person Entry">
+            <div class="caption">
+              <h3>Multiple Person Entry</h3>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <!-- end of row -->
+      <div class="row text-center mrT4">
+        <h2 class="arvo-b bigger-text mrB5 pClr">24/7 instant support</h2>
+        <button id="pBtn" class="btn btn-default sharp btn-lg arvo">Try Now</button>
+      </div>
+    </div>
   </section>
 
-  <section class="container" id="midSection">
-    <ul class="ln" id="cmnul">
-      <li class="col-xs-4" ng-repeat="list in pricing.middle.list">
-        <h4 class="h4">{{list.title}}</h4>
-
-        <p class="cmnp">{{list.details}}</p>
-        <!-- <a href="javascript:;" class="readmore">Read more</a> -->
-      </li>
-    </ul>
-  </section>
-  <ng-include src="'public/website/views/footer.html'"></ng-include>
+  <ng-include src="'/public/website/views/footer.html'"></ng-include>
 </div>

@@ -41,7 +41,8 @@
     "jspdf": "~1.1.135",
     "html2canvas": "~0.4.1",
     "angular-ui-switch": "^0.1.1",
-    "ng-csv": "^0.3.6"
+    "ng-csv": "^0.3.6",
+    "angular-vidbg": "angular-video-background#^0.0.12"
   },
   "resolutions": {
     "angular": "~1.4.4",

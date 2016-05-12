@@ -8,82 +8,98 @@
   <meta name="keywords" content="bookkeeping software, Accounting softwares, online accounting software, bookkeeping software for small business"/>
   <title>Giddh ~ Accounting at its Rough! Bookkeeping and Accounting Software</title>
   <!-- STYLE / THEME -->
-  <link href="/public/website/css/giddh.website.min.css" rel="stylesheet">
+  <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/bower_components/angular-vidbg/dist/vidBg.min.css" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Arvo:400' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link href="/public/website/css/new-style.css" rel="stylesheet">
   <!-- LIBRARIES -->
   <script src="/public/webapp/newRelic.js"></script>
   <script  type="text/javascript" src='/public/webapp/core_bower.min.js'></script>
   <script type="text/javascript" src="/public/website/js/app.js"></script>
-  <script type="text/javascript" src="/public/website/js/controller/homeController.js"></script>
 </head>
-<body class="unresponsive">
-<div ng-controller="homeController">
+<body ng-controller="homeCtrl" id="page-top">
 
-  <section id="topSection">
-    <ng-include src="'/public/website/views/header.html'"></ng-include>
-    <!-- start of slider -->
+  <ng-include src="'/public/website/views/header.html'"></ng-include>
+  <!-- end navigation -->
 
-    <div class="container" id="banner">
-      <div class="row">
-        <div class="col-xs-6">
+  <section id="videoBg" class="intro home">
+    <vid-bg resources="resources" poster="poster" full-screen="fullScreen" muted="muted" z-index="zIndex" play-info="playInfo" pause-play="pausePlay"></vid-bg>
+
+    <!-- banner content -->
+    <div class="intro-body">
+      <div class="container">
+        <div class="row">
           <div>
-            <h1 id="imd" class="h2i mocha white-space-pre-wrap">{{home.banner.mainHead}}</h1>
-
-            <h2 id="imdContent" class="h3 trumph white-space-pre-wrap">{{home.banner.subHead}}</h2>
-
-            <div id="thead" class="trumph">{{home.banner.p}}</div>
+            <button class="btn btn-primary sharp btn-lg btn-transparent">Cheque out</button>
           </div>
-        </div>
-
-        <div class="col-xs-6">
-          <figure class="">
-            <img class="img-responsive center-block" ng-src="{{home.banner.imgSrc}}"
-                 alt="{{home.banner.imgTitle}}"/>
-          </figure>
-        </div>
-      </div>
-      <div class="row pr">
-        <div id="trywrap">
-          <a href="/beta">
-            <div id="try">
-              <img border="0" ng-src="{{home.banner.banBtnImgSrc}}" alt="{{home.banner.banBtnImgTitle}}"/>
-            </div>
-          </a>
+          <div class="brand-wrap">
+            <h1 class="brand-heading arvo">Your new non-inventory accountant</h1>
+          </div>
+          <div class="scroll-btn">
+            <a href="#feature" class="page-scroll"></a>
+          </div>
         </div>
       </div>
     </div>
-    <!-- end of banner -->
-  </section>
-  <!-- end of top section -->
+  </section> <!-- end of videoBg -->
 
-
-  <section id="midSection">
+  <section class="blueBg homeContent" id="feature">
     <div class="container">
-      <ul class="ln" id="indul">
-        <li class="row" ng-repeat="list in home.middle.list">
-          <div class="col-xs-6 lSide">
-            <h4 class="h4">{{list.title}}</h4>
+      <div class="row">
+        <h2 class="arvo">Accounting that’s not just limited to accountants</h2>
+        <figure>
+          <img class="img-fluid" src="/public/website/images/new/1.png" alt="Synced with Giddh">
+          <figcaption>Stop logging into your bank account. Your bank syncs with Giddh.</figcaption>
+        </figure>
 
-            <p class="cmnp">{{list.details}}</p>
-          </div>
-          <div class="col-xs-6 rSide">
-            <figure class="">
-              <img class="img-responsive center-block" ng-src="{{list.imgSrc}}" alt="{{list.imgTitle}}"/>
-            </figure>
-          </div>
-        </li>
-      </ul>
+        <figure>
+          <img class="img-fluid" src="/public/website/images/new/2.png" alt="Synced with Giddh">
+          <figcaption>Share realtime ledgers and invoices with your customers</figcaption>
+        </figure>
+
+        <figure>
+          <img class="img-fluid" src="/public/website/images/new/3.png" alt="Synced with Giddh">
+          <figcaption>You are not dependent on your accountant for your business reports</figcaption>
+        </figure>
+
+        <figure>
+          <img class="img-fluid" src="/public/website/images/new/4.png" alt="Synced with Giddh">
+          <figcaption>Every key person in your Company can see the numbers relevant to them</figcaption>
+        </figure>
+
+        <figure>
+          <img class="img-fluid" src="/public/website/images/new/5.png" alt="Synced with Giddh">
+          <figcaption>Our API’s integrate seamlessly into your software’s</figcaption>
+        </figure>
+
+        <figure>
+          <img class="img-fluid" src="/public/website/images/new/6.png" alt="Synced with Giddh">
+          <figcaption>Have branches? Your accounts are still at the same place.</figcaption>
+        </figure>
+
+        <figure>
+          <img class="img-fluid" src="/public/website/images/new/7.png" alt="Synced with Giddh">
+          <figcaption>Reports at your thumb. Find us at Playstore or istore.</figcaption>
+        </figure>
+      </div>
     </div>
   </section>
+  <!-- home content end -->
 
-  <section id="mainline" class="alC mocha">
+  <section class="cmnPd80 ylwBg homeBtmhalf">
     <div class="container">
-      {{home.bottomContent.text}}
-      <img ng-src="{{home.bottomContent.imgSrc}}" alt="{{home.bottomContent.altText}}" align="absmiddle"/>
+      <div class="row  text-center">
+        <h3 class="arvo">Why use local database? When Giddh gives you bank level security<br> with its unmatched data encryption</h3>
+        <button class="btn btn-secondary sharp btn-lg btn-transparent">See how</button>
+      </div>
     </div>
   </section>
+  <!-- end of page -->
 
+  <!-- include footer -->
   <ng-include src="'/public/website/views/footer.html'"></ng-include>
-</div>
 
 </body>
 </html>
