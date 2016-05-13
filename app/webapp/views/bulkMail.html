@@ -1,0 +1,31 @@
+<div class="noBrdRdsModal">
+	<div class="modal-header themeBg">
+		
+		<h3 class="modal-title">{{msgBody.header.set}}</h3>
+
+	</div>
+
+	<div class="modal-body">
+		
+		<h1 class="mrB1" ng-if="msgBody.type == 'Email'">Enter Subject:</h1>
+		<input ng-if="msgBody.type == 'Email'" class="form-control mrB1" type="text" ng-model="msgBody.subject" placeholder="Enter subject here"/>
+
+		<h1 class="mrB1">Type message body:</h1>
+		<textarea ng-model="msgBody.msg" class="form-control" rows="4" style="resize:none;" placeholder="start typing your message here">
+
+		</textarea>
+		<p class="mrT mrB">Tip: Click on the tabs below to insert data in your message body. Anything followed by '%s_' represents the position where actual data will be placed.</p>
+
+		<div class="row">
+			<ul class="list-inline pills">
+			    <li ng-repeat="val in dataVariables" ng-click="addValueToMsg(val)">{{val.name}}</li>
+			</ul>
+		</div>
+
+
+		<div class="row pdR2 mrT1">
+			<button class="btn btn-sm btn-success pull-right mrL1">{{msgBody.btn.set}}</button>
+		</div>
+
+	</div>
+</div>
