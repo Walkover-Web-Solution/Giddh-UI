@@ -249,16 +249,19 @@ describe 'groupController', ->
         "status": "success",
         "body": []
       }
+      @rootScope.selectedCompany = {"data": "Got it", "uniqueName": "soniravi"}
       @rootScope.makeAccountFlatten = () ->
       spyOn(@rootScope, "makeAccountFlatten")
       spyOn(@groupService, "flattenGroup").andReturn([])
       spyOn(@groupService, "flattenGroupsWithAccounts").andReturn([])
       spyOn(@groupService, "flattenAccount").andReturn([])
       spyOn(@groupService, "makeGroupListFlatwithLessDtl").andReturn([])
+      spyOn(@scope, "getFlattenGrpWithAccList")
       @scope.makeAccountsList(res)
       expect(@rootScope.flatGroupsList).toEqual([])
-      expect(@scope.flatAccntWGroupsList).toEqual([])
-      expect(@scope.showAccountList).toBeTruthy()
+      expect(@scope.getFlattenGrpWithAccList).toHaveBeenCalled()
+      #expect(@scope.flatAccntWGroupsList).toEqual([])
+      #expect(@scope.showAccountList).toBeTruthy()
       expect(@rootScope.makeAccountFlatten).toHaveBeenCalledWith([])
       expect(@scope.flattenGroupList).toEqual([])
 
