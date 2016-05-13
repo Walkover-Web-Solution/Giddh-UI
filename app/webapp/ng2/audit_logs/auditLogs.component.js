@@ -131,7 +131,7 @@
   var loadMore = ng.core.Component({
     selector: 'load-more',
     providers: [ng.http.HTTP_PROVIDERS, httpService,sharedService],
-    template: "<button class='btn btn-success pull-right mrT2 mrB2' (click)='loadMoreLogs()' *ngIf='page > 0 && page < totalPages'>Load More</button>"
+    template: "<button class='btn btn-success pull-left mrT2 mrB2' (click)='loadMoreLogs()' *ngIf='page > 0 && page < totalPages'>Load More</button>"
   }).Class({
     constructor: [ng.http.Http, httpService,sharedService, function (http, service, shared){
         this.result = {};

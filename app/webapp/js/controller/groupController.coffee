@@ -146,7 +146,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     a = []
     angular.copy(res.body, a)
     $rootScope.flatGroupsList = groupService.flattenGroup(a, [])
-    $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
+    #$scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
+    $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
     $scope.showAccountList = true
     $rootScope.canChangeCompany = true
     b = groupService.flattenAccount(a)
@@ -155,6 +156,20 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.makeAccountsListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
+
+  $scope.getFlattenGrpWithAccList = (compUname) ->
+    reqParam = {
+      companyUniqueName: compUname
+    }
+    groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+
+  $scope.getFlattenGrpWithAccListSuccess = (res) ->
+    _.each res.body, (grp) ->
+      grp.open = false
+    $scope.flatAccntWGroupsList = res.body
+
+  $scope.getFlattenGrpWithAccListFailure = (res) ->
+    console.log res
 
   $scope.addFilterKey = (data) ->
     _.each data, (grp) ->

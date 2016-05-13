@@ -147,7 +147,7 @@
     <button class="btn btn-warning pull-left mrT2 mrL" ng-click="resetFilters()">Reset</button>
 
     <br/>
-    <h1 class="page-title pull-left" style="margin-left:0; margin-bottom:15px;width:100%;border-top:1px solid #ccc;padding-top:5px;" ng-if="canManageCompany">Delete Logs</h1>
+   <!--  <h1 class="page-title pull-left" style="margin-left:0; margin-bottom:15px;width:100%;border-top:1px solid #ccc;padding-top:5px;" ng-if="canManageCompany">Delete Logs</h1>
         <div class="clearfix mrT2"  ng-if="canManageCompany">
               <label>Before date</label>
               <p class="input-group">
@@ -165,14 +165,14 @@
                 </span>
               </p>
         </div>
-        <button class="btn btn-danger pull-left mrT2" ng-click="deleteLogs()" ng-if="canManageCompany">Delete Logs</button>
+        <button class="btn btn-danger pull-left mrT2" ng-click="deleteLogs()" ng-if="canManageCompany">Delete Logs</button> -->
 	</perfect-scrollbar>
 </div>
 
 
 <div class="col-xs-9">
   <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
-  	<section class="container audit-logs">
+  	<section class="container-fluid audit-logs">
   			<audit-logs>Loading..</audit-logs>
         <load-more *ngIf="page > 0">Loading...</load-more>
   	</section>

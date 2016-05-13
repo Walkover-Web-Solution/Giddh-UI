@@ -161,6 +161,8 @@
                 <button ng-if="inSrchmode" ng-click="resetQuery()" class="btn btn-info mrR1">Reset Query</button>
                 
                 <button type="button" class="btn btn-success" ng-csv="searchResData" csv-header="getCSVHeader()"  filename="{{ searchFormData.group.name }}.csv" field-separator="," decimal-separator="." csv-column-order="order">Download CSV</button>
+                <button type="button" class="btn btn-success mrL1" ng-click="openEmailDialog()">Send as Email</button>
+                <button type="button" class="btn btn-success mrL1" ng-click="openSmsDialog()">Send as Sms</button>
               </div>
               <!-- end of second row -->
             </form>

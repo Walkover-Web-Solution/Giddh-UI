@@ -27,6 +27,10 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         method: 'GET',
         url: '/company/:companyUniqueName/groups/detailed-groups-with-accounts'
       }
+      getFlattenGrpWithAcc: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/groups/flatten-groups-accounts'
+      }
       update: {
         method: 'PUT'
         url: '/company/:companyUniqueName/groups/:groupUniqueName'
@@ -99,6 +103,12 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
 #   All groups with less detail, with account
     getGroupsWithAccountsCropped: (companyUniqueName, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccounts({companyUniqueName: companyUniqueName},
+        onSuccess, onFailure))
+
+#   flatten groups with accounts list
+    getFlattenGroupAccList: (reqParam, onSuccess, onFailure) ->
+      console.log reqParam
+      @handlePromise((onSuccess, onFailure) -> Group.getFlattenGrpWithAcc({companyUniqueName: reqParam.companyUniqueName},
         onSuccess, onFailure))
 
     update: (companyUniqueName, group) ->

@@ -1,5 +1,5 @@
 "use strict"
-searchController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService) ->
+searchController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $uibModal) ->
 
   $scope.today = new Date()
   $scope.dateOptions = {
@@ -180,6 +180,88 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   # init some func when page load
   $scope.getGrpsforSearch()
+
+  #send as email/sms
+  $scope.accountName = '%s_AccountName'
+  $scope.msgBody = {
+    header: {
+      email: 'Send Email'
+      sms: 'Send Sms'
+      set: ''
+    }
+    btn : {
+      email: 'Send Email'
+      sms: 'Send Sms'
+      set: ''
+    }
+    type: ''
+    msg: ''
+    subject: ''
+  }
+
+  $scope.dataVariables = [
+    {
+      name: 'Opening Balance'
+      value: '%s_OB'
+    }
+    {
+      name: 'Closing Balance'
+      value: '%s_CB'
+    }
+    {
+      name: 'Credit Total'
+      value: '%s_CT'
+    }
+    {
+      name: 'Debit Total'
+      value: '%s_DT'
+    }
+    {
+      name: 'From Date'
+      value: '%s_FD'
+    }
+    {
+      name: 'To Date'
+      value: '%s_TD'
+    }
+    {
+      name: 'Magic Link'
+      value: '%s_ML'
+    }
+    {
+      name: 'Account Name'
+      value: $scope.accountName
+    }
+  ]
+
+  $scope.openEmailDialog = () ->
+    $scope.msgBody.subject = ''
+    $scope.msgBody.msg = ''
+    $scope.msgBody.type = 'Email'
+    $scope.msgBody.btn.set = $scope.msgBody.btn.email
+    $scope.msgBody.header.set = $scope.msgBody.header.email
+    modalInstance = $uibModal.open(
+        templateUrl: '/public/webapp/views/bulkMail.html' 
+        size: "md"
+        backdrop: 'static'
+        scope: $scope
+      )
+
+  $scope.openSmsDialog = () ->
+    $scope.msgBody.msg = ''
+    $scope.msgBody.type = 'sms'
+    $scope.msgBody.btn.set = $scope.msgBody.btn.sms
+    $scope.msgBody.header.set = $scope.msgBody.header.sms
+    modalInstance = $uibModal.open(
+        templateUrl: '/public/webapp/views/bulkMail.html' 
+        size: "md"
+        backdrop: 'static'
+        scope: $scope
+      )
+
+  $scope.addValueToMsg = (val) ->
+    $scope.msgBody.msg += " " + val.value.toString() + " "
+    
 
 #init angular app
 giddh.webApp.controller 'searchController', searchController

@@ -70,6 +70,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
             return a
             localStorageService.set("_selectedCompany", companyList[0])
         onFailure = (res) ->
+          console.log res
           toastr.error('Failed to retrieve company list' + res.data.message)
         companyServices.getAll().then(onSuccess, onFailure)
     }
