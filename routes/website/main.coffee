@@ -16,6 +16,9 @@ router.get '/', (req, res) ->
 router.get '/index', (req, res) ->
   res.sendFile 'index.html', options
 
+router.get '/about', (req, res) ->
+  res.sendFile 'about.html', options
+
 router.get '/beta', (req, res) ->
   res.sendFile 'beta.html', options
 

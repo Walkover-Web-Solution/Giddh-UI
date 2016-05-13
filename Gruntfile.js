@@ -214,7 +214,9 @@ module.exports = function (grunt) {
           'Chart.js',
           'angular-ui-switch',
           'ng-csv',
-          'angular-vidbg'
+          'angular-vidbg',
+          'fullpage.js',
+          'angular-fullpage.js'
         ],
         dependencies: {
           'jquery': 'modernizr',

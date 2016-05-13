@@ -5,6 +5,7 @@ app = angular.module("giddhApp", [
   "ngResource"
   "toastr"
   "ngVidBg"
+  "fullPage.js"
   ]
 )
 
@@ -23,6 +24,14 @@ app.controller 'homeCtrl', [
 
     $scope.formSubmitted = false
     $scope.formProcess = false
+
+    $scope.pageOptions = {
+      sectionsColor: ['#1bbc9b', '#FFF6E7', '#E3422E', '#4BBFC3', '#7BAABE', '#FFF6E7', '#FFF6E7', '#E34A26']
+      navigation: true
+      navigationPosition: 'right'
+      scrollingSpeed: 800
+      scrollOverflow: true
+    }
 
     $scope.socialList= [
       # {

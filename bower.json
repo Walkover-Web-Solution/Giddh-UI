@@ -42,11 +42,13 @@
     "html2canvas": "~0.4.1",
     "angular-ui-switch": "^0.1.1",
     "ng-csv": "^0.3.6",
-    "angular-vidbg": "angular-video-background#^0.0.12"
+    "angular-vidbg": "angular-video-background#^0.0.12",
+    "angular-fullpage.js": "^0.2.1"
   },
   "resolutions": {
     "angular": "~1.4.4",
-    "jspdf": "~1.1.135"
+    "jspdf": "~1.1.135",
+    "jquery": "~2.0.3"
   },
   "description": "",
   "main": "",
