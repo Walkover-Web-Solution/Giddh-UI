@@ -626,7 +626,8 @@ angular.module('ledger', [])
           edArr = obj.sharedData.entryDate.split('-')
           edMmddyy = edArr[1] + '-' + edArr[0] + '-' + edArr[2]
           entryDate = new Date(edMmddyy).getTime()
-          
+          item.sharedData.eDate = entryDate
+
           _.each scope.ledgerDataArray.ledgers, (ledger) ->
             if unq == ledger.uniqueName
               siblings = ledger.transactions

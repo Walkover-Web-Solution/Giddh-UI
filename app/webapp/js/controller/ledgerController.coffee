@@ -384,6 +384,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
       taxData.entryAmount = Math.abs(taxData.entryAmount)
 
   $scope.addTaxTransactions = (edata, taxes) ->
+    console.log edata.entryDate
     # calculate total entry amount
     newTaxTransactions = []
     pTxns = edata.transactions
@@ -414,7 +415,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         # calculate total tax amount for entry
         _.each tax.taxDetail, (det) ->
           taxDate = new Date(det.date).getTime()
-          entryDate = new Date(edata.entryDate).getTime()
+          entryDate = edata.eDate
           
           if entryDate >= taxDate && taxDate >= prevDate
             newTax.amount = det.taxValue/100 * taxData.entryAmount
