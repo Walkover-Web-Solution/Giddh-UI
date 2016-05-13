@@ -107,7 +107,6 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
 
 #   flatten groups with accounts list
     getFlattenGroupAccList: (reqParam, onSuccess, onFailure) ->
-      console.log reqParam
       @handlePromise((onSuccess, onFailure) -> Group.getFlattenGrpWithAcc({companyUniqueName: reqParam.companyUniqueName},
         onSuccess, onFailure))
 

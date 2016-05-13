@@ -45,7 +45,7 @@
       <ul class="acntAccordion" ng-if="showAccountList">
         <li>
           <ul id="ul_0" class="mainUl accBox" style="border-left:none">
-            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList" id="li_{{value.groupUniqueName}}" >
+            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList | accntsrch:acntSrch" id="li_{{value.groupUniqueName}}" >
               <div 
                 class="title  LIB{{value.groupUniqueName}}" 
                 ng-click="value.open = !value.open"
