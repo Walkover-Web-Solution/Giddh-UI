@@ -7,6 +7,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       'groupUniqueName': @groupUniqueName
       'date1': @date1
       'date2': @date2
+      'q':@q
     },
     {
       add: {
@@ -29,7 +30,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       }
       getFlattenGrpWithAcc: {
         method: 'GET'
-        url: '/company/:companyUniqueName/groups/flatten-groups-accounts'
+        url: '/company/:companyUniqueName/groups/flatten-groups-accounts?q=:q'
       }
       update: {
         method: 'PUT'
@@ -107,7 +108,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
 
 #   flatten groups with accounts list
     getFlattenGroupAccList: (reqParam, onSuccess, onFailure) ->
-      @handlePromise((onSuccess, onFailure) -> Group.getFlattenGrpWithAcc({companyUniqueName: reqParam.companyUniqueName},
+      @handlePromise((onSuccess, onFailure) -> Group.getFlattenGrpWithAcc({companyUniqueName: reqParam.companyUniqueName, q:reqParam.q},
         onSuccess, onFailure))
 
     update: (companyUniqueName, group) ->

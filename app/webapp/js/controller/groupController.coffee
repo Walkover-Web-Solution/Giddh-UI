@@ -46,7 +46,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.flatAccntWGroupsList = {}
   $scope.showAccountList = false
   $scope.selectedAccountUniqueName = undefined
-
+  $scope.flatAccntWGroupsList_1 = []
+  $scope.noGroups = false
+  
   $scope.valuationDatePickerOpen = ()->
     this.valuationDatePickerIsOpen = true
 
@@ -146,9 +148,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     a = []
     angular.copy(res.body, a)
     $rootScope.flatGroupsList = groupService.flattenGroup(a, [])
-    #$scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
-    $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
-    $scope.showAccountList = true
+    $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
+    #$scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
+    #$scope.showAccountList = true
     $rootScope.canChangeCompany = true
     b = groupService.flattenAccount(a)
     $rootScope.makeAccountFlatten(b)
@@ -157,20 +159,34 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.makeAccountsListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  # $scope.getFlattenGrpWithAccList = (compUname) ->
-  #   reqParam = {
-  #     companyUniqueName: compUname
-  #   }
-  #   groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+  $scope.getFlattenGrpWithAccList = (compUname) ->
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+    }
+    groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
 
-  # $scope.getFlattenGrpWithAccListSuccess = (res) ->
-  #   _.each res.body, (grp) ->
-  #     grp.open = false
-  #   $scope.flatAccntWGroupsList = res.body
-  #   $scope.showAccountList = true
+  $scope.getFlattenGrpWithAccListSuccess = (res) ->
+    $scope.flatAccntWGroupsList = []
+    _.each res.body, (grp, idx) ->
+      grp.open = false
+      if idx < 11
+        $scope.flatAccntWGroupsList.push(res.body[idx])
+    $scope.showAccountList = true
+      
 
-  # $scope.getFlattenGrpWithAccListFailure = (res) ->
-  #   toastr.error(res.data.message)
+  $scope.getFlattenGrpWithAccListFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.searchGrpWithAccounts = (str) ->
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    if str.length > 2
+      reqParam.q = str
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+    else
+      reqParam.q = ''
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
 
   $scope.addFilterKey = (data) ->
     _.each data, (grp) ->

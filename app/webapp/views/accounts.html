@@ -14,7 +14,9 @@
           <i class="glyphicon glyphicon-search"></i>
         </div>
 
-        <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList');" ng-change="checkLength(acntSrch)" ng-model-options="{debounce: 200}">
+        <!-- <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList');" ng-change="checkLength(acntSrch)" ng-model-options="{debounce: 200}"> -->
+
+        <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-change="searchGrpWithAccounts(acntSrch);" ng-model-options="{debounce: 500}">
 
         <div ng-hide="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(true)" tooltip-placement="right" uib-tooltip="Expand all" >
           <i class="glyphicon glyphicon-list"></i>
@@ -29,9 +31,12 @@
   </div>
   <!-- searchbar end -->
 
-  <div class="pdL1 pdR1 mrB1" ng-if="flatAccntWGroupsList.length == 0 && showAccountList">
+  <div class="pdL1 pdR1 mrB1" ng-if="flatAccntWGroupsList.length == 0 && showAccountList && !noGroups">
     <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{::selectedCompany.name}}</strong> <a
         href="" ng-click="goToManageGroups()">+ add new</a></h4>
+  </div>
+  <div class="pdL1 pdR1 mrB1" ng-if="flatAccntWGroupsList.length == 0 && showAccountList && noGroups">
+    <h4 class="list-group-item-heading">Oops, No Accounts Found :(</h4>
   </div>
   <perfect-scrollbar id="accountList" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
     <div class="menu acList">
@@ -45,7 +50,7 @@
       <ul class="acntAccordion" ng-if="showAccountList">
         <li>
           <ul id="ul_0" class="mainUl accBox" style="border-left:none">
-            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList | accntsrch:acntSrch" id="li_{{value.groupUniqueName}}" >
+            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList" id="li_{{value.groupUniqueName}}" >
               <div 
                 class="title  LIB{{value.groupUniqueName}}" 
                 ng-click="value.open = !value.open"
