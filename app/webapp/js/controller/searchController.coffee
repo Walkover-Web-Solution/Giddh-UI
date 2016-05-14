@@ -226,11 +226,11 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     }
     {
       name: 'Magic Link'
-      value: '%s_ML'
+      value: '%s_magicLink'
     }
     {
       name: 'Account Name'
-      value: $scope.accountName
+      value: '%s_accountName'
     }
   ]
 
