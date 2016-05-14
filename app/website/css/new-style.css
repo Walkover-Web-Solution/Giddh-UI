@@ -602,7 +602,33 @@ footer small a{
 }
 /*about page end*/
 
-
+/*privacy page and terms page*/
+#cmnTpPad{
+	margin-top: 100px;
+}
+.gridBg{
+	background: #FFF8EA url('/public/website/images/new/banner-grid-design.png') repeat top left;
+}
+.txtBody{
+	font-size: 18px;
+}
+.txtBody .lead{
+	font-family: 'Arvo', serif
+}
+.txtBody p{
+	line-height: 24px;
+	margin-bottom: 20px;
+}
+.txtBody .head3{
+	font-size: 22px;
+}
+.txtBody ol li ul{
+	list-style: disc;
+}
+.txtBody ol li ul li ul{
+	list-style: circle;
+}
+/*end of terms */
 
 
 
