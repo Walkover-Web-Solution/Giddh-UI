@@ -253,9 +253,11 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       )
       file.upload.then ((res) ->
         $timeout ->
+          # $scope.logoWrapShow = false
           toastr.success("Logo Uploaded Successfully", res.data.status)
       ), ((res) ->
         console.log res, "error"
+        $scope.logoUpldComplt = false
         toastr.warning("Something went wrong", "warning")
       ), (evt) ->
         console.log "file upload progress" ,Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
@@ -263,6 +265,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   # reset Logo
   $scope.resetLogo=()->
     $scope.logoUpldComplt = false
+    $scope.logoWrapShow = true
 
   $scope.showUploadWrap=()->
     $scope.logoWrapShow = true
@@ -471,6 +474,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   $scope.prevAndGenInvFailure=(res)->
     $scope.prevInProg = false
+    $scope.entriesForInvoice = []
     toastr.error(res.data.message, res.data.status)
 
 

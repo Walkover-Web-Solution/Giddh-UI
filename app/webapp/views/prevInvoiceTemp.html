@@ -186,7 +186,7 @@ textarea{
               <aside ng-if="editMode && defTempData.entries === null">
                 <form class="form-inline" enctype="multipart/form-data">
                   <div class="form-group" ng-show="logoWrapShow || defTempData.logo.path === ''">
-                    <span ng-hide="logoUpldComplt && logoWrapShow">
+                    <span ng-hide="logoUpldComplt">
                       <button type="file" 
                         ng-model="logoFile"
                         class="btn btn-primary" 
@@ -206,7 +206,7 @@ textarea{
                     <a href="javascript:void(0)" ng-click="resetLogo()">Reset Logo</a>
                   </div>
                 </form>
-                <div ng-if="defTempData.logo.path !== ''" ng-hide="logoWrapShow">
+                <div ng-show="defTempData.logo.path !== ''" ng-hide="logoWrapShow">
                   <img src="{{defTempData.logo.path}}" class="" height="50px">
                   <a href="javascript:void(0)" ng-click="showUploadWrap()">Change Logo</a>
                 </div>
@@ -265,7 +265,7 @@ textarea{
         
 
         <section ng-if="defTempData.entries !== null || !editMode && genPrevMode">
-          <table class="table table-bordered vAlMid">
+          <table class="table table-bordered vAlMid" ng-init="start = 1">
             <thead>
               <tr>
                 <th class="col-xs-1">
@@ -280,14 +280,14 @@ textarea{
               </tr>
             </thead>
           
-            <tbody>
-              <tr ng-repeat="item in defTempData.entries track by $index">
-                <td>{{$index+1 | number}}</td>
+            <tbody ng-repeat="item in defTempData.entries track by $index" ng-init="current = $parent.start; $parent.start=$parent.start+ item.transactions.length;">
+              <tr ng-repeat="entry in item.transactions">
+                <td>{{current + $index | number}}</td>
                 <td>
-                  <input type="text" ng-model="item.transactions[0].description" class="form-control">
+                  <input type="text" ng-model="entry.description" class="form-control">
                 </td>
                 <td class="text-right">
-                  {{item.transactions[0].amount | currency:"&#x20B9;"}}
+                  {{entry.amount | currency:"&#x20B9;"}}
                 </td>
               </tr>
             </tbody>
