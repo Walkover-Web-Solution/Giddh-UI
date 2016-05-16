@@ -15,7 +15,7 @@ describe "Login Service", ->
   )
 
   describe "#submitUserForm", ->
-    it 'should submit user form', ->
+    xit 'should submit user form', ->
       user = {uFname: "Priyanka", uLname: "pathak", email: "p@p.com", company: "Walkover", reason: "blank"}
       @httpBackend.when('POST', '/contact/submitDetails', user).respond(200,
         {"message": "success"})
@@ -24,7 +24,7 @@ describe "Login Service", ->
         (data)-> expect(data.message).toBe('success'),
         (data)-> expect(true).toBeFalsy())
 
-    it 'should not submit user form', ->
+    xit 'should not submit user form', ->
       user = {uFname: "Priyanka", uLname: "pathak", email: "p@p.com", company: "Walkover", reason: "blank"}
       @httpBackend.when('POST', '/contact/submitDetails', user).respond(401,
         {"message": "failure message"})
