@@ -50,7 +50,7 @@
       <ul class="acntAccordion" ng-if="showAccountList">
         <li>
           <ul id="ul_0" class="mainUl accBox" style="border-left:none">
-            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList" id="li_{{value.groupUniqueName}}" >
+            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList" id="li_{{value.groupUniqueName}}" ng-if="value.accountDetails.length > 0">
               <div 
                 class="title  LIB{{value.groupUniqueName}}" 
                 ng-click="value.open = !value.open"
@@ -79,7 +79,7 @@
 
         </li>
       </ul>
-      <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreGrpWithAcc(selectedCompany.uniqueName)" ng-if="!hideLoadMore && showAccountList">Load More</a>
+      <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreGrpWithAcc(selectedCompany.uniqueName)" ng-if="!hideLoadMore && showAccountList && flatAccntWGroupsList.length > 0">Load More</a>
     </div>
     <div style="height: 50px;"></div>
   </perfect-scrollbar>

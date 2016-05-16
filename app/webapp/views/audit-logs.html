@@ -112,7 +112,7 @@
 	          <ui-select-match placeholder="Select Option">
 	              <span>{{$select.selected.name}}</span>
 	          </ui-select-match>
-	          <ui-select-choices repeat="acc in options.accountUniqueNames | filter: $select.search ">
+	          <ui-select-choices repeat="acc in options.accountUniqueNames | filter: $select.search " refresh="searchAccounts($select.search)">
 	              <span ng-bind="acc.name"></span>
 	          </ui-select-choices>
 	      </ui-select>

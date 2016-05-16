@@ -168,7 +168,8 @@ giddh.webApp.run [
   'toastr'
   'localStorageService'
   'DAServices'
-  ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices) ->
+  'groupService'
+  ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService) ->
     $rootScope.$state = $state
     $rootScope.$stateParams = $stateParams
 
@@ -212,6 +213,41 @@ giddh.webApp.run [
       localStorageService.remove("_selectedAccount")
     )
     $rootScope.canChangeCompany = false
+
+    $rootScope.flatAccList = {
+      page: 1
+      count: 10
+      totalPages: 0
+      currentPage : 1
+    }
+
+    $rootScope.getFlatAccountList = (compUname) ->
+      reqParam = {
+        companyUniqueName: compUname
+        q: ''
+        page: $rootScope.flatAccList.page
+        count: $rootScope.flatAccList.count
+      }
+      groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+
+    $rootScope.getFlatAccountListListSuccess = (res) ->
+      $rootScope.fltAccntListPaginated = res.body.results
+
+    $rootScope.getFlatAccountListFailure = (res) ->
+      toastr.error(res.data.message)
+
+    # search flat accounts list
+    $rootScope.searchAccounts = (str) ->
+      reqParam = {}
+      reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+      if str.length > 2
+        reqParam.q = str
+        groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+      else
+        reqParam.q = ''
+        reqParam.count = 5
+        groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+
 ] 
 
 giddh.webApp.config ($httpProvider) ->

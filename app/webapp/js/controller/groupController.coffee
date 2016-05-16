@@ -151,7 +151,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     else
       # with accounts, group data
       $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
-      $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+      $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
       
       # without accounts only groups conditionally
