@@ -8,6 +8,8 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     'tempUname': @tempUname
     'invoiceUniqueID': @invoiceUniqueID
     'taxUniqueName': @taxUniqueName
+    'to':@to
+    'from':@from
   },
   {
     addCompany:
@@ -104,6 +106,34 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     editTax:
       method: 'PUT'
       url: '/company/:uniqueName/tax/:taxUniqueName/:updateEntries'
+
+    saveSmsKey:
+      method: 'POST'
+      url: '/company/:companyUniqueName/sms-key'
+
+    saveEmailKey:
+      method: 'POST'
+      url: '/company/:companyUniqueName/email-key'
+
+    getSmsKey:
+      method: 'GET'
+      url: '/company/:companyUniqueName/sms-key'
+
+    getEmailKey:
+      method: 'GET'
+      url: '/company/:companyUniqueName/email-key'
+
+    sendEmail:
+      method: 'POST'
+      url: '/company/:companyUniqueName/accounts/bulk-email?from=:from&to=:to'
+
+    sendSms:
+      method: 'POST'
+      url: '/company/:companyUniqueName/accounts/bulk-sms?from=:from&to=:to'
+
+    getFY:
+      method: 'GET'
+      url: '/company/:companyUniqueName/financial-year'
 
   })
 
@@ -211,5 +241,29 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
         taxUniqueName: reqParam.taxUniqueName
         updateEntries: reqParam.updateEntries
       }, taxData, onSuccess, onFailure))
+
+    saveSmsKey: (companyUniqueName, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.saveSmsKey({companyUniqueName: companyUniqueName}, data, onSuccess, onFailure))
+
+    saveEmailKey: (companyUniqueName, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.saveEmailKey({companyUniqueName: companyUniqueName}, data, onSuccess, onFailure))
+
+    getSmsKey: (companyUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getSmsKey({companyUniqueName: companyUniqueName}, onSuccess,
+          onFailure))
+
+    getEmailKey: (companyUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getEmailKey({companyUniqueName: companyUniqueName}, onSuccess,
+          onFailure))
+
+    sendEmail: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.sendEmail({companyUniqueName: reqParam.compUname, to:reqParam.to, from:reqParam.from}, data, onSuccess, onFailure))
+
+    sendSms: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.sendSms({companyUniqueName: reqParam.compUname, to:reqParam.to, from:reqParam.from}, data, onSuccess, onFailure))
+
+    getFY: (companyUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getFY({companyUniqueName: companyUniqueName}, onSuccess,
+          onFailure))
 
   companyServices

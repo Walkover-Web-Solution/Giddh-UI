@@ -624,11 +624,12 @@ angular.module('ledger', [])
           unq = obj.sharedData.uniqueName
           taxList_1 = scope.taxList
           siblings = []
-          edArr = obj.sharedData.entryDate.split('-')
-          edMmddyy = edArr[1] + '-' + edArr[0] + '-' + edArr[2]
-          entryDate = new Date(edMmddyy).getTime()
-          item.sharedData.eDate = entryDate
-
+          if obj.sharedData.entryDate != undefined
+            edArr = obj.sharedData.entryDate.split('-')
+            edMmddyy = edArr[1] + '-' + edArr[0] + '-' + edArr[2]
+            entryDate = new Date(edMmddyy).getTime()
+            item.sharedData.eDate = entryDate
+          
           _.each scope.ledgerDataArray.ledgers, (ledger) ->
             if unq == ledger.uniqueName
               siblings = ledger.transactions

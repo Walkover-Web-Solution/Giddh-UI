@@ -667,9 +667,82 @@
 
       </div>
     </uib-tab>
-
     <!-- end of manage taxes -->
 
+    <uib-tab ng-if="canManageCompany" heading="Email/Sms Settings" id="email-settings" select="getKeys()">
+      <div class="pd2">
+        <h3 class="fs16 mrB1">Bulk Email/Sms Settings</h3>
+        <p>Currently we offer bulk email and sms services to our users through <a href="http://https://sendgrid.com/">SendGrid</a> and <a href="https://msg91.com/">MSG91</a> respectively. <br/> In order to be able to send bulk emails and sms you would require auth-keys and sender ID from aforementioned providers. </p>
+        
+        <hr>
+
+        <div style="overflow:hidden">
+          <h3 class="fs16 mrB1 mrT2">MSG91</h3>
+          <form name="msg91_keys" ng-submit="msg91_keys.$valid && saveMsg91()">
+            <div class="form-group">
+              <label>Auth Key</label>
+              <input type="text" placeholder="enter auth-key" class="form-control max350" ng-model="msg91.authKey"/>
+            </div>
+            <div class="form-group">
+              <label>Sender ID</label>
+              <input type="text" placeholder="enter sender Id" class="form-control max350" ng-model="msg91.senderId"/>
+            </div>
+            <button type="submit" class="btn btn-success pull-left" ng-disabled="msg91_keys.$invalid">Save</button>
+          </form>
+        </div>
+        
+        <hr class="mrT1 mrB1">
+
+        <div style="overflow:hidden">
+          <h3 class="fs16 mrB1 mrT1">SendGrid</h3>
+          <form name="sGrid_keys" ng-submit="sGrid_keys.$valid && saveSendGrid()">
+            <div class="form-group">
+              <label>Auth Key</label>
+              <input type="text" placeholder="enter auth-key" class="form-control max350" ng-model="sGrid.authKey"/>
+            </div>
+            <div class="form-group">
+              <label>Email Subject</label>
+              <input type="text" placeholder="enter email subject" class="form-control max350" ng-model="sGrid.subject"/>
+            </div>
+            <button type="submit" class="btn btn-success pull-left" ng-disabled="sGrid_keys.$invalid">Save</button>
+          </form>
+        </div>
+
+      </div>
+    </uib-tab>
+
+    <uib-tab ng-if="canManageCompany" heading="Financial Year" id="fin-year" select="getFY()">
+      <div class="pd2">
+
+          <h3 class="fs16 mrB1 mrT1">Financial Year(s) - {{fy.company}}</h3>
+
+          <div class="">
+
+            <table class="mrT3 table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Lock Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr ng-repeat="year in fy.years | orderBy: year.financialYearStarts">
+                  <td>{{$index + 1}}</td>
+                  <td>{{year.financialYearStarts}}</td>
+                  <td>{{year.financialYearEnds}}</td>
+                  <td><switch name="autopay" on="On" off="Off" ng-model="year.isLocked" class="wide"></switch></td>
+                </tr>
+              </tbody>
+            </table>
+
+          </div>
+      </div>
+
+
+
+    </uib-tab>
   </uib-tabset>
 </perfect-scrollbar>
 

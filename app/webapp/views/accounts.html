@@ -31,7 +31,7 @@
   </div>
   <!-- searchbar end -->
 
-  <div class="pdL1 pdR1 mrB1" ng-if="flatAccntWGroupsList.length == 0 && showAccountList && !noGroups">
+  <div class="pdL1 pdR1 mrB1" ng-if="flatAccntWGroupsList.length == 0 && showAccountList && !noGroups ">
     <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{::selectedCompany.name}}</strong> <a
         href="" ng-click="goToManageGroups()">+ add new</a></h4>
   </div>
@@ -79,7 +79,7 @@
 
         </li>
       </ul>
-      <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreGrpWithAcc(selectedCompany.uniqueName)" ng-if="!hideLoadMore && showAccountList && flatAccntWGroupsList.length > 0">Load More</a>
+      <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreGrpWithAcc(selectedCompany.uniqueName)" ng-if="!hideLoadMore && showAccountList && fltAccntListPaginated.length > 0">Load More</a>
     </div>
     <div style="height: 50px;"></div>
   </perfect-scrollbar>

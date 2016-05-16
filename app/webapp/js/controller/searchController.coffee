@@ -1,5 +1,5 @@
 "use strict"
-searchController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $uibModal) ->
+searchController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $uibModal, companyServices) ->
 
   $scope.today = new Date()
   $scope.dateOptions = {
@@ -261,6 +261,38 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $scope.addValueToMsg = (val) ->
     $scope.msgBody.msg += " " + val.value.toString() + " "
+
+  $scope.send = () ->
+    accountsUnqList = []
+    _.each $scope.searchResData, (acc) ->
+      accountsUnqList.push(acc.uniqueName)
+
+    data = {
+      "message": $scope.msgBody.msg,
+      "accounts": accountsUnqList
+    }
+    reqParam = {
+      compUname : $rootScope.selectedCompany.uniqueName
+      from : $filter('date')($scope.searchFormData.fromDate, 'dd-MM-yyyy')
+      to : $filter('date')($scope.searchFormData.toDate, 'dd-MM-yyyy')
+    }
+    if $scope.msgBody.btn.set == 'Send Email'
+      companyServices.sendSms(reqParam, data).then($scope.sendEmailSuccess, $scope.sendEmailFailure)
+    else if $scope.msgBody.btn.set == 'Send Sms'
+      companyServices.sendSms(reqParam, data).then($scope.sendSmsSuccess, $scope.sendSmsFailure)
+    
+    
+  $scope.sendSmsSuccess = (res) ->
+    console.log res
+
+  $scope.sendSmsFailure = (res) ->
+    console.log res
+    
+  $scope.sendEmailSuccess = (res) ->
+    console.log res
+
+  $scope.sendEmailFailure = (res) ->
+    console.log res
     
 
 #init angular app

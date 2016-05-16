@@ -776,6 +776,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $rootScope.canChangeCompany = false
     $scope.showAccountList = false
     $scope.getGroups()
+    
 
   $rootScope.$on 'callManageGroups', ->
     $scope.goToManageGroups()
@@ -1000,6 +1001,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if newVal != oldVal && newVal.length < 1
       $scope.showDeleteMove = false
   )
+
 
 #init angular app
 giddh.webApp.controller 'groupController', groupController

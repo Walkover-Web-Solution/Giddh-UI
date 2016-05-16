@@ -7,8 +7,8 @@
 
 	<div class="modal-body">
 		
-		<h1 class="mrB1" ng-if="msgBody.type == 'Email'">Enter Subject:</h1>
-		<input ng-if="msgBody.type == 'Email'" class="form-control mrB1" type="text" ng-model="msgBody.subject" placeholder="Enter subject here"/>
+<!-- 		<h1 class="mrB1" ng-if="msgBody.type == 'Email'">Enter Subject:</h1>
+		<input ng-if="msgBody.type == 'Email'" class="form-control mrB1" type="text" ng-model="msgBody.subject" placeholder="Enter subject here"/> -->
 
 		<h1 class="mrB1">Type message body:</h1>
 		<textarea ng-model="msgBody.msg" class="form-control" rows="4" style="resize:none;" placeholder="start typing your message here">
@@ -24,7 +24,7 @@
 
 
 		<div class="row pdR2 mrT1">
-			<button class="btn btn-sm btn-success pull-right mrL1">{{msgBody.btn.set}}</button>
+			<button class="btn btn-sm btn-success pull-right mrL1" ng-click="send()">{{msgBody.btn.set}}</button>
 		</div>
 
 	</div>

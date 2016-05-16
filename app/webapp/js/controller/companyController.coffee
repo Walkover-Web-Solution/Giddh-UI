@@ -180,6 +180,14 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, res.data.status)
 
   $scope.goToCompanyCheck = (data, index) ->
+    # set financial year
+    activeYear = {} 
+    activeYear.start = moment(data.activeFinancialYear.financialYearStarts,"DD/MM/YYYY").year()
+    activeYear.ends = moment(data.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").year()
+    if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
+    $rootScope.currentFinancialYear = activeYear.year
+    ########
+    
     $rootScope.$emit('callCheckPermissions', data)
     $rootScope.canViewSpecificItems = false
     if data.role.uniqueName is 'shared'
@@ -946,6 +954,81 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.taxEditData.taxDetail = $scope.preSpliceTaxDetail 
     $scope.modalInstance.close()
 
+
+  #------------bulk sms and email---------#
+  $scope.msg91 = {
+    authKey: ''
+    senderId: ''
+  }
+  $scope.sGrid = {
+    authKey: ''
+    subject: ''
+  }
+  
+  $scope.getKeys = () ->
+    companyServices.getSmsKey($rootScope.selectedCompany.uniqueName).then($scope.getSmsKeySuccess, $scope.getSmsKeyFailure)
+    companyServices.getEmailKey($rootScope.selectedCompany.uniqueName).then($scope.getEmailKeySuccess, $scope.getEmailKeyFailure)
+
+  $scope.getSmsKeySuccess = (res) ->
+    $scope.msg91.authKey = res.body.authKey
+    $scope.msg91.senderId = res.body.senderId
+
+  $scope.getSmsKeyFailure = (res) ->
+    console.log res.data.message
+
+  $scope.getEmailKeySuccess = (res) ->
+    $scope.sGrid.authKey = res.body.authKey
+    $scope.sGrid.subject = res.body.subject
+
+  $scope.getEmailKeyFailure = (res) ->
+    console.log res
+
+  $scope.saveMsg91 = () ->
+    data = {
+      "authKey":$scope.msg91.authKey
+      "senderId": $scope.msg91.senderId
+    }
+    companyUniqueName = $rootScope.selectedCompany.uniqueName
+    if $scope.msg91.authKey.length > 0 && $scope.msg91.senderId.length > 0
+      companyServices.saveSmsKey(companyUniqueName, data).then($scope.saveMsg91Success, $scope.saveMsg91Failure)
+
+  $scope.saveMsg91Success = (res) ->
+    toastr.success(res.body)
+
+  $scope.saveMsg91Failure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.saveSendGrid = () ->
+    data = {
+      "authKey":$scope.sGrid.authKey
+      "subject": $scope.sGrid.subject
+    }
+    companyUniqueName = $rootScope.selectedCompany.uniqueName
+    if $scope.sGrid.authKey.length > 0 && $scope.sGrid.subject.length > 0
+      companyServices.saveEmailKey(companyUniqueName, data).then($scope.saveSendGridSuccess, $scope.saveSendGridFailure)
+
+  $scope.saveSendGridSuccess = (res) ->
+    toastr.success(res.body)
+
+  $scope.saveSendGridFailure = (res) ->
+    toastr.error(res.data.message)
+
+  # ---------------- Financial Year----------------#
+  $scope.fy = {
+    company: ''
+    companyUniqueName: ''
+    years: []
+  }
+  $scope.getFY = () ->
+    companyServices.getFY($rootScope.selectedCompany.uniqueName).then($scope.getFYSuccess, $scope.getFYFailure)
+
+  $scope.getFYSuccess = (res) ->
+    $scope.fy.company = res.body.companyName
+    $scope.fy.companyUniqueName = res.body.companyUniqueName
+    $scope.fy.years = res.body.financialYears
+
+  $scope.getFYFailure = (res) ->
+    toastr.error(res.data.message)
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

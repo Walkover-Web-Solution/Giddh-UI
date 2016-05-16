@@ -132,6 +132,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       toastr.error("Select company first.", "Error")
     else
       # with accounts, group data
+      $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
 
   $scope.makeAccountsList = (res) ->
@@ -142,14 +143,72 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     }
     result = groupService.matchAndReturnGroupObj(item, res.body)
     $rootScope.flatGroupsList = groupService.flattenGroup([result], [])
-    $scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
+    #$scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
     $rootScope.canChangeCompany = true
-    $scope.showAccountList = true
+    #$scope.showAccountList = true
     if not(_.isEmpty($rootScope.$stateParams.invId))
       $scope.toggleAcMenus(true)
 
   $scope.makeAccountsListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
+
+  #-------- fetch groups with accounts list-------
+  $scope.gwaList = {
+    page: 1
+    count: 5
+    totalPages: 0
+    currentPage : 1
+  }
+
+  $scope.getFlattenGrpWithAccList = (compUname) ->
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+      page: $scope.gwaList.page
+      count: $scope.gwaList.count
+    }
+    groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+
+  $scope.getFlattenGrpWithAccListSuccess = (res) ->
+    $scope.gwaList.totalPages = res.body.totalPages
+    $scope.flatAccntWGroupsList = res.body.results
+    $scope.showAccountList = true  
+
+  $scope.getFlattenGrpWithAccListFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.searchGrpWithAccounts = (str) ->
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    if str.length > 2
+      $scope.hideLoadMore = true
+      reqParam.q = str
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+    else
+      $scope.hideLoadMore = false
+      reqParam.q = ''
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+  
+  $scope.loadMoreGrpWithAcc = (compUname) ->
+    $scope.gwaList.page += 1
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+      page: $scope.gwaList.page
+      count: $scope.gwaList.count
+    }
+    groupService.getFlattenGroupAccList(reqParam).then($scope.loadMoreGrpWithAccSuccess, $scope.loadMoreGrpWithAccFailure)
+
+  $scope.loadMoreGrpWithAccSuccess = (res) ->
+    $scope.gwaList.currentPage += 1
+    list = res.body.results
+    if res.body.totalPages >= $scope.gwaList.currentPage
+      $scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
+    else
+      $scope.hideLoadMore = true
+
+  $scope.loadMoreGrpWithAccFailure = (res) ->
+    toastr.error(res.data.message)
 
 
   #Expand or  Collapse all account menus
@@ -643,6 +702,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $rootScope.cmpViewShow = true
   ,1000)
 
+  # group list through api
+  $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
 
 
 #init angular app

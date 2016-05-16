@@ -423,6 +423,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
             _.each edata.transactions, (txn) ->
               if txn.particular.uniqueName == tax.account.uniqueName
                 newTax.amount = txn.amount
+
             
           if det.taxValue < 0
             newTax.amount = Math.abs(newTax.amount)
@@ -455,6 +456,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         _.each taxes, (tax) ->
           if tax.account.uniqueName == txn.particular.uniqueName
             txn.toRemove = false
+            
     edata.transactions = _.without(edata.transactions, _.findWhere(edata.transactions, {toRemove: true}))
 
   $scope.addNewEntry = (data) ->
@@ -867,7 +869,8 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.getTaxList = () ->
     $scope.taxList = []
-    companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
+    if $rootScope.canUpdate and $rootScope.canDelete
+      companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
 
   $scope.getTaxListSuccess = (res) ->
     _.each res.body, (tax) ->

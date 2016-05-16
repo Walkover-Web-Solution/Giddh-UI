@@ -15,7 +15,6 @@ router.post '/history', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/history'
   settings.client.post hUrl, args, (data, response) ->
-    console.log "get graph data by date", new Date()
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
@@ -50,6 +49,99 @@ router.get '/networth-history', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/sms-key', (req, res) ->
+  authHead = 
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp 
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/sms-key'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
 
+router.get '/email-key', (req, res) ->
+  authHead = 
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/email-key'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+router.get '/financial-year', (req, res) ->
+  authHead = 
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/financial-year'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/sms-key', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/sms-key'
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/email-key', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/email-key'
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/accounts/bulk-sms', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+    parameters:
+      to:req.query.to
+      from:req.query.from
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/accounts/bulk-sms'
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/accounts/bulk-email', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+    parameters:
+      to:req.query.to
+      from:req.query.from
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/accounts/bulk-sms'
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
 
 module.exports = router
