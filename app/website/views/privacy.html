@@ -8,158 +8,77 @@
   <meta name="keywords" content="Privacy policy of Giddh, Giddh Accounting softwares"/>
   <title>Privacy Policy | Giddh ~ Accounting at its Rough! </title>
   <!-- STYLE / THEME -->
-  <link href="/public/website/css/giddh.website.min.css" rel="stylesheet">
+  <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  
+  <link href='https://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link href="/public/website/css/new-style.css" rel="stylesheet">
   <!-- LIBRARIES -->
   <script src="/public/webapp/newRelic.js"></script>
   <script  type="text/javascript" src='/public/webapp/core_bower.min.js'></script>
-
-  <script src="/public/website/js/app.js"></script>
-  <script src="/public/website/js/controller/pricingController.js"></script>
-  <style type="text/css">
-    #topSection {
-      min-height: inherit;
-    }
-  </style>
+  <script type="text/javascript" src="/public/website/js/app.js"></script>
+  <!-- recaptcha -->
+  <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
+  <script type="text/javascript" src="/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
 </head>
-<body class="unresponsive">
-<div ng-controller="pricingController">
-  <section id="topSection">
-    <ng-include src="'public/website/views/header.html'"></ng-include>
-    <!-- start of banner -->
-    <div class="container othPage" id="banner">
-      <div class="row">
-        <div class="col-xs-12 alC">
-          <h1 class="h2 mocha">
-            Privacy Policy
-          </h1>
-        </div>
-      </div>
-    </div>
-    <!-- End of banner -->
-  </section>
+<body ng-controller="homeCtrl" class="gridBg txtBody">
 
-  <section class="container" id="midSection">
-        <p class="b bmarg">You own Your Data</p>
+<ng-include src="'public/website/views/header.html'"></ng-include>
 
-        <p class="lmarg25 bmarg">Giddh is an online accounting system which stores financial information about a company
-          or individual (Organization) as provided or entered by that company or individual. Giddh will store
-          information that is entered by You, or automatically imported on Your instruction. The Data entered, or
-          imported on instruction, by You remains Your property and Giddh will not use nor make available for use any of
-          this information without Your permission.</p>
+<section class="cmnPd100" id="cmnTpPad">
+  <div class="container">
+    <div class="row">
 
+<h3 class="lead">Your privacy is respected.</h3>
+<p>We value our relationship with you and place the highest importance on respecting and protecting your privacy. We want you to feel comfortable and confident when using our product and with entrusting your personal, company and financial information to us.</p>
+<p>This privacy statement sets out our current policies and demonstrates our commitment to your financial privacy. We may change the content or services found on our website at any time without notice, and consequently our privacy policy may change at any time in the future. You agree to revisit this page regularly and your continued access to or use of the website will mean that you agree to the changes.</p>
 
-        <p class="b bmarg">You control who has access to Your Data</p>
+<h3 class="lead">You own Your Data</h3>
+<p>Giddh is an online accounting system which stores financial information about a company or individual (Organization) as provided or entered by that company or individual. Giddh will store information that is entered by You, or automatically imported on Your instruction. The Data entered, or imported on instruction, by You remains Your property and Giddh will not use nor make available for use any of this information without Your permission.</p>
 
-        <p class="lmarg25 bmarg">The Data entered, or imported on instruction, by You is stored securely in a database
-          and is only accessible to any person You have authorized to use the Service.</p>
+<h3 class="lead">You control who has access to Your Data</h3>
+<p>The Data entered, or imported on instruction, by You is stored securely in a database and is only accessible to any person You have authorized to use the Service.</p>
+<p>It is Your responsibility to keep Your password safe</p>
+<p>Giddh, Giddh's staff and Giddh's partners do not have access to Your password and are therefore unable to access Your Organization's account or Data without receiving an invitation to do so from You.</p>
 
-        <p class="lmarg25 bmarg">It is Your responsibility to keep Your password safe</p>
+<h3 class="lead">Giddh monitors system usage</h3>
+<p>The Data entered, or imported on instruction, by You is stored securely in a database and is only accessible to any person You have authorized to use the Service. It is Your responsibility to keep Your password safe. Giddh, Giddh's staff and Giddh's partners do not have access to Your password and are therefore unable to access Your Organization's account or Data without receiving an invitation to do so from You.</p>
+<p>Giddh will never access the details of any financial transaction entered and stored in the Service. Giddh will never access system usage history for a specific identifiable user, except where granted permission by that person to assist with resolution of a system issue or error.</p>
+<p>Giddh staff and key commercial partners can access non-identifying and aggregated usage information and transaction volumes in order to better understand how our customers are using the Service so we can improve the system design and where appropriate have the system prompt users with suggestions on ways to improve their own use of the system. All aggregated usage information is stored in a secure Giddh data warehouse facility at AWS (Amazon Web Services).</p>
 
-        <p class="lmarg25 bmarg">Giddh, Giddh's staff and Giddh's partners do not have access to Your password and are
-          therefore unable to access Your Organization's account or Data without receiving an invitation to do so from
-          You.</p>
+<h3 class="lead">Your Data is sent securely across the Internet</h3>
+<p>Giddh's servers have SSL Certificates issued by leading certificate authorities  COMODO CA Limited, so all Data transferred between users and the Service is encrypted. However, the Internet is not in itself a secure environment. Users should only enter, or instruct the importation of, Data to the database within a secure environment.</p>
 
+<h3 class="lead">Giddh does not store Your credit card details</h3>
+<p>If you choose to pay for the Service by credit card, your credit card details are not stored by the Service and cannot be accessed by Giddh staff.</p>
 
-        <p class="b bmarg">Giddh monitors system usage</p>
+<h3 class="lead">Giddh will give you access to Your Data at any time</h3>
+<p>Provided You have met Your obligations under the Service Terms of Use, on request Giddh will provide You with a full export of the Data in a common file format determined by Giddh.</p>
+<p>Access to the Data may be permanently deleted by Giddh 40 days after You stop paying for the Service or at Your request.</p>
 
-        <p class="lmarg25 bmarg">The Data entered, or imported on instruction, by You is stored securely in a database
-          and is only accessible to any person You have authorized to use the Service. It is Your responsibility to keep
-          Your password safe. Giddh, Giddh's staff and Giddh's partners do not have access to Your password and are
-          therefore unable to access Your Organization's account or Data without receiving an invitation to do so from
-          You.</p>
+<h3 class="lead">Your browser stores no information that will identify You or Your Organization</h3>
+<p>The Service utilises "cookies" and other technical measures that enable us to monitor traffic patterns and to serve you more efficiently if you revisit the site. A cookie does not identify You personally or contain any other information about You or Your Organization, but it does identify Your computer. You can set your browser to notify you when you receive a cookie and this will provide you with an opportunity to either accept or reject it in each instance.</p>
+<p>Giddh will not sell or otherwise provide Your personal information to a third party, or make any other use of personal information about You for any purpose which is not incidental to the normal use of the Service.</p>
 
-        <p class="lmarg25 bmarg">Giddh will never access the details of any financial transaction entered and stored in
-          the Service. Giddh will never access system usage history for a specific identifiable user, except where
-          granted permission by that person to assist with resolution of a system issue or error.</p>
+<h3 class="lead">You can opt-out of any email communications</h3>
+<p>Giddh sends billing information, product information, Service updates and Service notifications to You via email, where appropriate email communication will contain clear and obvious instructions describing how You can opt to be removed from the mailing list. Giddh will remove You upon Your request.</p>
 
-        <p class="lmarg25 bmarg">Giddh staff and key commercial partners can access non-identifying and aggregated usage
-          information and transaction volumes in order to better understand how our customers are using the Service so
-          we can improve the system design and where appropriate have the system prompt users with suggestions on ways
-          to improve their own use of the system. All aggregated usage information is stored in a secure Giddh data
-          warehouse facility.</p>
+<h3 class="lead">You are responsible for checking the Privacy Policy of any third-party applications the Service links to</h3>
+<p>The Service may contain links enabling the electronic transfer of data with third-party applications. Giddh takes no responsibility for the privacy practices or content of these applications.</p>
 
+<h3 class="lead">This policy may be updated from time to time</h3>
+<p>Giddh reserves the right to change this policy at any time and any amended policy is effective upon the posting on this website. Giddh will make every effort to communicate these changes to You via email or notification via the website.</p>
 
-        <p class="b bmarg">Your Data is sent securely across the Internet</p>
+<h3 class="lead">Please read our Terms of Use</h3>
+<p>Use of the Service is subject to Giddh's Terms of Use and this Privacy Policy should be read in conjunction with this. In the event of a conflict or disagreement between this Privacy Policy and the Terms of Use, the Terms of Use will prevail.</p>
+<p>Last updated: 10 May 2016</p>
 
-        <p class="lmarg25 bmarg">Giddh's servers have SSL Certificates issued by leading certificate authorities Entrust
-          & GTE Cybertrust, so all Data transferred between users and the Service is encrypted. However, the Internet is
-          not in itself a secure environment. Users should only enter, or instruct the importation of, Data to the
-          database within a secure </p>
-
-        <p class="lmarg25 bmarg">Giddh stores your Data in the location Giddh considers will give You the most efficient
-          access from wherever in the world You may be. Access and storage controls via the Service are however
-          administered by Giddh in New Zealand as the custodian of that Data (<a
-              href="https://giddh.com/beta">Giddh's address and contact details are here</a>). Where You
-          access or input Data from somewhere other than the country where the Data is stored or to be stored, You
-          consent to that Data being transferred from one country to the other (including via any intermediate country)
-          as a function of transmission across the Internet.</p>
-
-
-        <p class="b bmarg">Giddh does not store Your credit card details</p>
-
-        <p class="lmarg25 bmarg">If you choose to pay for the Service by credit card, your credit card details are not
-          stored by the Service and cannot be accessed by Giddh staff.</p>
-
-        <p class="lmarg25 bmarg">Your credit card details are encrypted and securely stored by Direct Payments Solutions
-          Ltd to enable Giddh to automatically bill your credit card on a recurring basis.</p>
-
-
-        <p class="b bmarg">Giddh will give you access to Your Data at any time</p>
-
-        <p class="lmarg25 bmarg">Provided You have met Your obligations under the Service Terms of Use, on request Giddh
-          will provide You with a full export of the Data in a common file format determined by Giddh.</p>
-
-        <p class="lmarg25 bmarg">Access to the Data may be permanently deleted by Giddh 40 days after You stop paying
-          for the Service or at Your request.</p>
-
-
-        <p class="b bmarg">Your browser stores no information that will identify You or Your Organization</p>
-
-        <p class="lmarg25 bmarg">The Service utilises "cookies" and other technical measures that enable us to monitor
-          traffic patterns and to serve you more efficiently if you revisit the site. A cookie does not identify You
-          personally or contain any other information about You or Your Organization, but it does identify Your
-          computer. You can set your browser to notify you when you receive a cookie and this will provide you with an
-          opportunity to either accept or reject it in each instance.</p>
-
-        <p class="lmarg25 bmarg">Giddh will not sell or otherwise provide Your personal information to a third party, or
-          make any other use of personal information about You for any purpose which is not incidental to the normal use
-          of the Service.</p>
-
-
-        <p class="b bmarg">You can opt-out of any email communications</p>
-
-        <p class="lmarg25 bmarg">Giddh sends billing information, product information, Service updates and Service
-          notifications to You via email,
-          where appropriate email communication will contain clear and obvious instructions describing how You can opt
-          to be removed from the mailing list. Giddh will remove You upon Your request.
-        </p>
-
-
-        <p class="b bmarg">You are responsible for checking the Privacy Policy of any third-party applications the
-          Service links to</p>
-
-        <p class="lmarg25 bmarg">The Service may contain links enabling the electronic transfer of data with third-party
-          applications. Giddh takes no responsibility for the privacy practices or content of these applications.
-        </p>
-
-
-        <p class="b bmarg">This policy may be updated from time to time</p>
-
-        <p class="lmarg25 bmarg">Giddh reserves the right to change this policy at any time and any amended policy is
-          effective upon the posting on this website. Giddh will make every effort to communicate these changes to You
-          via email or notification via the website.
-        </p>
-
-
-        <p class="b bmarg">Please read our Terms of Use</p>
-
-        <p class="lmarg25 bmarg">Use of the Service is subject to Giddh's Terms of Use and this Privacy Policy should be
-          read in conjunction with this. In the event of a conflict or disagreement between this Privacy Policy and the
-          Terms of Use, the Terms of Use will prevail.
-        </p>
-
-        <p class="lmarg25 bmarg">Last updated: 02 October 2016
-        </p>
-  </section>
-  <ng-include src="'public/website/views/footer.html'"></ng-include>
 </div>
+  </div>
+</section>
+
+<ng-include src="'public/website/views/footer.html'"></ng-include>
+
+</body>
+</html>
