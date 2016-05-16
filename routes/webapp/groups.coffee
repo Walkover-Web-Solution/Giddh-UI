@@ -19,7 +19,24 @@ router.get '/flatten-groups-accounts', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     parameters:
       'q':req.query.q
+      'page': req.query.page
+      'count':req.query.count
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/flatten-groups-with-accounts'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+router.get '/flatten-accounts', (req, res) ->
+  authHead = 
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      'q':req.query.q
+      'page': req.query.page
+      'count':req.query.count
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/flatten-accounts'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)

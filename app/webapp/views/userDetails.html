@@ -309,7 +309,7 @@
                           </ui-select-match >
                           <ui-select-choices 
                             ui-disable-choice="acc.uniqueName === selAcntUname" 
-                            repeat="acc in AccountsList | filter: $select.search">
+                            repeat="acc in fltAccntListPaginated | filter: $select.search" refresh="searchAccounts($select.search)">
                             <span>{{acc.name}} ({{acc.uniqueName}})</span>
                           </ui-select-choices>
                         </ui-select>

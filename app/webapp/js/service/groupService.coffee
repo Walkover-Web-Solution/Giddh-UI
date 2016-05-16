@@ -8,6 +8,8 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       'date1': @date1
       'date2': @date2
       'q':@q
+      'page':@page
+      'count':@count
     },
     {
       add: {
@@ -30,7 +32,11 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       }
       getFlattenGrpWithAcc: {
         method: 'GET'
-        url: '/company/:companyUniqueName/groups/flatten-groups-accounts?q=:q'
+        url: '/company/:companyUniqueName/groups/flatten-groups-accounts?q=:q&page=:page&count=:count'
+      }
+      getFlatAccList: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/groups/flatten-accounts?q=:q&page=:page&count=:count'
       }
       update: {
         method: 'PUT'
@@ -106,9 +112,14 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccounts({companyUniqueName: companyUniqueName},
         onSuccess, onFailure))
 
-#   flatten groups with accounts list
+#   Get flatten groups with accounts list
     getFlattenGroupAccList: (reqParam, onSuccess, onFailure) ->
-      @handlePromise((onSuccess, onFailure) -> Group.getFlattenGrpWithAcc({companyUniqueName: reqParam.companyUniqueName, q:reqParam.q},
+      @handlePromise((onSuccess, onFailure) -> Group.getFlattenGrpWithAcc({companyUniqueName: reqParam.companyUniqueName, q:reqParam.q, page:reqParam.page, count:reqParam.count},
+        onSuccess, onFailure))
+
+#   Get flat accounts list
+    getFlatAccList: (reqParam, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Group.getFlatAccList({companyUniqueName: reqParam.companyUniqueName, q:reqParam.q, page:reqParam.page, count:reqParam.count},
         onSuccess, onFailure))
 
     update: (companyUniqueName, group) ->

@@ -560,7 +560,42 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
       $scope.toDate.date =  newDate
   )
 
+  #------get flat account list-----------#
+  $scope.flatAccList = {
+    page: 1
+    count: 5
+    totalPages: 0
+    currentPage : 1
+  }
 
+  $scope.getFlatAccountList = (compUname) ->
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+      page: $scope.flatAccList.page
+      count: $scope.flatAccList.count
+    }
+    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+
+  $scope.getFlatAccountListListSuccess = (res) ->
+    $rootScope.fltAccntListPaginated = res.body.results
+
+  $scope.getFlatAccountListFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+
+  # search flat accounts list
+  $rootScope.searchAccounts = (str) ->
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    if str.length > 2
+      reqParam.q = str
+      groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+    else
+      reqParam.q = ''
+      reqParam.count = 5
+      groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
 
 
 #init angular app

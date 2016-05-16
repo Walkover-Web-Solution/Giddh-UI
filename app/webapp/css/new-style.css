@@ -2505,3 +2505,9 @@ ul.pills li {
     padding:5px;
     cursor: pointer;
 }
+
+.load-more{
+    margin-top: 10px;
+    font-size: 12px;
+    color: #337ab7;
+}

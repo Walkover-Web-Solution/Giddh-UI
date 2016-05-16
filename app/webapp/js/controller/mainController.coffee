@@ -25,7 +25,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
 
   # for ledger
   $rootScope.makeAccountFlatten = (data) ->
-    angular.copy(data, $rootScope.flatAccntListWithParents)
+    $rootScope.flatAccntListWithParents = data
     obj = _.map(data, (item) ->
       obj = {}
       obj.name = item.name

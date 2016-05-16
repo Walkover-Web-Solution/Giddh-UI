@@ -355,7 +355,6 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
           }
           $scope.AccountsList = _.without($scope.AccountsList, _.findWhere($scope.AccountsList, linked))
         
-
   $scope.linkGiddhAccount = (card) ->
     card.showAccList = false
     $scope.showAccountsList(card)

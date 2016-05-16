@@ -43,12 +43,27 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     'todayBtn': false
   }
   $scope.format = "dd-MM-yyyy"
-  $scope.flatAccntWGroupsList = {}
+  $scope.flatAccntWGroupsList = []
   $scope.showAccountList = false
   $scope.selectedAccountUniqueName = undefined
   $scope.flatAccntWGroupsList_1 = []
   $scope.noGroups = false
+  $scope.hideLoadMore = false
+  $scope.hideAccLoadMore = false
+  $scope.gwaList = {
+    page: 1
+    count: 5
+    totalPages: 0
+    currentPage : 1
+  }
+  $scope.flatAccList = {
+    page: 1
+    count: 5
+    totalPages: 0
+    currentPage : 1
+  }
   
+
   $scope.valuationDatePickerOpen = ()->
     this.valuationDatePickerIsOpen = true
 
@@ -135,7 +150,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       toastr.error("Select company first.", "Error")
     else
       # with accounts, group data
+      $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
+      $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
+      
       # without accounts only groups conditionally
       cData = localStorageService.get("_selectedCompany")
       if cData.sharedEntity is 'accounts'
@@ -148,7 +166,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     a = []
     angular.copy(res.body, a)
     $rootScope.flatGroupsList = groupService.flattenGroup(a, [])
-    $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
     #$scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
     #$scope.showAccountList = true
     $rootScope.canChangeCompany = true
@@ -159,34 +176,111 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.makeAccountsListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+  #-------------------Functions for API side search and fetching flat account list-----------------------------------------------#
+
+  $rootScope.getFlatAccountList = (compUname) ->
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+      page: $scope.flatAccList.page
+      count: $scope.flatAccList.count
+    }
+    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+
+  $rootScope.getFlatAccountListListSuccess = (res) ->
+    $rootScope.fltAccntListPaginated = res.body.results
+
+  $rootScope.getFlatAccountListFailure = (res) ->
+    toastr.error(res.data.message)
+
+  # load-more function for accounts list on add and manage popup
+  $rootScope.loadMoreAcc = (compUname) ->
+    $scope.flatAccList.page += 1
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+      page: $scope.flatAccList.page
+      count: $scope.flatAccList.count
+    }
+    groupService.getFlatAccList(reqParam).then($scope.loadMoreAccSuccess, $scope.loadMoreAccFailure)
+
+  $rootScope.loadMoreAccSuccess = (res) ->
+    $scope.gwaList.currentPage += 1
+    list = res.body.results
+    if res.body.totalPages >= $scope.flatAccList.currentPage
+      $scope.fltAccntListPaginated = _.union($scope.fltAccntListPaginated, list)
+    else
+      $scope.hideAccLoadMore = true
+
+  $rootScope.loadMoreAccFailure = (res) ->
+    console.log res
+
+  # search flat accounts list
+  $rootScope.searchAccounts = (str) ->
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    if str.length > 2
+      $scope.hideAccLoadMore = true
+      reqParam.q = str
+      groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+    else
+      $scope.hideAccLoadMore = false
+      reqParam.q = ''
+      reqParam.count = 5
+      groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+
+  #-------- fetch groups with accounts list-------
   $scope.getFlattenGrpWithAccList = (compUname) ->
     reqParam = {
       companyUniqueName: compUname
       q: ''
+      page: $scope.gwaList.page
+      count: $scope.gwaList.count
     }
     groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
 
   $scope.getFlattenGrpWithAccListSuccess = (res) ->
-    $scope.flatAccntWGroupsList = []
-    _.each res.body, (grp, idx) ->
-      grp.open = false
-      if idx < 11
-        $scope.flatAccntWGroupsList.push(res.body[idx])
-    $scope.showAccountList = true
-      
+    $scope.gwaList.totalPages = res.body.totalPages
+    $scope.flatAccntWGroupsList = res.body.results
+    $scope.showAccountList = true  
 
   $scope.getFlattenGrpWithAccListFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.loadMoreGrpWithAcc = (compUname) ->
+    $scope.gwaList.page += 1
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+      page: $scope.gwaList.page
+      count: $scope.gwaList.count
+    }
+    groupService.getFlattenGroupAccList(reqParam).then($scope.loadMoreGrpWithAccSuccess, $scope.loadMoreGrpWithAccFailure)
+
+  $scope.loadMoreGrpWithAccSuccess = (res) ->
+    $scope.gwaList.currentPage += 1
+    list = res.body.results
+    if res.body.totalPages >= $scope.gwaList.currentPage
+      $scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
+    else
+      $scope.hideLoadMore = true
+
+  $scope.loadMoreGrpWithAccFailure = (res) ->
     toastr.error(res.data.message)
 
   $scope.searchGrpWithAccounts = (str) ->
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     if str.length > 2
+      $scope.hideLoadMore = true
       reqParam.q = str
       groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
     else
+      $scope.hideLoadMore = false
       reqParam.q = ''
       groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+
+  #-------------------Functions for API side search and fetching flat account list end here-----------------------------------------------# 
 
   $scope.addFilterKey = (data) ->
     _.each data, (grp) ->
