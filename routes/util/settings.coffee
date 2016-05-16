@@ -12,4 +12,6 @@ module.exports.twitterSecret = process.env.TWITTER_SECRET || "62GfvL1A6FcSEJBPnw
 module.exports.linkedinKey = process.env.LINKEDIN_KEY || "75urm0g3386r26"
 module.exports.linkedinSecret = process.env.LINKEDIN_SECRET || "3AJTvaKNOEG4ISJ0"
 
+module.exports.sendGridKey = 'SG.5FId5yqnSL-_oKb-_enkQg.iV8QkRJKyKK0NScGRRq-SyiHNEFCdN_kKkJ8DYS4ZUI'
+
 module.exports.request = require('request')

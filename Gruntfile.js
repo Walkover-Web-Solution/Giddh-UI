@@ -60,7 +60,7 @@ module.exports = function (grunt) {
           expand: true,
           dot: true,
           cwd: srcDir,
-          src: ['**/images/*', '**/css/*', '**/fonts/*', '**/views/*', '**/ng2/*', '**/ng2/**/*'],
+          src: ['**/images/*', '**/images/new/*', '**/css/*', '**/fonts/*', '**/views/*', '**/ng2/*', '**/ng2/**/*'],
           dest: destDir
         }]
       }
@@ -213,7 +213,10 @@ module.exports = function (grunt) {
           'html2canvas',
           'Chart.js',
           'angular-ui-switch',
-          'ng-csv'
+          'ng-csv',
+          'angular-vidbg',
+          'fullpage.js',
+          'angular-fullpage.js'
         ],
         dependencies: {
           'jquery': 'modernizr',

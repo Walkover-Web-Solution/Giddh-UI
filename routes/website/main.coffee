@@ -16,6 +16,9 @@ router.get '/', (req, res) ->
 router.get '/index', (req, res) ->
   res.sendFile 'index.html', options
 
+router.get '/about', (req, res) ->
+  res.sendFile 'about.html', options
+
 router.get '/beta', (req, res) ->
   res.sendFile 'beta.html', options
 
@@ -28,8 +31,8 @@ router.get '/privacy', (req, res) ->
 router.get '/terms', (req, res) ->
   res.sendFile 'terms.html', options
 
-router.get '/why-giddh', (req, res) ->
-  res.sendFile 'whyGiddh.html', options
+# router.get '/why-giddh', (req, res) ->
+#   res.sendFile 'whyGiddh.html', options
 
 router.get '/login', (req, res) ->
   res.sendFile 'login.html', options

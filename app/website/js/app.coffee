@@ -4,8 +4,108 @@ app = angular.module("giddhApp", [
   "LocalStorageModule"
   "ngResource"
   "toastr"
+  "ngVidBg"
+  "fullPage.js"
+  "vcRecaptcha"
   ]
 )
+
+app.controller 'homeCtrl', [
+  '$scope', 'toastr', '$http', 'vcRecaptchaService'
+  ($scope, toastr, $http, vcRecaptchaService) ->
+    $scope.resources = [
+      'https://s3-us-west-2.amazonaws.com/coverr/mp4/Coverr-beach2.mp4'
+    ]
+    $scope.poster = '/public/website/images/new/banner.jpg'
+    $scope.fullScreen = true
+    $scope.muted = false
+    $scope.zIndex = '0'
+    $scope.playInfo = {}
+    $scope.pausePlay = true
+
+    $scope.formSubmitted = false
+    $scope.formProcess = false
+
+    $scope.pageOptions = {
+      sectionsColor: ['#1bbc9b', '#FFF6E7', '#E3422E', '#4BBFC3', '#7BAABE', '#FFF6E7', '#FFF6E7', '#E34A26']
+      navigation: true
+      navigationPosition: 'right'
+      scrollingSpeed: 800
+      scrollOverflow: true
+    }
+
+    $scope.socialList= [
+      # {
+      #   name: "Google",
+      #   url: "javascript:void(0)",
+      #   class: "gplus"
+      # }
+      {
+        name: "Facebook"
+        url: "http://www.facebook.com/giddh"
+        class: "fb"
+      }
+      {
+        name: "Linkedin"
+        url: "javascript:void(0)"
+        class: "in"
+      }
+      {
+        name: "Twitter"
+        url: "https://twitter.com/giddhcom/"
+        class: "twit"
+      }
+      # {
+      #   name: "Youtube"
+      #   url: "http://www.youtube.com/watch?v=p6HClX7mMMY"
+      #   class: "yt"
+      # }
+      # {
+      #   name: "RSS"
+      #   url: "http://blog.giddh.com/feed/"
+      #   class: "rss"
+      # }
+    ]
+
+    $scope.captchaKey = '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi'
+
+    # check string has whitespace
+    $scope.hasWhiteSpace = (s) ->
+      return /\s/g.test(s)
+
+    $scope.validateEmail = (emailStr)->
+      pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      return pattern.test(emailStr)
+    
+    $scope.submitForm =(data)->
+
+      $scope.formProcess = true
+      #check and split full name in first and last name
+      if($scope.hasWhiteSpace(data.name))
+        unameArr = data.name.split(" ")
+        data.uFname = unameArr[0]
+        data.uLname = unameArr[1]
+      else
+        data.uFname = data.name
+        data.uLname = "  "
+
+      if not($scope.validateEmail(data.email))
+        toastr.warning("Enter valid Email ID", "Warning")
+        return false
+
+      data.company = ''
+
+      if _.isEmpty(data.message)
+        data.message = 'test'
+
+      $http.post('http://localhost:8000/contact/submitDetails', data).then((response) ->
+          $scope.formSubmitted = true
+          if(response.status == 200 && _.isUndefined(response.data.status))  
+            $scope.responseMsg = "Thanks! will get in touch with you soon"
+          else
+            $scope.responseMsg = response.data.message
+        )
+]
 
 app.config [
   '$authProvider'
@@ -31,6 +131,15 @@ app.config [
 
 app.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
+
+
+app.config (vcRecaptchaServiceProvider)->
+  vcRecaptchaServiceProvider.setDefaults({
+    key: '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi'
+    # theme: 'dark'
+    stoken: '6LcgBiATAAAAACj5K_70CDbRUSyGR1R7e9gckO1w'
+    # size: 'compact'
+  })
 
 app.run [
   '$rootScope'
@@ -66,3 +175,6 @@ do ->
         scope.$on '$locationChangeSuccess', setActive
       }
   ]
+
+# resources locations
+# video background- https://github.com/2013gang/angular-video-background
