@@ -37,20 +37,39 @@
                 </div>
                 <div class="col-sm-6">
                   <div class="form-group">
-                    <label for="email">Email Address *</label>
-                    <input name="contactForm.email" ng-model="cForm.email" type="email" required class="form-control">
+                    <label for="message">Contact Number *</label>
+                    <input class="form-control" type="number" name="contactForm.number" ng-model="cForm.number" ng-minlength="7" ng-maxlength="12" required>
                   </div>
                 </div>
               </div>
 
               <div class="control-group">
                 <div class="form-group">
-                  <label for="message">Message</label>
+                  <label for="email">Email Address *</label>
+                  <input name="contactForm.email" ng-model="cForm.email" type="email" required class="form-control">
+                </div>
+              </div>
+
+              <div class="control-group">
+                <div class="form-group">
+                  <label for="message">Message *</label>
                   <textarea name="contactForm.message" required ng-model="cForm.message" class="form-control"></textarea>
                 </div>
               </div>
-              <div id="success"></div>
+
+              <div class="control-group">
+                <div class="form-group">
+                  <div 
+                    vc-recaptcha
+                    theme="'light'"
+                    key="captchaKey"
+                    ng-model="cForm.myRecaptchaResponse">
+                  </div>
+                </div>
+              </div>
+
               <button ng-click="submitForm(cForm)" class="btn sharp btn-default btn-transparent btn-lg" type="submit" ng-disabled="contactForm.$invalid || formProcess">Submit</button>
+
             </form>
 
           </div>
@@ -64,7 +83,7 @@
         <a href="http://blog.giddh.com/" target="_Blank">Blog</a>|
         <a href="/terms">Terms of use</a>|
         <a href="/privacy">Privacy policy</a>|
-        <a href="/about">Work with us!</a>
+        <a href="https://www.walkover.in/currentopening.php" target="_Blank">Work with us!</a>
       </div>
 
       <small>All right are reserved © 2020 Walkover <a href="https://giddh.com/" target="_Blank">Giddh.com</a></small>
@@ -91,8 +110,14 @@ jQuery(document).ready(function($){
 
   $('.page-scroll').click(function(){
     var url = $(this).attr('href');
-    $("html, body").animate({ scrollTop: $(url).offset().top}, 500);
-    return false;
+    console.log (window.location, window.location.path, url)
+    if (window.location.pathname === '/'){
+      $("html, body").animate({ scrollTop: $(url).offset().top}, 500);
+      return false;
+    }
+    else{
+      window.location.href = window.location.origin+url
+    }
   });
 
   // onwindow scroll

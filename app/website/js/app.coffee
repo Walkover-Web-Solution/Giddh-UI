@@ -6,12 +6,13 @@ app = angular.module("giddhApp", [
   "toastr"
   "ngVidBg"
   "fullPage.js"
+  "vcRecaptcha"
   ]
 )
 
 app.controller 'homeCtrl', [
-  '$scope', 'toastr', '$http'
-  ($scope, toastr, $http) ->
+  '$scope', 'toastr', '$http', 'vcRecaptchaService'
+  ($scope, toastr, $http, vcRecaptchaService) ->
     $scope.resources = [
       'https://s3-us-west-2.amazonaws.com/coverr/mp4/Coverr-beach2.mp4'
     ]
@@ -66,6 +67,8 @@ app.controller 'homeCtrl', [
       # }
     ]
 
+    $scope.captchaKey = '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi'
+
     # check string has whitespace
     $scope.hasWhiteSpace = (s) ->
       return /\s/g.test(s)
@@ -75,6 +78,7 @@ app.controller 'homeCtrl', [
       return pattern.test(emailStr)
     
     $scope.submitForm =(data)->
+
       $scope.formProcess = true
       #check and split full name in first and last name
       if($scope.hasWhiteSpace(data.name))
@@ -127,6 +131,16 @@ app.config [
 
 app.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
+
+
+app.config (vcRecaptchaServiceProvider)->
+  vcRecaptchaServiceProvider.setDefaults({
+    key: '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi',
+    theme: 'light',
+    stoken: '6LcgBiATAAAAACj5K_70CDbRUSyGR1R7e9gckO1w',
+    size: 'compact',
+    type: 'image'
+  })
 
 app.run [
   '$rootScope'

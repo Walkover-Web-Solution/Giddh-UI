@@ -43,7 +43,8 @@
     "angular-ui-switch": "^0.1.1",
     "ng-csv": "^0.3.6",
     "angular-vidbg": "angular-video-background#^0.0.12",
-    "angular-fullpage.js": "^0.2.1"
+    "angular-fullpage.js": "^0.2.1",
+    "angular-recaptcha": "^3.0.3"
   },
   "resolutions": {
     "angular": "~1.4.4",
