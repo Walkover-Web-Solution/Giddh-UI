@@ -110,7 +110,6 @@ jQuery(document).ready(function($){
 
   $('.page-scroll').click(function(){
     var url = $(this).attr('href');
-    console.log (window.location, window.location.path, url)
     if (window.location.pathname === '/'){
       $("html, body").animate({ scrollTop: $(url).offset().top}, 500);
       return false;

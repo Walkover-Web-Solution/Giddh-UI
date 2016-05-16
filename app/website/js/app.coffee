@@ -135,11 +135,10 @@ app.config (localStorageServiceProvider) ->
 
 app.config (vcRecaptchaServiceProvider)->
   vcRecaptchaServiceProvider.setDefaults({
-    key: '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi',
-    theme: 'light',
-    stoken: '6LcgBiATAAAAACj5K_70CDbRUSyGR1R7e9gckO1w',
-    size: 'compact',
-    type: 'image'
+    key: '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi'
+    # theme: 'dark'
+    stoken: '6LcgBiATAAAAACj5K_70CDbRUSyGR1R7e9gckO1w'
+    # size: 'compact'
   })
 
 app.run [
