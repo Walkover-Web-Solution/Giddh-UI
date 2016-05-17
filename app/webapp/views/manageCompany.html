@@ -758,7 +758,7 @@
           <div>
             <h3 class="fs16 mrB1 mrT1">Switch Financial Year</h3>
             <div class="clearfix max350">
-              <ui-select ng-model="fy.selectedYear" theme="bootstrap" ng-disabled=" fy.years.legnth < 2">
+              <ui-select ng-model="fy.selectedYear" theme="bootstrap">
                   <ui-select-match placeholder="Select Period">
                     <span>{{$select.selected.name}}</span>
                   </ui-select-match >
@@ -768,6 +768,23 @@
               </ui-select>
             </div>
             <button class="btn btn-success mrT1 mrB1" ng-click="switchFY(fy.selectedYear)">Save</button>   
+          </div>
+
+          <hr>
+
+          <div>
+            <h3 class="fs16 mrB1 mrT1">Add Financial Year</h3>
+            <div class="clearfix max350">
+              <ui-select ng-model="fy.newFY" theme="bootstrap">
+                  <ui-select-match placeholder="Select Period">
+                    <span>{{$select.selected}}</span>
+                  </ui-select-match >
+                  <ui-select-choices repeat="yr in fyYears | filter: $select.search | orderBy:yr">
+                    <span ng-bind="yr"></span>
+                  </ui-select-choices>
+              </ui-select>
+            </div>
+            <button class="btn btn-success mrT1 mrB1" ng-click="addFY(fy.newFY)">Save</button>   
           </div>
       </div>
 

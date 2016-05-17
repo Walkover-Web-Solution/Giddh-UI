@@ -150,6 +150,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     unlockFY:
       method: 'PATCH'
       url: '/company/:companyUniqueName/financial-year-unlock'
+
+    addFY:
+      method: 'POST'
+      url: '/company/:companyUniqueName/financial-year'
        
   })
 
@@ -293,6 +297,9 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
 
     unlockFY: (reqParam, data) ->
       @handlePromise((onSuccess, onFailure) -> Company.unlockFY({companyUniqueName: reqParam.companyUniqueName}, data, onSuccess, onFailure))
+
+    addFY: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.addFY({companyUniqueName: reqParam.companyUniqueName}, data, onSuccess, onFailure))
 
   companyServices
 

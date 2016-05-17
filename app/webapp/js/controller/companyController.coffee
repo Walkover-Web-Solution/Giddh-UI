@@ -1022,8 +1022,16 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     selectedYear: ''
     periods: ['Jan-Dec', 'Apr-Mar']
     selectedPeriod: ''
+    newFY: ''
   }
   $scope.months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+  $scope.fyYears = []
+
+  $scope.addfyYears = () ->
+    year = moment().get('year') - 1
+    while year >= 1950
+      $scope.fyYears.push(year)
+      year -= 1
 
   $scope.setFYname = (years) ->
     _.each years, (yr) ->
@@ -1038,6 +1046,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.fy.companyUniqueName = res.body.companyUniqueName
     $scope.fy.years = res.body.financialYears
     $scope.setFYname($scope.fy.years)
+    $scope.addfyYears()
 
   $scope.getFYFailure = (res) ->
     toastr.error(res.data.message)
@@ -1055,7 +1064,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.success('Period Updated Successfully')
     $scope.fy.years = res.body.financialYears
     $scope.setFYname($scope.fy.years)
-    
+
   $scope.changeFyPeriodFailure = (res) ->
     toastr.error(res.data.message)
 
@@ -1113,6 +1122,23 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.setFYname($scope.fy.years)
 
   $scope.unlockFYFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.addFY = (newFy) ->
+    data = {
+      "fromYear": newFy
+    }
+    reqParam = {
+      companyUniqueName:  $rootScope.selectedCompany.uniqueName
+    }
+    companyServices.addFY(reqParam, data).then($scope.addFYSuccess, $scope.addFYFailure)
+
+  $scope.addFYSuccess = (res) ->
+    toastr.success('Financial Year created successfully.')
+    $scope.getFY()
+    $scope.fy.newFY = ''
+
+  $scope.addFYFailure = (res) ->
     toastr.error(res.data.message)
 
   $timeout( ->
