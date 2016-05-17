@@ -60,15 +60,19 @@
               <div class="control-group">
                 <div class="form-group">
                   <div 
+                    theme="'light'"
+                    ng-model="cForm.myRecaptchaResponse">
+                  </div>
+<!--                   <div 
                     vc-recaptcha
                     theme="'light'"
                     key="captchaKey"
                     ng-model="cForm.myRecaptchaResponse">
-                  </div>
+                  </div> -->
                 </div>
               </div>
 
-              <button ng-click="submitForm(cForm)" class="btn sharp btn-default btn-transparent btn-lg" type="submit" ng-disabled="contactForm.$invalid || formProcess">Submit</button>
+              <button ng-click="submitForm(cForm)" class="btn sharp btn-default btn-transparent btn-lg" type="submit" ng-disabled="contactForm.$invalid">Submit</button>
 
             </form>
 
