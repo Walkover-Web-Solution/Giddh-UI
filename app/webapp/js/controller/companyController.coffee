@@ -79,6 +79,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     cData.name = data.name
     cData.city = data.city
     $scope.createCompany(cData)
+    $state.reload()
 
   $scope.onCompanyCreateModalCloseFailure = () ->
     $scope.checkCmpCretedOrNot()

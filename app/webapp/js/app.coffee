@@ -44,6 +44,12 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       localStorageService: 'localStorageService'
       toastr: 'toastr'
       getLedgerState: (companyServices, localStorageService, toastr) ->
+        user = {
+          role :{
+            uniqueName: undefined
+          }
+          firstLogin:true
+        }
         checkRole = (data) ->
           return {
           type: data.role.uniqueName
@@ -66,8 +72,12 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
               localStorageService.set("_selectedCompany", cst)
           else
             console.info "direct from api"
-            a = checkRole(companyList[0])
-            return a
+            if companyList.length < 1
+              a = checkRole(user)
+              return a
+            else      
+              a = checkRole(companyList[0])
+              return a
             localStorageService.set("_selectedCompany", companyList[0])
         onFailure = (res) ->
           console.log res
@@ -250,13 +260,14 @@ giddh.webApp.run [
 
     # set financial year
     $rootScope.setActiveFinancialYear = (FY) ->
-      activeYear = {} 
-      activeYear.start = moment(FY.financialYearStarts,"DD/MM/YYYY").year()
-      activeYear.ends = moment(FY.financialYearEnds,"DD/MM/YYYY").year()
-      if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
-      $rootScope.fy = FY
-      $rootScope.activeYear = activeYear
-      $rootScope.currentFinancialYear =  activeYear.year
+      if FY != undefined
+        activeYear = {} 
+        activeYear.start = moment(FY.financialYearStarts,"DD/MM/YYYY").year()
+        activeYear.ends = moment(FY.financialYearEnds,"DD/MM/YYYY").year()
+        if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
+        $rootScope.fy = FY
+        $rootScope.activeYear = activeYear
+        $rootScope.currentFinancialYear =  activeYear.year
 
 ] 
 

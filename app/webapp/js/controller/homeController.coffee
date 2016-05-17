@@ -2,7 +2,7 @@
 homeController = ($scope, $rootScope, getLedgerState, $state) ->
 
   $scope.goToLedgerState = () ->
-    if getLedgerState.data.shared
+    if getLedgerState.data.shared && getLedgerState.data.firstLogin == false
       $rootScope.selectedCompany = getLedgerState.data
       $state.go('company.content.ledgerContent')
     else
