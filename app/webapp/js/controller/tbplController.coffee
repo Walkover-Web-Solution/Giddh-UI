@@ -53,6 +53,11 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     liabTotal : 0
   }
   
+  $scope.fy = {
+    fromYear: ''
+    toYear: ''
+  }
+
 
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
@@ -61,6 +66,16 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     this.toDatePickerIsOpen = true
 
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+
+  $scope.checkFY = (reqParam) ->
+    currentYear = moment().get('year')
+    currentFY =  $rootScope.activeYear.start
+    if currentYear != currentFY
+      $scope.fromDate.date = $rootScope.fy.financialYearStarts
+      $scope.toDate.date = $rootScope.fy.financialYearEnds
+      reqParam.fromDate = $scope.fromDate.date
+      reqParam.toDate = $scope.toDate.date
+
 
   # p&l functions
   $scope.calCulateTotalIncome = (data) ->
@@ -266,6 +281,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       'fromDate': data.fromDate
       'toDate': data.toDate
     }
+    $scope.checkFY(reqParam)
     trialBalService.getAllFor(reqParam).then $scope.getTrialBalSuccess, $scope.getTrialBalFailure
 
   $scope.getTrialBalSuccess = (res) ->

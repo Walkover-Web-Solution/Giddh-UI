@@ -135,6 +135,22 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       method: 'GET'
       url: '/company/:companyUniqueName/financial-year'
 
+    updateFY:
+      method: 'PUT'
+      url: '/company/:companyUniqueName/financial-year'
+
+    switchFY:
+      method: 'PATCH'
+      url: '/company/:companyUniqueName/active-financial-year'
+
+    lockFY:
+      method: 'PATCH'
+      url: '/company/:companyUniqueName/financial-year-lock'
+
+    unlockFY:
+      method: 'PATCH'
+      url: '/company/:companyUniqueName/financial-year-unlock'
+       
   })
 
   companyServices =
@@ -266,4 +282,17 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Company.getFY({companyUniqueName: companyUniqueName}, onSuccess,
           onFailure))
 
+    updateFY: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.updateFY({companyUniqueName: reqParam.companyUniqueName}, data, onSuccess, onFailure))
+
+    switchFY: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.switchFY({companyUniqueName: reqParam.companyUniqueName}, data, onSuccess, onFailure))
+
+    lockFY: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.lockFY({companyUniqueName: reqParam.companyUniqueName}, data, onSuccess, onFailure))
+
+    unlockFY: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.unlockFY({companyUniqueName: reqParam.companyUniqueName}, data, onSuccess, onFailure))
+
   companyServices
+

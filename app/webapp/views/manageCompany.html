@@ -715,11 +715,9 @@
       <div class="pd2">
 
           <h3 class="fs16 mrB1 mrT1">Financial Year(s) - {{fy.company}}</h3>
-
           <div class="">
-
             <table class="mrT3 table table-bordered table-striped">
-              <thead>
+              <thead ng-if="fy.years.length > 0">
                 <tr>
                   <th>#</th>
                   <th>From</th>
@@ -732,11 +730,44 @@
                   <td>{{$index + 1}}</td>
                   <td>{{year.financialYearStarts}}</td>
                   <td>{{year.financialYearEnds}}</td>
-                  <td><switch name="autopay" on="On" off="Off" ng-model="year.isLocked" class="wide"></switch></td>
+                  <td><switch name="autopay" on="Lock" off="Unlock" ng-model="year.isLocked" class="wide" ng-change="lockFY(year)"></switch></td>
                 </tr>
               </tbody>
             </table>
+          </div>
 
+          <hr>
+
+          <div>
+            <h3 class="fs16 mrB1 mrT1">Change Financial Year Period</h3>
+            <div class="clearfix max350">
+              <ui-select ng-model="fy.selectedPeriod" theme="bootstrap" ng-disabled=" fy.years.legnth < 2">
+                  <ui-select-match placeholder="Select Period">
+                    <span>{{$select.selected}}</span>
+                  </ui-select-match >
+                  <ui-select-choices repeat="period in fy.periods | filter: $select.search">
+                    <span ng-bind="period"></span>
+                  </ui-select-choices>
+              </ui-select>
+            </div>
+            <button class="btn btn-success mrT1 mrB1" ng-click="changeFyPeriod(fy.selectedPeriod)">Save</button>   
+          </div>
+
+          <hr>
+
+          <div>
+            <h3 class="fs16 mrB1 mrT1">Switch Financial Year</h3>
+            <div class="clearfix max350">
+              <ui-select ng-model="fy.selectedYear" theme="bootstrap" ng-disabled=" fy.years.legnth < 2">
+                  <ui-select-match placeholder="Select Period">
+                    <span>{{$select.selected.name}}</span>
+                  </ui-select-match >
+                  <ui-select-choices repeat="yr in fy.years | filter: $select.search">
+                    <span ng-bind="yr.name"></span>
+                  </ui-select-choices>
+              </ui-select>
+            </div>
+            <button class="btn btn-success mrT1 mrB1" ng-click="switchFY(fy.selectedYear)">Save</button>   
           </div>
       </div>
 

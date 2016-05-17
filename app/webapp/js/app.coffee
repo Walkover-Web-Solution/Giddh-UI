@@ -248,6 +248,16 @@ giddh.webApp.run [
         reqParam.count = 5
         groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
 
+    # set financial year
+    $rootScope.setActiveFinancialYear = (FY) ->
+      activeYear = {} 
+      activeYear.start = moment(FY.financialYearStarts,"DD/MM/YYYY").year()
+      activeYear.ends = moment(FY.financialYearEnds,"DD/MM/YYYY").year()
+      if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
+      $rootScope.fy = FY
+      $rootScope.activeYear = activeYear
+      $rootScope.currentFinancialYear =  activeYear.year
+
 ] 
 
 giddh.webApp.config ($httpProvider) ->

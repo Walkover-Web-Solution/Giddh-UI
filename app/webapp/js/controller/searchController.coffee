@@ -226,11 +226,11 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     }
     {
       name: 'Magic Link'
-      value: '%s_magicLink'
+      value: '%s_ML'
     }
     {
       name: 'Account Name'
-      value: '%s_accountName'
+      value: '%s_AN'
     }
   ]
 
@@ -277,22 +277,22 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
       to : $filter('date')($scope.searchFormData.toDate, 'dd-MM-yyyy')
     }
     if $scope.msgBody.btn.set == 'Send Email'
-      companyServices.sendSms(reqParam, data).then($scope.sendEmailSuccess, $scope.sendEmailFailure)
+      companyServices.sendEmail(reqParam, data).then($scope.sendEmailSuccess, $scope.sendEmailFailure)
     else if $scope.msgBody.btn.set == 'Send Sms'
       companyServices.sendSms(reqParam, data).then($scope.sendSmsSuccess, $scope.sendSmsFailure)
     
     
   $scope.sendSmsSuccess = (res) ->
-    console.log res
+    toastr.success(res.body)
 
   $scope.sendSmsFailure = (res) ->
-    console.log res
+    toastr.error(res.data.message)
     
   $scope.sendEmailSuccess = (res) ->
-    console.log res
+    toastr.success(res.body)
 
   $scope.sendEmailFailure = (res) ->
-    console.log res
+    toastr.error(res.data.message)
     
 
 #init angular app

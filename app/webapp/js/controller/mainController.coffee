@@ -85,6 +85,15 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
       $rootScope.cmpViewShow = true
   ,1000)
 
+  $timeout (->
+    cdt = localStorageService.get("_selectedCompany")
+    if !_.isNull(cdt)
+      $rootScope.setActiveFinancialYear(cdt.activeFinancialYear)
+  ), 500
+  
+
+
+
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
     # $rootScope.$emit('callCheckPermissions', data)
