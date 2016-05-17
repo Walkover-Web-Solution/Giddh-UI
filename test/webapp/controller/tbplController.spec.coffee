@@ -55,7 +55,7 @@ describe 'tbplController', ->
         expect(@toastr.error).toHaveBeenCalledWith("Date should be in proper format", "Error")
         expect(@trialBalService.getAllFor).not.toHaveBeenCalled()
 
-      it 'should call trialBalService getAllFor method with reqparam obj', ->
+      xit 'should call trialBalService getAllFor method with reqparam obj', ->
         spyOn(@toastr, "error")
         deferred = @q.defer()
         spyOn(@trialBalService, "getAllFor").andReturn(deferred.promise)
