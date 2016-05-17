@@ -3,183 +3,65 @@
 <head>
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
-  <!-- <meta name="viewport" content="width=device-width, initial-scale=1"> -->
-  <meta name="description"
-        content="Do you feel accounting is tough to manage? Giddh will solve all your accounting related needs. Get a free invitation now."/>
-  <meta name="keywords" content="Accounting softwares, online accounting software, Web Based Accounting Software"/>
-  <title>Login - Giddh ~ Accounting at its Rough! Angular js</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Start using easiest and well featured Giddh accounting software. Giddh is an ultimate accounting solution for small businesses at the best price"/>
+  <meta name="keywords" content="bookkeeping software, Accounting softwares, best accounting software"/>
+  <title>Pricing Plan for Online Accounting software | Giddh</title>
   <!-- STYLE / THEME -->
-  <link href="/public/website/css/giddh.website.min.css" rel="stylesheet">
+  <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/bower_components/angular-toastr/dist/angular-toastr.min.css" rel="stylesheet">
+  
+  <link href='https://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link href="/public/website/css/new-style.css" rel="stylesheet">
   <!-- LIBRARIES -->
   <script src="/public/webapp/newRelic.js"></script>
   <script  type="text/javascript" src='/public/webapp/core_bower.min.js'></script>
-  <script src="/public/website/js/app.js"></script>
-   <!-- recaptcha -->
+  <script type="text/javascript" src="/public/website/js/app.js"></script>
+  <!-- recaptcha -->
   <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
   <script type="text/javascript" src="/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
   
   <script src="/public/website/js/controller/loginController.js"></script>
-  <style type="text/css">
-  html, body{
-    background-color: #56bc8a;
-    color: #fff;
-    height:100%;
-  }
-  .loginBtn{
-    background-color: #fff;
-    color: #56bc8a;
-    font-weight: 700;
-    float: right;
-    border-radius: 0;
-  }
-  .borderbottom{
-    border-bottom: 1px solid #3FAD77;
-  }
-  body{
-    background-image: url('/public/website/images/login_bg.png');
-    background-size: cover;
-    background-repeat: no-repeat;
-  }
-  .login-box{
-    width: 400px;
-    text-align: center;
-    background: #fff;
-    position: relative;
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 4px;
-    margin:0 auto;
-    padding:25px; 
-    transform:translateY(25%);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
-    transition: all 0.2s ease-in-out;
-  }
-  .login-box:hover{
-    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-  }
-  .login-box > ul{
-    width:100%;
-    position: absolute;
-    top:0px;
-    left:0;
-    padding:0;
-    margin:0;
-    line-height: 0;
-  }
-  .login-box > ul > li{
-    height:5px;
-    width:12.5%;
-    margin:0;
-    padding:0;
-    border-right: 1px solid #fff;
-    box-sizing: border-box;
-    float: left;
-  }
-  .login-box > ul > li:last-child{
-    border-right:0;
-  }
-  .giddh-logo{
-      background: #221F1F none repeat scroll 0 0;
-      border: 7px solid #C63B13;
-      border-radius: 50%;
-      box-shadow: 0 10px 0 14px #fff inset;
-      box-sizing: border-box;
-      height: 60px;
-      width: 60px;
-      margin:0 auto 20px;
-  }
-  .btn-login{
-    margin-bottom:20px
-  }
-  .btn-login:hover, .btn-login:focus, .btn-login:active{
-    
-  }
-  .twitter{
-    background: #11B1E5;
-  }
-  .google{
-    background:#DE4D3C;
-  }
-  .linkedin{
-    background: #0E78AA;
-  }
-  .btn-login {
-    display: inline-block;
-    vertical-align: middle;
-    -webkit-transform: translateZ(0);
-    transform: translateZ(0);
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0);
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-transition-duration: 0.3s;
-    transition-duration: 0.3s;
-    -webkit-transition-property: transform;
-    transition-property: transform;
-  }
-  .btn-login:hover, .btn-login:focus, .btn-login:active {
-    -webkit-transform: scale(1.1);
-    transform: scale(1.1);
-  }
-
-</style>
 </head>
-<body>
-<div ng-controller="loginBackController">
+<body ng-controller="loginController">
+
+  <section id="videoBg" class="intro login">
+    <!-- banner content -->
+    <div class="intro-body">
+      <div class="container">
+        <div class="row">
+          <div class="col-sm-12">
+            <h1 class="brand-heading arvo">Enter your accounting space</h1>
+            
+            <div id="box">
+              <div class="clearfix mrB1">
+                <div ng-class="loginIsProcessing ? 'giddh-spinner': 'giddh-logo'" ></div>
+              </div>
+
+              <button type="login" class="btn sharp btn-block btn-lg btn-login twitter" ng-click="authenticate('twitter')">Sign in with Twitter</button>
+              <button type="login" class="btn sharp btn-block btn-lg btn-login linkedin" ng-click="authenticate('linkedin')">Sign in with LinkedIn</button>
+              <button type="login" class="btn sharp btn-block btn-lg btn-login google" ng-click="authenticate('google')">Sign in with Google</button>
+            </div>
 
 
-    <section id="top" class="container"> 
-      <div class="row" style="padding: 20px 0">
-        <a class="btn loginBtn" href="/">Home</a>
-      </div>
-      <div class="row">
-        <div id="tipscnt" class="tipcnt mocha borderbottom pdB2" style="margin-top:0">
-          Tip : "Every transaction has a statement."
-        </div>
-      </div>
-    </section>
-
-    <section id="bottom" class="container pdT2">
-      <div class="row clearfix">
-        <div class="login-box">
-          <ul class="list-inline clearfix">
-            <li style="background:#08ACDC"></li>
-            <li style="background:#191D19"></li>
-            <li style="background:#E84219"></li>
-            <li style="background:#F0C114"></li>
-            <li style="background:#0C2141"></li>
-            <li style="background:#22BAB8"></li>
-            <li style="background:#2A76B9"></li>
-            <li style="background:#B10F24"></li>
-          </ul>
-          <div class="clearfix mrB2">
-            <div ng-class="loginIsProcessing ? 'giddh-spinner': 'giddh-logo'" ></div>
           </div>
-          <button type="login" class="btn btn-block btn-lg btn-login twitter" ng-click="authenticate('twitter')">Sign in with Twitter</button>
-          <button type="login" class="btn btn-block btn-lg btn-login linkedin" ng-click="authenticate('linkedin')">Sign in with LinkedIn</button>
-          <button type="login" class="btn btn-block btn-lg btn-login google" ng-click="authenticate('google')">Sign in with Google</button>
         </div>
       </div>
-    </section>
-  
-
-
-</div>
-
-<script>
-  (function(){
-    var bodyHeight = $('body,html').height();
-    var top = $('#top').height();
-    var bottom = $('#bottom');
-    $(window).on('resize', function(){
-      bottom.css('min-height', bodyHeight - top);
-    })
-    $(document).ready(function(){
-      bottom.css({
-        'min-height': bodyHeight - top,
-        'height': bodyHeight - top
-      });
-    })
-  })();
+    </div>
+  </section> <!-- end of intro -->
+<script type="text/javascript">
+/*-------------------------------------------------------------------*/
+/*  FULL SCREEN FIRST SECTION
+/*-------------------------------------------------------------------*/
+jQuery(document).ready(function($){
+'use strict';
+  $(window).resize(function(){
+    $('#videoBg').css({ 'height' : $(window).height() });
+  });
+  $(window).trigger('resize');
+});
 </script>
 </body>
 </html>
