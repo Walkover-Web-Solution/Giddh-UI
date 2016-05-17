@@ -313,5 +313,21 @@ router.post '/:accountUniqueName/invoices/mail', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+# generate magic link
+router.post '/:accountUniqueName/magic-link', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      to: req.query.toDate
+      from: req.query.fromDate
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/accounts/' + req.params.accountUniqueName + '/magic-link'
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 
 module.exports = router

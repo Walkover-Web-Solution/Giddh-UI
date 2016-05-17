@@ -172,7 +172,6 @@ app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/profit-loss', profitLoss);
 app.use('/company/:companyUniqueName', reports);
-
 app.use('/coupon', coupon);
 app.use('/yodlee', yodlee);
 app.use('/ebanks', ebanks);

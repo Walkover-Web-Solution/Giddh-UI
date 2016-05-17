@@ -142,6 +142,15 @@ app.config (vcRecaptchaServiceProvider)->
     # size: 'compact'
   })
 
+# app.config [
+#   '$locationProvider'
+#   ($locationProvider) ->
+#     $locationProvider.html5Mode({
+#       enabled: true
+#       requireBase: false
+#     })
+# ]
+
 app.run [
   '$rootScope'
   '$window'

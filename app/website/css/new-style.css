@@ -217,6 +217,9 @@ box-shadow: 0px 2px 2px 0px rgba(0,0,0,1);
 	padding: 100px 0
 }
 /*pricing page styles*/
+.intro.pricing figure .img-responsive {
+    margin: 0 auto;
+}
 .pricing .brand-heading {
   font-size: 40px;
   letter-spacing: 2px;
