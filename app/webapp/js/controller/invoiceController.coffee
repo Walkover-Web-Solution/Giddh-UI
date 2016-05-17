@@ -684,9 +684,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       template: $scope.tempType.uniqueName
     accountService.downloadInvoice(obj, data).then($scope.downInvSuccess, $scope.multiActionWithInvFailure)
 
-  # init func on dom ready
-  # get accounts
-  $scope.getAllGroupsWithAcnt()
+  
 
   # state change
   $scope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
@@ -702,8 +700,14 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $rootScope.cmpViewShow = true
   ,1000)
 
-  # group list through api
-  $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+  # init func on dom ready
+  $timeout(->
+    # get accounts
+    $scope.getAllGroupsWithAcnt()
+
+    # group list through api
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+  ,10)
 
 
 #init angular app
