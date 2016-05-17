@@ -112,8 +112,7 @@ module.exports = function (grunt) {
           'public/webapp/ng2.js': ['app/webapp/ng2/**/*.services.js','app/webapp/ng2/**/*.component.js','app/webapp/ng2/*.js'],
           'public/webapp/newRelic.js': ['app/webapp/modified_lib/newRelic.js'],
           'public/webapp/_extras.js': ['app/webapp/modified_lib/angular-charts.js', 'app/webapp/modified_lib/jspdf.debug.js'],
-          'public/webapp/css/giddh.min.css': ['public/webapp/css/all_bower.css', 'public/webapp/css/modiefied-bootstrap.css', 'public/webapp/css/new-style.css'],
-          'public/website/css/giddh.website.min.css': ['public/webapp/css/all_bower.css', 'public/webapp/css/modiefied-bootstrap.css', 'public/website/css/style-web.css']
+          'public/webapp/css/giddh.min.css': ['public/webapp/css/all_bower.css', 'public/webapp/css/modiefied-bootstrap.css', 'public/webapp/css/new-style.css']
         }
       }
     },
@@ -123,8 +122,7 @@ module.exports = function (grunt) {
         "public/webapp/ng2.js",
         "public/webapp/newRelic.js",
         "public/webapp/_extras.js",
-        "public/webapp/css/giddh.min.css",
-        "public/website/css/giddh.website.min.css"
+        "public/webapp/css/giddh.min.css"
       ]
     },
     uglify: {
@@ -165,7 +163,12 @@ module.exports = function (grunt) {
         },
         exclude: [
           'v-accordion',
-          'bootstrap'
+          'bootstrap',
+          'fullpage.js',
+          'angular-vidbg',
+          'angular-recaptcha',
+          'angular-fullpage.js',
+          'angular-bootstrap'
         ],
         mainFiles: {
           // 'bootstrap': 'dist/css/bootstrap.min.css',
