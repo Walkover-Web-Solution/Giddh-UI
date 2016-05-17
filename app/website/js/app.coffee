@@ -32,6 +32,7 @@ app.controller 'homeCtrl', [
       navigationPosition: 'right'
       scrollingSpeed: 800
       scrollOverflow: true
+      responsiveWidth: 600
     }
 
     $scope.socialList= [
@@ -178,3 +179,5 @@ do ->
 
 # resources locations
 # video background- https://github.com/2013gang/angular-video-background
+# angular-fullPage.js- https://github.com/hellsan631/angular-fullpage.js
+# angular-recaptcha- https://github.com/VividCortex/angular-recaptcha

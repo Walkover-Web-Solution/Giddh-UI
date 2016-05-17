@@ -108,6 +108,12 @@ jQuery(document).ready(function($){
 jQuery(document).ready(function($){
 'use strict';
 
+  $('.pScroll').click(function(){
+    var url = $(this).attr('href');
+    $("html, body").animate({ scrollTop: $(url).offset().top}, 500);
+    return false;    
+  });
+
   $('.page-scroll').click(function(){
     var url = $(this).attr('href');
     if (window.location.pathname === '/'){

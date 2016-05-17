@@ -631,8 +631,78 @@ footer small a{
 }
 /*end of terms */
 
+/*media queries*/
+@media only screen and (max-width: 560px) {
+	/*navigation*/
+	.navbar-collapse.navbar-main-collapse{
+		background-color: #fff
+	}
+	.navbar-custom .navbar-nav > li > a, .navbar-custom .navbar-nav > li{
+    text-align: center;
+  }
+  .navbar .navbar-nav{
+  	padding: 0
+  }
+	/*end navigation*/
 
+	/*home page banner*/
+  .intro.home .brand-heading{
+    font-size: 28px;
+    line-height: 40px;
+  }
+  .navbar-brand img {
+    height: 50px;
+	}
+	.intro-body .scroll-btn{
+		bottom: 0;
+	}
+	.intro.home .btn{
+		width: 80%;
+		font-size: 24px;
+		height: inherit;
+		line-height: 40px;
+	}
+	/*home page banner end*/
 
+	/*pricing page*/
+	.intro.pricing .intro-body{
+		padding: 85px 0
+	}
+	.pricing .brand-heading{
+		font-size: 30px;
+	}
+	.pBnrBtm .head3{
+		margin-right: 0;
+	}
+	.pBnrBtm .btn-lg{
+		margin-top: 0;
+	}
+	/*end pricing page*/
+
+	/*about page*/
+	.secBg .bigger-text{
+		font-size: 5em;
+		line-height: 70px;
+	}
+	.secBg p{
+		font-size: 18px;
+		line-height: 28px;
+	}
+	#abtCircle{
+		width: 100px;
+		height: 100px;
+		line-height: 100px;
+		font-size: 6em;
+	}
+	#aboutPage .brand-heading{
+		font-size: 28px;
+		line-height: 40px;
+	}
+	#cmnTpPad{
+		margin-top: 0;
+	}
+	/*end about */
+}
 
 
 
