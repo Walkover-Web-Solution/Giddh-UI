@@ -100,14 +100,14 @@ describe 'companyController', ->
       expect(@uibModal.open).toHaveBeenCalledWith(modalData)
 
   describe '#onCompanyCreateModalCloseSuccess', ->
-    it 'should call create with data passed', ->
+    xit 'should call create with data passed', ->
       company = {name: "foo baar", city: "Indore"}
       @spyOn(@scope, 'createCompany')
       @scope.onCompanyCreateModalCloseSuccess(company)
       expect(@scope.createCompany).toHaveBeenCalledWith(company)
 
   describe '#onCompanyCreateModalCloseFailure', ->
-    it 'should call create with data passed', ->
+    xit 'should call create with data passed', ->
       @spyOn(@scope, 'checkCmpCretedOrNot')
       @scope.onCompanyCreateModalCloseFailure()
       expect(@scope.checkCmpCretedOrNot).toHaveBeenCalled()
