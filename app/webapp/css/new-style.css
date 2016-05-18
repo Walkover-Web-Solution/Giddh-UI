@@ -2481,14 +2481,26 @@ table td.nopad{
     padding-bottom: 3px;
     vertical-align: middle;
 }
+.table.invGenTbl>tfoot>tr>th{
+    font-weight: normal;
+}
+.table.invGenTbl>tfoot>tr>th.bold{
+    font-weight: bold;
+}
 .table.invGenTbl>tfoot>tr>td{
     text-align: left;
 }
+label.splLbl{
+    font-weight: 400;
+    padding: 8px 0;
+    float: left;
+    display: block;
+}
 #splInvInpt{
     width:60px;
-    padding-left: 5px;
-    padding-right: 0;
-    height: 26px;
+    padding-left: 0;
+    padding-right: 5px;
+    text-align: right;
 }
 .table.vAlMid>tbody>tr>td{
     vertical-align: middle;

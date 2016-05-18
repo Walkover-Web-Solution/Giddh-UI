@@ -29,7 +29,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       name: 'Walkover Web Solutions Pvt. ltd.'
       data: '405-406 Capt. C.S. Naidu Arcade,10/2 Old Palasiya,Indore Madhya Pradesh,CIN: 02830948209eeri,Email: account@giddh.com'
     companyIdentities: 
-      data: 'tin:67890, cin:12345'
+      data: 'tin:67890,cin:12345'
     entries: [
       {
         "transactions": [
@@ -360,6 +360,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     # companyIdentities setting
     if not(_.isEmpty(data.companyIdentities.data))
       data.companyIdentities.data = data.companyIdentities.data.replace(RegExp('\n', 'g'), ',')
+      # data.companyIdentities.data = data.companyIdentities.data.replace(RegExp(' ', 'g'), '')
 
     # terms setting
     if not(_.isEmpty(data.termsStr))
@@ -471,15 +472,13 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
           $scope.onlyDrData.push(newEntry)
       )
     )
-    console.log "before", $scope.onlyDrData.length
+    $scope.onlyDrData = _.reject($scope.onlyDrData, (item) ->
+      item.sharedData.invoiceGenerated is true
+    )
     if $scope.onlyDrData.length is 0
       $scope.noDataDR = true
     else
       $scope.noDataDR = false
-    $scope.onlyDrData = _.reject($scope.onlyDrData, (item) ->
-      item.sharedData.invoiceGenerated is true
-    )
-    console.log "after", $scope.onlyDrData.length
     
   $scope.getLedgerEntriesFailure=(res)->
     toastr.error(res.data.message, res.data.status)

@@ -79,12 +79,12 @@ giddh.webApp.filter 'numtowords', ->
     fraction = Math.round(frac(value) * 100)
     f_text = ''
     if fraction > 0
-      f_text = 'AND ' + convert_number(fraction) + ' PAISE'
+      f_text = 'AND ' + convert_number(fraction)
     convertNumber = convert_number(value)
     if convertNumber == ''
       ''
     else
-      convertNumber + ' RUPEE ' + f_text + ' ONLY'
+      convertNumber + ' ' + f_text + ' ONLY'
 
 
 
