@@ -603,18 +603,13 @@ angular.module('ledger', [])
         console.info "not a number"
 
     scope.openDialog = (item, indexs, ftype, parentForm) ->
-
-      refreshTaxList = () ->
+      taxes_1 = []
+      refreshTaxList = (taxes) ->
         taxes_refresh = []
-        _.each scope.taxList, (tax) ->
+        _.each taxes, (tax) ->
           if tax.isSelected
             taxes_refresh.push(tax)
         item.sharedData.taxes = taxes_refresh
-
-      $timeout (->
-        if item.taxes = undefined
-          refreshTaxList()
-      )
 
       manageTaxOndialog = (item) ->
         obj = item
@@ -656,6 +651,8 @@ angular.module('ledger', [])
 
             if entryDate >= dates[0] 
               tax.withinDate = true
+
+          taxes_1 = taxList_1
         )
       
       manageTaxOndialog(item)
@@ -667,11 +664,11 @@ angular.module('ledger', [])
 
       scope.$watch('item.transactions[0].amount', (newVal, oldVal)->
         if newVal != oldVal
-          refreshTaxList()
+          refreshTaxList(taxes_1)
       )
 
       scope.$watch('item.sharedData.unconfirmedEntry', (newVal, oldVal)->
-        refreshTaxList()
+        refreshTaxList(taxes_1)
       )
 
       scope.removeClassInAllEle("ledgEntryForm", "open")
