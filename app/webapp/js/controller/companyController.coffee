@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService, accountService, $filter) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService, accountService, $filter, $http) ->
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -83,6 +83,20 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.onCompanyCreateModalCloseFailure = () ->
     $scope.checkCmpCretedOrNot()
+    modalService.openConfirmModal(
+        title: 'LogOut',
+        body: 'In order to be able to use Giddh, you must create a company. Are you sure you want to cancel and logout?',
+        ok: 'Yes',
+        cancel: 'No').then($scope.firstLogout)
+
+  $scope.firstLogout = () ->
+    $http.post('/logout').then ((res) ->
+      # don't need to clear below
+      # _userDetails, _currencyList
+      localStorageService.clearAll()
+      window.location = "/thanks"
+    ), (res) ->
+
 
   #for make sure
   $scope.checkCmpCretedOrNot = ->

@@ -609,9 +609,7 @@ angular.module('ledger', [])
         _.each scope.taxList, (tax) ->
           if tax.isSelected
             taxes_refresh.push(tax)
-
-          if _.isUndefined(item.taxes)
-            item.sharedData.taxes = taxes_refresh
+        item.sharedData.taxes = taxes_refresh
 
       $timeout (->
         if item.taxes = undefined
