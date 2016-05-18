@@ -48,11 +48,10 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
 
   # switch user
   $scope.switchUser =() ->
-    console.log "switchUser"
     companyServices.switchUser($rootScope.selectedCompany.uniqueName).then($scope.switchUserSuccess, $scope.switchUserFailure)
 
   $scope.switchUserSuccess = (res) ->
-    console.log "switchUserSuccess:", res
+    #console.log "switchUserSuccess:", res
 
   $scope.switchUserFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
