@@ -205,7 +205,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     groupService.getFlatAccList(reqParam).then($scope.loadMoreAccSuccess, $scope.loadMoreAccFailure)
 
   $rootScope.loadMoreAccSuccess = (res) ->
-    $scope.gwaList.currentPage += 1
+    $scope.flatAccList.currentPage += 1
     list = res.body.results
     if res.body.totalPages >= $scope.flatAccList.currentPage
       $scope.fltAccntListPaginated = _.union($scope.fltAccntListPaginated, list)

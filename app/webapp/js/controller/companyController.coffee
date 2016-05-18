@@ -218,8 +218,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $rootScope.canManageComp = true
       $scope.goToCompany(data, index, "CHANGED")
     $rootScope.$emit('reloadAccounts')
-    $scope.getTax()
-    $scope.getFY()
+    if $rootScope.canManageCompany
+      $scope.getFY()
+      $scope.getTax()
+      $scope.getKeys()
 
   #making a detail company view
   $scope.goToCompany = (data, index, type) ->
