@@ -263,9 +263,9 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #update company success
   $scope.updtCompanySuccess = (res)->
+    localStorageService.set("_selectedCompany", res.body)
     toastr.success("Company updated successfully", "Success")
     $scope.getCompanyList()
-    localStorageService.set("_selectedCompany", res.body)
 
   #update company failure
   $scope.updtCompanyFailure = (res)->
