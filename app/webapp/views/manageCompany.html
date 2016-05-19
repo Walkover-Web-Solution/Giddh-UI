@@ -46,13 +46,13 @@
 
                     <input type="hidden" ng-model="selectedCompany.contactNo">
 
-                    <input type="text" ng-model="selectedCompany.cCode"
+                    <input type="text" ng-model="selectedCompany.cCode" required
                            uib-typeahead="country as country.value for country in countryCodesList | filter:$viewValue | limitTo:8"
                            class="form-control" typeahead-template-url="cityTemplate.html" placeholder="91"/>
 
                   </div>
-                  <div class="col-xs-9">
-                    <input type="text" placeholder="98XXXXXXXX" class="form-control" name="onlyMobileNo"
+                  <div class="col-xs-9"> 
+                    <input type="text" placeholder="98XXXXXXXX" class="form-control" name="onlyMobileNo" required
                            ng-model="selectedCompany.mobileNo" valid-number/>
                   </div>
                 </div>

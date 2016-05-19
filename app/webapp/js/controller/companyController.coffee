@@ -253,13 +253,12 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
-    if not _.isEmpty(data.contactNo)
-      if _.isObject(data.cCode)
-        data.contactNo = data.cCode.value + "-" + data.mobileNo
-      else
-        data.contactNo = data.cCode + "-" + data.mobileNo
-
-    companyServices.update(data).then($scope.updtCompanySuccess, $scope.updtCompanyFailure)
+    if _.isObject(data.cCode)
+      data.contactNo = data.cCode.value + "-" + data.mobileNo
+    else
+      data.contactNo = data.cCode + "-" + data.mobileNo
+    abc = _.omit(data, "financialYears")
+    companyServices.update(abc).then($scope.updtCompanySuccess, $scope.updtCompanyFailure)
 
   #update company success
   $scope.updtCompanySuccess = (res)->
