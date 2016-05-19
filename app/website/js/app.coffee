@@ -7,8 +7,38 @@ app = angular.module("giddhApp", [
   "ngVidBg"
   "fullPage.js"
   "vcRecaptcha"
+  "valid-number"
   ]
 )
+
+angular.module('valid-number', []).
+directive 'validNumber', ->
+  {
+  require: '?ngModel'
+  link: (scope, element, attrs, ngModelCtrl) ->
+    if !ngModelCtrl
+      return
+    ngModelCtrl.$parsers.push (val) ->
+      if angular.isUndefined(val)
+        val = ''
+      if _.isNull(val)
+        val = ''
+      clean = val.replace(/[^0-9\.]/g, '')
+      decimalCheck = clean.split('.')
+      if !angular.isUndefined(decimalCheck[1])
+        decimalCheck[1] = decimalCheck[1].slice(0, 2)
+        clean = decimalCheck[0] + '.' + decimalCheck[1]
+      if val != clean
+        ngModelCtrl.$setViewValue clean
+        ngModelCtrl.$render()
+      clean
+    element.on 'keypress', (event) ->
+      if event.keyCode == 32
+        event.preventDefault()
+      return
+    return
+
+  }
 
 app.controller 'homeCtrl', [
   '$scope', 'toastr', '$http', 'vcRecaptchaService'
@@ -34,6 +64,7 @@ app.controller 'homeCtrl', [
       scrollingSpeed: 800
       scrollOverflow: true
       responsiveWidth: 600
+      responsiveHeight: 400
     }
 
     $scope.socialList= [
