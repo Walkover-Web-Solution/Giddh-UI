@@ -726,7 +726,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr ng-repeat="year in fy.years | orderBy: year.financialYearStarts">
+                <tr ng-repeat="year in fy.years track by $index | orderBy: year.financialYearStarts">
                   <td>{{$index + 1}}</td>
                   <td>{{year.financialYearStarts}}</td>
                   <td>{{year.financialYearEnds}}</td>

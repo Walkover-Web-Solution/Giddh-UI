@@ -775,6 +775,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $rootScope.canChangeCompany = false
     $scope.showAccountList = false
     $scope.getGroups()
+    $('#accountSearch').val('')
     
 
   $rootScope.$on 'callManageGroups', ->

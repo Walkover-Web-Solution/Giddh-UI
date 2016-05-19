@@ -1041,6 +1041,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     periods: ['Jan-Dec', 'Apr-Mar']
     selectedPeriod: ''
     newFY: ''
+    addedFYears: []
   }
   $scope.months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
   $scope.fyYears = []
@@ -1050,7 +1051,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     while year >= 1950
       $scope.fyYears.push(year)
       year -= 1
-
+    $scope.fyYears = _.difference($scope.fyYears, $scope.fy.addedFYears)
+      
   $scope.setFYname = (years) ->
     _.each years, (yr) ->
       name = yr.uniqueName.split("-")
@@ -1063,6 +1065,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.fy.company = res.body.companyName
     $scope.fy.companyUniqueName = res.body.companyUniqueName
     $scope.fy.years = res.body.financialYears
+    _.each $scope.fy.years, (yr) ->
+      addedYear = yr.financialYearStarts
+      addedYearSplit = addedYear.split('-')
+      cYear = addedYearSplit[2]
+      $scope.fy.addedFYears.push(Number(cYear))
     $scope.setFYname($scope.fy.years)
     $scope.addfyYears()
 
