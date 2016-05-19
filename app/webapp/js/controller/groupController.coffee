@@ -188,8 +188,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
 
   $rootScope.getFlatAccountListListSuccess = (res) ->
-    $rootScope.fltAccntListPaginated = res.body.results
-
+    $scope.fltAccntListPaginated = res.body.results
+    
   $rootScope.getFlatAccountListFailure = (res) ->
     toastr.error(res.data.message)
 
@@ -222,12 +222,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if str.length > 2
       $scope.hideAccLoadMore = true
       reqParam.q = str
-      groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
     else
       $scope.hideAccLoadMore = false
       reqParam.q = ''
       reqParam.count = 5
-      groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+    groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
 
   #-------- fetch groups with accounts list-------
   $scope.getFlattenGrpWithAccList = (compUname) ->
