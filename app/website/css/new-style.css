@@ -632,20 +632,26 @@ footer small a{
   text-align: center;
   color: #fff;
 }
+.secBg-zero {
+	background: url('/public/website/images/new/about-banner.jpg') no-repeat top center scroll;
+}
 .secBg-one {
-	background: url('/public/website/images/new/sec-one.jpg') no-repeat center center scroll;
+	background: url('/public/website/images/new/webegan.jpg') no-repeat center center scroll;
 }
 .secBg-two {
-	background: url('/public/website/images/new/sec-two.jpg') no-repeat center center scroll;
+	background: url('/public/website/images/new/theteam.jpg') no-repeat center center scroll;
 }
 .secBg-three {
-	background: url('/public/website/images/new/sec-three.jpg') no-repeat center center scroll;
+	background: url('/public/website/images/new/culture.jpg') no-repeat center center scroll;
 }
 .secBg-four {
-	background: url('/public/website/images/new/sec-four.jpg') no-repeat center center scroll;
+	background: url('/public/website/images/new/youdecide.jpg') no-repeat center center scroll;
 }
 .secBg-five{
 	background: url('/public/website/images/new/banner-grid-design.png') repeat top left;
+}
+.secBg-zero .sec-overlay{
+	background-color: rgba(14, 47, 68, 0.5);
 }
 .secBg-one .sec-overlay{
 	background-color: rgba(227, 86, 67, 0.8);
