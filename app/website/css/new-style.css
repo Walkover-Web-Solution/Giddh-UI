@@ -396,18 +396,31 @@ box-shadow: 0 2px 10px -4px;
 	line-height: 60px;
 }
 .brand-wrap{
-	background: url('/public/website/images/new/banner-graph.png') no-repeat center center scroll;
+	/*background: url('/public/website/images/new/banner-graph.png') no-repeat center center scroll;
   -webkit-background-size: cover;
   -moz-background-size: cover;
   background-size: cover;
-	width: 100%;
+	
 	height: 210px;
-	margin: 0 auto;
+	margin: 0 auto;*/
 	display: table;
+	width: 100%;
+}
+.brand-wrap img{
+	width: 100%;
 }
 .brand-wrap .brand-heading {
 	display: table-cell;
 	vertical-align: middle;
+}
+.brand-wrap .brand-heading p{
+	position: absolute;
+  top: 50%;
+  text-align: center;
+  display: block;
+  left: 0;
+  right: 0;
+  margin: -22px 0 0 0;
 }
 .intro-body .scroll-btn{
 	width: 24px;
@@ -595,31 +608,56 @@ footer small a{
 /*footer style end*/
 
 /*about page*/
+#fullpage .navbar-fixed-top{
+	position: absolute;
+	top: 0;
+}
+.section{
+	position: relative;
+}
+#nrmTxtWrp{
+	background-color: #FFF6E7;
+	padding: 80px 0;
+}
+#nrmTxtWrp1{
+	background-color: #FFF6E7;
+	padding: 80px 0;
+}
+#fullpage .img-responsive{
+	position: relative;
+	z-index: 0;
+}
+.section .secBgWrap{
+	position: absolute;
+	z-index: 1;
+	left: 0;
+	right: 0;
+	top: 0;
+	display: block;
+}
 #abtCircle{
-	width: 300px;
-	height: 300px;
+	width: 150px;
+	height: 150px;
 	vertical-align: middle;
 	border-radius: 50%;
 	background-color: #E54024;
 	color: #26253B;
-	margin: 0 auto 60px;
-	font-size: 12em;
-	line-height: 300px;
+	margin: 0 auto;
+	font-size: 8em;
+	line-height: 150px;
 }
 #aboutPage .brand-heading {
   font-size: 36px;
   letter-spacing: 2px;
   color: #FFF6E7;
   line-height: 48px;
+  margin-bottom: 40px;
 }
 .abtTxt p{
 	margin-bottom: 30px;
 	line-height: 36px;
 }
 .secBg{
-	-webkit-background-size: cover;
-  -moz-background-size: cover;
-  background-size: cover;
   width: 100%;
   height: 100%;
   display: table;
@@ -632,24 +670,7 @@ footer small a{
   text-align: center;
   color: #fff;
 }
-.secBg-zero {
-	background: url('/public/website/images/new/about-banner.jpg') no-repeat top center scroll;
-}
-.secBg-one {
-	background: url('/public/website/images/new/webegan.jpg') no-repeat center center scroll;
-}
-.secBg-two {
-	background: url('/public/website/images/new/theteam.jpg') no-repeat center center scroll;
-}
-.secBg-three {
-	background: url('/public/website/images/new/culture.jpg') no-repeat center center scroll;
-}
-.secBg-four {
-	background: url('/public/website/images/new/youdecide.jpg') no-repeat center center scroll;
-}
-.secBg-five{
-	background: url('/public/website/images/new/banner-grid-design.png') repeat top left;
-}
+
 .secBg-zero .sec-overlay{
 	background-color: rgba(14, 47, 68, 0.5);
 }
@@ -696,13 +717,15 @@ footer small a{
 	margin-left: 40px;
 	font-size: 30px;
 }
-#aboutPage #footer{
-	position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 99;
+
+/*media queries*/
+@media only screen and (max-width: 980px) {
+	#aboutPage .img-responsive, body.unresponsive .section{
+		max-width: none;
+		width: 980px;
+	}
 }
+
 /*about page end*/
 
 /*privacy page and terms page*/
@@ -734,7 +757,7 @@ footer small a{
 /*end of terms */
 
 /*media queries*/
-@media only screen and (max-width: 560px) {
+@media only screen and (max-width: 760px) {
 	/*navigation*/
 	.navbar-collapse.navbar-main-collapse{
 		background-color: #fff
@@ -746,7 +769,12 @@ footer small a{
   	padding: 0
   }
 	/*end navigation*/
-
+	.navbar-brand img{
+		height: 60px;
+	}
+}
+/*media queries*/
+@media only screen and (max-width: 560px) {
 	/*home page banner*/
   .intro.home .brand-heading{
     font-size: 28px;
@@ -852,5 +880,9 @@ footer>div>a:before{
   right: 0;
 }
 
-
+/*make website unresponsive*/
+body.unresponsive .container {
+  width: 970px !important;
+  max-width: none !important;
+}
 
