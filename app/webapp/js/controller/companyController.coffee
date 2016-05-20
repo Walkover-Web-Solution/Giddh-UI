@@ -1173,7 +1173,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.getCompanyList()
     $scope.getCurrencyList()
     $scope.getUserDetails()
-    $scope.getCurrentPeriod()
+    # $scope.getCurrentPeriod()
   ,200)
 
   #fire function after page fully loaded

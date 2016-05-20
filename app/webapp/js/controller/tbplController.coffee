@@ -281,7 +281,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       'fromDate': data.fromDate
       'toDate': data.toDate
     }
-    $scope.checkFY(reqParam)
+    # $scope.checkFY(reqParam)
     trialBalService.getAllFor(reqParam).then $scope.getTrialBalSuccess, $scope.getTrialBalFailure
 
   $scope.getTrialBalSuccess = (res) ->
