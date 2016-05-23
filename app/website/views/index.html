@@ -25,41 +25,45 @@
 
 </head>
 </head>
-<body ng-controller="homeCtrl" id="page-top">
+<body ng-controller="homeCtrl" id="page-top" class="light">
 
   <ng-include src="'/public/website/views/header.html'"></ng-include>
   <!-- end navigation -->
 
-  <section id="videoBg" class="intro home">
+  <section id="videoBg" class="pr">
+    <div class="scroll-btn">
+      <a href="#feature" class="page-scroll"></a>
+    </div>
+    <div class="intro home">
 
-    <vid-bg resources="resources" poster="poster" full-screen="fullScreen" muted="muted" z-index="zIndex" play-info="playInfo" pause-play="pausePlay" class="visible-md-block visible-lg-block"></vid-bg>
-    <!-- hidden-md hidden-xs hidden-sm -->
+      <vid-bg resources="resources" poster="poster" full-screen="fullScreen" muted="muted" z-index="zIndex" play-info="playInfo" pause-play="pausePlay" class="visible-md-block visible-lg-block"></vid-bg>
+      <!-- hidden-md hidden-xs hidden-sm -->
 
-    <!-- banner content -->
-    <div class="intro-body">
-      <div class="container">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="pr clearfix">
-              <div>
-                <a href="/login" class="btn btn-primary  btn-lg">Cheque out</a>
-              </div>
-              <div class="brand-wrap">
-                <h1 class="brand-heading arvo">
-                  <div class="pr">
-                    <img class="img-responsive" src="/public/website/images/new/banner-graph.png" />
-                    <p>Your new non-inventory accountant</p>
-                  </div>
-                </h1>
-              </div>
-              <div class="scroll-btn">
-                <a href="#feature" class="page-scroll"></a>
+      <!-- banner content -->
+      <div class="intro-body">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm-12">
+              <div class="pr clearfix">
+                <div>
+                  <a href="/login" class="btn btn-primary  btn-lg">Cheque out</a>
+                </div>
+                <div class="brand-wrap">
+                  <h1 class="brand-heading arvo">
+                    <div class="pr">
+                      <img class="img-responsive" src="/public/website/images/new/banner-graph.png" />
+                      <p>Your new non-inventory accountant</p>
+                    </div>
+                  </h1>
+                </div>
+                
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
+
   </section> <!-- end of videoBg -->
 
   <section class="blueBg homeContent" id="feature">

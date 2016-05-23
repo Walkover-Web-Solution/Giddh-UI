@@ -26,7 +26,7 @@
   
   <script src="/public/website/js/controller/loginController.js"></script>
 </head>
-<body ng-controller="loginController">
+<body ng-controller="loginController" class="lightTrans">
   
   <ng-include src="'public/website/views/header.html'"></ng-include>
 
@@ -38,14 +38,16 @@
           <div class="col-sm-12">
             <h1 class="brand-heading arvo">Enter your accounting space</h1>
             
-            <div id="box">
+            <div id="box" class="text-uppercase">
               <div class="clearfix mrB1">
-                <div ng-class="loginIsProcessing ? 'giddh-spinner': 'giddh-logo'" ></div>
+                <p class="lead ">Sign In or register</p>
+                <!-- <div ng-class="loginIsProcessing ? 'giddh-spinner': 'giddh-logo'" ></div> -->
               </div>
 
-              <button type="login" class="btn sharp btn-block btn-lg btn-login twitter" ng-click="authenticate('twitter')">Sign in with Twitter</button>
-              <button type="login" class="btn sharp btn-block btn-lg btn-login linkedin" ng-click="authenticate('linkedin')">Sign in with LinkedIn</button>
-              <button type="login" class="btn sharp btn-block btn-lg btn-login google" ng-click="authenticate('google')">Sign in with Google</button>
+              <button type="login" class="btn sharp btn-block btn-lg btn-login google" ng-click="authenticate('google')">connect with Google</button>
+              <button type="login" class="btn sharp btn-block btn-lg btn-login twitter" ng-click="authenticate('twitter')">connect with Twitter</button>
+              <button type="login" class="btn sharp btn-block btn-lg btn-login linkedin" ng-click="authenticate('linkedin')">connect with LinkedIn</button>
+
             </div>
 
 

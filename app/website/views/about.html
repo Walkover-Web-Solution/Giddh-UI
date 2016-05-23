@@ -27,23 +27,23 @@
   <script type="text/javascript" src="/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
 
 </head>
-<body ng-controller="homeCtrl" id="aboutPage" class="unresponsive">
+<body ng-controller="homeCtrl" id="aboutPage" class="unresponsive light notAffix">
 
   <div id="fullpage">
-    
+    <ng-include src="'/public/website/views/header.html'"></ng-include>
     <div class="section">
       <img class="img-responsive" src="/public/website/images/new/about-banner.jpg" />
       <div class="secBgWrap">
         <div class="secBg secBg-zero">
           <div class="sec-overlay">
-            <ng-include src="'/public/website/views/header.html'"></ng-include>
+            
             <div class="container">
               <div class="row text-center">
                 <div class="col-sm-12">
                   <h1 class="brand-heading arvo">It’s okay to make a mess<br>Our experiments have turned into amazing things</h1>
-                  <div id="abtCircle" class="arvo-b">
+                  <!-- <div id="abtCircle" class="arvo-b">
                     ?
-                  </div>
+                  </div> -->
                 </div>
               </div>
             </div>
@@ -168,6 +168,7 @@
 jQuery(document).ready(function($){
 'use strict';
   $(window).resize(function(){
+    $(".navbar").removeClass('navbar-fixed-top')
     var imgs = $('.section .img-responsive')
     $.each( imgs , function( key, ths ) {
       $(ths).next('div').css({ 
@@ -176,11 +177,12 @@ jQuery(document).ready(function($){
       })
     });
   });
-  $(window).trigger('resize');
+  
 });
 
 window.onload = function() {
   $(window).trigger('resize');
+  $(".navbar").removeClass('navbar-fixed-top')
 }
 </script>  
 
