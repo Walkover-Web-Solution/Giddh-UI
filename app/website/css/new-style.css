@@ -84,15 +84,6 @@ body {
 	font-family: 'Arvo', serif;
 	font-size: 18px;
 }
-.navbar-custom .btn-primary {
-  color: #FFF8EA;
-  background-color: #28283C;
-  border-color: #28283C;
-}
-.navbar-custom .btn-primary:hover {
-  color: #28283C;
-  background-color: transparent;
-}
 /*navigation light theme*/
 body.light .navbar{
 	background-color: #fff

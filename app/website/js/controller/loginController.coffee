@@ -3,6 +3,8 @@
 loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr) ->
   $scope.loginIsProcessing = false
 
+  $rootScope.homePage = false
+
   $scope.authenticate = (provider) ->
     $scope.loginIsProcessing = true
     $auth.authenticate(provider).then((response) ->

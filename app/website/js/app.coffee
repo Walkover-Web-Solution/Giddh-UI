@@ -41,8 +41,8 @@ directive 'validNumber', ->
   }
 
 app.controller 'homeCtrl', [
-  '$scope', 'toastr', '$http', 'vcRecaptchaService'
-  ($scope, toastr, $http, vcRecaptchaService) ->
+  '$scope', 'toastr', '$http', 'vcRecaptchaService', '$rootScope'
+  ($scope, toastr, $http, vcRecaptchaService, $rootScope) ->
     $scope.resources = [
       'https://d2v9y0dukr6mq2.cloudfront.net/video/preview/63y00O5/top-view-of-a-young-woman-doing-home-finances-on-a-wooden-table-with-a-notebook-and-a-smartphone-shallow-dof-focus-on-the-glasses_v1n8q4uzx__PM.mp4'
       # 'https://s3-us-west-2.amazonaws.com/coverr/mp4/Coverr-beach2.mp4'
@@ -66,6 +66,7 @@ app.controller 'homeCtrl', [
       responsiveWidth: 600
       responsiveHeight: 400
     }
+    $rootScope.homePage = true
 
     $scope.socialList= [
       # {
