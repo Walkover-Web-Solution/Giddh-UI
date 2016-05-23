@@ -32,6 +32,16 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.discount = 0
   $scope.amount = 0
   $scope.noTaxes = false
+  $scope.tabs = [
+    {title:'Basic information', active: true}
+    {title:'Permission', active: false}
+    {title:'Tally XML upload', active: false}
+    {title:'Payment details', active: false}
+    {title:'Taxes', active: false}
+    {title:'Email/SMS settings', active: false}
+    {title:'Financial Year', active: false}
+  ]
+
   # manage tax variables
   $scope.taxTypes = [
     "MONTHLY"
@@ -218,10 +228,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $rootScope.canManageComp = true
       $scope.goToCompany(data, index, "CHANGED")
     $rootScope.$emit('reloadAccounts')
-    if $rootScope.canManageCompany
-      $scope.getFY()
-      $scope.getTax()
-      $scope.getKeys()
+    $scope.tabs[0].active = true
+    console.log "reset tabs"
 
   #making a detail company view
   $scope.goToCompany = (data, index, type) ->
@@ -816,15 +824,19 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxSuccess, $scope.getTaxFailure)
 
   $scope.getTaxSuccess = (res) ->
-    _.each res.body, (obj) ->
-      obj.isEditable = false
-      if obj.account == null
-        obj.account = {}
-        obj.account.uniqueName = ''
-      obj.hasLinkedAcc = _.find($scope.fltAccntList, (acc)->
-        return acc.uniqueName == obj.account.uniqueName
-      ) 
-      $scope.taxList.push(obj)
+    if res.body.length is 0
+      $scope.taxList = []
+      console.log "isEmpty array"
+    else
+      _.each res.body, (obj) ->
+        obj.isEditable = false
+        if obj.account == null
+          obj.account = {}
+          obj.account.uniqueName = ''
+        obj.hasLinkedAcc = _.find($scope.fltAccntList, (acc)->
+          return acc.uniqueName == obj.account.uniqueName
+        ) 
+        $scope.taxList.push(obj)
 
   $scope.getTaxFailure = (res) ->
     $scope.noTaxes = true

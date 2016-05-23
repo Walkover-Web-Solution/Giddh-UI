@@ -5,7 +5,8 @@
 
 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20" auto-height>
   <uib-tabset justified="false">
-    <uib-tab heading="Basic Information" active="true" id="basic">
+    
+    <uib-tab heading="{{tabs[0].title}}" active="tabs[0].active" id="basic">
       <div class="pd2">
         <fieldset ng-disabled="!canManageCompany">
         <form id="cmpnyBascFrm" name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
@@ -144,7 +145,7 @@
     </uib-tab>
     <!-- basic information tab end here -->
 
-    <uib-tab ng-if="canManageCompany" heading="Permission" id="permission">
+    <uib-tab ng-if="canManageCompany" heading="{{tabs[1].title}}" active="tabs[1].active" id="permission">
       <div class="pd2">
         <div class="greyBox mrB2">
           <form name="addShareEmailForm" novalidate class="form-inline">
@@ -212,7 +213,7 @@
       </div>
     </uib-tab>
     <!-- end of second tab ng-if="canManageCompany" -->
-    <uib-tab ng-if="canManageCompany" heading="Tally XML upload"  id="tally">
+    <uib-tab ng-if="canManageCompany" heading="{{tabs[2].title}}" active="tabs[2].active" id="tally">
       <div class="clearfix bdrB">
         <div class="col-xs-6">
           <div class="pdT2">
@@ -306,7 +307,7 @@
     </uib-tab>
 
     <!-- start transaction tab -->
-    <uib-tab ng-if="canManageCompany" heading="Payment details"  id="payment">
+    <uib-tab ng-if="canManageCompany" heading="{{tabs[3].title}}" active="tabs[3].active" id="payment">
       <div class="pd2">
         <div class="clearfix mrB1 form-inline">
           <div class="form-group mrR1">
@@ -447,7 +448,7 @@
     <!-- end transaction tab -->
 
     <!-- manage taxes -->
-    <uib-tab ng-if="canManageCompany" heading="Taxes" id="taxes" select="getTax()">
+    <uib-tab ng-if="canManageCompany" heading="{{tabs[4].title}}" active="tabs[4].active" id="taxes" select="getTax()">
       <div class="pd2">
         <h3 class="fs16 mrB1">Create New Tax</h3>
         <div class="form-wrapper" style="max-width:460px">
@@ -669,7 +670,7 @@
     </uib-tab>
     <!-- end of manage taxes -->
 
-    <uib-tab ng-if="canManageCompany" heading="Email/Sms Settings" id="email-settings" select="getKeys()">
+    <uib-tab ng-if="canManageCompany" heading="{{tabs[5].title}}" active="tabs[5].active" id="email-settings" select="getKeys()">
       <div class="pd2">
         <h3 class="fs16 mrB1">Bulk Email/Sms Settings</h3>
         <p>Currently we offer bulk email and sms services to our users through <a href="http://https://sendgrid.com/">SendGrid</a> and <a href="https://msg91.com/">MSG91</a> respectively. <br/> In order to be able to send bulk emails and sms you would require auth-keys and sender ID from aforementioned providers. </p>
@@ -711,7 +712,7 @@
       </div>
     </uib-tab>
 
-<!--     <uib-tab ng-if="canManageCompany" heading="Financial Year" id="fin-year" select="getFY()">
+<!--     <uib-tab ng-if="canManageCompany" heading="{{tabs[6].title}}" active="tabs[6].active" id="fin-year" select="getFY()">
       <div class="pd2">
 
           <h3 class="fs16 mrB1 mrT1">Financial Year(s) - {{fy.company}}</h3>
