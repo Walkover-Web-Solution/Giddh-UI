@@ -64,8 +64,21 @@ h1 {
   display: block;
   text-align: left;
 }
+.form-inline .form-control.smlInp{
+  width: 100px;
+  padding: 6px 0 6px 4px;
+}
+.form-inline input[disabled].form-control.smlInp{
+  width: 100px;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
 .template_b #three, #four{
-  height: 2.3in;
+  height: 2.5in;
+  overflow: visible;
 }
 .vcenter {
   display: block;
@@ -220,7 +233,7 @@ textarea{
                 </div>
                 <div class="form-group pull-right">
                   <label>Date:</label>
-                  {{defTempData.invoiceDetails.invoiceDate}}
+                  <input ng-disabled="!genMode" class="smlInp form-control" ng-model="defTempData.invoiceDetails.invoiceDate" valid-date>
                 </div>
               </section>
             </section>
@@ -246,7 +259,7 @@ textarea{
               </div>
               <div class="form-group">
                 <label>Date :&nbsp;</label>
-                {{defTempData.invoiceDetails.invoiceDate}}
+                <input ng-disabled="!genMode" class="smlInp form-control" ng-model="defTempData.invoiceDetails.invoiceDate" valid-date>
               </div>
             </section>
             <!-- end if -->

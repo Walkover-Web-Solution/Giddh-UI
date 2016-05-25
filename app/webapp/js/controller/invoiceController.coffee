@@ -383,7 +383,13 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       if force
         dData.validateTax = false
 
-      accountService.genInvoice(obj, dData).then($scope.genInvoiceSuccess, $scope.genInvoiceFailure)
+      if moment(data.invoiceDetails.invoiceDate, "DD-MM-YYYY", true).isValid()
+        accountService.genInvoice(obj, dData).then($scope.genInvoiceSuccess, $scope.genInvoiceFailure)
+      else
+        toastr.warning("Enter proper date", "Warning")
+        $scope.genMode = true
+        $scope.updatingTempData = false
+        return false
 
     else
       console.log "do nothing"
@@ -428,6 +434,9 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     else
       $scope.updatingTempData = false
       toastr.error(res.data.message, res.data.status)
+      # if invoice date have any problem
+      if res.data.code is 'ENTRIES_AFTER_INOICEDATE'
+        $scope.genMode = true
 
   # get inv templates 
   if not(_.isEmpty($rootScope.$stateParams.invId))

@@ -630,6 +630,19 @@ describe 'invoiceController', ->
         expect(@scope.updatingTempData).toBeFalsy()
         expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
 
+      it 'should show error message with toastr and make a variable falsy and go in else condition if beneath', ->
+        res=
+          data:
+            code: "ENTRIES_AFTER_INOICEDATE"
+            message: "Before invoice not allowed"
+            status: "error"
+
+        spyOn(@toastr, "error")
+        @scope.genInvoiceFailure(res)
+        expect(@scope.updatingTempData).toBeFalsy()
+        expect(@toastr.error).toHaveBeenCalledWith(res.data.message, res.data.status)
+        expect(@scope.genMode).toBeTruthy()
+
       it 'should go in if condition', ->
         res=
           data:
