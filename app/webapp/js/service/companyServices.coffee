@@ -154,6 +154,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     addFY:
       method: 'POST'
       url: '/company/:companyUniqueName/financial-year'
+
+    getMagicLink:
+      method: 'POST'
+      url: '/company/:companyUniqueName/accounts/:accountUniqueName/magic-link?from=:from&to=:to'
        
   })
 
@@ -300,6 +304,9 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
 
     addFY: (reqParam, data) ->
       @handlePromise((onSuccess, onFailure) -> Company.addFY({companyUniqueName: reqParam.companyUniqueName}, data, onSuccess, onFailure))
+
+    getMagicLink: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getMagicLink({companyUniqueName: reqParam.companyUniqueName, accountUniqueName: reqParam.accountUniqueName, from:reqParam.from, to:reqParam.to}, data, onSuccess, onFailure))
 
   companyServices
 

@@ -413,7 +413,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         prevDate = 0
         # calculate total tax amount for entry
         _.each tax.taxDetail, (det) ->
-          taxDate = new Date(det.date).getTime()
+          taxDate = edata.eDate
           entryDate = edata.eDate
           
           if entryDate >= taxDate && taxDate >= prevDate
@@ -895,6 +895,40 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     $scope.reloadLedger()
   )
   
+  # generate magic link
+  $scope.getMagicLink = () ->
+    accUname = $location.path()
+    accUname = accUname.split('/')
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      accountUniqueName: accUname[1]
+      from: $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
+      to: $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
+    }
+    companyServices.getMagicLink(reqParam).then($scope.getMagicLinkSuccess, $scope.getMagicLinkFailure)
+
+  $scope.getMagicLinkSuccess = (res) ->
+    $scope.magicLink = res.body.magicLink
+    modalInstance = $uibModal.open(
+      template: '<div>
+          <div class="modal-header">
+            <h3 class="modal-title">Magic Link</h3>
+          </div>
+          <div class="modal-body">
+            <input id="magicLink" class="form-control" type="text" ng-model="magicLink">
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" ngclipboard data-clipboard-target="#magicLink">Copy</button>
+          </div>
+      </div>'
+      size: "md"
+      backdrop: 'static'
+      scope: $scope
+    )
+
+  $scope.getMagicLinkFailure = (res) ->
+    toastr.error(res.data.message)
+
   $scope.$on('$destroy', someEventHandle)
 
   $scope.$on '$viewContentLoaded',  ->

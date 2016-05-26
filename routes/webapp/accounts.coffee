@@ -320,8 +320,8 @@ router.post '/:accountUniqueName/magic-link', (req, res) ->
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
     parameters:
-      to: req.query.toDate
-      from: req.query.fromDate
+      to: req.query.to
+      from: req.query.from
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/magic-link'
   settings.client.post hUrl, args, (data, response) ->

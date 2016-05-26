@@ -28,6 +28,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "uiSwitch"
     "razor-pay"
     "ngCsv"
+    "ngclipboard"
   ]
 )
 
@@ -164,8 +165,13 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('/thankyou',
     url: '/thankyou'
     templateUrl: '/public/webapp/views/thanks.html'
-    controller: 'thankyouController')
-
+    controller: 'thankyouController'
+  )
+  .state('/magic-link',
+    url: '/magic-link'
+    templateUrl: '/public/webapp/views/magic.html'
+    controller: 'thankyouController'
+  )
   $locationProvider.html5Mode(false)
   return
 

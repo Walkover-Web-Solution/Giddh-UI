@@ -214,6 +214,7 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         },data, onSuccess, onFailure))
 
     genInvoice: (obj, data, onSuccess, onFailure) ->
+      console.log data
       @handlePromise((onSuccess, onFailure) -> Account.genInvoice({
           companyUniqueName: obj.compUname
           accountsUniqueName: obj.acntUname

@@ -25,8 +25,6 @@ var rest = require('restler');
 
 var app = settings.express();
 
-
-
 //// Require and setup mashape analytics
 //var analytics = require('mashape-analytics')
 //var agent = analytics('5628ae08593b00f7098a3b3d', 'giddh-ui', {
@@ -157,7 +155,7 @@ var reports = require('./public/routes/webapp/reports')
 var coupon = require('./public/routes/webapp/coupon')
 var yodlee = require('./public/routes/webapp/yodlee')
 var ebanks  = require('./public/routes/webapp/ebanks')
-
+var magicLink = require('./public/routes/webapp/magic')
 
 app.use('/currency', currency);
 app.use('/users', users);
@@ -175,7 +173,7 @@ app.use('/company/:companyUniqueName', reports);
 app.use('/coupon', coupon);
 app.use('/yodlee', yodlee);
 app.use('/ebanks', ebanks);
-
+//app.use('/magic', magicLink);
 
 app.listen(port, function () {
   console.log('Express Server running at port', this.address().port);

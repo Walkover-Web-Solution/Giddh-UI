@@ -34,6 +34,9 @@ router.get '/terms', (req, res) ->
 router.get '/login', (req, res) ->
   res.sendFile 'login.html', options
 
+router.get '/magic', (req, res) ->
+  res.sendFile 'magic.html', options
+
 router.get '/google87e474bb481dae55.html',(req, res) ->
   res.sendFile('google87e474bb481dae55.html', options)
 
@@ -42,5 +45,17 @@ router.get '/sitemap.xml', (req, res) ->
 
 router.get '/robots.txt', (req, res) ->
   res.sendFile 'robots.txt', options
+
+router.post '/magic-link', (req, res) ->
+  if req.body.data.from != undefined && req.body.data.to != undefined
+    hUrl = settings.envUrl + '/magic-link/' + req.body.data.id + '?from=' + req.body.data.from + '&to=' + req.body.data.to
+  else
+    hUrl = settings.envUrl + '/magic-link/' + req.body.data.id
+  settings.client.get hUrl, (data, response) ->
+    console.log response
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 
 module.exports = router

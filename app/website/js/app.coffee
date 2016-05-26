@@ -1,6 +1,7 @@
 
 app = angular.module("giddhApp", [
   "satellizer"
+  "ui.bootstrap"
   "LocalStorageModule"
   "ngResource"
   "toastr"
@@ -218,6 +219,70 @@ do ->
         scope.$on '$locationChangeSuccess', setActive
       }
   ]
+
+app.controller 'magicCtrl', [
+  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter',
+  ($scope, toastr, $http, $location, $rootScope, $filter) ->
+
+    $scope.magicLinkId = window.location.search.split('=')
+    $scope.magicLinkId = $scope.magicLinkId[1]
+    $scope.ledgerData = []
+    $scope.magicUrl = '/magic-link'
+    $scope.today = new Date()
+    $scope.fromDate = {date: new Date()}
+    $scope.toDate = {date: new Date()}
+    $scope.fromDatePickerIsOpen = false
+    $scope.toDatePickerIsOpen = false
+    $scope.dateOptions = {
+      'year-format': "'yy'",
+      'starting-day': 1,
+      'showWeeks': false,
+      'show-button-bar': false,
+      'year-range': 1,
+      'todayBtn': false
+    }
+    $scope.format = "dd-MM-yyyy"
+
+    $scope.fromDatePickerOpen = ->
+      this.fromDatePickerIsOpen = true
+
+    $scope.toDatePickerOpen = ->
+      this.toDatePickerIsOpen = true
+    
+    $scope.data = {
+      id: $scope.magicLinkId
+    }  
+
+    $scope.filterLedgers = (ledgers) ->
+      _.each ledgers, (lgr) ->
+        lgr.hasDebit = false
+        lgr.hasCredit = false
+        if lgr.transactions.length > 0
+          _.each lgr.transactions, (txn) ->
+            if txn.type == 'DEBIT'
+              lgr.hasDebit = true
+            else if txn.type == 'CREDIT'
+              lgr.hasCredit = true
+
+
+    $scope.getData = (data) ->
+      _data = data
+      $http.post($scope.magicUrl, data:_data).then(
+        (success)->
+          $scope.ledgerData = success.data.body
+          $scope.filterLedgers($scope.ledgerData.ledgers)
+        (error)->
+          toastr.error(error.data.message)
+      )
+
+    $scope.getData($scope.data)
+
+    $scope.getDataByDate = () ->
+      $scope.data.from = $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
+      $scope.data.to = $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
+      $scope.getData($scope.data)
+
+] 
 
 # resources locations
 # video background- https://github.com/2013gang/angular-video-background
