@@ -899,3 +899,17 @@ body.unresponsive .container {
   max-width: none !important;
 }
 
+.transparent{
+	background: transparent !important;
+	box-shadow: none !important; 
+}
+
+.white{
+	color:#fff !important;
+}
+
+@media (min-width:1024px) and (max-width:1366px){
+	.container.adjust-width{
+		max-width:768px;
+	}
+}

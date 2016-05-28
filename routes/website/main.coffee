@@ -52,7 +52,6 @@ router.post '/magic-link', (req, res) ->
   else
     hUrl = settings.envUrl + '/magic-link/' + req.body.data.id
   settings.client.get hUrl, (data, response) ->
-    console.log response
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data

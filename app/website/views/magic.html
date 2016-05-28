@@ -30,7 +30,17 @@
   <ng-include src="'/public/website/views/header.html'"></ng-include>
 
     <section class="container-fluid" style="margin-top:100px">
-      <div>
+      <div style="min-height:600px" ng-hide="magicReady">
+        <div class="loader">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>        
+      </div>
+
+      <div ng-show="magicReady">
         <div class="pdL2 pdR2 pdT2">
 
           <div class="form-inline pdB1 ledgHead">
@@ -266,5 +276,6 @@
         <div style="height: 80px;"></div>
       </div>
     </section>
-
+    
+    <ng-include src="'/public/website/views/footer.html'"></ng-include>
 </body></html>

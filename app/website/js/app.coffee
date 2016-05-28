@@ -42,8 +42,8 @@ directive 'validNumber', ->
   }
 
 app.controller 'homeCtrl', [
-  '$scope', 'toastr', '$http', 'vcRecaptchaService', '$rootScope'
-  ($scope, toastr, $http, vcRecaptchaService, $rootScope) ->
+  '$scope', 'toastr', '$http', 'vcRecaptchaService', '$rootScope', '$location',
+  ($scope, toastr, $http, vcRecaptchaService, $rootScope, $location) ->
     $scope.resources = [
       'https://d2v9y0dukr6mq2.cloudfront.net/video/preview/63y00O5/top-view-of-a-young-woman-doing-home-finances-on-a-wooden-table-with-a-notebook-and-a-smartphone-shallow-dof-focus-on-the-glasses_v1n8q4uzx__PM.mp4'
       # 'https://s3-us-west-2.amazonaws.com/coverr/mp4/Coverr-beach2.mp4'
@@ -68,6 +68,7 @@ app.controller 'homeCtrl', [
       responsiveHeight: 400
     }
     $rootScope.homePage = true
+    $rootScope.pricingPage = false
 
     $scope.socialList= [
       # {
@@ -103,6 +104,7 @@ app.controller 'homeCtrl', [
     ]
 
     $scope.captchaKey = '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi'
+
 
     # check string has whitespace
     $scope.hasWhiteSpace = (s) ->
@@ -189,8 +191,12 @@ app.run [
   '$rootScope'
   '$window'
   ($rootScope, $window)->
-    
-    #console.log window.location, "app run", window.location.origin
+    $rootScope.magicLinkPage = false
+    $rootScope.whiteLinks = false
+    loc = window.location.pathname
+    if loc == "/index" or loc == "/" or loc == "/login"
+      $rootScope.whiteLinks = true
+
 ]
   
 
@@ -223,7 +229,8 @@ do ->
 app.controller 'magicCtrl', [
   '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter',
   ($scope, toastr, $http, $location, $rootScope, $filter) ->
-
+    $rootScope.magicLinkPage = true
+    $scope.magicReady = false
     $scope.magicLinkId = window.location.search.split('=')
     $scope.magicLinkId = $scope.magicLinkId[1]
     $scope.ledgerData = []
@@ -271,6 +278,7 @@ app.controller 'magicCtrl', [
         (success)->
           $scope.ledgerData = success.data.body
           $scope.filterLedgers($scope.ledgerData.ledgers)
+          $scope.magicReady = true
         (error)->
           toastr.error(error.data.message)
       )
@@ -281,6 +289,47 @@ app.controller 'magicCtrl', [
       $scope.data.from = $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
       $scope.data.to = $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
       $scope.getData($scope.data)
+
+    #for contact form
+        # check string has whitespace
+    $scope.hasWhiteSpace = (s) ->
+      return /\s/g.test(s)
+
+    $scope.validateEmail = (emailStr)->
+      pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      return pattern.test(emailStr)
+
+    $scope.captchaKey = '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi'
+
+    $scope.submitForm =(data)->
+      $scope.formProcess = true
+      #check and split full name in first and last name
+      if($scope.hasWhiteSpace(data.name))
+        unameArr = data.name.split(" ")
+        data.uFname = unameArr[0]
+        data.uLname = unameArr[1]
+      else
+        data.uFname = data.name
+        data.uLname = "  "
+
+      if not($scope.validateEmail(data.email))
+        toastr.warning("Enter valid Email ID", "Warning")
+        return false
+
+      data.company = ''
+
+      if _.isEmpty(data.message)
+        data.message = 'test'
+
+      $http.post('https://giddh.com/contact/submitDetails', data).then((response) ->
+          $scope.formSubmitted = true
+          if(response.status == 200 && _.isUndefined(response.data.status))  
+            $scope.responseMsg = "Thanks! will get in touch with you soon"
+          else
+            $scope.responseMsg = response.data.message
+        )
+
+
 
 ] 
 
