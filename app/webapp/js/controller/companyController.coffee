@@ -1005,14 +1005,16 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.msg91.senderId = res.body.senderId
 
   $scope.getSmsKeyFailure = (res) ->
-    console.log res.data.message
+    $scope.msg91.authKey = ''
+    $scope.msg91.senderId = ''
 
   $scope.getEmailKeySuccess = (res) ->
     $scope.sGrid.authKey = res.body.authKey
     $scope.sGrid.subject = res.body.subject
 
   $scope.getEmailKeyFailure = (res) ->
-    console.log res
+    $scope.sGrid.authKey = ''
+    $scope.sGrid.subject = ''
 
   $scope.saveMsg91 = () ->
     data = {
