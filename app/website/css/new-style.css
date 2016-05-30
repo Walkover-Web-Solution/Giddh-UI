@@ -90,7 +90,388 @@ body.light .navbar{
 }
 body.lightTrans .navbar{
 	background-color: rgba(255, 255, 255, .4);
+}/*universal styles*/
+
+.db {
+    display: block
 }
+
+.pdLR0{
+    padding-left:0;
+    padding-right:0;
+}
+.pdL25{
+    padding-left: 25px
+}
+.pdR25{
+    padding-right: 25px
+}
+.pdL-5{
+    padding-left: 5px
+}
+.pdR-5{
+    padding-right: 5px
+}
+.pd {
+    padding: 5px
+}
+
+.pd1 {
+    padding: 10px
+}
+
+.pd15 {
+    padding: 15px
+}
+
+.pd2 {
+    padding: 20px
+}
+
+.pd3 {
+    padding: 30px
+}
+
+.pd4 {
+    padding: 40px
+}
+
+.pdT {
+    padding-top: 5px
+}
+
+.pdB {
+    padding-bottom: 5px
+}
+
+.pdL {
+    padding-left: 5px
+}
+
+.pdR {
+    padding-right: 5px
+}
+
+.pdT1 {
+    padding-top: 10px
+}
+
+.pdT2, .pdT3 {
+    padding-top: 20px
+}
+
+.pdB1 {
+    padding-bottom: 10px
+}
+
+.pdL1 {
+    padding-left: 10px
+}
+
+.pdR1 {
+    padding-right: 10px
+}
+
+.pdB2 {
+    padding-bottom: 20px
+}
+
+.pdL2 {
+    padding-left: 20px
+}
+
+.pdR2 {
+    padding-right: 20px
+}
+
+.pdB3 {
+    padding-bottom: 30px
+}
+
+.pdL3 {
+    padding-left: 30px
+}
+
+.pdR3 {
+    padding-right: 30px
+}
+
+.pdT4 {
+    padding-top: 30px
+}
+
+.pdT5 {
+    padding-top: 30px
+}
+
+.pdB4 {
+    padding-bottom: 40px
+}
+
+.pdL4 {
+    padding-left: 40px
+}
+
+.pdR4 {
+    padding-right: 40px
+}
+
+.pd0{
+    padding:0;
+}
+
+.mr {
+    margin: 5px
+}
+
+.mr1 {
+    margin: 10px
+}
+
+.mr15 {
+    margin: 15px
+}
+
+.mr2 {
+    margin: 20px
+}
+
+.mr3 {
+    margin: 30px
+}
+
+.mr4 {
+    margin: 40px
+}
+
+.mrT {
+    margin-top: 5px
+}
+
+.mrB {
+    margin-bottom: 5px
+}
+
+.mrL {
+    margin-left: 5px
+}
+
+.mrR {
+    margin-right: 5px
+}
+
+.mrT1 {
+    margin-top: 10px
+}
+
+.mrB1 {
+    margin-bottom: 10px
+}
+
+.mrL1 {
+    margin-left: 10px
+}
+
+.mrR1 {
+    margin-right: 10px
+}
+
+.mrT2 {
+    margin-top: 20px
+}
+
+.mrB2 {
+    margin-bottom: 20px
+}
+
+.mrL2 {
+    margin-left: 20px
+}
+
+.mrR2 {
+    margin-right: 20px
+}
+
+.mrT3 {
+    margin-top: 30px
+}
+
+.mrB3 {
+    margin-bottom: 30px
+}
+
+.mrL3 {
+    margin-left: 30px
+}
+
+.mrR3 {
+    margin-right: 30px
+}
+
+.mrT2 {
+    margin-top: 20px
+}
+
+.mrT4 {
+    margin-top: 40px
+}
+
+.mrT5 {
+    margin-top: 50px
+}
+
+.mrB4 {
+    margin-bottom: 40px
+}
+
+.mrL4 {
+    margin-left: 40px
+}
+
+.mrR4 {
+    margin-right: 40px
+}
+
+.bdr {
+    border: 1px solid #ddd
+}
+
+.bdrN {
+    border: none
+}
+
+.bdrT {
+    border-top: 1px solid #ddd
+}
+
+.bdrB {
+    border-bottom: 1px solid #ddd
+}
+
+.bdrL {
+    border-left: 1px solid #ddd
+}
+
+.bdrR {
+    border-right: 1px solid #ddd
+}
+
+.pa {
+    position: absolute
+}
+
+.pr {
+    position: relative
+}
+
+.pf {
+    position: fixed
+}
+
+.witClr {
+    color: #fff
+}
+
+.gryClr {
+    color: #777
+}
+
+.greyBg {
+    background: #f5f5f5;
+    /*min-width:320px;*/
+}
+
+.witBg {
+    background: #fff
+}
+
+.transBg {
+    background: 0 0
+}
+
+.oh {
+    overflow: hidden
+}
+
+.oyAuto {
+    overflow-y: auto
+}
+
+.oxAuto {
+    overflow-x: auto
+}
+
+.rn {
+    resize: none
+}
+
+.ln {
+    list-style: none
+}
+
+.txtUpc {
+    text-transform: uppercase
+}
+
+.txtLwc {
+    text-transform: lowercase
+}
+
+.txtCpc {
+    text-transform: capitalize
+}
+
+.tdUndr {
+    text-decoration: underline
+}
+
+.alR {
+    text-align: right
+}
+
+.alL {
+    text-align: left
+}
+
+.alC {
+    text-align: center
+}
+
+.ellp {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap
+}
+
+.cp {
+    cursor: pointer
+}
+
+.pdBth1510 {
+    padding: 15px 10px
+}
+
+.thead {
+    font-size: 16px
+}
+
+.scrClass {
+    overflow: hidden;
+    position: relative;
+}
+
+.oyHid {
+    overflow-y: hidden
+}
+
+.oxHid {
+    overflow-x: hidden
+}
+
+.pad0{
+    padding:0 !important;
+}
+
 /*affix navbar*/
 .navbar.affix, body.light .navbar.affix{
 	min-height: 60px;

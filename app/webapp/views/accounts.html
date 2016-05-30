@@ -50,7 +50,7 @@
       <ul class="acntAccordion" ng-if="showAccountList">
         <li>
           <ul id="ul_0" class="mainUl accBox" style="border-left:none">
-            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList" id="li_{{value.groupUniqueName}}" ng-if="value.accountDetails.length > 0">
+            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList | searchfilter:acntSrch | limitTo:gwaList.limit | filter:searchfilter as filtList" id="li_{{value.groupUniqueName}}" ng-if="value.accountDetails.length > 0">
               <div 
                 class="title  LIB{{value.groupUniqueName}}" 
                 ng-click="value.open = !value.open"
@@ -59,7 +59,7 @@
               </div>
               <ul class="accBox subAccBox" ng-show="value.open || value.groupUniqueName === selectedGroupUname"
                   id="ul_{{value.groupUniqueName}}">
-                <li class="inrPrnt" ng-repeat="(index,accDtl) in value.accountDetails" id="ac_{{accDtl.uniqueName}}"
+                <li class="inrPrnt" ng-repeat="(index,accDtl) in value.accountDetails | filter : isGrpMatch(value, acntSrch) ? '' : acntSrch" id="ac_{{accDtl.uniqueName}}"
                   tooltip-placement="top" uib-tooltip="{{accDtl.uniqueName}}">
                   <a
                     ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl)"
@@ -69,19 +69,19 @@
                       <i ng-class="accDtl.charId == 1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
                       <span ng-bind-html="accDtl.name" class="ellp max100"></span>
                       <span class="ng-hide">{{accDtl.uniqueName}}</span>
-                    </div>
+                    </div
                   </a>
                 </li>
               </ul>
-
             </li> 
           </ul>
-
         </li>
+        <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreGrpWithAcc(selectedCompany.uniqueName);$event.stopPropagation()" ng-if="flatAccntWGroupsList.length > 5 && filtList.length >= gwaList.limit" >Load More</a>
       </ul>
-      <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreGrpWithAcc(selectedCompany.uniqueName)" ng-if="!hideLoadMore && showAccountList && fltAccntListPaginated.length > 0">Load More</a>
+
     </div>
     <div style="height: 50px;"></div>
   </perfect-scrollbar>
 
 </div>
+

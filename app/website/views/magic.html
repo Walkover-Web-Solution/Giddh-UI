@@ -39,8 +39,17 @@
           <span></span>
         </div>        
       </div>
-
-      <div ng-show="magicReady">
+      <div  class="pdL2 pdR2 pdT2 text-center title no-data" ng-show="showError " style="min-height:600px;">
+        <h1>No Transactions Found.</h1>
+        <p class="text-center" style="text-decoration:underline">Here are some things you can check:</p>
+        <ul class="text-center list-unstyled" style="max-width:395px;margin:0 auto">
+            <li><p>Whether the Link is still active.</p></li>
+            <li><p>Whether the URL is Proper.</p></li>
+            <li><p>You have an Active Internet Connection.</p></li>
+            <li><p>Any third party add-on is not blocking scripts on this page.</p></li>
+        </ul>
+      </div>
+      <div ng-show="magicReady && !showError">
         <div class="pdL2 pdR2 pdT2">
 
           <div class="form-inline pdB1 ledgHead">
@@ -174,6 +183,12 @@
                     </th>
                     <th class="alR">{{ledgerData.forwardedBalance.amount | number:2}}</th>
                   </tr>
+                  <tr class="greyBg"
+                      ng-if="ledgerData.forwardedBalance.type == 'CREDIT' && ledgerData.forwardedBalance.amount > 0">
+                    <th colspan="100%">
+                      &nbsp;
+                    </th>
+                  </tr>
                   </thead>
                   <tbody>
                     <tr ng-repeat="ledger in ledgerData.ledgers" ng-if="ledger.hasDebit">
@@ -189,6 +204,20 @@
                         </table>
                       </td>
                     </tr>
+                    <tr ng-if="ledgerData.ledgers.length < 1">
+                      <td colspan="100%" style="padding:0;border:0">
+                        <table style="width:100%">
+                          <tbody>
+                            <tr class="text-left bdrB">
+                              <td class="col-xs-3" style="padding:20px;min-height:42px"></td>
+                              <td class="col-xs-6 bdrL" style="padding:20px;"></td>
+                              <td class="col-xs-3 bdrL" style="padding:20px;"></td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+
                   </tbody>
                 </table>
               </td>
@@ -211,6 +240,12 @@
                     </th>
                     <th class="alR">{{ledgerData.forwardedBalance.amount | number:2}}</th>
                   </tr>
+                  <tr class="greyBg"
+                      ng-if="ledgerData.forwardedBalance.type == 'DEBIT' && ledgerData.forwardedBalance.amount > 0">
+                    <th colspan="100%">
+                      &nbsp;
+                    </th>
+                  </tr>
                   </thead>
 
                   <tbody>
@@ -222,6 +257,19 @@
                               <td class="col-xs-3" style="padding:10px;">{{ledger.entryDate}}</td>
                               <td class="col-xs-6 bdrL" style="padding:10px;">{{txn.particular.name}}</td>
                               <td class="col-xs-3 bdrL" style="padding:10px;">{{txn.amount}}</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                    <trng-if="ledgerData.ledgers.length < 1">
+                      <td colspan="100%" style="padding:0; border:0">
+                        <table  style="width:100%;">
+                          <tbody>
+                            <tr class="text-left bdrB" >
+                              <td class="col-xs-3" style="padding:20px;"></td>
+                              <td class="col-xs-6 bdrL" style="padding:20px;"></td>
+                              <td class="col-xs-3 bdrL" style="padding:20px;"></td>
                             </tr>
                           </tbody>
                         </table>

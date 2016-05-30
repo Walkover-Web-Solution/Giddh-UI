@@ -203,7 +203,7 @@ router.post '/accounts/bulk-email', (req, res) ->
       to:req.query.to
       from:req.query.from
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/bulk-sms'
+      '/accounts/bulk-email'
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)

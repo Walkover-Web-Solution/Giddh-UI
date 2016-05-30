@@ -790,3 +790,21 @@ angular.module('ledger', [])
     scope.el = elem[0]
   }
 ]
+
+.filter 'searchfilter', ->
+  (input, q) ->
+    result = []
+    _.each input, (g) ->
+      p = RegExp(q, 'i')
+      if g.groupName.match(p) or g.groupUniqueName.match(p) or (g.groupSynonyms != null && g.groupSynonyms.match(p))
+        result.push g
+      else
+        acMatch = false
+        _.each g.accountDetails, (a) ->
+          if !acMatch
+            if a.name.match(p) or a.uniqueName.match(p) or a.mergedAccounts.match(p)
+              acMatch = true
+              result.push g
+          return
+      return
+    result

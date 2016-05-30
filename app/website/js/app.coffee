@@ -45,8 +45,7 @@ app.controller 'homeCtrl', [
   '$scope', 'toastr', '$http', 'vcRecaptchaService', '$rootScope', '$location',
   ($scope, toastr, $http, vcRecaptchaService, $rootScope, $location) ->
     $scope.resources = [
-      'https://d2v9y0dukr6mq2.cloudfront.net/video/preview/63y00O5/top-view-of-a-young-woman-doing-home-finances-on-a-wooden-table-with-a-notebook-and-a-smartphone-shallow-dof-focus-on-the-glasses_v1n8q4uzx__PM.mp4'
-      # 'https://s3-us-west-2.amazonaws.com/coverr/mp4/Coverr-beach2.mp4'
+      '/public/website/images/Giddh.mp4'
     ]
     $scope.poster = '/public/website/images/new/banner.jpg'
     $scope.fullScreen = true
@@ -196,6 +195,8 @@ app.run [
     loc = window.location.pathname
     if loc == "/index" or loc == "/" or loc == "/login"
       $rootScope.whiteLinks = true
+    if loc == "/magic"
+      $rootScope.magicLinkPage = true
 
 ]
   
@@ -249,6 +250,7 @@ app.controller 'magicCtrl', [
       'todayBtn': false
     }
     $scope.format = "dd-MM-yyyy"
+    $scope.showError = false
 
     $scope.fromDatePickerOpen = ->
       this.fromDatePickerIsOpen = true
@@ -271,16 +273,28 @@ app.controller 'magicCtrl', [
             else if txn.type == 'CREDIT'
               lgr.hasCredit = true
 
+    $scope.assignDates = (fromDate,toDate) ->
+      fdArr = fromDate.split('-')
+      tdArr = toDate.split('-')
+      from = new Date(fdArr[1] + '/' + fdArr[0] + '/' + fdArr[2])
+      to = new Date(tdArr[1] + '/' + tdArr[0] + '/' + tdArr[2])
+      $scope.fromDate.date = from
+      $scope.toDate.date = to
 
     $scope.getData = (data) ->
+      $scope.magicReady = false
       _data = data
       $http.post($scope.magicUrl, data:_data).then(
         (success)->
-          $scope.ledgerData = success.data.body
+          $scope.ledgerData = success.data.body.ledgerTransactions
           $scope.filterLedgers($scope.ledgerData.ledgers)
           $scope.magicReady = true
+          $scope.showError = false
+          $scope.assignDates($scope.ledgerData.ledgers[0].entryDate, $scope.ledgerData.ledgers[$scope.ledgerData.ledgers.length-1].entryDate)
         (error)->
           toastr.error(error.data.message)
+          $scope.magicReady = true
+          $scope.showError = true
       )
 
     $scope.getData($scope.data)

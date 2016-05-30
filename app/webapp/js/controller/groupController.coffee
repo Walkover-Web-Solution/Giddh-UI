@@ -52,9 +52,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.hideAccLoadMore = false
   $scope.gwaList = {
     page: 1
-    count: 5
+    count: 5000
     totalPages: 0
     currentPage : 1
+    limit: 5
   }
   $scope.flatAccList = {
     page: 1
@@ -241,20 +242,23 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.getFlattenGrpWithAccListSuccess = (res) ->
     $scope.gwaList.totalPages = res.body.totalPages
     $scope.flatAccntWGroupsList = res.body.results
-    $scope.showAccountList = true  
+    $scope.showAccountList = true
+    $scope.gwaList.limit = 5  
 
   $scope.getFlattenGrpWithAccListFailure = (res) ->
     toastr.error(res.data.message)
 
   $scope.loadMoreGrpWithAcc = (compUname) ->
-    $scope.gwaList.page += 1
-    reqParam = {
-      companyUniqueName: compUname
-      q: ''
-      page: $scope.gwaList.page
-      count: $scope.gwaList.count
-    }
-    groupService.getFlattenGroupAccList(reqParam).then($scope.loadMoreGrpWithAccSuccess, $scope.loadMoreGrpWithAccFailure)
+    # $scope.gwaList.page += 1
+    # reqParam = {
+    #   companyUniqueName: compUname
+    #   q: ''
+    #   page: $scope.gwaList.page
+    #   count: $scope.gwaList.count
+    # }
+    # groupService.getFlattenGroupAccList(reqParam).then($scope.loadMoreGrpWithAccSuccess, $scope.loadMoreGrpWithAccFailure)
+    $scope.gwaList.limit += 5
+
 
   $scope.loadMoreGrpWithAccSuccess = (res) ->
     $scope.gwaList.currentPage += 1
@@ -268,17 +272,18 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error(res.data.message)
 
   $scope.searchGrpWithAccounts = (str) ->
-    reqParam = {}
-    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-    if str.length > 2
-      $scope.hideLoadMore = true
-      reqParam.q = str
-      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
-    else
-      $scope.hideLoadMore = false
-      reqParam.q = ''
-      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
-
+    # reqParam = {}
+    # reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    # if str.length > 2
+    #   $scope.hideLoadMore = true
+    #   reqParam.q = str
+    #   groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+    # else
+    #   $scope.hideLoadMore = false
+    #   reqParam.q = ''
+    #   groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+    if str.length < 1
+      $scope.gwaList.limit = 5
   #-------------------Functions for API side search and fetching flat account list end here-----------------------------------------------# 
 
   $scope.addFilterKey = (data) ->
@@ -992,6 +997,12 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.moveToAccountConfirmFailure = (res) ->
     toastr.error(res.body)
 
+  $scope.isGrpMatch = (g, q) ->
+    p = RegExp(q,"i")
+    if (g.groupName.match(p) || g.groupUniqueName.match(p)) 
+      return true
+    return false
+
   $scope.$watch('toMerge.mergedAcc', (newVal,oldVal) ->
     if newVal != oldVal && newVal < 1
       $scope.showDeleteMove = false
@@ -1001,7 +1012,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if newVal != oldVal && newVal.length < 1
       $scope.showDeleteMove = false
   )
-
 
 #init angular app
 giddh.webApp.controller 'groupController', groupController
