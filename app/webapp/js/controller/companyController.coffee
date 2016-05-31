@@ -206,12 +206,12 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.goToCompanyCheck = (data, index) ->
     # set financial year
-    #$rootScope.setActiveFinancialYear(data.activeFinancialYear)
-    # activeYear = {} 
-    # activeYear.start = moment(data.activeFinancialYear.financialYearStarts,"DD/MM/YYYY").year()
-    # activeYear.ends = moment(data.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").year()
-    # if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
-    # $rootScope.currentFinancialYear = activeYear.year
+    $rootScope.setActiveFinancialYear(data.activeFinancialYear)
+    activeYear = {} 
+    activeYear.start = moment(data.activeFinancialYear.financialYearStarts,"DD/MM/YYYY").year()
+    activeYear.ends = moment(data.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").year()
+    if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
+    $rootScope.currentFinancialYear = activeYear.year
     ########
     
     $rootScope.$emit('callCheckPermissions', data)
@@ -1047,140 +1047,140 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message)
 
   # # ---------------- Financial Year----------------#
-  # $scope.fy = {
-  #   company: ''
-  #   companyUniqueName: ''
-  #   years: []
-  #   selectedYear: ''
-  #   periods: ['Jan-Dec', 'Apr-Mar']
-  #   selectedPeriod: ''
-  #   newFY: ''
-  #   addedFYears: []
-  #   currentFY: {}
-  # }
-  # $scope.months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
-  # $scope.fyYears = []
+  $scope.fy = {
+    company: ''
+    companyUniqueName: ''
+    years: []
+    selectedYear: ''
+    periods: ['Jan-Dec', 'Apr-Mar']
+    selectedPeriod: ''
+    newFY: ''
+    addedFYears: []
+    currentFY: {}
+  }
+  $scope.months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+  $scope.fyYears = []
 
-  # $scope.addfyYears = () ->
-  #   year = moment().get('year') - 1
-  #   while year >= 1950
-  #     $scope.fyYears.push(year)
-  #     year -= 1
-  #   $scope.fyYears = _.difference($scope.fyYears, $scope.fy.addedFYears)
+  $scope.addfyYears = () ->
+    year = moment().get('year') - 1
+    while year >= 1950
+      $scope.fyYears.push(year)
+      year -= 1
+    $scope.fyYears = _.difference($scope.fyYears, $scope.fy.addedFYears)
       
-  # $scope.setFYname = (years) ->
-  #   _.each years, (yr) ->
-  #     name = yr.uniqueName.split("-")
-  #     yr.name = name[1] + '-' + name[2]
+  $scope.setFYname = (years) ->
+    _.each years, (yr) ->
+      name = yr.uniqueName.split("-")
+      yr.name = name[1] + '-' + name[2]
 
-  # $scope.getFY = () ->
-  #   companyServices.getFY($rootScope.selectedCompany.uniqueName).then($scope.getFYSuccess, $scope.getFYFailure)
+  $scope.getFY = () ->
+    companyServices.getFY($rootScope.selectedCompany.uniqueName).then($scope.getFYSuccess, $scope.getFYFailure)
 
-  # $scope.getFYSuccess = (res) ->
-  #   $scope.fy.company = res.body.companyName
-  #   $scope.fy.companyUniqueName = res.body.companyUniqueName
-  #   $scope.fy.years = res.body.financialYears
-  #   _.each $scope.fy.years, (yr) ->
-  #     addedYear = yr.financialYearStarts
-  #     addedYearSplit = addedYear.split('-')
-  #     cYear = addedYearSplit[2]
-  #     $scope.fy.addedFYears.push(Number(cYear))
-  #   $scope.setFYname($scope.fy.years)
-  #   $scope.addfyYears()
+  $scope.getFYSuccess = (res) ->
+    $scope.fy.company = res.body.companyName
+    $scope.fy.companyUniqueName = res.body.companyUniqueName
+    $scope.fy.years = res.body.financialYears
+    _.each $scope.fy.years, (yr) ->
+      addedYear = yr.financialYearStarts
+      addedYearSplit = addedYear.split('-')
+      cYear = addedYearSplit[2]
+      $scope.fy.addedFYears.push(Number(cYear))
+    $scope.setFYname($scope.fy.years)
+    $scope.addfyYears()
 
-  # $scope.getFYFailure = (res) ->
-  #   toastr.error(res.data.message)
+  $scope.getFYFailure = (res) ->
+    toastr.error(res.data.message)
 
-  # $scope.changeFyPeriod = (period) ->
-  #   reqParam = {
-  #     companyUniqueName:  $rootScope.selectedCompany.uniqueName
-  #   }
-  #   data = {
-  #     "financialYearPeriod": period.toString()
-  #   }
-  #   companyServices.updateFY(reqParam, data).then($scope.changeFyPeriodSuccess, $scope.changeFyPeriodFailure)
+  $scope.changeFyPeriod = (period) ->
+    reqParam = {
+      companyUniqueName:  $rootScope.selectedCompany.uniqueName
+    }
+    data = {
+      "financialYearPeriod": period.toString()
+    }
+    companyServices.updateFY(reqParam, data).then($scope.changeFyPeriodSuccess, $scope.changeFyPeriodFailure)
 
-  # $scope.changeFyPeriodSuccess = (res) ->
-  #   toastr.success('Period Updated Successfully')
-  #   $scope.fy.years = res.body.financialYears
-  #   $scope.setFYname($scope.fy.years)
-  #   $state.reload()
+  $scope.changeFyPeriodSuccess = (res) ->
+    toastr.success('Period Updated Successfully')
+    $scope.fy.years = res.body.financialYears
+    $scope.setFYname($scope.fy.years)
+    $state.reload()
 
-  # $scope.changeFyPeriodFailure = (res) ->
-  #   toastr.error(res.data.message)
+  $scope.changeFyPeriodFailure = (res) ->
+    toastr.error(res.data.message)
 
-  # $scope.getCurrentPeriod = () ->
-  #   cmp = localStorageService.get('_selectedCompany')
-  #   if !_.isNull(cmp)
-  #     fromMonth = moment(cmp.activeFinancialYear.financialYearStarts,"DD/MM/YYYY").month()
-  #     toMonth = moment(cmp.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").month()
-  #     selectedPeriod = $scope.months[fromMonth] + '-' + $scope.months[toMonth]
-  #     if selectedPeriod == 'Apr-Mar'
-  #       $scope.fy.selectedPeriod = $scope.fy.periods[1]
-  #     else if selectedPeriod == 'Jan-Dec'
-  #       $scope.fy.selectedPeriod = $scope.fy.periods[0]
+  $scope.getCurrentPeriod = () ->
+    cmp = localStorageService.get('_selectedCompany')
+    if !_.isNull(cmp)
+      fromMonth = moment(cmp.activeFinancialYear.financialYearStarts,"DD/MM/YYYY").month()
+      toMonth = moment(cmp.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").month()
+      selectedPeriod = $scope.months[fromMonth] + '-' + $scope.months[toMonth]
+      if selectedPeriod == 'Apr-Mar'
+        $scope.fy.selectedPeriod = $scope.fy.periods[1]
+      else if selectedPeriod == 'Jan-Dec'
+        $scope.fy.selectedPeriod = $scope.fy.periods[0]
 
-  # $scope.switchFY = (year) ->
-  #   data = {
-  #     "uniqueName":year.uniqueName
-  #   }
-  #   reqParam = {
-  #     companyUniqueName:  $rootScope.selectedCompany.uniqueName
-  #   }
-  #   companyServices.switchFY(reqParam, data).then($scope.switchFYSuccess, $scope.switchFYFailure)
+  $scope.switchFY = (year) ->
+    data = {
+      "uniqueName":year.uniqueName
+    }
+    reqParam = {
+      companyUniqueName:  $rootScope.selectedCompany.uniqueName
+    }
+    companyServices.switchFY(reqParam, data).then($scope.switchFYSuccess, $scope.switchFYFailure)
 
-  # $scope.switchFYSuccess = (res) ->
-  #   toastr.success(res.status, 'Financial Year switched successfully.')
-  #   $rootScope.setActiveFinancialYear(res.body)
+  $scope.switchFYSuccess = (res) ->
+    toastr.success(res.status, 'Financial Year switched successfully.')
+    $rootScope.setActiveFinancialYear(res.body)
 
-  # $scope.switchFYFailure = (res) ->
-  #   toastr.error(res.data.message)
+  $scope.switchFYFailure = (res) ->
+    toastr.error(res.data.message)
 
-  # $scope.lockFY = (year) ->
-  #   data = {
-  #     "uniqueName":year.uniqueName
-  #     "lockAll":"true"
-  #   }
-  #   reqParam = {
-  #     companyUniqueName:  $rootScope.selectedCompany.uniqueName
-  #   }
-  #   if year.isLocked
-  #     companyServices.lockFY(reqParam, data).then($scope.lockFYSuccess, $scope.lockFYFailure)
-  #   else
-  #     companyServices.unlockFY(reqParam, data).then($scope.unlockFYSuccess, $scope.unlockFYFailure)
+  $scope.lockFY = (year) ->
+    data = {
+      "uniqueName":year.uniqueName
+      "lockAll":"true"
+    }
+    reqParam = {
+      companyUniqueName:  $rootScope.selectedCompany.uniqueName
+    }
+    if year.isLocked
+      companyServices.lockFY(reqParam, data).then($scope.lockFYSuccess, $scope.lockFYFailure)
+    else
+      companyServices.unlockFY(reqParam, data).then($scope.unlockFYSuccess, $scope.unlockFYFailure)
 
-  # $scope.lockFYSuccess = (res) ->
-  #   toastr.success('Financial Year Locked Successfully.')
-  #   $scope.fy.years = res.body.financialYears
-  #   $scope.setFYname($scope.fy.years)
+  $scope.lockFYSuccess = (res) ->
+    toastr.success('Financial Year Locked Successfully.')
+    $scope.fy.years = res.body.financialYears
+    $scope.setFYname($scope.fy.years)
 
-  # $scope.lockFYFailure = (res) ->
-  #   toastr.error(res.data.message)
+  $scope.lockFYFailure = (res) ->
+    toastr.error(res.data.message)
 
-  # $scope.unlockFYSuccess = (res) ->
-  #   toastr.success('Financial Year Unlocked Successfully.')
-  #   $scope.fy.years = res.body.financialYears
-  #   $scope.setFYname($scope.fy.years)
+  $scope.unlockFYSuccess = (res) ->
+    toastr.success('Financial Year Unlocked Successfully.')
+    $scope.fy.years = res.body.financialYears
+    $scope.setFYname($scope.fy.years)
 
-  # $scope.unlockFYFailure = (res) ->
-  #   toastr.error(res.data.message)
+  $scope.unlockFYFailure = (res) ->
+    toastr.error(res.data.message)
 
-  # $scope.addFY = (newFy) ->
-  #   data = {
-  #     "fromYear": newFy
-  #   }
-  #   reqParam = {
-  #     companyUniqueName:  $rootScope.selectedCompany.uniqueName
-  #   }
-  #   companyServices.addFY(reqParam, data).then($scope.addFYSuccess, $scope.addFYFailure)
+  $scope.addFY = (newFy) ->
+    data = {
+      "fromYear": newFy
+    }
+    reqParam = {
+      companyUniqueName:  $rootScope.selectedCompany.uniqueName
+    }
+    companyServices.addFY(reqParam, data).then($scope.addFYSuccess, $scope.addFYFailure)
 
-  # $scope.addFYSuccess = (res) ->
-  #   toastr.success('Financial Year created successfully.')
-  #   $scope.getFY()
-  #   $scope.fy.newFY = ''
+  $scope.addFYSuccess = (res) ->
+    toastr.success('Financial Year created successfully.')
+    $scope.getFY()
+    $scope.fy.newFY = ''
 
-  # $scope.addFYFailure = (res) ->
-  #   toastr.error(res.data.message)
+  $scope.addFYFailure = (res) ->
+    toastr.error(res.data.message)
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

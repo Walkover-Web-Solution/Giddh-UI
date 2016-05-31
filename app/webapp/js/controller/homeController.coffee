@@ -9,7 +9,7 @@ homeController = ($scope, $rootScope, getLedgerState, $state) ->
       $state.go('company.content.manage')
   $scope.goToLedgerState()
 
-  #$rootScope.setActiveFinancialYear(getLedgerState.data.activeFinancialYear)
+  $rootScope.setActiveFinancialYear(getLedgerState.data.activeFinancialYear)
 
 
 #init angular app

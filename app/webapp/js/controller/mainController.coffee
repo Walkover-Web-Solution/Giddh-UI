@@ -87,8 +87,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $timeout (->
     cdt = localStorageService.get("_selectedCompany")
-    # if !_.isNull(cdt)
-    #   $rootScope.setActiveFinancialYear(cdt.activeFinancialYear)
+    if !_.isNull(cdt)
+      $rootScope.setActiveFinancialYear(cdt.activeFinancialYear)
   ), 500
   
 
