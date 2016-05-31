@@ -16,7 +16,7 @@
 
         <!-- <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList');" ng-change="checkLength(acntSrch)" ng-model-options="{debounce: 200}"> -->
 
-        <input id="accountSearch" type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-change="searchGrpWithAccounts(acntSrch);" ng-model-options="{debounce: 500}">
+        <input id="accountSearch" type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-change="searchGrpWithAccounts(acntSrch);checkLength(acntSrch)" ng-model-options="{debounce: 500}">
 
         <div ng-hide="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(true)" tooltip-placement="right" uib-tooltip="Expand all" >
           <i class="glyphicon glyphicon-list"></i>
@@ -77,6 +77,7 @@
           </ul>
         </li>
         <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreGrpWithAcc(selectedCompany.uniqueName);$event.stopPropagation()" ng-if="flatAccntWGroupsList.length > 5 && filtList.length >= gwaList.limit" >Load More</a>
+        {{flatAccntWGroupsList.length}},{{filtList.length}},{{gwaList.limit}}
       </ul>
 
     </div>

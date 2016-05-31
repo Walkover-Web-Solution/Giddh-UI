@@ -241,7 +241,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.getFlattenGrpWithAccListSuccess = (res) ->
     $scope.gwaList.totalPages = res.body.totalPages
-    $scope.flatAccntWGroupsList = res.body.results
+    #$scope.flatAccntWGroupsList = res.body.results
+    $scope.removeEmptyGroups(res.body.results)
+    $scope.flatAccntWGroupsList = $scope.grpWithoutEmptyAccounts
     $scope.showAccountList = true
     $scope.gwaList.limit = 5  
 
@@ -258,7 +260,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     # }
     # groupService.getFlattenGroupAccList(reqParam).then($scope.loadMoreGrpWithAccSuccess, $scope.loadMoreGrpWithAccFailure)
     $scope.gwaList.limit += 5
-
 
   $scope.loadMoreGrpWithAccSuccess = (res) ->
     $scope.gwaList.currentPage += 1
@@ -284,6 +285,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     #   groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
     if str.length < 1
       $scope.gwaList.limit = 5
+
+  $scope.removeEmptyGroups = (grpList) ->
+    newList = []
+    _.each grpList, (grp) ->
+      if grp.accountDetails.length > 0
+        newList.push(grp)
+    $scope.grpWithoutEmptyAccounts = newList
+
   #-------------------Functions for API side search and fetching flat account list end here-----------------------------------------------# 
 
   $scope.addFilterKey = (data) ->

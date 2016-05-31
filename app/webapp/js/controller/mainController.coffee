@@ -1,6 +1,6 @@
 "use strict"
 
-mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices) ->
+mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window) ->
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
   $rootScope.basicInfo = {}
@@ -52,6 +52,7 @@ mainController = ($scope, $rootScope, $timeout, $http, $uibModal, localStorageSe
 
   $scope.switchUserSuccess = (res) ->
     #console.log "switchUserSuccess:", res
+    $state.reload()
 
   $scope.switchUserFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
