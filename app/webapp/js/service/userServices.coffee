@@ -90,6 +90,14 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
           method: 'GET' 
           url: '/users/:uniqueName/auth-key/sub-user?uniqueName=:uniqueName'
         }
+        addMobileNumber : {
+          method: 'POST'
+          url: '/users/system_admin/verify-number'
+        }
+        verifyNumber : {
+          method: 'PUT'
+          url: '/users/system_admin/verify-number'
+        }
       }
   )
 
@@ -190,6 +198,14 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.getSubUserAuthKey({uniqueName: uUname}, onSuccess, onFailure)
       )
+    addNumber: (data) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.addMobileNumber(data, onSuccess, onFailure)
+    )
+    verifyNumber: (data) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.verifyNumber(data, onSuccess, onFailure)
+    )
 
   userServices
 

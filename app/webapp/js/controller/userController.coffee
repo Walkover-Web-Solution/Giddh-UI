@@ -533,6 +533,67 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.getSubUserAuthKeyFailure = (res) ->
     toastr.error(res.data.code, res.data.message)
 
+  # add and verify mobile number
+  $scope.phoneNumber = ''
+  $scope.userNumber = ''
+  $scope.mobNum = {
+    countryCode: ''
+    number: ''
+    showVerificationBox : false
+    verificationCode: ''
+  }
+
+  $scope.addNumber = (number) ->
+    if number.indexOf('-') != -1
+      numArr = number.split('-')
+      $scope.mobNum.countryCode = numArr[0]
+      $scope.mobNum.number = numArr[1]
+      data = {
+        "countryCode":$scope.mobNum.countryCode
+        "mobileNumber":$scope.mobNum.number
+      }
+      userServices.addNumber(data).then($scope.addNumberSuccess, $scope.addNumberFailure)
+    else
+      toastr.error("Please enter number in format: 91-9998899988")
+
+  $scope.addNumberSuccess = (res) ->
+    toastr.success("You will receive a verification code on your mobile shortly.")
+    $scope.mobNum.showVerificationBox = true
+
+  $scope.addNumberFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.verifyNumber = (code) ->
+    data = {
+      "countryCode":$scope.mobNum.countryCode
+      "mobileNumber":$scope.mobNum.number
+      "oneTimePassword":$scope.mobNum.verificationCode
+    }
+    userServices.verifyNumber(data).then($scope.verifyNumberSuccess, $scope.verifyNumberFailure)
+
+  $scope.verifyNumberSuccess = (res) ->
+    toastr.success(res.body)
+    $scope.mobNum.showVerificationBox = false
+    $scope.getUserDetails()
+
+  $scope.verifyNumberFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.getUserDetails = ->
+    if _.isUndefined($rootScope.basicInfo.uniqueName)
+      $rootScope.basicInfo = localStorageService.get("_userDetails")
+    userServices.get($rootScope.basicInfo.uniqueName).then($scope.getUserDetailSuccess, $scope.getUserDetailFailure)
+
+  #Get user details
+  $scope.getUserDetailSuccess = (res) ->
+    localStorageService.set("_userDetails", res.body)
+    $rootScope.basicInfo = res.body
+    $scope.userNumber = res.body.contactNo
+
+  #Get user details failure
+  $scope.getUserDetailFailure = (res)->
+    toastr.error(res.data.message, res.data.status)
+
 
   # manage sub user end
 

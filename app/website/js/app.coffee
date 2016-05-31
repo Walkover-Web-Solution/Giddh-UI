@@ -251,6 +251,8 @@ app.controller 'magicCtrl', [
     }
     $scope.format = "dd-MM-yyyy"
     $scope.showError = false
+    $scope.accountName = ''
+
 
     $scope.fromDatePickerOpen = ->
       this.fromDatePickerIsOpen = true
@@ -286,6 +288,7 @@ app.controller 'magicCtrl', [
       _data = data
       $http.post($scope.magicUrl, data:_data).then(
         (success)->
+          $scope.accountName = success.data.body.account.name
           $scope.ledgerData = success.data.body.ledgerTransactions
           $scope.filterLedgers($scope.ledgerData.ledgers)
           $scope.magicReady = true

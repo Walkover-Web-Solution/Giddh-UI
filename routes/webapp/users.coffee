@@ -137,4 +137,33 @@ router.post '/:uniqueName/balance', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+# add mobile number
+router.post '/system_admin/verify-number', (req, res) ->
+  console.log req.body
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  hUrl = settings.envUrl + 'users/system_admin/verify-number'
+  settings.client.post hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+# verify mobile number
+router.put '/system_admin/verify-number', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+      'Content-Type': 'application/json'
+    data: req.body
+  hUrl = settings.envUrl + 'users/system_admin/verify-number'
+  settings.client.put hUrl, authHead, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 module.exports = router
