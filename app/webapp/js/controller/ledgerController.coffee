@@ -912,7 +912,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     modalInstance = $uibModal.open(
       template: '<div>
           <div class="modal-header">
-            <h3 class="modal-title">Magic Link</h3>
+            <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title">Magic Link</h3>
           </div>
           <div class="modal-body">
             <input id="magicLink" class="form-control" type="text" ng-model="magicLink">

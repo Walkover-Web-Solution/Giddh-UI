@@ -86,6 +86,8 @@
             reqBody.toDate = null;
           } else if (options.logOrEntry == "entryDate"){
             reqBody.entryDate = options.selectedEntryDate;
+            reqBody.fromDate = null;
+            reqBody.toDate = null;
           }
         }else{
           reqBody.logDate = null;

@@ -19,7 +19,6 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
         localStorageService.set("_userDetails", response.data.userDetails)
         window.location = "/app/#/home/"
     ).catch (response) ->
-      console.log response
       $scope.loginIsProcessing = false
       #user is not registerd with us
       if response.data.result.status is "error"

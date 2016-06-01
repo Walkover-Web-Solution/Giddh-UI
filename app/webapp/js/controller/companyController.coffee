@@ -1060,6 +1060,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   }
   $scope.months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
   $scope.fyYears = []
+  $scope.sFY = {}
 
   $scope.addfyYears = () ->
     year = moment().get('year') - 1
@@ -1137,6 +1138,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message)
 
   $scope.lockFY = (year) ->
+    $scope.sFY = year
     data = {
       "uniqueName":year.uniqueName
       "lockAll":"true"
@@ -1155,6 +1157,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.setFYname($scope.fy.years)
 
   $scope.lockFYFailure = (res) ->
+    $scope.sFY.isLocked = false
     toastr.error(res.data.message)
 
   $scope.unlockFYSuccess = (res) ->
@@ -1163,6 +1166,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.setFYname($scope.fy.years)
 
   $scope.unlockFYFailure = (res) ->
+    $scope.sFY.isLocked = true
     toastr.error(res.data.message)
 
   $scope.addFY = (newFy) ->

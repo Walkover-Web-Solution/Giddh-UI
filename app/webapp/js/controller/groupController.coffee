@@ -59,9 +59,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   }
   $scope.flatAccList = {
     page: 1
-    count: 5
+    count: 5000
     totalPages: 0
     currentPage : 1
+    limit: 5
   }
   
 
@@ -190,20 +191,22 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $rootScope.getFlatAccountListListSuccess = (res) ->
     $scope.fltAccntListPaginated = res.body.results
+    $scope.flatAccList.limit = 5
     
   $rootScope.getFlatAccountListFailure = (res) ->
     toastr.error(res.data.message)
 
   # load-more function for accounts list on add and manage popup
   $rootScope.loadMoreAcc = (compUname) ->
-    $scope.flatAccList.page += 1
-    reqParam = {
-      companyUniqueName: compUname
-      q: ''
-      page: $scope.flatAccList.page
-      count: $scope.flatAccList.count
-    }
-    groupService.getFlatAccList(reqParam).then($scope.loadMoreAccSuccess, $scope.loadMoreAccFailure)
+    # $scope.flatAccList.page += 1
+    # reqParam = {
+    #   companyUniqueName: compUname
+    #   q: ''
+    #   page: $scope.flatAccList.page
+    #   count: $scope.flatAccList.count
+    # }
+    # groupService.getFlatAccList(reqParam).then($scope.loadMoreAccSuccess, $scope.loadMoreAccFailure)
+    $scope.flatAccList.limit += 5
 
   $rootScope.loadMoreAccSuccess = (res) ->
     $scope.flatAccList.currentPage += 1
@@ -223,10 +226,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if str.length > 2
       $scope.hideAccLoadMore = true
       reqParam.q = str
+      reqParam.count = 5000
     else
       $scope.hideAccLoadMore = false
       reqParam.q = ''
-      reqParam.count = 5
+      reqParam.count = 5000
     groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
 
   #-------- fetch groups with accounts list-------
@@ -867,7 +871,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       #       accToMerge.push(accToSend)
       withoutMerged = _.difference($scope.toMerge.mergedAcc, $scope.prePopulate)
       _.each withoutMerged, (acc) ->
-        console.log acc
         accToSend = {
           "uniqueName": ""
         }

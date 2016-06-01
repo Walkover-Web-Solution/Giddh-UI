@@ -2,9 +2,9 @@ settings = require('../util/settings')
 jwt = require('jwt-simple')
 qs = require('qs')
 router = settings.express.Router()
-googleLoginUrl = settings.envUrl + 'login-with-google'
-linkedinLoginUrl =  settings.envUrl + 'login-with-linkedIn'
-twitterLoginUrl =  settings.envUrl + 'login-with-twitter'
+googleLoginUrl = settings.envUrl + 'signup-with-google'
+linkedinLoginUrl =  settings.envUrl + 'signup-with-linkedIn'
+twitterLoginUrl =  settings.envUrl + 'signup-with-twitter'
 ###
  |--------------------------------------------------------------------------
  | login with google

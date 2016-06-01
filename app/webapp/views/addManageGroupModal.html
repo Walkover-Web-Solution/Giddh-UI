@@ -134,7 +134,7 @@
               <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
               ng-class="{'minimizeBoth': accountsSearch.length > 0}">
                 <div class="list-group">
-                  <a ng-repeat="value in fltAccntListPaginated | filter:accountsSearch track by $index"
+                  <a ng-repeat="value in fltAccntListPaginated | filter:accountsSearch | limitTo: flatAccList.limit"
                      href="javascript:void(0)" ng-click="showAccountDtl(value)"
                      class="list-group-item"
                      ng-class="{'active': selectedAccntMenu === value}">
