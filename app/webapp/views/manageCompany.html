@@ -731,7 +731,8 @@
                   <td>{{$index + 1}}</td>
                   <td>{{year.financialYearStarts}}</td>
                   <td>{{year.financialYearEnds}}</td>
-                  <td><switch name="autopay" on="Lock" off="Unlock" ng-model="year.isLocked" class="wide" ng-change="lockFY(year)"></switch></td>
+                  <td ng-if="$index != 0"><switch name="lockFY_{{$index}}" on="Lock" off="Unlock" ng-model="year.isLocked" class="wide" ng-change="lockFY(year)"></switch></td>
+                  <td ng-if="$index == 0"><p>Current Financial Year (can not be locked)</td>
                 </tr>
               </tbody>
             </table>

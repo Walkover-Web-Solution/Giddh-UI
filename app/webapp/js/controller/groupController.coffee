@@ -21,7 +21,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.showDeleteMove = false
   $scope.AccountsList = []
   $scope.groupAccntList = []
-  $scope.acntSrch = ''
+  $scope.search = {}
+  $scope.search.acnt = ''
   $scope.shareGroupObj ={role: "view_only"}
   $scope.shareAccountObj ={role: "view_only"}
   $scope.openingBalType = [
@@ -50,6 +51,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.noGroups = false
   $scope.hideLoadMore = false
   $scope.hideAccLoadMore = false
+  $scope.isFixedAcc = false
   $scope.gwaList = {
     page: 1
     count: 5000
@@ -148,6 +150,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   # end acCntrl
 
   $scope.getGroups =() ->
+    $scope.search = {}
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
@@ -180,7 +183,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #-------------------Functions for API side search and fetching flat account list-----------------------------------------------#
 
-  $rootScope.getFlatAccountList = (compUname) ->
+  $scope.getFlatAccountList = (compUname) ->
     reqParam = {
       companyUniqueName: compUname
       q: ''
@@ -189,11 +192,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     }
     groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
 
-  $rootScope.getFlatAccountListListSuccess = (res) ->
+  $scope.getFlatAccountListListSuccess = (res) ->
     $scope.fltAccntListPaginated = res.body.results
     $scope.flatAccList.limit = 5
     
-  $rootScope.getFlatAccountListFailure = (res) ->
+  $scope.getFlatAccountListFailure = (res) ->
     toastr.error(res.data.message)
 
   # load-more function for accounts list on add and manage popup
@@ -220,7 +223,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     console.log res
 
   # search flat accounts list
-  $rootScope.searchAccounts = (str) ->
+  $scope.searchAccounts = (str) ->
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     if str.length > 2
@@ -231,7 +234,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.hideAccLoadMore = false
       reqParam.q = ''
       reqParam.count = 5000
-    groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
 
   #-------- fetch groups with accounts list-------
   $scope.getFlattenGrpWithAccList = (compUname) ->
@@ -571,6 +574,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.setOpeningBalanceDate()
     $scope.getAccountSharedList()
     $scope.acntCase = "Update"
+    $scope.isFixedAcc = res.body.isFixed
     $scope.showBreadCrumbs(data.parentGroups.reverse())
     
 

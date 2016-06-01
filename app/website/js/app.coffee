@@ -252,6 +252,7 @@ app.controller 'magicCtrl', [
     $scope.format = "dd-MM-yyyy"
     $scope.showError = false
     $scope.accountName = ''
+    $scope.isCompoundEntry = false
 
 
     $scope.fromDatePickerOpen = ->
@@ -327,7 +328,7 @@ app.controller 'magicCtrl', [
         data.uLname = unameArr[1]
       else
         data.uFname = data.name
-        data.uLname = "  "
+        data.uLname = ""
 
       if not($scope.validateEmail(data.email))
         toastr.warning("Enter valid Email ID", "Warning")
@@ -346,6 +347,14 @@ app.controller 'magicCtrl', [
             $scope.responseMsg = response.data.message
         )
 
+    $scope.checkCompEntry = (ledger) ->
+      unq = ledger.uniqueName
+      ledger.isCompoundEntry = true
+      _.each $scope.ledgerData.ledgers, (lgr) ->
+        if unq == lgr.uniqueName
+          lgr.isCompoundEntry = true
+        else
+          lgr.isCompoundEntry = false
 
 
 ] 

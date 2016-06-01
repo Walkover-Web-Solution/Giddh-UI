@@ -12,7 +12,12 @@
       <uib-alert type="warning" ng-show="cantUpdate">For security reasons, you can't update current account</uib-alert>
     </div>
   </div>
-  <div class="clearfix bdrB">
+  <div class="clearfix">
+    <div class="col-xs-12">
+      <uib-alert type="warning" ng-if="isFixedAcc">A fixed account can not be deleted, moved or updated.</uib-alert>
+    </div>
+  </div>
+  <div class="clearfix bdrB" ng-if="!isFixedAcc">
     <div class="dGryHead">{{acntCase}} Account</div>
     <form class="col-xs-12" name="addAccountForm" novalidate>
 
@@ -132,7 +137,7 @@
 </fieldset>
 <!-- end row first -->
 
-<section ng-if="acntCase == 'Update'">
+<section ng-if="acntCase == 'Update' && !isFixedAcc">
   <div class="clearfix bdrB">
     <div class="col-xs-6" ng-show="canUpdate">
       <fieldset ng-disabled="cantUpdate">

@@ -47,10 +47,13 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     toastr.error("Something went wrong while fetching role", "Error")
 
   # switch user
+  $scope.ucActive = false
+
   $scope.switchUser =() ->
     companyServices.switchUser($rootScope.selectedCompany.uniqueName).then($scope.switchUserSuccess, $scope.switchUserFailure)
 
   $scope.switchUserSuccess = (res) ->
+    $scope.ucActive = res.body.active
     #console.log "switchUserSuccess:", res
     $state.reload()
 
