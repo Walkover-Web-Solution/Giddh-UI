@@ -33,7 +33,7 @@ describe 'groupController', ->
       expect(@scope.canDelete).toBeFalsy()
       expect(@scope.canAdd).toBeFalsy()
       expect(@scope.groupAccntList).toEqual([])
-      expect(@scope.acntSrch).toBe('')
+      #expect(@scope.acntSrch).toBe('')
       expect(@scope.shareGroupObj).toEqual({role: "view_only"})
       expect(@scope.shareAccountObj).toEqual({role: "view_only"})
       openingBalType_resp = [
