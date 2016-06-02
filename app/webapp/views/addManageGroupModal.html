@@ -134,7 +134,7 @@
               <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
               ng-class="{'minimizeBoth': accountsSearch.length > 0}">
                 <div class="list-group">
-                  <a ng-repeat="value in fltAccntListPaginated | filter:accountsSearch | limitTo: flatAccList.limit"
+                  <a ng-repeat="value in fltAccntListPaginated | filter:accountsSearch | limitTo: flatAccList.limit | filter:addManageAccSearch as addManageSearchList"
                      href="javascript:void(0)" ng-click="showAccountDtl(value)"
                      class="list-group-item"
                      ng-class="{'active': selectedAccntMenu === value}">
@@ -144,7 +144,7 @@
                       ng-bind-html="value.name | highlight: accountsSearch"></h4>
                   </a>
                 </div>
-                <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreAcc(selectedCompany.uniqueName)" ng-if="!hideAccLoadMore">Load More</a>
+                <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreAcc(selectedCompany.uniqueName)" ng-if="fltAccntListPaginated.length > 5 && addManageSearchList.length >= flatAccList.limit" >Load More</a>
               </perfect-scrollbar>
             </div>
         <!-- uib-tooltip="{{value.parentGroups[0].name}}"tooltip-placement="bottom" ng-if="value.parentGroups[0].name!=selectedGroup.name" -->
