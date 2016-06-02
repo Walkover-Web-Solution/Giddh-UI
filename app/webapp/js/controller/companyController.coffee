@@ -1064,7 +1064,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.addfyYears = () ->
     year = moment().get('year') - 1
-    while year >= 1950
+    while year >= 1970
       $scope.fyYears.push(year)
       year -= 1
     $scope.fyYears = _.difference($scope.fyYears, $scope.fy.addedFYears)

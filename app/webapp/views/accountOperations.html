@@ -12,12 +12,12 @@
       <uib-alert type="warning" ng-show="cantUpdate">For security reasons, you can't update current account</uib-alert>
     </div>
   </div>
-  <div class="clearfix">
+<!--   <div class="clearfix">
     <div class="col-xs-12">
       <uib-alert type="warning" ng-if="isFixedAcc">A fixed account can not be deleted, moved or updated.</uib-alert>
     </div>
-  </div>
-  <div class="clearfix bdrB" ng-if="!isFixedAcc">
+  </div> -->
+  <div class="clearfix bdrB">
     <div class="dGryHead">{{acntCase}} Account</div>
     <form class="col-xs-12" name="addAccountForm" novalidate>
 
@@ -29,11 +29,11 @@
 
             <div class="form-group">
               <input type="text" placeholder="Enter Account name" class="form-control" name="name" maxlength="100"
-                     ng-model="selectedAccount.name" required/>
+                     ng-model="selectedAccount.name" required ng-disabled="isFixedAcc"/>
             </div>
             <div class="form-group">
               <input type="text" placeholder="Unique Names" class="form-control" name="uniqueName" valid-unique
-              ng-model="selectedAccount.uniqueName"/>
+              ng-model="selectedAccount.uniqueName" ng-disabled="isFixedAcc"/>
             </div>
 
             <div class="form-group">
@@ -44,7 +44,7 @@
                        datepicker-options="dateOptions"
                        is-open="valuationDatePickerIsOpen"
                        ng-click="valuationDatePickerOpen()"
-                       ng-model="datePicker.accountOpeningBalanceDate" max-date="today"/>
+                       ng-model="datePicker.accountOpeningBalanceDate" max-date="today" ng-disabled="isFixedAcc"/>
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="valuationDatePickerOpen()"><i
                     class="glyphicon glyphicon-calendar"></i></button>
@@ -85,36 +85,36 @@
           <div class="form-group row">
             <div class="col-xs-3">
 
-              <input type="hidden" ng-model="selectedAccount.mobileNo">
+              <input type="hidden" ng-model="selectedAccount.mobileNo" ng-disabled="isFixedAcc">
 
               <input type="text" ng-model="acntExt.Ccode"
                      uib-typeahead="country as country.value for country in countryCodesList | filter:$viewValue | limitTo:8"
-                     class="form-control" typeahead-template-url="countryList.html" placeholder="91"/>
+                     class="form-control" typeahead-template-url="countryList.html" placeholder="91" ng-disabled="isFixedAcc"/>
 
             </div>
             <div class="col-xs-9">
               <input type="text" placeholder="98XXXXXXXX" class="form-control" name="onlyMobileNo"
-                     ng-model="acntExt.onlyMobileNo" valid-number/>
+                     ng-model="acntExt.onlyMobileNo" valid-number ng-disabled="isFixedAcc"/>
             </div>
           </div>
 
           <div class="form-group">
-            <input type="email" placeholder="Email" class="form-control" name="email" ng-model="selectedAccount.email"/>
+            <input type="email" placeholder="Email" class="form-control" name="email" ng-model="selectedAccount.email" ng-disabled="isFixedAcc"/>
           </div>
 
           <div class="form-group">
             <input type="text" placeholder="Company Name" class="form-control" name="companyName"
-                   ng-model="selectedAccount.companyName"/>
+                   ng-model="selectedAccount.companyName" ng-disabled="isFixedAcc"/>
           </div>
 
           <div class="form-group">
             <input type="text" placeholder="Description" class="form-control" name="description"
-                   ng-model="selectedAccount.description"/>
+                   ng-model="selectedAccount.description" ng-disabled="isFixedAcc"/>
           </div>
 
           <div class="form-group">
             <textarea placeholder="Address" class="form-control" name="address"
-                      ng-model="selectedAccount.address"></textarea>
+                      ng-model="selectedAccount.address" ng-disabled="isFixedAcc"></textarea>
           </div>
         </div>
 
@@ -137,9 +137,9 @@
 </fieldset>
 <!-- end row first -->
 
-<section ng-if="acntCase == 'Update' && !isFixedAcc">
+<section ng-if="acntCase == 'Update'">
   <div class="clearfix bdrB">
-    <div class="col-xs-6" ng-show="canUpdate">
+    <div class="col-xs-6" ng-show="canUpdate" ng-if="!isFixedAcc">
       <fieldset ng-disabled="cantUpdate">
         <div class="row">
           <form name="moveAccntForm" novalidate class="pd2 form-inline">
@@ -203,7 +203,7 @@
   <!-- end row second -->
 
   <!--merge/unmerge section-->
-  <div class="clearfix bdrB">
+  <div class="clearfix bdrB" ng-if="!isFixedAcc">
     <div class="dGryHead">Account Merge/Unmerge Settings <!-- <i class="glyphicon glyphicon-question-sign merge-q" ng-click=" showMergeDescription = !showMergeDescription"></i> --></div>
     <div ng-show="showMergeDescription">
       <div class="col-xs-6">
@@ -255,7 +255,7 @@
   </div>
   <!--merge/unmerge section end-->
   
-  <div class="pd2">
+  <div class="pd2" ng-if="!isFixedAcc">
     <fieldset ng-disabled="!canUpdate || cantUpdate">
       <button class="btn btn-danger" ng-click="deleteAccount()">Delete {{selectedAccount.name}} account</button>
     </fieldset>
