@@ -89,7 +89,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     cData.name = data.name
     cData.city = data.city
     $scope.createCompany(cData)
-    $state.reload()
 
   $scope.onCompanyCreateModalCloseFailure = () ->
     $scope.checkCmpCretedOrNot()
@@ -137,6 +136,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.success("Company create successfully", "Success")
     $rootScope.mngCompDataFound = true
     $scope.companyList.push(res.body)
+    $state.reload()
 
   #create company failure
   $scope.onCreateCompanyFailure = (res) ->
@@ -1063,12 +1063,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.sFY = {}
 
   $scope.addfyYears = () ->
+    $scope.fyYears = []
     year = moment().get('year') - 1
     while year >= 1970
       $scope.fyYears.push(year)
       year -= 1
     $scope.fyYears = _.difference($scope.fyYears, $scope.fy.addedFYears)
-      
+
   $scope.setFYname = (years) ->
     _.each years, (yr) ->
       name = yr.uniqueName.split("-")
