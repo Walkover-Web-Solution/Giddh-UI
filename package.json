@@ -29,7 +29,6 @@
     "karma-phantomjs-launcher": "~0.1.0",
     "karma-requirejs": "0.2.0",
     "karma-script-launcher": "~0.1.0",
-    //"mashape-analytics": "^1.1.5",
     "morgan": "*",
     "multer": "^1.1.0",
     "mustache": "2.1.3",
