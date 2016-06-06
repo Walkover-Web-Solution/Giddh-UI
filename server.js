@@ -232,3 +232,5 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
+
+// http://stackoverflow.com/questions/6528876/how-to-redirect-404-errors-to-a-page-in-expressjs/9802006#9802006

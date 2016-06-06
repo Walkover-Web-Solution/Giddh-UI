@@ -55,6 +55,15 @@ module.exports = function (grunt) {
       }
     },
     copy: {
+      libs: {
+        files: [{
+          expand: true,
+          dot: true,
+          cwd: 'bower_components/angular-sanitize/',
+          src: ['angular-sanitize.min.js.map'],
+          dest: destDir+'/webapp/'
+        }]
+      },
       all: {
         files: [{
           expand: true,
@@ -237,7 +246,6 @@ module.exports = function (grunt) {
         },
         callback: function(mainFiles, component) {
           return _.map(mainFiles, function(filepath) {
-            console.log(filepath)
             var min = filepath.replace(/\.js$/, '.min.js');
             return grunt.file.exists(min) ? min : filepath;
           });
