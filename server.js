@@ -174,6 +174,22 @@ app.use('/coupon', coupon);
 app.use('/yodlee', yodlee);
 app.use('/ebanks', ebanks);
 //app.use('/magic', magicLink);
+/*
+ # set all route above this snippet
+ # redirecting to 404 if page/route not found
+*/
+app.use(redirectUnmatched)
+function redirectUnmatched(req, res) {
+  var options = {
+    root: __dirname + '/public/website/views',
+    dotfiles: 'deny',
+    headers:{
+      'x-timestamp': Date.now(),
+      'x-sent': true
+    }
+  }
+  res.sendFile('404.html', options)
+}
 
 app.listen(port, function () {
   console.log('Express Server running at port', this.address().port);
