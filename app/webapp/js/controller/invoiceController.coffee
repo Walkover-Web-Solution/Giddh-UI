@@ -155,7 +155,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   #-------- fetch groups with accounts list-------
   $scope.gwaList = {
     page: 1
-    count: 5
+    count: 5000
     totalPages: 0
     currentPage : 1
   }
@@ -170,8 +170,9 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
 
   $scope.getFlattenGrpWithAccListSuccess = (res) ->
+    $scope.flatAccntWGroupsList = []
     $scope.gwaList.totalPages = res.body.totalPages
-    $scope.flatAccntWGroupsList = res.body.results
+    $scope.filterSundryDebtors(res.body.results)
     $scope.showAccountList = true  
 
   $scope.getFlattenGrpWithAccListFailure = (res) ->
@@ -189,23 +190,29 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       reqParam.q = ''
       groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
   
-  $scope.loadMoreGrpWithAcc = (compUname) ->
-    $scope.gwaList.page += 1
-    reqParam = {
-      companyUniqueName: compUname
-      q: ''
-      page: $scope.gwaList.page
-      count: $scope.gwaList.count
-    }
-    groupService.getFlattenGroupAccList(reqParam).then($scope.loadMoreGrpWithAccSuccess, $scope.loadMoreGrpWithAccFailure)
+  # $scope.loadMoreGrpWithAcc = (compUname) ->
+  #   $scope.gwaList.page += 1
+  #   reqParam = {
+  #     companyUniqueName: compUname
+  #     q: ''
+  #     page: $scope.gwaList.page
+  #     count: $scope.gwaList.count
+  #   }
+  #   groupService.getFlattenGroupAccList(reqParam).then($scope.loadMoreGrpWithAccSuccess, $scope.loadMoreGrpWithAccFailure)
 
-  $scope.loadMoreGrpWithAccSuccess = (res) ->
-    $scope.gwaList.currentPage += 1
-    list = res.body.results
-    if res.body.totalPages >= $scope.gwaList.currentPage
-      $scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
-    else
-      $scope.hideLoadMore = true
+  # $scope.loadMoreGrpWithAccSuccess = (res) ->
+  #   $scope.gwaList.currentPage += 1
+  #   list = res.body.results
+  #   if res.body.totalPages >= $scope.gwaList.currentPage
+  #     $scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
+  #   else
+  #     $scope.hideLoadMore = true
+
+  $scope.filterSundryDebtors = (grpList) ->
+    _.each grpList, (grp) ->
+      if grp.groupUniqueName == 'sundry_debtors'
+        $scope.flatAccntWGroupsList.push(grp)
+        grp.open = true
 
   $scope.loadMoreGrpWithAccFailure = (res) ->
     toastr.error(res.data.message)

@@ -304,14 +304,19 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #-------------------Functions for API side search and fetching flat account list end here-----------------------------------------------# 
 
-  $scope.addFilterKey = (data) ->
+  $scope.addFilterKey = (data, n) ->
+    n = n || 1
     _.each data, (grp) ->
       grp.isVisible = true
+      grp.hLevel = n
       if grp.groups.length > 0
+        n += 1
         _.each grp.groups, (sub) ->
           sub.isVisible = true
+          sub.hLevel = n
           if sub.groups.length > 0
-            $scope.addFilterKey(sub.groups)
+            n += 1
+            $scope.addFilterKey(sub.groups, n)
     data
 
   $scope.getGroupListSuccess = (res) ->
@@ -496,12 +501,18 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error(res.data.message, res.data.status)
 
   $scope.selectGroupToEdit = (group) ->
+    _.each $scope.groupList, (grp) ->
+      if grp.uniqueName == group.uniqueName
+        group.isTopLevel = true
+    if group.isTopLevel == undefined
+      group.isTopLevel = false
     $scope.selectedGroup = group
     if _.isEmpty($scope.selectedGroup.oldUName)
       $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
     $scope.selectedSubGroup = {}
     $rootScope.$emit('callCheckPermissions', group)
     $scope.getGroupSharedList(group)
+
 
   $scope.populateAccountList = (item) ->
     result = groupService.matchAndReturnGroupObj(item, $rootScope.flatGroupsList)

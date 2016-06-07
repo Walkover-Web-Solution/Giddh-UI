@@ -99,7 +99,7 @@
                 <h4 class="list-group-item-heading small">Oops, there are no accounts in <strong>{{selectedGroup.name}}</strong>
                 </h4>
 
-                <div class="mrB1 mrT1" ng-show="canAdd && !selectedGroup.fixed">
+                <div class="mrB1 mrT1" ng-show="canAdd && !selectedGroup.fixed || canAdd && selectedGroup.fixed && !selectedGroup.isTopLevel">
                   <button class="btn btn-success btn-block" ng-click="addNewAccountShow(selectedGroup)"
                           href="javascript:void(0)">+ Add New
                   </button>
@@ -110,7 +110,7 @@
 
                 <h3 class="mrB1 mrL1 small">Accounts from <strong>{{selectedGroup.name}}</strong></h3>
 
-                <div class="mrB1 mrT1 pdL1 pdR1" ng-show="canAdd && !selectedGroup.fixed">
+                <div class="mrB1 mrT1 pdL1 pdR1" ng-show="canAdd && !selectedGroup.fixed || canAdd && selectedGroup.fixed && !selectedGroup.isTopLevel">
                   <button class="btn btn-success btn-block" ng-click="addNewAccountShow(selectedGroup)"
                           href="javascript:void(0)">+ Add New
                   </button>

@@ -305,7 +305,7 @@ angular.module('ledger', [])
                   name='trans_{{item.transactionId}}'
                   ng-model-options='{debounce: 400}'
                   ng-model='item.transactions[0].particular'
-                  uib-typeahead='obj as obj.name for obj in searchAccount($viewValue) | omit: isECurrentAc | filter:$viewValue'
+                  uib-typeahead='obj as obj.name for obj in aclist | omit: isECurrentAc | filter:$viewValue'
                   class='form-control' autocomplete='off'
                   typeahead-no-results='noResultsE' typeahead-template-url='customETemp.html'
                   typeahead-select-on-blur='true'

@@ -1,6 +1,6 @@
 "use strict"
 
-tbplController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window) ->
+tbplController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window, companyServices) ->
   tb = this
   $scope.showTbplLoader = true
   $scope.inProfit = true
@@ -66,16 +66,18 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     this.toDatePickerIsOpen = true
 
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+  $scope.activeFinancialYear = localStorageService.get("activeFY")
+
+  # financial year functions
+  $rootScope.setActiveFinancialYear($scope.activeFinancialYear)
 
   $scope.checkFY = (reqParam) ->
     currentYear = moment().get('year')
     currentFY =  $rootScope.activeYear.start
-    if currentYear != currentFY
-      $scope.fromDate.date = $rootScope.fy.financialYearStarts
-      $scope.toDate.date = $rootScope.fy.financialYearEnds
-      reqParam.fromDate = $scope.fromDate.date
-      reqParam.toDate = $scope.toDate.date
-
+    $scope.fromDate.date = $rootScope.fy.financialYearStarts
+    $scope.toDate.date = $rootScope.fy.financialYearEnds
+    reqParam.fromDate = $scope.fromDate.date
+    reqParam.toDate = $scope.toDate.date
 
   # p&l functions
   $scope.calCulateTotalIncome = (data) ->

@@ -206,6 +206,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.goToCompanyCheck = (data, index) ->
     # set financial year
+    localStorageService.set('activeFY', data.activeFinancialYear)
     $rootScope.setActiveFinancialYear(data.activeFinancialYear)
     activeYear = {} 
     activeYear.start = moment(data.activeFinancialYear.financialYearStarts,"DD/MM/YYYY").year()
@@ -229,7 +230,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.goToCompany(data, index, "CHANGED")
     $rootScope.$emit('reloadAccounts')
     $scope.tabs[0].active = true
-    console.log "reset tabs"
 
   #making a detail company view
   $scope.goToCompany = (data, index, type) ->
@@ -951,6 +951,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.success(res.status, "Tax updated successfully.")
     
   $scope.updateTaxFailure = (res) ->
+    $scope.getTax()
     toastr.error(res.statusText, res.data.message)
 
   # edit tax slab
@@ -1106,7 +1107,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.success('Period Updated Successfully')
     $scope.fy.years = res.body.financialYears
     $scope.setFYname($scope.fy.years)
-    $state.reload()
+    $scope.getcurrentFYfromResponse($rootScope.currentFinancialYear, $scope.fy.years)
 
   $scope.changeFyPeriodFailure = (res) ->
     toastr.error(res.data.message)
@@ -1134,6 +1135,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.switchFYSuccess = (res) ->
     toastr.success(res.status, 'Financial Year switched successfully.')
     $rootScope.setActiveFinancialYear(res.body)
+    localStorageService.set('activeFY', res.body)
 
   $scope.switchFYFailure = (res) ->
     toastr.error(res.data.message)
@@ -1186,6 +1188,21 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.addFYFailure = (res) ->
     toastr.error(res.data.message)
+
+  $scope.getcurrentFYfromResponse = (currentFinancialYear, response) ->
+    cYear = {}
+    cFY = ''
+    if currentFinancialYear.length > 4
+      f = currentFinancialYear.split('-')
+      cFY = f[0]
+    else
+      cFY = currentFinancialYear
+      
+    _.each response,(yr) ->
+      if yr.financialYearStarts.indexOf(cFY) != -1
+        cYear = yr
+    $rootScope.setActiveFinancialYear(cYear)
+    localStorageService.set('activeFY', cYear)
 
   $timeout( ->
     $rootScope.selAcntUname = undefined
