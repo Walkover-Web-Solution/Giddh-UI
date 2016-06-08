@@ -29,11 +29,11 @@
 
             <div class="form-group">
               <input type="text" placeholder="Enter Account name" class="form-control" name="name" maxlength="100"
-                     ng-model="selectedAccount.name" required ng-disabled="isFixedAcc"/>
+                     ng-model="selectedAccount.name" required ng-disabled="isFixedAcc" autocomplete="off"/>
             </div>
             <div class="form-group">
               <input type="text" placeholder="Unique Names" class="form-control" name="uniqueName" valid-unique
-              ng-model="selectedAccount.uniqueName" ng-disabled="isFixedAcc"/>
+              ng-model="selectedAccount.uniqueName" ng-disabled="isFixedAcc" autocomplete="off"/>
             </div>
 
             <div class="form-group">
@@ -215,7 +215,7 @@
                   </ui-select-match >
                   <ui-select-choices
                     ui-disable-choice="acc.uniqueName === selAcntUname"
-                    repeat="acc in fltAccntListPaginated | filter: $select.search" refresh="searchAccounts($select.search)">
+                    repeat="acc in fltAccntListcount5 | filter: $select.search" refresh="searchAccountsC5($select.search)">
                     <span>{{acc.name}} ({{acc.uniqueName}})</span>
                   </ui-select-choices>
               </ui-select>
@@ -237,7 +237,7 @@
                   </ui-select-match >
                   <ui-select-choices 
                     ui-disable-choice="acc.uniqueName === selAcntUname" 
-                    repeat="acc in AccountsList | filter: $select.search">
+                    repeat="acc in  fltAccntListcount5 | filter: $select.search" refresh="searchAccountsC5($select.search)">
                     <span>{{acc.name}} ({{acc.uniqueName}})</span>
                   </ui-select-choices>
               </ui-select>

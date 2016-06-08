@@ -61,7 +61,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   }
   $scope.flatAccList = {
     page: 1
-    count: 5000
+    count: 5
     totalPages: 0
     currentPage : 1
     limit: 5
@@ -102,6 +102,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.goToManageGroups =() ->
     $scope.fltAccntListPaginated = []
     $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+    $scope.getFlatAccountListCount5($rootScope.selectedCompany.uniqueName)
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
     else
@@ -200,6 +201,45 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     
   $scope.getFlatAccountListFailure = (res) ->
     toastr.error(res.data.message)
+
+  # get flat account list with count 5
+  
+  $scope.flatAccListC5 = {
+    page: 1
+    count: 5
+    totalPages: 0
+    currentPage : 1
+  }
+
+  $scope.getFlatAccountListCount5 = (compUname) ->
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+      page: $scope.flatAccListC5.page
+      count: $scope.flatAccListC5.count
+    }
+    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListCount5ListSuccess, $scope.getFlatAccountListCount5ListFailure)
+
+  $scope.getFlatAccountListCount5ListSuccess = (res) ->
+    console.log res.body.res
+    $scope.fltAccntListcount5 = res.body.results
+
+  $scope.getFlatAccountListCount5ListFailure = (res) ->
+    toastr.error(res.data.message)
+
+  # search flat accounts list
+  $scope.searchAccountsC5 = (str) ->
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    if str.length > 2
+      reqParam.q = str
+      groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListCount5ListSuccess, $scope.getFlatAccountListCount5ListFailure)
+    else
+      reqParam.q = ''
+      reqParam.count = 5
+      groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListCount5ListSuccess, $scope.getFlatAccountListCount5ListFailure)
+
+
 
   # load-more function for accounts list on add and manage popup
   $rootScope.loadMoreAcc = (compUname) ->
@@ -1025,7 +1065,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.toMerge.moveToAcc = ''
 
   $scope.moveToAccountConfirmFailure = (res) ->
-    toastr.error(res.body)
+    toastr.error(res.data.message)
 
   $scope.isGrpMatch = (g, q) ->
     p = RegExp(q,"i")
