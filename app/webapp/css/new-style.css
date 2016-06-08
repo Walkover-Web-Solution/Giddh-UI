@@ -84,9 +84,11 @@ a, a:focus, a:hover, a:active {
 }
 
 body, textarea, input, button {
-    font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
-    font-weight: 400
+    font-family: 'Inconsolata', Arial, serif;
+    font-weight: 400;
+    font-size: 15px;
+    letter-spacing: 1px;
+    /*font-family: 'Open Sans', sans-serif */
 }
 
 textarea{
