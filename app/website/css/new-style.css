@@ -43,54 +43,7 @@ body {
 .mrT5{margin-top: 50px}
 .mrT6{margin-top: 60px}
 
-/*navbar animation affix*/
-.navbar, .navbar .navbar-nav{
-	-webkit-transition: all 0.8s;
-  -moz-transition: all 0.8s;
-  -ms-transition: all 0.8s;
-  -o-transition: all 0.8s;
-  transition: all 0.8s;
-}
-.navbar, .navbar-brand{
-	-webkit-transition: height 0.3s;
-  -moz-transition: height 0.3s;
-  -ms-transition: height 0.3s;
-  -o-transition: height 0.3s;
-  transition: height 0.3s;
-}
-.navbar-brand img{
-	-webkit-transition: height 1s ease;
-	-moz-transition: height 1s ease;
-	-o-transition: height 1s ease;
-	transition: height 1s ease;
-}
-.navbar{
-	min-height: 80px;
-	margin-bottom: 0;
-	border: 0
-}
-.navbar-brand{
-	height: 80px;
-	padding: 10px 15px;
-}
-.navbar .navbar-nav{
-	padding-top: 12px;
-}
-.navbar .navbar-btn{
-	margin: 9px 0 0;
-	height: 40px;
-	line-height: 20px;
-	padding: 10px 15px;
-	font-family: 'Arvo', serif;
-	font-size: 18px;
-}
-/*navigation light theme*/
-body.light .navbar{
-	background-color: #fff
-}
-body.lightTrans .navbar{
-	background-color: rgba(255, 255, 255, .4);
-}/*universal styles*/
+/*universal styles*/
 
 .db {
     display: block
@@ -472,6 +425,59 @@ body.lightTrans .navbar{
     padding:0 !important;
 }
 
+/*navbar animation affix*/
+.navbar, .navbar .navbar-nav{
+	-webkit-transition: all 0.8s;
+  -moz-transition: all 0.8s;
+  -ms-transition: all 0.8s;
+  -o-transition: all 0.8s;
+  transition: all 0.8s;
+}
+.navbar, .navbar-brand{
+	-webkit-transition: height 0.3s;
+  -moz-transition: height 0.3s;
+  -ms-transition: height 0.3s;
+  -o-transition: height 0.3s;
+  transition: height 0.3s;
+}
+.navbar-brand img{
+	-webkit-transition: height 1s ease;
+	-moz-transition: height 1s ease;
+	-o-transition: height 1s ease;
+	transition: height 1s ease;
+}
+.navbar{
+	min-height: 80px;
+	margin-bottom: 0;
+	border: 0
+}
+.navbar-brand{
+	height: 80px;
+	padding: 10px 15px;
+}
+.navbar .navbar-nav{
+	padding-top: 12px;
+}
+.navbar .navbar-btn{
+	margin: 9px 0 0;
+	height: 40px;
+	line-height: 20px;
+	padding: 10px 15px;
+	font-family: 'Arvo', serif;
+	font-size: 18px;
+}
+/*navigation light theme*/
+body.light .navbar{
+	background-color: #fff
+}
+body.lightTrans .navbar{
+	background-color: rgba(255, 255, 255, .4);
+}
+body.light .navbar.transparent{
+	background: transparent;
+	box-shadow: none; 
+}
+
 /*affix navbar*/
 .navbar.affix, body.light .navbar.affix{
 	min-height: 60px;
@@ -513,6 +519,13 @@ body.lightTrans .navbar{
   font-size: 22px;
   padding: 10px 22px;
 }
+.navbar-custom .navbar-nav > li > a.white{
+	color:#fff;
+}
+.navbar-custom.affix .navbar-nav > li > a.white{
+	color:#26263A;
+}
+
 .navbar-custom .navbar-nav > li > a.active, .navbar-custom .navbar-nav > li > a:visited, .navbar-custom .navbar-nav > li > a:hover {
   background-color: transparent;
 }
@@ -1278,15 +1291,6 @@ footer>div>a:before{
 body.unresponsive .container {
   width: 970px !important;
   max-width: none !important;
-}
-
-.transparent{
-	background: transparent !important;
-	box-shadow: none !important; 
-}
-
-.white{
-	color:#fff !important;
 }
 
 @media (min-width:1024px) and (max-width:1366px){
