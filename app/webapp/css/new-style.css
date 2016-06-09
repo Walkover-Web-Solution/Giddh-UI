@@ -2536,3 +2536,8 @@ ul.pills li {
     border-radius: 50%;
     background: green;      
 }
+/*switch*/
+.switch.wide100{width:100px}
+.switch.wide100.checked small {
+    left: 72px;
+}
