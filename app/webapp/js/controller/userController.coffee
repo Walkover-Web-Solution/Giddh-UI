@@ -632,6 +632,27 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       reqParam.q = ''
       reqParam.count = 5
       groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+
+  # connect bank
+  $scope.connectBank = ()->
+    console.log "connectBank"
+    userServices.connectBankAc($rootScope.selectedCompany.uniqueName).then($scope.connectBankSuccess, $scope.connectBankFailure)
+
+  $scope.connectBankSuccess = (res) ->
+    console.log "connectBankSuccess:", res
+    $scope.cntBnkData = res.body
+    $uibModal.open(
+      templateUrl: '/public/webapp/views/connectBankModal.html',
+      size: "md",
+      backdrop: 'static',
+      scope: $scope
+    )
+
+  $scope.connectBankFailure = (res) ->
+    console.log "connectBankFailure:", res
+    toastr.error(res.data.message, "Error")
+
+
 #init angular app
 giddh.webApp.controller 'userController', userController
 
