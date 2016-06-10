@@ -2536,3 +2536,14 @@ ul.pills li {
     border-radius: 50%;
     background: green;      
 }
+
+.borderless, .borderless:focus{
+    border:0;
+    outline: 0;
+    box-shadow: none;
+}
+
+
+.ledger-table td > input{
+    min-height:42px;
+}

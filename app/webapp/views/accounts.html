@@ -60,9 +60,9 @@
                 <li class="inrPrnt" ng-repeat="(index,accDtl) in value.accountDetails | filter : isGrpMatch(value, search.acnt) ? '' : search.acnt" id="ac_{{accDtl.uniqueName}}"
                   tooltip-placement="top" uib-tooltip="{{accDtl.uniqueName}}">
                   <a
-                    ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl)"
+                    ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl); getLedgerData(value, accDtl);"
                      ng-class="{'active': accDtl.uniqueName === selectedAccountUniqueName}" 
-                     ui-sref="company.content.ledgerContent({unqName:accDtl.uniqueName})">
+                     ui-sref="company.content.ledger({unqName:accDtl.uniqueName})">
                     <div class="clearfix">
                       <i ng-class="accDtl.charId == 1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
                       <span ng-bind-html="accDtl.name" class="ellp max100"></span>

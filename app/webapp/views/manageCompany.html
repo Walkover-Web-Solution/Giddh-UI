@@ -475,7 +475,7 @@
                       <span>{{$select.selected.name}}</span>
                     </ui-select-match >
                     <ui-select-choices 
-                      repeat="val in fltAccntListPaginated | filter: $select.search" refresh="searchAccounts($select.search)">
+                      repeat="val in fltAccntListcount5 | filter: $select.search" refresh="searchAccountsC5($select.search)">
                       <span ng-bind-html="val.name"></span>
                     </ui-select-choices>
                   </ui-select>

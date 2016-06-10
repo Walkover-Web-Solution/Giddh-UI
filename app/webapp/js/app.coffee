@@ -29,6 +29,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "razor-pay"
     "ngCsv"
     "ngclipboard"
+    "ledgerDirectives"
   ]
 )
 
@@ -162,14 +163,14 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/views/ledgerContent.html'
     controller: 'ledgerController'
   )
+  .state('company.content.ledger',
+    url: '/ledger/:unqName'
+    templateUrl: '/public/webapp/views/newLedger.html'
+    controller: 'newLedgerController'
+  )
   .state('/thankyou',
     url: '/thankyou'
     templateUrl: '/public/webapp/views/thanks.html'
-    controller: 'thankyouController'
-  )
-  .state('/magic-link',
-    url: '/magic-link'
-    templateUrl: '/public/webapp/views/magic.html'
     controller: 'thankyouController'
   )
   $locationProvider.html5Mode(false)
