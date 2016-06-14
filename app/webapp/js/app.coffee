@@ -274,6 +274,7 @@ giddh.webApp.run [
         $rootScope.fy = FY
         $rootScope.activeYear = activeYear
         $rootScope.currentFinancialYear =  activeYear.year
+      localStorageService.set('activeFY',FY)
 
 ]
 

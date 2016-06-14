@@ -461,6 +461,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       # if invoice date have any problem
       if res.data.code is 'ENTRIES_AFTER_INOICEDATE'
         $scope.genMode = true
+      else if res.data.code is 'INVALID_INVOICE_DATE'
+        $scope.genMode = true
 
   # get inv templates 
   if not(_.isEmpty($rootScope.$stateParams.invId))
