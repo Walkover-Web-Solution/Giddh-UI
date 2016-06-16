@@ -46,8 +46,8 @@ router.get '/sitemap.xml', (req, res) ->
 router.get '/robots.txt', (req, res) ->
   res.sendFile 'robots.txt', options
 
-# router.get '/success', (req, res) ->
-#   res.sendFile 'success.html', options
+router.get '/success', (req, res) ->
+  res.sendFile 'success.html', options
 
 router.post '/magic-link', (req, res) ->
   if req.body.data.from != undefined && req.body.data.to != undefined
