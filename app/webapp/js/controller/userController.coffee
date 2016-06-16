@@ -597,21 +597,22 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   # manage sub user end
 
   #get flat account list
-  $scope.flatAccList = {
-    page: 1
-    count: 5
-    totalPages: 0
-    currentPage : 1
-  }
+#  $scope.flatAccList = {
+#    page: 1
+#    count: 5
+#    totalPages: 0
+#    currentPage : 1
+#  }
 
   $scope.getFlatAccountList = (compUname) ->
-    reqParam = {
-      companyUniqueName: compUname
-      q: ''
-      page: $scope.flatAccList.page
-      count: $scope.flatAccList.count
-    }
-    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+    $rootScope.getFlatAccountList(compUname)
+#    reqParam = {
+#      companyUniqueName: compUname
+#      q: ''
+#      page: $scope.flatAccList.page
+#      count: $scope.flatAccList.count
+#    }
+#    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
 
   $scope.getFlatAccountListListSuccess = (res) ->
     $scope.fltAccntListPaginated = res.body.results

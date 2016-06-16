@@ -144,11 +144,17 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #Get company list
   $scope.getCompanyList = ()->
-    companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
+#    $rootScope.getCompanyList()
+#    if _.isEmpty($rootScope.CompanyList)
+#      $scope.openFirstTimeUserModal()
+#    else
+#      $scope.goToCompany($rootScope.selectedCompany,$rootScope.companyIndex,"")
+   companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
 
   #Get company list
   $scope.getCompanyListSuccess = (res) ->
     $scope.companyList = _.sortBy(res.body, 'shared')
+    $rootScope.CompanyList = $scope.companyList
     if _.isEmpty($scope.companyList)
       $scope.openFirstTimeUserModal()
     else
@@ -157,13 +163,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
         cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName})
         if _.isUndefined(cdt)
-          localStorageService.set("_selectedCompany", $scope.companyList[0])
+          $rootScope.setCompany($scope.companyList[0])
           $scope.goToCompany($scope.companyList[0], 0, "CHANGED")
         else
-          localStorageService.set("_selectedCompany", cdt)
+          $rootScope.setCompany(cdt)
           $scope.goToCompany(cdt, cdt.index, "NOCHANGED")
       else
-        localStorageService.set("_selectedCompany", $scope.companyList[0])
+        $rootScope.setCompany($scope.companyList[0])
         $scope.goToCompany($scope.companyList[0], 0, "CHANGED")
 
   #get company list failure
@@ -198,7 +204,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $rootScope.selectedCompany = {}
     localStorageService.remove("_selectedCompany")
     toastr.success("Company deleted successfully", "Success")
-    $scope.getCompanyList()
+    $scope.getCompanyList()    
 
   #delete company failure
   $scope.delCompanyFailure = (res) ->
@@ -242,7 +248,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.dErrFiles = []
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
-    angular.extend($rootScope.selectedCompany, data)
+    $rootScope.setCompany(data)
+    #angular.extend($rootScope.selectedCompany, data)
     $rootScope.selectedCompany.index = index
     contactnumber = $rootScope.selectedCompany.contactNo
     if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
@@ -250,7 +257,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $rootScope.selectedCompany.mobileNo = SplitNumber[1]
       $rootScope.selectedCompany.cCode = SplitNumber[0]
 
-    localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
+    #localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
 
     if $rootScope.canManageCompany
       $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)

@@ -551,22 +551,23 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     $scope.chartDataAvailable = true
   
    #---------get flat accounts list------#
-  $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
-  $scope.flatAccList = {
-    page: 1
-    count: 5
-    totalPages: 0
-    currentPage : 1
-  }
+#  $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+#  $scope.flatAccList = {
+#    page: 1
+#    count: 5
+#    totalPages: 0
+#    currentPage : 1
+#  }
 
   $scope.getFlatAccountList = (compUname) ->
-    reqParam = {
-      companyUniqueName: compUname
-      q: ''
-      page: $scope.flatAccList.page
-      count: $scope.flatAccList.count
-    }
-    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+    $rootScope.getFlatAccountList(compUname)
+#    reqParam = {
+#      companyUniqueName: compUname
+#      q: ''
+#      page: $scope.flatAccList.page
+#      count: $scope.flatAccList.count
+#    }
+#    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
 
   $scope.getFlatAccountListListSuccess = (res) ->
     $rootScope.fltAccntListPaginated = res.body.results
@@ -574,7 +575,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.getFlatAccountListFailure = (res) ->
     toastr.error(res.data.message)
 
-  $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+#  $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
 
   # search flat accounts list
   $rootScope.searchAccounts = (str) ->

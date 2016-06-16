@@ -16,12 +16,15 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.superLoader = false
   $rootScope.flatAccList = {
     page: 1
-    count: 5
+    count: 5000
     totalPages: 0
     currentPage : 1
     limit: 5
   }
   $rootScope.fltAccntListPaginated = []
+  $rootScope.fltAccountLIstFixed = []
+  $rootScope.CompanyList = []
+  $rootScope.companyIndex = 0
   
   $scope.logout = ->
     $http.post('/logout').then ((res) ->
@@ -102,7 +105,74 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $rootScope.setActiveFinancialYear(cdt.activeFinancialYear)
   ), 500
   
-  
+  #Get company list
+  $rootScope.getCompanyList = ()->
+    companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
+
+  #Get company list success
+  $scope.getCompanyListSuccess = (res) ->    
+    $scope.companyList = _.sortBy(res.body, 'shared')
+    $rootScope.CompanyList = $scope.companyList
+    if _.isEmpty($scope.companyList)
+      #When no company is there
+      $scope.companyList.count
+    else
+      # When there are companies
+      $rootScope.mngCompDataFound = true
+      cdt = localStorageService.get("_selectedCompany")
+      if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
+        cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName})
+        if _.isUndefined(cdt)
+          $rootScope.setCompany($scope.companyList[0])
+          $rootScope.companyIndex = 0
+        else
+          $rootScope.setCompany(cdt)
+          $rootScope.companyIndex = cdt.index
+      else
+        $rootScope.setCompany($scope.companyList[0])
+        $rootScope.companyIndex = 0
+
+  #get company list failure
+  $scope.getCompanyListFailure = (res)->
+    $rootScope.CompanyList = []
+    toastr.error(res.data.message, res.data.status)
+
+  $rootScope.setCompany = (company) ->
+    angular.extend($rootScope.selectedCompany, company)
+    #$rootScope.selectedCompany = company
+    localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
+    $rootScope.getFlatAccountList(company.uniqueName)
+
+  $rootScope.getParticularAccount = (searchThis) ->
+    accountList = []
+    _.filter($rootScope.fltAccntListPaginated,(account) ->
+      if not(account.name.match(searchThis) == null)
+        accountList.push(account)
+    )
+    accountList
+
+  $rootScope.getFlatAccountList = (compUname) ->
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+      page: $scope.flatAccList.page
+      count: $scope.flatAccList.count
+    }
+    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+
+  $scope.getFlatAccountListListSuccess = (res) ->
+    $rootScope.fltAccntListPaginated = res.body.results
+    $rootScope.fltAccountLIstFixed = $rootScope.fltAccntListPaginated
+    $rootScope.flatAccList.limit = 5
+    
+  $scope.getFlatAccountListFailure = (res) ->
+    toastr.error(res.data.message)
+
+  # load-more function for accounts list on add and manage popup
+  $rootScope.loadMoreAcc = (compUname) ->
+    $rootScope.flatAccList.limit += 5
+
+#  $rootScope.getCompanyList()
 
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)

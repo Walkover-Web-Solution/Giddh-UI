@@ -59,13 +59,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     currentPage : 1
     limit: 5
   }
-  $scope.flatAccList = {
-    page: 1
-    count: 5
-    totalPages: 0
-    currentPage : 1
-    limit: 5
-  }
+#  $scope.fltAccntListPaginated = []
+#  $scope.flatAccList = {
+#    page: 1
+#    count: 5
+#    totalPages: 0
+#    currentPage : 1
+#    limit: 5
+#  }
   
 
   $scope.valuationDatePickerOpen = ()->
@@ -159,7 +160,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     else
       # with accounts, group data
       $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
-      $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+      $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
       
       # without accounts only groups conditionally
@@ -187,23 +188,42 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   #-------------------Functions for API side search and fetching flat account list-----------------------------------------------#
 
   $scope.getFlatAccountList = (compUname) ->
-    reqParam = {
-      companyUniqueName: compUname
-      q: ''
-      page: $scope.flatAccList.page
-      count: $scope.flatAccList.count
-    }
-    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+#    $rootScope.getFlatAccountList(compUname)
+    console.log("flt accnt list paginated",$rootScope.fltAccntListPaginated)
+#    $scope.fltAccntListPaginated = $rootScope.fltAccntListPaginated
+#
+#    reqParam = {
+#      companyUniqueName: compUname
+#      q: ''
+#      page: $scope.flatAccList.page
+#      count: $scope.flatAccList.count
+#    }
+#    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
 
-  $scope.getFlatAccountListListSuccess = (res) ->
-    $scope.fltAccntListPaginated = res.body.results
-    $scope.flatAccList.limit = 5
-    
-  $scope.getFlatAccountListFailure = (res) ->
-    toastr.error(res.data.message)
+#  $scope.getFlatAccountListListSuccess = (res) ->
+#    $scope.fltAccntListPaginated = res.body.results
+#    $scope.flatAccList.limit = 5
+#
+#  $scope.getFlatAccountListFailure = (res) ->
+#    toastr.error(res.data.message)
 
+  # search flat accounts list
+#  $scope.searchAccounts = (str) ->
+#    console.log("inside search accounts")
+#    $scope.fltAccntListPaginated = _.where($rootScope.fltAccntListPaginated,str)
+#    reqParam = {}
+#    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+#    if str.length > 2
+#      $scope.hideAccLoadMore = true
+#      reqParam.q = str
+#      reqParam.count = 5000
+#    else
+#      $scope.hideAccLoadMore = false
+#      reqParam.q = ''
+#      reqParam.count = 5000
+#    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
   # get flat account list with count 5
-  
+
   $scope.flatAccListC5 = {
     page: 1
     count: 5
@@ -253,30 +273,19 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     # groupService.getFlatAccList(reqParam).then($scope.loadMoreAccSuccess, $scope.loadMoreAccFailure)
     $scope.flatAccList.limit += 5
 
-  $rootScope.loadMoreAccSuccess = (res) ->
-    $scope.flatAccList.currentPage += 1
-    list = res.body.results
-    if res.body.totalPages >= $scope.flatAccList.currentPage
-      $scope.fltAccntListPaginated = _.union($scope.fltAccntListPaginated, list)
-    else
-      $scope.hideAccLoadMore = true
+  #----- This methods are not used now but may be used in future ----------#
+  #$rootScope.loadMoreAccSuccess = (res) ->
+   # $scope.flatAccList.currentPage += 1
+    #list = res.body.results
+    #if res.body.totalPages >= $scope.flatAccList.currentPage
+     # $scope.fltAccntListPaginated = _.union($scope.fltAccntListPaginated, list)
+    #else
+     # $scope.hideAccLoadMore = true
 
-  $rootScope.loadMoreAccFailure = (res) ->
-    console.log res
+  #$rootScope.loadMoreAccFailure = (res) ->
+    #console.log res
 
-  # search flat accounts list
-  $scope.searchAccounts = (str) ->
-    reqParam = {}
-    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-    if str.length > 2
-      $scope.hideAccLoadMore = true
-      reqParam.q = str
-      reqParam.count = 5000
-    else
-      $scope.hideAccLoadMore = false
-      reqParam.q = ''
-      reqParam.count = 5000
-    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+
 
   #-------- fetch groups with accounts list-------
   $scope.getFlattenGrpWithAccList = (compUname) ->

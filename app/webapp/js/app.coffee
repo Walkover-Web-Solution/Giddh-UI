@@ -248,6 +248,7 @@ giddh.webApp.run [
 
     $rootScope.getFlatAccountListListSuccess = (res) ->
       $rootScope.fltAccntListPaginated = res.body.results
+      $rootScope.flatAccList.limit = 5
 
     $rootScope.getFlatAccountListFailure = (res) ->
       toastr.error(res.data.message)

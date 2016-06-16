@@ -145,7 +145,7 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
       filters : ["All", "create", "delete", "share", "unshare", "move", "merge", "unmerge", "delete-all", "update", "master-import", "daybook-import", "ledger-excel-import"],
       entities: ["All", "company", "group", "account", "ledger", "voucher", "logs"],
       userUniqueNames: [],
-      accountUniqueNames: $scope.fltAccntListPaginated,
+      accountUniqueNames: $rootScope.fltAccntListPaginated,
       groupUniqueNames: $scope.groups,
       selectedOption: '',
       selectedEntity: '',
@@ -194,22 +194,23 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
   $scope.checkPermissions($rootScope.selectedCompany)
 
   #---------get flat accounts list------#
-  $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
-  $scope.flatAccList = {
-    page: 1
-    count: 5
-    totalPages: 0
-    currentPage : 1
-  }
+#  $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+#  $scope.flatAccList = {
+#    page: 1
+#    count: 5
+#    totalPages: 0
+#    currentPage : 1
+#  }
 
   $scope.getFlatAccountList = (compUname) ->
-    reqParam = {
-      companyUniqueName: compUname
-      q: ''
-      page: $scope.flatAccList.page
-      count: $scope.flatAccList.count
-    }
-    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+    $rootScope.getFlatAccountList(compUname)
+#    reqParam = {
+#      companyUniqueName: compUname
+#      q: ''
+#      page: $scope.flatAccList.page
+#      count: $scope.flatAccList.count
+#    }
+#    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
 
   $scope.getFlatAccountListListSuccess = (res) ->
     $rootScope.fltAccntListPaginated = res.body.results
@@ -217,7 +218,7 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
   $scope.getFlatAccountListFailure = (res) ->
     toastr.error(res.data.message)
 
-  $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+#  $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
 
   # search flat accounts list
   $rootScope.searchAccounts = (str) ->
