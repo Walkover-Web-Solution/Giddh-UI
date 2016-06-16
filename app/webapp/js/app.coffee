@@ -275,8 +275,12 @@ giddh.webApp.run [
         $rootScope.fy = FY
         $rootScope.activeYear = activeYear
         $rootScope.currentFinancialYear =  activeYear.year
+      localStorageService.set('activeFY',FY)
 
-] 
+]
+
+giddh.webApp.config ($sceProvider) ->
+  $sceProvider.enabled(false)
 
 giddh.webApp.config ($httpProvider) ->
   $httpProvider.interceptors.push('appInterceptor')

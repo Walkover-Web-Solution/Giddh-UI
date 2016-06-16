@@ -663,7 +663,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.setAdditionalAccountDetails = ()->
     $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.datePicker.accountOpeningBalanceDate,
         "dd-MM-yyyy")
-    $scope.selectedAccount.mobileNo = $scope.mergeNum($scope.acntExt)
+    if(_.isUndefined($scope.selectedAccount.mobileNo) || _.isEmpty($scope.selectedAccount.mobileNo))
+      $scope.selectedAccount.mobileNo = null
+    if(_.isUndefined($scope.selectedAccount.email) || _.isEmpty($scope.selectedAccount.email))
+      $scope.selectedAccount.email = null
+    #$scope.selectedAccount.mobileNo = $scope.mergeNum($scope.acntExt)
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: $scope.selectedGroup.uniqueName

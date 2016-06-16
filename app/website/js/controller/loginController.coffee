@@ -2,6 +2,7 @@
 
 loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr) ->
   $scope.loginIsProcessing = false
+  $scope.captchaKey = '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi'
 
   $rootScope.homePage = false
 

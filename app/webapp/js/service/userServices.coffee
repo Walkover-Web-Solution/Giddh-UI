@@ -98,6 +98,10 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
           method: 'PUT'
           url: '/users/system_admin/verify-number'
         }
+        connectBankAc: {
+          method: 'GET'
+          url: '/company/:companyUniqueName/ebanks/token'
+        }
       }
   )
 
@@ -205,6 +209,10 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
     verifyNumber: (data) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.verifyNumber(data, onSuccess, onFailure)
+    )
+    connectBankAc: (uUname) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.connectBankAc({companyUniqueName: uUname}, onSuccess, onFailure)
     )
 
   userServices

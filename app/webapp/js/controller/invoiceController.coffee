@@ -17,7 +17,16 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.nameForAction = []
   $scope.onlyDrData = []
   $scope.entriesForInvoice = []
-
+  $scope.flatAccntWGroupsList = []
+  $scope.search = {}
+  $scope.search.acnt = ''
+  $scope.gwaList = {
+    page: 1
+    count: 5000
+    totalPages: 0
+    currentPage : 1
+    limit: 5
+  }
   # default Template data
   $scope.tempDataDef=
     logo: 
@@ -152,14 +161,22 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.makeAccountsListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  #-------- fetch groups with accounts list-------
-  $scope.gwaList = {
-    page: 1
-    count: 5000
-    totalPages: 0
-    currentPage : 1
-  }
+  
+  # search flat accounts list
+  $scope.searchAccounts = (str) ->
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    if str.length > 2
+      $scope.hideAccLoadMore = true
+      reqParam.q = str
+      reqParam.count = 5000
+    else
+      $scope.hideAccLoadMore = false
+      reqParam.q = ''
+      reqParam.count = 5000
+    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
 
+  #-------- fetch groups with accounts list-------
   $scope.getFlattenGrpWithAccList = (compUname) ->
     reqParam = {
       companyUniqueName: compUname
@@ -170,45 +187,34 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
 
   $scope.getFlattenGrpWithAccListSuccess = (res) ->
-    $scope.flatAccntWGroupsList = []
-    $scope.gwaList.totalPages = res.body.totalPages
+    $scope.gwaList.totalPages = res.body.totalPages    
     $scope.filterSundryDebtors(res.body.results)
-    $scope.showAccountList = true  
+    $scope.showAccountList = true
+    $scope.gwaList.limit = 5  
 
   $scope.getFlattenGrpWithAccListFailure = (res) ->
     toastr.error(res.data.message)
 
-  $scope.searchGrpWithAccounts = (str) ->
-    reqParam = {}
-    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-    if str.length > 2
-      $scope.hideLoadMore = true
-      reqParam.q = str
-      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
-    else
-      $scope.hideLoadMore = false
-      reqParam.q = ''
-      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
-  
-  # $scope.loadMoreGrpWithAcc = (compUname) ->
-  #   $scope.gwaList.page += 1
-  #   reqParam = {
-  #     companyUniqueName: compUname
-  #     q: ''
-  #     page: $scope.gwaList.page
-  #     count: $scope.gwaList.count
-  #   }
-  #   groupService.getFlattenGroupAccList(reqParam).then($scope.loadMoreGrpWithAccSuccess, $scope.loadMoreGrpWithAccFailure)
+  $scope.loadMoreGrpWithAcc = (compUname) ->
+    $scope.gwaList.limit += 5
 
-  # $scope.loadMoreGrpWithAccSuccess = (res) ->
-  #   $scope.gwaList.currentPage += 1
-  #   list = res.body.results
-  #   if res.body.totalPages >= $scope.gwaList.currentPage
-  #     $scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
-  #   else
-  #     $scope.hideLoadMore = true
+  $scope.loadMoreGrpWithAccSuccess = (res) ->
+    $scope.gwaList.currentPage += 1
+    list = res.body.results
+    if res.body.totalPages >= $scope.gwaList.currentPage
+      $scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
+    else
+      $scope.hideLoadMore = true
+
+  $scope.loadMoreGrpWithAccFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.searchGrpWithAccounts = (str) ->
+    if str.length < 1
+      $scope.gwaList.limit = 5
 
   $scope.filterSundryDebtors = (grpList) ->
+    $scope.flatAccntWGroupsList = []
     _.each grpList, (grp) ->
       if grp.groupUniqueName == 'sundry_debtors'
         $scope.flatAccntWGroupsList.push(grp)
@@ -287,6 +293,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # view template with sample data
   $scope.viewInvTemplate =(template, mode, data) ->
+    showPopUp = true
     $scope.templateClass = template.uniqueName
     if mode isnt 'genprev'
       $scope.genPrevMode = false
@@ -299,15 +306,16 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.tempSet = template.sections
     
     _.extend($scope.defTempData , data)
-    $scope.convertIntoOur()
+    showPopUp = $scope.convertIntoOur()
 
     # open dialog
-    $scope.modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/views/prevInvoiceTemp.html'
-      size: "a4"
-      backdrop: 'static'
-      scope: $scope
-    )
+    if(showPopUp)
+      $scope.modalInstance = $uibModal.open(
+        templateUrl: '/public/webapp/views/prevInvoiceTemp.html'
+        size: "a4"
+        backdrop: 'static'
+        scope: $scope
+      )
 
   # upload logo
   $scope.uploadLogo=(files)->
@@ -338,18 +346,26 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # convert data for UI usage
   $scope.convertIntoOur=()->
+    showPopUp = true
     # company setting
-    if not(_.isEmpty($scope.defTempData.company.data))
-      $scope.defTempData.company.data = $scope.defTempData.company.data.replace(RegExp(',', 'g'), '\n')
+    if(_.isNull($scope.defTempData.company))
+      toastr.error("Selected company is not available, please contact to support.","Error")
+      showPopUp = false
+    else if not(_.isEmpty($scope.defTempData.company.data))      
+      $scope.defTempData.company.data = $scope.defTempData.company.data.join("\n")
     
     # companyIdentities setting
-    if not(_.isEmpty($scope.defTempData.companyIdentities.data))
+    if(_.isNull($scope.defTempData.companyIdentities))
+      toastr.error("Selected company is not available, please contact to support.","Error")
+      showPopUp = false
+    else if not(_.isEmpty($scope.defTempData.companyIdentities.data))
       $scope.defTempData.companyIdentities.data = $scope.defTempData.companyIdentities.data.replace(RegExp(',', 'g'), '\n')
 
     # terms setting
     if $scope.defTempData.terms.length > 0
       str = $scope.defTempData.terms.toString()
       $scope.defTempData.termsStr = str.replace(RegExp(',', 'g'), '\n')
+    showPopUp
 
 
   # save template data
@@ -362,7 +378,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
     # company setting
     if not(_.isEmpty(data.company.data))
-      data.company.data = data.company.data.replace(RegExp('\n', 'g'), ',')
+      data.company.data = data.company.data.split('\n')
+      #data.company.data.replace(RegExp('\n', 'g'), ',')
     
     # companyIdentities setting
     if not(_.isEmpty(data.companyIdentities.data))
@@ -443,6 +460,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       toastr.error(res.data.message, res.data.status)
       # if invoice date have any problem
       if res.data.code is 'ENTRIES_AFTER_INOICEDATE'
+        $scope.genMode = true
+      else if res.data.code is 'INVALID_INVOICE_DATE'
         $scope.genMode = true
 
   # get inv templates 

@@ -415,12 +415,11 @@ textarea{
               <div class="txtAreaWrap">
                 
                 <div ng-if="editMode">
-                  <label class="mrB">Enter your terms or bank details</label>
-                  <textarea class="form-control" ng-model="defTempData.termsStr" placeholder="Use Enter for line Break"></textarea>
+                  <textarea class="form-control" ng-model="defTempData.termsStr" placeholder="Enter your terms"></textarea>
                 </div>
                 <!-- end if editmode -->
 
-                <ol  ng-if="!editMode" style="list-style: decimal inside;">
+                <ol  ng-if="!editMode" style="list-style: none">
                   <li ng-repeat="item in defTempData.terms track by $index">{{item}}</li>
                 </ol>
 

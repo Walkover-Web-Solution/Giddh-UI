@@ -1,6 +1,6 @@
 "use strict"
 
-mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window) ->
+mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService) ->
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
   $rootScope.basicInfo = {}
@@ -14,6 +14,14 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.canManageCompany = false
   $rootScope.canVWDLT = false
   $rootScope.superLoader = false
+  $rootScope.flatAccList = {
+    page: 1
+    count: 5
+    totalPages: 0
+    currentPage : 1
+    limit: 5
+  }
+  $rootScope.fltAccntListPaginated = []
   
   $scope.logout = ->
     $http.post('/logout').then ((res) ->
@@ -94,8 +102,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $rootScope.setActiveFinancialYear(cdt.activeFinancialYear)
   ), 500
   
-
-
+  
 
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)

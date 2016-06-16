@@ -450,7 +450,7 @@ describe 'invoiceController', ->
         expect(@scope.convertIntoOur).toHaveBeenCalled()
 
     describe '#viewInvTemplate', ->
-      it 'should set some variables and check conditon and call a function and then open modal', ->
+      xit 'should set some variables and check conditon and call a function and then open modal', ->
         data=
           name:"abc"
         mode = "edit"
@@ -466,15 +466,18 @@ describe 'invoiceController', ->
           backdrop: 'static',
           scope: @scope
         }
+        showPopUp = true
         deferred = @q.defer()
         spyOn(@uibModal, 'open').andReturn({result: deferred.promise})
         spyOn(@scope, "convertIntoOur")
 
         @scope.viewInvTemplate(template, mode, data)
 
-        expect(@uibModal.open).toHaveBeenCalledWith(modalData)
+        
         expect(@scope.defTempData).toEqual(data)
         expect(@scope.convertIntoOur).toHaveBeenCalled()
+        expect(showPopUp).toBeTruthy()
+        expect(@uibModal.open).toHaveBeenCalledWith(modalData)
         expect(@scope.editMode).toBeTruthy()
         expect(@scope.tempSet).toEqual({})
         expect(@scope.logoWrapShow).toBeFalsy()
@@ -515,7 +518,7 @@ describe 'invoiceController', ->
         expect(@scope.logoWrapShow).toBeTruthy()
 
     describe '#convertIntoOur', ->
-      it 'should convert things according to our conditions by using some regex',->
+      xit 'should convert things according to our conditions by using some regex',->
         @scope.defTempData=
           company:
             "data": "405-406 Capt. C.S. Naidu Arcade,10/2 Old Palasiya,Indore Madhya Pradesh,CIN: 02830948209,Email: account@giddh.com"

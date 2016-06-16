@@ -450,4 +450,18 @@ router.delete '/:uniqueName/invoices/:invoiceUniqueID', (req, res) ->
     res.send data
 
 
+# connect banks
+router.get '/:uniqueName/ebanks/token', (req, res) ->
+  hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/ebanks/token'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
+
 module.exports = router

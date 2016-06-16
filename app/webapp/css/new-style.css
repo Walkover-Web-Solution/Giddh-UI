@@ -2547,3 +2547,8 @@ ul.pills li {
 .ledger-table td > input{
     min-height:42px;
 }
+/*switch*/
+.switch.wide100{width:100px}
+.switch.wide100.checked small {
+    left: 72px;
+}
