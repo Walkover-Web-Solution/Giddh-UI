@@ -178,7 +178,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       $scope.linkedAccountsExist = true
       #add transaction date to cards and assign utc format
       _.each $scope.banks.linked, (bank) ->
-        _.each bank.yodleeAccounts, (card) ->
+        _.each bank.accounts, (card) ->
           if _.isNull(card.transactionDate) || _.isUndefined(card.transactionDate)
             card.transactionDate =  new Date()
           else
@@ -360,7 +360,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     card.showAccList = false
     $scope.showAccountsList(card)
     $scope.banks.toLinkObj = {
-      itemAccountId: card.itemAccountId
+      itemAccountId: card.accountId
       uniqueName: ''
     }
 
@@ -381,7 +381,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
   $scope.LinkGiddhAccountConfirmSuccess = (res) ->
     linkAccData = res.body
-    toastr.success('Account linked successfully with ' + linkAccData.giddhAccount.name)
+    toastr.success('Account linked successfully with ' + linkAccData.linkedAccount.name)
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
     }
@@ -391,11 +391,11 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     toastr.error(res.data.message)
 
   $scope.removeGiddhAccount = (card) ->
-    $scope.banks.toRemove.linkedAccount = card.giddhAccount.uniqueName
-    $scope.banks.toRemove.ItemAccountId = card.itemAccountId.toString()
+    $scope.banks.toRemove.linkedAccount = card.linkedAccount.uniqueName
+    $scope.banks.toRemove.ItemAccountId = card.accountId.toString()
     modalService.openConfirmModal(
         title: 'Delete Account',
-        body: 'Are you sure you want to unlink ' + card.giddhAccount.uniqueName + ' ?',
+        body: 'Are you sure you want to unlink ' + card.linkedAccount.uniqueName + ' ?',
         ok: 'Yes',
         cancel: 'No').then($scope.removeGiddhAccountConfirmed)
 
@@ -459,7 +459,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     toastr.error(res.data.message, res.data.code)
 
   $scope.setItemAccountId = (card) ->
-    $scope.banks.toLinkObj.itemAccountId = card.itemAccountId
+    $scope.banks.toLinkObj.itemAccountId = card.accountId
 
   $scope.updateTransactionDate = (date) ->
     obj =  {

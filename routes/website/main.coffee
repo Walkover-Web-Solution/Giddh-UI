@@ -59,5 +59,4 @@ router.post '/magic-link', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-
 module.exports = router

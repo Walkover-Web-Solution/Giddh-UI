@@ -276,8 +276,8 @@
                 <section class="linked-accounts clearfix" ng-repeat="account in banks.linked | orderBy: 'siteName'">
                   <aside class="title" ng-bind="account.siteName"></aside>
                   <aside class="body">
-                    <aside class="account-card" ng-repeat="card in account.yodleeAccounts">
-                      <h1 ng-bind="card.accountName"  uib-tooltip="{{card.accountName}}"></h1>
+                    <aside class="account-card" ng-repeat="card in account.accounts">
+                      <h1 ng-bind="card.name"  uib-tooltip="{{card.name}}"></h1>
                       <div class="account-number">
                         <b>Account</b>: {{card.accountNumber}}
                       </div>
@@ -301,8 +301,8 @@
                       <div class="balance">
                         {{card.currentBalanceCurrencyCode}} {{card.currentBalance}}
                       </div>
-                      <div class="with" ng-if="card.giddhAccount != null">
-                        Linked with: {{card.giddhAccount.name}} ({{card.giddhAccount.uniqueName}})
+                      <div class="with" ng-if="card.linkedAccount != null">
+                        Linked with: {{card.linkedAccount.name}} ({{card.linkedAccount.uniqueName}})
                       </div>
                       <div class="select-account" ng-if="card.showAccList">
                         <ui-select ng-model="banks.toLink" theme="bootstrap" on-select="LinkGiddhAccountConfirm($select.selected)">
@@ -317,8 +317,8 @@
                         </ui-select>
                       </div>
                       <button class="btn btn-sm btn-warning pull-right" ng-if="card.showAccList" ng-click="card.showAccList = !card.showAccList" style="margin-top:5px">Not Now</button>
-                      <button class="btn btn-sm btn-info" ng-if="card.giddhAccount == null && !card.showAccList" ng-click="linkGiddhAccount(card)">Link Account</button>
-                      <button class="btn btn-sm btn-danger mrT1" ng-if="card.giddhAccount.name.length > 0" ng-click="removeGiddhAccount(card)">Unlink Account</button>
+                      <button class="btn btn-sm btn-info" ng-if="card.linkedAccount == null && !card.showAccList" ng-click="linkGiddhAccount(card)">Link Account</button>
+                      <button class="btn btn-sm btn-danger mrT1" ng-if="card.linkedAccount.name.length > 0" ng-click="removeGiddhAccount(card)">Unlink Account</button>
                       <a class="delete-bank" ng-click="deleteAddedBank(card)" uib-tooltip="Delete Bank" tooltip-placement="left"><i class="glyphicon glyphicon-trash"></i></a>
                     </aside>
                   </aside>

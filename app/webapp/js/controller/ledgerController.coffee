@@ -181,6 +181,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.getOtherTransactionsSuccess = (res, gData, acData) ->
+    console.log res
     angular.copy([], $scope.eLedgerDrData)
     angular.copy([], $scope.eLedgerCrData)
 
@@ -290,6 +291,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.getAcDtlDataSuccess = (res, gData, acData) ->
+    console.log res
     _.extend(acData, res.body)
     $scope.canAddAndEdit = $scope.hasAddAndUpdatePermission(acData)
     $rootScope.showLedgerBox = false

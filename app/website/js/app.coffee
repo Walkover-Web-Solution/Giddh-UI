@@ -363,9 +363,12 @@ app.controller 'magicCtrl', [
 app.controller 'successCtrl', [
   '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter',
   ($scope, toastr, $http, $location, $rootScope, $filter) ->
-    console.log($location.search)
+    console.log($location.search())
 
 ]
+
+
+
 
 # resources locations
 # video background- https://github.com/2013gang/angular-video-background
