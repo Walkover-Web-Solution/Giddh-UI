@@ -641,6 +641,8 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.connectBankSuccess = (res) ->
     console.log "connectBankSuccess:", res
     $scope.cntBnkData = res.body
+    url = res.body.token_URL + '?token=' + res.body.token
+    $scope.connectUrl = url
     $uibModal.open(
       templateUrl: '/public/webapp/views/connectBankModal.html',
       size: "md",
@@ -652,6 +654,8 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     console.log "connectBankFailure:", res
     toastr.error(res.data.message, "Error")
 
+  $scope.getIframe = (self) ->
+    console.log self
 
 #init angular app
 giddh.webApp.controller 'userController', userController

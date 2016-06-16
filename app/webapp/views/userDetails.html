@@ -212,7 +212,7 @@
         <uib-tab ng-if="canManageCompany" heading="Linked Accounts" select="loadYodlee()">
           <div class="pd2 clearfix">
             <h1 class="mrB1">Add Bank Account </h1>
-           <!--  <button ng-click="connectBank()" class="btn btn-primary">Connect Bank</button> -->
+            <button ng-click="connectBank()" class="btn btn-primary">Connect Bank</button>
 
             <div class="max350 mrT1">
               <ui-select ng-model="banks.list" theme="bootstrap" on-select="selectBank($select.selected)">
