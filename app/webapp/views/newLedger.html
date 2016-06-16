@@ -1,0 +1,293 @@
+<!-- 
+<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent"> -->
+
+    <section class="container-fluid">
+        <div class="pdL2 pdR2 pdT2">
+
+		    <div class="form-inline pdB1 ledgHead">
+		      <form name="fromToDateForm" novalidate class="form-group mrR1">
+		        <div class="form-group">
+		        <!--   <label>From</label> -->
+
+		          <p class="input-group maxW150">
+		            <input type="text" class="form-control"
+		                   uib-datepicker-popup="{{format}}" required
+		                   datepicker-options="dateOptions"
+		                   is-open="fromDatePickerIsOpen"
+		                   ng-click="fromDatePickerOpen()"
+		                   ng-model="fromDate.date" 
+		                   max-date="today" 
+		                   placeholder="from date" 
+		                    />
+		        <span class="input-group-btn">
+		          <button type="button" class="btn btn-default" ng-click="fromDatePickerOpen()"><i
+		              class="glyphicon glyphicon-calendar"></i></button>
+		        </span>
+		          </p>
+		        </div>
+		        <div class="form-group">
+		          <label>To</label>
+
+		          <p class="input-group maxW150">
+		            <input type="text" class="form-control"
+		                   uib-datepicker-popup="{{format}}" required
+		                   datepicker-options="dateOptions"
+		                   is-open="toDatePickerIsOpen"
+		                   ng-click="toDatePickerOpen()"
+		                   ng-model="toDate.date" min-date="fromDate.date"max-date="today" placeholder="to date" 
+		                   />
+		        <span class="input-group-btn">
+		          <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i
+		              class="glyphicon glyphicon-calendar"></i></button>
+		        </span>
+		          </p>
+		        </div>
+		        <div class="form-group">
+		          <button type="button" class="btn btn-primary mrL1" ng-click="getLedgerData()" ng-disabled="fromToDateForm.$invalid">
+		            GO
+		          </button>
+		        </div>
+		        
+		      </form>
+
+
+		      <div class="form-group mrL1 pull-right">
+		        <input type="search" class="form-control maxW150" placeholder="Search ledger" ng-model="particularSearch">
+		        <i class="glyphicon glyphicon-search"  style="right:25px;top:3px;"></i>
+		      </div>
+		      
+		      <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Show List" tooltip-placement="left" ng-click="showImportList()" >
+		        <i class="glyphicon glyphicon-th-list" ></i>
+		      </a>
+		      
+		      <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Export" tooltip-placement="left" ng-click="exportLedger()" >
+		        <i class="glyphicon glyphicon-cloud-download pull-right" ></i>
+		      </a>
+
+		      <span id="isSafari"></span>
+		     
+		      <form class="pull-right mrL1" enctype="multipart/form-data">
+		        <a class="mrL1" type="file" ngf-select="importLedger($files, $invalidFiles)" accept=".xls, .xlsx" ngf-max-size="100MB" ng-disabled="!canUpdate">
+		           <i class="glyphicon glyphicon-copy" uib-tooltip="Import" tooltip-placement="left"></i>
+		        </a>
+		      </form>
+
+
+		      <span class="pull-right mrL1" uib-dropdown  auto-close="outsideClick">
+		        <a href id="simple-dropdown" uib-dropdown-toggle>
+		          <i uib-tooltip="Send Ledger" tooltip-placement="right" class="glyphicon glyphicon-envelope" ></i>
+		        </a>
+		        <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+		          <li>
+		            <form class="form-group pd1" name="ledgerEmailSendForm" novalidate>
+		              <div class="mrB1">
+		                <textarea ng-model="ledgerEmailData.email" required name="ledgerEmailSendForm.email" class="form-control" placeholder="Recipents Email Id's"></textarea>
+		              </div>
+		              <button ng-disabled="ledgerEmailSendForm.$invalid" class="btn btn-primary btn-sm" ng-click="sendLedgEmail(ledgerEmailData.email)">Send Email</button>
+		            </form>
+		          </li>
+		        </ul>
+		      </span>
+
+		      <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Generate Magic Link" tooltip-placement="left" ng-click="getMagicLink()">
+		        <i class="glyphicon glyphicon-link pull-right"></i>
+		      </a>
+
+		    </div>
+
+		    <div class="mrB1" ng-repeat="f in impLedgFiles" style="font:smaller" ng-hide="impLedgBar">
+		      <uib-progressbar class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</uib-progressbar>
+		    </div>
+
+        <!--recieving-giving-->
+        <div class="col-xs-12 pad0">
+          <div class="clearfix ldgTheadL col-xs-4 text-left">
+            <span class="icon48 icon-in"></span>
+
+            <h3 class="ledgerHead">
+              <span tooltip-placement="top" uib-tooltip="{{accountName}}" class="ellp">{{accountName}}</span>
+              <span>&nbsp;is <strong>receiving</strong></span>
+            </h3>
+          </div>
+
+          <div class="col-xs-4 text-center">
+            <!--breadcrumbs-->
+            <div>
+              <ol class="breadcrumb">
+                <!-- <li ng-repeat="(key,value) in ledgerBreadCrumbList"
+                    ng-class="{active:$last}">
+                  <a href="javascript:void(0)">{{value.name}}</a>
+                </li> -->
+                <li>Bank Accounts</li>
+                <li>ICICI Bank Ltd</li>
+              </ol>
+            </div>
+            <!--/breadcrumbs-->
+          </div>
+
+
+          <div class="alR col-xs-4 text-right">
+            <div class="clearfix ldgTheadR">
+              <span class="icon48 icon-out"></span>
+
+              <h3 class="ledgerHead">
+                <span>&nbsp;is <strong>giving</strong></span>
+                <span tooltip-placement="top" uib-tooltip="{{accountName}}" class="ellp">{{accountName}}</span>
+              </h3>
+            </div>
+          </div>
+        </div>
+        <!--/receiving-giving-->
+
+
+
+
+
+        <!--ledger table start-->
+        <div class="ledger-container">
+          <!--ledger table head 1-->
+          <table class="col-xs-12 ledger-head t-h-bg1">
+            <thead>
+              <tr>
+                <th class="col-xs-6">Debit</th>
+                <th class="col-xs-6">Credit</th>
+              </tr>
+            </thead>
+          </table>
+          <div class="ledger-table-body">
+            <!--left column-->
+            <div class="left-col">
+                <!--ledger table body debit section-->
+                <section class="col-xs-12 pad0 bdr-w-t">
+                  <table class="width100">
+                    <thead>
+                      <tr class="t-h-bg2">
+                        <th class="col-xs-1"></th>
+                        <th class="col-xs-3">
+                          Date
+                          <!-- <i class="glyphicon glyphicon-sort pull-left mrL"></i> -->
+                        </th>
+                        <th class="col-xs-5">Paticular</th>
+                        <th class="col-xs-3">Amount</th>
+                      </tr>
+                      <tr class="bg3">
+                        <td colspan="12" class="col-xs-12 text-right bdr-w-t h32">
+                          <span ng-if="ledgerData.forwardedBalance.type == 'DEBIT' && ledgerData.forwardedBalance.amount > 0">B/F : {{ledgerData.forwardedBalance.amount | number:2}}</span>
+                          <!-- <span ng-if="ledgerData.forwardedBalance.type == 'CREDIT'">B/F : 0</span> -->
+                        </td>
+                      </tr>
+                    </thead>
+                  </table>
+
+                  <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84">
+                  
+                  <table class="width100">
+                    <tbody>
+                      <tr class="bdr-w-t" ng-repeat="ledger in ledgerData.ledgers" ng-if="ledger.hasDebit">
+                        <td colspan="100%" class="ledger-row">
+                          <table class="width100">
+                            <tbody class="ledger-main">
+                              <tr ng-repeat="txn in ledger.transactions">
+                                <td class="col-xs-1 maxW42">
+                                  <input type="checkbox">
+                                </td>
+                                <td class="col-xs-3"><input class="form-control" ng-model="ledger.entryDate"></td>
+                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular.name"></td>
+                                <td class="col-xs-3"><input class="form-control" ng-model="txn.amount"></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+              </perfect-scrollbar>
+              <table class="width100">
+                <tbody>
+                    <tr class="t-h-bg3 bdr-w-t">
+                      <td colspan="12" class="col-xs-12 text-right bdr-w-t white h42">
+                        <span ng-if="ledgerData.balance.type == 'DEBIT'">C/F: {{ledgerData.debitTotal | number:2}}</span>
+                      </td>
+                    </tr>
+                    <tr class="t-h-bg2">
+                      <td colspan="12" class="col-xs-12 text-right bdr-w-t white">Total : {{ledgerData.debitTotal | number:2}}</td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+            <!--right column-->
+            <div class="right-col">
+                <!--ledger table body debit section-->
+                <section class="col-xs-12 pad0 bdr-w-t">
+                  
+                  <table class="width100">
+                    <thead>
+                      <tr class="t-h-bg2">
+                        <th class="col-xs-1"></th>
+                        <th class="col-xs-3">
+                          Date
+                          <!-- <i class="glyphicon glyphicon-sort pull-left"></i> -->
+                        </th>
+                        <th class="col-xs-5">Paticular</th>
+                        <th class="col-xs-3">Amount</th>
+                      </tr>
+                      <tr class="bg3">
+                        <td colspan="12" class="col-xs-12 text-right bdr-w-t h32">
+                          <span ng-if="ledgerData.forwardedBalance.type == 'CREDIT' && ledgerData.forwardedBalance.amount > 0">B/F : {{ledgerData.forwardedBalance.amount | number:2}}</span>
+                         <!--  <span ng-if="ledgerData.forwardedBalance.type == 'DEBIT'">B/F : 0</span> -->
+                        </td>
+                      </tr>
+                    </thead>
+                  </table>
+                  
+                  <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84">
+                  
+                  <table class="width100">
+                    <tbody>
+                      <tr class="bdr-w-t" ng-repeat="ledger in ledgerData.ledgers" ng-if="ledger.hasCredit">
+                        <td colspan="100%" class="ledger-row">
+                          <table class="width100">
+                            <tbody class="ledger-main">
+                              <tr ng-repeat="txn in ledger.transactions">
+                                <td class="col-xs-1 maxW42">
+                                  <input type="checkbox">
+                                </td>
+                                <td class="col-xs-3"><input class="form-control" ng-model="ledger.entryDate"></td>
+                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular.name"></td>
+                                <td class="col-xs-3"><input class="form-control" ng-model="txn.amount"></td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </section>
+              </perfect-scrollbar>
+              <table class="width100">
+                <tbody>
+                    <tr class="t-h-bg3">
+                      <td colspan="12" class="col-xs-12 text-right bdr-w-t white h42">
+                        <span  ng-if="ledgerData.balance.type == 'CREDIT'">C/F: {{ledgerData.balance.amount | number:2}}</span>
+                      </td>
+                    </tr>
+                    <tr class="t-h-bg2">
+                      <td colspan="12" class="col-xs-12 text-right bdr-w-t white">Total: {{ledgerData.creditTotal | number:2}}</td>
+                    </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+
+
+
+        </div>
+        <div style="height: 80px;"></div>
+      </div>
+    </section>
+
+<!-- </perfect-scrollbar> -->
+
