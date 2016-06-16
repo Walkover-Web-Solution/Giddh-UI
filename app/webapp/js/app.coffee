@@ -29,7 +29,6 @@ giddh.webApp = angular.module("giddhWebApp",
     "razor-pay"
     "ngCsv"
     "ngclipboard"
-    "ledgerDirectives"
   ]
 )
 
