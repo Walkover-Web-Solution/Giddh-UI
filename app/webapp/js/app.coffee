@@ -163,11 +163,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/views/ledgerContent.html'
     controller: 'ledgerController'
   )
-  .state('company.content.ledger',
-    url: '/ledger/:unqName'
-    templateUrl: '/public/webapp/views/newLedger.html'
-    controller: 'newLedgerController'
-  )
+  # .state('company.content.ledger',
+  #   url: '/ledger/:unqName'
+  #   templateUrl: '/public/webapp/views/newLedger.html'
+  #   controller: 'newLedgerController'
+  # )
   .state('/thankyou',
     url: '/thankyou'
     templateUrl: '/public/webapp/views/thanks.html'

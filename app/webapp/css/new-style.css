@@ -2548,7 +2548,15 @@ ul.pills li {
     min-height:42px;
 }
 /*switch*/
-.switch.wide100{width:100px}
+.switch.wide100{
+    width:100px
+}
+
 .switch.wide100.checked small {
     left: 72px;
+}
+
+.left-col, .right-col{
+    width:50%;
+    float:left;
 }
