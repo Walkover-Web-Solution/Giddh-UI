@@ -46,7 +46,7 @@ router.get '/sitemap.xml', (req, res) ->
 router.get '/robots.txt', (req, res) ->
   res.sendFile 'robots.txt', options
 
-router.get '/success/?login_id', (req, res) ->
+router.get '/success?login_id=:login_id', (req, res) ->
   console.log req.query
   res.sendFile 'success.html', options
 
