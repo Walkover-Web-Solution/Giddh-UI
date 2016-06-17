@@ -214,7 +214,7 @@
             <h1 class="mrB1">Add Bank Account </h1>
             <button ng-click="connectBank()" class="btn btn-primary">Connect Bank</button>
 
-            <div class="max350 mrT1">
+<!--             <div class="max350 mrT1">
               <ui-select ng-model="banks.list" theme="bootstrap" on-select="selectBank($select.selected)">
                 <ui-select-match placeholder="Select Accounts">
                   <span>{{$select.selected.defaultDisplayName}}</span>
@@ -224,8 +224,8 @@
                   <span ng-bind-html="bank.defaultDisplayName"></span>
                 </ui-select-choices>
               </ui-select>
-            </div>
-            <form class="clearfix" name="addAccountForm" novalidate ng-if="banks.list != undefined" ng-submit="addAccountForm.$valid && submitForm(bankDetails)">
+            </div> -->
+<!--             <form class="clearfix" name="addAccountForm" novalidate ng-if="banks.list != undefined" ng-submit="addAccountForm.$valid && submitForm(bankDetails)">
               <div class="row pdT2 pdR">
                 <div class="col-xs-4">
                  <section class="greyBox">
@@ -266,7 +266,7 @@
                   </section>
                 </div>
               </div>
-            </form>
+            </form> -->
             <div class="mrT1">NOTE: In case you do not see your bank listed in Added Accounts even after getting a success message, please check again after some time.</div>
             <hr class="mrT2 col-xs-11">
             <div class="mrT2 col-xs-12 pd0">

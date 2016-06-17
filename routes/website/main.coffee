@@ -59,4 +59,11 @@ router.post '/magic-link', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.put '/ebanks/login', (req, res) ->
+  hUrl = settings.envUrl + '/ebanks/login/' + req.body.loginId
+  settings.client.put hUrl, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 module.exports = router

@@ -366,13 +366,16 @@ app.controller 'successCtrl', [
     urlSearch = window.location.search
     searchArr = urlSearch.split("=")
     LoginId = searchArr[1]
-    url = '/ebanks/login/' + LoginId
+    url = '/ebanks/login'
+    data = {
+      loginId : LoginId
+    }
 
-    $http.put(url).then(
+    $http.put(url, data).then(
       (success)->
         
       (error)->
-        console.log error
+
     )
 
 ]
