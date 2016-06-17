@@ -47,8 +47,6 @@ router.get '/robots.txt', (req, res) ->
   res.sendFile 'robots.txt', options
 
 router.get '/success', (req, res) ->
-  console.log req
-  console.log req.query, req.param
   res.sendFile 'success.html', options
 
 router.post '/magic-link', (req, res) ->

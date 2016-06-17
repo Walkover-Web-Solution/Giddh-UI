@@ -363,13 +363,14 @@ app.controller 'magicCtrl', [
 app.controller 'successCtrl', [
   '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter',
   ($scope, toastr, $http, $location, $rootScope, $filter) ->
-    console.log($location.search(), window.location)
-    LoginId = "92504"
-    url = 'ebanks/login/' + LoginId
+    urlSearch = window.location.search
+    searchArr = urlSearch.split("=")
+    LoginId = searchArr[1]
+    url = '/ebanks/login/' + LoginId
 
     $http.put(url).then(
       (success)->
-        console.log success
+        
       (error)->
         console.log error
     )
