@@ -201,12 +201,12 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
           newEntry = {}
           newEntry.sharedData= sharedData
           newEntry.sharedData.description= transaction.remarks.description
-          if transaction.type is "debit"
+          if transaction.type is "DEBIT"
             newEntry.transactions = [transaction]
             sharedData.voucherType = "pay"
             $scope.eLedgerDrData.push(newEntry)
 
-          if transaction.type is "credit"
+          if transaction.type is "CREDIT"
             newEntry.transactions = [transaction]
             sharedData.voucherType = "rcpt"
             $scope.eLedgerCrData.push(newEntry)

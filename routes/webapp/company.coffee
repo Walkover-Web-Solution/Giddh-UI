@@ -207,12 +207,12 @@ router.get '/:companyUniqueName/ebanks', (req, res) ->
     res.send data
 
 #refresh added banks list
-router.get '/:companyUniqueName/ebanks', (req, res) ->
+router.get '/:companyUniqueName/ebanks/refresh', (req, res) ->
   authHead =
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks' + req.params.refresh
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/refresh'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
@@ -314,6 +314,20 @@ router.post '/:companyUniqueName/logs/:page', (req, res) ->
       res.status(response.statusCode).send(data)
     else
       res.send data
+
+#refresh-token
+router.get '/:companyUniqueName/ebanks/:accountId/refresh-token', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/' + req.params.accountId + '/refresh-token'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 
 #delete audit logs
 router.delete '/:companyUniqueName/logs/:beforeDate', (req, res) ->
@@ -463,5 +477,16 @@ router.get '/:uniqueName/ebanks/token', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.delete '/:uniqueName/ebanks/:accountId',(req,res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.uniqueName+'/ebanks/'+req.params.accountId
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
 
 module.exports = router

@@ -8,6 +8,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         'page': @page
         'memSiteAccId': @memSiteAccId
         'linkedAccount': @linkedAccount
+        'accountId': @accountId
       },
       {
         getUserDetails: {
@@ -68,15 +69,15 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         }
         refreshAll: {
           method: 'GET'
-          url: '/company/:companyUniqueName/ebanks'
+          url: '/company/:companyUniqueName/ebanks/refresh'
         }
-        deleteAccount: {
+        deleteBAccount: {
           method: 'DELETE'
-          url: '/company/:companyUniqueName/ebanks/:memSiteAccId/remove'
+          url: '/company/:companyUniqueName/ebanks/:memSiteAccId'
         }
         removeGiddhAccount: {
           method: 'DELETE'
-          url: '/company/:companyUniqueName/ebanks/:ItemAccountId/:linkedAccount'
+          url: '/company/:companyUniqueName/ebanks/:ItemAccountId/:linkedAccount/unlink'
         }
         createSubUser: {
           method: 'POST' 
@@ -101,6 +102,10 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         connectBankAc: {
           method: 'GET'
           url: '/company/:companyUniqueName/ebanks/token'
+        }
+        refreshAccount: {
+          method: 'GET' 
+          url: '/company/:companyUniqueName/ebanks/:accountId/refresh-token'
         }
       }
   )
@@ -180,7 +185,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
     )
     refreshAll: (companyUniqueName) ->
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.refreshAll({companyUniqueName: companyUniqueName.cUnq, refresh: companyUniqueName.refresh},onSuccess, onFailure)
+        UserSET.refreshAll({companyUniqueName: companyUniqueName.cUnq},onSuccess, onFailure)
     )
     removeAccount: (reqParam) ->
       @handlePromise((onSuccess, onFailure) ->
@@ -188,7 +193,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
     )
     deleteBankAccount: (reqParam) ->
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.deleteAccount({companyUniqueName: reqParam.cUnq, memSiteAccId: reqParam.memSiteAccId},onSuccess, onFailure)
+        UserSET.deleteBAccount({companyUniqueName: reqParam.cUnq, memSiteAccId: reqParam.memSiteAccId},onSuccess, onFailure)
     )
     createSubUser: (uUname, data) ->
       @handlePromise((onSuccess, onFailure) ->
@@ -213,6 +218,10 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
     connectBankAc: (uUname) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.connectBankAc({companyUniqueName: uUname}, onSuccess, onFailure)
+    )
+    refreshAccount: (reqParam) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.refreshAccount({companyUniqueName: reqParam.companyUniqueName, accountId: reqParam.accountId}, onSuccess, onFailure)
     )
 
   userServices

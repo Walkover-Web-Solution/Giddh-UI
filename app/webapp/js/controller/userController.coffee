@@ -165,6 +165,9 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
   $scope.loadYodlee = () ->
     #userServices.loginRegister($scope.loginSuccess, $scope.loginFailure)
+    $scope.getYodleeAccounts()
+
+  $scope.getYodleeAccounts = () ->
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
     }
@@ -291,6 +294,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
       $scope.banks.list = undefined
       toastr.success('Account added successfully!')
 
+    # $scope.getYodleeAccounts()
     userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
 
     $scope.banks.requestSent = false
@@ -418,7 +422,8 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     toastr.error(res.body)
 
   $scope.deleteAddedBank = (card) ->
-    $scope.banks.toDelete = card.siteAccountId
+    console.log card
+    $scope.banks.toDelete = card.accountId
     modalService.openConfirmModal(
         title: 'Delete Account',
         body: 'Are you sure you want to delete ' + card.accountName + ' ?' + '\n' + 'All accounts linked with the same bank will be deleted.',
@@ -434,6 +439,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     userServices.deleteBankAccount(reqParam).then($scope.deleteAddedBankAccountConfirmedSuccess, $scope.deleteAddedBankAccountConfirmedFailure)
 
   $scope.deleteAddedBankAccountConfirmedSuccess = (res) ->
+    console.log(res)
     toastr.success(res.body)
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
@@ -636,11 +642,9 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
   # connect bank
   $scope.connectBank = ()->
-    console.log "connectBank"
     userServices.connectBankAc($rootScope.selectedCompany.uniqueName).then($scope.connectBankSuccess, $scope.connectBankFailure)
 
   $scope.connectBankSuccess = (res) ->
-    console.log "connectBankSuccess:", res
     $scope.cntBnkData = res.body
     url = res.body.token_URL + '?token=' + res.body.token
     $scope.connectUrl = url
@@ -652,13 +656,29 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     )
 
   $scope.connectBankFailure = (res) ->
-    console.log "connectBankFailure:", res
     toastr.error(res.data.message, "Error")
 
-  $scope.getIframe = (self) ->
-    console.log self
+  $scope.refreshToken = (account) ->
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      accountId: account.accountId
+    }
+    userServices.refreshAccount(reqParam).then($scope.refreshTokenSuccess, $scope.refreshTokenFailure )
+
+  $scope.refreshTokenSuccess = (res) ->
+    console.log res
+    url = res.body.connectUrl
+    $scope.connectUrl = url
+    $uibModal.open(
+      templateUrl: '/public/webapp/views/refreshBankAccountsModal.html',
+      size: "md",
+      backdrop: 'static',
+      scope: $scope
+    )
+
+  $scope.refreshTokenFailure = (res) ->
+    toastr.error(res.data.message, "Error")
+  
 
 #init angular app
 giddh.webApp.controller 'userController', userController
-
-
