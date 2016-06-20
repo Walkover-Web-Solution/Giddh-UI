@@ -164,17 +164,18 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   
   # search flat accounts list
   $scope.searchAccounts = (str) ->
-    reqParam = {}
-    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-    if str.length > 2
-      $scope.hideAccLoadMore = true
-      reqParam.q = str
-      reqParam.count = 5000
-    else
-      $scope.hideAccLoadMore = false
-      reqParam.q = ''
-      reqParam.count = 5000
-    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+    console.log("inside search accounts")
+#    reqParam = {}
+#    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+#    if str.length > 2
+#      $scope.hideAccLoadMore = true
+#      reqParam.q = str
+#      reqParam.count = 5000
+#    else
+#      $scope.hideAccLoadMore = false
+#      reqParam.q = ''
+#      reqParam.count = 5000
+#    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
 
   #-------- fetch groups with accounts list-------
   $scope.getFlattenGrpWithAccList = (compUname) ->

@@ -90,7 +90,7 @@
           </div>
 
         <section class="pr" style="height: 378px">
-            <div class="search-loading" ng-hide="showAccountListDetails || showListGroupsNow">
+            <div class="search-loading" ng-hide="showAccountListDetails || showListGroupsNow || fltAccntListPaginated.length > 0">
               <span class="spinner small"></span> Loading…
             </div>
             <div ng-if="showAccountListDetails">

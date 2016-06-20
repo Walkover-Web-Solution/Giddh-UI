@@ -101,8 +101,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   # dom method functions end
 
   $scope.goToManageGroups =() ->
-    $scope.fltAccntListPaginated = []
-    $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+#    $scope.fltAccntListPaginated = []
+#    $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
     $scope.getFlatAccountListCount5($rootScope.selectedCompany.uniqueName)
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
@@ -188,40 +188,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   #-------------------Functions for API side search and fetching flat account list-----------------------------------------------#
 
   $scope.getFlatAccountList = (compUname) ->
-#    $rootScope.getFlatAccountList(compUname)
-    console.log("flt accnt list paginated",$rootScope.fltAccntListPaginated)
-#    $scope.fltAccntListPaginated = $rootScope.fltAccntListPaginated
-#
-#    reqParam = {
-#      companyUniqueName: compUname
-#      q: ''
-#      page: $scope.flatAccList.page
-#      count: $scope.flatAccList.count
-#    }
-#    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+    $rootScope.getFlatAccountList(compUname)
+#    console.log("flt accnt list paginated",$rootScope.fltAccntListPaginated)
 
-#  $scope.getFlatAccountListListSuccess = (res) ->
-#    $scope.fltAccntListPaginated = res.body.results
-#    $scope.flatAccList.limit = 5
-#
-#  $scope.getFlatAccountListFailure = (res) ->
-#    toastr.error(res.data.message)
 
-  # search flat accounts list
-#  $scope.searchAccounts = (str) ->
-#    console.log("inside search accounts")
-#    $scope.fltAccntListPaginated = _.where($rootScope.fltAccntListPaginated,str)
-#    reqParam = {}
-#    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-#    if str.length > 2
-#      $scope.hideAccLoadMore = true
-#      reqParam.q = str
-#      reqParam.count = 5000
-#    else
-#      $scope.hideAccLoadMore = false
-#      reqParam.q = ''
-#      reqParam.count = 5000
-#    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+
   # get flat account list with count 5
 
   $scope.flatAccListC5 = {
@@ -673,9 +644,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.datePicker.accountOpeningBalanceDate,
         "dd-MM-yyyy")
     if(_.isUndefined($scope.selectedAccount.mobileNo) || _.isEmpty($scope.selectedAccount.mobileNo))
-      $scope.selectedAccount.mobileNo = null
+      $scope.selectedAccount.mobileNo = ""
     if(_.isUndefined($scope.selectedAccount.email) || _.isEmpty($scope.selectedAccount.email))
-      $scope.selectedAccount.email = null
+      $scope.selectedAccount.email = ""
     #$scope.selectedAccount.mobileNo = $scope.mergeNum($scope.acntExt)
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
@@ -973,9 +944,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.mergeSuccess = (res) ->
     toastr.success(res.body)
     _.each $scope.toMerge.mergedAcc, (acc) ->
+      $rootScope.removeAccountFromPaginatedList(acc)
       acc.noRemove = true
     $scope.getGroups()
     $scope.prePopulate = $scope.toMerge.mergedAcc
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
 
   $scope.mergeFailure = (res) ->
     toastr.error(res.data.message)

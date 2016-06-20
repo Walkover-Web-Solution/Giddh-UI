@@ -222,6 +222,7 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
 
   # search flat accounts list
   $rootScope.searchAccounts = (str) ->
+    console.log("inside rootscope search accounts")
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     if str.length > 2

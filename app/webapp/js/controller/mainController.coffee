@@ -22,7 +22,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     limit: 5
   }
   $rootScope.fltAccntListPaginated = []
-  $rootScope.fltAccountLIstFixed = []
+#  $rootScope.fltAccountLIstFixed = []
   $rootScope.CompanyList = []
   $rootScope.companyIndex = 0
   
@@ -139,6 +139,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.setCompany = (company) ->
     angular.extend($rootScope.selectedCompany, company)
+    $rootScope.fltAccntListPaginated = []
     #$rootScope.selectedCompany = company
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
@@ -146,10 +147,13 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.getParticularAccount = (searchThis) ->
     accountList = []
     _.filter($rootScope.fltAccntListPaginated,(account) ->
-      if not(account.name.match(searchThis) == null)
+      if not(account.name.match(searchThis) == null || account.uniqueName.match(searchThis) == null)
         accountList.push(account)
     )
     accountList
+
+  $rootScope.removeAccountFromPaginatedList = (account) ->
+    $rootScope.fltAccntListPaginated = _.without($rootScope.fltAccntListPaginated,account)
 
   $rootScope.getFlatAccountList = (compUname) ->
     reqParam = {
@@ -162,7 +166,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.getFlatAccountListListSuccess = (res) ->
     $rootScope.fltAccntListPaginated = res.body.results
-    $rootScope.fltAccountLIstFixed = $rootScope.fltAccntListPaginated
+#    $rootScope.fltAccountLIstFixed = $rootScope.fltAccntListPaginated
     $rootScope.flatAccList.limit = 5
     
   $scope.getFlatAccountListFailure = (res) ->
