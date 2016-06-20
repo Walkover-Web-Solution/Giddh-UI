@@ -830,7 +830,7 @@
             <h3 class="txtUpc ellp">{{value.name}}</h3>
           </a>
           <div class="action">
-            <span ng-click="deleteCompany(value.uniqueName, $index, value.name)" ng-hide="value.shared" class="glyphicon glyphicon-trash"></span>
+            <span ng-click="deleteCompany(value.uniqueName, $index, value.name)" ng-show="value.shared" class="glyphicon glyphicon-trash"></span>
           </div>
         </li>
 
