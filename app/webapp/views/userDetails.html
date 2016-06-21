@@ -209,17 +209,18 @@
         </uib-tab>
         <!-- end of subscription list tab -->
 
-        <uib-tab ng-if="canManageCompany" heading="Linked Accounts" select="loadYodlee()">
-          <div class="pd2 clearfix">
-            <h1 class="mrB1">Add Bank Account </h1>
-            <button ng-click="connectBank()" class="btn btn-primary">Connect Bank</button>
+        <!--Linked account tab starts here-->
+        <!--<uib-tab ng-if="canManageCompany" heading="Linked Accounts" select="loadYodlee()">-->
+          <!--<div class="pd2 clearfix">-->
+            <!--<h1 class="mrB1">Add Bank Account </h1>-->
+            <!--<button ng-click="connectBank()" class="btn btn-primary">Connect Bank</button>-->
 
 <!--             <div class="max350 mrT1">
               <ui-select ng-model="banks.list" theme="bootstrap" on-select="selectBank($select.selected)">
                 <ui-select-match placeholder="Select Accounts">
                   <span>{{$select.selected.defaultDisplayName}}</span>
                 </ui-select-match >
-                <ui-select-choices 
+                <ui-select-choices
                   repeat="bank in banks.banksList | filter: $select.search" refresh="fetchSiteList($select.search)" refresh-delay="500">
                   <span ng-bind-html="bank.defaultDisplayName"></span>
                 </ui-select-choices>
@@ -246,7 +247,7 @@
                           <ui-select-match placeholder="Select Options">
                             <span>{{$select.selected.name}}</span>
                           </ui-select-match >
-                          <ui-select-choices 
+                          <ui-select-choices
                             repeat="val.value as val in field.fieldOptions | filter: $select.search">
                             <span ng-bind-html="val.name"></span>
                           </ui-select-choices>
@@ -267,67 +268,67 @@
                 </div>
               </div>
             </form> -->
-            <div class="mrT1">NOTE: In case you do not see your bank listed in Added Accounts even after getting a success message, please check again after some time.</div>
-            <hr class="mrT2 col-xs-11">
-            <div class="mrT2 col-xs-12 pd0">
-              <h1 class="pull-left">Added Accounts</h1>
-              <button class="btn btn-primary btn-sm pull-right" ng-click="refreshAccounts()" ng-if="linkedAccountsExist">Refresh</button>
-              <div class="col-xs-12 mrT1 pd0" ng-if="banks.linked.length > 0">
-                <section class="linked-accounts clearfix" ng-repeat="account in banks.linked | orderBy: 'siteName'">
-                  <aside class="title">{{account.siteName}}</aside>
-                  <aside class="body">
-                    <aside class="account-card" ng-repeat="card in account.accounts">
-                      <a><i class="pull-left glyphicon glyphicon-refresh refresh-icon" ng-click="refreshToken(card)"></i></a>
-                      <h1 ng-bind="card.name"  uib-tooltip="{{card.name}}"></h1>
-                      <div class="account-number">
-                        <b>Account</b>: {{card.accountNumber}}
-                      </div>
-                      <div class="account-date">
-                        <b>Get Entries From</b>: 
-                        <a href="javascript:void(0)">
-                           {{card.transactionDate | date}} 
-                          <input  
-                            ng-change='changedate(card.transactionDate)'
-                            type="text" class="transaction-date"
-                             uib-datepicker-popup="{{format}}" required
-                             datepicker-options="dateOptionsBanks"
-                             is-open="fromDatePickerIsOpen"
-                             ng-click="fromDatePickerOpen(); setItemAccountId(card)"
-                             ng-model="card.transactionDate"
-                             max-date="today"
-                             min-date="beforeThreeMonths"
-                             placeholder="from date"/>
-                        </a>
-                      </div>
-                      <div class="balance">
-                        {{card.currentBalanceCurrencyCode}} {{card.currentBalance}}
-                      </div>
-                      <div class="with" ng-if="card.linkedAccount != null">
-                        Linked with: {{card.linkedAccount.name}} ({{card.linkedAccount.uniqueName}})
-                      </div>
-                      <div class="select-account" ng-if="card.showAccList">
-                        <ui-select ng-model="banks.toLink" theme="bootstrap" on-select="LinkGiddhAccountConfirm($select.selected)">
-                          <ui-select-match placeholder="Select Accounts">
-                            <span>{{$select.selected.name}}</span>
-                          </ui-select-match >
-                          <ui-select-choices 
-                            ui-disable-choice="acc.uniqueName === selAcntUname" 
-                            repeat="acc in getParticularAccount($select.search) | limitTo : 5 | filter: $select.search">
-                            <span>{{acc.name}} ({{acc.uniqueName}})</span>
-                          </ui-select-choices>
-                        </ui-select>
-                      </div>
-                      <button class="btn btn-sm btn-warning pull-right" ng-if="card.showAccList" ng-click="card.showAccList = !card.showAccList" style="margin-top:5px">Not Now</button>
-                      <button class="btn btn-sm btn-info" ng-if="card.linkedAccount == null && !card.showAccList" ng-click="linkGiddhAccount(card)">Link Account</button>
-                      <button class="btn btn-sm btn-danger mrT1" ng-if="card.linkedAccount.name.length > 0" ng-click="removeGiddhAccount(card)">Unlink Account</button>
-                      <a class="delete-bank" ng-click="deleteAddedBank(card)" uib-tooltip="Delete Bank" tooltip-placement="left"><i class="glyphicon glyphicon-trash"></i></a>
-                    </aside>
-                  </aside>
-                </section>
-              </div>
-            </div>
-          </div>
-        </uib-tab>
+            <!--<div class="mrT1">NOTE: In case you do not see your bank listed in Added Accounts even after getting a success message, please check again after some time.</div>-->
+            <!--<hr class="mrT2 col-xs-11">-->
+            <!--<div class="mrT2 col-xs-12 pd0">-->
+              <!--<h1 class="pull-left">Added Accounts</h1>-->
+              <!--<button class="btn btn-primary btn-sm pull-right" ng-click="refreshAccounts()" ng-if="linkedAccountsExist">Refresh</button>-->
+              <!--<div class="col-xs-12 mrT1 pd0" ng-if="banks.linked.length > 0">-->
+                <!--<section class="linked-accounts clearfix" ng-repeat="account in banks.linked | orderBy: 'siteName'">-->
+                  <!--<aside class="title">{{account.siteName}}</aside>-->
+                  <!--<aside class="body">-->
+                    <!--<aside class="account-card" ng-repeat="card in account.accounts">-->
+                      <!--<a><i class="pull-left glyphicon glyphicon-refresh refresh-icon" ng-click="refreshToken(card)"></i></a>-->
+                      <!--<h1 ng-bind="card.name"  uib-tooltip="{{card.name}}"></h1>-->
+                      <!--<div class="account-number">-->
+                        <!--<b>Account</b>: {{card.accountNumber}}-->
+                      <!--</div>-->
+                      <!--<div class="account-date">-->
+                        <!--<b>Entries From</b>:-->
+                        <!--<a href="javascript:void(0)">-->
+                           <!--{{card.transactionDate | date}}-->
+                          <!--<input-->
+                            <!--ng-change='changedate(card.transactionDate)'-->
+                            <!--type="text" class="transaction-date"-->
+                             <!--uib-datepicker-popup="{{format}}" required-->
+                             <!--datepicker-options="dateOptionsBanks"-->
+                             <!--is-open="fromDatePickerIsOpen"-->
+                             <!--ng-click="fromDatePickerOpen(); setItemAccountId(card)"-->
+                             <!--ng-model="card.transactionDate"-->
+                             <!--max-date="today"-->
+                             <!--min-date="beforeThreeMonths"-->
+                             <!--placeholder="from date"/>-->
+                        <!--</a>-->
+                      <!--</div>-->
+                      <!--<div class="balance">-->
+                        <!--{{card.currencyCode}} {{card.amount}}-->
+                      <!--</div>-->
+                      <!--<div class="with" ng-if="card.linkedAccount != null">-->
+                        <!--Linked with: {{card.linkedAccount.name}} ({{card.linkedAccount.uniqueName}})-->
+                      <!--</div>-->
+                      <!--<div class="select-account" ng-if="card.showAccList">-->
+                        <!--<ui-select ng-model="banks.toLink" theme="bootstrap" on-select="LinkGiddhAccountConfirm($select.selected)">-->
+                          <!--<ui-select-match placeholder="Select Accounts">-->
+                            <!--<span>{{$select.selected.name}}</span>-->
+                          <!--</ui-select-match >-->
+                          <!--<ui-select-choices-->
+                            <!--ui-disable-choice="acc.uniqueName === selAcntUname"-->
+                            <!--repeat="acc in getParticularAccount($select.search) | limitTo : 5 | filter: $select.search">-->
+                            <!--<span>{{acc.name}} ({{acc.uniqueName}})</span>-->
+                          <!--</ui-select-choices>-->
+                        <!--</ui-select>-->
+                      <!--</div>-->
+                      <!--<button class="btn btn-sm btn-warning pull-right" ng-if="card.showAccList" ng-click="card.showAccList = !card.showAccList" style="margin-top:5px">Not Now</button>-->
+                      <!--<button class="btn btn-sm btn-info" ng-if="card.linkedAccount == null && !card.showAccList" ng-click="linkGiddhAccount(card)">Link Account</button>-->
+                      <!--<button class="btn btn-sm btn-danger mrT1" ng-if="card.linkedAccount.name.length > 0" ng-click="removeGiddhAccount(card)">Unlink Account</button>-->
+                      <!--<a class="delete-bank" ng-click="deleteAddedBank(card)" uib-tooltip="Delete Bank" tooltip-placement="left"><i class="glyphicon glyphicon-trash"></i></a>-->
+                    <!--</aside>-->
+                  <!--</aside>-->
+                <!--</section>-->
+              <!--</div>-->
+            <!--</div>-->
+          <!--</div>-->
+        <!--</uib-tab>-->
         <!-- end of yodlee tabs -->
         <!--mobile number verification-->
         <uib-tab ng-if="canManageCompany" heading="Mobile Number" select="getUserDetails()">
