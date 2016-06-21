@@ -38,6 +38,7 @@
 			<thead>
 				<tr>
 					<th class="col-xs-3 text-center">#</th>
+					<th class="col-xs-3 text-center">Date</th>
 					<th class="col-xs-3 text-center">Particular</th>
 					<th class="col-xs-3 text-center">Amount</th>
 					<th class="col-xs-3 text-center">Type</th>
@@ -46,8 +47,9 @@
 			<tbody>
 				<tr *ngFor = "let transaction of log.log.transactions; let i = index">
 					<td>{{i + 1}}</td>
+					<td>{{log.log.entryDate}}</td>
 					<td>{{transaction.particular.name}}</td>
-					<td>{{transaction.amount}}</td>
+					<td>{{transaction.amount| number:'1.2-2'}}</td>
 					<td>{{transaction.type}}</td>
 				</tr>
 			</tbody>
@@ -59,6 +61,7 @@
 			<thead>
 				<tr>
 					<th class="col-xs-3 text-center">#</th>
+					<th class="col-xs-3 text-center">Date</th>
 					<th class="col-xs-3 text-center">Particular</th>
 					<th class="col-xs-3 text-center">Amount</th>
 					<th class="col-xs-3 text-center">Type</th>
@@ -67,6 +70,7 @@
 			<tbody>
 				<tr *ngFor = "let transaction of log.log.updated.transactions; let i = index">
 					<td>{{i + 1}}</td>
+					<td>{{log.log.entryDate}}</td>
 					<td>{{transaction.particular.name}}</td>
 					<td>{{transaction.amount}}</td>
 					<td>{{transaction.type}}</td>
@@ -79,6 +83,7 @@
 			<thead>
 				<tr>
 					<th class="col-xs-3 text-center">#</th>
+					<th class="col-xs-3 text-center">Date</th>
 					<th class="col-xs-3 text-center">Particular</th>
 					<th class="col-xs-3 text-center">Amount</th>
 					<th class="col-xs-3 text-center">Type</th>
@@ -87,6 +92,7 @@
 			<tbody>
 				<tr *ngFor = "let transaction of log.log.old.transactions; let i = index">
 					<td>{{i + 1}}</td>
+					<td>{{log.log.entryDate}}</td>
 					<td>{{transaction.particular.name}}</td>
 					<td>{{transaction.amount}}</td>
 					<td>{{transaction.type}}</td>

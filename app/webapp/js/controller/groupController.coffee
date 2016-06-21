@@ -182,6 +182,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $rootScope.makeAccountFlatten(b)
     $scope.flattenGroupList = groupService.makeGroupListFlatwithLessDtl($rootScope.flatGroupsList)
 
+  $scope.getParticularGroup = (searchThis) ->
+    groupList = []
+    _.filter($scope.flattenGroupList,(group) ->
+      if(group.name.match(searchThis) != null || group.uniqueName.match(searchThis) != null)
+        groupList.push(group)
+    )
+    groupList
+
   $scope.makeAccountsListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
@@ -723,10 +731,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error(res.data.message, res.data.status)
 
   $scope.isCurrentGroup =(group) ->
-    group.uniqueName is $scope.selectedAccount.parentGroups[0].uniqueName
+    group.uniqueName is $scope.selectedAccount.parentGroups[0].uniqueName || group.uniqueName is $scope.selectedAccount.parentGroups[$scope.selectedAccount.parentGroups.length-1].uniqueName
 
   $scope.isCurrentAccount =(acnt) ->
-    acnt.uniqueName is $rootScope.selAcntUname
+    acnt.uniqueName is $scope.selectedAccount.uniqueName
 
   $scope.moveAccnt = (group) ->
     if _.isUndefined(group.uniqueName)

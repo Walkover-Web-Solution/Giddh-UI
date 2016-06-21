@@ -148,7 +148,14 @@
             </div>
             <div class="form-group">
               <input ng-model="moveacto" type="text" placeholder="Group name" class="form-control" required
-                uib-typeahead="groups as groups.name for groups in flattenGroupList | omit: isCurrentGroup | filter:{name: $viewValue} | limitTo:4"/>
+                typeahead="groups as groups.name for groups in flattenGroupList | omit: isCurrentGroup | filter:({uniqueName:$viewValue} || {name:$viewValue} || {synonyms:$viewValue}) | limitTo: 4"/>
+
+              <!--<ui-select ng-model="moveacto" theme="bootstrap">-->
+                <!--<ui-select-choices-->
+                    <!--repeat="groups in getParticularGroup($select.search) | limitTo : 5 | filter: $select.search">-->
+                  <!--<span>{{groups.name}}</span>-->
+                <!--</ui-select-choices>-->
+              <!--</ui-select>-->
             </div>
             <div class="form-group">
               <button class="btn btn-info mrL" ng-click="moveAccnt(moveacto)" ng-disabled="moveAccntForm.$invalid">Move</button>
@@ -215,7 +222,7 @@
                   </ui-select-match >
                   <ui-select-choices
                     ui-disable-choice="acc.uniqueName === selAcntUname"
-                    repeat="acc in getParticularAccount($select.search) | limitTo : 5 | filter: $select.search">
+                    repeat="acc in getParticularAccount($select.search) | omit:isCurrentAccount | limitTo : 5 | filter: $select.search">
                     <span>{{acc.name}} ({{acc.uniqueName}})</span>
                   </ui-select-choices>
               </ui-select>
