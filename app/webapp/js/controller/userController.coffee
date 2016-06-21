@@ -406,7 +406,6 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.removeGiddhAccountConfirmed = () ->
     reqParam =  {
       cUnq: $rootScope.selectedCompany.uniqueName
-      linkedAccount: $scope.banks.toRemove.linkedAccount
       ItemAccountId: $scope.banks.toRemove.ItemAccountId
     }
     userServices.removeAccount(reqParam).then($scope.removeGiddhAccountConfirmedSuccess, $scope.removeGiddhAccountConfirmedFailure)

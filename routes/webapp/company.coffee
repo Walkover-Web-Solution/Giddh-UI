@@ -232,6 +232,17 @@ router.delete '/:companyUniqueName/ebanks/:memSiteAccId/remove', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.delete '/:companyUniqueName/ebanks/:ItemAccountId/unlink', (req,res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/' + req.params.ItemAccountId + '/unlink'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
 
 router.post '/:companyUniqueName/ebanks', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks'
@@ -259,6 +270,8 @@ router.delete '/:companyUniqueName/ebanks/:ItemAccountId/:linkedAccount', (req, 
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
+
+
 
 router.put '/:companyUniqueName/ebanks/:ItemAccountId', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/' + req.params.ItemAccountId
