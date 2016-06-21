@@ -370,7 +370,7 @@ app.controller 'successCtrl', [
     data = {
       loginId : LoginId
     }
-
+    
     $http.put(url, data).then(
       (success)->
         

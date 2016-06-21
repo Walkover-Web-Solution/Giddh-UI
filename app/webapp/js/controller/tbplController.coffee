@@ -283,7 +283,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       'fromDate': data.fromDate
       'toDate': data.toDate
     }
-    $scope.checkFY(reqParam)
+    #$scope.checkFY(reqParam)
     trialBalService.getAllFor(reqParam).then $scope.getTrialBalSuccess, $scope.getTrialBalFailure
 
   $scope.getTrialBalSuccess = (res) ->
@@ -324,6 +324,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
         'fromDate': $filter('date')($scope.getDefaultDate().date,'dd-MM-yyyy')
         'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
       }
+      $scope.checkFY(dateObj)
       $scope.getTrialBal(dateObj)
       $scope.sendRequest = false
 

@@ -422,7 +422,6 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     toastr.error(res.body)
 
   $scope.deleteAddedBank = (card) ->
-    console.log card
     $scope.banks.toDelete = card.accountId
     modalService.openConfirmModal(
         title: 'Delete Account',
@@ -439,7 +438,6 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     userServices.deleteBankAccount(reqParam).then($scope.deleteAddedBankAccountConfirmedSuccess, $scope.deleteAddedBankAccountConfirmedFailure)
 
   $scope.deleteAddedBankAccountConfirmedSuccess = (res) ->
-    console.log(res)
     toastr.success(res.body)
     companyUniqueName =  {
       cUnq: $rootScope.selectedCompany.uniqueName
@@ -500,7 +498,6 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   # get subuser list
   $scope.getSubUsers = () ->
     console.time "getSubUsers"
-    console.log $rootScope.basicInfo
     console.timeEnd "getSubUsers"
 
   # create sub user
@@ -666,7 +663,6 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     userServices.refreshAccount(reqParam).then($scope.refreshTokenSuccess, $scope.refreshTokenFailure )
 
   $scope.refreshTokenSuccess = (res) ->
-    console.log res
     url = res.body.connectUrl
     $scope.connectUrl = url
     $uibModal.open(

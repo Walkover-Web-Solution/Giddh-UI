@@ -181,7 +181,6 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
     toastr.error(res.data.message, res.data.status)
 
   $scope.getOtherTransactionsSuccess = (res, gData, acData) ->
-    console.log res
     angular.copy([], $scope.eLedgerDrData)
     angular.copy([], $scope.eLedgerCrData)
 
