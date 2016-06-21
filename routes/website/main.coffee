@@ -49,6 +49,9 @@ router.get '/robots.txt', (req, res) ->
 router.get '/success', (req, res) ->
   res.sendFile 'success.html', options
 
+router.get '/refresh-completed', (req, res) ->
+  res.sendFile 'refresh-completed.html', options
+
 router.post '/magic-link', (req, res) ->
   if req.body.data.from != undefined && req.body.data.to != undefined
     hUrl = settings.envUrl + '/magic-link/' + req.body.data.id + '?from=' + req.body.data.from + '&to=' + req.body.data.to
