@@ -144,6 +144,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
 
+
   $rootScope.getParticularAccount = (searchThis) ->
     accountList = []
     _.filter($rootScope.fltAccntListPaginated,(account) ->

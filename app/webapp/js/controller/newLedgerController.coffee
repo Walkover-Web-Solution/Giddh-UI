@@ -1,6 +1,6 @@
 
 newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices) ->
-  
+
   #date time picker code starts here
   $scope.today = new Date()
   d = moment(new Date()).subtract(1, 'month')
@@ -21,7 +21,6 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     particular: ''
     amount : 0
   }
-
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
 
@@ -105,7 +104,5 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       reqParam.q = ''
       reqParam.count = 5
       groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListCount5ListSuccess, $scope.getFlatAccountListCount5ListFailure)
-
-
 
 giddh.webApp.controller 'newLedgerController', newLedgerController

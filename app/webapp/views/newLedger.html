@@ -146,9 +146,9 @@
         <!--ledger table start-->
         <div class="ledger-container">
           <!--ledger table head 1-->
-          <table class="col-xs-12 ledger-head t-h-bg1">
+          <table class="col-xs-12 ledger-head">
             <thead>
-              <tr>
+              <tr class="t-h-bg1">
                 <th class="col-xs-6">Debit</th>
                 <th class="col-xs-6">Credit</th>
               </tr>
@@ -171,10 +171,10 @@
                         <th class="col-xs-3">Amount</th>
                       </tr>
                       <tr class="bg3">
-                        <td colspan="12" class="col-xs-12 text-right bdr-w-t h32">
+                        <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
                           <span ng-if="ledgerData.forwardedBalance.type == 'DEBIT' && ledgerData.forwardedBalance.amount > 0">B/F : {{ledgerData.forwardedBalance.amount | number:2}}</span>
                           <!-- <span ng-if="ledgerData.forwardedBalance.type == 'CREDIT'">B/F : 0</span> -->
-                        </td>
+                        </th>
                       </tr>
                     </thead>
                   </table>
@@ -183,7 +183,7 @@
                   
                   <table class="width100">
                     <tbody>
-                      <tr class="bdr-w-t" ng-repeat="ledger in ledgerData.ledgers" ng-if="ledger.hasDebit">
+                      <tr class="" ng-repeat="ledger in ledgerData.ledgers" ng-if="ledger.hasDebit">
                         <td colspan="100%" class="ledger-row">
                           <table class="width100">
                             <tbody class="ledger-main">
@@ -206,12 +206,12 @@
               <table class="width100">
                 <tbody>
                     <tr class="t-h-bg3 bdr-w-t">
-                      <td colspan="12" class="col-xs-12 text-right bdr-w-t white h42">
+                      <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
                         <span ng-if="ledgerData.balance.type == 'DEBIT'">C/F: {{ledgerData.debitTotal | number:2}}</span>
                       </td>
                     </tr>
-                    <tr class="t-h-bg2">
-                      <td colspan="12" class="col-xs-12 text-right bdr-w-t white">Total : {{ledgerData.debitTotal | number:2}}</td>
+                    <tr class="t-h-bg2 bdr-w-t h42">
+                      <td colspan="12" class="col-xs-12 text-right bdr-w-t bold">Total : {{ledgerData.debitTotal | number:2}}</td>
                     </tr>
                 </tbody>
               </table>
@@ -233,10 +233,10 @@
                         <th class="col-xs-3">Amount</th>
                       </tr>
                       <tr class="bg3">
-                        <td colspan="12" class="col-xs-12 text-right bdr-w-t h32">
+                        <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
                           <span ng-if="ledgerData.forwardedBalance.type == 'CREDIT' && ledgerData.forwardedBalance.amount > 0">B/F : {{ledgerData.forwardedBalance.amount | number:2}}</span>
                          <!--  <span ng-if="ledgerData.forwardedBalance.type == 'DEBIT'">B/F : 0</span> -->
-                        </td>
+                        </th>
                       </tr>
                     </thead>
                   </table>
@@ -245,7 +245,7 @@
                   
                   <table class="width100">
                     <tbody>
-                      <tr class="bdr-w-t" ng-repeat="ledger in ledgerData.ledgers" ng-if="ledger.hasCredit">
+                      <tr class="" ng-repeat="ledger in ledgerData.ledgers" ng-if="ledger.hasCredit">
                         <td colspan="100%" class="ledger-row">
                           <table class="width100">
                             <tbody class="ledger-main">
@@ -268,12 +268,12 @@
               <table class="width100">
                 <tbody>
                     <tr class="t-h-bg3">
-                      <td colspan="12" class="col-xs-12 text-right bdr-w-t white h42">
+                      <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
                         <span  ng-if="ledgerData.balance.type == 'CREDIT'">C/F: {{ledgerData.balance.amount | number:2}}</span>
                       </td>
                     </tr>
-                    <tr class="t-h-bg2">
-                      <td colspan="12" class="col-xs-12 text-right bdr-w-t white">Total: {{ledgerData.creditTotal | number:2}}</td>
+                    <tr class="t-h-bg2 bdr-w-t h42">
+                      <td colspan="12" class="col-xs-12 text-right bold">Total: {{ledgerData.creditTotal | number:2}}</td>
                     </tr>
                 </tbody>
               </table>
