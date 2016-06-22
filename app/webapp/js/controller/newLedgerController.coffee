@@ -21,6 +21,11 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     particular: ''
     amount : 0
   }
+  $scope.taxList = []
+
+  $scope.isCurrentAccount =(acnt) ->
+    acnt.uniqueName is $scope.accountUnq
+
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
 
@@ -28,6 +33,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     this.toDatePickerIsOpen = true
 
   $scope.getLedgerData = () ->
+    if _.isUndefined($rootScope.selectedCompany.uniqueName)
+      $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $scope.accountUnq
@@ -54,18 +61,37 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
           else if txn.type == 'CREDIT'
             lgr.hasCredit = true
 
+  # get tax list
+
+  $scope.getTaxList = () ->
+    $scope.taxList = []
+    if $rootScope.canUpdate and $rootScope.canDelete
+      companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
+
+  $scope.getTaxListSuccess = (res) ->
+    console.log(res)
+    _.each res.body, (tax) ->
+      tax.isSelected = false
+      if tax.account == null
+        tax.account = {}
+        tax.account.uniqueName = 0
+      $scope.taxList.push(tax)
+
+
+  $scope.getTaxListFailure = (res) ->
+    toastr.error(res.data.message, res.status)
 
   $scope.getLedgerData()
+
 
   $scope.popOver = {
     template : "ledgerPopover.html"
     position:"bottom"
   }
   $scope.fltAccntListcount5 = []
-  $scope.taxList = []
 
   $timeout ( ->
-    $scope.taxList = ['tax1','tax2','tax3']
+    $scope.getTaxList()
   ), 3000
 
   $scope.addItem = (ledger, txn) ->
@@ -104,5 +130,6 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       reqParam.q = ''
       reqParam.count = 5
       groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListCount5ListSuccess, $scope.getFlatAccountListCount5ListFailure)
+
 
 giddh.webApp.controller 'newLedgerController', newLedgerController

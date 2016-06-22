@@ -611,6 +611,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.cantUpdate = true
     _.extend($scope.selAcntPrevObj, data)
     _.extend($scope.selectedAccount, data)
+    $rootScope.selectedAccount = $scope.selectedAccount
     $scope.breakMobNo(data)
     $scope.setOpeningBalanceDate()
     $scope.getAccountSharedList()

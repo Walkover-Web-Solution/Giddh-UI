@@ -25,6 +25,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 #  $rootScope.fltAccountLIstFixed = []
   $rootScope.CompanyList = []
   $rootScope.companyIndex = 0
+  $rootScope.selectedAccount ={}
   
   $scope.logout = ->
     $http.post('/logout').then ((res) ->
