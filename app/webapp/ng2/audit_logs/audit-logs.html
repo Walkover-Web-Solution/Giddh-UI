@@ -1,7 +1,7 @@
 <h1 class="page-title" *ngIf="logs.length > 0"> Audit Logs</h1>
 <br/>
 <section class="audit-log" *ngFor = "let log of logs; let i = index">
-	<h1>{{log.operationType}}<span *ngIf="log.accountName != null"> - {{log.accountName}}</span></h1> 
+	<h1>{{log.operationType}}<span *ngIf="log.accountName != null"> - {{log.accountName}} ({{log.accountUniqueName}})</span></h1>
 	<div class="mrT border-top-btm clearfix">
 		<div>
 			<label class="pull-left">Entity:</label>
@@ -48,7 +48,7 @@
 				<tr *ngFor = "let transaction of log.log.transactions; let i = index">
 					<td>{{i + 1}}</td>
 					<td>{{log.log.entryDate}}</td>
-					<td>{{transaction.particular.name}}</td>
+					<td>{{transaction.particular.name}} ({{transaction.particular.uniqueName}})</td>
 					<td>{{transaction.amount| number:'1.2-2'}}</td>
 					<td>{{transaction.type}}</td>
 				</tr>
@@ -71,7 +71,7 @@
 				<tr *ngFor = "let transaction of log.log.updated.transactions; let i = index">
 					<td>{{i + 1}}</td>
 					<td>{{log.log.entryDate}}</td>
-					<td>{{transaction.particular.name}}</td>
+					<td>{{transaction.particular.name}} ({{transaction.particular.uniqueName}})</td>
 					<td>{{transaction.amount}}</td>
 					<td>{{transaction.type}}</td>
 				</tr>
@@ -93,7 +93,7 @@
 				<tr *ngFor = "let transaction of log.log.old.transactions; let i = index">
 					<td>{{i + 1}}</td>
 					<td>{{log.log.entryDate}}</td>
-					<td>{{transaction.particular.name}}</td>
+					<td>{{transaction.particular.name}} ({{transaction.particular.uniqueName}})</td>
 					<td>{{transaction.amount}}</td>
 					<td>{{transaction.type}}</td>
 				</tr>

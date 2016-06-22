@@ -116,6 +116,7 @@
                 reqBody : req,
                 totalPages: this.result.body.totalPages
               }
+              console.log(logTracker);
               self.shared.updateData(logTracker);
             }, 100)
           }.bind(self), // on Success

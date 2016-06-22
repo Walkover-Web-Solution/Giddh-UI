@@ -1547,13 +1547,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     userServices.refreshAll(companyUniqueName).then($scope.refreshAllSuccess, $scope.refreshAllFailure)
 
   $scope.refreshAllSuccess = (res) ->
-#    refreshedAccounts = res.body
-#    $scope.banks.linked = refreshedAccounts
-    companyUniqueName =  {
-      cUnq: $rootScope.selectedCompany.uniqueName
-    }
-    userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
-#    toastr.success('SuccessFully refreshed!')
+    refreshedAccounts = res.body
+    $scope.banks.linked = refreshedAccounts
+#    companyUniqueName =  {
+#      cUnq: $rootScope.selectedCompany.uniqueName
+#    }
+#    userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
+    toastr.success('SuccessFully refreshed!')
 
   $scope.refreshAllFailure = (res) ->
     toastr.error(res.data.message, res.data.code)
@@ -1591,6 +1591,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   # connect bank
   $scope.connectBank = ()->
     userServices.connectBankAc($rootScope.selectedCompany.uniqueName).then($scope.connectBankSuccess, $scope.connectBankFailure)
+
 
   $scope.connectBankSuccess = (res) ->
     $scope.cntBnkData = res.body
