@@ -172,7 +172,7 @@
                       </tr>
                       <tr class="bg3">
                         <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
-                          <span ng-if="ledgerData.forwardedBalance.type == 'DEBIT' && ledgerData.forwardedBalance.amount > 0">B/F : {{ledgerData.forwardedBalance.amount | number:2}}</span>
+                          <span ng-if="ledgerData.forwardedBalance.type == 'DEBIT' && ledgerData.forwardedBalance.amount > 0">Opening Balance : {{ledgerData.forwardedBalance.amount | number:2}}</span>
                           <!-- <span ng-if="ledgerData.forwardedBalance.type == 'CREDIT'">B/F : 0</span> -->
                         </th>
                       </tr>
@@ -204,13 +204,13 @@
                         <td colspan="100%" class="ledger-row">
                           <table class="width100">
                             <tbody class="ledger-main">
-                              <tr>
+                              <tr ng-repeat="txn in blankLedger.transactions" ng-if="txn.type == 'DEBIT'" ng-click="selectTxn(blankLedger, txn, $index)">
                                 <td class="col-xs-1 maxW42">
                                   <input type="checkbox">
                                 </td>
-                                <td class="col-xs-3"><input class="form-control" ng-model="newDebitTxn.date" accesskey="L"></td>
-                                <td class="col-xs-5"><input class="form-control" ng-model="newDebitTxn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
-                                <td class="col-xs-3"><input class="form-control" ng-model="newDebitTxn.amount"></td>
+                                <td class="col-xs-3"><input class="form-control" ng-model="txn.date" accesskey="L"></td>
+                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
+                                <td class="col-xs-3"><input class="form-control" ng-model="txn.amount"></td>
                               </tr>
                             </tbody>
                           </table>
@@ -284,13 +284,13 @@
                         <td colspan="100%" class="ledger-row">
                           <table class="width100">
                             <tbody class="ledger-main">
-                              <tr>
+                              <tr  ng-repeat="txn in blankLedger.transactions" ng-if="txn.type == 'CREDIT'" ng-click="selectTxn(blankLedger, txn, $index)">
                                 <td class="col-xs-1 maxW42">
                                   <input type="checkbox">
                                 </td>
-                                <td class="col-xs-3"><input class="form-control"  ng-model="newCreditTxn.date" accesskey="R"></td>
-                                <td class="col-xs-5"><input class="form-control" ng-model="newCreditTxn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
-                                <td class="col-xs-3"><input class="form-control"  ng-model="newCreditTxn.amount"></td>
+                                <td class="col-xs-3"><input class="form-control"  ng-model="txn.date" accesskey="R"></td>
+                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
+                                <td class="col-xs-3"><input class="form-control"  ng-model="txn.amount"></td>
                               </tr>
                             </tbody>
                           </table>
@@ -313,8 +313,9 @@
                 </tbody>
               </table>
             </div>
-            <div class="ledger-panel">
-              <div>
+            <div class="ledger-panel" ng-if="showPanel">
+              <div class="wrapper">
+                <i class="glyphicon glyphicon-off close-panel" ng-click="closePanel()"></i>
                 <div class="mrT">
                   <div class="form-group">
                     <div style="margin-top:3px" class="checkbox mrR1 pull-left">
@@ -322,8 +323,8 @@
                         <input type="checkbox">Unconfirmed Entry
                       </label>
                     </div>
-                    <button class="btn btn-sm btn-info mrR1">Add in DR</button>
-                    <button class="btn btn-sm btn-primary">Add in CR</button>
+                    <button class="btn btn-sm btn-info mrR1" ng-click="addBlankTxn('DEBIT')">Add in DR</button>
+                    <button class="btn btn-sm btn-primary" ng-click="addBlankTxn('CREDIT')">Add in CR</button>
                     <div class="row mrT1">
                       <hr>
                       <ul class="list-inline" style="margin-left:15px">
@@ -355,7 +356,7 @@
                         {{selectedLedger.voucher.shortCode}}-{{selectedLedger.voucherNo}}
                       </div>
                       <div class="form-group">
-                        <textarea class="form-control" name="description" placeholder="Description" ng-model="selectedLedger.description"></textarea>
+                        <textarea class="form-control" name="description" placeholder="Description" rows="3" ng-model="selectedLedger.description"></textarea>
                       </div>
                     </div>
                   </div>
@@ -364,7 +365,7 @@
                   </div>
                   <div class="">
 <!--                     <button class="btn btn-success" type="button">Update</button> -->
-                    <button class="pull-left mrR btn btn-success" type="button">Save</button>
+                    <button class="pull-left mrR btn btn-success" type="button" ng-click="saveEntry(selectedLedger)">Save</button>
                     <button class="pull-left btn btn-danger">Delete Entry</button>
                   </div>
                 </div>

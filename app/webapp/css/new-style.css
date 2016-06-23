@@ -2663,13 +2663,24 @@ ul.pills li {
     width:100%;
     min-height: 200px;
     overflow:hidden;
-    background:rgba(92,83,77,0.9);
-    color:#fff;
+    background:rgba(204, 210, 218, 0.9);
+    color:#333;
     position:absolute;
     bottom:0;
     padding:5px;
+    transition: all 0.5s ease-in-out;
 }
 
 .ledger-panel .form-group{
     margin-bottom:5px;
+}
+
+.ledger-panel .close-panel{
+    position:absolute;
+    right:10px;
+    top:10px;
+}
+
+.ledger-panel textarea{
+    resize:none;
 }

@@ -9,23 +9,63 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
   $scope.format = "dd-MM-yyyy"
+  $scope.showPanel = false
   $scope.accountUnq = $stateParams.unqName
+  $scope.closePanel = () ->
+    $scope.showPanel = false
+    console.log $scope.showPanel
+
   $scope.ledgerData = {} 
   $scope.newDebitTxn = {
     date: $filter('date')(new Date(), "dd-MM-yyyy")
     particular: ''
     amount : 0
+    type: 'DEBIT'
   }
   $scope.newCreditTxn = {
     date: $filter('date')(new Date(), "dd-MM-yyyy")
     particular: ''
     amount : 0
+    type: 'CREDIT'
   }
 
-  $scope.newLedger = {
-    description: ""
-    
-  }
+  $scope.blankLedger = {
+      description:null
+      entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
+      hasCredit:false
+      hasDebit:false
+      invoiceGenerated:false
+      isCompoundEntry:false
+      tag:null
+      transactions:[
+        $scope.newDebitTxn
+        $scope.newCreditTxn
+      ]
+      unconfirmedEntry:false
+      uniqueName:""
+      voucher:{
+        name:""
+        shortCode:""
+      }
+      voucherNo:null
+    }
+
+
+  txnModel = (str) ->
+    @ledger = {
+      date: $filter('date')(new Date(), "dd-MM-yyyy")
+      particular: ''
+      amount : 0
+      type: str
+    } 
+
+  $scope.addBlankTxn= (str) ->
+    txn = new txnModel(str)
+    $scope.blankLedger.transactions.push(txn)
+
+  $scope.saveEntry = (newEntry) ->
+    console.log newEntry
+
 
   $scope.taxList = []
   $scope.voucherTypeList = [
@@ -166,9 +206,11 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     }
 
   $scope.selectTxn = (ledger, txn, index) ->
+    $scope.showPanel = true
     console.log ledger, txn, index
     $scope.selectedLedger = ledger
-    $scope.checkCompEntry(ledger)
+    if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
+      $scope.checkCompEntry(ledger)
 
   $scope.checkCompEntry = (ledger) ->
     unq = ledger.uniqueName
