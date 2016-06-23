@@ -192,11 +192,15 @@ app.run [
   ($rootScope, $window)->
     $rootScope.magicLinkPage = false
     $rootScope.whiteLinks = false
+    $rootScope.loginPage = false
     loc = window.location.pathname
-    if loc == "/index" or loc == "/" or loc == "/login"
+    if loc == "/index" or loc == "/"
       $rootScope.whiteLinks = true
     if loc == "/magic"
       $rootScope.magicLinkPage = true
+    if loc == "/login"
+      $rootScope.whiteLinks = true
+      $rootScope.loginPage = true
 
 ]
   

@@ -1,5 +1,5 @@
-<!-- 
-<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent"> -->
+
+<!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent">-->
 
     <section class="container-fluid">
         <div class="pdL2 pdR2 pdT2">
@@ -278,6 +278,71 @@
                 </tbody>
               </table>
             </div>
+            <div class="ledger-panel">
+              <div class="popover-content">
+                <div class="mrT">
+                  <div class="form-group">
+                    <div style="margin-top:3px" class="checkbox mrR1 pull-left">
+                      <label>
+                        <input ng-readonly="" ng-model="" type="checkbox">Unconfirmed Entry
+                      </label>
+                    </div>
+                    <button class="btn btn-sm btn-info mrR1">Add in DR</button>
+                    <button class="btn btn-sm btn-primary">Add in CR</button>
+                    <div class="row mrT1" ng-show="{{formClass}}.$valid">
+                      <hr>
+                      <ul class="list-inline" style="margin-left:15px">
+                        <li ng-repeat="tax in taxList">
+                          <div class="checkbox"><label><input type="checkbox" ng-model="tax.isSelected" ng-change="addTaxEntry(tax, item)" ng-disabled="">{{tax.name}}</label></div>
+                        </li>
+                      </ul>
+                      <hr>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <div class="form-group">
+                        <select
+                            class="form-control"
+                            ng-readonly="!canAddAndEdit"
+                            name="voucherType"
+                            ng-model="item.sharedData.voucher.shortCode"
+                            ng-options="item.shortCode as item.name for item in voucherTypeList"
+                            ng-disabled="item.sharedData.invoiceGenerated">
+                        </select>
+                      </div>
+                      <div class="form-group">
+                        <input type="text" name="tag" class="form-control" placeholder="Tag"/>
+                      </div>
+                    </div>
+                    <div class="col-xs-6">
+                      <div class="form-group" ng-if="ftype == \'Update\'">
+                        <label>Voucher no. </label>
+                        {{item.sharedData.voucher.shortCode}}-{{item.sharedData.voucherNo}}
+                      </div>
+                      <div class="form-group">
+                        <textarea class="form-control" name="description" placeholder="Description"></textarea>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="mrB">
+                    <label>Total: {{ttlValD + ttlValDType}}</label>
+                  </div>
+                  <div class="">
+                    <button ng-if="ftype == \'Update\'" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults || item.sharedData.invoiceGenerated"
+                            ng-click="updateLedger({entry: item})">Update</button>
+                    <button  ng-if="ftype == \'Add\'" class="btn btn-success" type="button" ng-disabled="{{formClass}}.$invalid || noResults || item.sharedData.invoiceGenerated"
+                             ng-click="addLedger({entry: item});checkItem(item)">Add</button>
+
+                    <button ng-click="closeEntry()" class="btn btn-default mrL1" type="button" ng-disabled="item.sharedData.invoiceGenerated">close</button>
+
+                    <button ng-click="closeAllEntry()" ng-show="canAddAndEdit" class="btn btn-default mrL1" type="button" ng-disabled="item.sharedData.invoiceGenerated">close All</button>
+
+                    <button ng-if="canAddAndEdit" ng-show="item.sharedData.uniqueName != undefined" class="pull-right btn btn-danger" ng-click="discardLedger({entry: item})" ng-disabled="item.sharedData.invoiceGenerated">Delete Entry</button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -289,5 +354,5 @@
       </div>
     </section>
 
-<!-- </perfect-scrollbar> -->
+<!--</perfect-scrollbar>-->
 

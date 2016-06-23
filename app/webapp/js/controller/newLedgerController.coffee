@@ -22,6 +22,40 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     amount : 0
   }
   $scope.taxList = []
+  $scope.voucherTypeList = [
+    {
+      name: "Sales"
+      shortCode: "sal"
+    }
+    {
+      name: "Purchases"
+      shortCode: "pur"
+    }
+    {
+      name: "Receipt"
+      shortCode: "rcpt"
+    }
+    {
+      name: "Payment"
+      shortCode: "pay"
+    }
+    {
+      name: "Journal"
+      shortCode: "jr"
+    }
+    {
+      name: "Contra"
+      shortCode: "cntr"
+    }
+    {
+      name: "Debit Note"
+      shortCode: "debit note"
+    }
+    {
+      name: "Credit Note"
+      shortCode: "credit note"
+    }
+  ]
 
   $scope.isCurrentAccount =(acnt) ->
     acnt.uniqueName is $scope.accountUnq
@@ -80,6 +114,13 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $scope.getTaxListFailure = (res) ->
     toastr.error(res.data.message, res.status)
+
+  $scope.addTaxEntry = (tax, item) ->
+    if tax.isSelected
+      $scope.selectedTaxes.push(tax)
+    else
+      $scope.selectedTaxes = _.without($scope.selectedTaxes, tax)
+#    item.sharedData.taxes = $scope.selectedTaxes
 
   $scope.getLedgerData()
 

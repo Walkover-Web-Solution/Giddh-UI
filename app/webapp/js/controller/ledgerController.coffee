@@ -166,9 +166,9 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
 
   $scope.reverseDirection = (type) ->
     if type is 'debit' || type is 'DEBIT'
-      return 'credit'
-    else if type is 'credit' || type is 'CREDIT'
       return 'debit'
+    else if type is 'credit' || type is 'CREDIT'
+      return 'credit'
 
   $scope.moveEntryInGiddhSuccess = (res) ->
     toastr.success("Entry created successfully", "Success")

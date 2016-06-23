@@ -11,7 +11,7 @@
       </button>
 
       <a href="/" class="navbar-brand">
-        <img src="/public/website/images/new/giddh-logo.png" alt="Giddh">
+        <img src="/public/website/images/new/giddh-logo.png" alt="Giddh - online accounting software">
       </a>
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -26,13 +26,13 @@
             <img src="/public/website/images/new/security-icon.png" alt="Security">
           </a>
         </li> -->
-        <li class="" ng-show="homePage || magicLinkPage">
+        <li class="" ng-show="homePage || magicLinkPage || loginPage">
           <a href="/index" class="page-scroll" ng-class="{white:whiteLinks}">Features</a>
         </li>
         <li class="">
           <a href="/pricing" ng-class="{white:whiteLinks}">Pricing</a>
         </li>
-        <li>
+        <li ng-hide="loginPage">
           <button onClick="window.location.href='/login'" type="button" class="btn btn-secondary navbar-btn" style="margin-left:20px">Login</button>
         </li>
       </ul>

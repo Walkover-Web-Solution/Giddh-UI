@@ -2579,6 +2579,11 @@ ul.pills li {
 }
 
 /* ledger container */
+.ledger-container{
+    clear:both;
+    overflow:hidden;
+    position: relative;
+}
 
 .ledger-container table th{
     padding:10px 10px;
@@ -2632,4 +2637,13 @@ ul.pills li {
 }
 .h32{
     height:32px;
+}
+
+.ledger-panel{
+    width:100%;
+    min-height: 200px;
+    overflow:hidden;
+    background:#f5f5f5;
+    position:absolute;
+    bottom:0;
 }
