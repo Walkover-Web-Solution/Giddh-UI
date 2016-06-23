@@ -14,6 +14,20 @@ ______\////////////________
   AUTHOR:   @THEMECHANIC
   VERSION:  1
 */
+/* fonts */
+
+
+@font-face {
+    font-family: 'pt_serifregular';
+    src: url('../fonts/ptf55f.woff2') format('woff2'),
+         url('../fonts/ptf55f.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+
+}
+
+
+
 
 /*start super loader*/
 .load-bar-wrap{
@@ -2642,6 +2656,7 @@ ul.pills li {
 .compoundEntry td , .compoundEntry td input{
     background: #FFF8EA;
 }
+
 .ledger-panel{
     width:100%;
     min-height: 200px;
@@ -2650,4 +2665,9 @@ ul.pills li {
     color:#fff;
     position:absolute;
     bottom:0;
+    padding:5px;
+}
+
+.ledger-panel .form-group{
+    margin-bottom:5px;
 }
