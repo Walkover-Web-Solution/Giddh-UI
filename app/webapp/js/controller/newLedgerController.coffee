@@ -21,6 +21,12 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     particular: ''
     amount : 0
   }
+
+  $scope.newLedger = {
+    description: ""
+    
+  }
+
   $scope.taxList = []
   $scope.voucherTypeList = [
     {
