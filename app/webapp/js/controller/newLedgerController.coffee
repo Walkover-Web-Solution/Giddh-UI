@@ -57,6 +57,31 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     }
   ]
 
+  $scope.selectedLedger = {
+    description:null
+    entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
+    hasCredit:false
+    hasDebit:false
+    invoiceGenerated:false
+    isCompoundEntry:false
+    tag:null
+    transactions:[{
+      amount:0
+      particular:{
+        name:""
+        uniqueName:""
+      }
+      type:""
+    }]
+    unconfirmedEntry:false
+    uniqueName:""
+    voucher:{
+      name:""
+      shortCode:""
+    }
+    voucherNo:null
+  }
+
   $scope.isCurrentAccount =(acnt) ->
     acnt.uniqueName is $scope.accountUnq
 
@@ -136,6 +161,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $scope.selectTxn = (ledger, txn, index) ->
     console.log ledger, txn, index
+    $scope.selectedLedger = ledger
     $scope.checkCompEntry(ledger)
 
   $scope.checkCompEntry = (ledger) ->
@@ -146,6 +172,31 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         lgr.isCompoundEntry = true
       else
         lgr.isCompoundEntry = false
+
+  $scope.saveUpdateLedger = (ledger) ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $rootScope.selAcntUname
+      entUname: ledger.uniqueName
+    }
+    if _.isEmpty(ledger.uniqueName)
+      console.log("creating new entry")
+      ledgerService.createEntry(unqNamesObj, ledger).then($scope.addEntrySuccess, $scope.addEntryFailure)
+    else
+      console.log("updating entry")
+      ledgerService.updateEntry(unqNamesObj, ledger).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
+
+  $scope.addEntrySuccess = (res) ->
+    toastr.success("Entry created successfully", "Success")
+
+  $scope.addEntryFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.updateEntrySuccess = (res) ->
+    toastr.success("Entry updated successfully", "Success")
+
+  $scope.updateEntryFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
 
 giddh.webApp.controller 'newLedgerController', newLedgerController

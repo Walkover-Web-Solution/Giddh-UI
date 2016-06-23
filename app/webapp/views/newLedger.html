@@ -342,20 +342,20 @@
                             class="form-control"
                             name="voucherType"
                             ng-options="item.shortCode as item.name for item in voucherTypeList"
-                            >
+                            ng-model="selectedLedger.voucher.shortCode">
                         </select>
                       </div>
                       <div class="form-group">
-                        <input type="text" name="tag" class="form-control" placeholder="Tag"/>
+                        <input type="text" name="tag" class="form-control" placeholder="Tag" ng-model="selectedLedger.tag"/>
                       </div>
                     </div>
                     <div class="col-xs-6">
                       <div class="form-group" style="margin-bottom:0">
                         <label>Voucher no. </label>
-                        {{item.sharedData.voucher.shortCode}}-{{item.sharedData.voucherNo}}
+                        {{selectedLedger.voucher.shortCode}}-{{selectedLedger.voucherNo}}
                       </div>
                       <div class="form-group">
-                        <textarea class="form-control" name="description" placeholder="Description"></textarea>
+                        <textarea class="form-control" name="description" placeholder="Description" ng-model="selectedLedger.description"></textarea>
                       </div>
                     </div>
                   </div>
@@ -364,7 +364,7 @@
                   </div>
                   <div class="">
 <!--                     <button class="btn btn-success" type="button">Update</button> -->
-                    <button class="pull -left mrR btn btn-success" type="button">Save</button>
+                    <button class="pull-left mrR btn btn-success" type="button">Save</button>
                     <button class="pull-left btn btn-danger">Delete Entry</button>
                   </div>
                 </div>

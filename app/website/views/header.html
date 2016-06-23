@@ -30,7 +30,7 @@
           <a href="/index" class="page-scroll" ng-class="{white:whiteLinks}">Features</a>
         </li>
         <li class="">
-          <a href="/pricing" ng-class="{white:whiteLinks}">Pricing</a>
+          <a href="/pricing" ng-class="{white:whiteLinks && !loginPage}">Pricing</a>
         </li>
         <li ng-hide="loginPage">
           <button onClick="window.location.href='/login'" type="button" class="btn btn-secondary navbar-btn" style="margin-left:20px">Login</button>

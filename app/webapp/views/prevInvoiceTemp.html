@@ -319,6 +319,17 @@ textarea{
                   {{defTempData.subTotal  | currency: "" : 2}}
                 </th>
               </tr>
+              <tr ng-if="defTempData.roundOff">
+                <th class="col-xs-1">
+                  &nbsp;
+                </th>
+                <th class="col-xs-9">
+                  Round Off :
+                </th>
+                <th class="col-xs-2">
+                  <span ng-if="defTempData.roundOff.balanceType == 'CREDIT'">-</span>{{defTempData.roundOff.transaction.amount  | currency: "" : 2}}
+                </th>
+              </tr>
               <!-- tax repeat -->
               <tr ng-if="defTempData.taxes.length > 0" ng-repeat="tax in defTempData.taxes">
                 <th class="col-xs-1">
