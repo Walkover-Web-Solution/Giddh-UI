@@ -103,7 +103,6 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
 
   $scope.getTaxListSuccess = (res) ->
-    console.log(res)
     _.each res.body, (tax) ->
       tax.isSelected = false
       if tax.account == null
@@ -124,19 +123,9 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $scope.getLedgerData()
 
-
-  $scope.popOver = {
-    template : "ledgerPopover.html"
-    position:"bottom"
-  }
-  $scope.fltAccntListcount5 = []
-
   $timeout ( ->
     $scope.getTaxList()
   ), 3000
-
-  $scope.addItem = (ledger, txn) ->
-    console.log txn
 
   $scope.flatAccListC5 = {
       page: 1
@@ -145,32 +134,18 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       currentPage : 1
     }
 
-  $scope.getFlatAccountListCount5 = (compUname) ->
-    reqParam = {
-      companyUniqueName: compUname
-      q: ''
-      page: $scope.flatAccListC5.page
-      count: $scope.flatAccListC5.count
-    }
-    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListCount5ListSuccess, $scope.getFlatAccountListCount5ListFailure)
+  $scope.selectTxn = (ledger, txn, index) ->
+    console.log ledger, txn, index
+    $scope.checkCompEntry(ledger)
 
-  $scope.getFlatAccountListCount5ListSuccess = (res) ->
-    $scope.fltAccntListcount5 = res.body.results
-
-  $scope.getFlatAccountListCount5ListFailure = (res) ->
-    toastr.error(res.data.message)
-
-  # search flat accounts list
-  $scope.searchAccountsC5 = (str) ->
-    reqParam = {}
-    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-    if str.length > 2
-      reqParam.q = str
-      groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListCount5ListSuccess, $scope.getFlatAccountListCount5ListFailure)
-    else
-      reqParam.q = ''
-      reqParam.count = 5
-      groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListCount5ListSuccess, $scope.getFlatAccountListCount5ListFailure)
+  $scope.checkCompEntry = (ledger) ->
+    unq = ledger.uniqueName
+    ledger.isCompoundEntry = true
+    _.each $scope.ledgerData.ledgers, (lgr) ->
+      if unq == lgr.uniqueName
+        lgr.isCompoundEntry = true
+      else
+        lgr.isCompoundEntry = false
 
 
 giddh.webApp.controller 'newLedgerController', newLedgerController
