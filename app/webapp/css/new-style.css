@@ -2646,7 +2646,8 @@ ul.pills li {
     width:100%;
     min-height: 200px;
     overflow:hidden;
-    background:#f5f5f5;
+    background:rgba(92,83,77,0.9);
+    color:#fff;
     position:absolute;
     bottom:0;
 }
