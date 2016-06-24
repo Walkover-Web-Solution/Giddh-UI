@@ -130,6 +130,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   
   $scope.setLedgerData = (data, acData) ->
     $scope.selectedAccountUniqueName = acData.uniqueName
+    $rootScope.selectedAccount = acData
     DAServices.LedgerSet(data, acData)
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)

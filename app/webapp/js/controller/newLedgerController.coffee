@@ -14,17 +14,24 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.closePanel = () ->
     $scope.showPanel = false
     console.log $scope.showPanel
+  $scope.accountToShow = {}
 
   $scope.ledgerData = {} 
   $scope.newDebitTxn = {
     date: $filter('date')(new Date(), "dd-MM-yyyy")
-    particular: ''
+    particular: {
+      name:''
+      uniqueName:''
+    }
     amount : 0
     type: 'DEBIT'
   }
   $scope.newCreditTxn = {
     date: $filter('date')(new Date(), "dd-MM-yyyy")
-    particular: ''
+    particular: {
+      name:''
+      uniqueName:''
+    }
     amount : 0
     type: 'CREDIT'
   }
@@ -32,8 +39,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.blankLedger = {
       description:null
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
-      hasCredit:false
-      hasDebit:false
+#      hasCredit:false
+#      hasDebit:false
       invoiceGenerated:false
       isCompoundEntry:false
       tag:null
@@ -49,7 +56,6 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       }
       voucherNo:null
     }
-
 
   txnModel = (str) ->
     @ledger = {
@@ -106,8 +112,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.selectedLedger = {
     description:null
     entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
-    hasCredit:false
-    hasDebit:false
+#    hasCredit:false
+#    hasDebit:false
     invoiceGenerated:false
     isCompoundEntry:false
     tag:null
@@ -128,6 +134,13 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     voucherNo:null
   }
 
+  $scope.isSelectedAccount = () ->
+    if _.isUndefined($rootScope.selectedAccount.name)
+      $rootScope.selectedAccount = localStorageService.get('_selectedAccount')
+      $scope.accountToShow = $rootScope.selectedAccount
+    else
+      $scope.accountToShow = $rootScope.selectedAccount
+
   $scope.isCurrentAccount =(acnt) ->
     acnt.uniqueName is $scope.accountUnq
 
@@ -136,6 +149,90 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $scope.toDatePickerOpen = ->
     this.toDatePickerIsOpen = true
+
+  # upper icon functions starts here
+  # generate magic link
+  $scope.getMagicLink = () ->
+    accUname = $location.path()
+    accUname = accUname.split('/')
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      accountUniqueName: $scope.accountUnq
+      from: $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
+      to: $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
+    }
+    companyServices.getMagicLink(reqParam).then($scope.getMagicLinkSuccess, $scope.getMagicLinkFailure)
+
+  $scope.getMagicLinkSuccess = (res) ->
+    $scope.magicLink = res.body.magicLink
+    modalInstance = $uibModal.open(
+      template: '<div>
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title">Magic Link</h3>
+          </div>
+          <div class="modal-body">
+            <input id="magicLink" class="form-control" type="text" ng-model="magicLink">
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" ngclipboard data-clipboard-target="#magicLink">Copy</button>
+          </div>
+      </div>'
+      size: "md"
+      backdrop: 'static'
+      scope: $scope
+    )
+
+  $scope.getMagicLinkFailure = (res) ->
+    toastr.error(res.data.message)
+
+  # ledger send email
+  $scope.sendLedgEmail = (emailData) ->
+    data = angular.copy(emailData)
+    if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
+      toastr.error("Date should be in proper format", "Error")
+      return false
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $scope.accountUnq
+      toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+      fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
+    }
+    sendData = {
+      recipients: []
+    }
+    data = data.replace(RegExp(' ', 'g'), '')
+    cdata = data.split(',')
+    _.each(cdata, (str) ->
+      if $rootScope.validateEmail(str)
+        sendData.recipients.push(str)
+      else
+        toastr.warning("Enter valid Email ID", "Warning")
+        data = ''
+        sendData.recipients = []
+        return false
+    )
+    if sendData.recipients < 1
+      if $rootScope.validateEmail(data)
+        sendData.recipients.push(data)
+      else
+        toastr.warning("Enter valid Email ID", "Warning")
+        return false
+
+    accountService.emailLedger(unqNamesObj, sendData).then($scope.emailLedgerSuccess, $scope.emailLedgerFailure)
+
+
+
+  $scope.emailLedgerSuccess = (res) ->
+    toastr.success(res.body, res.status)
+    $scope.ledgerEmailData = {}
+
+  $scope.emailLedgerFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+
+  # upper icon functions ends here
 
   $scope.getLedgerData = () ->
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
@@ -149,7 +246,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     ledgerService.getLedger(unqNamesObj).then($scope.getLedgerDataSuccess, $scope.getLedgerDataFailure)
 
   $scope.getLedgerDataSuccess = (res) ->
-    $scope.filterLedgers(res.body.ledgers)
+#    $scope.filterLedgers(res.body.ledgers)
     $scope.ledgerData = res.body
 
   $scope.getLedgerDataFailure = (res) ->
@@ -192,6 +289,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       $scope.selectedTaxes = _.without($scope.selectedTaxes, tax)
 #    item.sharedData.taxes = $scope.selectedTaxes
 
+  $scope.isSelectedAccount()
   $scope.getLedgerData()
 
   $timeout ( ->
@@ -222,28 +320,108 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         lgr.isCompoundEntry = false
 
   $scope.saveUpdateLedger = (ledger) ->
-    unqNamesObj = {
-      compUname: $rootScope.selectedCompany.uniqueName
-      acntUname: $rootScope.selAcntUname
-      entUname: ledger.uniqueName
-    }
+    delete ledger.isCompoundEntry
     if _.isEmpty(ledger.uniqueName)
       console.log("creating new entry")
+      unqNamesObj = {
+        compUname: $rootScope.selectedCompany.uniqueName
+        acntUname: $scope.accountUnq
+      }
+      delete ledger.uniqueName
+      delete ledger.voucherNo
+      transactionsArray = []
+      _.every(ledger.transactions,(led) ->
+        delete led.date
+        delete led.parentGroups
+        if led.particular != ""
+          if led.particular.uniqueName != ""
+            transactionsArray.push(led)
+      )
+      ledger.transactions = transactionsArray
+      ledger.voucherType = ledger.voucher.shortCode
+
       ledgerService.createEntry(unqNamesObj, ledger).then($scope.addEntrySuccess, $scope.addEntryFailure)
     else
       console.log("updating entry")
+      unqNamesObj = {
+        compUname: $rootScope.selectedCompany.uniqueName
+        acntUname: $scope.accountUnq
+        entUname: ledger.uniqueName
+      }
       ledgerService.updateEntry(unqNamesObj, ledger).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
+    $scope.getLedgerData()
+
+
+  $scope.resetBlankLedger = () ->
+    $scope.blankLedger = {
+      description:null
+      entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
+      invoiceGenerated:false
+      isCompoundEntry:false
+      tag:null
+      transactions:[
+        $scope.newDebitTxn = {
+          date: $filter('date')(new Date(), "dd-MM-yyyy")
+          particular: ''
+          amount : 0
+          type: 'DEBIT'
+        }
+        $scope.newCreditTxn = {
+          date: $filter('date')(new Date(), "dd-MM-yyyy")
+          particular: ''
+          amount : 0
+          type: 'CREDIT'
+        }
+      ]
+      unconfirmedEntry:false
+      uniqueName:""
+      voucher:{
+        name:""
+        shortCode:""
+      }
+      voucherNo:null
+    }
 
   $scope.addEntrySuccess = (res) ->
     toastr.success("Entry created successfully", "Success")
+    addThisLedger = {}
+    _.extend(addThisLedger,$scope.selectedLedger)
+    $scope.ledgerData.ledgers.push(addThisLedger)
+    $scope.getLedgerData()
+    $scope.resetBlankLedger()
+    $scope.selectedLedger = $scope.blankLedger
 
   $scope.addEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
+    $scope.resetBlankLedger()
+    $scope.selectedLedger = $scope.blankLedger
 
   $scope.updateEntrySuccess = (res) ->
     toastr.success("Entry updated successfully", "Success")
 
   $scope.updateEntryFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.deleteEntry = (ledger) ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $scope.accountUnq
+      entUname: ledger.uniqueName
+    }
+    ledgerService.deleteEntry(unqNamesObj).then((res) ->
+      $scope.deleteEntrySuccess(ledger, res)
+    , $scope.deleteEntryFailure)
+
+  $scope.deleteEntrySuccess = (item, res) ->
+    toastr.success("Entry deleted successfully","Success")
+    withoutLedger  = _.without($scope.ledgerData,item)
+    $scope.ledgerData = withoutLedger
+    $scope.resetBlankLedger()
+    $scope.selectedLedger = $scope.blankLedger
+    $scope.getLedgerData()
+#    $scope.calculateLedger($scope.ledgerData, "deleted")
+
+  $scope.deleteEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
 

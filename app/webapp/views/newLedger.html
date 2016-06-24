@@ -105,7 +105,7 @@
             <span class="icon48 icon-in"></span>
 
             <h3 class="ledgerHead">
-              <span tooltip-placement="top" uib-tooltip="{{accountName}}" class="ellp">{{accountName}}</span>
+              <span tooltip-placement="top" uib-tooltip="{{accountToShow.name}}" class="ellp">{{accountToShow.name}}</span>
               <span>&nbsp;is <strong>receiving</strong></span>
             </h3>
           </div>
@@ -114,12 +114,12 @@
             <!--breadcrumbs-->
             <div>
               <ol class="breadcrumb">
-                <!-- <li ng-repeat="(key,value) in ledgerBreadCrumbList"
+                <li ng-repeat="(key,value) in accountToShow.parentGroups"
                     ng-class="{active:$last}">
                   <a href="javascript:void(0)">{{value.name}}</a>
-                </li> -->
-                <li>Bank Accounts</li>
-                <li>ICICI Bank Ltd</li>
+                </li>
+                <!--<li>Bank Accounts</li>-->
+                <!--<li>ICICI Bank Ltd</li>-->
               </ol>
             </div>
             <!--/breadcrumbs-->
@@ -132,7 +132,7 @@
 
               <h3 class="ledgerHead">
                 <span>&nbsp;is <strong>giving</strong></span>
-                <span tooltip-placement="top" uib-tooltip="{{accountName}}" class="ellp">{{accountName}}</span>
+                <span tooltip-placement="top" uib-tooltip="{{accountToShow.name}}" class="ellp">{{accountToShow.name}}</span>
               </h3>
             </div>
           </div>
@@ -183,7 +183,7 @@
                   
                   <table class="width100">
                     <tbody>
-                      <tr class="" ng-repeat="ledger in ledgerData.ledgers" ng-if="ledger.hasDebit" ng-class="{compoundEntry: ledger.isCompoundEntry}">
+                      <tr class="" ng-repeat="ledger in ledgerData.ledgers" ng-class="{compoundEntry: ledger.isCompoundEntry}">
                         <td colspan="100%" class="ledger-row">
                           <table class="width100">
                             <tbody class="ledger-main">
@@ -208,7 +208,7 @@
                                 <td class="col-xs-1 maxW42">
                                   <input type="checkbox">
                                 </td>
-                                <td class="col-xs-3"><input class="form-control" ng-model="txn.date" accesskey="L"></td>
+                                <td class="col-xs-3"><input class="form-control" ng-model="blankLedger.entryDate" accesskey="L"></td>
                                 <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
                                 <td class="col-xs-3"><input class="form-control" ng-model="txn.amount"></td>
                               </tr>
@@ -263,7 +263,7 @@
                   
                   <table class="width100">
                     <tbody>
-                      <tr class="" ng-repeat="ledger in ledgerData.ledgers" ng-if="ledger.hasCredit" ng-class="{compoundEntry: ledger.isCompoundEntry}">
+                      <tr class="" ng-repeat="ledger in ledgerData.ledgers" ng-class="{compoundEntry: ledger.isCompoundEntry}">
                         <td colspan="100%" class="ledger-row">
                           <table class="width100">
                             <tbody class="ledger-main">
@@ -288,7 +288,7 @@
                                 <td class="col-xs-1 maxW42">
                                   <input type="checkbox">
                                 </td>
-                                <td class="col-xs-3"><input class="form-control"  ng-model="txn.date" accesskey="R"></td>
+                                <td class="col-xs-3"><input class="form-control"  ng-model="blankLedger.entryDate" accesskey="R"></td>
                                 <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
                                 <td class="col-xs-3"><input class="form-control"  ng-model="txn.amount"></td>
                               </tr>
@@ -343,7 +343,7 @@
                             class="form-control"
                             name="voucherType"
                             ng-options="item.shortCode as item.name for item in voucherTypeList"
-                            ng-model="selectedLedger.voucher.shortCode">
+                            ng-model="selectedLedger.voucher.shortCode" ng-init="voucherTypeList[1]">
                         </select>
                       </div>
                       <div class="form-group">
@@ -365,8 +365,8 @@
                   </div>
                   <div class="">
 <!--                     <button class="btn btn-success" type="button">Update</button> -->
-                    <button class="pull-left mrR btn btn-success" type="button" ng-click="saveEntry(selectedLedger)">Save</button>
-                    <button class="pull-left btn btn-danger">Delete Entry</button>
+                    <button class="pull-left mrR btn btn-success" type="button" ng-click="saveUpdateLedger(selectedLedger)">Save</button>
+                    <button class="pull-left btn btn-danger" ng-click="deleteEntry(selectedLedger)">Delete Entry</button>
                   </div>
                 </div>
               </div>
