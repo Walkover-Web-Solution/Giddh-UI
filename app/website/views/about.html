@@ -27,10 +27,11 @@
   <script type="text/javascript" src="/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
 
 </head>
-<body ng-controller="homeCtrl" id="aboutPage" class="unresponsive light notAffix">
+<body ng-controller="homeCtrl" id="aboutPage" class="unresponsive lightTrans notAffix">
+
+  <ng-include src="'/public/website/views/header.html'"></ng-include>
 
   <div id="fullpage">
-    <ng-include src="'/public/website/views/header.html'"></ng-include>
     <div class="section">
       <img class="img-responsive" src="/public/website/images/new/about-banner.jpg" />
       <div class="secBgWrap">

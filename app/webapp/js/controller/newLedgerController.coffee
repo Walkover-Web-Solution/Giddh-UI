@@ -154,10 +154,10 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   # generate magic link
   $scope.getMagicLink = () ->
     accUname = $location.path()
-    accUname = accUname.split('/')
+    accUname = $scope.accountUnq #accUname.split('/')
     reqParam = {
       companyUniqueName: $rootScope.selectedCompany.uniqueName
-      accountUniqueName: $scope.accountUnq
+      accountUniqueName: accUname
       from: $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
       to: $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
     }
@@ -333,9 +333,9 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       _.every(ledger.transactions,(led) ->
         delete led.date
         delete led.parentGroups
-        if led.particular != ""
-          if led.particular.uniqueName != ""
-            transactionsArray.push(led)
+      )
+      transactionsArray = _.reject(ledger.transactions, (led) ->
+           led.particular.uniqueName == ""
       )
       ledger.transactions = transactionsArray
       ledger.voucherType = ledger.voucher.shortCode
@@ -348,8 +348,16 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         acntUname: $scope.accountUnq
         entUname: ledger.uniqueName
       }
+      transactionsArray = []
+      _.every($scope.blankLedger.transactions,(led) ->
+        delete led.date
+        delete led.parentGroups
+      )
+      transactionsArray = _.reject($scope.blankLedger.transactions, (led) ->
+        led.particular.uniqueName == ""
+      )
+      ledger.transactions.push(transactionsArray)
       ledgerService.updateEntry(unqNamesObj, ledger).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
-    $scope.getLedgerData()
 
 
   $scope.resetBlankLedger = () ->
@@ -362,13 +370,19 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       transactions:[
         $scope.newDebitTxn = {
           date: $filter('date')(new Date(), "dd-MM-yyyy")
-          particular: ''
+          particular: {
+            name:""
+            uniqueName:""
+          }
           amount : 0
           type: 'DEBIT'
         }
         $scope.newCreditTxn = {
           date: $filter('date')(new Date(), "dd-MM-yyyy")
-          particular: ''
+          particular: {
+            name:""
+            uniqueName:""
+          }
           amount : 0
           type: 'CREDIT'
         }
@@ -398,6 +412,11 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $scope.updateEntrySuccess = (res) ->
     toastr.success("Entry updated successfully", "Success")
+    addThisLedger = {}
+    _.extend(addThisLedger,$scope.blankLedger)
+    $scope.ledgerData.ledgers.push(addThisLedger)
+    $scope.getLedgerData()
+    $scope.resetBlankLedger()
 
   $scope.updateEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)

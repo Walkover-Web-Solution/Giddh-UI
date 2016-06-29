@@ -1597,12 +1597,19 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.cntBnkData = res.body
     url = res.body.token_URL + '?token=' + res.body.token
     $scope.connectUrl = url
-    $uibModal.open(
+    modalInstance = $uibModal.open(
       templateUrl: '/public/webapp/views/connectBankModal.html',
       size: "md",
       backdrop: 'static',
-      scope: $scope
+      scope: $scope,
+      controller:'companyController'
     )
+    modalInstance.result.then ((selectedItem) ->
+      console.log(selectedItem)
+      return
+    ),(something) ->
+      console.log($scope + ' Modal dismissed at: ' + new Date)
+      return
 
   $scope.connectBankFailure = (res) ->
     toastr.error(res.data.message, "Error")
@@ -1610,7 +1617,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.refreshToken = (account) ->
     reqParam = {
       companyUniqueName: $rootScope.selectedCompany.uniqueName
-      accountId: account.accountId
+      loginId: account.loginId
     }
     userServices.refreshAccount(reqParam).then($scope.refreshTokenSuccess, $scope.refreshTokenFailure )
 
@@ -1628,6 +1635,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.data.message, "Error")
 
   #  Linked methods ends here
+
 
   $timeout( ->
     $rootScope.selAcntUname = undefined
@@ -1647,6 +1655,9 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
     $scope.resetSteps()
   )
+
+  window.message = (event,data) ->
+    console.log(event)
 
 #init angular app
 giddh.webApp.controller 'companyController', companyController

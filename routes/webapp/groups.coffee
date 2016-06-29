@@ -205,4 +205,16 @@ router.get '/:groupUniqueName/closing-balance', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/:groupUniqueName/subgroups-with-accounts', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName + '/subgroups-with-accounts'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 module.exports = router

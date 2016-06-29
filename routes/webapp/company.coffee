@@ -329,8 +329,8 @@ router.post '/:companyUniqueName/logs/:page', (req, res) ->
       res.send data
 
 #refresh-token
-router.get '/:companyUniqueName/ebanks/:accountId/refresh-token', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/' + req.params.accountId + '/refresh-token'
+router.get '/:companyUniqueName/login/:loginId/token/refresh', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/login/' + req.params.accountId + '/token/refresh'
   args =
     headers:
       'Auth-Key': req.session.authKey

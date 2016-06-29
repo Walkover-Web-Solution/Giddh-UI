@@ -142,6 +142,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     else
       # with accounts, group data
       $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
+      $scope.getSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,'sundry_debtors')
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
 
   $scope.makeAccountsList = (res) ->
@@ -177,6 +178,24 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 #      reqParam.count = 5000
 #    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
 
+  #----------- Get subgroups with accounts -----------#
+  $scope.getSubgroupsWithAccounts = (compUname, groupUname) ->
+    reqParam = {
+      companyUniqueName: compUname
+      groupUniqueName: groupUname
+    }
+    groupService.getSubgroupsWithAccounts(reqParam).then($scope.getSubgroupsSuccess,$scope.getSubgroupsFailure)
+
+  $scope.getSubgroupsSuccess = (res) ->
+    console.log(res)
+    $scope.flatAccntWGroupsList = []
+    $scope.flatAccntWGroupsList.push(res.body)
+    $scope.filterSundryDebtors(res.body.groups)
+    $scope.gwaList.limit = 5
+
+  $scope.getSubgroupsFailure = (res) ->
+    console.log(res)
+
   #-------- fetch groups with accounts list-------
   $scope.getFlattenGrpWithAccList = (compUname) ->
     reqParam = {
@@ -188,9 +207,10 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
 
   $scope.getFlattenGrpWithAccListSuccess = (res) ->
-    $scope.gwaList.totalPages = res.body.totalPages    
-    $scope.filterSundryDebtors(res.body.results)
-    $scope.showAccountList = true
+    $scope.gwaList.totalPages = res.body.totalPages
+#    $scope.flatAccntWGroupsList = []
+#    $scope.filterSundryDebtors(res.body.results)
+#    $scope.showAccountList = true
     $scope.gwaList.limit = 5  
 
   $scope.getFlattenGrpWithAccListFailure = (res) ->
@@ -215,11 +235,13 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $scope.gwaList.limit = 5
 
   $scope.filterSundryDebtors = (grpList) ->
-    $scope.flatAccntWGroupsList = []
     _.each grpList, (grp) ->
-      if grp.groupUniqueName == 'sundry_debtors'
+#      if grp.groupUniqueName == 'sundry_debtors'
+        grp.open = false
         $scope.flatAccntWGroupsList.push(grp)
-        grp.open = true
+    $scope.showAccountList = true
+
+
 
   $scope.loadMoreGrpWithAccFailure = (res) ->
     toastr.error(res.data.message)
@@ -682,7 +704,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
         scope: $scope
       )
     else
-      window.open("data:application/pdf;base64, " + res.body)
+      passthis = "data:application/pdf;base64, " + res.body
+      window.open(passthis)
 
 
   # preview of generated invoice

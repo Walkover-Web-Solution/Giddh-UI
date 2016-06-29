@@ -42,12 +42,12 @@
               <div 
                 class="title  LIB{{value.groupUniqueName}}" 
                 ng-click="value.open = !value.open"
-                ng-class="{'active' : value.open || value.groupUniqueName === selectedGroupUname}">
-                <a ng-bind-html="value.groupName | highlight: search.acnt"></a>
+                ng-class="{'active' : value.open || value.uniqueName === selectedGroupUname}">
+                <a ng-bind-html="value.name | highlight: search.acnt"></a>
               </div>
-              <ul class="accBox subAccBox" ng-show="value.open || value.groupUniqueName === selectedGroupUname"
+              <ul class="accBox subAccBox" ng-show="value.open || value.uniqueName === selectedGroupUname"
                   id="ul_{{value.groupUniqueName}}">
-                <li class="inrPrnt" ng-repeat="(index,accDtl) in value.accountDetails | filter : search.acnt" id="ac_{{accDtl.uniqueName}}"
+                <li class="inrPrnt" ng-repeat="(index,accDtl) in value.accounts | filter : search.acnt" id="ac_{{accDtl.uniqueName}}"
                   tooltip-placement="top" uib-tooltip="{{accDtl.uniqueName}}">
                   <a
                     ng-click="loadInvoice(value, accDtl)"

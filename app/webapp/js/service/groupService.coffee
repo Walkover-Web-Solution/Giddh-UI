@@ -78,6 +78,10 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         method: 'DELETE'
         url: '/company/:companyUniqueName/logs/:beforeDate'
       }
+      getSubgroups: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/groups/:groupUniqueName/subgroups-with-accounts'
+      }
     })
 
   groupService =
@@ -116,6 +120,14 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
     getFlattenGroupAccList: (reqParam, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.getFlattenGrpWithAcc({companyUniqueName: reqParam.companyUniqueName, q:reqParam.q, page:reqParam.page, count:reqParam.count},
         onSuccess, onFailure))
+
+#   Get sub goups with accounts
+    getSubgroupsWithAccounts: (reqParam, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Group.getSubgroups({
+            companyUniqueName: reqParam.companyUniqueName,
+            groupUniqueName:reqParam.groupUniqueName
+          },onSuccess, onFailure))
+
 
 #   Get flat accounts list
     getFlatAccList: (reqParam, onSuccess, onFailure) ->

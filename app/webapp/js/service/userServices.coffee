@@ -105,7 +105,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         }
         refreshAccount: {
           method: 'GET' 
-          url: '/company/:companyUniqueName/ebanks/:accountId/refresh-token'
+          url: '/company/:companyUniqueName/login/:loginId/token/refresh'
         }
       }
   )
@@ -221,7 +221,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
     )
     refreshAccount: (reqParam) ->
       @handlePromise((onSuccess, onFailure) ->
-        UserSET.refreshAccount({companyUniqueName: reqParam.companyUniqueName, accountId: reqParam.accountId}, onSuccess, onFailure)
+        UserSET.refreshAccount({companyUniqueName: reqParam.companyUniqueName, loginId: reqParam.loginId}, onSuccess, onFailure)
     )
 
   userServices
