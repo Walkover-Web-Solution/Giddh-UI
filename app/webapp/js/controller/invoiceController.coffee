@@ -18,6 +18,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.onlyDrData = []
   $scope.entriesForInvoice = []
   $scope.flatAccntWGroupsList = []
+  $scope.subgroupsList = []
   $scope.search = {}
   $scope.search.acnt = ''
   $scope.gwaList = {
@@ -191,6 +192,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.flatAccntWGroupsList = []
     $scope.flatAccntWGroupsList.push(res.body)
     $scope.filterSundryDebtors(res.body.groups)
+    _.extend($scope.subgroupsList,$scope.flatAccntWGroupsList)
     $scope.gwaList.limit = 5
 
   $scope.getSubgroupsFailure = (res) ->
@@ -231,15 +233,42 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     toastr.error(res.data.message)
 
   $scope.searchGrpWithAccounts = (str) ->
+#    $scope.flatAccntWGroupsList = []
+#    if _.isEmpty(str)
+#      _.extend($scope.flatAccntWGroupsList,$scope.subgroupsList)
+#    else
+#      _.each($scope.subgroupsList,(group) ->
+#        if group.name.toLowerCase().match(str) || group.uniqueName.match(str)
+#          $scope.flatAccntWGroupsList.push(group)
+#        else
+#          if group.accounts.length > 0
+#            _.each(group.accounts, (account) ->
+#              if account.name.toLowerCase().match(str) || account.uniqueName.match(str)
+#                $scope.flatAccntWGroupsList.push(group)
+#            )
+#      )
     if str.length < 1
       $scope.gwaList.limit = 5
 
+  $scope.isGrpMatch = (g, q) ->
+    p = RegExp(q,"i")
+    if (g.name.match(p) || g.uniqueName.match(p))
+      return true
+    return false
+
+  $scope.loadMoreGrpWithAcc = () ->
+    $scope.gwaList.limit += 5
+
   $scope.filterSundryDebtors = (grpList) ->
+#    $scope.flatAccntWGroupsList = _.flatten(grpList)
     _.each grpList, (grp) ->
 #      if grp.groupUniqueName == 'sundry_debtors'
         grp.open = false
         $scope.flatAccntWGroupsList.push(grp)
+        if grp.groups.length > 0
+          $scope.filterSundryDebtors(grp.groups)
     $scope.showAccountList = true
+    console.log($scope.flatAccntWGroupsList)
 
 
 

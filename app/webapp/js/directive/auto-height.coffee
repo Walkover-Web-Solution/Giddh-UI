@@ -808,3 +808,21 @@ angular.module('ledger', [])
           return
       return
     result
+
+.filter 'searchfilterInvoice', ->
+  (input, q) ->
+    result = []
+    _.each input, (g) ->
+      p = RegExp(q, 'i')
+      if g.name.match(p) or g.uniqueName.match(p)
+        result.push g
+      else
+        acMatch = false
+        _.each g.accounts, (a) ->
+          if !acMatch
+            if a.name.match(p) or a.uniqueName.match(p) or a.mergedAccounts.match(p)
+              acMatch = true
+              result.push g
+          return
+      return
+    result

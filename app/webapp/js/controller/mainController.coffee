@@ -149,7 +149,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.getParticularAccount = (searchThis) ->
     accountList = []
     _.filter($rootScope.fltAccntListPaginated,(account) ->
-      if(account.name.match(searchThis) != null || account.uniqueName.match(searchThis) != null)
+      if(account.name.toLowerCase().match(searchThis.toLowerCase()) != null || account.uniqueName.match(searchThis) != null)
         accountList.push(account)
     )
     accountList

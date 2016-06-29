@@ -282,6 +282,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     #$scope.flatAccntWGroupsList = res.body.results
     $scope.removeEmptyGroups(res.body.results)
     $scope.flatAccntWGroupsList = $scope.grpWithoutEmptyAccounts
+    console.log($scope.flatAccntWGroupsList)
     $scope.showAccountList = true
     $scope.gwaList.limit = 5  
 
