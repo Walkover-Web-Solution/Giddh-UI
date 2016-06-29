@@ -1624,12 +1624,18 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.reconnectAccountSuccess= (res) ->
     url = res.body.connectUrl
     $scope.connectUrl = url
-    $uibModal.open(
+    modalInstance = $uibModal.open(
       templateUrl: '/public/webapp/views/refreshBankAccountsModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope
     )
+    modalInstance.result.then ((selectedItem) ->
+      $scope.refreshAccounts()
+      return
+    ), ->
+      $scope.refreshAccounts()
+      return
 
   $scope.reconnectAccountFailure = (res) ->
     toastr.error(res.data.message, "Error")

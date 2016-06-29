@@ -2692,7 +2692,7 @@ ul.pills li {
     width: 100%;
     left: 0;
     top: 0;
-    z-index: 9999;
+    z-index: 1;
 }
 
 .reconnectButton {
