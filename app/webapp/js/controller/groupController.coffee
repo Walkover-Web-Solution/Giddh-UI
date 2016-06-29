@@ -221,7 +221,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListCount5ListSuccess, $scope.getFlatAccountListCount5ListFailure)
 
   $scope.getFlatAccountListCount5ListSuccess = (res) ->
-    console.log res.body.res
+#    console.log res.body.res
     $scope.fltAccntListcount5 = res.body.results
 
   $scope.getFlatAccountListCount5ListFailure = (res) ->
@@ -282,7 +282,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     #$scope.flatAccntWGroupsList = res.body.results
     $scope.removeEmptyGroups(res.body.results)
     $scope.flatAccntWGroupsList = $scope.grpWithoutEmptyAccounts
-    console.log($scope.flatAccntWGroupsList)
+#    console.log($scope.flatAccntWGroupsList)
     $scope.showAccountList = true
     $scope.gwaList.limit = 5  
 

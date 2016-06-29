@@ -188,7 +188,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     groupService.getSubgroupsWithAccounts(reqParam).then($scope.getSubgroupsSuccess,$scope.getSubgroupsFailure)
 
   $scope.getSubgroupsSuccess = (res) ->
-    console.log(res)
+#    console.log(res)
     $scope.flatAccntWGroupsList = []
     $scope.flatAccntWGroupsList.push(res.body)
     $scope.filterSundryDebtors(res.body.groups)
@@ -268,7 +268,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
         if grp.groups.length > 0
           $scope.filterSundryDebtors(grp.groups)
     $scope.showAccountList = true
-    console.log($scope.flatAccntWGroupsList)
+#    console.log($scope.flatAccntWGroupsList)
 
 
 
