@@ -107,6 +107,10 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
           method: 'GET' 
           url: '/company/:companyUniqueName/login/:loginId/token/refresh'
         }
+        reconnectAccount:{
+          method: 'GET'
+          url: '/company/:companyUniqueName/login/:loginId/token/reconnect'
+        }
       }
   )
 
@@ -222,6 +226,10 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
     refreshAccount: (reqParam) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.refreshAccount({companyUniqueName: reqParam.companyUniqueName, loginId: reqParam.loginId}, onSuccess, onFailure)
+    )
+    reconnectAccount: (reqParam) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.reconnectAccount({companyUniqueName: reqParam.companyUniqueName, loginId: reqParam.loginId}, onSuccess, onFailure)
     )
 
   userServices

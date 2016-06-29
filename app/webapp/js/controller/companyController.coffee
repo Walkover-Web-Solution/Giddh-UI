@@ -1614,7 +1614,29 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.connectBankFailure = (res) ->
     toastr.error(res.data.message, "Error")
 
+  $scope.reconnectAccount = (account) ->
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      loginId: account.loginId
+    }
+    userServices.reconnectAccount(reqParam).then($scope.reconnectAccountSuccess,$scope.reconnectAccountFailure)
+
+  $scope.reconnectAccountSuccess= (res) ->
+    url = res.body.connectUrl
+    $scope.connectUrl = url
+    $uibModal.open(
+      templateUrl: '/public/webapp/views/refreshBankAccountsModal.html',
+      size: "md",
+      backdrop: 'static',
+      scope: $scope
+    )
+
+  $scope.reconnectAccountFailure = (res) ->
+    toastr.error(res.data.message, "Error")
+
   $scope.refreshToken = (account) ->
+    if account.reconnect
+      return
     reqParam = {
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       loginId: account.loginId
