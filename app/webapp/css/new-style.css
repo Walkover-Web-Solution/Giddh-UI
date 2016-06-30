@@ -2661,14 +2661,18 @@ ul.pills li {
 
 .ledger-panel{
     width:100%;
+    max-width:1024px;
     min-height: 200px;
     overflow:hidden;
     background:rgba(204, 210, 218, 0.9);
     color:#333;
     position:absolute;
-    bottom:0;
     padding:5px;
     transition: all 0.5s ease-in-out;
+}
+
+.bottom0{
+    bottom:0;
 }
 
 .ledger-panel .form-group{

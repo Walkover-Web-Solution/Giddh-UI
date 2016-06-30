@@ -225,7 +225,61 @@ angular.module('trialBalance', []).directive('exportReport', [
 
       result
 
-.filter 'addmanagesrch', ->
-  (input, search) ->
-    console.log input
-    input
+.directive('dragAround', [
+  '$rootScope'
+  '$compile'
+  '$timeout'
+  ($rootScope, $compile, $timeout) ->
+    {
+      restrict: 'A'
+      link: (scope, elem, attr) ->
+        scope.xCor = 0
+        scope.yCor = 0
+        
+        iX = 0
+        iY = 0
+        cX = 0
+        cY = 0
+        scope.currentX = 0
+        scope.currentY = 0
+        finalX = 0
+        finalY = 0
+        isMouseDown = false
+        mouseUp = false
+        iCords = {}
+        cCords = {}
+        setCoordinates = (x,y) ->
+          console.log x,y
+          elem.removeClass('bottom0')
+          elem.css({
+            top: x
+            left: y
+          })
+          
+        onMouseMove = (e) ->
+          cX = e.pageX
+          cY = e.pageY
+          cCords.x = iX - cX
+          cCords.y = iY - cY
+          if isMouseDown
+            setCoordinates(cCords.x, cCords.y)
+
+        onMouseDown = (e) ->
+          iCords = elem[0].getBoundingClientRect()
+          iX = e.pageX
+          iY = e.pageY
+          console.log iCords
+          isMouseDown = true
+
+        onMouseUp = (e) ->
+          isMouseDown = false
+          console.log e.pageX, e.pageY, '   ', iX, iY
+        
+        elem.on('mousemove', onMouseMove)  
+
+        elem.on('mousedown', onMouseDown)
+
+        elem.on('mouseup', onMouseUp)
+        
+    }
+])

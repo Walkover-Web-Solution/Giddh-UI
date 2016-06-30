@@ -305,7 +305,6 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $scope.selectTxn = (ledger, txn, index) ->
     $scope.showPanel = true
-    console.log ledger, txn, index
     $scope.selectedLedger = ledger
     if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
       $scope.checkCompEntry(ledger)

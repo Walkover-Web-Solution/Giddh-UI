@@ -313,7 +313,7 @@
                 </tbody>
               </table>
             </div>
-            <div class="ledger-panel" ng-if="showPanel">
+           <!--  <div class="ledger-panel" ng-if="showPanel">
               <div class="wrapper">
                 <i class="glyphicon glyphicon-off close-panel" ng-click="closePanel()"></i>
                 <div class="mrT">
@@ -364,20 +364,74 @@
                     <label>Total: {{ttlValD + ttlValDType}}</label>
                   </div>
                   <div class="">
-<!--                     <button class="btn btn-success" type="button">Update</button> -->
-                    <button class="pull-left mrR btn btn-success" type="button" ng-click="saveUpdateLedger(selectedLedger)">Save</button>
-                    <button class="pull-left btn btn-danger" ng-click="deleteEntry(selectedLedger)">Delete Entry</button>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </div>-->
+          </div> 
         </div>
 
       </div>
       <div style="height: 80px;"></div>
       </div>
     </section>
-
+    <div class="ledger-panel bottom0" ng-if="showPanel" drag-around>
+      <div class="wrapper">
+        <i class="glyphicon glyphicon-off close-panel" ng-click="closePanel()"></i>
+        <div class="mrT">
+          <div class="form-group">
+            <div style="margin-top:3px" class="checkbox mrR1 pull-left">
+              <label>
+                <input type="checkbox">Unconfirmed Entry
+              </label>
+            </div>
+            <button class="btn btn-sm btn-info mrR1" ng-click="addBlankTxn('DEBIT')">Add in DR</button>
+            <button class="btn btn-sm btn-primary" ng-click="addBlankTxn('CREDIT')">Add in CR</button>
+            <span class="pull-right">{{currentX}}</br>{{currentY}}</span>
+            <div class="row mrT1">
+              <hr>
+              <ul class="list-inline" style="margin-left:15px">
+                <li ng-repeat="tax in taxList">
+                  <div class="checkbox"><label><input type="checkbox">{{tax.name}}</label></div>
+                </li>
+              </ul>
+              <hr>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-xs-6">
+              <div class="form-group">
+                <label>Voucher Type</label>
+                <select
+                    class="form-control"
+                    name="voucherType"
+                    ng-options="item.shortCode as item.name for item in voucherTypeList"
+                    ng-model="selectedLedger.voucher.shortCode">
+                </select>
+              </div>
+              <div class="form-group">
+                <input type="text" name="tag" class="form-control" placeholder="Tag" ng-model="selectedLedger.tag"/>
+              </div>
+            </div>
+            <div class="col-xs-6">
+              <div class="form-group" style="margin-bottom:0">
+                <label>Voucher no. </label>
+                {{selectedLedger.voucher.shortCode}}-{{selectedLedger.voucherNo}}
+              </div>
+              <div class="form-group">
+                <textarea class="form-control" name="description" placeholder="Description" rows="3" ng-model="selectedLedger.description"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="mrB">
+            <label>Total: {{ttlValD + ttlValDType}}</label>
+          </div>
+          <div class="">
+              <button class="pull-left mrR btn btn-success" type="button" ng-click="saveUpdateLedger(selectedLedger)">Save</button>
+              <button class="pull-left btn btn-danger" ng-click="deleteEntry(selectedLedger)">Delete Entry</button>
+          </div>
+        </div>
+      </div>
+    </div>
 <!--</perfect-scrollbar>-->
 
