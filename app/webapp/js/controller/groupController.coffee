@@ -269,6 +269,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #-------- fetch groups with accounts list-------
   $scope.getFlattenGrpWithAccList = (compUname) ->
+    $rootScope.companyLoaded = false
     reqParam = {
       companyUniqueName: compUname
       q: ''
@@ -284,7 +285,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.flatAccntWGroupsList = $scope.grpWithoutEmptyAccounts
 #    console.log($scope.flatAccntWGroupsList)
     $scope.showAccountList = true
-    $scope.gwaList.limit = 5  
+    $scope.gwaList.limit = 5
+    $rootScope.companyLoaded = true
 
   $scope.getFlattenGrpWithAccListFailure = (res) ->
     toastr.error(res.data.message)
@@ -1079,6 +1081,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if newVal != oldVal && newVal.length < 1
       $scope.showDeleteMove = false
   )
+
+  $rootScope.$on 'companyLoaded', ()->
+    $scope.flatAccntWGroupsList = []
+    $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
 
 #init angular app
 giddh.webApp.controller 'groupController', groupController

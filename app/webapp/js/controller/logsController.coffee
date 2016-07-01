@@ -136,7 +136,7 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
     $scope.users = res.body
 
   $scope.getUsersFailure = (res) ->
-    console.error('Unable to fetch user list', res.statusText);
+    console.error('Unable to fetch user list');
 
   $scope.getUsers()
 

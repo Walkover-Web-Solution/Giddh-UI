@@ -13,6 +13,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.canShare = false
   $rootScope.canManageCompany = false
   $rootScope.canVWDLT = false
+  $rootScope.companyLoaded = true
   $rootScope.superLoader = false
   $rootScope.flatAccList = {
     page: 1

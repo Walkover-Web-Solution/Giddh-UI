@@ -218,6 +218,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       else
         $rootScope.setCompany($scope.companyList[0])
         $scope.goToCompany($scope.companyList[0], 0, "CHANGED")
+      $rootScope.$emit('companyLoaded')
 
   #get company list failure
   $scope.getCompanyListFailure = (res)->

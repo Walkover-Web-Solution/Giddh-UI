@@ -940,7 +940,7 @@
       <div class="pdBth1510 bdrB pdB1 gryClr thead">My Companies</div>
     </div>
     <perfect-scrollbar id="restMngCompRit" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" suppressScrollX="true" auto-height>
-      <div class="loader" ng-hide="canChangeCompany">
+      <div class="loader" ng-hide="canChangeCompany && companyLoaded">
         <span></span>
         <span></span>
         <span></span>
@@ -948,7 +948,7 @@
         <span></span>
       </div>
       <ul class="companyList ln">
-        <li ng-repeat="value in CompanyList track by $index" class="clearfix" ng-class="{'active': value.uniqueName === selectedCompany.uniqueName}" ng-show="canChangeCompany">
+        <li ng-repeat="value in CompanyList track by $index" class="clearfix" ng-class="{'active': value.uniqueName === selectedCompany.uniqueName}" ng-show="canChangeCompany && companyLoaded">
           <span class="ui-icon ui-icon-flag"></span>
           <a id="cmpnyli_{{$index}}" href="javascript:;"
              ng-click="goToCompanyCheck(value, $index)">

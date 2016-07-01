@@ -37,7 +37,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       invoiceDate: '11-12-2016'
     company:
       name: 'Walkover Web Solutions Pvt. ltd.'
-      data: '405-406 Capt. C.S. Naidu Arcade,10/2 Old Palasiya,Indore Madhya Pradesh,CIN: 02830948209eeri,Email: account@giddh.com'
+      data: ['405-406 Capt. C.S. Naidu Arcade','10/2 Old Palasiya','Indore Madhya Pradesh','CIN: 02830948209eeri','Email: account@giddh.com']
     companyIdentities: 
       data: 'tin:67890,cin:12345'
     entries: [
