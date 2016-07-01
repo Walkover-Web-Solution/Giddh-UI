@@ -403,7 +403,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     if(_.isNull($scope.defTempData.company))
       toastr.error("Selected company is not available, please contact to support.","Error")
       showPopUp = false
-    else if not(_.isEmpty($scope.defTempData.company.data))      
+    else if typeof($scope.defTempData.company.data) == 'object' && not(_.isEmpty($scope.defTempData.company.data))
       $scope.defTempData.company.data = $scope.defTempData.company.data.join("\n")
     
     # companyIdentities setting
