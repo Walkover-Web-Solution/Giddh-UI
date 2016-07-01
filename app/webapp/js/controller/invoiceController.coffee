@@ -405,6 +405,12 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       showPopUp = false
     else if typeof($scope.defTempData.company.data) == 'object' && not(_.isEmpty($scope.defTempData.company.data))
       $scope.defTempData.company.data = $scope.defTempData.company.data.join("\n")
+
+    if(_.isNull($scope.defTempData.account))
+#      toastr.error("Selected company is not available, please contact to support.","Error")
+      showPopUp = true
+    else if typeof($scope.defTempData.account.data) == 'object' && not(_.isEmpty($scope.defTempData.account.data))
+      $scope.defTempData.company.data = $scope.defTempData.company.data.join("\n")
     
     # companyIdentities setting
     if(_.isNull($scope.defTempData.companyIdentities))
@@ -432,6 +438,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     if not(_.isEmpty(data.company.data))
       data.company.data = data.company.data.split('\n')
       #data.company.data.replace(RegExp('\n', 'g'), ',')
+    if not(_.isEmpty(data.account.data))
+      data.account.data = data.account.data.split('\n')
     
     # companyIdentities setting
     if not(_.isEmpty(data.companyIdentities.data))

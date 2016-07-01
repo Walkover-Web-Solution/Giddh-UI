@@ -266,7 +266,7 @@ router.post '/:accountUniqueName/invoices/generate', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName+'/accounts/' + req.params.accountUniqueName + '/invoices/generate'
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
