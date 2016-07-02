@@ -5,6 +5,7 @@ module.exports = function (grunt) {
   var testDir, srcDir, destDir, routeSrcDir, routeDestDir;
 
   var _ = require('underscore');
+  var git_revision = require('underscore');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-bower-concat');
   grunt.loadNpmTasks('grunt-contrib-uglify');
@@ -17,6 +18,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-preprocess');
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-env');
+  grunt.loadNpmTasks('grunt-execute');
 
   srcDir = 'app/';
   destDir = 'public/';
@@ -254,6 +256,11 @@ module.exports = function (grunt) {
           return "\n" + src + "\n\n";
         }
       }
+    },
+    execute: {
+      target: {
+        src: ['git_revision.js']
+      }
     }
   });
 
@@ -271,4 +278,6 @@ module.exports = function (grunt) {
     'coffee',
     'karma:unit'
   ]);
+
+  grunt.registerTask('addCommitInfo', ['execute']);
 };
