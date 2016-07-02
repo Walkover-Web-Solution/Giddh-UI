@@ -438,8 +438,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     if not(_.isEmpty(data.company.data))
       data.company.data = data.company.data.split('\n')
       #data.company.data.replace(RegExp('\n', 'g'), ',')
-    # if not(_.isEmpty(data.account.data))
-    #   data.account.data = data.account.data.split('\n')
+    if not(_.isEmpty(data.account.data))
+      data.account.data = data.account.data.split('\n')
     
     # companyIdentities setting
     if not(_.isEmpty(data.companyIdentities.data))
