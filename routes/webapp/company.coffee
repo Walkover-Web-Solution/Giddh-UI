@@ -501,6 +501,7 @@ router.get '/:uniqueName/ebanks/token', (req, res) ->
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
+    console.log data
     res.send data
 
 router.delete '/:uniqueName/ebanks/:accountId',(req,res) ->

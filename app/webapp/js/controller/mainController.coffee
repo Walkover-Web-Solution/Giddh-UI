@@ -15,6 +15,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.canVWDLT = false
   $rootScope.companyLoaded = true
   $rootScope.superLoader = false
+  $rootScope.companyLoaded = true
   $rootScope.flatAccList = {
     page: 1
     count: 5000
@@ -184,5 +185,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
     # $rootScope.$emit('callCheckPermissions', data)
+
+  $rootScope.$on 'companyLoaded', ()->
+    console.log 'company changed'
 
 giddh.webApp.controller 'mainController', mainController

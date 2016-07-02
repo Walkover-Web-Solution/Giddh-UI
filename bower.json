@@ -45,7 +45,8 @@
     "angular-vidbg": "angular-video-background#^0.0.12",
     "angular-fullpage.js": "^0.2.1",
     "angular-recaptcha": "^3.0.3",
-    "ngclipboard": "^1.1.1"
+    "ngclipboard": "^1.1.1",
+    "jquery-ui": "^1.11.4"
   },
   "resolutions": {
     "angular": "~1.4.4",

@@ -203,6 +203,7 @@ module.exports = function (grunt) {
         include: [
           'modernizr',
           'jquery',
+          'jquery-ui',
           'angular',
           'angular2',
           'bootstrap',

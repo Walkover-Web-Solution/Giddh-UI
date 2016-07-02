@@ -10,11 +10,11 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.toDatePickerIsOpen = false
   $scope.format = "dd-MM-yyyy"
   $scope.showPanel = false
-  $scope.accountUnq = $stateParams.unqName
+  $scope.accountUnq = $stateParams.unqName  
+  $scope.accountToShow = {}
+
   $scope.closePanel = () ->
     $scope.showPanel = false
-    console.log $scope.showPanel
-  $scope.accountToShow = {}
 
   $scope.ledgerData = {} 
   $scope.newDebitTxn = {
@@ -153,8 +153,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   # upper icon functions starts here
   # generate magic link
   $scope.getMagicLink = () ->
-    accUname = $location.path()
-    accUname = $scope.accountUnq #accUname.split('/')
+    accUname = $scope.accountUnq
     reqParam = {
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       accountUniqueName: accUname
@@ -189,7 +188,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   # ledger send email
   $scope.sendLedgEmail = (emailData) ->
-    data = angular.copy(emailData)
+    data = emailData
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
       return false
@@ -222,8 +221,6 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
     accountService.emailLedger(unqNamesObj, sendData).then($scope.emailLedgerSuccess, $scope.emailLedgerFailure)
 
-
-
   $scope.emailLedgerSuccess = (res) ->
     toastr.success(res.body, res.status)
     $scope.ledgerEmailData = {}
@@ -246,7 +243,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     ledgerService.getLedger(unqNamesObj).then($scope.getLedgerDataSuccess, $scope.getLedgerDataFailure)
 
   $scope.getLedgerDataSuccess = (res) ->
-#    $scope.filterLedgers(res.body.ledgers)
+    #$scope.filterLedgers(res.body.ledgers)
     $scope.ledgerData = res.body
 
   $scope.getLedgerDataFailure = (res) ->
@@ -426,9 +423,11 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       acntUname: $scope.accountUnq
       entUname: ledger.uniqueName
     }
-    ledgerService.deleteEntry(unqNamesObj).then((res) ->
-      $scope.deleteEntrySuccess(ledger, res)
-    , $scope.deleteEntryFailure)
+    if unqNamesObj.acntUname != '' || unqNamesObj.acntUname != undefined
+      ledgerService.deleteEntry(unqNamesObj).then((res) ->
+        $scope.deleteEntrySuccess(ledger, res)
+        $scope.deleteEntryFailure
+      )
 
   $scope.deleteEntrySuccess = (item, res) ->
     toastr.success("Entry deleted successfully","Success")
@@ -441,6 +440,27 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $scope.deleteEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
+
+
+  # select multiple transactions, from same or different entries
+  $scope.allSelected = []  
+  $scope.selectMultiple = (ledger, txn, index) ->
+    cTxn = {}
+    if txn.isSelected == true
+      cTxn.unq = ledger.uniqueName
+      cTxn.index = index
+      cTxn.txn = txn 
+      $scope.allSelected.push(cTxn)
+
+  $scope.deleteMultipleTransactions = () ->
+    if $scope.allSelected.length > 0
+      _.each $scope.ledgerData.ledgers, (ledger) ->
+        _.each $scope.allSelected, (t) ->
+          if ledger.uniqueName = t.unq
+            ledger.transactions.splice(t.index, 1)
+    $scope.allSelected = []
+
+
 
 
 giddh.webApp.controller 'newLedgerController', newLedgerController
