@@ -1,51 +1,6 @@
 
 <!-- main content start -->
 <uib-tabset justified="false" ng-if="invoiceLoadDone">
-  <uib-tab heading="Invoice Setting" id="setting">
-    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
-      <div class="pd2">
-
-        <div class="row">
-
-          <div class="col-xs-3" ng-repeat="value in templateList">
-            <a href="javascript:void(0)" class="thumbnail" ng-class="value.isDefault? 'active': ''">
-              <div class="caption">
-                <h3 class="lead alC" ng-bind-html="value.name"></h3>
-                <p>
-                  <button ng-click="viewInvTemplate( value, 'sample', tempDataDef)" class="btn btn-default btn-block mrB1">Sample</button>
-
-                  <button ng-disabled="!value.isDefault" ng-click="viewInvTemplate(value, 'edit', templateData)" class="btn btn-default btn-block">Edit</button>
-
-                  <div class="mrT1 alC">
-                    <div ng-click="setDefTemp(value)">
-                      <switch name="setAsDefault" on="On" off="Off" class="wide" ng-model="value.isDefault"></switch>
-                    </div>
-                    <label ng-if="value.isDefault" class="mrT">Default Selected</label>
-                    <label ng-if="!value.isDefault" class="mrT">Set as default</label>
-                  </div>
-                  
-                </p>
-              </div>
-            </a>
-          </div>
-
-        </div> 
-        <!-- end of row -->
-
-        <!-- start invoice template -->
-        
-        
-        <!-- end of invoice template -->
-
-
-
-      </div> <!-- end of pd div -->
-    </perfect-scrollbar>
-  </uib-tab>
-  <!-- end of setting -->
-  
-
-
   <uib-tab heading="Generate Invoice" id="generate" ng-click="getLedgerEntries()">
 
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
@@ -150,7 +105,48 @@
     </perfect-scrollbar>
   </uib-tab>
   <!-- end of list entries for invoice -->
+  <uib-tab heading="Invoice Setting" id="setting">
+    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+      <div class="pd2">
 
+        <div class="row">
+
+          <div class="col-xs-3" ng-repeat="value in templateList">
+            <a href="javascript:void(0)" class="thumbnail" ng-class="value.isDefault? 'active': ''">
+              <div class="caption">
+                <h3 class="lead alC" ng-bind-html="value.name"></h3>
+                <p>
+                  <button ng-click="viewInvTemplate( value, 'sample', tempDataDef)" class="btn btn-default btn-block mrB1">Sample</button>
+
+                  <button ng-disabled="!value.isDefault" ng-click="viewInvTemplate(value, 'edit', templateData)" class="btn btn-default btn-block">Edit</button>
+
+                  <div class="mrT1 alC">
+                    <div ng-click="setDefTemp(value)">
+                      <switch name="setAsDefault" on="On" off="Off" class="wide" ng-model="value.isDefault"></switch>
+                    </div>
+                    <label ng-if="value.isDefault" class="mrT">Default Selected</label>
+                    <label ng-if="!value.isDefault" class="mrT">Set as default</label>
+                  </div>
+                  
+                </p>
+              </div>
+            </a>
+          </div>
+
+        </div> 
+        <!-- end of row -->
+
+        <!-- start invoice template -->
+        
+        
+        <!-- end of invoice template -->
+
+
+
+      </div> <!-- end of pd div -->
+    </perfect-scrollbar>
+  </uib-tab>
+  <!-- end of setting -->
   <uib-tab heading="View Invoice" id="view" ng-click="getInvList()">
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
 

@@ -32,6 +32,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.discount = 0
   $scope.amount = 0
   $scope.noTaxes = false
+  $scope.AccountsListToLink = []
   $scope.tabs = [
     {title:'Basic information', active: true}
     {title:'Permission', active: false}
@@ -67,7 +68,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     'todayBtn': false
   }
 
-  #################### yodlee integration ####################
+  #################### linked banks integration ####################
   $scope.banks = {
     list : undefined
     banksList: []
@@ -1444,15 +1445,23 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.showAccountsList = (card) ->
     card.showAccList = true
-    $scope.AccountsList = $rootScope.fltAccntList
+    $scope.AccountsListToLink = $rootScope.fltAccntListPaginated
     linkedAccounts = []
-    _.each $scope.banks.linked, (acc) ->
-      _.each acc.yodleeAccounts, (link) ->
-        if link.giddhAccount != null
-          linked = {
-            uniqueName : link.giddhAccount.uniqueName
-          }
-          $scope.AccountsList = _.without($scope.AccountsList, _.findWhere($scope.AccountsList, linked))
+    _.each $scope.banks.linked, (bank) ->
+      if bank.accounts.length > 0
+        _.each bank.accounts, (acc) ->
+          linkedAccounts.push(acc)
+      _.each linkedAccounts, (lAcc) ->
+        if lAcc.linkedAccount != null
+          linked = {}
+          linked.uniqueName = lAcc.linkedAccount.uniqueName
+          $scope.AccountsListToLink = _.without($scope.AccountsListToLink, _.findWhere($scope.AccountsListToLink, linked))
+      # _.each acc.yodleeAccounts, (link) ->
+      #   if link.giddhAccount != null
+      #     linked = {
+      #       uniqueName : link.giddhAccount.uniqueName
+      #     }
+      #     $scope.AccountsListToLink = _.without($scope.AccountsList, _.findWhere($scope.AccountsList, linked))
 
   $scope.linkGiddhAccount = (card) ->
     card.showAccList = false
