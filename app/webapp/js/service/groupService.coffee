@@ -82,6 +82,10 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         method: 'GET'
         url: '/company/:companyUniqueName/groups/:groupUniqueName/subgroups-with-accounts'
       }
+      getMultipleSubGroups:{
+        method:'POST'
+        url: '/company/:companyUniqueName/subgroups-with-accounts'
+      }
     })
 
   groupService =
@@ -128,6 +132,10 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
             groupUniqueName:reqParam.groupUniqueName
           },onSuccess, onFailure))
 
+    getMultipleSubGroups:(reqParam,data, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Group.getMultipleSubGroups({
+        companyUniqueName: reqParam.companyUniqueName
+      },data,onSuccess, onFailure))
 
 #   Get flat accounts list
     getFlatAccList: (reqParam, onSuccess, onFailure) ->

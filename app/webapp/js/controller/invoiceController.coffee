@@ -143,7 +143,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     else
       # with accounts, group data
       $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
-      $scope.getSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,'sundry_debtors')
+#      $scope.getSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,'sundry_debtors')
+      $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,['sundry_debtors','revenue_from_operations'])
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
 
   $scope.makeAccountsList = (res) ->
@@ -179,6 +180,24 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 #      reqParam.count = 5000
 #    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
 
+  #----------- Get multiple subgroups with accounts -----------#
+  $scope.getMultipleSubgroupsWithAccounts = (compUname, groupUnames) ->
+    reqParam = {
+      companyUniqueName: compUname
+    }
+    data = {uniqueNames:groupUnames}
+    groupService.getMultipleSubGroups(reqParam,data).then($scope.getMSubgroupsSuccess,$scope.getMSubgroupsFailure)
+
+  $scope.getMSubgroupsSuccess = (res) ->
+#    console.log(res)
+    $scope.flatAccntWGroupsList = []
+#    $scope.flatAccntWGroupsList.push(res.body)
+    $scope.filterSundryDebtors(res.body)
+    _.extend($scope.subgroupsList,$scope.flatAccntWGroupsList)
+    $scope.gwaList.limit = 5
+
+  $scope.getMSubgroupsFailure = (res) ->
+    console.log(res)
   #----------- Get subgroups with accounts -----------#
   $scope.getSubgroupsWithAccounts = (compUname, groupUname) ->
     reqParam = {
