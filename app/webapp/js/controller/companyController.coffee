@@ -927,7 +927,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
 
   $scope.addNewTaxFailure = (res) ->
-    toastr.error(res.statusText, res.data.message)
+    toastr.error(res.data.message)
 
   #delete tax
   $scope.deleteTaxconfirmation = (data) ->
@@ -1008,7 +1008,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     
   $scope.updateTaxFailure = (res) ->
     $scope.getTax()
-    toastr.error(res.statusText, res.data.message)
+    toastr.error(res.data.message)
 
   # edit tax slab
   $scope.addNewSlabBefore = (tax, index)->

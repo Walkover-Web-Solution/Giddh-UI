@@ -88,7 +88,7 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
   )
 
   $scope.options = {
-    filters : ["All", "create", "delete", "share", "unshare", "move", "merge", "unmerge", "delete-all", "update", "master-import", "daybook-import", "ledger-excel-import"],
+    filters : ["All", "create", "delete", "share", "unshare", "move", "merge", "unmerge", "update", "master-import", "daybook-import", "ledger-excel-import"],
     entities: ["All", "company", "group", "account", "ledger", "voucher", "logs"],
     userUniqueNames: [],
     accountUniqueNames: $rootScope.fltAccntListPaginated || $scope.accounts,

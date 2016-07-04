@@ -733,7 +733,9 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.getInvList()
 
   $scope.downInvSuccess=(res)->
-    # close dialog box
+    #console.log res
+
+    close dialog box
     if $scope.genPrevMode
       $scope.modalInstance.close()
     $scope.genPrevMode = false
@@ -760,7 +762,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
         scope: $scope
       )
     else
-      passthis = "data:application/pdf;base64, " + res.body
+      passthis = "data:application/pdf;base64, " + res.body 
       window.open(passthis)
 
 
