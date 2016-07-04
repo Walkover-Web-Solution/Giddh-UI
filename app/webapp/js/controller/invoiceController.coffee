@@ -779,12 +779,12 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     # else
       # passthis = "data:application/pdf;base64, " + res.body 
       # window.open(passthis)
-      a = document.createElement("a")
-      document.body.appendChild(a)
-      a.style = "display:none"
-      a.href = fileURL
-      a.download = "abc.pdf"
-      a.click()
+    a = document.createElement("a")
+    document.body.appendChild(a)
+    a.style = "display:none"
+    a.href = fileURL
+    a.download = "abc.pdf"
+    a.click()
 
 
   # preview of generated invoice
