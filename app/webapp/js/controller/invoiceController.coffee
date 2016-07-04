@@ -189,7 +189,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     groupService.getMultipleSubGroups(reqParam,data).then($scope.getMSubgroupsSuccess,$scope.getMSubgroupsFailure)
 
   $scope.getMSubgroupsSuccess = (res) ->
-#    console.log(res)
     $scope.flatAccntWGroupsList = []
 #    $scope.flatAccntWGroupsList.push(res.body)
     $scope.filterSundryDebtors(res.body)
@@ -197,7 +196,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.gwaList.limit = 5
 
   $scope.getMSubgroupsFailure = (res) ->
-    console.log(res)
+    toastr.error(res.data.message)
+
   #----------- Get subgroups with accounts -----------#
   $scope.getSubgroupsWithAccounts = (compUname, groupUname) ->
     reqParam = {

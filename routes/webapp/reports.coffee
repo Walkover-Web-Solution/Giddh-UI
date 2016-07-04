@@ -211,7 +211,6 @@ router.post '/accounts/bulk-email', (req, res) ->
 
 
 router.post '/subgroups-with-accounts', (req, res) ->
-  console.log req.params
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups-with-accounts'
   args =
     headers:
@@ -219,8 +218,7 @@ router.post '/subgroups-with-accounts', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
-  settings.client.get hUrl, args, (data, response) ->
-    console.log(hUrl)
+  settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data

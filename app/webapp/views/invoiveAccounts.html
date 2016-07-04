@@ -38,7 +38,7 @@
         <li>
           <ul id="ul_0" class="mainUl accBox" style="border-left:none">
 <!--             <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList | searchfilter:search.acnt | limitTo:gwaList.limit | filter:searchfilter as filtList" id="li_{{value.groupUniqueName}}"> -->
-            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList | searchfilterInvoice:search.acnt | limitTo:gwaList.limit  | filter:searchfilterInvoice as filtList" id="li_{{value.groupUniqueName}}" ng-model-options="{debounce : 200}">
+            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList | searchfilterInvoice:search.acnt | limitTo:gwaList.limit  | filter:searchfilterInvoice as filtList" ng-if="value.accounts.length > 0" id="li_{{value.groupUniqueName}}" ng-model-options="{debounce : 200}">
               <div 
                 class="title" 
                 ng-click="value.open = !value.open"
