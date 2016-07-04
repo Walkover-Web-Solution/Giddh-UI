@@ -797,7 +797,7 @@
     </uib-tab>
 
     <!--linked bank accounts section-->
-    <uib-tab ng-if="canManageCompany" heading="Linked Accounts" select="loadYodlee()">
+    <uib-tab ng-if="canManageCompany" heading="{{tabs[7].title}}" active="tabs[7].active" select="loadYodlee()">
       <div class="pd2 clearfix">
         <h1 class="mrB1">Add Bank Account </h1>
         <button ng-click="connectBank()" class="btn btn-primary">Connect Bank</button>

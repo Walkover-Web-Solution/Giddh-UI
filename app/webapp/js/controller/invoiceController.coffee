@@ -392,6 +392,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.uploadLogo=(files)->
     $scope.logoUpldComplt = true
     angular.forEach files, (file) ->
+      console.log file
       file.upload = Upload.upload(
         url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/logo'
         file: file
@@ -459,7 +460,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       #data.company.data.replace(RegExp('\n', 'g'), ',')
     if not(_.isEmpty(data.account.data))
       data.account.data = data.account.data.split('\n')
-    
+
     # companyIdentities setting
     if not(_.isEmpty(data.companyIdentities.data))
       data.companyIdentities.data = data.companyIdentities.data.replace(RegExp('\n', 'g'), ',')
@@ -487,7 +488,12 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
         dData.validateTax = false
 
       if moment(data.invoiceDetails.invoiceDate, "DD-MM-YYYY", true).isValid()
-        accountService.genInvoice(obj, dData).then($scope.genInvoiceSuccess, $scope.genInvoiceFailure)
+        if $scope.defTempData.account.data.length > 0 
+          accountService.genInvoice(obj, dData).then($scope.genInvoiceSuccess, $scope.genInvoiceFailure)
+        else
+          toastr.error("Buyer's address can not be left blank.")
+          $scope.updatingTempData = false
+          $scope.genMode = true
       else
         toastr.warning("Enter proper date", "Warning")
         $scope.genMode = true
@@ -538,10 +544,11 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $scope.updatingTempData = false
       toastr.error(res.data.message, res.data.status)
       # if invoice date have any problem
-      if res.data.code is 'ENTRIES_AFTER_INOICEDATE'
-        $scope.genMode = true
-      else if res.data.code is 'INVALID_INVOICE_DATE'
-        $scope.genMode = true
+      # if res.data.code is 'ENTRIES_AFTER_INOICEDATE'
+      #   $scope.genMode = true
+      # else if res.data.code is 'INVALID_INVOICE_DATE'
+      #   $scope.genMode = true
+      $scope.genMode = true
 
   # get inv templates 
   if not(_.isEmpty($rootScope.$stateParams.invId))
@@ -733,37 +740,51 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.getInvList()
 
   $scope.downInvSuccess=(res)->
-    #console.log res
+    byteChars = atob(res.body)
+    byteNums = new Array(byteChars.length)
+    i = 0
+    while i < byteChars.length
+      byteNums[i] = byteChars.charCodeAt(i)
+      i++
+    byteArray = new Uint8Array(byteNums)
+    file = new Blob([byteArray], {type: 'application/pdf'})
+    fileURL = URL.createObjectURL(file)
+    #close dialog box
+    # if $scope.genPrevMode
+    #   $scope.modalInstance.close()
+    # $scope.genPrevMode = false
 
-    close dialog box
-    if $scope.genPrevMode
-      $scope.modalInstance.close()
-    $scope.genPrevMode = false
-
-    $scope.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
-    if $scope.msieBrowser()
-      $scope.openWindow("data:application/pdf;base64, " + res.body)
-    else if $scope.isSafari       
-      modalInstance = $uibModal.open(
-        template: '<div>
-            <div class="modal-header">
-              <h3 class="modal-title">Download File</h3>
-            </div>
-            <div class="modal-body">
-              <p class="mrB">To download your file Click on button</p>
-              <button onClick="window.open(\'data:application/pdf;base64, '+res.body+'\')" class="btn btn-primary">Download</button>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
-            </div>
-        </div>'
-        size: "sm"
-        backdrop: 'static'
-        scope: $scope
-      )
-    else
-      passthis = "data:application/pdf;base64, " + res.body 
-      window.open(passthis)
+    # $scope.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
+    # if $scope.msieBrowser()
+    #   #$scope.openWindow("data:application/pdf;base64, " + res.body)
+    #   window.navigator.msSaveBlob(file, 'abc.pdf')
+    # else if $scope.isSafari       
+    #   modalInstance = $uibModal.open(
+    #     template: '<div>
+    #         <div class="modal-header">
+    #           <h3 class="modal-title">Download File</h3>
+    #         </div>
+    #         <div class="modal-body">
+    #           <p class="mrB">To download your file Click on button</p>
+    #           <button onClick="window.open(\'data:application/pdf;base64, '+res.body+'\')" class="btn btn-primary">Download</button>
+    #         </div>
+    #         <div class="modal-footer">
+    #           <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+    #         </div>
+    #     </div>'
+    #     size: "sm"
+    #     backdrop: 'static'
+    #     scope: $scope
+    #   )
+    # else
+      # passthis = "data:application/pdf;base64, " + res.body 
+      # window.open(passthis)
+      a = document.createElement("a")
+      document.body.appendChild(a)
+      a.style = "display:none"
+      a.href = fileURL
+      a.download = "abc.pdf"
+      a.click()
 
 
   # preview of generated invoice

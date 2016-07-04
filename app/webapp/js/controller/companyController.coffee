@@ -13,6 +13,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.compTransData = {}
   $scope.showPayOptns = false
   $scope.isHaveCoupon = false
+  $scope.afterConnectSuccess = false
   #contains company list
   $scope.companyList = []
   $scope.companyDetails = {}
@@ -41,6 +42,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     {title:'Taxes', active: false}
     {title:'Email/SMS settings', active: false}
     {title:'Financial Year', active: false}
+    {title: 'Linked Accounts', active:false}
   ]
 
   # manage tax variables
@@ -1493,6 +1495,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       cUnq: $rootScope.selectedCompany.uniqueName
     }
     userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
+    $timeout ( ->
+      $scope.banks.toLink = ''
+    ) ,500
+
 
   $scope.LinkGiddhAccountConfirmFailure = (res) ->
     toastr.error(res.data.message)
@@ -1614,12 +1620,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       scope: $scope,
       controller:'companyController'
     )
-    modalInstance.result.then ((selectedItem) ->
-      console.log(selectedItem)
-      return
-    ),(something) ->
-      console.log($scope + ' Modal dismissed at: ' + new Date)
-      return
 
   $scope.connectBankFailure = (res) ->
     toastr.error(res.data.message, "Error")
@@ -1672,7 +1672,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.refreshTokenFailure = (res) ->
     toastr.error(res.data.message, "Error")
 
-  #  Linked methods ends here
+  $scope.setActiveTab = () ->
+    $scope.afterConnectSuccess  = true
+    $scope.loadYodlee()
+  #  Linked methods end here
 
 
   $timeout( ->
@@ -1693,9 +1696,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
     $scope.resetSteps()
   )
-
-  window.message = (event,data) ->
-    console.log(event)
 
 #init angular app
 giddh.webApp.controller 'companyController', companyController
