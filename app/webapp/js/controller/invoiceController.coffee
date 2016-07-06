@@ -100,6 +100,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     account:
       name: 'Career Point Ltd.'
       data: 'CP Tower Road No. 1,Indraprashta Industrial Kota,PAN: 1862842,Email: info@career.com'
+      attentionTo:'Mr. Agrawal'
   # invoice setting end
 
   # datepicker setting end
