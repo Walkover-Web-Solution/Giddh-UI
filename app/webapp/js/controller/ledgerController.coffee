@@ -415,7 +415,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         _.each tax.taxDetail, (det) ->
           taxDate = edata.eDate
           entryDate = edata.eDate
-          
+
           if entryDate >= taxDate && taxDate >= prevDate
             newTax.amount = det.taxValue/100 * taxData.entryAmount
             prevDate = taxDate
@@ -424,24 +424,24 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
               if txn.particular.uniqueName == tax.account.uniqueName
                 newTax.amount = txn.amount
 
-            
+
           if det.taxValue < 0
             newTax.amount = Math.abs(newTax.amount)
             if edata.transactions[0].type.toLowerCase() == 'credit'
               newTax.type = 'DEBIT'
             else
               newTax.type = 'CREDIT'
-          else 
+          else
             newTax.type = edata.transactions[0].type
-        
-        # copy newTax 
+
+        # copy newTax
         tax_1 = newTax
         newTax.isLinked = false
         toRemove = []
         #check if newTax exists in edata.transactions
         _.each edata.transactions, (txn, idx) ->
           inTaxes = true
-          if txn.particular.uniqueName == newTax.particular.uniqueName && newTax.isLinked != true 
+          if txn.particular.uniqueName == newTax.particular.uniqueName && newTax.isLinked != true
             newTax.isLinked = true
           if txn.particular.uniqueName == newTax.particular.uniqueName && newTax.isLinked && newTax.amount != txn.amount
             txn.amount = newTax.amount
@@ -456,7 +456,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
         _.each taxes, (tax) ->
           if tax.account.uniqueName == txn.particular.uniqueName
             txn.toRemove = false
-            
+
     edata.transactions = _.without(edata.transactions, _.findWhere(edata.transactions, {toRemove: true}))
 
   $scope.addNewEntry = (data) ->

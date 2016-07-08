@@ -784,7 +784,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     document.body.appendChild(a)
     a.style = "display:none"
     a.href = fileURL
-    a.download = "abc.pdf"
+    a.download = $scope.nameForAction[0]+".pdf"
     a.click()
 
 
