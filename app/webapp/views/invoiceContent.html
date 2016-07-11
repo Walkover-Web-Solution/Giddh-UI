@@ -1,14 +1,14 @@
 
 <!-- main content start -->
 <uib-tabset justified="false" ng-if="invoiceLoadDone">
-  <uib-tab heading="Generate Invoice" id="generate">
+  <uib-tab heading="Generate Invoice" id="generate" select="getLedgerEntries()">
 
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
 
 
       
 
-      <div class="pd2" ng-init="getLedgerEntries()">
+      <div class="pd2">
 
         <div class="row">
           <div class="col-xs-6">

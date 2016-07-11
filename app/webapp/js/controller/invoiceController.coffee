@@ -390,13 +390,15 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       )
 
   # upload logo
-  $scope.uploadLogo=(files)->
+  $scope.uploadLogo=(files,type)->
     $scope.logoUpldComplt = true
     angular.forEach files, (file) ->
+      file.fType = type
       console.log file
       file.upload = Upload.upload(
         url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/logo'
         file: file
+        fType: type
       )
       file.upload.then ((res) ->
         $timeout ->

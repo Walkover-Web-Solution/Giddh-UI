@@ -111,7 +111,6 @@ global.mStorage = multer.diskStorage({
     cb(null, './uploads/')
   },
   filename: function (req, file, cb) {
-    console.log (file)
     switch (file.mimetype){
       case 'image/*' :
         cb(null, file.originalname)
