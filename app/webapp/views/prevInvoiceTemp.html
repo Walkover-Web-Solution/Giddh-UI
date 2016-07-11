@@ -120,6 +120,9 @@ fieldset[disabled] .form-control{
 textarea{
   resize:none;
 }
+textarea:disabled, input:disabled{
+  background:#fff !important;
+}
 
 </style>
 
@@ -149,10 +152,13 @@ textarea{
           </select>
         </div>
         <div class="form-group mrR">
-          <button ng-click="downInv()" class="btn btn-primary">Download</button>
+          <button ng-disabled="editGenInvoice" ng-click="downInv()" class="btn btn-primary">Download</button>
+        </div>
+        <div class="form-group mrR" ng-if="genPrevMode">
+          <button ng-click="updateGeneratedInvoice()" class="btn btn-primary"><span style="position:relative;left:0;top:0" ng-if="!editGenInvoice">Edit</span><span style="position:relative;left:0;top:0" ng-if="editGenInvoice">Save</span></button>
         </div>
         <div class="form-group mrR" uib-dropdown  auto-close="outsideClick">
-          <button id="button-template-url" type="button" class="btn btn-primary" uib-dropdown-toggle>Send Email</button>
+          <button ng-disabled="editGenInvoice" id="button-template-url" type="button" class="btn btn-primary" uib-dropdown-toggle>Send Email</button>
           <ul class="dropdown-menu" uib-dropdown-menu template-url="invDropdown.html" aria-labelledby="button-template-url">
           </ul>
         </div>
@@ -161,9 +167,6 @@ textarea{
         </div>
       </aside>
     </span>
-
-    
-    
 
     <span ng-if="editMode && defTempData.entries === null">
       <a ng-click="saveTemp('save', false)" class="btn btn-success btn-sm" href="javascript:void(0)" ng-disabled="updatingTempData">Save Changes</a>
@@ -184,7 +187,7 @@ textarea{
 
       <!-- sample preview mode start -->
 
-      <fieldset ng-disabled="!editMode">
+      <fieldset>
         <section ng-if="tempSet.logo && tempSet.invoiceDetails">
           <div class="row">
             <section id="one" class="col-xs-6">
@@ -246,8 +249,8 @@ textarea{
           <section class="col-xs-5" id="three">
             <h4 class="mrB">From:</h4>
             <div class="txtAreaWrap">
-              <input ng-disabled="genMode" class="form-control" ng-model="defTempData.company.name" placeholder="Your company name">
-              <textarea ng-disabled="genMode" class="form-control" ng-model="defTempData.company.data" placeholder="Address and other details"></textarea>
+              <input ng-disabled="genMode && editMode || genPrevMode" class="form-control" ng-model="defTempData.company.name" placeholder="Your company name">
+              <textarea ng-disabled="genMode && editMode || genPrevMode" class="form-control" ng-model="defTempData.company.data" placeholder="Address and other details"></textarea>
             </div>
           </section>
           <section class="col-xs-5 col-xs-offset-2" id="four">
@@ -265,9 +268,13 @@ textarea{
             <!-- end if -->
 
             <h4 class="mrB">To:</h4>
-            <div class="txtAreaWrap">
-              <input ng-disabled="!genMode" class="form-control" ng-model="defTempData.account.name" placeholder="Buyer Name">
-              <textarea ng-disabled="!genMode" class="form-control" ng-model="defTempData.account.data"  placeholder="Buyer Address and other details"></textarea>
+            <div class="txtAreaWrap" ng-if="!genPrevMode">
+              <input ng-disabled="!genMode && !editMode" class="form-control" ng-model="defTempData.account.name" placeholder="Buyer Name">
+              <textarea ng-disabled="!genMode && !editMode" class="form-control" ng-model="defTempData.account.data"  placeholder="Buyer Address and other details"></textarea>
+            </div>
+            <div class="txtAreaWrap" ng-if="genPrevMode">
+              <input ng-disabled="!editGenInvoice" class="form-control" ng-model="defTempData.account.name" placeholder="Buyer Name">
+              <textarea ng-disabled="!editGenInvoice" class="form-control" ng-model="defTempData.account.data"  placeholder="Buyer Address and other details"></textarea>
             </div>
           </section>
           <section class="col-xs-5" ng-if="defTempData.account.attentionTo.length > 0 || genMode">
@@ -303,7 +310,7 @@ textarea{
               <tr ng-repeat="entry in item.transactions">
                 <td>{{current + $index | number}}</td>
                 <td>
-                  <input type="text" ng-model="entry.description" class="form-control">
+                  <input ng-disabled="genPrevMode && !editGenInvoice" type="text" ng-model="entry.description" class="form-control">
                 </td>
                 <td class="text-right">
                   {{entry.amount  | currency: "" : 2}}
@@ -334,7 +341,7 @@ textarea{
                   <div class="form-inline clearfix">
                     <div class="form-group" ng-class="tax.hasError ? 'has-error' : ''">
                       <label class="splLbl">{{tax.accountName}} - </label>
-                      <input type="text" ng-model="tax.visibleTaxRate" class="form-control pull-left" valid-number id="splInvInpt">
+                      <input ng-disabled="!editMode" type="text" ng-model="tax.visibleTaxRate" class="form-control pull-left" valid-number id="splInvInpt">
                       <label class="splLbl">%</label>
                     </div>
                     <div class="form-group" ng-if="tax.hasError">
@@ -414,13 +421,13 @@ textarea{
         <div class="row">
           <section class="col-xs-5" id="six">
             <div class="txtAreaWrap">
-              <textarea class="form-control" ng-model="defTempData.companyIdentities.data" placeholder="Company other details"></textarea>
+              <textarea ng-disabled="!editMode" class="form-control" ng-model="defTempData.companyIdentities.data" placeholder="Company other details"></textarea>
             </div>
           </section>
           <section class="col-xs-7" id="seven">
             <div class="txtAreaWrap">
-              <input class="form-control mrB alR" ng-model="defTempData.signature.name"  placeholder="Your Company name">
-              <input class="form-control alR" ng-model="defTempData.signature.data" placeholder="Signatory slogan">
+              <input ng-disabled="!editMode" class="form-control mrB alR" ng-model="defTempData.signature.name"  placeholder="Your Company name">
+              <input ng-disabled="!editMode" class="form-control alR" ng-model="defTempData.signature.data" placeholder="Signatory slogan">
             </div>
           </section>
         </div>
@@ -432,7 +439,7 @@ textarea{
               <div class="txtAreaWrap">
                 
                 <div ng-if="editMode">
-                  <textarea class="form-control" ng-model="defTempData.termsStr" placeholder="Enter your terms"></textarea>
+                  <textarea ng-disabled="!editMode" class="form-control" ng-model="defTempData.termsStr" placeholder="Enter your terms"></textarea>
                 </div>
                 <!-- end if editmode -->
 

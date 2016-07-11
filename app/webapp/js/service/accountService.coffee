@@ -96,6 +96,10 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         method: 'POST',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/invoices/mail'
 
+      updateInvoice:
+        method: 'PUT',
+        url: '/company/:companyUniqueName/invoices'
+
       generateMagicLink:
         method: 'POST'
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/magic-link?fromDate=:fromDate&toDate=:toDate'
@@ -246,5 +250,10 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         fromDate: obj.fromDate
         toDate: obj.toDate
       }, {}, onSuccess, onFailure))
+
+    updateInvoice: (obj, data) ->
+      @handlePromise((onSuccess, onFailure) -> Account.updateInvoice({
+        companyUniqueName: obj.compUname
+      }, data, onSuccess, onFailure))
 
   accountService

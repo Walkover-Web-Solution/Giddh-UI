@@ -952,7 +952,7 @@
           <span class="ui-icon ui-icon-flag"></span>
           <a id="cmpnyli_{{$index}}" href="javascript:;"
              ng-click="goToCompanyCheck(value, $index)">
-            <h3 class="txtUpc ellp">{{value.name}}</h3>
+            <h3 class="txtUpc ellp pull-left" uib-tooltip="Alias - {{value.alias}}" tooltip-placement="top" tooltip-append-to-body="true">{{value.name}}</h3>
           </a>
           <div class="action">
             <span ng-click="deleteCompany(value.uniqueName, $index, value.name)" ng-show="value.shared" class="glyphicon glyphicon-trash"></span>

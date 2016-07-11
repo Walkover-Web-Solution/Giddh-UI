@@ -21,6 +21,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.subgroupsList = []
   $scope.search = {}
   $scope.search.acnt = ''
+  $scope.selectedAccountCategory = ''
+  $scope.editGenInvoice = false
   $scope.gwaList = {
     page: 1
     count: 5000
@@ -284,6 +286,12 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     _.each grpList, (grp) ->
 #      if grp.groupUniqueName == 'sundry_debtors'
         grp.open = false
+
+        if grp.accounts.length > 0
+          _.each grp.accounts, (acc) ->
+            if acc.uniqueName == $rootScope.$stateParams.invId
+              $scope.selectedAccountCategory = grp.category
+
         $scope.flatAccntWGroupsList.push(grp)
         if grp.groups.length > 0
           $scope.filterSundryDebtors(grp.groups)
@@ -316,6 +324,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   $scope.loadInvoice = (data, acData) ->
     DAServices.LedgerSet(data, acData)
+    $scope.selectedAccountCategory = data.category
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
     # call invoice load func
@@ -397,8 +406,12 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       console.log file
       file.upload = Upload.upload(
         url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/logo'
-        file: file
-        fType: type
+        # file: file
+        # fType: type
+        data : {
+          file: file
+          fType: type
+        }
       )
       file.upload.then ((res) ->
         $timeout ->
@@ -579,7 +592,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     }
     ledgerService.getLedger(obj).then($scope.getLedgerEntriesSuccess, $scope.getLedgerEntriesFailure)
 
-  $scope.getLedgerEntriesSuccess=(res)->
+  $scope.getLedgerEntriesSuccess = (res)->
     $scope.onlyDrData = []
     _.each(res.body.ledgers, (ledger) ->
       if ledger.transactions.length > 1
@@ -591,7 +604,10 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
         transaction.amount = parseFloat(transaction.amount).toFixed(2)
         newEntry = {sharedData: sharedData}
         newEntry.id = sharedData.uniqueName + "_" + index
-        if transaction.type is "DEBIT"
+        if $scope.selectedAccountCategory.toLowerCase() != 'income' && transaction.type is "DEBIT"
+          newEntry.transactions = [transaction]
+          $scope.onlyDrData.push(newEntry)
+        if $scope.selectedAccountCategory.toLowerCase() == 'income'
           newEntry.transactions = [transaction]
           $scope.onlyDrData.push(newEntry)
       )
@@ -658,6 +674,11 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.prevInProg = false
     $scope.entriesForInvoice = []
     toastr.error(res.data.message, res.data.status)
+    $scope.resetAllCheckBoxes()
+
+  $scope.resetAllCheckBoxes = () ->
+    _.each $scope.onlyDrData, (dr) ->
+      dr.sharedData.itemCheck = false
 
 
   # get generated invoices list
@@ -824,8 +845,28 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       template: $scope.tempType.uniqueName
     accountService.downloadInvoice(obj, data).then($scope.downInvSuccess, $scope.multiActionWithInvFailure)
 
-  
+  $scope.updateGeneratedInvoice = () ->
+    if $scope.editGenInvoice
+      data_ = {}
+      angular.copy($scope.defTempData, data_)
+      data_.account.data = data_.account.data.split('\n')
+      data = {}
+      data.account = data_.account
+      data.entries = data_.entries
+      data.invoiceDetails = data_.invoiceDetails
+      obj = {
+        compUname : $rootScope.selectedCompany.uniqueName
+      }
+      accountService.updateInvoice(obj, data).then($scope.updateGeneratedInvoiceSuccess, $scope.updateGeneratedInvoiceFailure)
+    $scope.editGenInvoice = true
+    
+  $scope.updateGeneratedInvoiceSuccess = (res) ->
+    toastr.success(res.body)
+    $scope.editGenInvoice = false
 
+  $scope.updateGeneratedInvoiceFailure = (res) ->
+    toastr.error(res.data.message)
+  
   # state change
   $scope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
     # close accounts dropdown and false var if going upwords

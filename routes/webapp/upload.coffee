@@ -5,9 +5,7 @@ router = settings.express.Router()
 
 # upload logo
 router.post '/:companyName/logo', (req, res) ->
-  console.log "logo file is: ", req
-  url = settings.envUrl + 'company/' + req.params.companyName + '/logo?type='+req.file.fType
-  console.log(url)
+  url = settings.envUrl + 'company/' + req.params.companyName + '/logo?type='+ req.body.fType
   rest.post(url,
     multipart: true
     headers:
@@ -23,7 +21,6 @@ router.post '/:companyName/logo', (req, res) ->
 
 # upload master
 router.post '/:companyName/master', (req, res) ->
-  console.log "Master file is: ", req.file
   url = settings.envUrl + 'company/' + req.params.companyName + '/import-master'
   rest.post(url,
     multipart: true
