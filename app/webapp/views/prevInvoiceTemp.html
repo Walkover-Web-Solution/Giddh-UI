@@ -424,11 +424,49 @@ textarea:disabled, input:disabled{
               <textarea ng-disabled="!editMode" class="form-control" ng-model="defTempData.companyIdentities.data" placeholder="Company other details"></textarea>
             </div>
           </section>
-          <section class="col-xs-7" id="seven">
+          <section class="col-xs-7" id="seven" ng-if="defTempData.signatureType == 'text' || tempSet.signatureType == 'text'">
             <div class="txtAreaWrap">
               <input ng-disabled="!editMode" class="form-control mrB alR" ng-model="defTempData.signature.name"  placeholder="Your Company name">
               <input ng-disabled="!editMode" class="form-control alR" ng-model="defTempData.signature.data" placeholder="Signatory slogan">
             </div>
+          </section>
+          <section id="nine" class="col-xs-7" ng-if="defTempData.signatureType == 'image' || tempSet.signatureType == 'image'">
+            <h1 ng-if="!editMode">
+              <img src="{{defTempData.signature.path}}" alt="" height="50px">
+            </h1>
+
+            <h1 ng-if="editMode && defTempData.entries !== null">
+              <img src="{{defTempData.signature.path}}" alt="" height="50px">
+            </h1>
+
+            <aside ng-if="editMode && defTempData.entries === null">
+              <form class="form-inline" enctype="multipart/form-data">
+                <div class="form-group" ng-show="logoWrapShow || defTempData.signature.path === ''">
+                    <span ng-hide="logoUpldComplt">
+                      <button type="file"
+                              ng-model="logoFile"
+                              class="btn btn-primary"
+                              ngf-select="uploadLogo($files,'signature')"
+                              ngf-pattern="image/*"
+                              accept="image/*"
+                              ngf-max-size="200KB"
+                              ngf-multiple="false"
+                          >
+                        <i class="glyphicon glyphicon-folder-open"></i>
+                        &nbsp; Upload Signature</button><br/>
+                      <small>* Signature size should be max 200KB</small>
+                    </span>
+                </div>
+                <div class="form-group" ng-show="logoUpldComplt">
+                  <img ngf-src="logoFile" class="thumb">
+                  <a href="javascript:void(0)" ng-click="resetLogo()">Reset Signature</a>
+                </div>
+              </form>
+              <div ng-show="defTempData.signature.path !== ''" ng-hide="logoWrapShow">
+                <img src="{{defTempData.signature.path}}" class="" height="50px">
+                <a href="javascript:void(0)" ng-click="showUploadWrap()">Change Signature</a>
+              </div>
+            </aside>
           </section>
         </div>
         <!-- end of section six or seven -->

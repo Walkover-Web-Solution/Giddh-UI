@@ -376,6 +376,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.viewInvTemplate =(template, mode, data) ->
     showPopUp = true
     $scope.templateClass = template.uniqueName
+    data.signatureType = template.sections.signatureType
     if mode isnt 'genprev'
       $scope.genPrevMode = false
     $scope.logoWrapShow = false
