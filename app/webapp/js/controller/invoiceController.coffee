@@ -388,6 +388,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.tempSet = template.sections
     
     _.extend($scope.defTempData , data)
+    $scope.defTempData.signatureType = $scope.tempSet.signatureType
     showPopUp = $scope.convertIntoOur()
 
     # open dialog
@@ -836,6 +837,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       item.uniqueName is $scope.tempType.uniqueName
     )
     $scope.tempSet = even.sections
+    $scope.defTempData.signatureType = $scope.tempSet.signatureType
 
   $scope.downInv=()->
     obj =

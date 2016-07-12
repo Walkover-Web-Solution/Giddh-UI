@@ -427,11 +427,11 @@ textarea:disabled, input:disabled{
           <section class="col-xs-7" id="seven" ng-if="defTempData.signatureType == 'text' || tempSet.signatureType == 'text'">
             <div class="txtAreaWrap">
               <input ng-disabled="!editMode" class="form-control mrB alR" ng-model="defTempData.signature.name"  placeholder="Your Company name">
-              <input ng-disabled="!editMode" class="form-control alR" ng-model="defTempData.signature.data" placeholder="Signatory slogan">
+              <input ng-if="defTempData.signatureType == 'text'" ng-disabled="!editMode" class="form-control alR" ng-model="defTempData.signature.data" placeholder="Signatory slogan">
             </div>
           </section>
           <section id="nine" class="col-xs-7" ng-if="defTempData.signatureType == 'image' || tempSet.signatureType == 'image'">
-            <h1 ng-if="!editMode">
+            <h1 ng-if="!editMode" class="pull-right mrR2">
               <img src="{{defTempData.signature.path}}" alt="" height="50px">
             </h1>
 
