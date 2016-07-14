@@ -71,7 +71,7 @@ module.exports = function (grunt) {
           expand: true,
           dot: true,
           cwd: srcDir,
-          src: ['**/images/*', '**/images/new/*', '**/css/*', '**/fonts/*', '**/views/*', '**/ng2/*', '**/ng2/**/*'],
+          src: ['**/images/*', '**/images/new/*', '**/css/*', '**/fonts/*', '**/views/*', '**/ng2/*', '**/ng2/**/*', '**/*.coffee'],
           dest: destDir
         }]
       }
@@ -82,7 +82,7 @@ module.exports = function (grunt) {
       },
       src: {
         files: [
-          srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '/**/*.css', routeSrcDir + "/**/*.coffee", srcDir + '/**/*.js', srcDir + '/**/**/*.js', srcDir + '/webapp/ng2/**/*.js' 
+          srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '/**/*.css', routeSrcDir + "/**/*.coffee", srcDir + '/**/*.js', srcDir + '/**/**/*.js', srcDir + '/webapp/ng2/**/*.js',  srcDir + '/**/*.coffee'
         ],
         tasks: ['coffee', 'copy', 'clean', 'cssmin', 'concat', 'env:dev', 'preprocess:dev']
       }
@@ -119,7 +119,7 @@ module.exports = function (grunt) {
       },
       js:{
         files:{
-          'public/webapp/app.js': ['public/webapp/js/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/jspdf.debug.js', 'app/webapp/**/*.js', '!app/webapp/ng2/*.js', '!app/webapp/ng2/**/*.js'],
+          'public/webapp/app.js': ['app/webapp/**/*.js','public/webapp/root.js', 'public/webapp/js/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/jspdf.debug.js','!app/webapp/ng2/*.js', '!app/webapp/ng2/**/*.js'],
           'public/webapp/ng2.js': ['app/webapp/ng2/**/*.services.js','app/webapp/ng2/**/*.component.js','app/webapp/ng2/*.js'],
           'public/webapp/newRelic.js': ['app/webapp/modified_lib/newRelic.js'],
           'public/webapp/_extras.js': ['app/webapp/modified_lib/angular-charts.js', 'app/webapp/modified_lib/jspdf.debug.js'],
