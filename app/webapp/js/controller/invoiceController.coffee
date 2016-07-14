@@ -381,6 +381,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $scope.genPrevMode = false
     $scope.logoWrapShow = false
     $scope.logoUpldComplt = false
+    $scope.signatureWrapShow = false
+    $scope.signatureUpldComplt = false
     $scope.tempSet = {}
     $scope.defTempData = {}
     # set mode
@@ -403,9 +405,10 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   # upload logo
   $scope.uploadLogo=(files,type)->
     $scope.logoUpldComplt = true
+    $scope.signatureUpldComplt = true
     angular.forEach files, (file) ->
       file.fType = type
-      console.log file
+#      console.log file
       file.upload = Upload.upload(
         url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/logo'
         # file: file
@@ -418,10 +421,12 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       file.upload.then ((res) ->
         $timeout ->
           # $scope.logoWrapShow = false
+          $scope.defTempData.signature.path = res.data.body.path
           toastr.success("Logo Uploaded Successfully", res.data.status)
       ), ((res) ->
-        console.log res, "error"
+#        console.log res, "error"
         $scope.logoUpldComplt = false
+        $scope.signatureUpldComplt = false
         toastr.warning("Something went wrong", "warning")
       ), (evt) ->
         console.log "file upload progress" ,Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
@@ -433,6 +438,14 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   $scope.showUploadWrap=()->
     $scope.logoWrapShow = true
+
+  # reset Signature
+  $scope.resetSignature=()->
+    $scope.signatureUpldComplt = false
+    $scope.signatureWrapShow = true
+
+  $scope.showUploadSignatureWrap=()->
+    $scope.signatureWrapShow = true
 
   # convert data for UI usage
   $scope.convertIntoOur=()->

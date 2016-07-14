@@ -441,8 +441,8 @@ textarea:disabled, input:disabled{
 
             <aside ng-if="editMode && defTempData.entries === null">
               <form class="form-inline" enctype="multipart/form-data">
-                <div class="form-group" ng-show="logoWrapShow || defTempData.signature.path === ''">
-                    <span ng-hide="logoUpldComplt">
+                <div class="form-group" ng-show="signatureWrapShow || defTempData.signature.path === ''">
+                    <span ng-hide="signatureUpldComplt">
                       <button type="file"
                               ng-model="logoFile"
                               class="btn btn-primary"
@@ -457,14 +457,14 @@ textarea:disabled, input:disabled{
                       <small>* Signature size should be max 200KB</small>
                     </span>
                 </div>
-                <div class="form-group" ng-show="logoUpldComplt">
+                <div class="form-group" ng-show="signatureUpldComplt">
                   <img ngf-src="logoFile" class="thumb">
-                  <a href="javascript:void(0)" ng-click="resetLogo()">Reset Signature</a>
+                  <a href="javascript:void(0)" ng-click="resetSignature()">Reset Signature</a>
                 </div>
               </form>
-              <div ng-show="defTempData.signature.path !== ''" ng-hide="logoWrapShow">
+              <div ng-show="defTempData.signature.path !== ''" ng-hide="signatureWrapShow">
                 <img src="{{defTempData.signature.path}}" class="" height="50px">
-                <a href="javascript:void(0)" ng-click="showUploadWrap()">Change Signature</a>
+                <a href="javascript:void(0)" ng-click="showUploadSignatureWrap()">Change Signature</a>
               </div>
             </aside>
           </section>
