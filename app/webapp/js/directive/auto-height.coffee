@@ -618,7 +618,7 @@ angular.module('ledger', [])
           taxList_1 = scope.taxList
           siblings = []
           if obj.sharedData.entryDate != undefined
-            console.log obj.sharedData.entryDate
+#            console.log obj.sharedData.entryDate
             edArr = obj.sharedData.entryDate.split('-')
             edMmddyy = edArr[1] + '-' + edArr[0] + '-' + edArr[2]
             entryDate = new Date(edMmddyy).getTime()
