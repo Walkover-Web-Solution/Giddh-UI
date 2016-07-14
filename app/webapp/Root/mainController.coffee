@@ -28,7 +28,37 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.CompanyList = []
   $rootScope.companyIndex = 0
   $rootScope.selectedAccount ={}
-  
+
+
+  # check IE browser version
+  $rootScope.GetIEVersion = () ->
+    ua = window.navigator.userAgent
+    msie = ua.indexOf('MSIE ')
+    trident = ua.indexOf('Trident/')
+    edge = ua.indexOf('Edge/')
+    if (msie > 0)
+      toastr.error('For Best User Expreince, upgrade to IE 11+')
+
+  $rootScope.GetIEVersion()
+
+  # check browser
+  $rootScope.msieBrowser = ()->
+    ua = window.navigator.userAgent
+    msie = ua.indexOf('MSIE')
+    if msie > 0 or !!navigator.userAgent.match(/Trident.*rv\:11\./)
+      return true
+    else
+      console.info window.navigator.userAgent, 'otherbrowser', msie
+      return false
+
+  # open window for IE
+  $rootScope.openWindow = (url) ->
+    win = window.open()
+    win.document.write('sep=,\r\n', url)
+    win.document.close()
+    win.document.execCommand('SaveAs', true, 'abc' + ".xls")
+    win.close()
+
   $scope.logout = ->
     $http.post('/logout').then ((res) ->
       # don't need to clear below
@@ -176,9 +206,34 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.getFlatAccountListFailure = (res) ->
     toastr.error(res.data.message)
 
+
+  # search flat accounts list
+  $rootScope.searchAccounts = (str) ->
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    if str.length > 2
+      reqParam.q = str
+      groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+    else
+      reqParam.q = ''
+      reqParam.count = 5
+      groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+
   # load-more function for accounts list on add and manage popup
   $rootScope.loadMoreAcc = (compUname) ->
     $rootScope.flatAccList.limit += 5
+
+    # set financial year
+  $rootScope.setActiveFinancialYear = (FY) ->
+    if FY != undefined
+      activeYear = {}
+      activeYear.start = moment(FY.financialYearStarts,"DD/MM/YYYY").year()
+      activeYear.ends = moment(FY.financialYearEnds,"DD/MM/YYYY").year()
+      if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
+      $rootScope.fy = FY
+      $rootScope.activeYear = activeYear
+      $rootScope.currentFinancialYear =  activeYear.year
+    localStorageService.set('activeFY',FY)
 
 #  $rootScope.getCompanyList()
 

@@ -127,7 +127,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   #dialog for first time user
   $scope.openFirstTimeUserModal = () ->
     modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/views/createCompanyModal.html',
+      templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
       size: "sm",
       backdrop: 'static',
       scope: $scope
@@ -800,7 +800,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       )
     $scope.modal = {}
     $scope.modal.modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/views/fixUploadIssueModal.html',
+      templateUrl: '/public/webapp/Globals/modals/fixUploadIssueModal.html',
       size: "lg",
       backdrop: 'static',
       scope: $scope
@@ -1382,7 +1382,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
           $scope.banks.mfaForm = res.body.yodleeMfaResponse.fieldInfo.questionAns
           $scope.banks.showToken = false
       $scope.banks.modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/views/yodleeMfaModal.html'
+        templateUrl: '/public/webapp/Globals/modals/yodleeMfaModal.html'
         size: "sm"
         backdrop: 'static'
         scope: $scope
@@ -1614,7 +1614,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     url = res.body.token_URL + '?token=' + res.body.token
     $scope.connectUrl = url
     modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/views/connectBankModal.html',
+      templateUrl: '/public/webapp/Globals/modals/connectBankModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope,
@@ -1635,7 +1635,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     url = res.body.connectUrl
     $scope.connectUrl = url
     modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/views/refreshBankAccountsModal.html',
+      templateUrl: '/public/webapp/Globals/modals/refreshBankAccountsModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope
@@ -1663,7 +1663,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     url = res.body.connectUrl
     $scope.connectUrl = url
     $uibModal.open(
-      templateUrl: '/public/webapp/views/refreshBankAccountsModal.html',
+      templateUrl: '/public/webapp/Globals/modals/refreshBankAccountsModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope

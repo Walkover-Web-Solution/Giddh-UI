@@ -229,31 +229,31 @@ giddh.webApp.run [
         $rootScope.selAcntUname = undefined
     )
 
-    # check IE browser version
-    $rootScope.GetIEVersion = () ->
-      ua = window.navigator.userAgent
-      msie = ua.indexOf('MSIE ')
-      trident = ua.indexOf('Trident/')
-      edge = ua.indexOf('Edge/')
-      if (msie > 0)
-        toastr.error('For Best User Expreince, upgrade to IE 11+')
-    $rootScope.GetIEVersion()
-    # check browser
-    $rootScope.msieBrowser = ()->
-      ua = window.navigator.userAgent
-      msie = ua.indexOf('MSIE')
-      if msie > 0 or !!navigator.userAgent.match(/Trident.*rv\:11\./)
-        return true
-      else
-        console.info window.navigator.userAgent, 'otherbrowser', msie
-        return false
-    # open window for IE
-    $rootScope.openWindow = (url) ->
-      win = window.open()
-      win.document.write('sep=,\r\n', url)
-      win.document.close()
-      win.document.execCommand('SaveAs', true, 'abc' + ".xls")
-      win.close()
+#    # check IE browser version
+#    $rootScope.GetIEVersion = () ->
+#      ua = window.navigator.userAgent
+#      msie = ua.indexOf('MSIE ')
+#      trident = ua.indexOf('Trident/')
+#      edge = ua.indexOf('Edge/')
+#      if (msie > 0)
+#        toastr.error('For Best User Expreince, upgrade to IE 11+')
+#    $rootScope.GetIEVersion()
+#    # check browser
+#    $rootScope.msieBrowser = ()->
+#      ua = window.navigator.userAgent
+#      msie = ua.indexOf('MSIE')
+#      if msie > 0 or !!navigator.userAgent.match(/Trident.*rv\:11\./)
+#        return true
+#      else
+#        console.info window.navigator.userAgent, 'otherbrowser', msie
+#        return false
+#    # open window for IE
+#    $rootScope.openWindow = (url) ->
+#      win = window.open()
+#      win.document.write('sep=,\r\n', url)
+#      win.document.close()
+#      win.document.execCommand('SaveAs', true, 'abc' + ".xls")
+#      win.close()
 
     $rootScope.firstLogin = true
 
@@ -264,52 +264,52 @@ giddh.webApp.run [
     )
     $rootScope.canChangeCompany = false
 
-    $rootScope.flatAccList = {
-      page: 1
-      count: 10
-      totalPages: 0
-      currentPage : 1
-    }
+#    $rootScope.flatAccList = {
+#      page: 1
+#      count: 10
+#      totalPages: 0
+#      currentPage : 1
+#    }
 
-    $rootScope.getFlatAccountList = (compUname) ->
-      reqParam = {
-        companyUniqueName: compUname
-        q: ''
-        page: $rootScope.flatAccList.page
-        count: $rootScope.flatAccList.count
-      }
-      groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+#    $rootScope.getFlatAccountList = (compUname) ->
+#      reqParam = {
+#        companyUniqueName: compUname
+#        q: ''
+#        page: $rootScope.flatAccList.page
+#        count: $rootScope.flatAccList.count
+#      }
+#      groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+#
+#    $rootScope.getFlatAccountListListSuccess = (res) ->
+#      $rootScope.fltAccntListPaginated = res.body.results
+#      $rootScope.flatAccList.limit = 5
+#
+#    $rootScope.getFlatAccountListFailure = (res) ->
+#      toastr.error(res.data.message)
 
-    $rootScope.getFlatAccountListListSuccess = (res) ->
-      $rootScope.fltAccntListPaginated = res.body.results
-      $rootScope.flatAccList.limit = 5
+#    # search flat accounts list
+#    $rootScope.searchAccounts = (str) ->
+#      reqParam = {}
+#      reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+#      if str.length > 2
+#        reqParam.q = str
+#        groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+#      else
+#        reqParam.q = ''
+#        reqParam.count = 5
+#        groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
 
-    $rootScope.getFlatAccountListFailure = (res) ->
-      toastr.error(res.data.message)
-
-    # search flat accounts list
-    $rootScope.searchAccounts = (str) ->
-      reqParam = {}
-      reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-      if str.length > 2
-        reqParam.q = str
-        groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
-      else
-        reqParam.q = ''
-        reqParam.count = 5
-        groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
-
-    # set financial year
-    $rootScope.setActiveFinancialYear = (FY) ->
-      if FY != undefined
-        activeYear = {} 
-        activeYear.start = moment(FY.financialYearStarts,"DD/MM/YYYY").year()
-        activeYear.ends = moment(FY.financialYearEnds,"DD/MM/YYYY").year()
-        if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
-        $rootScope.fy = FY
-        $rootScope.activeYear = activeYear
-        $rootScope.currentFinancialYear =  activeYear.year
-      localStorageService.set('activeFY',FY)
+#    # set financial year
+#    $rootScope.setActiveFinancialYear = (FY) ->
+#      if FY != undefined
+#        activeYear = {}
+#        activeYear.start = moment(FY.financialYearStarts,"DD/MM/YYYY").year()
+#        activeYear.ends = moment(FY.financialYearEnds,"DD/MM/YYYY").year()
+#        if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
+#        $rootScope.fy = FY
+#        $rootScope.activeYear = activeYear
+#        $rootScope.currentFinancialYear =  activeYear.year
+#      localStorageService.set('activeFY',FY)
 
 ]
 
