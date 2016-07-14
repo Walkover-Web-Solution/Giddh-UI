@@ -115,6 +115,11 @@ textarea{
     padding: 0;
     border:0;
 }
+
+ul.dropdown-menu {
+    list-style-type: none;
+}
+
 header{
   background-color: #d35f29;
 }

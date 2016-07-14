@@ -71,7 +71,7 @@ module.exports = function (grunt) {
           expand: true,
           dot: true,
           cwd: srcDir,
-          src: ['**/images/*', '**/images/new/*', '**/css/*', '**/fonts/*', '**/views/*', '**/ng2/*', '**/ng2/**/*', '**/*.coffee'],
+          src: ['**/**/images/*', '**/**/images/new/*', '**/**/css/*', '**/**/fonts/*', '**/views/*', '**/ng2/*', '**/ng2/**/*', '**/*.coffee'],
           dest: destDir
         }]
       }
@@ -82,7 +82,7 @@ module.exports = function (grunt) {
       },
       src: {
         files: [
-          srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '/**/*.css', routeSrcDir + "/**/*.coffee", srcDir + '/**/*.js', srcDir + '/**/**/*.js', srcDir + '/webapp/ng2/**/*.js',  srcDir + '/**/*.coffee'
+          srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '**/**/*.css', routeSrcDir + "/**/*.coffee", srcDir + '/**/*.js', srcDir + '/**/**/*.js', srcDir + '/webapp/ng2/**/*.js',  srcDir + '/**/*.coffee'
         ],
         tasks: ['coffee', 'copy', 'clean', 'cssmin', 'concat', 'env:dev', 'preprocess:dev']
       }
