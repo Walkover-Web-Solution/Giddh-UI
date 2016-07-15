@@ -119,10 +119,11 @@ module.exports = function (grunt) {
       },
       js:{
         files:{
-          'public/webapp/app.js': ['app/webapp/**/*.js','public/webapp/root.js', 'public/webapp/js/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/jspdf.debug.js','!app/webapp/ng2/*.js', '!app/webapp/ng2/**/*.js'],
-          'public/webapp/ng2.js': ['app/webapp/ng2/**/*.services.js','app/webapp/ng2/**/*.component.js','app/webapp/ng2/*.js'],
-          'public/webapp/newRelic.js': ['app/webapp/modified_lib/newRelic.js'],
-          'public/webapp/_extras.js': ['app/webapp/modified_lib/angular-charts.js', 'app/webapp/modified_lib/jspdf.debug.js'],
+          'public/webapp/app.js': ['public/webapp/root.js','public/webapp/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/jspdf.debug.js','!public/webapp/ng2/*.js', '!public/webapp/ng2/**/*.js'],
+          // 'public/webapp/app.js': ['public/webapp/root.js','public/webapp/**/*.js','public/webapp/**/**/*.js','!public/webapp/ng2/*.js','!public/webapp/ng2/**/*.js'],
+          'public/webapp/ng2.js': ['public/webapp/ng2/**/*.services.js','public/webapp/ng2/**/*.component.js','public/webapp/ng2/*.js'],
+          'public/webapp/newRelic.js': ['app/webapp/Globals/modified_lib/newRelic.js'],
+          'public/webapp/_extras.js': ['app/webapp/Globals/modified_lib/angular-charts.js', 'app/webapp/Globals/modified_lib/jspdf.debug.js'],
           'public/webapp/css/giddh.min.css': ['public/webapp/css/all_bower.css', 'public/webapp/css/modiefied-bootstrap.css', 'public/webapp/css/new-style.css']
         }
       }

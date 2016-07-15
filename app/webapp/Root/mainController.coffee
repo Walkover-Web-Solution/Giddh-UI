@@ -237,6 +237,11 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
 #  $rootScope.getCompanyList()
 
+  $scope.selectCompany = () ->
+    console.log 'select company'
+
+  $scope.selectCompany()
+
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
     # $rootScope.$emit('callCheckPermissions', data)
