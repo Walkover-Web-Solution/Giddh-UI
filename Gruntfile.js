@@ -62,7 +62,7 @@ module.exports = function (grunt) {
           expand: true,
           dot: true,
           cwd: 'bower_components/angular-sanitize/',
-          src: ['angular-sanitize.min.js.map'],
+          src: ['angular-sanitize.js'],
           dest: destDir+'/webapp/'
         }]
       },
@@ -249,6 +249,7 @@ module.exports = function (grunt) {
           'angular-toastr': 'dist/angular-toastr.tpls.min.js'
         },
         callback: function(mainFiles, component) {
+          console.log(mainFiles)
           return _.map(mainFiles, function(filepath) {
             var min = filepath.replace(/\.js$/, '.min.js');
             return grunt.file.exists(min) ? min : filepath;
@@ -281,5 +282,5 @@ module.exports = function (grunt) {
     'karma:unit'
   ]);
 
-  grunt.registerTask('addCommitInfo', ['execute']);
+  //grunt.registerTask('addCommitInfo', ['execute']);
 };

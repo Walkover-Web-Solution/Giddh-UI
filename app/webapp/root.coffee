@@ -112,7 +112,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/invoice'
     views:{
       'accounts':{
-        templateUrl: '/public/webapp/Invoice/invoiveAccounts.html'
+        templateUrl: '/public/webapp/Invoice/invoiceAccounts.html'
       }
       'rightPanel':{
         abstract:true
@@ -222,7 +222,6 @@ giddh.webApp.run [
   ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService) ->
     $rootScope.$state = $state
     $rootScope.$stateParams = $stateParams
-    console.log 'from root'
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
       $rootScope.showLedgerBox = false
       if _.isEmpty(toParams)
