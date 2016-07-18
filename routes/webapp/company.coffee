@@ -504,8 +504,9 @@ router.get '/:uniqueName/ebanks/token', (req, res) ->
     console.log data
     res.send data
 
-router.delete '/:uniqueName/ebanks/:accountId',(req,res) ->
-  hUrl = settings.envUrl + 'company/'+req.params.uniqueName+'/ebanks/'+req.params.accountId
+router.delete '/:uniqueName/ebanks/login/:loginId',(req,res) ->
+  console.log("delete bank",req)
+  hUrl = settings.envUrl + 'company/'+req.params.uniqueName+'/ebanks/login/'+req.params.loginId
   args =
     headers:
       'Auth-Key': req.session.authKey

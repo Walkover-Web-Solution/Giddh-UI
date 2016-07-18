@@ -401,6 +401,13 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
         backdrop: 'static'
         scope: $scope
       )
+      $scope.modalInstance.result.then($scope.showInvoiceSuccess,$scope.showInvoiceFailure)
+
+  $scope.showInvoiceSuccess = () ->
+    console.log("invoice opened")
+
+  $scope.showInvoiceFailure = () ->
+    $scope.editGenInvoice = false
 
   # upload logo
   $scope.uploadLogo=(files,type)->

@@ -126,7 +126,7 @@ textarea:disabled, input:disabled{
 
 </style>
 
-<div class="templateClass">
+<div id="InvoiceTemplate" class="templateClass no-border">
   <div class="modal-header" ng-class="genPrevMode ? 'genPrevMode': ''">
     <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); closePop()" aria-label="Close"><i aria-hidden="true">&times;</i></button>
     
@@ -253,7 +253,7 @@ textarea:disabled, input:disabled{
               <textarea ng-disabled="genMode && editMode || genPrevMode" class="form-control" ng-model="defTempData.company.data" placeholder="Address and other details"></textarea>
             </div>
           </section>
-          <section class="col-xs-5 col-xs-offset-2" id="four">
+          <section class="col-xs-5 col-xs-offset-2 no-border" id="four">
             <!-- if logo or invoiceDetails false then show invoice no -->
             <section class="form-inline clearfix mrB1" ng-if="!tempSet.logo">
               <div class="form-group mrR">
@@ -267,22 +267,36 @@ textarea:disabled, input:disabled{
             </section>
             <!-- end if -->
 
-            <h4 class="mrB">To:</h4>
+            <h4 class="mrB">To,</h4>
             <div class="txtAreaWrap" ng-if="!genPrevMode">
-              <input ng-disabled="!genMode && !editMode" class="form-control" ng-model="defTempData.account.name" placeholder="Buyer Name">
+              <!--<div class="form-inline">-->
+                <!--<label>To, : </label>-->
+                <input ng-disabled="!genMode && !editMode" class="form-control" ng-model="defTempData.account.name" placeholder="Buyer Name">
+              <!--</div>-->
+              <!--<div class="form-inline" ng-if="defTempData.account.attentionTo.length > 0 || genMode">-->
+                <!--<label>Att. : </label>-->
+                <input ng-if="defTempData.account.attentionTo.length > 0 || genMode" ng-disabled="!genMode" class="form-control" ng-model="defTempData.account.attentionTo" placeholder="Attention To">
+              <!--</div>-->
               <textarea ng-disabled="!genMode && !editMode" class="form-control" ng-model="defTempData.account.data"  placeholder="Buyer Address and other details"></textarea>
             </div>
             <div class="txtAreaWrap" ng-if="genPrevMode">
-              <input ng-disabled="!editGenInvoice" class="form-control" ng-model="defTempData.account.name" placeholder="Buyer Name">
+              <!--<div class="form-inline">-->
+                <!--<label>To : </label>-->
+                <input ng-disabled="!editGenInvoice" class="form-control" ng-model="defTempData.account.name" placeholder="Buyer Name">
+              <!--</div>-->
+              <!--<div class="form-inline" ng-if="defTempData.account.attentionTo.length > 0">-->
+                <!--<label>Att. : </label>-->
+                <input ng-disabled="!editGenInvoice" class="form-control" ng-model="defTempData.account.attentionTo" placeholder="Attention To">
+              <!--</div>-->
               <textarea ng-disabled="!editGenInvoice" class="form-control" ng-model="defTempData.account.data"  placeholder="Buyer Address and other details"></textarea>
             </div>
           </section>
-          <section class="col-xs-5" ng-if="defTempData.account.attentionTo.length > 0 || genMode">
-            <div class="form-inline">
-              <label>Attention To : </label>
-              <input ng-disabled="!genMode" class="form-control" ng-model="defTempData.account.attentionTo" placeholder="Attention To">
-            </div>
-          </section>
+          <!--<section class="col-xs-5" ng-if="defTempData.account.attentionTo.length > 0 || genMode">-->
+            <!--<div class="form-inline">-->
+              <!--<label>Attention To : </label>-->
+              <!--<input ng-disabled="!genMode" class="form-control" ng-model="defTempData.account.attentionTo" placeholder="Attention To">-->
+            <!--</div>-->
+          <!--</section>-->
         </div>
         <!-- section three or four end -->
         

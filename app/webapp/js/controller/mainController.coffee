@@ -166,14 +166,14 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       page: $scope.flatAccList.page
       count: $scope.flatAccList.count
     }
-    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+    groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
 
-  $scope.getFlatAccountListListSuccess = (res) ->
+  $rootScope.getFlatAccountListListSuccess = (res) ->
     $rootScope.fltAccntListPaginated = res.body.results
 #    $rootScope.fltAccountLIstFixed = $rootScope.fltAccntListPaginated
     $rootScope.flatAccList.limit = 5
     
-  $scope.getFlatAccountListFailure = (res) ->
+  $rootScope.getFlatAccountListFailure = (res) ->
     toastr.error(res.data.message)
 
   # load-more function for accounts list on add and manage popup

@@ -1530,7 +1530,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.error(res.body)
 
   $scope.deleteAddedBank = (card) ->
-    $scope.banks.toDelete = card.accountId
+    $scope.banks.toDelete = card.loginId
     modalService.openConfirmModal(
       title: 'Delete Account',
       body: 'Are you sure you want to delete ' + card.name + ' ?' + '\n' + 'All accounts linked with the same bank will be deleted.',
@@ -1541,7 +1541,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.deleteAddedBankAccountConfirmed = () ->
     reqParam = {
       cUnq : $rootScope.selectedCompany.uniqueName
-      memSiteAccId: $scope.banks.toDelete
+      loginId: $scope.banks.toDelete
     }
     userServices.deleteBankAccount(reqParam).then($scope.deleteAddedBankAccountConfirmedSuccess, $scope.deleteAddedBankAccountConfirmedFailure)
 
