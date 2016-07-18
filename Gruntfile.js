@@ -71,7 +71,7 @@ module.exports = function (grunt) {
           expand: true,
           dot: true,
           cwd: srcDir,
-          src: ['**/**/images/*', '**/**/images/new/*', '**/**/css/*', '**/**/fonts/*', '**/views/*', '**/ng2/*', '**/ng2/**/*', '**/*.coffee'],
+          src: ['**/**/images/*', '**/**/images/new/*', '**/**/css/*', '**/**/fonts/*', '**/views/*', '**/ng2/*', '**/ng2/**/*', '**/*.coffee','**/**/*.*'],
           dest: destDir
         }]
       }
@@ -119,8 +119,8 @@ module.exports = function (grunt) {
       },
       js:{
         files:{
-          'public/webapp/app.js': ['public/webapp/root.js','public/webapp/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/jspdf.debug.js','!public/webapp/ng2/*.js', '!public/webapp/ng2/**/*.js'],
-          // 'public/webapp/app.js': ['public/webapp/root.js','public/webapp/**/*.js','public/webapp/**/**/*.js','!public/webapp/ng2/*.js','!public/webapp/ng2/**/*.js'],
+          // 'public/webapp/app.js': ['public/webapp/root.js','public/webapp/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/jspdf.debug.js','!public/webapp/ng2/*.js', '!public/webapp/ng2/**/*.js'],
+          'public/webapp/app.js': ['public/webapp/root.js','public/webapp/**/*.js','public/webapp/**/**/*.js','!public/webapp/ng2/*.js','!public/webapp/ng2/**/*.js'],
           'public/webapp/ng2.js': ['public/webapp/ng2/**/*.services.js','public/webapp/ng2/**/*.component.js','public/webapp/ng2/*.js'],
           'public/webapp/newRelic.js': ['app/webapp/Globals/modified_lib/newRelic.js'],
           'public/webapp/_extras.js': ['app/webapp/Globals/modified_lib/angular-charts.js', 'app/webapp/Globals/modified_lib/jspdf.debug.js'],

@@ -112,7 +112,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/invoice'
     views:{
       'accounts':{
-        templateUrl: '/public/webapp/views/invoiveAccounts.html'
+        templateUrl: '/public/webapp/Invoice/invoiveAccounts.html'
       }
       'rightPanel':{
         abstract:true
@@ -122,7 +122,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   )
   .state('invoice.accounts.invoiceId',
     url: '/:invId'
-    templateUrl: '/public/webapp/views/invoiceContent.html'
+    templateUrl: '/public/webapp/Invoice/invoiceContent.html'
   )
   .state('company'
     url: ''
@@ -153,7 +153,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
         #template: "<div>manage page</div>"
       }
       'rightPanel':{
-        templateUrl: '/public/webapp/views/manageCompany.html'
+        templateUrl: '/public/webapp/ManageCompany/manageCompany.html'
       }
     }
   )
