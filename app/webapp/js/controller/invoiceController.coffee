@@ -622,7 +622,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
         if $scope.selectedAccountCategory.toLowerCase() != 'income' && transaction.type is "DEBIT"
           newEntry.transactions = [transaction]
           $scope.onlyDrData.push(newEntry)
-        if $scope.selectedAccountCategory.toLowerCase() == 'income'
+        if $scope.selectedAccountCategory.toLowerCase() == 'income' && transaction.type is "CREDIT"
           newEntry.transactions = [transaction]
           $scope.onlyDrData.push(newEntry)
       )

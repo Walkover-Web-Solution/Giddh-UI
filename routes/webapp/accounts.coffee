@@ -237,6 +237,7 @@ router.get '/:accountUniqueName/invoices', (req, res) ->
     parameters:
       to: req.query.toDate
       from: req.query.fromDate
+  console.log(hUrl)
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error'
       res.status(response.statusCode)
