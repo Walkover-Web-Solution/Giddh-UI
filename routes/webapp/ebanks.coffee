@@ -17,4 +17,17 @@ router.post '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.delete '/:companyUniqueName/ebanks/login/:loginId',(req,res) ->
+  console.log('delete ebank')
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName+'/ebanks/login/'+req.params.loginId
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error'
+      res.status(response.statusCode)
+    res.send data
+
 module.exports = router

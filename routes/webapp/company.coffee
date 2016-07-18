@@ -14,6 +14,7 @@ router.get '/all', (req, res) ->
 
 #delete company
 router.delete '/:uniqueName', (req, res) ->
+  console.log('delete company')
   hUrl = settings.envUrl + 'company/' + req.params.uniqueName
   args =
     headers:
@@ -196,6 +197,7 @@ router.post '/:companyUniqueName/ebanks/:ItemAccountId/verify-mfa', (req, res) -
 
 #get added ebanks list
 router.get '/:companyUniqueName/ebanks', (req, res) ->
+  console.log 'from get list'
   authHead =
     headers:
       'Auth-Key': req.session.authKey
@@ -221,6 +223,7 @@ router.get '/:companyUniqueName/ebanks/refresh', (req, res) ->
 #login to ebank
 
 router.delete '/:companyUniqueName/ebanks/:memSiteAccId/remove', (req, res) ->
+  console.log('remove ebank')
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/' + req.params.memSiteAccId + '/remove'
   args =
     headers:
@@ -233,6 +236,7 @@ router.delete '/:companyUniqueName/ebanks/:memSiteAccId/remove', (req, res) ->
     res.send data
 
 router.delete '/:companyUniqueName/ebanks/:ItemAccountId/unlink', (req,res) ->
+  console.log('unlink ebank')
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/' + req.params.ItemAccountId + '/unlink'
   args =
     headers:
@@ -245,6 +249,7 @@ router.delete '/:companyUniqueName/ebanks/:ItemAccountId/unlink', (req,res) ->
     res.send data
 
 router.post '/:companyUniqueName/ebanks', (req, res) ->
+  console.log 'from /ebanks'
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks'
   authHead =
     headers:
@@ -259,6 +264,7 @@ router.post '/:companyUniqueName/ebanks', (req, res) ->
     res.send data
 
 router.delete '/:companyUniqueName/ebanks/:ItemAccountId/:linkedAccount', (req, res) ->
+  console.log('delete linked account')
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/' + req.params.ItemAccountId + '/?linkedAccount=' + req.params.linkedAccount
   args =
     headers:
@@ -504,9 +510,9 @@ router.get '/:uniqueName/ebanks/token', (req, res) ->
     console.log data
     res.send data
 
-router.delete '/:uniqueName/ebanks/login/:loginId',(req,res) ->
-  console.log("delete bank",req)
-  hUrl = settings.envUrl + 'company/'+req.params.uniqueName+'/ebanks/login/'+req.params.loginId
+router.delete '/:companyUniqueName/ebanks/login/:loginId',(req,res) ->
+  console.log('delete bank')
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName+'/ebanks/login/'+req.params.loginId
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -516,6 +522,5 @@ router.delete '/:uniqueName/ebanks/login/:loginId',(req,res) ->
     if data.status == 'error'
       res.status(response.statusCode)
     res.send data
-
 
 module.exports = router
