@@ -15,7 +15,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.canVWDLT = false
   $rootScope.companyLoaded = true
   $rootScope.superLoader = false
-  $rootScope.companyLoaded = true
   $rootScope.flatAccList = {
     page: 1
     count: 5000
@@ -227,6 +226,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     angular.extend($rootScope.selectedCompany, company)
     $rootScope.fltAccntListPaginated = []
     #$rootScope.selectedCompany = company
+    $scope.checkPermissions($rootScope.selectedCompany)
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
 
@@ -335,7 +335,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
-    # $rootScope.$emit('callCheckPermissions', data)
+
 
   $rootScope.$on 'companyLoaded', ()->
     console.log 'company changed'
@@ -343,7 +343,5 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $(document).on('click', ()->
     $scope.showCompanyList = false
   )
-
-  $scope.fromMainController = true
 
 giddh.webApp.controller 'mainController', mainController
