@@ -136,6 +136,41 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $rootScope.setActiveFinancialYear(cdt.activeFinancialYear)
   ), 500
 
+
+  #delete company
+  $scope.deleteCompany = (uniqueName, index, name) ->
+    modalService.openConfirmModal(
+      title: 'Are you sure you want to delete? ' + name,
+      ok: 'Yes',
+      cancel: 'No'
+    ).then ->
+      companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
+
+  #delete company success
+  $scope.delCompanySuccess = (res) ->
+    $rootScope.selectedCompany = {}
+    localStorageService.remove("_selectedCompany")
+    toastr.success("Company deleted successfully", "Success")
+    $scope.getCompanyList()
+
+  #delete company failure
+  $scope.delCompanyFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  #creating company
+  $scope.createCompany = (cdata) ->
+    companyServices.create(cdata).then($scope.onCreateCompanySuccess, $scope.onCreateCompanyFailure)
+
+  #create company success
+  $scope.onCreateCompanySuccess = (res) ->
+    toastr.success("Company created successfully", "Success")
+    $rootScope.mngCompDataFound = true
+    $scope.companyList.push(res.body)
+
+  #create company failure
+  $scope.onCreateCompanyFailure = (res) ->
+    toastr.error(res.data.message, "Error")
+
   #Create ne company
   $scope.createNewCompany = () ->
     # Open modal here and ask for company details

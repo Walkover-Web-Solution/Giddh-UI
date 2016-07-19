@@ -124,73 +124,73 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     this.toDatePickerIsOpen = true
   
 
-  #dialog for first time user
-  $scope.openFirstTimeUserModal = () ->
-    modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
-      size: "sm",
-      backdrop: 'static',
-      scope: $scope
-    )
-    modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
+#  #dialog for first time user
+#  $scope.openFirstTimeUserModal = () ->
+#    modalInstance = $uibModal.open(
+#      templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
+#      size: "sm",
+#      backdrop: 'static',
+#      scope: $scope
+#    )
+#    modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
+#
+#  $scope.onCompanyCreateModalCloseSuccess = (data) ->
+#    cData = {}
+#    cData.name = data.name
+#    cData.city = data.city
+#    $scope.createCompany(cData)
+#
+#  $scope.onCompanyCreateModalCloseFailure = () ->
+#    $scope.checkCmpCretedOrNot()
+#    modalService.openConfirmModal(
+#        title: 'LogOut',
+#        body: 'In order to be able to use Giddh, you must create a company. Are you sure you want to cancel and logout?',
+#        ok: 'Yes',
+#        cancel: 'No').then($scope.firstLogout)
+#
+#  $scope.firstLogout = () ->
+#    $http.post('/logout').then ((res) ->
+#      # don't need to clear below
+#      # _userDetails, _currencyList
+#      localStorageService.clearAll()
+#      window.location = "/thanks"
+#    ), (res) ->
 
-  $scope.onCompanyCreateModalCloseSuccess = (data) ->
-    cData = {}
-    cData.name = data.name
-    cData.city = data.city
-    $scope.createCompany(cData)
 
-  $scope.onCompanyCreateModalCloseFailure = () ->
-    $scope.checkCmpCretedOrNot()
-    modalService.openConfirmModal(
-        title: 'LogOut',
-        body: 'In order to be able to use Giddh, you must create a company. Are you sure you want to cancel and logout?',
-        ok: 'Yes',
-        cancel: 'No').then($scope.firstLogout)
+#  #for make sure
+#  $scope.checkCmpCretedOrNot = ->
+#    if $scope.companyList.length <= 0
+#      $scope.openFirstTimeUserModal()
+#
+#  #get only city for create company
+#  $scope.getOnlyCity = (val) ->
+#    locationService.searchOnlyCity(val).then($scope.getOnlyCitySuccess, $scope.getOnlyCityFailure)
+#
+#  #get only city success
+#  $scope.getOnlyCitySuccess = (data) ->
+#    filterThis = data.results.filter (i) -> i.types[0] is "locality"
+#    filterThis.map((item) ->
+#      item.address_components[0].long_name
+#    )
+#
+#  #get only city failure
+#  $scope.getOnlyCityFailure = (res) ->
+#    toastr.error(res.data.message, res.data.status)
 
-  $scope.firstLogout = () ->
-    $http.post('/logout').then ((res) ->
-      # don't need to clear below
-      # _userDetails, _currencyList
-      localStorageService.clearAll()
-      window.location = "/thanks"
-    ), (res) ->
-
-
-  #for make sure
-  $scope.checkCmpCretedOrNot = ->
-    if $scope.companyList.length <= 0
-      $scope.openFirstTimeUserModal()
-
-  #get only city for create company
-  $scope.getOnlyCity = (val) ->
-    locationService.searchOnlyCity(val).then($scope.getOnlyCitySuccess, $scope.getOnlyCityFailure)
-
-  #get only city success
-  $scope.getOnlyCitySuccess = (data) ->
-    filterThis = data.results.filter (i) -> i.types[0] is "locality"
-    filterThis.map((item) ->
-      item.address_components[0].long_name
-    )
-
-  #get only city failure
-  $scope.getOnlyCityFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
-
-  #creating company
-  $scope.createCompany = (cdata) ->
-    companyServices.create(cdata).then($scope.onCreateCompanySuccess, $scope.onCreateCompanyFailure)
-
-  #create company success
-  $scope.onCreateCompanySuccess = (res) ->
-    toastr.success("Company created successfully", "Success")
-    $rootScope.mngCompDataFound = true
-    $scope.companyList.push(res.body)
-    $state.reload()
-
-  #create company failure
-  $scope.onCreateCompanyFailure = (res) ->
-    toastr.error(res.data.message, "Error")
+#  #creating company
+#  $scope.createCompany = (cdata) ->
+#    companyServices.create(cdata).then($scope.onCreateCompanySuccess, $scope.onCreateCompanyFailure)
+#
+#  #create company success
+#  $scope.onCreateCompanySuccess = (res) ->
+#    toastr.success("Company created successfully", "Success")
+#    $rootScope.mngCompDataFound = true
+#    $scope.companyList.push(res.body)
+##    $state.reload()
+#
+#  #create company failure
+#  $scope.onCreateCompanyFailure = (res) ->
+#    toastr.error(res.data.message, "Error")
 
   #Get company list
   $scope.getCompanyList = ()->
@@ -241,25 +241,25 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.getUserDetailFailure = (res)->
     toastr.error(res.data.message, res.data.status)
 
-  #delete company
-  $scope.deleteCompany = (uniqueName, index, name) ->
-    modalService.openConfirmModal(
-      title: 'Are you sure you want to delete? ' + name,
-      ok: 'Yes',
-      cancel: 'No'
-    ).then ->
-      companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
-
-  #delete company success
-  $scope.delCompanySuccess = (res) ->
-    $rootScope.selectedCompany = {}
-    localStorageService.remove("_selectedCompany")
-    toastr.success("Company deleted successfully", "Success")
-    $scope.getCompanyList()    
-
-  #delete company failure
-  $scope.delCompanyFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
+#  #delete company
+#  $scope.deleteCompany = (uniqueName, index, name) ->
+#    modalService.openConfirmModal(
+#      title: 'Are you sure you want to delete? ' + name,
+#      ok: 'Yes',
+#      cancel: 'No'
+#    ).then ->
+#      companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
+#
+#  #delete company success
+#  $scope.delCompanySuccess = (res) ->
+#    $rootScope.selectedCompany = {}
+#    localStorageService.remove("_selectedCompany")
+#    toastr.success("Company deleted successfully", "Success")
+#    $scope.getCompanyList()
+#
+#  #delete company failure
+#  $scope.delCompanyFailure = (res) ->
+#    toastr.error(res.data.message, res.data.status)
 
   # $scope.goToCompanyCheck = (data, index) ->
   #   # set financial year
