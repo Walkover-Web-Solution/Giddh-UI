@@ -2717,8 +2717,6 @@ ul.pills li {
 /* company list dropdown styles */
 
 #companyList{
-    position: absolute;
-    top: 54px;
     width:100%;
     background: #000;
     color:#fff;
@@ -2730,25 +2728,30 @@ ul.pills li {
 #companyList li {
     padding:10px;
     cursor:pointer;
+    position: relative;
 }
 
 #companyList li:hover{
     background:rgba(63,63,63,.9);
 }
 
+#companyList li i.glyphicon-trash{
+    position: absolute;
+    right:10px;
+    top:12px;
+}
+
 .company-list-wrap{
-    position: relative;
-    max-height:300px;
 }
 
 .company-list-container{
     width: 100%;
     position: absolute;
     top: 54px;
-    height: 350px;
     background: #000;
     z-index: 3;
-    overflow:hidden;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
 }
 
 .create-company{

@@ -130,13 +130,12 @@
               <button class="btn btn-primary btn-sm" ng-click="createNewCompany">Create Company</button>
             </div>
             <div class="company-list-wrap">
-              <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height suppress-scroll-x="true">
-                <ul id="companyList" class="company-list" >
-                  <li ng-repeat="company in companyList" ng-click="changeCompany(company)">
-                    <span tooltip-placement="top" uib-tooltip="{{company.alias}}">{{company.name}}</span>
-                  </li>
-                </ul>
-              </perfect-scrollbar>
+              <ul id="companyList" class="company-list" >
+                <li ng-repeat="company in companyList" ng-click="changeCompany(company)">
+                  <span tooltip-placement="top" uib-tooltip="{{company.alias}}">{{company.name}}</span>
+                  <i class="glyphicon glyphicon-trash" uib-tooltip="Delete Company" tooltip-placement="right" ng-if="company.shared"></i>
+                </li>
+              </ul>
             <div>
           </div>
         </li>
