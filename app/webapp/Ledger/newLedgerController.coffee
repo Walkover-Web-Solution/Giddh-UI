@@ -1,5 +1,5 @@
 
-newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices) ->
+newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state) ->
 
   #date time picker code starts here
   $scope.today = new Date()
@@ -461,6 +461,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     $scope.allSelected = []
 
 
-
+  $rootScope.$on 'company-changed', () ->
+    $state.reload()
 
 giddh.webApp.controller 'newLedgerController', newLedgerController
