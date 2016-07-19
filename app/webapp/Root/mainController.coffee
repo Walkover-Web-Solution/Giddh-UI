@@ -137,21 +137,32 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   ), 500
 
 
+  $scope.beforeDeleteCompany = {}
+
   #delete company
-  $scope.deleteCompany = (uniqueName, index, name) ->
+  $scope.deleteCompany = (company, index, name, event) ->
+    event.stopPropagation()
+    $scope.beforeDeleteCompany.company = company
+    $scope.beforeDeleteCompany.index = index
     modalService.openConfirmModal(
       title: 'Are you sure you want to delete? ' + name,
       ok: 'Yes',
       cancel: 'No'
     ).then ->
-      companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
+      companyServices.delete(company.uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
 
   #delete company success
   $scope.delCompanySuccess = (res) ->
-    $rootScope.selectedCompany = {}
-    localStorageService.remove("_selectedCompany")
+#    $rootScope.selectedCompany = {}
+#    localStorageService.remove("_selectedCompany")
+    if $rootScope.selectedCompany.uniqueName == $scope.beforeDeleteCompany.company.uniqueName
+      localStorageService.remove("_selectedCompany")
+      $scope.getCompanyList()
+    else
+      $scope.companyList = _.without($scope.companyList, $scope.beforeDeleteCompany.company)
+    $scope.beforeDeleteCompany = {}
     toastr.success("Company deleted successfully", "Success")
-    $scope.getCompanyList()
+#    $scope.getCompanyList()
 
   #delete company failure
   $scope.delCompanyFailure = (res) ->
@@ -243,12 +254,15 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
         cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName})
         if _.isUndefined(cdt)
+          $scope.changeCompany($scope.companyList[0],0)
           $rootScope.setCompany($scope.companyList[0])
           $rootScope.companyIndex = 0
         else
+          $scope.changeCompany(cdt,cdt.index)
           $rootScope.setCompany(cdt)
           $rootScope.companyIndex = cdt.index
       else
+        $scope.changeCompany($scope.companyList[0],0)
         $rootScope.setCompany($scope.companyList[0])
         $rootScope.companyIndex = 0
 
