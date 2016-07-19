@@ -721,6 +721,13 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
         total += obj.closingBalance.amount
     total
 
+  $rootScope.$on 'company-changed' , () ->
+    dateObj = {
+      'fromDate': $filter('date')($scope.getDefaultDate().date,'dd-MM-yyyy')
+      'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+    }
+    $scope.checkFY(dateObj)
+    $scope.getTrialBal(dateObj)
   
 
 giddh.webApp.controller 'tbplController', tbplController

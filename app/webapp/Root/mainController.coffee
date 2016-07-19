@@ -162,7 +162,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $scope.companyList = _.without($scope.companyList, $scope.beforeDeleteCompany.company)
     $scope.beforeDeleteCompany = {}
     toastr.success("Company deleted successfully", "Success")
+
 #    $scope.getCompanyList()
+
 
   #delete company failure
   $scope.delCompanyFailure = (res) ->
