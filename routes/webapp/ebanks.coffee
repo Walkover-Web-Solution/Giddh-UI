@@ -17,7 +17,7 @@ router.post '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.delete '/:companyUniqueName/ebanks/login/:loginId',(req,res) ->
+router.delete '/:companyUniqueName/login/:loginId',(req,res) ->
   console.log('delete ebank')
   hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName+'/ebanks/login/'+req.params.loginId
   args =

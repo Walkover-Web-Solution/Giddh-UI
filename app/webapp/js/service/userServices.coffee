@@ -73,7 +73,7 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
         }
         deleteBAccount: {
           method: 'DELETE'
-          url: '/company/:companyUniqueName/ebanks/login/:loginId'
+          url: '/company/:companyUniqueName/login/:loginId'
         }
         removeGiddhAccount: {
           method: 'DELETE'
