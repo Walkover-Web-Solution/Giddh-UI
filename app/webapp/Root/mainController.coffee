@@ -136,7 +136,61 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     if !_.isNull(cdt)
       $rootScope.setActiveFinancialYear(cdt.activeFinancialYear)
   ), 500
-  
+
+  #Create ne company
+  $scope.createNewCompany = () ->
+    # Open modal here and ask for company details
+    modalInstance = $uibModal.open(
+      templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
+      size: "sm",
+      backdrop: 'static',
+      scope: $scope
+    )
+    modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
+
+  $scope.onCompanyCreateModalCloseSuccess = (data) ->
+    cData = {}
+    cData.name = data.name
+    cData.city = data.city
+    $scope.createCompany(cData)
+
+  $scope.onCompanyCreateModalCloseFailure = () ->
+    $scope.checkCmpCretedOrNot()
+    modalService.openConfirmModal(
+      title: 'LogOut',
+      body: 'In order to be able to use Giddh, you must create a company. Are you sure you want to cancel and logout?',
+      ok: 'Yes',
+      cancel: 'No').then($scope.firstLogout)
+
+  $scope.firstLogout = () ->
+    $http.post('/logout').then ((res) ->
+# don't need to clear below
+# _userDetails, _currencyList
+      localStorageService.clearAll()
+      window.location = "/thanks"
+    ), (res) ->
+
+
+#for make sure
+  $scope.checkCmpCretedOrNot = ->
+    if $scope.companyList.length <= 0
+      $scope.openFirstTimeUserModal()
+
+  #get only city for create company
+  $scope.getOnlyCity = (val) ->
+    locationService.searchOnlyCity(val).then($scope.getOnlyCitySuccess, $scope.getOnlyCityFailure)
+
+  #get only city success
+  $scope.getOnlyCitySuccess = (data) ->
+    filterThis = data.results.filter (i) -> i.types[0] is "locality"
+    filterThis.map((item) ->
+      item.address_components[0].long_name
+    )
+
+  #get only city failure
+  $scope.getOnlyCityFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
   #Get company list
   $rootScope.getCompanyList = ()->
     companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)

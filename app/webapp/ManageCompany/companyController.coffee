@@ -183,7 +183,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #create company success
   $scope.onCreateCompanySuccess = (res) ->
-    toastr.success("Company create successfully", "Success")
+    toastr.success("Company created successfully", "Success")
     $rootScope.mngCompDataFound = true
     $scope.companyList.push(res.body)
     $state.reload()

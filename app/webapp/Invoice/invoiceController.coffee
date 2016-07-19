@@ -392,7 +392,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     # open dialog
     if(showPopUp)
       $scope.modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/views/prevInvoiceTemp.html'
+        templateUrl: '/public/webapp/Invoice/prevInvoiceTemp.html'
         size: "a4"
         backdrop: 'static'
         scope: $scope

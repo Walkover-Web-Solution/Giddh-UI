@@ -198,8 +198,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.getFlatAccountList = (compUname) ->
     $rootScope.getFlatAccountList(compUname)
-#    console.log("flt accnt list paginated",$rootScope.fltAccntListPaginated)
-
 
 
   # get flat account list with count 5
