@@ -27,8 +27,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 #  $rootScope.fltAccountLIstFixed = []
   $rootScope.CompanyList = []
   $rootScope.companyIndex = 0
-  $rootScope.selectedAccount ={}
-
+  $rootScope.selectedAccount = {}
+  $scope.showCompanyList = false
 
   # check IE browser version
   $rootScope.GetIEVersion = () ->
@@ -146,6 +146,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.getCompanyListSuccess = (res) ->    
     $scope.companyList = _.sortBy(res.body, 'shared')
     $rootScope.CompanyList = $scope.companyList
+    console.log $rootScope.CompanyList
     if _.isEmpty($scope.companyList)
       #When no company is there
       $scope.companyList.count
@@ -235,12 +236,14 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $rootScope.currentFinancialYear =  activeYear.year
     localStorageService.set('activeFY',FY)
 
-#  $rootScope.getCompanyList()
+  $rootScope.getCompanyList()
 
-  $scope.selectCompany = () ->
-    console.log 'select company'
+  $scope.selectCompany = (e) ->
+    e.stopPropagation()
+    $scope.showCompanyList = !$scope.showCompanyList
 
-  $scope.selectCompany()
+  $scope.changeCompany = (company) ->
+    console.log company
 
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
@@ -248,5 +251,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.$on 'companyLoaded', ()->
     console.log 'company changed'
+
+  $(document).on('click', ()->
+    $scope.showCompanyList = false
+  )
 
 giddh.webApp.controller 'mainController', mainController
