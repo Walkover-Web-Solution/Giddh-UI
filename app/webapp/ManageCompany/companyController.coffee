@@ -261,36 +261,37 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.delCompanyFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  $scope.goToCompanyCheck = (data, index) ->
-    # set financial year
-    localStorageService.set('activeFY', data.activeFinancialYear)
-    $rootScope.setActiveFinancialYear(data.activeFinancialYear)
-    activeYear = {} 
-    activeYear.start = moment(data.activeFinancialYear.financialYearStarts,"DD/MM/YYYY").year()
-    activeYear.ends = moment(data.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").year()
-    if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
-    $rootScope.currentFinancialYear = activeYear.year
-    ########
+  # $scope.goToCompanyCheck = (data, index) ->
+  #   # set financial year
+  #   localStorageService.set('activeFY', data.activeFinancialYear)
+  #   $rootScope.setActiveFinancialYear(data.activeFinancialYear)
+  #   activeYear = {} 
+  #   activeYear.start = moment(data.activeFinancialYear.financialYearStarts,"DD/MM/YYYY").year()
+  #   activeYear.ends = moment(data.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").year()
+  #   if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
+  #   $rootScope.currentFinancialYear = activeYear.year
+  #   ########
     
-    $rootScope.$emit('callCheckPermissions', data)
-    $rootScope.canViewSpecificItems = false
-    if data.role.uniqueName is 'shared'
-      $rootScope.canManageComp = false
-      if data.sharedEntity is 'groups'
-        $rootScope.canViewSpecificItems = true
-      localStorageService.set("_selectedCompany", data)
-      $rootScope.selectedCompany = data
-      $rootScope.$emit('companyChanged')
-      $state.go('company.content.ledgerContent')
-    else
-      $rootScope.canManageComp = true
-      $scope.goToCompany(data, index, "CHANGED")
-    $rootScope.$emit('reloadAccounts')
-    $scope.tabs[0].active = true
+  #   $rootScope.$emit('callCheckPermissions', data)
+  #   $rootScope.canViewSpecificItems = false
+  #   if data.role.uniqueName is 'shared'
+  #     $rootScope.canManageComp = false
+  #     if data.sharedEntity is 'groups'
+  #       $rootScope.canViewSpecificItems = true
+  #     localStorageService.set("_selectedCompany", data)
+  #     $rootScope.selectedCompany = data
+  #     $rootScope.$emit('companyChanged')
+  #     $state.go('company.content.ledgerContent')
+  #   else
+  #     $rootScope.canManageComp = true
+  #     $scope.goToCompany(data, index, "CHANGED")
+  #   $rootScope.$emit('reloadAccounts')
+  #   $scope.tabs[0].active = true
 
   #making a detail company view
   $scope.goToCompany = (data, index, type) ->
-    $rootScope.$emit('callCheckPermissions', data)
+    #$rootScope.$emit('callCheckPermissions', data)
+    $scope.tabs[0].active = true
     $scope.compDataFound = false
     $scope.showUpdTbl = false
     $scope.mFiles = []
@@ -299,7 +300,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.dErrFiles = []
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
-    $rootScope.setCompany(data)
+    #$rootScope.setCompany(data)
     #angular.extend($rootScope.selectedCompany, data)
     $rootScope.selectedCompany.index = index
     contactnumber = $rootScope.selectedCompany.contactNo
@@ -1695,6 +1696,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
     $scope.resetSteps()
+  )
+
+  $rootScope.$on('company-changed', (changeData)->
+    data = changeData.data
+    index = changeData.index
+    type = changeData.type
+    $scope.goToCompany(data, index, type)
   )
 
 #init angular app

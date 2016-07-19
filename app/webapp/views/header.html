@@ -117,7 +117,7 @@
           </ul>
         </li>
 
-        <li ng-if="cmpViewShow" >
+        <li ng-if="cmpViewShow" class="company-name">
           <a id="cmpWrp" class="clearfix" ng-click="selectCompany($event)" style="cursor:pointer">
             <i class="gic-24 icon-building-w"></i>
             <div class="cText">
@@ -131,7 +131,7 @@
             </div>
             <div class="company-list-wrap">
               <ul id="companyList" class="company-list" >
-                <li ng-repeat="company in companyList" ng-click="changeCompany(company)">
+                <li ng-repeat="company in companyList" ng-click="changeCompany(company, $index)">
                   <span tooltip-placement="top" uib-tooltip="{{company.alias}}">{{company.name}}</span>
                   <i class="glyphicon glyphicon-trash" uib-tooltip="Delete Company" tooltip-placement="right" ng-if="company.shared"></i>
                 </li>

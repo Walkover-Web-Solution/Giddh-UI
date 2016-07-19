@@ -98,7 +98,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.switchUserSuccess = (res) ->
     $scope.ucActive = res.body.active
-    #console.log "switchUserSuccess:", res
     $state.reload()
 
   $scope.switchUserFailure = (res) ->
@@ -146,7 +145,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.getCompanyListSuccess = (res) ->    
     $scope.companyList = _.sortBy(res.body, 'shared')
     $rootScope.CompanyList = $scope.companyList
-    console.log $rootScope.CompanyList
     if _.isEmpty($scope.companyList)
       #When no company is there
       $scope.companyList.count
@@ -236,14 +234,50 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $rootScope.currentFinancialYear =  activeYear.year
     localStorageService.set('activeFY',FY)
 
+  # change selected company
+
   $rootScope.getCompanyList()
 
   $scope.selectCompany = (e) ->
     e.stopPropagation()
     $scope.showCompanyList = !$scope.showCompanyList
 
-  $scope.changeCompany = (company) ->
+  $scope.changeCompany = (company, index) ->
     console.log company
+    # select and set active financial year
+    $scope.setFYonCompanychange(company)
+    #check permissions on selected company
+    $scope.checkPermissions(company)
+    $rootScope.canViewSpecificItems = false
+    if company.role.uniqueName is 'shared'
+      $rootScope.canManageComp = false
+      if company.sharedEntity is 'groups'
+        $rootScope.canViewSpecificItems = true
+      localStorageService.set("_selectedCompany", company)
+      $rootScope.selectedCompany = company
+      $rootScope.$emit('companyChanged')
+      $state.go('company.content.ledgerContent')
+    else
+      $rootScope.canManageComp = true
+      #$scope.goToCompany(company, index, "CHANGED")
+      $rootScope.setCompany(company)
+      $rootScope.selectedCompany.index = index
+    $rootScope.$emit('reloadAccounts')
+    changeData = {}
+    changeData.data = company
+    changeData.index = index
+    changeData.type = 'CHANGED'
+    $rootScope.$emit('company-changed', changeData)
+    #$scope.tabs[0].active = true
+
+  $scope.setFYonCompanychange = (company) ->
+    localStorageService.set('activeFY', company.activeFinancialYear)
+    $rootScope.setActiveFinancialYear(company.activeFinancialYear)
+    activeYear = {} 
+    activeYear.start = moment(company.activeFinancialYear.financialYearStarts,"DD/MM/YYYY").year()
+    activeYear.ends = moment(company.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").year()
+    if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
+    $rootScope.currentFinancialYear = activeYear.year
 
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
@@ -255,5 +289,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $(document).on('click', ()->
     $scope.showCompanyList = false
   )
+
+  $scope.fromMainController = true
 
 giddh.webApp.controller 'mainController', mainController

@@ -2759,3 +2759,7 @@ ul.pills li {
     border-bottom: 1px solid #fff;
     text-align: right;
 }
+
+.company-name{
+    min-width:450px;
+}
