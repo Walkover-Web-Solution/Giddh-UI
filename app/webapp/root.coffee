@@ -62,17 +62,14 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
           if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
             cst = _.findWhere(companyList, {uniqueName: cdt.uniqueName})
             if _.isUndefined(cst)
-              console.info "data from localstorage mismatch"
               a = checkRole(companyList[0])
               return a
               localStorageService.set("_selectedCompany", companyList[0])
             else
-              console.info "data from localstorage match"
               a = checkRole(cst)
               return a
               localStorageService.set("_selectedCompany", cst)
           else
-            console.info "direct from api"
             if companyList.length < 1
               a = checkRole(user)
               return a
@@ -81,7 +78,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
               return a
             localStorageService.set("_selectedCompany", companyList[0])
         onFailure = (res) ->
-          console.log res
           toastr.error('Failed to retrieve company list' + res.data.message)
         companyServices.getAll().then(onSuccess, onFailure)
     }
@@ -94,7 +90,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   )
   .state('audit-logs',
     url: '/audit-logs'
-    templateUrl: '/public/webapp/views/audit-logs.html',
+    templateUrl: '/public/webapp/AuditLogs/audit-logs.html',
     controller:'logsController'
   )
   .state('search',

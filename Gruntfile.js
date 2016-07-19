@@ -103,9 +103,9 @@ module.exports = function (grunt) {
       minifyCss: {
         files: [{
           expand: true,
-          cwd: 'public/webapp/css',
+          cwd: 'public/webapp/Globals/css',
           src: ['*.css', '!*.min.css'],
-          dest: 'public/webapp/css',
+          dest: 'public/webapp/Globals/css',
           ext: '.css'
         }]
       }
@@ -119,12 +119,11 @@ module.exports = function (grunt) {
       },
       js:{
         files:{
-          // 'public/webapp/app.js': ['public/webapp/root.js','public/webapp/**/*.js', '!public/**/newRelic.js', '!public/**/angular-charts.js', '!public/**/jspdf.debug.js','!public/webapp/ng2/*.js', '!public/webapp/ng2/**/*.js'],
-          'public/webapp/app.js': ['public/webapp/root.js','public/webapp/**/*.js','public/webapp/**/**/*.js','!public/webapp/ng2/*.js','!public/webapp/ng2/**/*.js'],
+          'public/webapp/app.js': ['public/webapp/root.js', 'public/webapp/Root/*.js', 'public/webapp/Root/**/*.js','public/webapp/**/*.js','!public/webapp/**/core_bower.min.js','!public/webapp/**/newRelic.js','!public/webapp/ng2/*.js', '!public/webapp/ng2/**/*.js'],
           'public/webapp/ng2.js': ['public/webapp/ng2/**/*.services.js','public/webapp/ng2/**/*.component.js','public/webapp/ng2/*.js'],
           'public/webapp/newRelic.js': ['app/webapp/Globals/modified_lib/newRelic.js'],
           'public/webapp/_extras.js': ['app/webapp/Globals/modified_lib/angular-charts.js', 'app/webapp/Globals/modified_lib/jspdf.debug.js'],
-          'public/webapp/css/giddh.min.css': ['public/webapp/css/all_bower.css', 'public/webapp/css/modiefied-bootstrap.css', 'public/webapp/css/new-style.css']
+          'public/webapp/Globals/css/giddh.min.css': ['public/webapp/Globals/css/all_bower.css', 'public/webapp/Globals/css/modiefied-bootstrap.css', 'public/webapp/Globals/css/new-style.css']
         }
       }
     },
@@ -169,7 +168,7 @@ module.exports = function (grunt) {
     },
     bower_concat: {
       onlyCss: {
-        cssDest: 'public/webapp/css/all_bower.css',
+        cssDest: 'public/webapp/Globals/css/all_bower.css',
         bowerOptions: {
           relative: false
         },
