@@ -1,7 +1,9 @@
 
 <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent">-->
-
-    <section class="container-fluid">
+    <section class="alert alert-info mrL2 mrR2 mrT2" ng-if="accountUnq.length < 1">
+      Please select an Account to load its Ledger
+    </section>
+    <section class="container-fluid" ng-if="accountUnq.length > 0">
         <div class="pdL2 pdR2 pdT2">
 
 		    <div class="form-inline pdB1 ledgHead">

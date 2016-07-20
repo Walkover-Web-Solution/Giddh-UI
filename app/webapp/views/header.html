@@ -127,13 +127,13 @@
           </a>
           <div class="company-list-container" ng-show="showCompanyList">
             <div class="create-company">
-              <button class="btn btn-primary btn-sm" ng-click="createNewCompany()">Create Company</button>
+              <button id="createCompanyBtn" class="btn btn-primary btn-sm" ng-click="createNewCompany()">Create Company</button>
             </div>
             <div class="company-list-wrap">
               <ul id="companyList" class="company-list" >
-                <li ng-repeat="company in companyList" ng-click="changeCompany(company, $index,'CHANGE')">
+                <li ng-repeat="company in companyList" ng-click="changeCompany(company, $index,'CHANGE')" id="cmp">
                   <span tooltip-placement="top" uib-tooltip="{{company.alias}}">{{company.name}}</span>
-                  <i class="glyphicon glyphicon-trash" uib-tooltip="Delete Company" tooltip-placement="right" ng-if="company.shared" ng-click="deleteCompany(company,$index,company.name,$event)"></i>
+                  <i id="deleteCmp" class="glyphicon glyphicon-trash" uib-tooltip="Delete Company" tooltip-placement="right" ng-if="company.shared" ng-click="deleteCompany(company,$index,company.name,$event)"></i>
                 </li>
               </ul>
             <div>

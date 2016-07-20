@@ -728,6 +728,6 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     }
     $scope.checkFY(dateObj)
     $scope.getTrialBal(dateObj)
-  
+ 
 
 giddh.webApp.controller 'tbplController', tbplController

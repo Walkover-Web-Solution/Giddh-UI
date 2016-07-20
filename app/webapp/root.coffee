@@ -249,8 +249,8 @@ giddh.webApp.run [
 #      win.document.close()
 #      win.document.execCommand('SaveAs', true, 'abc' + ".xls")
 #      win.close()
-
-    $rootScope.firstLogin = true
+#
+#   $rootScope.firstLogin = true
 
     $rootScope.$on('companyChanged', ->
       DAServices.ClearData()

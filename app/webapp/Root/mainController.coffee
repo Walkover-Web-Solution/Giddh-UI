@@ -4,7 +4,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
   $rootScope.basicInfo = {}
-  $rootScope.flatAccntListWithParents = []
+  #$rootScope.flatAccntListWithParents = []
   $rootScope.canManageComp = true
   $rootScope.canViewSpecificItems = false
   $rootScope.canUpdate = false
@@ -68,15 +68,15 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   # for ledger
   $rootScope.makeAccountFlatten = (data) ->
-    $rootScope.flatAccntListWithParents = data
-    obj = _.map(data, (item) ->
-      obj = {}
-      obj.name = item.name
-      obj.uniqueName = item.uniqueName
-      obj.mergedAccounts = item.mergedAccounts
-      obj
-    )
-    $rootScope.fltAccntList = obj
+    # $rootScope.flatAccntListWithParents = data
+    # obj = _.map(data, (item) ->
+    #   obj = {}
+    #   obj.name = item.name
+    #   obj.uniqueName = item.uniqueName
+    #   obj.mergedAccounts = item.mergedAccounts
+    #   obj
+    # )
+    #$rootScope.fltAccntList = obj
 
   $rootScope.countryCodesList = locationService.getCountryCode()
 
@@ -274,7 +274,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     toastr.error(res.data.message, res.data.status)
 
   $rootScope.setCompany = (company) ->
-    angular.extend($rootScope.selectedCompany, company)
+    #angular.extend($rootScope.selectedCompany, company)
+    $rootScope.selectedCompany = company
     $rootScope.fltAccntListPaginated = []
     #$rootScope.selectedCompany = company
     $scope.checkPermissions($rootScope.selectedCompany)
@@ -347,8 +348,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     e.stopPropagation()
     $scope.showCompanyList = !$scope.showCompanyList
 
-  $scope.changeCompany = (company, index) ->
-#    console.log company
+  $scope.changeCompany = (company, index, method) ->
     # select and set active financial year
     $scope.setFYonCompanychange(company)
     #check permissions on selected company
@@ -387,12 +387,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
 
-
-  $rootScope.$on 'companyLoaded', ()->
-    console.log 'company changed'
-
   $(document).on('click', ()->
     $scope.showCompanyList = false
   )
+
 
 giddh.webApp.controller 'mainController', mainController

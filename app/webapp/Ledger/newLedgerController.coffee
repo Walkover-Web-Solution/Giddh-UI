@@ -468,8 +468,5 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     # when company is changed, redirect to manage company page
     if changeData.type == 'CHANGE'
       $scope.redirectToState('company.content.manage')
-    
-    
-    
 
 giddh.webApp.controller 'newLedgerController', newLedgerController

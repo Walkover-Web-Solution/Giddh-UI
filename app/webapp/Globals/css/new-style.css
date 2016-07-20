@@ -1327,7 +1327,7 @@ li:last-child .angular-ui-tree-handle {
     margin:0;
     background:#337ab7;
     color:#fff;
-    z-index:999;
+    z-index:9;
 }
 
 .tb-head th{
@@ -2749,7 +2749,7 @@ ul.pills li {
     position: absolute;
     top: 54px;
     background: #000;
-    z-index: 3;
+    z-index: 9999;
     -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
     box-shadow: 0 6px 12px rgba(0,0,0,.175);
 }

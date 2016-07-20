@@ -167,7 +167,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       # without accounts only groups conditionally
       cData = localStorageService.get("_selectedCompany")
       if cData.sharedEntity is 'accounts'
-        console.info "sharedEntity:"+ cData.sharedEntity
+        #console.info "sharedEntity:"+ cData.sharedEntity
       else
         groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess, $scope.getGroupListFailure)
 
@@ -180,7 +180,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     #$scope.showAccountList = true
     $rootScope.canChangeCompany = true
     b = groupService.flattenAccount(a)
-    $rootScope.makeAccountFlatten(b)
+    #$rootScope.makeAccountFlatten(b)
     $scope.flattenGroupList = groupService.makeGroupListFlatwithLessDtl($rootScope.flatGroupsList)
 
   $scope.getParticularGroup = (searchThis) ->
@@ -268,7 +268,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   #-------- fetch groups with accounts list-------
   $scope.working = false
   $scope.getFlattenGrpWithAccList = (compUname) ->
-    console.log("working  : ",$scope.working)
+    #console.log("working  : ",$scope.working)
     $rootScope.companyLoaded = false
     reqParam = {
       companyUniqueName: compUname
@@ -606,7 +606,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     accountService.get(reqParams).then($scope.getAcDtlSuccess, $scope.getAcDtlFailure)
 
   $scope.getAcDtlSuccess = (res) ->
-    getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.flatAccntListWithParents)
+    #getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.flatAccntListWithParents)
+    getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.fltAccntListPaginated)
     data = res.body
     $scope.getMergedAccounts(data)
     data.parentGroups = []
@@ -878,7 +879,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   }
   $scope.getMergedAccounts = (accData) ->
     $scope.showDeleteMove = false
-    $scope.AccountsList = $rootScope.fltAccntList
+    $scope.AccountsList = $rootScope.fltAccntListPaginated
     #remove selected account from AccountsList
     accToRemove = {
       uniqueName: accData.uniqueName
@@ -1089,6 +1090,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $rootScope.$on 'companyLoaded', ()->
     $scope.flatAccntWGroupsList = []
     $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
+
 
 #init angular app
 giddh.webApp.controller 'groupController', groupController

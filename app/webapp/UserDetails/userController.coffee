@@ -350,7 +350,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 #
 #  $scope.showAccountsList = (card) ->
 #    card.showAccList = true
-#    $scope.AccountsList = $rootScope.fltAccntList
+#    $scope.AccountsList = $rootScope.fltAccntListPaginated
 #    linkedAccounts = []
 #    _.each $scope.banks.linked, (acc) ->
 #      _.each acc.yodleeAccounts, (link) ->

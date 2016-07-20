@@ -316,7 +316,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     if type is 'CHANGED'
       $rootScope.$emit('companyChanged')
     else
-      console.info "Same Company loaded"
+      #console.info "Same Company loaded"
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
@@ -795,7 +795,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       )
     if data.isAccountConflict
       $scope.fixUploadData.accountConflicts = _.reject($scope.fixUploadData.accountConflicts, (acObj) ->
-          _.some($scope.fltAccntList, (ac) ->
+          _.some($scope.fltAccntListPaginated, (ac) ->
             ac.uniqueName is acObj.uniqueName || ac.mergedAccounts.indexOf(acObj.uniqueName) isnt -1
           ) 
       )
@@ -892,7 +892,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         if obj.account == null
           obj.account = {}
           obj.account.uniqueName = ''
-        obj.hasLinkedAcc = _.find($scope.fltAccntList, (acc)->
+        obj.hasLinkedAcc = _.find($scope.fltAccntListPaginated, (acc)->
           return acc.uniqueName == obj.account.uniqueName
         ) 
         $scope.taxList.push(obj)

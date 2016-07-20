@@ -597,7 +597,7 @@
                   </table>
                 </td>
                 <td>
-                  <select ng-options="option.uniqueName as option.name for option in fltAccntList" class="form-control" ng-class="{isNotEditable : !item.isEditable}" ng-model="item.account.uniqueName" ng-disabled="!item.isEditable" ng-if="item.isEditable">
+                  <select ng-options="option.uniqueName as option.name for option in fltAccntListPaginated" class="form-control" ng-class="{isNotEditable : !item.isEditable}" ng-model="item.account.uniqueName" ng-disabled="!item.isEditable" ng-if="item.isEditable">
                   </select>
                   <div class="pdBth06" ng-if="!item.isEditable && item.hasLinkedAcc">{{item.account.name}}</div>
                   <span ng-if="!item.hasLinkedAcc && !item.isEditable">No Account Linked</span>
