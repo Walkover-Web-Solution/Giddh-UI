@@ -211,7 +211,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.workInProgress = false
   $scope.getFlatAccountListCount5 = (compUname) ->
-    console.log($scope.workInProgress)
     reqParam = {
       companyUniqueName: compUname
       q: ''
