@@ -1,6 +1,6 @@
 "use strict"
 reportsController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService) ->
-
+  console.log 'reports'
   $scope.today = new Date()
   $scope.fromDate = {date: new Date()}
   $scope.toDate = {date: new Date()}
@@ -598,5 +598,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     if newDate > toDate
       $scope.toDate.date =  newDate
   )
+
+  $rootScope.$on 'company-changed' , () ->
+    $scope.getAccountsGroupsList()
 
 giddh.webApp.controller 'reportsController', reportsController

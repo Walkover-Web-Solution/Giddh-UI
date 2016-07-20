@@ -62,17 +62,14 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
           if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
             cst = _.findWhere(companyList, {uniqueName: cdt.uniqueName})
             if _.isUndefined(cst)
-              console.info "data from localstorage mismatch"
               a = checkRole(companyList[0])
               return a
               localStorageService.set("_selectedCompany", companyList[0])
             else
-              console.info "data from localstorage match"
               a = checkRole(cst)
               return a
               localStorageService.set("_selectedCompany", cst)
           else
-            console.info "direct from api"
             if companyList.length < 1
               a = checkRole(user)
               return a
@@ -81,7 +78,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
               return a
             localStorageService.set("_selectedCompany", companyList[0])
         onFailure = (res) ->
-          console.log res
           toastr.error('Failed to retrieve company list' + res.data.message)
         companyServices.getAll().then(onSuccess, onFailure)
     }
@@ -89,17 +85,17 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     controller: 'homeController')
   .state('Reports',
     url: '/reports'
-    templateUrl: '/public/webapp/views/reports.html',
+    templateUrl: '/public/webapp/Reports/reports.html',
     controller: 'reportsController'
   )
   .state('audit-logs',
     url: '/audit-logs'
-    templateUrl: '/public/webapp/views/audit-logs.html',
+    templateUrl: '/public/webapp/AuditLogs/audit-logs.html',
     controller:'logsController'
   )
   .state('search',
     url: '/search'
-    templateUrl: '/public/webapp/views/searchContent.html'
+    templateUrl: '/public/webapp/Search/searchContent.html'
     controller: 'searchController'
   )
   .state('invoice',
@@ -112,7 +108,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/invoice'
     views:{
       'accounts':{
-        templateUrl: '/public/webapp/views/invoiveAccounts.html'
+        templateUrl: '/public/webapp/Invoice/invoiceAccounts.html'
       }
       'rightPanel':{
         abstract:true
@@ -122,7 +118,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   )
   .state('invoice.accounts.invoiceId',
     url: '/:invId'
-    templateUrl: '/public/webapp/views/invoiceContent.html'
+    templateUrl: '/public/webapp/Invoice/invoiceContent.html'
   )
   .state('company'
     url: ''
@@ -134,33 +130,67 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: ''
     views:{
       'accounts':{
-        templateUrl: '/public/webapp/views/accounts.html'
+        #templateUrl: '/public/webapp/views/accounts.html'
+        template: "<div ui-view='accountsList'></div>"
+        abstract: true
       }
       'rightPanel':{
         abstract:true
-        template: '<div ui-view></div>'
+        template: '<div ui-view="rightPanel"></div>'
         controller: 'companyController'
       }
     }
   )
   .state('company.content.manage',
     url: '/manage'
-    templateUrl: '/public/webapp/views/manageCompany.html'
+    views:{
+      'accountsList':{
+        templateUrl: '/public/webapp/views/accounts.html'
+        #template: "<div>manage page</div>"
+      }
+      'rightPanel':{
+        templateUrl: '/public/webapp/ManageCompany/manageCompany.html'
+      }
+    }
   )
   .state('company.content.user',
     url: '/user'
-    templateUrl: '/public/webapp/views/userDetails.html'
-    controller: 'userController'
+    # templateUrl: '/public/webapp/views/userDetails.html'
+    # controller: 'userController'
+    views:{
+      'accountsList':{
+        templateUrl: '/public/webapp/views/accounts.html'
+        #template: "<div>user page</div>"
+      }
+      'rightPanel':{
+        templateUrl: '/public/webapp/UserDetails/userDetails.html'
+        controller: 'userController'
+      }
+    }
   )
   .state('company.content.tbpl',
     url: '/trial-balance-and-profit-loss',
-    templateUrl: '/public/webapp/views/tbpl.html',
-    controller: 'tbplController'
+    views:{
+      'accountsList':{
+        templateUrl: '/public/webapp/views/accounts.html'
+      }
+      'rightPanel':{
+        templateUrl: '/public/webapp/Tbpl/tbpl.html'
+        controller: 'tbplController'
+      }
+    }
   )
   .state('company.content.ledgerContent',
-    url: '/:unqName'
-    templateUrl: '/public/webapp/views/ledgerContent.html'
-    controller: 'ledgerController'
+    url: '/ledger/:unqName'
+    views:{
+      'accountsList':{
+        templateUrl: '/public/webapp/views/accounts.html'
+      }
+      'rightPanel':{
+        templateUrl: '/public/webapp/Ledger/ledger.html'
+        controller: 'newLedgerController'
+      }
+    }
   )
   # .state('company.content.ledger',
   #   url: '/ledger/:unqName'
@@ -188,40 +218,39 @@ giddh.webApp.run [
   ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService) ->
     $rootScope.$state = $state
     $rootScope.$stateParams = $stateParams
-
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
       $rootScope.showLedgerBox = false
       if _.isEmpty(toParams)
         $rootScope.selAcntUname = undefined
     )
 
-    # check IE browser version
-    $rootScope.GetIEVersion = () ->
-      ua = window.navigator.userAgent
-      msie = ua.indexOf('MSIE ')
-      trident = ua.indexOf('Trident/')
-      edge = ua.indexOf('Edge/')
-      if (msie > 0)
-        toastr.error('For Best User Expreince, upgrade to IE 11+')
-    $rootScope.GetIEVersion()
-    # check browser
-    $rootScope.msieBrowser = ()->
-      ua = window.navigator.userAgent
-      msie = ua.indexOf('MSIE')
-      if msie > 0 or !!navigator.userAgent.match(/Trident.*rv\:11\./)
-        return true
-      else
-        console.info window.navigator.userAgent, 'otherbrowser', msie
-        return false
-    # open window for IE
-    $rootScope.openWindow = (url) ->
-      win = window.open()
-      win.document.write('sep=,\r\n', url)
-      win.document.close()
-      win.document.execCommand('SaveAs', true, 'abc' + ".xls")
-      win.close()
-
-    $rootScope.firstLogin = true
+#    # check IE browser version
+#    $rootScope.GetIEVersion = () ->
+#      ua = window.navigator.userAgent
+#      msie = ua.indexOf('MSIE ')
+#      trident = ua.indexOf('Trident/')
+#      edge = ua.indexOf('Edge/')
+#      if (msie > 0)
+#        toastr.error('For Best User Expreince, upgrade to IE 11+')
+#    $rootScope.GetIEVersion()
+#    # check browser
+#    $rootScope.msieBrowser = ()->
+#      ua = window.navigator.userAgent
+#      msie = ua.indexOf('MSIE')
+#      if msie > 0 or !!navigator.userAgent.match(/Trident.*rv\:11\./)
+#        return true
+#      else
+#        console.info window.navigator.userAgent, 'otherbrowser', msie
+#        return false
+#    # open window for IE
+#    $rootScope.openWindow = (url) ->
+#      win = window.open()
+#      win.document.write('sep=,\r\n', url)
+#      win.document.close()
+#      win.document.execCommand('SaveAs', true, 'abc' + ".xls")
+#      win.close()
+#
+#   $rootScope.firstLogin = true
 
     $rootScope.$on('companyChanged', ->
       DAServices.ClearData()
@@ -230,52 +259,52 @@ giddh.webApp.run [
     )
     $rootScope.canChangeCompany = false
 
-    $rootScope.flatAccList = {
-      page: 1
-      count: 10
-      totalPages: 0
-      currentPage : 1
-    }
+#    $rootScope.flatAccList = {
+#      page: 1
+#      count: 10
+#      totalPages: 0
+#      currentPage : 1
+#    }
 
-    $rootScope.getFlatAccountList = (compUname) ->
-      reqParam = {
-        companyUniqueName: compUname
-        q: ''
-        page: $rootScope.flatAccList.page
-        count: $rootScope.flatAccList.count
-      }
-      groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+#    $rootScope.getFlatAccountList = (compUname) ->
+#      reqParam = {
+#        companyUniqueName: compUname
+#        q: ''
+#        page: $rootScope.flatAccList.page
+#        count: $rootScope.flatAccList.count
+#      }
+#      groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+#
+#    $rootScope.getFlatAccountListListSuccess = (res) ->
+#      $rootScope.fltAccntListPaginated = res.body.results
+#      $rootScope.flatAccList.limit = 5
+#
+#    $rootScope.getFlatAccountListFailure = (res) ->
+#      toastr.error(res.data.message)
 
-    $rootScope.getFlatAccountListListSuccess = (res) ->
-      $rootScope.fltAccntListPaginated = res.body.results
-      $rootScope.flatAccList.limit = 5
+#    # search flat accounts list
+#    $rootScope.searchAccounts = (str) ->
+#      reqParam = {}
+#      reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+#      if str.length > 2
+#        reqParam.q = str
+#        groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
+#      else
+#        reqParam.q = ''
+#        reqParam.count = 5
+#        groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
 
-    $rootScope.getFlatAccountListFailure = (res) ->
-      toastr.error(res.data.message)
-
-    # search flat accounts list
-    $rootScope.searchAccounts = (str) ->
-      reqParam = {}
-      reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-      if str.length > 2
-        reqParam.q = str
-        groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
-      else
-        reqParam.q = ''
-        reqParam.count = 5
-        groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
-
-    # set financial year
-    $rootScope.setActiveFinancialYear = (FY) ->
-      if FY != undefined
-        activeYear = {} 
-        activeYear.start = moment(FY.financialYearStarts,"DD/MM/YYYY").year()
-        activeYear.ends = moment(FY.financialYearEnds,"DD/MM/YYYY").year()
-        if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
-        $rootScope.fy = FY
-        $rootScope.activeYear = activeYear
-        $rootScope.currentFinancialYear =  activeYear.year
-      localStorageService.set('activeFY',FY)
+#    # set financial year
+#    $rootScope.setActiveFinancialYear = (FY) ->
+#      if FY != undefined
+#        activeYear = {}
+#        activeYear.start = moment(FY.financialYearStarts,"DD/MM/YYYY").year()
+#        activeYear.ends = moment(FY.financialYearEnds,"DD/MM/YYYY").year()
+#        if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
+#        $rootScope.fy = FY
+#        $rootScope.activeYear = activeYear
+#        $rootScope.currentFinancialYear =  activeYear.year
+#      localStorageService.set('activeFY',FY)
 
 ]
 

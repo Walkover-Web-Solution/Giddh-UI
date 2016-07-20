@@ -77,7 +77,7 @@
                       <div class="media">
                         <div class="media-body">
                           <div class="title">Reports</div>
-                          <div class="subTitle">View and edit all your <b>done</b> entries.</div>
+                          <div class="subTitle">Generate and view Business Reports</div>
                         </div>
                       </div>
                     </a>
@@ -119,16 +119,27 @@
           </ul>
         </li>
 
-        <li ng-if="cmpViewShow" >
-          <a id="cmpWrp" class="clearfix" ui-sref="company.content.manage">
+        <li ng-if="cmpViewShow" class="company-name">
+          <a id="cmpWrp" class="clearfix" ng-click="selectCompany($event)" style="cursor:pointer">
             <i class="gic-24 icon-building-w"></i>
-
             <div class="cText">
               <span class="cName">{{selectedCompany.name}}</span>
               <span ng-bind="currentFinancialYear"></span>
-              <!-- <span class="cDate">Date</span> -->
             </div>
           </a>
+          <div class="company-list-container" ng-show="showCompanyList">
+            <div class="create-company">
+              <button id="createCompanyBtn" class="btn btn-primary btn-sm" ng-click="createNewCompany()">Create Company</button>
+            </div>
+            <div class="company-list-wrap">
+              <ul id="companyList" class="company-list" >
+                <li ng-repeat="company in companyList" ng-click="changeCompany(company, $index,'CHANGE')" id="cmp">
+                  <span tooltip-placement="top" uib-tooltip="{{company.alias}}">{{company.name}}</span>
+                  <i id="deleteCmp" class="glyphicon glyphicon-trash" uib-tooltip="Delete Company" tooltip-placement="right" ng-if="company.shared" ng-click="deleteCompany(company,$index,company.name,$event)"></i>
+                </li>
+              </ul>
+            <div>
+          </div>
         </li>
       </ul>
 

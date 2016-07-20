@@ -124,73 +124,73 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     this.toDatePickerIsOpen = true
   
 
-  #dialog for first time user
-  $scope.openFirstTimeUserModal = () ->
-    modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/views/createCompanyModal.html',
-      size: "sm",
-      backdrop: 'static',
-      scope: $scope
-    )
-    modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
+#  #dialog for first time user
+#  $scope.openFirstTimeUserModal = () ->
+#    modalInstance = $uibModal.open(
+#      templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
+#      size: "sm",
+#      backdrop: 'static',
+#      scope: $scope
+#    )
+#    modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
+#
+#  $scope.onCompanyCreateModalCloseSuccess = (data) ->
+#    cData = {}
+#    cData.name = data.name
+#    cData.city = data.city
+#    $scope.createCompany(cData)
+#
+#  $scope.onCompanyCreateModalCloseFailure = () ->
+#    $scope.checkCmpCretedOrNot()
+#    modalService.openConfirmModal(
+#        title: 'LogOut',
+#        body: 'In order to be able to use Giddh, you must create a company. Are you sure you want to cancel and logout?',
+#        ok: 'Yes',
+#        cancel: 'No').then($scope.firstLogout)
+#
+#  $scope.firstLogout = () ->
+#    $http.post('/logout').then ((res) ->
+#      # don't need to clear below
+#      # _userDetails, _currencyList
+#      localStorageService.clearAll()
+#      window.location = "/thanks"
+#    ), (res) ->
 
-  $scope.onCompanyCreateModalCloseSuccess = (data) ->
-    cData = {}
-    cData.name = data.name
-    cData.city = data.city
-    $scope.createCompany(cData)
 
-  $scope.onCompanyCreateModalCloseFailure = () ->
-    $scope.checkCmpCretedOrNot()
-    modalService.openConfirmModal(
-        title: 'LogOut',
-        body: 'In order to be able to use Giddh, you must create a company. Are you sure you want to cancel and logout?',
-        ok: 'Yes',
-        cancel: 'No').then($scope.firstLogout)
+#  #for make sure
+#  $scope.checkCmpCretedOrNot = ->
+#    if $scope.companyList.length <= 0
+#      $scope.openFirstTimeUserModal()
+#
+#  #get only city for create company
+#  $scope.getOnlyCity = (val) ->
+#    locationService.searchOnlyCity(val).then($scope.getOnlyCitySuccess, $scope.getOnlyCityFailure)
+#
+#  #get only city success
+#  $scope.getOnlyCitySuccess = (data) ->
+#    filterThis = data.results.filter (i) -> i.types[0] is "locality"
+#    filterThis.map((item) ->
+#      item.address_components[0].long_name
+#    )
+#
+#  #get only city failure
+#  $scope.getOnlyCityFailure = (res) ->
+#    toastr.error(res.data.message, res.data.status)
 
-  $scope.firstLogout = () ->
-    $http.post('/logout').then ((res) ->
-      # don't need to clear below
-      # _userDetails, _currencyList
-      localStorageService.clearAll()
-      window.location = "/thanks"
-    ), (res) ->
-
-
-  #for make sure
-  $scope.checkCmpCretedOrNot = ->
-    if $scope.companyList.length <= 0
-      $scope.openFirstTimeUserModal()
-
-  #get only city for create company
-  $scope.getOnlyCity = (val) ->
-    locationService.searchOnlyCity(val).then($scope.getOnlyCitySuccess, $scope.getOnlyCityFailure)
-
-  #get only city success
-  $scope.getOnlyCitySuccess = (data) ->
-    filterThis = data.results.filter (i) -> i.types[0] is "locality"
-    filterThis.map((item) ->
-      item.address_components[0].long_name
-    )
-
-  #get only city failure
-  $scope.getOnlyCityFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
-
-  #creating company
-  $scope.createCompany = (cdata) ->
-    companyServices.create(cdata).then($scope.onCreateCompanySuccess, $scope.onCreateCompanyFailure)
-
-  #create company success
-  $scope.onCreateCompanySuccess = (res) ->
-    toastr.success("Company create successfully", "Success")
-    $rootScope.mngCompDataFound = true
-    $scope.companyList.push(res.body)
-    $state.reload()
-
-  #create company failure
-  $scope.onCreateCompanyFailure = (res) ->
-    toastr.error(res.data.message, "Error")
+#  #creating company
+#  $scope.createCompany = (cdata) ->
+#    companyServices.create(cdata).then($scope.onCreateCompanySuccess, $scope.onCreateCompanyFailure)
+#
+#  #create company success
+#  $scope.onCreateCompanySuccess = (res) ->
+#    toastr.success("Company created successfully", "Success")
+#    $rootScope.mngCompDataFound = true
+#    $scope.companyList.push(res.body)
+##    $state.reload()
+#
+#  #create company failure
+#  $scope.onCreateCompanyFailure = (res) ->
+#    toastr.error(res.data.message, "Error")
 
   #Get company list
   $scope.getCompanyList = ()->
@@ -241,56 +241,57 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.getUserDetailFailure = (res)->
     toastr.error(res.data.message, res.data.status)
 
-  #delete company
-  $scope.deleteCompany = (uniqueName, index, name) ->
-    modalService.openConfirmModal(
-      title: 'Are you sure you want to delete? ' + name,
-      ok: 'Yes',
-      cancel: 'No'
-    ).then ->
-      companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
+#  #delete company
+#  $scope.deleteCompany = (uniqueName, index, name) ->
+#    modalService.openConfirmModal(
+#      title: 'Are you sure you want to delete? ' + name,
+#      ok: 'Yes',
+#      cancel: 'No'
+#    ).then ->
+#      companyServices.delete(uniqueName).then($scope.delCompanySuccess, $scope.delCompanyFailure)
+#
+#  #delete company success
+#  $scope.delCompanySuccess = (res) ->
+#    $rootScope.selectedCompany = {}
+#    localStorageService.remove("_selectedCompany")
+#    toastr.success("Company deleted successfully", "Success")
+#    $scope.getCompanyList()
+#
+#  #delete company failure
+#  $scope.delCompanyFailure = (res) ->
+#    toastr.error(res.data.message, res.data.status)
 
-  #delete company success
-  $scope.delCompanySuccess = (res) ->
-    $rootScope.selectedCompany = {}
-    localStorageService.remove("_selectedCompany")
-    toastr.success("Company deleted successfully", "Success")
-    $scope.getCompanyList()    
-
-  #delete company failure
-  $scope.delCompanyFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
-
-  $scope.goToCompanyCheck = (data, index) ->
-    # set financial year
-    localStorageService.set('activeFY', data.activeFinancialYear)
-    $rootScope.setActiveFinancialYear(data.activeFinancialYear)
-    activeYear = {} 
-    activeYear.start = moment(data.activeFinancialYear.financialYearStarts,"DD/MM/YYYY").year()
-    activeYear.ends = moment(data.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").year()
-    if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
-    $rootScope.currentFinancialYear = activeYear.year
-    ########
+  # $scope.goToCompanyCheck = (data, index) ->
+  #   # set financial year
+  #   localStorageService.set('activeFY', data.activeFinancialYear)
+  #   $rootScope.setActiveFinancialYear(data.activeFinancialYear)
+  #   activeYear = {} 
+  #   activeYear.start = moment(data.activeFinancialYear.financialYearStarts,"DD/MM/YYYY").year()
+  #   activeYear.ends = moment(data.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").year()
+  #   if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
+  #   $rootScope.currentFinancialYear = activeYear.year
+  #   ########
     
-    $rootScope.$emit('callCheckPermissions', data)
-    $rootScope.canViewSpecificItems = false
-    if data.role.uniqueName is 'shared'
-      $rootScope.canManageComp = false
-      if data.sharedEntity is 'groups'
-        $rootScope.canViewSpecificItems = true
-      localStorageService.set("_selectedCompany", data)
-      $rootScope.selectedCompany = data
-      $rootScope.$emit('companyChanged')
-      $state.go('company.content.ledgerContent')
-    else
-      $rootScope.canManageComp = true
-      $scope.goToCompany(data, index, "CHANGED")
-    $rootScope.$emit('reloadAccounts')
-    $scope.tabs[0].active = true
+  #   $rootScope.$emit('callCheckPermissions', data)
+  #   $rootScope.canViewSpecificItems = false
+  #   if data.role.uniqueName is 'shared'
+  #     $rootScope.canManageComp = false
+  #     if data.sharedEntity is 'groups'
+  #       $rootScope.canViewSpecificItems = true
+  #     localStorageService.set("_selectedCompany", data)
+  #     $rootScope.selectedCompany = data
+  #     $rootScope.$emit('companyChanged')
+  #     $state.go('company.content.ledgerContent')
+  #   else
+  #     $rootScope.canManageComp = true
+  #     $scope.goToCompany(data, index, "CHANGED")
+  #   $rootScope.$emit('reloadAccounts')
+  #   $scope.tabs[0].active = true
 
   #making a detail company view
   $scope.goToCompany = (data, index, type) ->
-    $rootScope.$emit('callCheckPermissions', data)
+    #$rootScope.$emit('callCheckPermissions', data)
+    $scope.tabs[0].active = true
     $scope.compDataFound = false
     $scope.showUpdTbl = false
     $scope.mFiles = []
@@ -299,7 +300,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.dErrFiles = []
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
-    $rootScope.setCompany(data)
+    #$rootScope.setCompany(data)
     #angular.extend($rootScope.selectedCompany, data)
     $rootScope.selectedCompany.index = index
     contactnumber = $rootScope.selectedCompany.contactNo
@@ -315,7 +316,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     if type is 'CHANGED'
       $rootScope.$emit('companyChanged')
     else
-      console.info "Same Company loaded"
+      #console.info "Same Company loaded"
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
@@ -794,13 +795,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       )
     if data.isAccountConflict
       $scope.fixUploadData.accountConflicts = _.reject($scope.fixUploadData.accountConflicts, (acObj) ->
-          _.some($scope.fltAccntList, (ac) ->
+          _.some($scope.fltAccntListPaginated, (ac) ->
             ac.uniqueName is acObj.uniqueName || ac.mergedAccounts.indexOf(acObj.uniqueName) isnt -1
           ) 
       )
     $scope.modal = {}
     $scope.modal.modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/views/fixUploadIssueModal.html',
+      templateUrl: '/public/webapp/Globals/modals/fixUploadIssueModal.html',
       size: "lg",
       backdrop: 'static',
       scope: $scope
@@ -891,7 +892,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         if obj.account == null
           obj.account = {}
           obj.account.uniqueName = ''
-        obj.hasLinkedAcc = _.find($scope.fltAccntList, (acc)->
+        obj.hasLinkedAcc = _.find($scope.fltAccntListPaginated, (acc)->
           return acc.uniqueName == obj.account.uniqueName
         ) 
         $scope.taxList.push(obj)
@@ -1382,7 +1383,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
           $scope.banks.mfaForm = res.body.yodleeMfaResponse.fieldInfo.questionAns
           $scope.banks.showToken = false
       $scope.banks.modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/views/yodleeMfaModal.html'
+        templateUrl: '/public/webapp/Globals/modals/yodleeMfaModal.html'
         size: "sm"
         backdrop: 'static'
         scope: $scope
@@ -1614,7 +1615,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     url = res.body.token_URL + '?token=' + res.body.token
     $scope.connectUrl = url
     modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/views/connectBankModal.html',
+      templateUrl: '/public/webapp/Globals/modals/connectBankModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope,
@@ -1635,7 +1636,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     url = res.body.connectUrl
     $scope.connectUrl = url
     modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/views/refreshBankAccountsModal.html',
+      templateUrl: '/public/webapp/Globals/modals/refreshBankAccountsModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope
@@ -1663,7 +1664,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     url = res.body.connectUrl
     $scope.connectUrl = url
     $uibModal.open(
-      templateUrl: '/public/webapp/views/refreshBankAccountsModal.html',
+      templateUrl: '/public/webapp/Globals/modals/refreshBankAccountsModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope
@@ -1695,6 +1696,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
     $scope.resetSteps()
+  )
+
+  $rootScope.$on('company-changed', (changeData)->
+    data = changeData.data
+    index = changeData.index
+    type = changeData.type
+    $scope.goToCompany(data, index, type)
   )
 
 #init angular app

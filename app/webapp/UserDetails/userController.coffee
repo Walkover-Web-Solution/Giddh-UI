@@ -7,6 +7,13 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.uTransData = {}
   $scope.cSubsData = false
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+  $scope.tabs = [
+    {title:'Auth Key', active: true}
+    {title:'Wallet', active: false}
+    {title:'Subscription List', active: false}
+    {title:'Mobile Number', active: false}
+  ]
+
 
   $scope.getUserAuthKey = () ->
     if !_.isEmpty($rootScope.basicInfo)
@@ -350,7 +357,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 #
 #  $scope.showAccountsList = (card) ->
 #    card.showAccList = true
-#    $scope.AccountsList = $rootScope.fltAccntList
+#    $scope.AccountsList = $rootScope.fltAccntListPaginated
 #    linkedAccounts = []
 #    _.each $scope.banks.linked, (acc) ->
 #      _.each acc.yodleeAccounts, (link) ->
@@ -675,6 +682,11 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 #  $scope.refreshTokenFailure = (res) ->
 #    toastr.error(res.data.message, "Error")
   
+
+  $rootScope.$on 'company-changed', (event,changeData) ->
+    # when company is changed, redirect to manage company page
+    if changeData.type == 'CHANGE'
+      $scope.tabs[0].active = true
 
 #init angular app
 giddh.webApp.controller 'userController', userController

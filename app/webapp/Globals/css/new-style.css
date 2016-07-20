@@ -115,6 +115,11 @@ textarea{
     padding: 0;
     border:0;
 }
+
+ul.dropdown-menu {
+    list-style-type: none;
+}
+
 header{
   background-color: #d35f29;
 }
@@ -1322,7 +1327,7 @@ li:last-child .angular-ui-tree-handle {
     margin:0;
     background:#337ab7;
     color:#fff;
-    z-index:999;
+    z-index:9;
 }
 
 .tb-head th{
@@ -2707,6 +2712,57 @@ ul.pills li {
     position: relative;
     top: 40%;
     left: 36%;
+}
+
+/* company list dropdown styles */
+
+#companyList{
+    width:100%;
+    background: #000;
+    color:#fff;
+    z-index: 3;
+    list-style-type: none;
+    padding:0px;
+}
+
+#companyList li {
+    padding:10px;
+    cursor:pointer;
+    position: relative;
+}
+
+
+#companyList li:hover{
+    background:rgba(63,63,63,.9);
+}
+
+#companyList li i.glyphicon-trash{
+    position: absolute;
+    right:10px;
+    top:12px;
+}
+
+.company-list-wrap{
+}
+
+.company-list-container{
+    width: 100%;
+    position: absolute;
+    top: 54px;
+    background: #000;
+    z-index: 9999;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+}
+
+.create-company{
+    padding: 10px;
+    border-bottom: 1px solid #fff;
+    text-align: right;
+}
+
+.company-name{
+    min-width:450px;
 }
 
 #InvoiceTemplate.no-border input{

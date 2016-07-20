@@ -293,7 +293,9 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   $scope.sendEmailFailure = (res) ->
     toastr.error(res.data.message)
-    
+
+  $rootScope.$on 'company-changed' , () ->
+    $scope.getGrpsforSearch()
 
 #init angular app
 giddh.webApp.controller 'searchController', searchController

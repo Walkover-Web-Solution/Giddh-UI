@@ -108,7 +108,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       toastr.error("Select company first.", "Error")
     else
       modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/views/addManageGroupModal.html'
+        templateUrl: '/public/webapp/ManageGroupsAndAccounts/addManageGroupModal.html'
         size: "liq90"
         backdrop: 'static'
         scope: $scope
@@ -167,7 +167,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       # without accounts only groups conditionally
       cData = localStorageService.get("_selectedCompany")
       if cData.sharedEntity is 'accounts'
-        console.info "sharedEntity:"+ cData.sharedEntity
+        #console.info "sharedEntity:"+ cData.sharedEntity
       else
         groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess, $scope.getGroupListFailure)
 
@@ -180,7 +180,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     #$scope.showAccountList = true
     $rootScope.canChangeCompany = true
     b = groupService.flattenAccount(a)
-    $rootScope.makeAccountFlatten(b)
+    #$rootScope.makeAccountFlatten(b)
     $scope.flattenGroupList = groupService.makeGroupListFlatwithLessDtl($rootScope.flatGroupsList)
 
   $scope.getParticularGroup = (searchThis) ->
@@ -198,8 +198,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.getFlatAccountList = (compUname) ->
     $rootScope.getFlatAccountList(compUname)
-#    console.log("flt accnt list paginated",$rootScope.fltAccntListPaginated)
-
 
 
   # get flat account list with count 5
@@ -211,6 +209,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     currentPage : 1
   }
 
+
   $scope.getFlatAccountListCount5 = (compUname) ->
     reqParam = {
       companyUniqueName: compUname
@@ -218,13 +217,17 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       page: $scope.flatAccListC5.page
       count: $scope.flatAccListC5.count
     }
-    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListCount5ListSuccess, $scope.getFlatAccountListCount5ListFailure)
+    if $scope.workInProgress == false
+      groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListCount5ListSuccess, $scope.getFlatAccountListCount5ListFailure)
+      $scope.workInProgress = true
 
   $scope.getFlatAccountListCount5ListSuccess = (res) ->
 #    console.log res.body.res
+    $scope.workInProgress = false
     $scope.fltAccntListcount5 = res.body.results
 
   $scope.getFlatAccountListCount5ListFailure = (res) ->
+    $scope.workInProgress = false
     toastr.error(res.data.message)
 
   # search flat accounts list
@@ -268,7 +271,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
 
   #-------- fetch groups with accounts list-------
+  $scope.working = false
   $scope.getFlattenGrpWithAccList = (compUname) ->
+    #console.log("working  : ",$scope.working)
     $rootScope.companyLoaded = false
     reqParam = {
       companyUniqueName: compUname
@@ -276,7 +281,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       page: $scope.gwaList.page
       count: $scope.gwaList.count
     }
-    groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+    if $scope.working == false
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+      $scope.working = true
 
   $scope.getFlattenGrpWithAccListSuccess = (res) ->
     $scope.gwaList.totalPages = res.body.totalPages
@@ -287,9 +294,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showAccountList = true
     $scope.gwaList.limit = 5
     $rootScope.companyLoaded = true
+    $scope.working = false
 
   $scope.getFlattenGrpWithAccListFailure = (res) ->
     toastr.error(res.data.message)
+    $scope.working = false
 
   $scope.loadMoreGrpWithAcc = (compUname) ->
     # $scope.gwaList.page += 1
@@ -602,7 +611,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     accountService.get(reqParams).then($scope.getAcDtlSuccess, $scope.getAcDtlFailure)
 
   $scope.getAcDtlSuccess = (res) ->
-    getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.flatAccntListWithParents)
+    #getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.flatAccntListWithParents)
+    getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.fltAccntListPaginated)
     data = res.body
     $scope.getMergedAccounts(data)
     data.parentGroups = []
@@ -874,7 +884,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   }
   $scope.getMergedAccounts = (accData) ->
     $scope.showDeleteMove = false
-    $scope.AccountsList = $rootScope.fltAccntList
+    $scope.AccountsList = $rootScope.fltAccntListPaginated
     #remove selected account from AccountsList
     accToRemove = {
       uniqueName: accData.uniqueName
@@ -1085,6 +1095,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $rootScope.$on 'companyLoaded', ()->
     $scope.flatAccntWGroupsList = []
     $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
+
 
 #init angular app
 giddh.webApp.controller 'groupController', groupController

@@ -495,9 +495,11 @@ textarea:disabled, input:disabled{
                 </div>
                 <!-- end if editmode -->
 
-                <ol  ng-if="!editMode" style="list-style: none">
-                  <li ng-repeat="item in defTempData.terms track by $index">{{item}}</li>
-                </ol>
+                <pre ng-if="!editMode">
+                  <ol style="list-style: none">
+                    <li ng-repeat="item in defTempData.terms track by $index">{{item}}</li>
+                  </ol>
+                </pre>
 
               </div>
             </section>

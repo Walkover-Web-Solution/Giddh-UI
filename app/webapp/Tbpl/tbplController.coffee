@@ -1,6 +1,6 @@
 "use strict"
 
-tbplController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window, companyServices) ->
+tbplController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window, companyServices, $state) ->
   tb = this
   $scope.showTbplLoader = true
   $scope.inProfit = true
@@ -721,6 +721,9 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
         total += obj.closingBalance.amount
     total
 
-  
+  $rootScope.$on 'company-changed' , (event, data) ->
+    if data.type == 'CHANGE'
+      $state.reload()
+ 
 
 giddh.webApp.controller 'tbplController', tbplController

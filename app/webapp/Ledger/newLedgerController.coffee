@@ -1,5 +1,5 @@
 
-newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices) ->
+newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state) ->
 
   #date time picker code starts here
   $scope.today = new Date()
@@ -240,14 +240,15 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
     }
-    ledgerService.getLedger(unqNamesObj).then($scope.getLedgerDataSuccess, $scope.getLedgerDataFailure)
+    if not _.isEmpty($scope.accountUnq)
+      ledgerService.getLedger(unqNamesObj).then($scope.getLedgerDataSuccess, $scope.getLedgerDataFailure)
 
   $scope.getLedgerDataSuccess = (res) ->
     #$scope.filterLedgers(res.body.ledgers)
     $scope.ledgerData = res.body
 
   $scope.getLedgerDataFailure = (res) ->
-    console.log res
+    toastr.error(res.data.message)
 
   $scope.filterLedgers = (ledgers) ->
     _.each ledgers, (lgr) ->
@@ -460,7 +461,12 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
             ledger.transactions.splice(t.index, 1)
     $scope.allSelected = []
 
+  $scope.redirectToState = (state) ->
+    $state.go(state)
 
-
+  $rootScope.$on 'company-changed', (event,changeData) ->
+    # when company is changed, redirect to manage company page
+    if changeData.type == 'CHANGE'
+      $scope.redirectToState('company.content.manage')
 
 giddh.webApp.controller 'newLedgerController', newLedgerController

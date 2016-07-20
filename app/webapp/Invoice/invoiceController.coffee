@@ -1,5 +1,5 @@
 "use strict"
-invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices,  Upload, ledgerService, companyServices, accountService, modalService) ->
+invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices, $state,  Upload, ledgerService, companyServices, accountService, modalService) ->
 
   $rootScope.selectedCompany = {}
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -396,7 +396,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     # open dialog
     if(showPopUp)
       $scope.modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/views/prevInvoiceTemp.html'
+        templateUrl: '/public/webapp/Invoice/prevInvoiceTemp.html'
         size: "a4"
         backdrop: 'static'
         scope: $scope
@@ -898,6 +898,10 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $scope.invoiceLoadDone = false
   )
 
+  $rootScope.$on 'company-changed' , () ->
+    $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+    $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,['sundry_debtors','revenue_from_operations'])
+
   $timeout(->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
     if !_.isEmpty($rootScope.selectedCompany)
@@ -913,6 +917,13 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
   ,10)
 
+  $scope.redirectToState = (state) ->
+    $state.go(state)
+
+  $rootScope.$on 'company-changed', (event,changeData) ->
+    # when company is changed, redirect to manage company page
+    if changeData.type == 'CHANGE'
+      $scope.redirectToState('company.content.manage')
 
 #init angular app
 giddh.webApp.controller 'invoiceController', invoiceController

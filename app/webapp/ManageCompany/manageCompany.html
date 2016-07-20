@@ -1,5 +1,5 @@
 <!-- start middle section -->
-<div class="col-xs-9">
+<div class="col-xs-12">
   <div class="middleBody bdrR bdrL row" auto-height>
     <div ng-if="cmpViewShow">
 
@@ -453,7 +453,7 @@
       <div class="pd2">
         <h3 class="fs16 mrB1">Create New Tax</h3>
         <div class="form-wrapper" style="max-width:460px">
-          <form name="createTax" ng-submit="createTax.$valid && addNewTax(createTaxData); isAddNewTax=true"  novalidate >
+          <form name="createTax"  novalidate >
 
             <div class="row">
               <div class="col-xs-6">
@@ -540,8 +540,7 @@
               </div>
             </div>
             <div class="form-group">
-              <!-- ng-disabled="isAddNewTax|| createTax.$invalid" -->
-              <button  class="btn btn-success btn-block" type="submit" ng-disabled="createTax.$invalid">Add</button>
+              <button class="btn btn-success btn-block" type="submit" ng-disabled="createTax.$invalid" ng-click="createTax.$valid && addNewTax(createTaxData); isAddNewTax=true">Add</button>
             </div>
           </form>
           <!-- end of form -->
@@ -597,7 +596,7 @@
                   </table>
                 </td>
                 <td>
-                  <select ng-options="option.uniqueName as option.name for option in fltAccntList" class="form-control" ng-class="{isNotEditable : !item.isEditable}" ng-model="item.account.uniqueName" ng-disabled="!item.isEditable" ng-if="item.isEditable">
+                  <select ng-options="option.uniqueName as option.name for option in fltAccntListPaginated" class="form-control" ng-class="{isNotEditable : !item.isEditable}" ng-model="item.account.uniqueName" ng-disabled="!item.isEditable" ng-if="item.isEditable">
                   </select>
                   <div class="pdBth06" ng-if="!item.isEditable && item.hasLinkedAcc">{{item.account.name}}</div>
                   <span ng-if="!item.hasLinkedAcc && !item.isEditable">No Account Linked</span>
@@ -931,7 +930,7 @@
 <!-- end of middle section -->
 
 <!-- right side -->
-<div class="col-xs-3" id="right">
+<!-- <div class="col-xs-3" id="right">
   <div class="row" ng-if="mngCompDataFound">
     <div>
       <div class="pd15 bdrB">
@@ -962,4 +961,4 @@
       </ul>
     </perfect-scrollbar>
   </div>
-</div>
+</div> -->
