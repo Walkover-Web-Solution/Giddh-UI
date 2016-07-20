@@ -902,13 +902,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
 
   $scope.clearTaxFields = () ->
-    $scope.createTaxData.taxNumber = ""
-    $scope.createTaxData.name = ""
-    $scope.createTaxData.account = {}
-    $scope.createTaxData.value = ""
-    $scope.createTaxData.value = ""
-    $scope.createTaxData.duration = $scope.taxTypes[0]
-    $scope.createTaxData.taxFileDate = $scope.monthDays[0]
+    $scope.createTaxData = {
+      duration: "MONTHLY"
+      taxFileDate: 1
+    }
 
 
   $scope.addNewTax = (newTax) ->
