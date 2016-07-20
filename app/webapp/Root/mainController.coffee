@@ -256,15 +256,15 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
         cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName})
         if _.isUndefined(cdt)
-          $scope.changeCompany($scope.companyList[0],0)
+          $scope.changeCompany($scope.companyList[0],0,'SELECT')
           $rootScope.setCompany($scope.companyList[0])
           $rootScope.companyIndex = 0
         else
-          $scope.changeCompany(cdt,cdt.index)
+          $scope.changeCompany(cdt,cdt.index,'SELECT')
           $rootScope.setCompany(cdt)
           $rootScope.companyIndex = cdt.index
       else
-        $scope.changeCompany($scope.companyList[0],0)
+        $scope.changeCompany($scope.companyList[0],0,'SELECT')
         $rootScope.setCompany($scope.companyList[0])
         $rootScope.companyIndex = 0
 
@@ -347,7 +347,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     e.stopPropagation()
     $scope.showCompanyList = !$scope.showCompanyList
 
-  $scope.changeCompany = (company, index) ->
+  $scope.changeCompany = (company, index, method) ->
     console.log company
     # select and set active financial year
     $scope.setFYonCompanychange(company)
@@ -371,7 +371,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     changeData = {}
     changeData.data = company
     changeData.index = index
-    changeData.type = 'CHANGED'
+    changeData.type = method
     $rootScope.$emit('company-changed', changeData)
     #$scope.tabs[0].active = true
 

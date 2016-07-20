@@ -247,7 +247,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     $scope.ledgerData = res.body
 
   $scope.getLedgerDataFailure = (res) ->
-    console.log res
+    toastr.error(res.data.message)
 
   $scope.filterLedgers = (ledgers) ->
     _.each ledgers, (lgr) ->
@@ -460,8 +460,15 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
             ledger.transactions.splice(t.index, 1)
     $scope.allSelected = []
 
+  $scope.redirectToState = (state) ->
+    $state.go(state)
 
-  $rootScope.$on 'company-changed', () ->
-    $state.reload()
+  $rootScope.$on 'company-changed', (event,changeData) ->
+    # when company is changed, redirect to manage company page
+    if changeData.type == 'CHANGE'
+      $scope.redirectToState('company.content.manage')
+    
+    
+    
 
 giddh.webApp.controller 'newLedgerController', newLedgerController

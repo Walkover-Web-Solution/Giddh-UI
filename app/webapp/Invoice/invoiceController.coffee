@@ -1,5 +1,5 @@
 "use strict"
-invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices,  Upload, ledgerService, companyServices, accountService, modalService) ->
+invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices, $state,  Upload, ledgerService, companyServices, accountService, modalService) ->
 
   $rootScope.selectedCompany = {}
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -890,6 +890,13 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
   ,10)
 
+  $scope.redirectToState = (state) ->
+    $state.go(state)
+
+  $rootScope.$on 'company-changed', (event,changeData) ->
+    # when company is changed, redirect to manage company page
+    if changeData.type == 'CHANGE'
+      $scope.redirectToState('company.content.manage')
 
 #init angular app
 giddh.webApp.controller 'invoiceController', invoiceController

@@ -131,7 +131,7 @@
             </div>
             <div class="company-list-wrap">
               <ul id="companyList" class="company-list" >
-                <li ng-repeat="company in companyList" ng-click="changeCompany(company, $index)">
+                <li ng-repeat="company in companyList" ng-click="changeCompany(company, $index,'CHANGE')">
                   <span tooltip-placement="top" uib-tooltip="{{company.alias}}">{{company.name}}</span>
                   <i class="glyphicon glyphicon-trash" uib-tooltip="Delete Company" tooltip-placement="right" ng-if="company.shared" ng-click="deleteCompany(company,$index,company.name,$event)"></i>
                 </li>
