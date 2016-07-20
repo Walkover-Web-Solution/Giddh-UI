@@ -453,7 +453,7 @@
       <div class="pd2">
         <h3 class="fs16 mrB1">Create New Tax</h3>
         <div class="form-wrapper" style="max-width:460px">
-          <form name="createTax" ng-submit="createTax.$valid && addNewTax(createTaxData); isAddNewTax=true"  novalidate >
+          <form name="createTax"  novalidate >
 
             <div class="row">
               <div class="col-xs-6">
@@ -540,8 +540,7 @@
               </div>
             </div>
             <div class="form-group">
-              <!-- ng-disabled="isAddNewTax|| createTax.$invalid" -->
-              <button  class="btn btn-success btn-block" type="submit" ng-disabled="createTax.$invalid">Add</button>
+              <button class="btn btn-success btn-block" type="submit" ng-disabled="createTax.$invalid" ng-click="createTax.$valid && addNewTax(createTaxData); isAddNewTax=true">Add</button>
             </div>
           </form>
           <!-- end of form -->
