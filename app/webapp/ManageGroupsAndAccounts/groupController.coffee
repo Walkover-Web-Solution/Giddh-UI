@@ -209,20 +209,26 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     currentPage : 1
   }
 
+  $scope.workInProgress = false
   $scope.getFlatAccountListCount5 = (compUname) ->
+    console.log($scope.workInProgress)
     reqParam = {
       companyUniqueName: compUname
       q: ''
       page: $scope.flatAccListC5.page
       count: $scope.flatAccListC5.count
     }
-    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListCount5ListSuccess, $scope.getFlatAccountListCount5ListFailure)
+    if $scope.workInProgress == false
+      groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListCount5ListSuccess, $scope.getFlatAccountListCount5ListFailure)
+      $scope.workInProgress = true
 
   $scope.getFlatAccountListCount5ListSuccess = (res) ->
 #    console.log res.body.res
+    $scope.workInProgress = false
     $scope.fltAccntListcount5 = res.body.results
 
   $scope.getFlatAccountListCount5ListFailure = (res) ->
+    $scope.workInProgress = false
     toastr.error(res.data.message)
 
   # search flat accounts list
