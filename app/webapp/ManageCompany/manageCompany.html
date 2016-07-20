@@ -49,12 +49,12 @@
 
                     <input type="text" ng-model="selectedCompany.cCode" required
                            uib-typeahead="country as country.value for country in countryCodesList | filter:$viewValue | limitTo:8"
-                           class="form-control" typeahead-template-url="cityTemplate.html" placeholder="91"/>
+                           class="form-control" typeahead-template-url="cityTemplate.html" placeholder="91" tabindex="3"/>
 
                   </div>
                   <div class="col-xs-9"> 
                     <input type="text" placeholder="98XXXXXXXX" class="form-control" name="onlyMobileNo" required
-                           ng-model="selectedCompany.mobileNo" valid-number/>
+                           ng-model="selectedCompany.mobileNo" valid-number tabindex="4"/>
                   </div>
                 </div>
 
@@ -63,7 +63,7 @@
                    ng-class="(cmpnyBascFrm.cAddress.$valid  && cmpnyBascFrm.cAddress.$touched) ? 'has-success' : (cmpnyBascFrm.cAddress.$touched) ? 'has-error' : '' ">
                 <label>Address</label>
                 <textarea ng-model="selectedCompany.address" class="form-control" name="cAddress" required
-                          tabindex="4"/>
+                          tabindex="5"/>
               </div>
             </div>
             <div class="col-xs-6">
@@ -73,7 +73,7 @@
                 <input type="text" ng-model="selectedCompany.country"
                        uib-typeahead="address for address in getCountry($viewValue)" typeahead-loading="loadingLocationsC"
                        typeahead-no-results="noResultsC" class="form-control" name="cCountry" autocomplete="off"
-                       tabindex="5" required>
+                       tabindex="6" required>
                 <i ng-show="loadingLocationsC" class="glyphicon glyphicon-refresh"></i>
 
                 <div ng-show="noResultsC">
@@ -87,7 +87,7 @@
                 <input type="text" ng-model="selectedCompany.state"
                        uib-typeahead="address for address in getState($viewValue)" typeahead-loading="loadingLocationsS"
                        typeahead-no-results="noResultsS" class="form-control" name="cState" autocomplete="off"
-                       tabindex="6" ng-disabled="cmpnyBascFrm.cCountry.$invalid" required>
+                       tabindex="7" ng-disabled="cmpnyBascFrm.cCountry.$invalid" required>
                 <i ng-show="loadingLocationsS" class="glyphicon glyphicon-refresh"></i>
 
                 <div ng-show="noResultsS">
@@ -101,7 +101,7 @@
                 <input type="text" ng-model="selectedCompany.city"
                        uib-typeahead="address for address in getCity($viewValue)" typeahead-loading="loadingLocationsCt"
                        typeahead-no-results="noResultsCt" class="form-control" name="cCity" autocomplete="off"
-                       tabindex="7" ng-disabled="cmpnyBascFrm.cState.$invalid" required>
+                       tabindex="8" ng-disabled="cmpnyBascFrm.cState.$invalid" required>
                 <i ng-show="loadingLocationsCt" class="glyphicon glyphicon-refresh"></i>
 
                 <div ng-show="noResultsCt">
@@ -117,7 +117,7 @@
                     <input type="text" ng-model="selectedCompany.baseCurrency" class="form-control"
                      ng-model="currencySelected"
                      uib-typeahead="currency for currency in currencyList | filter:$viewValue | limitTo:4" required
-                     name="cCurrency" autocomplete="off" tabindex="8">
+                     name="cCurrency" autocomplete="off" tabindex="9">
 
                   </div>
                 </div>
@@ -126,7 +126,7 @@
                        ng-class="(cmpnyBascFrm.cPincode.$valid  && cmpnyBascFrm.cPincode.$touched) ? 'has-success' : (cmpnyBascFrm.cPincode.$touched) ? 'has-error' : '' ">
                     <label>Pincode</label>
                     <input type="text" ng-model="selectedCompany.pincode" class="form-control" required
-                           pattern="^[0-9]*$" name="cPincode" tabindex="9" valid-number>
+                           pattern="^[0-9]*$" name="cPincode" tabindex="10" valid-number>
 
                   </div>
                 </div>
@@ -135,7 +135,7 @@
           </div>
           <!-- end of row -->
           <div class="clearfix">
-            <button ng-hide="!canManageCompany" tabindex="10" ng-click="updateCompanyInfo(selectedCompany)" class="btn btn-primary" ng-disabled="cmpnyBascFrm.$invalid">Update
+            <button ng-hide="!canManageCompany" tabindex="11" ng-click="updateCompanyInfo(selectedCompany)" class="btn btn-primary" ng-disabled="cmpnyBascFrm.$invalid">Update
             </button>
           </div>
         </form>

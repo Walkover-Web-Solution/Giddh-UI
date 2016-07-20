@@ -296,6 +296,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.workInProgress = false
   $rootScope.getFlatAccountList = (compUname) ->
+#    console.log("work in progress", $scope.workInProgress)
     reqParam = {
       companyUniqueName: compUname
       q: ''

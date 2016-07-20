@@ -900,6 +900,17 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.getTaxFailure = (res) ->
     $scope.noTaxes = true
 
+
+  $scope.clearTaxFields = () ->
+    $scope.createTaxData.taxNumber = ""
+    $scope.createTaxData.name = ""
+    $scope.createTaxData.account = {}
+    $scope.createTaxData.value = ""
+    $scope.createTaxData.value = ""
+    $scope.createTaxData.duration = $scope.taxTypes[0]
+    $scope.createTaxData.taxFileDate = $scope.monthDays[0]
+
+
   $scope.addNewTax = (newTax) ->
     newTax = {
       updateEntries: false
@@ -1699,11 +1710,15 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   )
 
   $rootScope.$on('company-changed', (changeData)->
+    $scope.clearTaxFields()
     data = changeData.data
     index = changeData.index
     type = changeData.type
     $scope.goToCompany(data, index, type)
   )
+
+#  $rootScope.$on 'companyLoaded', ()->
+#    $scope.clearTaxFields()
 
 #init angular app
 giddh.webApp.controller 'companyController', companyController

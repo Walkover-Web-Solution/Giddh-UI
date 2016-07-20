@@ -273,7 +273,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   #-------- fetch groups with accounts list-------
   $scope.working = false
   $scope.getFlattenGrpWithAccList = (compUname) ->
-    #console.log("working  : ",$scope.working)
+#    console.log("working  : ",$scope.working)
     $rootScope.companyLoaded = false
     reqParam = {
       companyUniqueName: compUname
@@ -282,8 +282,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       count: $scope.gwaList.count
     }
     if $scope.working == false
-      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
       $scope.working = true
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+
 
   $scope.getFlattenGrpWithAccListSuccess = (res) ->
     $scope.gwaList.totalPages = res.body.totalPages
