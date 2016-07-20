@@ -240,7 +240,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
     }
-    ledgerService.getLedger(unqNamesObj).then($scope.getLedgerDataSuccess, $scope.getLedgerDataFailure)
+    if not _.isEmpty($scope.accountUnq)
+      ledgerService.getLedger(unqNamesObj).then($scope.getLedgerDataSuccess, $scope.getLedgerDataFailure)
 
   $scope.getLedgerDataSuccess = (res) ->
     #$scope.filterLedgers(res.body.ledgers)

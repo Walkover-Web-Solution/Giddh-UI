@@ -875,6 +875,10 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $scope.invoiceLoadDone = false
   )
 
+  $rootScope.$on 'company-changed' , () ->
+    $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+    $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,['sundry_debtors','revenue_from_operations'])
+
   $timeout(->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
     if !_.isEmpty($rootScope.selectedCompany)

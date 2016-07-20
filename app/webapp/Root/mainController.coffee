@@ -347,8 +347,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     e.stopPropagation()
     $scope.showCompanyList = !$scope.showCompanyList
 
-  $scope.changeCompany = (company, index, method) ->
-    console.log company
+  $scope.changeCompany = (company, index) ->
+#    console.log company
     # select and set active financial year
     $scope.setFYonCompanychange(company)
     #check permissions on selected company
@@ -360,8 +360,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
         $rootScope.canViewSpecificItems = true
       localStorageService.set("_selectedCompany", company)
       $rootScope.selectedCompany = company
-      $rootScope.$emit('companyChanged')
       $state.go('company.content.ledgerContent')
+      $rootScope.$emit('companyChanged')
     else
       $rootScope.canManageComp = true
       #$scope.goToCompany(company, index, "CHANGED")

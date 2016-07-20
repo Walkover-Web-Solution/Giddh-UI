@@ -235,5 +235,9 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
 
   window.giddh.webApp.toastr = toastr
 
+  $rootScope.$on 'company-changed' , () ->
+    $scope.getAccountsGroupsList()
+    $scope.getUsers()
+
 #init angular app
 giddh.webApp.controller 'logsController', logsController
