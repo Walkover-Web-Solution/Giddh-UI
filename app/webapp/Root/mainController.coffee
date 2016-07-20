@@ -294,6 +294,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.removeAccountFromPaginatedList = (account) ->
     $rootScope.fltAccntListPaginated = _.without($rootScope.fltAccntListPaginated,account)
 
+  $scope.workInProgress = false
   $rootScope.getFlatAccountList = (compUname) ->
     reqParam = {
       companyUniqueName: compUname
@@ -301,14 +302,18 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       page: $scope.flatAccList.page
       count: $scope.flatAccList.count
     }
-    groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
+    if $scope.workInProgress == false
+      $scope.workInProgress = true
+      groupService.getFlatAccList(reqParam).then($scope.getFlatAccountListListSuccess, $scope.getFlatAccountListFailure)
 
   $scope.getFlatAccountListListSuccess = (res) ->
+    $scope.workInProgress = false
     $rootScope.fltAccntListPaginated = res.body.results
 #    $rootScope.fltAccountLIstFixed = $rootScope.fltAccntListPaginated
     $rootScope.flatAccList.limit = 5
     
   $scope.getFlatAccountListFailure = (res) ->
+    $scope.workInProgress = false
     toastr.error(res.data.message)
 
 
