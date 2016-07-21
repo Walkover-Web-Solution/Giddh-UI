@@ -281,5 +281,5 @@ module.exports = function (grunt) {
     //'karma:unit'
   ]);
 
-  //grunt.registerTask('addCommitInfo', ['execute']);
+  grunt.registerTask('addCommitInfo', ['execute']);
 };
