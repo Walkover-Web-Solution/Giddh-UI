@@ -207,8 +207,8 @@ header .navbar-nav > li.active {
     margin: 0;
     padding: 0;
     list-style: none;
-    border: 1px solid #ccc;
-    border: 1px solid rgba(0,0,0,.15);
+    border: 0;
+    background:rgba(0,0,0,0.9);
     border-radius: 4px;
     -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
     box-shadow: 0 6px 12px rgba(0,0,0,.175);
@@ -2747,6 +2747,10 @@ ul.pills li {
     background:rgba(63,63,63,.9);
 }
 
+#companyList li.selected-company{
+    background:rgba(63,63,63,.9);
+}
+
 #companyList li i.glyphicon-trash{
     position: absolute;
     right:10px;
@@ -2760,7 +2764,7 @@ ul.pills li {
     width: 100%;
     position: absolute;
     top: 54px;
-    background: rgba(25, 25, 25, .85);
+    background: rgba(0,0,0,0.9);
     z-index: 9999;
     -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
     box-shadow: 0 6px 12px rgba(0,0,0,.175);

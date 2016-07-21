@@ -27,7 +27,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.CompanyList = []
   $rootScope.companyIndex = 0
   $rootScope.selectedAccount = {}
-  $scope.showCompanyList = false
 
   # check IE browser version
   $rootScope.GetIEVersion = () ->
@@ -350,10 +349,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.getCompanyList()
 
-  $scope.selectCompany = (e) ->
-    e.stopPropagation()
-    $scope.showCompanyList = !$scope.showCompanyList
-
   $scope.changeCompany = (company, index, method) ->
     # select and set active financial year
     $scope.setFYonCompanychange(company)
@@ -392,10 +387,5 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
-
-  $(document).on('click', ()->
-    $scope.showCompanyList = false
-  )
-
 
 giddh.webApp.controller 'mainController', mainController

@@ -119,21 +119,22 @@
           </ul>
         </li>
 
-        <li ng-if="cmpViewShow" class="company-name">
-          <a id="cmpWrp" class="clearfix" ng-click="selectCompany($event)" style="cursor:pointer">
+        <li ng-if="cmpViewShow" class="company-name" uib-dropdown>
+          <a id="cmpWrp" class="clearfix" ng-click="selectCompany($event)" style="cursor:pointer" uib-dropdown-toggle>
             <i class="gic-24 icon-building-w"></i>
             <div class="cText">
               <span class="cName">{{selectedCompany.name}}</span>
               <span ng-bind="currentFinancialYear"></span>
             </div>
           </a>
+          <!--<div class="company-list-container" ng-show="showCompanyList">-->
           <div class="company-list-container" ng-show="showCompanyList">
             <div class="create-company">
               <button id="createCompanyBtn" class="btn btn-primary btn-sm" ng-click="createNewCompany()">Create Company</button>
             </div>
             <div class="company-list-wrap">
-              <ul id="companyList" class="company-list" >
-                <li ng-repeat="company in companyList" ng-click="changeCompany(company, $index,'CHANGE')" id="cmp">
+              <ul id="companyList" class="company-list" class="dropdown-menu" aria-labelledby="cmpWrp">
+                <li ng-repeat="company in companyList" ng-click="changeCompany(company, $index,'CHANGE')" id="cmp" ng-class="{'selected-company':selectedCompany.uniqueName == company.uniqueName}">
                   <span tooltip-placement="top" uib-tooltip="{{company.alias}}">{{company.name}}</span>
                   <i id="deleteCmp" class="glyphicon glyphicon-trash" uib-tooltip="Delete Company" tooltip-placement="right" ng-if="company.shared" ng-click="deleteCompany(company,$index,company.name,$event)"></i>
                 </li>
