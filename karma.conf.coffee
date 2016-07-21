@@ -8,6 +8,7 @@ module.exports = (config) ->
       "public/webapp/_extras.js",
       "app/website/**/*.coffee",
       "app/webapp/**/*.coffee",
+      "app/webapp/**/**/*.coffee",
       "test/**/*.coffee"
     ]
     plugins: [
