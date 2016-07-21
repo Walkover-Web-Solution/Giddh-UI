@@ -925,5 +925,4 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     if changeData.type == 'CHANGE'
       $scope.redirectToState('company.content.manage')
 
-#init angular app
 giddh.webApp.controller 'invoiceController', invoiceController
