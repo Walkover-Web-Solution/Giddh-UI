@@ -114,6 +114,8 @@ textarea{
 #topMenusBar.dropdown-menu{
     padding: 0;
     border:0;
+    background: transparent;
+    box-shadow: none;
 }
 
 ul.dropdown-menu {
@@ -205,6 +207,11 @@ header .navbar-nav > li.active {
     margin: 0;
     padding: 0;
     list-style: none;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: 4px;
+    -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
 }
 
 .dshUl > li {
@@ -2718,7 +2725,6 @@ ul.pills li {
 
 #companyList{
     width:100%;
-    background: #000;
     color:#fff;
     z-index: 3;
     list-style-type: none;
@@ -2729,6 +2735,11 @@ ul.pills li {
     padding:10px;
     cursor:pointer;
     position: relative;
+    border-bottom: 1px solid rgba(256,256,256,.2);
+}
+
+#companyList li:last-child{
+    border:none;
 }
 
 
@@ -2749,7 +2760,7 @@ ul.pills li {
     width: 100%;
     position: absolute;
     top: 54px;
-    background: #000;
+    background: rgba(25, 25, 25, .85);
     z-index: 9999;
     -webkit-box-shadow: 0 6px 12px rgba(0,0,0,.175);
     box-shadow: 0 6px 12px rgba(0,0,0,.175);
@@ -2782,3 +2793,4 @@ ul.pills li {
     /*height:initial;*/
     /*max-height:200px;*/
 }
+
