@@ -28,14 +28,14 @@ module.exports = function (grunt) {
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
-    // coffeelint: {
-    //   app: ['karma.conf.coffee', "" + srcDir + "/**/*.coffee", "" + testDir + "/**/*.coffee", routeSrcDir + "/**/*.coffee"],
-    //   options: {
-    //     max_line_length: {
-    //       level: 'ignore'
-    //     }
-    //   }
-    // },
+    coffeelint: {
+      app: ['karma.conf.coffee', "" + srcDir + "/**/*.coffee", "" + testDir + "/**/*.coffee", routeSrcDir + "/**/*.coffee"],
+      options: {
+        max_line_length: {
+          level: 'ignore'
+        }
+      }
+    },
     coffee: {
       dist: {
         files: [
@@ -269,8 +269,8 @@ module.exports = function (grunt) {
   grunt.event.on('watch', function (action, filepath, target) {
     grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
   });
-  // add 'coffeelint' to default 
-  grunt.registerTask('default', [ 'copy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
+
+  grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
 
   grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean','bower_concat', 'cssmin', 'concat', 'preprocess:dev'])
 
