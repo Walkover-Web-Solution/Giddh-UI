@@ -103,7 +103,10 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       generateMagicLink:
         method: 'POST'
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/magic-link?fromDate=:fromDate&toDate=:toDate'
-      
+
+      getTaxHierarchy:
+        method: 'GET'
+        url: '/company/:companyUniqueName/accounts/:accountUniqueName/tax-hierarchy'
       
     })
 
@@ -255,5 +258,11 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Account.updateInvoice({
         companyUniqueName: obj.compUname
       }, data, onSuccess, onFailure))
+
+    getTaxHierarchy: (companyUniqueName, accountUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Account.getTaxHierarchy({
+        companyUniqueName: companyUniqueName
+        accountUniqueName: accountUniqueName
+      }, onSuccess, onFailure))
 
   accountService

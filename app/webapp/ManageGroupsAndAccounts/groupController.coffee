@@ -1085,8 +1085,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       return true
     return false
 
-  $scope.getTaxHierarchy = () ->
-    groupService.getTaxHierarchy($rootScope.selectedCompany.uniqueName,$scope.selectedGroup.uniqueName).then($scope.getTaxHierarchyOnSuccess,$scope.getTaxHierarchyOnFailure)
+  $scope.getTaxHierarchy = (type) ->
+    if type == 'group'
+      groupService.getTaxHierarchy($rootScope.selectedCompany.uniqueName,$scope.selectedGroup.uniqueName).then($scope.getTaxHierarchyOnSuccess,$scope.getTaxHierarchyOnFailure)
+    else if type == 'account'
+      accountService.getTaxHierarchy($rootScope.selectedCompany.uniqueName, $scope.selectedAccount.uniqueName).then($scope.getTaxHierarchyOnSuccess,$scope.getTaxHierarchyOnFailure)
 
   $scope.getTaxHierarchyOnSuccess = (res) ->
     console.log("on success : ",res)
