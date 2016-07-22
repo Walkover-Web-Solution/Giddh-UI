@@ -174,14 +174,14 @@
                   <ui-select-match placeholder="Select Taxes">
                     <span>{{$item.name}}</span>
                   </ui-select-match >
-                  <ui-select-choices repeat="tax in taxList| filter: $select.search ">
+                  <ui-select-choices repeat="tax in taxList| filter: $select.search | omit: alreadyAppliedTaxes">
                     <span ng-bind="tax.name"></span>
                   </ui-select-choices>
               </ui-select>
             </div>
           </div>
         </div>
-        <button class="btn btn-success mrT1" ng-click="applyTax()" ng-if="showEditTaxSection"> Save</button>
+        <button class="btn btn-success mrT1" ng-click="applyTax('account')" ng-if="showEditTaxSection"> Save</button>
   </div>
 </div>
 <!--end of tax section-->

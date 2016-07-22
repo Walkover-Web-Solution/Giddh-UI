@@ -62,6 +62,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   }
 
   $scope.taxHierarchy = {}
+  $scope.taxHierarchy.applicableTaxes = []
+  $scope.taxHierarchy.inheritedTaxes = []
 #  $scope.fltAccntListPaginated = []
 #  $scope.flatAccList = {
 #    page: 1
@@ -1114,32 +1116,33 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showEditTaxSection = true
 
   $scope.getTaxHierarchyOnFailure = (res) ->
-#    console.log("on failure : ",res)
-    $scope.taxHierarchy =  { "applicableTaxes": [{"name":"input service tax" , "uniqueName":"14642524959328m6r7ziemb"},{"name":"tds 194j" , "uniqueName":"1464252568446qtx08q8adj"} ] , "inheritedTaxes": [ {"name": "groupName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupsdfdsfName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupName1212" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]}]  }
-    $scope.showEditTaxSection = true
-    $scope.selectedTax.taxes = $scope.taxHierarchy.applicableTaxes
-    console.log($scope.taxHierarchy)
-    toastr.error("Unable to load tax.")
+    toastr.error(res.data.message)
 
   $scope.assignTax = (dataToSend) ->
     companyServices.assignTax($rootScope.selectedCompany.uniqueName,dataToSend).then($scope.assignTaxOnSuccess,$scope.assignTaxOnFailure)
 
   $scope.assignTaxOnSuccess = (res) ->
-    console.log("on success : ",res)
     $scope.showEditTaxSection = false
 
   $scope.assignTaxOnFailure = (res) ->
-#    console.log("on failure : ",res)
-    $scope.taxHierarchy =  { "applicableTaxes": [{"name":"tax1" , "uniqueName":"t1"},{"name":"tax2" , "uniqueName":"t2"} ] , "inheritedTaxes": [ {"name": "groupName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupsdfdsfName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupName1212" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]}]  }
-    $scope.showEditTaxSection = true
-    console.log($scope.taxHierarchy)
-    toastr.error("Unable to load tax.")
+    $scope.showEditTaxSection = false
+    toastr.error(res.data.message)
 
-  $scope.applyTax = () ->
-#    console.log $scope.selectedTax.taxes
-    sendThisList = _.pluck($scope.selectedTax.taxes,'uniqueName')
+  $scope.applyTax = (type) ->
+    sendThisList = _.pluck($scope.taxHierarchy.applicableTaxes,'uniqueName')
+    data = {}
+    if type == 'group'
+      data = {"uniqueName":$scope.selectedGroup.uniqueName, "taxes":sendThisList,"isAccount":false}
+    else if type == 'account'
+      data = {"uniqueName":$scope.selectedAccount.uniqueName, "taxes":sendThisList,"isAccount":true}
     console.log(sendThisList)
-    $scope.assignTax(sendThisList)
+    $scope.assignTax(data)
+
+  $scope.alreadyAppliedTaxes = (tax) ->
+    checkInThis = _.pluck(_.flatten($scope.taxHierarchy),'uniqueName')
+    condition = _.contains(checkInThis, tax.uniqueName)
+    condition
+
 
 
   $scope.$watch('toMerge.mergedAcc', (newVal,oldVal) ->
