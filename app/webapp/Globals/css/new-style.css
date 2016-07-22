@@ -2805,6 +2805,19 @@ ul.pills li {
     background: #444;
     padding: 2px 5px;
     margin-right: 5px;
+    margin-top:10px;
     color: #fff;
     border-radius: 5px;
+}
+
+.tax-list-wrap{
+    overflow:hidden;
+    position: relative;
+    padding-bottom:20px;
+}
+
+.edit-tax-btn{
+    position: absolute;
+    right:10px;
+    bottom:0px;
 }

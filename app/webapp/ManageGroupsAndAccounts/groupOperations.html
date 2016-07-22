@@ -67,15 +67,31 @@
         Taxes
       </div>
       <div class="pd2 clearfix">
-        <aside>
-          <div class="mrB1"><label>All Applicable Taxes</label></div>
+        <div class="tax-list-wrap">
+          <div class=""><label>All Applicable Taxes</label></div>
           <!-- <span class="tax-bullet" ng-repeat="tax in selectedGroup.applicableTaxes" ng-if="selectedGroup.applicableTaxes.length > 0">{{tax.name}}</span>
           <p ng-if="selectedGroup.applicableTaxes.length < 1">No taxes Applied</p> -->
           <span class="tax-bullet">Tax name 1</span>
           <span class="tax-bullet">Tax name 2</span>
-          <span class="tax-bullet">Tax name 3</span>
+          <span class="tax-bullet">Taxasdasdxcxc name 3</span>
           <span class="tax-bullet">Tax name 4</span>
-        </aside>
+          <span class="tax-bullet">Tax nameasdasd 2</span>
+          <span class="tax-bullet">Tax name 3</span>
+          <span class="tax-bullet">Taxasdasdasd name 4</span>
+          <span class="tax-bullet">Tax name 2</span>
+          <span class="tax-bullet">Tax name asdasd3</span>
+          <span class="tax-bullet">Tax name 4ssdfsd</span>
+          <button id="editTax" class="btn btn-sm btn-default edit-tax-btn" ng-click="editTaxes()"><i class="glyphicon glyphicon-edit"></i></button>
+        </div>
+        <div class="edit-tax-section" ng-if="showEditTaxSection">
+          <div class="tax-list-wrap">
+            <div class=""><label>All Inherited Taxes</label></div>
+              <span class="tax-bullet">Tax name 1</span>
+              <span class="tax-bullet">Tax name 2</span>
+              <span class="tax-bullet">Taxasdasdxcxc name 3</span>
+              <span class="tax-bullet">Tax name 4</span>
+          </div>
+        </div>
       </div>
   </div>
 </div>

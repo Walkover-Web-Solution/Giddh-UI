@@ -23,7 +23,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.groupAccntList = []
   $scope.search = {}
   $scope.search.acnt = ''
-  $scope.shareGroupObj ={role: "view_only"}
+  $scope.showEditTaxSection = false
+  $scope.shareGroupObj = {role: "view_only"}
   $scope.shareAccountObj ={role: "view_only"}
   $scope.openingBalType = [
     {"name": "Credit", "val": "CREDIT"}
