@@ -1,6 +1,6 @@
 'use strict'
 
-groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService, DAServices, $location, $uibModal) ->
+groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService, DAServices, $location, $uibModal, companyServices) ->
   $scope.groupList = {}
   $scope.flattenGroupList = []
   $scope.moveto = undefined
@@ -131,6 +131,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showAccountDetails = false
     $scope.showAccountListDetails = false
     $scope.cantUpdate = false
+    $scope.selectedTax.taxes = {}
+    $scope.showEditTaxSection = false
     groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess, $scope.getGroupListFailure)
   
   $scope.setLedgerData = (data, acData) ->
@@ -1107,11 +1109,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.getTaxHierarchyOnSuccess = (res) ->
     console.log("on success : ",res)
+    $scope.taxHierarchy = res.body
+    $scope.selectedTax.taxes = $scope.taxHierarchy.applicableTaxes
+    $scope.showEditTaxSection = true
 
   $scope.getTaxHierarchyOnFailure = (res) ->
 #    console.log("on failure : ",res)
-    $scope.taxHierarchy =  { "applicableTaxes": [{"name":"tax1" , "uniqueName":"t1"},{"name":"tax2" , "uniqueName":"t2"} ] , "inheritedTaxes": [ {"name": "groupName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupsdfdsfName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupName1212" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]}]  }
+    $scope.taxHierarchy =  { "applicableTaxes": [{"name":"input service tax" , "uniqueName":"14642524959328m6r7ziemb"},{"name":"tds 194j" , "uniqueName":"1464252568446qtx08q8adj"} ] , "inheritedTaxes": [ {"name": "groupName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupsdfdsfName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupName1212" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]}]  }
     $scope.showEditTaxSection = true
+    $scope.selectedTax.taxes = $scope.taxHierarchy.applicableTaxes
     console.log($scope.taxHierarchy)
     toastr.error("Unable to load tax.")
 
@@ -1120,6 +1126,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.assignTaxOnSuccess = (res) ->
     console.log("on success : ",res)
+    $scope.showEditTaxSection = false
 
   $scope.assignTaxOnFailure = (res) ->
 #    console.log("on failure : ",res)
@@ -1129,7 +1136,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error("Unable to load tax.")
 
   $scope.applyTax = () ->
-    console.log $scope.selectedTax.taxes
+#    console.log $scope.selectedTax.taxes
+    sendThisList = _.pluck($scope.selectedTax.taxes,'uniqueName')
+    console.log(sendThisList)
+    $scope.assignTax(sendThisList)
 
 
   $scope.$watch('toMerge.mergedAcc', (newVal,oldVal) ->
