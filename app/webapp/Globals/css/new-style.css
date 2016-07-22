@@ -2821,3 +2821,8 @@ ul.pills li {
     right:10px;
     bottom:0px;
 }
+
+.tax-label{
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 5px;
+}

@@ -71,6 +71,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 #    limit: 5
 #  }
   
+  $scope.selectedTax = {}
+  $scope.selectedTax.taxes = ''
 
   $scope.valuationDatePickerOpen = ()->
     this.valuationDatePickerIsOpen = true
@@ -1097,7 +1099,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.getTaxHierarchyOnFailure = (res) ->
 #    console.log("on failure : ",res)
-    $scope.taxHierarchy =  { "applicableTaxes": [{"name":"tax1" , "uniqueName":"t1"},{"name":"tax2" , "uniqueName":"t2"} ] , "inheritedTaxes": [ {"name": "groupName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]}]  }
+    $scope.taxHierarchy =  { "applicableTaxes": [{"name":"tax1" , "uniqueName":"t1"},{"name":"tax2" , "uniqueName":"t2"} ] , "inheritedTaxes": [ {"name": "groupName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupsdfdsfName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupName1212" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]}]  }
+    $scope.showEditTaxSection = true
     console.log($scope.taxHierarchy)
     toastr.error("Unable to load tax.")
 

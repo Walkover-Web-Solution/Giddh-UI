@@ -68,7 +68,7 @@
       </div>
       <div class="pd2 clearfix">
         <div class="tax-list-wrap">
-          <div class=""><label>All Applicable Taxes</label></div>
+          <div class="tax-label"><label>All Applied Taxes</label></div>
           <!-- <span class="tax-bullet" ng-repeat="tax in selectedGroup.applicableTaxes" ng-if="selectedGroup.applicableTaxes.length > 0">{{tax.name}}</span>
           <p ng-if="selectedGroup.applicableTaxes.length < 1">No taxes Applied</p> -->
           <span class="tax-bullet">Tax name 1</span>
@@ -81,16 +81,25 @@
           <span class="tax-bullet">Tax name 2</span>
           <span class="tax-bullet">Tax name asdasd3</span>
           <span class="tax-bullet">Tax name 4ssdfsd</span>
-          <button id="editTax" class="btn btn-sm btn-default edit-tax-btn" ng-click="editTaxes()"><i class="glyphicon glyphicon-edit"></i></button>
+          <button id="editTax" class="btn btn-sm btn-default edit-tax-btn" ng-click="getTaxHierarchy()"><i class="glyphicon glyphicon-edit"></i></button>
         </div>
         <div class="edit-tax-section" ng-if="showEditTaxSection">
           <div class="tax-list-wrap">
-            <div class=""><label>All Inherited Taxes</label></div>
-              <span class="tax-bullet">Tax name 1</span>
-              <span class="tax-bullet">Tax name 2</span>
-              <span class="tax-bullet">Taxasdasdxcxc name 3</span>
-              <span class="tax-bullet">Tax name 4</span>
+            <div class="tax-label"><label>All Inherited Taxes</label></div>
+              <span class="tax-bullet" ng-repeat="inTax in taxHierarchy.inheritedTaxes"></span>
           </div>
+          <div class="tax-list-wrap">
+            <div class="tax-label"><label>All Applicable Taxes</label></div>
+            <div class="clearfix max350">
+              <ui-select multiple ng-model="selectedTax.taxes" theme="bootstrap">
+                  <ui-select-match placeholder="Select Taxes">
+                    <span>{{$item.name}}</span>
+                  </ui-select-match >
+                  <ui-select-choices repeat="tax in taxList| filter: $select.search ">
+                    <span ng-bind="tax.name"></span>
+                  </ui-select-choices>
+              </ui-select>
+            </div>
         </div>
       </div>
   </div>
