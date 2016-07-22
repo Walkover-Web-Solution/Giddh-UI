@@ -141,33 +141,24 @@
 </fieldset>
 <!-- end row first -->
 <div class="clearfix bdrB">
-  <div class="">
+  <div class="bdrB ">
       <div class="dGryHead">
         Taxes
       </div>
       <div class="pd2 clearfix">
         <div class="tax-list-wrap">
           <div class="tax-label"><label>All Applied Taxes</label></div>
-          <!-- <span class="tax-bullet" ng-repeat="tax in selectedAccount.applicableTaxes" ng-if="selectedAccount.applicableTaxes.length > 0">{{tax.name}}</span>
-          <p ng-if="selectedAccount.applicableTaxes.length < 1">No taxes Applied</p> -->
-          <span class="tax-bullet">Tax name 1</span>
-          <span class="tax-bullet">Tax name 2</span>
-          <span class="tax-bullet">Taxasdasdxcxc name 3</span>
-          <span class="tax-bullet">Tax name 4</span>
-          <span class="tax-bullet">Tax nameasdasd 2</span>
-          <span class="tax-bullet">Tax name 3</span>
-          <span class="tax-bullet">Taxasdasdasd name 4</span>
-          <span class="tax-bullet">Tax name 2</span>
-          <span class="tax-bullet">Tax name asdasd3</span>
-          <span class="tax-bullet">Tax name 4ssdfsd</span>
+          <span class="tax-bullet" ng-repeat="tax in selectedAccount.applicableTaxes" ng-if="selectedAccount.applicableTaxes.length > 0">{{tax.name}}</span>
+          <p ng-if="selectedAccount.applicableTaxes.length < 1">No taxes Applied</p>
           <button id="editTax" class="btn btn-sm btn-default edit-tax-btn" ng-click="getTaxHierarchy('account')"><i class="glyphicon glyphicon-edit"></i></button>
         </div>
         <div class="edit-tax-section" ng-if="showEditTaxSection">
           <div class="tax-list-wrap">
             <div class="tax-label"><label>All Inherited Taxes</label></div>
-              <span class="tax-bullet" ng-repeat="inTax in taxHierarchy.inheritedTaxes">{{inTax.name}}</span>
+              <span class="tax-bullet" ng-repeat="inTax in allInheritedTaxes" popover-trigger="mouseenter" popover-placement="right" uib-popover-template="'taxHierarchy.html'" ng-if="allInheritedTaxes.length > 0">{{inTax.name}}</span>
+              <p ng-if="allInheritedTaxes.length < 1">No Inherited Taxes</p>
           </div>
-          <div class="">
+          <div class="tax-list-wrap">
             <div class="tax-label"><label>All Applicable Taxes</label></div>
             <div class="clearfix max350 mrT1">
               <ui-select multiple ng-model="selectedTax.taxes" theme="bootstrap">
@@ -179,9 +170,9 @@
                   </ui-select-choices>
               </ui-select>
             </div>
+            <button class="btn btn-success mrT1" ng-click="applyTax()" ng-if="showEditTaxSection"> Save</button>
           </div>
         </div>
-        <button class="btn btn-success mrT1" ng-click="applyTax()" ng-if="showEditTaxSection"> Save</button>
   </div>
 </div>
 <!--end of tax section-->
@@ -316,3 +307,12 @@
     </fieldset>
   </div>
 </section>
+
+<script type="text/ng-template" id="taxHierarchy.html">
+  <div class="popover-content">
+    <label>Tax being inherited from:</label>
+    <ul>
+      <li ng-repeat="grp in inTax.groups">{{grp.name}}</li>
+    </ul>
+  </div> 
+</script>

@@ -1108,18 +1108,37 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       accountService.getTaxHierarchy($rootScope.selectedCompany.uniqueName, $scope.selectedAccount.uniqueName).then($scope.getTaxHierarchyOnSuccess,$scope.getTaxHierarchyOnFailure)
 
   $scope.getTaxHierarchyOnSuccess = (res) ->
-    console.log("on success : ",res)
     $scope.taxHierarchy = res.body
     $scope.selectedTax.taxes = $scope.taxHierarchy.applicableTaxes
     $scope.showEditTaxSection = true
+    $scope.allInheritedTaxes = []
+    $scope.createInheritedTaxList($scope.taxHierarchy.inheritedTaxes)
 
   $scope.getTaxHierarchyOnFailure = (res) ->
-#    console.log("on failure : ",res)
-    $scope.taxHierarchy =  { "applicableTaxes": [{"name":"input service tax" , "uniqueName":"14642524959328m6r7ziemb"},{"name":"tds 194j" , "uniqueName":"1464252568446qtx08q8adj"} ] , "inheritedTaxes": [ {"name": "groupName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupsdfdsfName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupName1212" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]}]  }
-    $scope.showEditTaxSection = true
-    $scope.selectedTax.taxes = $scope.taxHierarchy.applicableTaxes
-    console.log($scope.taxHierarchy)
-    toastr.error("Unable to load tax.")
+    toastr.error(res.data.message)
+
+  $scope.createInheritedTaxList = (inTaxList) ->
+    #get all taxes by uniqueName
+    inTaxUnq = []
+    _.each inTaxList, (tax) ->
+      _.each tax.applicableTaxes, (inTax) ->
+        inTaxUnq.push(inTax.uniqueName)
+    inTaxUnq = _.uniq(inTaxUnq)
+
+    # match groups with tax uniqueNames
+    _.each inTaxUnq, (unq) ->
+      tax = {}
+      tax.uniqueName = unq
+      tax.groups = []
+      _.each inTaxList, (inTax) ->
+        _.each inTax.applicableTaxes, (inAppTax) ->
+          if tax.uniqueName == inAppTax.uniqueName
+            grp = {}
+            grp.name = inTax.name
+            grp.uniqueName = inTax.uniqueName
+            tax.name = inAppTax.name
+            tax.groups.push(grp)
+      $scope.allInheritedTaxes.push(tax) 
 
   $scope.assignTax = (dataToSend) ->
     companyServices.assignTax($rootScope.selectedCompany.uniqueName,dataToSend).then($scope.assignTaxOnSuccess,$scope.assignTaxOnFailure)
