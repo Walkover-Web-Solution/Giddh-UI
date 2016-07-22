@@ -81,16 +81,16 @@
           <span class="tax-bullet">Tax name 2</span>
           <span class="tax-bullet">Tax name asdasd3</span>
           <span class="tax-bullet">Tax name 4ssdfsd</span>
-          <button id="editTax" class="btn btn-sm btn-default edit-tax-btn" ng-click="getTaxHierarchy()"><i class="glyphicon glyphicon-edit"></i></button>
+          <button id="editTax" class="btn btn-sm btn-default edit-tax-btn" ng-click="getTaxHierarchy('group')"><i class="glyphicon glyphicon-edit"></i></button>
         </div>
         <div class="edit-tax-section" ng-if="showEditTaxSection">
           <div class="tax-list-wrap">
             <div class="tax-label"><label>All Inherited Taxes</label></div>
-              <span class="tax-bullet" ng-repeat="inTax in taxHierarchy.inheritedTaxes"></span>
+              <span class="tax-bullet" ng-repeat="inTax in taxHierarchy.inheritedTaxes">{{inTax.name}}</span>
           </div>
-          <div class="tax-list-wrap">
+          <div class="">
             <div class="tax-label"><label>All Applicable Taxes</label></div>
-            <div class="clearfix max350">
+            <div class="clearfix max350 mrT1">
               <ui-select multiple ng-model="selectedTax.taxes" theme="bootstrap">
                   <ui-select-match placeholder="Select Taxes">
                     <span>{{$item.name}}</span>
@@ -100,8 +100,9 @@
                   </ui-select-choices>
               </ui-select>
             </div>
+          </div>
         </div>
-      </div>
+        <button class="btn btn-success mrT1" ng-click="applyTax()"> Save</button>
   </div>
 </div>
 

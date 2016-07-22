@@ -1,6 +1,6 @@
 'use strict'
 
-groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService, DAServices, $location, $uibModal) ->
+groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService,companyServices, DAServices, $location, $uibModal) ->
   $scope.groupList = {}
   $scope.flattenGroupList = []
   $scope.moveto = undefined
@@ -60,7 +60,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     currentPage : 1
     limit: 5
   }
-
+  $scope.taxList = []
   $scope.taxHierarchy = {}
 #  $scope.fltAccntListPaginated = []
 #  $scope.flatAccList = {
@@ -1088,7 +1088,17 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       return true
     return false
 
+  $scope.getTaxList = () ->
+    companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxSuccess, $scope.getTaxFailure)
+
+  $scope.getTaxSuccess = (res) ->  
+    $scope.taxList = res.body
+
+  $scope.getTaxFailure = (res) ->
+    console.log res
+
   $scope.getTaxHierarchy = (type) ->
+    $scope.getTaxList()
     if type == 'group'
       groupService.getTaxHierarchy($rootScope.selectedCompany.uniqueName,$scope.selectedGroup.uniqueName).then($scope.getTaxHierarchyOnSuccess,$scope.getTaxHierarchyOnFailure)
     else if type == 'account'
@@ -1103,6 +1113,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showEditTaxSection = true
     console.log($scope.taxHierarchy)
     toastr.error("Unable to load tax.")
+
+  $scope.applyTax = () ->
+    console.log $scope.selectedTax.taxes
+
 
   $scope.$watch('toMerge.mergedAcc', (newVal,oldVal) ->
     if newVal != oldVal && newVal < 1
