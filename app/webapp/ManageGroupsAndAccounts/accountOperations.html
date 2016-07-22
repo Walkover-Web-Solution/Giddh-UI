@@ -140,8 +140,8 @@
   </div>
 </fieldset>
 <!-- end row first -->
-<div class="clearfix bdrB">
-  <div class="bdrB ">
+<div class="clearfix">
+  <div class="bdrB">
       <div class="dGryHead">
         Taxes
       </div>
@@ -161,16 +161,16 @@
           <div class="tax-list-wrap">
             <div class="tax-label"><label>All Applicable Taxes</label></div>
             <div class="clearfix max350 mrT1">
-              <ui-select multiple ng-model="selectedTax.taxes" theme="bootstrap">
+              <ui-select multiple ng-model="taxHierarchy.applicableTaxes" theme="bootstrap">
                   <ui-select-match placeholder="Select Taxes">
                     <span>{{$item.name}}</span>
                   </ui-select-match >
-                  <ui-select-choices repeat="tax in taxList| filter: $select.search ">
+                  <ui-select-choices repeat="tax in taxList| filter: $select.search | omit: alreadyAppliedTaxes">
                     <span ng-bind="tax.name"></span>
                   </ui-select-choices>
               </ui-select>
             </div>
-            <button class="btn btn-success mrT1" ng-click="applyTax()" ng-if="showEditTaxSection"> Save</button>
+            <button class="btn btn-success mrT1" ng-click="applyTax('account')" ng-if="showEditTaxSection"> Save</button>
           </div>
         </div>
   </div>

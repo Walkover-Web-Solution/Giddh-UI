@@ -62,6 +62,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   }
 
   $scope.taxHierarchy = {}
+  $scope.taxHierarchy.applicableTaxes = []
+  $scope.taxHierarchy.inheritedTaxes = []
 #  $scope.fltAccntListPaginated = []
 #  $scope.flatAccList = {
 #    page: 1
@@ -70,7 +72,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 #    currentPage : 1
 #    limit: 5
 #  }
-  
+
   $scope.selectedTax = {}
   $scope.selectedTax.taxes = ''
 
@@ -122,7 +124,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.goToManageGroupsOpen = (res) ->
     console.log "manage opened", res
-  
+
   $scope.goToManageGroupsClose = () ->
     $scope.selectedGroup = {}
     $scope.selectedAccntMenu = undefined
@@ -134,7 +136,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.selectedTax.taxes = {}
     $scope.showEditTaxSection = false
     groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.getGroupListSuccess, $scope.getGroupListFailure)
-  
+
   $scope.setLedgerData = (data, acData) ->
     $scope.selectedAccountUniqueName = acData.uniqueName
     $rootScope.selectedAccount = acData
@@ -170,7 +172,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
       $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
-      
+
       # without accounts only groups conditionally
       cData = localStorageService.get("_selectedCompany")
       if cData.sharedEntity is 'accounts'
@@ -351,7 +353,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         newList.push(grp)
     $scope.grpWithoutEmptyAccounts = newList
 
-  #-------------------Functions for API side search and fetching flat account list end here-----------------------------------------------# 
+  #-------------------Functions for API side search and fetching flat account list end here-----------------------------------------------#
 
   $scope.addFilterKey = (data, n) ->
     n = n || 1
@@ -375,7 +377,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.getGroupListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
-  
+
   $scope.getGroupSharedList = () ->
     if $scope.canShare
       unqNamesObj = {
@@ -533,6 +535,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     e.stopPropagation()
 
   $scope.selectItem = (item) ->
+    $scope.showEditTaxSection = false
     groupService.get($rootScope.selectedCompany.uniqueName, item.uniqueName).then($scope.getGrpDtlSuccess,
           $scope.getGrpDtlFailure)
 
@@ -616,6 +619,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: data.uniqueName
     }
+    $scope.showEditTaxSection = false
     accountService.get(reqParams).then($scope.getAcDtlSuccess, $scope.getAcDtlFailure)
 
   $scope.getAcDtlSuccess = (res) ->
@@ -641,7 +645,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.isFixedAcc = res.body.isFixed
     $scope.showBreadCrumbs(data.parentGroups.reverse())
     console.log $scope.selectedAccount
-    
+
 
   $scope.getAcDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -728,14 +732,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
     if $scope.selectedAccount.uniqueName isnt $scope.selAcntPrevObj.uniqueName
       unqNamesObj.acntUname = $scope.selAcntPrevObj.uniqueName
-      
+
     if _.isEmpty($scope.selectedGroup)
       lastVal = _.last($scope.selectedAccount.parentGroups)
       unqNamesObj.selGrpUname = lastVal.uniqueName
 
     accountService.updateAc(unqNamesObj, $scope.selectedAccount).then($scope.updateAccountSuccess,
         $scope.updateAccountFailure)
-    
+
 
   $scope.updateAccountSuccess = (res) ->
     toastr.success("Account updated successfully", res.status)
@@ -748,8 +752,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
           angular.merge($scope.groupAccntList[index], abc)
       )
     # end if
-    angular.merge($scope.selAcntPrevObj, res.body)      
-    
+    angular.merge($scope.selAcntPrevObj, res.body)
+
 
   $scope.updateAccountFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -855,7 +859,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     data = localStorageService.get("_selectedCompany")
     $rootScope.canViewSpecificItems = false
     if _.isUndefined(data) || _.isEmpty(data)
-      
+
     else if data.role.uniqueName is 'shared'
       $rootScope.canManageComp = false
       if data.sharedEntity is 'groups'
@@ -868,7 +872,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showAccountList = false
     $scope.getGroups()
     $('#accountSearch').val('')
-    
+
 
   $rootScope.$on 'callManageGroups', ->
     $scope.goToManageGroups()
@@ -879,7 +883,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $rootScope.$emit('reloadAccounts')
     $scope.assignValues()
   ,2000)
-    
+
   ############################ for merge/unmerge accounts ############################
   $scope.toMerge = {
     mergeTo:''
@@ -917,8 +921,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     else
       $scope.prePopulate = []
       $scope.toMerge.mergedAcc = []
-  
-  $scope.enableMergeButton = () -> 
+
+  $scope.enableMergeButton = () ->
     if $scope.prePopulate.length == 0 && $scope.toMerge.mergedAcc.length == 0
       true
     else if  $scope.prePopulate.length > 0 && $scope.toMerge.mergedAcc.length == $scope.prePopulate.length
@@ -957,7 +961,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
           "uniqueName": ""
         }
         accToSend.uniqueName = acc.uniqueName
-        accToMerge.push(accToSend)  
+        accToMerge.push(accToSend)
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $scope.toMerge.mergeTo
@@ -971,7 +975,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
         $scope.AccountsList = _.without($scope.AccountsList, _.findWhere($scope.AccountsList, removeMerged))
     else
       toastr.error("Please select at least one account.")
-  
+
 
   $scope.mergeSuccess = (res) ->
     toastr.success(res.body)
@@ -984,7 +988,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.mergeFailure = (res) ->
     toastr.error(res.data.message)
-  
+
   #delete account
   $scope.unmerge = (item) ->
     item.uniqueName = item.uniqueName.replace(RegExp(' ', 'g'), '')
@@ -1034,7 +1038,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.toMerge.mergedAcc = updatedMergedAccList
     $scope.toMerge.toUnMerge.uniqueNames = ''
     $scope.toMerge.moveToAcc = ''
-    
+
 
   $scope.deleteMergedAccountFailure = (res) ->
     toastr.error(res.body)
@@ -1087,14 +1091,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.isGrpMatch = (g, q) ->
     p = RegExp(q,"i")
-    if (g.groupName.match(p) || g.groupUniqueName.match(p)) 
+    if (g.groupName.match(p) || g.groupUniqueName.match(p))
       return true
     return false
 
   $scope.getTaxList = () ->
     companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxSuccess, $scope.getTaxFailure)
 
-  $scope.getTaxSuccess = (res) ->  
+  $scope.getTaxSuccess = (res) ->
     $scope.taxList = res.body
 
   $scope.getTaxFailure = (res) ->
@@ -1118,7 +1122,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error(res.data.message)
 
   $scope.createInheritedTaxList = (inTaxList) ->
-    #get all taxes by uniqueName
+#get all taxes by uniqueName
     inTaxUnq = []
     _.each inTaxList, (tax) ->
       _.each tax.applicableTaxes, (inTax) ->
@@ -1138,27 +1142,50 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
             grp.uniqueName = inTax.uniqueName
             tax.name = inAppTax.name
             tax.groups.push(grp)
-      $scope.allInheritedTaxes.push(tax) 
+      $scope.allInheritedTaxes.push(tax)
 
+  $scope.isAccount = false
   $scope.assignTax = (dataToSend) ->
     companyServices.assignTax($rootScope.selectedCompany.uniqueName,dataToSend).then($scope.assignTaxOnSuccess,$scope.assignTaxOnFailure)
 
   $scope.assignTaxOnSuccess = (res) ->
-    console.log("on success : ",res)
     $scope.showEditTaxSection = false
+    toastr.success(res.body)
+    if not $scope.isAccount
+      groupService.get($rootScope.selectedCompany.uniqueName, $scope.selectedGroup.uniqueName).then($scope.getGrpDtlSuccess,
+          $scope.getGrpDtlFailure)
+    else
+      reqParams = {
+        compUname: $rootScope.selectedCompany.uniqueName
+        acntUname: $scope.selectedAccount.uniqueName
+      }
+      accountService.get(reqParams).then($scope.getAcDtlSuccess, $scope.getAcDtlFailure)
+
 
   $scope.assignTaxOnFailure = (res) ->
-#    console.log("on failure : ",res)
-    $scope.taxHierarchy =  { "applicableTaxes": [{"name":"tax1" , "uniqueName":"t1"},{"name":"tax2" , "uniqueName":"t2"} ] , "inheritedTaxes": [ {"name": "groupName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupsdfdsfName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupName1212" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]}]  }
-    $scope.showEditTaxSection = true
-    console.log($scope.taxHierarchy)
-    toastr.error("Unable to load tax.")
+    $scope.showEditTaxSection = false
+    toastr.error(res.data.message)
 
-  $scope.applyTax = () ->
-#    console.log $scope.selectedTax.taxes
-    sendThisList = _.pluck($scope.selectedTax.taxes,'uniqueName')
-    console.log(sendThisList)
-    $scope.assignTax(sendThisList)
+  $scope.applyTax = (type) ->
+    if _.isEmpty(type)
+      toastr.warning("Please do not mess with html.")
+    else
+      sendThisList = _.pluck($scope.taxHierarchy.applicableTaxes,'uniqueName')
+      data = {}
+      if type == 'group'
+        data = [{"uniqueName":$scope.selectedGroup.uniqueName, "taxes":sendThisList,"isAccount":false}]
+      else if type == 'account'
+        data = [{"uniqueName":$scope.selectedAccount.uniqueName, "taxes":sendThisList,"isAccount":true}]
+      $scope.assignTax(data)
+
+  $scope.alreadyAppliedTaxes = (tax) ->
+    inheritTax = _.pluck($scope.taxHierarchy.inheritedTaxes,'applicableTaxes')
+    applicableTaxes = _.flatten($scope.taxHierarchy)
+    applicableTaxes.push(inheritTax)
+    checkInThis = _.pluck(_.flatten(applicableTaxes),'uniqueName')
+    condition = _.contains(checkInThis, tax.uniqueName)
+    condition
+
 
 
   $scope.$watch('toMerge.mergedAcc', (newVal,oldVal) ->
