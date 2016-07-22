@@ -535,6 +535,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     e.stopPropagation()
 
   $scope.selectItem = (item) ->
+    $scope.showEditTaxSection = false
     groupService.get($rootScope.selectedCompany.uniqueName, item.uniqueName).then($scope.getGrpDtlSuccess,
           $scope.getGrpDtlFailure)
 
@@ -618,6 +619,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: data.uniqueName
     }
+    $scope.showEditTaxSection = false
     accountService.get(reqParams).then($scope.getAcDtlSuccess, $scope.getAcDtlFailure)
 
   $scope.getAcDtlSuccess = (res) ->
@@ -1132,9 +1134,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     sendThisList = _.pluck($scope.taxHierarchy.applicableTaxes,'uniqueName')
     data = {}
     if type == 'group'
-      data = {"uniqueName":$scope.selectedGroup.uniqueName, "taxes":sendThisList,"isAccount":false}
+      data = [{"uniqueName":$scope.selectedGroup.uniqueName, "taxes":sendThisList,"isAccount":false}]
     else if type == 'account'
-      data = {"uniqueName":$scope.selectedAccount.uniqueName, "taxes":sendThisList,"isAccount":true}
+      data = [{"uniqueName":$scope.selectedAccount.uniqueName, "taxes":sendThisList,"isAccount":true}]
     console.log(sendThisList)
     $scope.assignTax(data)
 
