@@ -86,6 +86,10 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         method:'POST'
         url: '/company/:companyUniqueName/subgroups-with-accounts'
       }
+      getTaxHierarchy:{
+        method:'GET'
+        url:'/company/:companyUniqueName/groups/:groupUniqueName/tax-hierarchy'
+      }
     })
 
   groupService =
@@ -329,6 +333,12 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Group.deleteLogs({
         companyUniqueName: reqParam.companyUniqueName,
         beforeDate: reqParam.beforeDate
+      }, onSuccess, onFailure))
+
+    getTaxHierarchy:(companyUniqueName, groupUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Group.getTaxHierarchy({
+        companyUniqueName: companyUniqueName,
+        groupUniqueName: groupUniqueName
       }, onSuccess, onFailure))
 
   groupService

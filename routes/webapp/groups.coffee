@@ -217,5 +217,18 @@ router.get '/:groupUniqueName/subgroups-with-accounts', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/:groupUniqueName/tax-hierarchy', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/groups/'+req.params.groupUniqueName+'/tax-hierarchy'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+
 
 module.exports = router

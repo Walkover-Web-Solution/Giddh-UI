@@ -59,6 +59,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     currentPage : 1
     limit: 5
   }
+
+  $scope.taxHierarchy = {}
 #  $scope.fltAccntListPaginated = []
 #  $scope.flatAccList = {
 #    page: 1
@@ -1082,6 +1084,18 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if (g.groupName.match(p) || g.groupUniqueName.match(p)) 
       return true
     return false
+
+  $scope.getTaxHierarchy = () ->
+    groupService.getTaxHierarchy($rootScope.selectedCompany.uniqueName,$scope.selectedGroup.uniqueName).then($scope.getTaxHierarchyOnSuccess,$scope.getTaxHierarchyOnFailure)
+
+  $scope.getTaxHierarchyOnSuccess = (res) ->
+    console.log("on success : ",res)
+
+  $scope.getTaxHierarchyOnFailure = (res) ->
+#    console.log("on failure : ",res)
+    $scope.taxHierarchy =  { "applicableTaxes": [{"name":"tax1" , "uniqueName":"t1"},{"name":"tax2" , "uniqueName":"t2"} ] , "inheritedTaxes": [ {"name": "groupName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]}]  }
+    console.log($scope.taxHierarchy)
+    toastr.error("Unable to load tax.")
 
   $scope.$watch('toMerge.mergedAcc', (newVal,oldVal) ->
     if newVal != oldVal && newVal < 1
