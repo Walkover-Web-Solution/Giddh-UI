@@ -946,7 +946,11 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.$on('$stateChangeSuccess', () ->
     $scope.getTaxList()
   )
-
+  
+  $rootScope.$on 'company-changed', (event,changeData) ->
+    # when company is changed, redirect to manage company page
+    if changeData.type == 'CHANGE'
+      $scope.redirectToState('company.content.manage')
 
 giddh.webApp.controller 'ledgerController', ledgerController
 

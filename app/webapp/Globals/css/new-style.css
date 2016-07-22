@@ -2798,3 +2798,13 @@ ul.pills li {
     /*max-height:200px;*/
 }
 
+/* tax section on manage groups and accounts*/
+.tax-bullet{
+    display: block;
+    float: left;
+    background: #444;
+    padding: 2px 5px;
+    margin-right: 5px;
+    color: #fff;
+    border-radius: 5px;
+}
