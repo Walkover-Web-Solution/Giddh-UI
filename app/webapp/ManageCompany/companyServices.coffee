@@ -158,6 +158,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     getMagicLink:
       method: 'POST'
       url: '/company/:companyUniqueName/accounts/:accountUniqueName/magic-link?from=:from&to=:to'
+
+    assignTax:
+      method: 'POST'
+      url: '/company/:companyUniqueName/tax/assign'
        
   })
 
@@ -307,6 +311,11 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
 
     getMagicLink: (reqParam, data) ->
       @handlePromise((onSuccess, onFailure) -> Company.getMagicLink({companyUniqueName: reqParam.companyUniqueName, accountUniqueName: reqParam.accountUniqueName, from:reqParam.from, to:reqParam.to}, data, onSuccess, onFailure))
+
+    assignTax: (companyUniqueName,data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.assignTax({
+        companyUniqueName: companyUniqueName
+      },data, onSuccess, onFailure))
 
   companyServices
 

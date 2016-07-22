@@ -1,6 +1,6 @@
 'use strict'
 
-groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService,companyServices, DAServices, $location, $uibModal) ->
+groupController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService, DAServices, $location, $uibModal) ->
   $scope.groupList = {}
   $scope.flattenGroupList = []
   $scope.moveto = undefined
@@ -60,7 +60,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     currentPage : 1
     limit: 5
   }
-  $scope.taxList = []
+
   $scope.taxHierarchy = {}
 #  $scope.fltAccntListPaginated = []
 #  $scope.flatAccList = {
@@ -1109,6 +1109,19 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     console.log("on success : ",res)
 
   $scope.getTaxHierarchyOnFailure = (res) ->
+#    console.log("on failure : ",res)
+    $scope.taxHierarchy =  { "applicableTaxes": [{"name":"tax1" , "uniqueName":"t1"},{"name":"tax2" , "uniqueName":"t2"} ] , "inheritedTaxes": [ {"name": "groupName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupsdfdsfName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupName1212" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]}]  }
+    $scope.showEditTaxSection = true
+    console.log($scope.taxHierarchy)
+    toastr.error("Unable to load tax.")
+
+  $scope.assignTax = (dataToSend) ->
+    companyServices.assignTax($rootScope.selectedCompany.uniqueName,dataToSend).then($scope.assignTaxOnSuccess,$scope.assignTaxOnFailure)
+
+  $scope.assignTaxOnSuccess = (res) ->
+    console.log("on success : ",res)
+
+  $scope.assignTaxOnFailure = (res) ->
 #    console.log("on failure : ",res)
     $scope.taxHierarchy =  { "applicableTaxes": [{"name":"tax1" , "uniqueName":"t1"},{"name":"tax2" , "uniqueName":"t2"} ] , "inheritedTaxes": [ {"name": "groupName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupsdfdsfName" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]},{"name": "groupName1212" , "uniqueName":"groupUniqueName" , "applicableTaxes" :[{"name":"tax3" , "uniqueName":"t3"},{"name":"tax4" , "uniqueName":"t4"}]}]  }
     $scope.showEditTaxSection = true
