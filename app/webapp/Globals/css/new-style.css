@@ -2808,6 +2808,7 @@ ul.pills li {
     margin-top:10px;
     color: #fff;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .tax-list-wrap{

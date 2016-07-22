@@ -638,6 +638,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.acntCase = "Update"
     $scope.isFixedAcc = res.body.isFixed
     $scope.showBreadCrumbs(data.parentGroups.reverse())
+    console.log $scope.selectedAccount
     
 
   $scope.getAcDtlFailure = (res) ->
