@@ -64,6 +64,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.taxHierarchy = {}
   $scope.taxHierarchy.applicableTaxes = []
   $scope.taxHierarchy.inheritedTaxes = []
+  $scope.taxInEditMode = false
 #  $scope.fltAccntListPaginated = []
 #  $scope.flatAccList = {
 #    page: 1
@@ -644,7 +645,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.acntCase = "Update"
     $scope.isFixedAcc = res.body.isFixed
     $scope.showBreadCrumbs(data.parentGroups.reverse())
-    console.log $scope.selectedAccount
+#    console.log $scope.selectedAccount
 
 
   $scope.getAcDtlFailure = (res) ->
@@ -1161,6 +1162,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       }
       accountService.get(reqParams).then($scope.getAcDtlSuccess, $scope.getAcDtlFailure)
 
+  $scope.getAccountDetailsSuccess = (res) ->
+    $scope.selectedAccount.applicableTaxes = res.body.applicableTaxes
 
   $scope.assignTaxOnFailure = (res) ->
     $scope.showEditTaxSection = false
@@ -1174,8 +1177,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       data = {}
       if type == 'group'
         data = [{"uniqueName":$scope.selectedGroup.uniqueName, "taxes":sendThisList,"isAccount":false}]
+        $scope.isAccount = false
       else if type == 'account'
         data = [{"uniqueName":$scope.selectedAccount.uniqueName, "taxes":sendThisList,"isAccount":true}]
+        $scope.isAccount = true
       $scope.assignTax(data)
 
   $scope.alreadyAppliedTaxes = (tax) ->
@@ -1183,6 +1188,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     applicableTaxes = _.flatten($scope.taxHierarchy)
     applicableTaxes.push(inheritTax)
     checkInThis = _.pluck(_.flatten(applicableTaxes),'uniqueName')
+#    checkInThis = _.pluck($scope.selectedAccount.applicableTaxes, 'uniqueName')
     condition = _.contains(checkInThis, tax.uniqueName)
     condition
 
