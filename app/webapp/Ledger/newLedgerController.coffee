@@ -12,6 +12,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.showPanel = false
   $scope.accountUnq = $stateParams.unqName  
   $scope.accountToShow = {}
+  $scope.combineTransaction = true
 
   $scope.closePanel = () ->
     $scope.showPanel = false
@@ -231,9 +232,89 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   # upper icon functions ends here
 
+  $scope.getAccountDetail = (accountUniqueName) ->
+    unqObj = {
+      compUname : $rootScope.selectedCompany.uniqueName
+      acntUname : accountUniqueName
+    }
+    accountService.get(unqObj)
+    .then(
+      (res)->
+        $scope.getAccountDetailSuccess(res)
+    ,(error)->
+      $scope.getAccountDetailFailure(error)
+    )
+
+  $scope.getAccountDetailFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.getAccountDetailSuccess = (res) ->
+    if res.body.yodleeAdded == true
+      #get bank transaction here
+      $scope.getBankTransactions(res.body.uniqueName)
+
+  $scope.getBankTransactions = (accountUniqueName) ->
+    unqObj = {
+      compUname : $rootScope.selectedCompany.uniqueName
+      acntUname : accountUniqueName
+    }
+    # get other ledger transactions
+    ledgerService.getOtherTransactions(unqObj)
+    .then(
+      (res)->
+        $scope.getBankTransactionsSuccess(res)
+    ,(error)->
+      $scope.getBankTransactionsFailure(error)
+    )
+
+  $scope.getBankTransactionsFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.getBankTransactionsSuccess = (res) ->
+    angular.copy([], $scope.eLedgerDrData)
+    angular.copy([], $scope.eLedgerCrData)
+
+    if res.body.length > 0
+      $scope.eLedgerDataFound = true
+    else
+      $scope.eLedgerDataFound = false
+
+
+  $scope.calculateELedger = () ->
+    $scope.eLedgType = undefined
+    $scope.eCrBalAmnt = 0
+    $scope.eDrBalAmnt = 0
+    $scope.eDrTotal = 0
+    $scope.eCrTotal = 0
+    crt = 0
+    drt = 0
+    _.each($scope.eLedgerDrData, (entry) ->
+      drt += Number(entry.transactions[0].amount)
+    )
+    _.each($scope.eLedgerCrData, (entry) ->
+      crt += Number(entry.transactions[0].amount)
+    )
+    crt = parseFloat(crt)
+    drt = parseFloat(drt)
+
+    if drt > crt
+      $scope.eLedgType = 'DEBIT'
+      $scope.eCrBalAmnt = drt - crt
+      $scope.eDrTotal = drt
+      $scope.eCrTotal = crt + (drt - crt)
+    else if crt > drt
+      $scope.eLedgType = 'CREDIT'
+      $scope.eDrBalAmnt = crt - drt
+      $scope.eDrTotal = drt + (crt - drt)
+      $scope.eCrTotal = crt
+    else
+      $scope.eCrTotal = crt
+      $scope.eDrTotal = drt
+
   $scope.getLedgerData = () ->
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+    $scope.getAccountDetail($scope.accountUnq)
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $scope.accountUnq

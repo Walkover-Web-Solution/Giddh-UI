@@ -228,7 +228,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   #get only city success
   $scope.getOnlyCitySuccess = (data) ->
-    filterThis = data.results.filter (i) -> i.types[0] is "locality"
+    filterThis = data.results.filter (i) -> _.contains(i.types, "locality")
     filterThis.map((item) ->
       item.address_components[0].long_name
     )

@@ -345,7 +345,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     locationService.searchCountry(val).then($scope.onGetCountrySuccess, $scope.onGetCountryFailure)
 
   $scope.onGetCountrySuccess = (data) ->
-    filterThis = data.results.filter (i) -> i.types[0] is "country"
+    filterThis = data.results.filter (i) -> _.contains(i.types, "country")
     filterThis.map((item) ->
       item.address_components[0].long_name
     )
@@ -358,7 +358,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.onGetStateFailure)
 
   $scope.onGetStateSuccess = (data) ->
-    filterThis = data.results.filter (i) -> i.types[0] is "administrative_area_level_1"
+    filterThis = data.results.filter (i) -> _.contains(i.types, "administrative_area_level_1")
     filterThis.map((item) ->
       item.address_components[0].long_name
     )
