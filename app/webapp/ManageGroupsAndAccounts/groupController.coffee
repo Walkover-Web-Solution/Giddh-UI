@@ -441,6 +441,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.onUpdateGroupSuccess = (res) ->
     $scope.selectedGroup.oldUName = $scope.selectedGroup.uniqueName
+    $scope.selectedGroup.applicableTaxes = res.body.applicableTaxes
     if not _.isEmpty($scope.selectedGroup)
       $scope.selectedItem = $scope.selectedGroup
     toastr.success("Group has been updated successfully.", "Success")
@@ -586,7 +587,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     obj = _.find(fltGrpList, (item) ->
       item.uniqueName == grpUniqName
     )
-    $scope.selectGroupToEdit(obj)
+#    $scope.selectGroupToEdit(obj)
     $scope.selectItem(obj)
 
   #check if object is empty on client side by mechanic
@@ -648,7 +649,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.getAccountSharedList()
     $scope.acntCase = "Update"
     $scope.isFixedAcc = res.body.isFixed
-    $scope.showBreadCrumbs(data.parentGroups.reverse())
+    $scope.showBreadCrumbs(data.parentGroups)
 #    console.log $scope.selectedAccount
 
 
