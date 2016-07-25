@@ -33,7 +33,7 @@ router.post '/company/:companyUniqueName/add-giddh-account', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.post hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -46,7 +46,7 @@ router.get '/company/:companyUniqueName/all-site-account', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'yodlee/company/' + req.params.companyUniqueName + '/all-site-account'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 

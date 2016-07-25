@@ -13,7 +13,7 @@ router.get '/', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/ledgers'
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -26,7 +26,7 @@ router.delete '/', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/ledgers'
   settings.client.delete hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -39,7 +39,7 @@ router.get '/:ledgerUniqueName', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/ledgers/' + req.params.ledgerUniqueName
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -55,7 +55,7 @@ router.post '/', (req, res) ->
       'Content-Type': 'application/json'
     data: req.body
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
     
@@ -70,7 +70,7 @@ router.put '/:ledgerUniqueName', (req, res) ->
       'Content-Type': 'application/json'
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -83,7 +83,7 @@ router.delete '/:ledgerUniqueName', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/ledgers/' + req.params.ledgerUniqueName
   settings.client.delete hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
     

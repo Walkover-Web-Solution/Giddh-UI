@@ -15,7 +15,7 @@ router.get '/', (req, res) ->
       from: from
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/profit-loss'
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 

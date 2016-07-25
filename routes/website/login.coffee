@@ -32,7 +32,7 @@ router.post '/google', (req, res, next) ->
         'Access-Token': accessToken
     # Step 2. Retrieve profile information about the current user.
     settings.client.get googleLoginUrl, args, (data, response) ->
-      if data.status == 'error'
+      if data.status == 'error' || data.status == undefined
         res.status(response.statusCode)
       else
         userDetailObj = data.body.user
@@ -88,7 +88,7 @@ router.post '/twitter', (req, res) ->
           'Access-Token': accessToken.oauth_token
           'Access-Secret': accessToken.oauth_token_secret
       settings.client.get twitterLoginUrl, args, (data, response) ->
-        if data.status == 'error'
+        if data.status == 'error' || data.status == undefined
           res.status(response.statusCode)
         else
           userDetailObj = data.body.user
@@ -133,7 +133,7 @@ router.post '/linkedin', (req, res) ->
         'Access-Token': body.access_token
     # Step 2. Retrieve profile information about the current user.
     settings.client.get linkedinLoginUrl, args, (data, response) ->
-      if data.status == 'error'
+      if data.status == 'error' || data.status == undefined
         res.status(response.statusCode)
       else
         userDetailObj = data.body.user

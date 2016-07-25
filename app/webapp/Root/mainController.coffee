@@ -83,6 +83,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     roleServices.getAll().then($scope.onGetRolesSuccess, $scope.onGetRolesFailure)
 
   $scope.onGetRolesSuccess = (res) ->
+#    console.log("roles we have",res.body)
     localStorageService.set("_roles", res.body)
 
   $scope.onGetRolesFailure = (res) ->

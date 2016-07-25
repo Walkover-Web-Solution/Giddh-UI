@@ -12,7 +12,7 @@ router.get '/', (req, res) ->
       from: req.query.fromDate
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/trial-balance'
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 

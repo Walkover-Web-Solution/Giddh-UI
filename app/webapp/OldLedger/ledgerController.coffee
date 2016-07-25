@@ -1,6 +1,6 @@
 "use strict"
 
-ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices) ->
+ledgerController = ($scope, $rootScope, localStorageService, toastr, modalService, $state, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices) ->
   $scope.ledgerData = undefined 
   $scope.accntTitle = undefined
   $scope.selectedGroupUname = undefined
@@ -946,7 +946,10 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.$on('$stateChangeSuccess', () ->
     $scope.getTaxList()
   )
-  
+
+  $scope.redirectToState = (state) ->
+    $state.go(state)
+
   $rootScope.$on 'company-changed', (event,changeData) ->
     # when company is changed, redirect to manage company page
     if changeData.type == 'CHANGE'

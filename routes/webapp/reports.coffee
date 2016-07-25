@@ -15,7 +15,7 @@ router.post '/history', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/history'
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -30,7 +30,7 @@ router.get '/profit-loss-history', (req, res) ->
       interval: req.query.interval 
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/profit-loss-history'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -45,7 +45,7 @@ router.get '/networth-history', (req, res) ->
       interval: req.query.interval 
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/networth-history'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -56,7 +56,7 @@ router.get '/sms-key', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp 
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/sms-key'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -67,7 +67,7 @@ router.get '/email-key', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/email-key'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -78,7 +78,7 @@ router.get '/financial-year', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/financial-year'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -91,7 +91,7 @@ router.put '/financial-year', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/financial-year'
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -104,7 +104,7 @@ router.post '/financial-year', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/financial-year'
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -117,7 +117,7 @@ router.patch '/active-financial-year', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/active-financial-year'
   settings.client.patch hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -130,7 +130,7 @@ router.patch '/financial-year-lock', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/financial-year-lock'
   settings.client.patch hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -143,7 +143,7 @@ router.patch '/financial-year-unlock', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/financial-year-unlock'
   settings.client.patch hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -157,7 +157,7 @@ router.post '/sms-key', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/sms-key'
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -171,7 +171,7 @@ router.post '/email-key', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/email-key'
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -188,7 +188,7 @@ router.post '/accounts/bulk-sms', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/bulk-sms'
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -205,7 +205,7 @@ router.post '/accounts/bulk-email', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/bulk-email'
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -219,7 +219,7 @@ router.post '/subgroups-with-accounts', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -233,7 +233,7 @@ router.put '/invoices', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/invoices'
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 

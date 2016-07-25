@@ -65,6 +65,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.taxHierarchy.applicableTaxes = []
   $scope.taxHierarchy.inheritedTaxes = []
   $scope.taxInEditMode = false
+  $scope.havePermission = false
 #  $scope.fltAccntListPaginated = []
 #  $scope.flatAccList = {
 #    page: 1
@@ -361,6 +362,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     _.each data, (grp) ->
       grp.isVisible = true
       grp.hLevel = n
+
       if grp.groups.length > 0
         n += 1
         _.each grp.groups, (sub) ->
@@ -432,6 +434,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.updateGroup = ->
     $scope.selectedGroup.uniqueName = $scope.selectedGroup.uniqueName.toLowerCase()
+    if $scope.selectedGroup.applicableTaxes.length > 0
+      $scope.selectedGroup.applicableTaxes = _.pluck($scope.selectedGroup.applicableTaxes, 'uniqueName')
     groupService.update($scope.selectedCompany.uniqueName, $scope.selectedGroup).then($scope.onUpdateGroupSuccess,
         $scope.onUpdateGroupFailure)
 
@@ -737,6 +741,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if _.isEmpty($scope.selectedGroup)
       lastVal = _.last($scope.selectedAccount.parentGroups)
       unqNamesObj.selGrpUname = lastVal.uniqueName
+
+    if $scope.selectedAccount.applicableTaxes.length > 0
+      $scope.selectedAccount.applicableTaxes = _.pluck($scope.selectedAccount.applicableTaxes,'uniqueName')
 
     accountService.updateAc(unqNamesObj, $scope.selectedAccount).then($scope.updateAccountSuccess,
         $scope.updateAccountFailure)
@@ -1173,7 +1180,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if _.isEmpty(type)
       toastr.warning("Please do not mess with html.")
     else
-      sendThisList = _.pluck($scope.taxHierarchy.applicableTaxes,'uniqueName')
+      # We have to send all the taxes
+      mergeTaxes = []
+      mergeTaxes.push($scope.taxHierarchy.applicableTaxes)
+      mergeTaxes.push(_.pluck($scope.taxHierarchy.inheritedTaxes, 'applicableTaxes'))
+      sendThisList = _.pluck(_.flatten(mergeTaxes),'uniqueName')
       data = {}
       if type == 'group'
         data = [{"uniqueName":$scope.selectedGroup.uniqueName, "taxes":sendThisList,"isAccount":false}]

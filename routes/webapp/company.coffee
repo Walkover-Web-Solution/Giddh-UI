@@ -8,7 +8,7 @@ router.get '/all', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'users/' + req.session.name + '/companies'
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -21,7 +21,7 @@ router.delete '/:uniqueName', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.delete hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -35,7 +35,7 @@ router.put '/:uniqueName', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -47,7 +47,7 @@ router.get '/:uniqueName/imports', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -59,7 +59,7 @@ router.get '/:companyUniqueName/users', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -73,7 +73,7 @@ router.post '/', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -86,7 +86,7 @@ router.get '/:uniqueName/shareable-roles', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode).send(data)
     else
       res.send data
@@ -100,7 +100,7 @@ router.get '/:uniqueName/shared-with', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode).send(data)
     else
       res.send data
@@ -115,7 +115,7 @@ router.put '/:uniqueName/share', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode).send(data)
     else
       res.send data
@@ -130,7 +130,7 @@ router.put '/:uniqueName/unshare', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode).send(data)
     else
       res.send data
@@ -146,7 +146,7 @@ router.get '/:uniqueName/transactions', (req, res) ->
     parameters:
       page: req.query.page
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode).send(data)
     else
       res.send data
@@ -161,7 +161,7 @@ router.put '/:uniqueName/subscription-update', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -175,7 +175,7 @@ router.post '/:uniqueName/pay-via-wallet', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -189,7 +189,7 @@ router.post '/:companyUniqueName/ebanks/:ItemAccountId/verify-mfa', (req, res) -
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.post hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -201,7 +201,7 @@ router.get '/:companyUniqueName/ebanks', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -213,7 +213,7 @@ router.get '/:companyUniqueName/ebanks/refresh', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ebanks/refresh'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -227,7 +227,7 @@ router.delete '/:companyUniqueName/ebanks/:memSiteAccId/remove', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.delete hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -239,7 +239,7 @@ router.delete '/:companyUniqueName/ebanks/:ItemAccountId/unlink', (req,res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.delete hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -253,7 +253,7 @@ router.post '/:companyUniqueName/ebanks', (req, res) ->
     data: req.body
   settings.client.post hUrl, authHead, (data, response) ->
 
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -266,7 +266,7 @@ router.delete '/:companyUniqueName/ebanks/:ItemAccountId/:linkedAccount', (req, 
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.delete hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -281,7 +281,7 @@ router.put '/:companyUniqueName/ebanks/:ItemAccountId', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -294,7 +294,7 @@ router.put '/:companyUniqueName/ebanks/:ItemAccountId/eledgers/:date', (req, res
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -307,7 +307,7 @@ router.put '/:uniqueName/retry', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -322,7 +322,7 @@ router.post '/:companyUniqueName/logs/:page', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode).send(data)
     else
       res.send data
@@ -336,7 +336,7 @@ router.get '/:companyUniqueName/login/:loginId/token/refresh', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -349,7 +349,7 @@ router.get '/:companyUniqueName/login/:loginId/token/reconnect', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -364,7 +364,7 @@ router.delete '/:companyUniqueName/logs/:beforeDate', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.delete hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -376,7 +376,7 @@ router.get '/:uniqueName/switchUser', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.patch hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -389,7 +389,7 @@ router.get '/:companyUniqueName/tax', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/tax'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -403,7 +403,7 @@ router.post '/:companyUniqueName/tax', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -416,7 +416,7 @@ router.delete '/:companyUniqueName/tax/:taxUniqueName', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.delete hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -430,7 +430,7 @@ router.put '/:companyUniqueName/tax/:taxUniqueName/:updateEntries', (req, res) -
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -444,7 +444,7 @@ router.get '/:uniqueName/templates', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
     
@@ -457,7 +457,7 @@ router.put '/:uniqueName/templates/:tempUname', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -471,7 +471,7 @@ router.put '/:uniqueName/templates', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -484,7 +484,7 @@ router.delete '/:uniqueName/invoices/:invoiceUniqueID', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.delete hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -498,7 +498,7 @@ router.get '/:uniqueName/ebanks/token', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     console.log data
     res.send data
@@ -511,7 +511,7 @@ router.delete '/:companyUniqueName/login/:loginId',(req,res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.delete hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 

@@ -150,7 +150,7 @@
           <div class="tax-label"><label>All Applied Taxes</label></div>
           <span class="tax-bullet" ng-repeat="tax in selectedAccount.applicableTaxes" ng-if="selectedAccount.applicableTaxes.length > 0">{{tax.name}}</span>
           <p ng-if="selectedAccount.applicableTaxes.length < 1">No taxes Applied</p>
-          <button id="editTax" class="btn btn-sm btn-default edit-tax-btn" ng-click="getTaxHierarchy('account')" ng-hide="showEditTaxSection"><i class="glyphicon glyphicon-edit"></i></button>
+          <button id="editTax" ng-if="canUpdate" class="btn btn-sm btn-default edit-tax-btn" ng-click="getTaxHierarchy('account')" ng-hide="showEditTaxSection"><i class="glyphicon glyphicon-edit"></i></button>
         </div>
         <div class="edit-tax-section" ng-if="showEditTaxSection">
           <div class="tax-list-wrap">

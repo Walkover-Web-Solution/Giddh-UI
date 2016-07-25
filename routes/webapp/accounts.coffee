@@ -9,7 +9,7 @@ router.get '/', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -21,7 +21,7 @@ router.get '/:accountUniqueName', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     #console.log res
     res.send data
@@ -36,7 +36,7 @@ router.put '/:accountUniqueName', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -50,7 +50,7 @@ router.put '/:accountUniqueName/move', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -64,7 +64,7 @@ router.put '/:accountUniqueName/merge', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -91,7 +91,7 @@ router.post '/:accountUniqueName/un-merge', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -108,7 +108,7 @@ router.put '/:accountUniqueName/share', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -120,7 +120,7 @@ router.delete '/:accountUniqueName', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName
   settings.client.delete hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -133,7 +133,7 @@ router.get '/:accountUniqueName/shared-with', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -147,7 +147,7 @@ router.put '/:accountUniqueName/unshare', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.put hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -163,7 +163,7 @@ router.get '/:accountUniqueName/export-ledger', (req, res) ->
       to: req.query.toDate
       from: req.query.fromDate
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -176,7 +176,7 @@ router.get '/:accountUniqueName/xls-imports', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/xls-imports'
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -189,7 +189,7 @@ router.get '/:accountUniqueName/eledgers', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/eledgers'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -202,7 +202,7 @@ router.delete '/:accountUniqueName/eledgers/:transactionId', (req, res) ->
   hUrl = settings.envUrl + 'eledgers/' + req.params.transactionId
   console.log "actual URL is: ",hUrl
   settings.client.delete hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -221,7 +221,7 @@ router.post '/:accountUniqueName/ledgers/mail', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/ledgers/mail'
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -239,7 +239,7 @@ router.get '/:accountUniqueName/invoices', (req, res) ->
       from: req.query.fromDate
   console.log(hUrl)
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -253,7 +253,7 @@ router.post '/:accountUniqueName/invoices/preview', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName+'/accounts/' + req.params.accountUniqueName + '/invoices/preview'
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -283,7 +283,7 @@ router.post '/:accountUniqueName/invoices/download', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName+'/accounts/' + req.params.accountUniqueName + '/invoices/download'
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -297,7 +297,7 @@ router.get '/:accountUniqueName/invoices/:invoiceUniqueID/preview', (req, res) -
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -311,7 +311,7 @@ router.post '/:accountUniqueName/invoices/mail', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName+'/accounts/' + req.params.accountUniqueName + '/invoices/mail'
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -327,7 +327,7 @@ router.post '/:accountUniqueName/magic-link', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/magic-link'
   settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 

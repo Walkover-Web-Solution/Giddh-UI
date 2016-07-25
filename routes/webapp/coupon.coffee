@@ -10,7 +10,7 @@ router.get '/get-coupon', (req, res) ->
       code: req.query.code
   hUrl = settings.envUrl + 'coupon/get-coupon'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 

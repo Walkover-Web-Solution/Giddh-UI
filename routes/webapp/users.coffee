@@ -9,7 +9,7 @@ router.get '/:uniqueName', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'users/' + req.params.uniqueName
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -21,7 +21,7 @@ router.delete '/:uniqueName', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'users/' + req.params.uniqueName
   settings.client.delete hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -35,7 +35,7 @@ router.post '/:uniqueName/sub-user', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'users/' + req.params.uniqueName+ '/sub-user'
   settings.client.post hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -50,7 +50,7 @@ router.get '/:uniqueName/auth-key/sub-user', (req, res) ->
       uniqueName: req.query.uniqueName
   hUrl = settings.envUrl + 'users/auth-key'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -68,7 +68,7 @@ router.put '/:uniqueName/generate-auth-key', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'users/' + req.params.uniqueName + '/generate-auth-key'
   settings.client.put hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     else
       req.session.authKey = data.body.authKey
@@ -81,7 +81,7 @@ router.get '/:uniqueName/subscribed-companies', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'users/' + req.params.uniqueName + '/subscribed-companies'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -94,7 +94,7 @@ router.get '/:uniqueName/transactions', (req, res) ->
       page: req.query.page
   hUrl = settings.envUrl + 'users/' + req.params.uniqueName + '/transactions'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -105,7 +105,7 @@ router.get '/:uniqueName/available-credit', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'users/' + req.params.uniqueName + '/available-credit'
   settings.client.get hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -119,7 +119,7 @@ router.put '/:uniqueName/delete-payee', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'users/' + req.params.uniqueName + '/delete-payee'
   settings.client.put hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -133,7 +133,7 @@ router.post '/:uniqueName/balance', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.post hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -148,7 +148,7 @@ router.post '/system_admin/verify-number', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'users/system_admin/verify-number'
   settings.client.post hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
@@ -162,7 +162,7 @@ router.put '/system_admin/verify-number', (req, res) ->
     data: req.body
   hUrl = settings.envUrl + 'users/system_admin/verify-number'
   settings.client.put hUrl, authHead, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 

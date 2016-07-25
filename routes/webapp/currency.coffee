@@ -8,7 +8,7 @@ router.get '/', (req, res) ->
   		'Content-Type': 'application/json'
   		'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 

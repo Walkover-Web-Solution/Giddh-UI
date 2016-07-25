@@ -58,14 +58,14 @@ router.post '/magic-link', (req, res) ->
   else
     hUrl = settings.envUrl + '/magic-link/' + req.body.data.id
   settings.client.get hUrl, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
 router.put '/ebanks/login', (req, res) ->
   hUrl = settings.envUrl + '/ebanks/login/' + req.body.loginId
   settings.client.put hUrl, (data, response) ->
-    if data.status == 'error'
+    if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
