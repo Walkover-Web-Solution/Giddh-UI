@@ -271,8 +271,9 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     toastr.error(res.data.message, res.data.status)
 
   $scope.getBankTransactionsSuccess = (res) ->
-    angular.copy([], $scope.eLedgerDrData)
-    angular.copy([], $scope.eLedgerCrData)
+    $scope.eLedgerData = res.body
+    angular.extend([], $scope.eLedgerDrData)
+    angular.extend([], $scope.eLedgerCrData)
 
     if res.body.length > 0
       $scope.eLedgerDataFound = true
