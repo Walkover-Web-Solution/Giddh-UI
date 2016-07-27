@@ -541,6 +541,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     e.stopPropagation()
 
   $scope.selectItem = (item) ->
+    $scope.grpCategory = item.category
     $scope.showEditTaxSection = false
     groupService.get($rootScope.selectedCompany.uniqueName, item.uniqueName).then($scope.getGrpDtlSuccess,
           $scope.getGrpDtlFailure)
@@ -574,7 +575,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.populateAccountList = (item) ->
     result = groupService.matchAndReturnGroupObj(item, $rootScope.flatGroupsList)
-    $scope.groupAccntList = groupService.makeAcListWithLessDtl(result.accounts)
+    $scope.groupAccntList = result.accounts
 
   #show breadcrumbs
   $scope.showBreadCrumbs = (data) ->
@@ -617,7 +618,13 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       }
 
   #show account
+  $scope.getAccountCategory = (acc) ->
+    pg = acc.parentGroups[0]['uniqueName']
+    grp = _.findWhere($rootScope.flatGroupsList, {uniqueName:pg})
+    grp.category
+
   $scope.showAccountDtl = (data) ->
+    $scope.AccountCategory = $scope.getAccountCategory(data)
     $scope.cantUpdate = false
     #highlight account menus
     $scope.selectedAccntMenu = data

@@ -223,6 +223,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         obj.name = item.name
         obj.uniqueName = item.uniqueName
         obj.mergedAccounts = item.mergedAccounts
+        obj.parentGroups = item.parentGroups
         obj
       )
       return obj
