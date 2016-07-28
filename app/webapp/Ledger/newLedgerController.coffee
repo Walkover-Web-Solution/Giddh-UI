@@ -95,7 +95,9 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     if $scope.selectedLedger.uniqueName != ""
       $scope.selectedLedger.transactions.push(txn)
     else
-      $scope.blankLedger.transactions.push(txn)
+      _.each $scope.blankLedger.transactions, (txn) ->
+        if txn.type == str && txn.particular.uniqueName != ''
+          $scope.blankLedger.transactions.push(txn)
 
   $scope.saveEntry = (newEntry) ->
     console.log newEntry
@@ -300,7 +302,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $scope.getBankTransactionsSuccess = (res) ->
     $scope.eLedgerData = $scope.formatBankLedgers(res.body)
-    console.log $scope.eLedgerData
+    #$scope.removeUpdatedBankLedger()
 
   $scope.formatBankLedgers = (bankArray) ->
     formattedBankLedgers = []
@@ -308,14 +310,17 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       _.each bankArray, (bank) ->
         ledger = new blankLedgerModel()
         ledger.entryDate = bank.date
-        ledger.transactions = $scope.formatBankTransactions(bank.transactions)
+        ledger.isBankTransaction = true
+        ledger.transactionId = bank.transactionId
+        ledger.transactions = $scope.formatBankTransactions(bank.transactions, bank)
         formattedBankLedgers.push(ledger)
     formattedBankLedgers
 
-  $scope.formatBankTransactions = (transactions) ->
+  $scope.formatBankTransactions = (transactions, bank) ->
     formattedBanktxns = []
     if transactions.length > 0
       _.each transactions, (txn) ->
+        bank.description = txn.remarks.description
         newTxn = new txnModel()
         newTxn.particular = {}
         newTxn.particular.name = ''
@@ -356,13 +361,17 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       $scope.eCrTotal = crt
       $scope.eDrTotal = drt
 
-  # $scope.mergeBankTransactions = (toMerge) ->
-  #   if toMerge
-  #     $scope.AddBankTransactions()
-  #     $scope.showEledger = false
-  #   else
-  #     $scope.removeBankTransactions()
-  #     $scope.showEledger = true
+  $scope.mergeBankTransactions = (toMerge) ->
+    if toMerge
+      $scope.ledgerData.ledgers.push($scope.eLedgerData)
+      $scope.ledgerData.ledgers = _.flatten($scope.ledgerData.ledgers)
+      $scope.showEledger = false
+    else
+    #   $scope.AddBankTransactions()
+    #   $scope.showEledger = false
+    # else
+      $scope.removeBankTransactions()
+    #   $scope.showEledger = true
 
   # $scope.AddBankTransactions = () ->
   #   bankTxnDuplicate = $scope.eLedgerData
@@ -370,28 +379,28 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   #   $scope.ledgerData.ledgers.push(bankTxntoMerge)
   #   $scope.ledgerData.ledgers = _.flatten($scope.ledgerData.ledgers)
 
-  # $scope.removeBankTransactions = () ->
-  #   withoutBankTxn = []
-  #   _.each $scope.ledgerData.ledgers, (ledger) ->
-  #     if ledger.isBankTransaction == undefined || !ledger.isBankTransaction
-  #       withoutBankTxn.push(ledger)
-  #   $scope.ledgerData.ledgers = withoutBankTxn
-  #   console.log withoutBankTxn
+  $scope.removeBankTransactions = () ->
+    withoutBankTxn = []
+    _.each $scope.ledgerData.ledgers, (ledger) ->
+      if ledger.isBankTransaction == undefined
+        withoutBankTxn.push(ledger)
+    $scope.ledgerData.ledgers = withoutBankTxn
+    $scope.showEledger = true
 
-  $scope.fromBanktoLedgerObject = (bankArray) ->
-    bank2LedgerArray = []
-    _.each bankArray, (txn) ->
-      led = {}
-      led.entryDate = txn.date
-      led.transactions = txn.transactions
-      led.isBankTransaction = true
-      $scope.renameBankTxnKeys(led.transactions)
-      bank2LedgerArray.push(led)
-    bank2LedgerArray
+  # $scope.fromBanktoLedgerObject = (bankArray) ->
+  #   bank2LedgerArray = []
+  #   _.each bankArray, (txn) ->
+  #     led = {}
+  #     led.entryDate = txn.date
+  #     led.transactions = txn.transactions
+  #     led.isBankTransaction = true
+  #     $scope.renameBankTxnKeys(led.transactions)
+  #     bank2LedgerArray.push(led)
+  #   bank2LedgerArray
 
-  $scope.renameBankTxnKeys = (txnArray) ->
-    _.each txnArray, (txn) ->
-      txn.particular = txn.remarks
+  # $scope.renameBankTxnKeys = (txnArray) ->
+  #   _.each txnArray, (txn) ->
+  #     txn.particular = txn.remarks
 
   $scope.getLedgerData = () ->
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
@@ -467,6 +476,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.selectTxn = (ledger, txn, index) ->
     $scope.showPanel = true
     $scope.selectedLedger = ledger
+    $scope.selectedLedger.index = index
     if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
       $scope.checkCompEntry(ledger)
 
@@ -480,7 +490,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         lgr.isCompoundEntry = false
 
   $scope.saveUpdateLedger = (ledger) ->
-    console.log ledger
+    if ledger.isBankTransaction
+      $scope.btIndex = ledger.index
     delete ledger.isCompoundEntry
     if _.isEmpty(ledger.uniqueName)
       console.log("creating new entry")
@@ -533,6 +544,9 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       #ledger.transactions.push(transactionsArray)
       ledgerService.updateEntry(unqNamesObj, ledger).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
 
+  $scope.removeUpdatedBankLedger = () ->
+    if $scope.btIndex != undefined
+      $scope.eLedgerData.splice($scope.btIndex, 1)
 
   $scope.resetBlankLedger = () ->
     $scope.blankLedger = {
@@ -578,7 +592,9 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     $scope.getLedgerData()
     $scope.resetBlankLedger()
     $scope.selectedLedger = $scope.blankLedger
-
+    if $scope.mergeTransaction
+      $scope.mergeBankTransactions(mergeTransaction)
+    
   $scope.addEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
     $scope.resetBlankLedger()
@@ -591,6 +607,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     $scope.ledgerData.ledgers.push(addThisLedger)
     $scope.getLedgerData()
     $scope.resetBlankLedger()
+    if $scope.mergeTransaction
+      $scope.mergeBankTransactions(mergeTransaction)
 
   $scope.updateEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
