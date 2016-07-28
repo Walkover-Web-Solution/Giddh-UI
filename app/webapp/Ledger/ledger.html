@@ -1,5 +1,5 @@
 
-<!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent">-->
+<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent">
     <section class="alert alert-info mrL2 mrR2 mrT2" ng-if="accountUnq.length < 1">
       Please select an Account to load its Ledger
     </section>
@@ -96,8 +96,8 @@
 		      </a>
 
           <a class="pull-right mrL1">
-            <div>
-              <switch on="Unmerge bank transactions" off="Merge bank transactions" ng-model="combineTransaction" class="wide100" ></switch>
+            <div ng-click="mergeBankTransactions(mergeTransaction)">
+              <switch on="Unmerge" off="Merge" ng-model="mergeTransaction" class="wide100" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>
             </div>
           </a>
 
@@ -108,7 +108,7 @@
 		    </div>
 
         <!-- external ledger code here -->
-        <section class="eledger-table">
+        <section class="eledger-table" ng-if="eLedgerData.length > 0 && showEledger">
           <div ng-include="'/public/webapp/Ledger/eLedger.html'"></div>
         </section>
         <!--recieving-giving-->
@@ -204,7 +204,7 @@
                                   <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                 </td>
                                 <td class="col-xs-3"><input class="form-control" ng-model="ledger.entryDate"></td>
-                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular.name" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4"></td>
+                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4"></td>
                                 <td class="col-xs-3"><input class="form-control" ng-model="txn.amount"></td>
                               </tr>
                             </tbody>
@@ -284,7 +284,7 @@
                                   <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                 </td>
                                 <td class="col-xs-3"><input class="form-control" ng-model="ledger.entryDate"></td>
-                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular.name" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
+                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
                                 <td class="col-xs-3"><input class="form-control" ng-model="txn.amount"></td>
                               </tr>
                             </tbody>
@@ -444,5 +444,5 @@
         </div>
       </div>
     </div>
-<!--</perfect-scrollbar>-->
+</perfect-scrollbar>
 

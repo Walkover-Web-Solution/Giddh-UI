@@ -2615,6 +2615,25 @@ ul.pills li {
     padding:10px 10px;
 }
 
+.eledger-inner{
+    width:100%;
+}
+
+.eledger-inner tbody td{
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+}
+
+.eledger-inner tbody td input , .eledger-inner tbody td input:focus{
+    border:0;
+    outline:0;
+    box-shadow:none; 
+}
+
+.eledger-inner tbody > tr > td:first-child{
+    padding-left:20px !important;
+}
+
 .t-h-bg1 th{
     background: #5c534d;
     color: #fff;
@@ -2673,7 +2692,7 @@ ul.pills li {
 
 .ledger-panel{
     width:100%;
-    max-width:1024px;
+    max-width:640px;
     min-height: 200px;
     overflow:hidden;
     background:#fff;
@@ -2684,7 +2703,8 @@ ul.pills li {
     -webkit-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
-    bottom:175px;
+    bottom:100px;
+    z-index: 9;
 }
 
 .bottom0{
