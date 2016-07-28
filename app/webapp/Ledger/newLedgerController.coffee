@@ -49,6 +49,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 #      hasDebit:false
       invoiceGenerated:false
       isCompoundEntry:false
+      isAppliedTaxes:true
       tag:null
       transactions:[
         $scope.newDebitTxn
@@ -531,7 +532,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
           particular.name = txn.particular.name
           particular.uniqueName = txn.particular.uniqueName
           txn.particular = particular
-      ledger.isInclusiveTax = false
+#      ledger.isInclusiveTax = false
       unqNamesObj = {
         compUname: $rootScope.selectedCompany.uniqueName
         acntUname: $scope.accountUnq
@@ -549,6 +550,15 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       console.log ledger
       #ledger.transactions.push(transactionsArray)
       ledgerService.updateEntry(unqNamesObj, ledger).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
+
+
+  $scope.isTransactionContainsTax = (taxesAppliedArray) ->
+    _.each(taxesAppliedArray, (taxApplied) ->
+      _.each($scope.taxList, (tax) ->
+        if tax.uniqueName == taxApplied
+          tax.isChecked = true
+      )
+    )
 
   $scope.removeUpdatedBankLedger = () ->
     if $scope.btIndex != undefined

@@ -95,7 +95,7 @@
 		        <i class="glyphicon glyphicon-link pull-right"></i>
 		      </a>
 
-          <a class="pull-right mrL1">
+          <a class="pull-right mrL1" ng-if="eLedgerData.length > 0 && showEledger">
             <div ng-click="mergeBankTransactions(mergeTransaction)">
               <switch on="Unmerge" off="Merge" ng-model="mergeTransaction" class="wide100" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>
             </div>
@@ -204,7 +204,7 @@
                                   <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                 </td>
                                 <td class="col-xs-3"><input class="form-control" ng-model="ledger.entryDate"></td>
-                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4"></td>
+                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4"></td>
                                 <td class="col-xs-3" style="position: relative"><input class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" ng-click="downloadInvoice(ledger.invoiceNumber)"></i></span></td>
                               </tr>
                             </tbody>
@@ -221,7 +221,7 @@
                                   <input type="checkbox">
                                 </td>
                                 <td class="col-xs-3"><input class="form-control" ng-model="blankLedger.entryDate" accesskey="L"></td>
-                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
+                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
                                 <td class="col-xs-3" style="position: relative"><input class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)"></i></span></td>
                               </tr>
                             </tbody>
@@ -284,7 +284,7 @@
                                   <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                 </td>
                                 <td class="col-xs-3"><input class="form-control" ng-model="ledger.entryDate"></td>
-                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
+                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
                                 <td class="col-xs-3" style="position: relative"><input class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" ng-click="downloadInvoice(ledger.invoiceNumber)"></i></span></td>
                               </tr>
                             </tbody>
@@ -301,7 +301,7 @@
                                   <input type="checkbox">
                                 </td>
                                 <td class="col-xs-3"><input class="form-control"  ng-model="blankLedger.entryDate" accesskey="R"></td>
-                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
+                                <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
                                 <td class="col-xs-3" style="position: relative"><input class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)"></i></span></td>
                               </tr>
                             </tbody>
@@ -392,9 +392,17 @@
         <i class="glyphicon glyphicon-off close-panel" ng-click="closePanel()"></i>
         <div class="mrT">
           <div class="form-group">
-            <div style="margin-top:3px" class="checkbox mrR1 pull-left" ng-if="selectedCompany.canUserSwitch">
+            <div ng-if="selectedCompany.canUserSwitch" style="margin-top:3px" class="checkbox mrR1 pull-left">
               <label>
                 <input type="checkbox" ng-model="selectedLedger.unconfirmedEntry">Unconfirmed Entry
+              </label>
+            </div>
+            <div style="margin-top: 3px;" class="checkbox mrR1 pull-left">
+              <label>
+                <input type="checkbox" ng-model="selectedLedger.isInclusive">Inclusive of tax
+              </label>
+              <label>
+                <input type="checkbox" ng-model="selectedLedger.isAppliedTaxes">Include applied taxes
               </label>
             </div>
             <button class="btn btn-sm btn-info mrR1" ng-click="addBlankTxn('DEBIT')">Add in DR</button>
@@ -403,7 +411,7 @@
               <hr>
               <ul class="list-inline" style="margin-left:15px">
                 <li ng-repeat="tax in taxList">
-                  <div class="checkbox"><label><input type="checkbox">{{tax.name}}</label></div>
+                  <div class="checkbox"><label><input type="checkbox" ng-model="tax.isChecked">{{tax.name}}</label></div>
                 </li>
               </ul>
               <hr>
@@ -439,7 +447,7 @@
           </div>
           <div class="">
               <button class="pull-left mrR btn btn-success" type="button" ng-click="saveUpdateLedger(selectedLedger)">Save</button>
-              <button class="pull-left btn btn-danger" ng-click="deleteEntry(selectedLedger);deleteMultipleTransactions()">Delete</button>
+              <button ng-if="selectedLedger.uniqueName != ''" class="pull-left btn btn-danger" ng-click="deleteEntry(selectedLedger);deleteMultipleTransactions()">Delete</button>
           </div>
         </div>
       </div>
