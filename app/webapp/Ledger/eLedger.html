@@ -41,7 +41,7 @@
                           <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                         </td>
                         <td class="col-xs-3"><input class="form-control" ng-model="eledger.entryDate"></td>
-                        <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4"></td>
+                        <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" typeahead-append-to-body="true"></td>
                         <td class="col-xs-3"><input class="form-control" ng-model="txn.amount"></td>
                       </tr>
                     </tbody>
@@ -75,7 +75,7 @@
                           <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                         </td>
                         <td class="col-xs-3"><input class="form-control" ng-model="eledger.entryDate"></td>
-                        <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4"></td>
+                        <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" typeahead-append-to-body="true"></td>
                         <td class="col-xs-3"><input class="form-control" ng-model="txn.amount"></td>
                       </tr>
                     </tbody>
