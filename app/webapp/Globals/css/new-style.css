@@ -2851,3 +2851,9 @@ ul.pills li {
     border-bottom: 1px solid #e0e0e0;
     padding-bottom: 5px;
 }
+
+.download-invoice-ledger{
+    position: absolute;
+    right: 5px;
+    top: 10px;
+}

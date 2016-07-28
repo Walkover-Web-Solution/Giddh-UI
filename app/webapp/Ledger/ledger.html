@@ -205,7 +205,7 @@
                                 </td>
                                 <td class="col-xs-3"><input class="form-control" ng-model="ledger.entryDate"></td>
                                 <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4"></td>
-                                <td class="col-xs-3"><input class="form-control" ng-model="txn.amount"></td>
+                                <td class="col-xs-3" style="position: relative"><input class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" ng-click="downloadInvoice(ledger.invoiceNumber)"></i></span></td>
                               </tr>
                             </tbody>
                           </table>
@@ -222,7 +222,7 @@
                                 </td>
                                 <td class="col-xs-3"><input class="form-control" ng-model="blankLedger.entryDate" accesskey="L"></td>
                                 <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
-                                <td class="col-xs-3"><input class="form-control" ng-model="txn.amount"></td>
+                                <td class="col-xs-3" style="position: relative"><input class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)"></i></span></td>
                               </tr>
                             </tbody>
                           </table>
@@ -285,7 +285,7 @@
                                 </td>
                                 <td class="col-xs-3"><input class="form-control" ng-model="ledger.entryDate"></td>
                                 <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
-                                <td class="col-xs-3"><input class="form-control" ng-model="txn.amount"></td>
+                                <td class="col-xs-3" style="position: relative"><input class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" ng-click="downloadInvoice(ledger.invoiceNumber)"></i></span></td>
                               </tr>
                             </tbody>
                           </table>
@@ -302,7 +302,7 @@
                                 </td>
                                 <td class="col-xs-3"><input class="form-control"  ng-model="blankLedger.entryDate" accesskey="R"></td>
                                 <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
-                                <td class="col-xs-3"><input class="form-control"  ng-model="txn.amount"></td>
+                                <td class="col-xs-3" style="position: relative"><input class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)"></i></span></td>
                               </tr>
                             </tbody>
                           </table>

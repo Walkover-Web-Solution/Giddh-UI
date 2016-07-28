@@ -263,17 +263,18 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   # upper icon functions ends here
 
   $scope.getAccountDetail = (accountUniqueName) ->
-    unqObj = {
-      compUname : $rootScope.selectedCompany.uniqueName
-      acntUname : accountUniqueName
-    }
-    accountService.get(unqObj)
-    .then(
-      (res)->
-        $scope.getAccountDetailSuccess(res)
-    ,(error)->
-      $scope.getAccountDetailFailure(error)
-    )
+    if not _.isUndefined(accountUniqueName) && not _.isEmpty(accountUniqueName) && not _.isNull(accountUniqueName)
+      unqObj = {
+        compUname : $rootScope.selectedCompany.uniqueName
+        acntUname : accountUniqueName
+      }
+      accountService.get(unqObj)
+      .then(
+        (res)->
+          $scope.getAccountDetailSuccess(res)
+      ,(error)->
+        $scope.getAccountDetailFailure(error)
+      )
 
   $scope.getAccountDetailFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -658,6 +659,38 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $scope.redirectToState = (state) ->
     $state.go(state)
+
+  $scope.downloadInvoice = (invoiceNumber) ->
+    obj =
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $scope.accountUnq
+    data=
+      invoiceNumber: [invoiceNumber]
+      template: ''
+    accountService.downloadInvoice(obj, data).then((res) ->
+      $scope.downloadInvSuccess(res, invoiceNumber)
+    , $scope.multiActionWithInvFailure)
+
+  $scope.downloadInvSuccess = (res, invoiceNumber)->
+    byteChars = atob(res.body)
+    byteNums = new Array(byteChars.length)
+    i = 0
+    while i < byteChars.length
+      byteNums[i] = byteChars.charCodeAt(i)
+      i++
+    byteArray = new Uint8Array(byteNums)
+    file = new Blob([byteArray], {type: 'application/pdf'})
+    fileURL = URL.createObjectURL(file)
+    a = document.createElement("a")
+    document.body.appendChild(a)
+    a.style = "display:none"
+    a.href = fileURL
+    a.download = invoiceNumber+".pdf"
+    a.click()
+
+  # common failure message
+  $scope.multiActionWithInvFailure=(res)->
+    toastr.error(res.data.message, res.data.status)
 
   $rootScope.$on 'company-changed', (event,changeData) ->
     # when company is changed, redirect to manage company page
