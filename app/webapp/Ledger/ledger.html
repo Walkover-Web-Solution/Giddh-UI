@@ -392,7 +392,7 @@
         <i class="glyphicon glyphicon-off close-panel" ng-click="closePanel()"></i>
         <div class="mrT">
           <div class="form-group">
-            <div style="margin-top:3px" class="checkbox mrR1 pull-left">
+            <div style="margin-top:3px" class="checkbox mrR1 pull-left" ng-if="selectedCompany.canUserSwitch">
               <label>
                 <input type="checkbox" ng-model="selectedLedger.unconfirmedEntry">Unconfirmed Entry
               </label>
