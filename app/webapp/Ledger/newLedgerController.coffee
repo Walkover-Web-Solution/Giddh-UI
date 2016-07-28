@@ -448,10 +448,15 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         tax.account = {}
         tax.account.uniqueName = 0
       $scope.taxList.push(tax)
+    $scope.matchTaxAccounts($scope.taxList)
 
 
   $scope.getTaxListFailure = (res) ->
     toastr.error(res.data.message, res.status)
+
+  $scope.matchTaxAccounts = (taxlist) ->
+    _.each taxlist, (tax) ->
+      
 
   $scope.addTaxEntry = (tax, item) ->
     if tax.isSelected
