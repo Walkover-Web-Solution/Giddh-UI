@@ -402,7 +402,7 @@
                 <input type="checkbox" ng-model="selectedLedger.isInclusive">Inclusive of tax
               </label>
               <label>
-                <input type="checkbox" ng-model="selectedLedger.isAppliedTaxes">Include applied taxes
+                <input type="checkbox" ng-model="selectedLedger.applyApplicableTaxes">Include applied taxes
               </label>
             </div>
             <button class="btn btn-sm btn-info mrR1" ng-click="addBlankTxn('DEBIT')">Add in DR</button>
@@ -445,7 +445,7 @@
           <div class="mrB">
             <label>Total: {{ttlValD + ttlValDType}}</label>
           </div>
-          <div class="">
+          <div class="" ng-if="selectedLedger.transactions[0].particular.uniqueName != '' || selectedLedger.transactions[1].particular.uniqueName != ''">
               <button class="pull-left mrR btn btn-success" type="button" ng-click="saveUpdateLedger(selectedLedger)">Save</button>
               <button ng-if="selectedLedger.uniqueName != ''" class="pull-left btn btn-danger" ng-click="deleteEntry(selectedLedger);deleteMultipleTransactions()">Delete</button>
           </div>

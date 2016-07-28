@@ -49,7 +49,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 #      hasDebit:false
       invoiceGenerated:false
       isCompoundEntry:false
-      isAppliedTaxes:true
+      applyApplicableTaxes:true
       tag:null
       transactions:[
         $scope.newDebitTxn
@@ -86,7 +86,10 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   txnModel = (str) ->
     @ledger = {
       date: $filter('date')(new Date(), "dd-MM-yyyy")
-      particular: ''
+      particular: {
+        name:""
+        uniqueName:""
+      }
       amount : 0
       type: str
     } 
@@ -500,57 +503,85 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     if ledger.isBankTransaction
       $scope.btIndex = ledger.index
     delete ledger.isCompoundEntry
-    if _.isEmpty(ledger.uniqueName)
-      console.log("creating new entry")
-      unqNamesObj = {
-        compUname: $rootScope.selectedCompany.uniqueName
-        acntUname: $scope.accountUnq
-      }
-      delete ledger.uniqueName
-      delete ledger.voucherNo
-      transactionsArray = []
-      _.every(ledger.transactions,(led) ->
-        delete led.date
-        delete led.parentGroups
-        delete led.particular.parentGroups
-        delete led.particular.mergedAccounts
-        delete led.particular.applicableTaxes
-      )
-      transactionsArray = _.reject(ledger.transactions, (led) ->
-           led.particular.uniqueName == ""
-      )
-      ledger.transactions = transactionsArray
-      ledger.voucherType = ledger.voucher.shortCode
+    if ledger.transactions.length > 0
+      if _.isEmpty(ledger.uniqueName)
+        console.log("creating new entry")
+        unqNamesObj = {
+          compUname: $rootScope.selectedCompany.uniqueName
+          acntUname: $scope.accountUnq
+        }
+        delete ledger.uniqueName
+        delete ledger.voucherNo
+        transactionsArray = []
+        _.every(ledger.transactions,(led) ->
+          delete led.date
+          delete led.parentGroups
+          delete led.particular.parentGroups
+          delete led.particular.mergedAccounts
+          delete led.particular.applicableTaxes
+        )
+        transactionsArray = _.reject(ledger.transactions, (led) ->
+             if led.particular == "" || led.particular.uniqueName == ""
+               return led
+        )
+        ledger.transactions = transactionsArray
+        ledger.voucherType = ledger.voucher.shortCode
+        $scope.addTaxesToLedger(ledger)
+        if ledger.transactions.length > 0
+          ledgerService.createEntry(unqNamesObj, ledger).then($scope.addEntrySuccess, $scope.addEntryFailure)
+        else
+          response = {}
+          response.data = {}
+          response.data.message = "There must be at least a transaction to make an entry."
+          response.data.status = "Error"
+          $scope.addEntryFailure(response)
+#          toastr.error("There must be at least a transaction to make an entry.")
+      else
+        console.log("updating entry")
 
-      ledgerService.createEntry(unqNamesObj, ledger).then($scope.addEntrySuccess, $scope.addEntryFailure)
+        _.each ledger.transactions, (txn) ->
+          if !_.isEmpty(txn.particular.uniqueName)
+            particular = {}
+            particular.name = txn.particular.name
+            particular.uniqueName = txn.particular.uniqueName
+            txn.particular = particular
+  #      ledger.isInclusiveTax = false
+        unqNamesObj = {
+          compUname: $rootScope.selectedCompany.uniqueName
+          acntUname: $scope.accountUnq
+          entUname: ledger.uniqueName
+        }
+        # transactionsArray = []
+        # _.every($scope.blankLedger.transactions,(led) ->
+        #   delete led.date
+        #   delete led.parentGroups
+        # )
+        # _.each(ledger.)
+        # transactionsArray = _.reject($scope.blankLedger.transactions, (led) ->
+        #   led.particular.uniqueName == ""
+        # )
+        $scope.addTaxesToLedger(ledger)
+#        console.log ledger
+        #ledger.transactions.push(transactionsArray)
+        if ledger.transactions.length > 0
+          ledgerService.updateEntry(unqNamesObj, ledger).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
+        else
+          response = {}
+          response.data = {}
+          response.data.message = "There must be at least a transaction to make an entry."
+          response.data.status = "Error"
+          $scope.addEntryFailure(response)
     else
-      console.log("updating entry")
+      toastr.error("There must be at least a transaction to make an entry.")
 
-      _.each ledger.transactions, (txn) ->
-        if !_.isEmpty(txn.particular.uniqueName)
-          particular = {}
-          particular.name = txn.particular.name
-          particular.uniqueName = txn.particular.uniqueName
-          txn.particular = particular
-#      ledger.isInclusiveTax = false
-      unqNamesObj = {
-        compUname: $rootScope.selectedCompany.uniqueName
-        acntUname: $scope.accountUnq
-        entUname: ledger.uniqueName
-      }
-      # transactionsArray = []
-      # _.every($scope.blankLedger.transactions,(led) ->
-      #   delete led.date
-      #   delete led.parentGroups
-      # )
-      # _.each(ledger.)
-      # transactionsArray = _.reject($scope.blankLedger.transactions, (led) ->
-      #   led.particular.uniqueName == ""
-      # )
-      console.log ledger
-      #ledger.transactions.push(transactionsArray)
-      ledgerService.updateEntry(unqNamesObj, ledger).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
 
+
+  $scope.addTaxesToLedger = (ledger) ->
+    ledger.tax = []
+    _.each($scope.taxList, (tax) ->
+      if tax.isChecked == true
+        ledger.tax.push(tax.uniqueName)
+    )
 
   $scope.isTransactionContainsTax = (taxesAppliedArray) ->
     _.each(taxesAppliedArray, (taxApplied) ->
