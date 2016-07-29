@@ -56,7 +56,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         $scope.newCreditTxn
       ]
       unconfirmedEntry:false
-      isInclusiveTax: true
+      isInclusiveTax: false
       uniqueName:""
       voucher:{
         name:""
@@ -72,15 +72,17 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       entryDate:''
       invoiceGenerated:false
       isCompoundEntry:false
+      applyApplicableTaxes: true
       tag:''
       transactions:[]
       unconfirmedEntry:false
       uniqueName:""
-      isInclusiveTax: true
+      isInclusiveTax: false
       voucher:{
         name:""
         shortCode:""
       }
+      tax: []
       voucherNo:''
     }
 
@@ -490,6 +492,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     $scope.selectedLedger.index = index
     if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
       $scope.checkCompEntry(ledger)
+    $scope.isTransactionContainsTax(ledger.transactions)
 
   $scope.checkCompEntry = (ledger) ->
     unq = ledger.uniqueName
@@ -585,10 +588,11 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         ledger.tax.push(tax.uniqueName)
     )
 
-  $scope.isTransactionContainsTax = (taxesAppliedArray) ->
-    _.each(taxesAppliedArray, (taxApplied) ->
+  $scope.isTransactionContainsTax = (transactions) ->
+    _.each(transactions, (txn) ->
       _.each($scope.taxList, (tax) ->
-        if tax.uniqueName == taxApplied
+        tax.isChecked = false
+        if tax.account.uniqueName == txn.particular.uniqueName
           tax.isChecked = true
       )
     )
@@ -601,35 +605,24 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     $scope.blankLedger = {
       description:null
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
+#      hasCredit:false
+#      hasDebit:false
       invoiceGenerated:false
       isCompoundEntry:false
+      applyApplicableTaxes:true
       tag:null
       transactions:[
-        $scope.newDebitTxn = {
-          date: $filter('date')(new Date(), "dd-MM-yyyy")
-          particular: {
-            name:""
-            uniqueName:""
-          }
-          amount : 0
-          type: 'DEBIT'
-        }
-        $scope.newCreditTxn = {
-          date: $filter('date')(new Date(), "dd-MM-yyyy")
-          particular: {
-            name:""
-            uniqueName:""
-          }
-          amount : 0
-          type: 'CREDIT'
-        }
+        $scope.newDebitTxn
+        $scope.newCreditTxn
       ]
       unconfirmedEntry:false
+      isInclusiveTax: false
       uniqueName:""
       voucher:{
         name:""
         shortCode:""
       }
+      tax:[]
       voucherNo:null
     }
 

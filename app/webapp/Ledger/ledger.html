@@ -200,9 +200,9 @@
                           <table class="width100">
                             <tbody class="ledger-main">
                               <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index)" ng-if="txn.type == 'DEBIT'">
-                                <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
+                                <!-- <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
                                   <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
-                                </td>
+                                </td> -->
                                 <td class="col-xs-3"><input class="form-control" ng-model="ledger.entryDate"></td>
                                 <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4"></td>
                                 <td class="col-xs-3" style="position: relative"><input class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" ng-click="downloadInvoice(ledger.invoiceNumber)"></i></span></td>
@@ -217,9 +217,9 @@
                           <table class="width100">
                             <tbody class="ledger-main">
                               <tr class="ledger-row" ng-repeat="txn in blankLedger.transactions" ng-if="txn.type == 'DEBIT'" ng-click="selectTxn(blankLedger, txn, $index)">
-                                <td class="col-xs-1 maxW42">
+                                <!-- <td class="col-xs-1 maxW42">
                                   <input type="checkbox">
-                                </td>
+                                </td> -->
                                 <td class="col-xs-3"><input class="form-control" ng-model="blankLedger.entryDate" accesskey="L"></td>
                                 <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
                                 <td class="col-xs-3" style="position: relative"><input class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)"></i></span></td>
@@ -280,9 +280,9 @@
                           <table class="width100">
                             <tbody class="ledger-main">
                               <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index)" ng-if="txn.type == 'CREDIT'">
-                                <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
+                                <!-- <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
                                   <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
-                                </td>
+                                </td> -->
                                 <td class="col-xs-3"><input class="form-control" ng-model="ledger.entryDate"></td>
                                 <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
                                 <td class="col-xs-3" style="position: relative"><input class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" ng-click="downloadInvoice(ledger.invoiceNumber)"></i></span></td>
@@ -297,9 +297,9 @@
                           <table class="width100">
                             <tbody class="ledger-main">
                               <tr class="ledger-row" ng-repeat="txn in blankLedger.transactions" ng-if="txn.type == 'CREDIT'" ng-click="selectTxn(blankLedger, txn, $index)">
-                                <td class="col-xs-1 maxW42">
+                                <!-- <td class="col-xs-1 maxW42">
                                   <input type="checkbox">
-                                </td>
+                                </td> -->
                                 <td class="col-xs-3"><input class="form-control"  ng-model="blankLedger.entryDate" accesskey="R"></td>
                                 <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" ></td>
                                 <td class="col-xs-3" style="position: relative"><input class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)"></i></span></td>
@@ -399,7 +399,7 @@
             </div>
             <div style="margin-top: 3px;" class="checkbox mrR1 pull-left">
               <label>
-                <input type="checkbox" ng-model="selectedLedger.isInclusive">Inclusive of tax
+                <input type="checkbox" ng-model="selectedLedger.isInclusiveTax">Inclusive of tax
               </label>
               <label>
                 <input type="checkbox" ng-model="selectedLedger.applyApplicableTaxes">Include applied taxes
