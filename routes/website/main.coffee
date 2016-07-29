@@ -49,7 +49,7 @@ router.get '/robots.txt', (req, res) ->
 router.get '/success', (req, res) ->
   res.sendFile 'success.html', options
 
-router.get '/verify-email', (req, res) ->
+router.get '/company/verify-email', (req, res) ->
   res.sendFile 'verifyEmail.html', options
 
 router.get '/refresh-completed', (req, res) ->

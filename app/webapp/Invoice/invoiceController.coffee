@@ -340,6 +340,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.invoiceLoadDone = true
     $scope.templateList = res.body.templates
     $scope.templateData = res.body.templateData
+    $scope.invoiceSettings.emailAddress = $scope.templateData.email
+    $scope.invoiceSettings.isEmailVerified = $scope.templateData.emailVerified
 
   $scope.getTemplatesFailure = (res) ->
     $scope.invoiceLoadDone = true

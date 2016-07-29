@@ -3109,3 +3109,22 @@ ul.pills li {
     transition: 0.5s linear all;
     opacity: 1;
 }
+
+.pos-rel{
+    position:relative;
+}
+
+.pos-abs{
+    position: absolute;
+}
+
+.verified{
+    right: 10px;
+    top: 32px;
+    color:green;
+}
+
+.unverified{
+    right: 10px;
+    top: 32px;
+}
