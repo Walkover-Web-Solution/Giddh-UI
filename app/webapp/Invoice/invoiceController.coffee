@@ -894,16 +894,23 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.updateGeneratedInvoiceFailure = (res) ->
     toastr.error(res.data.message)
 
-  $scope.saveInvoiceSettings = () ->
+  $scope.saveInvoiceSettings = (action) ->
+    if action == 'delete'
+      $scope.invoiceSettings.emailAddress = ""
     if _.isEmpty($scope.invoiceSettings.emailAddress)
       $scope.invoiceSettings.emailAddress = null
     obj = {
       companyUniqueName : $rootScope.selectedCompany.uniqueName
     }
-    companyServices.saveInvoiceSetting(obj.companyUniqueName,$scope.invoiceSettings).then($scope.saveInvoiceSettingsSuccess,$scope.saveInvoiceSettingsFailure)
+    companyServices.saveInvoiceSetting(obj.companyUniqueName,$scope.invoiceSettings).then((res) ->
+        $scope.saveInvoiceSettingsSuccess(res, action)
+      , $scope.saveInvoiceSettingsFailure)
 
-  $scope.saveInvoiceSettingsSuccess = (res) ->
-    toastr.success(res.body)
+  $scope.saveInvoiceSettingsSuccess = (res,action) ->
+    if action == 'delete'
+      toastr.error("Email deleted successfully.")
+    else
+      toastr.success(res.body)
 
   $scope.saveInvoiceSettingsFailure = (res) ->
     toastr.error(res.data.message)

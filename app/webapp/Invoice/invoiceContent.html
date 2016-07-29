@@ -224,11 +224,10 @@
                        tabindex="2" required>
                 <i class="glyphicon glyphicon-ok-sign pos-abs verified" ng-if="invoiceSettings.isEmailVerified"></i>
                 <i class="glyphicon glyphicon-exclamation-sign pos-abs unverified" ng-if="!invoiceSettings.isEmailVerified && !settingForm.settingEmail.$invalid"></i>
-
-                <!--<span class="label" ng-class="{'label-success' : invoiceSettings.isEmailVerified}"><i class="glyphicon glyphicon-ok-sign"></i> <span ng-if="invoiceSettings.isEmailVerified">Verified</span> <span ng-if="!invoiceSettings.isEmailVerified">Unverified</span></span>-->
+                <i class="glyphicon glyphicon-trash pos-abs" style="right:-20px;top:30px" ng-click="saveInvoiceSettings('delete')" ng-if="invoiceSettings.emailAddress != ''"></i>
               </div>
               <div class="form-group">
-                <button class="btn btn-primary" ng-disabled="settingForm.settingEmail.$invalid" ng-click="saveInvoiceSettings()">Save</button>
+                <button class="btn btn-primary" ng-disabled="settingForm.settingEmail.$invalid" ng-click="saveInvoiceSettings('save')">Save</button>
               </div>
             </form>
           </div>
