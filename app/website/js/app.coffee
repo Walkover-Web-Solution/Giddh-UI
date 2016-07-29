@@ -388,6 +388,30 @@ app.controller 'successCtrl', [
 
 ]
 
+app.controller 'verifyEmailCtrl', [
+  '$scope', 'toastr', '$http',
+  ($scope, toastr, $http) ->
+    urlSearch = window.location.search
+    if !_.isEmpty(urlSearch)
+      searchArr = urlSearch.split("&")
+      emailAddress = searchArr[0].split("=")[1]
+      companyUniqueName = searchArr[1].split("=")[1]
+      scope = searchArr[2].split("=")[1]
+      data = {}
+      data.companyUname = companyUniqueName
+      data.emailAddress = emailAddress
+      data.scope = scope
+      url = '/verify-email'
+
+      $http.post(url, data).then(
+        (success)->
+          console.log(success)
+        (error)->
+          console.log(error)
+
+      )
+]
+
 
 
 

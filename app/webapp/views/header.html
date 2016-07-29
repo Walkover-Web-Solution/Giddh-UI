@@ -120,12 +120,13 @@
         </li>
 
         <li ng-if="cmpViewShow" class="company-name" uib-dropdown>
-          <a id="cmpWrp" class="clearfix" style="cursor:pointer" uib-dropdown-toggle>
+          <a id="cmpWrp" class="clearfix" style="cursor:pointer;position: relative;" uib-dropdown-toggle>
             <i class="gic-24 icon-building-w"></i>
             <div class="cText">
               <span class="cName">{{selectedCompany.name}}</span>
               <span ng-bind="currentFinancialYear"></span>
             </div>
+            <i class="glyphicon glyphicon-chevron-down pull-right" style="right: 2px"></i>
           </a>
           <ul id="companyList" class="company-list dropdown-menu" aria-labelledby="cmpWrp">
             <li class="create-company">

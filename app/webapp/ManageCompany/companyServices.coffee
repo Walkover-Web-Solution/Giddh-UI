@@ -162,6 +162,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     assignTax:
       method: 'POST'
       url: '/company/:companyUniqueName/tax/assign'
+
+    saveInvoiceSetting:
+      method: 'PUT'
+      url: '/company/:companyUniqueName/invoice-setting'
        
   })
 
@@ -314,6 +318,11 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
 
     assignTax: (companyUniqueName,data) ->
       @handlePromise((onSuccess, onFailure) -> Company.assignTax({
+        companyUniqueName: companyUniqueName
+      },data, onSuccess, onFailure))
+
+    saveInvoiceSetting: (companyUniqueName,data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.saveInvoiceSetting({
         companyUniqueName: companyUniqueName
       },data, onSuccess, onFailure))
 

@@ -23,6 +23,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.search.acnt = ''
   $scope.selectedAccountCategory = ''
   $scope.editGenInvoice = false
+  $scope.invoiceSettings = {}
+  $scope.invoiceSettings.emailAddress = ""
   $scope.gwaList = {
     page: 1
     count: 5000
@@ -888,6 +890,20 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.editGenInvoice = false
 
   $scope.updateGeneratedInvoiceFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.saveInvoiceSettings = () ->
+    if _.isEmpty($scope.invoiceSettings.emailAddress)
+      $scope.invoiceSettings.emailAddress = null
+    obj = {
+      companyUniqueName : $rootScope.selectedCompany.uniqueName
+    }
+    companyServices.saveInvoiceSetting(obj.companyUniqueName,$scope.invoiceSettings).then($scope.saveInvoiceSettingsSuccess,$scope.saveInvoiceSettingsFailure)
+
+  $scope.saveInvoiceSettingsSuccess = (res) ->
+    toastr.success(res.body)
+
+  $scope.saveInvoiceSettingsFailure = (res) ->
     toastr.error(res.data.message)
   
   # state change

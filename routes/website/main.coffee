@@ -49,6 +49,9 @@ router.get '/robots.txt', (req, res) ->
 router.get '/success', (req, res) ->
   res.sendFile 'success.html', options
 
+router.get '/verify-email', (req, res) ->
+  res.sendFile 'verifyEmail.html', options
+
 router.get '/refresh-completed', (req, res) ->
   res.sendFile 'refresh-completed.html', options
 
@@ -69,5 +72,12 @@ router.put '/ebanks/login', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.post '/verify-email', (req, res) ->
+  data = req.body
+  hUrl = settings.envUrl + '/company/'+data.companyUname+'/invoice-setting/verify-email?emailAddress='+data.emailAddress+'&scope='+data.scope
+  settings.client.get hUrl, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
 
 module.exports = router

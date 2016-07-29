@@ -577,7 +577,6 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
           $scope.addEntryFailure(response)
     else
       toastr.error("Select voucher type.")
-      $document.getElementsByName("voucherType").focus()
 
 
 

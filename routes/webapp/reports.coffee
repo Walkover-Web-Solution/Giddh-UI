@@ -250,6 +250,18 @@ router.post '/tax/assign', (req,res) ->
       res.status(response.statusCode)
     res.send data
 
+router.put '/invoice-setting', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/invoice-setting'
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
 
 
 
