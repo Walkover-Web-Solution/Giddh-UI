@@ -56,7 +56,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         $scope.newCreditTxn
       ]
       unconfirmedEntry:false
-      isInclusiveTax: false
+      isInclusiveTax: true
       uniqueName:""
       voucher:{
         name:""
@@ -76,7 +76,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       transactions:[]
       unconfirmedEntry:false
       uniqueName:""
-      isInclusiveTax: false
+      isInclusiveTax: true
       voucher:{
         name:""
         shortCode:""
