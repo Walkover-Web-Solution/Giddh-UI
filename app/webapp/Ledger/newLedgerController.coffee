@@ -62,6 +62,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         name:""
         shortCode:""
       }
+      tax:[]
       voucherNo:null
     }
 
@@ -503,7 +504,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     if ledger.isBankTransaction
       $scope.btIndex = ledger.index
     delete ledger.isCompoundEntry
-    if ledger.transactions.length > 0
+    if !_.isEmpty(ledger.voucher.shortCode)
       if _.isEmpty(ledger.uniqueName)
         console.log("creating new entry")
         unqNamesObj = {
@@ -572,7 +573,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
           response.data.status = "Error"
           $scope.addEntryFailure(response)
     else
-      toastr.error("There must be at least a transaction to make an entry.")
+      toastr.error("Select voucher type.")
+      $document.getElementsByName("voucherType").focus()
 
 
 
@@ -639,6 +641,9 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     $scope.getLedgerData()
     $scope.resetBlankLedger()
     $scope.selectedLedger = $scope.blankLedger
+    _.each($scope.taxList, (tax) ->
+      tax.isChecked = false
+    )
     if $scope.mergeTransaction
       $scope.mergeBankTransactions(mergeTransaction)
     
@@ -646,6 +651,9 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     toastr.error(res.data.message, res.data.status)
     $scope.resetBlankLedger()
     $scope.selectedLedger = $scope.blankLedger
+    _.each($scope.taxList, (tx) ->
+      tx.isChecked = false
+    )
 
   $scope.updateEntrySuccess = (res) ->
     toastr.success("Entry updated successfully", "Success")
