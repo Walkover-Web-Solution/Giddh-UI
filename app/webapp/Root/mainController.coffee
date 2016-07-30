@@ -23,7 +23,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     limit: 5
   }
   $rootScope.fltAccntListPaginated = []
-#  $rootScope.fltAccountLIstFixed = []
+  $rootScope.fltAccountListFixed = []
   $rootScope.CompanyList = []
   $rootScope.companyIndex = 0
   $rootScope.selectedAccount = {}
@@ -320,6 +320,16 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.getFlatAccountListFailure = (res) ->
     $scope.workInProgress = false
     toastr.error(res.data.message)
+
+  $rootScope.searchAccountInFilter = (str) ->
+    filteredList = []
+    _.each($rootScope.fltAccntListPaginated, (account) ->
+      if account.name.contains(str) || account.uniqueName.contains(str)
+        filteredList.push(account)
+    )
+    filteredList
+
+
 
 
   # search flat accounts list

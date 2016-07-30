@@ -826,3 +826,14 @@ angular.module('ledger', [])
           return
       return
     result
+
+.filter 'searchAccountInPaginated', ->
+  (input, g) ->
+    console.log("input : ",input)
+    console.log("search for : ",g)
+    result = []
+    _.each input, (q) ->
+      p = RegExp(g, 'i')
+      if q.name.match(p) or q.uniqueName.match(p)
+        result.push q
+    result
