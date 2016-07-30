@@ -182,7 +182,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   )
   .state('company.content.ledgerContent',
     url: '/ledger/:unqName'
-#    url: '/:unqName'
     views:{
       'accountsList':{
         templateUrl: '/public/webapp/views/accounts.html'
@@ -190,11 +189,17 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       'rightPanel':{
         templateUrl: '/public/webapp/Ledger/ledger.html'
         controller: 'newLedgerController'
+<<<<<<< 7a6b9bb10d0af5f5b890a4387de8b64b4e019570
 
       }
     }
   )
   
+=======
+      }
+    }
+  )
+>>>>>>> axosoft card problems resolve
   .state('/thankyou',
     url: '/thankyou'
     templateUrl: '/public/webapp/views/thanks.html'

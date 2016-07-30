@@ -14,6 +14,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.accountToShow = {}
   $scope.mergeTransaction = false
   $scope.showEledger = true
+  $scope.pageAccount = {}
 
 
   $scope.hideEledger = () ->
@@ -97,18 +98,22 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       type: str
     } 
 
-  $scope.addBlankTxn= (str) ->
+  $scope.addBlankTxn= (str, ledger) ->
     txn = new txnModel(str)
-    if $scope.selectedLedger.uniqueName != ""
-      $scope.selectedLedger.transactions.push(txn)
+    if ledger.uniqueName != ""
+      $scope.hasBlankTxn = false
+      $scope.checkForExistingblankTransaction($scope.selectedLedger, str)
+      if !$scope.hasBlankTxn
+        ledger.transactions.push(txn)
     else
-      _.each $scope.blankLedger.transactions, (txn) ->
+      _.each ledger.transactions, (txn) ->
         if txn.type == str && txn.particular.uniqueName != ''
-          $scope.blankLedger.transactions.push(txn)
+          ledger.transactions.push(txn)
 
-  $scope.saveEntry = (newEntry) ->
-    console.log newEntry
-
+  $scope.checkForExistingblankTransaction = (ledger, str) ->
+    _.each ledger.transactions, (txn) ->
+      if txn.particular.uniqueName == '' && txn.amount == 0 && txn.type == str
+        $scope.hasBlankTxn = true
 
   $scope.taxList = []
   $scope.voucherTypeList = [
@@ -264,6 +269,44 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     $scope.ledgerEmailData = {}
 
   $scope.emailLedgerFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  #export ledger
+  $scope.exportLedger = ()->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $scope.accountUnq
+      fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+    }
+    accountService.exportLedger(unqNamesObj).then($scope.exportLedgerSuccess, $scope.exportLedgerFailure)
+
+  $scope.exportLedgerSuccess = (res)->
+    $scope.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
+    if $scope.msieBrowser()
+      $scope.openWindow(res.body.filePath)
+    else if $scope.isSafari       
+      modalInstance = $uibModal.open(
+        template: '<div>
+            <div class="modal-header">
+              <h3 class="modal-title">Download File</h3>
+            </div>
+            <div class="modal-body">
+              <p class="mrB">To download your file Click on button</p>
+              <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+            </div>
+        </div>'
+        size: "sm"
+        backdrop: 'static'
+        scope: $scope
+      )
+    else
+      window.open(res.body.filePath)
+
+  $scope.exportLedgerFailure = (res)->
     toastr.error(res.data.message, res.data.status)
 
 

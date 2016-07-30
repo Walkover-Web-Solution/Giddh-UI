@@ -2629,7 +2629,11 @@ body.unresponsive {
 }
 
 .uncEntry {
-    border: 1px solid #d35f29;
+    border: 1px solid #d35f29 !important;
+}
+
+.uncEntry > td {
+    border: 1px solid #d35f29 !important;
 }
 
 .isNotEditable {

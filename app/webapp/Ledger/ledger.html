@@ -199,7 +199,7 @@
                         <td colspan="100%" class="ledger-row">
                           <table class="width100">
                             <tbody class="ledger-main">
-                              <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index)" ng-if="txn.type == 'DEBIT'">
+                              <tr class="ledger-row" ng-repeat="txn in ledger.transactions" ng-click="selectTxn(ledger, txn, $index)" ng-if="txn.type == 'DEBIT'" ng-class="{uncEntry : ledger.unconfirmedEntry}">
                                 <!-- <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
                                   <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                 </td> -->
@@ -279,7 +279,7 @@
                         <td colspan="100%" class="ledger-row">
                           <table class="width100">
                             <tbody class="ledger-main">
-                              <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index)" ng-if="txn.type == 'CREDIT'">
+                              <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index)" ng-if="txn.type == 'CREDIT'" ng-class="{uncEntry : ledger.unconfirmedEntry}">
                                 <!-- <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
                                   <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                 </td> -->
@@ -397,7 +397,7 @@
                 <input type="checkbox" ng-model="selectedLedger.unconfirmedEntry">Unconfirmed Entry
               </label>
             </div>
-            <div style="margin-top: 3px;" class="checkbox mrR1 pull-left">
+            <div style="margin-top: 3px;" class="checkbox mrR1 pull-left" >
               <label>
                 <input type="checkbox" ng-model="selectedLedger.isInclusiveTax">Inclusive of tax
               </label>
@@ -405,8 +405,8 @@
                 <input type="checkbox" ng-model="selectedLedger.applyApplicableTaxes">Include applied taxes
               </label>
             </div>
-            <button class="btn btn-sm btn-info mrR1" ng-click="addBlankTxn('DEBIT')">Add in DR</button>
-            <button class="btn btn-sm btn-primary" ng-click="addBlankTxn('CREDIT')">Add in CR</button>
+            <button class="btn btn-sm btn-info mrR1" ng-click="addBlankTxn('DEBIT', selectedLedger)">Add in DR</button>
+            <button class="btn btn-sm btn-primary" ng-click="addBlankTxn('CREDIT', selectedLedger)">Add in CR</button>
             <div class="row mrT1">
               <hr>
               <ul class="list-inline" style="margin-left:15px">
@@ -445,9 +445,12 @@
           <div class="mrB">
             <label>Total: {{ttlValD + ttlValDType}}</label>
           </div>
-          <div class="" ng-if="selectedLedger.transactions[0].particular.uniqueName != '' || selectedLedger.transactions[1].particular.uniqueName != ''">
-              <button class="pull-left mrR btn btn-success" type="button" ng-click="saveUpdateLedger(selectedLedger)">Save</button>
-              <button ng-if="selectedLedger.uniqueName != ''" class="pull-left btn btn-danger" ng-click="deleteEntry(selectedLedger);deleteMultipleTransactions()">Delete</button>
+          <div class="" >
+              <button class="pull-left mrR btn btn-success" type="button" ng-click="saveUpdateLedger(selectedLedger)">
+                <span ng-if="selectedLedger.transactions[0].particular.uniqueName == '' || selectedLedger.transactions[0].particular == ''">Save</span>
+                <span ng-if="selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined">Update</span>
+              </button>
+              <button ng-if="selectedLedger.uniqueName != '' && selectedLedger.invoiceGenerated == false" class="pull-left btn btn-danger" ng-click="deleteEntry(selectedLedger);deleteMultipleTransactions()">Delete</button>
           </div>
         </div>
       </div>

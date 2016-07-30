@@ -28,6 +28,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.companyIndex = 0
   $rootScope.selectedAccount = {}
 
+  #get account details for ledger
+  $rootScope.getSelectedAccountDetail = (acc) ->
+    console.log acc
+
   # check IE browser version
   $rootScope.GetIEVersion = () ->
     ua = window.navigator.userAgent
