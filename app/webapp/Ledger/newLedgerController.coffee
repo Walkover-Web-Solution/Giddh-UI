@@ -50,7 +50,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 #      hasDebit:false
       invoiceGenerated:false
       isCompoundEntry:false
-      applyApplicableTaxes:true
+      applyApplicableTaxes:false
       tag:null
       transactions:[
         $scope.newDebitTxn
@@ -73,7 +73,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       entryDate:''
       invoiceGenerated:false
       isCompoundEntry:false
-      applyApplicableTaxes: true
+      applyApplicableTaxes: false
       tag:''
       transactions:[]
       unconfirmedEntry:false
@@ -106,8 +106,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       if !$scope.hasBlankTxn
         ledger.transactions.push(txn)
     else
-      _.each ledger.transactions, (txn) ->
-        if txn.type == str && txn.particular.uniqueName != ''
+      _.each ledger.transactions, (transaction) ->
+        if transaction.type == str && transaction.particular.uniqueName != ''
           ledger.transactions.push(txn)
 
   $scope.checkForExistingblankTransaction = (ledger, str) ->
@@ -644,6 +644,24 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       $scope.eLedgerData.splice($scope.btIndex, 1)
 
   $scope.resetBlankLedger = () ->
+    $scope.newDebitTxn = {
+      date: $filter('date')(new Date(), "dd-MM-yyyy")
+      particular: {
+        name:''
+        uniqueName:''
+      }
+      amount : 0
+      type: 'DEBIT'
+    }
+    $scope.newCreditTxn = {
+      date: $filter('date')(new Date(), "dd-MM-yyyy")
+      particular: {
+        name:''
+        uniqueName:''
+      }
+      amount : 0
+      type: 'CREDIT'
+    }
     $scope.blankLedger = {
       description:null
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
@@ -651,7 +669,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 #      hasDebit:false
       invoiceGenerated:false
       isCompoundEntry:false
-      applyApplicableTaxes:true
+      applyApplicableTaxes:false
       tag:null
       transactions:[
         $scope.newDebitTxn
@@ -691,12 +709,13 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     )
 
   $scope.updateEntrySuccess = (res) ->
-    toastr.success("Entry updated successfully", "Success")
+    toastr.success("Entry updated successfully.", "Success")
     addThisLedger = {}
     _.extend(addThisLedger,$scope.blankLedger)
-    $scope.ledgerData.ledgers.push(addThisLedger)
+#    $scope.ledgerData.ledgers.push(addThisLedger)
     $scope.getLedgerData()
     $scope.resetBlankLedger()
+    $scope.selectedLedger = $scope.blankLedger
     if $scope.mergeTransaction
       $scope.mergeBankTransactions(mergeTransaction)
 
@@ -712,8 +731,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     if unqNamesObj.acntUname != '' || unqNamesObj.acntUname != undefined
       ledgerService.deleteEntry(unqNamesObj).then((res) ->
         $scope.deleteEntrySuccess(ledger, res)
-        $scope.deleteEntryFailure
-      )
+      , $scope.deleteEntryFailure)
 
   $scope.deleteEntrySuccess = (item, res) ->
     toastr.success("Entry deleted successfully","Success")

@@ -1,7 +1,7 @@
  <section id="eledgerwrap" class="pdL2 pdR2 pdT2">
   <div class="alert alert-danger fade in pr" style="padding-right:15px"> 
     <button type="button" ng-click="hideEledger()"class="close">
-      <span style="font-size:12px;font-weight:normal">Hide</span>
+      <span style="font-size:12px;font-weight:normal">Close</span>
     </button> 
     
     <table class="table ledgerTable" style="margin-bottom:0">
@@ -37,9 +37,9 @@
                   <table class="eledger-inner" ng-repeat="eledger in eLedgerData">
                     <tbody>
                       <tr ng-repeat="txn in eledger.transactions" ng-if="txn.type == 'DEBIT'" ng-click="selectTxn(eledger, txn, $index)">
-                        <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
-                          <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
-                        </td>
+                        <!--<td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">-->
+                          <!--<input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">-->
+                        <!--</td>-->
                         <td class="col-xs-3"><input class="form-control" ng-model="eledger.entryDate"></td>
                         <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" typeahead-append-to-body="true"></td>
                         <td class="col-xs-3"><input class="form-control" ng-model="txn.amount"></td>
@@ -71,9 +71,9 @@
                   <table class="eledger-inner" ng-repeat="eledger in eLedgerData">
                     <tbody>
                       <tr ng-repeat="txn in eledger.transactions" ng-if="txn.type == 'CREDIT'" ng-click="selectTxn(eledger, txn, $index)">
-                        <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
-                          <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
-                        </td>
+                        <!--<td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">-->
+                          <!--<input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">-->
+                        <!--</td>-->
                         <td class="col-xs-3"><input class="form-control" ng-model="eledger.entryDate"></td>
                         <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:({uniqueName:$viewValue} || {name:$viewValue}) | limitTo: 4" typeahead-append-to-body="true"></td>
                         <td class="col-xs-3"><input class="form-control" ng-model="txn.amount"></td>
