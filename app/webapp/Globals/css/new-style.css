@@ -3139,3 +3139,7 @@ ul.pills li {
     right: 10px;
     top: 32px;
 }
+
+.background-transparent{
+    background: transparent !important;
+}
