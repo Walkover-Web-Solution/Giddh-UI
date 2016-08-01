@@ -514,7 +514,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $timeout ( ->
     $scope.getTaxList()
-  ), 1000
+  ), 2000
 
   $scope.flatAccListC5 = {
       page: 1
@@ -524,6 +524,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     }
 
   $scope.selectTxn = (ledger, txn, index) ->
+    $scope.ledgerBeforeEdit = {}
+    angular.copy(ledger,$scope.ledgerBeforeEdit)
     $scope.showPanel = true
     $scope.selectedLedger = ledger
     $scope.selectedLedger.index = index
@@ -541,12 +543,12 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         lgr.isCompoundEntry = false
 
   $scope.saveUpdateLedger = (ledger) ->
+    $scope.ledgerTxnChanged = false
     if ledger.isBankTransaction
       $scope.btIndex = ledger.index
     delete ledger.isCompoundEntry
     if !_.isEmpty(ledger.voucher.shortCode)
       if _.isEmpty(ledger.uniqueName)
-        console.log("creating new entry")
         unqNamesObj = {
           compUname: $rootScope.selectedCompany.uniqueName
           acntUname: $scope.accountUnq
@@ -607,8 +609,12 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         $scope.addTaxesToLedger(ledger)
 #        console.log ledger
         #ledger.transactions.push(transactionsArray)
+
         if ledger.transactions.length > 0
-          ledgerService.updateEntry(unqNamesObj, ledger).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
+          $scope.matchTaxTransactions(ledger.transactions, $scope.taxList)
+          $scope.checkIfPrincipleTxnIsModified(ledger, $scope.ledgerBeforeEdit.transactions, unqNamesObj)
+          if !$scope.ledgerTxnChanged
+            ledgerService.updateEntry(unqNamesObj, ledger).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
         else
           response = {}
           response.data = {}
@@ -617,8 +623,6 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
           $scope.addEntryFailure(response)
     else
       toastr.error("Select voucher type.")
-
-
 
   $scope.addTaxesToLedger = (ledger) ->
     ledger.taxes = []
@@ -644,6 +648,38 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
             tax.isChecked = true
         )
       )
+
+  $scope.UpdateEntry = (ledger, unqNamesObj) ->
+    $scope.txnAfterRmovingTax = []
+    $scope.removeTaxTxnOnPrincipleTxnModified(ledger.transactions)
+    ledger.transactions = $scope.txnAfterRmovingTax
+    if ledger.transactions.length > 0
+      ledgerService.updateEntry(unqNamesObj, ledger).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
+
+  $scope.matchTaxTransactions = (txnList, taxList) ->
+    _.each txnList, (txn) ->
+      _.each taxList, (tax) ->
+        if txn.particular.uniqueName == tax.account.uniqueName
+          txn.isTax = true
+
+  $scope.checkIfPrincipleTxnIsModified = (ledger, uTxnList, unqNamesObj) ->
+    txnList = ledger.transactions
+    _.each txnList, (txn, i) ->
+      _.each uTxnList, (uTxn, j) ->
+        if txn.isTax == undefined && i == j && txn.particular.uniqueName == uTxn.particular.uniqueName && txn.amount != uTxn.amount
+          $scope.ledgerTxnChanged = true
+          modalService.openConfirmModal(
+            title: 'Principle transaction updated, Would you also like to update tax transactions?',
+            ok: 'Yes',
+            cancel: 'No'
+          ).then ->
+              $scope.UpdateEntry(ledger, unqNamesObj)
+
+  $scope.removeTaxTxnOnPrincipleTxnModified = (txnList) ->
+    _.each txnList, (txn) ->
+      if !txn.isTax
+        $scope.txnAfterRmovingTax.push(txn)
+
 
   $scope.removeUpdatedBankLedger = () ->
     if $scope.btIndex != undefined
