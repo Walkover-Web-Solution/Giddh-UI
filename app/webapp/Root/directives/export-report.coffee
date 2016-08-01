@@ -236,17 +236,10 @@ angular.module('trialBalance', []).directive('exportReport', [
 
         $(elem).draggable()
 
-        # onMouseDown = () ->
-        #   elem.css({
-        #     cursor: '-webkit-grabbing'
-        #   })
+        $(elem).on('drag', (e)->
+          if $(elem).hasClass('fixed-panel')
+            $(elem).removeClass('fixed-panel')
+        )
 
-        # onMouseUp = () ->
-        #   elem.css({
-        #     cursor: '-webkit-grab'
-        #   })
-
-        # elem.on 'mousedown', onMouseDown
-        # elem.on 'mouseup', onMouseUp
     }
 ])

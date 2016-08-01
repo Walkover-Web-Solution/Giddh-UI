@@ -2943,15 +2943,22 @@ ul.pills li {
     background: #fff;
     border-radius: 4px;
     color: #333;
-    position: absolute;
+    position: fixed;
     padding: 10px;
-    -webkit-box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.75);
-    -moz-box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.75);
-    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.75);
-    /*bottom:50px;*/
-    left: 50px;
-    top: 353px;
     z-index: 9;
+    bottom:20px;
+    right:20px;
+    -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+    box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
+}
+
+.fixed-panel{
+    bottom:0px;
+    left: 320px;
+    right:0px;
+    max-width: initial;
+    width: initial;
 }
 
 .bottom0 {
