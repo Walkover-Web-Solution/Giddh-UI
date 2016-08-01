@@ -61,10 +61,19 @@
 		      <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Show List" tooltip-placement="left" ng-click="showImportList()" >
 		        <i class="glyphicon glyphicon-th-list" ></i>
 		      </a>
-		      
-		      <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Export" tooltip-placement="left" ng-click="exportLedger()" >
-		        <i class="glyphicon glyphicon-cloud-download pull-right" ></i>
-		      </a>
+
+          <div class="form-group pull-right mrL1 pdf-export">
+            <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Export" tooltip-placement="right" ng-click="exportOptions()" >
+              <i class="glyphicon glyphicon-cloud-download pull-right" ></i>
+            </a>
+            <div class="export-ledger-options" ng-show="showExportOption">
+              <span class="arrow"></span>
+              <ul class="list-unstyled">
+                <li ng-click="exportLedger('detailed')">Detailed</li>
+                <li ng-click="exportLedger('condensed')">Condensed</li>
+              </ul>
+            </div>
+          </div>
 
 		      <span id="isSafari"></span>
 		     

@@ -15,6 +15,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.mergeTransaction = false
   $scope.showEledger = true
   $scope.pageAccount = {}
+  $scope.showExportOption = false
 
 
   $scope.hideEledger = () ->
@@ -272,12 +273,14 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     toastr.error(res.data.message, res.data.status)
 
   #export ledger
-  $scope.exportLedger = ()->
+  $scope.exportLedger = (type)->
+    $scope.showExportOption = false
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $scope.accountUnq
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+      lType:type
     }
     accountService.exportLedger(unqNamesObj).then($scope.exportLedgerSuccess, $scope.exportLedgerFailure)
 
@@ -523,10 +526,19 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       currentPage : 1
     }
 
+  $scope.exportOptions = () ->
+    $scope.showExportOption = !$scope.showExportOption
   $scope.selectTxn = (ledger, txn, index) ->
     $scope.ledgerBeforeEdit = {}
     angular.copy(ledger,$scope.ledgerBeforeEdit)
     $scope.showPanel = true
+    if ledger.isBankTransaction != undefined
+      _.each(ledger.transactions,(transaction) ->
+        if transaction.type == 'DEBIT'
+          ledger.voucher.shortCode = "rcpt"
+        else if transaction.type == 'CREDIT'
+          ledger.voucher.shortCode = "pay"
+      )
     $scope.selectedLedger = ledger
     $scope.selectedLedger.index = index
     if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
@@ -844,43 +856,43 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     toastr.error(res.data.message, res.data.status)
 
   #export ledger
-  $scope.exportLedger = ()->
-    unqNamesObj = {
-      compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: $scope.selectedGroupUname
-      acntUname: $rootScope.selectedAccount.uniqueName
-      fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
-      toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
-    }
-    accountService.exportLedger(unqNamesObj).then($scope.exportLedgerSuccess, $scope.exportLedgerFailure)
-
-  $scope.exportLedgerSuccess = (res)->
-    $scope.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
-    if $scope.msieBrowser()
-      $scope.openWindow(res.body.filePath)
-    else if $scope.isSafari
-      modalInstance = $uibModal.open(
-        template: '<div>
-            <div class="modal-header">
-              <h3 class="modal-title">Download File</h3>
-            </div>
-            <div class="modal-body">
-              <p class="mrB">To download your file Click on button</p>
-              <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
-            </div>
-        </div>'
-        size: "sm"
-        backdrop: 'static'
-        scope: $scope
-      )
-    else
-      window.open(res.body.filePath)
-
-  $scope.exportLedgerFailure = (res)->
-    toastr.error(res.data.message, res.data.status)
+#  $scope.exportLedger = ()->
+#    unqNamesObj = {
+#      compUname: $rootScope.selectedCompany.uniqueName
+#      selGrpUname: $scope.selectedGroupUname
+#      acntUname: $rootScope.selectedAccount.uniqueName
+#      fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
+#      toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+#    }
+#    accountService.exportLedger(unqNamesObj).then($scope.exportLedgerSuccess, $scope.exportLedgerFailure)
+#
+#  $scope.exportLedgerSuccess = (res)->
+#    $scope.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
+#    if $scope.msieBrowser()
+#      $scope.openWindow(res.body.filePath)
+#    else if $scope.isSafari
+#      modalInstance = $uibModal.open(
+#        template: '<div>
+#            <div class="modal-header">
+#              <h3 class="modal-title">Download File</h3>
+#            </div>
+#            <div class="modal-body">
+#              <p class="mrB">To download your file Click on button</p>
+#              <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
+#            </div>
+#            <div class="modal-footer">
+#              <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+#            </div>
+#        </div>'
+#        size: "sm"
+#        backdrop: 'static'
+#        scope: $scope
+#      )
+#    else
+#      window.open(res.body.filePath)
+#
+#  $scope.exportLedgerFailure = (res)->
+#    toastr.error(res.data.message, res.data.status)
 
   $rootScope.$on 'company-changed', (event,changeData) ->
     # when company is changed, redirect to manage company page

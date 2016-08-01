@@ -154,6 +154,8 @@ router.put '/:accountUniqueName/unshare', (req, res) ->
 router.get '/:accountUniqueName/export-ledger', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + req.params.accountUniqueName + '/export-ledger'
+  if req.query.ltype == 'condensed'
+    hUrl = hUrl + '-condensed'
   args =
     headers:
       'Auth-Key': req.session.authKey

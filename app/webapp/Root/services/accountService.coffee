@@ -172,6 +172,7 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         accountsUniqueName: unqNamesObj.acntUname
         toDate: unqNamesObj.toDate
         fromDate: unqNamesObj.fromDate
+        ltype:unqNamesObj.lType
       }, onSuccess, onFailure))
 
     ledgerImportList: (unqNamesObj) ->

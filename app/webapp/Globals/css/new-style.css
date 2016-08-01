@@ -3143,3 +3143,80 @@ ul.pills li {
 .background-transparent{
     background: transparent !important;
 }
+
+.export-ledger-options {
+    position: absolute;
+    left: -95px;
+    top: -15px;
+    background: #000;
+    color: #fff;
+    border-radius: 5px;
+    z-index: 9999;
+    opacity: 0.9;
+    -webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -ms-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out;
+
+}
+
+.export-ledger-options.left {
+    position: absolute;
+    left: inherit;
+    right: -95px;
+    top: -15px;
+    background: #000;
+    color: #fff;
+    border-radius: 5px;
+    z-index: 9999;
+    opacity: 0.9;
+    -webkit-transition: opacity 1s ease-in-out;
+    -moz-transition: opacity 1s ease-in-out;
+    -ms-transition: opacity 1s ease-in-out;
+    -o-transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out;
+
+}
+
+.export-ledger-options.left > .arrow {
+    position: absolute;
+    left: -10px;
+    top: 30px;
+    width: 0px;
+    height: 0px;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 10px solid black;
+    transform: rotate(-90deg);
+}
+
+.export-ledger-options > .arrow {
+    position: absolute;
+    right: -11px;
+    top: 30px;
+    width: 0px;
+    height: 0px;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-bottom: 10px solid black;
+    transform: rotate(90deg);
+}
+
+.export-ledger-options > ul > li {
+    font-size: 14px;
+    text-align: left;
+    line-height: 20px;
+    cursor: pointer;
+    line-height: 25px;
+    padding: 5px 10px;
+    border-bottom: 1px solid #fff;
+}
+
+.export-ledger-options > ul > li > a {
+    color: #fff;
+}
+
+.export-ledger-options > ul > li:last-child {
+    border-bottom: none;
+}
