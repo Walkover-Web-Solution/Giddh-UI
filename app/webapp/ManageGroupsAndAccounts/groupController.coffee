@@ -743,6 +743,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       toastr.info("Nothing to update", "Info")
       return false
 
+    if $scope.selectedAccount.openingBalanceType == null
+      $scope.selectedAccount.openingBalanceType = 'credit'
+
     if $scope.selectedAccount.uniqueName isnt $scope.selAcntPrevObj.uniqueName
       unqNamesObj.acntUname = $scope.selAcntPrevObj.uniqueName
 

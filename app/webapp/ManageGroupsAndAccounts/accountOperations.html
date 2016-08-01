@@ -44,7 +44,7 @@
                        datepicker-options="dateOptions"
                        is-open="valuationDatePickerIsOpen"
                        ng-click="valuationDatePickerOpen()"
-                       ng-model="datePicker.accountOpeningBalanceDate" max-date="today" ng-disabled="isFixedAcc" required/>
+                       ng-model="datePicker.accountOpeningBalanceDate" max-date="today" ng-disabled="isFixedAcc"/>
               <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="valuationDatePickerOpen()"><i
                     class="glyphicon glyphicon-calendar"></i></button>
@@ -67,7 +67,7 @@
                 </select>
               </div>
               <div class="col-xs-6">
-                <input type="text" class="form-control" name="openingBalance" ng-model="selectedAccount.openingBalance" valid-number required/>
+                <input type="text" class="form-control" name="openingBalance" ng-model="selectedAccount.openingBalance" valid-number/>
               </div>
             </div>
 
@@ -127,11 +127,11 @@
       <div class="row pdL pdR mrT2">
         <div class="form-group col-xs-12" ng-hide="!canUpdate || cantUpdate">
           <button ng-if="acntCase == 'Update'" class="btn btn-success" ng-click="updateAccount()"
-                  ng-disabled="addAccountForm.$invalid|| selectedAccount.openingBalanceType == null">{{acntCase}}
+                  ng-disabled="addAccountForm.$invalid">{{acntCase}}
           </button>
 
           <button ng-if="acntCase == 'Add'" class="btn btn-success" ng-click="addAccount()"
-                  ng-disabled="addAccountForm.$invalid || selectedAccount.openingBalanceType == null">{{acntCase}}
+                  ng-disabled="addAccountForm.$invalid">{{acntCase}}
           </button>
 
         </div>
