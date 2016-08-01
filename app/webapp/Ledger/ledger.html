@@ -322,12 +322,16 @@
                 </tbody>
               </table>
             </div>
+            <div ng-include="'panel'"></div>
           </div>
         </div>
 
       </div>
       </div>
     </section>
+</perfect-scrollbar>
+
+<script type="text/ng-template" id="panel">
     <div class="ledger-panel fixed-panel" ng-if="showPanel" drag-around>
       <div class="wrapper">
         <i class="glyphicon glyphicon-off close-panel" ng-click="closePanel()"></i>
@@ -397,5 +401,4 @@
         </div>
       </div>
     </div>
-</perfect-scrollbar>
-
+</script>

@@ -2956,7 +2956,7 @@ ul.pills li {
 .fixed-panel{
     bottom:0px;
     left: 320px;
-    right:0px;
+    right:35px;
     max-width: initial;
     width: initial;
 }
