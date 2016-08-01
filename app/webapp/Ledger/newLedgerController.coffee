@@ -514,7 +514,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $timeout ( ->
     $scope.getTaxList()
-  ), 3000
+  ), 1000
 
   $scope.flatAccListC5 = {
       page: 1
@@ -529,7 +529,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     $scope.selectedLedger.index = index
     if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
       $scope.checkCompEntry(ledger)
-    $scope.isTransactionContainsTax(ledger.transactions)
+    $scope.isTransactionContainsTax(ledger)
 
   $scope.checkCompEntry = (ledger) ->
     unq = ledger.uniqueName
@@ -621,20 +621,29 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
 
   $scope.addTaxesToLedger = (ledger) ->
-    ledger.tax = []
+    ledger.taxes = []
     _.each($scope.taxList, (tax) ->
       if tax.isChecked == true
-        ledger.tax.push(tax.uniqueName)
+        ledger.taxes.push(tax.uniqueName)
     )
 
-  $scope.isTransactionContainsTax = (transactions) ->
-    _.each($scope.taxList, (tax) ->
-      tax.isChecked = false
-      _.each(transactions, (txn) ->
-        if txn.particular.uniqueName == tax.account.uniqueName
-          tax.isChecked = true
+  $scope.isTransactionContainsTax = (ledger) ->
+    if ledger.taxes != undefined && ledger.taxes.length > 0
+      _.each($scope.taxList, (tax) ->
+        tax.isChecked = false
+        _.each(ledger.taxes, (taxe) ->
+          if taxe == tax.account.uniqueName
+            tax.isChecked = true
+        )
       )
-    )
+    else
+      _.each($scope.taxList, (tax) ->
+        tax.isChecked = false
+        _.each(ledger.transactions, (txn) ->
+          if txn.particular.uniqueName == tax.account.uniqueName
+            tax.isChecked = true
+        )
+      )
 
   $scope.removeUpdatedBankLedger = () ->
     if $scope.btIndex != undefined

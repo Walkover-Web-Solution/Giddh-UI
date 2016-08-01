@@ -176,6 +176,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.refreshcompanyListSuccess = (res) ->
     $scope.companyList = _.sortBy(res.body, 'shared')
+    $scope.findCompanyInList()
 
   #delete company failure
   $scope.delCompanyFailure = (res) ->
@@ -264,21 +265,24 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     else
       # When there are companies
       $rootScope.mngCompDataFound = true
-      cdt = localStorageService.get("_selectedCompany")
-      if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
-        cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName})
-        if _.isUndefined(cdt)
-          $scope.changeCompany($scope.companyList[0],0,'SELECT')
-          $rootScope.setCompany($scope.companyList[0])
-          $rootScope.companyIndex = 0
-        else
-          $scope.changeCompany(cdt,cdt.index,'SELECT')
-          $rootScope.setCompany(cdt)
-          $rootScope.companyIndex = cdt.index
-      else
+      $scope.findCompanyInList()
+
+  $scope.findCompanyInList = () ->
+    cdt = localStorageService.get("_selectedCompany")
+    if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
+      cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName})
+      if _.isUndefined(cdt)
         $scope.changeCompany($scope.companyList[0],0,'SELECT')
         $rootScope.setCompany($scope.companyList[0])
         $rootScope.companyIndex = 0
+      else
+        $scope.changeCompany(cdt,cdt.index,'SELECT')
+        $rootScope.setCompany(cdt)
+        $rootScope.companyIndex = cdt.index
+    else
+      $scope.changeCompany($scope.companyList[0],0,'SELECT')
+      $rootScope.setCompany($scope.companyList[0])
+      $rootScope.companyIndex = 0
 
   #get company list failure
   $scope.getCompanyListFailure = (res)->
