@@ -632,7 +632,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       _.each($scope.taxList, (tax) ->
         tax.isChecked = false
         _.each(ledger.taxes, (taxe) ->
-          if taxe == tax.account.uniqueName
+          if taxe == tax.uniqueName
             tax.isChecked = true
         )
       )
