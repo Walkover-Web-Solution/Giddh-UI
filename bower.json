@@ -46,7 +46,8 @@
     "angular-fullpage.js": "^0.2.1",
     "angular-recaptcha": "^3.0.3",
     "ngclipboard": "^1.1.1",
-    "jquery-ui": "^1.11.4"
+    "jquery-ui": "^1.11.4",
+    "ng-appcache": "^2.0.1"
   },
   "resolutions": {
     "angular": "~1.4.4",
