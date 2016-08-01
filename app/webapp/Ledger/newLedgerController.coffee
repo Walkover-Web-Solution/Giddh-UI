@@ -353,7 +353,30 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $scope.getBankTransactionsSuccess = (res) ->
     $scope.eLedgerData = $scope.formatBankLedgers(res.body)
+    $scope.calculateELedger()
     #$scope.removeUpdatedBankLedger()
+
+  $scope.calculateELedger = () ->
+    $scope.eLedgType = undefined
+    $scope.eCrBalAmnt = 0
+    $scope.eDrBalAmnt = 0
+    $scope.eDrTotal = 0
+    $scope.eCrTotal = 0
+    crt = 0
+    drt = 0
+    _.each($scope.eLedgerData, (ledger) ->
+      _.each(ledger.transactions, (transaction) ->
+        if transaction.type == 'DEBIT'
+          drt += Number(transaction.amount)
+        else if transaction.type == 'CREDIT'
+          crt += Number(transaction.amount)
+      )
+    )
+    crt = parseFloat(crt)
+    drt = parseFloat(drt)
+    $scope.eCrTotal = crt
+    $scope.eDrTotal = drt
+
 
   $scope.formatBankLedgers = (bankArray) ->
     formattedBankLedgers = []
@@ -380,37 +403,6 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         newTxn.type = txn.type
         formattedBanktxns.push(newTxn)
     formattedBanktxns
-
-  $scope.calculateELedger = () ->
-    $scope.eLedgType = undefined
-    $scope.eCrBalAmnt = 0
-    $scope.eDrBalAmnt = 0
-    $scope.eDrTotal = 0
-    $scope.eCrTotal = 0
-    crt = 0
-    drt = 0
-    _.each($scope.eLedgerDrData, (entry) ->
-      drt += Number(entry.transactions[0].amount)
-    )
-    _.each($scope.eLedgerCrData, (entry) ->
-      crt += Number(entry.transactions[0].amount)
-    )
-    crt = parseFloat(crt)
-    drt = parseFloat(drt)
-
-    if drt > crt
-      $scope.eLedgType = 'DEBIT'
-      $scope.eCrBalAmnt = drt - crt
-      $scope.eDrTotal = drt
-      $scope.eCrTotal = crt + (drt - crt)
-    else if crt > drt
-      $scope.eLedgType = 'CREDIT'
-      $scope.eDrBalAmnt = crt - drt
-      $scope.eDrTotal = drt + (crt - drt)
-      $scope.eCrTotal = crt
-    else
-      $scope.eCrTotal = crt
-      $scope.eDrTotal = drt
 
   $scope.mergeBankTransactions = (toMerge) ->
     if toMerge

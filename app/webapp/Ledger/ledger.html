@@ -235,7 +235,7 @@
                 <tbody>
                     <tr class="t-h-bg3 bdr-w-t">
                       <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
-                        <span ng-if="ledgerData.balance.type == 'DEBIT'">C/F: {{ledgerData.debitTotal | number:2}}</span>
+                        <span ng-if="ledgerData.balance.type == 'DEBIT'">C/F: {{ledgerData.balance.amount | number:2}}</span>
                       </td>
                     </tr>
                     <tr class="t-h-bg2 bdr-w-t h42">
