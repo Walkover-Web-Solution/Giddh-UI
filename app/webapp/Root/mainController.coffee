@@ -171,8 +171,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
 # refresh company list 
   $scope.refreshcompanyList = (e) ->
-    e.stopPropagation()
     companyServices.getAll().then($scope.refreshcompanyListSuccess, $scope.getCompanyListFailure)
+    e.stopPropagation()
 
   $scope.refreshcompanyListSuccess = (res) ->
     $scope.companyList = _.sortBy(res.body, 'shared')
