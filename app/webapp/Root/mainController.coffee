@@ -207,11 +207,12 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.onCompanyCreateModalCloseFailure = () ->
     $scope.checkCmpCretedOrNot()
-    modalService.openConfirmModal(
-      title: 'LogOut',
-      body: 'In order to be able to use Giddh, you must create a company. Are you sure you want to cancel and logout?',
-      ok: 'Yes',
-      cancel: 'No').then($scope.firstLogout)
+    if $scope.companyList.length <= 0
+      modalService.openConfirmModal(
+        title: 'LogOut',
+        body: 'In order to be able to use Giddh, you must create a company. Are you sure you want to cancel and logout?',
+        ok: 'Yes',
+        cancel: 'No').then($scope.firstLogout)
 
   $scope.firstLogout = () ->
     $http.post('/logout').then ((res) ->

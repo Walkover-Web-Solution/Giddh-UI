@@ -222,8 +222,8 @@
                 <label>Email</label>
                 <input type="email" ng-model="invoiceSettings.emailAddress" class="form-control" name="settingEmail"
                        tabindex="2" required>
-                <i class="glyphicon glyphicon-ok-sign pos-abs verified" ng-if="invoiceSettings.isEmailVerified"></i>
-                <i class="glyphicon glyphicon-exclamation-sign pos-abs unverified" ng-if="!invoiceSettings.isEmailVerified && !settingForm.settingEmail.$invalid"></i>
+                <i class="glyphicon glyphicon-ok-sign pos-abs verified" uib-tooltip="Verified" ng-if="invoiceSettings.isEmailVerified"></i>
+                <i class="glyphicon glyphicon-exclamation-sign pos-abs unverified" uib-tooltip="Unverified" ng-if="!invoiceSettings.isEmailVerified && !settingForm.settingEmail.$invalid"></i>
                 <i class="glyphicon glyphicon-trash pos-abs" style="right:-20px;top:30px" ng-click="saveInvoiceSettings('delete')" ng-if="invoiceSettings.emailAddress != ''"></i>
               </div>
               <div class="form-group">
