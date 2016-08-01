@@ -239,7 +239,23 @@ angular.module('trialBalance', []).directive('exportReport', [
         $(elem).on('drag', (e)->
           if $(elem).hasClass('fixed-panel')
             $(elem).removeClass('fixed-panel')
+            $(elem).css('bottom','initial')
         )
 
+        getLeftSectionWidth = () ->
+          left = $('.col-xs-2.greyBg').width()
+
+        setPanelLeftPos = (left) ->
+          $(elem).css('left', left+65)
+
+        window.addEventListener('resize', (e) ->
+          left = getLeftSectionWidth()
+          setPanelLeftPos(left)
+        )
+
+        $(document).ready((e)->
+          left = getLeftSectionWidth()
+          setPanelLeftPos(left)
+        )
     }
 ])
