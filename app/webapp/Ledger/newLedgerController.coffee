@@ -703,8 +703,10 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       tax.isChecked = false
     )
     if $scope.mergeTransaction
-      $scope.mergeBankTransactions($scope.mergeTransaction)
-    
+      $timeout ( ->
+        $scope.mergeBankTransactions($scope.mergeTransaction)
+      ), 2000
+
   $scope.addEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
     $scope.resetBlankLedger()

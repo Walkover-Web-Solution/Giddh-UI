@@ -16,7 +16,7 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
 
     $timeout ->
       angular.element($window).triggerHandler('resize')
-    , 1000
+    
 ]
 
 # convert digit to words
