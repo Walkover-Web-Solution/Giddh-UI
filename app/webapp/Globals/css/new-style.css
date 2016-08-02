@@ -3253,10 +3253,10 @@ ul.pills li {
 .popover-content{
     padding:0;
 }
-.underline {
-    text-decoration: underline;
+.ledger-top-panel {
+    position: relative;
+    clear: both;
 }
-.ledger-top-panel{
-    position:relative;
-    clear:both;
+.underline{
+    text-decoration: underline;
 }

@@ -190,6 +190,7 @@
                   </div>
                 </th>
                 <th class="col-xs-2">
+<<<<<<< fabeae9023d5377c74f7ce701adb462348bb1df5
                   <div ng-click="sortType = 'debitTotal'; sortReverse = !sortReverse">
                     DR Total
                     <span ng-show="sortType == 'debitTotal' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
@@ -197,6 +198,8 @@
                   </div>
                 </th>
                 <th class="col-xs-2">
+=======
+>>>>>>> axosoft card number 177 issue fixes
                   <div ng-click="sortType = 'creditTotal'; sortReverse = !sortReverse">
                     CR Total
                     <span ng-show="sortType == 'creditTotal' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
@@ -237,8 +240,13 @@
                   </span>
                   {{item.openingBalance}}
                 </td>
+<<<<<<< fabeae9023d5377c74f7ce701adb462348bb1df5
                 <td class="alR">{{item.debitTotal}}</td>
                 <td class="alR">{{item.creditTotal}}</td>
+=======
+                <td class="alR">{{item.creditTotal}}</td>
+                <td class="alR">{{item.debitTotal}}</td>
+>>>>>>> axosoft card number 177 issue fixes
                 <td class="alR">
                   <span ng-if="item.closingBalance > 0">
                     <span class="text-success pull-left" ng-if="item.closeBalType === 'DEBIT'">DR</span>
