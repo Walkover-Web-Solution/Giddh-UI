@@ -359,8 +359,8 @@
                 <input type="checkbox" ng-model="selectedLedger.applyApplicableTaxes">Include applied taxes
               </label>
             </div>
-            <button class="btn btn-sm btn-info mrR1" ng-click="addBlankTxn('DEBIT', selectedLedger)">Add in DR</button>
-            <button class="btn btn-sm btn-primary" ng-click="addBlankTxn('CREDIT', selectedLedger)">Add in CR</button>
+            <button ng-if="(selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-info mrR1" ng-click="addBlankTxn('DEBIT', selectedLedger)">Add in DR</button>
+            <button ng-if="(selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-primary" ng-click="addBlankTxn('CREDIT', selectedLedger)">Add in CR</button>
             <div class="row mrT1">
               <hr>
               <ul class="list-inline" style="margin-left:15px">
@@ -400,11 +400,12 @@
             <label>Total: {{ttlValD + ttlValDType}}</label>
           </div>
           <div class="" >
-              <button class="pull-left mrR btn btn-success" type="button" ng-click="saveUpdateLedger(selectedLedger)">
-                <span ng-if="(selectedLedger.uniqueName == '' || (selectedLedger.transactions[0].particular.uniqueName == '' || selectedLedger.transactions[0].particular == '')) || selectedLedger.isBankTransaction == true">Save</span>
-                <span ng-if="(selectedLedger.uniqueName != '' && (selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined)) && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)">Update</span>
+              <button ng-if="(selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined)" class="pull-left mrR btn btn-success" type="button" ng-click="saveUpdateLedger(selectedLedger)">
+                <span ng-if="(selectedLedger.uniqueName == undefined || selectedLedger.uniqueName == '') || selectedLedger.isBankTransaction == true">Save</span>
+                <span ng-if="(selectedLedger.uniqueName != undefined && selectedLedger.uniqueName != '') && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)">Update</span>
               </button>
-              <button ng-if="selectedLedger.uniqueName != '' && selectedLedger.invoiceGenerated == false && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-left btn btn-danger" ng-click="deleteEntry(selectedLedger);deleteMultipleTransactions()">Delete</button>
+              <button ng-if="(selectedLedger.uniqueName == undefined || selectedLedger.uniqueName == '') && (selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined) && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-left btn btn-danger" ng-click="resetLedger()">Reset</button>
+              <button ng-if="(selectedLedger.uniqueName != undefined && selectedLedger.uniqueName != '') && selectedLedger.invoiceGenerated == false && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-left btn btn-danger" ng-click="deleteEntry(selectedLedger);deleteMultipleTransactions()">Delete</button>
 
           </div>
         </div>

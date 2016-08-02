@@ -585,14 +585,15 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         ledger.voucherType = ledger.voucher.shortCode
         $scope.addTaxesToLedger(ledger)
         if ledger.transactions.length > 0
-          ledgerService.createEntry(unqNamesObj, ledger).then($scope.addEntrySuccess, $scope.addEntryFailure)
+          ledgerService.createEntry(unqNamesObj, ledger).then($scope.addEntrySuccess
+          ,(res) -> $scope.addEntryFailure(res,rejectedTransactions))
         else
           ledger.transactions = rejectedTransactions
           response = {}
           response.data = {}
           response.data.message = "There must be at least a transaction to make an entry."
           response.data.status = "Error"
-          $scope.addEntryFailure(response)
+          $scope.addEntryFailure(response,[])
 #          toastr.error("There must be at least a transaction to make an entry.")
       else
         console.log("updating entry")
@@ -632,7 +633,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
           response.data = {}
           response.data.message = "There must be at least a transaction to make an entry."
           response.data.status = "Error"
-          $scope.addEntryFailure(response)
+          $scope.addEntryFailure(response,[])
     else
       toastr.error("Select voucher type.")
 
@@ -756,8 +757,14 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         $scope.mergeBankTransactions($scope.mergeTransaction)
       ), 2000
 
-  $scope.addEntryFailure = (res) ->
+  $scope.addEntryFailure = (res, rejectedTransactions) ->
     toastr.error(res.data.message, res.data.status)
+    if rejectedTransactions.length > 0
+      _.each(rejectedTransactions, (rTransaction) ->
+        $scope.selectedLedger.transactions.push(rTransaction)
+      )
+
+  $scope.resetLedger = () ->
     $scope.resetBlankLedger()
     $scope.selectedLedger = $scope.blankLedger
     _.each($scope.taxList, (tx) ->
@@ -779,6 +786,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     toastr.error(res.data.message, res.data.status)
 
   $scope.deleteEntry = (ledger) ->
+    if ledger.uniqueName == undefined || _.isEmpty(ledger.uniqueName)
+      return
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $scope.accountUnq
