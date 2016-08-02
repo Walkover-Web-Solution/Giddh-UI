@@ -346,7 +346,7 @@
 </perfect-scrollbar>
 
 <script type="text/ng-template" id="panel">
-    <div class="ledger-panel" ng-class="{'fixed-panel': popover.draggable, 'pop-panel': !popover.draggable}" drag-around="{{popover.draggable}}">
+    <div class="ledger-panel" ng-class="{'fixed-panel': popover.draggable, 'pop-panel': !popover.draggable}" drag-around="{{popover.draggable}}" ng-click="stopProp($event)">
       <div class="wrapper">
         <i class="glyphicon glyphicon-off close-panel" ng-click="closePanel()" ng-if="popover.draggable"></i>
         <div class="mrT">
@@ -367,13 +367,13 @@
             <button ng-if="(selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-info mrR1" ng-click="addBlankTxn('DEBIT', selectedLedger)">Add in DR</button>
             <button ng-if="(selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-primary" ng-click="addBlankTxn('CREDIT', selectedLedger)">Add in CR</button>
             <div class="row mrT1 clearfix" style="clear:both">
-              <hr>
+              <hr class="width100">
               <ul class="list-inline pull-left" style="margin-left:15px">
                 <li ng-repeat="tax in taxList">
                   <div class="checkbox"><label><input type="checkbox" ng-model="tax.isChecked">{{tax.name}}</label></div>
                 </li>
               </ul>
-              <hr>
+              <hr  class="width100">
             </div>
           </div>
           <div class="row">

@@ -540,7 +540,9 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     if $scope.popover.draggable
       $scope.showPanel = true
     else
-      $scope.openClosePopover(txn, ledger)
+      $scope.openClosePopoverForLedger(txn, ledger)
+      $scope.openClosePopoverForBlankLedger(txn, ledger)
+      $scope.openClosePopoverForeLedger(txn, ledger)
     if ledger.isBankTransaction != undefined
       _.each(ledger.transactions,(transaction) ->
         if transaction.type == 'DEBIT'
@@ -555,10 +557,21 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     $scope.isTransactionContainsTax(ledger)
     e.stopPropagation()
 
-  $scope.openClosePopover = (txn, ledger) ->
+  $scope.openClosePopoverForLedger = (txn, ledger) ->
     _.each $scope.ledgerData.ledgers, (iledger) ->
       _.each iledger.transactions, (itxn) ->
         itxn.isOpen = false
+    txn.isOpen = true
+
+  $scope.openClosePopoverForeLedger = (txn, ledger) ->
+    _.each $scope.eLedgerData, (iledger) ->
+      _.each iledger.transactions, (itxn) ->
+        itxn.isOpen = false
+    txn.isOpen = true
+
+  $scope.openClosePopoverForBlankLedger = (txn, ledger) ->
+    _.each $scope.blankLedger.transactions, (itxn) ->
+      itxn.isOpen = false
     txn.isOpen = true
 
   $scope.checkCompEntry = (ledger) ->
@@ -918,6 +931,9 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 #
 #  $scope.exportLedgerFailure = (res)->
 #    toastr.error(res.data.message, res.data.status)
+
+  $scope.stopProp = (e) ->
+    e.stopPropagation()
 
   $rootScope.$on 'company-changed', (event,changeData) ->
     # when company is changed, redirect to manage company page

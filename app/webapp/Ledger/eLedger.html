@@ -36,7 +36,7 @@
                 <td class="nopad" colspan="100%">
                   <table class="eledger-inner" ng-repeat="eledger in eLedgerData">
                     <tbody>
-                      <tr ng-repeat="txn in eledger.transactions" ng-if="txn.type == 'DEBIT'" ng-click="selectTxn(eledger, txn, $index)">
+                      <tr ng-repeat="txn in eledger.transactions" ng-if="txn.type == 'DEBIT'" ng-click="selectTxn(eledger, txn, $index, $event)"   uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='false' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover">
                         <!--<td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">-->
                           <!--<input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">-->
                         <!--</td>-->
@@ -70,7 +70,7 @@
                 <td class="nopad" colspan="100%">
                   <table class="eledger-inner" ng-repeat="eledger in eLedgerData">
                     <tbody>
-                      <tr ng-repeat="txn in eledger.transactions" ng-if="txn.type == 'CREDIT'" ng-click="selectTxn(eledger, txn, $index)">
+                      <tr ng-repeat="txn in eledger.transactions" ng-if="txn.type == 'CREDIT'" ng-click="selectTxn(eledger, txn, $index, $event)"   uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='false' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover">
                         <!--<td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">-->
                           <!--<input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">-->
                         <!--</td>-->
