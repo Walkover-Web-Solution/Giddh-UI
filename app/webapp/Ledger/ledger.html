@@ -211,7 +211,7 @@
                           <td colspan="100%" class="ledger-row">
                             <table class="width100">
                               <tbody class="ledger-main">
-                                <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index, $event)" ng-if="txn.type == 'DEBIT'" ng-class="{uncEntry : ledger.unconfirmedEntry}"  uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='false' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover"> 
+                                <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index, $event)" ng-if="txn.type == 'DEBIT'" ng-class="{uncEntry : ledger.unconfirmedEntry}"  uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover"> 
                                   <!-- <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
                                     <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                   </td> -->
@@ -228,7 +228,7 @@
                           <td colspan="100%" class="ledger-row">
                             <table class="width100">
                               <tbody class="ledger-main">
-                                <tr class="ledger-row" ng-repeat="txn in blankLedger.transactions track by $index" ng-if="txn.type == 'DEBIT'" ng-click="selectTxn(blankLedger, txn, $index, $event)" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='false' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover">
+                                <tr class="ledger-row" ng-repeat="txn in blankLedger.transactions track by $index" ng-if="txn.type == 'DEBIT'" ng-click="selectTxn(blankLedger, txn, $index, $event)" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover">
                                   <!-- <td class="col-xs-1 maxW42">
                                     <input type="checkbox">
                                   </td> -->
@@ -290,7 +290,7 @@
                           <td colspan="100%" class="ledger-row">
                             <table class="width100">
                               <tbody class="ledger-main">
-                                <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index, $event)" ng-if="txn.type == 'CREDIT'" ng-class="{uncEntry : ledger.unconfirmedEntry}" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='false' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover">
+                                <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index, $event)" ng-if="txn.type == 'CREDIT'" ng-class="{uncEntry : ledger.unconfirmedEntry}" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover">
                                   <!-- <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
                                     <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                   </td> -->
@@ -307,7 +307,7 @@
                           <td colspan="100%" class="ledger-row">
                             <table class="width100">
                               <tbody class="ledger-main">
-                                <tr class="ledger-row" ng-repeat="txn in blankLedger.transactions track by $index" ng-if="txn.type == 'CREDIT'" ng-click="selectTxn(blankLedger, txn, $index, $event)" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='false' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover">
+                                <tr class="ledger-row" ng-repeat="txn in blankLedger.transactions track by $index" ng-if="txn.type == 'CREDIT'" ng-click="selectTxn(blankLedger, txn, $index, $event)" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover">
                                   <!-- <td class="col-xs-1 maxW42">
                                     <input type="checkbox">
                                   </td> -->
