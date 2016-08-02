@@ -366,9 +366,9 @@
             </div>
             <button ng-if="(selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-info mrR1" ng-click="addBlankTxn('DEBIT', selectedLedger)">Add in DR</button>
             <button ng-if="(selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-primary" ng-click="addBlankTxn('CREDIT', selectedLedger)">Add in CR</button>
-            <div class="row mrT1">
+            <div class="row mrT1 clearfix" style="clear:both">
               <hr>
-              <ul class="list-inline" style="margin-left:15px">
+              <ul class="list-inline pull-left" style="margin-left:15px">
                 <li ng-repeat="tax in taxList">
                   <div class="checkbox"><label><input type="checkbox" ng-model="tax.isChecked">{{tax.name}}</label></div>
                 </li>
