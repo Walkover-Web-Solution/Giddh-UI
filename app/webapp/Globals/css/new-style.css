@@ -2961,6 +2961,13 @@ ul.pills li {
     width: initial;
 }
 
+.pop-panel{
+    position: relative !important;
+    width:640px !important;
+    bottom:initial;
+    right:initial;
+}
+
 .bottom0 {
     bottom: 0;
 }
@@ -3219,4 +3226,20 @@ ul.pills li {
 
 .export-ledger-options > ul > li:last-child {
     border-bottom: none;
+}
+
+.popover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1060;
+    display: none;
+    max-width: initial; 
+     padding: 0px; 
+    font-size: 14px;
+    border: none; 
+    box-shadow: none; 
+}
+.popover-content{
+    padding:0;
 }

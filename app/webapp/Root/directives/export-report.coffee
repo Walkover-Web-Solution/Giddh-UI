@@ -233,29 +233,31 @@ angular.module('trialBalance', []).directive('exportReport', [
     {
       restrict: 'A'
       link: (scope, elem, attr) ->
+        if attr.dragAround == 'true' 
+          $(elem).draggable()
 
-        $(elem).draggable()
+          $(elem).on('drag', (e)->
+            if $(elem).hasClass('fixed-panel')
+              $(elem).removeClass('fixed-panel')
+              $(elem).css('bottom','initial')
+          )
 
-        $(elem).on('drag', (e)->
-          if $(elem).hasClass('fixed-panel')
-            $(elem).removeClass('fixed-panel')
-            $(elem).css('bottom','initial')
-        )
+          getLeftSectionWidth = () ->
+            left = $('.col-xs-2.greyBg').width()
 
-        getLeftSectionWidth = () ->
-          left = $('.col-xs-2.greyBg').width()
+          setPanelLeftPos = (left) ->
+            $(elem).css('left', left+65)
 
-        setPanelLeftPos = (left) ->
-          $(elem).css('left', left+65)
+          window.addEventListener('resize', (e) ->
+            left = getLeftSectionWidth()
+            setPanelLeftPos(left)
+          )
+          console.log attr.dragAround
 
-        window.addEventListener('resize', (e) ->
-          left = getLeftSectionWidth()
-          setPanelLeftPos(left)
-        )
-
-        $(document).ready((e)->
-          left = getLeftSectionWidth()
-          setPanelLeftPos(left)
-        )
+          # $(document).ready((e)->
+          #   left = getLeftSectionWidth()
+          #   setPanelLeftPos(left)
+          # )
     }
 ])
+

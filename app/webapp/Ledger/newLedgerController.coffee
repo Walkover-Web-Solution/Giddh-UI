@@ -16,7 +16,11 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.showEledger = true
   $scope.pageAccount = {}
   $scope.showExportOption = false
-
+  $scope.showLedgerPopover = false
+  $scope.popover = {
+    templateUrl: 'panel'
+    draggable: false
+  }
 
   $scope.hideEledger = () ->
     $scope.showEledger = !$scope.showEledger 
@@ -528,10 +532,15 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $scope.exportOptions = () ->
     $scope.showExportOption = !$scope.showExportOption
-  $scope.selectTxn = (ledger, txn, index) ->
+
+  $scope.selectTxn = (ledger, txn, index ,e) ->
+    $scope.showLedgerPopover = true
     $scope.ledgerBeforeEdit = {}
     angular.copy(ledger,$scope.ledgerBeforeEdit)
-    $scope.showPanel = true
+    if $scope.popover.draggable
+      $scope.showPanel = true
+    else
+      $scope.openClosePopover(txn, ledger)
     if ledger.isBankTransaction != undefined
       _.each(ledger.transactions,(transaction) ->
         if transaction.type == 'DEBIT'
@@ -544,6 +553,13 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
       $scope.checkCompEntry(ledger)
     $scope.isTransactionContainsTax(ledger)
+    e.stopPropagation()
+
+  $scope.openClosePopover = (txn, ledger) ->
+    _.each $scope.ledgerData.ledgers, (iledger) ->
+      _.each iledger.transactions, (itxn) ->
+        itxn.isOpen = false
+    txn.isOpen = true
 
   $scope.checkCompEntry = (ledger) ->
     unq = ledger.uniqueName
@@ -907,5 +923,13 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     # when company is changed, redirect to manage company page
     if changeData.type == 'CHANGE'
       $scope.redirectToState('company.content.manage')
+
+  $scope.$watch 'popover.draggable', (newVal, oldVal) ->
+    if newVal != oldVal
+      $('.popover').remove()
+
+  $(document).on('click', ()->
+    $scope.showLedgerPopover = false
+  )
 
 giddh.webApp.controller 'newLedgerController', newLedgerController
