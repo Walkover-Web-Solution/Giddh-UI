@@ -136,6 +136,7 @@ textarea {
 
 ul.dropdown-menu {
     list-style-type: none;
+    z-index: 9999;
 }
 
 header {
@@ -3242,4 +3243,8 @@ ul.pills li {
 }
 .popover-content{
     padding:0;
+}
+
+.underline{
+    text-decoration: underline;
 }

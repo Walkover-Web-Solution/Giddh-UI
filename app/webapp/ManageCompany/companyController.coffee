@@ -999,23 +999,44 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     }
 
     if $scope.taxValueUpdated
-      modalService.openConfirmModal(
-        title: 'Update Tax Value',
-        body: 'One or more tax values have changed, would you like to update tax amount as per new value(s) ?',
-        ok: 'Yes',
-        cancel: 'No'
-      ).then(->
-        reqParam.updateEntries = true
-        companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
+      # modalService.openConfirmModal(
+      #   title: 'Update Tax Value',
+      #   body: 'One or more tax values have changed, would you like to update tax amount in all entries as per new value(s) ?',
+      #   showConfirmBox: true,
+      #   ok: 'Yes',
+      #   cancel: 'No'
+      # ).then(->
+      #   console.log this
+      #   reqParam.updateEntries = true
+      #   companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
+      # )
+      $scope.updateEntriesWithChangedTaxValue = false
+      $scope.taxObj = {
+        reqParam : reqParam
+        newTax : newTax
+      }
+      $scope.updateTax.modalInstance = $uibModal.open(
+        templateUrl: '/public/webapp/Globals/modals/update-tax.html'
+        size: "md"
+        backdrop: 'static'
+        scope: $scope
       )
     else
       companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
       item.isEditable = false
-      
+  
+  $scope.updateTaxAndEntries = (val) ->
+    reqParam = $scope.taxObj.reqParam
+    newTax = $scope.taxObj.newTax
+    reqParam.updateEntries = val
+    companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
+
+
   $scope.updateTaxSuccess = (res) ->
     $scope.taxEditData.isEditable = false
     $scope.getTax()
     toastr.success(res.status, "Tax updated successfully.")
+    $scope.updateTax.modalInstance.close()
     
   $scope.updateTaxFailure = (res) ->
     $scope.getTax()
@@ -1132,10 +1153,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.addfyYears = () ->
     $scope.fyYears = []
-    year = moment().get('year') - 1
-    while year >= 1970
-      $scope.fyYears.push(year)
-      year -= 1
+    startYear = moment().get('year') - 1
+    endYear = moment().get('year') - 8
+    while startYear > endYear
+      $scope.fyYears.push(startYear)
+      startYear -= 1
     $scope.fyYears = _.difference($scope.fyYears, $scope.fy.addedFYears)
 
   $scope.setFYname = (years) ->

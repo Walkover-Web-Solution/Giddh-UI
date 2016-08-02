@@ -190,13 +190,6 @@
                   </div>
                 </th>
                 <th class="col-xs-2">
-                  <div ng-click="sortType = 'closeBalType'; sortReverse = !sortReverse">
-                  Closing Bal. 
-                    <span ng-show="sortType=='closeBalType' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                    <span ng-show="sortType=='closeBalType' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
-                  </div>
-                </th>
-                <th class="col-xs-2">
                   <div ng-click="sortType = 'creditTotal'; sortReverse = !sortReverse">
                   CR Total
                     <span ng-show="sortType == 'creditTotal' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
@@ -208,6 +201,13 @@
                   DR Total
                     <span ng-show="sortType == 'debitTotal' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
                     <span ng-show="sortType == 'debitTotal' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </div>
+                </th>
+                <th class="col-xs-2">
+                  <div ng-click="sortType = 'closeBalType'; sortReverse = !sortReverse">
+                  Closing Bal. 
+                    <span ng-show="sortType=='closeBalType' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType=='closeBalType' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                   </div>
                 </th>
                 <th class="col-xs-2">
@@ -230,6 +230,8 @@
                   </span>
                   {{item.openingBalance}}
                 </td>
+                <td class="alR">{{item.creditTotal}}</td>
+                <td class="alR">{{item.debitTotal}}</td>
                 <td class="alR">
                   <span ng-if="item.closingBalance > 0">
                     <span class="text-success pull-left" ng-if="item.closeBalType === 'DEBIT'">DR</span>
@@ -238,8 +240,6 @@
                   </span>
                   {{item.closingBalance}}
                 </td>
-                <td class="alR">{{item.creditTotal}}</td>
-                <td class="alR">{{item.debitTotal}}</td>
                 <td>{{item.parent}}</td>
               </tr>
             </tbody>
