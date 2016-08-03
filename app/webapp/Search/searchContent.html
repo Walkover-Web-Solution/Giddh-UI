@@ -183,24 +183,31 @@
                   </div>
                 </th>
                 <th class="col-xs-2">
-                  <div ng-click="sortType = 'openBalType'; sortReverse = !sortReverse">
+                  <div ng-click="sortType = 'openingBalance'; sortReverse = !sortReverse">
                   Opening Bal.
-                    <span ng-show="sortType=='openBalType' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                    <span ng-show="sortType=='openBalType' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                    <span ng-show="sortType=='openingBalance' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType=='openingBalance' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </div>
+                </th>
+                <th class="col-xs-2">
+                  <div ng-click="sortType = 'debitTotal'; sortReverse = !sortReverse">
+                    DR Total
+                    <span ng-show="sortType == 'debitTotal' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'debitTotal' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                   </div>
                 </th>
                 <th class="col-xs-2">
                   <div ng-click="sortType = 'creditTotal'; sortReverse = !sortReverse">
-                  CR Total
+                    CR Total
                     <span ng-show="sortType == 'creditTotal' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
                     <span ng-show="sortType == 'creditTotal' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                   </div>
                 </th>
                 <th class="col-xs-2">
-                  <div ng-click="sortType = 'debitTotal'; sortReverse = !sortReverse">
-                  DR Total
-                    <span ng-show="sortType == 'debitTotal' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
-                    <span ng-show="sortType == 'debitTotal' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  <div ng-click="sortType = 'closingBalance'; sortReverse = !sortReverse">
+                  Closing Bal. 
+                    <span ng-show="sortType=='closingBalance' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType=='closingBalance' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                   </div>
                 </th>
                 <th class="col-xs-2">
@@ -230,8 +237,8 @@
                   </span>
                   {{item.openingBalance}}
                 </td>
-                <td class="alR">{{item.creditTotal}}</td>
                 <td class="alR">{{item.debitTotal}}</td>
+                <td class="alR">{{item.creditTotal}}</td>
                 <td class="alR">
                   <span ng-if="item.closingBalance > 0">
                     <span class="text-success pull-left" ng-if="item.closeBalType === 'DEBIT'">DR</span>

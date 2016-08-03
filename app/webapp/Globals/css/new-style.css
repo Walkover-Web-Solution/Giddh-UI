@@ -2117,6 +2117,10 @@ table:focus {
     max-width: 150px;
 }
 
+.maxW110{
+    max-width: 110px;
+}
+
 .mart100 {
     margin-top: 100px;
 }
@@ -2188,6 +2192,10 @@ i.cls-alert {
 
 .min320 {
     min-width: 320px;
+}
+
+.min150{
+    min-width: 150px;
 }
 
 .graph-filters td > .btn, .graph-filters td {
@@ -2937,18 +2945,19 @@ ul.pills li {
 }
 
 .ledger-panel {
-    width: 100%;
-    max-width: 640px;
+    width: 79%;
+    /*color: white !important;*/
+    /*max-width: 640px;*/
     min-height: 200px;
     overflow: hidden;
-    background: #fff;
+    background: linear-gradient(180deg, white, rgba(255,255,255,0.9) 40%);
     border-radius: 4px;
     color: #333;
     position: fixed;
     padding: 10px;
     z-index: 9;
-    bottom:20px;
-    right:20px;
+    top:54px;
+    right:35px;
     -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
@@ -3244,7 +3253,10 @@ ul.pills li {
 .popover-content{
     padding:0;
 }
-
-.underline{
+.underline {
     text-decoration: underline;
+}
+.ledger-top-panel{
+    position:relative;
+    clear:both;
 }

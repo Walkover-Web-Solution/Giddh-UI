@@ -889,6 +889,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     a.download = invoiceNumber+".pdf"
     a.click()
 
+
   # common failure message
   $scope.multiActionWithInvFailure=(res)->
     toastr.error(res.data.message, res.data.status)

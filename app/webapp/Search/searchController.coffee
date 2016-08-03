@@ -40,7 +40,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
   ]
   $scope.srchDataSet=[new angular.srchDataSet()]
 
-  $scope.sortType     = 'name'
+  $scope.sortType = 'name'
   $scope.sortReverse  = false  
 
   $scope.fromDatePickerOpen = ->
@@ -87,6 +87,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
         ,(error)->
           $scope.srchDataFound = false
           $scope.searchDtCntLdr = false
+          toastr.error(error.data.message)
       )
 
   # push new value
@@ -156,25 +157,26 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   # download CSV
   $scope.getCSVHeader=()->
+    console.log($scope.searchResData)
     return  [
       "Name"
       "Opening Bal."
-      "Opening Bal. Type"
-      "Closing Bal."
-      "Closing Bal. Type"
-      "CR Total"
+      "O/B Type"
       "DR Total"
+      "CR Total"
+      "Closing Bal."
+      "C/B Type"
       "UniqueName"
     ]
 
   $scope.order = [
     "name"
-    "closingBalance"
-    "closeBalType"
     "openingBalance"
     "openBalType"
-    "creditTotal"
     "debitTotal"
+    "creditTotal"
+    "closingBalance"
+    "closeBalType"
     "uniqueName"
   ]
 
