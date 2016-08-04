@@ -485,7 +485,11 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.getLedgerDataFailure = (res) ->
     toastr.error(res.data.message)
 
+  $scope.creditTotal = 0
+  $scope.debitTotal = 0
   $scope.countTotalTransactions = () ->
+    $scope.creditTotal = 0
+    $scope.debitTotal = 0
     $scope.dTxnCount = 0
     $scope.cTxnCount = 0
     if $scope.ledgerData.ledgers.length > 0
@@ -494,8 +498,10 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
           _.each ledger.transactions, (txn) ->
             if txn.type == 'DEBIT'
               $scope.dTxnCount += 1
+              $scope.debitTotal += txn.amount
             else
               $scope.cTxnCount += 1
+              $scope.creditTotal += txn.amount
 
   $scope.filterLedgers = (ledgers) ->
     _.each ledgers, (lgr) ->
@@ -857,7 +863,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     toastr.error(res.data.message, res.data.status)
 
   $scope.deleteEntry = (ledger) ->
-    if ledger.uniqueName == undefined || _.isEmpty(ledger.uniqueName)
+    if (ledger.uniqueName == undefined || _.isEmpty(ledger.uniqueName)) && (ledger.isBankTransaction)
       return
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
@@ -974,6 +980,17 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 #
 #  $scope.exportLedgerFailure = (res)->
 #    toastr.error(res.data.message, res.data.status)
+
+  $scope.onScroll = (sTop, sHeight, e) ->
+    first = null
+
+
+  $scope.isScrolledIntoView = (elem,top,height) ->
+    docViewTop = top
+    docViewBottom = docViewTop + height
+    elemTop = $(elem).offset().top
+    elemBottom = elemTop + $(elem).height()
+    ((elemBottom <= docViewBottom) && (elemTop >= docViewTop))
 
   $scope.stopProp = (e) ->
     e.stopPropagation()

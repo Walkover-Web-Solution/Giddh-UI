@@ -1060,7 +1060,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
 
   $scope.deleteMergedAccountFailure = (res) ->
-    toastr.error(res.body)
+    toastr.error(res.data.message)
 
   # move to account
   $scope.moveToAccount = () ->
