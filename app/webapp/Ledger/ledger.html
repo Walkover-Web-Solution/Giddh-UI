@@ -1,13 +1,20 @@
 
-<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent">
+<div class="loader mrT4" ng-if="showEledger">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+</div>
+<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent"  ng-if="!showEledger">
     <section class="alert alert-info mrL2 mrR2 mrT2" ng-if="accountUnq.length < 1">
       Please select an Account to load its Ledger
     </section>
     <section class="container-fluid" ng-if="accountUnq.length > 0">
       <div class="pdT1">
-        <div class="ledger-top-panel">
+        <div class="ledger-top-panel clearfix" ng-class="{'while-panel':showPanel}">
           <div class="form-inline pdB1 ledgHead">
-            <form name="fromToDateForm" novalidate class="form-group mrR1">
+            <form name="fromToDateForm" novalidate class="form-group mrR1 pull-left">
               <div class="form-group">
               <!--   <label>From</label> -->
 
@@ -53,9 +60,9 @@
             </form>
 
 
-            <div class="form-group mrL1 pull-right">
+            <div class="form-group mrL1 pull-right maxW150 pos-rel" >
               <input type="search" class="form-control maxW150" placeholder="Search ledger" ng-model="particularSearch">
-              <i class="glyphicon glyphicon-search"  style="right:25px;top:3px;"></i>
+              <i class="glyphicon glyphicon-search pos-abs"  style="right:5px;top:10px;"></i>
             </div>
 
             <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Show List" tooltip-placement="left" ng-click="showImportList()" >
@@ -117,53 +124,20 @@
           </div>
           <div class="mrB1" ng-repeat="f in impLedgFiles" style="font:smaller" ng-hide="impLedgBar">
             <uib-progressbar class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</uib-progressbar>
-          </div>
-          <!-- external ledger code here -->
-          <section class="eledger-table" ng-if="eLedgerData.length > 0 && showEledger">
-            <div ng-include="'/public/webapp/Ledger/eLedger.html'"></div>
-          </section>
-          <!--Breadcrumb-->
-          <div class="col-xs-12 pad0">
-            <div class="clearfix ldgTheadL col-xs-4 text-left">
-              <!--<span class="icon48 icon-in"></span>-->
-
-              <!--<h3 class="ledgerHead">-->
-                <!--<span tooltip-placement="top" uib-tooltip="{{accountToShow.name}}" class="ellp">{{accountToShow.name}}</span>-->
-                <!--<span>&nbsp;is <strong>receiving</strong></span>-->
-              <!--</h3>-->
-            </div>
-            <div class="col-xs-4 text-center">
-              <!--breadcrumbs-->
-              <div>
-                <ol class="breadcrumb">
-                  <li ng-repeat="(key,value) in accountToShow.parentGroups"
-                      ng-class="{active:$last}">
-                    <a href="javascript:void(0)">{{value.name}}</a>
-                  </li>
-                  <!--<li>Bank Accounts</li>-->
-                  <!--<li>ICICI Bank Ltd</li>-->
-                </ol>
-              </div>
-              <!--/breadcrumbs-->
-            </div>
-            <div class="alR col-xs-4 text-right">
-              <!--<div class="clearfix ldgTheadR">-->
-                <!--<span class="icon48 icon-out"></span>-->
-
-                <!--<h3 class="ledgerHead">-->
-                  <!--<span>&nbsp;is <strong>giving</strong></span>-->
-                  <!--<span tooltip-placement="top" uib-tooltip="{{accountToShow.name}}" class="ellp">{{accountToShow.name}}</span>-->
-                <!--</h3>-->
-              <!--</div>-->
-            </div>
-          </div>
-          <!--/Breadcrumb-->
+          </div>  
         </div>
 
         <div>
           <!--ledger table start-->
           <div ng-include="'panel'" ng-if="showPanel"></div>
-          <div class="ledger-container">
+          
+          <!-- external ledger code here -->
+          <section class="eledger-table" ng-if="eLedgerData.length > 0 && showEledger">
+            <div ng-include="'/public/webapp/Ledger/eLedger.html'"></div>
+          </section>
+          <!-- external ledger code end here -->
+
+          <div class="ledger-container clearfix">
             <!--ledger table head 1-->
             <table class="col-xs-12 ledger-head">
               <thead>
@@ -191,6 +165,7 @@
                         </tr>
                         <tr class="bg3">
                           <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
+                            <span class="pull-left tcount">Total Transactions: {{dTxnCount}}</span>
                             <span ng-if="ledgerData.forwardedBalance.type == 'DEBIT' && ledgerData.forwardedBalance.amount > 0">Opening Balance : {{ledgerData.forwardedBalance.amount | number:2}}</span>
                             <!-- <span ng-if="ledgerData.forwardedBalance.type == 'CREDIT'">B/F : 0</span> -->
                           </th>
@@ -269,6 +244,7 @@
                         </tr>
                         <tr class="bg3">
                           <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
+                            <span class="pull-left tcount">Total Transactions: {{cTxnCount}}</span>
                             <span ng-if="ledgerData.forwardedBalance.type == 'CREDIT' && ledgerData.forwardedBalance.amount > 0">B/F : {{ledgerData.forwardedBalance.amount | number:2}}</span>
                            <!--  <span ng-if="ledgerData.forwardedBalance.type == 'DEBIT'">B/F : 0</span> -->
                           </th>
@@ -337,7 +313,7 @@
 </perfect-scrollbar>
 
 <script type="text/ng-template" id="panel">
-    <div class="ledger-panel" ng-click="stopProp($event)">
+    <div class="ledger-panel" ng-click="stopProp($event)" ng-class="{'pop-panel':!popover.draggable}">
       <div class="wrapper">
         <i class="glyphicon glyphicon-off close-panel" ng-click="closePanel()" ng-if="popover.draggable"></i>
         <div class="mrT">
@@ -371,8 +347,8 @@
                 <!--<input type="checkbox" ng-model="selectedLedger.applyApplicableTaxes">Applied taxes-->
               <!--</label>-->
             </div>
-            <div class="mrB">
-              <label class="pull-right">Total: {{ttlValD + ttlValDType}}</label>
+            <div class="mrT1 pull-right">
+              <label>Total: {{selectedLedger.entryTotal.amount}} <span ng-if="selectedLedger.entryTotal.amount != 0">{{selectedLedger.entryTotal.type}}</span></label>
             </div>
             <div class="row mrT1 clearfix" style="clear:both">
               <hr class="width100">

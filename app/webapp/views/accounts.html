@@ -77,6 +77,20 @@
       </ul>
 
     </div>
+    <div class="text-center bc-wrap">
+      <!--breadcrumbs-->
+      <div>
+        <ol class="breadcrumb">
+          <li ng-repeat="(key,value) in accountToShow.parentGroups"
+              ng-class="{active:$last}">
+            <a href="javascript:void(0)">{{value.name}}</a>
+          </li>
+          <!--<li>Bank Accounts</li>-->
+          <!--<li>ICICI Bank Ltd</li>-->
+        </ol>
+      </div>
+      <!--/breadcrumbs-->
+    </div>
     <div style="height: 50px;"></div>
   </perfect-scrollbar>
 

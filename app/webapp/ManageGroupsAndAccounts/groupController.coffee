@@ -1230,6 +1230,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.flatAccntWGroupsList = []
     $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
 
-
+  $rootScope.$on 'catchBreadcumbs', (e, breadcrumbs) ->
+    $scope.accountToShow = breadcrumbs
 #init angular app
 giddh.webApp.controller 'groupController', groupController

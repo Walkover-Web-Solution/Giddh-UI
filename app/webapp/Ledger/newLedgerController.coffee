@@ -15,6 +15,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.mergeTransaction = false
   $scope.showEledger = true
   $scope.pageAccount = {}
+  $scope.showLoader = true
   $scope.showExportOption = false
   $scope.showLedgerPopover = false
   $scope.popover = {
@@ -49,6 +50,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   }
 
   $scope.blankLedger = {
+      isBlankLedger : true
       description:null
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
 #      hasCredit:false
@@ -74,6 +76,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   blankLedgerModel = () ->
     @blankLedger = {
+      isBlankLedger : true
       description:''
       entryDate:''
       invoiceGenerated:false
@@ -455,6 +458,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   #     txn.particular = txn.remarks
 
   $scope.getLedgerData = () ->
+    $scope.showEledger = true
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.getAccountDetail($scope.accountUnq)
@@ -470,9 +474,23 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.getLedgerDataSuccess = (res) ->
     #$scope.filterLedgers(res.body.ledgers)
     $scope.ledgerData = res.body
+    $scope.countTotalTransactions()
+    $scope.showEledger = false
 
   $scope.getLedgerDataFailure = (res) ->
     toastr.error(res.data.message)
+
+  $scope.countTotalTransactions = () ->
+    $scope.dTxnCount = 0
+    $scope.cTxnCount = 0
+    if $scope.ledgerData.ledgers.length > 0
+      _.each $scope.ledgerData.ledgers, (ledger) ->
+        if ledger.transactions.length > 0
+          _.each ledger.transactions, (txn) ->
+            if txn.type == 'DEBIT'
+              $scope.dTxnCount += 1
+            else
+              $scope.cTxnCount += 1
 
   $scope.filterLedgers = (ledgers) ->
     _.each ledgers, (lgr) ->
@@ -533,7 +551,25 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.exportOptions = () ->
     $scope.showExportOption = !$scope.showExportOption
 
+  $scope.calculateEntryTotal = (ledger) ->
+    ledger.entryTotal = {}
+    ledger.entryTotal.amount = 0
+    if ledger.transactions.length > 1
+      _.each ledger.transactions, (txn) ->
+        if txn.type == 'DEBIT'
+          ledger.entryTotal.amount += txn.amount
+        else
+          ledger.entryTotal.amount -= txn.amount
+    else
+      ledger.entryTotal.amount = ledger.transactions[0].amount
+    if ledger.entryTotal.amount > 0
+      ledger.entryTotal.type = 'Dr'
+    else
+      ledger.entryTotal.type = 'Cr'
+
+
   $scope.selectTxn = (ledger, txn, index ,e) ->
+    $scope.calculateEntryTotal(ledger)
     $scope.showLedgerPopover = true
     $scope.ledgerBeforeEdit = {}
     angular.copy(ledger,$scope.ledgerBeforeEdit)
@@ -746,29 +782,30 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       amount : 0
       type: 'CREDIT'
     }
-    $scope.blankLedger = {
-      description:null
-      entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
-#      hasCredit:false
-#      hasDebit:false
-      invoiceGenerated:false
-      isCompoundEntry:false
-      applyApplicableTaxes:false
-      tag:null
-      transactions:[
-        $scope.newDebitTxn
-        $scope.newCreditTxn
-      ]
-      unconfirmedEntry:false
-      isInclusiveTax: false
-      uniqueName:""
-      voucher:{
-        name:""
-        shortCode:""
-      }
-      tax:[]
-      voucherNo:null
-    }
+#     $scope.blankLedger = {
+#       isBlankLedger : true
+#       description:null
+#       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
+# #      hasCredit:false
+# #      hasDebit:false
+#       invoiceGenerated:false
+#       isCompoundEntry:false
+#       applyApplicableTaxes:false
+#       tag:null
+#       transactions:[
+#         $scope.newDebitTxn
+#         $scope.newCreditTxn
+#       ]
+#       unconfirmedEntry:false
+#       isInclusiveTax: false
+#       uniqueName:""
+#       voucher:{
+#         name:""
+#         shortCode:""
+#       }
+#       tax:[]
+#       voucherNo:null
+#     }
 
   $scope.addEntrySuccess = (res) ->
     toastr.success("Entry created successfully", "Success")
@@ -948,5 +985,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $(document).on('click', ()->
     $scope.showLedgerPopover = false
   )
+
+  $rootScope.$emit('catchBreadcumbs', $scope.accountToShow)
 
 giddh.webApp.controller 'newLedgerController', newLedgerController

@@ -2861,6 +2861,7 @@ ul.pills li {
     clear: both;
     overflow: hidden;
     position: relative;
+    margin-top:5px;
 }
 
 .ledger-container table th {
@@ -2950,12 +2951,12 @@ ul.pills li {
     /*max-width: 640px;*/
     min-height: 200px;
     overflow: hidden;
-    background: (1,1,1,0.6);
+    background: #fff;
     border-radius: 4px;
     color: #333;
     position: relative;
     padding: 10px;
-    z-index: 9;
+    z-index: 2;
 /*    top:54px;
     right:35px;*/
     -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
@@ -3259,4 +3260,24 @@ ul.pills li {
 }
 .underline{
     text-decoration: underline;
+}
+
+.while-panel{
+    position: absolute;
+    right:15px;
+    left:15px;
+}
+
+.bc-wrap{
+    position: absolute;
+    bottom: 0;
+    left:0;
+}
+
+.bc-wrap .breadcrumb{
+    padding:0;
+}
+
+.tcount{
+    font-weight: 100 !important;
 }
