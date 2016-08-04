@@ -19,7 +19,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.showLedgerPopover = false
   $scope.popover = {
     templateUrl: 'panel'
-    draggable: false
+    draggable: true
   }
 
   $scope.hideEledger = () ->

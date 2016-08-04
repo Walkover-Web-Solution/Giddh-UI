@@ -4,7 +4,7 @@
       Please select an Account to load its Ledger
     </section>
     <section class="container-fluid" ng-if="accountUnq.length > 0">
-      <div class="pdL2 pdR2 pdT2">
+      <div class="pdT1">
         <div class="ledger-top-panel">
           <div class="form-inline pdB1 ledgHead">
             <form name="fromToDateForm" novalidate class="form-group mrR1">
@@ -118,7 +118,6 @@
           <div class="mrB1" ng-repeat="f in impLedgFiles" style="font:smaller" ng-hide="impLedgBar">
             <uib-progressbar class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</uib-progressbar>
           </div>
-          <div ng-include="'panel'" ng-if="showPanel"></div>
           <!-- external ledger code here -->
           <section class="eledger-table" ng-if="eLedgerData.length > 0 && showEledger">
             <div ng-include="'/public/webapp/Ledger/eLedger.html'"></div>
@@ -163,6 +162,7 @@
 
         <div>
           <!--ledger table start-->
+          <div ng-include="'panel'" ng-if="showPanel"></div>
           <div class="ledger-container">
             <!--ledger table head 1-->
             <table class="col-xs-12 ledger-head">
@@ -359,15 +359,13 @@
                 <!--<switch on="Applied Tax" off="Don't A.T." ng-model="selectedLedger.applyApplicableTaxes" class="wide100" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>-->
               <!--</div>-->
               <button class="btn btn-sm" ng-click="selectedLedger.isInclusiveTax = !selectedLedger.isInclusiveTax" ng-class="{'btn-primary' : selectedLedger.isInclusiveTax == true, 'btn-default' : selectedLedger.isInclusiveTax == false}">
-                <span ng-if="selectedLedger.isInclusiveTax">Inclusive</span>
-                <span ng-if="!selectedLedger.isInclusiveTax">Exclusive</span>
+                <span>Inclusive</span>
               </button>
               <!--<label>                -->
                 <!--<input type="checkbox" ng-model="selectedLedger.isInclusiveTax">Inclusive-->
               <!--</label>-->
               <button class="btn btn-sm" ng-click="selectedLedger.applyApplicableTaxes = !selectedLedger.applyApplicableTaxes" ng-class="{'btn-primary' : selectedLedger.applyApplicableTaxes == true, 'btn-default' : selectedLedger.applyApplicableTaxes == false}">
-                <span ng-if="selectedLedger.applyApplicableTaxes">Tax as per account</span>
-                <span ng-if="!selectedLedger.applyApplicableTaxes">No tax as per account</span>
+                <span>Tax as per account</span>
               </button>
               <!--<label>-->
                 <!--<input type="checkbox" ng-model="selectedLedger.applyApplicableTaxes">Applied taxes-->

@@ -2945,19 +2945,19 @@ ul.pills li {
 }
 
 .ledger-panel {
-    width: 79%;
+    /*width: 79%;*/
     /*color: white !important;*/
     /*max-width: 640px;*/
     min-height: 200px;
     overflow: hidden;
-    background: linear-gradient(180deg, white, rgba(255,255,255,0.9) 40%);
+    background: (1,1,1,0.6);
     border-radius: 4px;
     color: #333;
-    position: fixed;
+    position: relative;
     padding: 10px;
     z-index: 9;
-    top:54px;
-    right:35px;
+/*    top:54px;
+    right:35px;*/
     -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
     -moz-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
     box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
