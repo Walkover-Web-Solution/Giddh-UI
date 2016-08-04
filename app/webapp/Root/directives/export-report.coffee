@@ -261,3 +261,19 @@ angular.module('trialBalance', []).directive('exportReport', [
     }
 ])
 
+.directive 'optionList', ['$window', '$timeout', ($window, $timeout) ->
+
+  link: (scope, elem, attr) ->
+    console.log scope
+
+    btn = $(elem).find('#showHide')
+    target = $(elem).find('.ol-options')
+
+
+    btn.on 'click', (e) ->
+
+      target.toggle("slide", {direction: "right"}, 300)
+
+
+
+]

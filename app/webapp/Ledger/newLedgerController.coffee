@@ -418,7 +418,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     if toMerge
       $scope.mergeTransaction = true
       $scope.ledgerData.ledgers.push($scope.eLedgerData)
-      $scope.ledgerData.ledgers = _.flatten($scope.ledgerData.ledgers)
+      $scope.ledgerData.ledgers = $scope.sortTransactions(_.flatten($scope.ledgerData.ledgers), 'entryDate')
       $scope.showEledger = false
     else
     #   $scope.AddBankTransactions()
@@ -433,6 +433,10 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   #   bankTxntoMerge = $scope.fromBanktoLedgerObject(bankTxnDuplicate)
   #   $scope.ledgerData.ledgers.push(bankTxntoMerge)
   #   $scope.ledgerData.ledgers = _.flatten($scope.ledgerData.ledgers)
+
+  $scope.sortTransactions = (ledger, sortType) ->
+    ledger = _.sortBy(ledger, sortType)
+    ledger
 
   $scope.removeBankTransactions = () ->
     withoutBankTxn = []
@@ -458,7 +462,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   #     txn.particular = txn.remarks
 
   $scope.getLedgerData = () ->
-    $scope.showEledger = true
+    $scope.showLoader = true
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.getAccountDetail($scope.accountUnq)
@@ -475,7 +479,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     #$scope.filterLedgers(res.body.ledgers)
     $scope.ledgerData = res.body
     $scope.countTotalTransactions()
-    $scope.showEledger = false
+    $scope.sortTransactions($scope.ledgerData, 'entryDate')
+    $scope.showLoader = false
 
   $scope.getLedgerDataFailure = (res) ->
     toastr.error(res.data.message)
@@ -782,30 +787,30 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       amount : 0
       type: 'CREDIT'
     }
-#     $scope.blankLedger = {
-#       isBlankLedger : true
-#       description:null
-#       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
-# #      hasCredit:false
-# #      hasDebit:false
-#       invoiceGenerated:false
-#       isCompoundEntry:false
-#       applyApplicableTaxes:false
-#       tag:null
-#       transactions:[
-#         $scope.newDebitTxn
-#         $scope.newCreditTxn
-#       ]
-#       unconfirmedEntry:false
-#       isInclusiveTax: false
-#       uniqueName:""
-#       voucher:{
-#         name:""
-#         shortCode:""
-#       }
-#       tax:[]
-#       voucherNo:null
-#     }
+    $scope.blankLedger = {
+      isBlankLedger : true
+      description:null
+      entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
+#      hasCredit:false
+#      hasDebit:false
+      invoiceGenerated:false
+      isCompoundEntry:false
+      applyApplicableTaxes:false
+      tag:null
+      transactions:[
+        $scope.newDebitTxn
+        $scope.newCreditTxn
+      ]
+      unconfirmedEntry:false
+      isInclusiveTax: false
+      uniqueName:""
+      voucher:{
+        name:""
+        shortCode:""
+      }
+      tax:[]
+      voucherNo:null
+    }
 
   $scope.addEntrySuccess = (res) ->
     toastr.success("Entry created successfully", "Success")

@@ -3165,7 +3165,7 @@ ul.pills li {
 .export-ledger-options {
     position: absolute;
     left: -95px;
-    top: -15px;
+    top: 0;
     background: #000;
     color: #fff;
     border-radius: 5px;
@@ -3272,6 +3272,7 @@ ul.pills li {
     position: absolute;
     bottom: 0;
     left:0;
+    padding:30px 10px 30px 20px;
 }
 
 .bc-wrap .breadcrumb{
@@ -3280,4 +3281,10 @@ ul.pills li {
 
 .tcount{
     font-weight: 100 !important;
+}
+
+.ol-options{
+    float:right;
+    max-height:34px;
+    display: none;
 }

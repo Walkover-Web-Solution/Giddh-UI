@@ -1,12 +1,13 @@
 
-<div class="loader mrT4" ng-if="showEledger">
+<div class="loader mrT4" ng-if="showLoader">
   <span></span>
   <span></span>
   <span></span>
   <span></span>
   <span></span>
 </div>
-<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent"  ng-if="!showEledger">
+<div ng-if="!showLoader">
+<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" >
     <section class="alert alert-info mrL2 mrR2 mrT2" ng-if="accountUnq.length < 1">
       Please select an Account to load its Ledger
     </section>
@@ -65,62 +66,68 @@
               <i class="glyphicon glyphicon-search pos-abs"  style="right:5px;top:10px;"></i>
             </div>
 
-            <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Show List" tooltip-placement="left" ng-click="showImportList()" >
-              <i class="glyphicon glyphicon-th-list" ></i>
-            </a>
-
-            <div class="form-group pull-right mrL1 pdf-export">
-              <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Export" tooltip-placement="right" ng-click="exportOptions()" >
-                <i class="glyphicon glyphicon-cloud-download pull-right" ></i>
+            <div option-list>
+              <a id="showHide" class="pull-right mrL1" href="javascript:void(0)">
+                <i class="glyphicon glyphicon-th-list"></i>
               </a>
-              <div class="export-ledger-options" ng-show="showExportOption">
-                <span class="arrow"></span>
-                <ul class="list-unstyled">
-                  <li ng-click="exportLedger('detailed')">Detailed</li>
-                  <li ng-click="exportLedger('condensed')">Condensed</li>
-                </ul>
+              <div class="ol-options">
+
+                <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Show List" tooltip-placement="left" ng-click="showImportList()" >
+                  <i class="glyphicon glyphicon-list-alt" ></i>
+                </a>
+
+                <div class="form-group pull-right mrL1 pdf-export">
+                  <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Export" tooltip-placement="right" ng-click="exportOptions()" >
+                    <i class="glyphicon glyphicon-cloud-download pull-right" ></i>
+                  </a>
+                  <div class="export-ledger-options" ng-show="showExportOption">
+                    <span class="arrow"></span>
+                    <ul class="list-unstyled">
+                      <li ng-click="exportLedger('detailed')">Detailed</li>
+                      <li ng-click="exportLedger('condensed')">Condensed</li>
+                    </ul>
+                  </div>
+                </div>
+
+                <form class="pull-right mrL1" enctype="multipart/form-data">
+                  <a class="mrL1" type="file" ngf-select="importLedger($files, $invalidFiles)" accept=".xls, .xlsx" ngf-max-size="100MB" ng-disabled="!canUpdate">
+                     <i class="glyphicon glyphicon-copy" uib-tooltip="Import" tooltip-placement="left"></i>
+                  </a>
+                </form>
+
+
+                <span class="pull-right mrL1" uib-dropdown  auto-close="outsideClick">
+                  <a href id="simple-dropdown" uib-dropdown-toggle>
+                    <i uib-tooltip="Send Ledger" tooltip-placement="right" class="glyphicon glyphicon-envelope" ></i>
+                  </a>
+                  <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                    <li>
+                      <form class="form-group pd1" name="ledgerEmailSendForm" novalidate>
+                        <div class="mrB1">
+                          <textarea ng-model="ledgerEmailData.email" required name="ledgerEmailSendForm.email" class="form-control" placeholder="Recipents Email Id's"></textarea>
+                        </div>
+                        <button ng-disabled="ledgerEmailSendForm.$invalid" class="btn btn-primary btn-sm" ng-click="sendLedgEmail(ledgerEmailData.email)">Send Email</button>
+                      </form>
+                    </li>
+                  </ul>
+                </span>
+
+                <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Generate Magic Link" tooltip-placement="left" ng-click="getMagicLink()">
+                  <i class="glyphicon glyphicon-link pull-right"></i>
+                </a>
+
+                <a class="pull-right mrL1" style="margin-top:3px">
+                  <div ng-click="togglePopoverDrag()">
+                    <switch on="Drag" off="Fixed" ng-model="popover.draggable" class="wide100" uib-tooltip="Switch between draggable and fixed popover. " tooltip-placement="bottom" ></switch>
+                  </div>
+                </a>
+                <a class="pull-right mrL1" ng-if="eLedgerData.length > 0" style="margin-top:3px">
+                  <div ng-click="mergeBankTransactions(mergeTransaction)">
+                    <switch on="Unmerge" off="Merge" ng-model="mergeTransaction" class="wide100" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>
+                  </div>
+                </a>
               </div>
             </div>
-
-            <span id="isSafari"></span>
-
-            <form class="pull-right mrL1" enctype="multipart/form-data">
-              <a class="mrL1" type="file" ngf-select="importLedger($files, $invalidFiles)" accept=".xls, .xlsx" ngf-max-size="100MB" ng-disabled="!canUpdate">
-                 <i class="glyphicon glyphicon-copy" uib-tooltip="Import" tooltip-placement="left"></i>
-              </a>
-            </form>
-
-
-            <span class="pull-right mrL1" uib-dropdown  auto-close="outsideClick">
-              <a href id="simple-dropdown" uib-dropdown-toggle>
-                <i uib-tooltip="Send Ledger" tooltip-placement="right" class="glyphicon glyphicon-envelope" ></i>
-              </a>
-              <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
-                <li>
-                  <form class="form-group pd1" name="ledgerEmailSendForm" novalidate>
-                    <div class="mrB1">
-                      <textarea ng-model="ledgerEmailData.email" required name="ledgerEmailSendForm.email" class="form-control" placeholder="Recipents Email Id's"></textarea>
-                    </div>
-                    <button ng-disabled="ledgerEmailSendForm.$invalid" class="btn btn-primary btn-sm" ng-click="sendLedgEmail(ledgerEmailData.email)">Send Email</button>
-                  </form>
-                </li>
-              </ul>
-            </span>
-
-            <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Generate Magic Link" tooltip-placement="left" ng-click="getMagicLink()">
-              <i class="glyphicon glyphicon-link pull-right"></i>
-            </a>
-
-            <a class="pull-right mrL1">
-              <div ng-click="togglePopoverDrag()">
-                <switch on="Drag" off="Fixed" ng-model="popover.draggable" class="wide100" uib-tooltip="Switch between draggable and fixed popover. " tooltip-placement="bottom" ></switch>
-              </div>
-            </a>
-            <a class="pull-right mrL1" ng-if="eLedgerData.length > 0">
-              <div ng-click="mergeBankTransactions(mergeTransaction)">
-                <switch on="Unmerge" off="Merge" ng-model="mergeTransaction" class="wide100" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>
-              </div>
-            </a>
           </div>
           <div class="mrB1" ng-repeat="f in impLedgFiles" style="font:smaller" ng-hide="impLedgBar">
             <uib-progressbar class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</uib-progressbar>
@@ -311,7 +318,7 @@
       </div>
     </section>
 </perfect-scrollbar>
-
+</div>
 <script type="text/ng-template" id="panel">
     <div class="ledger-panel" ng-click="stopProp($event)" ng-class="{'pop-panel':!popover.draggable}">
       <div class="wrapper">
