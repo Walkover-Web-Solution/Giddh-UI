@@ -1,6 +1,7 @@
 angular.module('twygmbh.auto-height', []).
 directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
   link: ($scope, $element, $attrs) ->
+
     combineHeights = (collection) ->
       heights = 0
       heights += node.offsetHeight for node in collection
@@ -9,14 +10,16 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
     siblings = ($elm) ->
       elm for elm in $elm.parent().children() when elm != $elm[0]
 
-    angular.element($window).on 'resize', ->
+    adjustHeight = () ->
       additionalHeight = $attrs.additionalHeight || 0
       parentHeight = $window.innerHeight - $element.parent()[0].getBoundingClientRect().top
       $element.css('height', (parentHeight - combineHeights(siblings($element)) - additionalHeight) + "px")
 
+    angular.element($window).on 'resize', ->
+      adjustHeight()
+
     $timeout ->
       angular.element($window).triggerHandler('resize')
-    
 ]
 
 # convert digit to words

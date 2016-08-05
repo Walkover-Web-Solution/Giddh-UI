@@ -252,7 +252,6 @@ angular.module('trialBalance', []).directive('exportReport', [
             left = getLeftSectionWidth()
             setPanelLeftPos(left)
           )
-          console.log attr.dragAround
 
           # $(document).ready((e)->
           #   left = getLeftSectionWidth()
@@ -264,7 +263,6 @@ angular.module('trialBalance', []).directive('exportReport', [
 .directive 'optionList', ['$window', '$timeout', ($window, $timeout) ->
 
   link: (scope, elem, attr) ->
-    console.log scope
 
     btn = $(elem).find('#showHide')
     target = $(elem).find('.ol-options')

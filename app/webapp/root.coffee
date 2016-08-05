@@ -221,9 +221,9 @@ giddh.webApp.run [
         $rootScope.selAcntUname = undefined
     )
 
-    appcache.checkUpdate().then( ->
+    # appcache.checkUpdate().then( ->
 
-    )
+    # )
 
 #    # check IE browser version
 #    $rootScope.GetIEVersion = () ->

@@ -580,6 +580,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
 
   $scope.selectTxn = (ledger, txn, index ,e) ->
+    $scope.selectedTxn = txn
     $scope.calculateEntryTotal(ledger)
     $scope.showLedgerPopover = true
     $scope.ledgerBeforeEdit = {}
@@ -602,7 +603,13 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
       $scope.checkCompEntry(ledger)
     $scope.isTransactionContainsTax(ledger)
-    e.stopPropagation()
+    e.stopPropagation() 
+
+  $scope.$watch('selectedTxn.amount', (newVal, oldVal) ->
+    if newVal != oldVal
+      $scope.calculateEntryTotal($scope.selectedLedger)
+
+  )
 
   $scope.openClosePopoverForLedger = (txn, ledger) ->
     _.each $scope.ledgerData.ledgers, (iledger) ->
