@@ -214,14 +214,17 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.createCompany(cData)
 
   $scope.onCompanyCreateModalCloseFailure = () ->
-    $scope.checkCmpCretedOrNot()
+#    $scope.checkCmpCretedOrNot()
     if $scope.companyList.length <= 0
       modalService.openConfirmModal(
         title: 'LogOut',
         body: 'In order to be able to use Giddh, you must create a company. Are you sure you want to cancel and logout?',
         ok: 'Yes',
-        cancel: 'No').then($scope.firstLogout)
+        cancel: 'No').then($scope.firstLogout, $scope.logoutCancel)
 
+  $scope.logoutCancel = () ->
+    $scope.createNewCompany()
+    
   $scope.firstLogout = () ->
     $http.post('/logout').then ((res) ->
 # don't need to clear below
@@ -262,6 +265,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     if _.isEmpty($scope.companyList)
       #When no company is there
       $scope.companyList.count
+      $scope.createNewCompany()
     else
       # When there are companies
       $rootScope.mngCompDataFound = true

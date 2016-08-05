@@ -194,12 +194,12 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #Get company list
   $scope.getCompanyList = ()->
-#    $rootScope.getCompanyList()
+    $rootScope.getCompanyList()
 #    if _.isEmpty($rootScope.CompanyList)
 #      $scope.openFirstTimeUserModal()
 #    else
 #      $scope.goToCompany($rootScope.selectedCompany,$rootScope.companyIndex,"")
-   companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
+#   companyServices.getAll().then($rootScope.getCompanyListSuccess, $rootScope.getCompanyListFailure)
 
   #Get company list
   $scope.getCompanyListSuccess = (res) ->
