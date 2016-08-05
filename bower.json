@@ -33,7 +33,7 @@
     "moment": "~2.10.6",
     "ng-file-upload": "10.1.9",
     "angular-bootstrap": "~0.14.3",
-    "ui-select": "angular-ui-select#~0.13.2",
+    "ui-select": "angular-ui-select#~0.18.1",
     "angular-chart.js": "~0.8.8",
     "angular-ui-router": "~0.2.15",
     "v-accordion": "~1.4.1",
