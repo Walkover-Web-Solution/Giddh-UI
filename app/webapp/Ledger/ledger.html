@@ -7,7 +7,7 @@
   <span></span>
 </div>
 <div ng-if="!showLoader">
-<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" >
+<!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" >  -->
     <section class="alert alert-info mrL2 mrR2 mrT2" ng-if="accountUnq.length < 1">
       Please select an Account to load its Ledger
     </section>
@@ -72,12 +72,12 @@
               </a>
               <div class="ol-options">
 
-                <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Show List" tooltip-placement="left" ng-click="showImportList()" >
+                <a class="pull-right" href="javascript:void(0)" title=""  uib-tooltip="Show List" tooltip-placement="left" ng-click="showImportList()" >
                   <i class="glyphicon glyphicon-list-alt" ></i>
                 </a>
 
                 <div class="form-group pull-right mrL1 pdf-export">
-                  <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Export" tooltip-placement="right" ng-click="exportOptions()" >
+                  <a class="pull-right" href="javascript:void(0)" title=""  uib-tooltip="Export" tooltip-placement="right" ng-click="exportOptions()" >
                     <i class="glyphicon glyphicon-cloud-download pull-right" ></i>
                   </a>
                   <div class="export-ledger-options" ng-show="showExportOption">
@@ -90,7 +90,7 @@
                 </div>
 
                 <form class="pull-right mrL1" enctype="multipart/form-data">
-                  <a class="mrL1" type="file" ngf-select="importLedger($files, $invalidFiles)" accept=".xls, .xlsx" ngf-max-size="100MB" ng-disabled="!canUpdate">
+                  <a class="" type="file" ngf-select="importLedger($files, $invalidFiles)" accept=".xls, .xlsx" ngf-max-size="100MB" ng-disabled="!canUpdate">
                      <i class="glyphicon glyphicon-copy" uib-tooltip="Import" tooltip-placement="left"></i>
                   </a>
                 </form>
@@ -133,11 +133,10 @@
             <uib-progressbar class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</uib-progressbar>
           </div>  
         </div>
-
+        <div ng-include="'panel'" ng-if="showPanel"></div>
         <div>
           <!--ledger table start-->
-          <div ng-include="'panel'" ng-if="showPanel"></div>
-          
+          <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" >  
           <!-- external ledger code here -->
           <section class="eledger-table" ng-if="eLedgerData.length > 0 && showEledger">
             <div ng-include="'/public/webapp/Ledger/eLedger.html'"></div>
@@ -320,6 +319,7 @@
       </div>
     </section>
 </perfect-scrollbar>
+<!-- </perfect-scrollbar> -->
 </div>
 <script type="text/ng-template" id="panel">
     <div class="ledger-panel" ng-click="stopProp($event)" ng-class="{'pop-panel':!popover.draggable}">
