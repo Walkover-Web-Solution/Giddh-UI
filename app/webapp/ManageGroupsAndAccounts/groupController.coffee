@@ -687,7 +687,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     # for play between update and add
     $scope.acntCase = "Add"
     $scope.setOpeningBalanceDate()
-    $scope.showBreadCrumbs($scope.selectedGroup.parentGroups)
+    $scope.showBreadCrumbs([_.pick($scope.selectedGroup,'uniqueName','name')])
 
   $scope.setAdditionalAccountDetails = ()->
     $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.datePicker.accountOpeningBalanceDate,
@@ -711,7 +711,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.success("Account created successfully", res.status)
     $scope.getGroups()
     $scope.selectedAccount = {}
-    abc = _.pick(res.body, 'name', 'uniqueName', 'mergedAccounts')
+    abc = _.pick(res.body, 'name', 'uniqueName', 'mergedAccounts','applicableTaxes','parentGroups')
     $scope.groupAccntList.push(abc)
 
   $scope.addAccountFailure = (res) ->

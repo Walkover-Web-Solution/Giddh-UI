@@ -576,6 +576,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     if ledger.entryTotal.amount > 0
       ledger.entryTotal.type = 'Dr'
     else
+      ledger.entryTotal.amount = ledger.entryTotal.amount * -1
       ledger.entryTotal.type = 'Cr'
 
 

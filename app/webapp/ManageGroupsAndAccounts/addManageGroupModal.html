@@ -41,7 +41,7 @@
 
               <div class="clearfix add-manage-grouplist">
 
-                <section class="row row-1" ng-repeat="grp in groupList | orderBy: grp.category | grpsrch:keyWord" ng-class="grp.category">
+                <section class="row row-1" ng-repeat="grp in groupList | orderBy: 'category' | grpsrch:keyWord" ng-class="grp.category">
                   <div class="" trial-accordion>  
                     <div class="col-xs-12 group" ng-if="grp.isVisible"><span id="grp_{{grp.name}}" ng-bind-html="grp.name | uppercase" ng-click="selectItem(grp)" uib-tooltip="{{grp.synonyms}}" tooltip-placement="right"></span></div>
                   </div>
