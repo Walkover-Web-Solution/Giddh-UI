@@ -1458,7 +1458,6 @@ li:last-child .angular-ui-tree-handle {
     margin: 0;
     background: #337ab7;
     color: #fff;
-    z-index: 9;
 }
 
 .tb-head th {
@@ -2840,6 +2839,16 @@ ul.pills li {
     left: 72px;
 }
 
+.switch{
+    width:40px;
+    height:20px;
+}
+
+.switch small{
+    width:20px;
+    height:20px;
+}
+
 .left-col, .right-col {
     width: 50%;
     float: left;
@@ -2965,9 +2974,9 @@ ul.pills li {
 }
 
 .fixed-panel{
-    bottom:0px;
-    left: 320px;
-    right:35px;
+    position:fixed;
+    right:15px;
+    top:54px;
     max-width: initial;
     width: initial;
 }
@@ -3287,4 +3296,12 @@ ul.pills li {
     float:right;
     max-height:34px;
     display: none;
+}
+
+.panel-margin{
+    margin-top: 220px;
+}
+
+.top0{
+    top:0;
 }

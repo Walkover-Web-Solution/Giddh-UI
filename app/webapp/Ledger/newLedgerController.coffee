@@ -18,6 +18,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.showLoader = true
   $scope.showExportOption = false
   $scope.showLedgerPopover = false
+  $scope.adjustHeight = 0
   $scope.popover = {
     templateUrl: 'panel'
     draggable: true
@@ -1002,6 +1003,12 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $scope.stopProp = (e) ->
     e.stopPropagation()
+
+  $scope.onledgerScroll = (top,height,e) ->
+    if top > 200
+      $rootScope.hideHeader = true
+    else
+      $rootScope.hideHeader = false
 
   $rootScope.$on 'company-changed', (event,changeData) ->
     # when company is changed, redirect to manage company page

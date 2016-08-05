@@ -15,6 +15,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.canVWDLT = false
   $rootScope.companyLoaded = true
   $rootScope.superLoader = false
+  $rootScope.hideHeader = false
   $rootScope.flatAccList = {
     page: 1
     count: 5000

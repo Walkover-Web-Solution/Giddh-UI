@@ -7,13 +7,13 @@
   <span></span>
 </div>
 <div ng-if="!showLoader">
-<!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" >  -->
+<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > 
     <section class="alert alert-info mrL2 mrR2 mrT2" ng-if="accountUnq.length < 1">
       Please select an Account to load its Ledger
     </section>
     <section class="container-fluid" ng-if="accountUnq.length > 0">
       <div class="pdT1">
-        <div class="ledger-top-panel clearfix" ng-class="{'while-panel':showPanel}">
+        <div class="ledger-top-panel clearfix" ng-class="{'while-panel':showPanel}" ng-hide="showPanel">
           <div class="form-inline pdB1 ledgHead">
             <form name="fromToDateForm" novalidate class="form-group mrR1 pull-left">
               <div class="form-group">
@@ -116,14 +116,14 @@
                   <i class="glyphicon glyphicon-link pull-right"></i>
                 </a>
 
-                <a class="pull-right mrL1" style="margin-top:3px">
+                <a class="pull-right mrL1" style="margin-top:9px">
                   <div ng-click="togglePopoverDrag()">
-                    <switch on="Drag" off="Fixed" ng-model="popover.draggable" class="wide100" uib-tooltip="Switch between draggable and fixed popover. " tooltip-placement="bottom" ></switch>
+                    <switch ng-model="popover.draggable" class="small" uib-tooltip="Switch between draggable and fixed popover. " tooltip-placement="bottom" ></switch>
                   </div>
                 </a>
-                <a class="pull-right mrL1" ng-if="eLedgerData.length > 0" style="margin-top:3px">
+                <a class="pull-right mrL1" ng-if="eLedgerData.length > 0" style="margin-top:9px">
                   <div ng-click="mergeBankTransactions(mergeTransaction)">
-                    <switch on="Unmerge" off="Merge" ng-model="mergeTransaction" class="wide100" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>
+                    <switch  ng-model="mergeTransaction" class="small" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>
                   </div>
                 </a>
               </div>
@@ -134,9 +134,9 @@
           </div>  
         </div>
         <div ng-include="'panel'" ng-if="showPanel"></div>
-        <div>
+        <div ng-class="{'panel-margin': showPanel}">
           <!--ledger table start-->
-          <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" >  
+          <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="{{adjustHeight}}" >   -->
           <!-- external ledger code here -->
           <section class="eledger-table" ng-if="eLedgerData.length > 0 && showEledger">
             <div ng-include="'/public/webapp/Ledger/eLedger.html'"></div>
@@ -321,8 +321,12 @@
 </perfect-scrollbar>
 <!-- </perfect-scrollbar> -->
 </div>
+
+
+
+
 <script type="text/ng-template" id="panel">
-    <div class="ledger-panel" ng-click="stopProp($event)" ng-class="{'pop-panel':!popover.draggable}">
+    <div class="ledger-panel" ng-click="stopProp($event)" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': showPanel, top0:hideHeader}" left-margin>
       <div class="wrapper">
         <i class="glyphicon glyphicon-off close-panel" ng-click="closePanel()" ng-if="popover.draggable"></i>
         <div class="mrT">
