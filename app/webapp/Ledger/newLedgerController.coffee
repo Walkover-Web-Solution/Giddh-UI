@@ -68,8 +68,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       isInclusiveTax: false
       uniqueName:""
       voucher:{
-        name:""
-        shortCode:""
+        name:"Sales"
+        shortCode:"sal"
       }
       tax:[]
       voucherNo:null
@@ -89,8 +89,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       uniqueName:""
       isInclusiveTax: false
       voucher:{
-        name:""
-        shortCode:""
+        name:"Sales"
+        shortCode:"sal"
       }
       tax: []
       voucherNo:''
@@ -180,8 +180,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     isInclusiveTax: false
     uniqueName:""
     voucher:{
-      name:""
-      shortCode:""
+      name:"Sales"
+      shortCode:"sal"
     }
     voucherNo:null
   }
@@ -821,8 +821,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       isInclusiveTax: false
       uniqueName:""
       voucher:{
-        name:""
-        shortCode:""
+        name:"Sales"
+        shortCode:"sal"
       }
       tax:[]
       voucherNo:null
