@@ -143,7 +143,7 @@
           </section>
           <!-- external ledger code end here -->
 
-          <div class="ledger-container clearfix">
+          <div class="clearfix" ng-class="{'ledger-container':!showPanel, 'ledger-container-w':showPanel}">
             <!--ledger table head 1-->
             <table class="col-xs-12 ledger-head">
               <thead>
@@ -223,11 +223,11 @@
                   <tbody>
                       <tr class="t-h-bg3 bdr-w-t">
                         <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
-                          <span ng-if="ledgerData.balance.type == 'DEBIT'">C/F: {{ledgerData.balance.amount | number:2}}</span>
+                          <span ng-if="ledgerData.balance.type == 'CREDIT'">C/F: Cr {{ledgerData.balance.amount | number:2}}</span>
                         </td>
                       </tr>
                       <tr class="t-h-bg2 bdr-w-t h42">
-                        <td colspan="6" class="col-xs-6 text-left bold">Debit Total: {{debitTotal}}</td>
+                        <td colspan="6" class="col-xs-6 text-left bold">Debit Total: {{debitTotal | number:2}}</td>
                         <td colspan="6" class="col-xs-6 text-right bdr-w-t bold">Reckoning : {{ledgerData.debitTotal | number:2}}</td>
                       </tr>
                   </tbody>
@@ -303,11 +303,11 @@
                   <tbody>
                       <tr class="t-h-bg3">
                         <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
-                          <span  ng-if="ledgerData.balance.type == 'CREDIT'">C/F: {{ledgerData.balance.amount | number:2}}</span>
+                          <span  ng-if="ledgerData.balance.type == 'DEBIT'">C/F: Dr {{ledgerData.balance.amount | number:2}}</span>
                         </td>
                       </tr>
                       <tr class="t-h-bg2 bdr-w-t h42">
-                        <td colspan="6" class="col-xs-6 text-left bold">Credit Total: {{creditTotal}}</td>
+                        <td colspan="6" class="col-xs-6 text-left bold">Credit Total: {{creditTotal | number:2}}</td>
                         <td colspan="6" class="col-xs-6 text-right bold">Reckoning: {{ledgerData.creditTotal | number:2}}</td>
                       </tr>
                   </tbody>
@@ -328,8 +328,7 @@
 <script type="text/ng-template" id="panel">
     <div class="ledger-panel" ng-click="stopProp($event)" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': showPanel, top0:hideHeader}" left-margin>
       <div class="wrapper">
-        <i class="glyphicon glyphicon-off close-panel" ng-click="closePanel()" ng-if="popover.draggable"></i>
-        <div class="mrT">
+        <div class="">
           <div class="form-group">
             <div ng-if="selectedCompany.canUserSwitch" style="margin-top:3px" class="checkbox mrR1 pull-left">
               <!--<label>-->
@@ -360,7 +359,7 @@
                 <!--<input type="checkbox" ng-model="selectedLedger.applyApplicableTaxes">Applied taxes-->
               <!--</label>-->
             </div>
-            <div class="mrT1 pull-right">
+            <div class="mrT2 pull-right">
               <label>Total: {{selectedLedger.entryTotal.amount}} <span ng-if="selectedLedger.entryTotal.amount != 0">{{selectedLedger.entryTotal.type}}</span></label>
             </div>
             <div class="row mrT1 clearfix" style="clear:both">
@@ -409,9 +408,10 @@
               <span ng-if="(selectedLedger.uniqueName == undefined || selectedLedger.uniqueName == '') || selectedLedger.isBankTransaction == true">Save</span>
               <span ng-if="(selectedLedger.uniqueName != undefined && selectedLedger.uniqueName != '') && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)">Update</span>
             </button>
-            <button ng-if="((selectedLedger.uniqueName == undefined || selectedLedger.uniqueName == '') && (selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined) || (selectedLedger.transactions[1].particular.uniqueName != '' && selectedLedger.transactions[1].particular.uniqueName != undefined)) && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default" ng-click="resetLedger()">Reset</button>
-            <button ng-if="(selectedLedger.uniqueName != undefined && selectedLedger.uniqueName != '') && selectedLedger.invoiceGenerated == false && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default mrR1" ng-click="deleteEntry(selectedLedger);deleteMultipleTransactions()">Delete</button>
+            <button ng-if="(selectedLedger.uniqueName == undefined || selectedLedger.uniqueName == '') && ((selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined) || (selectedLedger.transactions[1].particular.uniqueName != '' && selectedLedger.transactions[1].particular.uniqueName != undefined)) && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default" ng-click="resetLedger()">Reset</button>
+            <i ng-if="(selectedLedger.uniqueName != undefined && selectedLedger.uniqueName != '') && selectedLedger.invoiceGenerated == false && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-right glyphicon glyphicon-trash mrR1 pos-abs" uib-tooltip="Delete" tooltip-placement="left" style="top:9px;right:1px;color:#d35f29;" ng-click="deleteEntry(selectedLedger);deleteMultipleTransactions()" uib-tooltip=""></i>
           </div>
+          <button class="btn btn-sm close-panel pull-right" ng-click="closePanel()" ng-if="popover.draggable">Close</button>
         </div>
       </div>
     </div>

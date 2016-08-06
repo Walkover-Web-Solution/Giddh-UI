@@ -225,7 +225,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.logoutCancel = () ->
     $scope.createNewCompany()
-    
+
   $scope.firstLogout = () ->
     $http.post('/logout').then ((res) ->
 # don't need to clear below
