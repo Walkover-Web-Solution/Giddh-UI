@@ -3001,6 +3001,7 @@ ul.pills li {
     top:54px;
     max-width: initial;
     width: initial;
+    left: 282px;
 }
 
 .pop-panel{
@@ -3008,6 +3009,7 @@ ul.pills li {
     width:640px !important;
     bottom:initial;
     right:initial;
+    left: 0px !important;
 }
 
 .bottom0 {
@@ -3032,7 +3034,6 @@ ul.pills li {
 .eledger-table-w{
     position: relative;
     top: -165px;
->>>>>>> dev
 }
 
 .ledger-panel textarea {
