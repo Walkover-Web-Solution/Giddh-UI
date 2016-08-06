@@ -156,6 +156,8 @@ router.get '/:accountUniqueName/export-ledger', (req, res) ->
       '/accounts/' + req.params.accountUniqueName + '/export-ledger'
   if req.query.ltype == 'condensed'
     hUrl = hUrl + '-condensed'
+  else
+    hUrl = hUrl + '-detailed'
   args =
     headers:
       'Auth-Key': req.session.authKey
