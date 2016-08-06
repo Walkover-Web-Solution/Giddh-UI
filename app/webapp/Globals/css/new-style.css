@@ -3024,6 +3024,16 @@ ul.pills li {
     /*top: 163px;*/
 }
 
+.eledger-table{
+    position:relative;
+    top:40px;
+}
+
+.eledger-table-w{
+    position: relative;
+    top: -165px;
+}
+
 .ledger-panel textarea {
     resize: none;
 }

@@ -138,7 +138,7 @@
           <!--ledger table start-->
           <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="{{adjustHeight}}" >   -->
           <!-- external ledger code here -->
-          <section class="eledger-table" ng-if="eLedgerData.length > 0 && showEledger">
+          <section ng-class="{'eledger-table':!showPanel, 'eledger-table-w':showPanel}" ng-if="eLedgerData.length > 0 && showEledger">
             <div ng-include="'/public/webapp/Ledger/eLedger.html'"></div>
           </section>
           <!-- external ledger code end here -->
@@ -326,7 +326,7 @@
 
 
 <script type="text/ng-template" id="panel">
-    <div class="ledger-panel" ng-click="stopProp($event)" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': showPanel, top0:hideHeader}" left-margin>
+    <div class="ledger-panel" ng-click="stopProp($event)" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': showPanel, 'top0':hideHeader}" left-margin>
       <div class="wrapper">
         <div class="">
           <div class="form-group">
@@ -411,7 +411,7 @@
             <button ng-if="(selectedLedger.uniqueName == undefined || selectedLedger.uniqueName == '') && ((selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined) || (selectedLedger.transactions[1].particular.uniqueName != '' && selectedLedger.transactions[1].particular.uniqueName != undefined)) && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default" ng-click="resetLedger()">Reset</button>
             <i ng-if="(selectedLedger.uniqueName != undefined && selectedLedger.uniqueName != '') && selectedLedger.invoiceGenerated == false && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-right glyphicon glyphicon-trash mrR1 pos-abs" uib-tooltip="Delete" tooltip-placement="left" style="top:9px;right:1px;color:#d35f29;" ng-click="deleteEntry(selectedLedger);deleteMultipleTransactions()" uib-tooltip=""></i>
           </div>
-          <button class="btn btn-sm close-panel pull-right" ng-click="closePanel()" ng-if="popover.draggable">Close</button>
+          <button class="btn btn-sm close-panel pull-right" ng-click="closePanel()" style="position: relative" ng-if="popover.draggable">Close</button>
         </div>
       </div>
     </div>
