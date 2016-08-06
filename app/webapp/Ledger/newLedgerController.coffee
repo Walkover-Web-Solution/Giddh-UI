@@ -275,6 +275,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 
   $scope.emailLedgerSuccess = (res) ->
     toastr.success(res.body, res.status)
+    $scope.ledgerEmailData.email = ''
     $scope.ledgerEmailData = {}
 
   $scope.emailLedgerFailure = (res) ->
