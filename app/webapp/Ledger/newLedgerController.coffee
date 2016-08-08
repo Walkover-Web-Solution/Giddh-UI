@@ -114,14 +114,14 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     $scope.checkForExistingblankTransaction(ledger, str)
     if !$scope.hasBlankTxn
       ledger.transactions.push(txn)
-      $scope.triggerNewTxnFocus(ledger, txn)
-#    else
-#      _.each ledger.transactions, (transaction) ->
-#        if transaction.type == str && transaction.particular.uniqueName != ''
-#          ledger.transactions.push(txn)
   
-  $scope.triggerNewTxnFocus = (ledger, txn) ->
-    
+#  $scope.triggerFocusOnBlankTxn = (ledger, txn) ->
+
+  $scope.getFocus = (txn, ledger) ->
+    if txn.particular.name == "" && txn.particular.uniqueName == "" && txn.amount == 0
+      txn.isOpen = true
+      $scope.openClosePopOver(txn,ledger)
+
 
   $scope.checkForExistingblankTransaction = (ledger, str) ->
     _.each ledger.transactions, (txn) ->
@@ -595,9 +595,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     if $scope.popover.draggable
       $scope.showPanel = true
     else
-      $scope.openClosePopoverForLedger(txn, ledger)
-      $scope.openClosePopoverForBlankLedger(txn, ledger)
-      $scope.openClosePopoverForeLedger(txn, ledger)
+      $scope.openClosePopOver(txn, ledger)
     if ledger.isBankTransaction != undefined
       _.each(ledger.transactions,(transaction) ->
         if transaction.type == 'DEBIT'
@@ -634,6 +632,11 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     _.each $scope.blankLedger.transactions, (itxn) ->
       itxn.isOpen = false
     txn.isOpen = true
+
+  $scope.openClosePopOver = (txn, ledger) ->
+    $scope.openClosePopoverForLedger(txn, ledger)
+    $scope.openClosePopoverForBlankLedger(txn, ledger)
+    $scope.openClosePopoverForeLedger(txn, ledger)
 
   $scope.checkCompEntry = (ledger) ->
     unq = ledger.uniqueName
@@ -953,10 +956,11 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     a = document.createElement("a")
     document.body.appendChild(a)
     a.style = "display:none"
+    a.id = 'inv12'
     a.href = fileURL
     a.download = $scope.accountToShow.name+invoiceNumber+".pdf"
     a.click()
-
+    document.body.removeChild(a)
 
   # common failure message
   $scope.multiActionWithInvFailure=(res)->

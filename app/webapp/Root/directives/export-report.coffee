@@ -276,3 +276,16 @@ angular.module('trialBalance', []).directive('exportReport', [
 
 ]
 
+
+.directive 'triggerFocus', ['$window', '$timeout', ($window, $timeout) ->
+
+  link: (scope, elem, attr) ->
+
+    idx = parseInt(attr.index)
+    tL = attr.txnlength - 1
+    txn = JSON.parse(attr.txn)
+
+    if idx == tL && txn.particular.name == "" && txn.particular.uniqueName == "" && txn.amount == 0
+      $(elem).trigger('click')
+    
+]

@@ -1,16 +1,18 @@
 
-<div class="loader mrT4" ng-if="showLoader">
+<div class="loader mrT4" ng-if="showLoader && accountUnq.length != ''">
   <span></span>
   <span></span>
   <span></span>
   <span></span>
   <span></span>
 </div>
+
+<section class="alert alert-info mrL2 mrR2 mrT2" ng-if="showLoader && accountUnq.length == ''">
+  Please select an Account to load its Ledger
+</section>
+
 <div ng-if="!showLoader">
 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > 
-    <section class="alert alert-info mrL2 mrR2 mrT2" ng-if="accountUnq.length < 1">
-      Please select an Account to load its Ledger
-    </section>
     <section class="container-fluid" ng-if="accountUnq.length > 0">
       <div class="pdT1">
         <div class="ledger-top-panel clearfix" ng-class="{'while-panel':showPanel}" ng-hide="showPanel">
@@ -181,23 +183,23 @@
                     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84">
                       <table class="width100">
                         <tbody>
-                          <tr class="" ng-repeat="ledger in ledgerData.ledgers | filter:particularSearch track by $index" ng-class="{compoundEntry: ledger.isCompoundEntry}">
+                          <tr id="{{ledger.uniqueName}}" class="" ng-repeat="ledger in ledgerData.ledgers | filter:particularSearch track by $index" ng-class="{compoundEntry: ledger.isCompoundEntry}">
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
                                 <tbody class="ledger-main">
-                                  <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index, $event)" ng-if="txn.type == 'DEBIT'" ng-class="{uncEntry : ledger.unconfirmedEntry}"  uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover">
+                                  <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index, $event)" ng-if="txn.type == 'DEBIT'" ng-class="{uncEntry : ledger.unconfirmedEntry}"  uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover" ng-init="getFocus(txn,ledger)">
                                     <!-- <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
                                       <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                     </td> -->
                                     <td class="col-xs-3">
-                                      <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                      <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)">
+                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)" >
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
-                                      <input type="number" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
-                                        <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="$event.stopPropagation()">  <i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" ng-click="downloadInvoice(ledger.invoiceNumber)"></i>
+                                      <input type="number" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
+                                        <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber);$event.stopPropagation()" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="top">  <i class="glyphicon glyphicon-download pull-left" ></i>
                                         </span>
                                     </td>
                                   </tr>
@@ -210,18 +212,18 @@
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
                                 <tbody class="ledger-main">
-                                  <tr class="ledger-row" ng-repeat="txn in blankLedger.transactions track by $index" ng-if="txn.type == 'DEBIT'" ng-click="selectTxn(blankLedger, txn, $index, $event)" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover">
+                                  <tr class="ledger-row" ng-repeat="txn in blankLedger.transactions track by $index" ng-if="txn.type == 'DEBIT'" ng-click="selectTxn(blankLedger, txn, $index, $event)" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover"  ng-init="getFocus(txn,ledger)">
                                     <!-- <td class="col-xs-1 maxW42">
                                       <input type="checkbox">
                                     </td> -->
                                     <td class="col-xs-3">
-                                      <input class="form-control" ng-model="blankLedger.entryDate" accesskey="L" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                      <input class="form-control" ng-model="blankLedger.entryDate" accesskey="L" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
                                       <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)">
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
-                                      <input type="number" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                      <input type="number" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
                                       <span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()">
                                         <i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)"></i>
                                       </span>
@@ -283,19 +285,19 @@
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
                                 <tbody class="ledger-main">
-                                  <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index, $event)" ng-if="txn.type == 'CREDIT'" ng-class="{uncEntry : ledger.unconfirmedEntry}" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover">
+                                  <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index, $event)" ng-if="txn.type == 'CREDIT'" ng-class="{uncEntry : ledger.unconfirmedEntry}" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover"  ng-init="getFocus(txn,ledger)">
                                     <!-- <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
                                       <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                     </td> -->
                                     <td class="col-xs-3">
-                                      <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                      <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
                                       <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)" >
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
-                                      <input type="number" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
-                                      <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" ng-click="downloadInvoice(ledger.invoiceNumber)"></i>
+                                      <input type="number" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
+                                      <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber);$event.stopPropagation()" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="top"><i class="glyphicon glyphicon-download pull-left"></i>
                                       </span>
                                     </td>
                                   </tr>
@@ -308,18 +310,18 @@
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
                                 <tbody class="ledger-main">
-                                  <tr class="ledger-row" ng-repeat="txn in blankLedger.transactions track by $index" ng-if="txn.type == 'CREDIT'" ng-click="selectTxn(blankLedger, txn, $index, $event)" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover">
+                                  <tr class="ledger-row" ng-repeat="txn in blankLedger.transactions track by $index" ng-if="txn.type == 'CREDIT'" ng-click="selectTxn(blankLedger, txn, $index, $event)" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover"  ng-init="getFocus(txn,ledger)">
                                     <!-- <td class="col-xs-1 maxW42">
                                       <input type="checkbox">
                                     </td> -->
                                     <td class="col-xs-3">
-                                      <input class="form-control"  ng-model="blankLedger.entryDate" accesskey="R" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                      <input class="form-control"  ng-model="blankLedger.entryDate" accesskey="R" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
                                       <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)">
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
-                                      <input type="number" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                      <input type="number" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
                                       <span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()">
                                         <i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)">
                                         </i>

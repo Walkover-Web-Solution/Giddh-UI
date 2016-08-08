@@ -2841,6 +2841,20 @@ ul.pills li {
     width: 36px;
 }
 
+.switch.wide {
+    width: 100px;
+    height:36px;
+}
+
+.switch.wide small{
+    height: 36px;
+    width: 36px;
+}
+
+.switch.wide.checked small {
+    left: 65px;
+}
+
 .switch.wide100.checked small {
     left: 72px;
 }
@@ -3370,7 +3384,7 @@ ul.pills li {
     position: absolute;
     bottom: 0;
     left:0;
-    padding:30px 10px 30px 20px;
+    padding:30px 10px 30px 10px;
 }
 
 .bc-wrap .breadcrumb{
