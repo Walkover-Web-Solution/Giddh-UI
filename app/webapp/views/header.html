@@ -128,14 +128,18 @@
             </div>
             <i class="glyphicon glyphicon-chevron-down pull-right" style="right: -10px"></i>
           </a>
-          <ul id="companyList" class="company-list dropdown-menu" aria-labelledby="cmpWrp">
+          <ul id="companyList" class="company-list dropdown-menu" aria-labelledby="cmpWrp" >
             <li class="create-company">
               <button id="refreshCompanyBtn" class="btn btn-success btn-sm" ng-click="refreshcompanyList($event)">Refresh</button>
               <button id="createCompanyBtn" class="btn btn-primary btn-sm" ng-click="createNewCompany()">Create Company</button>
             </li>
-            <li ng-repeat="company in companyList" ng-click="changeCompany(company, $index,'CHANGE')" id="cmp" ng-class="{'selected-company':selectedCompany.uniqueName == company.uniqueName}">
-              <span tooltip-placement="top" uib-tooltip="{{company.alias}}">{{company.name}}</span>
-              <i id="deleteCmp" class="glyphicon glyphicon-trash" uib-tooltip="Delete Company" tooltip-placement="right" ng-if="company.shared" ng-click="deleteCompany(company,$index,company.name,$event)"></i>
+            <li style="padding:0px;">
+              <ul style="max-height: 260px;overflow-y: scroll;background:rgba(0,0,0,0.9);overflow:auto;">
+                <li ng-repeat="company in companyList" ng-click="changeCompany(company, $index,'CHANGE')" id="cmp" ng-class="{'selected-company':selectedCompany.uniqueName == company.uniqueName}">
+                  <span tooltip-placement="top" uib-tooltip="{{company.alias}}">{{company.name}}</span>
+                  <i id="deleteCmp" class="glyphicon glyphicon-trash" ng-if="company.shared" ng-click="deleteCompany(company,$index,company.name,$event)"></i>
+                </li>
+              </ul>
             </li>
           </ul>
         </li>

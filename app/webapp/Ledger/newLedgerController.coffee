@@ -898,6 +898,10 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     $scope.resetBlankLedger()
     $scope.selectedLedger = $scope.blankLedger
     $scope.getLedgerData()
+    if $scope.mergeTransaction
+      $timeout ( ->
+        $scope.mergeBankTransactions($scope.mergeTransaction)
+      ), 2000
 #    $scope.calculateLedger($scope.ledgerData, "deleted")
 
   $scope.deleteEntryFailure = (res) ->
@@ -950,7 +954,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     document.body.appendChild(a)
     a.style = "display:none"
     a.href = fileURL
-    a.download = invoiceNumber+".pdf"
+    a.download = $scope.accountToShow.name+invoiceNumber+".pdf"
     a.click()
 
 

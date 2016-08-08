@@ -2927,6 +2927,10 @@ ul.pills li {
     color: #333;
 }
 
+.ledger-table-body table tbody.ledger-main{
+    min-height: 600px;
+}
+
 .ledger-table-body table tbody.ledger-main tr td {
     border-bottom: 1px solid #ccc;
     border-right: 1px solid #ccc;
