@@ -21,7 +21,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.adjustHeight = 0
   $scope.popover = {
     templateUrl: 'panel'
-    draggable: true
+    draggable: false
   }
 
   $scope.hideEledger = () ->
@@ -114,10 +114,14 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     $scope.checkForExistingblankTransaction(ledger, str)
     if !$scope.hasBlankTxn
       ledger.transactions.push(txn)
+      $scope.triggerNewTxnFocus(ledger, txn)
 #    else
 #      _.each ledger.transactions, (transaction) ->
 #        if transaction.type == str && transaction.particular.uniqueName != ''
 #          ledger.transactions.push(txn)
+  
+  $scope.triggerNewTxnFocus = (ledger, txn) ->
+    
 
   $scope.checkForExistingblankTransaction = (ledger, str) ->
     _.each ledger.transactions, (txn) ->
@@ -1012,6 +1016,11 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       $rootScope.hideHeader = true
     else
       $rootScope.hideHeader = false
+
+  $scope.triggerPanelFocus = (e) ->
+    if e.keyCode == 13
+      $('#saveUpdate').focus()
+      return false
 
   $rootScope.$on 'company-changed', (event,changeData) ->
     # when company is changed, redirect to manage company page

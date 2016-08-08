@@ -1822,7 +1822,7 @@ v-pane-header.show-pseudo {
 }
 
 .btn:focus {
-    outline: 0 !important;
+    outline: 1px dotted;
 }
 
 .fadeIn {
@@ -2832,7 +2832,13 @@ ul.pills li {
 
 /*switch*/
 .switch.wide100 {
-    width: 100px
+    width: 100px;
+    height:36px;
+}
+
+.switch.wide100 small{
+    height: 36px;
+    width: 36px;
 }
 
 .switch.wide100.checked small {
@@ -2995,6 +3001,50 @@ ul.pills li {
     box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.75);
 }
 
+@-webkit-keyframes panel-open {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@-moz-keyframes panel-open{
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@-o-keyframes panel-open {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes panel-open {
+  from {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 .fixed-panel{
     position:fixed;
     right:15px;
@@ -3002,6 +3052,7 @@ ul.pills li {
     max-width: initial;
     width: initial;
     left: 17.6%;
+    animation: panel-open 0.2s linear;
 }
 
 .pop-panel{
@@ -3339,3 +3390,4 @@ ul.pills li {
 .top0{
     top:0;
 }
+

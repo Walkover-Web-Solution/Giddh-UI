@@ -133,7 +133,7 @@
             <uib-progressbar class="progress-striped active" value="f.progress" type="success">{{f.progress}}%</uib-progressbar>
           </div>  
         </div>
-        <div ng-include="'panel'" ng-if="showPanel"></div>
+        <div ng-include="'panel'" ng-if="showPanel" left-margin></div>
         <div ng-class="{'panel-margin': showPanel}">
           <!--ledger table start-->
           <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="{{adjustHeight}}" >   -->
@@ -189,9 +189,17 @@
                                     <!-- <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
                                       <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                     </td> -->
-                                    <td class="col-xs-3"><input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true"></td>
-                                    <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4"></td>
-                                    <td class="col-xs-3" style="position: relative"><input type="number" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true"><span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" ng-click="downloadInvoice(ledger.invoiceNumber)"></i></span></td>
+                                    <td class="col-xs-3">
+                                      <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                    </td>
+                                    <td class="col-xs-5">
+                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)">
+                                    </td>
+                                    <td class="col-xs-3" style="position: relative">
+                                      <input type="number" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                        <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="$event.stopPropagation()">  <i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" ng-click="downloadInvoice(ledger.invoiceNumber)"></i>
+                                        </span>
+                                    </td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -206,9 +214,18 @@
                                     <!-- <td class="col-xs-1 maxW42">
                                       <input type="checkbox">
                                     </td> -->
-                                    <td class="col-xs-3"><input class="form-control" ng-model="blankLedger.entryDate" accesskey="L"></td>
-                                    <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ></td>
-                                    <td class="col-xs-3" style="position: relative"><input type="number" class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)"></i></span></td>
+                                    <td class="col-xs-3">
+                                      <input class="form-control" ng-model="blankLedger.entryDate" accesskey="L" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                    </td>
+                                    <td class="col-xs-5">
+                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)">
+                                    </td>
+                                    <td class="col-xs-3" style="position: relative">
+                                      <input type="number" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                      <span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()">
+                                        <i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)"></i>
+                                      </span>
+                                    </td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -270,9 +287,17 @@
                                     <!-- <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
                                       <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                     </td> -->
-                                    <td class="col-xs-3"><input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true"></td>
-                                    <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ></td>
-                                    <td class="col-xs-3" style="position: relative"><input type="number" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true"><span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" ng-click="downloadInvoice(ledger.invoiceNumber)"></i></span></td>
+                                    <td class="col-xs-3">
+                                      <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                    </td>
+                                    <td class="col-xs-5">
+                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)" >
+                                    </td>
+                                    <td class="col-xs-3" style="position: relative">
+                                      <input type="number" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                      <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" ng-click="downloadInvoice(ledger.invoiceNumber)"></i>
+                                      </span>
+                                    </td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -287,9 +312,19 @@
                                     <!-- <td class="col-xs-1 maxW42">
                                       <input type="checkbox">
                                     </td> -->
-                                    <td class="col-xs-3"><input class="form-control"  ng-model="blankLedger.entryDate" accesskey="R"></td>
-                                    <td class="col-xs-5"><input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ></td>
-                                    <td class="col-xs-3" style="position: relative"><input type="number" class="form-control"  ng-model="txn.amount"><span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)"></i></span></td>
+                                    <td class="col-xs-3">
+                                      <input class="form-control"  ng-model="blankLedger.entryDate" accesskey="R" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                    </td>
+                                    <td class="col-xs-5">
+                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)">
+                                    </td>
+                                    <td class="col-xs-3" style="position: relative">
+                                      <input type="number" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)">
+                                      <span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()">
+                                        <i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)">
+                                        </i>
+                                      </span>
+                                    </td>
                                   </tr>
                                 </tbody>
                               </table>
@@ -352,7 +387,7 @@
               <!--<label>                -->
                 <!--<input type="checkbox" ng-model="selectedLedger.isInclusiveTax">Inclusive-->
               <!--</label>-->
-              <button class="btn btn-sm" ng-click="selectedLedger.applyApplicableTaxes = !selectedLedger.applyApplicableTaxes" ng-class="{'btn-primary' : selectedLedger.applyApplicableTaxes == true, 'btn-default' : selectedLedger.applyApplicableTaxes == false}">
+              <button class="btn btn-sm" ng-click="selectedLedger.applyApplicableTaxes = !selectedLedger.applyApplicableTaxes" ng-class="{'btn-primary' : selectedLedger.applyApplicableTaxes == true, 'btn-default' : selectedLedger.applyApplicableTaxes == false}" tabindex="0">
                 <span>Tax as per account</span>
               </button>
               <!--<label>-->
@@ -360,7 +395,7 @@
               <!--</label>-->
             </div>
             <div class="mrT2 pull-right">
-              <label>Total: {{selectedLedger.entryTotal.amount}} <span ng-if="selectedLedger.entryTotal.amount != 0">{{selectedLedger.entryTotal.type}}</span></label>
+              <label>Total: {{selectedLedger.entryTotal.amount | number:2}} <span ng-if="selectedLedger.entryTotal.amount != 0">{{selectedLedger.entryTotal.type}}</span></label>
             </div>
             <div class="row mrT1 clearfix" style="clear:both">
               <hr class="width100">
@@ -402,9 +437,9 @@
             </div>
           </div>
           <div class="" ng-if="canUpdate">
-            <button accesskey="e" ng-if="(selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="addBlankTxn('DEBIT', selectedLedger)">Add in DR</button>
+            <button accesskey="x" ng-if="(selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="addBlankTxn('DEBIT', selectedLedger)">Add in DR</button>
             <button accesskey="c" ng-if="(selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="addBlankTxn('CREDIT', selectedLedger)">Add in CR</button>
-            <button ng-if="(selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined) || (selectedLedger.transactions[1].particular.uniqueName != '' && selectedLedger.transactions[1].particular.uniqueName != undefined)" class="pull-left mrR1 btn btn-sm btn-success min150" ng-click="saveUpdateLedger(selectedLedger)">
+            <button id="saveUpdate" ng-if="(selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined) || (selectedLedger.transactions[1].particular.uniqueName != '' && selectedLedger.transactions[1].particular.uniqueName != undefined)" class="pull-left mrR1 btn btn-sm btn-success min150" ng-click="saveUpdateLedger(selectedLedger)">
               <span ng-if="(selectedLedger.uniqueName == undefined || selectedLedger.uniqueName == '') || selectedLedger.isBankTransaction == true">Save</span>
               <span ng-if="(selectedLedger.uniqueName != undefined && selectedLedger.uniqueName != '') && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)">Update</span>
             </button>

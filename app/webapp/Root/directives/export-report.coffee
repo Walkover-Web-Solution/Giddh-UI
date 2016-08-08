@@ -246,7 +246,7 @@ angular.module('trialBalance', []).directive('exportReport', [
             left = $('.col-xs-2.greyBg').width()
 
           setPanelLeftPos = (left) ->
-            $(elem).css('left', left + 45)
+            $(elem).find('.ledger-panel').css('left', left + 45)
 
           window.addEventListener('resize', (e) ->
             left = getLeftSectionWidth()
@@ -275,3 +275,4 @@ angular.module('trialBalance', []).directive('exportReport', [
 
 
 ]
+
