@@ -329,6 +329,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.selectedAccountCategory = data.category
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
+    $scope.entriesForInvoice = []
     # call invoice load func
     $scope.getTemplates()
 
@@ -609,6 +610,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # get ledger entries to generate invoice
   $scope.getLedgerEntries=()->
+    $scope.entriesForInvoice = []
     $scope.prevInProg = false
     obj = {
       compUname: $rootScope.selectedCompany.uniqueName

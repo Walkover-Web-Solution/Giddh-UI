@@ -1489,12 +1489,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
           linked = {}
           linked.uniqueName = lAcc.linkedAccount.uniqueName
           $scope.AccountsListToLink = _.without($scope.AccountsListToLink, _.findWhere($scope.AccountsListToLink, linked))
-      # _.each acc.yodleeAccounts, (link) ->
-      #   if link.giddhAccount != null
-      #     linked = {
-      #       uniqueName : link.giddhAccount.uniqueName
-      #     }
-      #     $scope.AccountsListToLink = _.without($scope.AccountsList, _.findWhere($scope.AccountsList, linked))
 
   $scope.linkGiddhAccount = (card) ->
     card.showAccList = false

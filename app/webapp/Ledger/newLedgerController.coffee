@@ -708,7 +708,9 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         $scope.addTaxesToLedger(ledger)
 #        console.log ledger
         #ledger.transactions.push(transactionsArray)
-
+        ledger.voucher = _.findWhere($scope.voucherTypeList,{'shortCode':ledger.voucher.shortCode})
+        console.log(ledger.voucher)
+        ledger.voucherType = ledger.voucher.shortCode
         if ledger.transactions.length > 0
           $scope.matchTaxTransactions(ledger.transactions, $scope.taxList)
           $scope.checkIfPrincipleTxnIsModified(ledger, $scope.ledgerBeforeEdit.transactions, unqNamesObj)

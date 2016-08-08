@@ -596,7 +596,7 @@
                   </table>
                 </td>
                 <td>
-                  <select ng-options="option.uniqueName as option.name for option in fltAccntListPaginated" class="form-control" ng-class="{isNotEditable : !item.isEditable}" ng-model="item.account.uniqueName" ng-disabled="!item.isEditable" ng-if="item.isEditable">
+                  <select ng-options="option.uniqueName as option.name for option in fltAccntListPaginated | searchAccountInPaginated:$viewValue" class="form-control" ng-class="{isNotEditable : !item.isEditable}" ng-model="item.account.uniqueName" ng-disabled="!item.isEditable" ng-if="item.isEditable">
                   </select>
                   <div class="pdBth06" ng-if="!item.isEditable && item.hasLinkedAcc">{{item.account.name}}</div>
                   <span ng-if="!item.hasLinkedAcc && !item.isEditable">No Account Linked</span>
@@ -902,7 +902,7 @@
                       </ui-select-match >
                       <ui-select-choices
                           ui-disable-choice="acc.uniqueName === selAcntUname"
-                          repeat="acc in AccountsListToLink | limitTo : 5 | filter: $select.search">
+                          repeat="acc in AccountsListToLink | filter: $select.search | limitTo: 5">
                         <span>{{acc.name}} ({{acc.uniqueName}})</span>
                       </ui-select-choices>
                     </ui-select>
