@@ -792,15 +792,11 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.getInvList()
 
   $scope.downInvSuccess=(res)->
-    byteChars = atob(res.body)
-    byteNums = new Array(byteChars.length)
-    i = 0
-    while i < byteChars.length
-      byteNums[i] = byteChars.charCodeAt(i)
-      i++
-    byteArray = new Uint8Array(byteNums)
-    file = new Blob([byteArray], {type: 'application/pdf'})
-    fileURL = URL.createObjectURL(file)
+    dataUri = 'data:application/pdf;base64,' + res.body
+    a = document.createElement('a')
+    a.download = $scope.nameForAction[0]+".pdf"
+    a.href = dataUri
+    a.click()
     #close dialog box
     # if $scope.genPrevMode
     #   $scope.modalInstance.close()
@@ -831,12 +827,12 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     # else
       # passthis = "data:application/pdf;base64, " + res.body 
       # window.open(passthis)
-    a = document.createElement("a")
-    document.body.appendChild(a)
-    a.style = "display:none"
-    a.href = fileURL
-    a.download = $scope.nameForAction[0]+".pdf"
-    a.click()
+    # a = document.createElement("a")
+    # document.body.appendChild(a)
+    # a.style = "display:none"
+    # a.href = fileURL
+    # a.download = $scope.nameForAction[0]+".pdf"
+    # a.click()
 
 
   # preview of generated invoice

@@ -183,11 +183,22 @@
                     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84">
                       <table class="width100">
                         <tbody>
-                          <tr id="{{ledger.uniqueName}}" class="" ng-repeat="ledger in ledgerData.ledgers | filter:particularSearch track by $index" ng-class="{compoundEntry: ledger.isCompoundEntry}">
+                          <tr id="{{ledger.uniqueName}}" class="" ng-repeat="ledger in ledgerData.ledgers | filter:particularSearch track by $index" ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed}">
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
                                 <tbody class="ledger-main">
-                                  <tr class="ledger-row" ng-repeat="txn in ledger.transactions track by $index" ng-click="selectTxn(ledger, txn, $index, $event)" ng-if="txn.type == 'DEBIT'" ng-class="{uncEntry : ledger.unconfirmedEntry}"  uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover" ng-init="getFocus(txn,ledger)">
+                                  <tr class="ledger-row" 
+                                  ng-repeat="txn in ledger.transactions track by $index" 
+                                  ng-click="selectTxn(ledger, txn, $index, $event)" 
+                                  ng-if="txn.type == 'DEBIT'" 
+                                  ng-class="{uncEntry : ledger.unconfirmedEntry}"  
+                                  uib-popover-template="popover.templateUrl" 
+                                  popover-trigger="click" 
+                                  popover-placement="bottom" 
+                                  popover-append-to-body='true' 
+                                  popover-enable="!popover.draggable" 
+                                  popover-is-open="txn.isOpen && showLedgerPopover" 
+                                  ng-init="getFocus(txn,ledger)">
                                     <!-- <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
                                       <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                     </td> -->
@@ -199,7 +210,7 @@
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="number" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
-                                        <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber);$event.stopPropagation()" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="top">  <i class="glyphicon glyphicon-download pull-left" ></i>
+                                        <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber, $event)" tooltip-append-to-body="false" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="left">  <i class="glyphicon glyphicon-download pull-left" ></i>
                                         </span>
                                     </td>
                                   </tr>
@@ -212,7 +223,19 @@
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
                                 <tbody class="ledger-main">
-                                  <tr class="ledger-row" ng-repeat="txn in blankLedger.transactions track by $index" ng-if="txn.type == 'DEBIT'" ng-click="selectTxn(blankLedger, txn, $index, $event)" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover"  ng-init="getFocus(txn,ledger)">
+                                  <tr class="ledger-row"
+                                  ng-repeat="txn in blankLedger.transactions track by $index"
+                                  ng-if="txn.type == 'DEBIT'" 
+                                  ng-click="selectTxn(blankLedger, txn, $index, $event)" 
+                                  uib-popover-template="popover.templateUrl" 
+                                  popover-trigger="click" 
+                                  popover-placement="bottom" 
+                                  popover-append-to-body='true' 
+                                  popover-enable="!popover.draggable" 
+                                  popover-is-open="txn.isOpen && showLedgerPopover"  
+                                  ng-init="getFocus(txn,ledger)"
+                                  ng-class="{'failed-entry':blankLedger.failed}"
+                                  >
                                     <!-- <td class="col-xs-1 maxW42">
                                       <input type="checkbox">
                                     </td> -->
@@ -281,7 +304,7 @@
                     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84">
                       <table class="width100">
                         <tbody>
-                          <tr class="" ng-repeat="ledger in ledgerData.ledgers | filter:particularSearch track by $index" ng-class="{compoundEntry: ledger.isCompoundEntry}">
+                          <tr class="" ng-repeat="ledger in ledgerData.ledgers | filter:particularSearch track by $index" ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed}">
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
                                 <tbody class="ledger-main">
@@ -297,7 +320,7 @@
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="number" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
-                                      <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber);$event.stopPropagation()" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="top"><i class="glyphicon glyphicon-download pull-left"></i>
+                                      <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber,$event)" tooltip-append-to-body="false" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="left"><i class="glyphicon glyphicon-download pull-left"></i>
                                       </span>
                                     </td>
                                   </tr>
@@ -310,7 +333,19 @@
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
                                 <tbody class="ledger-main">
-                                  <tr class="ledger-row" ng-repeat="txn in blankLedger.transactions track by $index" ng-if="txn.type == 'CREDIT'" ng-click="selectTxn(blankLedger, txn, $index, $event)" uib-popover-template="popover.templateUrl" popover-trigger="click" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover"  ng-init="getFocus(txn,ledger)">
+                                  <tr 
+                                  class="ledger-row" 
+                                  ng-repeat="txn in blankLedger.transactions track by $index" 
+                                  ng-if="txn.type == 'CREDIT'" 
+                                  ng-click="selectTxn(blankLedger, txn, $index, $event)" 
+                                  uib-popover-template="popover.templateUrl" 
+                                  popover-trigger="click" 
+                                  popover-placement="bottom" 
+                                  popover-append-to-body='true' 
+                                  popover-enable="!popover.draggable" 
+                                  popover-is-open="txn.isOpen && showLedgerPopover"  
+                                  ng-init="getFocus(txn,ledger)"
+                                  ng-class="{'failed-entry':blankLedger.failed}">
                                     <!-- <td class="col-xs-1 maxW42">
                                       <input type="checkbox">
                                     </td> -->
@@ -358,9 +393,6 @@
 </perfect-scrollbar>
 <!-- </perfect-scrollbar> -->
 </div>
-
-
-
 
 <script type="text/ng-template" id="panel">
     <div class="ledger-panel" ng-click="stopProp($event)" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': showPanel, 'top0':hideHeader}">

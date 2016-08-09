@@ -2993,7 +2993,7 @@ ul.pills li {
 }
 
 .compoundEntry td, .compoundEntry td input {
-    background: #FFF8EA;
+    background: #fddfa4;
 }
 
 .ledger-panel {
@@ -3409,3 +3409,6 @@ ul.pills li {
     top:0;
 }
 
+.failed-entry td,.failed-entry td input{
+    background:#fddfa4;
+}

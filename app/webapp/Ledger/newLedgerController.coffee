@@ -1,5 +1,5 @@
 
-newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state) ->
+newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state) ->
 
   #date time picker code starts here
   $scope.today = new Date()
@@ -678,8 +678,9 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         ledger.voucherType = ledger.voucher.shortCode
         $scope.addTaxesToLedger(ledger)
         if ledger.transactions.length > 0
-          ledgerService.createEntry(unqNamesObj, ledger).then($scope.addEntrySuccess
-          ,(res) -> $scope.addEntryFailure(res,rejectedTransactions))
+          ledgerService.createEntry(unqNamesObj, ledger).then(
+            (res) -> $scope.addEntrySuccess(res, ledger)
+            (res) -> $scope.addEntryFailure(res,rejectedTransactions, ledger))
         else
           ledger.transactions = rejectedTransactions
           response = {}
@@ -689,8 +690,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
           $scope.addEntryFailure(response,[])
 #          toastr.error("There must be at least a transaction to make an entry.")
       else
-        console.log("updating entry")
-
+        #update entry
         _.each ledger.transactions, (txn) ->
           if !_.isEmpty(txn.particular.uniqueName)
             particular = {}
@@ -716,13 +716,15 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
 #        console.log ledger
         #ledger.transactions.push(transactionsArray)
         ledger.voucher = _.findWhere($scope.voucherTypeList,{'shortCode':ledger.voucher.shortCode})
-        console.log(ledger.voucher)
         ledger.voucherType = ledger.voucher.shortCode
         if ledger.transactions.length > 0
           $scope.matchTaxTransactions(ledger.transactions, $scope.taxList)
           $scope.checkIfPrincipleTxnIsModified(ledger, $scope.ledgerBeforeEdit.transactions, unqNamesObj)
           if !$scope.ledgerTxnChanged
-            ledgerService.updateEntry(unqNamesObj, ledger).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
+            ledgerService.updateEntry(unqNamesObj, ledger).then(
+              (res) -> $scope.updateEntrySuccess(res, ledger)
+              (res) -> $scope.updateEntryFailure(res, ledger)
+            )
         else
           response = {}
           response.data = {}
@@ -837,7 +839,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
       voucherNo:null
     }
 
-  $scope.addEntrySuccess = (res) ->
+  $scope.addEntrySuccess = (res, ledger) ->
+    ledger.failed = false
     toastr.success("Entry created successfully", "Success")
     addThisLedger = {}
     _.extend(addThisLedger,$scope.selectedLedger)
@@ -853,7 +856,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
         $scope.mergeBankTransactions($scope.mergeTransaction)
       ), 2000
 
-  $scope.addEntryFailure = (res, rejectedTransactions) ->
+  $scope.addEntryFailure = (res, rejectedTransactions, ledger) ->
+    ledger.failed = true
     toastr.error(res.data.message, res.data.status)
     if rejectedTransactions.length > 0
       _.each(rejectedTransactions, (rTransaction) ->
@@ -868,6 +872,7 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     )
 
   $scope.updateEntrySuccess = (res) ->
+    ledger.failed = false
     toastr.success("Entry updated successfully.", "Success")
     addThisLedger = {}
     _.extend(addThisLedger,$scope.blankLedger)
@@ -878,7 +883,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     if $scope.mergeTransaction
       $scope.mergeBankTransactions($scope.mergeTransaction)
 
-  $scope.updateEntryFailure = (res) ->
+  $scope.updateEntryFailure = (res, ledger) ->
+    ledger.failed = true
     toastr.error(res.data.message, res.data.status)
 
   $scope.deleteEntry = (ledger) ->
@@ -932,7 +938,8 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
   $scope.redirectToState = (state) ->
     $state.go(state)
 
-  $scope.downloadInvoice = (invoiceNumber) ->
+  $scope.downloadInvoice = (invoiceNumber, e) ->
+    e.stopPropagation()
     obj =
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $scope.accountUnq
@@ -944,23 +951,26 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     , $scope.multiActionWithInvFailure)
 
   $scope.downloadInvSuccess = (res, invoiceNumber)->
-    byteChars = atob(res.body)
-    byteNums = new Array(byteChars.length)
-    i = 0
-    while i < byteChars.length
-      byteNums[i] = byteChars.charCodeAt(i)
-      i++
-    byteArray = new Uint8Array(byteNums)
-    file = new Blob([byteArray], {type: 'application/pdf'})
-    fileURL = URL.createObjectURL(file)
-    a = document.createElement("a")
-    document.body.appendChild(a)
-    a.style = "display:none"
-    a.id = 'inv12'
-    a.href = fileURL
+    dataUri = 'data:application/pdf;base64,' + res.body
+    a = document.createElement('a')
     a.download = $scope.accountToShow.name+invoiceNumber+".pdf"
+    a.href = dataUri
     a.click()
-    document.body.removeChild(a)
+    # byteChars = atob(res.body)
+    # byteNums = new Array(byteChars.length)
+    # i = 0
+    # while i < byteChars.length
+    #   byteNums[i] = byteChars.charCodeAt(i)
+    #   i++
+    # byteArray = new Uint8Array(byteNums)
+    # file = new Blob([byteArray], {type: 'application/pdf'})
+    # fileURL = URL.createObjectURL(file)
+    # a = document.createElement("a")
+    # document.body.appendChild(a)
+    # a.style = "display:none"
+    # a.href = fileURL
+    # a.download = $scope.accountToShow.name+invoiceNumber+".pdf"
+    # a.click()
 
   # common failure message
   $scope.multiActionWithInvFailure=(res)->
@@ -1020,10 +1030,10 @@ newLedgerController = ($scope, $rootScope, localStorageService, toastr, modalSer
     e.stopPropagation()
 
   $scope.onledgerScroll = (top,height,e) ->
-    if top > 200
-      $rootScope.hideHeader = true
-    else
-      $rootScope.hideHeader = false
+    # if top > 200
+    #   $rootScope.hideHeader = true
+    # else
+    #   $rootScope.hideHeader = false
 
   $scope.triggerPanelFocus = (e) ->
     if e.keyCode == 13
