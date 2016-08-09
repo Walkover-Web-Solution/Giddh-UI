@@ -407,11 +407,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         ledger.entryDate = bank.date
         ledger.isBankTransaction = true
         ledger.transactionId = bank.transactionId
-        ledger.transactions = $scope.formatBankTransactions(bank.transactions, bank)
+        ledger.transactions = $scope.formatBankTransactions(bank.transactions, bank, ledger)
         formattedBankLedgers.push(ledger)
     formattedBankLedgers
 
-  $scope.formatBankTransactions = (transactions, bank) ->
+  $scope.formatBankTransactions = (transactions, bank, ledger) ->
     formattedBanktxns = []
     if transactions.length > 0
       _.each transactions, (txn) ->
@@ -422,6 +422,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         newTxn.particular.uniqueName = ''
         newTxn.amount = txn.amount
         newTxn.type = txn.type
+        if txn.type == 'DEBIT'
+          ledger.voucher.name = "Receipt"
+          ledger.voucher.shortCode = "rcpt"
+        else 
+          ledger.voucher.name = "Payment"
+          ledger.voucher.shortCode = "pay"
         formattedBanktxns.push(newTxn)
     formattedBanktxns
 
@@ -877,7 +883,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       tx.isChecked = false
     )
 
-  $scope.updateEntrySuccess = (res) ->
+  $scope.updateEntrySuccess = (res, ledger) ->
     ledger.failed = false
     toastr.success("Entry updated successfully.", "Success")
     addThisLedger = {}
