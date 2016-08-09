@@ -114,8 +114,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.checkForExistingblankTransaction(ledger, str)
     if !$scope.hasBlankTxn
       ledger.transactions.push(txn)
+    $scope.setFocusToBlankTxn(ledger, txn, str)
   
-#  $scope.triggerFocusOnBlankTxn = (ledger, txn) ->
+  $scope.setFocusToBlankTxn = (ledger, txn, str) ->
+    _.each ledger.transactions, (txn) ->
+      if txn.amount == 0 && txn.particular.name == "" && txn.particular.uniqueName == "" && txn.type == str
+        txn.isOpen = true
+        $scope.openClosePopOver(txn, ledger)
 
   $scope.getFocus = (txn, ledger) ->
     if txn.particular.name == "" && txn.particular.uniqueName == "" && txn.amount == 0
@@ -648,6 +653,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         lgr.isCompoundEntry = false
 
   $scope.saveUpdateLedger = (ledger) ->
+    console.log ledger
     $scope.ledgerTxnChanged = false
     if ledger.isBankTransaction
       $scope.btIndex = ledger.index

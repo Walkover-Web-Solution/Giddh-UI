@@ -12,8 +12,10 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
 
     adjustHeight = () ->
       additionalHeight = $attrs.additionalHeight || 0
+      minHeight = $attrs.minHeight || 0
       parentHeight = $window.innerHeight - $element.parent()[0].getBoundingClientRect().top
       $element.css('height', (parentHeight - combineHeights(siblings($element)) - additionalHeight) + "px")
+      $element.css('min-height',minHeight + 'px')
 
     angular.element($window).on 'resize', ->
       adjustHeight()

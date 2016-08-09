@@ -3079,6 +3079,9 @@ ul.pills li {
     bottom:initial;
     right:initial;
     left: 0px !important;
+    overflow:visible;
+    clear:both;
+    float:left;
 }
 
 .bottom0 {
@@ -3237,7 +3240,15 @@ ul.pills li {
 .download-invoice-ledger {
     position: absolute;
     right: 15px;
-    top: 10px;
+    top: 0px;
+    height: 30px;
+    padding: 1px 0px 1px 10px;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.download-invoice-ledger > i{
+    top:10px;
 }
 
 .ledger-row.ng-enter {
@@ -3411,4 +3422,4 @@ ul.pills li {
 
 .failed-entry td,.failed-entry td input{
     background:#fddfa4;
-}
+}   
