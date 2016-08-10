@@ -1,6 +1,6 @@
 "use strict"
 
-mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService) ->
+mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location) ->
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
   $rootScope.basicInfo = {}
@@ -419,5 +419,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
+
+  $scope.$on('$stateChangeSuccess', ()->
+    $rootScope.currentState = $state.current.name
+  )
 
 giddh.webApp.controller 'mainController', mainController
