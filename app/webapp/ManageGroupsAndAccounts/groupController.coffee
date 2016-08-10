@@ -623,8 +623,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     grp = _.findWhere($rootScope.flatGroupsList, {uniqueName:pg})
     grp.category
 
+  $scope.getAccountParentGroup = (acc) ->
+
+
   $scope.showAccountDtl = (data) ->
-    $scope.AccountCategory = $scope.getAccountCategory(data)
     $scope.cantUpdate = false
     #highlight account menus
     $scope.selectedAccntMenu = data
@@ -636,8 +638,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     accountService.get(reqParams).then($scope.getAcDtlSuccess, $scope.getAcDtlFailure)
 
   $scope.getAcDtlSuccess = (res) ->
-    #getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.flatAccntListWithParents)
+    #getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.fltAccntListPaginated)
     getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.fltAccntListPaginated)
+    $scope.AccountCategory = $scope.getAccountCategory(getPgrps)
     data = res.body
     $scope.getMergedAccounts(data)
     data.parentGroups = []

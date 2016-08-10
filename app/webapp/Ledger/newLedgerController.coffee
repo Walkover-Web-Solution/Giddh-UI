@@ -659,7 +659,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         lgr.isCompoundEntry = false
 
   $scope.saveUpdateLedger = (ledger) ->
-    console.log ledger
     $scope.ledgerTxnChanged = false
     if ledger.isBankTransaction
       $scope.btIndex = ledger.index
