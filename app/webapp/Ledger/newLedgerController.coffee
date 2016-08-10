@@ -1064,6 +1064,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.showLedgerPopover = false
   )
 
+
   $rootScope.$emit('catchBreadcumbs', $scope.accountToShow)
 
 giddh.webApp.controller 'newLedgerController', newLedgerController
