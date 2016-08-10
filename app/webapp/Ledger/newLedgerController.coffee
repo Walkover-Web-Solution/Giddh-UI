@@ -351,7 +351,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     toastr.error(res.data.message, res.data.status)
 
   $scope.getAccountDetailSuccess = (res) ->
-    if res.body.yodleeAdded == true
+    if res.body.yodleeAdded == true && $rootScope.canUpdate
       #get bank transaction here
       $scope.getBankTransactions(res.body.uniqueName)
 

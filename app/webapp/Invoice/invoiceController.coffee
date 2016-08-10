@@ -907,6 +907,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.saveInvoiceSettingsSuccess = (res,action) ->
     if action == 'delete'
       toastr.error("Email deleted successfully.")
+      $scope.invoiceSettings.isEmailVerified = false
     else
       toastr.success(res.body)
 
