@@ -441,6 +441,8 @@ textarea:disabled, input:disabled{
           <section class="col-xs-7" id="seven" ng-if="defTempData.signatureType == 'text' || tempSet.signatureType == 'text'">
             <div class="txtAreaWrap">
               <input ng-disabled="!editMode" class="form-control mrB alR" ng-model="defTempData.signature.name"  placeholder="Your Company name">
+              <div class="row"></div>
+              <div class="row"></div>
               <input ng-if="defTempData.signatureType == 'text'" ng-disabled="!editMode" class="form-control alR" ng-model="defTempData.signature.data" placeholder="Signatory slogan">
             </div>
           </section>

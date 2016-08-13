@@ -116,11 +116,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       ledger.transactions.push(txn)
     $scope.setFocusToBlankTxn(ledger, txn, str)
   
-  $scope.setFocusToBlankTxn = (ledger, txn, str) ->
+  $scope.setFocusToBlankTxn = (ledger, transaction, str) ->
     _.each ledger.transactions, (txn) ->
       if txn.amount == 0 && txn.particular.name == "" && txn.particular.uniqueName == "" && txn.type == str
         txn.isOpen = true
         $scope.openClosePopOver(txn, ledger)
+
 
   $scope.getFocus = (txn, ledger) ->
     if txn.particular.name == "" && txn.particular.uniqueName == "" && txn.amount == 0
@@ -658,7 +659,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       else
         lgr.isCompoundEntry = false
 
+  $scope.doingEntry = false
   $scope.saveUpdateLedger = (ledger) ->
+    if $scope.doingEntry == true
+      return
+
+    $scope.doingEntry = true
     $scope.ledgerTxnChanged = false
     if ledger.isBankTransaction
       $scope.btIndex = ledger.index
@@ -693,6 +699,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             (res) -> $scope.addEntrySuccess(res, ledger)
             (res) -> $scope.addEntryFailure(res,rejectedTransactions, ledger))
         else
+          $scope.doingEntry = false
           ledger.transactions = rejectedTransactions
           response = {}
           response.data = {}
@@ -737,6 +744,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
               (res) -> $scope.updateEntryFailure(res, ledger)
             )
         else
+          $scope.doingEntry = false
           response = {}
           response.data = {}
           response.data.message = "There must be at least a transaction to make an entry."
@@ -775,7 +783,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.removeTaxTxnOnPrincipleTxnModified(ledger.transactions)
     ledger.transactions = $scope.txnAfterRmovingTax
     if ledger.transactions.length > 0
-      ledgerService.updateEntry(unqNamesObj, ledger).then($scope.updateEntrySuccess, $scope.updateEntryFailure)
+      ledgerService.updateEntry(unqNamesObj, ledger).then(
+        (res) -> $scope.updateEntrySuccess(res, ledger)
+        (res) -> $scope.updateEntryFailure(res, ledger)
+      )
 
   $scope.matchTaxTransactions = (txnList, taxList) ->
     _.each txnList, (txn) ->
@@ -851,6 +862,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     }
 
   $scope.addEntrySuccess = (res, ledger) ->
+    $scope.doingEntry = false
     ledger.failed = false
     toastr.success("Entry created successfully", "Success")
     addThisLedger = {}
@@ -868,6 +880,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       ), 2000
 
   $scope.addEntryFailure = (res, rejectedTransactions, ledger) ->
+    $scope.doingEntry = false
     ledger.failed = true
     toastr.error(res.data.message, res.data.status)
     if rejectedTransactions.length > 0
@@ -883,6 +896,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     )
 
   $scope.updateEntrySuccess = (res, ledger) ->
+    $scope.doingEntry = false
     ledger.failed = false
     toastr.success("Entry updated successfully.", "Success")
     addThisLedger = {}
@@ -895,6 +909,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       $scope.mergeBankTransactions($scope.mergeTransaction)
 
   $scope.updateEntryFailure = (res, ledger) ->
+    $scope.doingEntry = false
     ledger.failed = true
     toastr.error(res.data.message, res.data.status)
 
