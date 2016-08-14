@@ -41,7 +41,7 @@ h1 {
 }
 .txtAreaWrap textarea.form-control{
   overflow: hidden;
-  height: 1.2in
+  /*height: 1.2in*/
 }
 #one, #two {
   height: .6in;
@@ -250,7 +250,7 @@ textarea:disabled, input:disabled{
             <h4 class="mrB">From:</h4>
             <div class="txtAreaWrap">
               <input ng-disabled="genMode && editMode || genPrevMode" class="form-control" ng-model="defTempData.company.name" placeholder="Your company name">
-              <textarea ng-disabled="genMode && editMode || genPrevMode" class="form-control" ng-model="defTempData.company.data" placeholder="Address and other details"></textarea>
+              <textarea ng-disabled="genMode && editMode || genPrevMode" class="form-control" ng-model="defTempData.company.data" placeholder="Address and other details" rows="5"></textarea>
             </div>
           </section>
           <section class="col-xs-5 col-xs-offset-2 no-border" id="four">
@@ -258,7 +258,7 @@ textarea:disabled, input:disabled{
             <section class="form-inline clearfix mrB1" ng-if="!tempSet.logo">
               <div class="form-group mrR">
                 <label>Invoice # :&nbsp;</label>
-                {{defTempData.invoiceDetails.invoiceNumber}}
+                <b>{{defTempData.invoiceDetails.invoiceNumber}}</b>
               </div>
               <div class="form-group">
                 <label>Date :&nbsp;</label>
@@ -277,7 +277,7 @@ textarea:disabled, input:disabled{
                 <!--<label>Att. : </label>-->
                 <input ng-if="defTempData.account.attentionTo.length > 0 || genMode" ng-disabled="!genMode" class="form-control" ng-model="defTempData.account.attentionTo" placeholder="Attention To">
               <!--</div>-->
-              <textarea ng-disabled="!genMode && !editMode" class="form-control" ng-model="defTempData.account.data"  placeholder="Buyer Address and other details"></textarea>
+              <textarea ng-disabled="!genMode && !editMode" class="form-control" ng-model="defTempData.account.data" rows="4"  placeholder="Buyer Address and other details"></textarea>
             </div>
             <div class="txtAreaWrap" ng-if="genPrevMode">
               <!--<div class="form-inline">-->
@@ -288,7 +288,7 @@ textarea:disabled, input:disabled{
                 <!--<label>Att. : </label>-->
                 <input ng-disabled="!editGenInvoice" class="form-control" ng-model="defTempData.account.attentionTo" placeholder="Attention To">
               <!--</div>-->
-              <textarea ng-disabled="!editGenInvoice" class="form-control" ng-model="defTempData.account.data"  placeholder="Buyer Address and other details"></textarea>
+              <textarea ng-disabled="!editGenInvoice" class="form-control" ng-model="defTempData.account.data"  placeholder="Buyer Address and other details" rows="4"></textarea>
             </div>
           </section>
           <!--<section class="col-xs-5" ng-if="defTempData.account.attentionTo.length > 0 || genMode">-->
@@ -435,7 +435,7 @@ textarea:disabled, input:disabled{
         <div class="row">
           <section class="col-xs-5" id="six">
             <div class="txtAreaWrap">
-              <textarea ng-disabled="!editMode" class="form-control" ng-model="defTempData.companyIdentities.data" placeholder="Company other details"></textarea>
+              <textarea ng-disabled="!editMode" class="form-control" ng-model="defTempData.companyIdentities.data" placeholder="Company other details" rows="5"></textarea>
             </div>
           </section>
           <section class="col-xs-7" id="seven" ng-if="defTempData.signatureType == 'text' || tempSet.signatureType == 'text'">
@@ -493,7 +493,7 @@ textarea:disabled, input:disabled{
               <div class="txtAreaWrap">
                 
                 <div ng-if="editMode">
-                  <textarea ng-disabled="!editMode" class="form-control" ng-model="defTempData.termsStr" placeholder="Enter your terms"></textarea>
+                  <textarea ng-disabled="!editMode" class="form-control" ng-model="defTempData.termsStr" placeholder="Enter your terms" rows="5"></textarea>
                 </div>
                 <!-- end if editmode -->
 

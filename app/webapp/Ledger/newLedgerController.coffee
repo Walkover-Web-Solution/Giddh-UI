@@ -796,6 +796,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.checkIfPrincipleTxnIsModified = (ledger, uTxnList, unqNamesObj) ->
     txnList = ledger.transactions
+    if txnList.length <= 1
+      return
     _.each txnList, (txn, i) ->
       _.each uTxnList, (uTxn, j) ->
         if txn.isTax == undefined && i == j && txn.particular.uniqueName == uTxn.particular.uniqueName && txn.amount != uTxn.amount

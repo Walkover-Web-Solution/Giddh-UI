@@ -677,6 +677,8 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     else
       $scope.prevInProg= false
 
+    entry.sharedData.itemCheck = ths
+
   $scope.prevAndGenInv=()->
     $scope.genMode = true
     $scope.prevInProg = true
