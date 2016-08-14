@@ -14,4 +14,12 @@ giddh.serviceModule.service 'permissionService', (localStorageService) ->
         permission.code is permissionCode
       )
 
+    shareableRoles: (selectedCompany) ->
+      roles = localStorageService.get("_roles")
+      roleOnCompany = _.find roles, (role) ->
+        role.uniqueName is selectedCompany.role.uniqueName
+      allowableRoles = _.filter roles, (role) ->
+        _.every role.permissions, (permission) ->
+          _.contains (_.pluck roleOnCompany.permissions, 'code'), permission.code
+
   permissionService

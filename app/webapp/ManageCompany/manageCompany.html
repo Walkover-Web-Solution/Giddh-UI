@@ -158,7 +158,7 @@
                 class="form-control"
                 name="userRole" 
                 ng-model="shareRequest.role"
-                ng-options="item.uniqueName as item.name for item in rolesList">
+                ng-options="item.uniqueName as item.name for item in shareableRoles">
               </select>
             </div>
             <div class="form-group">
@@ -193,8 +193,8 @@
                     <select 
                       class="form-control"
                       ng-change="updateUserRole(value.role.uniqueName, value.userEmail)"
-                      ng-model="value.role.uniqueName" 
-                      ng-options="item.uniqueName as item.name for item in rolesList">
+                      ng-model="value.role.uniqueName"
+                      ng-options="item.uniqueName as item.name for item in shareableRoles">
                     </select>
                   </div>
                   <span class="delIcon">

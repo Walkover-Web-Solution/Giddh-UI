@@ -212,7 +212,7 @@
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
-                                        <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber, $event)" tooltip-append-to-body="false" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="left">  <i class="glyphicon glyphicon-download pull-left" ></i>
+                                        <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber, $event)" tooltip-append-to-body="false" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="left">  <i class="glyphicon glyphicon-download pull-left" style="font-size:19px;"></i>
                                         </span>
                                     </td>
                                   </tr>
@@ -249,8 +249,7 @@
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
-                                      <span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()">
-                                        <i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)"></i>
+                                      <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber, $event)" tooltip-append-to-body="false" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="left">  <i class="glyphicon glyphicon-download pull-left" style="font-size:19px;"></i>
                                       </span>
                                     </td>
                                   </tr>
@@ -443,7 +442,9 @@
               <!--</label>-->
             </div>
             <div class="mrT2 pull-right">
-              <label>Total: {{selectedLedger.entryTotal.amount | number:2}} <span ng-if="selectedLedger.entryTotal.amount != 0">{{selectedLedger.entryTotal.type}}</span></label>
+              <label>Total: {{selectedLedger.total.amount | number:2}}
+                <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'CREDIT'">Cr</span>
+                <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'DEBIT'">Dr</span></label>
             </div>
             <div class="row mrT1 clearfix" style="clear:both">
               <hr class="width100">

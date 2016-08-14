@@ -3423,4 +3423,10 @@ ul.pills li {
 
 .failed-entry td,.failed-entry td input{
     background:#fddfa4;
-}   
+}
+
+@media only screen and (max-width: 1366px) and (orientation : landscape) {
+    .pop-panel{
+        max-width:480px;
+    }
+}
