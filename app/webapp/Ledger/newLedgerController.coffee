@@ -511,6 +511,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.getLedgerDataFailure = (res) ->
     toastr.error(res.data.message)
 
+  $scope.countTotalTransactionsAfterSomeTime = () ->
+    $timeout ( ->
+      $scope.countTotalTransactions()
+    ), 500
+
+
   $scope.creditTotal = 0
   $scope.debitTotal = 0
   $scope.countTotalTransactions = () ->
