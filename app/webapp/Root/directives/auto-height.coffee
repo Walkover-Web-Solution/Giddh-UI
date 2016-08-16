@@ -838,6 +838,6 @@ angular.module('ledger', [])
     result = []
     _.each input, (q) ->
       p = RegExp(g, 'i')
-      if q.name.match(p) or q.uniqueName.match(p)
+      if q.name.match(p) or q.uniqueName.match(p) or q.mergedAccounts.match(p)
         result.push q
     result
