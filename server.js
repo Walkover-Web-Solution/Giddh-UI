@@ -40,6 +40,14 @@ var port = process.env.PORT || 8000;
 //enabling cors
 app.use(cors())
 
+app.use(function (req, res, next) {
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    next()
+});
+
+
 //set engine
 app.set('public', __dirname + '/public/');
 app.engine('html', engines.mustache);
@@ -229,6 +237,7 @@ app.use(function (err, req, res, next) {
     error: {}
   });
 });
+
 
 module.exports = app;
 
