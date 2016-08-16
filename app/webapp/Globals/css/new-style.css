@@ -2636,13 +2636,13 @@ body.unresponsive {
     right: 10px;
 }
 
-.uncEntry {
-    border: 1px solid #d35f29 !important;
+.uncEntry input, .uncEntry td{
+    background: #ffccb4;
 }
 
-.uncEntry > td {
+/*.uncEntry > td {
     border: 1px solid #d35f29 !important;
-}
+}*/
 
 .isNotEditable {
     background:: 0 0;
@@ -2995,6 +2995,10 @@ ul.pills li {
 
 .compoundEntry td, .compoundEntry td input {
     background: #fddfa4;
+}
+
+.compoundEntry .uncEntry  td,  .compoundEntry .uncEntry td input {
+    background: #ffccb4;
 }
 
 .ledger-panel {

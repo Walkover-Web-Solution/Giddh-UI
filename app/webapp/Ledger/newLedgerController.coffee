@@ -115,12 +115,21 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if !$scope.hasBlankTxn
       ledger.transactions.push(txn)
     $scope.setFocusToBlankTxn(ledger, txn, str)
+    #$scope.setFocusToBlankInput(ledger)
   
   $scope.setFocusToBlankTxn = (ledger, txn, str) ->
     _.each ledger.transactions, (txn) ->
       if txn.amount == 0 && txn.particular.name == "" && txn.particular.uniqueName == "" && txn.type == str
         txn.isOpen = true
         $scope.openClosePopOver(txn, ledger)
+
+  $scope.setFocusToBlankInput = (ledger) ->
+    unq = ledger.uniqueName
+    input = $('#unq').find('.ledger-row').find('td:nth-child(2)').find('input')
+    inputs = $('#unq').find('input')
+    input.trigger('focus')
+    console.log inputs, input
+    return false
 
   $scope.getFocus = (txn, ledger) ->
     if txn.particular.name == "" && txn.particular.uniqueName == "" && txn.amount == 0
@@ -513,12 +522,18 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       _.each $scope.ledgerData.ledgers, (ledger) ->
         if ledger.transactions.length > 0
           _.each ledger.transactions, (txn) ->
+            txn.isOpen = false
             if txn.type == 'DEBIT'
               $scope.dTxnCount += 1
               $scope.debitTotal += txn.amount
             else
               $scope.cTxnCount += 1
               $scope.creditTotal += txn.amount
+
+  $scope.updateTotalTransactions = () ->
+    $timeout ( ->
+      $scope.countTotalTransactions()
+    ), 500
 
   $scope.filterLedgers = (ledgers) ->
     _.each ledgers, (lgr) ->
@@ -616,8 +631,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       )
     $scope.selectedLedger = ledger
     $scope.selectedLedger.index = index
-    if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
-      $scope.checkCompEntry(ledger)
+    #if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
+    $scope.checkCompEntry(ledger)
     $scope.isTransactionContainsTax(ledger)
     e.stopPropagation() 
 
@@ -657,6 +672,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         lgr.isCompoundEntry = true
       else
         lgr.isCompoundEntry = false
+
+    if unq == $scope.blankLedger.uniqueName
+      $scope.blankLedger.isCompoundEntry = true
+    else
+      $scope.blankLedger.isCompoundEntry = false
+
+
+
 
   $scope.saveUpdateLedger = (ledger) ->
     $scope.ledgerTxnChanged = false

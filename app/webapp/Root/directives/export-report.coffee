@@ -289,3 +289,18 @@ angular.module('trialBalance', []).directive('exportReport', [
       $(elem).trigger('click')
     
 ]
+
+
+.directive 'inputFocus', ['$window', '$timeout', ($window, $timeout) ->
+  scope: 
+    isOpen: '=isOpen'
+  link: (scope, elem, attr) ->
+
+    scope.$watch('isOpen', (newVal, oldVal) ->
+      if newVal
+        $timeout ( ->
+          $(elem).trigger('focus')
+        ), 200
+    )
+    
+]

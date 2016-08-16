@@ -193,7 +193,7 @@
                                   ng-if="txn.type == 'DEBIT'" 
                                   ng-class="{uncEntry : ledger.unconfirmedEntry}"  
                                   uib-popover-template="popover.templateUrl" 
-                                  popover-trigger="click" 
+                                  popover-trigger="outsideClick" 
                                   popover-placement="bottom" 
                                   popover-append-to-body='true' 
                                   popover-enable="!popover.draggable" 
@@ -208,7 +208,14 @@
                                       <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)" >
+                                      <input class="form-control particular"
+                                      ng-model="txn.particular"
+                                      typeahead-append-to-body="true" 
+                                      uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" 
+                                      ng-keyup="triggerPanelFocus($event)"                                   
+                                      input-focus
+                                      is-open='txn.isOpen'
+                                      >
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
@@ -230,13 +237,13 @@
                                   ng-if="txn.type == 'DEBIT'" 
                                   ng-click="selectTxn(blankLedger, txn, $index, $event)" 
                                   uib-popover-template="popover.templateUrl" 
-                                  popover-trigger="click" 
+                                  popover-trigger="outsideClick" 
                                   popover-placement="bottom" 
                                   popover-append-to-body='true' 
                                   popover-enable="!popover.draggable" 
                                   popover-is-open="txn.isOpen && showLedgerPopover"
                                   popover-popup-delay="200"  
-                                  ng-class="{'failed-entry':blankLedger.failed}"
+                                  ng-class="{'failed-entry':blankLedger.failed, compoundEntry: blankLedger.isBlankLedger && blankLedger.isCompoundEntry}"
                                   >
                                     <!-- <td class="col-xs-1 maxW42">
                                       <input type="checkbox">
@@ -245,7 +252,14 @@
                                       <input class="form-control" ng-model="blankLedger.entryDate" accesskey="L" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)">
+                                      <input class="form-control"
+                                      ng-model="txn.particular"
+                                      typeahead-append-to-body="true" 
+                                      uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" 
+                                      ng-keyup="triggerPanelFocus($event)"
+                                      input-focus
+                                      is-open='txn.isOpen'
+                                      >
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
@@ -306,7 +320,7 @@
                     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="600">
                       <table class="width100">
                         <tbody>
-                          <tr class="" ng-repeat="ledger in ledgerData.ledgers | filter:particularSearch track by $index" ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed}">
+                          <tr id="{{ledger.uniqueName}}" class="" ng-repeat="ledger in ledgerData.ledgers | filter:particularSearch track by $index" ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed}">
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
                                 <tbody class="ledger-main">
@@ -317,7 +331,7 @@
                                   ng-if="txn.type == 'CREDIT'" 
                                   ng-class="{uncEntry : ledger.unconfirmedEntry}" 
                                   uib-popover-template="popover.templateUrl" 
-                                  popover-trigger="click" 
+                                  popover-trigger="outsideClick" 
                                   popover-placement="bottom" 
                                   popover-append-to-body='true' 
                                   popover-enable="!popover.draggable" 
@@ -331,7 +345,14 @@
                                       <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)" >
+                                      <input class="form-control" 
+                                      ng-model="txn.particular" 
+                                      typeahead-append-to-body="true" 
+                                      uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" 
+                                      ng-keyup="triggerPanelFocus($event)" 
+                                      input-focus
+                                      is-open='txn.isOpen'
+                                      >
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
@@ -354,12 +375,12 @@
                                   ng-if="txn.type == 'CREDIT'" 
                                   ng-click="selectTxn(blankLedger, txn, $index, $event)" 
                                   uib-popover-template="popover.templateUrl" 
-                                  popover-trigger="click" 
+                                  popover-trigger="outsideClick" 
                                   popover-placement="bottom" 
                                   popover-append-to-body='true' 
                                   popover-enable="!popover.draggable" 
                                   popover-is-open="txn.isOpen && showLedgerPopover"  
-                                  ng-class="{'failed-entry':blankLedger.failed}">
+                                  ng-class="{'failed-entry':blankLedger.failed, compoundEntry: blankLedger.isBlankLedger && blankLedger.isCompoundEntry}">
                                     <!-- <td class="col-xs-1 maxW42">
                                       <input type="checkbox">
                                     </td> -->
@@ -367,7 +388,14 @@
                                       <input class="form-control"  ng-model="blankLedger.entryDate" accesskey="R" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)">
+                                      <input class="form-control" 
+                                      ng-model="txn.particular" 
+                                      typeahead-append-to-body="true" 
+                                      uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" 
+                                      ng-keyup="triggerPanelFocus($event)"
+                                      input-focus
+                                      is-open='txn.isOpen'
+                                      >
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
