@@ -145,7 +145,7 @@
           </section>
           <!-- external ledger code end here -->
 
-          <div class="clearfix" ng-class="{'ledger-container':!showPanel, 'ledger-container-w':showPanel}">
+          <div class="clearfix ledger-container" ng-class="{'ledger-container-w':showPanel}">
             <!--ledger table head 1-->
             <table class="col-xs-12 ledger-head">
               <thead>
@@ -219,7 +219,7 @@
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
-                                        <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber, $event)" tooltip-append-to-body="false" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="left">  <i class="glyphicon glyphicon-download pull-left" ></i>
+                                        <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber, $event)" tooltip-append-to-body="false" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="left">  <i class="glyphicon glyphicon-download pull-left" style="font-size:19px;"></i>
                                         </span>
                                     </td>
                                   </tr>
@@ -263,8 +263,7 @@
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
-                                      <span class="download-invoice-ledger" ng-if="blankLedger.invoiceGenerated" ng-click="$event.stopPropagation()">
-                                        <i class="glyphicon glyphicon-download pull-left" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{blankLedger.invoiceNumber}}" ng-click="downloadInvoice(blankLedger.invoiceNumber)"></i>
+                                      <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber, $event)" tooltip-append-to-body="false" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="left">  <i class="glyphicon glyphicon-download pull-left" style="font-size:19px;"></i>
                                       </span>
                                     </td>
                                   </tr>
@@ -471,7 +470,9 @@
               <!--</label>-->
             </div>
             <div class="mrT2 pull-right">
-              <label>Total: {{selectedLedger.entryTotal.amount | number:2}} <span ng-if="selectedLedger.entryTotal.amount != 0">{{selectedLedger.entryTotal.type}}</span></label>
+              <label>Total: {{selectedLedger.total.amount | number:2}}
+                <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'CREDIT'">Cr</span>
+                <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'DEBIT'">Dr</span></label>
             </div>
             <div class="row mrT1 clearfix" style="clear:both">
               <hr class="width100">
@@ -523,7 +524,7 @@
           <div class="" ng-if="canUpdate">
             <button accesskey="x" ng-if="(selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="addBlankTxn('DEBIT', selectedLedger)">Add in DR</button>
             <button accesskey="c" ng-if="(selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="addBlankTxn('CREDIT', selectedLedger)">Add in CR</button>
-            <button id="saveUpdate" ng-if="(selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined) || (selectedLedger.transactions[1].particular.uniqueName != '' && selectedLedger.transactions[1].particular.uniqueName != undefined)" class="pull-left mrR1 btn btn-sm btn-success min150" ng-click="saveUpdateLedger(selectedLedger)">
+            <button id="saveUpdate" ng-if="(selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined) || (selectedLedger.transactions[1].particular.uniqueName != '' && selectedLedger.transactions[1].particular.uniqueName != undefined)" class="pull-left mrR1 btn btn-sm btn-success min150" ng-click="saveUpdateLedger(selectedLedger)" ng-disabled="doingEntry">
               <span ng-if="(selectedLedger.uniqueName == undefined || selectedLedger.uniqueName == '') || selectedLedger.isBankTransaction == true">Save</span>
               <span ng-if="(selectedLedger.uniqueName != undefined && selectedLedger.uniqueName != '') && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)">Update</span>
             </button>

@@ -313,6 +313,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
     if $rootScope.canManageCompany
       $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
+      $scope.setShareableRoles($rootScope.selectedCompany)
     if type is 'CHANGED'
       $rootScope.$emit('companyChanged')
     else
@@ -1732,6 +1733,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
 #  $rootScope.$on 'companyLoaded', ()->
 #    $scope.clearTaxFields()
+
+  #Mayank
+  $scope.setShareableRoles = (selectedCompany) -> 
+    $scope.shareableRoles = permissionService.shareableRoles(selectedCompany)
 
 #init angular app
 giddh.webApp.controller 'companyController', companyController
