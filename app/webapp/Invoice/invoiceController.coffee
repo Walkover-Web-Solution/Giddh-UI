@@ -610,6 +610,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # get ledger entries to generate invoice
   $scope.getLedgerEntries=()->
+    $scope.invoiceLoadDone = false
     $scope.entriesForInvoice = []
     $scope.prevInProg = false
     obj = {
@@ -628,6 +629,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       else
         ledger.multiEntry = false
       sharedData = _.omit(ledger, 'transactions')
+      sharedData.itemCheck = false
       _.each(ledger.transactions, (transaction, index) ->
         transaction.amount = parseFloat(transaction.amount).toFixed(2)
         newEntry = {sharedData: sharedData}
@@ -647,9 +649,11 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $scope.noDataDR = true
     else
       $scope.noDataDR = false
+    $scope.invoiceLoadDone = true
     
   $scope.getLedgerEntriesFailure=(res)->
     toastr.error(res.data.message, res.data.status)
+    $scope.invoiceLoadDone = true
 
   $scope.summationForInvoice=(ths, entry, index)->
     if entry.sharedData.multiEntry

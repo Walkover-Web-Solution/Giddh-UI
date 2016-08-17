@@ -138,7 +138,7 @@
         <div ng-include="'panel'" ng-if="showPanel" left-margin></div>
         <div ng-class="{'panel-margin': showPanel}">
           <!--ledger table start-->
-          <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" >  
+          <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" >  --> 
           <!-- external ledger code here -->
           <section ng-class="{'eledger-table':!showPanel, 'eledger-table-w':showPanel}" ng-if="eLedgerData.length > 0 && showEledger">
             <div ng-include="'/public/webapp/Ledger/eLedger.html'"></div>
@@ -180,10 +180,14 @@
                         </tr>
                       </thead>
                     </table>
-                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84" min-height="600">
+                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScrollDebit(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84" min-height="600" >
                       <table class="width100">
                         <tbody>
-                          <tr id="{{ledger.uniqueName}}" class="" ng-repeat="ledger in ledgerData.ledgers | filter:particularSearch track by $index" ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed}">
+                          <tr id="{{ledger.uniqueName}}" class="" 
+                          ng-repeat="ledger in ledgerData.ledgers 
+                          | filter:particularSearch
+                          | limitTo: dLedgerLimit " 
+                          ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed}">
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
                                 <tbody class="ledger-main">
@@ -205,10 +209,10 @@
                                       <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                     </td> -->
                                     <td class="col-xs-3">
-                                      <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
+                                      <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)" typeahead-template-url="accountPopUp.html" input-focus is-open="txn.isOpen">
+                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:$viewValue | limitTo: 4" typeahead-template-url="accountPopUp.html" input-focus is-open="txn.isOpen">
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
@@ -236,16 +240,16 @@
                                   popover-enable="!popover.draggable" 
                                   popover-is-open="txn.isOpen && showLedgerPopover"
                                   popover-popup-delay="200"  
-                                  ng-class="{'failed-entry':blankLedger.failed, compoundEntry: blankLedger.isBlankLedger && blankLedger.isCompoundEntry}"
+                                  ng-class="{'failed-entry':blankLedger.failed,  'highlight-txn': txn.isOpen}"
                                   >
                                     <!-- <td class="col-xs-1 maxW42">
                                       <input type="checkbox">
                                     </td> -->
                                     <td class="col-xs-3">
-                                      <input class="form-control" ng-model="blankLedger.entryDate" accesskey="L" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
+                                      <input class="form-control" ng-model="blankLedger.entryDate" accesskey="L" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)"  typeahead-template-url="accountPopUp.html"  input-focus is-open="txn.isOpen">
+                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:$viewValue | limitTo: 4"  typeahead-template-url="accountPopUp.html"  input-focus is-open="txn.isOpen">
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
@@ -302,10 +306,13 @@
                       </thead>
                     </table>
 
-                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="600">
+                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="10" auto-height on-scroll="onScrollCredit(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="600">
                       <table class="width100">
                         <tbody>
-                          <tr id="{{ledger.uniqueName}}" class="" ng-repeat="ledger in ledgerData.ledgers | filter:particularSearch track by $index" ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed}">
+                          <tr id="{{ledger.uniqueName}}" class="" ng-repeat="ledger in ledgerData.ledgers | 
+                          filter:particularSearch | 
+                          limitTo: cLedgerLimit" 
+                          ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed}">
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
                                 <tbody class="ledger-main">
@@ -327,10 +334,10 @@
                                       <input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">
                                     </td> -->
                                     <td class="col-xs-3">
-                                      <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
+                                      <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)" typeahead-template-url="accountPopUp.html"  input-focus is-open="txn.isOpen">
+                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:$viewValue | limitTo: 4" typeahead-template-url="accountPopUp.html"  input-focus is-open="txn.isOpen">
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
@@ -358,15 +365,15 @@
                                   popover-append-to-body='true' 
                                   popover-enable="!popover.draggable" 
                                   popover-is-open="txn.isOpen && showLedgerPopover"  
-                                  ng-class="{'failed-entry':blankLedger.failed, compoundEntry: blankLedger.isBlankLedger && blankLedger.isCompoundEntry}">
+                                  ng-class="{'failed-entry':blankLedger.failed, 'highlight-txn': txn.isOpen}">
                                     <!-- <td class="col-xs-1 maxW42">
                                       <input type="checkbox">
                                     </td> -->
                                     <td class="col-xs-3">
-                                      <input class="form-control"  ng-model="blankLedger.entryDate" accesskey="R" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
+                                      <input class="form-control"  ng-model="blankLedger.entryDate" accesskey="R"  ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 4" ng-keyup="triggerPanelFocus($event)" typeahead-template-url="accountPopUp.html"  input-focus is-open="txn.isOpen">
+                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:$viewValue | limitTo: 4" typeahead-template-url="accountPopUp.html"  input-focus is-open="txn.isOpen">
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
@@ -403,7 +410,7 @@
         </div>
       </div>
     </section>
-</perfect-scrollbar>
+<!-- </perfect-scrollbar> -->
 <!-- </perfect-scrollbar> -->
 </div>
 
@@ -510,8 +517,9 @@
 </script>
 
 <script type="text/ng-template" id="accountPopUp.html">
-  <a>
-    <span ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
-    <span> ({{match.model.uniqueName}})</span>
+  <a href="javascript:void(0)" class="account-list-item">
+    <span class="account-list-item" ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+    <span class="account-list-item"> ({{match.model.uniqueName}})</span>
   </a>
 </script>
+

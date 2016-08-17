@@ -1,6 +1,5 @@
-
 <!-- main content start -->
-<uib-tabset justified="false" ng-if="invoiceLoadDone">
+<uib-tabset justified="false">
   <uib-tab heading="Generate Invoice" id="generate" select="getLedgerEntries()">
 
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
@@ -75,9 +74,7 @@
           <img src="/public/webapp/Globals/images/no-data.png" alt="No Data">
         </div>
 
-      
-
-        <table ng-if="onlyDrData.length > 0" class="mrT2 table table-bordered table-striped">
+        <table ng-if="onlyDrData.length > 0 && invoiceLoadDone" class="mrT2 table table-bordered table-striped">
           <thead>
             <th style="width:8%">&nbsp;</th>
             <th style="width:11%">Date</th>

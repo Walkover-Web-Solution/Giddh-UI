@@ -3001,6 +3001,10 @@ ul.pills li {
     background: #ffccb4;
 }
 
+.highlight-txn td, .highlight-txn td input {
+    background: #fddfa4;
+}
+
 .ledger-panel {
     /*width: 79%;*/
     /*color: white !important;*/
