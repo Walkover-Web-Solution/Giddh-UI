@@ -108,7 +108,21 @@
                         <div class="mrB1">
                           <textarea ng-model="ledgerEmailData.email" required name="ledgerEmailSendForm.email" class="form-control" placeholder="Recipents Email Id's"></textarea>
                         </div>
-                        <button ng-disabled="ledgerEmailSendForm.$invalid" class="btn btn-primary btn-sm" ng-click="sendLedgEmail(ledgerEmailData.email)">Send Email</button>
+                        <ul class="list-unstyled email-type">
+                            <li>
+                              <label><input type="radio" ng-model="ledgerEmailData.emailType" name="emailType" value="view-detailed">view-detailed</label>
+                            </li>
+                            <li>
+                              <label><input type="radio" ng-model="ledgerEmailData.emailType" name="emailType" value="view-condensed">view-condensed</label>
+                            </li>
+                            <li>
+                              <label><input type="radio" ng-model="ledgerEmailData.emailType" name="emailType" value="admin-detailed">admin-detailed</label>
+                            </li>
+                            <li>
+                              <label><input type="radio" ng-model="ledgerEmailData.emailType" name="emailType" value="admin-condensed">admin-condensed</label>
+                            </li>
+                        </ul>
+                        <button ng-disabled="ledgerEmailSendForm.$invalid" class="btn btn-primary btn-sm mrT1" ng-click="sendLedgEmail(ledgerEmailData.email, ledgerEmailData.emailType)">Send Email</button>
                       </form>
                     </li>
                   </ul>

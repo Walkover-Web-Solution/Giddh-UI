@@ -70,7 +70,7 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       
       emailLedger:
         method: 'POST',
-        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/mail'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/mail-ledger'
 
       getInvList:
         method: 'GET',
@@ -205,6 +205,7 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         accountsUniqueName: obj.acntUname
         toDate: obj.toDate
         fromDate: obj.fromDate
+        format: obj.format
       }, data, onSuccess, onFailure))
 
     getInvList: (obj, onSuccess, onFailure) ->

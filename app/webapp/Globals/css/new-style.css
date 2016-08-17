@@ -3438,3 +3438,12 @@ ul.pills li {
         max-width:480px;
     }
 }
+
+.email-type li label input{
+    vertical-align: sub;
+    margin-right:5px;
+}
+
+.email-type li label{
+    font-weight:300;
+}

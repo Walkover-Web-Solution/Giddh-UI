@@ -211,7 +211,8 @@ router.delete '/:accountUniqueName/eledgers/:transactionId', (req, res) ->
     res.send data
 
 # mail ledger 
-router.post '/:accountUniqueName/ledgers/mail', (req, res) ->
+router.post '/:accountUniqueName/mail-ledger', (req, res) ->
+  console.log req.query.format
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -220,10 +221,11 @@ router.post '/:accountUniqueName/ledgers/mail', (req, res) ->
     parameters:
       to: req.query.toDate
       from: req.query.fromDate
+      format: req.query.format
     data: req.body
 
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/ledgers/mail'
+      '/accounts/' + req.params.accountUniqueName + '/mail-ledger'
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

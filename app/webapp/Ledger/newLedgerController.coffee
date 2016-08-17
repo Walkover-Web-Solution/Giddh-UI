@@ -249,7 +249,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     toastr.error(res.data.message)
 
   # ledger send email
-  $scope.sendLedgEmail = (emailData) ->
+  $scope.sendLedgEmail = (emailData, emailType) ->
     data = emailData
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
@@ -259,6 +259,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       acntUname: $scope.accountUnq
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
+      format: emailType
     }
     sendData = {
       recipients: []
@@ -285,7 +286,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.emailLedgerSuccess = (res) ->
     toastr.success(res.body, res.status)
-    $scope.ledgerEmailData.email = ''
+    #$scope.ledgerEmailData.email = ''
     $scope.ledgerEmailData = {}
 
   $scope.emailLedgerFailure = (res) ->
