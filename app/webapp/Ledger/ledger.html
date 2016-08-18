@@ -169,7 +169,7 @@
                 </tr>
               </thead>
             </table>
-            <div class="ledger-table-body">
+            <div class="ledger-table-body clearfix">
               <!--left column-->
               <div class="left-col">
                   <!--ledger table body debit section-->
@@ -194,7 +194,7 @@
                         </tr>
                       </thead>
                     </table>
-                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScrollDebit(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84" min-height="600" >
+                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScrollDebit(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84" min-height="0" >
                       <table class="width100">
                         <tbody>
                           <tr id="{{ledger.uniqueName}}" class="" 
@@ -278,6 +278,7 @@
 
                         </tbody>
                       </table>
+                      <div style="height:200px;"></div>
                     </perfect-scrollbar>
                   </section>
                 <table class="width100">
@@ -320,7 +321,7 @@
                       </thead>
                     </table>
 
-                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="10" auto-height on-scroll="onScrollCredit(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="600">
+                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="10" auto-height on-scroll="onScrollCredit(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="0">
                       <table class="width100">
                         <tbody>
                           <tr id="{{ledger.uniqueName}}" class="" ng-repeat="ledger in ledgerData.ledgers | 
@@ -403,6 +404,7 @@
                           </tr>
                         </tbody>
                       </table>
+                      <div style="height:200px;"></div>
                     </perfect-scrollbar>
                   </section>
                 <table class="width100">
@@ -420,6 +422,7 @@
                 </table>
               </div>
             </div>
+
           </div>
         </div>
       </div>
