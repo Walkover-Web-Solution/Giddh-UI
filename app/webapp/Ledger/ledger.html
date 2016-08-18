@@ -226,7 +226,7 @@
                                       <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:$viewValue | limitTo: 4" typeahead-template-url="accountPopUp.html" input-focus is-open="txn.isOpen">
+                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 8" typeahead-template-url="accountPopUp.html" input-focus is-open="txn.isOpen">
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
@@ -263,7 +263,7 @@
                                       <input class="form-control" ng-model="blankLedger.entryDate" accesskey="L" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:$viewValue | limitTo: 4"  typeahead-template-url="accountPopUp.html"  input-focus is-open="txn.isOpen">
+                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 8"  typeahead-template-url="accountPopUp.html"  input-focus is-open="txn.isOpen">
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
@@ -352,7 +352,7 @@
                                       <input class="form-control background-transparent" ng-model="ledger.entryDate" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:$viewValue | limitTo: 4" typeahead-template-url="accountPopUp.html"  input-focus is-open="txn.isOpen">
+                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 8" typeahead-template-url="accountPopUp.html"  input-focus is-open="txn.isOpen">
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
@@ -388,7 +388,7 @@
                                       <input class="form-control"  ng-model="blankLedger.entryDate" accesskey="R"  ng-focus="openClosePopOver(txn,ledger)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | filter:$viewValue | limitTo: 4" typeahead-template-url="accountPopUp.html"  input-focus is-open="txn.isOpen">
+                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 8" typeahead-template-url="accountPopUp.html"  input-focus is-open="txn.isOpen">
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
                                       <input type="text" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger)">
@@ -536,7 +536,7 @@
 <script type="text/ng-template" id="accountPopUp.html">
   <a href="javascript:void(0)" class="account-list-item">
     <span class="account-list-item" ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
-    <span class="account-list-item"> ({{match.model.uniqueName}})</span>
+    (<span class="account-list-item" ng-bind-html="match.model.uniqueName | uibTypeaheadHighlight:query"></span>)
   </a>
 </script>
 
