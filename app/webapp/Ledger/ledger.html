@@ -194,7 +194,7 @@
                         </tr>
                       </thead>
                     </table>
-                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScrollDebit(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84" min-height="600" >
+                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScrollDebit(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84" min-height="0" >
                       <table class="width100">
                         <tbody>
                           <tr id="{{ledger.uniqueName}}" class="" 
@@ -321,7 +321,7 @@
                       </thead>
                     </table>
 
-                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="10" auto-height on-scroll="onScrollCredit(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="600">
+                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="10" auto-height on-scroll="onScrollCredit(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="0">
                       <table class="width100">
                         <tbody>
                           <tr id="{{ledger.uniqueName}}" class="" ng-repeat="ledger in ledgerData.ledgers | 
