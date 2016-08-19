@@ -1161,15 +1161,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       e.stopPropagation()
       return false
 
-  # $scope.preventPopOverCloseOnAccountClick = () ->
-  #   $(document).on('click', (e)->
-  #     if !$(e.target).is('.account-in-list') 
-  #       $scope.showLedgerPopover = false
-  #   )
-  #   return false
-
-  #$scope.preventPopOverCloseOnAccountClick()
-
   $rootScope.$on 'company-changed', (event,changeData) ->
     # when company is changed, redirect to manage company page
     if changeData.type == 'CHANGE'

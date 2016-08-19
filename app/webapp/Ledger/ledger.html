@@ -11,7 +11,7 @@
   Please select an Account to load its Ledger
 </section>
 
-<div ng-if="!showLoader">
+<div id="ledger" ng-if="!showLoader">
  <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" >
     <section class="container-fluid" ng-if="accountUnq.length > 0">
       <div class="pdT1">
@@ -115,10 +115,10 @@
                             <li>
                               <label><input type="radio" ng-model="ledgerEmailData.emailType" name="emailType" value="view-condensed">view-condensed</label>
                             </li>
-                            <li>
+                            <li ng-if="canUpdate">
                               <label><input type="radio" ng-model="ledgerEmailData.emailType" name="emailType" value="admin-detailed">admin-detailed</label>
                             </li>
-                            <li>
+                            <li ng-if="canUpdate">
                               <label><input type="radio" ng-model="ledgerEmailData.emailType" name="emailType" value="admin-condensed">admin-condensed</label>
                             </li>
                         </ul>
@@ -540,3 +540,16 @@
   </a>
 </script>
 
+<script>
+
+  var scope = angular.element('#ledger').scope();
+
+  angular.element(document).on('click',function(e){
+    if (!$(e.target).is('.account-list-item')){
+       scope.$apply(function(){
+        scope.showLedgerPopover = false
+      })
+    } 
+  })
+
+</script>
