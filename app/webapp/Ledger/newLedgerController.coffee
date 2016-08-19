@@ -796,11 +796,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         if ledger.transactions.length > 0
           $scope.matchTaxTransactions(ledger.transactions, $scope.taxList)
           ledgerCondition = $scope.checkIfPrincipleTxnIsModified(ledger, $scope.ledgerBeforeEdit.transactions, unqNamesObj)
-#          if !$scope.ledgerTxnChanged
-#            ledgerService.updateEntry(unqNamesObj, ledger).then(
-#              (res) -> $scope.updateEntrySuccess(res, ledger)
-#              (res) -> $scope.updateEntryFailure(res, ledger)
-#            )
+         if !$scope.ledgerTxnChanged
+           ledgerService.updateEntry(unqNamesObj, ledger).then(
+             (res) -> $scope.updateEntrySuccess(res, ledger)
+             (res) -> $scope.updateEntryFailure(res, ledger)
+           )
         else
           $scope.doingEntry = false
           response = {}
