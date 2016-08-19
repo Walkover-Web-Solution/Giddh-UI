@@ -3447,3 +3447,7 @@ ul.pills li {
 .email-type li label{
     font-weight:300;
 }
+
+.shadow {
+    box-shadow: black 0px 0px 14px -4px;
+}

@@ -30,6 +30,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "ngCsv"
     "ngclipboard"
     "ng-appcache"
+    "networthModule"
   ]
 )
 
