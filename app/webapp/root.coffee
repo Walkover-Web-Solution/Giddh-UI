@@ -114,6 +114,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       'rightPanel':{
         abstract:true
         template: '<div class="pdL2 pdR2 pdT2" ng-hide="invoiceLoadDone"><div class="alert alert-info" role="alert">Click on any Account to load <strong>Invoice</strong></div></div><div ui-view></div>'
+        #template: '<div ui-view></div>'
       }
     }
   )
