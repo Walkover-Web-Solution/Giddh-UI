@@ -232,7 +232,6 @@ module.exports = function (grunt) {
           'angular-vidbg',
           'fullpage.js',
           'angular-fullpage.js',
-          'ng-appcache'
         ],
         dependencies: {
           'jquery': 'modernizr',

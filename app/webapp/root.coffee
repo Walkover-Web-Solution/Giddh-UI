@@ -29,7 +29,6 @@ giddh.webApp = angular.module("giddhWebApp",
     "razor-pay"
     "ngCsv"
     "ngclipboard"
-    "ng-appcache"
   ]
 )
 
@@ -212,8 +211,7 @@ giddh.webApp.run [
   'localStorageService'
   'DAServices'
   'groupService'
-  'appcache'
-  ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService, appcache) ->
+  ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService) ->
     $rootScope.$state = $state
     $rootScope.$stateParams = $stateParams
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
@@ -221,10 +219,6 @@ giddh.webApp.run [
       if _.isEmpty(toParams)
         $rootScope.selAcntUname = undefined
     )
-
-    # appcache.checkUpdate().then( ->
-
-    # )
 
 #    # check IE browser version
 #    $rootScope.GetIEVersion = () ->
