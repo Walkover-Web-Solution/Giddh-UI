@@ -30,7 +30,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "ngCsv"
     "ngclipboard"
     "ng-appcache"
-    "networthModule"
+    "dashboard"
   ]
 )
 
@@ -203,7 +203,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('dashboard',
     url: '/dashboard'
     templateUrl: '/public/webapp/Dashboard/dashboard.html'
-#    controller: 'thankyouController'
+    controller: 'dashboardController'
   )
   $locationProvider.html5Mode(false)
   return

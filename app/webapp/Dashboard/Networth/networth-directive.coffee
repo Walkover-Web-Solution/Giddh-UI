@@ -1,7 +1,3 @@
-angular.module('networthModule', [
-  "networthControllers"
-  "networthDirectives"
-])
 
 angular.module('networthDirectives', [])
 .directive 'netWorth',[() -> {

@@ -1,7 +1,7 @@
-<div id="net-worth" class="col-lg-4">
+<div id="net-worth" class="col-lg-4" ng-init="getNetWorthData()">
   <div class="panel panel-default shadow">
     <div class="panel-heading">
-      <label>Net worth</label><i class="glyphicon glyphicon-refresh pull-right"></i>
+      <label>Net worth</label><i class="glyphicon glyphicon-refresh pull-right" ng-click="getNetWorthData()"></i>
     </div>
     <div class="panel-body">
       <canvas id="line" class="chart chart-line" chart-data="chartData"
