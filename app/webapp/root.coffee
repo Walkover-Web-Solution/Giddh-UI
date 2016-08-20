@@ -29,6 +29,8 @@ giddh.webApp = angular.module("giddhWebApp",
     "razor-pay"
     "ngCsv"
     "ngclipboard"
+    "ng-appcache"
+    "dashboard"
   ]
 )
 
@@ -197,6 +199,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/thankyou'
     templateUrl: '/public/webapp/views/thanks.html'
     controller: 'thankyouController'
+  )
+  .state('dashboard',
+    url: '/dashboard'
+    templateUrl: '/public/webapp/Dashboard/dashboard.html'
+    controller: 'dashboardController'
   )
   $locationProvider.html5Mode(false)
   return
