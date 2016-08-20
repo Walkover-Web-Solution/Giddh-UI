@@ -51,7 +51,6 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
       }, onSuccess,  onFailure))
 
     nwGraphData: (argData, onSuccess, onFailure) ->
-      console.log argData
       @handlePromise((onSuccess, onFailure) -> Report.nwHistoricData({
         companyUniqueName: argData.cUname
         date1: argData.fromDate

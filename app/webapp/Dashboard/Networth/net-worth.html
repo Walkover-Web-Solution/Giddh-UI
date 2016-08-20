@@ -3,7 +3,11 @@
     <div class="panel-heading">
       <label>Net worth</label><i class="glyphicon glyphicon-refresh pull-right" ng-click="getNetWorthData()"></i>
     </div>
-    <div class="panel-body">
+    <div class="panel-body pos-rel">
+      <div class="reconnectDiv" ng-if="!chartDataAvailable">
+        <div class="giddh-spinner vertical-center-spinner" ng-if="errorMessage == ''"></div>
+        <label class="font-white" ng-if="errorMessage != ''">{{errorMessage}}</label>
+      </div>
       <canvas id="line" class="chart chart-line" chart-data="chartData"
               chart-labels="labels" chart-legend="true" chart-series="series" chart-options="chartOptions">
       </canvas>

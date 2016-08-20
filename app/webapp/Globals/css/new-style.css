@@ -3451,3 +3451,33 @@ ul.pills li {
 .shadow {
     box-shadow: black 0px 0px 14px -4px;
 }
+
+/*giddh loader*/
+.giddh-spinner{
+    animation: rotate 1.5s infinite linear;
+    background: #221F1F none repeat scroll 0 0;
+    border: 7px solid #C63B13;
+    border-radius: 50%;
+    box-shadow: 0 -10px 0 14px #fff inset;
+    box-sizing: border-box;
+    height: 60px;
+    width: 60px;
+    margin:0 auto 20px;
+}
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.vertical-center-spinner{
+    margin-top: 24%;
+}
+
+.font-white{
+    color: white;
+    padding: 10px;
+}
