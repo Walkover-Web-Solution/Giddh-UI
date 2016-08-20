@@ -304,3 +304,13 @@ angular.module('trialBalance', []).directive('exportReport', [
     )
     
 ]
+
+.directive 'setDropOverflow', ['$window', '$timeout', ($window, $timeout) ->
+  link: (scope, elem, attr) ->
+
+    $(elem).parent().parent().css({
+      'max-height':150
+      'overflow-y':'scroll'
+    })
+    
+]

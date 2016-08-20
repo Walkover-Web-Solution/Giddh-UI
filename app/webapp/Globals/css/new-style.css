@@ -3080,6 +3080,7 @@ ul.pills li {
     width: initial;
     left: 17.6%;
     animation: panel-open 0.2s linear;
+    overflow:initial;
 }
 
 .pop-panel{

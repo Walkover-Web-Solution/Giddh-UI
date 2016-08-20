@@ -8,6 +8,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.logoUpldComplt = false
   $scope.showAccountList = false
   $scope.invoiceLoadDone = false
+  $scope.entryListUpdated = false
   $scope.noDataDR = false
   $scope.radioChecked = false
   $scope.genPrevMode = false
@@ -610,7 +611,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # get ledger entries to generate invoice
   $scope.getLedgerEntries=()->
-    $scope.invoiceLoadDone = false
     $scope.entriesForInvoice = []
     $scope.prevInProg = false
     obj = {
@@ -620,6 +620,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       toDate: $filter('date')($scope.dateData.toDate, "dd-MM-yyyy")
     }
     ledgerService.getLedger(obj).then($scope.getLedgerEntriesSuccess, $scope.getLedgerEntriesFailure)
+    $scope.entryListUpdated = false
 
   $scope.getLedgerEntriesSuccess = (res)->
     $scope.onlyDrData = []
@@ -649,11 +650,11 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $scope.noDataDR = true
     else
       $scope.noDataDR = false
-    $scope.invoiceLoadDone = true
+    $scope.entryListUpdated = true
     
   $scope.getLedgerEntriesFailure=(res)->
     toastr.error(res.data.message, res.data.status)
-    $scope.invoiceLoadDone = true
+    $scope.entryListUpdated = true
 
   $scope.summationForInvoice=(ths, entry, index)->
     if entry.sharedData.multiEntry

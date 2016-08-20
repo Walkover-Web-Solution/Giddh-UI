@@ -410,10 +410,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         ledger.isBankTransaction = true
         ledger.transactionId = bank.transactionId
         ledger.transactions = $scope.formatBankTransactions(bank.transactions, bank, ledger)
+        ledger.description = bank.description
         formattedBankLedgers.push(ledger)
     formattedBankLedgers
 
-  $scope.formatBankTransactions = (transactions, bank, ledger) ->
+  $scope.formatBankTransactions = (transactions, bank, ledger, type) ->
     formattedBanktxns = []
     if transactions.length > 0
       _.each transactions, (txn) ->
@@ -796,11 +797,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         if ledger.transactions.length > 0
           $scope.matchTaxTransactions(ledger.transactions, $scope.taxList)
           ledgerCondition = $scope.checkIfPrincipleTxnIsModified(ledger, $scope.ledgerBeforeEdit.transactions, unqNamesObj)
-         if !$scope.ledgerTxnChanged
-           ledgerService.updateEntry(unqNamesObj, ledger).then(
-             (res) -> $scope.updateEntrySuccess(res, ledger)
-             (res) -> $scope.updateEntryFailure(res, ledger)
-           )
+#          if !$scope.ledgerTxnChanged
+#            ledgerService.updateEntry(unqNamesObj, ledger).then(
+#              (res) -> $scope.updateEntrySuccess(res, ledger)
+#              (res) -> $scope.updateEntryFailure(res, ledger)
+#            )
         else
           $scope.doingEntry = false
           response = {}
@@ -886,6 +887,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             (res) -> $scope.UpdateEntry(ledger, unqNamesObj, true),
             (res) -> $scope.UpdateEntry(ledger, unqNamesObj, false)
         )
+      else
+        $scope.UpdateEntry(ledger, unqNamesObj, false)
 
 
   $scope.removeTaxTxnOnPrincipleTxnModified = (txnList) ->
