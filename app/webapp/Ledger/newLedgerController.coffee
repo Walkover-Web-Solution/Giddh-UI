@@ -768,7 +768,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         #   delete led.particular.mergedAccounts
         #   delete led.particular.applicableTaxes
         # )
-        $scope.removeEmptyTransactions(ledger.transactions)
+        rejectedTransactions = []
+        transactionsArray = _.reject(ledger.transactions, (led) ->
+         if led.particular == "" || led.particular.uniqueName == ""
+           rejectedTransactions.push(led)
+           return led
+        )
+        ledger.transactions = transactionsArray
         ledger.voucherType = ledger.voucher.shortCode
         $scope.addTaxesToLedger(ledger)
         if ledger.transactions.length > 0
@@ -845,12 +851,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       toastr.error("Select voucher type.")
 
   $scope.removeEmptyTransactions = (txnList) ->
-    rejectedTransactions = []
-    transactionsArray = _.reject(txnList, (led) ->
-     if led.particular == "" || led.particular.uniqueName == ""
-       rejectedTransactions.push(led)
-       return led
-    )
+
     txnList = transactionsArray
 
   $scope.checkPrincipleModifications = (ledger, uTxnList) ->
