@@ -819,7 +819,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         ledger.voucherType = ledger.voucher.shortCode
         if ledger.transactions.length > 0
           $scope.matchTaxTransactions(ledger.transactions, $scope.taxList)
-          ledgerCondition = $scope.checkIfPrincipleTxnIsModified(ledger, $scope.ledgerBeforeEdit.transactions, unqNamesObj)
+          isModified = $scope.checkPrincipleModifications(ledger, $scope.ledgerBeforeEdit)
+          #$scope.updateEntryTaxes(ledger.transactions)
+          #ledgerCondition = $scope.checkIfPrincipleTxnIsModified(ledger, $scope.ledgerBeforeEdit.transactions, unqNamesObj)
 #          if !$scope.ledgerTxnChanged
 #            ledgerService.updateEntry(unqNamesObj, ledger).then(
 #              (res) -> $scope.updateEntrySuccess(res, ledger)
@@ -835,6 +837,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     else
       toastr.error("Select voucher type.")
 
+  $scope.checkPrincipleModifications = (ledger, uTxnList) ->
+    console.log ledger, uTxnList
+
 
   $scope.addTaxesToLedger = (ledger) ->
     ledger.taxes = []
@@ -842,6 +847,16 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       if tax.isChecked == true
         ledger.taxes.push(tax.uniqueName)
     )
+
+  # $scope.updateEntryTaxes = (txnList) ->
+  #   transactions = []
+  #   if txnList.length > 1
+  #     _.each txnList, (txn, idx) ->
+  #       _.each $scope.taxList, (tax) ->
+  #         if txn.particular.uniqueName == tax.account.uniqueName && !tax.isChecked
+  #           # if txn is tax and is checked
+  #           txnList.splice(idx, 1)
+  #   txnList
 
   $scope.isTransactionContainsTax = (ledger) ->
     if ledger.taxes != undefined && ledger.taxes.length > 0
