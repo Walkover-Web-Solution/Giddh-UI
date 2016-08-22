@@ -310,7 +310,8 @@ angular.module('trialBalance', []).directive('exportReport', [
 
     $(elem).parent().parent().css({
       'max-height':150
-      'overflow-y':'scroll'
+      'max-width':300
+      'overflow':'scroll'
     })
     
 ]
