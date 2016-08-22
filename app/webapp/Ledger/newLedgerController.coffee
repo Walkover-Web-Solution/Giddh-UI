@@ -823,7 +823,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           $scope.matchTaxTransactions(ledger.transactions, $scope.taxList)
           $scope.matchTaxTransactions($scope.ledgerBeforeEdit.transactions, $scope.taxList)
           $scope.checkManualTaxTransaction(ledger.transactions, $scope.ledgerBeforeEdit.transactions)
-          $scope.updateEntryTaxes(ledger.transactions)
+          updatedTxns = $scope.updateEntryTaxes(ledger.transactions)
+          ledger.transactions = updatedTxns
           isModified = $scope.checkPrincipleModifications(ledger, $scope.ledgerBeforeEdit.transactions)
           if isModified
             modalService.openConfirmModal(
@@ -897,9 +898,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       _.each txnList, (txn, idx) ->
         _.each $scope.taxList, (tax) ->
           if txn.particular.uniqueName == tax.account.uniqueName && !tax.isChecked
-            #console.log txn
-            if !txn.isManualTax 
-              txnList.splice(idx, 1)
+            if !txn.isManualTax
+              txn.toRemove = true 
+              #transactions.push(txn)
+              #txnList.splice(idx, 1)
+    txnList = _.filter(txnList, (txn)->
+      return txn.toRemove == undefined || txn.toRemove == false
+    )
     txnList
 
   $scope.isTransactionContainsTax = (ledger) ->
