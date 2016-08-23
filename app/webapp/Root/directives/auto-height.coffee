@@ -2,6 +2,8 @@ angular.module('twygmbh.auto-height', []).
 directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
   link: ($scope, $element, $attrs) ->
 
+    timeout = Number($attrs.timeout) || 1000
+
     combineHeights = (collection) ->
       heights = 0
       heights += node.offsetHeight for node in collection
@@ -12,17 +14,18 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
 
     adjustHeight = () ->
       additionalHeight = $attrs.additionalHeight || 0
-      minHeight = $attrs.minHeight || 0
+      minHeight = $attrs.minHeight || 600
       parentHeight = $window.innerHeight - $element.parent()[0].getBoundingClientRect().top
-      $element.css('height', (parentHeight - combineHeights(siblings($element)) - additionalHeight) + "px")
       $element.css('min-height',minHeight + 'px')
+      $element.css('height', (parentHeight - combineHeights(siblings($element)) - additionalHeight) + "px")
 
     angular.element($window).on 'resize', ->
       adjustHeight()
 
-    $timeout ->
+    $timeout ( ->
       angular.element($window).triggerHandler('resize')
-    1000
+      console.log 'a'
+    ), timeout
 ]
 
 # convert digit to words

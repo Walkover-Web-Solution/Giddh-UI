@@ -12,7 +12,7 @@
       <span></span>
       <span></span>
     </div>
-    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height ng-show="entryListUpdated">
+    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height ng-show="entryListUpdated" timeout="5000">
 
       <div class="pd2" ng-init="getLedgerEntries()">
 
@@ -112,9 +112,6 @@
 
   <uib-tab heading="View Invoice" id="view"  select="getInvList()">
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
-
-      
-
       <div class="pd2">
         <div class="row">
           <div class="col-xs-6">

@@ -121,7 +121,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.setFocusToBlankTxn = (ledger, transaction, str) ->
     _.each ledger.transactions, (txn) ->
       if txn.amount == 0 && txn.particular.name == "" && txn.particular.uniqueName == "" && txn.type == str
-        txn.isOpen = true
+        txn.isblankOpen = true
         $scope.openClosePopOver(txn, ledger)
 
   $scope.getFocus = (txn, ledger) ->
