@@ -173,7 +173,7 @@ app.config (vcRecaptchaServiceProvider)->
   vcRecaptchaServiceProvider.setDefaults({
     key: '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi'
     # theme: 'dark'
-    stoken: '6LcgBiATAAAAACj5K_70CDbRUSyGR1R7e9gckO1w'
+    #stoken: '6LcgBiATAAAAACj5K_70CDbRUSyGR1R7e9gckO1w'
     # size: 'compact'
   })
 

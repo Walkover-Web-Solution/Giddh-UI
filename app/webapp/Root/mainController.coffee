@@ -18,7 +18,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.hideHeader = false
   $rootScope.flatAccList = {
     page: 1
-    count: 5000
+    count: 20000
     totalPages: 0
     currentPage : 1
     limit: 5
