@@ -1,14 +1,14 @@
 "use strict"
 
-angular.module('networthModule', [
-  "networthControllers"
-  "networthDirectives"
+networth = angular.module('networthModule', [
+#"networthControllers"
+#"networthDirectives"
 ])
 
 networthController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $timeout) ->
-
+  $scope.unq = 0
   $scope.monthArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-  $scope.series = []
+  $scope.series = ['Net worth']
   $scope.chartData = [
     [1424785, 1425744, 1425874, 1425985, 1435200, 1432999, 1437010]
   ]
@@ -27,9 +27,9 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
       $scope.getNWdata(moment().subtract(1, 'years').add(1,'months').format('DD-MM-YYYY'),moment().format('DD-MM-YYYY'))
     ),1400
 
-# for networth graph
+  # for networth graph
 
-  $scope.getNWdata = (fromDate,toDate) ->
+  $scope.getNWdata = (fromDate, toDate) ->
     $scope.errorMessage = ""
     $scope.chartDataAvailable = false
     reqParam = {
@@ -59,7 +59,7 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
     else
       $scope.chartDataAvailable = false
       $scope.chartData = []
-  #    toastr.error(res.data.message)
+      #    toastr.error(res.data.message)
       $scope.errorMessage = res.data.message
 
   $scope.formatNWgraphData = (nwData) ->
@@ -69,7 +69,8 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
     monthlyBalances = []
     yearlyBalances = []
     _.each nwData.periodBalances, (nw) ->
-      $scope.nwLabels.push($scope.monthArray[moment(nw.from).get('months')])
+      str = $scope.monthArray[moment(nw.to).get('months')] + moment(nw.to).get('y')
+      $scope.nwLabels.push(str)
       monthlyBalances.push(nw.monthlyBalance)
       $scope.nwSeries.push('Monthly Balances')
       yearlyBalances.push(nw.yearlyBalance)
@@ -88,7 +89,13 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
       $scope.getNWdata(moment().subtract(1, 'years').add(1,'months').format('DD-MM-YYYY'),moment().format('DD-MM-YYYY'))
 
 
+networth.controller('networthController', networthController)
 
 
-angular.module('networthControllers', [])
-.controller('networthController', networthController)
+.directive 'netWorth',[() -> {
+restrict: 'E'
+templateUrl: '/public/webapp/Dashboard/Networth/net-worth.html'
+controller: 'networthController'
+link: (scope,elem,attr) ->
+#    console.log "networth scope : ",scope
+}]
