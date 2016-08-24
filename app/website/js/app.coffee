@@ -300,6 +300,7 @@ app.controller 'magicCtrl', [
           $scope.accountName = success.data.body.account.name
           $scope.ledgerData = success.data.body.ledgerTransactions
           $scope.filterLedgers($scope.ledgerData.ledgers)
+          $scope.countTotalTransactions()
           $scope.magicReady = true
           $scope.showError = false
           $scope.assignDates($scope.ledgerData.ledgers[0].entryDate, $scope.ledgerData.ledgers[$scope.ledgerData.ledgers.length-1].entryDate)
@@ -356,6 +357,8 @@ app.controller 'magicCtrl', [
         )
 
     $scope.entryTotal = {}
+    $scope.entryTotal.amount = ''
+    $scope.entryTotal.type = ''
 
     $scope.checkCompEntry = (ledger) ->
       $scope.entryTotal = ledger.total
@@ -366,6 +369,25 @@ app.controller 'magicCtrl', [
           lgr.isCompoundEntry = true
         else
           lgr.isCompoundEntry = false
+
+  $scope.creditTotal = 0
+  $scope.debitTotal = 0
+  $scope.countTotalTransactions = () ->
+    $scope.creditTotal = 0
+    $scope.debitTotal = 0
+    $scope.dTxnCount = 0
+    $scope.cTxnCount = 0
+    if $scope.ledgerData.ledgers.length > 0
+      _.each $scope.ledgerData.ledgers, (ledger) ->
+        if ledger.transactions.length > 0
+          _.each ledger.transactions, (txn) ->
+            txn.isOpen = false
+            if txn.type == 'DEBIT'
+              $scope.dTxnCount += 1
+              $scope.debitTotal += Number(txn.amount)
+            else
+              $scope.cTxnCount += 1
+              $scope.creditTotal += Number(txn.amount)
 
 
 ] 
