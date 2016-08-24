@@ -370,24 +370,24 @@ app.controller 'magicCtrl', [
         else
           lgr.isCompoundEntry = false
 
-  $scope.creditTotal = 0
-  $scope.debitTotal = 0
-  $scope.countTotalTransactions = () ->
     $scope.creditTotal = 0
     $scope.debitTotal = 0
-    $scope.dTxnCount = 0
-    $scope.cTxnCount = 0
-    if $scope.ledgerData.ledgers.length > 0
-      _.each $scope.ledgerData.ledgers, (ledger) ->
-        if ledger.transactions.length > 0
-          _.each ledger.transactions, (txn) ->
-            txn.isOpen = false
-            if txn.type == 'DEBIT'
-              $scope.dTxnCount += 1
-              $scope.debitTotal += Number(txn.amount)
-            else
-              $scope.cTxnCount += 1
-              $scope.creditTotal += Number(txn.amount)
+    $scope.countTotalTransactions = () ->
+      $scope.creditTotal = 0
+      $scope.debitTotal = 0
+      $scope.dTxnCount = 0
+      $scope.cTxnCount = 0
+      if $scope.ledgerData.ledgers.length > 0
+        _.each $scope.ledgerData.ledgers, (ledger) ->
+          if ledger.transactions.length > 0
+            _.each ledger.transactions, (txn) ->
+              txn.isOpen = false
+              if txn.type == 'DEBIT'
+                $scope.dTxnCount += 1
+                $scope.debitTotal += Number(txn.amount)
+              else
+                $scope.cTxnCount += 1
+                $scope.creditTotal += Number(txn.amount)
 
 
 ] 
