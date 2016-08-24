@@ -2,7 +2,7 @@ angular.module('twygmbh.auto-height', []).
 directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
   link: ($scope, $element, $attrs) ->
 
-    timeout = Number($attrs.timeout) || 1000
+    interval = Number($attrs.timeout) || 1000
 
     combineHeights = (collection) ->
       heights = 0
@@ -24,8 +24,7 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
 
     $timeout ( ->
       angular.element($window).triggerHandler('resize')
-      console.log 'a'
-    ), timeout
+    ), interval
 ]
 
 # convert digit to words
