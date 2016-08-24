@@ -97,7 +97,7 @@
                   GO
                 </button>
               </div>
-              <div class="form-group" ng-if="entryTotal.amount >= 0">
+              <div class="form-group" ng-if="entryTotal.amount > 0">
                 Entry Total:{{entryTotal.amount}} {{entryTotal.type}}
               </div>
             </form>
@@ -306,19 +306,15 @@
               </td>
             </tr>
             <tr class="total greyBg">
-              <td colspan="2" style="width:18%" class="bdrL">
-                <span class="pull-right">Debit Total:{{debitTotal}}</span>
-              </td>
-              <td colspan="2" style="width:18%" class="bdrL">
+              <td colspan="2" style="width:36%" class="bdrL">
+                <span class="pull-left">Debit Total:{{debitTotal}}</span>
                 <span class="pull-right">Reckoning</span>
               </td>
               <td style="width:14%" class="bdrR alR">
                 <span>{{ledgerData.debitTotal | number:2}}</span>
               </td>
-              <td colspan="2" style="width:18%" class="bdrL">
-                <span class="pull-right">Credit Total:{{creditTotal}}</span>
-              </td>
-              <td colspan="2" style="width:18%" class="bdrL">
+              <td colspan="2" style="width:36%" class="bdrL">
+                <span class="pull-left">Credit Total:{{creditTotal}}</span>
                 <span class="pull-right">Reckoning</span>
               </td>
               <td style="width:14%" class="bdrR alR">
