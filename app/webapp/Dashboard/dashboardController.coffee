@@ -3,6 +3,7 @@
 dashboard = angular.module('dashboard', [
   "networthModule"
   "liveaccountsModule"
+  "piechartModule"
 ])
 
 dashboardController = ($scope, $rootScope) ->
