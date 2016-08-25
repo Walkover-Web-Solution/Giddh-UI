@@ -30,6 +30,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "ngCsv"
     "ngclipboard"
     "dashboard"
+    "mgo-angular-wizard"
   ]
 )
 

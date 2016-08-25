@@ -3482,3 +3482,27 @@ ul.pills li {
     color: white;
     padding: 10px;
 }
+
+#setupWizardModal{
+    height:500px;
+    overflow:hidden;
+}
+
+#setupWizardModal .welcome-msg{
+    text-align: center;
+    width:60%;
+    margin:20px auto;
+}
+
+#setupWizardModal .wizard-container{
+    width:80%;
+    margin:0 auto 20px;
+    padding:20px 0;
+    height:335px;
+    position: relative;
+}
+
+#setupWizardModal .wizard-container .steps-indicator {
+    position:absolute;
+    bottom:35px;
+}

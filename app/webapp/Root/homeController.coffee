@@ -8,11 +8,6 @@ homeController = ($scope, $rootScope, getLedgerState, $state) ->
     else
       $state.go('company.content.manage')
 
-  $scope.runSetupWizard = () ->
-    
-
-
-
   $scope.goToLedgerState()
 
   $rootScope.setActiveFinancialYear(getLedgerState.data.activeFinancialYear)

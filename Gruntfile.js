@@ -232,6 +232,7 @@ module.exports = function (grunt) {
           'angular-vidbg',
           'fullpage.js',
           'angular-fullpage.js',
+          'angular-wizard'
         ],
         dependencies: {
           'jquery': 'modernizr',

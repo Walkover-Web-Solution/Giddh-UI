@@ -289,20 +289,20 @@
 
             <tr class="fw600 dgreyBg">
               <td colspan="2" class="bdrL" style="width:36%">
-                <div class="pull-right" ng-if="ledgerData.balance.type == 'DEBIT'">
-                  C/F Balance
-                </div>
-              </td>
-              <td style="width:14%" class="bdrR alR">
-                <span ng-if="ledgerData.balance.type == 'DEBIT'">{{ledgerData.balance.amount | number:2}}</span>
-              </td>
-              <td colspan="2" style="width:36%" class="bdrL">
-                <div class="pull-right"  ng-if="ledgerData.balance.type == 'CREDIT'">
+                <div class="pull-right" ng-if="ledgerData.balance.type == 'CREDIT'">
                   C/F Balance
                 </div>
               </td>
               <td style="width:14%" class="bdrR alR">
                 <span ng-if="ledgerData.balance.type == 'CREDIT'">{{ledgerData.balance.amount | number:2}}</span>
+              </td>
+              <td colspan="2" style="width:36%" class="bdrL">
+                <div class="pull-right"  ng-if="ledgerData.balance.type == 'DEBIT'">
+                  C/F Balance
+                </div>
+              </td>
+              <td style="width:14%" class="bdrR alR">
+                <span ng-if="ledgerData.balance.type == 'DEBIT'">{{ledgerData.balance.amount | number:2}}</span>
               </td>
             </tr>
             <tr class="total greyBg">
