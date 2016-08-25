@@ -82,9 +82,7 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
     $scope.labels = $scope.nwLabels
     $scope.chartDataAvailable = true
 
-
   $rootScope.$on 'company-changed', (event,changeData) ->
-# when company is changed, redirect to manage company page
     if changeData.type == 'CHANGE'
       $scope.getNWdata(moment().subtract(1, 'years').add(1,'months').format('DD-MM-YYYY'),moment().format('DD-MM-YYYY'))
 
