@@ -38,7 +38,7 @@
   </div>
   <perfect-scrollbar id="accountList" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
     <div class="menu acList">
-      <div class="loader" ng-hide="showAccountList">
+      <div class="loader" ng-if="!showAccountList && companyList.length > 0">
         <span></span>
         <span></span>
         <span></span>
