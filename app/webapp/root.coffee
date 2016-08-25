@@ -31,6 +31,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "ngclipboard"
     "dashboard"
     "mgo-angular-wizard"
+    "googlechart"
   ]
 )
 
