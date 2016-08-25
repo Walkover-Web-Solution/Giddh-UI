@@ -202,7 +202,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('dashboard',
     url: '/dashboard'
     templateUrl: '/public/webapp/Dashboard/dashboard.html'
-    controller: 'dashboardController'
   )
   $locationProvider.html5Mode(false)
   return

@@ -3482,3 +3482,17 @@ ul.pills li {
     color: white;
     padding: 10px;
 }
+
+#dashboard .panel-body{
+    height:340px;
+    overflow-y: auto ;
+    overflow-x: hidden;
+}
+
+tr.db-bnk-account{
+    position: relative;
+}
+
+tr.db-bnk-account > td.reconnectDiv{
+    position: absolute;
+}
