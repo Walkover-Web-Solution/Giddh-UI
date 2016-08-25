@@ -165,7 +165,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       localStorageService.remove("_selectedCompany")
     else
       $scope.companyList = _.without($scope.companyList, $scope.beforeDeleteCompany.company)
-    $scope.getCompanyList()
+    $rootScope.getCompanyList()
     $scope.beforeDeleteCompany = {}
     toastr.success("Company deleted successfully", "Success")
 

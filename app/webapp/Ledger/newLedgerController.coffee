@@ -1,6 +1,7 @@
 
 newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state) ->
-
+  if _.isUndefined($rootScope.selectedCompany)
+    $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
   #date time picker code starts here
   $scope.today = new Date()
   d = moment(new Date()).subtract(1, 'month')
