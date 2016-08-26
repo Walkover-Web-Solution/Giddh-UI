@@ -124,7 +124,7 @@ pie.controller('piechartController', piechartController)
 .directive 'pieChart',[() -> {
   restrict: 'E'
   templateUrl: '/public/webapp/Dashboard/Expensepiechart/expensepiechart.html'
-  controller: 'piechartController'
+#  controller: 'piechartController'
   link: (scope,elem,attr) ->
   #    console.log "pie chart scope : ",scope
 }]

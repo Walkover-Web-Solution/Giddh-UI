@@ -96,5 +96,5 @@ liveaccount.controller('liveaccountsController',liveaccountsController)
 .directive 'liveAccount', [() -> {
   restrict: 'E'
   templateUrl: '/public/webapp/Dashboard/Liveaccounts/liveaccounts.html'
-  controller: 'liveaccountsController'
+#  controller: 'liveaccountsController'
 }]

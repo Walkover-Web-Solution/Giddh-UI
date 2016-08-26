@@ -393,6 +393,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.getCompanyList()
 
   $scope.changeCompany = (company, index, method) ->
+#    console.log("method we get here is : ", method)
     # select and set active financial year
     $scope.setFYonCompanychange(company)
     #check permissions on selected company
