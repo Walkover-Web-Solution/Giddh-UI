@@ -2,7 +2,7 @@
 
 liveaccount = angular.module('liveaccountsModule', [])
 
-liveaccountsController = ($rootScope, $scope, $uibModal, userServices, localStorageService) ->
+liveaccountsController = ($rootScope, $scope, $uibModal, userServices, localStorageService, toastr) ->
   $scope.unq = 1
   $scope.showThis = []
   $scope.dataAvailable = false

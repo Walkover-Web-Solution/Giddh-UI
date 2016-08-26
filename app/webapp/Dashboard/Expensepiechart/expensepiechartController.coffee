@@ -10,7 +10,7 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
   $scope.chartData = []
   $scope.labels = ["Salary", "Vendor", "Welfare", "Other"]
   $scope.chartOptions = {
-    datasetFill:true
+    legend:{position:'none'}
   }
   $scope.myChartObject = {}
   $scope.myChartObject.data = {"cols":[{
@@ -43,6 +43,12 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
     ]},
   ]}
   $scope.myChartObject.type = "PieChart"
+  $scope.myChartObject.options = {
+    legend:{position:'none'},
+    chartArea:{
+      height:'80%'
+    }
+  }
   $scope.chartDataAvailable = false
   $scope.errorMessage = ""
   $scope.accountList = []
