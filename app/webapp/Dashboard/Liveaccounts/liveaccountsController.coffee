@@ -9,6 +9,7 @@ liveaccountsController = ($rootScope, $scope, $uibModal, userServices, localStor
   $scope.errorMessage = ""
 
   $scope.getLiveData = () ->
+    $scope.showThis = []
     $scope.dataAvailable = false
     $scope.errorMessage = ""
     if _.isUndefined($rootScope.selectedCompany)
@@ -32,7 +33,6 @@ liveaccountsController = ($rootScope, $scope, $uibModal, userServices, localStor
     $scope.errorMessage = res.data.message
 
   $scope.reconnectBank = (account) ->
-    console.log("reconnecting bank")
     reqParam = {
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       loginId: account.loginId
@@ -66,7 +66,6 @@ liveaccountsController = ($rootScope, $scope, $uibModal, userServices, localStor
     userServices.refreshAll(companyUniqueName).then($scope.getLiveAccountsSuccess, $scope.getLiveAccountsFailure)
 
   $scope.refreshBank = (account) ->
-    console.log("refreshing bank")
     reqParam = {
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       loginId: account.loginId
