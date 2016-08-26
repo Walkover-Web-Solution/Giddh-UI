@@ -18,7 +18,8 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
       else
         #user is registered and redirect it to app
         localStorageService.set("_userDetails", response.data.userDetails)
-        window.location = "/app/#/home/"
+        console.log response
+        #window.location = "/app/#/home/"
     ).catch (response) ->
       $scope.loginIsProcessing = false
       #user is not registerd with us

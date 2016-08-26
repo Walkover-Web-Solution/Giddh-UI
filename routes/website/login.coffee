@@ -5,6 +5,28 @@ router = settings.express.Router()
 googleLoginUrl = settings.envUrl + 'signup-with-google'
 linkedinLoginUrl =  settings.envUrl + 'signup-with-linkedIn'
 twitterLoginUrl =  settings.envUrl + 'signup-with-twitter'
+
+
+hitViaSocket = (data) ->
+  data = JSON.stringify(data)
+  settings.request {
+    url: 'https://viasocket.com/t/fDR1TMJLvMQgwyjBUMVs/giddh-giddh-login?authkey=MbK1oT6x1RCoVf2AqL3y'
+    qs:
+      from: 'Giddh'
+      time: +new Date
+    method: 'POST'
+    headers:
+      'Content-Type': 'application/json'
+      'Auth-Key': 'MbK1oT6x1RCoVf2AqL3y'
+    body: data
+  }, (error, response, body) ->
+    if error
+      console.log error
+    else
+      console.log response.statusCode, body, 'from viasocket'
+    return
+
+
 ###
  |--------------------------------------------------------------------------
  | login with google
@@ -38,6 +60,8 @@ router.post '/google', (req, res, next) ->
         userDetailObj = data.body.user
         req.session.name = data.body.user.uniqueName
         req.session.authKey = data.body.authKey
+        if data.body.isNewUser
+          hitViaSocket(data.body.user)
       res.send
         token: token
         userDetails: userDetailObj
