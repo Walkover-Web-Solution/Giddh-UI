@@ -1356,6 +1356,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #$scope.working = false
 
   $scope.addNewAccount = () ->
+    $scope.newAccountModel.group = ''
+    $scope.newAccountModel.account = ''
+    $scope.newAccountModel.accUnqName = ''
     $scope.selectedTxn.isOpen = false
     $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
     $scope.AccmodalInstance = $uibModal.open(
