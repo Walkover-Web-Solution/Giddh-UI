@@ -86,28 +86,24 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
     $scope.chartDataAvailable = true
 
   $scope.setDateByFinancialYear = () ->
-    console.log($rootScope.activeYear)
-    console.log($rootScope.currentFinancialYear)
-    console.log($rootScope.selectedCompany.activeFinancialYear)
-    if moment($rootScope.selectedCompany.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').get('Y') == moment().get('Y') && moment($rootScope.selectedCompany.activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').get('Y') == moment().get('Y') + 1
+    presentYear = $scope.getPresentFinancialYear()
+    if $rootScope.currentFinancialYear == presentYear
       $scope.fromDate = moment().subtract(1, 'years').add(1,'months').format('DD-MM-YYYY')
       $scope.toDate = moment().format('DD-MM-YYYY')
     else
       $scope.fromDate = $rootScope.selectedCompany.activeFinancialYear.financialYearStarts
       $scope.toDate = $rootScope.selectedCompany.activeFinancialYear.financialYearEnds
-#    if $rootScope.activeYear.start == moment().get('y')
-#      setDate = ""
-#      if moment().get('months') > 4
-#        setDate = "01-04-" + moment().get('YEARS')
-#      else
-#        setDate = "01-04-" + moment().subtract(1, 'years').get('YEARS')
-#      $scope.fromDate = setDate
-  $scope.getCurrentFinancialYear = () ->
+
+  $scope.getPresentFinancialYear = () ->
     setDate = ""
+    toDate = ""
     if moment().get('months') > 4
-      setDate = "01-04-" + moment().get('YEARS')
+      setDate = moment().get('YEARS')
+      toDate = moment().add(1,'years').get('YEARS')
     else
-      setDate = "01-04-" + moment().subtract(1, 'years').get('YEARS')
+      setDate = moment().subtract(1, 'years').get('YEARS')
+      toDate = moment().get('YEARS')
+    setDate+"-"+toDate
 
   $rootScope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
