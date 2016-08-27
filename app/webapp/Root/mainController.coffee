@@ -202,16 +202,23 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   #Create ne company
   $scope.createNewCompany = () ->
     # Open modal here and ask for company details
-    if $rootScope.hasOwnCompany
-      modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
-        size: "sm",
-        backdrop: 'static',
-        scope: $scope
-      )
-      modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
-    else
-      $scope.runSetupWizard()
+    modalInstance = $uibModal.open(
+      templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
+      size: "sm",
+      backdrop: 'static',
+      scope: $scope
+    )
+    modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
+#    if $rootScope.hasOwnCompany
+#      modalInstance = $uibModal.open(
+#        templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
+#        size: "sm",
+#        backdrop: 'static',
+#        scope: $scope
+#      )
+#      modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
+#    else
+#      $scope.runSetupWizard()
 
   $scope.onCompanyCreateModalCloseSuccess = (data) ->
     cData = {}
@@ -271,11 +278,11 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     if _.isEmpty($scope.companyList)
       #When no company is there
       $scope.companyList.count
-      $scope.runSetupWizard()
-      #$scope.createNewCompany()
+#      $scope.runSetupWizard()
+      $scope.createNewCompany()
     else
       # When there are companies
-      $scope.checkUserCompanyStatus(res.body)
+#      $scope.checkUserCompanyStatus(res.body)
       $rootScope.mngCompDataFound = true
       $scope.findCompanyInList()
 
