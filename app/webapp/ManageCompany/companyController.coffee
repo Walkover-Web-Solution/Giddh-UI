@@ -1703,6 +1703,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.loadYodlee()
   #  Linked methods end here
 
+  $scope.getSharedList = () ->
+    $scope.setShareableRoles($rootScope.selectedCompany)
+    $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
+
+  #Mayank
+  $scope.setShareableRoles = (selectedCompany) ->
+    $scope.shareableRoles = permissionService.shareableRoles(selectedCompany)
 
   $timeout( ->
     $rootScope.selAcntUname = undefined
@@ -1734,9 +1741,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 #  $rootScope.$on 'companyLoaded', ()->
 #    $scope.clearTaxFields()
 
-  #Mayank
-  $scope.setShareableRoles = (selectedCompany) -> 
-    $scope.shareableRoles = permissionService.shareableRoles(selectedCompany)
 
 #init angular app
 giddh.webApp.controller 'companyController', companyController

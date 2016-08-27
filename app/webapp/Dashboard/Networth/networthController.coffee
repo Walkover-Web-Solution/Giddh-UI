@@ -18,14 +18,17 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
   }
   $scope.chartDataAvailable = false
   $scope.errorMessage = ""
+  $scope.fromDate = moment().format('DD-MM-YYYY')
+  $scope.toDate = moment().format('DD-MM-YYYY')
 
   $scope.getNetWorthData = () ->
 #    get net worth data here
     $scope.chartDataAvailable = false
     $scope.errorMessage = ""
-    $timeout (->
-      $scope.getNWdata(moment().subtract(1, 'years').add(1,'months').format('DD-MM-YYYY'),moment().format('DD-MM-YYYY'))
-    ),1400
+    if _.isUndefined($rootScope.selectedCompany)
+      $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+    $scope.setDateByFinancialYear()
+    $scope.getNWdata($scope.fromDate,$scope.toDate)
 
   # for networth graph
 
@@ -82,9 +85,34 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
     $scope.labels = $scope.nwLabels
     $scope.chartDataAvailable = true
 
+  $scope.setDateByFinancialYear = () ->
+    console.log($rootScope.activeYear)
+    console.log($rootScope.currentFinancialYear)
+    console.log($rootScope.selectedCompany.activeFinancialYear)
+    if moment($rootScope.selectedCompany.activeFinancialYear.financialYearStarts, 'DD-MM-YYYY').get('Y') == moment().get('Y') && moment($rootScope.selectedCompany.activeFinancialYear.financialYearEnds, 'DD-MM-YYYY').get('Y') == moment().get('Y') + 1
+      $scope.fromDate = moment().subtract(1, 'years').add(1,'months').format('DD-MM-YYYY')
+      $scope.toDate = moment().format('DD-MM-YYYY')
+    else
+      $scope.fromDate = $rootScope.selectedCompany.activeFinancialYear.financialYearStarts
+      $scope.toDate = $rootScope.selectedCompany.activeFinancialYear.financialYearEnds
+#    if $rootScope.activeYear.start == moment().get('y')
+#      setDate = ""
+#      if moment().get('months') > 4
+#        setDate = "01-04-" + moment().get('YEARS')
+#      else
+#        setDate = "01-04-" + moment().subtract(1, 'years').get('YEARS')
+#      $scope.fromDate = setDate
+  $scope.getCurrentFinancialYear = () ->
+    setDate = ""
+    if moment().get('months') > 4
+      setDate = "01-04-" + moment().get('YEARS')
+    else
+      setDate = "01-04-" + moment().subtract(1, 'years').get('YEARS')
+
   $rootScope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
-      $scope.getNWdata(moment().subtract(1, 'years').add(1,'months').format('DD-MM-YYYY'),moment().format('DD-MM-YYYY'))
+      $scope.setDateByFinancialYear()
+      $scope.getNWdata($scope.fromDate,$scope.toDate)
 
 
 networth.controller('networthController', networthController)
