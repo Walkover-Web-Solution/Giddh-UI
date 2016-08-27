@@ -1703,14 +1703,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.loadYodlee()
   #  Linked methods end here
 
-  #Mayank
-  $scope.setShareableRoles = (selectedCompany) ->
-    $scope.shareableRoles = permissionService.shareableRoles(selectedCompany)
-
-
   $scope.getSharedList = () ->
     $scope.setShareableRoles($rootScope.selectedCompany)
     $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
+
+  #Mayank
+  $scope.setShareableRoles = (selectedCompany) ->
+    $scope.shareableRoles = permissionService.shareableRoles(selectedCompany)
 
   $timeout( ->
     $rootScope.selAcntUname = undefined
