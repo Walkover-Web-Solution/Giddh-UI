@@ -83,7 +83,7 @@ app.use(session({
     maxAge: sessionTTL
   },
   store: new MongoStore({
-      url:'mongodb://localhost/giddhDB',
+      url: settings.mongoUrl,
       autoRemove: 'interval',
       autoRemoveInterval: sessionTTL,
       ttl: sessionTTL
