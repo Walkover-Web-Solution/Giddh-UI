@@ -58,7 +58,7 @@
     "reflect-metadata": "0.1.2",
     "request": "~2.61.0",
     "request-ip": "^1.1.4",
-    "requirejs": "^2.1",
+    "requirejs": "~2.1",
     "restler": "^3.4.0",
     "rxjs": "5.0.0-beta.6",
     "sendgrid": "^2.0.0",
