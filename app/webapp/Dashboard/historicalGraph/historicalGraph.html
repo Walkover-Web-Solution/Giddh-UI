@@ -1,0 +1,13 @@
+<div id="live" class="col-lg-4" ng-init="getHistory()">
+  <div class="panel panel-default shadow">
+    <div class="panel-heading">
+      <label>History (Sales & Expense)</label><i class="glyphicon glyphicon-refresh pull-right" ng-click="getHistory()"></i>
+    </div>
+    <div class="panel-body pos-rel">
+      <div class="reconnectDiv" ng-if="!dataAvailable">
+        <div class="giddh-spinner vertical-center-spinner" ng-if="errorMessage == ''"></div>
+        <label class="font-white" ng-if="errorMessage != ''">{{errorMessage}}</label>
+      </div>
+    </div>
+  </div>
+</div>
