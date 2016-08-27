@@ -2,7 +2,7 @@
   <div class="pdT1 pdB1 form-inline">
 
     <div ng-hide="canViewSpecificItems">
-      <button type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
+      <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
         <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add &amp; Manage
       </button>
     </div>
@@ -38,7 +38,7 @@
   </div>
   <perfect-scrollbar id="accountList" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
     <div class="menu acList">
-      <div class="loader" ng-hide="showAccountList">
+      <div class="loader" ng-if="!showAccountList && companyList.length > 0">
         <span></span>
         <span></span>
         <span></span>

@@ -1,6 +1,7 @@
 "use strict"
 
 mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location) ->
+  $rootScope.cmpViewShow = true
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
   $rootScope.basicInfo = {}
@@ -28,6 +29,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.CompanyList = []
   $rootScope.companyIndex = 0
   $rootScope.selectedAccount = {}
+  $rootScope.hasOwnCompany = false
 
   #get account details for ledger
   $rootScope.getSelectedAccountDetail = (acc) ->
@@ -162,9 +164,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 #    localStorageService.remove("_selectedCompany")
     if $rootScope.selectedCompany.uniqueName == $scope.beforeDeleteCompany.company.uniqueName
       localStorageService.remove("_selectedCompany")
-      $scope.getCompanyList()
     else
       $scope.companyList = _.without($scope.companyList, $scope.beforeDeleteCompany.company)
+    $rootScope.getCompanyList()
     $scope.beforeDeleteCompany = {}
     toastr.success("Company deleted successfully", "Success")
 
@@ -200,13 +202,16 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   #Create ne company
   $scope.createNewCompany = () ->
     # Open modal here and ask for company details
-    modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
-      size: "sm",
-      backdrop: 'static',
-      scope: $scope
-    )
-    modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
+    if $rootScope.hasOwnCompany
+      modalInstance = $uibModal.open(
+        templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
+        size: "sm",
+        backdrop: 'static',
+        scope: $scope
+      )
+      modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
+    else
+      $scope.runSetupWizard()
 
   $scope.onCompanyCreateModalCloseSuccess = (data) ->
     cData = {}
@@ -266,11 +271,18 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     if _.isEmpty($scope.companyList)
       #When no company is there
       $scope.companyList.count
-      $scope.createNewCompany()
+      $scope.runSetupWizard()
+      #$scope.createNewCompany()
     else
       # When there are companies
+      $scope.checkUserCompanyStatus(res.body)
       $rootScope.mngCompDataFound = true
       $scope.findCompanyInList()
+
+  $scope.checkUserCompanyStatus = (compList) ->
+    _.each compList, (cmp) ->
+      if cmp.shared
+        $rootScope.hasOwnCompany = true
 
   $scope.findCompanyInList = () ->
     cdt = localStorageService.get("_selectedCompany")
@@ -382,6 +394,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.getCompanyList()
 
   $scope.changeCompany = (company, index, method) ->
+#    console.log("method we get here is : ", method)
     # select and set active financial year
     $scope.setFYonCompanychange(company)
     #check permissions on selected company
@@ -417,11 +430,25 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
     $rootScope.currentFinancialYear = activeYear.year
 
+
+  $scope.runSetupWizard = () ->
+    modalInstance = $uibModal.open(
+      templateUrl: '/public/webapp/SetupWizard/setup-wizard.html',
+      size: "lg",
+      backdrop: 'static',
+      scope: $scope
+    )
+    #modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
+
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
 
   $scope.$on('$stateChangeSuccess', ()->
     $rootScope.currentState = $state.current.name
+  )
+
+  $rootScope.$on('openAddManage', () ->
+    $(document).find('#AddManage').trigger('click')
   )
 
 giddh.webApp.controller 'mainController', mainController

@@ -172,7 +172,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     else
       # with accounts, group data
       $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
-      $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+      #$rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
 
       # without accounts only groups conditionally
@@ -278,7 +278,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   #$rootScope.loadMoreAccFailure = (res) ->
     #console.log res
-
 
 
   #-------- fetch groups with accounts list-------
@@ -896,13 +895,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $('#accountSearch').val('')
 
 
+
   $rootScope.$on 'callManageGroups', ->
     $scope.goToManageGroups()
 
   $timeout(->
     # $scope.loadAccountsList()
-    if !_.isEmpty($rootScope.selectedCompany)
-      $rootScope.$emit('reloadAccounts')
+    if !_.isEmpty($rootScope.selectedCompany) && $scope.flatAccntWGroupsList.length < 1
+      $scope.getGroups()
     $scope.assignValues()
   ,2000)
 

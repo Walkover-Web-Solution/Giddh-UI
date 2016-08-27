@@ -1,6 +1,7 @@
 
 newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state) ->
-
+  if _.isUndefined($rootScope.selectedCompany)
+    $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
   #date time picker code starts here
   $scope.today = new Date()
   d = moment(new Date()).subtract(1, 'month')
@@ -25,6 +26,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     templateUrl: 'panel'
     draggable: false
   }
+  $scope.newAccountModel = {
+    group : ''
+    account: ''
+    accUnqName: ''
+  }
+
 
   $scope.hideEledger = () ->
     $scope.showEledger = !$scope.showEledger 
@@ -1292,6 +1299,117 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       $('#saveUpdate').focus()
       e.stopPropagation()
       return false
+
+  $scope.gwaList = {
+    page: 1
+    count: 5000
+    totalPages: 0
+    currentPage : 1
+    limit: 5
+  }
+
+  $scope.getFlattenGrpWithAccList = (compUname) ->
+#    console.log("working  : ",$scope.working)
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+      page: $scope.gwaList.page
+      count: $scope.gwaList.count
+    }
+    if $scope.working == false
+      $scope.working = true
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+
+  $scope.getGroupsWithDetail = () ->
+    groupService.getGroupsWithoutAccountsInDetail($rootScope.selectedCompany.uniqueName).then(
+      (success)->
+        $scope.detGrpList = success.body
+      (failure) ->
+        toastr.error('Failed to get Detailed Groups List')
+    )
+  $scope.getGroupsWithDetail()
+
+  $scope.markFixedGrps = (flatGrpList) ->
+    temp = []
+    _.each $scope.detGrpList, (detGrp) ->
+      _.each flatGrpList, (fGrp) ->
+        if detGrp.uniqueName == fGrp.groupUniqueName && detGrp.isFixed
+          fGrp.isFixed = true
+    _.each flatGrpList, (grp) ->
+      if !grp.isFixed
+        temp.push(grp)
+    temp
+
+  $scope.getFlattenGrpWithAccListSuccess = (res) ->
+    $scope.gwaList.totalPages = res.body.totalPages
+    $scope.flatGrpList = $scope.markFixedGrps(res.body.results)
+    #$scope.removeEmptyGroups(res.body.results)
+    #$scope.flatAccntWGroupsList = $scope.grpWithoutEmptyAccounts
+    #console.log($scope.flatAccntWGroupsList)
+    #$scope.showAccountList = true
+    $scope.gwaList.limit = 5
+    #$rootScope.companyLoaded = true
+    #$scope.working = false
+
+  $scope.getFlattenGrpWithAccListFailure = (res) ->
+    toastr.error(res.data.message)
+    #$scope.working = false
+
+  $scope.addNewAccount = () ->
+    $scope.newAccountModel.group = ''
+    $scope.newAccountModel.account = ''
+    $scope.newAccountModel.accUnqName = ''
+    $scope.selectedTxn.isOpen = false
+    $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
+    $scope.AccmodalInstance = $uibModal.open(
+      templateUrl: '/public/webapp/Ledger/createAccountQuick.html'
+      size: "sm"
+      backdrop: 'static'
+      scope: $scope
+    )
+    #modalInstance.result.then($scope.addNewAccountCloseSuccess, $scope.addNewAccountCloseFailure)
+
+  $scope.addNewAccountConfirm = () ->
+    newAccount = {
+      email:""
+      mobileNo:""
+      name:$scope.newAccountModel.account
+      openingBalanceDate: $filter('date')($scope.today, "dd-MM-yyyy")
+      uniqueName:$scope.newAccountModel.accUnqName
+    }
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.newAccountModel.group.groupUniqueName
+      acntUname: $scope.newAccountModel.accUnqName
+    }
+    accountService.createAc(unqNamesObj, newAccount).then($scope.addNewAccountConfirmSuccess, $scope.addNewAccountConfirmFailure) 
+
+  $scope.addNewAccountConfirmSuccess = (res) ->
+    toastr.success('Account created successfully')
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+    $scope.AccmodalInstance.close()
+
+  $scope.addNewAccountConfirmFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.genearateUniqueName = (unqName) ->
+    if unqName.length >= 1
+      unq = ''
+      text = ''
+      chars = 'abcdefghijklmnopqrstuvwxyz0123456789-_'
+      i = 0
+      while i < 3
+        text += chars.charAt(Math.floor(Math.random() * chars.length))
+        i++ 
+      unq = unqName + text
+      $scope.newAccountModel.accUnqName = unq
+    else
+      $scope.newAccountModel.accUnqName = ''
+
+  $scope.genUnq = (unqName) ->
+    $timeout ( ->
+      $scope.genearateUniqueName(unqName)
+    ), 800
 
   $rootScope.$on 'company-changed', (event,changeData) ->
     # when company is changed, redirect to manage company page

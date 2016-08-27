@@ -3,8 +3,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
-  $rootScope.cmpViewShow = false
-  $rootScope.selectedCompany = {}
+  #$rootScope.cmpViewShow = false
+  #$rootScope.selectedCompany = {}
   $scope.mHideBar = false
   $scope.dHideBar = false
   $scope.showUpdTbl = false
@@ -15,7 +15,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.isHaveCoupon = false
   $scope.afterConnectSuccess = false
   #contains company list
-  $scope.companyList = []
+  #$scope.companyList = []
   $scope.companyDetails = {}
   $scope.currencyList = []
   $scope.currencySelected = undefined
@@ -202,30 +202,30 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 #   companyServices.getAll().then($rootScope.getCompanyListSuccess, $rootScope.getCompanyListFailure)
 
   #Get company list
-  $scope.getCompanyListSuccess = (res) ->
-    $scope.companyList = _.sortBy(res.body, 'shared')
-    $rootScope.CompanyList = $scope.companyList
-    if _.isEmpty($scope.companyList)
-      $scope.openFirstTimeUserModal()
-    else
-      $rootScope.mngCompDataFound = true
-      cdt = localStorageService.get("_selectedCompany")
-      if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
-        cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName})
-        if _.isUndefined(cdt)
-          $rootScope.setCompany($scope.companyList[0])
-          $scope.goToCompany($scope.companyList[0], 0, "CHANGED")
-        else
-          $rootScope.setCompany(cdt)
-          $scope.goToCompany(cdt, cdt.index, "NOCHANGED")
-      else
-        $rootScope.setCompany($scope.companyList[0])
-        $scope.goToCompany($scope.companyList[0], 0, "CHANGED")
-      $rootScope.$emit('companyLoaded')
+  # $scope.getCompanyListSuccess = (res) ->
+  #   $scope.companyList = _.sortBy(res.body, 'shared')
+  #   $rootScope.CompanyList = $scope.companyList
+  #   if _.isEmpty($scope.companyList)
+  #     $scope.openFirstTimeUserModal()
+  #   else
+  #     $rootScope.mngCompDataFound = true
+  #     cdt = localStorageService.get("_selectedCompany")
+  #     if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
+  #       cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName})
+  #       if _.isUndefined(cdt)
+  #         $rootScope.setCompany($scope.companyList[0])
+  #         $scope.goToCompany($scope.companyList[0], 0, "CHANGED")
+  #       else
+  #         $rootScope.setCompany(cdt)
+  #         $scope.goToCompany(cdt, cdt.index, "NOCHANGED")
+  #     else
+  #       $rootScope.setCompany($scope.companyList[0])
+  #       $scope.goToCompany($scope.companyList[0], 0, "CHANGED")
+  #     $rootScope.$emit('companyLoaded')
 
-  #get company list failure
-  $scope.getCompanyListFailure = (res)->
-    toastr.error(res.data.message, res.data.status)
+  # #get company list failure
+  # $scope.getCompanyListFailure = (res)->
+  #   toastr.error(res.data.message, res.data.status)
 
   $scope.getUserDetails = ->
     if _.isUndefined($rootScope.basicInfo.uniqueName)
@@ -1703,10 +1703,18 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.loadYodlee()
   #  Linked methods end here
 
+  #Mayank
+  $scope.setShareableRoles = (selectedCompany) ->
+    $scope.shareableRoles = permissionService.shareableRoles(selectedCompany)
+
+
+  $scope.getSharedList = () ->
+    $scope.setShareableRoles($rootScope.selectedCompany)
+    $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
 
   $timeout( ->
     $rootScope.selAcntUname = undefined
-    $scope.getCompanyList()
+    #$scope.getCompanyList()
     $scope.getCurrencyList()
     $scope.getUserDetails()
     # $scope.getCurrentPeriod()
@@ -1734,9 +1742,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 #  $rootScope.$on 'companyLoaded', ()->
 #    $scope.clearTaxFields()
 
-  #Mayank
-  $scope.setShareableRoles = (selectedCompany) -> 
-    $scope.shareableRoles = permissionService.shareableRoles(selectedCompany)
 
 #init angular app
 giddh.webApp.controller 'companyController', companyController

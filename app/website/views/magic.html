@@ -97,9 +97,9 @@
                   GO
                 </button>
               </div>
-              <div class="form-group" ng-if="entryTotal.amount > 0">
+<!--               <div class="form-group" ng-if="entryTotal.amount > 0">
                 Entry Total:{{entryTotal.amount}} {{entryTotal.type}}
-              </div>
+              </div> -->
             </form>
 
            <div class="form-group mrL1 pull-right">
@@ -194,7 +194,7 @@
                   </tr>
                   </thead>
                   <tbody>
-                    <tr ng-repeat="ledger in ledgerData.ledgers" ng-if="ledger.hasDebit" ng-class="{compoundEntry: ledger.isCompoundEntry}" ng-click="checkCompEntry(ledger)">
+                    <tr ng-repeat="ledger in ledgerData.ledgers" ng-if="ledger.hasDebit" ng-class="{compoundEntry: ledger.isCompoundEntry}" ng-click="checkCompEntry(ledger)" uib-tooltip="Total : {{ledger.total.amount}} {{ledger.total.type}}" tooltip-placement="top">
                       <td colspan="100%" style="padding:0;border:0">
                         <table style="width:100%">
                           <tbody>
@@ -252,7 +252,7 @@
                   </thead>
 
                   <tbody>
-                    <tr ng-repeat="ledger in ledgerData.ledgers" ng-if="ledger.hasCredit" ng-class="{compoundEntry: ledger.isCompoundEntry}" ng-click="checkCompEntry(ledger)">
+                    <tr ng-repeat="ledger in ledgerData.ledgers" ng-if="ledger.hasCredit" ng-class="{compoundEntry: ledger.isCompoundEntry}" ng-click="checkCompEntry(ledger)" uib-tooltip="Total : {{ledger.total.amount}} {{ledger.total.type}}" tooltip-placement="top">
                       <td colspan="100%" style="padding:0; border:0">
                         <table  style="width:100%;">
                           <tbody>
@@ -289,32 +289,38 @@
 
             <tr class="fw600 dgreyBg">
               <td colspan="2" class="bdrL" style="width:36%">
-                <div class="pull-right" ng-if="ledgerData.balance.type == 'DEBIT'">
+                <div class="pull-right" ng-if="ledgerData.balance.type == 'CREDIT'">
                   C/F Balance
                 </div>
               </td>
               <td style="width:14%" class="bdrR alR">
-                <span ng-if="ledgerData.balance.type == 'DEBIT'">{{ledgerData.balance.amount | number:2}}</span>
+                <span ng-if="ledgerData.balance.type == 'CREDIT'">{{ledgerData.balance.amount | number:2}}
+                  <span ng-if="ledgerData.balance.type == 'DEBIT'">DR</span>
+                  <span ng-if="ledgerData.balance.type == 'CREDIT'">CR</span>
+                </span>
               </td>
               <td colspan="2" style="width:36%" class="bdrL">
-                <div class="pull-right"  ng-if="ledgerData.balance.type == 'CREDIT'">
+                <div class="pull-right"  ng-if="ledgerData.balance.type == 'DEBIT'">
                   C/F Balance
                 </div>
               </td>
               <td style="width:14%" class="bdrR alR">
-                <span ng-if="ledgerData.balance.type == 'CREDIT'">{{ledgerData.balance.amount | number:2}}</span>
+                <span ng-if="ledgerData.balance.type == 'DEBIT'">{{ledgerData.balance.amount | number:2}}
+                  <span ng-if="ledgerData.balance.type == 'DEBIT'">DR</span>
+                  <span ng-if="ledgerData.balance.type == 'CREDIT'">CR</span>
+                </span>
               </td>
             </tr>
             <tr class="total greyBg">
               <td colspan="2" style="width:36%" class="bdrL">
-                <span class="pull-left">Debit Total:{{debitTotal}}</span>
+                <span class="pull-left">Debit Total:{{debitTotal | number:2 }}</span>
                 <span class="pull-right">Reckoning</span>
               </td>
               <td style="width:14%" class="bdrR alR">
                 <span>{{ledgerData.debitTotal | number:2}}</span>
               </td>
               <td colspan="2" style="width:36%" class="bdrL">
-                <span class="pull-left">Credit Total:{{creditTotal}}</span>
+                <span class="pull-left">Credit Total:{{creditTotal | number:2 }}</span>
                 <span class="pull-right">Reckoning</span>
               </td>
               <td style="width:14%" class="bdrR alR">

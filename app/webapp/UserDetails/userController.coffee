@@ -630,7 +630,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.getFlatAccountListFailure = (res) ->
     toastr.error(res.data.message)
 
-  $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+  #$scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
 
   # search flat accounts list
   $rootScope.searchAccounts = (str) ->

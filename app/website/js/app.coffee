@@ -361,7 +361,7 @@ app.controller 'magicCtrl', [
     $scope.entryTotal.type = ''
 
     $scope.checkCompEntry = (ledger) ->
-      $scope.entryTotal = ledger.total
+      #$scope.entryTotal = ledger.total
       unq = ledger.uniqueName
       ledger.isCompoundEntry = true
       _.each $scope.ledgerData.ledgers, (lgr) ->

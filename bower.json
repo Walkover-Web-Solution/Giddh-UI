@@ -48,7 +48,9 @@
     "ngclipboard": "^1.1.1",
     "jquery-ui": "^1.11.4",
     "ng-appcache": "^2.0.1",
-    "angular-hideheader": "angular-hide-header#^1.0.0"
+    "angular-hideheader": "angular-hide-header#^1.0.0",
+    "angular-wizard": "^0.6.1",
+    "angular-google-chart": "~0.1.0"
   },
   "resolutions": {
     "angular": "~1.4.4",

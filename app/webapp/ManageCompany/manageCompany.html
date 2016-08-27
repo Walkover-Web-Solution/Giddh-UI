@@ -145,7 +145,7 @@
     </uib-tab>
     <!-- basic information tab end here -->
 
-    <uib-tab ng-if="canManageCompany" heading="{{tabs[1].title}}" active="tabs[1].active" id="permission">
+    <uib-tab ng-if="canManageCompany" heading="{{tabs[1].title}}" active="tabs[1].active" id="permission" select="getSharedList()">
       <div class="pd2">
         <div class="greyBox mrB2">
           <form name="addShareEmailForm" novalidate class="form-inline">
