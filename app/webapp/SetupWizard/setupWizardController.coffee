@@ -4,14 +4,19 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
 
 # add and verify mobile number
   $scope.numberVerified = false
+  $scope.isNotVerified = true
   $scope.phoneNumber = ''
   $scope.userNumber = ''
+  $scope.showSuccessMsg = false
   $scope.mobNum = {
     countryCode: ''
     number: ''
     showVerificationBox : false
     verificationCode: ''
   }
+  $scope.userDetails = localStorageService.get('_userDetails')
+  if $scope.userDetails.contactNo != null
+    $scope.isNotVerified = false
 
   $scope.addNumber = (number) ->
     if number.indexOf('-') != -1
@@ -59,17 +64,44 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
     toastr.success("Company created successfully", "Success")
     $rootScope.mngCompDataFound = true
     $scope.companyList.push(res.body)
+    $rootScope.setCompany(res.body)
     $rootScope.getCompanyList()
+    changeData = {}
+    changeData.data = res.body
+    changeData.type = 'CHANGE'
+    $rootScope.$emit('company-changed', changeData)
     WizardHandler.wizard().next()
 
   #create company failure
   $scope.onCreateCompanyFailure = (res) ->
     toastr.error(res.data.message, "Error")
 
+  $scope.promptBeforeClose = () ->
+    if $rootScope.CompanyList.length < 1
+      modalService.openConfirmModal(
+       title: 'Log Out',
+       body: 'In order to be able to use Giddh, you must create a company. Are you sure you want to cancel and logout?',
+       ok: 'Yes',
+       cancel: 'No').then($scope.firstLogout)
+    else
+      $rootScope.setupModalInstance.close()
+
+  $scope.firstLogout = () ->
+    $http.post('/logout').then ((res) ->
+     # don't need to clear below
+     # _userDetails, _currencyList
+     localStorageService.clearAll()
+     window.location = "/thanks"
+    ), (res) ->
+
   $scope.triggerAddManage = () ->
     $timeout ( ->
       $rootScope.$emit('openAddManage')
     ), 100
+
+  $scope.setupComplete = () ->
+    $scope.showSuccessMsg = true
+
   
 
 giddh.webApp.controller 'setWizardController', setWizardController
