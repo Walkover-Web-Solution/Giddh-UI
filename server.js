@@ -47,7 +47,6 @@ app.use(function (req, res, next) {
     next()
 });
 
-
 //set engine
 app.set('public', __dirname + '/public/');
 app.engine('html', engines.mustache);
@@ -86,7 +85,8 @@ app.use(session({
       url: settings.mongoUrl,
       autoRemove: 'interval',
       autoRemoveInterval: sessionTTL,
-      ttl: sessionTTL
+      ttl: sessionTTL,
+      touchAfter: sessionTTL - 300
   })
 }));
 
