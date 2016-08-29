@@ -31,6 +31,15 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.selectedAccount = {}
   $rootScope.hasOwnCompany = false
 
+  $scope.runSetupWizard = () ->
+    modalInstance = $uibModal.open(
+      templateUrl: '/public/webapp/SetupWizard/setup-wizard.html',
+      size: "lg",
+      backdrop: 'static',
+      scope: $scope
+    )
+    #modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
+
   #get account details for ledger
   $rootScope.getSelectedAccountDetail = (acc) ->
     console.log acc
@@ -209,16 +218,16 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       scope: $scope
     )
     modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
-#    if $rootScope.hasOwnCompany
-#      modalInstance = $uibModal.open(
-#        templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
-#        size: "sm",
-#        backdrop: 'static',
-#        scope: $scope
-#      )
-#      modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
-#    else
-#      $scope.runSetupWizard()
+   if $rootScope.hasOwnCompany
+     modalInstance = $uibModal.open(
+       templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
+       size: "sm",
+       backdrop: 'static',
+       scope: $scope
+     )
+     modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
+   else
+     $scope.runSetupWizard()
 
   $scope.onCompanyCreateModalCloseSuccess = (data) ->
     cData = {}
@@ -248,9 +257,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
 
 #for make sure
-  $scope.checkCmpCretedOrNot = ->
-    if $scope.companyList.length <= 0
-      $scope.openFirstTimeUserModal()
+  # $scope.checkCmpCretedOrNot = ->
+  #   if $scope.companyList.length <= 0
+  #     $scope.openFirstTimeUserModal()
 
   #get only city for create company
   $scope.getOnlyCity = (val) ->
@@ -278,7 +287,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     if _.isEmpty($scope.companyList)
       #When no company is there
       $scope.companyList.count
-#      $scope.runSetupWizard()
+      $scope.runSetupWizard()
       $scope.createNewCompany()
     else
       # When there are companies
@@ -436,16 +445,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     activeYear.ends = moment(company.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").year()
     if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
     $rootScope.currentFinancialYear = activeYear.year
-
-
-  $scope.runSetupWizard = () ->
-    modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/SetupWizard/setup-wizard.html',
-      size: "lg",
-      backdrop: 'static',
-      scope: $scope
-    )
-    #modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
 
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
