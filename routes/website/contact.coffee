@@ -1,9 +1,31 @@
 settings = require('../util/settings')
+app = settings.express()
 router = settings.express.Router()
 # sendgrid
 sendgrid  = require('sendgrid')(settings.sendGridKey);
 
 # hubURL = 'https://api.hubapi.com/contacts/v1/contact/?hapikey=41e07798-d4bf-499b-81df-4dfa52317054'
+#hit viasocket 
+hitViaSocket = (data) ->
+  data = JSON.stringify(data)
+  settings.request {
+    url: 'https://viasocket.com/t/zX62dMuqyjqikthjh5/giddh-giddh-contact-form?authkey=MbK1oT6x1RCoVf2AqL3y'
+    qs:
+      from: 'Giddh'
+      time: +new Date
+    method: 'POST'
+    headers:
+      'Content-Type': 'application/json'
+      'Auth-Key': 'MbK1oT6x1RCoVf2AqL3y'
+    body: data
+  }, (error, response, body) ->
+    if error
+      console.log error
+    else
+      console.log response.statusCode, body, 'from viasocket'
+    return
+
+
 
 # send email to user
 sendEmailToUser =(data) ->
@@ -38,8 +60,11 @@ sendEmailToGiddhTeam =(data) ->
 
 router.post '/submitDetails', (req, res) ->
   # send email by sendgrid to user
+  console.log req.body
   sendEmailToUser(req.body)
   sendEmailToGiddhTeam(req.body)
+  if app.get('env') == 'production'
+    hitViaSocket(req.body)
   data =
     status: "success"
     message: "Form submitted successfully! We will get in touch with you soon"

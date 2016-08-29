@@ -1,5 +1,28 @@
 settings = require('../util/settings')
+app = settings.express()
 router = settings.express.Router()
+
+env = app.get('env')
+
+hitViaSocket = (data) ->
+  data = JSON.stringify(data)
+  settings.request {
+    url: 'https://viasocket.com/t/JUXDVNwBZ6dgPacX9zT/giddh-giddh-new-company?authkey=MbK1oT6x1RCoVf2AqL3y'
+    qs:
+      from: 'Giddh'
+      time: +new Date
+    method: 'POST'
+    headers:
+      'Content-Type': 'application/json'
+      'Auth-Key': 'MbK1oT6x1RCoVf2AqL3y'
+    body: data
+  }, (error, response, body) ->
+    if error
+      console.log error
+    else
+      console.log response.statusCode, body, 'from viasocket'
+    return
+
 
 router.get '/all', (req, res) ->
   args =
@@ -75,6 +98,8 @@ router.post '/', (req, res) ->
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
+    if env == 'production'
+      hitViaSocket(data)
     res.send data
 
 #get all Roles

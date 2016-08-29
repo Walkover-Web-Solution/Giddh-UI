@@ -1,4 +1,5 @@
 settings = require('../util/settings')
+app = settings.express()
 jwt = require('jwt-simple')
 qs = require('qs')
 router = settings.express.Router()
@@ -61,7 +62,8 @@ router.post '/google', (req, res, next) ->
         userDetailObj = data.body.user
         req.session.name = data.body.user.uniqueName
         req.session.authKey = data.body.authKey
-        hitViaSocket(data.body)
+        if app.get('env') == 'production'
+          hitViaSocket(data.body)
       res.send
         token: token
         userDetails: userDetailObj
