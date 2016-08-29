@@ -1,6 +1,6 @@
 'use strict'
 
-loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr) ->
+loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr, $window) ->
   $scope.loginIsProcessing = false
   $scope.captchaKey = '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi'
 
@@ -18,7 +18,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
       else
         #user is registered and redirect it to app
         localStorageService.set("_userDetails", response.data.userDetails)
-        #console.log response
+        $window.sessionStorage.setItem("_ak", response.data.result.body.authKey)
         window.location = "/app/#/home/"
     ).catch (response) ->
       $scope.loginIsProcessing = false
