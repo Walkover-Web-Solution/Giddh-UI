@@ -50,10 +50,19 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
     toastr.success(res.body)
     $scope.mobNum.showVerificationBox = false
     $scope.numberVerified = true
+    userServices.get($rootScope.basicInfo.uniqueName).then($scope.getUserDetailSuccess, $scope.getUserDetailFailure)
     WizardHandler.wizard().next()
 
   $scope.verifyNumberFailure = (res) ->
     toastr.error(res.data.message)
+
+  $scope.getUserDetailSuccess = (res) ->
+    localStorageService.set("_userDetails", res.body)
+    $rootScope.basicInfo = res.body
+
+  #get company list failure
+  $scope.getUserDetailFailure = (res)->
+    toastr.error(res.data.message, res.data.status)
 
   #create company
   $scope.createCompany = (cdata) ->
@@ -70,6 +79,7 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
     changeData.data = res.body
     changeData.type = 'CHANGE'
     $rootScope.$emit('company-changed', changeData)
+    $scope.showSuccessMsg = true
     WizardHandler.wizard().next()
 
   #create company failure
@@ -77,7 +87,7 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
     toastr.error(res.data.message, "Error")
 
   $scope.promptBeforeClose = () ->
-    if $rootScope.CompanyList.length < 1
+    if $scope.companyList.length < 1
       modalService.openConfirmModal(
        title: 'Log Out',
        body: 'In order to be able to use Giddh, you must create a company. Are you sure you want to cancel and logout?',
@@ -102,6 +112,5 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
   $scope.setupComplete = () ->
     $scope.showSuccessMsg = true
 
-  
 
 giddh.webApp.controller 'setWizardController', setWizardController
