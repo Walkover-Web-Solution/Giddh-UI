@@ -2,15 +2,20 @@
   <div class="alert alert-info" role="alert">Click on any Account to load <strong>Invoice</strong></div>
 </div>
 
+
+
 <!-- main content start -->
 <uib-tabset justified="false">
   <uib-tab heading="Generate Invoice" id="generate" select="getLedgerEntries()">
-    <div class="loader" ng-hide="entryListUpdated">
+<!--     <div class="loader" ng-hide="entryListUpdated">
       <span></span>
       <span></span>
       <span></span>
       <span></span>
       <span></span>
+    </div> -->
+    <div class="page-loader" ng-show="superLoader && !entryListUpdated">
+      <div class="giddh-spinner vertical-center-spinner"></div>
     </div>
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height ng-show="entryListUpdated" timeout="5000">
 
@@ -111,6 +116,9 @@
   <!-- end of list entries for invoice -->
 
   <uib-tab heading="View Invoice" id="view"  select="getInvList()">
+    <div class="page-loader" ng-show="superLoader">
+      <div class="giddh-spinner vertical-center-spinner"></div>
+    </div>
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
       <div class="pd2">
         <div class="row">
@@ -213,6 +221,9 @@
   </uib-tab>
   <!-- end of view invoice -->
     <uib-tab heading="Invoice Setting" id="setting">
+    <div class="page-loader" ng-show="superLoader">
+      <div class="giddh-spinner vertical-center-spinner"></div>
+    </div>
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
       <div class="pd2">
 

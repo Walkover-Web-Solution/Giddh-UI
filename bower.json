@@ -1,5 +1,5 @@
 {
-  "name": "Giddh Node Web App",
+  "name": "giddh-node-web-app",
   "version": "0.0.0",
   "authors": [
     "Sarfaraz Ansari <sarfaraz@hostnsoft.com>"
@@ -50,7 +50,8 @@
     "ng-appcache": "^2.0.1",
     "angular-hideheader": "angular-hide-header#^1.0.0",
     "angular-wizard": "^0.6.1",
-    "angular-google-chart": "~0.1.0"
+    "angular-google-chart": "~0.1.0",
+    "angular-file-saver": "^1.1.2"
   },
   "resolutions": {
     "angular": "~1.4.4",

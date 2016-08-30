@@ -47,7 +47,6 @@ app.use(function (req, res, next) {
     next()
 });
 
-
 //set engine
 app.set('public', __dirname + '/public/');
 app.engine('html', engines.mustache);
@@ -83,10 +82,11 @@ app.use(session({
     maxAge: sessionTTL
   },
   store: new MongoStore({
-      url:'mongodb://localhost/giddhDB',
+      url: settings.mongoUrl,
       autoRemove: 'interval',
       autoRemoveInterval: sessionTTL,
-      ttl: sessionTTL
+      ttl: sessionTTL,
+      touchAfter: sessionTTL - 300
   })
 }));
 

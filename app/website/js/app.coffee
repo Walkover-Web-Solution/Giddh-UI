@@ -134,10 +134,10 @@ app.controller 'homeCtrl', [
       if _.isEmpty(data.message)
         data.message = 'test'
 
-      $http.post('https://giddh.com/contact/submitDetails', data).then((response) ->
+      $http.post('/contact/submitDetails', data).then((response) ->
           $scope.formSubmitted = true
           if(response.status == 200 && _.isUndefined(response.data.status))  
-            $scope.responseMsg = "Thanks! will get in touch with you soon"
+            $scope.responseMsg = "Thanks! we will get in touch with you soon"
           else
             $scope.responseMsg = response.data.message
         )
