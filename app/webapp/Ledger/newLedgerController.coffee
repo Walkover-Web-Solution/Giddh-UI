@@ -1203,6 +1203,27 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.redirectToState = (state) ->
     $state.go(state)
 
+
+  $scope.b64toBlob = (b64Data, contentType, sliceSize) ->
+    contentType = contentType or ''
+    sliceSize = sliceSize or 512
+    byteCharacters = atob(b64Data)
+    byteArrays = []
+    offset = 0
+    while offset < byteCharacters.length
+      slice = byteCharacters.slice(offset, offset + sliceSize)
+      byteNumbers = new Array(slice.length)
+      i = 0
+      while i < slice.length
+        byteNumbers[i] = slice.charCodeAt(i)
+        i++
+      byteArray = new Uint8Array(byteNumbers)
+      byteArrays.push byteArray
+      offset += sliceSize
+    blob = new Blob(byteArrays, type: contentType)
+    blob
+
+
   $scope.downloadInvoice = (invoiceNumber, e) ->
     e.stopPropagation()
     obj =
@@ -1216,29 +1237,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     , $scope.multiActionWithInvFailure)
 
   $scope.downloadInvSuccess = (res, invoiceNumber)->
-    data = new Blob([res.body], {type: 'application/pdf'})
+    data = $scope.b64toBlob(res.body, "application/pdf", 512)
+    blobUrl = URL.createObjectURL(data)
+    $scope.dlinv = blobUrl
+    $scope.dlname = "abc.pdf"
+    #$window.open(blobUrl)
     FileSaver.saveAs(data, $scope.accountToShow.name+invoiceNumber+".pdf")
-    # dataUri = 'data:application/pdf;base64,' + res.body
-    # a = document.createElement('a')
-    # a.download = $scope.accountToShow.name+invoiceNumber+".pdf"
-    # a.href = dataUri
-    # a.click()
-    # console.log dataUri
-    # byteChars = atob(res.body)
-    # byteNums = new Array(byteChars.length)
-    # i = 0
-    # while i < byteChars.length
-    #   byteNums[i] = byteChars.charCodeAt(i)
-    #   i++
-    # byteArray = new Uint8Array(byteNums)
-    # file = new Blob([byteArray], {type: 'application/pdf'})
-    # fileURL = URL.createObjectURL(file)
-    # a = document.createElement("a")
-    # document.body.appendChild(a)
-    # a.style = "display:none"
-    # a.href = fileURL
-    # a.download = $scope.accountToShow.name+invoiceNumber+".pdf"
-    # a.click()
 
   # common failure message
   $scope.multiActionWithInvFailure=(res)->
