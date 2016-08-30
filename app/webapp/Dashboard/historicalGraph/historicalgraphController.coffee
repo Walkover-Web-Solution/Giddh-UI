@@ -24,7 +24,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
         "p": {}
       },{
         "id": "incomeBalance",
-        "label": "Income",
+        "label": "Revenue",
         "type": "number",
         "p": {}
       }]
@@ -66,17 +66,22 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
     $scope.dataAvailable = false
     if _.isUndefined($rootScope.selectedCompany)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
-    $scope.setDateByFinancialYear()
-    reqParam = {
-      'cUname': $rootScope.selectedCompany.uniqueName
-      'fromDate': $scope.fromDate
-      'toDate': $scope.toDate
-      'interval': 30
-    }
-    graphParam = {
-      'groups' : $scope.groupArray
-    }
-    $scope.getHistoryData(reqParam, graphParam)
+    if $rootScope.currentFinancialYear == undefined
+      $timeout ( ->
+        $scope.getHistory()
+      ),2000
+    else
+      $scope.setDateByFinancialYear()
+      reqParam = {
+        'cUname': $rootScope.selectedCompany.uniqueName
+        'fromDate': $scope.fromDate
+        'toDate': $scope.toDate
+        'interval': 30
+      }
+      graphParam = {
+        'groups' : $scope.groupArray
+      }
+      $scope.getHistoryData(reqParam, graphParam)
 
   $scope.getHistoryData = (reqParam,graphParam) ->
     reportService.historicData(reqParam, graphParam).then $scope.getHistoryDataSuccess, $scope.getHistoryDataFailure
