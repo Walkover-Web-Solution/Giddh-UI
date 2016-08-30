@@ -6,6 +6,7 @@ env = app.get('env')
 
 hitViaSocket = (data) ->
   data = JSON.stringify(data)
+  data.environment = app.get('env')
   settings.request {
     url: 'https://viasocket.com/t/JUXDVNwBZ6dgPacX9zT/giddh-giddh-new-company?authkey=MbK1oT6x1RCoVf2AqL3y'
     qs:
@@ -98,8 +99,7 @@ router.post '/', (req, res) ->
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
-    if env == 'production'
-      hitViaSocket(data)
+    hitViaSocket(data)
     res.send data
 
 #get all Roles

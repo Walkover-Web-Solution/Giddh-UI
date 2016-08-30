@@ -1,3 +1,12 @@
+# 2.03
+
+## Update
+
+## Bug Fixes and viaSocket Integration
+
+- ([58a0c2a](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/58a0c2a4a927acca023e225490963c39697d3312))
+    1.) For cards #206,219,230,231,239,235
+
 # 2.02
 
 ## Update

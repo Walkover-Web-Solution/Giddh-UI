@@ -8,6 +8,7 @@ sendgrid  = require('sendgrid')(settings.sendGridKey);
 #hit viasocket 
 hitViaSocket = (data) ->
   data = JSON.stringify(data)
+  data.environment = app.get('env')
   settings.request {
     url: 'https://viasocket.com/t/zX62dMuqyjqikthjh5/giddh-giddh-contact-form?authkey=MbK1oT6x1RCoVf2AqL3y'
     qs:
@@ -63,8 +64,7 @@ router.post '/submitDetails', (req, res) ->
   console.log req.body
   sendEmailToUser(req.body)
   sendEmailToGiddhTeam(req.body)
-  if app.get('env') == 'production'
-    hitViaSocket(req.body)
+  hitViaSocket(req.body)
   data =
     status: "success"
     message: "Form submitted successfully! We will get in touch with you soon"

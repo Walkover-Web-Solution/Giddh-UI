@@ -10,6 +10,7 @@ twitterLoginUrl =  settings.envUrl + 'signup-with-twitter'
 
 hitViaSocket = (data) ->
   data = JSON.stringify(data)
+  data.environment = app.get('env')
   if data.isNewUser
     settings.request {
       url: 'https://viasocket.com/t/fDR1TMJLvMQgwyjBUMVs/giddh-giddh-login?authkey=MbK1oT6x1RCoVf2AqL3y'
@@ -62,8 +63,7 @@ router.post '/google', (req, res, next) ->
         userDetailObj = data.body.user
         req.session.name = data.body.user.uniqueName
         req.session.authKey = data.body.authKey
-        if app.get('env') == 'production'
-          hitViaSocket(data.body)
+        hitViaSocket(data.body)
       res.send
         token: token
         userDetails: userDetailObj
