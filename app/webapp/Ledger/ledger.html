@@ -1,10 +1,14 @@
 
-<div class="loader mrT4" ng-if="showLoader && accountUnq.length != ''">
+<!-- <div class="loader mrT4" ng-if="showLoader && accountUnq.length != ''">
   <span></span>
   <span></span>
   <span></span>
   <span></span>
   <span></span>
+</div>
+ -->
+<div class="page-loader" ng-show="superLoader && accountUnq.length > 0 ">
+  <div class="giddh-spinner vertical-center-spinner"></div>
 </div>
 
 <section class="alert alert-info mrL2 mrR2 mrT2" ng-if="showLoader && accountUnq.length == ''">

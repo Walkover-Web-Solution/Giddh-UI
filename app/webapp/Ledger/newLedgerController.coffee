@@ -1,5 +1,5 @@
 
-newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService, $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state) ->
+newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state) ->
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
   #date time picker code starts here
@@ -514,7 +514,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.getLedgerDataFailure = (res) ->
     toastr.error(res.data.message)
 
-  $scope.updateLedgerData = (condition,ledger) ->
+  $scope.updateLedgerData = (condition, ledger) ->
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $scope.accountUnq
@@ -536,6 +536,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.ledgerData.forwardedBalance.amount = res.body.forwardedBalance.amount
     $scope.ledgerData.forwardedBalance.type = res.body.forwardedBalance.type
     $scope.updateTotalTransactions()
+    #$scope.paginateledgerData(res.body.ledgers)
 
   $scope.updateLedgerDataFailure = (res) ->
     toastr.error(res.data.message)
@@ -848,8 +849,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           updatedTxns = $scope.updateEntryTaxes(ledger.transactions)
           ledger.transactions = updatedTxns
           $scope.checkTaxCondition(ledger)
-          isModified = $scope.checkPrincipleModifications(ledger, $scope.ledgerBeforeEdit.transactions)
+          isModified = false
+          if ledger.taxes.length > 0
+            isModified = $scope.checkPrincipleModifications(ledger, $scope.ledgerBeforeEdit.transactions)
           if isModified
+            $scope.selectedTxn.isOpen = false
             modalService.openConfirmModal(
               title: 'Update'
               body: 'Principle transaction updated, Would you also like to update tax transactions?',
@@ -1128,9 +1132,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.updateLedgerData('update',res.body)
     $timeout ( ->
       ledger.total = $scope.updatedLedgerTotal
-    ), 1000
-    
-
+    ), 2000
     
   $scope.updateEntryFailure = (res, ledger) ->
     $scope.doingEntry = false
@@ -1214,11 +1216,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     , $scope.multiActionWithInvFailure)
 
   $scope.downloadInvSuccess = (res, invoiceNumber)->
-    dataUri = 'data:application/pdf;base64,' + res.body
-    a = document.createElement('a')
-    a.download = $scope.accountToShow.name+invoiceNumber+".pdf"
-    a.href = dataUri
-    a.click()
+    data = new Blob([res.body], {type: 'application/pdf'})
+    FileSaver.saveAs(data, $scope.accountToShow.name+invoiceNumber+".pdf")
+    # dataUri = 'data:application/pdf;base64,' + res.body
+    # a = document.createElement('a')
+    # a.download = $scope.accountToShow.name+invoiceNumber+".pdf"
+    # a.href = dataUri
+    # a.click()
+    # console.log dataUri
     # byteChars = atob(res.body)
     # byteNums = new Array(byteChars.length)
     # i = 0

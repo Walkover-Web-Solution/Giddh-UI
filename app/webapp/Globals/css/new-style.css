@@ -3520,3 +3520,14 @@ tr.db-bnk-account{
 tr.db-bnk-account > td.reconnectDiv{
     position: absolute;
 }
+
+.page-loader{
+    position: absolute;
+    right: 0;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: #fff;
+    z-index: 99999;
+    opacity: 0.8;
+}
