@@ -1,5 +1,6 @@
 "use strict"
 companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService, accountService, $filter, $http) ->
+
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
   #make sure manage company detail not load
@@ -1703,14 +1704,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.loadYodlee()
   #  Linked methods end here
 
-  #Mayank
-  $scope.setShareableRoles = (selectedCompany) ->
-    $scope.shareableRoles = permissionService.shareableRoles(selectedCompany)
-
-
   $scope.getSharedList = () ->
     $scope.setShareableRoles($rootScope.selectedCompany)
     $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
+
+  #Mayank
+  $scope.setShareableRoles = (selectedCompany) ->
+    $scope.shareableRoles = permissionService.shareableRoles(selectedCompany)
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

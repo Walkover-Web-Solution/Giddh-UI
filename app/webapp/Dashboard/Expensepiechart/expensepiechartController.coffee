@@ -53,12 +53,34 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
   $scope.errorMessage = ""
   $scope.accountList = []
 
+  $scope.setDateByFinancialYear = () ->
+    presentYear = $scope.getPresentFinancialYear()
+    setDate = ""
+    if $rootScope.currentFinancialYear == undefined
+      $rootScope.currentFinancialYear = moment($rootScope.selectedCompany.activeFinancialYear.financialYearStarts,"DD-MM-YYYY").get("years") + "-"+ moment($rootScope.selectedCompany.activeFinancialYear.financialYearEnds,"DD-MM-YYYY").get("years")
+    if $rootScope.currentFinancialYear == presentYear
+      setDate = moment().format('DD-MM-YYYY')
+    else
+      setDate = $rootScope.selectedCompany.activeFinancialYear.financialYearEnds
+    setDate
+
+  $scope.getPresentFinancialYear = () ->
+    setDate = ""
+    toDate = ""
+    if moment().get('months') > 4
+      setDate = moment().get('YEARS')
+      toDate = moment().add(1,'years').get('YEARS')
+    else
+      setDate = moment().subtract(1, 'years').get('YEARS')
+      toDate = moment().get('YEARS')
+    setDate+"-"+toDate
+
   $scope.getExpenseData = () ->
     $scope.chartDataAvailable = false
     $scope.errorMessage = ""
     duration = {}
-    duration.from = moment().format('DD-MM-YYYY')
-    duration.to = moment().format('DD-MM-YYYY')
+    duration.from = $scope.setDateByFinancialYear()
+    duration.to = duration.from
     $scope.accountList = []
     $scope.getClosingBalance("operating_cost",duration)
     $scope.getClosingBalance("indirect_expenses",duration)

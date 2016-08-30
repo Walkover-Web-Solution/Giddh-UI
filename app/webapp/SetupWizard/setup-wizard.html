@@ -1,30 +1,30 @@
 <div id="setupWizardModal" ng-controller="setWizardController">
 
   <div class="modal-header themeBg">
-<!--     <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
-        aria-hidden="true">&times;</span></button> -->
-    <h3 class="modal-title">Setup Wizard</h3>
+    <button type="button" class="close" data-dismiss="modal" ng-click="promptBeforeClose()" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title">Create New Company</h3>
   </div>
   <!-- end header -->
 
   <div class="modal-body noPad">
 
     <div class="welcome-msg">
-      <div ng-if="!hasOwnCompany">
+      <div ng-if="!showSuccessMsg">
         <span>Welcome!</span></br>
-        <span>Let us help you set up your first company with Giddh.</span> 
+        <span>Let us help you set up your company with Giddh.</span> 
       </div>
-      <div ng-if="hasOwnCompany">
+      <div ng-if="showSuccessMsg">
         <span>Congratulations!</span></br>
-        <span>Setup Complete.</span> 
+        <span>Company created successfully.</span> 
       </div>
     </div>
     
     <hr>
 
     <div class="wizard-container">
-      <wizard on-finish="finishedWizard()"> 
-        <wz-step wz-title="Add Mobile Number">
+      <wizard on-finish="setupComplete()"> 
+        <wz-step wz-title="Add Mobile Number" wz-disabled="{{!isNotVerified}}">
             
             <div class="wizard-step">
                 
@@ -52,7 +52,7 @@
         <wz-step wz-title="Create Company">
             
             <div class="wizard-step">
-              <h1>Lets Create your first Company</h1>  
+              <h1>Create Your Company</h1>  
               <form name="createCompForm" novalidate id="createCompForm">
                 <div class="modal-body">
                   <div class="form-group"
@@ -86,7 +86,7 @@
             <div class="wizard-step text-center">
               <h1 class="mrT4 mrB2">Click here to manage Groups and Accounts</h1>
                 <button type="button" class="btn btn-primary btn-sm btn-block mrB1 max350 center-block" ng-click="triggerAddManage();$dismiss()">
-                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add &amp; Manage
+                  <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add &amp; Manage Groups and Accounts
                 </button>
             </div>
         </wz-step>
