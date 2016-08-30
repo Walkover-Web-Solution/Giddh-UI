@@ -27,8 +27,13 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
     $scope.errorMessage = ""
     if _.isUndefined($rootScope.selectedCompany)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
-    $scope.setDateByFinancialYear()
-    $scope.getNWdata($scope.fromDate,$scope.toDate)
+    if $rootScope.currentFinancialYear == undefined
+      $timeout ( ->
+        $scope.getNetWorthData()
+      ),2000
+    else
+      $scope.setDateByFinancialYear()
+      $scope.getNWdata($scope.fromDate,$scope.toDate)
 
   # for networth graph
 

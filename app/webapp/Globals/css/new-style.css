@@ -3520,3 +3520,7 @@ tr.db-bnk-account{
 tr.db-bnk-account > td.reconnectDiv{
     position: absolute;
 }
+
+.panel-body .chart-div{
+    height: 340px;
+}
