@@ -544,7 +544,7 @@
   var scope = angular.element('#ledger').scope();
 
   angular.element(document).on('click',function(e){
-    if (!$(e.target).is('.account-list-item')){
+    if (!$(e.target).is('.account-list-item') && !$(e.target).is('.account-list-item strong')){
        scope.$apply(function(){
         scope.showLedgerPopover = false
       })
