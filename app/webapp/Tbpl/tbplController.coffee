@@ -737,7 +737,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
         total += obj.closingBalance.amount
     total
 
-  $rootScope.$on 'company-changed' , (event, data) ->
+  $scope.$on 'company-changed' , (event, data) ->
     if data.type == 'CHANGE'
       $state.reload()
  
