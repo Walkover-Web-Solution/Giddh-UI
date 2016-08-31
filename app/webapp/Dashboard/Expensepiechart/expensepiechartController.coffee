@@ -101,7 +101,7 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
     groupService.getClosingBal(objToSend).then($scope.getClosingBalSuccess,$scope.getClosingBalFailure)
 
   $scope.getClosingBalSuccess = (res) ->
-    $scope.extractAccounts(res.body[0])
+    $scope.extractGroups(res.body[0])
     $scope.generateChartData($scope.accountList)
 
   $scope.getClosingBalFailure = (res) ->
@@ -118,6 +118,13 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
         $scope.extractAccounts(group)
       )
 
+
+  $scope.extractGroups = (data) ->
+    if data.childGroups.length > 0
+      _.each(data.childGroups, (grp) ->
+        $scope.accountList.push(grp)
+      )
+
   $scope.generateChartData = (accounts) ->
     chartCreate = false
     accountRows = []
@@ -125,10 +132,11 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
     $scope.chartData = []
     $scope.series = []
     accounts = _.sortBy(accounts,'closingBalance.amount')
+    console.log("groups we have : ", accounts)
     _.each(accounts, (account) ->
       row = {}
       row.c = []
-      row.c.push({v:account.name})
+      row.c.push({v:account.groupName})
       row.c.push({v:account.closingBalance.amount})
       $scope.labels.push(account.name)
       $scope.chartData.push(account.closingBalance.amount)

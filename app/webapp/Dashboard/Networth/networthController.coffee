@@ -50,7 +50,8 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
       chartArea:{
         width:'85%',
         right: 10
-      }
+      },
+      curveType: 'function'
     }
   }
 
