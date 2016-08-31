@@ -598,7 +598,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
       $scope.toDate.date =  newDate
   )
 
-  $rootScope.$on 'company-changed' , () ->
+  $scope.$on 'company-changed' , () ->
     $scope.getAccountsGroupsList()
 
 giddh.webApp.controller 'reportsController', reportsController

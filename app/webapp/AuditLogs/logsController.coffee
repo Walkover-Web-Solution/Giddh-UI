@@ -235,7 +235,7 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
 
   window.giddh.webApp.toastr = toastr
 
-  $rootScope.$on 'company-changed' , () ->
+  $scope.$on 'company-changed' , () ->
     $scope.getAccountsGroupsList()
     $scope.getUsers()
 

@@ -86,7 +86,12 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
         companyServices.getAll().then(onSuccess, onFailure)
     }
     templateUrl: '/public/webapp/views/demo.html'
-    controller: 'homeController')
+    controller: 'homeController'
+  )
+  .state('dashboard',
+    url: '/dashboard'
+    templateUrl: '/public/webapp/Dashboard/dashboard.html'
+  )
   .state('Reports',
     url: '/reports'
     templateUrl: '/public/webapp/Reports/reports.html',
@@ -201,10 +206,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/thankyou'
     templateUrl: '/public/webapp/views/thanks.html'
     controller: 'thankyouController'
-  )
-  .state('dashboard',
-    url: '/dashboard'
-    templateUrl: '/public/webapp/Dashboard/dashboard.html'
   )
   $locationProvider.html5Mode(false)
   return
