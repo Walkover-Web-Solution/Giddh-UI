@@ -4,7 +4,7 @@
 
 ## Bug Fixes and viaSocket Integration
 
-- ([58a0c2a](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/58a0c2a4a927acca023e225490963c39697d3312))
+- ([6ff88b9]https://github.com/Walkover-Web-Solution/Giddh-UI/commit/6ff88b92eb42e75c6d9c8f5d1657132589b6a5e7))
     1.) For cards #206,219,230,231,239,235
 
 # 2.02
