@@ -3083,6 +3083,11 @@ ul.pills li {
     overflow:initial;
 }
 
+.fixed-panel .anShrt{
+    margin-top:5px;
+    margin-right:20px;
+}
+
 .pop-panel{
     position: relative !important;
     width:640px !important;
@@ -3092,6 +3097,10 @@ ul.pills li {
     overflow:visible;
     clear:both;
     float:left;
+}
+
+.pop-panel .anShrt{
+    margin-top:10px;
 }
 
 .bottom0 {
