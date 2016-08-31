@@ -2,10 +2,12 @@
 
 ## Update
 
-## Bug Fixes and viaSocket Integration
+## Bug Fixes, viaSocket Integration and Dashboard updates
 
-- ([6ff88b9]https://github.com/Walkover-Web-Solution/Giddh-UI/commit/6ff88b92eb42e75c6d9c8f5d1657132589b6a5e7))
-    1.) For cards #206,219,230,231,239,235
+- ([9fbaa52](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/9fbaa52364f9acc3610cc7a12b28ff41db751b4b))
+    1.) Bugs for cards #206,219,230,231,239,235
+   	2.) Dashboard: History Graph added and other Graph Updates
+   	3.) Dashboard: New Networth API integrated
 
 # 2.02
 
