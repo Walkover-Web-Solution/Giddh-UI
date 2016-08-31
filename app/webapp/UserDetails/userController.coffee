@@ -1,6 +1,6 @@
 "use strict"
 
-userController = ($scope, $rootScope, toastr, userServices, localStorageService, $timeout, $uibModal, modalService, $filter, groupService) ->
+userController = ($scope, $rootScope, toastr, userServices, localStorageService, $timeout, $uibModal, modalService, $filter, groupService, $window) ->
   $scope.userAuthKey = undefined
   $scope.noData = false
   $scope.subListData = []
@@ -14,17 +14,14 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     {title:'Mobile Number', active: false}
   ]
 
-
   $scope.getUserAuthKey = () ->
-    if !_.isEmpty($rootScope.basicInfo)
-      userServices.getKey($rootScope.basicInfo.uniqueName).then($scope.getUserAuthKeySuccess,
-          $scope.getUserAuthKeyFailure)
+    $scope.userAuthKey = $window.sessionStorage.getItem('_ak')
 
-  $scope.getUserAuthKeySuccess = (res) ->
-    $scope.userAuthKey = res.body
+  # $scope.getUserAuthKeySuccess = (res) ->
+  #   $scope.userAuthKey = res.body
 
-  $scope.getUserAuthKeyFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
+  # $scope.getUserAuthKeyFailure = (res) ->
+  #   toastr.error(res.data.message, res.data.status)
 
   $scope.regenerateKey = () ->
     userServices.generateKey($rootScope.basicInfo.uniqueName).then($scope.generateKeySuccess,
@@ -32,7 +29,8 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 
   $scope.generateKeySuccess = (res) ->
     $scope.userAuthKey = res.body.authKey
-
+    $window.sessionStorage.setItem('_ak', res.body.authKey)
+    
   $scope.generateKeyFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 

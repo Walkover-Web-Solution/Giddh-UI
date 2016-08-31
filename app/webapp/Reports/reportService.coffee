@@ -21,6 +21,10 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
         method: 'GET',
         url: '/company/:companyUniqueName/networth-history?fromDate=:date1&toDate=:date2&interval=:interval'
       }
+      networthData: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/networth?fromDate=:date1&toDate=:date2&interval=:interval'
+      }
       # historicData: {
       #   method: 'PUT'
       #   url: '/company/:companyUniqueName/'
@@ -52,6 +56,14 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
 
     nwGraphData: (argData, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Report.nwHistoricData({
+        companyUniqueName: argData.cUname
+        date1: argData.fromDate
+        date2: argData.toDate
+        interval: argData.interval
+      }, onSuccess,  onFailure))
+
+    networthData: (argData, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Report.networthData({
         companyUniqueName: argData.cUname
         date1: argData.fromDate
         date2: argData.toDate

@@ -1,10 +1,14 @@
 
-<div class="loader mrT4" ng-if="showLoader && accountUnq.length != ''">
+<!-- <div class="loader mrT4" ng-if="showLoader && accountUnq.length != ''">
   <span></span>
   <span></span>
   <span></span>
   <span></span>
   <span></span>
+</div>
+ -->
+<div class="page-loader" ng-show="superLoader && accountUnq.length > 0 ">
+  <div class="giddh-spinner vertical-center-spinner"></div>
 </div>
 
 <section class="alert alert-info mrL2 mrR2 mrT2" ng-if="showLoader && accountUnq.length == ''">
@@ -427,8 +431,7 @@
     </section>
  </perfect-scrollbar>
 <!-- </perfect-scrollbar> -->
-</div>
-
+</div> 
 <script type="text/ng-template" id="panel">
     <div class="ledger-panel" ng-click="stopProp($event)" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': showPanel, 'top0':hideHeader}">
       <div class="wrapper">
@@ -544,7 +547,7 @@
   var scope = angular.element('#ledger').scope();
 
   angular.element(document).on('click',function(e){
-    if (!$(e.target).is('.account-list-item')){
+    if (!$(e.target).is('.account-list-item') && !$(e.target).is('.account-list-item strong')){
        scope.$apply(function(){
         scope.showLedgerPopover = false
       })

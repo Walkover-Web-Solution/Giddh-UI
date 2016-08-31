@@ -8,9 +8,10 @@
         <div class="giddh-spinner vertical-center-spinner" ng-if="errorMessage == ''"></div>
         <label class="font-white" ng-if="errorMessage != ''">{{errorMessage}}</label>
       </div>
-      <canvas id="line" class="chart chart-line" chart-data="chartData"
-              chart-labels="labels" chart-legend="true" chart-series="series" chart-options="chartOptions">
-      </canvas>
+      <div class="chart-div" google-chart chart="myChartData"></div>
+      <!--<canvas id="line" class="chart-div chart chart-line" chart-data="chartData"-->
+              <!--chart-labels="labels" chart-legend="true" chart-series="series" chart-options="chartOptions">-->
+      <!--</canvas>-->
     </div>
   </div>
 </div>

@@ -78,17 +78,22 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
   $scope.getExpenseData = () ->
     $scope.chartDataAvailable = false
     $scope.errorMessage = ""
-    duration = {}
-    duration.from = $scope.setDateByFinancialYear()
-    duration.to = duration.from
-    $scope.accountList = []
-    $scope.getClosingBalance("operating_cost",duration)
-    $scope.getClosingBalance("indirect_expenses",duration)
+    if _.isUndefined($rootScope.selectedCompany)
+      $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+    if $rootScope.currentFinancialYear == undefined
+      $timeout ( ->
+        $scope.getExpenseData()
+      ),2000
+    else
+      duration = {}
+      duration.from = $scope.setDateByFinancialYear()
+      duration.to = duration.from
+      $scope.accountList = []
+      $scope.getClosingBalance("operating_cost",duration)
+      $scope.getClosingBalance("indirect_expenses",duration)
 
   $scope.getClosingBalance = (groupUniqueName, duration) ->
     objToSend = {}
-    if _.isUndefined($rootScope.selectedCompany)
-      $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     objToSend.compUname = $rootScope.selectedCompany.uniqueName
     objToSend.selGrpUname = groupUniqueName
     objToSend.fromDate = duration.from

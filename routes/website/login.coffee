@@ -1,4 +1,5 @@
 settings = require('../util/settings')
+app = settings.express()
 jwt = require('jwt-simple')
 qs = require('qs')
 router = settings.express.Router()
@@ -9,6 +10,7 @@ twitterLoginUrl =  settings.envUrl + 'signup-with-twitter'
 
 hitViaSocket = (data) ->
   data = JSON.stringify(data)
+  data.environment = app.get('env')
   if data.isNewUser
     settings.request {
       url: 'https://viasocket.com/t/fDR1TMJLvMQgwyjBUMVs/giddh-giddh-login?authkey=MbK1oT6x1RCoVf2AqL3y'

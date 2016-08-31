@@ -20,6 +20,39 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
   $scope.errorMessage = ""
   $scope.fromDate = moment().format('DD-MM-YYYY')
   $scope.toDate = moment().format('DD-MM-YYYY')
+  $scope.myChartData = {
+    "type": "ComboChart",
+    "data": {
+      "cols": [
+        {
+          "id": "month",
+          "label": "Month",
+          "type": "string",
+          "p": {}
+        },
+        {
+          "id": "monthlyBalance",
+          "label": "Monthly change",
+          "type": "number",
+          "p": {}
+        },{
+          "id": "yearlyBalance",
+          "label": "Net worth",
+          "type": "number",
+          "p": {}
+        }]
+    },
+    "options": {
+      seriesType: 'bars',
+      series: {1: {type: 'line'}},
+      colors: ['#d35f29','#337ab7'],
+      legend:{position:'none'},
+      chartArea:{
+        width:'85%',
+        right: 10
+      }
+    }
+  }
 
   $scope.getNetWorthData = () ->
 #    get net worth data here
@@ -27,8 +60,13 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
     $scope.errorMessage = ""
     if _.isUndefined($rootScope.selectedCompany)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
-    $scope.setDateByFinancialYear()
-    $scope.getNWdata($scope.fromDate,$scope.toDate)
+    if $rootScope.currentFinancialYear == undefined
+      $timeout ( ->
+        $scope.getNetWorthData()
+      ),2000
+    else
+      $scope.setDateByFinancialYear()
+      $scope.getNWdata($scope.fromDate,$scope.toDate)
 
   # for networth graph
 
@@ -39,12 +77,12 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
       'cUname': $rootScope.selectedCompany.uniqueName
       'fromDate': fromDate
       'toDate': toDate
-      'interval': 30
+      'interval': "monthly"
     }
     $scope.getNWgraphData(reqParam)
 
   $scope.getNWgraphData = (reqParam) ->
-    reportService.nwGraphData(reqParam).then $scope.getNWgraphDataSuccess, $scope.getNWgraphDataFailure
+    reportService.networthData(reqParam).then $scope.getNWgraphDataSuccess, $scope.getNWgraphDataFailure
 
   $scope.getNWgraphDataSuccess = (res) ->
     $scope.errorMessage = ""
@@ -66,18 +104,25 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
       $scope.errorMessage = res.data.message
 
   $scope.formatNWgraphData = (nwData) ->
+    $scope.myChartData.data.rows = []
     $scope.nwSeries = []
     $scope.nwChartData = []
     $scope.nwLabels = []
     monthlyBalances = []
     yearlyBalances = []
     _.each nwData.periodBalances, (nw) ->
-      str = $scope.monthArray[moment(nw.to).get('months')] + moment(nw.to).get('y')
+      row = {}
+      row.c = []
+      str = $scope.monthArray[moment(nw.to, 'DD-MM-YYYY').get('months')] + moment(nw.to, 'DD-MM-YYYY').get('y')
       $scope.nwLabels.push(str)
       monthlyBalances.push(nw.monthlyBalance)
       $scope.nwSeries.push('Monthly Balances')
       yearlyBalances.push(nw.yearlyBalance)
       $scope.nwSeries.push('Yearly Balances')
+      row.c.push({v:str})
+      row.c.push({v:nw.monthlyBalance})
+      row.c.push({v:nw.yearlyBalance})
+      $scope.myChartData.data.rows.push(row)
 
     $scope.chartData = []
     $scope.chartData.push(yearlyBalances)

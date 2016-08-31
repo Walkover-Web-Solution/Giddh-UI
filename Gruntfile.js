@@ -233,7 +233,8 @@ module.exports = function (grunt) {
           'fullpage.js',
           'angular-fullpage.js',
           'angular-wizard',
-          'angular-google-chart'
+          'angular-google-chart',
+          'angular-file-saver'
         ],
         dependencies: {
           'jquery': 'modernizr',

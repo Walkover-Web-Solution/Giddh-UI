@@ -32,6 +32,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "dashboard"
     "mgo-angular-wizard"
     "googlechart"
+    "ngFileSaver"
   ]
 )
 
