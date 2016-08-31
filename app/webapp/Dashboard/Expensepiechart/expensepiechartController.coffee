@@ -122,7 +122,8 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
   $scope.extractGroups = (data) ->
     if data.childGroups.length > 0
       _.each(data.childGroups, (grp) ->
-        $scope.accountList.push(grp)
+        if grp.closingBalance.amount > 0
+          $scope.accountList.push(grp)
       )
 
   $scope.generateChartData = (accounts) ->
