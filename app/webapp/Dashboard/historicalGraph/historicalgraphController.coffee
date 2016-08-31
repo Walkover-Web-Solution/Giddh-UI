@@ -96,20 +96,14 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
     $scope.errorMessage = res.data.message
 
   $scope.combineCategoryWise = (result) ->
-    showThis = {}
     categoryWise = _.groupBy(result,'category')
-    groupWise = []
     addInThis = []
-    addThis = []
-#    console.log("category wise : ",categoryWise)
     _.each(categoryWise, (groups) ->
-#      console.log("where is category : ", groups)
       category = groups[0].category
       duration = ""
       interval = []
       interval = _.toArray(_.groupBy(_.flatten(_.pluck(groups, 'intervalBalances')), 'to'))
       _.each(interval, (group) ->
-#        console.log("info to retreive : ", group)
         closingBalance = {}
         closingBalance.amount = 0
         closingBalance.type = "DEBIT"
@@ -138,18 +132,15 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
         intB.category = category
         addInThis.push(intB)
       )
-#      console.log("finally : ", addInThis)
     )
     monthWise = _.groupBy(addInThis,'duration')
     $scope.generateChartData(monthWise)
-#    console.log("monthly data : ",monthWise)
 
   $scope.generateChartData = (data) ->
     $scope.chartData.data.rows = []
     _.each(data, (monthly) ->
       row = {}
       row.c = []
-#      console.log("monthly : ",monthly)
       row.c.push({v:monthly[0].month})
       _.each(monthly, (account) ->
         row.c.push({v:account.closingBalance.amount})
@@ -158,7 +149,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
     )
     $scope.dataAvailable = true
 
-  $rootScope.$on 'company-changed', (event,changeData) ->
+  $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
       $scope.getHistory()
 
@@ -168,4 +159,5 @@ history.controller('historicalgraphController',historicalgraphController)
 .directive 'history', () ->{
   restrict: 'E'
   templateUrl: '/public/webapp/Dashboard/historicalGraph/historicalGraph.html'
+#  controller: 'historicalgraphController'
 }

@@ -950,7 +950,7 @@ ledgerController = ($scope, $rootScope, localStorageService, toastr, modalServic
   $scope.redirectToState = (state) ->
     $state.go(state)
 
-  $rootScope.$on 'company-changed', (event,changeData) ->
+  $scope.$on 'company-changed', (event,changeData) ->
     # when company is changed, redirect to manage company page
     if changeData.type == 'CHANGE'
       $scope.redirectToState('company.content.manage')

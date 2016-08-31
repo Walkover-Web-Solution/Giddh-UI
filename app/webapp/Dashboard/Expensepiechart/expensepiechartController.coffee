@@ -133,7 +133,6 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
     $scope.chartData = []
     $scope.series = []
     accounts = _.sortBy(accounts,'closingBalance.amount')
-    console.log("groups we have : ", accounts)
     _.each(accounts, (account) ->
       row = {}
       row.c = []
@@ -155,7 +154,7 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
     $scope.myChartObject.data.rows = accountRows
 
 
-  $rootScope.$on 'company-changed', (event,changeData) ->
+  $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
       $scope.getExpenseData()
 

@@ -1731,7 +1731,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.resetSteps()
   )
 
-  $rootScope.$on('company-changed', (changeData)->
+  $scope.$on('company-changed', (changeData)->
     $scope.clearTaxFields()
     data = changeData.data
     index = changeData.index

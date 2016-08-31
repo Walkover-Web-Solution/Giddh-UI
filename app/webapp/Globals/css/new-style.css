@@ -3535,3 +3535,12 @@ tr.db-bnk-account > td.reconnectDiv{
 .panel-body .chart-div{
     height: 300px;
 }
+
+.maxWidth250{
+    max-width: 250px;
+}
+
+.icon-center{
+    top: 33px;
+    right: 25px;
+}

@@ -1,25 +1,19 @@
 <div id="live" class="col-lg-4">
   <div class="panel panel-default shadow">
     <div class="panel-heading">
-      <label>Compare & judge</label><i class="glyphicon glyphicon-refresh pull-right" ng-click="getHistory()"></i>
+      <!--<label>Compare & judge</label><i class="glyphicon glyphicon-refresh pull-right" ng-click="getHistory()"></i>-->
+      <uib-tabset justified="false" class="maxWidth250 background-transparent">
+        <uib-tab heading="Revenue" class="background-transparent" select="selectedChart = 'sales';getData(selectedChart)"></uib-tab>
+        <uib-tab heading="Expense" class="background-transparent" select="selectedChart = 'expense';getData(selectedChart)"></uib-tab>
+      </uib-tabset>
+      <i class="glyphicon glyphicon-refresh pull-right pos-abs icon-center" ng-click="getData(selectedChart)"></i>
     </div>
     <div class="panel-body pos-rel">
-      <uib-tabset justified="false">
-        <uib-tab heading="Revenue">
-          <div class="reconnectDiv" ng-if="!salesDataAvailable">
-            <div class="giddh-spinner vertical-center-spinner" ng-if="salesErrorMessage == ''"></div>
-            <label class="font-white" ng-if="salesErrorMessage != ''">{{salesErrorMessage}}</label>
-          </div>
-          <div class="chart-div" google-chart chart="salesChartData"></div>
-        </uib-tab>
-        <uib-tab heading="Expense">
-          <div class="reconnectDiv" ng-if="!expenseDataAvailable">
-            <div class="giddh-spinner vertical-center-spinner" ng-if="expenseErrorMessage == ''"></div>
-            <label class="font-white" ng-if="expenseErrorMessage != ''">{{expenseErrorMessage}}</label>
-          </div>
-          <div class="chart-div" google-chart chart="expenseChartData"></div>
-        </uib-tab>
-      </uib-tabset>
+      <div class="reconnectDiv" ng-if="!dataAvailable">
+        <div class="giddh-spinner vertical-center-spinner" ng-if="errorMessage == ''"></div>
+        <label class="font-white" ng-if="errorMessage != ''">{{errorMessage}}</label>
+      </div>
+      <div class="chart-div" google-chart chart="chartData"></div>
     </div>
   </div>
 </div>
