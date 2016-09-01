@@ -344,7 +344,7 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$t
             ), 2000
       else if responseError.status is 401
         if _.isObject(responseError.data) and responseError.data.code is "INVALID_AUTH_KEY"
-          toastr.error('INVALID_AUTH_KEY:- Provided auth key is not valid')
+          toastr.error('Your Session has Expired, Please Login Again.')
           $timeout ( ->
             window.location.assign('/login')
           ), 2000
