@@ -2,7 +2,7 @@
 newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state) ->
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
-  $rootScope.pageLoader = false
+  $scope.pageLoader = false
   #date time picker code starts here
   $scope.today = new Date()
   d = moment(new Date()).subtract(1, 'month')
@@ -623,7 +623,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   # get tax list
 
   $scope.getTaxList = () ->
-    $rootScope.pageLoader = true
+    $scope.pageLoader = true
     $scope.taxList = []
     if $rootScope.canUpdate and $rootScope.canDelete
       companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
@@ -636,12 +636,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         tax.account.uniqueName = 0
       $scope.taxList.push(tax)
     $scope.matchTaxAccounts($scope.taxList)
-    $rootScope.pageLoader = false
+    $scope.pageLoader = false
 
 
   $scope.getTaxListFailure = (res) ->
     toastr.error(res.data.message, res.status)
-    $rootScope.pageLoader = false
+    $scope.pageLoader = false
 
   $scope.matchTaxAccounts = (taxlist) ->
     _.each taxlist, (tax) ->
@@ -774,7 +774,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.doingEntry = false
   $scope.lastSelectedLedger = {}
   $scope.saveUpdateLedger = (ledger) ->
-    $rootScope.pageLoader = true
+    $scope.pageLoader = true
     $scope.lastSelectedLedger = ledger
     $scope.dLedgerLimitBeforeUpdate = $scope.dLedgerLimit
     $scope.cLedgerLimitBeforeUpdate = $scope.cLedgerLimit
@@ -1102,7 +1102,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if ledger.isBankTransaction
       $scope.updateBankLedger(ledger)
     $timeout ( ->
-      $rootScope.pageLoader = false
+      $scope.pageLoader = false
     ), 2000
 
   $scope.addEntryFailure = (res, rejectedTransactions, ledger) ->
@@ -1114,7 +1114,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         $scope.selectedLedger.transactions.push(rTransaction)
       )
     $timeout ( ->
-      $rootScope.pageLoader = false
+      $scope.pageLoader = false
     ), 1000
 
   $scope.updateBankLedger = (ledger) ->
@@ -1154,7 +1154,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.updateLedgerData('update',res.body)
     $timeout ( ->
       ledger.total = $scope.updatedLedgerTotal
-      $rootScope.pageLoader = false
+      $scope.pageLoader = false
     ), 2000
     
   $scope.updateEntryFailure = (res, ledger) ->
@@ -1162,7 +1162,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     ledger.failed = true
     toastr.error(res.data.message, res.data.status)
     $timeout ( ->
-      $rootScope.pageLoader = false
+      $scope.pageLoader = false
     ), 1000
     
   $scope.closePopOverSingleLedger = (ledger) ->
@@ -1199,13 +1199,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 #    $scope.calculateLedger($scope.ledgerData, "deleted")
     $scope.updateLedgerData('delete')
     $timeout ( ->
-      $rootScope.pageLoader = false
+      $scope.pageLoader = false
     ), 1000
+    
   
   $scope.deleteEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
     $timeout ( ->
-      $rootScope.pageLoader = false
+      $scope.pageLoader = false
     ), 1000
 
   $scope.removeDeletedLedger = (item) ->
