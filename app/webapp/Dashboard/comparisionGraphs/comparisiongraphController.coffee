@@ -9,7 +9,7 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
   $scope.monthArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   $scope.chartOptions = {
     seriesType: 'line',
-    series: {1: {type: 'line'}},
+    series: {1:{type: 'line'},2: {type: 'bars'},3:{type:'bars'}},
     colors: ['#d35f29','#337ab7'],
     legend:{position:'none'},
     chartArea:{
@@ -44,6 +44,25 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
           "p": {}
         },{
           "id": "tool",
+          "type": "string",
+          "role": "tooltip"
+        },
+        {
+          "id": "previousTBalance",
+          "label": "Total",
+          "type": "number",
+          "p": {}
+        },{
+          "id": "toolPT",
+          "type": "string",
+          "role": "tooltip"
+        },{
+          "id": "currentTBalance",
+          "label": "Total",
+          "type": "number",
+          "p": {}
+        },{
+          "id": "toolST",
           "type": "string",
           "role": "tooltip"
         }]
@@ -113,6 +132,9 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
         closingBalance = {}
         closingBalance.amount = 0
         closingBalance.type = "DEBIT"
+        total = {}
+        total.amount = 0
+        total.type = 'DEBIT'
         duration = ""
         year = moment().get('y')
         month = ""
@@ -123,15 +145,31 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
           monthNum = moment(grp.to, "YYYY-MM-DD").get('months') + 1
           year = moment(grp.to, "YYYY-MM-DD").get('years')
           if category == "income"
-            closingBalance.amount = grp.creditTotal - grp.debitTotal
+            total.amount = grp.creditTotal - grp.debitTotal
           else
-            closingBalance.amount = grp.debitTotal - grp.creditTotal
+            if total.type == "DEBIT"
+              total.amount = total.amount + (grp.debitTotal - grp.creditTotal)
+            else
+              total.amount = total.amount - (grp.debitTotal - grp.creditTotal)
+          if category == "income"
+            if grp.closingBalance.type == "DEBIT"
+              closingBalance.amount = closingBalance.amount - grp.closingBalance.amount
+            else
+              closingBalance.amount = closingBalance.amount + grp.closingBalance.amount
+          else
+            if grp.closingBalance.type == "DEBIT"
+              closingBalance.amount = closingBalance.amount + grp.closingBalance.amount
+            else
+              closingBalance.amount = closingBalance.amount - grp.closingBalance.amount
           if closingBalance.amount < 0
             closingBalance.type = "CREDIT"
           else
             closingBalance.type = "DEBIT"
+          if total.amount < 0
+            total.type = "CREDIT"
+          else
+            total.type = "DEBIT"
         )
-        console.log(month + " " + year + " " + closingBalance.amount)
         intB = {}
         intB.closingBalance = closingBalance
         intB.duration = duration
@@ -139,6 +177,7 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
         intB.month = month
         intB.monthNum = monthNum
         intB.category = category
+        intB.total = total
         addInThis.push(intB)
       )
     )
@@ -149,12 +188,6 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
   $scope.generateChartData = (data) ->
     $scope.chartData.data.rows = []
     _.each(data, (monthly) ->
-#      row = {}
-#      row.c = []
-#      row.c.push({v:monthly.month})
-#      row.c.push({
-#        v:monthly.closingBalance.amount
-#      })
       if $scope.selectedChart == "sales"
         $scope.salesData.push(monthly)
       else
@@ -163,14 +196,13 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
     if $scope.selectedChart == "sales"
       $scope.unformatData = $scope.salesData
       $scope.formatData($scope.unformatData)
-#      $scope.chartData.data.rows = $scope.salesData
     else
       $scope.unformatData = $scope.expenseData
       $scope.formatData($scope.unformatData)
-#      $scope.chartData.data.rows = $scope.expenseData
     $scope.dataAvailable = true
 
   $scope.formatData = (data) ->
+    $scope.chartData.data.rows = []
     temp = _.sortBy(data,'year')
     startWith = temp[0].monthNum
     groupedData = []
@@ -195,17 +227,21 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
       row = {}
       row.c = []
       row.c.push({v:itr[0].month})
-      tooltipData = itr[0].month + " "
       sortedData = _.sortBy(itr, 'year')
       _.each(sortedData, (monthly) ->
-#        str = Number(monthly.closingBalance.amount).toFixed(2) + " " + monthly.year
-        tooltipData = tooltipData + monthly.year + ": " + Number(monthly.closingBalance.amount).toFixed(2) + " "
         row.c.push({
           "v":monthly.closingBalance.amount
         })
         tooltipText = monthly.month + " "+monthly.year + ": "+$filter('currency')(Number(monthly.closingBalance.amount).toFixed(0), '', 0)
         row.c.push({"v": tooltipText})
       )
+#      _.each(sortedData, (monthly) ->
+#        row.c.push({
+#          "v":monthly.total.amount
+#        })
+#        tooltipText = monthly.month + " "+monthly.year + ": "+$filter('currency')(Number(monthly.total.amount).toFixed(0), '', 0)
+#        row.c.push({"v": tooltipText})
+#      )
       rowsToAdd.push(row)
     )
     $scope.chartData.data.rows = rowsToAdd

@@ -47,7 +47,11 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
     legend:{position:'none'},
     chartArea:{
       height:'80%'
-    }
+    },
+    animation:{
+      duration: 1000,
+      easing: 'out',
+    },
   }
   $scope.chartDataAvailable = false
   $scope.errorMessage = ""
