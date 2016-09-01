@@ -37,7 +37,8 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
     chartArea:{
       width:'100%'
     },
-    curveType: 'function'
+    curveType: 'function',
+    pointSize: 5
   }
   }
 

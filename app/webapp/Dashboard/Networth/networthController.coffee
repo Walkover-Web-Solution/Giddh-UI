@@ -51,7 +51,8 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
         width:'85%',
         right: 10
       },
-      curveType: 'function'
+      curveType: 'function',
+      pointSize: 5
     }
   }
 

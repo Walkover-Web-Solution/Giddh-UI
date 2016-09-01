@@ -15,7 +15,8 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
     chartArea:{
       width: '80%'
     },
-    curveType: 'function'
+    curveType: 'function',
+    pointSize: 5
   }
   $scope.chartData = {
     "type": $scope.chartType,
