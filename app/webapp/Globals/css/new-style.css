@@ -3153,7 +3153,7 @@ ul.pills li {
     width: 100%;
     background: rgba(0, 0, 0, 0.9);
     color: #fff;
-    z-index: 3;
+    z-index: 1100;
     list-style-type: none;
     padding: 0px;
 }
@@ -3537,7 +3537,7 @@ tr.db-bnk-account > td.reconnectDiv{
     left: 0;
     bottom: 0;
     background: #fff;
-    z-index: 99999;
+    z-index: 1061;
     opacity: 0.8;
 }
 
