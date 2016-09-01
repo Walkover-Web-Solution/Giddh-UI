@@ -321,6 +321,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
 
   $scope.getTrialBalFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
+    $scope.showTbplLoader = false
 
   $scope.filterBydate = () ->
     dateObj =
