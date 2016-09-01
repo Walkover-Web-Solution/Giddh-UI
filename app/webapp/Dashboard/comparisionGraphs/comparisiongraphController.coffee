@@ -28,15 +28,23 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
           "p": {}
         },
         {
+          "id": "previousSBalance",
+          "label": "Previous",
+          "type": "number",
+          "p": {}
+        },{
+          "id": "toolP",
+          "type": "string",
+          "role": "tooltip"
+        },{
           "id": "currentSBalance",
           "label": "Current",
           "type": "number",
           "p": {}
         },{
-          "id": "previousSBalance",
-          "label": "Previous",
-          "type": "number",
-          "p": {}
+          "id": "tool",
+          "type": "string",
+          "role": "tooltip"
         }]
     },
     "options": $scope.chartOptions
@@ -48,6 +56,7 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
 
   $scope.salesData = []
   $scope.expenseData = []
+  $scope.unformatData = []
   $scope.selectedChart = "sales"
 
   $scope.getData = (type) ->
@@ -64,7 +73,7 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
       $scope.setDateByFinancialYear()
       $scope.salesData = []
       $scope.expenseData = []
-      $scope.generateData(type, $scope.fromDate, $scope.toDate)
+      $scope.generateData(type, $scope.fromDate, moment().format('DD-MM-YYYY'))
       $scope.generateData(type, moment($scope.fromDate, 'DD-MM-YYYY').subtract(1,'years').format('DD-MM-YYYY'),moment($scope.toDate, 'DD-MM-YYYY').subtract(1,'years').format('DD-MM-YYYY'))
 
   $scope.generateData = (type, fromDate, toDate) ->
@@ -104,63 +113,111 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
         closingBalance.amount = 0
         closingBalance.type = "DEBIT"
         duration = ""
+        year = moment().get('y')
+        month = ""
+        monthNum = 0
         _.each(group, (grp) ->
           duration = $scope.monthArray[moment(grp.to, "YYYY-MM-DD").get('months')] + moment(grp.to, "YYYY-MM-DD").get('years')
+          month = $scope.monthArray[moment(grp.to, "YYYY-MM-DD").get('months')]
+          monthNum = moment(grp.to, "YYYY-MM-DD").get('months') + 1
+          year = moment(grp.to, "YYYY-MM-DD").get('years')
           if category == "income"
-            if closingBalance.type == "DEBIT"
-              closingBalance.amount = closingBalance.amount + (grp.creditTotal - grp.debitTotal)
-            else
-              closingBalance.amount = closingBalance.amount - (grp.creditTotal - grp.debitTotal)
+            closingBalance.amount = grp.creditTotal - grp.debitTotal
           else
-            if closingBalance.type == "DEBIT"
-              closingBalance.amount = closingBalance.amount + (grp.debitTotal - grp.creditTotal)
-            else
-              closingBalance.amount = closingBalance.amount - (grp.debitTotal - grp.creditTotal)
+            closingBalance.amount = grp.debitTotal - grp.creditTotal
           if closingBalance.amount < 0
             closingBalance.type = "CREDIT"
           else
             closingBalance.type = "DEBIT"
         )
+        console.log(month + " " + year + " " + closingBalance.amount)
         intB = {}
         intB.closingBalance = closingBalance
         intB.duration = duration
-        intB.month = duration
+        intB.year = year
+        intB.month = month
+        intB.monthNum = monthNum
         intB.category = category
         addInThis.push(intB)
       )
     )
-    monthWise = _.groupBy(addInThis,'duration')
-    $scope.generateChartData(monthWise)
+#    monthWise = _.groupBy(addInThis,'duration')
+#    console.log("monthly data : ", addInThis)
+    $scope.generateChartData(addInThis)
 
   $scope.generateChartData = (data) ->
     $scope.chartData.data.rows = []
     _.each(data, (monthly) ->
-      row = {}
-      row.c = []
-      row.c.push({v:monthly[0].month})
-      _.each(monthly, (account) ->
-        row.c.push({v:account.closingBalance.amount})
-      )
+#      row = {}
+#      row.c = []
+#      row.c.push({v:monthly.month})
+#      row.c.push({
+#        v:monthly.closingBalance.amount
+#      })
       if $scope.selectedChart == "sales"
-        $scope.salesData.push(row)
+        $scope.salesData.push(monthly)
       else
-        $scope.expenseData.push(row)
+        $scope.expenseData.push(monthly)
     )
     if $scope.selectedChart == "sales"
-      $scope.chartData.data.rows = $scope.salesData
+      $scope.unformatData = $scope.salesData
+      $scope.formatData($scope.unformatData)
+#      $scope.chartData.data.rows = $scope.salesData
     else
-      $scope.chartData.data.rows = $scope.expenseData
+      $scope.unformatData = $scope.expenseData
+      $scope.formatData($scope.unformatData)
+#      $scope.chartData.data.rows = $scope.expenseData
     $scope.dataAvailable = true
+
+  $scope.formatData = (data) ->
+    temp = _.sortBy(data,'year')
+    startWith = temp[0].monthNum
+    groupedData = []
+    before = []
+    after = []
+    _.each(temp, (group) ->
+      if group.monthNum < startWith
+        after.push(group)
+      else
+        before.push(group)
+    )
+    final = []
+    final.push(_.groupBy(before, 'monthNum'))
+    final.push(_.groupBy(after, 'monthNum'))
+    _.each(final, (grouped) ->
+      _.each(grouped, (addThis) ->
+        groupedData.push(addThis)
+      )
+    )
+    rowsToAdd = []
+    _.each(groupedData, (itr) ->
+      row = {}
+      row.c = []
+      row.c.push({v:itr[0].month})
+      tooltipData = itr[0].month + " "
+      sortedData = _.sortBy(itr, 'year')
+      _.each(sortedData, (monthly) ->
+#        str = Number(monthly.closingBalance.amount).toFixed(2) + " " + monthly.year
+        tooltipData = tooltipData + monthly.year + ": " + Number(monthly.closingBalance.amount).toFixed(2) + " "
+        row.c.push({
+          "v":monthly.closingBalance.amount
+        })
+        tooltipText = monthly.month + " "+monthly.year + ": "+$filter('currency')(Number(monthly.closingBalance.amount).toFixed(0), '', 0)
+        row.c.push({"v": tooltipText})
+      )
+      rowsToAdd.push(row)
+    )
+    $scope.chartData.data.rows = rowsToAdd
 
 
   $scope.setDateByFinancialYear = () ->
-    presentYear = $scope.getPresentFinancialYear()
-    if $rootScope.currentFinancialYear == presentYear
-      $scope.fromDate = moment().subtract(1, 'years').add(1,'months').format('DD-MM-YYYY')
-      $scope.toDate = moment().format('DD-MM-YYYY')
-    else
-      $scope.fromDate = $rootScope.selectedCompany.activeFinancialYear.financialYearStarts
-      $scope.toDate = $rootScope.selectedCompany.activeFinancialYear.financialYearEnds
+#    presentYear = $scope.getPresentFinancialYear()
+#    if $rootScope.currentFinancialYear == presentYear
+#      $scope.fromDate = moment().subtract(1, 'years').add(1,'months').format('DD-MM-YYYY')
+#      $scope.toDate = moment().format('DD-MM-YYYY')
+#    else
+    $scope.fromDate = $rootScope.selectedCompany.activeFinancialYear.financialYearStarts
+    $scope.toDate = $rootScope.selectedCompany.activeFinancialYear.financialYearEnds
 
   $scope.getPresentFinancialYear = () ->
     setDate = ""
@@ -175,8 +232,7 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
 
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
-#      $scope.getHistory()
-      console.log("")
+      $scope.getData($scope.selectedChart)
 
 compare.controller('comparisiongraphController',comparisiongraphController)
 
