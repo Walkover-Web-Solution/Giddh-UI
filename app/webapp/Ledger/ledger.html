@@ -204,7 +204,7 @@
                           <tr id="{{ledger.uniqueName}}" class="" 
                           ng-repeat="ledger in ledgerData.ledgers 
                           | filter:particularSearch
-                          | limitTo: dLedgerLimit " 
+                          " 
                           ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed}">
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
@@ -279,7 +279,6 @@
                               </table>
                             </td>
                           </tr>
-
                         </tbody>
                       </table>
                     </perfect-scrollbar>

@@ -3,7 +3,6 @@
         <h3 class="modal-title">Create New Account</h3>
     </div>
     <div class="modal-body">
-
         <div class="pdL1 pdR1">
             <div class="clearfix">
               <label>Select Group</label>
@@ -21,13 +20,14 @@
               <input class="form-control" name="account" type="text" ng-model="newAccountModel.account" placeholder="Enter Account Name" ng-keyup="genUnq(newAccountModel.account)">
             </div>
             <div class="clearfix mrT1">
-              <label>Account Unique Name</label>
+              
+                <form><label>Account Unique Name</label>
               <input class="form-control" name="account" type="text" ng-model="newAccountModel.accUnqName" placeholder="Enter Account Unique Name" >
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-success" ng-click="addNewAccountConfirm()">Create</button>
+        <button class="btn btn-success" ng-click="addNewAccountConfirm()" ng-disabled="newAccountModel.group == ''">Create</button>
         <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
     </div>
 </div>
