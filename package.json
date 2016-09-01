@@ -3,7 +3,7 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "postinstall": "grunt init",
+    "postinstall": "bower install && grunt init",
     "start": "node ./bin/www"
   },
   "dependencies": {
@@ -84,6 +84,6 @@
     "mongoose": "^4.3.1"
   },
   "engines": {
-    "node": "~0.13.0"
+    "node": "~6.5.0"
   }
 }
