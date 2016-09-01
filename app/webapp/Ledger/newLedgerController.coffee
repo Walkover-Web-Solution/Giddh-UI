@@ -493,6 +493,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.getLedgerData = (showLoaderCondition) ->
     $scope.showLoader = showLoaderCondition
+    $scope.pageLoader = showLoaderCondition
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.getAccountDetail($scope.accountUnq)
@@ -512,9 +513,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.countTotalTransactions()
     $scope.sortTransactions($scope.ledgerData, 'entryDate')
     $scope.showLoader = false
+    $scope.pageLoader = false
 
   $scope.getLedgerDataFailure = (res) ->
     toastr.error(res.data.message)
+    $scope.pageLoader = false
 
   $scope.updateLedgerData = (condition, ledger) ->
     unqNamesObj = {
@@ -544,24 +547,25 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     toastr.error(res.data.message)
 
   $scope.paginateledgerData = (ledgers) ->
-    $scope.ledgerCounter = 0
-    $scope.ledgerCount = 30
+    $scope.ledgerCount = 20
     $scope.dLedgerLimit = $scope.setCounter(ledgers, 'DEBIT')
     $scope.cLedgerLimit = $scope.setCounter(ledgers, 'CREDIT')
     
   $scope.setCounter = (ledgers, type) ->
-    c = 1
-    d = 1  
+    txns = 0
+    ledgerCount = 0  
     _.each ledgers, (led) ->
       l = 0
+      #count transactions in ledger
       _.each led.transactions, (txn) ->
         if txn.type == type
           l += 1 
-      if c <= $scope.ledgerCount
-        c += l
-        d += 1
-    $scope.ledgerCounter = d - 1
-    d
+      if txns <= $scope.ledgerCount
+        txns += l
+        ledgerCount += 1
+    if ledgerCount < txns
+      ledgerCount = txns
+    ledgerCount
 
   $scope.countTotalTransactionsAfterSomeTime = () ->
     $timeout ( ->
@@ -1425,7 +1429,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       selGrpUname: $scope.newAccountModel.group.groupUniqueName
       acntUname: $scope.newAccountModel.accUnqName
     }
-    accountService.createAc(unqNamesObj, newAccount).then($scope.addNewAccountConfirmSuccess, $scope.addNewAccountConfirmFailure) 
+    if $scope.newAccountModel.group.groupUniqueName == '' || $scope.newAccountModel.group.groupUniqueName == undefined
+      toastr.error('Please select a group.')
+    else
+      accountService.createAc(unqNamesObj, newAccount).then($scope.addNewAccountConfirmSuccess, $scope.addNewAccountConfirmFailure) 
 
   $scope.addNewAccountConfirmSuccess = (res) ->
     toastr.success('Account created successfully')
@@ -1436,6 +1443,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     toastr.error(res.data.message)
 
   $scope.genearateUniqueName = (unqName) ->
+    unqName = unqName.replace(/ /g,'')
     if unqName.length >= 1
       unq = ''
       text = ''
