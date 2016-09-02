@@ -3537,7 +3537,7 @@ tr.db-bnk-account > td.reconnectDiv{
     left: 0;
     bottom: 0;
     background: #fff;
-    z-index: 1061;
+    z-index: 1040;
     opacity: 0.8;
 }
 
@@ -3552,4 +3552,12 @@ tr.db-bnk-account > td.reconnectDiv{
 .icon-center{
     top: 33px;
     right: 25px;
+}
+
+.modal {
+    z-index: 1200;
+}
+
+.popover{
+    z-index: 1000;
 }

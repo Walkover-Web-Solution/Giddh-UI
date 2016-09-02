@@ -1444,10 +1444,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.genearateUniqueName = (unqName) ->
     unqName = unqName.replace(/ /g,'')
+    unqName = unqName.toLowerCase()
     if unqName.length >= 1
       unq = ''
       text = ''
-      chars = 'abcdefghijklmnopqrstuvwxyz0123456789-_'
+      chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
       i = 0
       while i < 3
         text += chars.charAt(Math.floor(Math.random() * chars.length))
