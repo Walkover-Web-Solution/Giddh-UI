@@ -232,17 +232,16 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
         row.c.push({
           "v":monthly.closingBalance.amount
         })
-        tooltipText = monthly.month + " "+monthly.year + ": "+$filter('currency')(Number(monthly.closingBalance.amount).toFixed(0), '', 0)
+        tooltipText = monthly.year + ": "+$filter('currency')(Number(monthly.closingBalance.amount).toFixed(0), '', 0)
         row.c.push({"v": tooltipText})
         row.c.push({
           "v":monthly.total.amount
         })
-        tooltipText = monthly.month + " "+monthly.year + ": "+$filter('currency')(Number(monthly.total.amount).toFixed(0), '', 0)
+        tooltipText = "Monthly change : "+monthly.year + ": "+$filter('currency')(Number(monthly.total.amount).toFixed(0), '', 0)
         row.c.push({"v": tooltipText})
       )
       rowsToAdd.push(row)
     )
-    console.log("chart data rows : ",rowsToAdd)
     $scope.chartData.data.rows = rowsToAdd
 
 
