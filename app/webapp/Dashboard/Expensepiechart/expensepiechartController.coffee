@@ -10,7 +10,8 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
   $scope.chartData = []
   $scope.labels = ["Salary", "Vendor", "Welfare", "Other"]
   $scope.chartOptions = {
-    legend:{position:'none'}
+    legend:{position:'none'},
+    title:""
   }
   $scope.myChartObject = {}
   $scope.myChartObject.data = {"cols":[{
@@ -89,6 +90,8 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
         $scope.getExpenseData()
       ),2000
     else
+      $scope.chartOptions.title = moment($rootScope.selectedCompany.activeFinancialYear.financialYearStarts,"DD-MM-YYYY").get("years") + "-"+ moment($rootScope.selectedCompany.activeFinancialYear.financialYearEnds,"DD-MM-YYYY").get("years")
+      $scope.myChartObject.options.title = $scope.chartOptions.title
       duration = {}
       duration.from = $scope.setDateByFinancialYear()
       duration.to = duration.from

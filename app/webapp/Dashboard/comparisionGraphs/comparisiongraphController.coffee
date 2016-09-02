@@ -9,14 +9,26 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
   $scope.monthArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   $scope.chartOptions = {
     seriesType: 'line',
-    series: {1:{type: 'bars'},2: {type: 'line'},3:{type:'bars'}},
+    series: {1:{type: 'bars'},2: {type: 'line',pointShape: 'star'},3:{type:'bars'}},
     colors: ['#d35f29','#d35f29','#337ab7','#337ab7'],
     legend:{position:'none'},
     chartArea:{
-      width: '80%'
+      width:'85%',
+      right: 10
     },
     curveType: 'function',
-    pointSize: 5
+    pointSize: 5,
+    animation:{
+      duration: 1000,
+      easing: 'out',
+    },
+    hAxis:{
+      slantedText:true
+    },
+    vAxis:{
+      scaleType: 'mirrorLog',
+      format: 'long'
+    }
   }
   $scope.chartData = {
     "type": $scope.chartType,
@@ -117,8 +129,16 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
     $scope.combineCategoryWise($scope.graphData.groups)
 
   $scope.getYearlyDataFailure = (res) ->
-    $scope.dataAvailable = false
-    $scope.errorMessage = res.data.message
+    if res.data.code == "INVALID_DATE"
+      setDate = ""
+      if moment().get('months') > 4
+        setDate = "01-04-" + moment().get('YEARS')
+      else
+        setDate = "01-04-" + moment().subtract(1, 'years').get('YEARS')
+      $scope.generateData($scope.selectedChart, setDate, moment().format('DD-MM-YYYY'))
+    else
+      $scope.dataAvailable = false
+      $scope.errorMessage = res.data.message
 
   $scope.combineCategoryWise = (result) ->
     categoryWise = _.groupBy(result,'category')

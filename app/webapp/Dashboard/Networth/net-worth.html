@@ -4,9 +4,9 @@
       <label>Net worth</label><i class="glyphicon glyphicon-refresh pull-right" ng-click="getNetWorthData()"></i>
     </div>
     <div class="panel-body pos-rel">
-      <div class="reconnectDiv" ng-if="!chartDataAvailable">
+      <div class="dashboard-reconnectdiv" ng-if="!chartDataAvailable">
         <div class="giddh-spinner vertical-center-spinner" ng-if="errorMessage == ''"></div>
-        <label class="font-white" ng-if="errorMessage != ''">{{errorMessage}}</label>
+        <label class="font-black" ng-if="errorMessage != ''">{{errorMessage}}</label>
       </div>
       <div class="chart-div" google-chart chart="myChartData"></div>
       <!--<canvas id="line" class="chart-div chart chart-line" chart-data="chartData"-->

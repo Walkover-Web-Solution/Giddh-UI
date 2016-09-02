@@ -35,10 +35,21 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
     colors: ['#d35f29','#337ab7'],
     legend:{position:'none'},
     chartArea:{
-      width:'100%'
+      width:'85%',
+      right: 10
     },
     curveType: 'function',
-    pointSize: 5
+    pointSize: 5,
+    animation:{
+      duration: 1000,
+      easing: 'out',
+    },
+    hAxis:{
+      slantedText:true
+    }
+    vAxis:{
+      format: 'long'
+    }
   }
   }
 
@@ -62,7 +73,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
       toDate = moment().get('YEARS')
     setDate+"-"+toDate
 
-  $scope.getHistory = () ->
+  $scope.getHistory = (fromDate, toDate) ->
 #    write code to get history data
     $scope.errorMessage = ""
     $scope.dataAvailable = false
@@ -70,14 +81,14 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     if $rootScope.currentFinancialYear == undefined
       $timeout ( ->
-        $scope.getHistory()
+        $scope.setDateByFinancialYear()
+        $scope.getHistory($scope.fromDate,$scope.toDate)
       ),2000
     else
-      $scope.setDateByFinancialYear()
       reqParam = {
         'cUname': $rootScope.selectedCompany.uniqueName
-        'fromDate': $scope.fromDate
-        'toDate': $scope.toDate
+        'fromDate': fromDate
+        'toDate': toDate
         'interval': "monthly"
       }
       graphParam = {
@@ -93,8 +104,16 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
     $scope.combineCategoryWise($scope.graphData.groups)
 
   $scope.getHistoryDataFailure = (res) ->
-    $scope.dataAvailable = false
-    $scope.errorMessage = res.data.message
+    if res.data.code == "INVALID_DATE"
+      setDate = ""
+      if moment().get('months') > 4
+        setDate = "01-04-" + moment().get('YEARS')
+      else
+        setDate = "01-04-" + moment().subtract(1, 'years').get('YEARS')
+      $scope.getHistory(setDate, moment().format('DD-MM-YYYY'))
+    else
+      $scope.dataAvailable = false
+      $scope.errorMessage = res.data.message
 
   $scope.combineCategoryWise = (result) ->
     categoryWise = _.groupBy(result,'category')
@@ -155,7 +174,8 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
 
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
-      $scope.getHistory()
+      $scope.setDateByFinancialYear()
+      $scope.getHistory($scope.fromDate,$scope.toDate)
 
 
 history.controller('historicalgraphController',historicalgraphController)
