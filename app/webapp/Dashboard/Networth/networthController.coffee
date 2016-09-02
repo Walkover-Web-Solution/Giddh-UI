@@ -57,6 +57,13 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
         duration: 1000,
         easing: 'out',
       },
+      hAxis:{
+        slantedText:true
+      },
+      vAxis:{
+        format: 'long',
+        scaleType: 'mirrorLog'
+      }
     }
   }
 

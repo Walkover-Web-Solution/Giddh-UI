@@ -3569,3 +3569,21 @@ tr.db-bnk-account > td.reconnectDiv{
 .popover{
     z-index: 1000;
 }
+
+.dashboard-reconnectdiv{
+    background: rgba(255, 255, 255, 0.9);
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    text-align: center;
+    transform-style: preserve-3d;
+}
+
+.font-black{
+    color: #444;
+    padding: 10px;
+    padding-top: 40px;
+}
