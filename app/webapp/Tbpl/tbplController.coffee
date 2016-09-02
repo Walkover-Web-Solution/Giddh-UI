@@ -335,15 +335,15 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     dateObj.toDate = $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
     $scope.getTrialBal(dateObj)
 
-  $scope.$on '$viewContentLoaded', ->
-    if $scope.sendRequest
-      dateObj = {
-        'fromDate': $filter('date')($scope.getDefaultDate().date,'dd-MM-yyyy')
-        'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
-      }
-      $scope.checkFY(dateObj)
-      $scope.getTrialBal(dateObj)
-      $scope.sendRequest = false
+
+  if $scope.sendRequest
+    dateObj = {
+      'fromDate': $filter('date')($scope.getDefaultDate().date,'dd-MM-yyyy')
+      'toDate': $filter('date')($scope.toDate.date, "dd-MM-yyyy")
+    }
+    $scope.checkFY(dateObj)
+    $scope.getTrialBal(dateObj)
+    $scope.sendRequest = false
 
   $scope.firstCapital = (input) ->
     s = input.split('')

@@ -563,8 +563,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       if txns <= $scope.ledgerCount
         txns += l
         ledgerCount += 1
-    if ledgerCount < txns
-      ledgerCount = txns
+    # if ledgerCount < txns
+    #   ledgerCount = txns
     ledgerCount
 
   $scope.countTotalTransactionsAfterSomeTime = () ->
@@ -1107,7 +1107,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       $scope.updateBankLedger(ledger)
     $timeout ( ->
       $scope.pageLoader = false
-    ), 2000
+    ), 1000
 
   $scope.addEntryFailure = (res, rejectedTransactions, ledger) ->
     $scope.doingEntry = false
