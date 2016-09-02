@@ -172,6 +172,8 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
     $scope.chartData.data.rows = rowsToAdd
     $scope.dataAvailable = true
 
+  $scope.setDateByFinancialYear()
+
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
       $scope.setDateByFinancialYear()
