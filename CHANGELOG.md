@@ -1,3 +1,14 @@
+# 2.04
+
+## Update
+
+## Bug Fixes, change in user session management , UI updates
+
+- ([e53bf87](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/e53bf876d98202c9dd8ba544d11ac01048f2a683))
+    1.) Bugs for cards #253, 234, 245
+   	2.) User Session: switched to cookies for session management
+   	3.) UI updates :  For card #252
+
 # 2.03
 
 ## Update
