@@ -45,7 +45,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
   $scope.setDateByFinancialYear = () ->
     presentYear = $scope.getPresentFinancialYear()
     if $rootScope.currentFinancialYear == presentYear
-      $scope.fromDate = moment().subtract(1, 'years').add(1,'months').format('DD-MM-YYYY')
+      $scope.fromDate = moment().subtract(1, 'years').add(1,'months').set('date',1).format('DD-MM-YYYY')
       $scope.toDate = moment().format('DD-MM-YYYY')
     else
       $scope.fromDate = $rootScope.selectedCompany.activeFinancialYear.financialYearStarts
@@ -78,7 +78,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
         'cUname': $rootScope.selectedCompany.uniqueName
         'fromDate': $scope.fromDate
         'toDate': $scope.toDate
-        'interval': 30
+        'interval': "monthly"
       }
       graphParam = {
         'groups' : $scope.groupArray
@@ -86,7 +86,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
       $scope.getHistoryData(reqParam, graphParam)
 
   $scope.getHistoryData = (reqParam,graphParam) ->
-    reportService.historicData(reqParam, graphParam).then $scope.getHistoryDataSuccess, $scope.getHistoryDataFailure
+    reportService.newHistoricData(reqParam, graphParam).then $scope.getHistoryDataSuccess, $scope.getHistoryDataFailure
 
   $scope.getHistoryDataSuccess = (res) ->
     $scope.graphData = res.body
@@ -103,7 +103,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
       category = groups[0].category
       duration = ""
       interval = []
-      interval = _.toArray(_.groupBy(_.flatten(_.pluck(groups, 'intervalBalances')), 'to'))
+      interval = _.toArray(_.groupBy(_.flatten(_.pluck(groups, 'intervalBalances')), 'from'))
       _.each(interval, (group) ->
         closingBalance = {}
         closingBalance.amount = 0
@@ -138,16 +138,20 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
     $scope.generateChartData(monthWise)
 
   $scope.generateChartData = (data) ->
+    console.log("data we have : ",data)
     $scope.chartData.data.rows = []
+    rowsToAdd = []
     _.each(data, (monthly) ->
       row = {}
       row.c = []
       row.c.push({v:monthly[0].month})
-      _.each(monthly, (account) ->
+      sortedMonth = _.sortBy(monthly, 'category')
+      _.each(sortedMonth, (account) ->
         row.c.push({v:account.closingBalance.amount})
       )
-      $scope.chartData.data.rows.push(row)
+      rowsToAdd.push(row)
     )
+    $scope.chartData.data.rows = rowsToAdd
     $scope.dataAvailable = true
 
   $scope.$on 'company-changed', (event,changeData) ->
