@@ -7,7 +7,7 @@
   <span></span>
 </div>
  -->
-<div class="page-loader" ng-show="superLoader &&accountUnq.length > 0 || pageLoader">
+<div class="page-loader" ng-show="pageLoader">
   <div class="giddh-spinner vertical-center-spinner"></div>
 </div>
 
@@ -204,7 +204,7 @@
                           <tr id="{{ledger.uniqueName}}" class="" 
                           ng-repeat="ledger in ledgerData.ledgers 
                           | filter:particularSearch
-                          " 
+                          | limitTo: dLedgerLimit" 
                           ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed}">
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
