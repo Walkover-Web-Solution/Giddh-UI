@@ -203,7 +203,7 @@ header .navbar-nav > li.active {
 }
 
 .cName {
-    font-size: 15px;
+    font-size: 12px;
     line-height: 20px;
     min-width: 130px;
     text-transform: uppercase;
@@ -3083,6 +3083,11 @@ ul.pills li {
     overflow:initial;
 }
 
+.fixed-panel .anShrt{
+    margin-top:5px;
+    margin-right:20px;
+}
+
 .pop-panel{
     position: relative !important;
     width:640px !important;
@@ -3092,6 +3097,10 @@ ul.pills li {
     overflow:visible;
     clear:both;
     float:left;
+}
+
+.pop-panel .anShrt{
+    margin-top:10px;
 }
 
 .bottom0 {
@@ -3144,7 +3153,7 @@ ul.pills li {
     width: 100%;
     background: rgba(0, 0, 0, 0.9);
     color: #fff;
-    z-index: 3;
+    z-index: 1100;
     list-style-type: none;
     padding: 0px;
 }
@@ -3528,10 +3537,27 @@ tr.db-bnk-account > td.reconnectDiv{
     left: 0;
     bottom: 0;
     background: #fff;
-    z-index: 99999;
+    z-index: 1040;
     opacity: 0.8;
 }
 
 .panel-body .chart-div{
-    height: 340px;
+    height: 300px;
+}
+
+.maxWidth250{
+    max-width: 250px;
+}
+
+.icon-center{
+    top: 33px;
+    right: 25px;
+}
+
+.modal {
+    z-index: 1200;
+}
+
+.popover{
+    z-index: 1000;
 }

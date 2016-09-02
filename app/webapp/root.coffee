@@ -86,7 +86,12 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
         companyServices.getAll().then(onSuccess, onFailure)
     }
     templateUrl: '/public/webapp/views/demo.html'
-    controller: 'homeController')
+    controller: 'homeController'
+  )
+  .state('dashboard',
+    url: '/dashboard'
+    templateUrl: '/public/webapp/Dashboard/dashboard.html'
+  )
   .state('Reports',
     url: '/reports'
     templateUrl: '/public/webapp/Reports/reports.html',
@@ -201,10 +206,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/thankyou'
     templateUrl: '/public/webapp/views/thanks.html'
     controller: 'thankyouController'
-  )
-  .state('dashboard',
-    url: '/dashboard'
-    templateUrl: '/public/webapp/Dashboard/dashboard.html'
   )
   $locationProvider.html5Mode(false)
   return
@@ -343,7 +344,7 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$t
             ), 2000
       else if responseError.status is 401
         if _.isObject(responseError.data) and responseError.data.code is "INVALID_AUTH_KEY"
-          toastr.error('INVALID_AUTH_KEY:- Provided auth key is not valid')
+          toastr.error('Your Session has Expired, Please Login Again.')
           $timeout ( ->
             window.location.assign('/login')
           ), 2000

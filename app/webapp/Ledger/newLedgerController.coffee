@@ -2,6 +2,7 @@
 newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state) ->
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
+  $scope.pageLoader = false
   #date time picker code starts here
   $scope.today = new Date()
   d = moment(new Date()).subtract(1, 'month')
@@ -124,6 +125,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if !$scope.hasBlankTxn
       ledger.transactions.push(txn)
     $scope.setFocusToBlankTxn(ledger, txn, str)
+    $scope.blankCheckCompEntry(ledger)
   
   $scope.setFocusToBlankTxn = (ledger, transaction, str) ->
     _.each ledger.transactions, (txn) ->
@@ -491,6 +493,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.getLedgerData = (showLoaderCondition) ->
     $scope.showLoader = showLoaderCondition
+    $scope.pageLoader = showLoaderCondition
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.getAccountDetail($scope.accountUnq)
@@ -510,9 +513,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.countTotalTransactions()
     $scope.sortTransactions($scope.ledgerData, 'entryDate')
     $scope.showLoader = false
+    $scope.pageLoader = false
 
   $scope.getLedgerDataFailure = (res) ->
     toastr.error(res.data.message)
+    $scope.pageLoader = false
 
   $scope.updateLedgerData = (condition, ledger) ->
     unqNamesObj = {
@@ -542,24 +547,25 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     toastr.error(res.data.message)
 
   $scope.paginateledgerData = (ledgers) ->
-    $scope.ledgerCounter = 0
-    $scope.ledgerCount = 30
+    $scope.ledgerCount = 20
     $scope.dLedgerLimit = $scope.setCounter(ledgers, 'DEBIT')
     $scope.cLedgerLimit = $scope.setCounter(ledgers, 'CREDIT')
     
   $scope.setCounter = (ledgers, type) ->
-    c = 1
-    d = 1  
+    txns = 0
+    ledgerCount = 0  
     _.each ledgers, (led) ->
       l = 0
+      #count transactions in ledger
       _.each led.transactions, (txn) ->
         if txn.type == type
           l += 1 
-      if c <= $scope.ledgerCount
-        c += l
-        d += 1
-    $scope.ledgerCounter = d - 1
-    d
+      if txns <= $scope.ledgerCount
+        txns += l
+        ledgerCount += 1
+    if ledgerCount < txns
+      ledgerCount = txns
+    ledgerCount
 
   $scope.countTotalTransactionsAfterSomeTime = () ->
     $timeout ( ->
@@ -621,6 +627,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   # get tax list
 
   $scope.getTaxList = () ->
+    $scope.pageLoader = true
     $scope.taxList = []
     if $rootScope.canUpdate and $rootScope.canDelete
       companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
@@ -633,10 +640,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         tax.account.uniqueName = 0
       $scope.taxList.push(tax)
     $scope.matchTaxAccounts($scope.taxList)
+    $scope.pageLoader = false
 
 
   $scope.getTaxListFailure = (res) ->
     toastr.error(res.data.message, res.status)
+    $scope.pageLoader = false
 
   $scope.matchTaxAccounts = (taxlist) ->
     _.each taxlist, (tax) ->
@@ -705,6 +714,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.selectedLedger.index = index
     #if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
     $scope.checkCompEntry(ledger)
+    $scope.blankCheckCompEntry(ledger)
     $scope.isTransactionContainsTax(ledger)
     e.stopPropagation() 
 
@@ -756,9 +766,19 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     else
       $scope.blankLedger.isCompoundEntry = false
 
+  $scope.blankCheckCompEntry = (ledger) ->
+    if ledger.isBlankLedger
+      _.each ledger.transactions, (txn) ->
+        if txn.particular.uniqueName.length > 0
+          ledger.isBlankCompEntry = true
+    else
+      ledger.isBlankCompEntry = false 
+      $scope.blankLedger.isBlankCompEntry = false
+
   $scope.doingEntry = false
   $scope.lastSelectedLedger = {}
   $scope.saveUpdateLedger = (ledger) ->
+    $scope.pageLoader = true
     $scope.lastSelectedLedger = ledger
     $scope.dLedgerLimitBeforeUpdate = $scope.dLedgerLimit
     $scope.cLedgerLimitBeforeUpdate = $scope.cLedgerLimit
@@ -1085,6 +1105,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.pushNewEntryToLedger(res.body)
     if ledger.isBankTransaction
       $scope.updateBankLedger(ledger)
+    $timeout ( ->
+      $scope.pageLoader = false
+    ), 2000
 
   $scope.addEntryFailure = (res, rejectedTransactions, ledger) ->
     $scope.doingEntry = false
@@ -1094,6 +1117,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       _.each(rejectedTransactions, (rTransaction) ->
         $scope.selectedLedger.transactions.push(rTransaction)
       )
+    $timeout ( ->
+      $scope.pageLoader = false
+    ), 1000
 
   $scope.updateBankLedger = (ledger) ->
     _.each $scope.eLedgerData, (eledger, idx) ->
@@ -1132,18 +1158,23 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.updateLedgerData('update',res.body)
     $timeout ( ->
       ledger.total = $scope.updatedLedgerTotal
+      $scope.pageLoader = false
     ), 2000
     
   $scope.updateEntryFailure = (res, ledger) ->
     $scope.doingEntry = false
     ledger.failed = true
     toastr.error(res.data.message, res.data.status)
-
+    $timeout ( ->
+      $scope.pageLoader = false
+    ), 1000
+    
   $scope.closePopOverSingleLedger = (ledger) ->
     _.each ledger.transactions, (txn) ->
       txn.isOpen = false
 
   $scope.deleteEntry = (ledger) ->
+    $scope.pageLoader = true
     $scope.lastSelectedLedger = ledger
     if (ledger.uniqueName == undefined || _.isEmpty(ledger.uniqueName)) && (ledger.isBankTransaction)
       return
@@ -1171,9 +1202,16 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       ), 2000
 #    $scope.calculateLedger($scope.ledgerData, "deleted")
     $scope.updateLedgerData('delete')
+    $timeout ( ->
+      $scope.pageLoader = false
+    ), 1000
+    
   
   $scope.deleteEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
+    $timeout ( ->
+      $scope.pageLoader = false
+    ), 1000
 
   $scope.removeDeletedLedger = (item) ->
     index = 0
@@ -1391,7 +1429,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       selGrpUname: $scope.newAccountModel.group.groupUniqueName
       acntUname: $scope.newAccountModel.accUnqName
     }
-    accountService.createAc(unqNamesObj, newAccount).then($scope.addNewAccountConfirmSuccess, $scope.addNewAccountConfirmFailure) 
+    if $scope.newAccountModel.group.groupUniqueName == '' || $scope.newAccountModel.group.groupUniqueName == undefined
+      toastr.error('Please select a group.')
+    else
+      accountService.createAc(unqNamesObj, newAccount).then($scope.addNewAccountConfirmSuccess, $scope.addNewAccountConfirmFailure) 
 
   $scope.addNewAccountConfirmSuccess = (res) ->
     toastr.success('Account created successfully')
@@ -1402,10 +1443,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     toastr.error(res.data.message)
 
   $scope.genearateUniqueName = (unqName) ->
+    unqName = unqName.replace(/ /g,'')
+    unqName = unqName.toLowerCase()
     if unqName.length >= 1
       unq = ''
       text = ''
-      chars = 'abcdefghijklmnopqrstuvwxyz0123456789-_'
+      chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
       i = 0
       while i < 3
         text += chars.charAt(Math.floor(Math.random() * chars.length))
@@ -1420,7 +1463,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       $scope.genearateUniqueName(unqName)
     ), 800
 
-  $rootScope.$on 'company-changed', (event,changeData) ->
+  $scope.$on 'company-changed', (event,changeData) ->
     # when company is changed, redirect to manage company page
     if changeData.type == 'CHANGE'
       $scope.redirectToState('company.content.manage')

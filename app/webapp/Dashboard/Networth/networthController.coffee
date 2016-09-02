@@ -5,7 +5,7 @@ networth = angular.module('networthModule', [
 #"networthDirectives"
 ])
 
-networthController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $timeout) ->
+networthController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $timeout, $state) ->
   $scope.unq = 0
   $scope.monthArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   $scope.series = ['Net worth']
@@ -50,7 +50,13 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
       chartArea:{
         width:'85%',
         right: 10
-      }
+      },
+      curveType: 'function',
+      pointSize: 5,
+      animation:{
+        duration: 1000,
+        easing: 'out',
+      },
     }
   }
 
@@ -150,7 +156,7 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
       toDate = moment().get('YEARS')
     setDate+"-"+toDate
 
-  $rootScope.$on 'company-changed', (event,changeData) ->
+  $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
       $scope.setDateByFinancialYear()
       $scope.getNWdata($scope.fromDate,$scope.toDate)

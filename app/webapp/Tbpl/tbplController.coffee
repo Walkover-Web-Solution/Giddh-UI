@@ -289,6 +289,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.getTrialBalSuccess = (res) ->
     $scope.makeDataForPl(res.body)
     $scope.addUIKey(res.body.groupDetails)
+    $scope.removeSd(res.body.groupDetails)
     $scope.data = res.body
     $scope.exportData = []
     $scope.data.groupDetails = $scope.orderGroups(res.body.groupDetails)
@@ -298,13 +299,29 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       $scope.balSheet.assetTotal += $scope.plData.closingBalance
     else if $scope.inProfit == true
       $scope.balSheet.liabTotal += $scope.plData.closingBalance
-    $scope.exportData = $scope.data.groupDetails
+    $scope.exportData = res.body.groupDetails
     if $scope.data.closingBalance.amount is 0 and $scope.data.creditTotal is 0 and $scope.data.debitTotal is 0 and $scope.data.forwardedBalance.amount is 0
       $scope.noData = true
     $scope.showTbplLoader = false
 
+  $scope.removeSd = (data) ->
+    _.each data, (grp) ->
+      if grp.childGroups.length > 0
+        _.each grp.childGroups, (ch) ->
+          if ch.uniqueName == 'sundry_debtors'
+            ch.accounts = []
+            if ch.childGroups.length > 0
+              $scope.removeAcc(ch)
+
+  $scope.removeAcc = (grp) ->
+    grp.accounts = []
+    if grp.childGroups.length > 0
+      _.each grp.childGroups, (ch) ->
+        $scope.removeAcc(ch)
+
   $scope.getTrialBalFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
+    $scope.showTbplLoader = false
 
   $scope.filterBydate = () ->
     dateObj =
@@ -721,7 +738,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
         total += obj.closingBalance.amount
     total
 
-  $rootScope.$on 'company-changed' , (event, data) ->
+  $scope.$on 'company-changed' , (event, data) ->
     if data.type == 'CHANGE'
       $state.reload()
  

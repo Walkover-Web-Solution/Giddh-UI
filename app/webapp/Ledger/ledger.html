@@ -7,7 +7,7 @@
   <span></span>
 </div>
  -->
-<div class="page-loader" ng-show="superLoader && accountUnq.length > 0 ">
+<div class="page-loader" ng-show="superLoader &&accountUnq.length > 0 || pageLoader">
   <div class="giddh-spinner vertical-center-spinner"></div>
 </div>
 
@@ -204,7 +204,7 @@
                           <tr id="{{ledger.uniqueName}}" class="" 
                           ng-repeat="ledger in ledgerData.ledgers 
                           | filter:particularSearch
-                          | limitTo: dLedgerLimit " 
+                          " 
                           ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed}">
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
@@ -258,7 +258,7 @@
                                   popover-enable="!popover.draggable" 
                                   popover-is-open="txn.isOpen && showLedgerPopover"
                                   popover-popup-delay="200"  
-                                  ng-class="{'failed-entry':blankLedger.failed,  'highlight-txn': txn.isOpen}"
+                                  ng-class="{'failed-entry':blankLedger.failed,  'highlight-txn': txn.isOpen, compoundEntry: blankLedger.isBlankCompEntry}"
                                   >
                                     <!-- <td class="col-xs-1 maxW42">
                                       <input type="checkbox">
@@ -279,7 +279,6 @@
                               </table>
                             </td>
                           </tr>
-
                         </tbody>
                       </table>
                     </perfect-scrollbar>
@@ -383,7 +382,7 @@
                                   popover-append-to-body='true' 
                                   popover-enable="!popover.draggable" 
                                   popover-is-open="txn.isOpen && showLedgerPopover"  
-                                  ng-class="{'failed-entry':blankLedger.failed, 'highlight-txn': txn.isOpen}">
+                                  ng-class="{'failed-entry':blankLedger.failed, 'highlight-txn': txn.isOpen, compoundEntry: blankLedger.isBlankCompEntry}">
                                     <!-- <td class="col-xs-1 maxW42">
                                       <input type="checkbox">
                                     </td> -->
@@ -518,18 +517,18 @@
               </div>
             </div>
           </div>
-          <div class="" ng-if="canUpdate">
+          <div class="clearfix" ng-if="canUpdate">
             <button accesskey="x" ng-if="(selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="addBlankTxn('DEBIT', selectedLedger)">Add in DR</button>
             <button accesskey="c" ng-if="(selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="addBlankTxn('CREDIT', selectedLedger)">Add in CR</button>
             <button id="saveUpdate" ng-if="(selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined) || (selectedLedger.transactions[1].particular.uniqueName != '' && selectedLedger.transactions[1].particular.uniqueName != undefined)" class="pull-left mrR1 btn btn-sm btn-success min150" ng-click="saveUpdateLedger(selectedLedger)" ng-disabled="doingEntry">
               <span ng-if="(selectedLedger.uniqueName == undefined || selectedLedger.uniqueName == '') || selectedLedger.isBankTransaction == true">Save</span>
               <span ng-if="(selectedLedger.uniqueName != undefined && selectedLedger.uniqueName != '') && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)">Update</span>
             </button>
-            <button ng-if="(selectedLedger.uniqueName == undefined || selectedLedger.uniqueName == '') && ((selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined) || (selectedLedger.transactions[1].particular.uniqueName != '' && selectedLedger.transactions[1].particular.uniqueName != undefined)) && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default" ng-click="resetLedger()">Reset</button>
+            <button ng-if="(selectedLedger.uniqueName == undefined || selectedLedger.uniqueName == '') && ((selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined) || (selectedLedger.transactions[1].particular.uniqueName != '' && selectedLedger.transactions[1].particular.uniqueName != undefined)) && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default mrL1" ng-click="resetLedger()">Reset</button>
             <i ng-if="(selectedLedger.uniqueName != undefined && selectedLedger.uniqueName != '') && selectedLedger.invoiceGenerated == false && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-right glyphicon glyphicon-trash mrR1 pos-abs" uib-tooltip="Delete" tooltip-placement="left" style="top:9px;right:1px;color:#d35f29;" ng-click="deleteEntry(selectedLedger);deleteMultipleTransactions()" uib-tooltip=""></i>
-            <a class="pull-right mrT1" href="javascript:void(0)" ng-click="addNewAccount()">Add New Account (Shortcut)</a>
+            <button class="btn btn-sm close-panel pull-right pos-rel" ng-click="closePanel()" ng-if="popover.draggable">Close</button>
+            <a class="pull-right anShrt" href="javascript:void(0)" ng-click="addNewAccount()">Add New Account (Shortcut)</a>
           </div>
-          <button class="btn btn-sm close-panel pull-right pos-rel" ng-click="closePanel()" ng-if="popover.draggable">Close</button>
         </div>
       </div>
     </div>

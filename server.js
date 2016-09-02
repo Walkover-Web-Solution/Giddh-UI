@@ -12,6 +12,7 @@ var request = require('request');
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(session);
+var MemcachedStore = require('connect-memcached')(session);
 //global.sessionTTL = 1000 * 60
 //Example POST method invocation 
 var Client = require('node-rest-client').Client; 
@@ -25,6 +26,7 @@ var rest = require('restler');
 
 var app = settings.express();
 
+app.disable('x-powered-by');
 //// Require and setup mashape analytics
 //var analytics = require('mashape-analytics')
 //var agent = analytics('5628ae08593b00f7098a3b3d', 'giddh-ui', {
@@ -81,13 +83,17 @@ app.use(session({
     secure: false,
     maxAge: sessionTTL
   },
-  store: new MongoStore({
-      url: settings.mongoUrl,
-      autoRemove: 'interval',
-      autoRemoveInterval: sessionTTL,
-      ttl: sessionTTL,
-      touchAfter: sessionTTL - 300
-  })
+  // store: new MongoStore({
+  //     url: settings.mongoUrl,
+  //     autoRemove: 'interval',
+  //     autoRemoveInterval: sessionTTL,
+  //     ttl: sessionTTL,
+  //     touchAfter: sessionTTL - 300
+  // })
+  // store   : new MemcachedStore({
+  //   hosts: ['127.0.0.1:11211'],
+  //   secret: 'keyboardcat'
+  // })
 }));
 
 // some global variables

@@ -5,13 +5,14 @@ dashboard = angular.module('dashboard', [
   "liveaccountsModule"
   "piechartModule"
   "historicalModule"
+  "compareModule"
 ])
 
 dashboardController = ($scope, $rootScope) ->
   $rootScope.cmpViewShow = true
 
-  $rootScope.$on 'company-changed', (event,changeData) ->
+  $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
-      $state.reload()
+      $scope.$broadcast('reloadAll')
 
 #dashboard.controller 'dashboardController',dashboardController

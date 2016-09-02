@@ -681,7 +681,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 #    toastr.error(res.data.message, "Error")
   
 
-  $rootScope.$on 'company-changed', (event,changeData) ->
+  $scope.$on 'company-changed', (event,changeData) ->
     # when company is changed, redirect to manage company page
     if changeData.type == 'CHANGE'
       $scope.tabs[0].active = true

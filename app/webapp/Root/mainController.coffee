@@ -435,7 +435,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     changeData.data = company
     changeData.index = index
     changeData.type = method
-    $rootScope.$emit('company-changed', changeData)
+    $scope.$broadcast('company-changed', changeData)
     #$scope.tabs[0].active = true
 
   $scope.setFYonCompanychange = (company) ->

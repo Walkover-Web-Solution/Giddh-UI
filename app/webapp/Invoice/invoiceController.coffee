@@ -929,10 +929,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $scope.invoiceLoadDone = false
   )
 
-  $rootScope.$on 'company-changed' , () ->
-    $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
-    $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,['sundry_debtors','revenue_from_operations'])
-
   $timeout(->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
     if !_.isEmpty($rootScope.selectedCompany)
@@ -951,7 +947,9 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   $scope.redirectToState = (state) ->
     $state.go(state)
 
-  $rootScope.$on 'company-changed', (event,changeData) ->
+  $scope.$on 'company-changed', (event,changeData) ->
+    $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+    $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,['sundry_debtors','revenue_from_operations'])
     # when company is changed, redirect to manage company page
     if changeData.type == 'CHANGE'
       $scope.redirectToState('company.content.manage')

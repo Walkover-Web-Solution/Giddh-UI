@@ -85,7 +85,7 @@ liveaccountsController = ($rootScope, $scope, $uibModal, userServices, localStor
   $scope.refreshBankFailure = (res) ->
     toastr.error(res.data.message, "Error")
 
-  $rootScope.$on 'company-changed', (event,changeData) ->
+  $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
       $scope.getLiveData()
 
