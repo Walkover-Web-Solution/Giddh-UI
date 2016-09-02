@@ -493,7 +493,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.getLedgerData = (showLoaderCondition) ->
     $scope.showLoader = showLoaderCondition
-    $scope.pageLoader = showLoaderCondition
+    $scope.pageLoader = showLoaderCondition || true
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.getAccountDetail($scope.accountUnq)
@@ -548,9 +548,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.paginateledgerData = (ledgers) ->
     $scope.ledgerCount = 20
-    $scope.dLedgerLimit = $scope.setCounter(ledgers, 'DEBIT')
-    $scope.cLedgerLimit = $scope.setCounter(ledgers, 'CREDIT')
-    
+    # $scope.dLedgerLimit = $scope.setCounter(ledgers, 'DEBIT')
+    # $scope.cLedgerLimit = $scope.setCounter(ledgers, 'CREDIT')
+    $scope.dLedgerLimit = 50
+    $scope.cLedgerLimit = 50
+
+
   $scope.setCounter = (ledgers, type) ->
     txns = 0
     ledgerCount = 0  
@@ -565,6 +568,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         ledgerCount += 1
     # if ledgerCount < txns
     #   ledgerCount = txns
+    if ledgerCount < 20
+      ledgerCount = $scope.ledgerCount
     ledgerCount
 
   $scope.countTotalTransactionsAfterSomeTime = () ->
@@ -1336,10 +1341,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     e.stopPropagation()
 
   $scope.onledgerScroll = (top,height,e) ->
-    # if top > 200
-    #   $rootScope.hideHeader = true
-    # else
-    #   $rootScope.hideHeader = false
+    if top >= height-100
+      $scope.cLedgerLimit += 10
+      $scope.dLedgerLimit += 10
 
   $scope.triggerPanelFocus = (e) ->
     if e.keyCode == 13
