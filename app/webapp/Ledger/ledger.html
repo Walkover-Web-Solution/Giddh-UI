@@ -7,7 +7,7 @@
   <span></span>
 </div>
  -->
-<div class="page-loader" ng-show="pageLoader">
+<div class="page-loader" ng-show="accountUnq.length != '' && showLoader">
   <div class="giddh-spinner vertical-center-spinner"></div>
 </div>
 
@@ -59,7 +59,7 @@
                 </p>
               </div>
               <div class="form-group">
-                <button type="button" class="btn btn-primary mrL1" ng-click="getLedgerData()" ng-disabled="fromToDateForm.$invalid">
+                <button type="button" class="btn btn-default mrL1" ng-click="getLedgerData()" ng-disabled="fromToDateForm.$invalid">
                   GO
                 </button>
               </div>
