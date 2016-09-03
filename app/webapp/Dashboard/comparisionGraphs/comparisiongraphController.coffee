@@ -30,56 +30,115 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
       format: 'long'
     }
   }
+  $scope.chartOptionsWODiff = {
+    seriesType: 'line',
+    series: {1: {type: 'line',pointShape: 'star'}},
+    colors: ['#d35f29', '#337ab7'],
+    legend:{position:'none'},
+    chartArea:{
+      width:'85%',
+      right: 10
+    },
+    curveType: 'function',
+    pointSize: 5,
+    animation:{
+      duration: 1000,
+      easing: 'out',
+    },
+    hAxis:{
+      slantedText:true
+    },
+    vAxis:{
+      scaleType: 'mirrorLog',
+      format: 'long'
+    }
+  }
+  $scope.chartColumnFormation = [
+      {
+        "id": "sMonth",
+        "label": "Month",
+        "type": "string",
+        "p": {}
+      },
+      {
+        "id": "previousSBalance",
+        "label": "Previous",
+        "type": "number",
+        "p": {}
+      },{
+        "id": "toolP",
+        "type": "string",
+        "role": "tooltip"
+      },{
+        "id": "previousTBalance",
+        "label": "Total",
+        "type": "number",
+        "p": {}
+      },{
+        "id": "toolPT",
+        "type": "string",
+        "role": "tooltip"
+      },{
+        "id": "currentSBalance",
+        "label": "Current",
+        "type": "number",
+        "p": {}
+      },{
+        "id": "tool",
+        "type": "string",
+        "role": "tooltip"
+      },
+      {
+        "id": "currentTBalance",
+        "label": "Total",
+        "type": "number",
+        "p": {}
+      },{
+        "id": "toolST",
+        "type": "string",
+        "role": "tooltip"
+      }
+  ]
   $scope.chartData = {
     "type": $scope.chartType,
     "data": {
-      "cols": [
-        {
-          "id": "sMonth",
-          "label": "Month",
-          "type": "string",
-          "p": {}
-        },
-        {
-          "id": "previousSBalance",
-          "label": "Previous",
-          "type": "number",
-          "p": {}
-        },{
-          "id": "toolP",
-          "type": "string",
-          "role": "tooltip"
-        },{
-          "id": "previousTBalance",
-          "label": "Total",
-          "type": "number",
-          "p": {}
-        },{
-          "id": "toolPT",
-          "type": "string",
-          "role": "tooltip"
-        },{
-          "id": "currentSBalance",
-          "label": "Current",
-          "type": "number",
-          "p": {}
-        },{
-          "id": "tool",
-          "type": "string",
-          "role": "tooltip"
-        },
-        {
-          "id": "currentTBalance",
-          "label": "Total",
-          "type": "number",
-          "p": {}
-        },{
-          "id": "toolST",
-          "type": "string",
-          "role": "tooltip"
-        }]
+      "cols" : $scope.chartColumnFormation
     },
     "options": $scope.chartOptions
+  }
+  $scope.chartColumnFormationWODiff = [
+    {
+      "id": "sMonth",
+      "label": "Month",
+      "type": "string",
+      "p": {}
+    },
+    {
+      "id": "previousSBalance",
+      "label": "Previous",
+      "type": "number",
+      "p": {}
+    },{
+      "id": "toolP",
+      "type": "string",
+      "role": "tooltip"
+    },{
+      "id": "currentSBalance",
+      "label": "Current",
+      "type": "number",
+      "p": {}
+    },{
+      "id": "tool",
+      "type": "string",
+      "role": "tooltip"
+    }
+  ]
+  $scope.chartDataWODiff = {
+    "type": $scope.chartType,
+    "data": {
+      "cols": $scope.chartColumnFormationWODiff
+    },
+    "options": $scope.chartOptionsWODiff
   }
   $scope.groupArray = {
     sales: ["revenue_from_operations"]
@@ -135,7 +194,7 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
         setDate = "01-04-" + moment().get('YEARS')
       else
         setDate = "01-04-" + moment().subtract(1, 'years').get('YEARS')
-      $scope.generateData($scope.selectedChart, setDate, moment().format('DD-MM-YYYY'))
+#      $scope.generateData($scope.selectedChart, setDate, moment().format('DD-MM-YYYY'))
     else
       $scope.dataAvailable = false
       $scope.errorMessage = res.data.message
@@ -262,6 +321,11 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
     )
     $scope.chartData.data.rows = rowsToAdd
 
+  $scope.switchData = (condition, rowsToAdd) ->
+    if condition == true
+      $scope.chartData.data.rows = rowsToAdd
+    else
+      $scope.chartDataWODiff.data.rows = rowsToAdd
 
   $scope.setDateByFinancialYear = () ->
 #    presentYear = $scope.getPresentFinancialYear()

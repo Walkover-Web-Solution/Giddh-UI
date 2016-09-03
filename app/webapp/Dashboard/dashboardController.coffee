@@ -6,6 +6,7 @@ dashboard = angular.module('dashboard', [
   "piechartModule"
   "historicalModule"
   "compareModule"
+  "revenuechartModule"
 ])
 
 dashboardController = ($scope, $rootScope) ->
