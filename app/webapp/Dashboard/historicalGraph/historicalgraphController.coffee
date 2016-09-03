@@ -52,6 +52,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
     }
   }
   }
+  $scope.secondTime = 0
 
   $scope.setDateByFinancialYear = () ->
     presentYear = $scope.getPresentFinancialYear()
@@ -86,6 +87,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
       ),2000
     else
       $scope.graphData = []
+      $scope.chartData.data.rows = []
       reqParam = {
         'cUname': $rootScope.selectedCompany.uniqueName
         'fromDate': fromDate
@@ -95,7 +97,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
       graphParam = {
         'groups': ["indirect_expenses","operating_cost"]
       }
-      $scope.getHistoryData(reqParam, $scope.getGraphParam("revenue_from_operations"))
+      $scope.getHistoryData(reqParam, {"groups":["revenue_from_operations"]})
       $scope.getHistoryData(reqParam, graphParam)
 
   $scope.getGraphParam = (groupUName) ->
@@ -113,12 +115,16 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
 
   $scope.getHistoryDataFailure = (res) ->
     if res.data.code == "INVALID_DATE"
-      setDate = ""
-      if moment().get('months') > 4
-        setDate = "01-04-" + moment().get('YEARS')
+      if $scope.secondTime <= 0
+        $scope.secondTime = $scope.secondTime + 1
+        setDate = ""
+        if moment().get('months') > 4
+          setDate = "01-04-" + moment().get('YEARS')
+        else
+          setDate = "01-04-" + moment().subtract(1, 'years').get('YEARS')
+        $scope.getHistory(setDate, moment().format('DD-MM-YYYY'))
       else
-        setDate = "01-04-" + moment().subtract(1, 'years').get('YEARS')
-      $scope.getHistory(setDate, moment().format('DD-MM-YYYY'))
+        $scope.secondTime = 0
     else
       $scope.dataAvailable = false
       $scope.errorMessage = res.data.message
