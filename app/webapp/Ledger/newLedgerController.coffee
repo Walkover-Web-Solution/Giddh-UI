@@ -492,7 +492,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #     txn.particular = txn.remarks
 
   $scope.getLedgerData = (showLoaderCondition) ->
-    $scope.showLoader = showLoaderCondition || true
+    $scope.showLoader = showLoaderCondition
+    $scope.pageLoader = showLoaderCondition
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.getAccountDetail($scope.accountUnq)
@@ -1455,9 +1456,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.addNewAccountConfirmFailure = (res) ->
     toastr.error(res.data.message)
-
-  $scope.doWeHavePermission = () ->
-
 
   $scope.genearateUniqueName = (unqName) ->
     unqName = unqName.replace(/ /g,'')

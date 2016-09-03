@@ -2877,14 +2877,12 @@ ul.pills li {
 .left-col {
     border: 1px solid #ccc;
     border-top: none;
-    border-bottom: none;
 }
 
 .right-col {
     border: 1px solid #ccc;
     border-left: none;
     border-top: none;
-    border-bottom: none;
 }
 
 /* ledger container */
