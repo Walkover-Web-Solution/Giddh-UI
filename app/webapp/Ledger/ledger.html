@@ -198,7 +198,7 @@
                         </tr>
                       </thead>
                     </table>
-                    <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScrollDebit(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84" min-height="600" > -->
+                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScrollDebit(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84" min-height="600" >
                       <table class="width100">
                         <tbody>
                           <tr id="{{ledger.uniqueName}}" class="" 
@@ -281,9 +281,9 @@
                           </tr>
                         </tbody>
                       </table>
-                    <!-- </perfect-scrollbar> -->
+                    </perfect-scrollbar>
                   </section>
-<!--                 <table class="width100">
+                <table class="width100">
                   <tbody>
                       <tr class="t-h-bg3 bdr-w-t">
                         <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
@@ -295,7 +295,7 @@
                         <td colspan="6" class="col-xs-6 text-right bdr-w-t bold">Reckoning : {{ledgerData.debitTotal | number:2}}</td>
                       </tr>
                   </tbody>
-                </table> -->
+                </table>
               </div>
               <!--right column-->
               <div class="right-col">
@@ -323,7 +323,7 @@
                       </thead>
                     </table>
 
-                    <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="10" auto-height on-scroll="onScrollCredit(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="600"> -->
+                    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="10" auto-height on-scroll="onScrollCredit(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="600">
                       <table class="width100">
                         <tbody>
                           <tr id="{{ledger.uniqueName}}" class="" ng-repeat="ledger in ledgerData.ledgers | 
@@ -406,9 +406,9 @@
                           </tr>
                         </tbody>
                       </table>
-                    <!-- </perfect-scrollbar> -->
+                    </perfect-scrollbar>
                   </section>
-<!--                 <table class="width100">
+                <table class="width100">
                   <tbody>
                       <tr class="t-h-bg3">
                         <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
@@ -420,42 +420,8 @@
                         <td colspan="6" class="col-xs-6 text-right bold">Reckoning: {{ledgerData.creditTotal | number:2}}</td>
                       </tr>
                   </tbody>
-                </table> -->
+                </table>
               </div>
-              <table class="width100" style="border:1px solid #ccc">
-                <tbody>
-                  <td colspan="6" style="border-right:1px solid #ccc">
-                    <table class="width100">
-                      <tbody>
-                          <tr class="t-h-bg3">
-                            <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
-                              <span  ng-if="ledgerData.balance.type == 'DEBIT'">C/F: Dr {{ledgerData.balance.amount | number:2}}</span>
-                            </td>
-                          </tr>
-                          <tr class="t-h-bg2 bdr-w-t h42">
-                            <td colspan="6" class="col-xs-6 text-left bold">Credit Total: {{creditTotal | number:2}}</td>
-                            <td colspan="6" class="col-xs-6 text-right bold">Reckoning: {{ledgerData.creditTotal | number:2}}</td>
-                          </tr>
-                      </tbody>
-                    </table>
-                  </td>
-                  <td colspan="6">
-                    <table class="width100">
-                      <tbody>
-                          <tr class="t-h-bg3">
-                            <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
-                              <span  ng-if="ledgerData.balance.type == 'DEBIT'">C/F: Dr {{ledgerData.balance.amount | number:2}}</span>
-                            </td>
-                          </tr>
-                          <tr class="t-h-bg2 bdr-w-t h42">
-                            <td colspan="6" class="col-xs-6 text-left bold">Credit Total: {{creditTotal | number:2}}</td>
-                            <td colspan="6" class="col-xs-6 text-right bold">Reckoning: {{ledgerData.creditTotal | number:2}}</td>
-                          </tr>
-                      </tbody>
-                    </table>
-                  </td>
-                </tbody>
-              </table>
             </div>
 
           </div>
