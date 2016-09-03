@@ -35,17 +35,28 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
     colors: ['#d35f29','#337ab7'],
     legend:{position:'none'},
     chartArea:{
-      width:'100%'
+      width:'85%',
+      right: 10
     },
     curveType: 'function',
-    pointSize: 5
+    pointSize: 5,
+    animation:{
+      duration: 1000,
+      easing: 'out',
+    },
+    hAxis:{
+      slantedText:true
+    }
+    vAxis:{
+      format: 'long'
+    }
   }
   }
 
   $scope.setDateByFinancialYear = () ->
     presentYear = $scope.getPresentFinancialYear()
     if $rootScope.currentFinancialYear == presentYear
-      $scope.fromDate = moment().subtract(1, 'years').add(1,'months').format('DD-MM-YYYY')
+      $scope.fromDate = moment().subtract(1, 'years').add(1,'months').set('date',1).format('DD-MM-YYYY')
       $scope.toDate = moment().format('DD-MM-YYYY')
     else
       $scope.fromDate = $rootScope.selectedCompany.activeFinancialYear.financialYearStarts
@@ -62,7 +73,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
       toDate = moment().get('YEARS')
     setDate+"-"+toDate
 
-  $scope.getHistory = () ->
+  $scope.getHistory = (fromDate, toDate) ->
 #    write code to get history data
     $scope.errorMessage = ""
     $scope.dataAvailable = false
@@ -70,15 +81,15 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     if $rootScope.currentFinancialYear == undefined
       $timeout ( ->
-        $scope.getHistory()
+        $scope.setDateByFinancialYear()
+        $scope.getHistory($scope.fromDate,$scope.toDate)
       ),2000
     else
-      $scope.setDateByFinancialYear()
       reqParam = {
         'cUname': $rootScope.selectedCompany.uniqueName
-        'fromDate': $scope.fromDate
-        'toDate': $scope.toDate
-        'interval': 30
+        'fromDate': fromDate
+        'toDate': toDate
+        'interval': "monthly"
       }
       graphParam = {
         'groups' : $scope.groupArray
@@ -86,15 +97,23 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
       $scope.getHistoryData(reqParam, graphParam)
 
   $scope.getHistoryData = (reqParam,graphParam) ->
-    reportService.historicData(reqParam, graphParam).then $scope.getHistoryDataSuccess, $scope.getHistoryDataFailure
+    reportService.newHistoricData(reqParam, graphParam).then $scope.getHistoryDataSuccess, $scope.getHistoryDataFailure
 
   $scope.getHistoryDataSuccess = (res) ->
     $scope.graphData = res.body
     $scope.combineCategoryWise($scope.graphData.groups)
 
   $scope.getHistoryDataFailure = (res) ->
-    $scope.dataAvailable = false
-    $scope.errorMessage = res.data.message
+    if res.data.code == "INVALID_DATE"
+      setDate = ""
+      if moment().get('months') > 4
+        setDate = "01-04-" + moment().get('YEARS')
+      else
+        setDate = "01-04-" + moment().subtract(1, 'years').get('YEARS')
+      $scope.getHistory(setDate, moment().format('DD-MM-YYYY'))
+    else
+      $scope.dataAvailable = false
+      $scope.errorMessage = res.data.message
 
   $scope.combineCategoryWise = (result) ->
     categoryWise = _.groupBy(result,'category')
@@ -103,7 +122,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
       category = groups[0].category
       duration = ""
       interval = []
-      interval = _.toArray(_.groupBy(_.flatten(_.pluck(groups, 'intervalBalances')), 'to'))
+      interval = _.toArray(_.groupBy(_.flatten(_.pluck(groups, 'intervalBalances')), 'from'))
       _.each(interval, (group) ->
         closingBalance = {}
         closingBalance.amount = 0
@@ -139,20 +158,26 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
 
   $scope.generateChartData = (data) ->
     $scope.chartData.data.rows = []
+    rowsToAdd = []
     _.each(data, (monthly) ->
       row = {}
       row.c = []
       row.c.push({v:monthly[0].month})
-      _.each(monthly, (account) ->
+      sortedMonth = _.sortBy(monthly, 'category')
+      _.each(sortedMonth, (account) ->
         row.c.push({v:account.closingBalance.amount})
       )
-      $scope.chartData.data.rows.push(row)
+      rowsToAdd.push(row)
     )
+    $scope.chartData.data.rows = rowsToAdd
     $scope.dataAvailable = true
+
+  $scope.setDateByFinancialYear()
 
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
-      $scope.getHistory()
+      $scope.setDateByFinancialYear()
+      $scope.getHistory($scope.fromDate,$scope.toDate)
 
 
 history.controller('historicalgraphController',historicalgraphController)

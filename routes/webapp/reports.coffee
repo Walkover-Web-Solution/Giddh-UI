@@ -13,7 +13,25 @@ router.post '/history', (req, res) ->
       interval: req.query.interval
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/history'
+          '/history'
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/group-history', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      to: req.query.toDate
+      from: req.query.fromDate
+      interval: req.query.interval
+    data: req.body
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/group-history'
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

@@ -5,7 +5,7 @@ networth = angular.module('networthModule', [
 #"networthDirectives"
 ])
 
-networthController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $timeout, $state) ->
+networthController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $timeout, $state, $http, $window) ->
   $scope.unq = 0
   $scope.monthArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   $scope.series = ['Net worth']
@@ -57,6 +57,13 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
         duration: 1000,
         easing: 'out',
       },
+      hAxis:{
+        slantedText:true
+      },
+      vAxis:{
+        format: 'long',
+        scaleType: 'mirrorLog'
+      }
     }
   }
 
@@ -88,6 +95,12 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
     $scope.getNWgraphData(reqParam)
 
   $scope.getNWgraphData = (reqParam) ->
+#    config = [
+#      headers:{
+#        'Auth-Key': $window.sessionStorage._ak
+#      }
+#    ]
+#    $http.get("https://api.giddh.com/company/"+$rootScope.selectedCompany.uniqueName+"/networth?from="+reqParam.fromDate+"&to="+reqParam.toDate+"&interval=monthly",config).then($scope.getNWgraphDataSuccess, $scope.getNWgraphDataFailure)
     reportService.networthData(reqParam).then $scope.getNWgraphDataSuccess, $scope.getNWgraphDataFailure
 
   $scope.getNWgraphDataSuccess = (res) ->
@@ -139,7 +152,7 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
   $scope.setDateByFinancialYear = () ->
     presentYear = $scope.getPresentFinancialYear()
     if $rootScope.currentFinancialYear == presentYear
-      $scope.fromDate = moment().subtract(1, 'years').add(1,'months').format('DD-MM-YYYY')
+      $scope.fromDate = moment().subtract(1, 'years').add(1,'months').set('date',1).format('DD-MM-YYYY')
       $scope.toDate = moment().format('DD-MM-YYYY')
     else
       $scope.fromDate = $rootScope.selectedCompany.activeFinancialYear.financialYearStarts

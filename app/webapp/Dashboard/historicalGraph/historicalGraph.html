@@ -1,12 +1,12 @@
-<div id="live" class="col-lg-4" ng-init="getHistory()">
+<div id="live" class="col-lg-4" ng-init="getHistory(fromDate,toDate)">
   <div class="panel panel-default shadow">
     <div class="panel-heading">
-      <label>History (Revenue vs. Expense)</label><i class="glyphicon glyphicon-refresh pull-right" ng-click="getHistory()"></i>
+      <label>History (Revenue vs. Expense)</label><i class="glyphicon glyphicon-refresh pull-right" ng-click="getHistory(fromDate,toDate)"></i>
     </div>
     <div class="panel-body pos-rel">
-      <div class="reconnectDiv" ng-if="!dataAvailable">
+      <div class="dashboard-reconnectdiv" ng-if="!dataAvailable">
         <div class="giddh-spinner vertical-center-spinner" ng-if="errorMessage == ''"></div>
-        <label class="font-white" ng-if="errorMessage != ''">{{errorMessage}}</label>
+        <label class="font-black" ng-if="errorMessage != ''">{{errorMessage}}</label>
       </div>
       <div class="chart-div" google-chart chart="chartData"></div>
     </div>
