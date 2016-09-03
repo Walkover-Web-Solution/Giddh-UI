@@ -1383,12 +1383,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
 
   $scope.getGroupsWithDetail = () ->
-    groupService.getGroupsWithoutAccountsInDetail($rootScope.selectedCompany.uniqueName).then(
-      (success)->
-        $scope.detGrpList = success.body
-      (failure) ->
-        toastr.error('Failed to get Detailed Groups List')
-    )
+    if $rootScope.allowed == true
+      groupService.getGroupsWithoutAccountsInDetail($rootScope.selectedCompany.uniqueName).then(
+        (success)->
+          $scope.detGrpList = success.body
+        (failure) ->
+          toastr.error('Failed to get Detailed Groups List')
+      )
   $scope.getGroupsWithDetail()
 
   $scope.markFixedGrps = (flatGrpList) ->

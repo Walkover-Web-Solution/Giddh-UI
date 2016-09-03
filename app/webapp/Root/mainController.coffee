@@ -415,6 +415,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     # select and set active financial year
     $scope.setFYonCompanychange(company)
     #check permissions on selected company
+    $rootScope.doWeHavePermission(company)
     $scope.checkPermissions(company)
     $rootScope.canViewSpecificItems = false
     if company.role.uniqueName is 'shared'
@@ -437,6 +438,18 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     changeData.type = method
     $scope.$broadcast('company-changed', changeData)
     #$scope.tabs[0].active = true
+
+  $rootScope.allowed = true
+  $rootScope.doWeHavePermission = (company) ->
+    str = company.sharedEntity
+    if str == null
+      $rootScope.allowed = true
+    else
+      if str == "accounts"
+        $rootScope.allowed = false
+      else
+        if str == "groups"
+          $rootScope.allowed = true
 
   $scope.setFYonCompanychange = (company) ->
     localStorageService.set('activeFY', company.activeFinancialYear)
