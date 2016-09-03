@@ -165,12 +165,10 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
           monthNum = moment(grp.to, "YYYY-MM-DD").get('months') + 1
           year = moment(grp.to, "YYYY-MM-DD").get('years')
           if category == "income"
-            total.amount = grp.creditTotal - grp.debitTotal
+            total.amount = total.amount + (grp.creditTotal - grp.debitTotal)
           else
-            if total.type == "DEBIT"
-              total.amount = total.amount - (grp.debitTotal - grp.creditTotal)
-            else
-              total.amount = total.amount + (grp.debitTotal - grp.creditTotal)
+            sum = grp.debitTotal - grp.creditTotal
+            total.amount = total.amount + sum
           if category == "income"
             if grp.closingBalance.type == "DEBIT"
               closingBalance.amount = closingBalance.amount - grp.closingBalance.amount

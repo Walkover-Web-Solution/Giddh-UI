@@ -1456,6 +1456,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.addNewAccountConfirmFailure = (res) ->
     toastr.error(res.data.message)
 
+  $scope.doWeHavePermission = () ->
+
+
   $scope.genearateUniqueName = (unqName) ->
     unqName = unqName.replace(/ /g,'')
     unqName = unqName.toLowerCase()
