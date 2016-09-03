@@ -2,12 +2,13 @@
 
 ## Update
 
-## Bug fixes, UI updates
+## Bug fixes, UI updates, Ledger improvements for large data
 
 - ([93e08f1](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/93e08f1dfc37a2a3c93460d7814ec21300f2494e))
     1.) Bugs for cards #234
     2.) UI updates :  For card #203,204
     3.) Graphs updated
+    4.) Ledger improvements for large data
 
 
 # 2.04
