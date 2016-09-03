@@ -85,6 +85,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
         $scope.getHistory($scope.fromDate,$scope.toDate)
       ),2000
     else
+      $scope.graphData = []
       reqParam = {
         'cUname': $rootScope.selectedCompany.uniqueName
         'fromDate': fromDate
@@ -92,16 +93,23 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
         'interval': "monthly"
       }
       graphParam = {
-        'groups' : $scope.groupArray
+        'groups': ["indirect_expenses","operating_cost"]
       }
+      $scope.getHistoryData(reqParam, $scope.getGraphParam("revenue_from_operations"))
       $scope.getHistoryData(reqParam, graphParam)
+
+  $scope.getGraphParam = (groupUName) ->
+    graphParam = {
+      'groups': [groupUName]
+    }
+    graphParam
 
   $scope.getHistoryData = (reqParam,graphParam) ->
     reportService.newHistoricData(reqParam, graphParam).then $scope.getHistoryDataSuccess, $scope.getHistoryDataFailure
 
   $scope.getHistoryDataSuccess = (res) ->
-    $scope.graphData = res.body
-    $scope.combineCategoryWise($scope.graphData.groups)
+    $scope.graphData.push(res.body.groups)
+    $scope.combineCategoryWise(_.flatten($scope.graphData))
 
   $scope.getHistoryDataFailure = (res) ->
     if res.data.code == "INVALID_DATE"
@@ -131,15 +139,10 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
         _.each(group, (grp) ->
           duration = $scope.monthArray[moment(grp.to, "YYYY-MM-DD").get('months')] + moment(grp.to, "YYYY-MM-DD").get('years')
           if category == "income"
-            if closingBalance.type == "DEBIT"
-              closingBalance.amount = closingBalance.amount + (grp.creditTotal - grp.debitTotal)
-            else
-              closingBalance.amount = closingBalance.amount - (grp.creditTotal - grp.debitTotal)
+            closingBalance.amount = closingBalance.amount + (grp.creditTotal - grp.debitTotal)
           else
-            if closingBalance.type == "DEBIT"
-              closingBalance.amount = closingBalance.amount + (grp.debitTotal - grp.creditTotal)
-            else
-              closingBalance.amount = closingBalance.amount - (grp.debitTotal - grp.creditTotal)
+            sum = grp.debitTotal - grp.creditTotal
+            closingBalance.amount = closingBalance.amount + sum
           if closingBalance.amount < 0
             closingBalance.type = "CREDIT"
           else
@@ -159,6 +162,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
   $scope.generateChartData = (data) ->
     $scope.chartData.data.rows = []
     rowsToAdd = []
+    console.log("data we have : ", data)
     _.each(data, (monthly) ->
       row = {}
       row.c = []
