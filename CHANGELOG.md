@@ -1,3 +1,27 @@
+# 2.05
+
+## Update
+
+## Bug fixes, UI updates, Ledger improvements for large data
+
+- ([93e08f1](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/93e08f1dfc37a2a3c93460d7814ec21300f2494e))
+    1.) Bugs for cards #234
+    2.) UI updates :  For card #203,204
+    3.) Graphs updated
+    4.) Ledger improvements for large data
+
+
+# 2.04
+
+## Update
+
+## Bug Fixes, change in user session management , UI updates
+
+- ([e53bf87](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/e53bf876d98202c9dd8ba544d11ac01048f2a683))
+    1.) Bugs for cards #253, 234, 245
+   	2.) User Session: switched to cookies for session management
+   	3.) UI updates :  For card #252
+
 # 2.03
 
 ## Update
