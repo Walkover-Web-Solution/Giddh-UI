@@ -52,6 +52,21 @@ router.get '/profit-loss-history', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/profit-loss', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      to: req.query.toDate
+      from: req.query.fromDate
+      interval: req.query.interval
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/profit-loss'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
 router.get '/networth-history', (req, res) ->
   authHead = 
     headers:
