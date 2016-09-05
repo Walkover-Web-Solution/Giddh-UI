@@ -7,16 +7,16 @@
 <!-- main content start -->
 <uib-tabset justified="false">
   <uib-tab heading="Generate Invoice" id="generate" select="getLedgerEntries()">
-<!--     <div class="loader" ng-hide="entryListUpdated">
+    <div class="loader" ng-hide="entryListUpdated">
       <span></span>
       <span></span>
       <span></span>
       <span></span>
       <span></span>
-    </div> -->
-    <div class="page-loader" ng-show="superLoader && !entryListUpdated">
-      <div class="giddh-spinner vertical-center-spinner"></div>
     </div>
+<!--     <div class="page-loader" ng-show="superLoader && !entryListUpdated">
+      <div class="giddh-spinner vertical-center-spinner"></div>
+    </div> -->
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height ng-show="entryListUpdated" timeout="5000">
 
       <div class="pd2" ng-init="getLedgerEntries()">
