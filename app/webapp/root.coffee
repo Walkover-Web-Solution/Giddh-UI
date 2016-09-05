@@ -88,10 +88,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/views/demo.html'
     controller: 'homeController'
   )
-  .state('dashboard',
-    url: '/dashboard'
-    templateUrl: '/public/webapp/Dashboard/dashboard.html'
-  )
   .state('Reports',
     url: '/reports'
     templateUrl: '/public/webapp/Reports/reports.html',
@@ -201,6 +197,10 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
         controller: 'newLedgerController'
       }
     }
+  )
+  .state('dashboard',
+    url: '/dashboard'
+    templateUrl: '/public/webapp/Dashboard/dashboard.html'
   )
   .state('/thankyou',
     url: '/thankyou'
