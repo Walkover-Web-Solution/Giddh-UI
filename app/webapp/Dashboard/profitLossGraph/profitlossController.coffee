@@ -20,12 +20,12 @@ profitlossController = ($scope, $rootScope, localStorageService, toastr, groupSe
         },
         {
           "id": "monthlyBalance",
-          "label": "Monthly change",
+          "label": "Monthly P&L",
           "type": "number",
           "p": {}
         },{
           "id": "yearlyBalance",
-          "label": "Net worth",
+          "label": "Yearly P&L",
           "type": "number",
           "p": {}
         }]
@@ -108,6 +108,7 @@ profitlossController = ($scope, $rootScope, localStorageService, toastr, groupSe
     _.each plData.periodBalances, (nw) ->
       row = {}
       row.c = []
+      tooltipText = ""
       str = $scope.monthArray[moment(nw.to, 'DD-MM-YYYY').get('months')] + moment(nw.to, 'DD-MM-YYYY').get('y')
       $scope.nwLabels.push(str)
       monthlyBalances.push(nw.monthlyBalance)
