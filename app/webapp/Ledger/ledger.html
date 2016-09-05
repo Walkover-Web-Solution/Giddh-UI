@@ -11,11 +11,11 @@
   <div class="giddh-spinner vertical-center-spinner"></div>
 </div> -->
 
-<section class="alert alert-info mrL2 mrR2 mrT2" ng-if="showLoader && accountUnq.length == ''">
+<section class="alert alert-info mrL2 mrR2 mrT2" ng-show="showLoader && accountUnq.length == ''">
   Please select an Account to load its Ledger
 </section>
 
-<div id="ledger" ng-if="!showLoader">
+<div id="ledger" ng-show="!showLoader">
  <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" >
     <section class="container-fluid" ng-if="accountUnq.length > 0">
       <div class="pdT1">

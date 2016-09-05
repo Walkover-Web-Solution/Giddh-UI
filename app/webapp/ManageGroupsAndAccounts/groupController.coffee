@@ -622,8 +622,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     grp = _.findWhere($rootScope.flatGroupsList, {uniqueName:pg})
     grp.category
 
-  $scope.getAccountParentGroup = (acc) ->
-
 
   $scope.showAccountDtl = (data) ->
     $scope.cantUpdate = false

@@ -8,7 +8,7 @@
         <p class="input-group max150">
           <input type="text" class="form-control"
                  uib-datepicker-popup="{{format}}" required
-                 datepicker-options="dateOptions"
+                 datepicker-options="dateOptions" 
                  is-open="fromDatePickerIsOpen"
                  ng-click="fromDatePickerOpen()"
                  ng-model="fromDate.date"
@@ -66,10 +66,19 @@
 <!-- nodata end -->
 
 <!-- loader -->
+  <div class="loader" ng-show="showTbplLoader">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
 
-<div class="page-loader" ng-show="showTbplLoader">
+    <h1>loading ledger</h1>
+  </div>
+
+<!-- <div class="page-loader" ng-show="showTbplLoader">
   <div class="giddh-spinner vertical-center-spinner"></div>
-</div>
+</div> -->
 <!--  -->
 
 <!-- active="tab.active" disable="tab.disabled" -->
