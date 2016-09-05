@@ -13,6 +13,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     {title:'Subscription List', active: false}
     {title:'Mobile Number', active: false}
   ]
+  $scope.expandLongCode = false
 
   $scope.getUserAuthKey = () ->
     $scope.userAuthKey = $window.sessionStorage.getItem('_ak')
