@@ -58,6 +58,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     toYear: ''
   }
 
+  $scope.fyChecked = false
 
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
@@ -71,13 +72,18 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   # financial year functions
   $rootScope.setActiveFinancialYear($scope.activeFinancialYear)
 
+  $scope.getDateObj = (date) ->
+    dateArray = date.split('-')
+    date = new Date(dateArray[2], dateArray[1] - 1, dateArray[0])
+    date 
+
   $scope.checkFY = (reqParam) ->
     currentYear = moment().get('year')
     currentFY =  $rootScope.activeYear.start
-    $scope.fromDate.date = $rootScope.fy.financialYearStarts
-    $scope.toDate.date = $rootScope.fy.financialYearEnds
-    reqParam.fromDate = $scope.fromDate.date
-    reqParam.toDate = $scope.toDate.date
+    $scope.fromDate.date = $scope.getDateObj($rootScope.fy.financialYearStarts)
+    $scope.toDate.date = $scope.getDateObj($rootScope.fy.financialYearEnds)
+    reqParam.fromDate = $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
+    reqParam.toDate = $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
 
   # p&l functions
   $scope.calCulateTotalIncome = (data) ->
@@ -268,9 +274,9 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       date  
     {date: getDate()}
 
-  $scope.fromDate = {
-    date: $scope.getDefaultDate().date
-  }
+  # $scope.fromDate = {
+  #   date: $scope.getDefaultDate().date
+  # }
 
   $scope.getTrialBal = (data) ->
     $scope.showTbplLoader = true
@@ -288,10 +294,11 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
 
   $scope.getTrialBalSuccess = (res) ->
     $scope.makeDataForPl(res.body)
+    $scope.exportData = []
     $scope.addUIKey(res.body.groupDetails)
+    angular.copy(res.body.groupDetails,$scope.exportData)
     $scope.removeSd(res.body.groupDetails)
     $scope.data = res.body
-    $scope.exportData = []
     $scope.data.groupDetails = $scope.orderGroups(res.body.groupDetails)
     $scope.balSheet.assetTotal = $scope.calCulateTotalAssets($scope.balSheet.assets)
     $scope.balSheet.liabTotal = $scope.calCulateTotalLiab($scope.balSheet.liabilities)
@@ -299,7 +306,6 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       $scope.balSheet.assetTotal += $scope.plData.closingBalance
     else if $scope.inProfit == true
       $scope.balSheet.liabTotal += $scope.plData.closingBalance
-    $scope.exportData = res.body.groupDetails
     if $scope.data.closingBalance.amount is 0 and $scope.data.creditTotal is 0 and $scope.data.debitTotal is 0 and $scope.data.forwardedBalance.amount is 0
       $scope.noData = true
     $scope.showTbplLoader = false
@@ -573,7 +579,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
           _.each obj.childGroups, (grp) ->
             childGroup = childGroup or
               childGroups: []
-              subAccounts: []
+              accounts: []
             childGroup.name = grp.groupName
             childGroup.parent = obj.groupName
             childGroup.openingBalance = grp.forwardedBalance.amount
@@ -620,6 +626,8 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
           (strIndex += '   ' for i in [0...index])
           if obj.isVisible == true && obj.closingBalance != 0
             row += strIndex + obj.name.toUpperCase() + ',' + obj.openingBalance + $filter('recType')(obj.openingBalanceType,obj.openingBalance) + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + $filter('recType')(obj.closingBalanceType,obj.ClosingBalance) + '\r\n'
+            if obj.accounts == undefined
+              console.log obj
             if obj.accounts.length > 0
               _.each obj.accounts, (acc) ->
                 if acc.isVisible == true

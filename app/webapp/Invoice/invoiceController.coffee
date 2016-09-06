@@ -110,7 +110,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # datepicker setting end
   $scope.dateData = {
-    fromDate: new Date(moment().subtract(3, 'month').utc())
+    fromDate: new Date(moment().subtract(1, 'month').utc())
     toDate: new Date()
   }
   $scope.dateOptions = {

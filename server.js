@@ -74,6 +74,7 @@ else{
   // ten minutes
   sessionTTL = 1000 * 60 * 10
 }
+
 app.use(session({
   secret: "keyboardcat",
   name: "userVerified",

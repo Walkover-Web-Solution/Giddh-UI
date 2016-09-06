@@ -493,7 +493,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.getLedgerData = (showLoaderCondition) ->
     $scope.showLoader = showLoaderCondition
-    $scope.pageLoader = showLoaderCondition
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.getAccountDetail($scope.accountUnq)
@@ -513,12 +512,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.countTotalTransactions()
     $scope.sortTransactions($scope.ledgerData, 'entryDate')
     $scope.showLoader = false
-    $scope.pageLoader = false
 
   $scope.getLedgerDataFailure = (res) ->
     toastr.error(res.data.message)
     $scope.showLoader = false
-    $scope.pageLoader = false
 
   $scope.updateLedgerData = (condition, ledger) ->
     unqNamesObj = {
@@ -549,11 +546,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.paginateledgerData = (ledgers) ->
     $scope.ledgerCount = 20
-    # $scope.dLedgerLimit = $scope.setCounter(ledgers, 'DEBIT')
-    # $scope.cLedgerLimit = $scope.setCounter(ledgers, 'CREDIT')
-    $scope.dLedgerLimit = 50
-    $scope.cLedgerLimit = 50
-
+    $scope.dLedgerLimit = $scope.setCounter(ledgers, 'DEBIT')
+    $scope.cLedgerLimit = $scope.setCounter(ledgers, 'CREDIT')
 
   $scope.setCounter = (ledgers, type) ->
     txns = 0
@@ -633,8 +627,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   # get tax list
 
   $scope.getTaxList = () ->
-    $scope.showLoader = true
-    $scope.pageLoader = true
     $scope.taxList = []
     if $rootScope.canUpdate and $rootScope.canDelete
       companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
@@ -647,13 +639,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         tax.account.uniqueName = 0
       $scope.taxList.push(tax)
     $scope.matchTaxAccounts($scope.taxList)
-    $scope.pageLoader = false
-    $scope.showLoader = false
 
   $scope.getTaxListFailure = (res) ->
     toastr.error(res.data.message, res.status)
-    $scope.pageLoader = false
-    $scope.showLoader = false
 
   $scope.matchTaxAccounts = (taxlist) ->
     _.each taxlist, (tax) ->
@@ -786,8 +774,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.doingEntry = false
   $scope.lastSelectedLedger = {}
   $scope.saveUpdateLedger = (ledger) ->
-    $scope.pageLoader = true
-    $scope.showLoader = true
+    # $scope.pageLoader = true
+    # $scope.showLoader = true
     $scope.lastSelectedLedger = ledger
     $scope.dLedgerLimitBeforeUpdate = $scope.dLedgerLimit
     $scope.cLedgerLimitBeforeUpdate = $scope.cLedgerLimit
@@ -1114,10 +1102,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.pushNewEntryToLedger(res.body)
     if ledger.isBankTransaction
       $scope.updateBankLedger(ledger)
-    $timeout ( ->
-      $scope.pageLoader = false
-      $scope.showLoader = false
-    ), 1000
+    # $timeout ( ->
+    #   $scope.pageLoader = false
+    #   $scope.showLoader = false
+    # ), 1000
 
   $scope.addEntryFailure = (res, rejectedTransactions, ledger) ->
     $scope.doingEntry = false
@@ -1127,10 +1115,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       _.each(rejectedTransactions, (rTransaction) ->
         $scope.selectedLedger.transactions.push(rTransaction)
       )
-    $timeout ( ->
-      $scope.pageLoader = false
-      $scope.showLoader = false
-    ), 1000
+    # $timeout ( ->
+    #   $scope.pageLoader = false
+    #   $scope.showLoader = false
+    # ), 1000
 
   $scope.updateBankLedger = (ledger) ->
     _.each $scope.eLedgerData, (eledger, idx) ->
@@ -1169,26 +1157,26 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.updateLedgerData('update',res.body)
     $timeout ( ->
       ledger.total = $scope.updatedLedgerTotal
-      $scope.pageLoader = false
-      $scope.showLoader = false
+      # $scope.pageLoader = false
+      # $scope.showLoader = false
     ), 2000
     
   $scope.updateEntryFailure = (res, ledger) ->
     $scope.doingEntry = false
     ledger.failed = true
     toastr.error(res.data.message, res.data.status)
-    $timeout ( ->
-      $scope.pageLoader = false
-      $scope.showLoader = false
-    ), 1000
+    # $timeout ( ->
+    #   $scope.pageLoader = false
+    #   $scope.showLoader = false
+    # ), 1000
     
   $scope.closePopOverSingleLedger = (ledger) ->
     _.each ledger.transactions, (txn) ->
       txn.isOpen = false
 
   $scope.deleteEntry = (ledger) ->
-    $scope.pageLoader = true
-    $scope.showLoader = true
+    # $scope.pageLoader = true
+    # $scope.showLoader = true
     $scope.lastSelectedLedger = ledger
     if (ledger.uniqueName == undefined || _.isEmpty(ledger.uniqueName)) && (ledger.isBankTransaction)
       return
@@ -1216,18 +1204,18 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       ), 2000
 #    $scope.calculateLedger($scope.ledgerData, "deleted")
     $scope.updateLedgerData('delete')
-    $timeout ( ->
-      $scope.pageLoader = false
-      $scope.showLoader = false
-    ), 1000
+    # $timeout ( ->
+    #   $scope.pageLoader = false
+    #   $scope.showLoader = false
+    # ), 1000
     
   
   $scope.deleteEntryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
-    $timeout ( ->
-      $scope.pageLoader = false
-      $scope.showLoader = false
-    ), 1000
+    # $timeout ( ->
+    #   $scope.pageLoader = false
+    #   $scope.showLoader = false
+    # ), 1000
 
   $scope.removeDeletedLedger = (item) ->
     index = 0
