@@ -148,7 +148,7 @@ profitlossController = ($scope, $rootScope, localStorageService, toastr, groupSe
 
 profitloss.controller('profitlossController',profitlossController)
 
-.directive 'profitLoss',[() -> {
+.directive 'profitLoss', () ->{
   restrict: 'E',
-  templateUrl: '/public/webapp/Dashboard/profitlossGraph/profitloss.html'
-}]
+  templateUrl: '/public/webapp/Dashboard/profitLossGraph/profitloss.html'
+}
