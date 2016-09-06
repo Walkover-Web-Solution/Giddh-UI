@@ -1,11 +1,47 @@
-<div class="pdL2 pdR2 pdT2" ng-hide="invoiceLoadDone">
+<div class="pdL2 pdR2 pdT2" ng-show="!invoiceLoadDone">
   <div class="alert alert-info" role="alert">Click on any Account to load <strong>Invoice</strong></div>
+  <div class="pd2">
+    <div class="row">
+      <div class="col-xs-3">
+        <form name="settingForm">
+          <div class="form-group pos-rel">
+            <label>From Email :</label>
+            <input type="email" ng-model="invoiceSettings.emailAddress" class="form-control" name="settingEmail"
+                   tabindex="2" required>
+            <i class="glyphicon glyphicon-ok-sign pos-abs verified" uib-tooltip="Verified" ng-if="invoiceSettings.isEmailVerified"></i>
+            <i class="glyphicon glyphicon-exclamation-sign pos-abs unverified" uib-tooltip="Unverified" ng-if="!invoiceSettings.isEmailVerified && !settingForm.settingEmail.$invalid"></i>
+            <i class="glyphicon glyphicon-trash pos-abs" style="right:-20px;top:30px" ng-click="saveInvoiceSettings('delete')" ng-if="invoiceSettings.emailAddress != ''"></i>
+          </div>
+          <div class="form-group">
+            <button class="btn btn-primary" ng-disabled="settingForm.settingEmail.$invalid" ng-click="saveInvoiceSettings('save')">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-3" ng-repeat="value in templateList">
+        <a href="javascript:void(0)" class="thumbnail" ng-class="value.isDefault? 'active': ''">
+          <div class="caption">
+            <h3 class="lead alC" ng-bind-html="value.name"></h3>
+            <p>
+              <button ng-click="viewInvTemplate( value, 'sample', tempDataDef)" class="btn btn-default btn-block mrB1">Sample</button>
+              <button ng-disabled="!value.isDefault" ng-click="viewInvTemplate(value, 'edit', templateData)" class="btn btn-default btn-block">Edit</button>
+            <div class="mrT1 alC">
+              <div ng-click="setDefTemp(value)">
+                <switch name="setAsDefault" on="On" off="Off" class="wide" ng-model="value.isDefault"></switch>
+              </div>
+              <label ng-if="value.isDefault" class="mrT">Default Selected</label>
+              <label ng-if="!value.isDefault" class="mrT">Set as default</label>
+            </div>
+            </p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
-
-
-
 <!-- main content start -->
-<uib-tabset justified="false">
+<uib-tabset justified="false" ng-if="invoiceLoadDone">
   <uib-tab heading="Generate Invoice" id="generate" select="getLedgerEntries()">
     <div class="loader" ng-hide="entryListUpdated">
       <span></span>

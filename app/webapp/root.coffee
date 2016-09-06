@@ -117,6 +117,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
       'rightPanel':{
         abstract:true
+#        templateUrl: '/public/webapp/Invoice/invoiceContent.html'
         template: '<div ui-view></div>'
         #template: '<div ui-view></div>'
       }
@@ -339,13 +340,13 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$t
           if isError != -1 and isAuthKeyError != -1
             toastr.error('Your Session has Expired, Please Login Again.')
             $timeout ( ->
-              #window.location.assign('/login')
+              window.location.assign('/login')
             ), 2000
       else if responseError.status is 401
         if _.isObject(responseError.data) and responseError.data.code is "INVALID_AUTH_KEY"
           toastr.error('Your Session has Expired, Please Login Again.')
           $timeout ( ->
-            #window.location.assign('/login')
+            window.location.assign('/login')
           ), 2000
         else
           $q.reject responseError
