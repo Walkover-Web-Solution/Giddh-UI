@@ -121,6 +121,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
       'rightPanel':{
         abstract:true
+#        templateUrl: '/public/webapp/Invoice/invoiceContent.html'
         template: '<div ui-view></div>'
         #template: '<div ui-view></div>'
       }
@@ -224,13 +225,9 @@ giddh.webApp.run [
     $rootScope.$state = $state
     $rootScope.$stateParams = $stateParams
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
-      console.log("start : ",performance.now())
       $rootScope.showLedgerBox = false
       if _.isEmpty(toParams)
         $rootScope.selAcntUname = undefined
-    )
-    $rootScope.$on('$stateChangeSuccess', (event, toState, toParams) ->
-      console.log("success : ",performance.now())
     )
 
 #    # check IE browser version

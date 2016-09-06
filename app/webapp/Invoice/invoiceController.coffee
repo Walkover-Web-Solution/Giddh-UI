@@ -333,20 +333,20 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.entriesForInvoice = []
     # call invoice load func
     $scope.getTemplates()
+    $scope.invoiceLoadDone = true
 
 
   $scope.getTemplates = ()->
     companyServices.getInvTemplates($rootScope.selectedCompany.uniqueName).then($scope.getTemplatesSuccess, $scope.getTemplatesFailure)
 
   $scope.getTemplatesSuccess=(res)->
-    $scope.invoiceLoadDone = true
     $scope.templateList = res.body.templates
     $scope.templateData = res.body.templateData
     $scope.invoiceSettings.emailAddress = $scope.templateData.email
     $scope.invoiceSettings.isEmailVerified = $scope.templateData.emailVerified
 
   $scope.getTemplatesFailure = (res) ->
-    $scope.invoiceLoadDone = true
+#    $scope.invoiceLoadDone = true
     toastr.error(res.data.message, res.data.status)
 
   # set as default
@@ -937,11 +937,13 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   # init func on dom ready
   $timeout(->
+    $scope.getTemplates()
     # get accounts
     $scope.getAllGroupsWithAcnt()
 
     # group list through api
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+
   ,10)
 
   $scope.redirectToState = (state) ->
@@ -949,7 +951,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
 
   $scope.$on 'company-changed', (event,changeData) ->
     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
-    $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,['sundry_debtors','revenue_from_operations'])
+#    $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,['sundry_debtors','revenue_from_operations'])
     # when company is changed, redirect to manage company page
     if changeData.type == 'CHANGE'
       $scope.redirectToState('company.content.manage')
