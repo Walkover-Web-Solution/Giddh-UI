@@ -1,3 +1,13 @@
+# 2.06
+
+## Update
+
+## Bug fixes for Setup Wizard and Trial Balance
+
+- ([93e08f1](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/93e08f1dfc37a2a3c93460d7814ec21300f2494e))
+    1.) Bugs for cards #245, 259, 260
+
+
 # 2.05
 
 ## Update
@@ -22,6 +32,7 @@
    	2.) User Session: switched to cookies for session management
    	3.) UI updates :  For card #252
 
+
 # 2.03
 
 ## Update
@@ -32,6 +43,7 @@
     1.) Bugs for cards #206,219,230,231,239,235
    	2.) Dashboard: History Graph added and other Graph Updates
    	3.) Dashboard: New Networth API integrated
+
 
 # 2.02
 
