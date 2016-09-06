@@ -352,6 +352,56 @@
             </div>
             <button class="btn btn-success mrT" ng-click="verifyNumber(mobNum.verificationCode)">Verify</button>
           </div>
+          <section>
+            <div class="container adjust-width pull-left">
+              <div class="row">
+                <div class="col-sm-12">
+                  <h2 class="arvo" ng-click="expandLongCode = !expandLongCode"><i class="glyphicon glyphicon-plus" ng-class="{'glyphicon-minus':expandLongCode}"/><b> Long Code Hints </b></h2>
+                  <div class="longcode-details" ng-if="expandLongCode">
+                    <figure>
+                      <h1>Accounts</h1>
+                      <ul>
+                        <li>
+                          <h2><b>Case 1</b> :</h2>
+                          <p>SMS format : Keyword accountName/uniqueName</p>
+                          <p>Example : Giddh1 test</p>
+                          <p>This will return balance details of particular account. With last five transactions.</p>
+                        </li>
+                        <li>
+                          <h2><b>Case 2</b> :</h2>
+                          <p>SMS format : Keyword accountName/uniqueName all</p>
+                          <p>Example : Giddh1 tes all</p>
+                          <p>This will return balance of all matched accounts.</p>
+                        </li>
+                      </ul>
+                    </figure>
+                    <figure>
+                      <h1>Groups</h1>
+                      <ul>
+                        <li>
+                          <h2><b>Case 1</b> :</h2>
+                          <p>SMS format : Keyword group groupName/uniqueName</p>
+                          <p>Example : Giddh1 group sundry_debtors</p>
+                          <p>This will return balance details of all matched group. And closing balance of all subgroups (with closing balance only).</p>
+                        </li>
+                      </ul>
+                    </figure>
+                    <figure>
+                      <h1>Net worth</h1>
+                      <ul>
+                        <li>
+                          <h2><b>Case 1</b> :</h2>
+                          <p>SMS format : Keyword networth</p>
+                          <p>Example : Giddh1 networth</p>
+                          <p>This will return net worth of last six months.</p>
+                        </li>
+                      </ul>
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
         </uib-tab>
 
       </uib-tabset>

@@ -3585,3 +3585,19 @@ tr.db-bnk-account > td.reconnectDiv{
     padding: 10px;
     padding-top: 40px;
 }
+
+.longcode-details{
+    margin-top: 10px;
+}
+
+.longcode-details figure{
+    margin-left: 8px;
+}
+
+.longcode-details figure ul{
+    margin-left: 20px;
+}
+
+.longcode-details figure h1{
+    font-size: 18px;
+}

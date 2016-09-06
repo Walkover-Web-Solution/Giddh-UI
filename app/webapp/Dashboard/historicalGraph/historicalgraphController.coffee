@@ -168,7 +168,6 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
   $scope.generateChartData = (data) ->
     $scope.chartData.data.rows = []
     rowsToAdd = []
-    console.log("data we have : ", data)
     _.each(data, (monthly) ->
       row = {}
       row.c = []
