@@ -41,10 +41,10 @@ angular.module('exportDirectives', [])
                   account = {}
                   account.name = acc.name
                   account.openingBalance = acc.openingBalance.amount + $filter('recType')(acc.openingBalance.type, acc.openingBalance.amount)
-                  account.openingBalanceType = acc.openingBalance.type + $filter('recType')(acc.closingBalance.type, acc.openingBalance.amount)
+                  account.openingBalanceType = acc.openingBalance.type
                   account.credit = acc.creditTotal
                   account.debit = acc.debitTotal
-                  account.closingBalance = acc.closingBalance.amount
+                  account.closingBalance = acc.closingBalance.amount + $filter('recType')(acc.closingBalance.type, acc.openingBalance.amount)
                   account.closingBalanceType = acc.closingBalance.type
                   if acc.isVisible
                     total.ob += acc.openingBalance.amount
@@ -320,11 +320,12 @@ angular.module('exportDirectives', [])
               #loop over childgroups and write values
               colX += 5
               _.each childgroups, (childGrp) ->
+                console.log childGrp
                 writeText(childGrp)
 
                 if childGrp.subAccounts.length > 0
                   colX += 5
-                  _.each childGrp.accounts, (acc) ->
+                  _.each childGrp.subAccounts, (acc) ->
                     writeText(acc)
                   colX -= 5
                     

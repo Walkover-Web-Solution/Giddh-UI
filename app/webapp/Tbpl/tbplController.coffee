@@ -579,7 +579,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
           _.each obj.childGroups, (grp) ->
             childGroup = childGroup or
               childGroups: []
-              subAccounts: []
+              accounts: []
             childGroup.name = grp.groupName
             childGroup.parent = obj.groupName
             childGroup.openingBalance = grp.forwardedBalance.amount
@@ -626,6 +626,8 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
           (strIndex += '   ' for i in [0...index])
           if obj.isVisible == true && obj.closingBalance != 0
             row += strIndex + obj.name.toUpperCase() + ',' + obj.openingBalance + $filter('recType')(obj.openingBalanceType,obj.openingBalance) + ',' + obj.debit + ',' + obj.credit + ',' + obj.closingBalance + $filter('recType')(obj.closingBalanceType,obj.ClosingBalance) + '\r\n'
+            if obj.accounts == undefined
+              console.log obj
             if obj.accounts.length > 0
               _.each obj.accounts, (acc) ->
                 if acc.isVisible == true
