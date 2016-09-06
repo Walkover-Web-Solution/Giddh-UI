@@ -8,6 +8,7 @@
         <div class="giddh-spinner vertical-center-spinner" ng-if="errorMessage == ''"></div>
         <label class="font-black" ng-if="errorMessage != ''">{{errorMessage}}</label>
       </div>
+      <a ng-if="chartDataAvailable" class="pull-right pos-abs" ng-click="goToReports()">view detailed</a>
       <div class="chart-div" google-chart chart="myChartData"></div>
       <!--<canvas id="line" class="chart-div chart chart-line" chart-data="chartData"-->
               <!--chart-labels="labels" chart-legend="true" chart-series="series" chart-options="chartOptions">-->
