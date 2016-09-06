@@ -4,7 +4,7 @@
 
 ## Bug fixes for Setup Wizard and Trial Balance
 
-- ([93e08f1](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/93e08f1dfc37a2a3c93460d7814ec21300f2494e))
+- ([16eeeda](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/16eeedaa05adc43c89790e871fa7babfbffd2b56))
     1.) Bugs for cards #245, 259, 260
 
 
