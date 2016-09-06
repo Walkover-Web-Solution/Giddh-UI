@@ -546,11 +546,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.paginateledgerData = (ledgers) ->
     $scope.ledgerCount = 20
-    # $scope.dLedgerLimit = $scope.setCounter(ledgers, 'DEBIT')
-    # $scope.cLedgerLimit = $scope.setCounter(ledgers, 'CREDIT')
-    $scope.dLedgerLimit = 50
-    $scope.cLedgerLimit = 50
-
+    $scope.dLedgerLimit = $scope.setCounter(ledgers, 'DEBIT')
+    $scope.cLedgerLimit = $scope.setCounter(ledgers, 'CREDIT')
 
   $scope.setCounter = (ledgers, type) ->
     txns = 0
