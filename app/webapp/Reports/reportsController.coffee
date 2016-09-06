@@ -1,5 +1,5 @@
 "use strict"
-reportsController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService) ->
+reportsController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $stateParams) ->
   $scope.today = new Date()
   $scope.fromDate = {date: new Date()}
   $scope.toDate = {date: new Date()}
@@ -19,6 +19,11 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     createChartByMultiple: []
     filteredGroupsAndAccounts: {}
   }
+  $scope.tabs = [
+    {title:'Historical Comparision', active: true}
+    {title:'Profit & Loss', active: false}
+    {title:'Net Worth', active: false}
+  ]
   $scope.dateOptions = {
     'year-format': "'yy'",
     'starting-day': 1,
@@ -597,6 +602,19 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
     if newDate > toDate
       $scope.toDate.date =  newDate
+  )
+
+  $scope.$on('$stateChangeSuccess', (params) ->
+#    console.log($rootScope.stateParams)
+    if $stateParams != null
+      if $stateParams.type == "networth"
+        $scope.tabs[2].active = true
+        $scope.tabs[0].active = false
+        $scope.tabs[1].active = false
+        $scope.selected.interval = "Monthly"
+        $scope.fromNWDate.date = $stateParams.frmDt
+        $scope.toNWDate.date = $stateParams.toDt
+        $scope.generateNWgraph()
   )
 
   $scope.$on 'company-changed' , () ->

@@ -5,7 +5,7 @@ networth = angular.module('networthModule', [
 #"networthDirectives"
 ])
 
-networthController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $timeout, $state, $http, $window) ->
+networthController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $timeout, $state, $http, $window, $stateParams) ->
   $scope.unq = 0
   $scope.monthArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   $scope.series = ['Net worth']
@@ -115,6 +115,8 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
         setDate = "01-04-" + moment().get('YEARS')
       else
         setDate = "01-04-" + moment().subtract(1, 'years').get('YEARS')
+      $scope.fromDate = setDate
+      $scope.toDate = moment().format('DD-MM-YYYY')
       $scope.getNWdata(setDate,moment().format('DD-MM-YYYY'))
     else
       $scope.chartDataAvailable = false
@@ -168,6 +170,16 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
       setDate = moment().subtract(1, 'years').get('YEARS')
       toDate = moment().get('YEARS')
     setDate+"-"+toDate
+
+  $scope.goToReports = () ->
+#    $stateParams.frmDt = $scope.fromDate
+#    $stateParams.toDt = $scope.toDate
+#    $stateParams.type = "networth"
+    $rootScope.stateParam = {'frmDt': $scope.fromDate, 'toDt': $scope.toDate, 'type': 'networth'}
+#    url = $state.href('Reports', {'params':{'frmDt': $scope.fromDate, 'toDt': $scope.toDate, 'type': 'networth'}});
+#    window.open(url,'_blank');
+#    return true
+    $state.go('Reports',{'frmDt': $scope.fromDate, 'toDt': $scope.toDate, 'type': 'networth'})
 
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
