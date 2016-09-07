@@ -1,3 +1,16 @@
+# 2.07
+
+## Update
+
+## Bug fixes, Profit loss graph, Arrangements of graph
+
+- ([fb0db43](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/fb0db438fd2bd39f2c83abab338e3ef7e6b2f5dd))
+    1.) Ledger bugs fixes
+    2.) Net worth and historic data new api integrated on reports page
+    3.) Graphs position changed
+    4.) Profit loss graph added
+
+
 # 2.06
 
 ## Update
