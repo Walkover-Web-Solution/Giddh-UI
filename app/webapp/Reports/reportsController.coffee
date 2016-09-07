@@ -1,5 +1,5 @@
 "use strict"
-reportsController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService) ->
+reportsController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $stateParams) ->
   $scope.today = new Date()
   $scope.fromDate = {date: new Date()}
   $scope.toDate = {date: new Date()}
@@ -13,12 +13,17 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.selected = {
     groups: []
     accounts: []
-    interval: 1
+    interval: 'Daily'
     filterBy: 'Closing Balance'
     createChartBy : 'Closing Balance'
     createChartByMultiple: []
     filteredGroupsAndAccounts: {}
   }
+  $scope.tabs = [
+    {title:'Historical Comparision', active: true}
+    {title:'Profit & Loss', active: false}
+    {title:'Net Worth', active: false}
+  ]
   $scope.dateOptions = {
     'year-format': "'yy'",
     'starting-day': 1,
@@ -63,7 +68,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.toDatePickerOpen = ->
     this.toDatePickerIsOpen = true
 
-  $scope.intervalVals = [1, 3, 7, 30, 90, 180, 365]
+#  $scope.intervalVals = [1, 3, 7, 30, 90, 180, 365]
+  $scope.intervalVals = ["Daily", "Weekly", "Bi-Weekly","Monthly", "Yearly"]
   $scope.chartParams = ['Closing Balance', 'Credit Total', 'Debit Total']
 
   $scope.getAccountsGroupsList = ()->
@@ -131,7 +137,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
       _.each data.groups ,(grp) ->
         groups.push(grp)
 
-    if data.accounts.length > 0
+    if data.accounts != null && data.accounts.length > 0
       _.each data.accounts, (acc) ->
         accounts.push(acc)
 
@@ -381,7 +387,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
                 $scope.chartData.splice(removeAtIdx, 1)                 
 
   $scope.getGraphData  = (reqParam,graphParam) ->
-    reportService.historicData(reqParam, graphParam).then $scope.getGraphDataSuccess, $scope.getGraphDataFailure
+    reportService.newHistoricData(reqParam, graphParam).then $scope.getGraphDataSuccess, $scope.getGraphDataFailure
 
   $scope.getGraphDataSuccess = (res) ->
     $scope.graphData = res.body
@@ -460,7 +466,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   
 
   $scope.getPLgraphData = (reqParam) ->
-    reportService.plGraphData(reqParam).then $scope.getPLgraphDataSuccess, $scope.getPLgraphDataFailure
+    reportService.profitLossData(reqParam).then $scope.getPLgraphDataSuccess, $scope.getPLgraphDataFailure
 
   $scope.getPLgraphDataSuccess = (res) ->
     $scope.plGraphData = res.body
@@ -511,7 +517,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   # for networth graph
 
   $scope.getNWgraphData = (reqParam) ->
-    reportService.nwGraphData(reqParam).then $scope.getNWgraphDataSuccess, $scope.getNWgraphDataFailure
+    reportService.networthData(reqParam).then $scope.getNWgraphDataSuccess, $scope.getNWgraphDataFailure
 
   $scope.getNWgraphDataSuccess = (res) ->
     $scope.nwGraphData = res.body
@@ -596,6 +602,19 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
 
     if newDate > toDate
       $scope.toDate.date =  newDate
+  )
+
+  $scope.$on('$stateChangeSuccess', (params) ->
+#    console.log($rootScope.stateParams)
+    if $stateParams != null
+      if $stateParams.type == "networth"
+        $scope.tabs[2].active = true
+        $scope.tabs[0].active = false
+        $scope.tabs[1].active = false
+        $scope.selected.interval = "Monthly"
+        $scope.fromNWDate.date = $stateParams.frmDt
+        $scope.toNWDate.date = $stateParams.toDt
+        $scope.generateNWgraph()
   )
 
   $scope.$on 'company-changed' , () ->

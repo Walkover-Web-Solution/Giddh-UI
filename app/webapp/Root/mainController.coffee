@@ -18,6 +18,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.superLoader = false
   $rootScope.hideHeader = false
   $rootScope.phoneVerified = false
+  $rootScope.stateParams = null
   $rootScope.flatAccList = {
     page: 1
     count: 20000

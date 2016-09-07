@@ -80,7 +80,7 @@
                       <label>Select Interval</label>
                       <ui-select ng-model="selected.interval" theme="bootstrap">
                           <ui-select-match>
-                              <span>{{$select.selected}} Days</span>
+                              <span>{{$select.selected}}</span>
                           </ui-select-match>
                           <ui-select-choices repeat="int in intervalVals">
                               <span ng-bind="int"></span>
@@ -139,7 +139,7 @@
                       <label>Select Interval</label>
                       <ui-select ng-model="selected.interval" theme="bootstrap">
                           <ui-select-match>
-                              <span>{{$select.selected}} Days</span>
+                              <span>{{$select.selected}}</span>
                           </ui-select-match>
                           <ui-select-choices repeat="int in intervalVals">
                               <span ng-bind="int"></span>
@@ -200,7 +200,7 @@
                       <label>Select Interval</label>
                       <ui-select ng-model="selected.interval" theme="bootstrap">
                           <ui-select-match>
-                              <span>{{$select.selected}} Days</span>
+                              <span>{{$select.selected}}</span>
                           </ui-select-match>
                           <ui-select-choices repeat="int in intervalVals">
                               <span ng-bind="int"></span>
@@ -228,8 +228,8 @@
           <h1>Sorry, No Data Found!</h1>
           <img src="/public/webapp/Globals/images/no-data.png" alt="">
         </div>
-        <uib-tabset ng-if="!noData">
-          <uib-tab heading="Historical Comparision" select="showHistoryFilter()">
+        <uib-tabset id="tabset" ng-if="!noData">
+          <uib-tab heading="{{tabs[0].title}}" active="tabs[0].active" select="showHistoryFilter()">
             <div class="clearfix">
               <div class="loader mrT4" ng-hide="showLedgerBox">
                     <span></span>
@@ -292,7 +292,7 @@
               </perfect-scrollbar>
             </div>
           </uib-tab>
-          <uib-tab heading="Profit & Loss" select="showPLFilter()">
+          <uib-tab heading="{{tabs[1].title}}" active="tabs[1].active" select="showPLFilter()">
               <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
                 <div class="loader mrT4" ng-hide="chartDataAvailable">
                     <span></span>
@@ -314,7 +314,7 @@
                 <div class="fixScroll"></div>
               </perfect-scrollbar>
           </uib-tab>
-          <uib-tab heading="Net Worth" select="showNWfilter()">
+          <uib-tab heading="{{tabs[2].title}}" active="tabs[2].active" select="showNWfilter()">
               <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
                 <div class="loader mrT4" ng-hide="chartDataAvailable">
                     <span></span>

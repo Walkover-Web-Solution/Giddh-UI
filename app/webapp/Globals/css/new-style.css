@@ -3601,3 +3601,10 @@ tr.db-bnk-account > td.reconnectDiv{
 .longcode-details figure h1{
     font-size: 18px;
 }
+
+.panel-body a{
+    top: 5px;
+    right: 10px;
+    z-index: 2;
+    cursor: pointer;
+}
