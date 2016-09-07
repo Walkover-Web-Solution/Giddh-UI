@@ -3443,7 +3443,7 @@ ul.pills li {
     background:#fddfa4;
 }
 
-@media only screen and (max-width: 1366px) and (orientation : landscape) {
+@media only screen and (max-width: 1440px) and (orientation : landscape) {
     .pop-panel{
         max-width:480px;
     }
