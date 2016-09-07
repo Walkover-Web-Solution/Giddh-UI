@@ -23,11 +23,6 @@ profitlossController = ($scope, $rootScope, localStorageService, toastr, groupSe
           "label": "Monthly P&L",
           "type": "number",
           "p": {}
-        },{
-          "id": "yearlyBalance",
-          "label": "Yearly P&L",
-          "type": "number",
-          "p": {}
         }]
     },
     "options": {
@@ -117,7 +112,7 @@ profitlossController = ($scope, $rootScope, localStorageService, toastr, groupSe
       $scope.nwSeries.push('Yearly Balances')
       row.c.push({v:str})
       row.c.push({v:nw.monthlyBalance})
-      row.c.push({v:nw.yearlyBalance})
+#      row.c.push({v:nw.yearlyBalance})
       $scope.myChartData.data.rows.push(row)
     $scope.chartDataAvailable = true
 
