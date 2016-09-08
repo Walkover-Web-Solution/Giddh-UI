@@ -8,7 +8,7 @@
             <p class="lead">Main Auth-key</p>
             <form name="authKeyForm" novalidate role="form">
               <div class="form-group">
-                <textarea id="authKey" class="form-control" ng-model="userAuthKey" ng-readonly="true"></textarea>
+                <input id="authKey" class="form-control" ng-model="userAuthKey" ng-readonly="true" />
               </div>
               <div class="form-group">
                 <button class="btn btn-primary" ng-click="regenerateKey()">Regenerate Auth Key</button>

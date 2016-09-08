@@ -492,7 +492,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #     txn.particular = txn.remarks
 
   $scope.getLedgerData = (showLoaderCondition) ->
-    $scope.showLoader = showLoaderCondition
+    $rootScope.superLoader = true
+    $scope.showLoader = showLoaderCondition || true
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     $scope.getAccountDetail($scope.accountUnq)
@@ -512,10 +513,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.countTotalTransactions()
     $scope.sortTransactions($scope.ledgerData, 'entryDate')
     $scope.showLoader = false
+    $rootScope.superLoader = false
 
   $scope.getLedgerDataFailure = (res) ->
     toastr.error(res.data.message)
     $scope.showLoader = false
+    $rootScope.superLoader = false
 
   $scope.updateLedgerData = (condition, ledger) ->
     unqNamesObj = {
