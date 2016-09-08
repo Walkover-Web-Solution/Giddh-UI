@@ -204,6 +204,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/dashboard'
     templateUrl: '/public/webapp/Dashboard/dashboard.html'
   )
+  .state('sindhu',
+    url: '/sindhu'
+    templateUrl: '/public/webapp/adminPanel/sindhu.html'
+    controller: 'adminController'
+  )
   .state('/thankyou',
     url: '/thankyou'
     templateUrl: '/public/webapp/views/thanks.html'
