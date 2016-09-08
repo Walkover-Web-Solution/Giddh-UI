@@ -1177,6 +1177,19 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     _.each ledger.transactions, (txn) ->
       txn.isOpen = false
 
+  $scope.deleteEntryConfirm = (ledger) ->
+    modalService.openConfirmModal(
+      title: 'Delete'
+      body: 'Are you sure you want to delete this entry?',
+      ok: 'Yes',
+      cancel: 'No'
+    ).then(
+      (res) -> 
+        $scope.deleteEntry(ledger)
+      (res) -> 
+        $dismiss()
+    )
+
   $scope.deleteEntry = (ledger) ->
     # $scope.pageLoader = true
     # $scope.showLoader = true
