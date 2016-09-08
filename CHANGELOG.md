@@ -1,3 +1,17 @@
+# 2.08
+
+## Update
+
+## Bug fixes, Combined api for networth and profit & loss graph, changes in dashboard
+
+- ([1969ee6](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/1969ee620370f51d1a0074af758409d2aac68a29))
+    1.) Ledger bugs fixes
+    2.) Integrated combined api for networth and p&l
+    3.) Multiple api hits due to financial year resolved
+    4.) trial balance, remove sundry debtors accounts if length > 50
+    5.) ledger css updates
+    6.) Minor bug fixes in ledger
+
 # 2.07
 
 ## Update
