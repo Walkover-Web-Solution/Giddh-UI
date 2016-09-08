@@ -8,6 +8,7 @@ dashboard = angular.module('dashboard', [
   "compareModule"
   "revenuechartModule"
   "profitlossModule"
+  "combinedModule"
 ])
 
 dashboardController = ($scope, $rootScope) ->

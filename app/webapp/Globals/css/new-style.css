@@ -3608,3 +3608,8 @@ tr.db-bnk-account > td.reconnectDiv{
     z-index: 2;
     cursor: pointer;
 }
+
+.padding-0{
+    padding-left: 0;
+    padding-right: 0;
+}
