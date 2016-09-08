@@ -165,7 +165,8 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
       $scope.salesData = []
       $scope.expenseData = []
       $scope.generateData(type, $scope.fromDate, moment().format('DD-MM-YYYY'))
-      $scope.generateData(type, moment($scope.fromDate, 'DD-MM-YYYY').subtract(1,'years').format('DD-MM-YYYY'),moment($scope.toDate, 'DD-MM-YYYY').subtract(1,'years').format('DD-MM-YYYY'))
+      if $rootScope.selectedCompany.financialYears.length > 1
+        $scope.generateData(type, moment($scope.fromDate, 'DD-MM-YYYY').subtract(1,'years').format('DD-MM-YYYY'),moment($scope.toDate, 'DD-MM-YYYY').subtract(1,'years').format('DD-MM-YYYY'))
 
   $scope.generateData = (type, fromDate, toDate) ->
     reqParam = {

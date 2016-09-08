@@ -154,8 +154,16 @@ networthController = ($scope, $rootScope, localStorageService, toastr, groupServ
   $scope.setDateByFinancialYear = () ->
     presentYear = $scope.getPresentFinancialYear()
     if $rootScope.currentFinancialYear == presentYear
-      $scope.fromDate = moment().subtract(1, 'years').add(1,'months').set('date',1).format('DD-MM-YYYY')
-      $scope.toDate = moment().format('DD-MM-YYYY')
+      if $rootScope.selectedCompany.financialYears.length > 1
+        if $rootScope.selectedCompany.financialYears.length > 1
+          $scope.fromDate = moment().subtract(1, 'years').add(1,'months').set('date',1).format('DD-MM-YYYY')
+          $scope.toDate = moment().format('DD-MM-YYYY')
+        else
+          $scope.fromDate = $rootScope.selectedCompany.activeFinancialYear.financialYearStarts
+          $scope.toDate = moment().format('DD-MM-YYYY')
+      else
+        $scope.fromDate = $rootScope.selectedCompany.activeFinancialYear.financialYearStarts
+        $scope.toDate = $rootScope.selectedCompany.activeFinancialYear.financialYearEnds
     else
       $scope.fromDate = $rootScope.selectedCompany.activeFinancialYear.financialYearStarts
       $scope.toDate = $rootScope.selectedCompany.activeFinancialYear.financialYearEnds
