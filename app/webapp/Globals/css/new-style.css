@@ -3443,7 +3443,7 @@ ul.pills li {
     background:#fddfa4;
 }
 
-@media only screen and (max-width: 1366px) and (orientation : landscape) {
+@media only screen and (max-width: 1440px) and (orientation : landscape) {
     .pop-panel{
         max-width:480px;
     }
@@ -3607,4 +3607,9 @@ tr.db-bnk-account > td.reconnectDiv{
     right: 10px;
     z-index: 2;
     cursor: pointer;
+}
+
+.padding-0{
+    padding-left: 0;
+    padding-right: 0;
 }

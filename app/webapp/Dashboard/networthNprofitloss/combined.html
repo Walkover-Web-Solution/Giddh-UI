@@ -1,0 +1,37 @@
+<div ng-init="getCombinedData()">
+  <div id="net-worth" class="col-xs-6">
+    <div class="panel panel-default shadow">
+      <div class="panel-heading">
+        <label>Net worth</label><i class="glyphicon glyphicon-refresh pull-right" ng-click="getCombinedData()"></i>
+      </div>
+      <div class="panel-body pos-rel">
+        <div class="dashboard-reconnectdiv" ng-if="!chartDataAvailable">
+          <div class="giddh-spinner vertical-center-spinner" ng-if="errorMessage == ''"></div>
+          <label class="font-black" ng-if="errorMessage != ''">{{errorMessage}}</label>
+        </div>
+        <a ng-if="chartDataAvailable" class="pull-right pos-abs" ng-click="goToReports()">view detailed</a>
+        <div class="chart-div" google-chart chart="networthData"></div>
+        <!--<canvas id="line" class="chart-div chart chart-line" chart-data="chartData"-->
+        <!--chart-labels="labels" chart-legend="true" chart-series="series" chart-options="chartOptions">-->
+        <!--</canvas>-->
+      </div>
+    </div>
+  </div>
+  <div id="profitloss" class="col-xs-6">
+    <div class="panel panel-default shadow">
+      <div class="panel-heading">
+        <label>Profit & loss</label><i class="glyphicon glyphicon-refresh pull-right" ng-click="getCombinedData(fromDate,toDate)"></i>
+      </div>
+      <div class="panel-body pos-rel">
+        <div class="dashboard-reconnectdiv" ng-if="!chartDataAvailable">
+          <div class="giddh-spinner vertical-center-spinner" ng-if="errorMessage == ''"></div>
+          <label class="font-black" ng-if="errorMessage != ''">{{errorMessage}}</label>
+        </div>
+        <div class="chart-div" google-chart chart="plData"></div>
+        <!--<canvas id="line" class="chart-div chart chart-line" chart-data="chartData"-->
+        <!--chart-labels="labels" chart-legend="true" chart-series="series" chart-options="chartOptions">-->
+        <!--</canvas>-->
+      </div>
+    </div>
+  </div>
+</div>

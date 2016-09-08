@@ -1,14 +1,37 @@
 "use strict"
 
-profitloss = angular.module('profitlossModule', [])
+combined = angular.module('combinedModule', [])
 
-profitlossController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $timeout, $state, $http, $window) ->
+combinedController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $timeout, $state, $http, $window) ->
   $scope.monthArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   $scope.chartDataAvailable = false
   $scope.errorMessage = ""
   $scope.fromDate = moment().format('DD-MM-YYYY')
   $scope.toDate = moment().format('DD-MM-YYYY')
-  $scope.myChartData = {
+  $scope.chartOptions = {
+    seriesType: 'bars',
+    series: {1: {type: 'line'}},
+    colors: ['#d35f29','#337ab7'],
+    legend:{position:'none'},
+    chartArea:{
+      width:'85%',
+      right: 10
+    },
+    curveType: 'function',
+    pointSize: 5,
+    animation:{
+      duration: 1000,
+      easing: 'out',
+    },
+    hAxis:{
+      slantedText:true
+    },
+    vAxis:{
+      format: 'long',
+      scaleType: 'mirrorLog'
+    }
+  }
+  $scope.plData = {
     "type": "ComboChart",
     "data": {
       "cols": [
@@ -25,44 +48,48 @@ profitlossController = ($scope, $rootScope, localStorageService, toastr, groupSe
           "p": {}
         }]
     },
-    "options": {
-      seriesType: 'bars',
-      series: {1: {type: 'line'}},
-      colors: ['#d35f29','#337ab7'],
-      legend:{position:'none'},
-      chartArea:{
-        width:'85%',
-        right: 10
-      },
-      curveType: 'function',
-      pointSize: 5,
-      animation:{
-        duration: 1000,
-        easing: 'out',
-      },
-      hAxis:{
-        slantedText:true
-      },
-      vAxis:{
-        format: 'long',
-        scaleType: 'mirrorLog'
-      }
-    }
+    "options": $scope.chartOptions
   }
-  $scope.getPLData = () ->
+  $scope.networthData = {
+    "type": "ComboChart",
+    "data": {
+      "cols": [
+        {
+          "id": "month",
+          "label": "Month",
+          "type": "string",
+          "p": {}
+        },
+        {
+          "id": "monthlyBalance",
+          "label": "Monthly change",
+          "type": "number",
+          "p": {}
+        },{
+          "id": "yearlyBalance",
+          "label": "Net worth",
+          "type": "number",
+          "p": {}
+        }]
+    },
+    "options": $scope.chartOptions
+  }
+
+
+  $scope.getCombinedData = () ->
     $scope.chartDataAvailable = false
     $scope.errorMessage = ""
     if _.isUndefined($rootScope.selectedCompany)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
     if $rootScope.currentFinancialYear == undefined
       $timeout ( ->
-        $scope.getPLData()
+        $scope.getCombinedData()
       ),2000
     else
       $scope.setDateByFinancialYear()
-      $scope.getprofitLossData($scope.fromDate,$scope.toDate)
+      $scope.getComData($scope.fromDate,$scope.toDate)
 
-  $scope.getprofitLossData = (fromDate,toDate) ->
+  $scope.getComData = (fromDate, toDate) ->
     $scope.errorMessage = ""
     $scope.chartDataAvailable = false
     reqParam = {
@@ -71,49 +98,62 @@ profitlossController = ($scope, $rootScope, localStorageService, toastr, groupSe
       'toDate': toDate
       'interval': "monthly"
     }
-    $scope.getPLgraphData(reqParam)
+    $scope.getCombinedGraphData(reqParam)
 
-  $scope.getPLgraphData = (reqParam) ->
-    reportService.profitLossData(reqParam).then($scope.getPLSuccess, $scope.getPLFailure)
+  $scope.getCombinedGraphData = (reqParam) ->
+    reportService.networthNprofitloss(reqParam).then $scope.getCGraphDataSuccess, $scope.getCGraphDataFailure
 
-  $scope.getPLSuccess = (res) ->
-    $scope.generateDataForGraph(res.body)
+  $scope.getCGraphDataSuccess = (res) ->
+    $scope.errorMessage = ""
+    nwGraphData = res.body
+    $scope.formatNetworthData (nwGraphData.networth)
+    $scope.formatPLdata(nwGraphData.profitLoss)
 
-  $scope.getPLFailure = (res) ->
+  $scope.getCGraphDataFailure = (res) ->
     if res.data.code == "INVALID_DATE"
       setDate = ""
       if moment().get('months') > 4
         setDate = "01-04-" + moment().get('YEARS')
       else
         setDate = "01-04-" + moment().subtract(1, 'years').get('YEARS')
-      $scope.getprofitLossData(setDate,moment().format('DD-MM-YYYY'))
+      $scope.fromDate = setDate
+      $scope.toDate = moment().format('DD-MM-YYYY')
+      $scope.getComData(setDate,moment().format('DD-MM-YYYY'))
     else
       $scope.chartDataAvailable = false
       $scope.chartData = []
       #    toastr.error(res.data.message)
       $scope.errorMessage = res.data.message
 
-  $scope.generateDataForGraph = (plData) ->
-    $scope.myChartData.data.rows = []
-    $scope.nwSeries = []
-    $scope.nwChartData = []
-    $scope.nwLabels = []
+  $scope.formatNetworthData = (data) ->
+    $scope.networthData.data.rows = []
     monthlyBalances = []
     yearlyBalances = []
-    _.each plData.periodBalances, (nw) ->
+    _.each data.periodBalances, (nw) ->
       row = {}
       row.c = []
-      tooltipText = ""
       str = $scope.monthArray[moment(nw.to, 'DD-MM-YYYY').get('months')] + moment(nw.to, 'DD-MM-YYYY').get('y')
-      $scope.nwLabels.push(str)
       monthlyBalances.push(nw.monthlyBalance)
-      $scope.nwSeries.push('Monthly Balances')
       yearlyBalances.push(nw.yearlyBalance)
-      $scope.nwSeries.push('Yearly Balances')
       row.c.push({v:str})
       row.c.push({v:nw.monthlyBalance})
-#      row.c.push({v:nw.yearlyBalance})
-      $scope.myChartData.data.rows.push(row)
+      row.c.push({v:nw.yearlyBalance})
+      $scope.networthData.data.rows.push(row)
+    $scope.chartDataAvailable = true
+
+  $scope.formatPLdata = (data) ->
+    $scope.plData.data.rows = []
+    monthlyBalances = []
+    yearlyBalances = []
+    _.each data.periodBalances, (nw) ->
+      row = {}
+      row.c = []
+      str = $scope.monthArray[moment(nw.to, 'DD-MM-YYYY').get('months')] + moment(nw.to, 'DD-MM-YYYY').get('y')
+      monthlyBalances.push(nw.monthlyBalance)
+      yearlyBalances.push(nw.yearlyBalance)
+      row.c.push({v:str})
+      row.c.push({v:nw.monthlyBalance})
+      $scope.plData.data.rows.push(row)
     $scope.chartDataAvailable = true
 
   $scope.setDateByFinancialYear = () ->
@@ -140,14 +180,18 @@ profitlossController = ($scope, $rootScope, localStorageService, toastr, groupSe
       toDate = moment().get('YEARS')
     setDate+"-"+toDate
 
+  $scope.goToReports = () ->
+    $rootScope.stateParam = {'frmDt': $scope.fromDate, 'toDt': $scope.toDate, 'type': 'networth'}
+    $state.go('Reports',{'frmDt': $scope.fromDate, 'toDt': $scope.toDate, 'type': 'networth'})
+
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
       $scope.setDateByFinancialYear()
-      $scope.getprofitLossData($scope.fromDate,$scope.toDate)
+      $scope.getComData($scope.fromDate,$scope.toDate)
 
-profitloss.controller('profitlossController',profitlossController)
+combined.controller('combinedController',combinedController)
 
-.directive 'profitLoss', () ->{
+.directive 'combined', () ->{
   restrict: 'E',
-  templateUrl: '/public/webapp/Dashboard/profitLossGraph/profitloss.html'
+  templateUrl: '/public/webapp/Dashboard/networthNprofitloss/combined.html'
 }

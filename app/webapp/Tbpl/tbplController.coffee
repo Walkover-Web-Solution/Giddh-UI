@@ -311,11 +311,14 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     $scope.showTbplLoader = false
 
   $scope.removeSd = (data) ->
+    count = 0
     _.each data, (grp) ->
       if grp.childGroups.length > 0
         _.each grp.childGroups, (ch) ->
           if ch.uniqueName == 'sundry_debtors'
-            ch.accounts = []
+            count += ch.accounts.length
+            if count > 50
+              ch.accounts = []
             if ch.childGroups.length > 0
               $scope.removeAcc(ch)
 
