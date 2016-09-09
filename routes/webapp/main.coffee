@@ -11,6 +11,8 @@ options = {
     'x-sent': true
 }
 
+
+
 router.get '/app/*', (req, res) ->
   if req.session.name != undefined
     res.sendFile 'index.html', options

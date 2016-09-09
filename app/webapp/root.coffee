@@ -223,8 +223,6 @@ giddh.webApp.run [
   'DAServices'
   'groupService'
   ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService) ->
-    $rootScope.$state = $state
-    $rootScope.$stateParams = $stateParams
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
       $rootScope.showLedgerBox = false
       if _.isEmpty(toParams)

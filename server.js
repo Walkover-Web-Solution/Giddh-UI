@@ -84,13 +84,13 @@ app.use(session({
     secure: false,
     maxAge: sessionTTL
   },
-  // store: new MongoStore({
-  //     url: settings.mongoUrl,
-  //     autoRemove: 'interval',
-  //     autoRemoveInterval: sessionTTL,
-  //     ttl: sessionTTL,
-  //     touchAfter: sessionTTL - 300
-  // })
+  store: new MongoStore({
+      url: settings.mongoUrl,
+      autoRemove: 'interval',
+      autoRemoveInterval: sessionTTL,
+      ttl: sessionTTL,
+      touchAfter: sessionTTL - 300
+  })
   // store   : new MemcachedStore({
   //   hosts: ['127.0.0.1:11211'],
   //   secret: 'keyboardcat'
@@ -170,7 +170,9 @@ var coupon = require('./public/routes/webapp/coupon')
 var yodlee = require('./public/routes/webapp/yodlee')
 var ebanks  = require('./public/routes/webapp/ebanks')
 var magicLink = require('./public/routes/webapp/magic')
+var timetest = require('./public/routes/webapp/timetest')
 
+app.use('/time-test', timetest);
 app.use('/currency', currency);
 app.use('/users', users);
 app.use('/roles', roles);
@@ -208,6 +210,7 @@ function redirectUnmatched(req, res) {
 app.listen(port, function () {
   console.log('Express Server running at port', this.address().port);
 });
+
 /*
  |--------------------------------------------------------------------------
  | Error Handlers

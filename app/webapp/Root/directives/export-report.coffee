@@ -315,3 +315,22 @@ angular.module('trialBalance', []).directive('exportReport', [
     })
     
 ]
+
+# .directive 'adjustPopoverPlacement', ['$window', '$timeout', ($window, $timeout) ->
+#   scope: {
+#     position: '=position'
+#   }
+#   link: (scope, elem, attr) ->
+
+#     $(elem).on('click', (e) ->
+#       if $(window).height() - e.pageY < $('.ledger-panel').height() + 30   
+#         scope.position = "top"
+#       else
+#         scope.position = "bottom"
+#     )
+
+# ]
+
+
+
+

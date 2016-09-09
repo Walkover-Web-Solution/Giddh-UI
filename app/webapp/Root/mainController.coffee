@@ -461,6 +461,328 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
     $rootScope.currentFinancialYear = activeYear.year
 
+
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+  $http.get('/time-test').then(
+    (success) ->
+      console.log success
+    (failure) ->
+      console.log failure
+  )
+
+
+
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
 
