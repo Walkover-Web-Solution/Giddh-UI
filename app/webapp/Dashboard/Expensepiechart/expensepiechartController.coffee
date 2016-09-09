@@ -4,7 +4,7 @@ pie = angular.module('piechartModule', [
   "googlechart"
 ])
 
-piechartController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, $timeout) ->
+piechartController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, $timeout, $http) ->
   $scope.unq = 1
   $scope.series = ['Expense']
   $scope.chartData = []
@@ -105,6 +105,8 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
     objToSend.selGrpUname = groupUniqueName
     objToSend.fromDate = duration.from
     objToSend.toDate = duration.to
+#    url = 'https://apitest.giddh.com/company/'+objToSend.compUname+'/groups/'+objToSend.selGrpUname+'/closing-balance?from='+objToSend.fromDate+'&to='+objToSend.toDate
+#    $http.get(url).then($scope.getClosingBalSuccess, $scope.getClosingBalFailure)
     groupService.getClosingBal(objToSend).then($scope.getClosingBalSuccess,$scope.getClosingBalFailure)
 
   $scope.getClosingBalSuccess = (res) ->
