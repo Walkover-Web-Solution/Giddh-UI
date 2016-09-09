@@ -172,7 +172,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     else
       # with accounts, group data
       $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
-      #$rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+      $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
 
       # without accounts only groups conditionally
@@ -617,8 +617,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       }
 
   #show account
-  $scope.getAccountCategory = (acc) ->
-    pg = acc.parentGroups[0]['uniqueName']
+  $scope.getAccountCategory = (parentGroups) ->
+    pg = parentGroups[0]['uniqueName']
     grp = _.findWhere($rootScope.flatGroupsList, {uniqueName:pg})
     grp.category
 
@@ -632,16 +632,19 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       acntUname: data.uniqueName
     }
     $scope.showEditTaxSection = false
-    accountService.get(reqParams).then($scope.getAcDtlSuccess, $scope.getAcDtlFailure)
+    accountService.get(reqParams).then(
+      (res) -> $scope.getAcDtlSuccess(res, data), 
+      (res) ->$scope.getAcDtlFailure(res)
+    )
 
-  $scope.getAcDtlSuccess = (res) ->
+  $scope.getAcDtlSuccess = (res, data) ->
     #getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.fltAccntListPaginated)
-    getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.fltAccntListPaginated)
-    $scope.AccountCategory = $scope.getAccountCategory(getPgrps)
+    #getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.fltAccntListPaginated)
+    $scope.AccountCategory = $scope.getAccountCategory(data.parentGroups)
     data = res.body
     $scope.getMergedAccounts(data)
-    data.parentGroups = []
-    _.extend(data.parentGroups, getPgrps.parentGroups)
+    #data.parentGroups = []
+    #_.extend(data.parentGroups, getPgrps.parentGroups)
     $rootScope.$emit('callCheckPermissions', data)
     pGroups = []
     $scope.showGroupDetails = false
