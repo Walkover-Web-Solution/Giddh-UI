@@ -1,3 +1,13 @@
+# 2.09
+
+## Update
+
+## Bug fixes, graph ui changes
+
+- ([39e33c0](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/39e33c0b2f5cff63b42774d3b8b1183b277bf97e))
+    1.) Add and manage bug fixes
+    2.) Sequence changed for dashboard graphs
+
 # 2.08
 
 ## Update
