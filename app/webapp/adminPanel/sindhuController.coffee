@@ -3,7 +3,37 @@
 adminController = ($scope, $rootScope, sindhuServices, $timeout) ->
   $rootScope.cmpViewShow = true
   $scope.companies = []
-
+  $scope.dummyData = [
+    {
+      "companySubscription": {
+        "subscriptionDate": "28-05-2016",
+        "servicePlan": {
+          "amount": 0,
+          "planName": "trial",
+          "servicePeriod": 1
+        },
+        "remainingPeriod": 1,
+        "paymentDue": false,
+        "paymentMode":"pre",
+        "nextBillDate":"28-06-2016",
+        "createdAt":"28-05-2016",
+        "expiry": "09-10-2016"
+      },
+      "contactNo":"91-7828405888",
+      "createdBy":{
+        "name":"Ravi Soni",
+        "email":"ravisoni@walkover.in",
+        "uniqueName":"ravisoni@walkover.in"
+      },
+      "updatedAt":"26-08-2016 17:06:00",
+      "name":"ravi soni",
+      "sharedWith":[{
+        "email": "ravisoni@hostnsoft.com",
+        "permission": "super_admin"
+      }],
+      "apiHits": 104521
+    }
+  ]
 #  {
 #  "activeFinancialYear":{
 #    "isLocked":false,
@@ -84,8 +114,13 @@ adminController = ($scope, $rootScope, sindhuServices, $timeout) ->
   $scope.getCompanyList = () ->
     #Need to hit api and get list of companies
     #structure to be followed
-    console.log($rootScope.CompanyList)
+#    console.log($rootScope.CompanyList)
     $scope.companies = $rootScope.CompanyList
+    groupedCompany = _.groupBy($rootScope.CompanyList, 'email')
+#    console.log(groupedCompany)
+
+  $scope.showSharedWithDetails = (data) ->
+    console.log(data)
 
   $timeout ( ->
     $scope.getCompanyList()

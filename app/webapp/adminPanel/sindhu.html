@@ -12,16 +12,16 @@
       <th>Monthly API hits</th>
     </thead>
     <tbody>
-      <tr ng-repeat="company in companies">
+      <tr ng-repeat="company in dummyData">
         <td>{{company.name}}</td>
         <td>{{company.createdBy.name}}</td>
         <td>{{company.contactNo}}</td>
-        <td>{{company.expire}}</td>
-        <td>{{company.activity}}</td>
-        <td>{{company.companySubscription.servicePlan.amount}}</td>
-        <td><button>open list</button></td>
+        <td>{{company.companySubscription.expiry}}</td>
+        <td>{{company.updatedAt}}</td>
+        <td>{{company.companySubscription.servicePlan.amount}}| number</td>
+        <td><button class="btn btn-default" ng-click="showSharedWithDetails(company.sharedWith)">open list</button></td>
         <td>{{company.companySubscription.servicePlan.planName}}</td>
-        <td>{{company.hits}}</td>
+        <td>{{company.apiHits}}</td>
       </tr>
     </tbody>
   </table>
