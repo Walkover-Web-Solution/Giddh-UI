@@ -11,15 +11,12 @@
   <!-- LIBRARIES INCLUDE -->
   
   <link rel="stylesheet" type="text/css" href="/public/webapp/Globals/css/giddh.min.css">
-  <script>
-    window.alert("<%=#{env['dev']['PREFIX_THIS']}%>");
-  </script>
   <!-- @if NODE_ENV='PRODUCTION' -->
   <script  type="text/javascript" src="https://testgiddh-nmzzic5albrr.netdna-ssl.com/public/webapp/newRelic.js"></script>
   <!-- @endif -->
  <!--data-cfasync="false" -->
   <script  type="text/javascript" src="/public/webapp/core_bower.min.js"></script>
-  <script type="text/javascript" src="<%=#{env['dev']['PREFIX_THIS']}%>/public/webapp/_extras.js"></script>
+  <script type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/_extras.js"></script>
   <!-- including app Js Files -->
   <!-- @if NODE_ENV='DEVELOPMENT' -->
   <script  type="text/javascript" src="/public/webapp/app.js"></script>
