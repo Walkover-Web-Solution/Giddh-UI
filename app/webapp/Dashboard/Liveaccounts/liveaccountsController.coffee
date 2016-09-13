@@ -92,8 +92,8 @@ liveaccountsController = ($rootScope, $scope, $uibModal, userServices, localStor
 
 liveaccount.controller('liveaccountsController',liveaccountsController)
 
-.directive 'liveAccount', [() -> {
+.directive 'liveAccount', [($locationProvider,$rootScope) -> {
   restrict: 'E'
-  templateUrl: '/public/webapp/Dashboard/Liveaccounts/liveaccounts.html'
+  templateUrl: $rootScope.prefixThis+'/public/webapp/Dashboard/Liveaccounts/liveaccounts.html'
 #  controller: 'liveaccountsController'
 }]

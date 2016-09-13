@@ -42,6 +42,7 @@ giddh.webApp.config (localStorageServiceProvider) ->
 
 giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   $urlRouterProvider.otherwise('/home')
+  appendThis = "https://testgiddh-nmzzic5albrr.netdna-ssl.com"
   $stateProvider.state('/home',
     url: '/home'
     resolve: {
@@ -85,36 +86,36 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
           toastr.error('Failed to retrieve company list' + res.data.message)
         companyServices.getAll().then(onSuccess, onFailure)
     }
-    templateUrl: '/public/webapp/views/demo.html'
+    templateUrl: appendThis+'/public/webapp/views/demo.html'
     controller: 'homeController'
   )
   .state('Reports',
     url: '/reports'
-    templateUrl: '/public/webapp/Reports/reports.html',
+    templateUrl: appendThis+'/public/webapp/Reports/reports.html',
     controller: 'reportsController',
     params: {'frmDt': null, 'toDt': null, 'type': null}
   )
   .state('audit-logs',
     url: '/audit-logs'
-    templateUrl: '/public/webapp/AuditLogs/audit-logs.html',
+    templateUrl: appendThis+'/public/webapp/AuditLogs/audit-logs.html',
     controller:'logsController'
   )
   .state('search',
     url: '/search'
-    templateUrl: '/public/webapp/Search/searchContent.html'
+    templateUrl: appendThis+'/public/webapp/Search/searchContent.html'
     controller: 'searchController'
   )
   .state('invoice',
     url: ''
     abstract: true
-    templateUrl: '/public/webapp/views/home.html'
+    templateUrl: appendThis+'/public/webapp/views/home.html'
     controller: 'invoiceController'
   )
   .state('invoice.accounts',
     url: '/invoice'
     views:{
       'accounts':{
-        templateUrl: '/public/webapp/Invoice/invoiceAccounts.html'
+        templateUrl: appendThis+'/public/webapp/Invoice/invoiceAccounts.html'
       }
       'rightPanel':{
         abstract:true
@@ -126,12 +127,12 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   )
   .state('invoice.accounts.invoiceId',
     url: '/:invId'
-    templateUrl: '/public/webapp/Invoice/invoiceContent.html'
+    templateUrl: appendThis+'/public/webapp/Invoice/invoiceContent.html'
   )
   .state('company'
     url: ''
     abstract: true
-    templateUrl: '/public/webapp/views/home.html'
+    templateUrl: appendThis+'/public/webapp/views/home.html'
     controller:'groupController'
   )
   .state('company.content',
@@ -153,11 +154,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/manage'
     views:{
       'accountsList':{
-        templateUrl: '/public/webapp/views/accounts.html'
+        templateUrl: appendThis+'/public/webapp/views/accounts.html'
         #template: "<div>manage page</div>"
       }
       'rightPanel':{
-        templateUrl: '/public/webapp/ManageCompany/manageCompany.html'
+        templateUrl: appendThis+'/public/webapp/ManageCompany/manageCompany.html'
       }
     }
   )
@@ -167,11 +168,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     # controller: 'userController'
     views:{
       'accountsList':{
-        templateUrl: '/public/webapp/views/accounts.html'
+        templateUrl: appendThis+'/public/webapp/views/accounts.html'
         #template: "<div>user page</div>"
       }
       'rightPanel':{
-        templateUrl: '/public/webapp/UserDetails/userDetails.html'
+        templateUrl: appendThis+'/public/webapp/UserDetails/userDetails.html'
         controller: 'userController'
       }
     }
@@ -180,10 +181,10 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/trial-balance-and-profit-loss',
     views:{
       'accountsList':{
-        templateUrl: '/public/webapp/views/accounts.html'
+        templateUrl: appendThis+'/public/webapp/views/accounts.html'
       }
       'rightPanel':{
-        templateUrl: '/public/webapp/Tbpl/tbpl.html'
+        templateUrl: appendThis+'/public/webapp/Tbpl/tbpl.html'
         controller: 'tbplController'
       }
     }
@@ -192,21 +193,21 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/ledger/:unqName'
     views:{
       'accountsList':{
-        templateUrl: '/public/webapp/views/accounts.html'
+        templateUrl: appendThis+'/public/webapp/views/accounts.html'
       }
       'rightPanel':{
-        templateUrl: '/public/webapp/Ledger/ledger.html'
+        templateUrl: appendThis+'/public/webapp/Ledger/ledger.html'
         controller: 'newLedgerController'
       }
     }
   )
   .state('dashboard',
     url: '/dashboard'
-    templateUrl: '/public/webapp/Dashboard/dashboard.html'
+    templateUrl: appendThis+'/public/webapp/Dashboard/dashboard.html'
   )
   .state('/thankyou',
     url: '/thankyou'
-    templateUrl: '/public/webapp/views/thanks.html'
+    templateUrl: appendThis+'/public/webapp/views/thanks.html'
     controller: 'thankyouController'
   )
   $locationProvider.html5Mode(false)

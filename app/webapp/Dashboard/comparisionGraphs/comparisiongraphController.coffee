@@ -354,8 +354,8 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
 
 compare.controller('comparisiongraphController',comparisiongraphController)
 
-.directive 'compareGraph', () ->{
+.directive 'compareGraph',[($locationProvider,$rootScope) -> {
   restrict: 'E'
-  templateUrl: '/public/webapp/Dashboard/comparisionGraphs/compare.html'
+  templateUrl: $rootScope.prefixThis+'/public/webapp/Dashboard/comparisionGraphs/compare.html'
 #  controller: 'comparisiongraphController'
-}
+}]
