@@ -195,8 +195,8 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
 
 history.controller('historicalgraphController',historicalgraphController)
 
-.directive 'history', () ->{
+.directive 'history',[($locationProvider,$rootScope) -> {
   restrict: 'E'
-  templateUrl: '/public/webapp/Dashboard/historicalGraph/historicalGraph.html'
+  templateUrl: $rootScope.prefixThis+'/public/webapp/Dashboard/historicalGraph/historicalGraph.html'
 #  controller: 'historicalgraphController'
-}
+}]

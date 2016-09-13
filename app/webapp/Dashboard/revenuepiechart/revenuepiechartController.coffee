@@ -169,7 +169,7 @@ revenuechartController = ($scope, $rootScope, localStorageService, toastr, group
 
 revenue.controller('revenuechartController', revenuechartController)
 
-.directive 'revenueChart',[() -> {
+.directive 'revenueChart',[($locationProvider,$rootScope) -> {
   restrict: 'E'
-  templateUrl: '/public/webapp/Dashboard/revenuepiechart/revenuepiechart.html'
+  templateUrl: $rootScope.prefixThis+'/public/webapp/Dashboard/revenuepiechart/revenuepiechart.html'
 }]

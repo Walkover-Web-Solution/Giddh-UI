@@ -117,7 +117,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       toastr.error("Select company first.", "Error")
     else
       modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/ManageGroupsAndAccounts/addManageGroupModal.html'
+        templateUrl: $rootScope.prefixThis+'/public/webapp/ManageGroupsAndAccounts/addManageGroupModal.html'
         size: "liq90"
         backdrop: 'static'
         scope: $scope
@@ -172,7 +172,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     else
       # with accounts, group data
       $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
-      $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+      #$rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
 
       # without accounts only groups conditionally
@@ -639,11 +639,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.getAcDtlSuccess = (res, data) ->
     #getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.fltAccntListPaginated)
-    #getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.fltAccntListPaginated)
+    getPgrps = groupService.matchAndReturnGroupObj(res.body, $rootScope.fltAccntListPaginated)
     $scope.AccountCategory = $scope.getAccountCategory(data.parentGroups)
     data = res.body
     $scope.getMergedAccounts(data)
-    #data.parentGroups = []
+    # data.parentGroups = []
     #_.extend(data.parentGroups, getPgrps.parentGroups)
     $rootScope.$emit('callCheckPermissions', data)
     pGroups = []

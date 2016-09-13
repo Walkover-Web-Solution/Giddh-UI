@@ -38,17 +38,18 @@
 
             <div class="form-group">
               <!-- selectedAccount.openingBalanceDate -->
-              <p class="input-group">
-                <input type="text" class="form-control"
+              <!-- <p class="input-group"> -->
+               <input type="text" class="form-control"
                        uib-datepicker-popup="{{format}}"
                        datepicker-options="dateOptions"
                        is-open="valuationDatePickerIsOpen"
                        ng-click="valuationDatePickerOpen()"
-                       ng-model="datePicker.accountOpeningBalanceDate" max-date="today" ng-disabled="isFixedAcc"/>
-              <span class="input-group-btn">
+                       ng-model="datePicker.accountOpeningBalanceDate" max-date="today" ng-disabled="true"/>
+                       <!--ng-disabled="isFixedAcc"-->
+            <!--  <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="valuationDatePickerOpen()"><i
                     class="glyphicon glyphicon-calendar"></i></button>
-              </span>
+              </span> -->
               </p>
 
             </div>
