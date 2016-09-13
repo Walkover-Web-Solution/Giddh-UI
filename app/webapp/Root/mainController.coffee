@@ -1,6 +1,20 @@
 "use strict"
 
 mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location) ->
+  $rootScope.scriptArrayHead = [
+    "/public/webapp/newRelic.js"
+    "/public/webapp/core_bower.min.js"
+    "/public/webapp/_extras.js"
+    "/public/webapp/app.js"
+    "/public/webapp/app.min.js"
+  ]
+  $rootScope.scriptArrayBody = [
+    "/node_modules/rxjs/bundles/Rx.umd.js"
+    "/node_modules/es6-shim/es6-shim.js"
+    "/node_modules/angular2/bundles/angular2-polyfills.js"
+    "/node_modules/angular2/bundles/angular2-all.umd.dev.js"
+    "/public/webapp/ng2.js"
+  ]
   $rootScope.cmpViewShow = true
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
@@ -32,6 +46,25 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.companyIndex = 0
   $rootScope.selectedAccount = {}
   $rootScope.hasOwnCompany = false
+
+  $scope.addScript = () ->
+    _.each($rootScope.scriptArrayHead, (script) ->
+      sc = document.createElement("script")
+      sc.src = $scope.prefixUrl(script)
+      sc.type = "text/javascript"
+      document.head.appendChild(sc)
+    )
+    _.each($rootScope.scriptArrayBody, (script) ->
+      sc = document.createElement("script")
+      sc.src = $scope.prefixUrl(script)
+      sc.type = "text/javascript"
+      document.body.appendChild(sc)
+    )
+
+  $scope.prefixUrl = (path) ->
+    str = "http://1." + location.host + path
+    console.log(str)
+    return str
 
   $scope.runSetupWizard = () ->
     $rootScope.setupModalInstance = $uibModal.open(
@@ -471,5 +504,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.$on('openAddManage', () ->
     $(document).find('#AddManage').trigger('click')
   )
+#  $scope.addScript()
 
 giddh.webApp.controller 'mainController', mainController

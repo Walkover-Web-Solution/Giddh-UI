@@ -191,7 +191,7 @@ combinedController = ($scope, $rootScope, localStorageService, toastr, groupServ
 
 combined.controller('combinedController',combinedController)
 
-.directive 'combined', () ->{
+.directive 'combined',[($locationProvider) -> {
   restrict: 'E',
-  templateUrl: '/public/webapp/Dashboard/networthNprofitloss/combined.html'
-}
+  templateUrl: 'http://1.'+location.host+'/public/webapp/Dashboard/networthNprofitloss/combined.html'
+}]
