@@ -10,19 +10,19 @@
   <title>Giddh ~ Accounting at its Rough!</title>
   <!-- LIBRARIES INCLUDE -->
   
-  <link rel="stylesheet" type="text/css" href="https://testgiddh-nmzzic5albrr.netdna-ssl.com/public/webapp/Globals/css/giddh.min.css">
+  <link rel="stylesheet" type="text/css" href="<<PREFIX_THIS>>/public/webapp/Globals/css/giddh.min.css">
   <!-- @if NODE_ENV='PRODUCTION' -->
-  <script  type="text/javascript" src="https://testgiddh-nmzzic5albrr.netdna-ssl.com/public/webapp/newRelic.js"></script>
+  <script  type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/newRelic.js"></script>
   <!-- @endif -->
  <!--data-cfasync="false" -->
-  <script  type="text/javascript" src='https://testgiddh-nmzzic5albrr.netdna-ssl.com/public/webapp/core_bower.min.js'></script>
-  <script type="text/javascript" src="https://testgiddh-nmzzic5albrr.netdna-ssl.com/public/webapp/_extras.js"></script>
+  <script  type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/core_bower.min.js"></script>
+  <script type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/_extras.js"></script>
   <!-- including app Js Files -->
   <!-- @if NODE_ENV='DEVELOPMENT' -->
-  <script  type="text/javascript" src="https://testgiddh-nmzzic5albrr.netdna-ssl.com/public/webapp/app.js"></script>
+  <script  type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/app.js"></script>
   <!-- @endif -->
   <!-- @if NODE_ENV='PRODUCTION' -->
-  <script type="text/javascript" src="https://testgiddh-nmzzic5albrr.netdna-ssl.com/public/webapp/app.min.js"></script>
+  <script type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/app.min.js"></script>
   <!-- @endif -->
 
 
@@ -37,15 +37,15 @@
 </head>
 <body class="unresponsive" ng-controller="mainController" >
 
-  <div ng-include="'https://testgiddh-nmzzic5albrr.netdna-ssl.com/public/webapp/views/header.html'"></div>
+  <div ng-include="'<<PREFIX_THIS>>/public/webapp/views/header.html'"></div>
   <ui-view></ui-view>
 
 
-  <script type="text/javascript" src="https://testgiddh-nmzzic5albrr.netdna-ssl.com/node_modules/rxjs/bundles/Rx.umd.js"></script>
-  <script type="text/javascript" src="https://testgiddh-nmzzic5albrr.netdna-ssl.com/node_modules/es6-shim/es6-shim.js"></script>
-  <script type="text/javascript" src="https://testgiddh-nmzzic5albrr.netdna-ssl.com/node_modules/angular2/bundles/angular2-polyfills.js"></script>
-  <script type="text/javascript" src="https://testgiddh-nmzzic5albrr.netdna-ssl.com/node_modules/angular2/bundles/angular2-all.umd.dev.js"></script>
-  <script  type="text/javascript" src="https://testgiddh-nmzzic5albrr.netdna-ssl.com/public/webapp/ng2.js"></script>
+  <script type="text/javascript" src="<<PREFIX_THIS>>/node_modules/rxjs/bundles/Rx.umd.js"></script>
+  <script type="text/javascript" src="<<PREFIX_THIS>>/node_modules/es6-shim/es6-shim.js"></script>
+  <script type="text/javascript" src="<<PREFIX_THIS>>/node_modules/angular2/bundles/angular2-polyfills.js"></script>
+  <script type="text/javascript" src="<<PREFIX_THIS>>/node_modules/angular2/bundles/angular2-all.umd.dev.js"></script>
+  <script  type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/ng2.js"></script>
 
   <!-- @if NODE_ENV='PRODUCTION' -->
   <!-- Google Tag Manager -->

@@ -71,9 +71,23 @@ module.exports = function (grunt) {
           expand: true,
           dot: true,
           cwd: srcDir,
-          src: ['**/**/images/*', '**/**/images/new/*', '**/**/css/*', '**/**/fonts/*', '**/views/*', '**/ng2/*', '**/ng2/**/*', '**/*.coffee','**/**/*.*'],
+          src: ['**/**/images/*', '**/**/images/new/*', '**/**/css/*', '**/**/fonts/*', '**/views/*', '**/ng2/*',
+              '**/ng2/**/*', '**/*.coffee','**/**/*.*', '!webapp/views/index.html'],
           dest: destDir
         }]
+      },
+      index: {
+        src: srcDir + 'webapp/views/index.html',
+        dest: destDir + 'webapp/views/index.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
       }
     },
     watch: {
@@ -148,7 +162,8 @@ module.exports = function (grunt) {
     },
     env: {
       dev: {
-        NODE_ENV: 'DEVELOPMENT'
+        NODE_ENV: 'DEVELOPMENT',
+        PREFIX_THIS: 'https://testgiddh-nmzzic5albrr.netdna-ssl.com'
       },
       prod: {
         NODE_ENV: 'PRODUCTION'
@@ -273,11 +288,13 @@ module.exports = function (grunt) {
     grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
   });
 
-  grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
+  grunt.registerTask('customCopy', ['env:dev', 'copy']);
 
-  grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean','bower_concat', 'cssmin', 'concat', 'preprocess:dev'])
+  grunt.registerTask('default', ['coffeelint', 'customCopy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
 
-  grunt.registerTask('init-prod', ['copy', 'coffee', 'env:prod', 'clean', 'bower_concat',  'cssmin', 'concat', 'uglify', 'preprocess:prod'])
+  grunt.registerTask('init', ['env:dev', 'copy', 'coffee', 'clean','bower_concat', 'cssmin', 'concat', 'preprocess:dev'])
+
+  grunt.registerTask('init-prod', ['env:prod', 'copy', 'coffee', 'clean', 'bower_concat',  'cssmin', 'concat', 'uglify', 'preprocess:prod'])
 
   grunt.registerTask('test', [
     'coffee',
@@ -285,4 +302,5 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('addCommitInfo', ['execute']);
+
 };

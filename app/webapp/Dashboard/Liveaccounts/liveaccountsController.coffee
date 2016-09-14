@@ -94,6 +94,6 @@ liveaccount.controller('liveaccountsController',liveaccountsController)
 
 .directive 'liveAccount', [($locationProvider,$rootScope) -> {
   restrict: 'E'
-  templateUrl: $rootScope.prefixThis+'/public/webapp/Dashboard/Liveaccounts/liveaccounts.html'
+  templateUrl: 'https://testgiddh-nmzzic5albrr.netdna-ssl.com/public/webapp/Dashboard/Liveaccounts/liveaccounts.html'
 #  controller: 'liveaccountsController'
 }]
