@@ -81,12 +81,11 @@ module.exports = function (grunt) {
         dest: destDir + 'webapp/views/index.html',
         options: {
           process: function (content, path) {
-            console.log(process.env.NODE_ENV);
-            console.log(process.env.PREFIX_THIS);
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
             // content is your whole HTML body of index page
             // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
             // after replacing return the tweaked content
-            return content;
+            return replaced;
           }
         }
       }
@@ -99,7 +98,7 @@ module.exports = function (grunt) {
         files: [
           srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '**/**/*.css', routeSrcDir + "/**/*.coffee", srcDir + '/**/*.js', srcDir + '/**/**/*.js', srcDir + '/webapp/ng2/**/*.js',  srcDir + '/**/*.coffee'
         ],
-        tasks: ['coffee', 'copy', 'clean', 'cssmin', 'concat', 'env:dev', 'preprocess:dev']
+        tasks: ['coffee', 'env:dev', 'preprocess:dev', 'copy', 'clean', 'cssmin', 'concat', 'env:dev', 'preprocess:dev']
       }
     },
     karma: {
@@ -291,11 +290,11 @@ module.exports = function (grunt) {
 
   grunt.registerTask('customCopy', ['env:dev', 'copy']);
 
-  grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
+  grunt.registerTask('default', ['coffeelint', 'customCopy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
 
-  grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean','bower_concat', 'cssmin', 'concat', 'preprocess:dev'])
+  grunt.registerTask('init', ['env:dev', 'copy', 'coffee', 'clean','bower_concat', 'cssmin', 'concat', 'preprocess:dev'])
 
-  grunt.registerTask('init-prod', ['copy', 'coffee', 'env:prod', 'clean', 'bower_concat',  'cssmin', 'concat', 'uglify', 'preprocess:prod'])
+  grunt.registerTask('init-prod', ['env:prod', 'copy', 'coffee', 'clean', 'bower_concat',  'cssmin', 'concat', 'uglify', 'preprocess:prod'])
 
   grunt.registerTask('test', [
     'coffee',
