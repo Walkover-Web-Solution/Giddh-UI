@@ -86,7 +86,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
           toastr.error('Failed to retrieve company list' + res.data.message)
         companyServices.getAll().then(onSuccess, onFailure)
     }
-    templateUrl: appendThis+'/public/webapp/views/demo.html'
+    templateUrl: '/public/webapp/views/demo.html'
     controller: 'homeController'
   )
   .state('Reports',
