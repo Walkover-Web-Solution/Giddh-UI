@@ -197,6 +197,6 @@ history.controller('historicalgraphController',historicalgraphController)
 
 .directive 'history',[($locationProvider,$rootScope) -> {
   restrict: 'E'
-  templateUrl: $rootScope.prefixThis+'/public/webapp/Dashboard/historicalGraph/historicalGraph.html'
+  templateUrl: 'https://testgiddh-nmzzic5albrr.netdna-ssl.com/public/webapp/Dashboard/historicalGraph/historicalGraph.html'
 #  controller: 'historicalgraphController'
 }]

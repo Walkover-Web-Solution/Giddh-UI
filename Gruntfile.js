@@ -98,7 +98,7 @@ module.exports = function (grunt) {
         files: [
           srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '**/**/*.css', routeSrcDir + "/**/*.coffee", srcDir + '/**/*.js', srcDir + '/**/**/*.js', srcDir + '/webapp/ng2/**/*.js',  srcDir + '/**/*.coffee'
         ],
-        tasks: ['coffee', 'env:dev', 'preprocess:dev', 'copy', 'clean', 'cssmin', 'concat', 'env:dev', 'preprocess:dev']
+        tasks: ['coffee', 'copy', 'clean', 'cssmin', 'concat', 'env:dev', 'preprocess:dev']
       }
     },
     karma: {
