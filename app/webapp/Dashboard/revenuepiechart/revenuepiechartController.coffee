@@ -93,8 +93,11 @@ revenuechartController = ($scope, $rootScope, localStorageService, toastr, group
       $scope.chartOptions.title = moment($rootScope.selectedCompany.activeFinancialYear.financialYearStarts,"DD-MM-YYYY").get("years") + "-"+ moment($rootScope.selectedCompany.activeFinancialYear.financialYearEnds,"DD-MM-YYYY").get("years")
       $scope.myChartObject.options.title = $scope.chartOptions.title
       duration = {}
-      duration.from = $scope.setDateByFinancialYear()
-      duration.to = duration.from
+      duration.to = $scope.setDateByFinancialYear()
+      if moment().get('months') > 4
+        duration.from = moment(duration.to, "dd-MM-YYYY").set({'date': 1, 'month': 4})
+      else
+        duration.from = moment(duration.to, "dd-MM-YYYY").set({'date': 1, 'month': 4, 'year': moment(duration.to, "dd-MM-YYYY").get('year')-1})
       $scope.accountList = []
       $scope.getClosingBalance("revenue_from_operations",duration)
       $scope.getClosingBalance("other_income",duration)
