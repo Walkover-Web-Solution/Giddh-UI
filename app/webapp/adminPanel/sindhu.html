@@ -1,28 +1,38 @@
-<div class="container-fluid">
-  <table class="table table-bordered">
-    <thead>
-      <th>Name</th>
-      <th>Created By</th>
-      <th>Mobile No.</th>
-      <th>Expiry Date</th>
-      <th>Last activity</th>
-      <th>Account balance</th>
-      <th>Shared With</th>
-      <th>Subscription plan</th>
-      <th>Monthly API hits</th>
-    </thead>
-    <tbody>
-      <tr ng-repeat="company in dummyData">
-        <td>{{company.name}}</td>
-        <td>{{company.createdBy.name}}</td>
-        <td>{{company.contactNo}}</td>
-        <td>{{company.companySubscription.expiry}}</td>
-        <td>{{company.updatedAt}}</td>
-        <td>{{company.companySubscription.servicePlan.amount}}| number</td>
-        <td><button class="btn btn-default" ng-click="showSharedWithDetails(company.sharedWith)">open list</button></td>
-        <td>{{company.companySubscription.servicePlan.planName}}</td>
-        <td>{{company.apiHits}}</td>
-      </tr>
-    </tbody>
-  </table>
+<div class="container mrT1">
+  <div class="row">
+    <div class="form-group mrL1 pull-right maxW150 pos-rel">
+      <input class="pull-right maxW150" placeholder="Search"/>
+      <i class="glyphicon glyphicon-search pos-abs"/>
+    </div>
+  </div>
+  <div class="row mrT1">
+    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height suppress-scroll-x="true">
+      <table class="table table-bordered">
+        <thead>
+        <th>Name</th>
+        <th>Created By</th>
+        <th>Mobile No.</th>
+        <th>Expiry Date</th>
+        <th>Last activity</th>
+        <th>Account balance</th>
+        <th>Shared With</th>
+        <th>Subscription plan</th>
+        <th>Monthly API hits</th>
+        </thead>
+        <tbody>
+        <tr ng-repeat="company in dummyData track by $index">
+          <td>{{company.name}}</td>
+          <td>{{company.createdBy.name}}</td>
+          <td>{{company.contactNo}}</td>
+          <td>{{company.companySubscription.expiry}}</td>
+          <td>{{company.lastActivity}}</td>
+          <td>{{company.companySubscription.servicePlan.amount | number:2}}</td>
+          <td><button class="btn btn-default" ng-click="showSharedWithDetails(company.sharedWith)">open list</button></td>
+          <td>{{company.companySubscription.servicePlan.planName}}</td>
+          <td>{{company.apiHits}}</td>
+        </tr>
+        </tbody>
+      </table>
+    </perfect-scrollbar>
+  </div>
 </div>

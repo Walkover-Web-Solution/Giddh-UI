@@ -3,36 +3,37 @@
 adminController = ($scope, $rootScope, sindhuServices, $timeout) ->
   $rootScope.cmpViewShow = true
   $scope.companies = []
+  $scope.dummyObj = {
+    "companySubscription": {
+      "subscriptionDate": "28-05-2016",
+      "servicePlan": {
+        "amount": 0,
+        "planName": "trial",
+        "servicePeriod": 1
+      },
+      "remainingPeriod": 1,
+      "paymentDue": false,
+      "paymentMode":"pre",
+      "nextBillDate":"28-06-2016",
+      "createdAt":"28-05-2016",
+      "expiry": "09-10-2016"
+    },
+    "contactNo":"91-7828405888",
+    "createdBy":{
+      "name":"Ravi Soni",
+      "email":"ravisoni@walkover.in",
+      "uniqueName":"ravisoni@walkover.in"
+    },
+    "lastActivity":"26-08-2016 17:06:00",
+    "name":"ravi soni",
+    "sharedWith":[{
+      "email": "ravisoni@hostnsoft.com",
+      "permission": "super_admin"
+    }],
+    "apiHits": 104521
+  }
   $scope.dummyData = [
-    {
-      "companySubscription": {
-        "subscriptionDate": "28-05-2016",
-        "servicePlan": {
-          "amount": 0,
-          "planName": "trial",
-          "servicePeriod": 1
-        },
-        "remainingPeriod": 1,
-        "paymentDue": false,
-        "paymentMode":"pre",
-        "nextBillDate":"28-06-2016",
-        "createdAt":"28-05-2016",
-        "expiry": "09-10-2016"
-      },
-      "contactNo":"91-7828405888",
-      "createdBy":{
-        "name":"Ravi Soni",
-        "email":"ravisoni@walkover.in",
-        "uniqueName":"ravisoni@walkover.in"
-      },
-      "updatedAt":"26-08-2016 17:06:00",
-      "name":"ravi soni",
-      "sharedWith":[{
-        "email": "ravisoni@hostnsoft.com",
-        "permission": "super_admin"
-      }],
-      "apiHits": 104521
-    }
+
   ]
 #  {
 #  "activeFinancialYear":{
@@ -117,6 +118,10 @@ adminController = ($scope, $rootScope, sindhuServices, $timeout) ->
 #    console.log($rootScope.CompanyList)
     $scope.companies = $rootScope.CompanyList
     groupedCompany = _.groupBy($rootScope.CompanyList, 'email')
+    i = 0
+    while i <= 100
+      $scope.dummyData.push($scope.dummyObj)
+      i++
 #    console.log(groupedCompany)
 
   $scope.showSharedWithDetails = (data) ->
