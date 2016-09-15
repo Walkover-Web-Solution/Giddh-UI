@@ -64,9 +64,14 @@ revenuechartController = ($scope, $rootScope, localStorageService, toastr, group
     if $rootScope.currentFinancialYear == undefined
       $rootScope.currentFinancialYear = moment($rootScope.selectedCompany.activeFinancialYear.financialYearStarts,"DD-MM-YYYY").get("years") + "-"+ moment($rootScope.selectedCompany.activeFinancialYear.financialYearEnds,"DD-MM-YYYY").get("years")
     if $rootScope.currentFinancialYear == presentYear
-      setDate = moment().format('DD-MM-YYYY')
+      $scope.toDate = moment().format('DD-MM-YYYY')
+      if moment().get('months') > 4
+        $scope.fromDate = moment().set({'date':1, 'month': 3}).format('DD-MM-YYYY')
+      else
+        $scope.fromDate = moment().subtract(1,'years').set({'date':1, 'month': 3}).format('DD-MM-YYYY')
     else
-      setDate = $rootScope.selectedCompany.activeFinancialYear.financialYearEnds
+      $scope.toDate = $rootScope.selectedCompany.activeFinancialYear.financialYearEnds
+      $scope.fromDate = $rootScope.selectedCompany.activeFinancialYear.financialYearStarts
     setDate
 
   $scope.getPresentFinancialYear = () ->
@@ -93,11 +98,9 @@ revenuechartController = ($scope, $rootScope, localStorageService, toastr, group
       $scope.chartOptions.title = moment($rootScope.selectedCompany.activeFinancialYear.financialYearStarts,"DD-MM-YYYY").get("years") + "-"+ moment($rootScope.selectedCompany.activeFinancialYear.financialYearEnds,"DD-MM-YYYY").get("years")
       $scope.myChartObject.options.title = $scope.chartOptions.title
       duration = {}
-      duration.to = $scope.setDateByFinancialYear()
-      if moment().get('months') > 4
-        duration.from = moment(duration.to, "dd-MM-YYYY").set({'date': 1, 'month': 4})
-      else
-        duration.from = moment(duration.to, "dd-MM-YYYY").set({'date': 1, 'month': 4, 'year': moment(duration.to, "dd-MM-YYYY").get('year')-1})
+      $scope.setDateByFinancialYear()
+      duration.to = $scope.toDate
+      duration.from = $scope.fromDate
       $scope.accountList = []
       $scope.getClosingBalance("revenue_from_operations",duration)
       $scope.getClosingBalance("other_income",duration)
