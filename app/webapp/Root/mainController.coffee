@@ -16,7 +16,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     "/public/webapp/ng2.js"
   ]
   $rootScope.$stateParams = {}
-  $rootScope.prefixThis = "https://testgiddh-nmzzic5albrr.netdna-ssl.com"
+  $rootScope.prefixThis = "https://giddh-fs8eefokm8yjj.stackpathdns.com"
   $rootScope.cmpViewShow = true
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
