@@ -2,7 +2,11 @@
 
 ## Update
 
-## Reverting back
+## Call css, js and html from sub domain, change date for closing balance in dashboard
+
+- ([ae6f608](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/ae6f608a303501393d03282baac9175278e06c9c))
+    1.) Sub domain for live - https://giddh-fs8eefokm8yjj.stackpathdns.com
+    2.) Change date for closing balance api in dashboard
     
     
 # 2.09
