@@ -1,7 +1,7 @@
 <div class="container-fluid mrT1 pd1">
   <div class="row">
     <div class="form-group mrL1 pull-right maxW150 pos-rel">
-      <input class="pull-right maxW150" placeholder="Search"/>
+      <input class="pull-right maxW150" placeholder="Search" ng-model="query"/>
       <i class="glyphicon glyphicon-search pos-abs"/>
     </div>
   </div>
@@ -11,6 +11,7 @@
         <thead>
         <th>Name</th>
         <th>Created By</th>
+        <th>Created At</th>
         <th>Mobile No.</th>
         <th>Expiry Date</th>
         <th>Last activity</th>
@@ -20,9 +21,10 @@
         <th>Monthly API hits</th>
         </thead>
         <tbody>
-        <tr ng-repeat="company in dummyData track by $index">
+        <tr ng-repeat="company in companies | filter : query  track by $index">
           <td>{{company.name}}</td>
-          <td>{{company.createdBy.name}}</td>
+          <td>{{company.createdBy.email}}</td>
+          <td>{{company.companySubscription.createdAt}}</td>
           <td>{{company.contactNo}}</td>
           <td>{{company.companySubscription.expiry}}</td>
           <td>{{company.lastActivity}}</td>

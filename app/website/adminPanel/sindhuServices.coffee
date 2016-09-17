@@ -1,6 +1,6 @@
 'use strict'
 
-giddh.serviceModule.service 'sindhuServices', ($resource, $q) ->
+angular.module('giddhApp').service 'sindhuServices', ($resource, $q) ->
   sindhu = $resource('/sindhu',
       {
         'uniqueName': @uniqueName,

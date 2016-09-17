@@ -1,8 +1,10 @@
 "use strict"
 
-adminController = ($scope, $rootScope, sindhuServices, $timeout) ->
-  $rootScope.cmpViewShow = true
+adminController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr, $window) ->
+  $scope.loginIsProcessing = false
+  $scope.captchaKey = '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi'
   $scope.companies = []
+  $scope.query = ""
   $scope.dummyObj = {
     "companySubscription": {
       "subscriptionDate": "28-05-2016",
@@ -112,6 +114,34 @@ adminController = ($scope, $rootScope, sindhuServices, $timeout) ->
 #  },
 #  "name":"ravi soni"
 #  }
+
+  $scope.authenticate = (provider) ->
+    $scope.loginIsProcessing = true
+    $auth.authenticate(provider).then((response) ->
+      if response.data.result.status is "error"
+#user is not registerd with us
+        toastr.error(response.data.result.message, "Error")
+        $timeout (->
+          window.location = "/sindhu"
+        ),3000
+      else
+#user is registered and redirect it to app
+        localStorageService.set("_adminDetails", response.data.userDetails)
+        $window.sessionStorage.setItem("_ak", response.data.result.body.authKey)
+        window.location = "/sindhu/panel"
+    ).catch (response) ->
+      $scope.loginIsProcessing = false
+      #user is not registerd with us
+      if response.data.result.status is "error"
+        toastr.error(response.data.result.message, "Error")
+        $timeout (->
+          window.location = "/index"
+        ), 3000
+      else if response.status is 502
+        toastr.error("Something went wrong please reload page", "Error")
+      else
+        toastr.error("Something went wrong please reload page", "Error")
+
   $scope.getCompanyList = () ->
     #Need to hit api and get list of companies
     #structure to be followed
@@ -120,17 +150,24 @@ adminController = ($scope, $rootScope, sindhuServices, $timeout) ->
     groupedCompany = _.groupBy($rootScope.CompanyList, 'email')
     i = 0
     while i <= 100
-      $scope.dummyData.push($scope.dummyObj)
+      $scope.dummyObj.apiHits = $scope.dummyObj.apiHits + 1
+      $scope.dummyObj.companySubscription.servicePlan.amount = $scope.dummyObj.companySubscription.servicePlan.amount + 1
+      addThis = {}
+      _.extend(addThis,$scope.dummyObj)
+      $scope.dummyData.push(addThis)
       i++
 #    console.log(groupedCompany)
+
+  $scope.searchCompanies = (query) ->
+
 
   $scope.showSharedWithDetails = (data) ->
     console.log(data)
 
-  $timeout ( ->
-    $scope.getCompanyList()
-  ),2000
+#  $timeout ( ->
+#    $scope.getCompanyList()
+#  ),2000
 
 
 
-giddh.webApp.controller 'adminController', adminController
+angular.module('giddhApp').controller 'sindhuController', adminController

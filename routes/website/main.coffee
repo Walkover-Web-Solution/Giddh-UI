@@ -10,6 +10,20 @@ options = {
     'x-sent': true
 }
 
+panelOption = {
+  root: dirName + '/website/adminPanel',
+  dotFiles: 'deny',
+  headers:
+    'x-timestamp': Date.now(),
+    'x-sent': true
+}
+
+router.get '/sindhu', (req,res) ->
+  res.sendFile 'sindhuLogin.html', panelOption
+
+router.get '/sindhu/panel', (req, res) ->
+  res.sendFile 'sindhu.html', panelOption
+
 router.get '/', (req, res) ->
   res.sendFile 'index.html', options
 
