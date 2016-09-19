@@ -1,3 +1,13 @@
+# 2.11
+
+## Update
+
+## CHanged angular2 dev file, redirect to dashboard
+ 
+- ([39bb46e](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/39bb46e18a65098eb8073212f1d98acb6daac101))
+    1.) Mayank changed angular2 dev file to min file to minimize datatx.
+    2.) Redirect to dashboard from home page for superadmin and view only access.
+
 # 2.10
 
 ## Update
