@@ -330,6 +330,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.selectedAccountCategory = data.category
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
+    $rootScope.$stateParams.invId = acData.uniqueName
     $scope.entriesForInvoice = []
     # call invoice load func
     $scope.getTemplates()

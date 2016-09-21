@@ -12,10 +12,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     "/node_modules/rxjs/bundles/Rx.umd.js"
     "/node_modules/es6-shim/es6-shim.js"
     "/node_modules/angular2/bundles/angular2-polyfills.js"
-    "/node_modules/angular2/bundles/angular2-all.umd.dev.js"
+    "/node_modules/angular2/bundles/angular2-all.umd.min.js"
     "/public/webapp/ng2.js"
   ]
-
+  $rootScope.$stateParams = {}
   $rootScope.prefixThis = "https://testgiddh-nmzzic5albrr.netdna-ssl.com"
   $rootScope.cmpViewShow = true
   $rootScope.showLedgerBox = true
