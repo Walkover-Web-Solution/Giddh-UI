@@ -16,7 +16,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     "/public/webapp/ng2.js"
   ]
   $rootScope.$stateParams = {}
-  $rootScope.prefixThis = "https://testgiddh-nmzzic5albrr.netdna-ssl.com"
+  $rootScope.prefixThis = ""
   $rootScope.cmpViewShow = true
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
@@ -48,6 +48,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.companyIndex = 0
   $rootScope.selectedAccount = {}
   $rootScope.hasOwnCompany = false
+  $rootScope.sharedEntity = ""
 
   $scope.addScript = () ->
     _.each($rootScope.scriptArrayHead, (script) ->
@@ -478,6 +479,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.allowed = true
   $rootScope.doWeHavePermission = (company) ->
     str = company.sharedEntity
+    $rootScope.sharedEntity = str
     if str == null
       $rootScope.allowed = true
     else

@@ -292,14 +292,19 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     #$scope.checkFY(reqParam)
     trialBalService.getAllFor(reqParam).then $scope.getTrialBalSuccess, $scope.getTrialBalFailure
 
+  $scope.count = 0
+  $scope.detailedGroups = []
   $scope.getTrialBalSuccess = (res) ->
     $scope.makeDataForPl(res.body)
     $scope.exportData = []
     $scope.addUIKey(res.body.groupDetails)
     angular.copy(res.body.groupDetails,$scope.exportData)
-    $scope.removeSd(res.body.groupDetails)
+    $scope.count = 0
+    $scope.detailedGroups = $scope.removeZeroAmountAccount(res.body.groupDetails)
+    $scope.removeZeroAmountGroup($scope.detailedGroups)
+    $scope.removeSd($scope.detailedGroups)
     $scope.data = res.body
-    $scope.data.groupDetails = $scope.orderGroups(res.body.groupDetails)
+    $scope.data.groupDetails = $scope.orderGroups($scope.detailedGroups)
     $scope.balSheet.assetTotal = $scope.calCulateTotalAssets($scope.balSheet.assets)
     $scope.balSheet.liabTotal = $scope.calCulateTotalLiab($scope.balSheet.liabilities)
     if $scope.inProfit == false
@@ -310,17 +315,55 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       $scope.noData = true
     $scope.showTbplLoader = false
 
+  $scope.removeZeroAmountAccount = (grpList) ->
+    _.each grpList, (grp) ->
+      tempAcc = []
+      count = 0
+      if grp.closingBalance.amount > 0 || grp.forwardedBalance.amount > 0 || grp.creditTotal > 0 || grp.debitTotal > 0
+        _.each(grp.accounts, (account) ->
+          if account.closingBalance.amount > 0 || account.openingBalance.amount > 0 || account.creditTotal > 0 || account.debitTotal > 0
+            tempAcc.push(account)
+          else
+            count = count + 1
+        )
+#      console.log("= 0 ", grp.groupName + " are " + count)
+#      console.log("> 0 ", grp.groupName + " are " + tempAcc.length)
+      if tempAcc.length > 0
+        grp.accounts = tempAcc
+      if grp.childGroups.length > 0
+        $scope.removeZeroAmountAccount(grp.childGroups)
+    grpList
+
+  $scope.removeZeroAmountGroup = (grpList) ->
+    _.each grpList, (grp) ->
+      if grp.childGroups.length > 0
+        $scope.removeZeroAmountGroup(grp.childGroups)
+      _.reject(grp.childGroups, (cGrp) ->
+        return if cGrp.closingBalance.amount == 0 && cGrp.forwardedBalance.amount == 0 && cGrp.creditTotal == 0 && cGrp.debitTotal == 0
+      )
+
   $scope.removeSd = (data) ->
     count = 0
     _.each data, (grp) ->
       if grp.childGroups.length > 0
         _.each grp.childGroups, (ch) ->
+          count = $scope.countAccounts(ch)
           if ch.uniqueName == 'sundry_debtors'
-            count += ch.accounts.length
             if count > 50
               ch.accounts = []
             if ch.childGroups.length > 0
               $scope.removeAcc(ch)
+
+
+  $scope.countAccounts = (group) ->
+    count = 0
+    if group.childGroups.length > 0
+      _.each(group.childGroups, (grp) ->
+        count = count + grp.accounts.length
+        if grp.childGroups.length > 0
+          count = count + $scope.countAccounts(grp)
+      )
+    count
 
   $scope.removeAcc = (grp) ->
     grp.accounts = []

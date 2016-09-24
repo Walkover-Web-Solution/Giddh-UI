@@ -228,7 +228,7 @@ module.exports = function (grunt) {
     env: {
       dev: {
         NODE_ENV: 'DEVELOPMENT',
-        PREFIX_THIS: 'https://testgiddh-nmzzic5albrr.netdna-ssl.com'
+        PREFIX_THIS: ''
       },
       prod: {
         NODE_ENV: 'PRODUCTION',
