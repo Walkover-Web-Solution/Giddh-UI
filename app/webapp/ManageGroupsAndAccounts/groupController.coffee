@@ -716,6 +716,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.selectedAccount = {}
     abc = _.pick(res.body, 'name', 'uniqueName', 'mergedAccounts','applicableTaxes','parentGroups')
     $scope.groupAccntList.push(abc)
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
 
   $scope.addAccountFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -807,6 +808,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.moveAccntSuccess = (res) ->
     toastr.success(res.body, res.status)
     $scope.getGroups()
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
     $scope.showAccountDetails = false
     if !_.isEmpty($scope.selectedGroup)
       $scope.groupAccntList = _.reject($scope.groupAccntList, (item) ->

@@ -48,6 +48,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.companyIndex = 0
   $rootScope.selectedAccount = {}
   $rootScope.hasOwnCompany = false
+  $rootScope.sharedEntity = ""
 
   $scope.addScript = () ->
     _.each($rootScope.scriptArrayHead, (script) ->
@@ -478,6 +479,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.allowed = true
   $rootScope.doWeHavePermission = (company) ->
     str = company.sharedEntity
+    $rootScope.sharedEntity = str
     if str == null
       $rootScope.allowed = true
     else

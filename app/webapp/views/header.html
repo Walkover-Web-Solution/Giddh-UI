@@ -21,7 +21,7 @@
               <div>
                 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
                   <ul class="dshUl clearfix">
-                <li class="dmLi trialB" ui-sref="dashboard">
+                <li class="dmLi trialB" ui-sref="dashboard" ng-if="sharedEntity == null">
                     <a href="">
                       <div class="media">
                         <div class="media-body">
@@ -72,7 +72,7 @@
                       </div>
                     </a>
                 </li> -->
-                <li ng-if="canUpdate" class="dmLi" ui-sref="invoice.accounts">
+                <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="invoice.accounts">
                     <a href="" >
                       <div class="media">
                         <div class="media-body">
@@ -92,7 +92,7 @@
                       </div>
                     </a>
                 </li>
-                <li class="dmLi" ui-sref="audit-logs">
+                <li ng-if="sharedEntity == null" class="dmLi" ui-sref="audit-logs">
                     <a href="" >
                       <div class="media">
                         <div class="media-body">
@@ -102,7 +102,7 @@
                       </div>
                     </a>
                 </li>
-                <li class="dmLi" ui-sref="search">
+                <li ng-if="sharedEntity != 'accounts'" class="dmLi" ui-sref="search">
                     <a href="" >
                       <div class="media">
                         <div class="media-body">
