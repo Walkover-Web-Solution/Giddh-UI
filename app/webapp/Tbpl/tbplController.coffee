@@ -298,10 +298,10 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     $scope.makeDataForPl(res.body)
     $scope.exportData = []
     $scope.addUIKey(res.body.groupDetails)
-    angular.copy(res.body.groupDetails,$scope.exportData)
     $scope.count = 0
     $scope.detailedGroups = $scope.removeZeroAmountAccount(res.body.groupDetails)
     $scope.removeZeroAmountGroup($scope.detailedGroups)
+    angular.copy($scope.detailedGroups,$scope.exportData)
     $scope.removeSd($scope.detailedGroups)
     $scope.data = res.body
     $scope.data.groupDetails = $scope.orderGroups($scope.detailedGroups)
