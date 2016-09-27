@@ -185,7 +185,7 @@ combinedController = ($scope, $rootScope, localStorageService, toastr, groupServ
     $state.go('Reports',{'frmDt': $scope.fromDate, 'toDt': $scope.toDate, 'type': 'networth'})
 
   $scope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.setDateByFinancialYear()
       $scope.getComData($scope.fromDate,$scope.toDate)
 

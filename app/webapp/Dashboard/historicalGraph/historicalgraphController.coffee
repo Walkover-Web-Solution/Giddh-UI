@@ -188,7 +188,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
   $scope.setDateByFinancialYear()
 
   $scope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.setDateByFinancialYear()
       $scope.getHistory($scope.fromDate,$scope.toDate)
 

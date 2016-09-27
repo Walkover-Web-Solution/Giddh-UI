@@ -349,7 +349,7 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
     setDate+"-"+toDate
 
   $scope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.getData($scope.selectedChart)
 
 compare.controller('comparisiongraphController',comparisiongraphController)
