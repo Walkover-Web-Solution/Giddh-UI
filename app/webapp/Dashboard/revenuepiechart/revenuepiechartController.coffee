@@ -168,7 +168,7 @@ revenuechartController = ($scope, $rootScope, localStorageService, toastr, group
 
 
   $scope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.getRevenueData()
 
 
