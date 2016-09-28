@@ -172,7 +172,7 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
 
 
   $scope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.getExpenseData()
 
 
