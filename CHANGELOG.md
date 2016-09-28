@@ -1,3 +1,15 @@
+# 2.12
+
+## Update
+
+## Trial balance issue resolved
+ 
+- ([d002597](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/d002597f7ae335be81764649c4a33f9632e5a11b))
+    1.) Bug fixed of trial balance issue
+    2.) Bug fixed of dashboard issue
+    3.) Card no. 287, 289 & 292
+    
+    
 # 2.11
 
 ## Update
