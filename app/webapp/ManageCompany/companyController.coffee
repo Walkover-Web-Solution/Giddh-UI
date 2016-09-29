@@ -1633,6 +1633,18 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   # connect bank
   $scope.connectBank = ()->
+    if $scope.linkedAccountsExist == false
+      $scope.modalInstance = $uibModal.open(
+        templateUrl: $rootScope.prefixThis+'/public/webapp/ManageCompany/saltedgeTerms.html'
+        size: "a4"
+        backdrop: 'static'
+        scope: $scope
+      )
+      $scope.modalInstance.result.then($scope.connectBnk)
+    else
+      userServices.connectBankAc($rootScope.selectedCompany.uniqueName).then($scope.connectBankSuccess, $scope.connectBankFailure)
+
+  $scope.connectBnk = () ->
     userServices.connectBankAc($rootScope.selectedCompany.uniqueName).then($scope.connectBankSuccess, $scope.connectBankFailure)
 
 

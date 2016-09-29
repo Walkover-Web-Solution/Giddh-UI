@@ -49,6 +49,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.selectedAccount = {}
   $rootScope.hasOwnCompany = false
   $rootScope.sharedEntity = ""
+  $rootScope.croppedAcntList = []
 
   $scope.addScript = () ->
     _.each($rootScope.scriptArrayHead, (script) ->
@@ -380,6 +381,20 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.removeAccountFromPaginatedList = (account) ->
     $rootScope.fltAccntListPaginated = _.without($rootScope.fltAccntListPaginated,account)
+
+  $rootScope.getCroppedAccountList = (compUname, query) ->
+    reqParam = {
+      cUname: compUname
+      query: query
+    }
+    data: {}
+    companyServices.getCroppedAcnt(reqParam, data).then($scope.getCroppedAccListSuccess, $scope.getCroppedAccListFailure)
+
+  $scope.getCroppedAccListSuccess = (res) ->
+    $rootScope.croppedAcntList = res.body.results
+
+  $scope.getCroppedAccListFailure = (res) ->
+    toastr.error(res.data.message)
 
   $scope.workInProgress = false
   $rootScope.getFlatAccountList = (compUname) ->

@@ -3141,10 +3141,17 @@ ul.pills li {
     z-index: 1;
 }
 
+.reconnectDiv .row{
+    position: relative;
+    top: 30%;
+}
+
 .reconnectButton {
     position: relative;
     top: 40%;
     left: 36%;
+    width: 85px;
+    margin-top: 5px;
 }
 
 /* company list dropdown styles */

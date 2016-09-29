@@ -166,6 +166,14 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     saveInvoiceSetting:
       method: 'PUT'
       url: '/company/:companyUniqueName/invoice-setting'
+
+    getCroppedAcnt:
+      method: 'GET'
+      url: '/company/:companyUniqueName/cropped-flatten-account?q=:query'
+
+    postCroppedAcnt:
+      method: 'POST'
+      url: '/company/:companyUniqueName/cropped-flatten-account?q=:query'
        
   })
 
@@ -325,6 +333,19 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Company.saveInvoiceSetting({
         companyUniqueName: companyUniqueName
       },data, onSuccess, onFailure))
+
+    getCroppedAcnt: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getCroppedAcnt({
+        companyUniqueName: reqParam.cUname,
+        query: reqParam.query
+      },data, onSuccess, onFailure))
+
+    postCroppedAcnt: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.postCroppedAcnt({
+        companyUniqueName: reqParam.cUname,
+        query: reqParam.query
+      },data, onSuccess, onFailure))
+
 
   companyServices
 
