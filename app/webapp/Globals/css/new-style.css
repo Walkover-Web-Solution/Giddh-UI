@@ -3623,7 +3623,6 @@ tr.db-bnk-account > td.reconnectDiv{
 
 .uvFaq{
     width: 100%;
-    height: 400px;
-    overflow-y: scroll;
+    height: 100px;
     padding: 5px;
 }
