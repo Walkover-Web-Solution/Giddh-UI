@@ -865,7 +865,12 @@
               <aside class="body">
                 <aside class="account-card" ng-repeat="card in account.accounts">
                   <div class="reconnectDiv" ng-if="card.reconnect">
-                    <button class="btn btn-sm btn-info reconnectButton" ng-click="reconnectAccount(card)">Reconnect</button>
+                    <div class="row">
+                      <button class="btn btn-sm btn-info reconnectButton" ng-click="reconnectAccount(card)">Reconnect</button>
+                    </div>
+                    <div class="row">
+                      <button class="btn btn-sm btn-danger reconnectButton" ng-click="deleteAddedBank(card)">Delete</button>
+                    </div>
                   </div>
                   <a><i class="pull-left glyphicon glyphicon-refresh refresh-icon" ng-disabled="card.reconnect" ng-click="refreshToken(card)"></i></a>
                   <h1 ng-bind="card.name"  uib-tooltip="{{card.name}}"></h1>
