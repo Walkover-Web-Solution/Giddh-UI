@@ -369,6 +369,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.checkPermissions($rootScope.selectedCompany)
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
+    $rootScope.getCroppedAccountList(company.uniqueName, '')
 
 
   $rootScope.getParticularAccount = (searchThis) ->
@@ -382,18 +383,23 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.removeAccountFromPaginatedList = (account) ->
     $rootScope.fltAccntListPaginated = _.without($rootScope.fltAccntListPaginated,account)
 
+  $scope.gettingCroppedAccount = false
   $rootScope.getCroppedAccountList = (compUname, query) ->
     reqParam = {
       cUname: compUname
       query: query
     }
-    data: {}
-    companyServices.getCroppedAcnt(reqParam, data).then($scope.getCroppedAccListSuccess, $scope.getCroppedAccListFailure)
+    data = {}
+    if $scope.gettingCroppedAccount == false || !_.isEmpty(query)
+      $scope.gettingCroppedAccount = true
+      companyServices.getCroppedAcnt(reqParam, data).then($scope.getCroppedAccListSuccess, $scope.getCroppedAccListFailure)
 
   $scope.getCroppedAccListSuccess = (res) ->
+    $scope.gettingCroppedAccount = false
     $rootScope.croppedAcntList = res.body.results
 
   $scope.getCroppedAccListFailure = (res) ->
+    $scope.gettingCroppedAccount = false
     toastr.error(res.data.message)
 
   $scope.workInProgress = false
