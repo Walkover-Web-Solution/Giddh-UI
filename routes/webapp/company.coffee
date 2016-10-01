@@ -525,7 +525,6 @@ router.get '/:uniqueName/ebanks/token', (req, res) ->
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
-    console.log data
     res.send data
 
 router.delete '/:companyUniqueName/login/:loginId',(req,res) ->
@@ -536,6 +535,35 @@ router.delete '/:companyUniqueName/login/:loginId',(req,res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+
+router.get '/:companyUniqueName/cropped-flatten-account', (req,res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName+'/cropped-flatten-accounts'
+  if req.query.query != ''
+    hUrl = hUrl + '?q='+req.query.query
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/:companyUniqueName/cropped-flatten-account', (req,res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName+'/cropped-flatten-accounts'
+  if req.query.query != ''
+    hUrl = hUrl + '?q='+req.query.query
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data

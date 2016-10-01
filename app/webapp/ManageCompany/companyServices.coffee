@@ -169,11 +169,11 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
 
     getCroppedAcnt:
       method: 'GET'
-      url: '/company/:companyUniqueName/cropped-flatten-account?q=:query'
+      url: '/company/:companyUniqueName/cropped-flatten-account'
 
     postCroppedAcnt:
       method: 'POST'
-      url: '/company/:companyUniqueName/cropped-flatten-account?q=:query'
+      url: '/company/:companyUniqueName/cropped-flatten-account'
        
   })
 
