@@ -135,12 +135,12 @@ app.controller 'homeCtrl', [
         data.message = 'test'
 
       $http.post('/contact/submitDetails', data).then((response) ->
-          $scope.formSubmitted = true
-          if(response.status == 200 && _.isUndefined(response.data.status))  
-            $scope.responseMsg = "Thanks! we will get in touch with you soon"
-          else
-            $scope.responseMsg = response.data.message
-        )
+        $scope.formSubmitted = true
+        if(response.status == 200 && _.isUndefined(response.data.status))
+          $scope.responseMsg = "Thanks! we will get in touch with you soon"
+        else
+          $scope.responseMsg = response.data.message
+      )
 ]
 
 app.config [
