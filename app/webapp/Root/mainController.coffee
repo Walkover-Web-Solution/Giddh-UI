@@ -369,7 +369,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.checkPermissions($rootScope.selectedCompany)
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
-    $rootScope.getCroppedAccountList(company.uniqueName, '')
+#    $rootScope.getCroppedAccountList(company.uniqueName, '')
 
 
   $rootScope.getParticularAccount = (searchThis) ->
