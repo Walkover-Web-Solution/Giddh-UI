@@ -228,6 +228,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
     }
   )
+  .state('settings',
+    url: '/settings'
+    templateUrl: appendThis+'/public/webapp/Settings/settings.html'
+    controller: 'settingsController'
+  )
   $locationProvider.html5Mode(false)
   return
 
