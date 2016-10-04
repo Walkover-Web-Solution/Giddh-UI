@@ -526,6 +526,13 @@ body.light .navbar.transparent{
 	color:#26263A;
 }
 
+.navbar-custom .navbar-nav > li > div.row > label.white{
+    color:#fff;
+}
+.navbar-custom.affix .navbar-nav > li > div.row > label.white{
+    color:#26263A;
+}
+
 .navbar-custom .navbar-nav > li > a.active, .navbar-custom .navbar-nav > li > a:visited, .navbar-custom .navbar-nav > li > a:hover {
   background-color: transparent;
 }
