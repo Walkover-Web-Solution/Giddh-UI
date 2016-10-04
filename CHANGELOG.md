@@ -1,3 +1,15 @@
+# 2.13
+
+## Update
+
+## Added delete button for saltedge accounts, provided terms and conditions while connecting bank, added toll free number and support email.
+ 
+- ([a9f0138](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/a9f013852863ba28047ff1e27b07137821b51071))
+    1.) Added delete button to saltedge bank accounts at time of reconnect
+    2.) Provided terms and conditions if no bank added
+    3.) Added toll free number and support email at header and other paged in website.
+
+
 # 2.12
 
 ## Update
