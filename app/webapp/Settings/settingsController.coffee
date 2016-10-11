@@ -4,7 +4,8 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   $rootScope.cmpViewShow = true
   $scope.showSubMenus = false
   $scope.webhooks = [{url:"https://www.giddh.com", days:-2}, {url:"https://www.giddh.com", days:2}, {url:"", days:""}]
-  $scope.autoPayOption = [{}]
+  $scope.autoPayOption = ["Never", "Runtime", "Midnight"]
+  $scope.settings = {}
   $scope.tabs = [
     {title:'Invoice/Proforma', active: true}
     {title:'Taxes', active: false}
@@ -82,6 +83,21 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     'year-range': 1,
     'todayBtn': true
   }
+
+  $scope.checkForCompany = () ->
+    if $rootScope.selectedCompany == undefined
+      $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
+
+  #get settings
+  $scope.getAllSetting = () ->
+    companyServices.getAllSettings($rootScope.selectedCompany.uniqueName).then($scope.getAllSettingSuccess, $scope.getAllSettingFailure)
+
+  $scope.getAllSettingSuccess = (res) ->
+    console.log(res)
+    $scope.settings = res.body
+
+  $scope.getAllSettingFailure = (res) ->
+    toastr.error(res.body.message)
 
   # get taxes
   $scope.getTax=()->
@@ -742,5 +758,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
 
   $scope.refreshTokenFailure = (res) ->
     toastr.error(res.data.message, "Error")
+
+  $scope.checkForCompany()
 
 giddh.webApp.controller 'settingsController', settingsController

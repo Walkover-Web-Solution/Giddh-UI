@@ -1,8 +1,8 @@
 <div class="col-xs-12">
-  <div  class="middleBody bdrR bdrL row" auto-height style="overflow:scroll;">
+  <div  class="middleBody bdrR bdrL row" auto-height style="overflow-y:scroll;">
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">
       <uib-tabset justified="false">
-        <uib-tab heading="{{tabs[0].title}}" active="tabs[0].active" class="background-transparent">
+        <uib-tab heading="{{tabs[0].title}}" active="tabs[0].active" class="background-transparent" select="getAllSetting()">
           <div class="container-fluid mrT1 form-group">
             <table class="table-bordered table">
               <thead>
@@ -14,19 +14,10 @@
               <tr>
                 <td>Create Entry + Invoice when paid</td>
                 <td>
-                  <input type="checkbox">
+                  <input type="checkbox" ng-model="settings.proformaSettings.autoEntryAndInvoice">
                 </td>
                 <td>
-                  <input type="checkbox">
-                </td>
-              </tr>
-              <tr>
-                <td>Create Entry when partial paid</td>
-                <td>
-                  <input type="checkbox">
-                </td>
-                <td>
-                  <input type="checkbox">
+                  <input type="checkbox" ng-model="settings.invoiceSettings.autoEntryAndInvoice">
                 </td>
               </tr>
               <tr>
@@ -61,38 +52,37 @@
               <tr>
                 <td>Auto paid</td>
                 <td>
-                  <div class="row">
-                    <div class="col-xs-1">
-                      <input type="checkbox">
-                    </div>
-                    <div class="col-xs-1">
-                      <ui-select ng-model="selectedLedger.voucher" theme="bootstrap">
-                        <ui-select-match>
-                          <span>{{$select.selected.name}}</span>
-                        </ui-select-match >
-                        <ui-select-choices repeat="item in voucherTypeList| filter: $select.search ">
-                          <span ng-bind="item.name"></span>
-                        </ui-select-choices>
-                      </ui-select>
-                    </div>
-                  </div>
-                  <input type="checkbox">
+                  <ui-select ng-model="settings.proformaSettings.autoPaid" theme="bootstrap">
+                    <ui-select-match>
+                      <span>{{$select.selected}}</span>
+                    </ui-select-match >
+                    <ui-select-choices repeat="item in autoPayOption | filter: $select.search ">
+                      <span ng-bind="item"></span>
+                    </ui-select-choices>
+                  </ui-select>
                 </td>
                 <td>
-                  <input type="checkbox">
+                  <ui-select ng-model="settings.invoiceSettings.autoPaid" theme="bootstrap">
+                    <ui-select-match>
+                      <span>{{$select.selected}}</span>
+                    </ui-select-match >
+                    <ui-select-choices repeat="item in autoPayOption | filter: $select.search ">
+                      <span ng-bind="item"></span>
+                    </ui-select-choices>
+                  </ui-select>
                 </td>
               </tr>
               <tr>
                 <td>Default due date</td>
                 <td>
                   <div class="col-xs-3">
-                    <input type="text" class="form-control"/>
+                    <input type="text" ng-model="settings.proformaSettings.duePeriod" class="form-control"/>
                   </div>
                   Days
                 </td>
                 <td>
                   <div class="col-xs-3">
-                    <input type="text" class="form-control"/>
+                    <input type="text" ng-model="settings.invoiceSettings.duePeriod" class="form-control"/>
                   </div>
                   Days
                 </td>
@@ -100,10 +90,10 @@
               <tr>
                 <td>Seal paid/unpaid</td>
                 <td>
-                  <input type="checkbox">
+                  <input type="checkbox" ng-model="settings.proformaSettings.showSeal">
                 </td>
                 <td>
-                  <input type="checkbox">
+                  <input type="checkbox" ng-model="settings.invoiceSettings.showSeal">
                 </td>
               </tr>
               <tr>

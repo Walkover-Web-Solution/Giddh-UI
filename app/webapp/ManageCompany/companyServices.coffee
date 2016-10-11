@@ -166,7 +166,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     saveInvoiceSetting:
       method: 'PUT'
       url: '/company/:companyUniqueName/invoice-setting'
-       
+
+    getAllSettings:
+      method: 'GET'
+      url: '/company/:companyUniqueName/settings'
   })
 
   companyServices =
@@ -325,6 +328,11 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Company.saveInvoiceSetting({
         companyUniqueName: companyUniqueName
       },data, onSuccess, onFailure))
+
+    getAllSettings: (companyUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getAllSettings({
+        companyUniqueName: companyUniqueName
+      }, onSuccess, onFailure))
 
   companyServices
 
