@@ -341,7 +341,9 @@ body {
 .transBg {
     background: 0 0
 }
-
+.font-black{
+    color: black !important;
+}
 .oh {
     overflow: hidden
 }
