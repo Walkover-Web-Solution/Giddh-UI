@@ -19,6 +19,22 @@
   <script  type="text/javascript" src='<<PREFIX_THIS>>/public/webapp/core_bower.min.js'></script>
   <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/app.js"></script>
 
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "url": "https://giddh.com",
+    "logo": "https://giddh.com/public/website/images/new/giddh-logo.png",
+    "contactPoint": [{
+      "@type": "ContactPoint",
+      "telephone": "+1-800-313-1911",
+      "contactType": ["customer support", "technical support", "billing support", "bill payment", "sales", "credit card support", "emergency",  "roadside assistance"],
+      "contactOption": "TollFree",
+      "areaServed": "IN"
+    }]
+  }
+  </script>
+
   <!-- recaptcha -->
   <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
   <script type="text/javascript" src="<<PREFIX_THIS>>/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
