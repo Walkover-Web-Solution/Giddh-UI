@@ -19,6 +19,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-env');
   grunt.loadNpmTasks('grunt-execute');
+  grunt.loadNpmTasks('grunt-processhtml');
 
   srcDir = 'app/';
   destDir = 'public/';
@@ -163,7 +164,7 @@ module.exports = function (grunt) {
         files: [
           srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '**/**/*.css', routeSrcDir + "/**/*.coffee", srcDir + '/**/*.js', srcDir + '/**/**/*.js', srcDir + '/webapp/ng2/**/*.js',  srcDir + '/**/*.coffee'
         ],
-        tasks: ['env:dev','coffee', 'copy', 'clean', 'cssmin', 'concat',  'preprocess:dev']
+        tasks: ['processhtml','env:dev','coffee', 'copy', 'clean', 'cssmin', 'concat',  'preprocess:dev']
       }
     },
     karma: {
@@ -347,6 +348,22 @@ module.exports = function (grunt) {
       target: {
         src: ['git_revision.js']
       }
+    },
+    processhtml:{
+      dist: {
+        options: {
+          process: true,
+        },
+        files: [
+          {
+            expand: true,
+            cwd: srcDir,
+            src: ['*.html'],
+            dest: destDir,
+            ext: '.html'
+          }
+        ]
+      }
     }
   });
 
@@ -356,9 +373,9 @@ module.exports = function (grunt) {
 
   grunt.registerTask('customCopy', ['env:dev', 'copy']);
 
-  grunt.registerTask('default', ['coffeelint', 'customCopy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
+  grunt.registerTask('default', ['processhtml','coffeelint', 'customCopy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
 
-  grunt.registerTask('init', ['env:dev', 'copy', 'coffee', 'clean','bower_concat', 'cssmin', 'concat', 'preprocess:dev'])
+  grunt.registerTask('init', ['processhtml','env:dev', 'copy', 'coffee', 'clean','bower_concat', 'cssmin', 'concat', 'preprocess:dev'])
 
   grunt.registerTask('init-prod', ['env:prod', 'copy', 'coffee', 'clean', 'bower_concat',  'cssmin', 'concat', 'uglify', 'preprocess:prod'])
 

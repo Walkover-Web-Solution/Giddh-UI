@@ -34,6 +34,7 @@
     "grunt-execute": "^0.2.2",
     "grunt-karma": "~0.6.2",
     "grunt-preprocess": "^5.0.1",
+    "grunt-processhtml": "^0.4.1",
     "jwt-simple": "~0.3.1",
     "karma": "^0.10.10",
     "karma-chrome-launcher": "^0.1.12",
@@ -77,6 +78,7 @@
     "grunt-contrib-watch": "^0.6.1",
     "grunt-execute": "^0.2.2",
     "grunt-preprocess": "^5.0.1",
+    "grunt-processhtml": "^0.4.1",
     "karma": "^0.10.10",
     "mongodb": "^2.0.52",
     "mongoose": "^4.3.1"
