@@ -24,16 +24,22 @@
                 <td>Send alert</td>
                 <td colspan="2">
                   <div class="row">
-                    <div class="col-xs-1">
-                      <input name="alertCheckbox" type="checkbox">
-                    </div>
-                    <div class="col-xs-11">
+                    <div class="col-xs-12">
                       <div ng-repeat="webhook in webhooks" class="row pd1">
-                        <div class="col-xs-10 pd0 mrR1">
+                        <div class="col-xs-6 pd0 mrR1">
                           <input type="text" class="form-control" placeholder="Add webhook url" ng-model="webhook.url">
                         </div>
                         <div class="col-xs-1 pd0">
                           <input type="text" class="form-control" placeholder="days" ng-model="webhook.days">
+                        </div>
+                        <div class="col-xs-2">
+                          <select class="form-control" ng-model="webhook.entity">
+                            <option>Proforma</option>
+                            <option>Invoice</option>
+                          </select>
+                        </div>
+                        <div class="col-xs-1">
+                          <i class="glyphicon glyphicon-trash"></i>
                         </div>
                       </div>
                     </div>
@@ -52,24 +58,34 @@
               <tr>
                 <td>Auto paid</td>
                 <td>
-                  <ui-select ng-model="settings.proformaSettings.autoPaid" theme="bootstrap">
-                    <ui-select-match>
-                      <span>{{$select.selected}}</span>
-                    </ui-select-match >
-                    <ui-select-choices repeat="item in autoPayOption | filter: $select.search ">
-                      <span ng-bind="item"></span>
-                    </ui-select-choices>
-                  </ui-select>
+                  <select class="form-control" ng-model="settings.proformaSettings.autoPaid">
+                    <option>Never</option>
+                    <option>Runtime</option>
+                    <option>Midnight</option>
+                  </select>
+                  <!--<ui-select ng-model="settings.proformaSettings.autoPaid" theme="bootstrap">-->
+                    <!--<ui-select-match>-->
+                      <!--<span>{{$select.selected}}</span>-->
+                    <!--</ui-select-match >-->
+                    <!--<ui-select-choices repeat="item in autoPayOption | filter: $select.search ">-->
+                      <!--<span ng-bind="item"></span>-->
+                    <!--</ui-select-choices>-->
+                  <!--</ui-select>-->
                 </td>
                 <td>
-                  <ui-select ng-model="settings.invoiceSettings.autoPaid" theme="bootstrap">
-                    <ui-select-match>
-                      <span>{{$select.selected}}</span>
-                    </ui-select-match >
-                    <ui-select-choices repeat="item in autoPayOption | filter: $select.search ">
-                      <span ng-bind="item"></span>
-                    </ui-select-choices>
-                  </ui-select>
+                  <select class="form-control" ng-model="settings.invoiceSettings.autoPaid">
+                    <option>Never</option>
+                    <option>Runtime</option>
+                    <option>Midnight</option>
+                  </select>
+                  <!--<ui-select ng-model="settings.invoiceSettings.autoPaid" theme="bootstrap">-->
+                    <!--<ui-select-match>-->
+                      <!--<span>{{$select.selected}}</span>-->
+                    <!--</ui-select-match >-->
+                    <!--<ui-select-choices repeat="item in autoPayOption | filter: $select.search ">-->
+                      <!--<span ng-bind="item"></span>-->
+                    <!--</ui-select-choices>-->
+                  <!--</ui-select>-->
                 </td>
               </tr>
               <tr>

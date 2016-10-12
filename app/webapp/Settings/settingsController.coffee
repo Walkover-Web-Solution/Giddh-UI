@@ -3,7 +3,7 @@
 settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService, accountService, $filter, $http, $location) ->
   $rootScope.cmpViewShow = true
   $scope.showSubMenus = false
-  $scope.webhooks = [{url:"https://www.giddh.com", days:-2}, {url:"https://www.giddh.com", days:2}, {url:"", days:""}]
+  $scope.webhooks = [{url:"https://www.giddh.com", days:-2, entity:"Proforma"}, {url:"https://www.giddh.com", days:2, entity:"Invoice"}, {url:"", days:"", entity:""}]
   $scope.autoPayOption = ["Never", "Runtime", "Midnight"]
   $scope.settings = {}
   $scope.tabs = [
