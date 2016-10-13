@@ -164,7 +164,7 @@ module.exports = function (grunt) {
         files: [
           srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '**/**/*.css', routeSrcDir + "/**/*.coffee", srcDir + '/**/*.js', srcDir + '/**/**/*.js', srcDir + '/webapp/ng2/**/*.js',  srcDir + '/**/*.coffee'
         ],
-        tasks: ['processhtml','env:dev','coffee', 'copy', 'clean', 'cssmin', 'concat',  'preprocess:dev']
+        tasks: ['env:dev','coffee', 'copy', 'clean', 'cssmin', 'concat',  'preprocess:dev']
       }
     },
     karma: {
@@ -373,9 +373,9 @@ module.exports = function (grunt) {
 
   grunt.registerTask('customCopy', ['env:dev', 'copy']);
 
-  grunt.registerTask('default', ['processhtml','coffeelint', 'customCopy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
+  grunt.registerTask('default', ['coffeelint', 'customCopy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
 
-  grunt.registerTask('init', ['processhtml','env:dev', 'copy', 'coffee', 'clean','bower_concat', 'cssmin', 'concat', 'preprocess:dev'])
+  grunt.registerTask('init', ['env:dev', 'copy', 'coffee', 'clean','bower_concat', 'cssmin', 'concat', 'preprocess:dev'])
 
   grunt.registerTask('init-prod', ['env:prod', 'copy', 'coffee', 'clean', 'bower_concat',  'cssmin', 'concat', 'uglify', 'preprocess:prod'])
 
