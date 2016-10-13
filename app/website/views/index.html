@@ -19,16 +19,32 @@
   <script  type="text/javascript" src='<<PREFIX_THIS>>/public/webapp/core_bower.min.js'></script>
   <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/app.js"></script>
 
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "url": "https://giddh.com",
+    "logo": "https://giddh.com/public/website/images/new/giddh-logo.png",
+    "contactPoint": [{
+      "@type": "ContactPoint",
+      "telephone": "+1-800-313-1911",
+      "contactType": ["customer support", "technical support", "billing support", "bill payment", "sales", "credit card support", "emergency",  "roadside assistance"],
+      "contactOption": "TollFree",
+      "areaServed": "IN"
+    }]
+  }
+  </script>
+
   <!-- recaptcha -->
   <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
   <script type="text/javascript" src="<<PREFIX_THIS>>/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
 </head>
 <body ng-controller="homeCtrl" id="page-top" class="light">
-
   <ng-include src="'/public/website/views/header.html'"></ng-include>
+
   <!-- end navigation -->
 
-  <section id="videoBg" class="pr">
+  <section id="videoBg" class="pr black-back">
     <div class="scroll-btn">
       <a href="#feature" class="page-scroll"></a>
     </div>
@@ -43,18 +59,17 @@
           <div class="row">
             <div class="col-sm-12">
               <div class="pr clearfix">
-                <div>
-                  <a href="/login" class="btn btn-primary  btn-lg">Cheque out</a>
-                </div>
                 <div class="brand-wrap">
                   <h1 class="brand-heading arvo">
                     <div class="pr">
-                      <img class="img-responsive" src="<<PREFIX_THIS>>/public/website/images/new/banner-graph.png" alt="bookkeeping software,Cloud Based Accounting Software" />
-                      <p class="white" style='color:white'>Your new non-inventory accountant</p>
+                      <!--<img class="img-responsive" src="<<PREFIX_THIS>>/public/website/images/new/banner-graph.png" alt="bookkeeping software,Cloud Based Accounting Software" />-->
+                      <p class="white" style='color:white;font-size:30px;'>An accounting software that meets your cash flow,  invoicing and basic business needs.</p>
                     </div>
                   </h1>
                 </div>
-                
+                <div class="row">
+                  <a href="/login" class="btn btn-primary  btn-lg">Start Today - it's free!</a>
+                </div>
               </div>
             </div>
           </div>
@@ -180,4 +195,41 @@
   <ng-include src="'/public/website/views/footer.html'"></ng-include>
 
 </body>
+<script>
+  window.intercomSettings = {
+    app_id: "e77157qf"
+  };
+</script>
+<script>(function () {
+  var w = window;
+  var ic = w.Intercom;
+  if (typeof ic === "function") {
+    ic('reattach_activator');
+    ic('update', intercomSettings);
+  } else {
+    var d = document;
+    var i = function () {
+      i.c(arguments)
+    };
+    i.q = [];
+    i.c = function (args) {
+      i.q.push(args)
+    };
+    w.Intercom = i;
+    function l() {
+      var s = d.createElement('script');
+      s.type = 'text/javascript';
+      s.async = true;
+      s.src = 'https://widget.intercom.io/widget/e77157qf';
+      var x = d.getElementsByTagName('script')[0];
+      x.parentNode.insertBefore(s, x);
+    }
+
+    if (w.attachEvent) {
+      w.attachEvent('onload', l);
+    } else {
+      w.addEventListener('load', l, false);
+    }
+  }
+})()</script>
 </html>

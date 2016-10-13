@@ -19,6 +19,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-env');
   grunt.loadNpmTasks('grunt-execute');
+  grunt.loadNpmTasks('grunt-processhtml');
 
   srcDir = 'app/';
   destDir = 'public/';
@@ -346,6 +347,22 @@ module.exports = function (grunt) {
     execute: {
       target: {
         src: ['git_revision.js']
+      }
+    },
+    processhtml:{
+      dist: {
+        options: {
+          process: true,
+        },
+        files: [
+          {
+            expand: true,
+            cwd: srcDir,
+            src: ['*.html'],
+            dest: destDir,
+            ext: '.html'
+          }
+        ]
       }
     }
   });
