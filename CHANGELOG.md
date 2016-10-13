@@ -1,3 +1,15 @@
+# 2.14
+
+## Update
+
+## SEO related work, UI changes on index page
+ 
+- ([2133bda](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/2133bdad49fa9b60d15fa2d674dd63453b524e16))
+    1.) Added toll free number
+    2.) Added support email
+    3.) Index page changes according to ankita mam
+    4.) Redirected to saltedge terms and conditions page
+
 # 2.13
 
 ## Update
