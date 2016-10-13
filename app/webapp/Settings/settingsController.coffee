@@ -3,7 +3,7 @@
 settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService, accountService, $filter, $http, $location) ->
   $rootScope.cmpViewShow = true
   $scope.showSubMenus = false
-  $scope.webhooks = [{url:"https://www.giddh.com", days:-2, entity:"Proforma"}, {url:"https://www.giddh.com", days:2, entity:"Invoice"}, {url:"", days:"", entity:""}]
+  $scope.webhooks = [{url:"https://www.giddh.com", triggerAt:-2, entity:"Proforma"}, {url:"https://www.giddh.com", triggerAt:2, entity:"Invoice"}]
   $scope.autoPayOption = ["Never", "Runtime", "Midnight"]
   $scope.settings = {}
   $scope.tabs = [
@@ -88,6 +88,8 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     if $rootScope.selectedCompany == undefined
       $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
 
+  $scope.showWebhook = () ->
+    $scope.addWebhook = {url:"", triggerAt:"", entity:""}
   #get settings
   $scope.getAllSetting = () ->
     companyServices.getAllSettings($rootScope.selectedCompany.uniqueName).then($scope.getAllSettingSuccess, $scope.getAllSettingFailure)
@@ -95,9 +97,13 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   $scope.getAllSettingSuccess = (res) ->
     console.log(res)
     $scope.settings = res.body
+    $scope.webhooks = $scope.settings.webhooks
 
   $scope.getAllSettingFailure = (res) ->
     toastr.error(res.body.message)
+
+  $scope.saveSettings = () ->
+    console.log($scope.settings)
 
   # get taxes
   $scope.getTax=()->

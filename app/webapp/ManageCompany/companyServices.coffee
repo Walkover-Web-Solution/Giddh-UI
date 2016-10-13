@@ -170,6 +170,14 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     getAllSettings:
       method: 'GET'
       url: '/company/:companyUniqueName/settings'
+
+    createWebhook:
+      method: 'POST'
+      url: '/company/:companyUniqueName/settings/webhooks'
+
+    deleteWebhook:
+      method: 'DELETE'
+      url: '/company/:companyUniqueName/settings/webhooks/:webhookUniqueName'
   })
 
   companyServices =
@@ -332,6 +340,17 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     getAllSettings: (companyUniqueName) ->
       @handlePromise((onSuccess, onFailure) -> Company.getAllSettings({
         companyUniqueName: companyUniqueName
+      }, onSuccess, onFailure))
+
+    createWebhook: (companyUniqueName, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.createWebhook({
+        companyUniqueName: companyUniqueName
+      }, data, onSuccess, onFailure))
+
+    deleteWebhook: (companyUniqueName, webhookUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Company.deleteWebhook({
+        companyUniqueName: companyUniqueName
+        webhookUniqueName: webhookUniqueName
       }, onSuccess, onFailure))
 
   companyServices
