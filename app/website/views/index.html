@@ -40,13 +40,11 @@
   <script type="text/javascript" src="<<PREFIX_THIS>>/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
 </head>
 <body ng-controller="homeCtrl" id="page-top" class="light">
-<!-- build:include header.html -->
   <ng-include src="'/public/website/views/header.html'"></ng-include>
-<!-- /build -->
 
   <!-- end navigation -->
 
-  <section id="videoBg" class="pr">
+  <section id="videoBg" class="pr black-back">
     <div class="scroll-btn">
       <a href="#feature" class="page-scroll"></a>
     </div>
@@ -61,18 +59,17 @@
           <div class="row">
             <div class="col-sm-12">
               <div class="pr clearfix">
-                <div>
-                  <a href="/login" class="btn btn-primary  btn-lg">Cheque out</a>
-                </div>
                 <div class="brand-wrap">
                   <h1 class="brand-heading arvo">
                     <div class="pr">
-                      <img class="img-responsive" src="<<PREFIX_THIS>>/public/website/images/new/banner-graph.png" alt="bookkeeping software,Cloud Based Accounting Software" />
-                      <p class="white" style='color:white'>Your new non-inventory accountant</p>
+                      <!--<img class="img-responsive" src="<<PREFIX_THIS>>/public/website/images/new/banner-graph.png" alt="bookkeeping software,Cloud Based Accounting Software" />-->
+                      <p class="white" style='color:white;font-size:30px;'>An accounting software that meets your cash flow,  invoicing and basic business needs.</p>
                     </div>
                   </h1>
                 </div>
-                
+                <div class="row">
+                  <a href="/login" class="btn btn-primary  btn-lg">Start Today - it's free!</a>
+                </div>
               </div>
             </div>
           </div>
