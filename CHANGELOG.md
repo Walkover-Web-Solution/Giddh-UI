@@ -1,3 +1,12 @@
+# 2.15
+
+## Update
+
+## SEO related work
+ 
+- ([82efc8a](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/82efc8a88f72a9d647df0e3632e5d068b5e71fbb))
+    1.) Changes in index page according to SEO
+
 # 2.14
 
 ## Update
