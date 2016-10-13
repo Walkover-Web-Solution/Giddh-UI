@@ -38,6 +38,7 @@ body {
 .fs20{font-size: 20px}
 .fs24{font-size: 24px}
 /*common margins*/
+.mrB0{margin-bottom: 0px !important;}
 .mrB5{margin-bottom: 50px}
 .mrT4{margin-top: 40px}
 .mrT5{margin-top: 50px}
@@ -315,6 +316,13 @@ body {
 
 .pr {
     position: relative
+}
+.pr h1, .pr label {
+    display: inline;
+    font-size: 30px;
+    color: white;
+    font-weight: normal;
+    font-family: Helvetica;
 }
 .black-back{
     background: rgba(0,0,0,0.7);
@@ -804,11 +812,10 @@ body.light .navbar.transparent{
   font-size: 40px;
   letter-spacing: 2px;
   margin: 0 0 5px;
-  text-transform: uppercase;
+  /*text-transform: uppercase;*/
   color: #011F39;
 }
 .intro.home .btn{
-    margin-top: 100px;
 	width: 320px;
 	height: 80px;
 	/*margin-bottom: 70px;*/
@@ -1361,4 +1368,10 @@ body.unresponsive .container {
 	.container.adjust-width{		
 		max-width: 55%;		
 	}		
+}
+
+.font-white{
+    color: white;
+    font-size: 30px;
+    font-family: Helvetica;
 }
