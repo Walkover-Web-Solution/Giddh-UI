@@ -1713,7 +1713,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.setActiveTab = () ->
     $scope.afterConnectSuccess  = true
-    $scope.loadYodlee()
+#    $scope.loadYodlee()
   #  Linked methods end here
 
   $scope.getSharedList = () ->
