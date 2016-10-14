@@ -2,7 +2,7 @@
   <div  class="middleBody bdrR bdrL row" auto-height style="overflow-y:scroll;">
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">
       <uib-tabset justified="false">
-        <uib-tab heading="{{tabs[0].title}}" active="tabs[0].active" class="background-transparent" select="getAllSetting()">
+        <uib-tab heading="{{tabs[0].title}}" active="tabs[0].active" class="background-transparent" select="getAllSetting(); setTab(0)">
           <div class="container-fluid mrT1 form-group">
             <table class="table-bordered table">
               <thead>
@@ -147,7 +147,7 @@
           </div>
         </uib-tab>
         <!-- manage taxes -->
-        <uib-tab heading="{{tabs[1].title}}" active="tabs[1].active" id="taxes" select="getTax()">
+        <uib-tab heading="{{tabs[1].title}}" active="tabs[1].active" id="taxes" select="getTax(); setTab(1)">
           <div class="pd2">
             <h3 class="fs16 mrB1">Create New Tax</h3>
             <div class="form-wrapper" style="max-width:460px">
@@ -368,7 +368,7 @@
         </uib-tab>
         <!-- end of manage taxes -->
 
-        <uib-tab heading="{{tabs[2].title}}" active="tabs[2].active" id="email-settings" select="getKeys()">
+        <uib-tab heading="{{tabs[2].title}}" active="tabs[2].active" id="email-settings" select="getKeys(); setTab(2)">
           <div class="pd2">
             <h3 class="fs16 mrB1">Bulk Email/Sms Settings</h3>
             <p>Currently we offer bulk email and sms services to our users through <a class="underline" href="https://sendgrid.com/" target="_blank">SendGrid</a> (Transactional Email) and <a class="underline" href="https://msg91.com/" target="_blank">MSG91</a>(Transactional Route) respectively. <br/> In order to be able to send bulk emails and sms you would require auth-keys and sender ID from aforementioned providers. </p>
@@ -412,7 +412,7 @@
 
 
         <!--linked bank accounts section-->
-        <uib-tab heading="{{tabs[3].title}}" active="tabs[3].active" select="loadYodlee()">
+        <uib-tab heading="{{tabs[3].title}}" active="tabs[3].active" select="loadYodlee(); setTab(3)">
           <div class="pd2 clearfix">
             <h1 class="mrB1">Add Bank Account </h1>
             <button ng-click="connectBank()" class="btn btn-primary">Connect Bank</button>

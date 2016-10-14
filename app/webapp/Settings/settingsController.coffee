@@ -102,7 +102,6 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     toastr.error(res.data.message)
 
   $scope.saveSettings = () ->
-    console.log($scope.settings)
     companyServices.updateAllSettings($rootScope.selectedCompany.uniqueName, $scope.settings).then($scope.saveSettingsSuccess, $scope.saveSettingsFailure)
 
   $scope.saveSettingsSuccess = (res) ->
@@ -791,6 +790,30 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
 
   $scope.refreshTokenFailure = (res) ->
     toastr.error(res.data.message, "Error")
+
+  $scope.setTab = (tabNumber) ->
+    count = 0
+    _.each($scope.tabs, (tab) ->
+      if count == tabNumber
+        tab.active = true
+      else
+        tab.active = false
+      count = count + 1
+    )
+
+  $scope.$on 'company-changed', (event,changeData) ->
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
+      _.each($scope.tabs, (tab) ->
+        if tab.active == true
+          if tab.title == "Invoice/Proforma"
+            $scope.getAllSetting()
+          else if tab.title == "Taxes"
+            $scope.getTax()
+          else if tab.title == "Email/SMS settings"
+            $scope.getKeys()
+          else if tab.title == "Linked Accounts"
+            $scope.loadYodlee()
+      )
 
   $scope.checkForCompany()
 
