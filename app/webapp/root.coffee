@@ -210,6 +210,29 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: appendThis+'/public/webapp/views/thanks.html'
     controller: 'thankyouController'
   )
+  .state('proforma',
+    url: ''
+    abstract: true
+    templateUrl: appendThis+'/public/webapp/views/home.html'
+    controller: 'proformaController'
+  )
+  .state('proforma.accounts',
+    url: '/proforma'
+    views:{
+      'accounts':{
+        templateUrl: appendThis+'/public/webapp/invoice2/proforma/proformaAccounts.html'
+      }
+      'rightPanel':{
+        abstract:true
+        templateUrl: appendThis+'/public/webapp/invoice2/proforma/proformaContent.html'
+      }
+    }
+  )
+  .state('settings',
+    url: '/settings'
+    templateUrl: appendThis+'/public/webapp/Settings/settings.html'
+    controller: 'settingsController'
+  )
   $locationProvider.html5Mode(false)
   return
 

@@ -21,47 +21,46 @@
               <div>
                 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
                   <ul class="dshUl clearfix">
-                <li class="dmLi trialB" ui-sref="dashboard" ng-if="sharedEntity == null">
-                    <a href="">
-                      <div class="media">
-                        <div class="media-body">
-                          <div class="title">Dashboard</div>
-                          <div class="subTitle">Your <b>Company Summary</b> at one place.</div>
+                    <li class="dmLi trialB" ui-sref="dashboard" ng-if="sharedEntity == null">
+                      <a href="">
+                        <div class="media">
+                          <div class="media-body">
+                            <div class="title">Dashboard</div>
+                            <div class="subTitle">Your <b>Company Summary</b> at one place.</div>
+                          </div>
                         </div>
-                      </div>
-                    </a>
-                  </li>
-                <li class="dmLi trialB" ui-sref="company.content.manage">
-                    <a href="">
-                      <div class="media">
-                        <div class="media-body">
-                          <div class="title">Manage Company</div>
-                          <div class="subTitle">All your <b>Groups, accounts</b> at one place.</div>
+                      </a>
+                    </li>
+                    <li class="dmLi trialB" ui-sref="settings">
+                      <a href="">
+                        <div class="media">
+                          <div class="media-body">
+                            <div class="title">Settings</div>
+                            <div class="subTitle">Manage your company settings.</div>
+                          </div>
                         </div>
-                      </div>
-                    </a>
-                </li>
-
-                <li class="dmLi" ui-sref="company.content.ledgerContent">
-                    <a href="" >
-                      <div class="media">
-                        <div class="media-body">
-                          <div class="title">Ledger</div>
-                          <div class="subTitle">View and edit all your <b>done</b> entries.</div>
+                      </a>
+                    </li>
+                    <li class="dmLi" ui-sref="company.content.ledgerContent">
+                        <a href="" >
+                          <div class="media">
+                            <div class="media-body">
+                              <div class="title">Ledger</div>
+                              <div class="subTitle">View and edit all your <b>done</b> entries.</div>
+                            </div>
+                          </div>
+                        </a>
+                    </li>
+                    <li class="dmLi" ui-sref="company.content.tbpl">
+                      <a href="" >
+                        <div class="media">
+                          <div class="media-body">
+                            <div class="title">TB/P&amp;L</div>
+                            <div class="subTitle">Trial Balance/ Profit and Loss</div>
+                          </div>
                         </div>
-                      </div>
-                    </a>
-                </li>
-                <li class="dmLi" ui-sref="company.content.tbpl">
-                  <a href="" >
-                    <div class="media">
-                      <div class="media-body">
-                        <div class="title">TB/P&amp;L</div>
-                        <div class="subTitle">Trial Balance/ Profit and Loss</div>
-                      </div>
-                    </div>
-                  </a>
-                </li>
+                      </a>
+                    </li>
                 <!-- <li ng-hide="canViewSpecificItems" class="dmLi" ui-sref="company.profitAndLoss">
                     <a href="" >
                       <div class="media">
@@ -72,46 +71,66 @@
                       </div>
                     </a>
                 </li> -->
-                <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="invoice.accounts">
-                    <a href="" >
-                      <div class="media">
-                        <div class="media-body">
-                          <div class="title">Invoice</div>
-                          <div class="subTitle">Generate and Download</div>
+                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="invoice.accounts">
+                        <a href="" >
+                          <div class="media">
+                            <div class="media-body">
+                              <div class="title">Invoice</div>
+                              <div class="subTitle">Generate and Download</div>
+                            </div>
+                          </div>
+                        </a>
+                    </li>
+                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="proforma.accounts">
+                      <a href="" >
+                        <div class="media">
+                          <div class="media-body">
+                            <div class="title">Proforma</div>
+                            <div class="subTitle">Generate and Download</div>
+                          </div>
                         </div>
-                      </div>
-                    </a>
-                </li>
-                <li class="dmLi" ui-sref="Reports">
-                    <a href="" >
-                      <div class="media">
-                        <div class="media-body">
-                          <div class="title">Reports</div>
-                          <div class="subTitle">Generate and view Business Reports</div>
+                      </a>
+                    </li>
+                    <li class="dmLi" ui-sref="Reports">
+                        <a href="" >
+                          <div class="media">
+                            <div class="media-body">
+                              <div class="title">Reports</div>
+                              <div class="subTitle">Generate and view Business Reports</div>
+                            </div>
+                          </div>
+                        </a>
+                    </li>
+                    <li ng-if="sharedEntity == null" class="dmLi" ui-sref="audit-logs">
+                        <a href="" >
+                          <div class="media">
+                            <div class="media-body">
+                              <div class="title">Audit Logs</div>
+                              <div class="subTitle">View and edit all your <b>done</b> entries.</div>
+                            </div>
+                          </div>
+                        </a>
+                    </li>
+                    <li ng-if="sharedEntity != 'accounts'" class="dmLi" ui-sref="search">
+                        <a href="" >
+                          <div class="media">
+                            <div class="media-body">
+                              <div class="title">Search</div>
+                              <div class="subTitle">View all your creditors</div>
+                            </div>
+                          </div>
+                        </a>
+                    </li>
+                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi trialB" ui-sref="company.content.manage">
+                      <a href="">
+                        <div class="media">
+                          <div class="media-body">
+                            <div class="title">Manage Company</div>
+                            <div class="subTitle">All your <b>Groups, accounts</b> at one place.</div>
+                          </div>
                         </div>
-                      </div>
-                    </a>
-                </li>
-                <li ng-if="sharedEntity == null" class="dmLi" ui-sref="audit-logs">
-                    <a href="" >
-                      <div class="media">
-                        <div class="media-body">
-                          <div class="title">Audit Logs</div>
-                          <div class="subTitle">View and edit all your <b>done</b> entries.</div>
-                        </div>
-                      </div>
-                    </a>
-                </li>
-                <li ng-if="sharedEntity != 'accounts'" class="dmLi" ui-sref="search">
-                    <a href="" >
-                      <div class="media">
-                        <div class="media-body">
-                          <div class="title">Search</div>
-                          <div class="subTitle">View all your creditors</div>
-                        </div>
-                      </div>
-                    </a>
-                </li>
+                      </a>
+                    </li>
 <!--                 <li class="dmLi" ui-sref="company.content.ledger">
                     <a href="" >
                       <div class="media">

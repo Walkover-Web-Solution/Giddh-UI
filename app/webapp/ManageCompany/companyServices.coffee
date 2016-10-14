@@ -175,6 +175,22 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       method: 'POST'
       url: '/company/:companyUniqueName/cropped-flatten-account'
        
+
+    getAllSettings:
+      method: 'GET'
+      url: '/company/:companyUniqueName/settings'
+
+    updateAllSettings:
+      method: 'PUT'
+      url: '/company/:companyUniqueName/settings'
+
+    createWebhook:
+      method: 'POST'
+      url: '/company/:companyUniqueName/settings/webhooks'
+
+    deleteWebhook:
+      method: 'DELETE'
+      url: '/company/:companyUniqueName/settings/webhooks/:webhookUniqueName'
   })
 
   companyServices =
@@ -346,6 +362,27 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
         query: reqParam.query
       },data, onSuccess, onFailure))
 
+
+    getAllSettings: (companyUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getAllSettings({
+        companyUniqueName: companyUniqueName
+      }, onSuccess, onFailure))
+
+    updateAllSettings: (companyUniqueName,data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.updateAllSettings({
+        companyUniqueName: companyUniqueName
+      },data, onSuccess, onFailure))
+
+    createWebhook: (companyUniqueName, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.createWebhook({
+        companyUniqueName: companyUniqueName
+      }, data, onSuccess, onFailure))
+
+    deleteWebhook: (companyUniqueName, webhookUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Company.deleteWebhook({
+        companyUniqueName: companyUniqueName
+        webhookUniqueName: webhookUniqueName
+      }, onSuccess, onFailure))
 
   companyServices
 
