@@ -26,7 +26,7 @@
                   <div class="row">
                     <div class="col-xs-12">
                       <div ng-repeat="webhook in webhooks" class="row pd1">
-                        <div class="col-xs-6 pd0 mrR1">
+                        <div class="col-xs-7 pd0 mrR1">
                           <input type="text" class="form-control" placeholder="Add webhook url" ng-model="webhook.url">
                         </div>
                         <div class="col-xs-1 pd0">
@@ -34,16 +34,33 @@
                         </div>
                         <div class="col-xs-2">
                           <select class="form-control" ng-model="webhook.entity">
-                            <option>Proforma</option>
-                            <option>Invoice</option>
+                            <option>proforma</option>
+                            <option>invoice</option>
                           </select>
                         </div>
-                        <div class="col-xs-1">
-                          <i class="glyphicon glyphicon-trash"></i>
+                        <div class="col-xs-1 mrT1">
+                          <i class="glyphicon glyphicon-trash" ng-click="deleteWebhook(webhook)"></i>
                         </div>
                       </div>
-                      <div ng-if="webhooks.length < 10" class="row pd1">
-                        <i class="glyphicon glyphicon-plus-sign" ng-click="showWebhook()"></i>
+                      <div class="row pd1" ng-if="addWebhook.url != undefined">
+                        <div class="col-xs-7 pd0 mrR1">
+                          <input type="text" class="form-control" placeholder="Add webhook url" ng-model="addWebhook.url">
+                        </div>
+                        <div class="col-xs-1 pd0">
+                          <input type="text" class="form-control" placeholder="days" ng-model="addWebhook.triggerAt">
+                        </div>
+                        <div class="col-xs-2">
+                          <select class="form-control" ng-model="addWebhook.entity">
+                            <option>proforma</option>
+                            <option>invoice</option>
+                          </select>
+                        </div>
+                        <div class="col-xs-1 mrT1">
+                          <i class="glyphicon glyphicon-ok" ng-click="saveWebhook()"></i>
+                        </div>
+                      </div>
+                      <div ng-if="webhooks.length < 10 && addWebhook.url == undefined" class="row pd1">
+                        <i class="glyphicon glyphicon-plus-sign mr" ng-click="showWebhook()">Add new webhook</i>
                       </div>
                     </div>
                   </div>
@@ -62,9 +79,9 @@
                 <td>Auto paid</td>
                 <td>
                   <select class="form-control" ng-model="settings.invoiceSettings.autoPaid">
-                    <option>Never</option>
-                    <option>Runtime</option>
-                    <option>Midnight</option>
+                    <option>never</option>
+                    <option>runtime</option>
+                    <option>midnight</option>
                   </select>
                   <!--<ui-select ng-model="settings.proformaSettings.autoPaid" theme="bootstrap">-->
                     <!--<ui-select-match>-->
@@ -77,9 +94,9 @@
                 </td>
                 <td>
                   <select class="form-control" ng-model="settings.proformaSettings.autoPaid">
-                    <option>Never</option>
-                    <option>Runtime</option>
-                    <option>Midnight</option>
+                    <option>never</option>
+                    <option>runtime</option>
+                    <option>midnight</option>
                   </select>
                   <!--<ui-select ng-model="settings.invoiceSettings.autoPaid" theme="bootstrap">-->
                     <!--<ui-select-match>-->
@@ -94,13 +111,13 @@
               <tr>
                 <td>Default due date</td>
                 <td>
-                  <div class="col-xs-3">
+                  <div class="col-xs-3 pdL-0">
                     <input type="text" ng-model="settings.invoiceSettings.duePeriod" class="form-control"/>
                   </div>
                   Days
                 </td>
                 <td>
-                  <div class="col-xs-3">
+                  <div class="col-xs-3 pdL-0">
                     <input type="text" ng-model="settings.proformaSettings.duePeriod" class="form-control"/>
                   </div>
                   Days
@@ -115,15 +132,15 @@
                   <input type="checkbox" ng-model="settings.proformaSettings.showSeal">
                 </td>
               </tr>
-              <tr>
-                <td>Do entry when paid using stripe/razorpay</td>
-                <td>
-                  <input type="checkbox">
-                </td>
-                <td>
-                  <input type="checkbox">
-                </td>
-              </tr>
+              <!--<tr>-->
+                <!--<td>Do entry when paid using stripe/razorpay</td>-->
+                <!--<td>-->
+                  <!--<input type="checkbox">-->
+                <!--</td>-->
+                <!--<td>-->
+                  <!--<input type="checkbox">-->
+                <!--</td>-->
+              <!--</tr>-->
               </tbody>
             </table>
             <button class="btn btn-primary" ng-click="saveSettings()">Save</button>

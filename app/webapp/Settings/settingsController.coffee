@@ -95,7 +95,6 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     companyServices.getAllSettings($rootScope.selectedCompany.uniqueName).then($scope.getAllSettingSuccess, $scope.getAllSettingFailure)
 
   $scope.getAllSettingSuccess = (res) ->
-    console.log(res)
     $scope.settings = res.body
     $scope.webhooks = $scope.settings.webhooks
 
@@ -104,6 +103,34 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
 
   $scope.saveSettings = () ->
     console.log($scope.settings)
+    companyServices.updateAllSettings($rootScope.selectedCompany.uniqueName, $scope.settings).then($scope.saveSettingsSuccess, $scope.saveSettingsFailure)
+
+  $scope.saveSettingsSuccess = (res) ->
+    $scope.getAllSetting()
+
+  $scope.saveSettingsFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.deleteWebhook = (webhook) ->
+    companyServices.deleteWebhook($rootScope.selectedCompany.uniqueName, webhook.uniqueName).then($scope.deleteWebhookSuccess,$scope.deleteWebhookFailure)
+
+  $scope.deleteWebhookSuccess = (res) ->
+    $scope.getAllSetting()
+
+  $scope.deleteWebhookFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.saveWebhook = () ->
+    if $scope.addWebhook.url == "" || $scope.addWebhook.entity == "" || $scope.addWebhook.triggerAt == ""
+      return
+    companyServices.createWebhook($rootScope.selectedCompany.uniqueName, $scope.addWebhook).then($scope.saveWebhookSuccess, $scope.saveWebhookFailure)
+
+  $scope.saveWebhookSuccess = (res) ->
+    $scope.addWebhook = {}
+    $scope.getAllSetting()
+
+  $scope.saveWebhookFailure = (res) ->
+    toastr.error(res.data.message)
 
   # get taxes
   $scope.getTax=()->

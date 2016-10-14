@@ -171,6 +171,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       method: 'GET'
       url: '/company/:companyUniqueName/settings'
 
+    updateAllSettings:
+      method: 'PUT'
+      url: '/company/:companyUniqueName/settings'
+
     createWebhook:
       method: 'POST'
       url: '/company/:companyUniqueName/settings/webhooks'
@@ -341,6 +345,11 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Company.getAllSettings({
         companyUniqueName: companyUniqueName
       }, onSuccess, onFailure))
+
+    updateAllSettings: (companyUniqueName,data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.updateAllSettings({
+        companyUniqueName: companyUniqueName
+      },data, onSuccess, onFailure))
 
     createWebhook: (companyUniqueName, data) ->
       @handlePromise((onSuccess, onFailure) -> Company.createWebhook({
