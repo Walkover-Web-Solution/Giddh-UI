@@ -99,7 +99,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     $scope.webhooks = $scope.settings.webhooks
 
   $scope.getAllSettingFailure = (res) ->
-    toastr.error(res.body.message)
+    toastr.error(res.data.message)
 
   $scope.saveSettings = () ->
     console.log($scope.settings)
