@@ -1,0 +1,36 @@
+<div class="container-fluid">
+  <div class="row">
+    <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">
+      <uib-tabset justified="false">
+        <uib-tab heading="Invoice">
+          <!--<uib-tab-heading>-->
+            <!--<select class="form-control">-->
+              <!--<option>Invoice</option>-->
+              <!--<option>Create</option>-->
+              <!--<option>View</option>-->
+            <!--</select>-->
+          <!--</uib-tab-heading>-->
+          <div class="row">
+            <div class="col-xs-11">
+              <uib-tabset>
+                <uib-tab heading="View"></uib-tab>
+                <uib-tab heading="Generate"></uib-tab>
+                <uib-tab heading="Setting">
+                  <div ng-include="'/public/webapp/Invoice/invoiceContent.html'" ng-controller="invoiceController">              </div>
+                </uib-tab>
+              </uib-tabset>
+            </div>
+            <div class="col-xs-1">
+              <label>#Filters</label>
+            </div>
+          </div>
+        </uib-tab>
+        <uib-tab heading="Proforma">
+          <div ng-include="'/public/webapp/invoice2/proforma/proformaContent.html'" ng-controller="proformaController">
+
+          </div>
+        </uib-tab>
+      </uib-tabset>
+    </perfect-scrollbar>
+  </div>
+</div>
