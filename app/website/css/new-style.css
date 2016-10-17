@@ -463,7 +463,8 @@ body {
 .navbar{
 	min-height: 80px;
 	margin-bottom: 0;
-	border: 0
+	border: 0;
+    font-family: Helvetica;
 }
 .navbar-brand{
 	height: 80px;
@@ -477,7 +478,7 @@ body {
 	height: 40px;
 	line-height: 20px;
 	padding: 10px 15px;
-	font-family: 'Arvo', serif;
+	font-family: 'Helvetica', serif;
 	font-size: 18px;
 }
 /*navigation light theme*/
@@ -526,32 +527,41 @@ body.light .navbar.transparent{
 	background-color: #fff
 }
 .navbar-custom .navbar-nav > li > a {
-	font-family: 'Inconsolata', Arial, serif;
+	font-family: 'Helvetica', Arial, serif;
 	font-weight: 400;
-  color: #26263A;
+  color: #E34A26;
   line-height: 36px;
   font-size: 22px;
   padding: 10px 22px;
 }
 .navbar-custom .navbar-nav > li > a.white{
 	color:#fff;
+    font-size: 18px;
+    font-weight: 300;
+    -webkit-text-decoration-color: #E34A26;
+    -moz-text-decoration-color: #E34A26;  /* vendor prefix not required as of V36 */
+    text-decoration-color: #E34A26;
 }
 .navbar-custom.affix .navbar-nav > li > a.white{
-	color:#26263A;
+	color:#E34A26;
 }
 
 .navbar-custom .navbar-nav > li > div.row > label.white{
     color:#fff;
 }
 .navbar-custom.affix .navbar-nav > li > div.row > label.white{
-    color:#26263A;
+    color:#E34A26;
 }
 
 .navbar-custom .navbar-nav > li > a.active, .navbar-custom .navbar-nav > li > a:visited, .navbar-custom .navbar-nav > li > a:hover {
-  background-color: transparent;
+    background-color: transparent;
 }
 .navbar-custom .navbar-nav > li > a:active, .navbar-custom .navbar-nav > li > a:focus{
-	 background-color: transparent;
+    background-color: transparent;
+}
+
+.navbar-custom .navbar-nav > li > a:after{
+    border-bottom: 0.1em solid #E34A26;
 }
 
 
@@ -820,7 +830,8 @@ body.light .navbar.transparent{
 	height: 80px;
 	/*margin-bottom: 70px;*/
 	/*font-family: 'Arvo', serif;*/
-	font-size: 30px;
+	font-size: 25px;
+    font-weight: 300;
 	line-height: 60px;
 }
 .brand-wrap{
@@ -833,6 +844,7 @@ body.light .navbar.transparent{
 	margin: 0 auto;*/
 	display: table;
 	width: 100%;
+    margin-bottom: 20px;
 }
 .brand-wrap img{
 	width: 100%;
