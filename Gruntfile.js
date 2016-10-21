@@ -267,7 +267,9 @@ module.exports = function (grunt) {
           'perfect-scrollbar': 'css/perfect-scrollbar.min.css',
           'angular-toastr': 'dist/angular-toastr.min.css',
           'angular-gridster': 'dist/angular-gridster.min.css',
-          'ui-select': 'dist/select.min.css'
+          'ui-select': 'dist/select.min.css',
+          'font-awesome': 'css/font-awesome.min.css',
+          'textAngular': 'dist/textAngular.css'
         },
         callback: function(mainFiles, component) {
           return _.map(mainFiles, function(filepath) {

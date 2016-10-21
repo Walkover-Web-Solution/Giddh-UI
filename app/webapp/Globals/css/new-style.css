@@ -3632,5 +3632,27 @@ tr.db-bnk-account > td.reconnectDiv{
 .gridster-loaded .gridster-item{
     background-color: rgba(242, 242, 242, 0.24);
 }
-
+/*override editor height*/
+.ta-scroll-window>.ta-bind, .ta-editor.ta-html{
+    min-height: 130px;
+}
+.ta-scroll-window.form-control{
+    min-height: 130px;
+    padding-top: 40px
+}
+[text-angular] { 
+  position : relative;
+}
+.ta-toolbar { 
+  position : absolute ;
+  top : 0;
+  right : 0;
+  z-index: 1;
+}
+#remove-widget{
+    position : absolute ;
+  top : 5px;
+  left : 10px;
+  z-index: 1;
+}
 

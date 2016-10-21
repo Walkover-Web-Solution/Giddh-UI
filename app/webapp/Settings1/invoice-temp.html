@@ -4,8 +4,7 @@
 		<button ng-click="ctrl.showAddTemplate()" class="btn btn-primary">Add New Template</button>
 	</div>
 
-	<div  class="clearfix">
-	<!-- ng-if="ctrl.showTemplate" -->
+	<div ng-if="ctrl.showTemplate" class="clearfix">
 
   	{{ctrl.widgets}}
 
@@ -13,7 +12,18 @@
       <div class="col-md-12">
 	      <section id="invoice-wrapper">
 	      	<div class="clearfix pdB2 form-inline">
-			      <div class="form-group">
+	      		
+	      		<div class="form-group">
+	      			<input type="text" name="ctrl.templateName" ng-model="ctrl.templateName" placeholder="Template Name" class="form-control">
+	      		</div>
+	      		<div class="form-group">
+			      	<a class="btn btn-success" ng-click="ctrl.saveTemplate()" href="javascript:void(0)">Save Template</a>
+			      </div>
+
+			      <div class="form-group pull-right">
+			      	<a class="btn btn-primary" ng-click="ctrl.addWidget()" href="javascript:void(0)">Add Widget</a>
+			      </div>
+			      <div class="form-group pull-right">
 				      <select
 			          required
 			          class="form-control"
@@ -22,20 +32,26 @@
 			          ng-options="item for item in ctrl.tempTypes">
 				      </select>
 				    </div>
-				    <div class="form-group">
-			      	<a class="btn btn-primary" ng-click="ctrl.addWidget()" href="javascript:void(0)">Add Widget</a>
-			      </div>
+				    
 			  	</div>
 
 	        <div gridster="ctrl.gridsterOptions">
 				    <ul>
 				      <li gridster-item="item" ng-repeat="item in ctrl.widgets">
-				      	<div class="panel panel-default">
-								  <div class="panel-heading">{{item.name}}</div>
-								  <div class="panel-body">
-								    Panel content
-								  </div>
-								</div>
+				      	<a id="remove-widget" title="Remove widget" ng-click="ctrl.removeWidget(item)"><i class="glyphicon glyphicon-trash"></i></a>
+
+							  <div ng-if="item.type === 'String'">
+							    <div text-angular ng-model="item.data" ta-toolbar="ctrl.toolbarOptions"></div>
+							  </div>
+
+							  <div ng-if="item.type === 'Image'">
+							 		<h1>Image Content</h1>
+							  </div>
+
+							  <div ng-if="item.type === 'Entry'">
+							  	<h1>Entry Content</h1>
+							  </div>
+								
 				      </li>
 				    </ul>
 					</div>

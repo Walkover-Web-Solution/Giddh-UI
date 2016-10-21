@@ -3,6 +3,7 @@ window.giddh = {}
 
 giddh.serviceModule = angular.module("serviceModule", ["LocalStorageModule", "ngResource", "ui.bootstrap"])
 
+# require('textangular/dist/textAngular-sanitize.min');
 giddh.webApp = angular.module("giddhWebApp",
   [
     "satellizer"
@@ -34,10 +35,10 @@ giddh.webApp = angular.module("giddhWebApp",
     "googlechart"
     "ngFileSaver"
     "gridster"
+    "textAngular"
   ]
 )
-# "textAngular"'textAngular'
-# 'textAngular': 'dist/textAngular.css'
+# 'textAngular' 
 
 giddh.webApp.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
