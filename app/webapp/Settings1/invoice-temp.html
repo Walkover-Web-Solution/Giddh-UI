@@ -1,0 +1,52 @@
+<div class="pd2">
+
+	<div class="clearfix mrB2">
+		<button ng-click="ctrl.showAddTemplate()" class="btn btn-primary">Add New Template</button>
+	</div>
+
+	<div  class="clearfix">
+	<!-- ng-if="ctrl.showTemplate" -->
+
+  	{{ctrl.widgets}}
+
+    <div class="row">
+      <div class="col-md-12">
+	      <section id="invoice-wrapper">
+	      	<div class="clearfix pdB2 form-inline">
+			      <div class="form-group">
+				      <select
+			          required
+			          class="form-control"
+			          name="ctrl.tempType"
+			          ng-model="ctrl.tempType"
+			          ng-options="item for item in ctrl.tempTypes">
+				      </select>
+				    </div>
+				    <div class="form-group">
+			      	<a class="btn btn-primary" ng-click="ctrl.addWidget()" href="javascript:void(0)">Add Widget</a>
+			      </div>
+			  	</div>
+
+	        <div gridster="ctrl.gridsterOptions">
+				    <ul>
+				      <li gridster-item="item" ng-repeat="item in ctrl.widgets">
+				      	<div class="panel panel-default">
+								  <div class="panel-heading">{{item.name}}</div>
+								  <div class="panel-body">
+								    Panel content
+								  </div>
+								</div>
+				      </li>
+				    </ul>
+					</div>
+					<!-- end gridster -->
+				</section>
+
+      </div>
+    </div>
+    <!-- end row -->
+
+
+	</div>
+
+</div>
