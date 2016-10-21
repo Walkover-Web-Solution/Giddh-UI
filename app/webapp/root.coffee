@@ -33,8 +33,11 @@ giddh.webApp = angular.module("giddhWebApp",
     "mgo-angular-wizard"
     "googlechart"
     "ngFileSaver"
+    "gridster"
   ]
 )
+# "textAngular"'textAngular'
+# 'textAngular': 'dist/textAngular.css'
 
 giddh.webApp.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
@@ -42,7 +45,8 @@ giddh.webApp.config (localStorageServiceProvider) ->
 
 giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   $urlRouterProvider.otherwise('/home')
-  appendThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
+  # $rootScope.prefixThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
+  appendThis = ""
   $stateProvider.state('/home',
     url: '/home'
     resolve: {
@@ -232,6 +236,12 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/settings'
     templateUrl: appendThis+'/public/webapp/Settings/settings.html'
     controller: 'settingsController'
+  )
+  .state('settings1',
+    url: '/settings1'
+    templateUrl: appendThis+'/public/webapp/Settings1/main.html'
+    controller: 'settingsVoneController'
+    controllerAs: 'ctrl'
   )
   $locationProvider.html5Mode(false)
   return

@@ -264,9 +264,9 @@ module.exports = function (grunt) {
           'angular-bootstrap'
         ],
         mainFiles: {
-          // 'bootstrap': 'dist/css/bootstrap.min.css',
           'perfect-scrollbar': 'css/perfect-scrollbar.min.css',
           'angular-toastr': 'dist/angular-toastr.min.css',
+          'angular-gridster': 'dist/angular-gridster.min.css',
           'ui-select': 'dist/select.min.css'
         },
         callback: function(mainFiles, component) {
@@ -316,7 +316,8 @@ module.exports = function (grunt) {
           'angular-fullpage.js',
           'angular-wizard',
           'angular-google-chart',
-          'angular-file-saver'
+          'angular-file-saver',
+          'angular-gridster'
         ],
         dependencies: {
           'jquery': 'modernizr',

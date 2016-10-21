@@ -3624,3 +3624,13 @@ tr.db-bnk-account > td.reconnectDiv{
 .pdL-0{
     padding-left: 0;
 }
+/*new invoice page*/
+#invoice-wrapper{
+  width: 760px;
+  margin: 0 auto;
+}
+.gridster-loaded .gridster-item{
+    background-color: rgba(242, 242, 242, 0.24);
+}
+
+
