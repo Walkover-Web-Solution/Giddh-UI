@@ -13,6 +13,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     {title: 'Linked Accounts', active:false}
     {title: 'Razorpay', active:false}
   ]
+  $scope.addRazorAccount = false
 
   $scope.razorPayDetail = {
     userName:""

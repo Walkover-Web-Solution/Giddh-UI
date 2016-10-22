@@ -550,11 +550,28 @@
               <input class="form-control" type="text" placeholder="Secret key" ng-model="razorPayDetail.password">
             </div>
             <div class="row pd1">
-              <div class="col-xs-1">
+              <div class="col-xs-3">
                 <button class="btn btn-default" ng-click="saveRazorPayDetails(razorPayDetail)">Save</button>
               </div>
-              <div class="col-xs-1">
-                <button class="btn btn-primary" ng-click="linkRazorPayAccount()">Link</button>
+              <div class="col-xs-8">
+                <div class="with" ng-if="razorPayDetail.account.uniqueName != null">
+                  Linked with: {{razorPayDetail.account.name}} ({{razorPayDetail.account.uniqueName}})
+                </div>
+                <div class="select-account" ng-if="card.showAccList">
+                  <ui-select ng-model="razorPayDetail.toLink" theme="bootstrap">
+                    <ui-select-match placeholder="Select Accounts">
+                      <span>{{$select.selected.name}}</span>
+                    </ui-select-match >
+                    <ui-select-choices
+                        ui-disable-choice="acc.uniqueName === selAcntUname"
+                        repeat="acc in AccountsListToLink | filter: $select.search | limitTo: 5">
+                      <span>{{acc.name}} ({{acc.uniqueName}})</span>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
+                <button class="btn btn-sm btn-warning pull-right" ng-if="card.showAccList" ng-disabled="card.reconnect" ng-click="card.showAccList = !card.showAccList" style="margin-top:5px">Not Now</button>
+                <button class="btn btn-sm btn-info" ng-if="card.linkedAccount == null && !card.showAccList" ng-disabled="card.reconnect" ng-click="linkGiddhAccount(card)">Link Account</button>
+                <button class="btn btn-sm btn-danger mrT1" ng-if="card.linkedAccount.name.length > 0" ng-disabled="card.reconnect" ng-click="removeGiddhAccount(card)">Unlink Account</button>
               </div>
             </div>
           </div>

@@ -177,5 +177,5 @@ revenue.controller('revenuechartController', revenuechartController)
 
 .directive 'revenueChart',[($locationProvider,$rootScope) -> {
   restrict: 'E'
-  templateUrl: 'https://test-fs8eefokm8yjj.stackpathdns.com/public/webapp/Dashboard/revenuepiechart/revenuepiechart.html'
+  templateUrl: '/public/webapp/Dashboard/revenuepiechart/revenuepiechart.html'
 }]
