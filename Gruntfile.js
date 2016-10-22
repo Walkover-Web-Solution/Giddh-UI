@@ -233,7 +233,7 @@ module.exports = function (grunt) {
       },
       prod: {
         NODE_ENV: 'PRODUCTION',
-        PREFIX_THIS: 'https://giddh-fs8eefokm8yjj.stackpathdns.com'
+        PREFIX_THIS: ''
       }
     },
     preprocess:{
