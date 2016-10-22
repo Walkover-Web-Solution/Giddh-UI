@@ -193,5 +193,5 @@ combined.controller('combinedController',combinedController)
 
 .directive 'combined',[($locationProvider,$rootScope) -> {
   restrict: 'E',
-  templateUrl: 'https://giddh-fs8eefokm8yjj.stackpathdns.com/public/webapp/Dashboard/networthNprofitloss/combined.html'
+  templateUrl: '/public/webapp/Dashboard/networthNprofitloss/combined.html'
 }]

@@ -181,7 +181,7 @@ pie.controller('piechartController', piechartController)
 
 .directive 'pieChart',[($locationProvider,$rootScope) -> {
   restrict: 'E'
-  templateUrl: 'https://giddh-fs8eefokm8yjj.stackpathdns.com/public/webapp/Dashboard/Expensepiechart/expensepiechart.html'
+  templateUrl: '/public/webapp/Dashboard/Expensepiechart/expensepiechart.html'
 #  controller: 'piechartController'
   link: (scope,elem,attr) ->
   #    console.log "pie chart scope : ",scope
