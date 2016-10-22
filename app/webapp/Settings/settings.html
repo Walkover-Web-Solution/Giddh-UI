@@ -557,21 +557,9 @@
                 <div class="with" ng-if="razorPayDetail.account.uniqueName != null">
                   Linked with: {{razorPayDetail.account.name}} ({{razorPayDetail.account.uniqueName}})
                 </div>
-                <div class="select-account" ng-if="card.showAccList">
-                  <ui-select ng-model="razorPayDetail.toLink" theme="bootstrap">
-                    <ui-select-match placeholder="Select Accounts">
-                      <span>{{$select.selected.name}}</span>
-                    </ui-select-match >
-                    <ui-select-choices
-                        ui-disable-choice="acc.uniqueName === selAcntUname"
-                        repeat="acc in AccountsListToLink | filter: $select.search | limitTo: 5">
-                      <span>{{acc.name}} ({{acc.uniqueName}})</span>
-                    </ui-select-choices>
-                  </ui-select>
-                </div>
-                <button class="btn btn-sm btn-warning pull-right" ng-if="card.showAccList" ng-disabled="card.reconnect" ng-click="card.showAccList = !card.showAccList" style="margin-top:5px">Not Now</button>
-                <button class="btn btn-sm btn-info" ng-if="card.linkedAccount == null && !card.showAccList" ng-disabled="card.reconnect" ng-click="linkGiddhAccount(card)">Link Account</button>
-                <button class="btn btn-sm btn-danger mrT1" ng-if="card.linkedAccount.name.length > 0" ng-disabled="card.reconnect" ng-click="removeGiddhAccount(card)">Unlink Account</button>
+                <button class="btn btn-sm btn-warning pull-right" style="margin-top:5px">Not Now</button>
+                <button class="btn btn-sm btn-info">Link Account</button>
+                <button class="btn btn-sm btn-danger mrT1">Unlink Account</button>
               </div>
             </div>
           </div>

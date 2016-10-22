@@ -9,6 +9,7 @@ app = angular.module("giddhApp", [
   "fullPage.js"
   "vcRecaptcha"
   "valid-number"
+  "razor-pay"
   ]
 )
 
@@ -40,6 +41,76 @@ directive 'validNumber', ->
     return
 
   }
+
+angular.module('razor-pay',[]).
+directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope', '$timeout', 'toastr', ($compile, $filter, $document, $parse, $rootScope, $timeout, toastr) ->
+  {
+  restrict: 'A'
+  scope: false
+  transclude: false
+  link: (scope, element, attrs) ->
+    scope.proceedToPay = (e, amount) ->
+      options = {
+        key: "rzp_test_6SDWNz3uMF944l"
+#        key: "rzp_live_xGAsAZIdwkmLJW"
+        amount: amount
+        name: "Giddh"
+        description: scope.randomUniqueName + " Subscription for Giddh"
+        image: "/public/website/images/logo.png"
+        handler: (response)->
+# hit api after success
+#          console.log response, "response after success"
+          sendThis = {
+            proformaUniqueName: scope.uniqueName
+            paymentId: response.razorpay_payment_id
+          }
+          scope.successPayment(sendThis)
+          # need to call payment api
+        prefill:
+          name: scope.basicInfo.name
+          email: scope.basicInfo.email
+          contact: "7828405888"
+        notes:
+          address: "505, C.S. Nayudu Arcade"
+        theme:
+          color: "#449d44"
+        order_id: scope.wlt.orderId
+      }
+      rzp1 = new Razorpay(options)
+      rzp1.open()
+      e.preventDefault()
+
+    element.on 'click', (e) ->
+      diff = scope.removeDotFromString(scope.wlt.Amnt)
+      scope.proceedToPay(e, Number(scope.wlt.Amnt)*100)
+  }
+]
+app.controller 'paymentCtrl', [
+  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter',
+  ($scope, toastr, $http, $location, $rootScope, $filter) ->
+    urlSearch = window.location.search
+    searchArr = urlSearch.split("=")
+    $scope.randomUniqueName = searchArr[1]
+    $scope.wlt = {
+      Amnt:100
+      orderId: ""
+    }
+    $scope.basicInfo = {
+      name: 'ravi soni'
+      email: 'ravisoni@walkover.in'
+    }
+    $scope.removeDotFromString = (str) ->
+      return Math.floor(Number(str))
+
+    $scope.successPayment = (data) ->
+      $http.post('/proforma/pay', data).then((response) ->
+        if(response.status == 200 && _.isUndefined(response.data.status))
+          toastr.success("Thanks! we will get in touch with you soon")
+        else
+          toastr.error(response.data.message)
+      )
+
+]
 
 app.controller 'homeCtrl', [
   '$scope', 'toastr', '$http', 'vcRecaptchaService', '$rootScope', '$location',
@@ -390,7 +461,7 @@ app.controller 'magicCtrl', [
                 $scope.creditTotal += Number(txn.amount)
 
 
-] 
+]
 
 
 app.controller 'successCtrl', [
