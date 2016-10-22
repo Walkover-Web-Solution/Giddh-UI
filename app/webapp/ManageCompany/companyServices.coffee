@@ -191,6 +191,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
     deleteWebhook:
       method: 'DELETE'
       url: '/company/:companyUniqueName/settings/webhooks/:webhookUniqueName'
+
+    addRazorPayDetail:
+      method: 'POST'
+      url: '/company/:companyUniqueName/razorpay'
   })
 
   companyServices =
@@ -383,6 +387,11 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
         companyUniqueName: companyUniqueName
         webhookUniqueName: webhookUniqueName
       }, onSuccess, onFailure))
+
+    addRazorPay: (companyUniqueName, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.addRazorPayDetail({
+        companyUniqueName: companyUniqueName
+      }, data, onSuccess, onFailure))
 
   companyServices
 
