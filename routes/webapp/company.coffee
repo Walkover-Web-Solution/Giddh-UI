@@ -618,6 +618,20 @@ router.delete '/:companyUniqueName/settings/webhooks/:webhookUniqueName', (req, 
       res.status(response.statusCode)
     res.send data
 
+
+router.get '/:companyUniqueName/razorpay', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/razorpay'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+
 router.post '/:companyUniqueName/razorpay', (req, res) ->
   hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/razorpay'
   args =
@@ -627,6 +641,31 @@ router.post '/:companyUniqueName/razorpay', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
   settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.patch '/:companyUniqueName/razorpay', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/razorpay'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.patch hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.delete '/:companyUniqueName/razorpay', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/razorpay'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.delete hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data

@@ -824,6 +824,9 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   $scope.linkRazorPayAccount = () ->
     return
 
+  $scope.updateRazorPayDetails = () ->
+    return
+
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       _.each($scope.tabs, (tab) ->

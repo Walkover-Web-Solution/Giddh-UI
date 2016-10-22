@@ -192,8 +192,20 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       method: 'DELETE'
       url: '/company/:companyUniqueName/settings/webhooks/:webhookUniqueName'
 
+    getRazorPayDetail:
+      method: 'GET'
+      url: '/company/:companyUniqueName/razorpay'
+
     addRazorPayDetail:
       method: 'POST'
+      url: '/company/:companyUniqueName/razorpay'
+
+    updateRazorPayDetail:
+      method: 'PATCH'
+      url: '/company/:companyUniqueName/razorpay'
+
+    deleteRazorPayDetail:
+      method: 'DELETE'
       url: '/company/:companyUniqueName/razorpay'
   })
 
@@ -388,10 +400,25 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
         webhookUniqueName: webhookUniqueName
       }, onSuccess, onFailure))
 
+    getRazorPay: (companyUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Company.getRazorPayDetail({
+        companyUniqueName: companyUniqueName
+      }, onSuccess, onFailure))
+
     addRazorPay: (companyUniqueName, data) ->
       @handlePromise((onSuccess, onFailure) -> Company.addRazorPayDetail({
         companyUniqueName: companyUniqueName
       }, data, onSuccess, onFailure))
+
+    updateRazorPay: (companyUniqueName, data) ->
+      @handlePromise((onSuccess, onFailure) -> Company.updateRazorPayDetail({
+        companyUniqueName: companyUniqueName
+      }, data, onSuccess, onFailure))
+
+    deleteRazorPay: (companyUniqueName) ->
+      @handlePromise((onSuccess, onFailure) -> Company.deleteRazorPayDetail({
+        companyUniqueName: companyUniqueName
+      }, onSuccess, onFailure))
 
   companyServices
 
