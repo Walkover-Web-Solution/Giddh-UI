@@ -42,6 +42,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     currentPage : 1
     limit: 5
   }
+  $rootScope.queryFltAccnt = []
   $rootScope.fltAccntListPaginated = []
   $rootScope.fltAccountListFixed = []
   $rootScope.CompanyList = []
@@ -401,6 +402,20 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.getCroppedAccListFailure = (res) ->
     $scope.gettingCroppedAccount = false
     toastr.error(res.data.message)
+
+  $rootScope.getFlatAccntsByQuery = (compUName, query) ->
+    reqParam = {
+      companyUniqueName: compUname
+      q: query
+    }
+    groupService.getFlatAccList(reqParam).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)
+
+  $scope.flatAccntQuerySuccess = (res) ->
+    $rootScope.queryFltAccnt = res.body.results
+
+  $scope.flatAccntQueryFailure = (res) ->
+    toastr.error(res.data.message)
+
 
   $scope.workInProgress = false
   $rootScope.getFlatAccountList = (compUname) ->
