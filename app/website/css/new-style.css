@@ -529,7 +529,7 @@ body.light .navbar.transparent{
 .navbar-custom .navbar-nav > li > a {
 	font-family: 'Helvetica', Arial, serif;
 	font-weight: 400;
-  color: #E34A26;
+  color: #26263A;
   line-height: 36px;
   font-size: 22px;
   padding: 10px 22px;
@@ -543,14 +543,14 @@ body.light .navbar.transparent{
     text-decoration-color: #E34A26;
 }
 .navbar-custom.affix .navbar-nav > li > a.white{
-	color:#E34A26;
+	color:#26263A;
 }
 
 .navbar-custom .navbar-nav > li > div.row > label.white{
     color:#fff;
 }
 .navbar-custom.affix .navbar-nav > li > div.row > label.white{
-    color:#E34A26;
+    color:#26263A;
 }
 
 .navbar-custom .navbar-nav > li > a.active, .navbar-custom .navbar-nav > li > a:visited, .navbar-custom .navbar-nav > li > a:hover {
