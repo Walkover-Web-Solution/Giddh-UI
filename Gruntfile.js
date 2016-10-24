@@ -268,8 +268,7 @@ module.exports = function (grunt) {
           'angular-toastr': 'dist/angular-toastr.min.css',
           'angular-gridster': 'dist/angular-gridster.min.css',
           'ui-select': 'dist/select.min.css',
-          'font-awesome': 'css/font-awesome.min.css',
-          'textAngular': 'dist/textAngular.css'
+          'font-awesome': 'css/font-awesome.min.css'
         },
         callback: function(mainFiles, component) {
           return _.map(mainFiles, function(filepath) {
@@ -319,7 +318,9 @@ module.exports = function (grunt) {
           'angular-wizard',
           'angular-google-chart',
           'angular-file-saver',
-          'angular-gridster'
+          'angular-gridster',
+          'angular-ui-tinymce',
+          'ment.io'
         ],
         dependencies: {
           'jquery': 'modernizr',

@@ -1,4 +1,7 @@
 SettingsVoneController = ($rootScope) ->
+  # assign universal this for ctrl
+  $this = @;
+
   @showTemplate = false
   @tabs = [
     {
@@ -12,14 +15,39 @@ SettingsVoneController = ($rootScope) ->
       "template":"/public/webapp/Settings1/dummy-temp.html"
     }
   ]
-  @tempTypes = [ "Image", "String", "Entry"]
+  @tempTypes = [ "Image", "String", "Entry", "Tosec"]
   @tempType = "String"
+
+  @peoples = [
+    { label: 'Joe'},
+    { label: 'Mike'},
+    { label: 'Diane'}
+  ]
+  @tinymceOptions = {
+    inline: false
+    menubar: false
+    toolbar: 'bold italic | h1 h2 h3'
+    skin: 'lightgray'
+    theme : 'modern'
+    statusbar: false
+  };
+
+  @tinymceOptionsWithMentio = {
+    inline: false
+    menubar: false
+    toolbar: 'bold italic | h1 h2 h3'
+    skin: 'lightgray'
+    theme : 'modern'
+    statusbar: false
+    init_instance_callback: (editor) ->
+      $this.iframeElement = editor.iframeElement
+  };
 
   # gridstack vars
   @widgets = [
     { sizeX: 6, sizeY: 1, row: 1, col: 0, name: "widget_0", data:"", type: 'Image' }
     { sizeX: 6, sizeY: 1, row: 1, col: 9, name: "widget_1", data:"", type: 'Image' }
-    { sizeX: 7, sizeY: 1, row: 1, col: 17, name: "widget_2", data:"", type: 'String'}
+    { sizeX: 7, sizeY: 1, row: 1, col: 17, name: "widget_2", data:"", type: 'Tosec'}
     { sizeX: 24, sizeY: 1, row: 2, col: 0, name: "widget_4", data:"", type: 'String' }
   ]
   @gridsterOptions = {
@@ -41,24 +69,13 @@ SettingsVoneController = ($rootScope) ->
     maxRows: 20, 
     resizable: {
        enabled: true,
-       handles: ['n', 'e', 's', 'ne', 'se', 'sw']
+       handles: ['n', 'e', 'w', 's', 'ne', 'se', 'sw', 'nw']
     },
     draggable: {
        enabled: true 
        # handle: '.my-class'
     }
-  };
-
-  # html editor option
-  @toolbarOptions = [
-    ['h1', 'h2', 'h3'],
-    ['bold']
-  ];
-  # ['html', 'insertImage','insertLink', 'insertVideo', 'wordcount', 'charcount']
-  
-
-  # assign universal this for ctrl
-  $this = @;
+  }
 
   @showAddTemplate = ->
     console.log "in showAddTemplate"

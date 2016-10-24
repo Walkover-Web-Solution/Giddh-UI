@@ -5,9 +5,7 @@
 	</div>
 
 	<div ng-if="ctrl.showTemplate" class="clearfix">
-
-  	{{ctrl.widgets}}
-
+	
     <div class="row">
       <div class="col-md-12">
 	      <section id="invoice-wrapper">
@@ -41,7 +39,13 @@
 				      	<a id="remove-widget" title="Remove widget" ng-click="ctrl.removeWidget(item)"><i class="glyphicon glyphicon-trash"></i></a>
 
 							  <div ng-if="item.type === 'String'">
-							    <div text-angular ng-model="item.data" ta-toolbar="ctrl.toolbarOptions"></div>
+							    <textarea ui-tinymce="ctrl.tinymceOptions" 
+										ng-model='item.data'></textarea>
+							  </div>
+
+							  <div ng-if="item.type === 'Tosec'">
+							    <textarea ui-tinymce="ctrl.tinymceOptionsWithMentio" 
+										ng-model='item.data' mentio mentio-typed-text="typedTerm" mentio-items="ctrl.peoples | filter:label:typedTerm" mentio-iframe-element="ctrl.iframeElement"></textarea>
 							  </div>
 
 							  <div ng-if="item.type === 'Image'">
