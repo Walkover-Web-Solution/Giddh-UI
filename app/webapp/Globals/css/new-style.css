@@ -3639,4 +3639,7 @@ tr.db-bnk-account > td.reconnectDiv{
   right : 10px;
   z-index: 1;
 }
+#invoice-wrapper .thumb{
+    width: 48px;
+}
 

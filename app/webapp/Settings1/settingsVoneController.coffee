@@ -1,6 +1,10 @@
-SettingsVoneController = ($rootScope) ->
+SettingsVoneController = ($rootScope, Upload, $timeout) ->
+
+  @Upload = Upload
+  @$rootScope = $rootScope
   # assign universal this for ctrl
   $this = @;
+  
 
   @showTemplate = false
   @tabs = [
@@ -87,8 +91,19 @@ SettingsVoneController = ($rootScope) ->
 
   @addWidget = ->
     getLastWidName = $this.getWidgetArrLength()
-    console.log($this.tempType, getLastWidName)
+    
+    # init obj with default param
     newWidget = { sizeX: 12, sizeY: 1, row: 1, col: 0, name: getLastWidName, data:"", type: $this.tempType }
+
+    console.log($this.tempType, getLastWidName)
+    
+    # "Image", "String", "Entry", "Tosec"
+    switch $this.tempType
+      when 'Entry'
+        newWidget.sizeX = 24
+      else
+        console.log "Else"
+
     $this.widgets.push(newWidget)
 
   @removeWidget = (w) ->
@@ -98,11 +113,18 @@ SettingsVoneController = ($rootScope) ->
   @saveTemplate = ->
     console.log($this.widgets, $this.templateName)
     console.log "hit api for saveTemplate"
+
+  @resetUpload =()->
+    console.log("resetUpload")
+
+  # upload Images
+  @uploadImages =(files,type)->
+    console.log(files,type, "uploadImages")
     
 
   
   return
 
-SettingsVoneController.$inject = ['$rootScope']
+SettingsVoneController.$inject = ['$rootScope', 'Upload', '$timeout']
 
 giddh.webApp.controller('settingsVoneController', SettingsVoneController)

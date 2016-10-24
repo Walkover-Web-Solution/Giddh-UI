@@ -5,7 +5,9 @@
 	</div>
 
 	<div ng-if="ctrl.showTemplate" class="clearfix">
-	
+
+		{{ctrl.widgets}}
+
     <div class="row">
       <div class="col-md-12">
 	      <section id="invoice-wrapper">
@@ -36,7 +38,7 @@
 	        <div gridster="ctrl.gridsterOptions">
 				    <ul>
 				      <li gridster-item="item" ng-repeat="item in ctrl.widgets">
-				      	<a id="remove-widget" title="Remove widget" ng-click="ctrl.removeWidget(item)"><i class="glyphicon glyphicon-trash"></i></a>
+				      	<a href="javascript:void(0)" id="remove-widget" title="Remove widget" ng-click="ctrl.removeWidget(item)"><i class="glyphicon glyphicon-trash"></i></a>
 
 							  <div ng-if="item.type === 'String'">
 							    <textarea ui-tinymce="ctrl.tinymceOptions" 
@@ -49,11 +51,35 @@
 							  </div>
 
 							  <div ng-if="item.type === 'Image'">
-							 		<h1>Image Content</h1>
+							 		<form class="form-inline" enctype="multipart/form-data">
+							      <div class="form-group">
+							        <span >
+							          <button type="file" 
+							            ng-model="item.uploadFile"
+							            class="btn btn-primary" 
+							            ngf-select="ctrl.uploadImages($files,'logo')"
+							            ngf-pattern="image/*"
+							            accept="image/*"
+							            ngf-max-size="200KB"
+							            ngf-multiple="false"
+							          >
+							            <i class="glyphicon glyphicon-folder-open"></i> 
+							            &nbsp; Upload Logo</button><br/>
+							          <small>* Image size should be max 200KB</small>
+							        </span>
+							      </div>
+							      <div class="form-group">
+							        <img ngf-src="item.uploadFile" class="thumb">
+							        <a href="javascript:void(0)" ng-click="item.uploadFile = null">Reset Logo</a>
+							      </div>
+							    </form>
 							  </div>
+							  <!-- end upload image section -->
 
 							  <div ng-if="item.type === 'Entry'">
-							  	<h1>Entry Content</h1>
+							  	<div class="greyBg alC">
+			              <div class="mrT4">Particulars will shown here</div>
+			            </div>
 							  </div>
 								
 				      </li>
