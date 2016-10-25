@@ -408,7 +408,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       q: query
     }
-    groupService.getFlatAccList(reqParam).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)
+    if query.length > 2
+      groupService.getFlatAccList(reqParam).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)
 
   $scope.flatAccntQuerySuccess = (res) ->
     $rootScope.queryFltAccnt = res.body.results
