@@ -27,6 +27,59 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
     ), interval
 ]
 
+# invoice widget
+.directive 'invoiceWidget', [() ->
+  restrict: 'E|A'
+  #called IFF compile not defined
+  link: (scope, elem, attr) ->
+    elem = $(elem)
+    input = elem.find('textarea')
+    clickEvent = true
+    cancelClick = null
+    div = elem.find('.matter')
+    selectedText = ''
+
+    noClick = () ->
+      clickEvent = false
+
+    elem.on('mousedown', (e)->
+      cancelClick = setTimeout(noClick, 200)
+    )
+
+    elem.on('mouseup', (e) ->
+      clearTimeout( cancelClick )
+      if clickEvent
+        input.trigger('focus')
+      else
+        selectedText = window.getSelection().toString()
+        # get selected text
+        if selectedText.length > 0
+          start = scope.widget.text.indexOf(selectedText)
+          end = start + selectedText.length
+          strArray = scope.widget.text.split(selectedText)
+          selectedText = " <b>" + selectedText + "</b> "
+          result = ""
+          strArray.forEach((str, idx)->
+            if idx < strArray.length - 1
+              result = str + " " + selectedText
+            else
+              result += str
+          )
+          scope.widget.text = result
+
+      clickEvent = true
+    )
+
+
+
+
+]
+
+
+
+
+
+
 # convert digit to words
 giddh.webApp.filter 'numtowords', ->
 
@@ -843,3 +896,4 @@ angular.module('ledger', [])
       if q.name.match(p) or q.uniqueName.match(p) or q.mergedAccounts.length > 0 && q.mergedAccounts.match(p)
         result.push q
     result
+

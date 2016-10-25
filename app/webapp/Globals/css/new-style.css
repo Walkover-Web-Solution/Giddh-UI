@@ -3623,8 +3623,37 @@ tr.db-bnk-account > td.reconnectDiv{
 
 .pdL-0{
     padding-left: 0;
+
+
+.invoice-widget{
+   width:400px;
+   height:400px;
+   border: 1px solid #e0e0e0 ;
+   margin:0 5px;
+   padding:5px;
+   position: relative;
 }
-/*new invoice page*/
+
+.invoice-widget textarea{
+   opacity:0;
+   position: absolute;
+   top:40px;
+   bottom:0;
+   left:0;
+   right:0;
+   z-index: 1;
+}
+
+.invoice-widget > .matter{
+   height:100%;
+   width:100%;
+   z-index: 2;
+   left: 0;
+   right: 0;
+   top: 40px;
+   bottom: 0;
+   position:absolute;
+}/*new invoice page*/
 #invoice-wrapper{
   width: 760px;
   margin: 0 auto;

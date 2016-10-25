@@ -3,6 +3,14 @@
     <div class="container-fluid row mrT2">
       <div class="col-xs-12">
         <div class="col-xs-4 padding-0">
+          <div invoice-widget class="invoice-widget">
+            <button id="" class="btn btn-default">Bold</button>
+            <div class="matter" ng-bind-html="widget.text"></div>
+            <textarea ng-model="widget.text"></textarea>
+          </div>
+
+        </div>
+        <div class="col-xs-4 padding-0">
           <live-account ng-controller="liveaccountsController"></live-account>
         </div>
         <div class="col-xs-4 padding-0">
