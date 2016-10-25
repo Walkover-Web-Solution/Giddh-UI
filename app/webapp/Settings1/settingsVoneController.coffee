@@ -1,11 +1,12 @@
-SettingsVoneController = ($rootScope, Upload, $timeout) ->
+SettingsVoneController = ($rootScope, Upload, $timeout, toastr) ->
 
   @Upload = Upload
   @$rootScope = $rootScope
+  @$timeout = $timeout
+  @toastr = toastr
   # assign universal this for ctrl
   $this = @;
   
-
   @showTemplate = false
   @tabs = [
     {
@@ -19,7 +20,7 @@ SettingsVoneController = ($rootScope, Upload, $timeout) ->
       "template":"/public/webapp/Settings1/dummy-temp.html"
     }
   ]
-  @tempTypes = [ "Image", "String", "Entry", "Tosec"]
+  @tempTypes = [ "Image", "String", "Entry"]
   @tempType = "String"
 
   @peoples = [
@@ -27,32 +28,14 @@ SettingsVoneController = ($rootScope, Upload, $timeout) ->
     { label: 'Mike'},
     { label: 'Diane'}
   ]
-  @tinymceOptions = {
-    inline: false
-    menubar: false
-    toolbar: 'bold italic | h1 h2 h3'
-    skin: 'lightgray'
-    theme : 'modern'
-    statusbar: false
-  };
-
-  @tinymceOptionsWithMentio = {
-    inline: false
-    menubar: false
-    toolbar: 'bold italic | h1 h2 h3'
-    skin: 'lightgray'
-    theme : 'modern'
-    statusbar: false
-    init_instance_callback: (editor) ->
-      $this.iframeElement = editor.iframeElement
-  };
+  
 
   # gridstack vars
   @widgets = [
-    { sizeX: 6, sizeY: 1, row: 1, col: 0, name: "widget_0", data:"", type: 'Image' }
-    { sizeX: 6, sizeY: 1, row: 1, col: 9, name: "widget_1", data:"", type: 'Image' }
-    { sizeX: 7, sizeY: 1, row: 1, col: 17, name: "widget_2", data:"", type: 'Tosec'}
-    { sizeX: 24, sizeY: 1, row: 2, col: 0, name: "widget_4", data:"", type: 'String' }
+    { sizeX: 6, sizeY: 3, row: 1, col: 0, name: "widget_0", data:"", type: 'Image' }
+    { sizeX: 6, sizeY: 2, row: 1, col: 9, name: "widget_1", data:"", type: 'String' }
+    { sizeX: 7, sizeY: 2, row: 1, col: 17, name: "widget_2", data:"", type: 'String'}
+    { sizeX: 24, sizeY: 2, row: 4, col: 0, name: "widget_4", data:"", type: 'String' }
   ]
   @gridsterOptions = {
     columns: 24,
@@ -61,7 +44,7 @@ SettingsVoneController = ($rootScope, Upload, $timeout) ->
     swapping: false,
     width: 'auto',
     colWidth: 'auto',
-    rowHeight: 200, 
+    rowHeight: 50, 
     margins: [5, 5], # the pixel distance between each widget
     outerMargin: true, # whether margins apply to outer edges of the grid
     sparse: false, # "true" can increase performance of dragging and resizing for big grid (e.g. 20x50)
@@ -73,11 +56,11 @@ SettingsVoneController = ($rootScope, Upload, $timeout) ->
     maxRows: 20, 
     resizable: {
        enabled: true,
-       handles: ['n', 'e', 'w', 's', 'ne', 'se', 'sw', 'nw']
+       handles: ['e','s', 'se', 'sw', 'nw']
     },
     draggable: {
        enabled: true 
-       # handle: '.my-class'
+       handle: '.gridster-item-heading'
     }
   }
 
@@ -86,23 +69,40 @@ SettingsVoneController = ($rootScope, Upload, $timeout) ->
     $this.showTemplate = true
 
   @getWidgetArrLength = ->
-    len = $this.widgets.length
-    return "widget_"+len
+    return $this.widgets.length
+
+  @getLastRowPos = ->
+    _.max($this.widgets, (obj)->
+      return obj.row 
+    )
+
+  @checkEntryWidget = ->
+    return _.findWhere($this.widgets, {type: 'Entry'})
+
 
   @addWidget = ->
-    getLastWidName = $this.getWidgetArrLength()
+
+    getLastRow = $this.getLastRowPos()
+    getLastRowPos = getLastRow.row + getLastRow.sizeY
+    getLastWidName = "widget_"+$this.getWidgetArrLength()
     
     # init obj with default param
-    newWidget = { sizeX: 12, sizeY: 1, row: 1, col: 0, name: getLastWidName, data:"", type: $this.tempType }
-
-    console.log($this.tempType, getLastWidName)
+    newWidget = { sizeX: 12, sizeY: 2, row: getLastRowPos, col: 0, name: getLastWidName, data:"", type: $this.tempType }
     
     # "Image", "String", "Entry", "Tosec"
     switch $this.tempType
       when 'Entry'
-        newWidget.sizeX = 24
+        # checking if already have entry widget than prevent user to add new one
+        isHaveEntryWidgetObj = $this.checkEntryWidget()    
+        if !_.isUndefined(isHaveEntryWidgetObj)
+          $this.toastr.warning("Can't add more than once Entry widget", "Warning")
+          return false
+        else
+          newWidget.sizeX = 24
+          newWidget.sizeY = 4
+          newWidget.maxSizeY= 4
       else
-        console.log "Else"
+        console.log "Else case"
 
     $this.widgets.push(newWidget)
 
@@ -112,7 +112,10 @@ SettingsVoneController = ($rootScope, Upload, $timeout) ->
 
   @saveTemplate = ->
     console.log($this.widgets, $this.templateName)
-    console.log "hit api for saveTemplate"
+    if _.isUndefined($this.templateName) || _.isEmpty($this.templateName)
+      $this.toastr.warning("Template name can't be empty", "Warning")
+    else
+      console.log "hit api for saveTemplate"
 
   @resetUpload =()->
     console.log("resetUpload")
@@ -125,6 +128,6 @@ SettingsVoneController = ($rootScope, Upload, $timeout) ->
   
   return
 
-SettingsVoneController.$inject = ['$rootScope', 'Upload', '$timeout']
+SettingsVoneController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr']
 
 giddh.webApp.controller('settingsVoneController', SettingsVoneController)

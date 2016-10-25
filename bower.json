@@ -53,13 +53,12 @@
     "angular-google-chart": "~0.1.0",
     "angular-file-saver": "^1.1.2",
     "angular-gridster": "^0.13.15",
-    "ment.io": "^0.9.24",
-    "angular-ui-tinymce": "^0.0.17"
+    "ment.io": "^0.9.24"
   },
   "resolutions": {
     "angular": "~1.4.4",
     "jspdf": "~1.1.135",
-    "jquery": ">= 2.0.3"
+    "jquery": "~2.0.3"
   },
   "description": "",
   "main": "",

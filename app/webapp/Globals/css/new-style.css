@@ -3632,14 +3632,22 @@ tr.db-bnk-account > td.reconnectDiv{
 .gridster-loaded .gridster-item{
     background-color: rgba(242, 242, 242, 0.24);
 }
+.gridster-item-heading{
+    position: relative;
+    min-height: 24px;
+    background-color: #ddd;
+}
 
 #remove-widget{
   position : absolute ;
-  top : 10px;
+  top : 4px;
   right : 10px;
   z-index: 1;
 }
 #invoice-wrapper .thumb{
     width: 48px;
+}
+.gridster-item-body .textarea.form-control{
+    height: 100%
 }
 

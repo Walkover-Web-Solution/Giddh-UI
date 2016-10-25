@@ -21,6 +21,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-execute');
   grunt.loadNpmTasks('grunt-processhtml');
 
+// https://test-fs8eefokm8yjj.stackpathdns.com test dev
+
   srcDir = 'app/';
   destDir = 'public/';
   routeSrcDir = 'routes/';
@@ -229,7 +231,7 @@ module.exports = function (grunt) {
     env: {
       dev: {
         NODE_ENV: 'DEVELOPMENT',
-        PREFIX_THIS: 'https://test-fs8eefokm8yjj.stackpathdns.com'
+        PREFIX_THIS: ''
       },
       prod: {
         NODE_ENV: 'PRODUCTION',
@@ -319,7 +321,6 @@ module.exports = function (grunt) {
           'angular-google-chart',
           'angular-file-saver',
           'angular-gridster',
-          'angular-ui-tinymce',
           'ment.io'
         ],
         dependencies: {

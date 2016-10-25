@@ -4,7 +4,9 @@ module.exports.path = require('path')
 module.exports.router = module.exports.express.Router()
 Client = require('node-rest-client').Client
 module.exports.client = new Client()
-module.exports.envUrl = process.env.API_URL || "http://apitest.giddh.com/"
+# module.exports.envUrl = process.env.API_URL || "http://apitest.giddh.com/"
+module.exports.envUrl = "https://api.giddh.com/"
+
 #module.exports.envUrl = "http://192.168.1.94:9292/giddh-api/"
 #module.exports.envUrl = "http://apites1.giddh.com/"
 module.exports.googleKey = process.env.GOOGLE_KEY || "eWzLFEb_T9VrzFjgE40Bz6_l"

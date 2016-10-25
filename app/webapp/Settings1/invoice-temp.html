@@ -6,7 +6,9 @@
 
 	<div ng-if="ctrl.showTemplate" class="clearfix">
 
-		{{ctrl.widgets}}
+		<div class="alert alert-info mrB1" role="alert">
+			For make text bold use #b and end with #b.
+		</div>
 
     <div class="row">
       <div class="col-md-12">
@@ -17,7 +19,7 @@
 	      			<input type="text" name="ctrl.templateName" ng-model="ctrl.templateName" placeholder="Template Name" class="form-control">
 	      		</div>
 	      		<div class="form-group">
-			      	<a class="btn btn-success" ng-click="ctrl.saveTemplate()" href="javascript:void(0)">Save Template</a>
+			      	<button ng-disabled="ctrl.templateName === undefined" class="btn btn-success" ng-click="ctrl.saveTemplate()" href="javascript:void(0)">Save Template</button>
 			      </div>
 
 			      <div class="form-group pull-right">
@@ -38,22 +40,24 @@
 	        <div gridster="ctrl.gridsterOptions">
 				    <ul>
 				      <li gridster-item="item" ng-repeat="item in ctrl.widgets">
-				      	<a href="javascript:void(0)" id="remove-widget" title="Remove widget" ng-click="ctrl.removeWidget(item)"><i class="glyphicon glyphicon-trash"></i></a>
 
-							  <div ng-if="item.type === 'String'">
-							    <textarea ui-tinymce="ctrl.tinymceOptions" 
-										ng-model='item.data'></textarea>
-							  </div>
+				      	<!-- imp handle to move widget -->
+				      	<div class="gridster-item-heading clearfix">
+				      		<a href="javascript:void(0)" title="Move widget"><i class="glyphicon glyphicon-move"></i></a>
 
-							  <div ng-if="item.type === 'Tosec'">
-							    <textarea ui-tinymce="ctrl.tinymceOptionsWithMentio" 
-										ng-model='item.data' mentio mentio-typed-text="typedTerm" mentio-items="ctrl.peoples | filter:label:typedTerm" mentio-iframe-element="ctrl.iframeElement"></textarea>
-							  </div>
+				      		<a href="javascript:void(0)" id="remove-widget" title="Remove widget" ng-click="ctrl.removeWidget(item)"><i class="glyphicon glyphicon-trash"></i></a>
+				      	</div>
+				      	<!-- end handle -->
 
-							  <div ng-if="item.type === 'Image'">
-							 		<form class="form-inline" enctype="multipart/form-data">
-							      <div class="form-group">
-							        <span >
+				      	<div class="gridster-item-body">
+
+								  <div ng-if="item.type === 'String'">
+								    <textarea class="form-control" ng-model='item.data' mentio mentio-typed-text="typedTerm" mentio-items="ctrl.peoples | filter:label:typedTerm"></textarea>
+								  </div>
+
+								  <div ng-if="item.type === 'Image'">
+								 		<form class="form-inline" enctype="multipart/form-data">
+								      <div class="form-group" ng-hide="item.uploadFile">
 							          <button type="file" 
 							            ng-model="item.uploadFile"
 							            class="btn btn-primary" 
@@ -66,22 +70,24 @@
 							            <i class="glyphicon glyphicon-folder-open"></i> 
 							            &nbsp; Upload Logo</button><br/>
 							          <small>* Image size should be max 200KB</small>
-							        </span>
-							      </div>
-							      <div class="form-group">
-							        <img ngf-src="item.uploadFile" class="thumb">
-							        <a href="javascript:void(0)" ng-click="item.uploadFile = null">Reset Logo</a>
-							      </div>
-							    </form>
-							  </div>
-							  <!-- end upload image section -->
+								      </div>
+								      <div class="form-group" ng-if="item.uploadFile">
+								        <img ngf-src="item.uploadFile" class="thumb">
+								        <a href="javascript:void(0)" ng-click="item.uploadFile = null">Reset Logo</a>
+								      </div>
+								    </form>
+								  </div>
+								  <!-- end upload image section -->
 
-							  <div ng-if="item.type === 'Entry'">
-							  	<div class="greyBg alC">
-			              <div class="mrT4">Particulars will shown here</div>
-			            </div>
-							  </div>
+								  <div ng-if="item.type === 'Entry'">
+								  	<div class="greyBg alC">
+				              <div class="mrT4">Particulars will shown here</div>
+				            </div>
+								  </div>
 								
+								</div>
+								<!-- end body -->
+
 				      </li>
 				    </ul>
 					</div>
