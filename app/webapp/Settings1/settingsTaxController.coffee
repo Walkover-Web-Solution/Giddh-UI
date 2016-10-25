@@ -7,7 +7,7 @@ SettingsTaxController = ($rootScope, Upload, $timeout, toastr) ->
   # assign universal this for ctrl
   $this = @;
 
-  console.log("controller loaded SettingsTaxController")
+  console.log("in SettingsTaxController")
   
   # local vars for tax module
   @taxTypes = [

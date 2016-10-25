@@ -3,7 +3,7 @@
     
       <uib-tabset justified="false">
         <uib-tab ng-repeat="tab in vm.tabs" heading="{{ tab.heading }}" active="tab.active">
-          <div ng-include="tab.template"></div>
+          <div ng-if="tab.active" ng-include="tab.template"></div>
         </uib-tab>
       </uib-tabset>
 
