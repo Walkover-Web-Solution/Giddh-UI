@@ -1,4 +1,4 @@
-SettingsVoneController = ($rootScope, Upload, $timeout, toastr) ->
+SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr) ->
 
   @Upload = Upload
   @$rootScope = $rootScope
@@ -8,18 +8,6 @@ SettingsVoneController = ($rootScope, Upload, $timeout, toastr) ->
   $this = @;
   
   @showTemplate = false
-  @tabs = [
-    {
-      "heading": "Templates"
-      "active": true
-      "template":"/public/webapp/Settings1/invoice-temp.html"
-    }
-    {
-      "heading": "Dummy"
-      "active": false
-      "template":"/public/webapp/Settings1/dummy-temp.html"
-    }
-  ]
   @tempTypes = [ "Image", "String", "Entry"]
   @tempType = "String"
 
@@ -128,6 +116,6 @@ SettingsVoneController = ($rootScope, Upload, $timeout, toastr) ->
   
   return
 
-SettingsVoneController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr']
+SettingsInvoiceController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr']
 
-giddh.webApp.controller('settingsVoneController', SettingsVoneController)
+giddh.webApp.controller('settingsInvoiceController', SettingsInvoiceController)

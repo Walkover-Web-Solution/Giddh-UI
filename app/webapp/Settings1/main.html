@@ -2,7 +2,7 @@
   <div  class="middleBody bdrR bdrL row" auto-height style="overflow-y:scroll;">
     
       <uib-tabset justified="false">
-        <uib-tab ng-repeat="tab in ctrl.tabs" heading="{{ tab.heading }}" active="tab.active">
+        <uib-tab ng-repeat="tab in vm.tabs" heading="{{ tab.heading }}" active="tab.active">
           <div ng-include="tab.template"></div>
         </uib-tab>
       </uib-tabset>
