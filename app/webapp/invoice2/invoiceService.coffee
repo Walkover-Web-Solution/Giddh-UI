@@ -6,11 +6,20 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
       'companyUniqueName': @companyUniqueName
       'date1': @date1
       'date2': @date2
+      'combined': @combined
     },
     {
       getAll: {
         method: 'GET'
         url: '/company/:companyUniqueName/invoices?from=:date1&to=:date2'
+      }
+      getAllLedgers: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/invoices/ledgers?from=:date1&to=:date2'
+      }
+      generateBulkInvoice: {
+        method: 'POST'
+        url: '/company/:comapnyUniqueName/invoices/bulk-generate?combined=:combined'
       }
     })
 
@@ -23,11 +32,23 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
       deferred.promise
 
     getInvoices: (info) ->
-      console.log(info)
       @handlePromise((onSuccess, onFailure) -> Invoice.getAll({
         companyUniqueName: info.companyUniqueName
         date1: info.fromDate
         date2: info.toDate
       }, info, onSuccess, onFailure))
+
+    getAllLedgers: (info, data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.getAllLedgers({
+        companyUniqueName: info.companyUniqueName
+        date1: info.fromDate
+        date2: info.toDate
+      }, onSuccess, onFailure))
+
+    generateBulkInvoice: (info, data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.generateBulkInvoice({
+        companyUniqueName: info.companyUniqueName
+        combined: info.combined
+      }, data, onSuccess, onFailure))
 
   invoiceService

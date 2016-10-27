@@ -3625,10 +3625,19 @@ tr.db-bnk-account > td.reconnectDiv{
     padding-left: 0;
 }
 
+.custom-tabset{
+    padding: 0px 12px;
+}
+
 .custom-tabset ul{
-    background: transparent;
+    background: transparent !important;
 }
 
 .custom-tabset ul li{
     border: 0px;
+}
+
+.custom-tabset ul li a{
+    border: 0px !important;
+    border-bottom: 1px solid #ddd !important;
 }

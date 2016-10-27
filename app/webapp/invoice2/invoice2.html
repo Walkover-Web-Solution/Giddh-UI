@@ -6,38 +6,7 @@
             <div class="col-xs-11" auto-height style="overflow-y: scroll;">
               <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">
                 <uib-tabset class="custom-tabset">
-                  <uib-tab class="mrB1" heading="View">
-                      <div class="row mr1">
-                        <!--<div class="col-xs-3">-->
-                          <!--<button class="btn btn-primary" ng-click="getAllInvoices()">Get all invoices</button>-->
-                        <!--</div>-->
-                        <div class="col-xs-3">
-                          <input type="text" class="form-control"
-                                 uib-datepicker-popup="{{format}}" required
-                                 datepicker-options="dateOptions"
-                                 is-open="fromDatePickerIsOpen"
-                                 ng-click="fromDatePickerOpen()"
-                                 ng-model="dateData.fromDate"
-                                 max-date="today"
-                                 placeholder="from date"
-                              />
-                        </div>
-                        <div class="col-xs-3">
-                          <input type="text" class="form-control"
-                                 uib-datepicker-popup="{{format}}" required
-                                 datepicker-options="dateOptions"
-                                 is-open="toDatePickerIsOpen"
-                                 ng-click="toDatePickerOpen()"
-                                 ng-model="dateData.toDate"
-                                 min-date="dateData.fromDate"
-                                 max-date="today"
-                                 placeholder="to date"
-                              />
-                        </div>
-                        <div class="col-xs-3">
-                          <button class="btn btn-primary" ng-click="getAllInvoices()">GO</button>
-                        </div>
-                      </div>
+                  <uib-tab class="mrB1" heading="View" select="setTab(0)">
                       <div class="row mr1">
                         <table class="table table-bordered">
                           <thead>
@@ -82,8 +51,59 @@
                         </table>
                       </div>
                   </uib-tab>
-                  <uib-tab heading="Generate">
-                    
+                  <uib-tab class="mrB1" heading="Generate" select="setTab(1)">
+                    <div class="row mr1">
+                      <div class="col-xs-3">
+                        <button class="btn btn-success" ng-click="generateBulkInvoice()">Generate Multiple</button>
+                      </div>
+                      <div class="col-xs-3">
+                        <button class="btn btn-primary">Generate Compound</button>
+                      </div>
+                    </div>
+                    <div class="row mr1">
+                      <table class="table table-bordered">
+                        <thead>
+                          <th style="width:3%"></th>
+                          <th style="width:10%">Date</th>
+                          <th style="width:23%">Particular</th>
+                          <th style="width:7%">Amount</th>
+                          <th style="width:30%">Description</th>
+                          <th style="width:7%">Total</th>
+                          <th style="width:20%">Account</th>
+                        </thead>
+                        <tbody>
+                          <tr ng-repeat="ledger in ledgers" ng-if="ledger.total.type == 'DEBIT'">
+                            <td style="width:3%" rowspan="ledger.transactions.length">
+                              <input type="checkbox" ng-model="$value" ng-change="addThis(ledger, $value)">
+                            </td>
+                            <td style="width:10%" rowspan="ledger.transactions.length">
+                              <label>{{ledger.entryDate}}</label>
+                            </td>
+                            <td colspan="2" style="padding:0;border-top:0px;border-bottom:0px;">
+                              <table class="table table-bordered">
+                                <tr ng-repeat="transaction in ledger.transactions">
+                                  <td style="width:77%">
+                                    <label>{{transaction.particular.name}}</label>
+                                  </td>
+                                  <td style="width:23%">
+                                    <label>{{transaction.amount}}</label>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                            <td style="width:33%">
+                              <label>{{ledger.description}}</label>
+                            </td>
+                            <td style="width:7%" rowspan="ledger.transactions.length">
+                              <label>{{ledger.total.amount}}</label>
+                            </td>
+                            <td style="width:20%" rowspan="ledger.transactions.length">
+                              <label>{{ledger.account.name}}</label>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
                   </uib-tab>
                   <uib-tab heading="Setting">
                     <div ng-include="'/public/webapp/Invoice/invoiceContent.html'" ng-controller="invoiceController">              </div>
@@ -93,6 +113,32 @@
             </div>
             <div class="col-xs-1 pull-right">
               <h1>#Filters</h1>
+              <div class="row">
+                <input type="text" class="form-control"
+                       uib-datepicker-popup="{{format}}" required
+                       datepicker-options="dateOptions"
+                       is-open="fromDatePickerIsOpen"
+                       ng-click="fromDatePickerOpen()"
+                       ng-model="dateData.fromDate"
+                       max-date="today"
+                       placeholder="from date"
+                    />
+              </div>
+              <div class="row">
+                <input type="text" class="form-control"
+                       uib-datepicker-popup="{{format}}" required
+                       datepicker-options="dateOptions"
+                       is-open="toDatePickerIsOpen"
+                       ng-click="toDatePickerOpen()"
+                       ng-model="dateData.toDate"
+                       min-date="dateData.fromDate"
+                       max-date="today"
+                       placeholder="to date"
+                    />
+              </div>
+              <div class="row">
+                <button class="btn btn-primary" ng-click="commonGoButtonClick()">GO</button>
+              </div>
             </div>
           </div>
         </uib-tab>

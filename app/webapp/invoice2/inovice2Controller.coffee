@@ -1,10 +1,13 @@
 'use strict'
 
-invoice2controller = ($scope, $rootScope, invoiceService) ->
+invoice2controller = ($scope, $rootScope, invoiceService, toastr) ->
   $rootScope.cmpViewShow = true
   $scope.checked = false;
-  $scope.size = '100px';
+  $scope.size = '105px';
   $scope.invoices = []
+  $scope.ledgers = []
+  $scope.selectedTab = 0
+  $scope.sendForGenerate = []
 
   # datepicker setting end
   $scope.dateData = {
@@ -34,6 +37,14 @@ invoice2controller = ($scope, $rootScope, invoiceService) ->
   $scope.toggle = () ->
     $scope.checked = !$scope.checked
 
+  $scope.setTab = (value) ->
+    $scope.selectedTab = value
+
+  $scope.commonGoButtonClick = () ->
+    if $scope.selectedTab == 0
+      $scope.getAllInvoices()
+    else if $scope.selectedTab == 1
+      $scope.getAllTransaction()
 
   $scope.getAllInvoices = () ->
     infoToSend = {
@@ -49,5 +60,54 @@ invoice2controller = ($scope, $rootScope, invoiceService) ->
 
   $scope.getInvoicesFailure = (res) ->
     console.log("failure ", res)
+
+  $scope.getAllTransaction = () ->
+    infoToSend = {
+      "companyUniqueName": $rootScope.selectedCompany.uniqueName
+      "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
+      "toDate": moment($scope.dateData.toDate).format('DD-MM-YYYY')
+    }
+    invoiceService.getAllLedgers(infoToSend, {}).then($scope.getAllTransactionSuccess, $scope.getAllTransactionFailure)
+
+  $scope.getAllTransactionSuccess = (res) ->
+    $scope.ledgers = res.body
+
+  $scope.getAllTransactionFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.addThis = (ledger, value) ->
+    console.log("ledger to add", value)
+    if value == true
+      $scope.sendForGenerate.push(ledger)
+    else if value == false
+      index = $scope.sendForGenerate.indexOf(ledger)
+      $scope.sendForGenerate.splice(index, 1)
+
+
+  $scope.generateBulkInvoice = () ->
+    console.log($scope.sendForGenerate)
+    selected = []
+    _.each($scope.sendForGenerate, (item) ->
+      obj = {}
+      obj.accUniqueName = item.account.uniqueName
+      obj.uniqueName = item.uniqueName
+      selected.push(obj)
+    )
+    generateInvoice = _.groupBy(selected, 'accUniqueName')
+    final = []
+    _.each(generateInvoice, (inv) ->
+      pushthis = {
+        accountUniqueName: ""
+        entries: []
+      }
+      unqNameArr = []
+      _.each(inv, (invoice) ->
+        pushthis.accountUnqiueName = invoice.accUniqueName
+        unqNameArr.push(invoice.uniqueName)
+      )
+      pushthis.entries = unqNameArr
+      final.push(pushthis)
+    )
+    console.log("inside generate invoice function", final)
 
 giddh.webApp.controller 'invoice2Controller', invoice2controller
