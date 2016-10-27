@@ -23,9 +23,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.adjustHeight = 0
   $scope.dLedgerLimit = 10
   $scope.cLedgerLimit = 10
+  $scope.sortOrder = {
+    debit : true
+    credit: true
+  }
   $scope.popover = {
     templateUrl: 'panel'
     draggable: false
+    position: "bottom"
   }
   $scope.newAccountModel = {
     group : ''
@@ -128,15 +133,19 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.blankCheckCompEntry(ledger)
   
   $scope.setFocusToBlankTxn = (ledger, transaction, str) ->
+    $scope.prevTxn.isOpen = false
+    $scope.prevTxn.isblankOpen = false
     _.each ledger.transactions, (txn) ->
       if txn.amount == 0 && txn.particular.name == "" && txn.particular.uniqueName == "" && txn.type == str
         txn.isblankOpen = true
-        $scope.openClosePopOver(txn, ledger)
+        txn.isOpen = true
+        $scope.prevTxn = txn
+        #$scope.openClosePopOver(txn, ledger)
 
   $scope.getFocus = (txn, ledger) ->
     if txn.particular.name == "" && txn.particular.uniqueName == "" && txn.amount == 0
       txn.isOpen = true
-      $scope.openClosePopOver(txn,ledger)
+      #$scope.openClosePopOver(txn,ledger)
 
   $scope.checkForExistingblankTransaction = (ledger, str) ->
     _.each ledger.transactions, (txn) ->
@@ -548,7 +557,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     toastr.error(res.data.message)
 
   $scope.paginateledgerData = (ledgers) ->
-    $scope.ledgerCount = 20
+    $scope.ledgerCount = 50
     $scope.dLedgerLimit = $scope.setCounter(ledgers, 'DEBIT')
     $scope.cLedgerLimit = $scope.setCounter(ledgers, 'CREDIT')
 
@@ -566,24 +575,24 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         ledgerCount += 1
     # if ledgerCount < txns
     #   ledgerCount = txns
-    if ledgerCount < 20
+    if ledgerCount < 50
       ledgerCount = $scope.ledgerCount
     ledgerCount
 
   $scope.countTotalTransactionsAfterSomeTime = () ->
     $timeout ( ->
       $scope.countTotalTransactions()
-    ), 500
+      $scope.showLoader = true
+    ), 1000
 
-  $scope.onScrollDebit = (sTop, sHeight, e) ->
-    if sTop >= sHeight-100
-      $scope.dLedgerLimit += 15
+  $scope.onScrollDebit = (sTop, sHeight) ->
+    $scope.dLedgerLimit += 15
       # $scope.dSpliceIdx += 2
       # $scope.spliceLedger('DEBIT')
     # else if sTop == 0 && $scope.dLedgerLimit > 20
-    #   $scope.dLedgerLimit -= 20
+    #   $scope.dLedgerLimit -= 2
 
-  $scope.onScrollCredit = (sTop, sHeight, e) ->
+  $scope.onScrollCredit = (sTop, sHeight) ->
     if sTop >= sHeight-100
       $scope.cLedgerLimit += 15
       # $scope.cSpliceIdx += 2
@@ -675,33 +684,47 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.showExportOption = !$scope.showExportOption
 
   $scope.calculateEntryTotal = (ledger) ->
-    ledger.entryTotal = {}
-    ledger.entryTotal.amount = 0
-    if ledger.transactions.length > 1
-      _.each ledger.transactions, (txn) ->
-        if txn.type == 'DEBIT'
-          ledger.entryTotal.amount += Number(txn.amount)
-        else
-          ledger.entryTotal.amount -= Number(txn.amount)
-    else
-      ledger.entryTotal.amount = Number(ledger.transactions[0]['amount'])
-    if ledger.entryTotal.amount > 0
-      ledger.entryTotal.type = 'Dr'
-    else
-      ledger.entryTotal.amount = Number(ledger.entryTotal.amount) * -1
-      ledger.entryTotal.type = 'Cr'
+    if ledger != undefined
+      ledger.entryTotal = {}
+      ledger.entryTotal.amount = 0
+      if ledger.transactions.length > 1
+        _.each ledger.transactions, (txn) ->
+          if txn.type == 'DEBIT'
+            ledger.entryTotal.amount += Number(txn.amount)
+          else
+            ledger.entryTotal.amount -= Number(txn.amount)
+      else
+        ledger.entryTotal.amount = Number(ledger.transactions[0]['amount'])
+      if ledger.entryTotal.amount > 0
+        ledger.entryTotal.type = 'Dr'
+      else
+        ledger.entryTotal.amount = Number(ledger.entryTotal.amount) * -1
+        ledger.entryTotal.type = 'Cr'
 
+  # $scope.setPopoverPlacement = (offset) ->
+  #   fromTop = $(window).height() / 3 * 2
+  #   if(offset > fromTop)
+  #     $scope.popover.position = "top"
+  #   else
+  #     $scope.popover.position = "bottom"
+  #   return false
 
+  $scope.prevTxn = null
   $scope.selectTxn = (ledger, txn, index ,e) ->
+    #setPopoverPlacement(e.clientY)
     $scope.selectedTxn = txn
+    if $scope.prevTxn != null
+      $scope.prevTxn.isOpen = false
+    txn.isOpen = true
+    $scope.prevTxn = txn
     $scope.calculateEntryTotal(ledger)
     $scope.showLedgerPopover = true
     $scope.ledgerBeforeEdit = {}
     angular.copy(ledger,$scope.ledgerBeforeEdit)
     if $scope.popover.draggable
       $scope.showPanel = true
-    else
-      $scope.openClosePopOver(txn, ledger)
+    #else
+      #$scope.openClosePopOver(txn, ledger)
     if ledger.isBankTransaction != undefined
       _.each(ledger.transactions,(transaction) ->
         if transaction.type == 'DEBIT'
@@ -730,27 +753,33 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           if condition == 'update'
             $scope.updatedLedgerTotal = led.total
 
-  $scope.openClosePopoverForLedger = (txn, ledger) ->
-    _.each $scope.ledgerData.ledgers, (iledger) ->
-      _.each iledger.transactions, (itxn) ->
-        itxn.isOpen = false
-    txn.isOpen = true
+  #$scope.openClosePopoverForLedger = (txn, ledger) ->
+    # _.each $scope.ledgerData.ledgers, (iledger) ->
+    #   _.each iledger.transactions, (itxn) ->
+    #     itxn.isOpen = false
+    # txn.isOpen = true
 
-  $scope.openClosePopoverForeLedger = (txn, ledger) ->
-    _.each $scope.eLedgerData, (iledger) ->
-      _.each iledger.transactions, (itxn) ->
-        itxn.isOpen = false
-    txn.isOpen = true
+  # $scope.openClosePopoverForeLedger = (txn, ledger) ->
+  #   _.each $scope.eLedgerData, (iledger) ->
+  #     _.each iledger.transactions, (itxn) ->
+  #       itxn.isOpen = false
+  #   txn.isOpen = true
 
-  $scope.openClosePopoverForBlankLedger = (txn, ledger) ->
-    _.each $scope.blankLedger.transactions, (itxn) ->
-      itxn.isOpen = false
-    txn.isOpen = true
+  # $scope.openClosePopoverForBlankLedger = (txn, ledger) ->
+  #   _.each $scope.blankLedger.transactions, (itxn) ->
+  #     itxn.isOpen = false
+  #   txn.isOpen = true
 
   $scope.openClosePopOver = (txn, ledger) ->
-    $scope.openClosePopoverForLedger(txn, ledger)
-    $scope.openClosePopoverForBlankLedger(txn, ledger)
-    $scope.openClosePopoverForeLedger(txn, ledger)
+    if $scope.prevTxn != null
+      $scope.prevTxn.isOpen = false
+    txn.isOpen = true
+    $scope.prevTxn = txn
+    $scope.selectedTxn = txn
+    $scope.selectedLedger = ledger
+    # $scope.openClosePopoverForLedger(txn, ledger)
+    # $scope.openClosePopoverForBlankLedger(txn, ledger)
+    # $scope.openClosePopoverForeLedger(txn, ledger)
 
   $scope.checkCompEntry = (ledger) ->
     unq = ledger.uniqueName
@@ -1355,10 +1384,47 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.stopProp = (e) ->
     e.stopPropagation()
 
-  $scope.onledgerScroll = (top,height,e) ->
-    if top >= height-100
-      $scope.cLedgerLimit += 10
-      $scope.dLedgerLimit += 10
+  # $scope.onledgerScroll = (top,height,e) ->
+  #   if top >= height-100
+  #     $scope.cLedgerLimit += 10
+  #     $scope.dLedgerLimit += 10
+
+
+  #### ledger scroll functions ####
+
+  # splicedTxns = []
+  # count = 40
+  # page = 1
+  # idx = 0
+  # scrolledBottom = false
+
+  # getTransactionCount = (ledgers) ->
+  #   txns = 0
+  #   _.each ledgers, (ledger) ->
+  #     txns += ledger.transactions.length
+  #   txns
+
+  # onLedgerScrollBottom = () ->
+  #   temp = $scope.ledgerDataDupe.ledgers.splice(0, count)
+  #   page += 1
+  #   if temp.length > 0
+  #     splicedTxns.push(temp)
+
+  # onLedgerScrollTop = () ->
+  #   if splicedTxns.length > 1
+  #     $scope.ledgerDataDupe.ledgers = splicedTxns[splicedTxns.length - 1].concat($scope.ledgerDataDupe.ledgers)
+  #     splicedTxns = splicedTxns.splice(splicedTxns.length - 1, 1)
+  #   else if splicedTxns.length == 1
+  #     $scope.ledgerDataDupe.ledgers = splicedTxns[0].concat($scope.ledgerDataDupe.ledgers)
+  #     splicedTxns = []
+  #   console.log $scope.ledgerDataDupe.ledgers.length
+
+  # $scope.onledgerScroll = (pos) ->
+  #   if pos == "bottom"
+  #     onLedgerScrollBottom()
+  #   else if pos == "top"
+  #     onLedgerScrollTop()
+  #   console.log $scope.ledgerDataDupe.ledgers.length
 
   $scope.triggerPanelFocus = (e) ->
     if e.keyCode == 13

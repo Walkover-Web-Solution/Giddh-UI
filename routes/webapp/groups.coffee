@@ -34,8 +34,8 @@ router.get '/flatten-accounts', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     parameters:
       'q':req.query.q
-      'page': req.query.page
-      'count':req.query.count
+      # 'page': req.query.page
+      # 'count':req.query.count
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/flatten-accounts'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
@@ -140,6 +140,7 @@ router.get '/:groupUniqueName/shared-with', (req, res) ->
     res.send data
 
 router.delete '/:groupUniqueName', (req, res) ->
+  console.log "from groups API"
   authHead = 
     headers:
       'Auth-Key': req.session.authKey
