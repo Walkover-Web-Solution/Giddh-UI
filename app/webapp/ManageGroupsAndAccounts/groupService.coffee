@@ -143,7 +143,6 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
 
 #   Get flat accounts list
     getFlatAccList: (reqParam, onSuccess, onFailure) ->
-      console.log reqParam
       @handlePromise((onSuccess, onFailure) -> Group.getFlatAccList({companyUniqueName: reqParam.companyUniqueName, q:reqParam.q, page:reqParam.page, count:reqParam.count},
         onSuccess, onFailure))
 

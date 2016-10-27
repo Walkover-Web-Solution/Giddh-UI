@@ -316,21 +316,56 @@ angular.module('trialBalance', []).directive('exportReport', [
     
 ]
 
-# .directive 'adjustPopoverPlacement', ['$window', '$timeout', ($window, $timeout) ->
-#   scope: {
-#     position: '=position'
-#   }
-#   link: (scope, elem, attr) ->
+.directive 'coverPage', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: "EA"
+  link: (scope, elem, attr) ->
 
-#     $(elem).on('click', (e) ->
-#       if $(window).height() - e.pageY < $('.ledger-panel').height() + 30   
-#         scope.position = "top"
-#       else
-#         scope.position = "bottom"
-#     )
+    setHeight = () ->
+      height = $(window).innerHeight() - 108
+      $(elem).css("height", height)
+    
+    $(window).on('resize', (e) ->
+      setHeight()
+    )
 
-# ]
+    setHeight()
+]
 
+.directive 'ledgerScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+  restrict: "EA"
+  link: (scope, elem, attrs) ->
+    invoker = $parse(attrs.scrolled)
 
+    $(elem).on('scroll', (e) ->
+      if $(elem).scrollTop()+$(elem).innerHeight() == elem[0].scrollHeight
+        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight})
+    )
 
+]
 
+.directive 'setPopoverPosition', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: "EA"
+  link: (scope, elem, attrs) ->
+    
+    # setPos = () ->
+    #   $timeout ( ->
+    #     frame = $(window).height() / 3 * 2
+    #     offset = $(elem).offset().top
+        
+    #     if offset > frame
+    #       attrs.$set("popoverPlacement", "top")
+    #     else
+    #       attrs.$set("popoverPlacement", "bottom")
+
+    #   ), 500
+
+    # setPos()
+
+    $(elem).on('mouseover', (e)->
+      if e.pageY > $(window).height() / 3 * 2
+        attrs.$set("popoverPlacement", "top")
+      else
+        attrs.$set("popoverPlacement", "bottom")
+    )
+
+]
