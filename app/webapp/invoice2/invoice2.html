@@ -10,21 +10,23 @@
                       <div class="row mr1">
                         <table class="table table-bordered">
                           <thead>
-                          <th>Checkbox</th>
-                          <th>Invoice number</th>
-                          <th>Account</th>
-                          <th>Invoice date</th>
-                          <th>Balance due</th>
-                          <th>Action to perform</th>
-                          <th>Status</th>
+                            <th>Invoice number</th>
+                            <th>Account</th>
+                            <th>Invoice date</th>
+                            <th>Balance due</th>
+                            <th>Action to perform</th>
+                            <th>Status</th>
                           </thead>
                           <tbody>
                           <tr ng-repeat="invoice in invoices">
+                            <!--<td>-->
+                              <!--<input type="checkbox">-->
+                            <!--</td>-->
                             <td>
-                              <input type="checkbox">
-                            </td>
-                            <td>
-                              <label ng-model="invoice.invoiceNumber">{{invoice.invoiceNumber}}</label>
+                              <a href="javascript:void(0)" ng-click="prevGenerateInv(invoice)">
+                                {{invoice.invoiceNumber}}
+                              </a>
+                              <!--<label ng-model="invoice.invoiceNumber">{{invoice.invoiceNumber}}</label>-->
                             </td>
                             <td>
                               <label ng-model="invoice.account.name">{{invoice.account.name}}</label>
@@ -37,6 +39,7 @@
                             </td>
                             <td>
                               <select class="form-control">
+                                <option>-- Select --</option>
                                 <option>Paid</option>
                                 <option>Unpaid</option>
                                 <option>Cancel</option>
@@ -54,10 +57,10 @@
                   <uib-tab class="mrB1" heading="Generate" select="setTab(1)">
                     <div class="row mr1">
                       <div class="col-xs-3">
-                        <button class="btn btn-success" ng-click="generateBulkInvoice()">Generate Multiple</button>
+                        <button class="btn btn-success" ng-click="generateBulkInvoice(false)">Generate Multiple</button>
                       </div>
                       <div class="col-xs-3">
-                        <button class="btn btn-primary">Generate Compound</button>
+                        <button class="btn btn-primary" ng-click="generateBulkInvoice(true)">Generate Compound</button>
                       </div>
                     </div>
                     <div class="row mr1">

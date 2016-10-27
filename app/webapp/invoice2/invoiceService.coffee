@@ -19,7 +19,7 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
       }
       generateBulkInvoice: {
         method: 'POST'
-        url: '/company/:comapnyUniqueName/invoices/bulk-generate?combined=:combined'
+        url: '/company/:companyUniqueName/invoices/bulk-generate?combined=:combined'
       }
     })
 

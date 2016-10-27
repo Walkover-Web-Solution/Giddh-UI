@@ -6,8 +6,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr) ->
   $scope.size = '105px';
   $scope.invoices = []
   $scope.ledgers = []
-  $scope.selectedTab = 0
-  $scope.sendForGenerate = []
+  selectedTab = 0
+  sendForGenerate = []
+
+  $scope.inCaseOfFailedInvoice = []
 
   # datepicker setting end
   $scope.dateData = {
@@ -38,12 +40,12 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr) ->
     $scope.checked = !$scope.checked
 
   $scope.setTab = (value) ->
-    $scope.selectedTab = value
+    selectedTab = value
 
   $scope.commonGoButtonClick = () ->
-    if $scope.selectedTab == 0
+    if selectedTab == 0
       $scope.getAllInvoices()
-    else if $scope.selectedTab == 1
+    else if selectedTab == 1
       $scope.getAllTransaction()
 
   $scope.getAllInvoices = () ->
@@ -56,10 +58,9 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr) ->
 
   $scope.getInvoicesSuccess = (res) ->
     $scope.invoices = _.flatten(res.body.results)
-    console.log(_.flatten($scope.invoices))
 
   $scope.getInvoicesFailure = (res) ->
-    console.log("failure ", res)
+    toastr.error(res.data.message)
 
   $scope.getAllTransaction = () ->
     infoToSend = {
@@ -76,18 +77,16 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr) ->
     toastr.error(res.data.message)
 
   $scope.addThis = (ledger, value) ->
-    console.log("ledger to add", value)
     if value == true
-      $scope.sendForGenerate.push(ledger)
+      sendForGenerate.push(ledger)
     else if value == false
-      index = $scope.sendForGenerate.indexOf(ledger)
-      $scope.sendForGenerate.splice(index, 1)
+      index = sendForGenerate.indexOf(ledger)
+      sendForGenerate.splice(index, 1)
 
 
-  $scope.generateBulkInvoice = () ->
-    console.log($scope.sendForGenerate)
+  $scope.generateBulkInvoice = (condition) ->
     selected = []
-    _.each($scope.sendForGenerate, (item) ->
+    _.each(sendForGenerate, (item) ->
       obj = {}
       obj.accUniqueName = item.account.uniqueName
       obj.uniqueName = item.uniqueName
@@ -102,12 +101,29 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr) ->
       }
       unqNameArr = []
       _.each(inv, (invoice) ->
-        pushthis.accountUnqiueName = invoice.accUniqueName
+        pushthis.accountUniqueName = invoice.accUniqueName
         unqNameArr.push(invoice.uniqueName)
       )
       pushthis.entries = unqNameArr
       final.push(pushthis)
     )
-    console.log("inside generate invoice function", final)
+    infoToSend = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      combined: condition
+    }
+    invoiceService.generateBulkInvoice(infoToSend, final).then($scope.generateBulkInvoiceSuccess, $scope.generateBulkInvoiceFailure)
+
+  $scope.generateBulkInvoiceSuccess = (res) ->
+    console.log("success", res)
+    toastr.success("Invoice generated successfully.")
+    $scope.inCaseOfFailedInvoice = res.body
+    _.each(sendForGenerate, (removeThis) ->
+      index = $scope.ledgers.indexOf(removeThis)
+      $scope.ledgers.splice(index, 1)
+    )
+    $scope.getAllTransaction()
+
+  $scope.generateBulkInvoiceFailure = (res) ->
+    toastr.error(res.data.message)
 
 giddh.webApp.controller 'invoice2Controller', invoice2controller
