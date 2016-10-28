@@ -116,9 +116,9 @@ app.controller 'homeCtrl', [
   '$scope', 'toastr', '$http', 'vcRecaptchaService', '$rootScope', '$location',
   ($scope, toastr, $http, vcRecaptchaService, $rootScope, $location) ->
     $scope.resources = [
-      '/public/website/images/Giddh.mp4'
+      'https://test-fs8eefokm8yjj.stackpathdns.com/public/website/images/Giddh.mp4'
     ]
-    $scope.poster = '/public/website/images/new/banner.jpg'
+    $scope.poster = 'https://test-fs8eefokm8yjj.stackpathdns.com/public/website/images/new/banner.jpg'
     $scope.fullScreen = true
     $scope.muted = false
     $scope.zIndex = '0'
