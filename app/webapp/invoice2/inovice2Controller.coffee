@@ -58,6 +58,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr) ->
 
   $scope.getInvoicesSuccess = (res) ->
     $scope.invoices = _.flatten(res.body.results)
+    if $scope.invoices.length == 0
+      toastr.error("No invoices found.")
 
   $scope.getInvoicesFailure = (res) ->
     toastr.error(res.data.message)
