@@ -36,7 +36,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       }
       getFlatAccList: {
         method: 'GET'
-        url: '/company/:companyUniqueName/groups/flatten-accounts?q=:q&page=:page&count=:count'
+        url: '/company/:companyUniqueName/groups/flatten-accounts'
       }
       update: {
         method: 'PUT'
