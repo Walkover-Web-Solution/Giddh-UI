@@ -16,7 +16,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     "/public/webapp/ng2.js"
   ]
   $rootScope.$stateParams = {}
-  $rootScope.prefixThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
+  $rootScope.prefixThis = ""
   $rootScope.cmpViewShow = true
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
@@ -409,6 +409,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       q: query
     }
+    console.log("inside method", reqParam)
     groupService.getFlatAccList(reqParam).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)
 
   $scope.flatAccntQuerySuccess = (res) ->
