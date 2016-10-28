@@ -1,0 +1,177 @@
+<div class="container-fluid">
+  <div class="row">
+    <uib-tabset justified="false">
+        <uib-tab heading="Invoice">
+          <div class="row">
+            <div class="col-xs-11" auto-height style="overflow-y: scroll;overflow: hidden">
+              <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">
+                <uib-tabset class="custom-tabset">
+                  <uib-tab class="mrB1" heading="View" select="setTab(0)">
+                      <div class="row mr1" ng-if="invoices.length == 0">
+                        <div class="no-data">
+                          <h1>No invoices found!</h1>
+                          <img src="/public/webapp/Globals/images/no-data.png" alt="No Data">
+                        </div>
+                      </div>
+                      <div class="row mr1" ng-if="invoices.length > 0">
+                        <table class="table table-bordered">
+                          <thead>
+                            <th>Invoice number</th>
+                            <th>Account</th>
+                            <th>Invoice date</th>
+                            <th>Balance due</th>
+                            <th>Action to perform</th>
+                            <th>Status</th>
+                          </thead>
+                          <tbody>
+                          <tr ng-repeat="invoice in invoices">
+                            <!--<td>-->
+                              <!--<input type="checkbox">-->
+                            <!--</td>-->
+                            <td>
+                              <a href="javascript:void(0)" ng-click="prevGenerateInv(invoice)">
+                                {{invoice.invoiceNumber}}
+                              </a>
+                              <!--<label ng-model="invoice.invoiceNumber">{{invoice.invoiceNumber}}</label>-->
+                            </td>
+                            <td>
+                              <label ng-model="invoice.account.name">{{invoice.account.name}}</label>
+                            </td>
+                            <td>
+                              <label ng-model="invoice.invoiceDate">{{invoice.invoiceDate}}</label>
+                            </td>
+                            <td>
+                              <label ng-model="invoice.balanceDue">{{invoice.balanceDue}}</label>
+                            </td>
+                            <td>
+                              <select class="form-control">
+                                <option>-- Select --</option>
+                                <option>Paid</option>
+                                <option>Unpaid</option>
+                                <option>Cancel</option>
+                                <option>Hold</option>
+                              </select>
+                            </td>
+                            <td>
+                              <label ng-model="invoice.balanceStatus">{{invoice.balanceStatus}}</label>
+                            </td>
+                          </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                  </uib-tab>
+                  <uib-tab class="mrB1" heading="Generate" select="setTab(1)">
+                    <div class="row mr1">
+                      <ul class="list-inline">
+                        <li><button class="btn btn-success" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
+                        <li><button class="btn btn-primary" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
+                      </ul>
+                      <!--<div class="col-xs-3">-->
+                        <!-- -->
+                      <!--</div>-->
+                      <!--<div class="col-xs-3">-->
+                        <!-- -->
+                      <!--</div>-->
+                    </div>
+                    <div class="row mr1">
+                      <table class="table table-bordered">
+                        <thead>
+                          <th style="width:3%"></th>
+                          <th style="width:10%">Date</th>
+                          <th style="width:23%">Particular</th>
+                          <th style="width:7%">Amount</th>
+                          <th style="width:30%">Description</th>
+                          <th style="width:7%">Total</th>
+                          <th style="width:20%">Account</th>
+                        </thead>
+                        <tbody>
+                          <tr ng-repeat="ledger in ledgers" ng-if="ledger.total.type == 'DEBIT'">
+                            <td style="width:3%" rowspan="ledger.transactions.length">
+                              <input type="checkbox" ng-model="$value" ng-change="addThis(ledger, $value)">
+                            </td>
+                            <td style="width:10%" rowspan="ledger.transactions.length">
+                              <label>{{ledger.entryDate}}</label>
+                            </td>
+                            <td colspan="2" style="padding:0;border-top:0px;border-bottom:0px;">
+                              <table class="table table-bordered">
+                                <tr ng-repeat="transaction in ledger.transactions">
+                                  <td style="width:77%">
+                                    <label>{{transaction.particular.name}}</label>
+                                  </td>
+                                  <td style="width:23%">
+                                    <label>{{transaction.amount}}</label>
+                                  </td>
+                                </tr>
+                              </table>
+                            </td>
+                            <td style="width:33%">
+                              <label>{{ledger.description}}</label>
+                            </td>
+                            <td style="width:7%" rowspan="ledger.transactions.length">
+                              <label>{{ledger.total.amount}}</label>
+                            </td>
+                            <td style="width:20%" rowspan="ledger.transactions.length">
+                              <label>{{ledger.account.name}}</label>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </uib-tab>
+                  <uib-tab heading="Setting">
+                    <div ng-include="'/public/webapp/Invoice/invoiceContent.html'" ng-controller="invoiceController">              </div>
+                  </uib-tab>
+                </uib-tabset>
+              </perfect-scrollbar>
+            </div>
+            <div class="" ng-class="{flyDiv : 'flying-div'}">
+              <i class="glyphicon glyphicon-close" ng-if="flyDiv" ng-click="flyDiv = false"></i><h1 ng-click="flyDiv = !flyDiv">#Filters</h1>
+              <div ng-show="flyDiv" class="flying-div">
+                <div class="">
+                  <input type="text" class="form-control"
+                         uib-datepicker-popup="{{format}}" required
+                         datepicker-options="dateOptions"
+                         is-open="fromDatePickerIsOpen"
+                         ng-click="fromDatePickerOpen()"
+                         ng-model="dateData.fromDate"
+                         max-date="today"
+                         placeholder="from date"
+                      />
+                </div>
+                <div class="">
+                  <input type="text" class="form-control"
+                         uib-datepicker-popup="{{format}}" required
+                         datepicker-options="dateOptions"
+                         is-open="toDatePickerIsOpen"
+                         ng-click="toDatePickerOpen()"
+                         ng-model="dateData.toDate"
+                         min-date="dateData.fromDate"
+                         max-date="today"
+                         placeholder="to date"
+                      />
+                </div>
+                <!--<div class="">-->
+                  <!--<input class="form-control" ng-model="filtersInvoice.account" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in queryFltAccnt | omit:isCurrentAccount | limitTo: 25"  ng-keyup="getFlatAccntsByQuery(filtersInvoice.account)" typeahead-template-url="accountPopUp.html" ng-model-options="{debounce: 200}">-->
+                <!--</div>-->
+                <div class="">
+                  <button class="btn btn-primary" ng-click="commonGoButtonClick()">GO</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </uib-tab>
+        <uib-tab heading="Proforma">
+          <div ng-include="'/public/webapp/invoice2/proforma/proformaContent.html'" ng-controller="proformaController">
+
+          </div>
+        </uib-tab>
+      </uib-tabset>
+  </div>
+</div>
+
+<script type="text/ng-template" id="accountPopUp.html">
+  <a href="javascript:void(0)" class="account-list-item" set-drop-overflow>
+    <span class="account-list-item" ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
+    (<span class="account-list-item" ng-bind-html="match.model.uniqueName | uibTypeaheadHighlight:query"></span>)
+  </a>
+</script>

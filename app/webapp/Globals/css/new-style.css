@@ -3667,10 +3667,36 @@ tr.db-bnk-account > td.reconnectDiv{
     padding-left: 0;
 }
 
+.custom-tabset{
+    padding: 0px 12px;
+}
+
+.custom-tabset ul{
+    background: transparent !important;
+}
+
+.custom-tabset ul li{
+    border: 0px;
+}
+
+.custom-tabset ul li a{
+    border: 0px !important;
+    border-bottom: 1px solid #ddd !important;
+}
+
 .y-scroll{
     overflow-y:auto !important;
 }
 
 .cursor-pointer{
     cursor:pointer;
+}
+
+.flying-div{
+    position: absolute;
+    right: 0px;
+    height: 100%;
+    background: lightgrey;
+    padding: 5px;
+    width: 300px;
 }

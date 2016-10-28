@@ -37,6 +37,9 @@ router.get '/login', (req, res) ->
 router.get '/magic', (req, res) ->
   res.sendFile 'magic.html', options
 
+router.get '/payment', (req, res) ->
+  res.sendFile 'payment.html', options
+
 router.get '/google87e474bb481dae55.html',(req, res) ->
   res.sendFile('google87e474bb481dae55.html', options)
 
@@ -75,6 +78,15 @@ router.put '/ebanks/login', (req, res) ->
 router.post '/verify-email', (req, res) ->
   data = req.body
   hUrl = settings.envUrl + '/company/'+data.companyUname+'/invoice-setting/verify-email?emailAddress='+data.emailAddress+'&scope='+data.scope
+  settings.client.get hUrl, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/proforma/pay', (req, res) ->
+  data = req.body
+  console.log(data)
+  hUrl = settings.envUrl + '/company/'+data.proformaUniqueName+'/proforma/'+data.proformaUniqueName+'/pay'
   settings.client.get hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
