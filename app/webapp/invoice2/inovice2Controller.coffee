@@ -8,6 +8,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr) ->
   $scope.ledgers = []
   selectedTab = 0
   sendForGenerate = []
+  $scope.filtersInvoice = {}
+  $scope.flyDiv = false
 
   $scope.inCaseOfFailedInvoice = []
 

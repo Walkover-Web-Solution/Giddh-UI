@@ -405,7 +405,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.getFlatAccntsByQuery = (compUName, query) ->
     reqParam = {
-      companyUniqueName: compUname
+      companyUniqueName: compUName
       q: query
     }
     groupService.getFlatAccList(reqParam).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)

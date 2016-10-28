@@ -3691,3 +3691,12 @@ tr.db-bnk-account > td.reconnectDiv{
 .cursor-pointer{
     cursor:pointer;
 }
+
+.flying-div{
+    position: absolute;
+    right: 0px;
+    height: 100%;
+    background: lightgrey;
+    padding: 5px;
+    width: 300px;
+}
