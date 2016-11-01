@@ -403,9 +403,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.gettingCroppedAccount = false
     toastr.error(res.data.message)
 
-  $rootScope.getFlatAccntsByQuery = (compUName, query) ->
+  $rootScope.getFlatAccntsByQuery = (query, compUName) ->
+    console.log query
     reqParam = {
-      companyUniqueName: compUName
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
       q: query
     }
     groupService.getFlatAccList(reqParam).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)

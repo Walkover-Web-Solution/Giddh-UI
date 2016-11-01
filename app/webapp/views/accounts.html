@@ -74,7 +74,7 @@
             </li> 
           </ul>
         </li>
-        <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreGrpWithAcc(selectedCompany.uniqueName);$event.stopPropagation()" ng-if="flatAccntWGroupsList.length > 5 && filtList.length >= gwaList.limit" >Load More</a>
+        <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreGrpWithAcc(selectedCompany.uniqueName);$event.stopPropagation()" ng-if="gwaList.currentPage <= gwaList.totalPages" >Load More</a>
       </ul>
 
     </div>

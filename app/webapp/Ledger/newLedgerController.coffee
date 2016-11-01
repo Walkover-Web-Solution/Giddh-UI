@@ -216,7 +216,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.isSelectedAccount = () ->
     if _.isUndefined($rootScope.selectedAccount.name)
-      $rootScope.selectedAccount = localStorageService.get('_selectedAccount')
+      #$rootScope.selectedAccount = localStorageService.get('_selectedAccount')
+      $rootScope.selectedAccount = $scope.accountUnq
       $scope.accountToShow = $rootScope.selectedAccount
     else
       $scope.accountToShow = $rootScope.selectedAccount
@@ -797,7 +798,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.blankCheckCompEntry = (ledger) ->
     if ledger.isBlankLedger
       _.each ledger.transactions, (txn) ->
-        if txn.particular.uniqueName.length > 0
+        if txn.particular.uniqueName != undefined && txn.particular.uniqueName.length > 0
           ledger.isBlankCompEntry = true
     else
       ledger.isBlankCompEntry = false 
