@@ -55,7 +55,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.isFixedAcc = false
   $scope.gwaList = {
     page: 1
-    count: 5000
+    count: 5
     totalPages: 0
     currentPage : 1
     limit: 5
@@ -312,14 +312,14 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.working = false
 
   $scope.loadMoreGrpWithAcc = (compUname) ->
-    # $scope.gwaList.page += 1
-    # reqParam = {
-    #   companyUniqueName: compUname
-    #   q: ''
-    #   page: $scope.gwaList.page
-    #   count: $scope.gwaList.count
-    # }
-    # groupService.getFlattenGroupAccList(reqParam).then($scope.loadMoreGrpWithAccSuccess, $scope.loadMoreGrpWithAccFailure)
+    $scope.gwaList.page += 1
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+      page: $scope.gwaList.page
+      count: $scope.gwaList.count
+    }
+    groupService.getFlattenGroupAccList(reqParam).then($scope.loadMoreGrpWithAccSuccess, $scope.loadMoreGrpWithAccFailure)
     $scope.gwaList.limit += 5
 
   $scope.loadMoreGrpWithAccSuccess = (res) ->
@@ -334,16 +334,16 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error(res.data.message)
 
   $scope.searchGrpWithAccounts = (str) ->
-    # reqParam = {}
-    # reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-    # if str.length > 2
-    #   $scope.hideLoadMore = true
-    #   reqParam.q = str
-    #   groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
-    # else
-    #   $scope.hideLoadMore = false
-    #   reqParam.q = ''
-    #   groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    if str.length > 2
+      $scope.hideLoadMore = true
+      reqParam.q = str
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+    else
+      $scope.hideLoadMore = false
+      reqParam.q = ''
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
     if str.length < 1
       $scope.gwaList.limit = 5
 
