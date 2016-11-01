@@ -3,7 +3,7 @@
     <uib-tabset justified="false">
         <uib-tab heading="Invoice">
           <div class="row">
-            <div class="col-xs-11" auto-height style="overflow-y: scroll;overflow: hidden">
+            <div class="col-xs-11" auto-height style="overflow-y: auto;">
               <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">
                 <uib-tabset class="custom-tabset">
                   <uib-tab class="mrB1" heading="View" select="setTab(0)">
@@ -118,15 +118,17 @@
                       </table>
                     </div>
                   </uib-tab>
-                  <uib-tab heading="Setting">
-                    <div ng-include="'/public/webapp/Invoice/invoiceContent.html'" ng-controller="invoiceController">              </div>
+                  <uib-tab heading="Setting" select="setTab(2)">
+                    <div ng-include="'/public/webapp/Invoice/invoiceContent.html'" ng-controller="invoiceController">
+
+                    </div>
                   </uib-tab>
                 </uib-tabset>
               </perfect-scrollbar>
             </div>
             <div class="" ng-class="{flyDiv : 'flying-div'}">
-              <i class="glyphicon glyphicon-close" ng-if="flyDiv" ng-click="flyDiv = false"></i><h1 ng-click="flyDiv = !flyDiv">#Filters</h1>
-              <div ng-show="flyDiv" class="flying-div">
+              <button class="btn btn-default" ng-click="flyDiv = !flyDiv">Filters</button>
+              <div ng-show="flyDiv" class="flying-div pos-abs">
                 <div class="">
                   <input type="text" class="form-control"
                          uib-datepicker-popup="{{format}}" required
@@ -150,9 +152,18 @@
                          placeholder="to date"
                       />
                 </div>
-                <!--<div class="">-->
-                  <!--<input class="form-control" ng-model="filtersInvoice.account" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in queryFltAccnt | omit:isCurrentAccount | limitTo: 25"  ng-keyup="getFlatAccntsByQuery(filtersInvoice.account)" typeahead-template-url="accountPopUp.html" ng-model-options="{debounce: 200}">-->
-                <!--</div>-->
+                <div class="">
+                  <ui-select ng-model="filtersInvoice.account" theme="bootstrap">
+                    <ui-select-match placeholder="Select Accounts" ui-lock-choice="$item.noRemove == true" reset-search-input="true">
+                      <span>{{$item.uniqueName}}</span>
+                    </ui-select-match >
+                    <ui-select-choices
+                        ui-disable-choice="acc.uniqueName === selAcntUname"
+                        repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="getFlatAccntsByQuery($select.search)">
+                      <span>{{acc.name}} ({{acc.uniqueName}})</span>
+                    </ui-select-choices>
+                  </ui-select>
+                </div>
                 <div class="">
                   <button class="btn btn-primary" ng-click="commonGoButtonClick()">GO</button>
                 </div>

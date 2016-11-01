@@ -3693,7 +3693,6 @@ tr.db-bnk-account > td.reconnectDiv{
 }
 
 .flying-div{
-    position: absolute;
     right: 0px;
     height: 100%;
     background: lightgrey;

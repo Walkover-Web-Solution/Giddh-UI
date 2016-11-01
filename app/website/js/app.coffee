@@ -102,6 +102,15 @@ app.controller 'paymentCtrl', [
     $scope.removeDotFromString = (str) ->
       return Math.floor(Number(str))
 
+    $scope.getDetails = () ->
+      $http.get('/invoice-pay-request', $scope.randomUniqueName).then((response) ->
+        if(response.status == 200 && _.isUndefined(response.data.status))
+          $scope.wlt = response.body
+          console.log(response)
+        else
+          toastr.error(response.data.message)
+      )
+
     $scope.successPayment = (data) ->
       $http.post('/proforma/pay', data).then((response) ->
         if(response.status == 200 && _.isUndefined(response.data.status))
@@ -110,6 +119,7 @@ app.controller 'paymentCtrl', [
           toastr.error(response.data.message)
       )
 
+    $scope.getDetails()
 ]
 
 app.controller 'homeCtrl', [
