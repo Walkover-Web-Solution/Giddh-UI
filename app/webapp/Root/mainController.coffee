@@ -16,7 +16,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     "/public/webapp/ng2.js"
   ]
   $rootScope.$stateParams = {}
-  $rootScope.prefixThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
+  $rootScope.prefixThis = ""
   $rootScope.cmpViewShow = true
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
@@ -403,8 +403,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.gettingCroppedAccount = false
     toastr.error(res.data.message)
 
-  $rootScope.getFlatAccntsByQuery = (query, compUName) ->
-    console.log query
+  $rootScope.getFlatAccntsByQuery = (query) ->
     reqParam = {
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       q: query
@@ -511,7 +510,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     changeData.index = index
     changeData.type = method
     $scope.$broadcast('company-changed', changeData)
-    $state.go('company.content.manage')
     #$scope.tabs[0].active = true
 
   $rootScope.allowed = true
