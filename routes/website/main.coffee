@@ -87,6 +87,13 @@ router.post '/proforma/pay', (req, res) ->
   data = req.body
   console.log(data)
   hUrl = settings.envUrl + '/company/'+data.proformaUniqueName+'/proforma/'+data.proformaUniqueName+'/pay'
+  settings.client.post hUrl, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.get '/invoice-pay-request', (req, res) ->
+  hUrl = settings.envUrl + '/invoice-pay-request/'+req.data
   settings.client.get hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
