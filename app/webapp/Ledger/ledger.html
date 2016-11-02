@@ -15,8 +15,8 @@
   Please select an Account to load its Ledger
 </section>
 
-<div id="ledger" ng-show="!showLoader">
-<!--  <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
+<div id="ledger" ng-show="!showLoader" get-full-height>
+ <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
     <section class="container-fluid" ng-if="accountUnq.length > 0">
       <div class="pdT1">
         <div class="ledger-top-panel clearfix" ng-class="{'while-panel':showPanel}" ng-hide="showPanel">
@@ -447,7 +447,7 @@
                                   ng-class="{uncEntry : ledger.unconfirmedEntry}" 
                                   uib-popover-template="popover.templateUrl" 
                                   popover-trigger="outsideClick" 
-                                  popover-placement="bottom" 
+                                  popover-placement="{{popover.position}}" 
                                   popover-append-to-body='true' 
                                   popover-enable="!popover.draggable" 
                                   popover-is-open="txn.isOpen && showLedgerPopover"

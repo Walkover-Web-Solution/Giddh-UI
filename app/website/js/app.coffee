@@ -115,6 +115,11 @@ app.controller 'paymentCtrl', [
 app.controller 'homeCtrl', [
   '$scope', 'toastr', '$http', 'vcRecaptchaService', '$rootScope', '$location',
   ($scope, toastr, $http, vcRecaptchaService, $rootScope, $location) ->
+    $scope.showLoginBox = false
+    $scope.toggleLoginBox = (e) ->
+      $scope.showLoginBox = !$scope.showLoginBox
+      e.stopPropagation()
+
     $scope.resources = [
       'https://test-fs8eefokm8yjj.stackpathdns.com/public/website/images/Giddh.mp4'
     ]
@@ -212,6 +217,10 @@ app.controller 'homeCtrl', [
         else
           $scope.responseMsg = response.data.message
       )
+
+    $(document).on('click', (e) ->
+      $scope.showLoginBox = false
+    )
 ]
 
 app.config [

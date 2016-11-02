@@ -331,6 +331,21 @@ angular.module('trialBalance', []).directive('exportReport', [
     setHeight()
 ]
 
+.directive 'getFullHeight', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: "EA"
+  link: (scope, elem, attr) ->
+    setHeight = () ->
+      height = $(window).innerHeight()
+      $(elem).css({"height": height, "overflow-y":"auto"})
+    
+    $(window).on('resize', (e) ->
+      setHeight()
+    )
+
+    setHeight()
+]
+
+
 .directive 'ledgerScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
   restrict: "EA"
   link: (scope, elem, attrs) ->

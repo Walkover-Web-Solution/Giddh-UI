@@ -299,8 +299,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.getFlattenGrpWithAccListSuccess = (res) ->
     $scope.gwaList.totalPages = res.body.totalPages
     #$scope.flatAccntWGroupsList = res.body.results
-    $scope.removeEmptyGroups(res.body.results)
-    $scope.flatAccntWGroupsList = $scope.grpWithoutEmptyAccounts
+    $scope.flatAccntWGroupsList = $scope.removeEmptyGroups(res.body.results)
 #    console.log($scope.flatAccntWGroupsList)
     $scope.showAccountList = true
     $scope.gwaList.limit = 5
@@ -324,9 +323,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $scope.loadMoreGrpWithAccSuccess = (res) ->
     $scope.gwaList.currentPage += 1
-    list = res.body.results
-    if res.body.totalPages >= $scope.gwaList.currentPage
+    list = $scope.removeEmptyGroups(res.body.results)
+    if list.length > 0 && res.body.totalPages >= $scope.gwaList.currentPage
       $scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
+    else if res.body.totalPages >= $scope.gwaList.currentPage
+      $scope.loadMoreGrpWithAcc($rootScope.selectedCompany.uniqueName)
     else
       $scope.hideLoadMore = true
 
@@ -337,22 +338,23 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     if str.length > 2
-      $scope.hideLoadMore = true
+      #$scope.hideLoadMore = true
       reqParam.q = str
       groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
     else
-      $scope.hideLoadMore = false
+      #$scope.hideLoadMore = false
       reqParam.q = ''
       groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
     if str.length < 1
       $scope.gwaList.limit = 5
+      #$scope.hideLoadMore = false
 
   $scope.removeEmptyGroups = (grpList) ->
     newList = []
     _.each grpList, (grp) ->
       if grp.accountDetails.length > 0
         newList.push(grp)
-    $scope.grpWithoutEmptyAccounts = newList
+    newList
 
   #-------------------Functions for API side search and fetching flat account list end here-----------------------------------------------#
 
