@@ -10,7 +10,7 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
     },
     {
       getAll: {
-        method: 'GET'
+        method: 'POST'
         url: '/company/:companyUniqueName/invoices?from=:date1&to=:date2'
       }
       getAllLedgers: {
@@ -31,12 +31,12 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
       func(onSuccess, onFailure)
       deferred.promise
 
-    getInvoices: (info) ->
+    getInvoices: (info, data) ->
       @handlePromise((onSuccess, onFailure) -> Invoice.getAll({
         companyUniqueName: info.companyUniqueName
         date1: info.fromDate
         date2: info.toDate
-      }, info, onSuccess, onFailure))
+      }, data, onSuccess, onFailure))
 
     getAllLedgers: (info, data) ->
       @handlePromise((onSuccess, onFailure) -> Invoice.getAllLedgers({

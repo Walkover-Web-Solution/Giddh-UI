@@ -2661,7 +2661,7 @@ body.unresponsive {
 }
 
 input.isNotEditable:disabled {
-    background:: 0 0;
+    background: 0 0;
 }
 
 /*tax table setting*/
@@ -3692,10 +3692,47 @@ tr.db-bnk-account > td.reconnectDiv{
     cursor:pointer;
 }
 
+@-webkit-keyframes reducetime {
+    0% {width: 0;}
+    100% { width: 100%; }
+}
+
+.background-color-giddh{
+    background: #d35f29;
+    height: 50px;
+}
+
+
 .flying-div{
     right: 0px;
     height: 100%;
-    background: lightgrey;
-    padding: 5px;
-    width: 300px;
+    background: transparent;
+    /*-webkit-animation-duration: 0.5s;*/
+    /*-webkit-animation-name: reducetime;*/
+    width: 100%;
+    float: right;
+    border-left: lightgrey 1px solid;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.right300{
+    right: 300px;
+}
+
+.right0{
+    right: 0px;
+}
+
+.filter-btn{
+    right: 20px;
+    z-index: 2;
+    bottom: 0;
+}
+
+.add-transition{
+    -webkit-transition: width 0.5s;
+    -moz-transition: width 0.5s;
+    -ms-transition: width 0.5s;
+    -o-transition: width 0.5s;
+    transition: width 0.5s;
 }

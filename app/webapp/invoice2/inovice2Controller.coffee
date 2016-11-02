@@ -56,7 +56,11 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
       "toDate": moment($scope.dateData.toDate).format('DD-MM-YYYY')
     }
-    invoiceService.getInvoices(infoToSend).then($scope.getInvoicesSuccess, $scope.getInvoicesFailure)
+    obj = {}
+    if $scope.filtersInvoice.account != undefined
+      obj.accountUniqueName = $scope.filtersInvoice.account.uniqueName
+    obj.invoiceNumber = $scope.filtersInvoice.invoiceNumber
+    invoiceService.getInvoices(infoToSend, obj).then($scope.getInvoicesSuccess, $scope.getInvoicesFailure)
 
   $scope.getInvoicesSuccess = (res) ->
     $scope.invoices = _.flatten(res.body.results)
