@@ -511,6 +511,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     changeData.index = index
     changeData.type = method
     $scope.$broadcast('company-changed', changeData)
+    $state.go('company.content.manage')
     #$scope.tabs[0].active = true
 
   $rootScope.allowed = true

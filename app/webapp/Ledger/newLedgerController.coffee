@@ -129,6 +129,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.checkForExistingblankTransaction(ledger, str)
     if !$scope.hasBlankTxn
       ledger.transactions.push(txn)
+    if str.toLowerCase() == "debit" && $scope.sortOrder.debit
+      $scope.popover.position = "top"
+    else if str.toLowerCase() == "credit" && $scope.sortOrder.credit
+      $scope.popover.position = "top"
+
     $scope.setFocusToBlankTxn(ledger, txn, str)
     $scope.blankCheckCompEntry(ledger)
   

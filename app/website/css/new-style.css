@@ -678,6 +678,7 @@ body.light .navbar.transparent{
 	font-size: 40px;
 	margin-bottom: 80px;
 }
+
 #box{
 	background-color: #fff;
 	padding: 20px 30px;
@@ -685,6 +686,48 @@ body.light .navbar.transparent{
 	width: 360px;
 	height: auto;
 }
+
+#boxDropdown{
+  background-color: #fff;
+  padding: 20px 30px;
+  margin: 0 auto;
+  width: 360px;
+  height: auto;
+  position: absolute;
+  right:0;
+
+}
+
+.login-btn{
+  position: relative;
+}
+
+/*.login-btn:hover #boxDropdown{
+  display: block;
+  right:0;
+  opacity: 1;
+  -webkit-transition: opacity 2s ease-in;
+  transition: opacity 2s ease-in;
+}*/
+
+#boxDropdown img {
+  max-height:30px;
+  position: absolute;
+  left:10px;
+  top:6px;
+}
+
+#boxDropdown .glyphicon{
+  max-height:30px;
+  position: absolute;
+  left:15px;
+  top:13px;
+}
+
+#boxDropdown .btn:hover, #box .btn:hover{
+  color:#fff;
+}
+
 .mrB1{margin-bottom: 10px}
 .giddh-logo{
   background: #221F1F none repeat scroll 0 0;
@@ -696,15 +739,23 @@ body.light .navbar.transparent{
   width: 60px;
   margin:0 auto 20px;
 }
+
 .twitter{
   background: #11B1E5;
 }
+
 .google{
   background:#DE4D3C;
 }
+
 .linkedin{
   background: #0E78AA;
 }
+
+.mobile{
+  background: #26263A;
+}
+
 .btn-login {
 	letter-spacing: 1px;
 	text-transform: uppercase;
