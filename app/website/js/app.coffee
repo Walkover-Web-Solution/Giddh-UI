@@ -54,29 +54,25 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
   link: (scope, element, attrs) ->
     scope.proceedToPay = (e, amount) ->
       options = {
-        key: "rzp_test_6SDWNz3uMF944l"
+        key: scope.wlt.razorPayKey
 #        key: "rzp_live_xGAsAZIdwkmLJW"
         amount: amount
-        name: "Giddh"
-        description: scope.randomUniqueName + " Subscription for Giddh"
-        image: "/public/website/images/logo.png"
+        name: scope.wlt.company.name
+        description: "Payment for " + scope.wlt.contentType + " " + scope.wlt.contentNumber
         handler: (response)->
 # hit api after success
 #          console.log response, "response after success"
           sendThis = {
-            proformaUniqueName: scope.uniqueName
+            proformaUniqueName: scope.wlt.company.uniqueName
+            uniqueName: scope.wlt.contentNumber
             paymentId: response.razorpay_payment_id
           }
           scope.successPayment(sendThis)
           # need to call payment api
         prefill:
-          name: scope.basicInfo.name
-          email: scope.basicInfo.email
-          contact: "7828405888"
-        notes:
-          address: "505, C.S. Nayudu Arcade"
-        theme:
-          color: "#449d44"
+          name: scope.wlt.consumer.name
+          email: scope.wlt.consumer.email
+          contact: scope.wlt.consumer.contactNo
         order_id: scope.wlt.orderId
       }
       rzp1 = new Razorpay(options)
@@ -84,8 +80,8 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
       e.preventDefault()
 
     element.on 'click', (e) ->
-      diff = scope.removeDotFromString(scope.wlt.Amnt)
-      scope.proceedToPay(e, Number(scope.wlt.Amnt)*100)
+      diff = scope.removeDotFromString(scope.wlt.amount)
+      scope.proceedToPay(e, Number(scope.wlt.amount)*100)
   }
 ]
 app.controller 'paymentCtrl', [
@@ -94,6 +90,8 @@ app.controller 'paymentCtrl', [
     urlSearch = window.location.search
     searchArr = urlSearch.split("=")
     $scope.randomUniqueName = searchArr[1]
+    data = {}
+    data.randomNumber = $scope.randomUniqueName
     $scope.wlt = {
       Amnt:100
       orderId: ""
@@ -106,21 +104,31 @@ app.controller 'paymentCtrl', [
       return Math.floor(Number(str))
 
     $scope.getDetails = () ->
-      $http.get('/invoice-pay-request', $scope.randomUniqueName).then((response) ->
-        if(response.status == 200 && _.isUndefined(response.data.status))
-          $scope.wlt = response.body
+      $http.post('/invoice-pay-request', data).then(
+        (response) ->
           console.log(response)
-        else
-          toastr.error(response.data.message)
+          $scope.wlt = response.data.body
+        (error) ->
+          console.log(error)
+          toastr.error(error.data.message)
       )
 
     $scope.successPayment = (data) ->
-      $http.post('/proforma/pay', data).then((response) ->
-        if(response.status == 200 && _.isUndefined(response.data.status))
-          toastr.success("Thanks! we will get in touch with you soon")
-        else
-          toastr.error(response.data.message)
-      )
+      if $scope.wlt.contentType == "invoice"
+        $http.post('/invoice/pay', data).then(
+          (response) ->
+            toastr.success("Thanks! payment done.")
+          (error) ->
+            toastr.error(error.data.message)
+        )
+      else if $scope.wlt.contentType == "proforma"
+        $http.post('/proforma/pay', data).then(
+          (response) ->
+            toastr.success("Thanks! payment done.")
+          (error) ->
+            toastr.error(error.data.message)
+        )
+
 
     $scope.getDetails()
 ]

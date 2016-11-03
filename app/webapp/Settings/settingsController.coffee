@@ -822,6 +822,9 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     else
       $scope.updateRazor = false
 
+    if $scope.razorPayDetail.account == null
+      $scope.linkRazor = true
+
   $scope.getRazorPayFailure = (res) ->
     toastr.error(res.data.message)
 
@@ -829,6 +832,14 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     if details.userName == "" || details.password == ""
       return
     else
+      sendThisDetail = {}
+      sendThisDetail.companyName = details.companyName
+      sendThisDetail.userName = details.userName
+      sendThisDetail.password = details.password
+      if details.account != null
+        sendThisDetail.account = {}
+        sendThisDetail.account.name = details.account.name
+        sendThisDetail.account.uniqueName = details.account.uniqueName
       companyServices.addRazorPay($rootScope.selectedCompany.uniqueName, details).then($scope.saveRazorPaySuccess, $scope.saveRazorPayFailure)
 
   $scope.saveRazorPaySuccess = (res) ->
@@ -838,11 +849,19 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   $scope.saveRazorPayFailure = (res) ->
     toastr.error(res.data.message)
 
-  $scope.linkRazorPayAccount = () ->
-    return
+  $scope.unlinkAccount = (detail) ->
+    detail.account = null
+    companyServices.updateRazorPay($rootScope.selectedCompany.uniqueName, detail).then($scope.saveRazorPaySuccess, $scope.saveRazorPayFailure)
 
   $scope.updateRazorPayDetails = (detail) ->
-    companyServices.updateRazorPay($rootScope.selectedCompany.uniqueName, detail).then($scope.saveRazorPaySuccess, $scope.saveRazorPayFailure)
+    sendThisDetail = {}
+    sendThisDetail.companyName = detail.companyName
+    sendThisDetail.userName = detail.userName
+    sendThisDetail.password = detail.password
+    sendThisDetail.account = {}
+    sendThisDetail.account.name = detail.account.name
+    sendThisDetail.account.uniqueName = detail.account.uniqueName
+    companyServices.updateRazorPay($rootScope.selectedCompany.uniqueName, sendThisDetail).then($scope.saveRazorPaySuccess, $scope.saveRazorPayFailure)
 
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'

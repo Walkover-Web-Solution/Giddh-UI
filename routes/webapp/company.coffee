@@ -645,7 +645,7 @@ router.post '/:companyUniqueName/razorpay', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.patch '/:companyUniqueName/razorpay', (req, res) ->
+router.put '/:companyUniqueName/razorpay', (req, res) ->
   hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/razorpay'
   args =
     headers:
@@ -653,7 +653,7 @@ router.patch '/:companyUniqueName/razorpay', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
-  settings.client.patch hUrl, args, (data, response) ->
+  settings.client.put hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
