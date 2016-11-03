@@ -9,6 +9,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
   $scope.countryCode = 91
   $rootScope.homePage = false
   $scope.loginBtnTxt = "Get OTP"
+  $scope.loggingIn = false
   # check string has whitespace
   $scope.hasWhiteSpace = (s) ->
     return /\s/g.test(s)
@@ -101,7 +102,8 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
     window.location = "/app/#/home/"
 
   loginUserFailure = (res) ->
-    toastr.error(res.message)
+    toastr.error(res.data.message)
+    $scope.loggingIn = false
 
   loginUser = (token) ->
     data = {
@@ -120,6 +122,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
 
   verifyOtpFailure = (res) ->
     toastr.error(res.data.response.code)
+    $scope.loggingIn = false
 
   $scope.verifyOtp = (otp) ->
     contact = $scope.contact
@@ -128,5 +131,6 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
       verifyOtpSuccess,
       verifyOtpFailure
     )
+    $scope.loggingIn = true
 
 angular.module('giddhApp').controller 'loginController', loginController
