@@ -32,7 +32,8 @@ router.get '/flatten-accounts', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
-    parameters:
+      'Content-Type': 'application/json'
+    data:
       'q':req.query.q
       # 'page': req.query.page
       # 'count':req.query.count

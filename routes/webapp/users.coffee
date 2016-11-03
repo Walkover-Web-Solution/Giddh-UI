@@ -139,7 +139,6 @@ router.post '/:uniqueName/balance', (req, res) ->
 
 # add mobile number
 router.post '/system_admin/verify-number', (req, res) ->
-  console.log req.body
   authHead =
     headers:
       'Auth-Key': req.session.authKey

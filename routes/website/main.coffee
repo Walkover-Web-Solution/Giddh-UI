@@ -85,7 +85,6 @@ router.post '/verify-email', (req, res) ->
 
 router.post '/proforma/pay', (req, res) ->
   data = req.body
-  console.log(data)
   hUrl = settings.envUrl + '/company/'+data.proformaUniqueName+'/proforma/'+data.proformaUniqueName+'/pay'
   settings.client.post hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
@@ -97,6 +96,47 @@ router.get '/invoice-pay-request', (req, res) ->
   settings.client.get hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
+    res.send data
+
+router.post '/get-login-otp', (req, res) ->
+  data = req.body
+  data.getGeneratedOTP = false
+  hUrl = "https://sendotp.msg91.com/api/generateOTP"
+  args =
+    headers:
+      "Content-Type": "application/json"
+      "application-Key" : settings.getOtpKey
+    data: data
+  settings.client.post hUrl,args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/verify-login-otp', (req, res) ->
+  data = req.body
+  hUrl = "https://sendotp.msg91.com/api/verifyOTP"
+  args =
+    headers:
+      "Content-Type": "application/json"
+      "application-Key" : settings.getOtpKey
+    data: data
+  settings.client.post hUrl,args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/login-with-number', (req, res) ->
+  hUrl = hUrl = settings.envUrl + 'login-with-number?' + "countryCode=" + req.body.countryCode + "&mobileNumber=" + req.body.mobileNumber
+  args =
+    headers:
+      "Content-Type": "application/json"
+      "Access-Token" : req.body.token
+  settings.client.get hUrl,args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    else
+      req.session.name = data.body.user.uniqueName
+      req.session.authKey = data.body.authKey
     res.send data
 
 module.exports = router

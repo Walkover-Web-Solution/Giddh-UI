@@ -10,8 +10,11 @@ app = angular.module("giddhApp", [
   "vcRecaptcha"
   "valid-number"
   "razor-pay"
+  "internationalPhoneNumber"
   ]
 )
+app.config (ipnConfig) ->
+  ipnConfig.autoFormat = false
 
 angular.module('valid-number', []).
 directive 'validNumber', ->
@@ -125,10 +128,15 @@ app.controller 'paymentCtrl', [
 app.controller 'homeCtrl', [
   '$scope', 'toastr', '$http', 'vcRecaptchaService', '$rootScope', '$location',
   ($scope, toastr, $http, vcRecaptchaService, $rootScope, $location) ->
+    $scope.showLoginBox = false
+    $scope.toggleLoginBox = (e) ->
+      $scope.showLoginBox = !$scope.showLoginBox
+      e.stopPropagation()
+
     $scope.resources = [
-      '/public/website/images/Giddh.mp4'
+      'https://test-fs8eefokm8yjj.stackpathdns.com/public/website/images/Giddh.mp4'
     ]
-    $scope.poster = '/public/website/images/new/banner.jpg'
+    $scope.poster = 'https://test-fs8eefokm8yjj.stackpathdns.com/public/website/images/new/banner.jpg'
     $scope.fullScreen = true
     $scope.muted = false
     $scope.zIndex = '0'
@@ -222,6 +230,12 @@ app.controller 'homeCtrl', [
         else
           $scope.responseMsg = response.data.message
       )
+
+    $(document).on('click', (e) ->
+      $scope.showLoginBox = false
+    )
+    $scope.goTo = (state) ->
+      window.location = state
 ]
 
 app.config [
@@ -518,8 +532,42 @@ app.controller 'verifyEmailCtrl', [
       )
 ]
 
+app.directive 'numbersOnly', ->
+  {
+    require: 'ngModel'
+    link: (scope, element, attr, ngModelCtrl) ->
 
+      fromUser = (text) ->
+        if text
+          transformedInput = text.replace(/[^0-9]/g, '')
+          if transformedInput != text
+            ngModelCtrl.$setViewValue transformedInput
+            ngModelCtrl.$render()
+          return transformedInput
+        undefined
 
+      ngModelCtrl.$parsers.push fromUser
+      return
+
+  }
+
+app.directive 'numberSelect', ->
+  {
+    require: 'ngModel'
+    link: (scope, element, attr, ngModelCtrl) ->
+      $(element).intlTelInput()
+      scope.intlNumber = $(element).intlTelInput("getNumber")
+
+      scope.$watch('intlNumber', (newVal, oldVal) ->
+        if newVal != oldVal
+          console.log newVal
+      )
+
+      $(element).on("countrychange", (e, countrydata) ->
+        console.log countrydata
+      )
+
+  }
 
 # resources locations
 # video background- https://github.com/2013gang/angular-video-background

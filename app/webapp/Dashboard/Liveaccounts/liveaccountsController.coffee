@@ -94,6 +94,6 @@ liveaccount.controller('liveaccountsController',liveaccountsController)
 
 .directive 'liveAccount', [($locationProvider,$rootScope) -> {
   restrict: 'E'
-  templateUrl: '/public/webapp/Dashboard/Liveaccounts/liveaccounts.html'
+  templateUrl: 'https://test-fs8eefokm8yjj.stackpathdns.com/public/webapp/Dashboard/Liveaccounts/liveaccounts.html'
 #  controller: 'liveaccountsController'
 }]
