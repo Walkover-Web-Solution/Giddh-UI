@@ -558,9 +558,27 @@
                 <div class="with" ng-if="razorPayDetail.account.uniqueName != null">
                   Linked with: {{razorPayDetail.account.name}} ({{razorPayDetail.account.uniqueName}})
                 </div>
-                <button ng-if="linkRazor" class="btn btn-sm btn-warning pull-right" ng-click="linkRazor = 'false'" style="margin-top:5px">Not Now</button>
-                <button ng-if="razorPayDetail.account.name == null" class="btn btn-sm btn-info" ng-click="linkRazor = 'true'">Link Account</button>
-                <button ng-if="razorPayDetail.account.name != null" class="btn btn-sm btn-danger mrT1">Unlink Account</button>
+                <div class="clearfix mrT1" ng-if="linkRazor">
+                  <label>Account</label>
+                  <div class="input-group">
+                    <ui-select allow-clear ng-model="razorPayDetail.account" theme="bootstrap">
+                      <ui-select-match placeholder="Select Accounts" reset-search-input="true">
+                        {{$select.selected.name}}
+                      </ui-select-match >
+                      <ui-select-choices
+                          repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="getFlatAccntsByQuery($select.search)">
+                        <span>{{acc.name}} ({{acc.uniqueName}})</span>
+                      </ui-select-choices>
+                    </ui-select>
+                    <span class="input-group-btn">
+                      <button type="button" ng-click="razorPayDetail.account = undefined" class="btn btn-default">
+                        <span class="glyphicon glyphicon-trash"></span>
+                      </button>
+                    </span>
+                  </div>
+                </div>
+                <button ng-if="razorPayDetail.account == null && linkRazor" class="btn btn-sm btn-info mrT1" ng-click="updateRazorPayDetails(razorPayDetail)">Link Account</button>
+                <button ng-if="razorPayDetail.account != null" class="btn btn-sm btn-danger mrT1" ng-click="unlinkAccount(razorPayDetail)">Unlink Account</button>
               </div>
             </div>
           </div>

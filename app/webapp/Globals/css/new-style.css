@@ -3731,7 +3731,7 @@ tr.db-bnk-account > td.reconnectDiv{
     bottom: 0;
 }
 
-.add-transition{
+.add-transition {
     -webkit-transition: width 0.5s;
     -moz-transition: width 0.5s;
     -ms-transition: width 0.5s;

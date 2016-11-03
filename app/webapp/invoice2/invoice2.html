@@ -3,7 +3,7 @@
     <uib-tabset justified="false">
         <uib-tab heading="Invoice">
           <div class="row">
-            <div class="add-transition" ng-class="{'col-xs-12' : flyDiv == false, 'col-xs-11' : flyDiv == true}" auto-height style="overflow-y: auto;">
+            <div class="add-transition" ng-class="{'col-xs-12' : flyDiv == false, 'col-xs-11' : flyDiv == true}" auto-height>
               <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
                 <uib-tabset class="custom-tabset">
                   <uib-tab class="mrB1" heading="View" select="setTab(0)">
@@ -13,7 +13,7 @@
                           <img src="/public/webapp/Globals/images/no-data.png" alt="No Data">
                         </div>
                       </div>
-                      <div class="row mr1" ng-if="invoices.length > 0">
+                      <div class="row mr1 y-scroll" ng-if="invoices.length > 0">
                         <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
                         <table class="table table-bordered">
                           <thead>
@@ -80,7 +80,7 @@
                         <!-- -->
                       <!--</div>-->
                     </div>
-                    <div class="row mr1">
+                    <div class="row mr1 y-scroll">
                       <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
                       <table class="table table-bordered">
                         <thead>

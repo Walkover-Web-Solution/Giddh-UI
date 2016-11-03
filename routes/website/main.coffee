@@ -85,14 +85,16 @@ router.post '/verify-email', (req, res) ->
 
 router.post '/proforma/pay', (req, res) ->
   data = req.body
-  hUrl = settings.envUrl + '/company/'+data.proformaUniqueName+'/proforma/'+data.proformaUniqueName+'/pay'
+  hUrl = settings.envUrl + 'company/'+data.proformaUniqueName+'/proforma/'+data.proformaUniqueName+'/pay'
   settings.client.post hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
-router.get '/invoice-pay-request', (req, res) ->
-  hUrl = settings.envUrl + '/invoice-pay-request/'+req.data
+router.post '/invoice-pay-request', (req, res) ->
+  console.log(req.body)
+  hUrl = settings.envUrl + 'invoice-pay-request/'+req.body.randomNumber
+  console.log(hUrl)
   settings.client.get hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

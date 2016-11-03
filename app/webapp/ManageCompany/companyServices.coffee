@@ -201,7 +201,7 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
       url: '/company/:companyUniqueName/razorpay'
 
     updateRazorPayDetail:
-      method: 'PATCH'
+      method: 'PUT'
       url: '/company/:companyUniqueName/razorpay'
 
     deleteRazorPayDetail:

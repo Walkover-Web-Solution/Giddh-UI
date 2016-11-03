@@ -94,6 +94,8 @@ app.controller 'paymentCtrl', [
     urlSearch = window.location.search
     searchArr = urlSearch.split("=")
     $scope.randomUniqueName = searchArr[1]
+    data = {}
+    data.randomNumber = $scope.randomUniqueName
     $scope.wlt = {
       Amnt:100
       orderId: ""
@@ -106,11 +108,13 @@ app.controller 'paymentCtrl', [
       return Math.floor(Number(str))
 
     $scope.getDetails = () ->
-      $http.get('/invoice-pay-request', $scope.randomUniqueName).then((response) ->
-        if(response.status == 200 && _.isUndefined(response.data.status))
+      $http.post('/invoice-pay-request', data).then((response) ->
+        console.log(response)
+        if(response.status == 200)
           $scope.wlt = response.body
           console.log(response)
         else
+          console.log(response)
           toastr.error(response.data.message)
       )
 
