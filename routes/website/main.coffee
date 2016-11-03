@@ -85,14 +85,28 @@ router.post '/verify-email', (req, res) ->
 
 router.post '/proforma/pay', (req, res) ->
   data = req.body
-  hUrl = settings.envUrl + '/company/'+data.proformaUniqueName+'/proforma/'+data.proformaUniqueName+'/pay'
-  settings.client.post hUrl, (data, response) ->
+  hUrl = settings.envUrl + 'company/'+data.proformaUniqueName+'/proforma/'+data.uniqueName+'/pay'
+  args = {}
+  args.paymentId = data.paymentId
+  settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
-router.get '/invoice-pay-request', (req, res) ->
-  hUrl = settings.envUrl + '/invoice-pay-request/'+req.data
+router.post '/invoice/pay', (req, res) ->
+  data = req.body
+  hUrl = settings.envUrl + 'company/'+data.proformaUniqueName+'/invoices/'+data.uniqueName+'/pay'
+  args = {}
+  args.paymentId = data.paymentId
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/invoice-pay-request', (req, res) ->
+  console.log(req.body)
+  hUrl = settings.envUrl + 'invoice-pay-request/'+req.body.randomNumber
+  console.log(hUrl)
   settings.client.get hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

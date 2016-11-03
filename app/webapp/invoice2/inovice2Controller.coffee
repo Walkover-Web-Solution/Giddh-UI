@@ -1,6 +1,6 @@
 'use strict'
 
-invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService, $uibModal, companyServices, $timeout) ->
+invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService, $uibModal, companyServices, $timeout, DAServices, modalService) ->
   $rootScope.cmpViewShow = true
   $scope.checked = false;
   $scope.size = '105px';
@@ -30,6 +30,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.today = new Date()
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
+  $scope.showPreview = false
 
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
@@ -49,6 +50,44 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       $scope.getAllInvoices()
     else if selectedTab == 1
       $scope.getAllTransaction()
+
+  $scope.checkAccounts = () ->
+    tempList = []
+    _.each(sendForGenerate, (entry) ->
+      tempList.push(entry.account.uniqueName)
+    )
+    uniqueList = _.uniq(tempList)
+    if uniqueList.length > 1
+      $scope.showPreview = false
+    else
+      $scope.showPreview = true
+
+  $scope.prevAndGenInv=()->
+    $scope.genMode = true
+    $scope.prevInProg = true
+    arr = []
+    _.each(sendForGenerate, (entry)->
+      arr.push(entry.uniqueName)
+    )
+    data =
+      uniqueNames: _.uniq(arr)
+
+    obj =
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: sendForGenerate[0].account.uniqueName
+
+    accountService.prevInvoice(obj, data).then($scope.prevAndGenInvSuccess, $scope.prevAndGenInvFailure)
+
+  $scope.prevAndGenInvSuccess=(res)->
+    $scope.prevInProg = false
+    $scope.viewInvTemplate(res.body.template, 'edit', res.body)
+
+
+  $scope.prevAndGenInvFailure=(res)->
+    $scope.prevInProg = false
+    $scope.entriesForInvoice = []
+    toastr.error(res.data.message, res.data.status)
+    $scope.resetAllCheckBoxes()
 
   $scope.getAllInvoices = () ->
     infoToSend = {
@@ -76,7 +115,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
       "toDate": moment($scope.dateData.toDate).format('DD-MM-YYYY')
     }
-    invoiceService.getAllLedgers(infoToSend, {}).then($scope.getAllTransactionSuccess, $scope.getAllTransactionFailure)
+    obj = {}
+    if $scope.filtersInvoice.account != undefined
+      obj.accountUniqueName = $scope.filtersInvoice.account.uniqueName
+    invoiceService.getAllLedgers(infoToSend, obj).then($scope.getAllTransactionSuccess, $scope.getAllTransactionFailure)
 
   $scope.getAllTransactionSuccess = (res) ->
     $scope.ledgers = res.body
@@ -91,9 +133,13 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       index = sendForGenerate.indexOf(ledger)
       sendForGenerate.splice(index, 1)
 
+    $scope.checkAccounts()
+
 
   $scope.generateBulkInvoice = (condition) ->
     selected = []
+    if sendForGenerate.length <= 0
+      return
     _.each(sendForGenerate, (item) ->
       obj = {}
       obj.accUniqueName = item.account.uniqueName
@@ -122,13 +168,13 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     invoiceService.generateBulkInvoice(infoToSend, final).then($scope.generateBulkInvoiceSuccess, $scope.generateBulkInvoiceFailure)
 
   $scope.generateBulkInvoiceSuccess = (res) ->
-    console.log("success", res)
     toastr.success("Invoice generated successfully.")
     $scope.inCaseOfFailedInvoice = res.body
     _.each(sendForGenerate, (removeThis) ->
       index = $scope.ledgers.indexOf(removeThis)
       $scope.ledgers.splice(index, 1)
     )
+    sendForGenerate = []
     $scope.getAllTransaction()
 
   $scope.generateBulkInvoiceFailure = (res) ->
@@ -203,6 +249,19 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.showInvoiceFailure = () ->
     $scope.editGenInvoice = false
 
+  $scope.deleteInvoice = (invoice) ->
+    obj =
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: invoice.account.uniqueName
+      invoiceUniqueID : invoice.invoiceNumber
+    companyServices.delInv(obj).then($scope.delInvSuccess, $scope.multiActionWithInvFailure)
+
+  $scope.delInvSuccess=(res)->
+    toastr.success("Invoice deleted successfully", "Success")
+    $scope.radioChecked = false
+    $scope.selectedInvoice = {}
+    $scope.getAllInvoices()
+
   $scope.downInv=()->
     obj =
       compUname: $rootScope.selectedCompany.uniqueName
@@ -270,6 +329,122 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.updateGeneratedInvoiceFailure = (res) ->
     toastr.error(res.data.message)
 
+
+  # save template data
+  $scope.saveTemp=(stype, force)->
+    $scope.genMode = false
+    $scope.updatingTempData = true
+    dData = {}
+    data = {}
+    angular.copy($scope.defTempData, data)
+
+    # company setting
+    if not(_.isEmpty(data.company.data))
+      data.company.data = data.company.data.split('\n')
+    #data.company.data.replace(RegExp('\n', 'g'), ',')
+    if not(_.isEmpty(data.account.data))
+      data.account.data = data.account.data.split('\n')
+
+    # companyIdentities setting
+    if not(_.isEmpty(data.companyIdentities.data))
+      data.companyIdentities.data = data.companyIdentities.data.replace(RegExp('\n', 'g'), ',')
+    # data.companyIdentities.data = data.companyIdentities.data.replace(RegExp(' ', 'g'), '')
+
+    # terms setting
+    if not(_.isEmpty(data.termsStr))
+      data.terms = data.termsStr.split('\n')
+    else
+      data.terms = []
+
+    if stype is 'save'
+      companyServices.updtInvTempData($rootScope.selectedCompany.uniqueName, data).then($scope.saveTempSuccess, $scope.saveTempFailure)
+
+    else if stype is 'generate'
+      _.omit(data, 'termsStr')
+      obj=
+        compUname: $rootScope.selectedCompany.uniqueName
+        acntUname: sendForGenerate[0].account.uniqueName
+      dData=
+        uniqueNames: data.ledgerUniqueNames
+        validateTax: true
+        invoice: _.omit(data, 'ledgerUniqueNames')
+      if force
+        dData.validateTax = false
+
+      if moment(data.invoiceDetails.invoiceDate, "DD-MM-YYYY", true).isValid()
+        if $scope.defTempData.account.data.length > 0
+          accountService.genInvoice(obj, dData).then($scope.genInvoiceSuccess, $scope.genInvoiceFailure)
+        else
+          toastr.error("Buyer's address can not be left blank.")
+          $scope.updatingTempData = false
+          $scope.genMode = true
+      else
+        toastr.warning("Enter proper date", "Warning")
+        $scope.genMode = true
+        $scope.updatingTempData = false
+        return false
+
+    else
+      console.log "do nothing"
+
+
+  $scope.saveTempSuccess=(res)->
+    $scope.updatingTempData = false
+    abc = _.omit(res.body, "logo")
+    _.extend($scope.templateData , abc)
+    toastr.success("Template updated successfully", "Success")
+    $scope.modalInstance.close()
+
+  $scope.saveTempFailure = (res) ->
+    $scope.updatingTempData = false
+    toastr.error(res.data.message, res.data.status)
+
+
+  $scope.genInvoiceSuccess=(res)->
+    $scope.updatingTempData = false
+    toastr.success(res.body, "Success")
+    $scope.modalInstance.close()
+    _.each(sendForGenerate, (removeThis) ->
+      index = $scope.ledgers.indexOf(removeThis)
+      $scope.ledgers.splice(index, 1)
+    )
+    sendForGenerate = []
+    $scope.getAllTransaction()
+    $scope.entriesForInvoice = []
+
+
+  # $scope.getLedgerEntries()
+
+  $scope.genInvoiceFailure = (res) ->
+    if res.data.code is "INVALID_TAX"
+      $scope.updatingTempData = false
+      modalService.openConfirmModal(
+        title: 'Something wrong with your invoice data',
+        body: res.data.message+'\\n Do you still want to generate invoice with incorrect data.',
+        ok: 'Generate Anyway',
+        cancel: 'Cancel'
+      ).then ->
+        $scope.saveTemp('generate', true)
+    else
+      $scope.updatingTempData = false
+      toastr.error(res.data.message, res.data.status)
+      # if invoice date have any problem
+      # if res.data.code is 'ENTRIES_AFTER_INOICEDATE'
+      #   $scope.genMode = true
+      # else if res.data.code is 'INVALID_INVOICE_DATE'
+      #   $scope.genMode = true
+      $scope.genMode = true
+
+#  # get inv templates
+#  if not(_.isEmpty(sendForGenerate[0].account.uniqueName))
+#    ledgerObj = DAServices.LedgerGet()
+#    if !_.isEmpty(ledgerObj.ledgerData)
+#      $scope.loadInvoice(ledgerObj.ledgerData, ledgerObj.selectedAccount)
+#    else
+#      if !_.isNull(localStorageService.get("_ledgerData"))
+#        lgD = localStorageService.get("_ledgerData")
+#        acD = localStorageService.get("_selectedAccount")
+#        $scope.loadInvoice(lgD, acD)
 
   # Helper methods
 

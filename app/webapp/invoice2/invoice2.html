@@ -3,8 +3,8 @@
     <uib-tabset justified="false">
         <uib-tab heading="Invoice">
           <div class="row">
-            <div class="add-transition" ng-class="{'col-xs-12' : flyDiv == false, 'col-xs-10' : flyDiv == true}" auto-height style="overflow-y: auto;">
-              <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">
+            <div class="add-transition" ng-class="{'col-xs-12' : flyDiv == false, 'col-xs-11' : flyDiv == true}" auto-height>
+              <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
                 <uib-tabset class="custom-tabset">
                   <uib-tab class="mrB1" heading="View" select="setTab(0)">
                       <div class="row mr1" ng-if="invoices.length == 0">
@@ -13,7 +13,8 @@
                           <img src="/public/webapp/Globals/images/no-data.png" alt="No Data">
                         </div>
                       </div>
-                      <div class="row mr1" ng-if="invoices.length > 0">
+                      <div class="row mr1 y-scroll" ng-if="invoices.length > 0" cover-page>
+                        <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
                         <table class="table table-bordered">
                           <thead>
                             <th>Invoice number</th>
@@ -22,6 +23,7 @@
                             <th>Balance due</th>
                             <th>Action to perform</th>
                             <th>Status</th>
+                            <th></th>
                           </thead>
                           <tbody>
                           <tr ng-repeat="invoice in invoices">
@@ -35,13 +37,13 @@
                               <!--<label ng-model="invoice.invoiceNumber">{{invoice.invoiceNumber}}</label>-->
                             </td>
                             <td>
-                              <label ng-model="invoice.account.name">{{invoice.account.name}}</label>
+                              {{invoice.account.name}}
                             </td>
                             <td>
-                              <label ng-model="invoice.invoiceDate">{{invoice.invoiceDate}}</label>
+                              {{invoice.invoiceDate}}
                             </td>
                             <td>
-                              <label ng-model="invoice.balanceDue">{{invoice.balanceDue}}</label>
+                              {{invoice.balanceDue}}
                             </td>
                             <td>
                               <select class="form-control">
@@ -53,11 +55,15 @@
                               </select>
                             </td>
                             <td>
-                              <label ng-model="invoice.balanceStatus">{{invoice.balanceStatus}}</label>
+                              {{invoice.balanceStatus}}
+                            </td>
+                            <td>
+                              <i class="glyphicon glyphicon-trash color-giddh" ng-click="deleteInvoice(invoice)"></i>
                             </td>
                           </tr>
                           </tbody>
                         </table>
+                        <!--</perfect-scrollbar>-->
                       </div>
                   </uib-tab>
                   <uib-tab class="mrB1" heading="Generate" select="setTab(1)">
@@ -65,6 +71,7 @@
                       <ul class="list-inline">
                         <li><button class="btn btn-success" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
                         <li><button class="btn btn-primary" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
+                        <li><button ng-disabled="!showPreview" class="btn btn-default" ng-click="prevAndGenInv()">Preview & Generate</button></li>
                       </ul>
                       <!--<div class="col-xs-3">-->
                         <!-- -->
@@ -73,7 +80,8 @@
                         <!-- -->
                       <!--</div>-->
                     </div>
-                    <div class="row mr1">
+                    <div class="row mr1 y-scroll" cover-page>
+                      <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
                       <table class="table table-bordered">
                         <thead>
                           <th style="width:3%"></th>
@@ -90,32 +98,33 @@
                               <input type="checkbox" ng-model="$value" ng-change="addThis(ledger, $value)">
                             </td>
                             <td style="width:10%" rowspan="ledger.transactions.length">
-                              <label>{{ledger.entryDate}}</label>
+                              {{ledger.entryDate}}
                             </td>
                             <td colspan="2" style="padding:0;border-top:0px;border-bottom:0px;">
                               <table class="table table-bordered">
                                 <tr ng-repeat="transaction in ledger.transactions">
                                   <td style="width:77%">
-                                    <label>{{transaction.particular.name}}</label>
+                                    {{transaction.particular.name}}
                                   </td>
                                   <td style="width:23%">
-                                    <label>{{transaction.amount}}</label>
+                                    {{transaction.amount}}
                                   </td>
                                 </tr>
                               </table>
                             </td>
                             <td style="width:33%">
-                              <label>{{ledger.description}}</label>
+                              {{ledger.description}}
                             </td>
                             <td style="width:7%" rowspan="ledger.transactions.length">
-                              <label>{{ledger.total.amount}}</label>
+                              {{ledger.total.amount}}
                             </td>
                             <td style="width:20%" rowspan="ledger.transactions.length">
-                              <label>{{ledger.account.name}}</label>
+                              {{ledger.account.name}}
                             </td>
                           </tr>
                         </tbody>
                       </table>
+                      <!--</perfect-scrollbar>-->
                     </div>
                   </uib-tab>
                   <uib-tab heading="Setting" select="setTab(2)">
@@ -124,7 +133,7 @@
                     </div>
                   </uib-tab>
                 </uib-tabset>
-              </perfect-scrollbar>
+              <!--</perfect-scrollbar>-->
             </div>
             <div class="graph-filters add-transition" ng-class="{'col-xs-1 mrT5 pos-abs right0' : flyDiv == false, 'col-xs-2 pos-abs right0 background-color-giddh' : flyDiv == true}">
               <label class="pos-abs filter-btn mrB1" ng-class="{'witClr' : flyDiv == true}" ng-click="flyDiv = !flyDiv">

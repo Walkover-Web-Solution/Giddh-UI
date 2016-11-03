@@ -42,8 +42,7 @@ giddh.webApp.config (localStorageServiceProvider) ->
 
 giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   $urlRouterProvider.otherwise('/home')
-  #appendThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
-  appendThis = ''
+  appendThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
   $stateProvider.state('/home',
     url: '/home'
     resolve: {

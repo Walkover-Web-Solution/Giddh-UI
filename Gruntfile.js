@@ -242,8 +242,7 @@ module.exports = function (grunt) {
     env: {
       dev: {
         NODE_ENV: 'DEVELOPMENT',
-        //PREFIX_THIS: 'https://test-fs8eefokm8yjj.stackpathdns.com'
-        PREFIX_THIS: ''
+        PREFIX_THIS: 'https://test-fs8eefokm8yjj.stackpathdns.com'
       },
       prod: {
         NODE_ENV: 'PRODUCTION',
