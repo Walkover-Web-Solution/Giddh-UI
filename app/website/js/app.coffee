@@ -234,6 +234,8 @@ app.controller 'homeCtrl', [
     $(document).on('click', (e) ->
       $scope.showLoginBox = false
     )
+    $scope.goTo = (state) ->
+      window.location = state
 ]
 
 app.config [

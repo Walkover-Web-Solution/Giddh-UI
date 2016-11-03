@@ -30,10 +30,10 @@
           </a>
         </li> -->
         <li class="" ng-show="homePage || magicLinkPage || loginPage">
-          <a href="/index#feature" class="page-scroll" ng-class="{white:whiteLinks && !loginPage}">Features</a>
+          <a href="#feature" class="page-scroll" ng-class="{white:whiteLinks && !loginPage}">Features</a>
         </li>
         <li class="">
-          <a href="/pricing" ng-class="{white:whiteLinks && !loginPage}">Pricing</a>
+          <a href="/pricing" ng-class="{white:whiteLinks && !loginPage}" ng-click="goTo('/pricing')">Pricing</a>
         </li>
         <li ng-hide="loginPage" class="login-btn" ng-click="toggleLoginBox($event)">
           <button id="loginButton" type="button" class="btn btn-secondary navbar-btn" style="margin-left:20px">
