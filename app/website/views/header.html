@@ -56,8 +56,8 @@
                 <i class="glyphicon glyphicon-phone"></i>
                 Login with Mobile
               </button>
-
-              <div class="phone-login" ng-if="phoneLoginPopup">
+              <div class="giddh-spinner" style="margin-top:85px" ng-if="phoneLoginPopup && loggingIn"></div>
+              <div class="phone-login" ng-if="phoneLoginPopup && !loggingIn">
                 <input type="text"
                   name="phone"
                   class="form-control"
