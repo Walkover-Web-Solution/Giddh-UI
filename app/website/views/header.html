@@ -60,16 +60,18 @@
               <div class="phone-login" ng-if="phoneLoginPopup">
                 <input type="text"
                   name="phone"
+                  class="form-control"
                   required
                   ng-model="contact.mobileNumber"
                   country="contact.countryCode"
                   default-country="in"
+                  preferred-countries="in"
                   international-phone-number>
                 <br>
-                <button type="login" class="btn mrT10" ng-click="getOtp(contact)">Get OTP</button>
-                <hr ng-if="showOtp" class="mrtb10">
+                <button class="btn btn-secondary mrT10" ng-click="getOtp()" ng-bind="loginBtnTxt"></button>
+                <hr class="mrtb10">
                 <input class="form-control" placeholder="Enter OTP" style="border-radius:0" ng-model="otp" ng-show="showOtp">
-                <button type="login" class="btn mrT10" ng-click="verifyOtp(otp)" ng-show="showOtp">Login</button>
+                <button type="login" class="btn btn-secondary mrT10" ng-click="verifyOtp(otp)" ng-show="showOtp">Login</button>
               </div>
             </div>
 
