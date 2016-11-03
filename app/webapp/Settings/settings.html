@@ -547,7 +547,7 @@
             </div>
             <div class="row pd1">
               <label>Secret</label>
-              <input class="form-control" type="text" placeholder="Secret key" ng-model="razorPayDetail.password">
+              <input class="form-control" type="password" placeholder="Secret key" ng-model="razorPayDetail.password">
             </div>
             <div class="row pd1">
               <div class="col-xs-3">
@@ -577,8 +577,8 @@
                     </span>
                   </div>
                 </div>
-                <button ng-if="razorPayDetail.account == null && linkRazor" class="btn btn-sm btn-info mrT1" ng-click="updateRazorPayDetails(razorPayDetail)">Link Account</button>
-                <button ng-if="razorPayDetail.account != null" class="btn btn-sm btn-danger mrT1" ng-click="unlinkAccount(razorPayDetail)">Unlink Account</button>
+                <button ng-if="linkRazor == true" class="btn btn-sm btn-info mrT1" ng-click="updateRazorPayDetails(razorPayDetail)">Link Account</button>
+                <button ng-if="linkRazor == false" class="btn btn-sm btn-danger mrT1" ng-click="unlinkAccount(razorPayDetail)">Unlink Account</button>
               </div>
             </div>
           </div>

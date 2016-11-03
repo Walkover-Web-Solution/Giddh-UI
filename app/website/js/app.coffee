@@ -108,14 +108,12 @@ app.controller 'paymentCtrl', [
       return Math.floor(Number(str))
 
     $scope.getDetails = () ->
-      $http.post('/invoice-pay-request', data).then((response) ->
-        console.log(response)
-        if(response.status == 200)
-          $scope.wlt = response.body
+      $http.post('/invoice-pay-request', data).then(
+        (response) ->
           console.log(response)
-        else
-          console.log(response)
-          toastr.error(response.data.message)
+        (error) ->
+          console.log(error)
+          toastr.error(error.data.message)
       )
 
     $scope.successPayment = (data) ->
