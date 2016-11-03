@@ -329,14 +329,18 @@ module.exports = function (grunt) {
           'angular-fullpage.js',
           'angular-wizard',
           'angular-google-chart',
-          'angular-file-saver'
+          'angular-file-saver',
+          'intl-tel-input',
+          'international-phone-number'
         ],
         dependencies: {
           'jquery': 'modernizr',
           'angular': 'jquery',
           'bootstrap': 'angular',
           'angular-bootstrap': 'bootstrap',
-          'underscore': 'angular-bootstrap'
+          'underscore': 'angular-bootstrap',
+          'intl-tel-input': 'jquery',
+          'international-phone-number':'intl-tel-input'
         },
         mainFiles: {
           'underscore': 'underscore-min.js',
