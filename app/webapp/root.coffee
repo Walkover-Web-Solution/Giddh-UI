@@ -39,7 +39,6 @@ giddh.webApp = angular.module("giddhWebApp",
 giddh.webApp.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
 
-
 giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   $urlRouterProvider.otherwise('/home')
   appendThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
