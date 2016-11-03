@@ -8,6 +8,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
   $scope.contact = {}
   $scope.countryCode = 91
   $rootScope.homePage = false
+  $scope.loginBtnTxt = "Get OTP"
   # check string has whitespace
   $scope.hasWhiteSpace = (s) ->
     return /\s/g.test(s)
@@ -82,12 +83,17 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
   getOtpFailure = (res) ->
     toastr.error(res.data.response.code)
 
-  $scope.getOtp = (contact) ->
-    contact.countryCode = $scope.countryCode
-    $http.post('/get-login-otp', contact).then(
-      getOtpSuccess,
-      getOtpFailure
-    )
+  $scope.getOtp = () ->
+    $scope.contact.countryCode = $scope.countryCode
+    if $scope.contact.mobileNumber != undefined
+      $http.post('/get-login-otp', $scope.contact).then(
+        getOtpSuccess,
+        getOtpFailure
+      )
+    else
+      toastr.error("mobile number cannot be blank")
+    $scope.loginBtnTxt = "Resend"
+    
 
   loginUserSuccess = (res) ->
     localStorageService.set("_userDetails", res.data.body.user)
@@ -95,7 +101,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
     window.location = "/app/#/home/"
 
   loginUserFailure = (res) ->
-    
+    toastr.error(res.message)
 
   loginUser = (token) ->
     data = {

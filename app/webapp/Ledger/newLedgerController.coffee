@@ -780,6 +780,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if $scope.prevTxn != null
       $scope.prevTxn.isOpen = false
     txn.isOpen = true
+    txn.isblankOpen = true
     $scope.prevTxn = txn
     $scope.selectedTxn = txn
     $scope.selectedLedger = ledger

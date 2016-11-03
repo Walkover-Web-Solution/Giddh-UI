@@ -1657,3 +1657,12 @@ button.toast-close-button {
     width: 25em;
   }
 }
+
+.phone-login input{
+  border-radius: 0 !important;
+  width:100%;
+}
+
+.phone-login .intl-tel-input{
+  width:100%;
+}
