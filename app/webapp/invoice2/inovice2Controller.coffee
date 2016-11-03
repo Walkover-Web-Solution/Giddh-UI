@@ -30,6 +30,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.today = new Date()
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
+  $scope.showPreview = false
 
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
@@ -49,6 +50,41 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       $scope.getAllInvoices()
     else if selectedTab == 1
       $scope.getAllTransaction()
+
+  $scope.checkAccounts = () ->
+    tempList = _.pluck(sendForGenerate, 'account')
+    uniqueList = _.uniq(tempList)
+    if uniqueList.length > 1
+      $scope.showPreview = false
+    else
+      $scope.showPreview = true
+
+  $scope.prevAndGenInv=()->
+    $scope.genMode = true
+    $scope.prevInProg = true
+    arr = []
+    _.each(sendForGenerate, (entry)->
+      arr.push(entry.uniqueName)
+    )
+    data =
+      uniqueNames: _.uniq(arr)
+
+    obj =
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $rootScope.$stateParams.invId
+
+    accountService.prevInvoice(obj, data).then($scope.prevAndGenInvSuccess, $scope.prevAndGenInvFailure)
+
+  $scope.prevAndGenInvSuccess=(res)->
+    $scope.prevInProg = false
+    $scope.viewInvTemplate(res.body.template, 'edit', res.body)
+
+
+  $scope.prevAndGenInvFailure=(res)->
+    $scope.prevInProg = false
+    $scope.entriesForInvoice = []
+    toastr.error(res.data.message, res.data.status)
+    $scope.resetAllCheckBoxes()
 
   $scope.getAllInvoices = () ->
     infoToSend = {
@@ -76,7 +112,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
       "toDate": moment($scope.dateData.toDate).format('DD-MM-YYYY')
     }
-    invoiceService.getAllLedgers(infoToSend, {}).then($scope.getAllTransactionSuccess, $scope.getAllTransactionFailure)
+    obj = {}
+    if $scope.filtersInvoice.account != undefined
+      obj.accountUniqueName = $scope.filtersInvoice.account.uniqueName
+    invoiceService.getAllLedgers(infoToSend, obj).then($scope.getAllTransactionSuccess, $scope.getAllTransactionFailure)
 
   $scope.getAllTransactionSuccess = (res) ->
     $scope.ledgers = res.body
@@ -90,6 +129,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     else if value == false
       index = sendForGenerate.indexOf(ledger)
       sendForGenerate.splice(index, 1)
+
+    $scope.checkAccounts()
 
 
   $scope.generateBulkInvoice = (condition) ->
@@ -202,6 +243,19 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
   $scope.showInvoiceFailure = () ->
     $scope.editGenInvoice = false
+
+  $scope.deleteInvoice = (invoice) ->
+    obj =
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: invoice.account.uniqueName
+      invoiceUniqueID : invoice.invoiceNumber
+    companyServices.delInv(obj).then($scope.delInvSuccess, $scope.multiActionWithInvFailure)
+
+  $scope.delInvSuccess=(res)->
+    toastr.success("Invoice deleted successfully", "Success")
+    $scope.radioChecked = false
+    $scope.selectedInvoice = {}
+    $scope.getAllInvoices()
 
   $scope.downInv=()->
     obj =

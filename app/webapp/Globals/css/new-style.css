@@ -3702,13 +3702,15 @@ tr.db-bnk-account > td.reconnectDiv{
     height: 50px;
 }
 
+.color-giddh{
+    color: #d35f29;
+}
+
 
 .flying-div{
     right: 0px;
     height: 100%;
-    background: transparent;
-    /*-webkit-animation-duration: 0.5s;*/
-    /*-webkit-animation-name: reducetime;*/
+    background: white;
     width: 100%;
     float: right;
     border-left: lightgrey 1px solid;
