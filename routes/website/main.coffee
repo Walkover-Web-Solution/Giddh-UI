@@ -85,9 +85,13 @@ router.post '/verify-email', (req, res) ->
 
 router.post '/proforma/pay', (req, res) ->
   data = req.body
-  hUrl = settings.envUrl + 'company/'+data.proformaUniqueName+'/proforma/'+data.uniqueName+'/pay'
-  args = {}
-  args.paymentId = data.paymentId
+  hUrl = settings.envUrl + 'company/' + data.companyUniqueName+'/proforma/' + data.uniqueName + '/pay'
+  args =
+    headers:
+      "Content-Type": "application/json"
+    data: {
+      "paymentId" : data.paymentId
+    }
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
@@ -95,9 +99,13 @@ router.post '/proforma/pay', (req, res) ->
 
 router.post '/invoice/pay', (req, res) ->
   data = req.body
-  hUrl = settings.envUrl + 'company/'+data.proformaUniqueName+'/invoices/'+data.uniqueName+'/pay'
-  args = {}
-  args.paymentId = data.paymentId
+  hUrl = settings.envUrl + 'company/'+data.companyUniqueName+'/invoices/'+data.uniqueName+'/pay'
+  args =
+    headers:
+      "Content-Type": "application/json"
+    data: {
+      "paymentId" : data.paymentId
+    }
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

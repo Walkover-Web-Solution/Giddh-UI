@@ -63,7 +63,7 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
 # hit api after success
 #          console.log response, "response after success"
           sendThis = {
-            proformaUniqueName: scope.wlt.company.uniqueName
+            companyUniqueName: scope.wlt.company.uniqueName
             uniqueName: scope.wlt.contentNumber
             paymentId: response.razorpay_payment_id
           }
@@ -85,8 +85,8 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
   }
 ]
 app.controller 'paymentCtrl', [
-  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter',
-  ($scope, toastr, $http, $location, $rootScope, $filter) ->
+  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter', '$sce'
+  ($scope, toastr, $http, $location, $rootScope, $filter, $sce) ->
     urlSearch = window.location.search
     searchArr = urlSearch.split("=")
     $scope.randomUniqueName = searchArr[1]
@@ -100,16 +100,40 @@ app.controller 'paymentCtrl', [
       name: 'ravi soni'
       email: 'ravisoni@walkover.in'
     }
+    $scope.pdfFile = ""
     $scope.removeDotFromString = (str) ->
       return Math.floor(Number(str))
 
+    $scope.b64toBlob = (b64Data, contentType, sliceSize) ->
+      contentType = contentType or ''
+      sliceSize = sliceSize or 512
+      byteCharacters = atob(b64Data)
+      byteArrays = []
+      offset = 0
+      while offset < byteCharacters.length
+        slice = byteCharacters.slice(offset, offset + sliceSize)
+        byteNumbers = new Array(slice.length)
+        i = 0
+        while i < slice.length
+          byteNumbers[i] = slice.charCodeAt(i)
+          i++
+        byteArray = new Uint8Array(byteNumbers)
+        byteArrays.push byteArray
+        offset += sliceSize
+      blob = new Blob(byteArrays, type: contentType)
+      blob
     $scope.getDetails = () ->
       $http.post('/invoice-pay-request', data).then(
         (response) ->
-          console.log(response)
           $scope.wlt = response.data.body
+          data = $scope.b64toBlob($scope.wlt.content, "application/pdf", 512)
+          blobUrl = URL.createObjectURL(data)
+#          file = new Blob([$scope.wlt.content], {type: 'application/pdf'});
+#          fileURL = URL.createObjectURL(file);
+#          console.log(fileURL)
+          $scope.content = "data:application/pdf;base64," + $scope.wlt.content
+          $scope.pdfFile = $sce.trustAsResourceUrl(blobUrl);
         (error) ->
-          console.log(error)
           toastr.error(error.data.message)
       )
 
@@ -117,14 +141,14 @@ app.controller 'paymentCtrl', [
       if $scope.wlt.contentType == "invoice"
         $http.post('/invoice/pay', data).then(
           (response) ->
-            toastr.success("Thanks! payment done.")
+            toastr.success(response.body)
           (error) ->
             toastr.error(error.data.message)
         )
       else if $scope.wlt.contentType == "proforma"
         $http.post('/proforma/pay', data).then(
           (response) ->
-            toastr.success("Thanks! payment done.")
+            toastr.success(response.body)
           (error) ->
             toastr.error(error.data.message)
         )
