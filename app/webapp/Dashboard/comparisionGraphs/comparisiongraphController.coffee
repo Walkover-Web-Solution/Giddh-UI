@@ -352,11 +352,15 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.getData($scope.selectedChart)
 
+  $scope.$on 'reloadAll', (event) ->
+    console.log("reload")
+    $scope.getData($scope.selectedChart)
+
 compare.controller('comparisiongraphController',comparisiongraphController)
 
 .directive('compareGraph',[($locationProvider) -> {
   restrict: 'E'
-  templateUrl: 'https://test-fs8eefokm8yjj.stackpathdns.com/public/webapp/Dashboard/comparisionGraphs/compare.html'
+  templateUrl: '/public/webapp/Dashboard/comparisionGraphs/compare.html'
 #  controller: 'comparisiongraphController'
 }]
 )

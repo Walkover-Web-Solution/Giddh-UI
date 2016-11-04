@@ -18,4 +18,7 @@ dashboardController = ($scope, $rootScope) ->
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.$broadcast('reloadAll')
 
+#  $scope.hardRefresh = () ->
+#    $scope.$broadcast('reloadAll')
+
 #dashboard.controller 'dashboardController',dashboardController
