@@ -31,6 +31,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
   $scope.showPreview = false
+  $scope.canGenerateInvoice = false
 
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
@@ -132,7 +133,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     else if value == false
       index = sendForGenerate.indexOf(ledger)
       sendForGenerate.splice(index, 1)
-
+    if sendForGenerate.length > 0
+      $scope.canGenerateInvoice = true
+    else
+      $scope.canGenerateInvoice = false
     $scope.checkAccounts()
 
 
@@ -372,12 +376,15 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
         dData.validateTax = false
 
       if moment(data.invoiceDetails.invoiceDate, "DD-MM-YYYY", true).isValid()
-        if $scope.defTempData.account.data.length > 0
-          accountService.genInvoice(obj, dData).then($scope.genInvoiceSuccess, $scope.genInvoiceFailure)
-        else
-          toastr.error("Buyer's address can not be left blank.")
-          $scope.updatingTempData = false
-          $scope.genMode = true
+#        if $scope.defTempData.account.data.length == 0
+#          $scope.defTempData.account.data = []
+        if dData.invoice.account.data.length == 0
+          dData.invoice.account.data = []
+        accountService.genInvoice(obj, dData).then($scope.genInvoiceSuccess, $scope.genInvoiceFailure)
+#        else
+#          toastr.error("Buyer's address can not be left blank.")
+#          $scope.updatingTempData = false
+#          $scope.genMode = true
       else
         toastr.warning("Enter proper date", "Warning")
         $scope.genMode = true
