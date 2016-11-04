@@ -118,6 +118,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       # don't need to clear below
       # _userDetails, _currencyList
       localStorageService.clearAll()
+      window.sessionStorage.clear()
       window.location = "/thanks"
     ), (res) ->
 
