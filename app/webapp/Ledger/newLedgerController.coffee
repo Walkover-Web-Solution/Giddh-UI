@@ -129,10 +129,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.checkForExistingblankTransaction(ledger, str)
     if !$scope.hasBlankTxn
       ledger.transactions.push(txn)
-    if str.toLowerCase() == "debit" && $scope.sortOrder.debit
-      $scope.popover.position = "top"
-    else if str.toLowerCase() == "credit" && $scope.sortOrder.credit
-      $scope.popover.position = "top"
+    # if str.toLowerCase() == "debit" && $scope.sortOrder.debit
+    #   $scope.popover.position = "top"
+    # else if str.toLowerCase() == "credit" && $scope.sortOrder.credit
+    #   $scope.popover.position = "top"
 
     $scope.setFocusToBlankTxn(ledger, txn, str)
     $scope.blankCheckCompEntry(ledger)
@@ -330,7 +330,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.exportLedgerSuccess = (res)->
     $scope.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
-    console.log $scope.isSafari
     if $scope.msieBrowser()
       $scope.openWindow(res.body.filePath)
     else if $scope.isSafari       
@@ -776,7 +775,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #     itxn.isOpen = false
   #   txn.isOpen = true
 
-  $scope.openClosePopOver = (txn, ledger) ->
+  $scope.openClosePopOver = (txn, ledger, e) ->
     if $scope.prevTxn != null
       $scope.prevTxn.isOpen = false
     txn.isOpen = true
@@ -784,6 +783,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.prevTxn = txn
     $scope.selectedTxn = txn
     $scope.selectedLedger = ledger
+
+    if $(e.currentTarget).offset().top > $(window).height() / 3 * 2
+      $scope.popover.position = "top"
+    else
+      $scope.popover.position = "bottom"
+
     # $scope.openClosePopoverForLedger(txn, ledger)
     # $scope.openClosePopoverForBlankLedger(txn, ledger)
     # $scope.openClosePopoverForeLedger(txn, ledger)
@@ -1334,9 +1339,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     data = $scope.b64toBlob(res.body, "application/pdf", 512)
     blobUrl = URL.createObjectURL(data)
     $scope.dlinv = blobUrl
-    $scope.dlname = "abc.pdf"
+    # $scope.dlname = "abc.pdf"
     #$window.open(blobUrl)
-    FileSaver.saveAs(data, $scope.accountToShow.name+invoiceNumber+".pdf")
+    FileSaver.saveAs(data, $scope.accountToShow+ '-' + invoiceNumber+".pdf")
 
   # common failure message
   $scope.multiActionWithInvFailure=(res)->

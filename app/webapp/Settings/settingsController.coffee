@@ -836,21 +836,23 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
       sendThisDetail.companyName = details.companyName
       sendThisDetail.userName = details.userName
       sendThisDetail.password = details.password
-      if details.account != null
+      if details.account != null && details.account != undefined
         sendThisDetail.account = {}
         sendThisDetail.account.name = details.account.name
         sendThisDetail.account.uniqueName = details.account.uniqueName
       companyServices.addRazorPay($rootScope.selectedCompany.uniqueName, details).then($scope.saveRazorPaySuccess, $scope.saveRazorPayFailure)
 
   $scope.saveRazorPaySuccess = (res) ->
-    toastr.success(res.body.message)
+    if res.body.message != undefined
+      toastr.success(res.body.message)
     $scope.getRazorPayDetails()
 
   $scope.saveRazorPayFailure = (res) ->
     toastr.error(res.data.message)
 
   $scope.unlinkAccount = (detail) ->
-    detail.account = null
+    detail.account.uniqueName = null
+    detail.account.name = null
     companyServices.updateRazorPay($rootScope.selectedCompany.uniqueName, detail).then($scope.saveRazorPaySuccess, $scope.saveRazorPayFailure)
 
   $scope.updateRazorPayDetails = (detail) ->
@@ -862,6 +864,18 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     sendThisDetail.account.name = detail.account.name
     sendThisDetail.account.uniqueName = detail.account.uniqueName
     companyServices.updateRazorPay($rootScope.selectedCompany.uniqueName, sendThisDetail).then($scope.saveRazorPaySuccess, $scope.saveRazorPayFailure)
+
+  $scope.deleteRazorPayDetail = () ->
+    companyServices.deleteRazorPay($rootScope.selectedCompany.uniqueName).then($scope.deleteRazorPaySuccess, $scope.deleteRazorPayFailure)
+
+  $scope.deleteRazorPaySuccess = (res) ->
+    toastr.success(res.body)
+    $scope.razorPayDetail = {}
+    $scope.updateRazorPay = false
+    $scope.linkRazor = true
+
+  $scope.deleteRazorPayFailure = (res) ->
+    toastr.error(res.data.message)
 
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'

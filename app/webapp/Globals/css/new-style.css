@@ -2915,7 +2915,7 @@ ul.pills li {
     clear: both;
     overflow: hidden;
     position: relative;
-    margin-top:-120px !important;
+    padding-top:200px !important;
 }
 
 .ledger-container table th {
@@ -3141,6 +3141,10 @@ ul.pills li {
     margin-top:10px;
 }
 
+.tax .checkbox{
+    margin:0 5px 5px 0;
+}
+
 .bottom0 {
     bottom: 0;
 }
@@ -3303,12 +3307,11 @@ ul.pills li {
 
 .download-invoice-ledger {
     position: absolute;
-    right: 15px;
+    right: 0;
     top: 0px;
-    height: 30px;
-    padding: 1px 0px 1px 10px;
+    height: 34px;
+    padding:0 15px;
     cursor: pointer;
-    overflow: hidden;
 }
 
 .download-invoice-ledger > i{
@@ -3481,7 +3484,7 @@ ul.pills li {
 }
 
 .panel-margin{
-    margin-top: 220px;
+    padding-top: 220px;
 }
 
 .top0{

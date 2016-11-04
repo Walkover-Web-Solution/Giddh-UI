@@ -386,7 +386,7 @@ angular.module('trialBalance', []).directive('exportReport', [
     )
 
     # $(elem).find('input').on('focus', (e) ->
-    #   if $(e.target).offset().top > $(window).height() / 3 * 2
+    #   if $(e.currentTarget).offset().top > $(window).height() / 3 * 2
     #     attrs.$set("popoverPlacement", "top")
     #   else
     #     attrs.$set("popoverPlacement", "bottom")

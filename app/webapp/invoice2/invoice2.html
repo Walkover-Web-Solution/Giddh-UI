@@ -20,8 +20,9 @@
                             <th>Invoice number</th>
                             <th>Account</th>
                             <th>Invoice date</th>
+                            <th>Total Amount</th>
                             <th>Balance due</th>
-                            <th>Action to perform</th>
+                            <!--<th>Action to perform</th>-->
                             <th>Status</th>
                             <th></th>
                           </thead>
@@ -43,17 +44,20 @@
                               {{invoice.invoiceDate}}
                             </td>
                             <td>
-                              {{invoice.balanceDue}}
+                              {{invoice.grandTotal}}
                             </td>
                             <td>
-                              <select class="form-control">
-                                <option>-- Select --</option>
-                                <option>Paid</option>
-                                <option>Unpaid</option>
-                                <option>Cancel</option>
-                                <option>Hold</option>
-                              </select>
+                              {{invoice.balanceDue}}
                             </td>
+                            <!--<td>-->
+                              <!--<select class="form-control">-->
+                                <!--<option>&#45;&#45; Select &#45;&#45;</option>-->
+                                <!--<option>Paid</option>-->
+                                <!--<option>Unpaid</option>-->
+                                <!--<option>Cancel</option>-->
+                                <!--<option>Hold</option>-->
+                              <!--</select>-->
+                            <!--</td>-->
                             <td>
                               {{invoice.balanceStatus}}
                             </td>
@@ -69,8 +73,8 @@
                   <uib-tab class="mrB1" heading="Generate" select="setTab(1)">
                     <div class="row mr1">
                       <ul class="list-inline">
-                        <li><button class="btn btn-success" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
-                        <li><button class="btn btn-primary" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
+                        <li><button ng-disabled="!canGenerateInvoice" class="btn btn-success" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
+                        <li><button ng-disabled="!canGenerateInvoice" class="btn btn-primary" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
                         <li><button ng-disabled="!showPreview" class="btn btn-default" ng-click="prevAndGenInv()">Preview & Generate</button></li>
                       </ul>
                       <!--<div class="col-xs-3">-->
@@ -127,7 +131,7 @@
                       <!--</perfect-scrollbar>-->
                     </div>
                   </uib-tab>
-                  <uib-tab heading="Setting" select="setTab(2)">
+                  <uib-tab heading="Template" select="setTab(2)">
                     <div ng-include="'/public/webapp/Invoice/invoiceContent.html'" ng-controller="invoiceController">
 
                     </div>
@@ -195,11 +199,11 @@
             </div>
           </div>
         </uib-tab>
-        <uib-tab heading="Proforma">
-          <div ng-include="'/public/webapp/invoice2/proforma/proformaContent.html'" ng-controller="proformaController">
+        <!--<uib-tab heading="Proforma">-->
+          <!--<div ng-include="'/public/webapp/invoice2/proforma/proformaContent.html'" ng-controller="proformaController">-->
 
-          </div>
-        </uib-tab>
+          <!--</div>-->
+        <!--</uib-tab>-->
       </uib-tabset>
   </div>
 </div>
