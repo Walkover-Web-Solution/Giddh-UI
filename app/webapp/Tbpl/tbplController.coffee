@@ -58,6 +58,8 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     toYear: ''
   }
 
+  $scope.hardRefresh = false
+
   $scope.fyChecked = false
 
   $scope.fromDatePickerOpen = ->
@@ -278,6 +280,9 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   #   date: $scope.getDefaultDate().date
   # }
 
+  $scope.setRefresh = () ->
+    $scope.hardRefresh = true
+
   $scope.getTrialBal = (data) ->
     $scope.showTbplLoader = true
     if _.isNull(data.fromDate) || _.isNull(data.toDate)
@@ -289,6 +294,14 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       'fromDate': data.fromDate
       'toDate': data.toDate
     }
+    console.log($scope.hardRefresh)
+    if $scope.hardRefresh == true
+      reqParam = {
+        'companyUniqueName': $rootScope.selectedCompany.uniqueName
+        'fromDate': data.fromDate
+        'toDate': data.toDate
+        'refresh': true
+      }
     #$scope.checkFY(reqParam)
     trialBalService.getAllFor(reqParam).then $scope.getTrialBalSuccess, $scope.getTrialBalFailure
 
@@ -314,6 +327,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     if $scope.data.closingBalance.amount is 0 and $scope.data.creditTotal is 0 and $scope.data.debitTotal is 0 and $scope.data.forwardedBalance.amount is 0
       $scope.noData = true
     $scope.showTbplLoader = false
+    $scope.hardRefresh = false
 
   $scope.removeZeroAmountAccount = (grpList) ->
     _.each grpList, (grp) ->
@@ -372,6 +386,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
         $scope.removeAcc(ch)
 
   $scope.getTrialBalFailure = (res) ->
+    $scope.hardRefresh = false
     toastr.error(res.data.message, res.data.status)
     $scope.showTbplLoader = false
 
