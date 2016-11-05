@@ -10,6 +10,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   sendForGenerate = []
   $scope.filtersInvoice = {}
   $scope.flyDiv = false
+  $scope.invoiceCurrentPage = 1
+  $scope.ledgerCurrentPage = 1
 
   $scope.inCaseOfFailedInvoice = []
 
@@ -33,6 +35,38 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.showPreview = false
   $scope.canGenerateInvoice = false
 
+  $scope.range = (size, start, end) ->
+    ret = []
+    console.log size, start, end
+    if size < end
+      end = size
+      if size < $scope.gap
+        start = 0
+      else
+        start = size - ($scope.gap)
+    i = start
+    while i < end
+      ret.push i
+      i++
+    console.log ret
+    ret
+
+  $scope.prevPageInv = () ->
+    $scope.invoiceCurrentPage = $scope.invoiceCurrentPage - 1
+
+  $scope.nextPageInv = () ->
+    $scope.invoiceCurrentPage = $scope.invoiceCurrentPage + 1
+
+  $scope.prevPageLed = () ->
+    $scope.ledgerCurrentPage = $scope.ledgerCurrentPage - 1
+
+  $scope.nextPageLed = () ->
+    $scope.ledgerCurrentPage = $scope.ledgerCurrentPage + 1
+
+  $scope.setPage = ->
+    $scope.currentPage = @n
+    return
+
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
 
@@ -45,6 +79,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
   $scope.setTab = (value) ->
     selectedTab = value
+    $scope.commonGoButtonClick()
 
   $scope.commonGoButtonClick = () ->
     if selectedTab == 0
@@ -95,6 +130,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       "companyUniqueName": $rootScope.selectedCompany.uniqueName
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
       "toDate": moment($scope.dateData.toDate).format('DD-MM-YYYY')
+      "count": "12"
+      "page": $scope.invoiceCurrentPage
     }
     obj = {}
     if $scope.filtersInvoice.account != undefined
@@ -103,7 +140,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     invoiceService.getInvoices(infoToSend, obj).then($scope.getInvoicesSuccess, $scope.getInvoicesFailure)
 
   $scope.getInvoicesSuccess = (res) ->
-    $scope.invoices = _.flatten(res.body.results)
+    $scope.invoices = res.body
     if $scope.invoices.length == 0
       toastr.error("No invoices found.")
 
@@ -115,6 +152,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       "companyUniqueName": $rootScope.selectedCompany.uniqueName
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
       "toDate": moment($scope.dateData.toDate).format('DD-MM-YYYY')
+      "count": "12"
+      "page": $scope.ledgerCurrentPage
     }
     obj = {}
     if $scope.filtersInvoice.account != undefined

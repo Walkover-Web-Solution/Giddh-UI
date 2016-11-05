@@ -36,6 +36,8 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         companyUniqueName: info.companyUniqueName
         date1: info.fromDate
         date2: info.toDate
+        count: info.count
+        page: info.page
       }, data, onSuccess, onFailure))
 
     getAllLedgers: (info, data) ->
@@ -43,6 +45,8 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         companyUniqueName: info.companyUniqueName
         date1: info.fromDate
         date2: info.toDate
+        count: info.count
+        page: info.page
       },data, onSuccess, onFailure))
 
     generateBulkInvoice: (info, data) ->
