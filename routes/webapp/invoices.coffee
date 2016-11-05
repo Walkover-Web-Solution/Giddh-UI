@@ -2,7 +2,7 @@ settings = require('../util/settings')
 router = settings.express.Router({mergeParams: true})
 
 router.post '/', (req, res) ->
-  abc = req.params.companyUniqueName + '/invoices?from='+req.query.from+'&to='+req.query.to
+  abc = req.params.companyUniqueName + '/invoices?from='+req.query.from+'&to='+req.query.to + '&count=' + req.query.count + '&page=' + req.query.page
   str = settings.envUrl+ 'company/' + abc
   args =
     headers:
@@ -29,7 +29,7 @@ router.post '/bulk-generate', (req, res) ->
     res.send data
 
 router.get '/ledgers', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ledgers?from=' + req.query.from + '&to=' + req.query.to
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ledgers?from=' + req.query.from + '&to=' + req.query.to + '&count=' + req.query.count + '&page=' + req.query.page
   args =
     headers:
       'Auth-Key': req.session.authKey

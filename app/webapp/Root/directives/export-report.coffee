@@ -333,6 +333,34 @@ angular.module('trialBalance', []).directive('exportReport', [
     ), interval
 ]
 
+.directive 'customSort', ['$window', '$timeout', '$scope', '$filter', ($window, $timeout, $scope, $filter) ->
+  restrict: "A"
+  transclude: true
+  scope: {
+    order: '='
+    sort: '='
+  }
+  template :"<a ng-click='sort_by(order)' style='color: #555555;'>"+
+    "<span ng-transclude></span>"+
+    "<i ng-class='selectedCls(order)'></i>"+
+    "</a>"
+link: (scope, elem, attr) ->
+  scope.sort_by = (newSortingOrder) ->
+    sort = scope.sort;
+
+    if sort.sortingOrder == newSortingOrder
+      sort.reverse = !sort.reverse
+
+    sort.sortingOrder = newSortingOrder
+
+  scope.selectedCls = (column) ->
+    if column == scope.sort.sortingOrder
+      ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'))
+    else
+      'icon-sort'
+
+]
+
 .directive 'getFullHeight', ['$window', '$timeout', ($window, $timeout) ->
   restrict: "EA"
   link: (scope, elem, attr) ->
