@@ -11,7 +11,7 @@ router.get '/', (req, res) ->
       to: req.query.toDate
       from: req.query.fromDate
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/trial-balance'
-  if req.query.refresh == true
+  if req.query.refresh == "true"
     args =
       headers:
         'Auth-Key': req.session.authKey
