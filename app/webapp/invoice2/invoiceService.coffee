@@ -43,7 +43,7 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         companyUniqueName: info.companyUniqueName
         date1: info.fromDate
         date2: info.toDate
-      }, onSuccess, onFailure))
+      },data, onSuccess, onFailure))
 
     generateBulkInvoice: (info, data) ->
       @handlePromise((onSuccess, onFailure) -> Invoice.generateBulkInvoice({

@@ -35,6 +35,7 @@ router.get '/ledgers', (req, res) ->
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
       'Content-Type': 'application/json'
+    data: req.body
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
