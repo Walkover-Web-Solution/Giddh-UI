@@ -28,7 +28,7 @@ router.post '/bulk-generate', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.get '/ledgers', (req, res) ->
+router.post '/ledgers', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ledgers?from=' + req.query.from + '&to=' + req.query.to + '&count=' + req.query.count + '&page=' + req.query.page
   args =
     headers:
@@ -36,7 +36,8 @@ router.get '/ledgers', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
       'Content-Type': 'application/json'
     data: req.body
-  settings.client.get hUrl, args, (data, response) ->
+  console.log(req.body)
+  settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
