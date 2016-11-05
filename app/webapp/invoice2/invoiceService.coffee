@@ -14,7 +14,7 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         url: '/company/:companyUniqueName/invoices?from=:date1&to=:date2'
       }
       getAllLedgers: {
-        method: 'GET'
+        method: 'POST'
         url: '/company/:companyUniqueName/invoices/ledgers?from=:date1&to=:date2'
       }
       generateBulkInvoice: {
