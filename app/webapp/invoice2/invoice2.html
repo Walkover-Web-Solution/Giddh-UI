@@ -23,7 +23,7 @@
                             <th>Total Amount</th>
                             <th>Balance due</th>
                             <!--<th>Action to perform</th>-->
-                            <th>Status</th>
+                            <!--<th>Status</th>-->
                             <th></th>
                           </thead>
                           <tfoot>
@@ -73,9 +73,9 @@
                                 <!--<option>Hold</option>-->
                               <!--</select>-->
                             <!--</td>-->
-                            <td>
-                              {{invoice.balanceStatus}}
-                            </td>
+                            <!--<td>-->
+                              <!--{{invoice.balanceStatus}}-->
+                            <!--</td>-->
                             <td>
                               <i class="glyphicon glyphicon-trash color-giddh" ng-click="deleteInvoice(invoice)"></i>
                             </td>
@@ -129,7 +129,7 @@
                         <tbody>
                           <tr ng-repeat="ledger in ledgers.results">
                             <td style="width:3%" rowspan="ledger.transactions.length">
-                              <input type="checkbox" ng-model="$value" ng-change="addThis(ledger, $value)">
+                              <input name="foo" type="checkbox" ng-model="$value" ng-change="addThis(ledger, $value)">
                             </td>
                             <td style="width:10%" rowspan="ledger.transactions.length">
                               {{ledger.entryDate}}
@@ -199,28 +199,73 @@
                          placeholder="to date"
                       />
                 </div>
-                <div class="clearfix mrT1">
-                  <label>Account</label>
-                  <div class="input-group">
-                    <ui-select allow-clear ng-model="filtersInvoice.account" theme="bootstrap">
-                      <ui-select-match placeholder="Select Accounts" reset-search-input="true">
-                        {{$select.selected.name}}
-                      </ui-select-match >
-                      <ui-select-choices
-                          repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="getFlatAccntsByQuery($select.search)">
-                        <span>{{acc.name}} ({{acc.uniqueName}})</span>
-                      </ui-select-choices>
-                    </ui-select>
+                <div ng-if="selectedTab == 0">
+                  <div class="clearfix mrT1">
+                    <label>Account</label>
+                    <div class="input-group">
+                      <ui-select allow-clear ng-model="filtersInvoice.account" theme="bootstrap">
+                        <ui-select-match placeholder="Select Accounts" reset-search-input="true">
+                          {{$select.selected.name}}
+                        </ui-select-match >
+                        <ui-select-choices
+                            repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="getFlatAccntsByQuery($select.search)">
+                          <span>{{acc.name}} ({{acc.uniqueName}})</span>
+                        </ui-select-choices>
+                      </ui-select>
                     <span class="input-group-btn">
                       <button type="button" ng-click="filtersInvoice.account = undefined" class="btn btn-default">
                         <span class="glyphicon glyphicon-trash"></span>
                       </button>
                     </span>
+                    </div>
+                  </div>
+                  <div class="clearfix mrT1">
+                    <label>Invoice Number</label>
+                    <input type="text" class="form-control" ng-model="filtersInvoice.invoiceNumber" placeholder="Invoice number">
+                  </div>
+                  <div class="clearfix mrT1">
+                    <label>Balance Due</label>
+                    <select ng-model="filtersInvoice.option" class="col-xs-6 form-control">
+                      <option>Greater than</option>
+                      <option>Less than</option>
+                      <option>Equals</option>
+                    </select>
+                    <input type="text" class="form-control col-xs-6" ng-model="filtersInvoice.balanceDue" placeholder="Balance Due">
                   </div>
                 </div>
-                <div class="clearfix mrT1">
-                  <label>Invoice Number</label>
-                  <input type="text" class="form-control" ng-model="filtersInvoice.invoiceNumber" placeholder="Invoice number">
+                <div ng-if="selectedTab == 1">
+                  <div class="clearfix mrT1">
+                    <label>Account</label>
+                    <div class="input-group">
+                      <ui-select allow-clear ng-model="filtersLedger.account" theme="bootstrap">
+                        <ui-select-match placeholder="Select Accounts" reset-search-input="true">
+                          {{$select.selected.name}}
+                        </ui-select-match >
+                        <ui-select-choices
+                            repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="getFlatAccntsByQuery($select.search)">
+                          <span>{{acc.name}} ({{acc.uniqueName}})</span>
+                        </ui-select-choices>
+                      </ui-select>
+                    <span class="input-group-btn">
+                      <button type="button" ng-click="filtersLedger.account = undefined" class="btn btn-default">
+                        <span class="glyphicon glyphicon-trash"></span>
+                      </button>
+                    </span>
+                    </div>
+                  </div>
+                  <div class="clearfix mrT1">
+                    <label>Description</label>
+                    <input type="text" class="form-control" ng-model="filtersLedger.description" placeholder="By description">
+                  </div>
+                  <div class="clearfix mrT1">
+                    <label>Amount</label>
+                    <select ng-model="filtersLedger.option" class="col-xs-6 form-control">
+                      <option>Greater than</option>
+                      <option>Less than</option>
+                      <option>Equals</option>
+                    </select>
+                    <input type="text" class="form-control col-xs-6" ng-model="filtersLedger.entryTotal" placeholder="By amount">
+                  </div>
                 </div>
                 <div class="clearfix mrT1">
                   <button class="btn btn-primary" ng-click="commonGoButtonClick()">GO</button>

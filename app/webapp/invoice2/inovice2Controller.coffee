@@ -6,9 +6,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.size = '105px';
   $scope.invoices = []
   $scope.ledgers = []
-  selectedTab = 0
+  $scope.selectedTab = 0
   sendForGenerate = []
   $scope.filtersInvoice = {}
+  $scope.filtersLedger = {}
   $scope.flyDiv = false
   $scope.invoiceCurrentPage = 1
   $scope.ledgerCurrentPage = 1
@@ -34,6 +35,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.toDatePickerIsOpen = false
   $scope.showPreview = false
   $scope.canGenerateInvoice = false
+  $scope.mainCheckbox = false
 
   $scope.range = (size, start, end) ->
     ret = []
@@ -74,17 +76,20 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     this.toDatePickerIsOpen = true
   # end of date picker
 
+  $scope.selectAll = (checkOrNot) ->
+
+
   $scope.toggle = () ->
     $scope.checked = !$scope.checked
 
   $scope.setTab = (value) ->
-    selectedTab = value
+    $scope.selectedTab = value
     $scope.commonGoButtonClick()
 
   $scope.commonGoButtonClick = () ->
-    if selectedTab == 0
+    if $scope.selectedTab == 0
       $scope.getAllInvoices()
-    else if selectedTab == 1
+    else if $scope.selectedTab == 1
       $scope.getAllTransaction()
 
   $scope.checkAccounts = () ->
@@ -137,6 +142,15 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     if $scope.filtersInvoice.account != undefined
       obj.accountUniqueName = $scope.filtersInvoice.account.uniqueName
     obj.invoiceNumber = $scope.filtersInvoice.invoiceNumber
+    if $scope.filtersInvoice.balanceDue != undefined
+      obj.balanceDue = $scope.filtersInvoice.balanceDue
+    if $scope.filtersInvoice.option != undefined
+      if $scope.filtersInvoice.option == 'Greater than'
+        obj.balanceMoreThan = true
+      else if $scope.filtersInvoice.option == 'Less than'
+        obj.balanceLessThan = true
+      else if $scope.filtersInvoice.option == 'Equals'
+        obj.balanceEqual = true
     invoiceService.getInvoices(infoToSend, obj).then($scope.getInvoicesSuccess, $scope.getInvoicesFailure)
 
   $scope.getInvoicesSuccess = (res) ->
@@ -156,8 +170,18 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       "page": $scope.ledgerCurrentPage
     }
     obj = {}
-    if $scope.filtersInvoice.account != undefined
-      obj.accountUniqueName = $scope.filtersInvoice.account.uniqueName
+    if $scope.filtersLedger.account != undefined
+      obj.accountUniqueName = $scope.filtersLedger.account.uniqueName
+    if $scope.filtersLedger.entryTotal != undefined
+      obj.entryTotal = $scope.filtersLedger.entryTotal
+    if $scope.filtersLedger.option != undefined
+      if $scope.filtersLedger.option == 'Greater than'
+        obj.totalIsMore = true
+      else if $scope.filtersLedger.option == 'Less than'
+        obj.totalIsLess = true
+      else if $scope.filtersLedger.option == 'Equals'
+        obj.totalIsEqual = true
+
     invoiceService.getAllLedgers(infoToSend, obj).then($scope.getAllTransactionSuccess, $scope.getAllTransactionFailure)
 
   $scope.getAllTransactionSuccess = (res) ->
@@ -211,14 +235,36 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     invoiceService.generateBulkInvoice(infoToSend, final).then($scope.generateBulkInvoiceSuccess, $scope.generateBulkInvoiceFailure)
 
   $scope.generateBulkInvoiceSuccess = (res) ->
-    toastr.success("Invoice generated successfully.")
-    $scope.inCaseOfFailedInvoice = res.body
-    _.each(sendForGenerate, (removeThis) ->
-      index = $scope.ledgers.indexOf(removeThis)
-      $scope.ledgers.splice(index, 1)
-    )
-    sendForGenerate = []
-    $scope.getAllTransaction()
+    console.log(sendForGenerate)
+    if angular.isArray(res.body)
+      toastr.success("Invoice generated successfully.")
+      $scope.inCaseOfFailedInvoice = res.body
+      if $scope.inCaseOfFailedInvoice.length > 0
+        str = ""
+        _.each($scope.inCaseOfFailedInvoice, (failedInv) ->
+          str = str + failedInv.failedEntries[0] + " " + failedInv.reason + ","
+        )
+        toastr.error(str)
+      _.each(sendForGenerate, (removeThis) ->
+        dontremove = false
+        if $scope.inCaseOfFailedInvoice.length > 0
+          _.each($scope.inCaseOfFailedInvoice, (check) ->
+            if check.failedEntries[0] == removeThis.uniqueName
+              dontremove = true
+          )
+        if dontremove == false
+          index = $scope.ledgers.results.indexOf(removeThis)
+          $scope.ledgers.results.splice(index, 1)
+      )
+      sendForGenerate = []
+      $scope.getAllTransaction()
+    else
+      _.each(sendForGenerate, (removeThis) ->
+        index = $scope.ledgers.results.indexOf(removeThis)
+        $scope.ledgers.results.splice(index, 1)
+      )
+      sendForGenerate = []
+      $scope.getAllTransaction()
 
   $scope.generateBulkInvoiceFailure = (res) ->
     toastr.error(res.data.message)
