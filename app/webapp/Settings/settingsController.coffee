@@ -114,6 +114,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     companyServices.updateAllSettings($rootScope.selectedCompany.uniqueName, $scope.settings).then($scope.saveSettingsSuccess, $scope.saveSettingsFailure)
 
   $scope.saveSettingsSuccess = (res) ->
+    toastr.success(res.body)
     $scope.getAllSetting()
 
   $scope.saveSettingsFailure = (res) ->

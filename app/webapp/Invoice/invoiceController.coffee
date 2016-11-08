@@ -40,6 +40,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     invoiceDetails:
       invoiceNumber: '##########'
       invoiceDate: '11-12-2016'
+      dueDate: ''
     company:
       name: 'Walkover Web Solutions Pvt. ltd.'
       data: ['405-406 Capt. C.S. Naidu Arcade','10/2 Old Palasiya','Indore Madhya Pradesh','CIN: 02830948209eeri','Email: account@giddh.com']
@@ -517,10 +518,10 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     else
       data.terms = []
 
-#    if data.invoiceDetails.dueDate != ""
-#      data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
-#    else
-#      data.invoiceDetails.dueDate = null
+    if data.invoiceDetails.dueDate != ""
+      data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+    else
+      data.invoiceDetails.dueDate = null
 
     if stype is 'save'
       companyServices.updtInvTempData($rootScope.selectedCompany.uniqueName, data).then($scope.saveTempSuccess, $scope.saveTempFailure)
