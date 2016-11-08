@@ -435,10 +435,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       data.account = data_.account
       data.entries = data_.entries
       data.invoiceDetails = data_.invoiceDetails
-#      if data.invoiceDetails.dueDate != ""
-#        data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
-#      else
-#        data.invoiceDetails.dueDate = null
+      if data.invoiceDetails.dueDate != ""
+        data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+      else
+        data.invoiceDetails.dueDate = null
       obj = {
         compUname : $rootScope.selectedCompany.uniqueName
       }
@@ -479,10 +479,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     else
       data.terms = []
 
-#    if data.invoiceDetails.dueDate != ""
-#      data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
-#    else
-#      data.invoiceDetails.dueDate = null
+    if data.invoiceDetails.dueDate != ""
+      data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+    else
+      data.invoiceDetails.dueDate = null
 
     if stype is 'save'
       companyServices.updtInvTempData($rootScope.selectedCompany.uniqueName, data).then($scope.saveTempSuccess, $scope.saveTempFailure)
