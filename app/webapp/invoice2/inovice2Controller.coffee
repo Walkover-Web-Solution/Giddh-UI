@@ -18,6 +18,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.reverse = false
   $scope.sortVarInv = 'invoiceNumber'
   $scope.reverseInv = false
+  $scope.hideFilters = false
 
   $scope.inCaseOfFailedInvoice = []
 
@@ -90,6 +91,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.setTab = (value) ->
     $scope.selectedTab = value
     $scope.commonGoButtonClick()
+    if value == 2
+      $scope.hideFilters = true
+    else
+      $scope.hideFilters = false
 
   $scope.commonGoButtonClick = () ->
     if $scope.selectedTab == 0
@@ -186,21 +191,22 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     obj = {}
     if $scope.filtersLedger.account != undefined
       obj.accountUniqueName = $scope.filtersLedger.account.uniqueName
-    if $scope.filtersLedger.entryTotal != undefined
-      obj.entryTotal = $scope.filtersLedger.entryTotal
-    if $scope.filtersLedger.option != undefined
-      if $scope.filtersLedger.option == 'Greater than'
-        obj.totalIsMore = true
-      else if $scope.filtersLedger.option == 'Less than'
-        obj.totalIsLess = true
-      else if $scope.filtersLedger.option == 'Equals'
-        obj.totalIsEqual = true
-      else if $scope.filtersLedger.option == 'Greater than Equals'
-        obj.totalIsMore = true
-        obj.totalIsEqual = true
-      else if $scope.filtersLedger.option == 'Less than Equals'
-        obj.totalIsLess = true
-        obj.totalIsEqual = true
+#    if $scope.filtersLedger.entryTotal != undefined
+#      obj.entryTotal = $scope.filtersLedger.entryTotal
+#    if $scope.filtersLedger.option != undefined
+#      if $scope.filtersLedger.option == 'Greater than'
+#        obj.totalIsMore = true
+#      else if $scope.filtersLedger.option == 'Less than'
+#        obj.totalIsLess = true
+#      else if $scope.filtersLedger.option == 'Equals'
+#        obj.totalIsEqual = true
+#      else if $scope.filtersLedger.option == 'Greater than Equals'
+#        obj.totalIsMore = true
+#        obj.totalIsEqual = true
+#      else if $scope.filtersLedger.option == 'Less than Equals'
+#        obj.totalIsLess = true
+#        obj.totalIsEqual = true
+    obj.description = $scope.filtersLedger.description
 
     invoiceService.getAllLedgers(infoToSend, obj).then($scope.getAllTransactionSuccess, $scope.getAllTransactionFailure)
 
@@ -255,7 +261,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     invoiceService.generateBulkInvoice(infoToSend, final).then($scope.generateBulkInvoiceSuccess, $scope.generateBulkInvoiceFailure)
 
   $scope.generateBulkInvoiceSuccess = (res) ->
-    console.log(sendForGenerate)
     if angular.isArray(res.body)
       toastr.success("Invoice generated successfully.")
       $scope.inCaseOfFailedInvoice = res.body
@@ -277,7 +282,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
           $scope.ledgers.results.splice(index, 1)
       )
       sendForGenerate = []
-#      $scope.getAllTransaction()
+      $scope.getAllTransaction()
     else
       toastr.success("Invoice generated successfully.")
       $scope.canGenerateInvoice = false
@@ -286,7 +291,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
         $scope.ledgers.results.splice(index, 1)
       )
       sendForGenerate = []
-#      $scope.getAllTransaction()
+      $scope.getAllTransaction()
 
   $scope.generateBulkInvoiceFailure = (res) ->
     toastr.error(res.data.message)

@@ -108,8 +108,8 @@
                   <uib-tab class="mrB1" heading="Generate" select="setTab(1)">
                     <div class="row mr1">
                       <ul class="list-inline">
-                        <li><button ng-disabled="!canGenerateInvoice" class="btn btn-success" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
-                        <li><button ng-disabled="!canGenerateInvoice" class="btn btn-primary" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
+                        <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
+                        <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
                         <li><button ng-disabled="!showPreview" class="btn btn-default" ng-click="prevAndGenInv()">Preview & Generate</button></li>
                       </ul>
                       <!--<div class="col-xs-3">-->
@@ -208,7 +208,7 @@
                 </uib-tabset>
               <!--</perfect-scrollbar>-->
             </div>
-            <div class="graph-filters add-transition" ng-class="{'col-xs-1 mrT5 pos-abs right0' : flyDiv == false, 'col-xs-2 pos-abs right0 background-color-giddh' : flyDiv == true}">
+            <div class="graph-filters add-transition" ng-class="{'col-xs-1 mrT5 pos-abs right0' : flyDiv == false, 'col-xs-2 pos-abs right0 background-color-giddh' : flyDiv == true}" ng-hide="hideFilters">
               <label class="pos-abs filter-btn mrB1" ng-class="{'witClr' : flyDiv == true}" ng-click="flyDiv = !flyDiv">
                 Filters
               </label>
@@ -298,17 +298,17 @@
                     <label>Description</label>
                     <input type="text" class="form-control" ng-model="filtersLedger.description" placeholder="By description">
                   </div>
-                  <div class="clearfix mrT1">
-                    <label>Amount</label>
-                    <select ng-model="filtersLedger.option" class="col-xs-6 form-control">
-                      <option>Greater than</option>
-                      <option>Greater than Equals</option>
-                      <option>Less than</option>
-                      <option>Greater than Equals</option>
-                      <option>Equals</option>
-                    </select>
-                    <input type="text" class="form-control col-xs-6" ng-model="filtersLedger.entryTotal" placeholder="By amount">
-                  </div>
+                  <!--<div class="clearfix mrT1">-->
+                    <!--<label>Amount</label>-->
+                    <!--<select ng-model="filtersLedger.option" class="col-xs-6 form-control">-->
+                      <!--<option>Greater than</option>-->
+                      <!--<option>Greater than Equals</option>-->
+                      <!--<option>Less than</option>-->
+                      <!--<option>Greater than Equals</option>-->
+                      <!--<option>Equals</option>-->
+                    <!--</select>-->
+                    <!--<input type="text" class="form-control col-xs-6" ng-model="filtersLedger.entryTotal" placeholder="By amount">-->
+                  <!--</div>-->
                 </div>
                 <div class="clearfix mrT1">
                   <button class="btn btn-primary" ng-click="commonGoButtonClick()">GO</button>
