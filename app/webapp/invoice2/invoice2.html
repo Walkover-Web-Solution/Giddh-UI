@@ -127,7 +127,7 @@
                         </td>
                         </tfoot>
                         <tbody>
-                          <tr ng-repeat="ledger in ledgers.results">
+                          <tr ng-repeat="ledger in ledgers.results" ng-class="{'danger': checkTransaction(ledger.uniqueName)}">
                             <td style="width:3%" rowspan="ledger.transactions.length">
                               <input name="foo" type="checkbox" ng-model="$value" ng-change="addThis(ledger, $value)">
                             </td>
@@ -136,7 +136,7 @@
                             </td>
                             <td colspan="2" style="padding:0;border-top:0px;border-bottom:0px;">
                               <table class="table table-bordered">
-                                <tr ng-repeat="transaction in ledger.transactions">
+                                <tr ng-repeat="transaction in ledger.transactions"  ng-class="{'danger': checkTransaction(ledger.uniqueName)}">
                                   <td style="width:77%">
                                     {{transaction.particular.name}}
                                   </td>

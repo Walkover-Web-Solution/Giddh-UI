@@ -90,6 +90,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     if $scope.selectedTab == 0
       $scope.getAllInvoices()
     else if $scope.selectedTab == 1
+      $scope.inCaseOfFailedInvoice = []
+      sendForGenerate = []
       $scope.getAllTransaction()
 
   $scope.checkAccounts = () ->
@@ -162,6 +164,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     toastr.error(res.data.message)
 
   $scope.getAllTransaction = () ->
+    sendForGenerate = []
     infoToSend = {
       "companyUniqueName": $rootScope.selectedCompany.uniqueName
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
@@ -259,6 +262,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       sendForGenerate = []
       $scope.getAllTransaction()
     else
+      $scope.canGenerateInvoice = false
       _.each(sendForGenerate, (removeThis) ->
         index = $scope.ledgers.results.indexOf(removeThis)
         $scope.ledgers.results.splice(index, 1)
@@ -268,6 +272,16 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
   $scope.generateBulkInvoiceFailure = (res) ->
     toastr.error(res.data.message)
+
+  $scope.checkTransaction = (trns) ->
+    sendThis = false
+    _.each($scope.inCaseOfFailedInvoice, (inv) ->
+      _.each(inv.failedEntries, (ent) ->
+        if trns == ent
+          sendThis = true
+      )
+    )
+    sendThis
 
 
   $scope.getTemplates = ()->
