@@ -100,6 +100,51 @@
 			</tbody>
 		</table>
 	</div>
+	<div class="mrT text-center" *ngIf="log.log.old != undefined && log.log.updated != undefined">
+		<label>Updated</label>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="col-xs-3 text-center">Opening Balance Date</th>
+					<th class="col-xs-2 text-center">Opening Balance</th>
+					<th class="col-xs-3 text-center">email</th>
+					<th class="col-xs-3 text-center">Name</th>
+					<th class="col-xs-4 text-center">Unique Name</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{{log.log.updated.openingBalanceDate}}</td>
+					<td>{{log.log.updated.openingBalance}}</td>
+					<td>{{log.log.updated.email}} </td>
+					<td>{{log.log.updated.name}}</td>
+					<td>{{log.log.updated.uniqueName}}</td>
+				</tr>
+			</tbody>
+		</table>
+		<br>
+		<label>Old</label>
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="col-xs-3 text-center">Opening Balance Date</th>
+					<th class="col-xs-2 text-center">Opening Balance</th>
+					<th class="col-xs-3 text-center">email</th>
+					<th class="col-xs-3 text-center">Name</th>
+					<th class="col-xs-4 text-center">Unique Name</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>{{log.log.old.openingBalanceDate}}</td>
+					<td>{{log.log.old.openingBalance}}</td>
+					<td>{{log.log.old.email}} </td>
+					<td>{{log.log.old.name}}</td>
+					<td>{{log.log.old.uniqueName}}</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 </section>
 <section class="no-logs" *ngIf="logs.length < 1">
 	<div class="no-data">
