@@ -425,7 +425,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.sendInvEmailSuccess=(res)->
     toastr.success("Email sent successfully", "Success")
     $scope.InvEmailData = {}
-
+    $(document).trigger('click')
+    return false
 
   $scope.updateGeneratedInvoice = () ->
     if $scope.editGenInvoice
