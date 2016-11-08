@@ -70,7 +70,7 @@
 			<tbody>
 				<tr *ngFor = "let transaction of log.log.updated.transactions; let i = index">
 					<td>{{i + 1}}</td>
-					<td>{{log.log.entryDate}}</td>
+					<td>{{log.log.updated.entryDate}}</td>
 					<td>{{transaction.particular.name}} ({{transaction.particular.uniqueName}})</td>
 					<td>{{transaction.amount}}</td>
 					<td>{{transaction.type}}</td>
@@ -92,7 +92,7 @@
 			<tbody>
 				<tr *ngFor = "let transaction of log.log.old.transactions; let i = index">
 					<td>{{i + 1}}</td>
-					<td>{{log.log.entryDate}}</td>
+					<td>{{log.log.old.entryDate}}</td>
 					<td>{{transaction.particular.name}} ({{transaction.particular.uniqueName}})</td>
 					<td>{{transaction.amount}}</td>
 					<td>{{transaction.type}}</td>
@@ -100,7 +100,7 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="mrT text-center" *ngIf="log.log.old != undefined && log.log.updated != undefined">
+	<div class="mrT text-center" *ngIf="log.log.old != undefined && log.log.updated != undefined && log.log.old.transactions == undefined && log.log.updated.transactions == undefined">
 		<label>Updated</label>
 		<table class="table table-bordered">
 			<thead>
