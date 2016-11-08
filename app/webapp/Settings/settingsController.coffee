@@ -846,6 +846,8 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   $scope.saveRazorPaySuccess = (res) ->
     if res.body.message != undefined
       toastr.success(res.body.message)
+    else
+      toastr.success("Razorpay detail added successfully.")
     $scope.getRazorPayDetails()
 
   $scope.saveRazorPayFailure = (res) ->
@@ -861,9 +863,10 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     sendThisDetail.companyName = detail.companyName
     sendThisDetail.userName = detail.userName
     sendThisDetail.password = detail.password
-    sendThisDetail.account = {}
-    sendThisDetail.account.name = detail.account.name
-    sendThisDetail.account.uniqueName = detail.account.uniqueName
+    if detail.account != null && detail.account != undefined
+      sendThisDetail.account = {}
+      sendThisDetail.account.name = detail.account.name
+      sendThisDetail.account.uniqueName = detail.account.uniqueName
     companyServices.updateRazorPay($rootScope.selectedCompany.uniqueName, sendThisDetail).then($scope.saveRazorPaySuccess, $scope.saveRazorPayFailure)
 
   $scope.deleteRazorPayDetail = () ->
