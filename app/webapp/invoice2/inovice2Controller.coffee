@@ -1,6 +1,7 @@
 'use strict'
 
 invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService, $uibModal, companyServices, $timeout, DAServices, modalService) ->
+  ic = this
   $rootScope.cmpViewShow = true
   $scope.checked = false;
   $scope.size = '105px';
@@ -640,6 +641,11 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.multiActionWithInvFailure=(res)->
     toastr.error(res.data.message, res.data.status)
   # Helper methods ends here
+
+  $scope.selectAllLedger = (condition) ->
+    _.each $scope.ledgers.results, (ledger) ->
+      ledger.checked = condition
+      $scope.addThis(ledger, condition)
 
   $timeout ( ->
     $scope.getTemplates()

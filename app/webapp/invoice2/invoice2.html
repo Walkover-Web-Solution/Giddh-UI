@@ -123,7 +123,10 @@
                       <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
                       <table class="table table-bordered">
                         <thead>
-                          <th style="width:3%"></th>
+                          <th style="width:3%">
+                            <input type="checkbox" name="checkall" ng-model="checkall" ng-change="selectAllLedger(checkall)">
+
+                          </th>
                           <th style="width:10%" ng-click="sortVar = 'entryDate';reverse = !reverse">
                             Date
                             <span ng-show="sortVar == 'entryDate' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
@@ -165,7 +168,7 @@
                         <tbody>
                           <tr ng-repeat="ledger in ledgers.results | orderBy:sortVar:reverse" ng-class="{'danger': checkTransaction(ledger.uniqueName)}">
                             <td style="width:3%" rowspan="ledger.transactions.length">
-                              <input name="foo" type="checkbox" ng-model="$value" ng-change="addThis(ledger, $value)">
+                              <input name="foo" type="checkbox" ng-model="ledger.checked" ng-change="addThis(ledger, ledger.checked)">
                             </td>
                             <td style="width:10%" rowspan="ledger.transactions.length">
                               {{ledger.entryDate}}

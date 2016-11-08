@@ -301,7 +301,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       page: 1
       count: 0
     }
-    groupService.getFlatAccList(reqParam).then(@success, @failure)
+    if str.length > 2
+      groupService.getFlatAccList(reqParam).then(@success, @failure)
 
   #-------- fetch groups with accounts list-------
   $scope.working = false
@@ -363,11 +364,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if str.length > 2
       #$scope.hideLoadMore = true
       reqParam.q = str
-      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+      groupService.getFlattenGroupAccList(reqParam).then(gc.getFlattenGrpWithAccListSuccess, gc.getFlattenGrpWithAccListFailure)
     else
       #$scope.hideLoadMore = false
       reqParam.q = ''
-      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+      groupService.getFlattenGroupAccList(reqParam).then(gc.getFlattenGrpWithAccListSuccess, gc.getFlattenGrpWithAccListFailure)
     if str.length < 1
       $scope.flatAccListC5.limit = 5
       #$scope.hideLoadMore = false
