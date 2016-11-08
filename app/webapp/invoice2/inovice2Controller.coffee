@@ -201,6 +201,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       else if $scope.filtersLedger.option == 'Less than Equals'
         obj.totalIsLess = true
         obj.totalIsEqual = true
+    obj.description = $scope.filtersLedger.description
 
     invoiceService.getAllLedgers(infoToSend, obj).then($scope.getAllTransactionSuccess, $scope.getAllTransactionFailure)
 
@@ -255,7 +256,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     invoiceService.generateBulkInvoice(infoToSend, final).then($scope.generateBulkInvoiceSuccess, $scope.generateBulkInvoiceFailure)
 
   $scope.generateBulkInvoiceSuccess = (res) ->
-    console.log(sendForGenerate)
     if angular.isArray(res.body)
       toastr.success("Invoice generated successfully.")
       $scope.inCaseOfFailedInvoice = res.body
