@@ -204,6 +204,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('dashboard',
     url: '/dashboard'
     templateUrl: appendThis+'/public/webapp/Dashboard/dashboard.html'
+    controller: "dashboardController"
   )
   .state('/thankyou',
     url: '/thankyou'
@@ -285,11 +286,15 @@ giddh.webApp.run [
 #      win.close()
 #
 #   $rootScope.firstLogin = true
-
+  
     $rootScope.$on('companyChanged', ->
       DAServices.ClearData()
       localStorageService.remove("_ledgerData")
       localStorageService.remove("_selectedAccount")
+    )
+    $rootScope.$on('company-changed', (event, changeData)->
+      if changeData.type == "CHANGE"
+        $state.go('company.content.manage')
     )
     $rootScope.canChangeCompany = false
 #    $rootScope.flatAccList = {
