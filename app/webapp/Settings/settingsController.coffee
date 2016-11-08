@@ -827,7 +827,8 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
       $scope.linkRazor = true
 
   $scope.getRazorPayFailure = (res) ->
-    toastr.error(res.data.message)
+    if res.data.code != "RAZORPAY_ACCOUNT_NOT_FOUND"
+      toastr.error(res.data.message)
 
   $scope.saveRazorPayDetails = (details) ->
     if details.userName == "" || details.password == ""

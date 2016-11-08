@@ -3741,3 +3741,7 @@ tr.db-bnk-account > td.reconnectDiv{
     -o-transition: width 0.5s;
     transition: width 0.5s;
 }
+
+.required{
+    color:red;
+}
