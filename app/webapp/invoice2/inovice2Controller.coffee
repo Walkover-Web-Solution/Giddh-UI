@@ -277,15 +277,16 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
           $scope.ledgers.results.splice(index, 1)
       )
       sendForGenerate = []
-      $scope.getAllTransaction()
+#      $scope.getAllTransaction()
     else
+      toastr.success("Invoice generated successfully.")
       $scope.canGenerateInvoice = false
       _.each(sendForGenerate, (removeThis) ->
         index = $scope.ledgers.results.indexOf(removeThis)
         $scope.ledgers.results.splice(index, 1)
       )
       sendForGenerate = []
-      $scope.getAllTransaction()
+#      $scope.getAllTransaction()
 
   $scope.generateBulkInvoiceFailure = (res) ->
     toastr.error(res.data.message)
@@ -425,7 +426,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.sendInvEmailSuccess=(res)->
     toastr.success("Email sent successfully", "Success")
     $scope.InvEmailData = {}
-
+    $(document).trigger('click')
+    return false
 
   $scope.updateGeneratedInvoice = () ->
     if $scope.editGenInvoice
