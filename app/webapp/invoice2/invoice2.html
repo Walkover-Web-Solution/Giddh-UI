@@ -3,7 +3,7 @@
     <uib-tabset justified="false">
         <uib-tab heading="Invoice">
           <div class="row">
-            <div class="add-transition" ng-class="{'col-xs-12' : flyDiv == false, 'col-xs-10' : flyDiv == true}" auto-height>
+            <div class="add-transition" ng-class="{'col-xs-12' : flyDiv == false || hideFilters == true, 'col-xs-10' : flyDiv == true && hideFilters == false}" auto-height>
               <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
                 <uib-tabset class="custom-tabset">
                   <uib-tab class="mrB1" heading="View" select="setTab(0)">
