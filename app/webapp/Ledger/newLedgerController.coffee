@@ -220,12 +220,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   }
 
   $scope.isSelectedAccount = () ->
-    if _.isUndefined($rootScope.selectedAccount.name)
-      #$rootScope.selectedAccount = localStorageService.get('_selectedAccount')
-      $rootScope.selectedAccount = $scope.accountUnq
-      $scope.accountToShow = $rootScope.selectedAccount
-    else
-      $scope.accountToShow = $rootScope.selectedAccount
+    $rootScope.selectedAccount = localStorageService.get('_selectedAccount')
+    # if _.isUndefined($rootScope.selectedAccount) || _.isNull($rootScope.selectedAccount)
+    #   $rootScope.selectedAccount = $scope.accountUnq
+    #   $scope.accountToShow = $scope.accountUnq
+    # else
+    if !_.isNull($rootScope.selectedAccount)
+      $scope.accountToShow = $rootScope.selectedAccount.name
 
   $scope.isCurrentAccount =(acnt) ->
     acnt.uniqueName is $scope.accountUnq
@@ -1561,10 +1562,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       $scope.genearateUniqueName(unqName)
     ), 800
 
-  $scope.$on 'company-changed', (event,changeData) ->
-    # when company is changed, redirect to manage company page
-    if changeData.type == 'CHANGE'
-      $scope.redirectToState('company.content.manage')
+  # $scope.$on 'company-changed', (event,changeData) ->
+  #   # when company is changed, redirect to manage company page
+  #   if changeData.type == 'CHANGE'
+  #     # $scope.redirectToState('company.content.manage')
+  #     $state.go('company.content.ledgerContent', {unqName: ""})
+  #     $scope.showLoader = true
 
   $scope.$watch 'popover.draggable', (newVal, oldVal) ->
     if newVal != oldVal
