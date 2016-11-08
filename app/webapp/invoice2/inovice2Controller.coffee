@@ -18,6 +18,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.reverse = false
   $scope.sortVarInv = 'invoiceNumber'
   $scope.reverseInv = false
+  $scope.hideFilters = false
 
   $scope.inCaseOfFailedInvoice = []
 
@@ -90,6 +91,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.setTab = (value) ->
     $scope.selectedTab = value
     $scope.commonGoButtonClick()
+    if value == 2
+      $scope.hideFilters = true
+    else
+      $scope.hideFilters = false
 
   $scope.commonGoButtonClick = () ->
     if $scope.selectedTab == 0

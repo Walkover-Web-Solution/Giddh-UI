@@ -108,8 +108,8 @@
                   <uib-tab class="mrB1" heading="Generate" select="setTab(1)">
                     <div class="row mr1">
                       <ul class="list-inline">
-                        <li><button ng-disabled="!canGenerateInvoice" class="btn btn-success" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
-                        <li><button ng-disabled="!canGenerateInvoice" class="btn btn-primary" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
+                        <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
+                        <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
                         <li><button ng-disabled="!showPreview" class="btn btn-default" ng-click="prevAndGenInv()">Preview & Generate</button></li>
                       </ul>
                       <!--<div class="col-xs-3">-->
@@ -208,7 +208,7 @@
                 </uib-tabset>
               <!--</perfect-scrollbar>-->
             </div>
-            <div class="graph-filters add-transition" ng-class="{'col-xs-1 mrT5 pos-abs right0' : flyDiv == false, 'col-xs-2 pos-abs right0 background-color-giddh' : flyDiv == true}">
+            <div class="graph-filters add-transition" ng-class="{'col-xs-1 mrT5 pos-abs right0' : flyDiv == false, 'col-xs-2 pos-abs right0 background-color-giddh' : flyDiv == true}" ng-hide="hideFilters">
               <label class="pos-abs filter-btn mrB1" ng-class="{'witClr' : flyDiv == true}" ng-click="flyDiv = !flyDiv">
                 Filters
               </label>
