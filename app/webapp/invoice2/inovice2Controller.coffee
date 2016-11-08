@@ -186,21 +186,21 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     obj = {}
     if $scope.filtersLedger.account != undefined
       obj.accountUniqueName = $scope.filtersLedger.account.uniqueName
-    if $scope.filtersLedger.entryTotal != undefined
-      obj.entryTotal = $scope.filtersLedger.entryTotal
-    if $scope.filtersLedger.option != undefined
-      if $scope.filtersLedger.option == 'Greater than'
-        obj.totalIsMore = true
-      else if $scope.filtersLedger.option == 'Less than'
-        obj.totalIsLess = true
-      else if $scope.filtersLedger.option == 'Equals'
-        obj.totalIsEqual = true
-      else if $scope.filtersLedger.option == 'Greater than Equals'
-        obj.totalIsMore = true
-        obj.totalIsEqual = true
-      else if $scope.filtersLedger.option == 'Less than Equals'
-        obj.totalIsLess = true
-        obj.totalIsEqual = true
+#    if $scope.filtersLedger.entryTotal != undefined
+#      obj.entryTotal = $scope.filtersLedger.entryTotal
+#    if $scope.filtersLedger.option != undefined
+#      if $scope.filtersLedger.option == 'Greater than'
+#        obj.totalIsMore = true
+#      else if $scope.filtersLedger.option == 'Less than'
+#        obj.totalIsLess = true
+#      else if $scope.filtersLedger.option == 'Equals'
+#        obj.totalIsEqual = true
+#      else if $scope.filtersLedger.option == 'Greater than Equals'
+#        obj.totalIsMore = true
+#        obj.totalIsEqual = true
+#      else if $scope.filtersLedger.option == 'Less than Equals'
+#        obj.totalIsLess = true
+#        obj.totalIsEqual = true
     obj.description = $scope.filtersLedger.description
 
     invoiceService.getAllLedgers(infoToSend, obj).then($scope.getAllTransactionSuccess, $scope.getAllTransactionFailure)
