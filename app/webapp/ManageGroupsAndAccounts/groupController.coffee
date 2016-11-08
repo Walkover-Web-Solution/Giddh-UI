@@ -363,11 +363,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if str.length > 2
       #$scope.hideLoadMore = true
       reqParam.q = str
-      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+      groupService.getFlattenGroupAccList(reqParam).then(gc.getFlattenGrpWithAccListSuccess, gc.getFlattenGrpWithAccListFailure)
     else
       #$scope.hideLoadMore = false
       reqParam.q = ''
-      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+      groupService.getFlattenGroupAccList(reqParam).then(gc.getFlattenGrpWithAccListSuccess, gc.getFlattenGrpWithAccListFailure)
     if str.length < 1
       $scope.flatAccListC5.limit = 5
       #$scope.hideLoadMore = false
