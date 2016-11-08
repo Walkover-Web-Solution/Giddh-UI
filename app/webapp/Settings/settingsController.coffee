@@ -135,7 +135,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     companyServices.createWebhook($rootScope.selectedCompany.uniqueName, $scope.addWebhook).then($scope.saveWebhookSuccess, $scope.saveWebhookFailure)
 
   $scope.saveWebhookSuccess = (res) ->
-    toastr.success(res.data.message)
+    toastr.success("Webhook added successfully.")
     $scope.addWebhook = {}
     $scope.getAllSetting()
 
