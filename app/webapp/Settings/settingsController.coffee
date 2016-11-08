@@ -875,7 +875,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   $scope.deleteRazorPaySuccess = (res) ->
     toastr.success(res.body)
     $scope.razorPayDetail = {}
-    $scope.updateRazorPay = false
+    $scope.updateRazor = false
     $scope.linkRazor = true
 
   $scope.deleteRazorPayFailure = (res) ->
