@@ -319,10 +319,12 @@ angular.module('trialBalance', []).directive('exportReport', [
 .directive 'coverPage', ['$window', '$timeout', ($window, $timeout) ->
   restrict: "EA"
   link: (scope, elem, attr) ->
-    interval = Number(attr.timeout) || 1000
-    exclude = $(window).innerHeight() - $(elem).offset().top
+    interval = Number(attr.timeout) || 2000
+
     setHeight = () ->
-      height = $(window).innerHeight() - $(elem).offset().top
+      top = $(elem).offset().top || 108
+      exclude = $(window).innerHeight() - top
+      height = $(window).innerHeight() - top
       $(elem).css("height", height)
 
     angular.element($window).on 'resize', ->

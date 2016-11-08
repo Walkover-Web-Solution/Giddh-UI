@@ -13,6 +13,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.flyDiv = false
   $scope.invoiceCurrentPage = 1
   $scope.ledgerCurrentPage = 1
+  $scope.sortVar = 'entryDate'
+  $scope.reverse = false
+  $scope.sortVarInv = 'invoiceNumber'
+  $scope.reverseInv = false
 
   $scope.inCaseOfFailedInvoice = []
 
@@ -153,6 +157,12 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
         obj.balanceLessThan = true
       else if $scope.filtersInvoice.option == 'Equals'
         obj.balanceEqual = true
+      else if $scope.filtersLedger.option == 'Greater than Equals'
+        obj.balanceMoreThan = true
+        obj.balanceEqual = true
+      else if $scope.filtersLedger.option == 'Less than Equals'
+        obj.balanceLessThan = true
+        obj.balanceEqual = true
     invoiceService.getInvoices(infoToSend, obj).then($scope.getInvoicesSuccess, $scope.getInvoicesFailure)
 
   $scope.getInvoicesSuccess = (res) ->
@@ -183,6 +193,12 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       else if $scope.filtersLedger.option == 'Less than'
         obj.totalIsLess = true
       else if $scope.filtersLedger.option == 'Equals'
+        obj.totalIsEqual = true
+      else if $scope.filtersLedger.option == 'Greater than Equals'
+        obj.totalIsMore = true
+        obj.totalIsEqual = true
+      else if $scope.filtersLedger.option == 'Less than Equals'
+        obj.totalIsLess = true
         obj.totalIsEqual = true
 
     invoiceService.getAllLedgers(infoToSend, obj).then($scope.getAllTransactionSuccess, $scope.getAllTransactionFailure)
@@ -419,10 +435,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       data.account = data_.account
       data.entries = data_.entries
       data.invoiceDetails = data_.invoiceDetails
-      if data.invoiceDetails.dueDate != ""
-        data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
-      else
-        data.invoiceDetails.dueDate = null
+#      if data.invoiceDetails.dueDate != ""
+#        data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+#      else
+#        data.invoiceDetails.dueDate = null
       obj = {
         compUname : $rootScope.selectedCompany.uniqueName
       }
@@ -463,10 +479,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     else
       data.terms = []
 
-    if data.invoiceDetails.dueDate != ""
-      data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
-    else
-      data.invoiceDetails.dueDate = null
+#    if data.invoiceDetails.dueDate != ""
+#      data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+#    else
+#      data.invoiceDetails.dueDate = null
 
     if stype is 'save'
       companyServices.updtInvTempData($rootScope.selectedCompany.uniqueName, data).then($scope.saveTempSuccess, $scope.saveTempFailure)
