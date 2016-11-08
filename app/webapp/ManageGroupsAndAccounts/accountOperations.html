@@ -263,7 +263,7 @@
                   </ui-select-match >
                   <ui-select-choices
                     ui-disable-choice="acc.uniqueName === selAcntUname"
-                    repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="getFlatAccntsByQuery($select.search)">
+                    repeat="acc in mergeAccList | filter: $select.search" refresh="refreshFlatAccount($select.search)" minimum-input-length="2">
                     <span>{{acc.name}} ({{acc.uniqueName}})</span>
                   </ui-select-choices>
               </ui-select>
@@ -285,7 +285,7 @@
                   </ui-select-match >
                   <ui-select-choices 
                     ui-disable-choice="acc.uniqueName === selAcntUname" 
-                    repeat="acc in  fltAccntListcount5 | filter: $select.search" refresh="searchAccountsC5($select.search)">
+                    repeat="acc in  mergeAccList | filter: $select.search" refresh="refreshFlatAccount($select.search)">
                     <span>{{acc.name}} ({{acc.uniqueName}})</span>
                   </ui-select-choices>
               </ui-select>

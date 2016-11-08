@@ -11,14 +11,16 @@ dashboard = angular.module('dashboard', [
   "combinedModule"
 ])
 
-dashboardController = ($scope, $rootScope) ->
+dashboardController = ($scope, $rootScope, toastr) ->
   $rootScope.cmpViewShow = true
 
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.$broadcast('reloadAll')
 
+  toastr.warning("Data can be delayed by one hour")
+
 #  $scope.hardRefresh = () ->
 #    $scope.$broadcast('reloadAll')
 
-#dashboard.controller 'dashboardController',dashboardController
+dashboard.controller 'dashboardController',dashboardController
