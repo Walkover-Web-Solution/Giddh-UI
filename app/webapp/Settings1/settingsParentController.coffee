@@ -6,6 +6,8 @@ SettingsParentController = ($rootScope, Upload, $timeout, toastr) ->
   @toastr = toastr
   # assign universal this for ctrl
   $this = @;
+
+  console.log "in SettingsParentController"
   
   # centralize vars for setting module
   @tabs = [
