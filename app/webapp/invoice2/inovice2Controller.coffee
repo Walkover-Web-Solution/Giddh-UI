@@ -19,6 +19,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.sortVarInv = 'invoiceNumber'
   $scope.reverseInv = false
   $scope.hideFilters = false
+  $scope.checkall = false
 
   $scope.inCaseOfFailedInvoice = []
 
@@ -110,7 +111,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       tempList.push(entry.account.uniqueName)
     )
     uniqueList = _.uniq(tempList)
-    if uniqueList.length > 1
+    if uniqueList.length > 1 || sendForGenerate.length == 0
       $scope.showPreview = false
     else
       $scope.showPreview = true
@@ -140,7 +141,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.prevInProg = false
     $scope.entriesForInvoice = []
     toastr.error(res.data.message, res.data.status)
-    $scope.resetAllCheckBoxes()
+#    $scope.resetAllCheckBoxes()
 
   $scope.getAllInvoices = () ->
     $scope.invoices = {}
@@ -216,6 +217,12 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.ledgers = res.body
 
   $scope.getAllTransactionFailure = (res) ->
+    if res.data.code == 'NOT_FOUND'
+      $scope.ledgers = {
+        results: []
+        totalPages: 1
+      }
+      $scope.buttonStatus()
     toastr.error(res.data.message)
 
   $scope.addThis = (ledger, value) ->
@@ -266,6 +273,9 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     invoiceService.generateBulkInvoice(infoToSend, final).then($scope.generateBulkInvoiceSuccess, $scope.generateBulkInvoiceFailure)
 
   $scope.generateBulkInvoiceSuccess = (res) ->
+    $scope.checkall = false
+    checkboxA = document.getElementsByName('checkall')
+    checkboxA[0].checked = false
     if angular.isArray(res.body)
       toastr.success("Invoice generated successfully.")
       $scope.inCaseOfFailedInvoice = res.body

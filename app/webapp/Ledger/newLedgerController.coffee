@@ -588,7 +588,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.countTotalTransactionsAfterSomeTime = () ->
     $timeout ( ->
       $scope.countTotalTransactions()
-      $scope.showLoader = true
+#      $scope.showLoader = true
     ), 1000
 
   $scope.onScrollDebit = (sTop, sHeight) ->
