@@ -321,7 +321,9 @@ module.exports = function (grunt) {
           'angular-google-chart',
           'angular-file-saver',
           'angular-gridster',
-          'ment.io'
+          'ment.io',
+          'trix',
+          'angular-trix'
         ],
         dependencies: {
           'jquery': 'modernizr',
