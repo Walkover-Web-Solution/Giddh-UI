@@ -1,3 +1,9 @@
+<script>
+  function validateThis(input) {
+    if (input.value < -90) input.value = -90;
+    if (input.value > 90) input.value = 90;
+  }
+</script>
 <div class="col-xs-12">
   <div  class="middleBody bdrR bdrL row" auto-height style="overflow-y:scroll;">
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">
@@ -47,7 +53,7 @@
                           <input type="text" class="form-control" placeholder="Add webhook url" ng-model="addWebhook.url">
                         </div>
                         <div class="col-xs-1 pd0">
-                          <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57' class="form-control" placeholder="days" ng-model="addWebhook.triggerAt">
+                          <input type="text" onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 45' onchange="validateThis(this)" class="form-control" placeholder="days" ng-model="addWebhook.triggerAt">
                         </div>
                         <div class="col-xs-2">
                           <select class="form-control" ng-model="addWebhook.entity">
@@ -112,13 +118,13 @@
                 <td>Default due date</td>
                 <td>
                   <div class="col-xs-3 pdL-0">
-                    <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="settings.invoiceSettings.duePeriod" class="form-control"/>
+                    <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57' maxlength="3" ng-model="settings.invoiceSettings.duePeriod" class="form-control"/>
                   </div>
                   Days
                 </td>
                 <td>
                   <div class="col-xs-3 pdL-0">
-                    <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57' ng-model="settings.proformaSettings.duePeriod" class="form-control"/>
+                    <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57' maxlength="3" ng-model="settings.proformaSettings.duePeriod" class="form-control"/>
                   </div>
                   Days
                 </td>
@@ -579,7 +585,7 @@
               </div>
             </div>
             <div class="row pd1">
-              <input type="checkbox" ng-model="razorPayDetail.autoCapturePayment">Automatic capture on payment
+              <input type="checkbox" ng-model="razorPayDetail.autoCapturePayment"> Automatic capture on payment
             </div>
             <div class="row">
               <div class="col-xs-3 pdL1">
