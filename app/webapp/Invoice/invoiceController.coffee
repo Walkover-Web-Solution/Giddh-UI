@@ -436,7 +436,10 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       file.upload.then ((res) ->
         $timeout ->
           # $scope.logoWrapShow = false
-          $scope.defTempData.signature.path = res.data.body.path
+          if type == 'logo'
+            $scope.defTempData.logo.path = res.data.body.path
+          else
+            $scope.defTempData.signature.path = res.data.body.path
           toastr.success("Logo Uploaded Successfully", res.data.status)
       ), ((res) ->
 #        console.log res, "error"
