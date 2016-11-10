@@ -842,6 +842,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
         sendThisDetail.account = {}
         sendThisDetail.account.name = details.account.name
         sendThisDetail.account.uniqueName = details.account.uniqueName
+      sendThisDetail.autoCapturePayment = details.autoCapturePayment
       companyServices.addRazorPay($rootScope.selectedCompany.uniqueName, details).then($scope.saveRazorPaySuccess, $scope.saveRazorPayFailure)
 
   $scope.saveRazorPaySuccess = (res) ->
@@ -868,6 +869,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
       sendThisDetail.account = {}
       sendThisDetail.account.name = detail.account.name
       sendThisDetail.account.uniqueName = detail.account.uniqueName
+    sendThisDetail.autoCapturePayment = detail.autoCapturePayment
     companyServices.updateRazorPay($rootScope.selectedCompany.uniqueName, sendThisDetail).then($scope.saveRazorPaySuccess, $scope.saveRazorPayFailure)
 
   $scope.deleteRazorPayDetail = () ->
