@@ -20,10 +20,15 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr) ->
 
   # gridstack vars
   @widgets = [
-    { sizeX: 6, sizeY: 3, row: 1, col: 0, name: "widget_0", data:"", type: 'Image' }
-    { sizeX: 6, sizeY: 2, row: 1, col: 9, name: "widget_1", data:"", type: 'String' }
-    { sizeX: 7, sizeY: 2, row: 1, col: 17, name: "widget_2", data:"", type: 'String'}
-    { sizeX: 24, sizeY: 2, row: 4, col: 0, name: "widget_4", data:"", type: 'String' }
+    { sizeX: 8, sizeY: 4, row: 1, col: 0, name: "widget_0", data:"", type: 'Image' , edit:false}
+    { sizeX: 8, sizeY: 4, row: 1, col: 8, name: "widget_1", data:"", type: 'String' , edit:false}
+    { sizeX: 8, sizeY: 4, row: 1, col: 17, name: "widget_2", data:"", type: 'String', edit:false}
+    { sizeX: 12, sizeY: 4, row: 2, col: 0, name: "widget_3", data:"", type: 'String', edit:false}
+    { sizeX: 12, sizeY: 4, row: 2, col: 13, name: "widget_4", data:"", type: 'String', edit:false}
+    { sizeX: 24, sizeY: 5, row: 3, col: 0, name: "widget_5", data:"", type: 'Entry' , edit:false}
+    { sizeX: 12, sizeY: 4, row: 4, col: 0, name: "widget_6", data:"", type: 'String', edit:false}
+    { sizeX: 12, sizeY: 4, row: 4, col: 13, name: "widget_7", data:"", type: 'String', edit:false}
+    { sizeX: 24, sizeY: 2, row: 5, col: 0, name: "widget_8", data:"", type: 'String' , edit:false}   
   ]
   @gridsterOptions = {
     columns: 24,
@@ -48,12 +53,11 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr) ->
     },
     draggable: {
        enabled: true 
-       handle: '.gridster-item-heading'
+       handle: ''
     }
   }
 
   @showAddTemplate = ->
-    console.log "in showAddTemplate"
     $this.showTemplate = true
 
   @getWidgetArrLength = ->

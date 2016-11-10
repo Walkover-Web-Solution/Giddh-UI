@@ -316,6 +316,7 @@ angular.module('trialBalance', []).directive('exportReport', [
     
 ]
 
+
 # .directive 'adjustPopoverPlacement', ['$window', '$timeout', ($window, $timeout) ->
 #   scope: {
 #     position: '=position'

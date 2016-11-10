@@ -3623,7 +3623,7 @@ tr.db-bnk-account > td.reconnectDiv{
 
 .pdL-0{
     padding-left: 0;
-
+}
 
 .invoice-widget{
    width:400px;
@@ -3655,7 +3655,7 @@ tr.db-bnk-account > td.reconnectDiv{
    position:absolute;
 }/*new invoice page*/
 #invoice-wrapper{
-  width: 760px;
+  width: 21cm;
   margin: 0 auto;
 }
 .gridster-loaded .gridster-item{
@@ -3680,3 +3680,49 @@ tr.db-bnk-account > td.reconnectDiv{
     height: 100%
 }
 
+.invoice-wrapper-m {
+  background: #d9edf7;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 0.5cm;
+  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+  padding:10px;
+}
+.invoice-wrapper-m.a4{  
+  width: 21cm;
+  height: 29.7cm; 
+}
+.invoice-widget{
+    height:200px;
+    width:200px;
+    background:#fff !important;
+    position: relative;
+    padding:5px;;
+}
+.invoice-widget i.glyphicon{
+    position: absolute;
+    right:10px;
+    top:10px;
+}
+.invoice-input{
+    height: 100%;
+    width:100%;
+    padding:5px;
+    margin:0;
+    background: transparent;
+}
+.invoice-input.hidden{
+    visibility: hidden;
+}
+.invoice-input textarea{
+    height: 100%;
+    width:100%;
+    margin:0;
+    border:0;
+}
+.widget-text{
+    overflow:hidden;
+}
+#trix-toolbar-1 .button_groups, #trix-toolbar-1 .button_groups button{
+    display:none;
+}

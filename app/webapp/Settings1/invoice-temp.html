@@ -1,3 +1,4 @@
+
 <div class="pd2" ng-controller="settingsInvoiceController as ctrl">
 
 	<div class="clearfix mrB2">
@@ -12,7 +13,7 @@
 
     <div class="row">
       <div class="col-md-12">
-	      <section id="invoice-wrapper">
+	    <section id="invoice-wrapper">
 	      	<div class="clearfix pdB2 form-inline">
 	      		
 	      		<div class="form-group">
@@ -25,7 +26,7 @@
 			      <div class="form-group pull-right">
 			      	<a class="btn btn-primary" ng-click="ctrl.addWidget()" href="javascript:void(0)">Add Widget</a>
 			      </div>
-			      <div class="form-group pull-right">
+			      <div class="form-group pull-right mrR1">
 				      <select
 			          required
 			          class="form-control"
@@ -35,64 +36,23 @@
 				      </select>
 				    </div>
 				    
-			  	</div>
+			  </div>
 
-	        <div gridster="ctrl.gridsterOptions">
-				    <ul>
-				      <li gridster-item="item" ng-repeat="item in ctrl.widgets">
-
-				      	<!-- imp handle to move widget -->
-				      	<div class="gridster-item-heading clearfix">
-				      		<a href="javascript:void(0)" title="Move widget"><i class="glyphicon glyphicon-move"></i></a>
-
-				      		<a href="javascript:void(0)" id="remove-widget" title="Remove widget" ng-click="ctrl.removeWidget(item)"><i class="glyphicon glyphicon-trash"></i></a>
-				      	</div>
-				      	<!-- end handle -->
-
-				      	<div class="gridster-item-body">
-
-								  <div ng-if="item.type === 'String'">
-								    <textarea class="form-control" ng-model='item.data' mentio mentio-typed-text="typedTerm" mentio-items="ctrl.peoples | filter:label:typedTerm"></textarea>
-								  </div>
-
-								  <div ng-if="item.type === 'Image'">
-								 		<form class="form-inline" enctype="multipart/form-data">
-								      <div class="form-group" ng-hide="item.uploadFile">
-							          <button type="file" 
-							            ng-model="item.uploadFile"
-							            class="btn btn-primary" 
-							            ngf-select="ctrl.uploadImages($files,'logo')"
-							            ngf-pattern="image/*"
-							            accept="image/*"
-							            ngf-max-size="200KB"
-							            ngf-multiple="false"
-							          >
-							            <i class="glyphicon glyphicon-folder-open"></i> 
-							            &nbsp; Upload Logo</button><br/>
-							          <small>* Image size should be max 200KB</small>
-								      </div>
-								      <div class="form-group" ng-if="item.uploadFile">
-								        <img ngf-src="item.uploadFile" class="thumb">
-								        <a href="javascript:void(0)" ng-click="item.uploadFile = null">Reset Logo</a>
-								      </div>
-								    </form>
-								  </div>
-								  <!-- end upload image section -->
-
-								  <div ng-if="item.type === 'Entry'">
-								  	<div class="greyBg alC">
-				              <div class="mrT4">Particulars will shown here</div>
-				            </div>
-								  </div>
-								
-								</div>
-								<!-- end body -->
-
-				      </li>
-				    </ul>
-					</div>
-					<!-- end gridster -->
-				</section>
+			<div class="invoice-wrapper-m a4">
+				<div gridster="ctrl.gridsterOptions">
+					<ul>
+						<li class="invoice-widget" ng-repeat="item in ctrl.widgets | orderBy:row:true" gridster-item row="item.row" col="item.col" size-x="item.sizeX" size-y="item.sizeY">
+							<div class="invoice-input" ng-class="{hidden:!item.edit}">
+								<trix-editor angular-trix ng-model="item.data"></trix-editor>
+							</div>
+							<p class="widget-text" ng-bind-html="item.data" ng-show="!item.edit"></p>
+							<i class="glyphicon glyphicon-edit" ng-hide="item.edit" ng-click="item.edit = true"></i>
+							<i class="glyphicon glyphicon-ok" ng-show="item.edit" ng-click="item.edit = false"></i>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</section>
 
       </div>
     </div>
