@@ -143,6 +143,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.resetAllCheckBoxes()
 
   $scope.getAllInvoices = () ->
+    $scope.invoices = {}
     infoToSend = {
       "companyUniqueName": $rootScope.selectedCompany.uniqueName
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
@@ -180,6 +181,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     toastr.error(res.data.message)
 
   $scope.getAllTransaction = () ->
+    $scope.ledgers = {}
     sendForGenerate = []
     infoToSend = {
       "companyUniqueName": $rootScope.selectedCompany.uniqueName
@@ -222,12 +224,15 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     else if value == false
       index = sendForGenerate.indexOf(ledger)
       sendForGenerate.splice(index, 1)
+    $scope.buttonStatus()
+
+
+  $scope.buttonStatus = () ->
     if sendForGenerate.length > 0
       $scope.canGenerateInvoice = true
     else
       $scope.canGenerateInvoice = false
     $scope.checkAccounts()
-
 
   $scope.generateBulkInvoice = (condition) ->
     selected = []
@@ -292,6 +297,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       )
       sendForGenerate = []
       $scope.getAllTransaction()
+
+    $scope.buttonStatus()
 
   $scope.generateBulkInvoiceFailure = (res) ->
     toastr.error(res.data.message)
@@ -544,10 +551,11 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     toastr.success(res.body, "Success")
     $scope.modalInstance.close()
     _.each(sendForGenerate, (removeThis) ->
-      index = $scope.ledgers.indexOf(removeThis)
-      $scope.ledgers.splice(index, 1)
+      index = $scope.ledgers.results.indexOf(removeThis)
+      $scope.ledgers.results.splice(index, 1)
     )
     sendForGenerate = []
+    $scope.buttonStatus()
     $scope.getAllTransaction()
     $scope.entriesForInvoice = []
 

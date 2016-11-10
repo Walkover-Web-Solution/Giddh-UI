@@ -141,6 +141,16 @@
                   <!--<input type="checkbox">-->
                 <!--</td>-->
               <!--</tr>-->
+
+              <tr>
+                <td>Create entry after payment using any payment gateway</td>
+                <td>
+                  <input type="checkbox" ng-model="settings.invoiceSettings.createPaymentEntry">
+                </td>
+                <td>
+                  <input type="checkbox" ng-model="settings.proformaSettings.createPaymentEntry">
+                </td>
+              </tr>
               </tbody>
             </table>
             <button class="btn btn-primary" ng-click="saveSettings()">Save</button>
@@ -567,6 +577,9 @@
                       </button>
                     </span>
               </div>
+            </div>
+            <div class="row pd1">
+              <input type="checkbox" ng-model="razorPayDetail.autoCapturePayment">Automatic capture on payment
             </div>
             <div class="row">
               <div class="col-xs-3 pdL1">
