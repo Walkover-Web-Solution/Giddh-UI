@@ -131,7 +131,7 @@ app.controller 'paymentCtrl', [
 #          file = new Blob([$scope.wlt.content], {type: 'application/pdf'});
 #          fileURL = URL.createObjectURL(file);
 #          console.log(fileURL)
-          $scope.content = "data:application/pdf;base64," + $scope.wlt.content
+          $scope.content = "data:application/pdf;"+ $scope.wlt.contentNumber + ".pdf," + "base64," + $scope.wlt.content
           $scope.pdfFile = $sce.trustAsResourceUrl(blobUrl);
         (error) ->
           toastr.error(error.data.message)
@@ -141,7 +141,7 @@ app.controller 'paymentCtrl', [
       if $scope.wlt.contentType == "invoice"
         $http.post('/invoice/pay', data).then(
           (response) ->
-            toastr.success(response.body)
+            toastr.success(response.data.body)
           (error) ->
             toastr.error(error.data.message)
         )
