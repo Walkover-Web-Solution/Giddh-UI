@@ -413,6 +413,19 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     }
     groupService.getFlatAccList(reqParam).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)
 
+  $rootScope.postFlatAccntsByQuery = (query,data) ->
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      q: query
+      page: 1
+      count: 0
+    }
+    datatosend = {
+      groupUniqueNames: data
+    }
+    console.log(datatosend)
+    groupService.postFlatAccList(reqParam,datatosend).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)
+
   $scope.flatAccntQuerySuccess = (res) ->
     $rootScope.queryFltAccnt = res.body.results
 

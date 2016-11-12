@@ -297,7 +297,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
           $scope.ledgers.results.splice(index, 1)
       )
       sendForGenerate = []
-      $scope.getAllTransaction()
+#      $scope.getAllTransaction()
     else
       toastr.success("Invoice generated successfully.")
       $scope.canGenerateInvoice = false
@@ -505,7 +505,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       data.terms = []
 
     if data.invoiceDetails.dueDate != ""
-      data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+      data.invoiceDetails.dueDate = data.invoiceDetails.dueDate
     else
       data.invoiceDetails.dueDate = null
 

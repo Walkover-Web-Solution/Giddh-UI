@@ -820,6 +820,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     $scope.razorPayDetail = res.body
     if $scope.razorPayDetail.userName != "" || $scope.razorPayDetail.userName != null
       $scope.updateRazor = true
+      $scope.razorPayDetail.password = "YOU_ARE_NOT_ALLOWED"
     else
       $scope.updateRazor = false
 
@@ -864,7 +865,8 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     sendThisDetail = {}
     sendThisDetail.companyName = detail.companyName
     sendThisDetail.userName = detail.userName
-    sendThisDetail.password = detail.password
+    if detail.password != "YOU_ARE_NOT_ALLOWED"
+      sendThisDetail.password = detail.password
     if detail.account != null && detail.account != undefined
       sendThisDetail.account = {}
       sendThisDetail.account.name = detail.account.name
