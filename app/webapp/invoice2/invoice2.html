@@ -247,7 +247,7 @@
                           {{$select.selected.name}}
                         </ui-select-match >
                         <ui-select-choices
-                            repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="getFlatAccntsByQuery($select.search)">
+                            repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="postFlatAccntsByQuery($select.search,['revenue_from_operations','sundry_debtors'])">
                           <span>{{acc.name}} ({{acc.uniqueName}})</span>
                         </ui-select-choices>
                       </ui-select>
