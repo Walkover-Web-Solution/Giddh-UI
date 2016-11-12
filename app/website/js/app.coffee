@@ -101,6 +101,7 @@ app.controller 'paymentCtrl', [
       email: 'ravisoni@walkover.in'
     }
     $scope.pdfFile = ""
+    $scope.showInvoice = false
     $scope.removeDotFromString = (str) ->
       return Math.floor(Number(str))
 
@@ -126,13 +127,14 @@ app.controller 'paymentCtrl', [
       $http.post('/invoice-pay-request', data).then(
         (response) ->
           $scope.wlt = response.data.body
-          data = $scope.b64toBlob($scope.wlt.content, "application/pdf", 512)
-          blobUrl = URL.createObjectURL(data)
-#          file = new Blob([$scope.wlt.content], {type: 'application/pdf'});
-#          fileURL = URL.createObjectURL(file);
-#          console.log(fileURL)
-          $scope.content = "data:application/pdf;"+ $scope.wlt.contentNumber + ".pdf," + "base64," + $scope.wlt.content
-          $scope.pdfFile = $sce.trustAsResourceUrl(blobUrl);
+#          str = $scope.wlt.content + "/" + $scope.wlt.contentNumber
+#          data = $scope.b64toBlob(str, "application/pdf", 512)
+#          blobUrl = URL.createObjectURL(data)
+#
+          $scope.content = "data:application/pdf;base64," + $scope.wlt.content
+          $scope.pdfFile = $sce.trustAsResourceUrl($scope.content);
+          $scope.contentHtml = $sce.trustAsHtml($scope.wlt.htmlContent)
+          $scope.showInvoice = true
         (error) ->
           toastr.error(error.data.message)
       )
@@ -153,6 +155,12 @@ app.controller 'paymentCtrl', [
             toastr.error(error.data.message)
         )
 
+    $scope.downloadInvoice = () ->
+      dataUri = 'data:application/pdf;base64,' + $scope.wlt.content
+      a = document.createElement('a')
+      a.download = $scope.wlt.contentNumber+".pdf"
+      a.href = dataUri
+      a.click()
 
     $scope.getDetails()
 ]
