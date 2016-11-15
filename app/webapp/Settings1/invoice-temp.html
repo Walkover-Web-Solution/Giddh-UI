@@ -43,16 +43,40 @@
 					<ul>
 						<li class="invoice-widget" ng-repeat="item in ctrl.widgets | orderBy:row:true" gridster-item row="item.row" col="item.col" size-x="item.sizeX" size-y="item.sizeY">
 							<div class="move-widget"  ng-if="!item.edit"></div>
-							<div class="invoice-input" ng-class="{hidden:!item.edit}">
-								<div class="widget-screen" widget-screen >
-									<div ng-bind-html="item.data"></div>
-								</div>
-								<textarea ui-tinymce="ctrl.tinymceOptions" ng-model="item.data"></textarea>
-							</div>
-							<p class="widget-text" ng-bind-html="item.data" ng-show="!item.edit"></p>
 							<i class="glyphicon glyphicon-edit" ng-hide="item.edit" ng-click="item.edit = true"></i>
 							<i class="glyphicon glyphicon-ok" ng-show="item.edit" ng-click="item.edit = false"></i>
 							<i class="glyphicon glyphicon-remove" ng-click="ctrl.removeWidget(item)"></i>
+							<div ng-if="item.type != 'Image'">
+								<div class="invoice-input" ng-class="{hidden:!item.edit}">
+								 	<textarea ng-model="item.data" mentio 
+									 mentio-typed-text="typedTerm" 
+									 mentio-items="ctrl.people | filter:label:typedTerm">
+									 </textarea>
+								</div>
+								<p class="widget-text" ng-bind-html="item.data" ng-show="!item.edit"></p>
+							</div>
+							  <div ng-if="item.type === 'Image' && item.edit" class="mrT2" style="position: relative;">
+							 		<form class="form-inline" enctype="multipart/form-data">
+							      <div class="form-group" ng-hide="item.uploadFile">
+						          <button type="file" 
+						            ng-model="item.uploadFile"
+						            class="btn btn-primary" 
+						            ngf-select="ctrl.uploadImages($files,'logo')"
+						            ngf-pattern="image/*"
+						            accept="image/*"
+						            ngf-max-size="200KB"
+						            ngf-multiple="false"
+						          >
+						            <i class="glyphicon glyphicon-folder-open"></i> 
+						            &nbsp; Upload Logo</button><br/>
+						          <small>* Image size should be max 200KB</small>
+							      </div>
+							      <div class="form-group" ng-if="item.uploadFile">
+							        <img ngf-src="item.uploadFile" class="thumb">
+							        <a href="javascript:void(0)" ng-click="item.uploadFile = null">Reset Logo</a>
+							      </div>
+							    </form>
+							  </div>
 						</li>
 					</ul>
 				</div>

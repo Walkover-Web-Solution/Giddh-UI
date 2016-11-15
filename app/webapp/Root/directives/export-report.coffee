@@ -317,37 +317,41 @@ angular.module('trialBalance', []).directive('exportReport', [
 ]
 
 
-.directive 'widgetScreen', ['$window', '$timeout', ($window, $timeout) ->
-  restrict: 'EA'
-  link: (scope, elem, attr) ->
+# .directive 'myAwns', ->
+#   directiveDefinitionObject = 
+#     restrict: 'E'
+#     templateUrl: '/public/webapp/views/widget-screen.html'
+#     require: '^ngModel'
+#     scope: ngModel: '='
+#     controller: ($scope, $q, $http) ->
 
-    # $(elem).on('click', (e) ->
-    #   $(elem).find('input').trigger('focus')
-    # )
+#       $scope.setup = (element) ->
+#         element.attr 'mentio', 'mentio'
+#         element.attr 'mentio-typed-term', 'typedTerm'
+#         element.attr 'mentio-require-leading-space', 'true'
+#         element.attr 'mentio-id', '\'htmlContent\''
+#         return
+        
+#       $scope.peopleList = [
+#         { label: 'Joe'},
+#         { label: 'Mike'},
+#         { label: 'Diane'}
+#       ]
 
-    # $(elem).find('input').on('keypress', (e)->
-    #   if e.keyCode == 13
-    #     @value += "<br>"
-    #   if e.keyCode == 18
-    #     @value += "&nbsp"
-    #   if e.keyCode == 9
-    #     @value += "&#9;"
-
-    #   e.stopPropagation()
-    # )
-
-    # $(elem).on('keyup', (e)->
-    #   if e.keyCode == 13
-    #     text = $(this).text()
-    #     $(this).text(text += "<br>")
-    #   if e.keyCode == 32
-    #     text = $(this).text()
-    #     $(this).text(text += "&nbsp")
-    # )
+#       $scope.searchPeople = (term) ->
+#         peopleList = []
+#         $http.get('peopledata.json').then (response) ->
+#           angular.forEach $scope.peopleList, (item) ->
+#             if item.label.toUpperCase().indexOf(term.toUpperCase()) >= 0
+#               peopleList.push item
+#             return
+#           $scope.people = peopleList
+#           $q.when peopleList
 
 
-]
-
+#       return
+#       console.log "fdsfsdf"
+#   directiveDefinitionObject
 
 
 

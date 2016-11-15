@@ -11,7 +11,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr) ->
   @tempTypes = [ "Image", "String", "Entry"]
   @tempType = "String"
 
-  @peoples = [
+  @people = [
     { label: 'Joe'},
     { label: 'Mike'},
     { label: 'Diane'}
@@ -66,9 +66,9 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr) ->
     skin: 'lightgray'
     theme: 'modern'
 
-  @watchChange = (e) ->
-    # if e.keyCode == 50
-    #   console.log e.keyCode
+  @getMentions = (text,e) ->
+    if e.shiftKey && e.keyCode == 50
+      console.log "@"
 
   @showAddTemplate = ->
     $this.showTemplate = true
