@@ -329,17 +329,22 @@ app.run [
     $rootScope.whiteLinks = false
     $rootScope.loginPage = false
     $rootScope.fixedHeader = false
+    $rootScope.showBlack = false
     loc = window.location.pathname
     if loc == "/index" or loc == "/"
       $rootScope.whiteLinks = true
     if loc == "/magic"
       $rootScope.magicLinkPage = true
+      $rootScope.fixedHeader = false
+      $rootScope.showBlack = true
     if loc == "/login"
       $rootScope.whiteLinks = true
       $rootScope.loginPage = true
     if loc == "/about"
       $rootScope.whiteLinks = true
       $rootScope.fixedHeader = true
+    if loc == "/payment"
+      $rootScope.showBlack = true
 
 ]
   

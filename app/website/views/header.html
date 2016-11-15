@@ -10,9 +10,12 @@
           <span class="icon-bar"></span>
       </button>
 
-      <a href="/" class="navbar-brand">
-        <img src="/public/website/images/new/giddh-logo-white.png" alt="Giddh - online accounting software" ng-if="!magicLinkPage || !fixedHeader">
-        <img src="/public/website/images/new/giddh-logo.png" alt="Giddh - online accounting software" ng-if="magicLinkPage || fixedHeader">
+      <a href="/" class="navbar-brand" ng-if="!showBlack">
+        <img class="showWhite" src="/public/website/images/new/giddh-logo-white.png" alt="Giddh - online accounting software" ng-if="!magicLinkPage">
+        <img src="/public/website/images/new/giddh-logo.png" alt="Giddh - online accounting software" ng-class="{'showWhite':magicLinkPage, 'showBlack':!magicLinkPage}">
+      </a>
+      <a href="/" class="navbar-brand" ng-if="showBlack">
+        <img src="/public/website/images/new/giddh-logo.png" alt="Giddh - online accounting software">
       </a>
     </div>
     <!-- Collect the nav links, forms, and other content for toggling -->

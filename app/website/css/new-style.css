@@ -463,6 +463,12 @@ body {
 	-o-transition: height 1s ease;
 	transition: height 1s ease;
 }
+.navbar-brand .showWhite{
+    display: block;
+}
+.navbar-brand .showBlack{
+    display: none;
+}
 .navbar{
 	min-height: 80px;
 	margin-bottom: 0;
@@ -509,6 +515,12 @@ body.light .navbar.transparent{
 }
 .navbar.affix .navbar-brand img{
 	height: 50px;
+}
+.navbar.affix .navbar-brand .showWhite{
+    display: none;
+}
+.navbar.affix .navbar-brand .showBlack{
+    display: block;
 }
 .navbar.affix .navbar.affix .navbar-nav{
 	padding-top: 12px;
