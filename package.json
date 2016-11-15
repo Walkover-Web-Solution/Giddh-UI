@@ -3,7 +3,7 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "postinstall": "bower install && grunt init",
+    "postinstall": "bower install && if [ \"$NODE_ENV\" == \"production\" ]; then grunt init-prod; else grunt init; fi",
     "start": "node ./bin/www"
   },
   "dependencies": {
