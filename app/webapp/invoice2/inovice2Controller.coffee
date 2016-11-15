@@ -277,8 +277,11 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     checkboxA = document.getElementsByName('checkall')
     checkboxA[0].checked = false
     if angular.isArray(res.body)
-      toastr.success("Invoice generated successfully.")
       $scope.inCaseOfFailedInvoice = res.body
+      
+      if $scope.inCaseOfFailedInvoice.length != sendForGenerate.length
+        toastr.success("Invoice generated successfully.")
+
       if $scope.inCaseOfFailedInvoice.length > 0
         str = ""
         _.each($scope.inCaseOfFailedInvoice, (failedInv) ->

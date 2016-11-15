@@ -249,8 +249,8 @@
                           <tr id="{{ledger.uniqueName}}" class="" 
                           ng-repeat="ledger in ledgerData.ledgers 
                           | filter:particularSearch
-                          | limitTo: dLedgerLimit
-                          | orderBy: ledger.entryDate:sortOrder.debit" 
+                          | orderBy: ledger.entryDate:sortOrder.debit
+                          | limitTo: dLedgerLimit" 
                           ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed}">
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
@@ -428,8 +428,8 @@
                           <!--ledgers-->
                           <tr id="{{ledger.uniqueName}}" class="" ng-repeat="ledger in ledgerData.ledgers | 
                           filter:particularSearch | 
-                          limitTo: cLedgerLimit |
-                          orderBy:ledger.entryDate:sortOrder.credit" 
+                          orderBy:ledger.entryDate:sortOrder.credit |
+                          limitTo: cLedgerLimit " 
                           ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed}">
                             <td colspan="100%" class="ledger-row">
                               <table class="width100">
