@@ -174,9 +174,9 @@ app.controller 'homeCtrl', [
       e.stopPropagation()
 
     $scope.resources = [
-      'https://test-fs8eefokm8yjj.stackpathdns.com/public/website/images/Giddh.mp4'
+      'https://giddh-fs8eefokm8yjj.stackpathdns.com/public/website/images/Giddh.mp4'
     ]
-    $scope.poster = 'https://test-fs8eefokm8yjj.stackpathdns.com/public/website/images/new/banner.jpg'
+    $scope.poster = 'https://giddh-fs8eefokm8yjj.stackpathdns.com/public/website/images/new/banner.jpg'
     $scope.fullScreen = true
     $scope.muted = false
     $scope.zIndex = '0'
