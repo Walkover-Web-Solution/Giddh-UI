@@ -9,8 +9,12 @@ app = angular.module("giddhApp", [
   "fullPage.js"
   "vcRecaptcha"
   "valid-number"
+  "razor-pay"
+  "internationalPhoneNumber"
   ]
 )
+app.config (ipnConfig) ->
+  ipnConfig.autoFormat = false
 
 angular.module('valid-number', []).
 directive 'validNumber', ->
@@ -41,13 +45,138 @@ directive 'validNumber', ->
 
   }
 
+angular.module('razor-pay',[]).
+directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope', '$timeout', 'toastr', ($compile, $filter, $document, $parse, $rootScope, $timeout, toastr) ->
+  {
+  restrict: 'A'
+  scope: false
+  transclude: false
+  link: (scope, element, attrs) ->
+    scope.proceedToPay = (e, amount) ->
+      options = {
+        key: scope.wlt.razorPayKey
+#        key: "rzp_live_xGAsAZIdwkmLJW"
+        amount: amount
+        name: scope.wlt.company.name
+        description: "Payment for " + scope.wlt.contentType + " " + scope.wlt.contentNumber
+        handler: (response)->
+# hit api after success
+#          console.log response, "response after success"
+          sendThis = {
+            companyUniqueName: scope.wlt.company.uniqueName
+            uniqueName: scope.wlt.contentNumber
+            paymentId: response.razorpay_payment_id
+          }
+          scope.successPayment(sendThis)
+          # need to call payment api
+        prefill:
+          name: scope.wlt.consumer.name
+          email: scope.wlt.consumer.email
+          contact: scope.wlt.consumer.contactNo
+        order_id: scope.wlt.orderId
+      }
+      rzp1 = new Razorpay(options)
+      rzp1.open()
+      e.preventDefault()
+
+    element.on 'click', (e) ->
+      diff = scope.removeDotFromString(scope.wlt.amount)
+      scope.proceedToPay(e, Number(scope.wlt.amount)*100)
+  }
+]
+app.controller 'paymentCtrl', [
+  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter', '$sce'
+  ($scope, toastr, $http, $location, $rootScope, $filter, $sce) ->
+    urlSearch = window.location.search
+    searchArr = urlSearch.split("=")
+    $scope.randomUniqueName = searchArr[1]
+    data = {}
+    data.randomNumber = $scope.randomUniqueName
+    $scope.wlt = {
+      Amnt:100
+      orderId: ""
+    }
+    $scope.basicInfo = {
+      name: 'ravi soni'
+      email: 'ravisoni@walkover.in'
+    }
+    $scope.pdfFile = ""
+    $scope.showInvoice = false
+    $scope.removeDotFromString = (str) ->
+      return Math.floor(Number(str))
+
+    $scope.b64toBlob = (b64Data, contentType, sliceSize) ->
+      contentType = contentType or ''
+      sliceSize = sliceSize or 512
+      byteCharacters = atob(b64Data)
+      byteArrays = []
+      offset = 0
+      while offset < byteCharacters.length
+        slice = byteCharacters.slice(offset, offset + sliceSize)
+        byteNumbers = new Array(slice.length)
+        i = 0
+        while i < slice.length
+          byteNumbers[i] = slice.charCodeAt(i)
+          i++
+        byteArray = new Uint8Array(byteNumbers)
+        byteArrays.push byteArray
+        offset += sliceSize
+      blob = new Blob(byteArrays, type: contentType)
+      blob
+    $scope.getDetails = () ->
+      $http.post('/invoice-pay-request', data).then(
+        (response) ->
+          $scope.wlt = response.data.body
+#          str = $scope.wlt.content + "/" + $scope.wlt.contentNumber
+#          data = $scope.b64toBlob(str, "application/pdf", 512)
+#          blobUrl = URL.createObjectURL(data)
+#
+          $scope.content = "data:application/pdf;base64," + $scope.wlt.content
+          $scope.pdfFile = $sce.trustAsResourceUrl($scope.content);
+          $scope.contentHtml = $sce.trustAsHtml($scope.wlt.htmlContent)
+          $scope.showInvoice = true
+        (error) ->
+          toastr.error(error.data.message)
+      )
+
+    $scope.successPayment = (data) ->
+      if $scope.wlt.contentType == "invoice"
+        $http.post('/invoice/pay', data).then(
+          (response) ->
+            toastr.success(response.data.body)
+          (error) ->
+            toastr.error(error.data.message)
+        )
+      else if $scope.wlt.contentType == "proforma"
+        $http.post('/proforma/pay', data).then(
+          (response) ->
+            toastr.success(response.body)
+          (error) ->
+            toastr.error(error.data.message)
+        )
+
+    $scope.downloadInvoice = () ->
+      dataUri = 'data:application/pdf;base64,' + $scope.wlt.content
+      a = document.createElement('a')
+      a.download = $scope.wlt.contentNumber+".pdf"
+      a.href = dataUri
+      a.click()
+
+    $scope.getDetails()
+]
+
 app.controller 'homeCtrl', [
   '$scope', 'toastr', '$http', 'vcRecaptchaService', '$rootScope', '$location',
   ($scope, toastr, $http, vcRecaptchaService, $rootScope, $location) ->
+    $scope.showLoginBox = false
+    $scope.toggleLoginBox = (e) ->
+      $scope.showLoginBox = !$scope.showLoginBox
+      e.stopPropagation()
+
     $scope.resources = [
-      '/public/website/images/Giddh.mp4'
+      'https://test-fs8eefokm8yjj.stackpathdns.com/public/website/images/Giddh.mp4'
     ]
-    $scope.poster = '/public/website/images/new/banner.jpg'
+    $scope.poster = 'https://test-fs8eefokm8yjj.stackpathdns.com/public/website/images/new/banner.jpg'
     $scope.fullScreen = true
     $scope.muted = false
     $scope.zIndex = '0'
@@ -141,6 +270,12 @@ app.controller 'homeCtrl', [
         else
           $scope.responseMsg = response.data.message
       )
+
+    $(document).on('click', (e) ->
+      $scope.showLoginBox = false
+    )
+    $scope.goTo = (state) ->
+      window.location = state
 ]
 
 app.config [
@@ -390,7 +525,7 @@ app.controller 'magicCtrl', [
                 $scope.creditTotal += Number(txn.amount)
 
 
-] 
+]
 
 
 app.controller 'successCtrl', [
@@ -437,8 +572,42 @@ app.controller 'verifyEmailCtrl', [
       )
 ]
 
+app.directive 'numbersOnly', ->
+  {
+    require: 'ngModel'
+    link: (scope, element, attr, ngModelCtrl) ->
 
+      fromUser = (text) ->
+        if text
+          transformedInput = text.replace(/[^0-9]/g, '')
+          if transformedInput != text
+            ngModelCtrl.$setViewValue transformedInput
+            ngModelCtrl.$render()
+          return transformedInput
+        undefined
 
+      ngModelCtrl.$parsers.push fromUser
+      return
+
+  }
+
+app.directive 'numberSelect', ->
+  {
+    require: 'ngModel'
+    link: (scope, element, attr, ngModelCtrl) ->
+      $(element).intlTelInput()
+      scope.intlNumber = $(element).intlTelInput("getNumber")
+
+      scope.$watch('intlNumber', (newVal, oldVal) ->
+        if newVal != oldVal
+          console.log newVal
+      )
+
+      $(element).on("countrychange", (e, countrydata) ->
+        console.log countrydata
+      )
+
+  }
 
 # resources locations
 # video background- https://github.com/2013gang/angular-video-background

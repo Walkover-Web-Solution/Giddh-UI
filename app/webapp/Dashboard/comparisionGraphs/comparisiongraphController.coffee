@@ -352,6 +352,10 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.getData($scope.selectedChart)
 
+  $scope.$on 'reloadAll', (event) ->
+    console.log("reload")
+    $scope.getData($scope.selectedChart)
+
 compare.controller('comparisiongraphController',comparisiongraphController)
 
 .directive('compareGraph',[($locationProvider) -> {

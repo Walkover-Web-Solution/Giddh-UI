@@ -42,12 +42,6 @@ var port = process.env.PORT || 8000;
 //enabling cors
 app.use(cors())
 
-app.use(function (req, res, next) {
-    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-    res.header('Expires', '-1');
-    res.header('Pragma', 'no-cache');
-    next()
-});
 
 //set engine
 app.set('public', __dirname + '/public/');
@@ -85,11 +79,11 @@ app.use(session({
     maxAge: sessionTTL
   },
   //store: new MongoStore({
-  //    url: settings.mongoUrl,
-  //    autoRemove: 'interval',
-  //    autoRemoveInterval: sessionTTL,
-  //    ttl: sessionTTL,
-  //    touchAfter: sessionTTL - 300
+  //   url: settings.mongoUrl,
+  //   autoRemove: 'interval',
+  //   autoRemoveInterval: sessionTTL,
+  //   ttl: sessionTTL,
+  //   touchAfter: sessionTTL - 300
   //})
   // store   : new MemcachedStore({
   //   hosts: ['127.0.0.1:11211'],
@@ -151,6 +145,17 @@ global.mStorage = multer.diskStorage({
   }
 })
 
+
+// disable browser cache
+app.use(function (req, res, next) {
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    next()
+});
+
+
+
 var parseUploads = multer({storage: mStorage}).single('file');
 
 var currency = require('./public/routes/webapp/currency');
@@ -171,6 +176,8 @@ var yodlee = require('./public/routes/webapp/yodlee')
 var ebanks  = require('./public/routes/webapp/ebanks')
 var magicLink = require('./public/routes/webapp/magic')
 var timetest = require('./public/routes/webapp/timetest')
+var invoice = require('./public/routes/webapp/invoices')
+var proforma = require('./public/routes/webapp/proformas')
 
 app.use('/time-test', timetest);
 app.use('/currency', currency);
@@ -178,6 +185,8 @@ app.use('/users', users);
 app.use('/roles', roles);
 app.use('/location', location);
 app.use('/company', company);
+app.use('/company/:companyUniqueName/invoices', invoice);
+app.use('/company/:companyUniqueName/proforma', proforma);
 app.use('/company/:companyUniqueName/groups', groups);
 app.use('/company/:companyUniqueName/accounts', accounts);
 app.use('/company/:companyUniqueName/accounts/:accountUniqueName/ledgers', ledgers);

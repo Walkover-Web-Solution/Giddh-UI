@@ -16,7 +16,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     "/public/webapp/ng2.js"
   ]
   $rootScope.$stateParams = {}
-  $rootScope.prefixThis = ""
+  $rootScope.prefixThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
   $rootScope.cmpViewShow = true
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
@@ -42,6 +42,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     currentPage : 1
     limit: 5
   }
+  $rootScope.queryFltAccnt = []
   $rootScope.fltAccntListPaginated = []
   $rootScope.fltAccountListFixed = []
   $rootScope.CompanyList = []
@@ -49,6 +50,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.selectedAccount = {}
   $rootScope.hasOwnCompany = false
   $rootScope.sharedEntity = ""
+  $rootScope.croppedAcntList = []
 
   $scope.addScript = () ->
     _.each($rootScope.scriptArrayHead, (script) ->
@@ -116,6 +118,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       # don't need to clear below
       # _userDetails, _currencyList
       localStorageService.clearAll()
+      window.sessionStorage.clear()
       window.location = "/thanks"
     ), (res) ->
 
@@ -368,6 +371,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.checkPermissions($rootScope.selectedCompany)
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
+#    $rootScope.getCroppedAccountList(company.uniqueName, '')
 
 
   $rootScope.getParticularAccount = (searchThis) ->
@@ -380,6 +384,54 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.removeAccountFromPaginatedList = (account) ->
     $rootScope.fltAccntListPaginated = _.without($rootScope.fltAccntListPaginated,account)
+
+  $scope.gettingCroppedAccount = false
+  $rootScope.getCroppedAccountList = (compUname, query) ->
+    reqParam = {
+      cUname: compUname
+      query: query
+    }
+    data = {}
+    if $scope.gettingCroppedAccount == false || !_.isEmpty(query)
+      $scope.gettingCroppedAccount = true
+      companyServices.getCroppedAcnt(reqParam, data).then($scope.getCroppedAccListSuccess, $scope.getCroppedAccListFailure)
+
+  $scope.getCroppedAccListSuccess = (res) ->
+    $scope.gettingCroppedAccount = false
+    $rootScope.croppedAcntList = res.body.results
+
+  $scope.getCroppedAccListFailure = (res) ->
+    $scope.gettingCroppedAccount = false
+    toastr.error(res.data.message)
+
+  $rootScope.getFlatAccntsByQuery = (query) ->
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      q: query
+      page: 1
+      count: 0
+    }
+    groupService.getFlatAccList(reqParam).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)
+
+  $rootScope.postFlatAccntsByQuery = (query,data) ->
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      q: query
+      page: 1
+      count: 0
+    }
+    datatosend = {
+      groupUniqueNames: data
+    }
+    console.log(datatosend)
+    groupService.postFlatAccList(reqParam,datatosend).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)
+
+  $scope.flatAccntQuerySuccess = (res) ->
+    $rootScope.queryFltAccnt = res.body.results
+
+  $scope.flatAccntQueryFailure = (res) ->
+    toastr.error(res.data.message)
+
 
   $scope.workInProgress = false
   $rootScope.getFlatAccountList = (compUname) ->
@@ -474,6 +526,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     changeData.index = index
     changeData.type = method
     $scope.$broadcast('company-changed', changeData)
+    $rootScope.$emit('company-changed', changeData)
     #$scope.tabs[0].active = true
 
   $rootScope.allowed = true

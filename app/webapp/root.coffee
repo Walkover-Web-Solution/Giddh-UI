@@ -39,7 +39,6 @@ giddh.webApp = angular.module("giddhWebApp",
 giddh.webApp.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
 
-
 giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   $urlRouterProvider.otherwise('/home')
   appendThis = ""
@@ -204,11 +203,40 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('dashboard',
     url: '/dashboard'
     templateUrl: appendThis+'/public/webapp/Dashboard/dashboard.html'
+    controller: "dashboardController"
   )
   .state('/thankyou',
     url: '/thankyou'
     templateUrl: appendThis+'/public/webapp/views/thanks.html'
     controller: 'thankyouController'
+  )
+  .state('proforma',
+    url: ''
+    abstract: true
+    templateUrl: appendThis+'/public/webapp/views/home.html'
+    controller: 'proformaController'
+  )
+  .state('proforma.accounts',
+    url: '/proforma'
+    views:{
+      'accounts':{
+        templateUrl: appendThis+'/public/webapp/invoice2/proforma/proformaAccounts.html'
+      }
+      'rightPanel':{
+        abstract:true
+        templateUrl: appendThis+'/public/webapp/invoice2/proforma/proformaContent.html'
+      }
+    }
+  )
+  .state('settings',
+    url: '/settings'
+    templateUrl: appendThis+'/public/webapp/Settings/settings.html'
+    controller: 'settingsController'
+  )
+  .state('invoice2',
+    url: '/invoice2'
+    templateUrl: appendThis + '/public/webapp/invoice2/invoice2.html'
+    controller: 'invoice2Controller'
   )
   $locationProvider.html5Mode(false)
   return
@@ -257,11 +285,15 @@ giddh.webApp.run [
 #      win.close()
 #
 #   $rootScope.firstLogin = true
-
+  
     $rootScope.$on('companyChanged', ->
       DAServices.ClearData()
       localStorageService.remove("_ledgerData")
       localStorageService.remove("_selectedAccount")
+    )
+    $rootScope.$on('company-changed', (event, changeData)->
+      if changeData.type == "CHANGE"
+        $state.go('company.content.manage')
     )
     $rootScope.canChangeCompany = false
 #    $rootScope.flatAccList = {

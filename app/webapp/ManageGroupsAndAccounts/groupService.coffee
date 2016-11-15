@@ -36,7 +36,11 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       }
       getFlatAccList: {
         method: 'GET'
-        url: '/company/:companyUniqueName/groups/flatten-accounts?q=:q&page=:page&count=:count'
+        url: '/company/:companyUniqueName/groups/flatten-accounts'
+      }
+      postFlatAccList:{
+        method: 'POST'
+        url: '/company/:companyUniqueName/groups/flatten-accounts'
       }
       update: {
         method: 'PUT'
@@ -145,6 +149,14 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
     getFlatAccList: (reqParam, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.getFlatAccList({companyUniqueName: reqParam.companyUniqueName, q:reqParam.q, page:reqParam.page, count:reqParam.count},
         onSuccess, onFailure))
+
+    postFlatAccList: (reqParam, data, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Group.postFlatAccList({
+            companyUniqueName: reqParam.companyUniqueName,
+            q:reqParam.q,
+            page:reqParam.page,
+            count:reqParam.count
+          },data, onSuccess, onFailure))
 
     update: (companyUniqueName, group) ->
       @handlePromise((onSuccess, onFailure) -> Group.update({

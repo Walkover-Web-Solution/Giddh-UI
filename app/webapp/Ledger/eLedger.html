@@ -1,4 +1,4 @@
- <section id="eledgerwrap" class="pdL2 pdR2 pdT2">
+ <section id="eledgerwrap" class="pdL2 pdR2">
   <div class="alert alert-danger fade in pr" style="padding-right:15px"> 
     <button type="button" ng-click="hideEledger()"class="close">
       <span style="font-size:12px;font-weight:normal">Close</span>
@@ -44,7 +44,8 @@
                           <input class="form-control background-transparent" ng-model="eledger.entryDate" ng-disabled="true">
                         </td>
                         <td class="col-xs-5">
-                          <input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-append-to-body="true" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)" typeahead-template-url="accountPopUp.html">
+                          <!--<input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-append-to-body="true" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)" typeahead-template-url="accountPopUp.html">-->
+                          <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)" ng-model-options="{debounce: 200}">
                         </td>
                         <td class="col-xs-3">
                           <input class="form-control background-transparent" ng-model="txn.amount" ng-disabled="true" ng-keyup="triggerPanelFocus($event)">
@@ -84,7 +85,8 @@
                           <input class="form-control background-transparent" ng-model="eledger.entryDate" ng-disabled="true">
                         </td>
                         <td class="col-xs-5">
-                          <input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-append-to-body="true" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)" typeahead-template-url="accountPopUp.html">
+                          <!--<input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-append-to-body="true" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)" typeahead-template-url="accountPopUp.html">-->
+                          <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)" ng-model-options="{debounce: 200}">
                         </td>
                         <td class="col-xs-3">
                           <input class="form-control background-transparent" ng-model="txn.amount" ng-disabled="true">
