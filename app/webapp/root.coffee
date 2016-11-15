@@ -36,6 +36,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "gridster"
     "mentio"
     "angularTrix"
+    "ui.tinymce"
   ]
 )
 

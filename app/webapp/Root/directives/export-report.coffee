@@ -317,20 +317,42 @@ angular.module('trialBalance', []).directive('exportReport', [
 ]
 
 
-# .directive 'adjustPopoverPlacement', ['$window', '$timeout', ($window, $timeout) ->
-#   scope: {
-#     position: '=position'
-#   }
-#   link: (scope, elem, attr) ->
+.directive 'widgetScreen', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: 'EA'
+  link: (scope, elem, attr) ->
 
-#     $(elem).on('click', (e) ->
-#       if $(window).height() - e.pageY < $('.ledger-panel').height() + 30   
-#         scope.position = "top"
-#       else
-#         scope.position = "bottom"
-#     )
+    # $(elem).on('click', (e) ->
+    #   $(elem).find('input').trigger('focus')
+    # )
 
-# ]
+    # $(elem).find('input').on('keypress', (e)->
+    #   if e.keyCode == 13
+    #     @value += "<br>"
+    #   if e.keyCode == 18
+    #     @value += "&nbsp"
+    #   if e.keyCode == 9
+    #     @value += "&#9;"
+
+    #   e.stopPropagation()
+    # )
+
+    # $(elem).on('keyup', (e)->
+    #   if e.keyCode == 13
+    #     text = $(this).text()
+    #     $(this).text(text += "<br>")
+    #   if e.keyCode == 32
+    #     text = $(this).text()
+    #     $(this).text(text += "&nbsp")
+    # )
+
+    editor = new MediumEditor(elem, {
+      extensions: {
+        mention: new TCMention()
+      }
+    })
+
+
+]
 
 
 

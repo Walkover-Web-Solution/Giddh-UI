@@ -34,7 +34,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr) ->
     columns: 24,
     pushing: true,
     floating: true,
-    swapping: false,
+    swapping: true,
     width: 'auto',
     colWidth: 'auto',
     rowHeight: 50, 
@@ -53,9 +53,17 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr) ->
     },
     draggable: {
        enabled: true 
-       handle: ''
+       handle: '.move-widget'
     }
   }
+
+  @tinymceOptions = {
+      toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
+    }
+
+  @watchChange = (e) ->
+    # if e.keyCode == 50
+    #   console.log e.keyCode
 
   @showAddTemplate = ->
     $this.showTemplate = true

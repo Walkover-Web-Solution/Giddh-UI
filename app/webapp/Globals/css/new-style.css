@@ -3703,12 +3703,18 @@ tr.db-bnk-account > td.reconnectDiv{
     position: absolute;
     right:10px;
     top:10px;
+    z-index: 100;
 }
+.invoice-widget i.glyphicon.glyphicon-remove{
+    top:10px;
+    right:40px;
+}
+
 .invoice-input{
     height: 100%;
     width:100%;
     padding:5px;
-    margin:0;
+    margin:20px 0 0 0;
     background: transparent;
 }
 .invoice-input.hidden{
@@ -3722,7 +3728,17 @@ tr.db-bnk-account > td.reconnectDiv{
 }
 .widget-text{
     overflow:hidden;
+    margin-top:20px;
 }
 #trix-toolbar-1 .button_groups, #trix-toolbar-1 .button_groups button{
     display:none;
+}
+
+.move-widget{
+    position:absolute;
+    top:20px;
+    left:20px;
+    right:20px;
+    bottom:20px;
+    z-index: 99;
 }
