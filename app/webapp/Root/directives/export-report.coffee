@@ -345,12 +345,6 @@ angular.module('trialBalance', []).directive('exportReport', [
     #     $(this).text(text += "&nbsp")
     # )
 
-    editor = new MediumEditor(elem, {
-      extensions: {
-        mention: new TCMention()
-      }
-    })
-
 
 ]
 

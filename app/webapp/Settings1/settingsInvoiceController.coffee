@@ -57,9 +57,14 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr) ->
     }
   }
 
-  @tinymceOptions = {
-      toolbar: 'undo redo | bold italic | alignleft aligncenter alignright | code'
-    }
+  @tinymceOptions =
+    onChange: (e) ->
+      # put logic here for keypress and cut/paste changes
+      return
+    inline: false
+    plugins: 'advlist autolink link image lists charmap print preview'
+    skin: 'lightgray'
+    theme: 'modern'
 
   @watchChange = (e) ->
     # if e.keyCode == 50

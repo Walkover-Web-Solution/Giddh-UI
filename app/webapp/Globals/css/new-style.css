@@ -3634,7 +3634,7 @@ tr.db-bnk-account > td.reconnectDiv{
    position: relative;
 }
 
-.invoice-widget textarea{
+/*.invoice-widget textarea{
    opacity:0;
    position: absolute;
    top:40px;
@@ -3642,7 +3642,7 @@ tr.db-bnk-account > td.reconnectDiv{
    left:0;
    right:0;
    z-index: 1;
-}
+}*/
 
 .invoice-widget > .matter{
    height:100%;

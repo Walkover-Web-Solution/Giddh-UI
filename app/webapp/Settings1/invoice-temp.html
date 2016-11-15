@@ -44,10 +44,10 @@
 						<li class="invoice-widget" ng-repeat="item in ctrl.widgets | orderBy:row:true" gridster-item row="item.row" col="item.col" size-x="item.sizeX" size-y="item.sizeY">
 							<div class="move-widget"  ng-if="!item.edit"></div>
 							<div class="invoice-input" ng-class="{hidden:!item.edit}">
-								<!-- <div class="widget-screen" widget-screen >
+								<div class="widget-screen" widget-screen >
 									<div ng-bind-html="item.data"></div>
-								</div> -->
-								<textarea ui-tinymce="ctrl.tinymceOptions" ng-model="tinymceModel"></textarea>
+								</div>
+								<textarea ui-tinymce="ctrl.tinymceOptions" ng-model="item.data"></textarea>
 							</div>
 							<p class="widget-text" ng-bind-html="item.data" ng-show="!item.edit"></p>
 							<i class="glyphicon glyphicon-edit" ng-hide="item.edit" ng-click="item.edit = true"></i>
