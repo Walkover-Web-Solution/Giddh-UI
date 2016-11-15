@@ -323,17 +323,14 @@ module.exports = function (grunt) {
           'angular-gridster',
           'ment.io',
           'trix',
-          'angular-trix',
-          'tinymce',
-          'angular-ui-tinymce'
+          'angular-trix'
         ],
         dependencies: {
           'jquery': 'modernizr',
           'angular': 'jquery',
           'bootstrap': 'angular',
           'angular-bootstrap': 'bootstrap',
-          'underscore': 'angular-bootstrap',
-          'angular-ui-tinymce':'tinymce'
+          'underscore': 'angular-bootstrap'
         },
         mainFiles: {
           'underscore': 'underscore-min.js',
