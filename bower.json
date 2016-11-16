@@ -51,8 +51,8 @@
     "angular-hideheader": "angular-hide-header#^1.0.0",
     "angular-wizard": "^0.6.1",
     "angular-google-chart": "~0.1.0",
-    "angular-file-saver": "^1.1.2"
-    "international-phone-number": "^0.0.16"
+    "angular-file-saver": "^1.1.2",
+    "international-phone-number": "^0.0.16",
     "angular-gridster": "^0.13.15"
   },
   "resolutions": {

@@ -8,7 +8,7 @@
 	<div ng-if="ctrl.showTemplate" class="clearfix">
 
 		<div class="alert alert-info mrB1" role="alert">
-			For make text bold use #b and end with #b.
+			To make text bold, wrap with < b > and < /b >, without spaces.
 		</div>
 
     <div class="row">
@@ -62,7 +62,7 @@
 						          <button type="file" 
 						            ng-model="item.uploadFile"
 						            class="btn btn-primary" 
-						            ngf-select="ctrl.uploadImages($files,'logo')"
+						            ngf-select="ctrl.uploadImages($files,'logo', item)"
 						            ngf-pattern="image/*"
 						            accept="image/*"
 						            ngf-max-size="200KB"
@@ -73,7 +73,7 @@
 						          <small>* Image size should be max 200KB</small>
 							      </div>
 							      <div class="form-group" ng-if="item.uploadFile">
-							        <img ngf-src="item.uploadFile" class="thumb">
+							        <img ngf-src="item.uploadFile" class="thumb"><br>
 							        <a href="javascript:void(0)" ng-click="item.uploadFile = null">Reset Logo</a>
 							      </div>
 							    </form>

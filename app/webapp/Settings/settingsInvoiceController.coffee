@@ -118,17 +118,14 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
   @saveTemplate = ->
     
     @success = (res) ->
-      console.log res
+      toastr.success(res.body)
 
     @failure = (res) ->
-      console.log res
-
-
+      toastr.failure(res.data.message)
 
     if _.isUndefined($this.templateName) || _.isEmpty($this.templateName)
       $this.toastr.warning("Template name can't be empty", "Warning")
     else
-      console.log "hit api for saveTemplate"
       template = {}
       template.name = $this.templateName
       template.type = "invoice"
@@ -146,15 +143,30 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
       reqparam.companyUniqueName = $rootScope.selectedCompany.uniqueName
       settingsService.save(reqparam, template).then(@success, @failure)
 
-
-
-
   @resetUpload =()->
     console.log("resetUpload")
 
   # upload Images
-  @uploadImages =(files,type)->
-    console.log(files,type, "uploadImages")
+  @uploadImages =(files,type, item)->
+    angular.forEach files, (file) ->
+      file.fType = type
+#      console.log file
+      file.upload = Upload.upload(
+        url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/logo'
+        # file: file
+        # fType: type
+        data : {
+          file: file
+          fType: type
+        }
+      )
+      file.upload.then ((res) ->
+        item.data = "<img src=" + res.data.body.path + ">"
+        toastr.success("Logo uploaded successfully")
+      ), ((res) ->
+        toastr.failure("Logo Upload Failed")
+      ), (evt) ->
+        console.log "file upload progress" ,Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
     
 
   

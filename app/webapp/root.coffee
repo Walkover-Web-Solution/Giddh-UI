@@ -243,12 +243,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: appendThis + '/public/webapp/invoice2/invoice2.html'
     controller: 'invoice2Controller'
   )
-  .state('settings1',
-    url: '/settings1'
-    templateUrl: appendThis+'/public/webapp/Settings1/main.html'
-    controller: 'settingsParentController'
-    controllerAs: 'vm'
-  )
   $locationProvider.html5Mode(false)
   return
 
