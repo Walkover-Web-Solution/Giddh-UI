@@ -1,4 +1,4 @@
-SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr) ->
+SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsService) ->
 
   @Upload = Upload
   @$rootScope = $rootScope
@@ -66,9 +66,10 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr) ->
     skin: 'lightgray'
     theme: 'modern'
 
-  @getMentions = (text,e) ->
-    if e.shiftKey && e.keyCode == 50
-      console.log "@"
+  @modifyInput = (text,e) ->
+    if e.keyCode == 13
+      text += "<br/>"
+    console.log text
 
   @showAddTemplate = ->
     $this.showTemplate = true
@@ -83,7 +84,6 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr) ->
 
   @checkEntryWidget = ->
     return _.findWhere($this.widgets, {type: 'Entry'})
-
 
   @addWidget = ->
 
@@ -116,11 +116,38 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr) ->
     $this.widgets.splice index, 1
 
   @saveTemplate = ->
-    console.log($this.widgets, $this.templateName)
+    
+    @success = (res) ->
+      console.log res
+
+    @failure = (res) ->
+      console.log res
+
+
+
     if _.isUndefined($this.templateName) || _.isEmpty($this.templateName)
       $this.toastr.warning("Template name can't be empty", "Warning")
     else
       console.log "hit api for saveTemplate"
+      template = {}
+      template.name = $this.templateName
+      template.type = "invoice"
+      template.sections = []
+      _.each $this.widgets, (wid) ->
+        widget = {}
+        widget.height = wid.sizeY
+        widget.width = wid.sizeX
+        widget.entity = wid.type
+        widget.column = wid.col
+        widget.row = wid.row
+        widget.data = wid.data
+        template.sections.push(widget)
+      reqparam = {}
+      reqparam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+      settingsService.save(reqparam, template).then(@success, @failure)
+
+
+
 
   @resetUpload =()->
     console.log("resetUpload")
@@ -133,6 +160,6 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr) ->
   
   return
 
-SettingsInvoiceController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr']
+SettingsInvoiceController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr', 'settingsService']
 
 giddh.webApp.controller('settingsInvoiceController', SettingsInvoiceController)

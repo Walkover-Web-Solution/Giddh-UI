@@ -171,6 +171,8 @@ var yodlee = require('./public/routes/webapp/yodlee')
 var ebanks  = require('./public/routes/webapp/ebanks')
 var magicLink = require('./public/routes/webapp/magic')
 var timetest = require('./public/routes/webapp/timetest')
+var templates = require('./public/routes/webapp/templates')
+
 
 app.use('/time-test', timetest);
 app.use('/currency', currency);
@@ -185,6 +187,7 @@ app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/profit-loss', profitLoss);
+app.use('/company/:companyUniqueName/templates', templates);
 app.use('/company/:companyUniqueName', reports);
 app.use('/coupon', coupon);
 app.use('/yodlee', yodlee);

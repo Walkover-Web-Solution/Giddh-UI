@@ -50,10 +50,11 @@
 								<div class="invoice-input" ng-class="{hidden:!item.edit}">
 								 	<textarea ng-model="item.data" mentio 
 									 mentio-typed-text="typedTerm" 
-									 mentio-items="ctrl.people | filter:label:typedTerm">
+									 mentio-items="ctrl.people | filter:label:typedTerm"
+									 ng-keypress="ctrl.modifyInput(item.data, $event)">
 									 </textarea>
 								</div>
-								<p class="widget-text" ng-bind-html="item.data" ng-show="!item.edit"></p>
+								<p class="widget-text" ng-bind-html="item.data" ng-show="item.edit"></p>
 							</div>
 							  <div ng-if="item.type === 'Image' && item.edit" class="mrT2" style="position: relative;">
 							 		<form class="form-inline" enctype="multipart/form-data">
