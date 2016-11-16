@@ -16,9 +16,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     "/public/webapp/ng2.js"
   ]
   $rootScope.$stateParams = {}
-  # $rootScope.prefixThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
   $rootScope.prefixThis = ""
-
   $rootScope.cmpViewShow = true
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
@@ -44,6 +42,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     currentPage : 1
     limit: 5
   }
+  $rootScope.queryFltAccnt = []
   $rootScope.fltAccntListPaginated = []
   $rootScope.fltAccountListFixed = []
   $rootScope.CompanyList = []
@@ -119,6 +118,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       # don't need to clear below
       # _userDetails, _currencyList
       localStorageService.clearAll()
+      window.sessionStorage.clear()
       window.location = "/thanks"
     ), (res) ->
 
@@ -404,6 +404,35 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.gettingCroppedAccount = false
     toastr.error(res.data.message)
 
+  $rootScope.getFlatAccntsByQuery = (query) ->
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      q: query
+      page: 1
+      count: 0
+    }
+    groupService.getFlatAccList(reqParam).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)
+
+  $rootScope.postFlatAccntsByQuery = (query,data) ->
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      q: query
+      page: 1
+      count: 0
+    }
+    datatosend = {
+      groupUniqueNames: data
+    }
+    console.log(datatosend)
+    groupService.postFlatAccList(reqParam,datatosend).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)
+
+  $scope.flatAccntQuerySuccess = (res) ->
+    $rootScope.queryFltAccnt = res.body.results
+
+  $scope.flatAccntQueryFailure = (res) ->
+    toastr.error(res.data.message)
+
+
   $scope.workInProgress = false
   $rootScope.getFlatAccountList = (compUname) ->
 #    console.log("work in progress", $scope.workInProgress)
@@ -497,6 +526,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     changeData.index = index
     changeData.type = method
     $scope.$broadcast('company-changed', changeData)
+    $rootScope.$emit('company-changed', changeData)
     #$scope.tabs[0].active = true
 
   $rootScope.allowed = true

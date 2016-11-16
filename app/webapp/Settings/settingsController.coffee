@@ -11,7 +11,16 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     {title:'Taxes', active: false}
     {title:'Email/SMS settings', active: false}
     {title: 'Linked Accounts', active:false}
+    {title: 'Razorpay', active:false}
   ]
+  $scope.addRazorAccount = false
+  $scope.linkRazor = false
+
+  $scope.razorPayDetail = {
+    userName:""
+    password:""
+  }
+  $scope.updateRazor = false
 
   # manage tax variables
   $scope.taxTypes = [
@@ -105,6 +114,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     companyServices.updateAllSettings($rootScope.selectedCompany.uniqueName, $scope.settings).then($scope.saveSettingsSuccess, $scope.saveSettingsFailure)
 
   $scope.saveSettingsSuccess = (res) ->
+    toastr.success(res.body)
     $scope.getAllSetting()
 
   $scope.saveSettingsFailure = (res) ->
@@ -125,6 +135,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     companyServices.createWebhook($rootScope.selectedCompany.uniqueName, $scope.addWebhook).then($scope.saveWebhookSuccess, $scope.saveWebhookFailure)
 
   $scope.saveWebhookSuccess = (res) ->
+    toastr.success("Webhook added successfully.")
     $scope.addWebhook = {}
     $scope.getAllSetting()
 
@@ -731,7 +742,8 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   $scope.connectBankSuccess = (res) ->
     $scope.cntBnkData = res.body
     url = res.body.token_URL + '?token=' + res.body.token
-    $scope.connectUrl = url
+    $scope.connectUrl = encodeURI(url)
+    console.log($scope.connectUrl)
     modalInstance = $uibModal.open(
       templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/connectBankModal.html',
       size: "md",
@@ -800,6 +812,79 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
         tab.active = false
       count = count + 1
     )
+
+  $scope.getRazorPayDetails = () ->
+    companyServices.getRazorPay($rootScope.selectedCompany.uniqueName).then($scope.getRazorPaySuccess, $scope.getRazorPayFailure)
+
+  $scope.getRazorPaySuccess = (res) ->
+    $scope.razorPayDetail = res.body
+    if $scope.razorPayDetail.userName != "" || $scope.razorPayDetail.userName != null
+      $scope.updateRazor = true
+      $scope.razorPayDetail.password = "YOU_ARE_NOT_ALLOWED"
+    else
+      $scope.updateRazor = false
+
+    if $scope.razorPayDetail.account == null
+      $scope.linkRazor = true
+
+  $scope.getRazorPayFailure = (res) ->
+    if res.data.code != "RAZORPAY_ACCOUNT_NOT_FOUND"
+      toastr.error(res.data.message)
+
+  $scope.saveRazorPayDetails = (details) ->
+    if details.userName == "" || details.password == ""
+      return
+    else
+      sendThisDetail = {}
+      sendThisDetail.companyName = details.companyName
+      sendThisDetail.userName = details.userName
+      sendThisDetail.password = details.password
+      if details.account != null && details.account != undefined
+        sendThisDetail.account = {}
+        sendThisDetail.account.name = details.account.name
+        sendThisDetail.account.uniqueName = details.account.uniqueName
+      sendThisDetail.autoCapturePayment = details.autoCapturePayment
+      companyServices.addRazorPay($rootScope.selectedCompany.uniqueName, details).then($scope.saveRazorPaySuccess, $scope.saveRazorPayFailure)
+
+  $scope.saveRazorPaySuccess = (res) ->
+    if res.body.message != undefined
+      toastr.success(res.body.message)
+    else
+      toastr.success("Razorpay detail added successfully.")
+    $scope.getRazorPayDetails()
+
+  $scope.saveRazorPayFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.unlinkAccount = (detail) ->
+    detail.account.uniqueName = null
+    detail.account.name = null
+    companyServices.updateRazorPay($rootScope.selectedCompany.uniqueName, detail).then($scope.saveRazorPaySuccess, $scope.saveRazorPayFailure)
+
+  $scope.updateRazorPayDetails = (detail) ->
+    sendThisDetail = {}
+    sendThisDetail.companyName = detail.companyName
+    sendThisDetail.userName = detail.userName
+    if detail.password != "YOU_ARE_NOT_ALLOWED"
+      sendThisDetail.password = detail.password
+    if detail.account != null && detail.account != undefined
+      sendThisDetail.account = {}
+      sendThisDetail.account.name = detail.account.name
+      sendThisDetail.account.uniqueName = detail.account.uniqueName
+    sendThisDetail.autoCapturePayment = detail.autoCapturePayment
+    companyServices.updateRazorPay($rootScope.selectedCompany.uniqueName, sendThisDetail).then($scope.saveRazorPaySuccess, $scope.saveRazorPayFailure)
+
+  $scope.deleteRazorPayDetail = () ->
+    companyServices.deleteRazorPay($rootScope.selectedCompany.uniqueName).then($scope.deleteRazorPaySuccess, $scope.deleteRazorPayFailure)
+
+  $scope.deleteRazorPaySuccess = (res) ->
+    toastr.success(res.body)
+    $scope.razorPayDetail = {}
+    $scope.updateRazor = false
+    $scope.linkRazor = true
+
+  $scope.deleteRazorPayFailure = (res) ->
+    toastr.error(res.data.message)
 
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'

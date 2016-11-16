@@ -316,42 +316,110 @@ angular.module('trialBalance', []).directive('exportReport', [
     
 ]
 
+.directive 'coverPage', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: "EA"
+  link: (scope, elem, attr) ->
+    interval = Number(attr.timeout) || 2000
 
-# .directive 'myAwns', ->
-#   directiveDefinitionObject = 
-#     restrict: 'E'
-#     templateUrl: '/public/webapp/views/widget-screen.html'
-#     require: '^ngModel'
-#     scope: ngModel: '='
-#     controller: ($scope, $q, $http) ->
+    setHeight = () ->
+      top = $(elem).offset().top || 108
+      exclude = $(window).innerHeight() - top
+      height = $(window).innerHeight() - top
+      $(elem).css("height", height)
 
-#       $scope.setup = (element) ->
-#         element.attr 'mentio', 'mentio'
-#         element.attr 'mentio-typed-term', 'typedTerm'
-#         element.attr 'mentio-require-leading-space', 'true'
-#         element.attr 'mentio-id', '\'htmlContent\''
-#         return
+    angular.element($window).on 'resize', ->
+      setHeight()
+
+    $timeout ( ->
+      angular.element($window).triggerHandler('resize')
+    ), interval
+]
+
+.directive 'customSort', ['$window', '$timeout', '$scope', '$filter', ($window, $timeout, $scope, $filter) ->
+  restrict: "A"
+  transclude: true
+  scope: {
+    order: '='
+    sort: '='
+  }
+  template :"<a ng-click='sort_by(order)' style='color: #555555;'>"+
+    "<span ng-transclude></span>"+
+    "<i ng-class='selectedCls(order)'></i>"+
+    "</a>"
+link: (scope, elem, attr) ->
+  scope.sort_by = (newSortingOrder) ->
+    sort = scope.sort;
+
+    if sort.sortingOrder == newSortingOrder
+      sort.reverse = !sort.reverse
+
+    sort.sortingOrder = newSortingOrder
+
+  scope.selectedCls = (column) ->
+    if column == scope.sort.sortingOrder
+      ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'))
+    else
+      'icon-sort'
+
+]
+
+.directive 'getFullHeight', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: "EA"
+  link: (scope, elem, attr) ->
+    setHeight = () ->
+      height = $(window).innerHeight()
+      $(elem).css({"height": height, "overflow-y":"auto"})
+    
+    $(window).on('resize', (e) ->
+      setHeight()
+    )
+
+    setHeight()
+]
+
+
+.directive 'ledgerScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+  restrict: "EA"
+  link: (scope, elem, attrs) ->
+    invoker = $parse(attrs.scrolled)
+
+    $(elem).on('scroll', (e) ->
+      if $(elem).scrollTop()+$(elem).innerHeight() == elem[0].scrollHeight
+        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight})
+    )
+
+]
+
+.directive 'setPopoverPosition', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: "EA"
+  link: (scope, elem, attrs) ->
+    
+    # setPos = () ->
+    #   $timeout ( ->
+    #     frame = $(window).height() / 3 * 2
+    #     offset = $(elem).offset().top
         
-#       $scope.peopleList = [
-#         { label: 'Joe'},
-#         { label: 'Mike'},
-#         { label: 'Diane'}
-#       ]
+    #     if offset > frame
+    #       attrs.$set("popoverPlacement", "top")
+    #     else
+    #       attrs.$set("popoverPlacement", "bottom")
 
-#       $scope.searchPeople = (term) ->
-#         peopleList = []
-#         $http.get('peopledata.json').then (response) ->
-#           angular.forEach $scope.peopleList, (item) ->
-#             if item.label.toUpperCase().indexOf(term.toUpperCase()) >= 0
-#               peopleList.push item
-#             return
-#           $scope.people = peopleList
-#           $q.when peopleList
+    #   ), 500
 
+    # setPos()
 
-#       return
-#       console.log "fdsfsdf"
-#   directiveDefinitionObject
+    $(elem).on('mouseover', (e)->
+      if e.pageY > $(window).height() / 3 * 2
+        attrs.$set("popoverPlacement", "top")
+      else
+        attrs.$set("popoverPlacement", "bottom")
+    )
 
+    # $(elem).find('input').on('focus', (e) ->
+    #   if $(e.currentTarget).offset().top > $(window).height() / 3 * 2
+    #     attrs.$set("popoverPlacement", "top")
+    #   else
+    #     attrs.$set("popoverPlacement", "bottom")
+    # )
 
-
+]

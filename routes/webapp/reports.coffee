@@ -1,6 +1,5 @@
 settings = require('../util/settings')
 router = settings.express.Router({mergeParams: true})
-
 router.post '/history', (req, res) ->
   args =
     headers:
@@ -325,6 +324,22 @@ router.put '/invoice-setting', (req, res) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
+
+# router.post '/flatten-accounts', (req, res) ->
+#   console.log req.query
+#   authHead = 
+#     headers:
+#       'Auth-Key': req.session.authKey
+#       'X-Forwarded-For': res.locales.remoteIp
+#     parameters:
+#       'q':req.query.q
+#       'page': req.query.page
+#       'count':req.query.count
+#   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/flatten-accounts'
+#   settings.client.get hUrl, authHead, (data, response) ->
+#     if data.status == 'error' || data.status == undefined
+#       res.status(response.statusCode)
+#     res.send data
 
 
 

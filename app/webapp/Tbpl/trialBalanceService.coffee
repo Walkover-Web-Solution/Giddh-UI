@@ -3,7 +3,8 @@ giddh.serviceModule.service 'trialBalService', ($resource, $q) ->
     {
       'companyUniqueName': @companyUniqueName,
       'fromDate': @date1,
-      'toDate': @date2
+      'toDate': @date2,
+      'refresh': @refresh
     },
     {
       getAll: {
@@ -21,7 +22,7 @@ giddh.serviceModule.service 'trialBalService', ($resource, $q) ->
       deferred.promise
 
     getAllFor: (reqParam, onSuccess, onFailure) ->
-      @handlePromise((onSuccess, onFailure) -> trialBal.getAll({companyUniqueName: reqParam.companyUniqueName, fromDate: reqParam.fromDate, toDate: reqParam.toDate}, onSuccess,
+      @handlePromise((onSuccess, onFailure) -> trialBal.getAll({companyUniqueName: reqParam.companyUniqueName, fromDate: reqParam.fromDate, toDate: reqParam.toDate, refresh: reqParam.refresh}, onSuccess,
         onFailure))
 
   trialBalService

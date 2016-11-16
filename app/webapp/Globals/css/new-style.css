@@ -25,6 +25,10 @@ ______\////////////________
 
 }
 
+html, body{
+    height:100%;
+}
+
 /*start super loader*/
 .load-bar-wrap {
     position: fixed;
@@ -2181,6 +2185,10 @@ i.cls-alert {
     width: 100%;
 }
 
+.h100{
+    height:100%;
+}
+
 .ui-select-match-item.btn {
     padding: 0;
 }
@@ -2197,14 +2205,14 @@ i.cls-alert {
     min-width: 150px;
 }
 
-.graph-filters td > .btn, .graph-filters td {
+/*.graph-filters td > .btn, .graph-filters td {
     max-width: 30px;
     min-width: 30px;
 }
-
-.graph-filters td > .btn, .graph-filters td > .btn-sm {
+*/
+/*.graph-filters td > .btn, .graph-filters td > .btn-sm {
     padding: 0;
-}
+}*/
 
 .account-card {
     width: 300px;
@@ -2653,7 +2661,7 @@ body.unresponsive {
 }
 
 input.isNotEditable:disabled {
-    background:: 0 0;
+    background: 0 0;
 }
 
 /*tax table setting*/
@@ -2872,6 +2880,8 @@ ul.pills li {
 .left-col, .right-col {
     width: 50%;
     float: left;
+    height:100%;
+    position: relative;
 }
 
 .left-col {
@@ -2885,24 +2895,43 @@ ul.pills li {
     border-top: none;
 }
 
+.col-container{
+    height: -moz-calc(100% - 160px);  
+    height: -webkit-calc(100% -160px);     
+    height: calc(100% - 160px);
+    overflow-y: auto;
+}
+
 /* ledger container */
 .ledger-container {
     clear: both;
     overflow: hidden;
     position: relative;
-    margin-top:65px;
-    padding-bottom:220px;
+    margin-top:10px;
+    padding-bottom:10px;
 }
 
 .ledger-container-w{
     clear: both;
     overflow: hidden;
     position: relative;
-    margin-top:-120px !important;
+    padding-top:200px !important;
 }
 
 .ledger-container table th {
     padding: 10px 10px;
+}
+
+.ledger-footer{
+    position: absolute;
+    bottom: 30px;
+    left:0;
+    right:0;
+}
+
+.ledger-header thead tr:nth-child(1) th{
+    padding:2px 10px;
+    font-size:14px;
 }
 
 /*.ledger-container-w table th {*/
@@ -2940,6 +2969,10 @@ ul.pills li {
 .t-h-bg3 th, .t-h-bg3 td {
     background: #f5f5f5;
     color: #333;
+}
+
+.ledger-table-body{
+    height: 100%;
 }
 
 .ledger-table-body table tbody.ledger-main{
@@ -3003,6 +3036,11 @@ ul.pills li {
 
 .highlight-txn td, .highlight-txn td input {
     background: #fddfa4;
+}
+
+.add-entry-row .ledger-row td, .add-entry-row .ledger-row td input {
+    background: #5c534d;
+    color:#fff;
 }
 
 .ledger-panel {
@@ -3101,6 +3139,10 @@ ul.pills li {
 
 .pop-panel .anShrt{
     margin-top:10px;
+}
+
+.tax .checkbox{
+    margin:0 5px 5px 0;
 }
 
 .bottom0 {
@@ -3265,12 +3307,11 @@ ul.pills li {
 
 .download-invoice-ledger {
     position: absolute;
-    right: 15px;
+    right: 0;
     top: 0px;
-    height: 30px;
-    padding: 1px 0px 1px 10px;
+    height: 34px;
+    padding:0 15px;
     cursor: pointer;
-    overflow: hidden;
 }
 
 .download-invoice-ledger > i{
@@ -3286,6 +3327,10 @@ ul.pills li {
     -webkit-transition: 0.5s linear all;
     transition: 0.5s linear all;
     opacity: 1;
+}
+
+.add-entry-row{
+    border-top: 2px solid #5c534d;
 }
 
 .pos-rel{
@@ -3439,7 +3484,7 @@ ul.pills li {
 }
 
 .panel-margin{
-    margin-top: 220px;
+    padding-top: 220px;
 }
 
 .top0{
@@ -3623,6 +3668,82 @@ tr.db-bnk-account > td.reconnectDiv{
 
 .pdL-0{
     padding-left: 0;
+}
+
+.custom-tabset{
+    padding: 0px 12px;
+}
+
+.custom-tabset ul{
+    background: transparent !important;
+}
+
+.custom-tabset ul li{
+    border: 0px;
+}
+
+.custom-tabset ul li a{
+    border: 0px !important;
+    border-bottom: 1px solid #ddd !important;
+}
+
+.y-scroll{
+    overflow-y:auto !important;
+}
+
+.cursor-pointer{
+    cursor:pointer;
+}
+
+@-webkit-keyframes reducetime {
+    0% {width: 0;}
+    100% { width: 100%; }
+}
+
+.background-color-giddh{
+    background: #d35f29;
+    height: 50px;
+}
+
+.color-giddh{
+    color: #d35f29;
+}
+
+
+.flying-div{
+    right: 0px;
+    height: 100%;
+    background: white;
+    width: 100%;
+    float: right;
+    border-left: lightgrey 1px solid;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.right300{
+    right: 300px;
+}
+
+.right0{
+    right: 0px;
+}
+
+.filter-btn{
+    right: 20px;
+    z-index: 2;
+    bottom: 0;
+}
+
+.add-transition {
+    -webkit-transition: width 0.5s;
+    -moz-transition: width 0.5s;
+    -ms-transition: width 0.5s;
+    -o-transition: width 0.5s;
+    transition: width 0.5s;
+}
+
+.required{
+    color:red;
 }
 
 .invoice-widget{

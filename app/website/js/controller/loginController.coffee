@@ -3,8 +3,13 @@
 loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr, $window) ->
   $scope.loginIsProcessing = false
   $scope.captchaKey = '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi'
-
+  $scope.phoneLoginPopup = false
+  $scope.showOtp = false
+  $scope.contact = {}
+  $scope.countryCode = 91
   $rootScope.homePage = false
+  $scope.loginBtnTxt = "Get OTP"
+  $scope.loggingIn = false
   # check string has whitespace
   $scope.hasWhiteSpace = (s) ->
     return /\s/g.test(s)
@@ -69,5 +74,63 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
       else
         toastr.error("Something went wrong please reload page", "Error")
 
+  $scope.loginWithMobile = (e) ->
+    $scope.phoneLoginPopup = true
+    e.stopPropagation()
+
+  getOtpSuccess = (res) ->
+    $scope.showOtp = true
+
+  getOtpFailure = (res) ->
+    toastr.error(res.data.response.code)
+
+  $scope.getOtp = () ->
+    $scope.contact.countryCode = $scope.countryCode
+    if $scope.contact.mobileNumber != undefined
+      $http.post('/get-login-otp', $scope.contact).then(
+        getOtpSuccess,
+        getOtpFailure
+      )
+    else
+      toastr.error("mobile number cannot be blank")
+    $scope.loginBtnTxt = "Resend"
+    
+
+  loginUserSuccess = (res) ->
+    localStorageService.set("_userDetails", res.data.body.user)
+    $window.sessionStorage.setItem("_ak", res.data.body.authKey)
+    window.location = "/app/#/home/"
+
+  loginUserFailure = (res) ->
+    toastr.error(res.data.message)
+    $scope.loggingIn = false
+
+  loginUser = (token) ->
+    data = {
+      countryCode : $scope.contact.countryCode
+      mobileNumber : $scope.contact.mobileNumber
+      token : token
+    }
+    $http.post('/login-with-number', data).then(
+      loginUserSuccess,
+      loginUserFailure
+    )
+
+  verifyOtpSuccess = (res) ->
+    refreshToken = res.data.response.refreshToken
+    loginUser(refreshToken)
+
+  verifyOtpFailure = (res) ->
+    toastr.error(res.data.response.code)
+    $scope.loggingIn = false
+
+  $scope.verifyOtp = (otp) ->
+    contact = $scope.contact
+    contact.oneTimePassword = otp
+    $http.post('/verify-login-otp', contact).then(
+      verifyOtpSuccess,
+      verifyOtpFailure
+    )
+    $scope.loggingIn = true
 
 angular.module('giddhApp').controller 'loginController', loginController

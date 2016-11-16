@@ -1,3 +1,9 @@
+<script>
+  function validateThis(input) {
+    if (input.value < -90) input.value = -90;
+    if (input.value > 90) input.value = 90;
+  }
+</script>
 <div class="col-xs-12">
   <div  class="middleBody bdrR bdrL row" auto-height style="overflow-y:scroll;">
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">
@@ -11,7 +17,7 @@
               <th>Proforma</th>
               </thead>
               <tbody>
-              <tr>
+              <!-- <tr>
                 <td>Create Entry + Invoice when paid</td>
                 <td>
                   <input type="checkbox" ng-model="settings.invoiceSettings.autoEntryAndInvoice">
@@ -19,7 +25,7 @@
                 <td>
                   <input type="checkbox" ng-model="settings.proformaSettings.autoEntryAndInvoice">
                 </td>
-              </tr>
+              </tr> -->
               <tr>
                 <td>Send alert</td>
                 <td colspan="2">
@@ -27,13 +33,13 @@
                     <div class="col-xs-12">
                       <div ng-repeat="webhook in webhooks" class="row pd1">
                         <div class="col-xs-7 pd0 mrR1">
-                          <input type="text" class="form-control" placeholder="Add webhook url" ng-model="webhook.url">
+                          <input ng-disabled="true" type="text" class="form-control" placeholder="Add webhook url" ng-model="webhook.url">
                         </div>
                         <div class="col-xs-1 pd0">
-                          <input type="text" class="form-control" placeholder="days" ng-model="webhook.triggerAt">
+                          <input ng-disabled="true" type="text" class="form-control" placeholder="days" ng-model="webhook.triggerAt">
                         </div>
                         <div class="col-xs-2">
-                          <select class="form-control" ng-model="webhook.entity">
+                          <select ng-disabled="true" class="form-control" ng-model="webhook.entity">
                             <option>proforma</option>
                             <option>invoice</option>
                           </select>
@@ -47,7 +53,7 @@
                           <input type="text" class="form-control" placeholder="Add webhook url" ng-model="addWebhook.url">
                         </div>
                         <div class="col-xs-1 pd0">
-                          <input type="text" class="form-control" placeholder="days" ng-model="addWebhook.triggerAt">
+                          <input type="text" onkeypress='return (event.charCode >= 48 && event.charCode <= 57) || event.charCode == 45' onchange="validateThis(this)" class="form-control" placeholder="days" ng-model="addWebhook.triggerAt">
                         </div>
                         <div class="col-xs-2">
                           <select class="form-control" ng-model="addWebhook.entity">
@@ -75,14 +81,14 @@
                   <input type="checkbox" ng-model="settings.proformaSettings.autoMail">
                 </td>
               </tr>
-              <tr>
+<!--               <tr>
                 <td>Auto paid</td>
                 <td>
                   <select class="form-control" ng-model="settings.invoiceSettings.autoPaid">
                     <option>never</option>
                     <option>runtime</option>
                     <option>midnight</option>
-                  </select>
+                  </select> -->
                   <!--<ui-select ng-model="settings.proformaSettings.autoPaid" theme="bootstrap">-->
                     <!--<ui-select-match>-->
                       <!--<span>{{$select.selected}}</span>-->
@@ -91,13 +97,13 @@
                       <!--<span ng-bind="item"></span>-->
                     <!--</ui-select-choices>-->
                   <!--</ui-select>-->
-                </td>
+<!--                 </td>
                 <td>
                   <select class="form-control" ng-model="settings.proformaSettings.autoPaid">
                     <option>never</option>
                     <option>runtime</option>
                     <option>midnight</option>
-                  </select>
+                  </select> -->
                   <!--<ui-select ng-model="settings.invoiceSettings.autoPaid" theme="bootstrap">-->
                     <!--<ui-select-match>-->
                       <!--<span>{{$select.selected}}</span>-->
@@ -106,32 +112,32 @@
                       <!--<span ng-bind="item"></span>-->
                     <!--</ui-select-choices>-->
                   <!--</ui-select>-->
-                </td>
-              </tr>
+<!--                 </td>
+              </tr> -->
               <tr>
                 <td>Default due date</td>
                 <td>
                   <div class="col-xs-3 pdL-0">
-                    <input type="text" ng-model="settings.invoiceSettings.duePeriod" class="form-control"/>
+                    <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57' maxlength="3" ng-model="settings.invoiceSettings.duePeriod" class="form-control"/>
                   </div>
                   Days
                 </td>
                 <td>
                   <div class="col-xs-3 pdL-0">
-                    <input type="text" ng-model="settings.proformaSettings.duePeriod" class="form-control"/>
+                    <input type="text" onkeypress='return event.charCode >= 48 && event.charCode <= 57' maxlength="3" ng-model="settings.proformaSettings.duePeriod" class="form-control"/>
                   </div>
                   Days
                 </td>
               </tr>
-              <tr>
-                <td>Seal paid/unpaid</td>
-                <td>
-                  <input type="checkbox" ng-model="settings.invoiceSettings.showSeal">
-                </td>
-                <td>
-                  <input type="checkbox" ng-model="settings.proformaSettings.showSeal">
-                </td>
-              </tr>
+              <!--<tr>-->
+                <!--<td>Seal paid/unpaid</td>-->
+                <!--<td>-->
+                  <!--<input type="checkbox" ng-model="settings.invoiceSettings.showSeal">-->
+                <!--</td>-->
+                <!--<td>-->
+                  <!--<input type="checkbox" ng-model="settings.proformaSettings.showSeal">-->
+                <!--</td>-->
+              <!--</tr>-->
               <!--<tr>-->
                 <!--<td>Do entry when paid using stripe/razorpay</td>-->
                 <!--<td>-->
@@ -141,6 +147,16 @@
                   <!--<input type="checkbox">-->
                 <!--</td>-->
               <!--</tr>-->
+
+              <tr>
+                <td>Create entry after payment using any payment gateway</td>
+                <td>
+                  <input type="checkbox" ng-model="settings.invoiceSettings.createPaymentEntry">
+                </td>
+                <td>
+                  <input type="checkbox" ng-model="settings.proformaSettings.createPaymentEntry">
+                </td>
+              </tr>
               </tbody>
             </table>
             <button class="btn btn-primary" ng-click="saveSettings()">Save</button>
@@ -169,13 +185,13 @@
                 <div class="row">
                   <div class="col-xs-12">
                     <div class="form-group">
-                      <ui-select ng-model="createTaxData.account" theme="bootstrap">
-                        <ui-select-match placeholder="Linked account">
-                          <span>{{$select.selected.name}}</span>
+                      <ui-select allow-clear ng-model="createTaxData.account" theme="bootstrap">
+                        <ui-select-match placeholder="Linked Account" reset-search-input="true">
+                          {{$select.selected.name}}
                         </ui-select-match >
                         <ui-select-choices
-                            repeat="val in getParticularAccount($select.search) | limitTo : 5 | filter: $select.search">
-                          <span ng-bind-html="val.name"></span>
+                            repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="getFlatAccntsByQuery($select.search)">
+                          <span>{{acc.name}} ({{acc.uniqueName}})</span>
                         </ui-select-choices>
                       </ui-select>
                     </div>
@@ -536,13 +552,52 @@
         </uib-tab>
         <!-- end of yodlee tabs -->
 
-        <uib-tab heading="{{tabs[4].title}}" active="tabs[4].active" select="setTab(4)">
-          <div class="pd2 clearfix">
-            <h1 class="mrB1">Template Settings</h1>
+        <uib-tab heading="{{tabs[4].title}}" active="tabs[4].active" select="getRazorPayDetails(); setTab(4)">
+          <div class="col-xs-3 pd3" cover-page>
+            <div class="row pd1">
+              <label>Razorpay details :</label>
+            </div>
+            <div class="row pd1">
+              <label>Key Id <span class="required">*</span></label>
+              <input class="form-control" type="text" placeholder="Key Id" ng-model="razorPayDetail.userName">
+            </div>
+            <div class="row pd1">
+              <label>Secret<span class="required">*</span></label>
+              <input class="form-control" type="password" placeholder="Secret key" ng-model="razorPayDetail.password">
+            </div>
+            <div class="row pd1">
+              <label>Link Account</label>
+              <div class="input-group">
+                <ui-select allow-clear ng-model="razorPayDetail.account" theme="bootstrap">
+                  <ui-select-match placeholder="Select Accounts" reset-search-input="true">
+                    {{$select.selected.name}}
+                  </ui-select-match >
+                  <ui-select-choices
+                      repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="getFlatAccntsByQuery($select.search)">
+                    <span>{{acc.name}} ({{acc.uniqueName}})</span>
+                  </ui-select-choices>
+                </ui-select>
+                    <span class="input-group-btn">
+                      <button type="button" ng-click="unlinkAccount(razorPayDetail)" class="btn btn-default">
+                        <span class="glyphicon glyphicon-trash"></span>
+                      </button>
+                    </span>
+              </div>
+            </div>
+            <div class="row pd1">
+              <input type="checkbox" ng-model="razorPayDetail.autoCapturePayment"> Automatic capture on payment
+            </div>
+            <div class="row">
+              <div class="col-xs-3 pdL1">
+                <button ng-if="!updateRazor" class="btn btn-default" ng-click="saveRazorPayDetails(razorPayDetail)">Save</button>
+                <button ng-if="updateRazor" class="btn btn-default" ng-click="updateRazorPayDetails(razorPayDetail)">Update</button>
+              </div>
+              <div class="col-xs-3">
+                <button ng-if="updateRazor" class="btn btn-danger" ng-click="deleteRazorPayDetail()">Delete</button>
+              </div>
+            </div>
           </div>
         </uib-tab>
-
-
       </uib-tabset>
     </perfect-scrollbar>
   </div>

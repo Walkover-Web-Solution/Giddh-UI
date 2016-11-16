@@ -10,15 +10,17 @@
   <!-- STYLE / THEME -->
   <link href="<<PREFIX_THIS>>/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="<<PREFIX_THIS>>/bower_components/angular-vidbg/dist/vidBg.min.css" rel="stylesheet">
+  <link href="<<PREFIX_THIS>>/bower_components/intl-tel-input/build/css/intlTelInput.css" rel="stylesheet">
   <link href='https://fonts.googleapis.com/css?family=Arvo:400' rel='stylesheet' type='text/css'>
   <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
 
   <link href="<<PREFIX_THIS>>/public/website/css/new-style.css" rel="stylesheet">
   <!-- LIBRARIES -->
   <script src="<<PREFIX_THIS>>/public/webapp/newRelic.js"></script>
+<!--   <script src="<<PREFIX_THIS>>/bower_components/intl-tel-input/build/js/intlTelInput.min.js"></script> -->
   <script  type="text/javascript" src='<<PREFIX_THIS>>/public/webapp/core_bower.min.js'></script>
   <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/app.js"></script>
-
+  <script src="<<PREFIX_THIS>>/public/website/js/controller/loginController.js"></script>
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -68,7 +70,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <a href="/login" class="btn btn-primary  btn-lg">Start Today - it's free!</a>
+                  <a href="/login" class="btn btn-primary  btn-lg" ng-click="goTo('/login')">Start Today - it's free!</a>
                 </div>
               </div>
             </div>

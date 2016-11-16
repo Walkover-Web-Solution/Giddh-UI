@@ -86,5 +86,19 @@ router.delete '/:ledgerUniqueName', (req, res) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
+
+router.post '/paymentTransactions', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/accounts/' + req.params.accountUniqueName + '/ledgers/paymentTransactions'
+  settings.client.post hUrl, authHead, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
     
 module.exports = router

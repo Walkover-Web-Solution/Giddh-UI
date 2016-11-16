@@ -156,6 +156,19 @@ module.exports = function (grunt) {
             return replaced;
           }
         }
+      },
+      paymentWebsite: {
+        src: srcDir + 'website/views/payment.html',
+        dest: destDir + 'website/views/payment.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
       }
     },
     watch: {
@@ -320,6 +333,9 @@ module.exports = function (grunt) {
           'angular-wizard',
           'angular-google-chart',
           'angular-file-saver',
+          'intl-tel-input',
+          'international-phone-number',
+          'angular-file-saver',
           'angular-gridster',
           'ment.io',
           'trix',
@@ -330,7 +346,9 @@ module.exports = function (grunt) {
           'angular': 'jquery',
           'bootstrap': 'angular',
           'angular-bootstrap': 'bootstrap',
-          'underscore': 'angular-bootstrap'
+          'underscore': 'angular-bootstrap',
+          'intl-tel-input': 'jquery',
+          'international-phone-number':'intl-tel-input'
         },
         mainFiles: {
           'underscore': 'underscore-min.js',
