@@ -464,18 +464,15 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       angular.copy($scope.defTempData, data_)
       data_.account.data = data_.account.data.split('\n')
       data = {}
-#      if angular.isArray(data_.terms)
-#      if not(_.isEmpty())
-#        data.terms = data_.terms.split('\n')
-#      else
-#        data.terms = []
-#      data.terms = data_.terms.split('/n')
+      if not angular.isArray(data_.termsStr)
+        data.terms = data_.termsStr.split('\n')
+      else
+        data.terms = data_.termsStr
       data.account = data_.account
       data.entries = data_.entries
       data.invoiceDetails = data_.invoiceDetails
       if data.invoiceDetails.dueDate != ""
-#        data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
-        data.invoiceDetails.dueDate = data.invoiceDetails.dueDate
+        data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
       else
         data.invoiceDetails.dueDate = null
       obj = {
@@ -666,9 +663,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       $scope.defTempData.companyIdentities.data = $scope.defTempData.companyIdentities.data.replace(RegExp(',', 'g'), '\n')
 
     # terms setting
-    if $scope.defTempData.terms.length > 0
-      str = $scope.defTempData.terms.toString()
-      $scope.defTempData.termsStr = str.replace(RegExp(',', 'g'), '\n')
+    if typeof($scope.defTempData.terms) == 'object' && not(_.isEmpty($scope.defTempData.terms))
+      $scope.defTempData.termsStr = $scope.defTempData.terms.join("\n")
     showPopUp
 
   # switch sample data with original data
