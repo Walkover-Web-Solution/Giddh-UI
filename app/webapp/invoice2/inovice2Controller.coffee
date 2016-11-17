@@ -9,14 +9,18 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.ledgers = []
   $scope.selectedTab = 0
   sendForGenerate = []
-  $scope.filtersInvoice = {}
-  $scope.filtersLedger = {}
+  $scope.filtersInvoice = {
+    count: 12
+  }
+  $scope.filtersLedger = {
+    count: 12
+  }
   $scope.flyDiv = false
   $scope.invoiceCurrentPage = 1
   $scope.ledgerCurrentPage = 1
   $scope.sortVar = 'entryDate'
   $scope.reverse = false
-  $scope.sortVarInv = 'invoiceNumber'
+  $scope.sortVarInv = 'invoiceDate'
   $scope.reverseInv = false
   $scope.hideFilters = false
   $scope.checkall = false
@@ -46,7 +50,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
   $scope.range = (size, start, end) ->
     ret = []
-    console.log size, start, end
     if size < end
       end = size
       if size < $scope.gap
@@ -57,7 +60,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     while i < end
       ret.push i
       i++
-    console.log ret
     ret
 
   $scope.prevPageInv = () ->
@@ -101,6 +103,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     if $scope.selectedTab == 0
       $scope.getAllInvoices()
     else if $scope.selectedTab == 1
+      $scope.ledgerCurrentPage = 1
       $scope.inCaseOfFailedInvoice = []
       sendForGenerate = []
       $scope.getAllTransaction()
@@ -149,7 +152,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       "companyUniqueName": $rootScope.selectedCompany.uniqueName
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
       "toDate": moment($scope.dateData.toDate).format('DD-MM-YYYY')
-      "count": "12"
+      "count": $scope.filtersInvoice.count
       "page": $scope.invoiceCurrentPage
     }
     obj = {}
@@ -182,13 +185,13 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     toastr.error(res.data.message)
 
   $scope.getAllTransaction = () ->
-    $scope.ledgers = {}
+    $scope.searchInLedger = ""
     sendForGenerate = []
     infoToSend = {
       "companyUniqueName": $rootScope.selectedCompany.uniqueName
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
       "toDate": moment($scope.dateData.toDate).format('DD-MM-YYYY')
-      "count": "12"
+      "count": $scope.filtersLedger.count
       "page": $scope.ledgerCurrentPage
     }
     obj = {}
@@ -214,6 +217,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     invoiceService.getAllLedgers(infoToSend, obj).then($scope.getAllTransactionSuccess, $scope.getAllTransactionFailure)
 
   $scope.getAllTransactionSuccess = (res) ->
+    $scope.ledgers = {}
     $scope.ledgers = res.body
 
   $scope.getAllTransactionFailure = (res) ->
