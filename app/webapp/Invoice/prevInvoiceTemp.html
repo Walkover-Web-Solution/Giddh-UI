@@ -524,8 +524,8 @@ textarea:disabled, input:disabled{
             <section class="col-xs-12" id="eight">
               <div class="txtAreaWrap pos-rel" style="height:100%">
                 
-                <div ng-if="editMode">
-                  <textarea ng-disabled="!editMode" class="form-control" ng-model="defTempData.termsStr" placeholder="Enter your terms" rows="5"></textarea>
+                <div ng-if="editMode" style="height:100%;">
+                  <textarea ng-disabled="!editMode" class="form-control" ng-model="defTempData.termsStr" placeholder="Enter your terms" style="width:100%;height:100%"></textarea>
                 </div>
                 <!-- end if editmode -->
 
