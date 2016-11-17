@@ -423,7 +423,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     datatosend = {
       groupUniqueNames: data
     }
-    console.log(datatosend)
     groupService.postFlatAccList(reqParam,datatosend).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)
 
   $scope.flatAccntQuerySuccess = (res) ->

@@ -107,11 +107,16 @@
                   </uib-tab>
                   <uib-tab class="mrB1" heading="Generate" select="setTab(1)">
                     <div class="row mr1">
-                      <ul class="list-inline">
-                        <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
-                        <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
-                        <li><button ng-disabled="!showPreview" class="btn btn-default" ng-click="prevAndGenInv()">Preview & Generate</button></li>
-                      </ul>
+                      <div class="col-xs-6">
+                        <ul class="list-inline">
+                          <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
+                          <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
+                          <li><button ng-disabled="!showPreview" class="btn btn-default" ng-click="prevAndGenInv()">Preview & Generate</button></li>
+                        </ul>
+                      </div>
+                      <div class="col-xs-6">
+                        <input type="search" class="form-control maxW150 pull-right" placeholder="Search" ng-model="searchInLedger">
+                      </div>
                       <!--<div class="col-xs-3">-->
                         <!-- -->
                       <!--</div>-->
@@ -166,7 +171,7 @@
                         </td>
                         </tfoot>
                         <tbody>
-                          <tr ng-repeat="ledger in ledgers.results | orderBy:sortVar:reverse" ng-class="{'danger': checkTransaction(ledger.uniqueName)}">
+                          <tr ng-repeat="ledger in ledgers.results | orderBy:sortVar:reverse | filter:searchInLedger track by $index" ng-class="{'danger': checkTransaction(ledger.uniqueName)}">
                             <td style="width:3%" rowspan="ledger.transactions.length">
                               <input type="checkbox" ng-model="ledger.checked" ng-change="addThis(ledger, ledger.checked)">
                             </td>
@@ -274,6 +279,15 @@
                     </select>
                     <input type="text" class="form-control col-xs-6" ng-model="filtersInvoice.balanceDue" placeholder="Balance Due">
                   </div>
+                  <div class="clearfix mrT1">
+                    <label>Count</label>
+                    <select class="form-control" ng-model="filtersInvoice.count">
+                      <option selected="true">12</option>
+                      <option>25</option>
+                      <option>50</option>
+                      <option>100</option>
+                    </select>
+                  </div>
                 </div>
                 <div ng-if="selectedTab == 1">
                   <div class="clearfix mrT1">
@@ -284,7 +298,7 @@
                           {{$select.selected.name}}
                         </ui-select-match >
                         <ui-select-choices
-                            repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="getFlatAccntsByQuery($select.search)">
+                            repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="postFlatAccntsByQuery($select.search,['revenue_from_operations','sundry_debtors'])">
                           <span>{{acc.name}} ({{acc.uniqueName}})</span>
                         </ui-select-choices>
                       </ui-select>
@@ -299,17 +313,26 @@
                     <label>Description</label>
                     <input type="text" class="form-control" ng-model="filtersLedger.description" placeholder="By description">
                   </div>
-                  <!--<div class="clearfix mrT1">-->
-                    <!--<label>Amount</label>-->
-                    <!--<select ng-model="filtersLedger.option" class="col-xs-6 form-control">-->
-                      <!--<option>Greater than</option>-->
-                      <!--<option>Greater than Equals</option>-->
-                      <!--<option>Less than</option>-->
-                      <!--<option>Greater than Equals</option>-->
-                      <!--<option>Equals</option>-->
-                    <!--</select>-->
-                    <!--<input type="text" class="form-control col-xs-6" ng-model="filtersLedger.entryTotal" placeholder="By amount">-->
-                  <!--</div>-->
+                  <div class="clearfix mrT1">
+                    <label>Count</label>
+                    <select class="form-control" ng-model="filtersLedger.count">
+                      <option selected="true">12</option>
+                      <option>25</option>
+                      <option>50</option>
+                      <option>100</option>
+                    </select>
+                  </div>
+                  <div class="clearfix mrT1">
+                    <label>Amount</label>
+                    <select ng-model="filtersLedger.option" class="col-xs-6 form-control">
+                      <option>Greater than</option>
+                      <option>Greater than Equals</option>
+                      <option>Less than</option>
+                      <option>Greater than Equals</option>
+                      <option>Equals</option>
+                    </select>
+                    <input type="text" class="form-control col-xs-6" ng-model="filtersLedger.entryTotal" placeholder="By amount">
+                  </div>
                 </div>
                 <div class="clearfix mrT1">
                   <button class="btn btn-primary" ng-click="commonGoButtonClick()">GO</button>
