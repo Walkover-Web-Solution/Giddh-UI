@@ -197,21 +197,21 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     obj = {}
     if $scope.filtersLedger.account != undefined
       obj.accountUniqueName = $scope.filtersLedger.account.uniqueName
-#    if $scope.filtersLedger.entryTotal != undefined
-#      obj.entryTotal = $scope.filtersLedger.entryTotal
-#    if $scope.filtersLedger.option != undefined
-#      if $scope.filtersLedger.option == 'Greater than'
-#        obj.totalIsMore = true
-#      else if $scope.filtersLedger.option == 'Less than'
-#        obj.totalIsLess = true
-#      else if $scope.filtersLedger.option == 'Equals'
-#        obj.totalIsEqual = true
-#      else if $scope.filtersLedger.option == 'Greater than Equals'
-#        obj.totalIsMore = true
-#        obj.totalIsEqual = true
-#      else if $scope.filtersLedger.option == 'Less than Equals'
-#        obj.totalIsLess = true
-#        obj.totalIsEqual = true
+    if $scope.filtersLedger.entryTotal != undefined
+      obj.entryTotal = $scope.filtersLedger.entryTotal
+    if $scope.filtersLedger.option != undefined
+      if $scope.filtersLedger.option == 'Greater than'
+        obj.totalIsMore = true
+      else if $scope.filtersLedger.option == 'Less than'
+        obj.totalIsLess = true
+      else if $scope.filtersLedger.option == 'Equals'
+        obj.totalIsEqual = true
+      else if $scope.filtersLedger.option == 'Greater than Equals'
+        obj.totalIsMore = true
+        obj.totalIsEqual = true
+      else if $scope.filtersLedger.option == 'Less than Equals'
+        obj.totalIsLess = true
+        obj.totalIsEqual = true
     obj.description = $scope.filtersLedger.description
 
     invoiceService.getAllLedgers(infoToSend, obj).then($scope.getAllTransactionSuccess, $scope.getAllTransactionFailure)
@@ -464,17 +464,28 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       angular.copy($scope.defTempData, data_)
       data_.account.data = data_.account.data.split('\n')
       data = {}
+#      if angular.isArray(data_.terms)
+#      if not(_.isEmpty())
+#        data.terms = data_.terms.split('\n')
+#      else
+#        data.terms = []
+#      data.terms = data_.terms.split('/n')
       data.account = data_.account
       data.entries = data_.entries
       data.invoiceDetails = data_.invoiceDetails
       if data.invoiceDetails.dueDate != ""
-        data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+#        data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+        data.invoiceDetails.dueDate = data.invoiceDetails.dueDate
       else
         data.invoiceDetails.dueDate = null
       obj = {
         compUname : $rootScope.selectedCompany.uniqueName
       }
-      accountService.updateInvoice(obj, data).then($scope.updateGeneratedInvoiceSuccess, $scope.updateGeneratedInvoiceFailure)
+      sendThis = {
+        invoice: data
+        updateAccountDetails: false
+      }
+      accountService.updateInvoice(obj, sendThis).then($scope.updateGeneratedInvoiceSuccess, $scope.updateGeneratedInvoiceFailure)
     $scope.editGenInvoice = true
 
   $scope.updateGeneratedInvoiceSuccess = (res) ->
@@ -528,6 +539,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
         uniqueNames: data.ledgerUniqueNames
         validateTax: true
         invoice: _.omit(data, 'ledgerUniqueNames')
+        updateAccountDetails: false
       if force
         dData.validateTax = false
 
