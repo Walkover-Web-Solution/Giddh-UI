@@ -464,17 +464,28 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       angular.copy($scope.defTempData, data_)
       data_.account.data = data_.account.data.split('\n')
       data = {}
+#      if angular.isArray(data_.terms)
+#      if not(_.isEmpty())
+#        data.terms = data_.terms.split('\n')
+#      else
+#        data.terms = []
+#      data.terms = data_.terms.split('/n')
       data.account = data_.account
       data.entries = data_.entries
       data.invoiceDetails = data_.invoiceDetails
       if data.invoiceDetails.dueDate != ""
-        data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+#        data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+        data.invoiceDetails.dueDate = data.invoiceDetails.dueDate
       else
         data.invoiceDetails.dueDate = null
       obj = {
         compUname : $rootScope.selectedCompany.uniqueName
       }
-      accountService.updateInvoice(obj, data).then($scope.updateGeneratedInvoiceSuccess, $scope.updateGeneratedInvoiceFailure)
+      sendThis = {
+        invoice: data
+        updateAccountDetails: false
+      }
+      accountService.updateInvoice(obj, sendThis).then($scope.updateGeneratedInvoiceSuccess, $scope.updateGeneratedInvoiceFailure)
     $scope.editGenInvoice = true
 
   $scope.updateGeneratedInvoiceSuccess = (res) ->
@@ -528,6 +539,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
         uniqueNames: data.ledgerUniqueNames
         validateTax: true
         invoice: _.omit(data, 'ledgerUniqueNames')
+        updateAccountDetails: false
       if force
         dData.validateTax = false
 
