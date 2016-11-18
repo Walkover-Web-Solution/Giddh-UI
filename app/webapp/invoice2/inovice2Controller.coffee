@@ -9,14 +9,18 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.ledgers = []
   $scope.selectedTab = 0
   sendForGenerate = []
-  $scope.filtersInvoice = {}
-  $scope.filtersLedger = {}
+  $scope.filtersInvoice = {
+    count: 12
+  }
+  $scope.filtersLedger = {
+    count: 12
+  }
   $scope.flyDiv = false
   $scope.invoiceCurrentPage = 1
   $scope.ledgerCurrentPage = 1
   $scope.sortVar = 'entryDate'
   $scope.reverse = false
-  $scope.sortVarInv = 'invoiceNumber'
+  $scope.sortVarInv = 'invoiceDate'
   $scope.reverseInv = false
   $scope.hideFilters = false
   $scope.checkall = false
@@ -46,7 +50,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
   $scope.range = (size, start, end) ->
     ret = []
-    console.log size, start, end
     if size < end
       end = size
       if size < $scope.gap
@@ -57,7 +60,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     while i < end
       ret.push i
       i++
-    console.log ret
     ret
 
   $scope.prevPageInv = () ->
@@ -101,6 +103,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     if $scope.selectedTab == 0
       $scope.getAllInvoices()
     else if $scope.selectedTab == 1
+      $scope.ledgerCurrentPage = 1
       $scope.inCaseOfFailedInvoice = []
       sendForGenerate = []
       $scope.getAllTransaction()
@@ -149,7 +152,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       "companyUniqueName": $rootScope.selectedCompany.uniqueName
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
       "toDate": moment($scope.dateData.toDate).format('DD-MM-YYYY')
-      "count": "12"
+      "count": $scope.filtersInvoice.count
       "page": $scope.invoiceCurrentPage
     }
     obj = {}
@@ -182,38 +185,39 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     toastr.error(res.data.message)
 
   $scope.getAllTransaction = () ->
-    $scope.ledgers = {}
+    $scope.searchInLedger = ""
     sendForGenerate = []
     infoToSend = {
       "companyUniqueName": $rootScope.selectedCompany.uniqueName
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
       "toDate": moment($scope.dateData.toDate).format('DD-MM-YYYY')
-      "count": "12"
+      "count": $scope.filtersLedger.count
       "page": $scope.ledgerCurrentPage
     }
     obj = {}
     if $scope.filtersLedger.account != undefined
       obj.accountUniqueName = $scope.filtersLedger.account.uniqueName
-#    if $scope.filtersLedger.entryTotal != undefined
-#      obj.entryTotal = $scope.filtersLedger.entryTotal
-#    if $scope.filtersLedger.option != undefined
-#      if $scope.filtersLedger.option == 'Greater than'
-#        obj.totalIsMore = true
-#      else if $scope.filtersLedger.option == 'Less than'
-#        obj.totalIsLess = true
-#      else if $scope.filtersLedger.option == 'Equals'
-#        obj.totalIsEqual = true
-#      else if $scope.filtersLedger.option == 'Greater than Equals'
-#        obj.totalIsMore = true
-#        obj.totalIsEqual = true
-#      else if $scope.filtersLedger.option == 'Less than Equals'
-#        obj.totalIsLess = true
-#        obj.totalIsEqual = true
+    if $scope.filtersLedger.entryTotal != undefined
+      obj.entryTotal = $scope.filtersLedger.entryTotal
+    if $scope.filtersLedger.option != undefined
+      if $scope.filtersLedger.option == 'Greater than'
+        obj.totalIsMore = true
+      else if $scope.filtersLedger.option == 'Less than'
+        obj.totalIsLess = true
+      else if $scope.filtersLedger.option == 'Equals'
+        obj.totalIsEqual = true
+      else if $scope.filtersLedger.option == 'Greater than Equals'
+        obj.totalIsMore = true
+        obj.totalIsEqual = true
+      else if $scope.filtersLedger.option == 'Less than Equals'
+        obj.totalIsLess = true
+        obj.totalIsEqual = true
     obj.description = $scope.filtersLedger.description
 
     invoiceService.getAllLedgers(infoToSend, obj).then($scope.getAllTransactionSuccess, $scope.getAllTransactionFailure)
 
   $scope.getAllTransactionSuccess = (res) ->
+    $scope.ledgers = {}
     $scope.ledgers = res.body
 
   $scope.getAllTransactionFailure = (res) ->
@@ -460,6 +464,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       angular.copy($scope.defTempData, data_)
       data_.account.data = data_.account.data.split('\n')
       data = {}
+      if not angular.isArray(data_.termsStr)
+        data.terms = data_.termsStr.split('\n')
+      else
+        data.terms = data_.termsStr
       data.account = data_.account
       data.entries = data_.entries
       data.invoiceDetails = data_.invoiceDetails
@@ -470,7 +478,11 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       obj = {
         compUname : $rootScope.selectedCompany.uniqueName
       }
-      accountService.updateInvoice(obj, data).then($scope.updateGeneratedInvoiceSuccess, $scope.updateGeneratedInvoiceFailure)
+      sendThis = {
+        invoice: data
+        updateAccountDetails: false
+      }
+      accountService.updateInvoice(obj, sendThis).then($scope.updateGeneratedInvoiceSuccess, $scope.updateGeneratedInvoiceFailure)
     $scope.editGenInvoice = true
 
   $scope.updateGeneratedInvoiceSuccess = (res) ->
@@ -524,6 +536,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
         uniqueNames: data.ledgerUniqueNames
         validateTax: true
         invoice: _.omit(data, 'ledgerUniqueNames')
+        updateAccountDetails: false
       if force
         dData.validateTax = false
 
@@ -650,9 +663,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       $scope.defTempData.companyIdentities.data = $scope.defTempData.companyIdentities.data.replace(RegExp(',', 'g'), '\n')
 
     # terms setting
-    if $scope.defTempData.terms.length > 0
-      str = $scope.defTempData.terms.toString()
-      $scope.defTempData.termsStr = str.replace(RegExp(',', 'g'), '\n')
+    if typeof($scope.defTempData.terms) == 'object' && not(_.isEmpty($scope.defTempData.terms))
+      $scope.defTempData.termsStr = $scope.defTempData.terms.join("\n")
     showPopUp
 
   # switch sample data with original data
