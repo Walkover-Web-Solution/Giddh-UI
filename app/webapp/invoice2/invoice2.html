@@ -98,6 +98,7 @@
                             <!--</td>-->
                             <td>
                               <i class="glyphicon glyphicon-trash color-giddh" ng-click="deleteInvoice(invoice)"></i>
+                              <i class="glyphicon glyphicon-download" ng-click="downloadInvoice(ledger.invoiceNumber, $event)"></i>
                             </td>
                           </tr>
                           </tbody>
@@ -252,7 +253,7 @@
                           {{$select.selected.name}}
                         </ui-select-match >
                         <ui-select-choices
-                            repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="postFlatAccntsByQuery($select.search,['revenue_from_operations','sundry_debtors'])">
+                            repeat="acc in queryFltAccnt | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,['revenue_from_operations','sundry_debtors'])" style="margin-left:-30px;">
                           <span>{{acc.name}} ({{acc.uniqueName}})</span>
                         </ui-select-choices>
                       </ui-select>
@@ -298,7 +299,7 @@
                           {{$select.selected.name}}
                         </ui-select-match >
                         <ui-select-choices
-                            repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5 | filter: $select.search" refresh="postFlatAccntsByQuery($select.search,['revenue_from_operations','sundry_debtors'])">
+                            repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,['revenue_from_operations','sundry_debtors'])">
                           <span>{{acc.name}} ({{acc.uniqueName}})</span>
                         </ui-select-choices>
                       </ui-select>
@@ -350,9 +351,9 @@
   </div>
 </div>
 
-<script type="text/ng-template" id="accountPopUp.html">
-  <a href="javascript:void(0)" class="account-list-item" set-drop-overflow>
-    <span class="account-list-item" ng-bind-html="match.label | uibTypeaheadHighlight:query"></span>
-    (<span class="account-list-item" ng-bind-html="match.model.uniqueName | uibTypeaheadHighlight:query"></span>)
+<script type="text/ng-template" id="accountPopUpInvoice.html">
+  <a href="javascript:void(0)" class="account-list-item" set-drop-overflow style="border-bottom:1px solid #e0e0e0;">
+    <span class="account-list-item" ng-bind-html="match.label | uibTypeaheadHighlight:query" style="display: block;font-size:12px"></span>
+    <span class="account-list-item" ng-bind-html="match.model.uniqueName | uibTypeaheadHighlight:query" style="display: block;font-size:10px"></span>
   </a>
 </script>
