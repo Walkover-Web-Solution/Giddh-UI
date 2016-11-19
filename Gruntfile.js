@@ -242,11 +242,11 @@ module.exports = function (grunt) {
     env: {
       dev: {
         NODE_ENV: 'DEVELOPMENT',
-        PREFIX_THIS: 'https://test-fs8eefokm8yjj.stackpathdns.com'
+        PREFIX_THIS: process.env.CDN_URL
       },
       prod: {
         NODE_ENV: 'PRODUCTION',
-        PREFIX_THIS: 'https://giddh-fs8eefokm8yjj.stackpathdns.com'
+        PREFIX_THIS: process.env.CDN_URL
       }
     },
     preprocess:{
@@ -389,6 +389,8 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('customCopy', ['env:dev', 'copy']);
+
+  grunt.registerTask('tempRun', ['copy:indexWebsite'])
 
   grunt.registerTask('default', ['coffeelint', 'customCopy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
 

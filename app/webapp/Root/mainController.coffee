@@ -16,7 +16,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     "/public/webapp/ng2.js"
   ]
   $rootScope.$stateParams = {}
-  $rootScope.prefixThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
+#  $rootScope.prefixThis = ""
   $rootScope.cmpViewShow = true
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
@@ -146,6 +146,15 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.onGetRolesFailure = (res) ->
     toastr.error("Something went wrong while fetching role", "Error")
 
+
+  $scope.getCdnUrl = ->
+    roleServices.getEnvVars().then($scope.onGetEnvSuccess, $scope.onGetEnvFailure)
+
+  $scope.onGetEnvSuccess = (res) ->
+    $rootScope.prefixThis = res.envUrl
+
+  $scope.onGetEnvFailure = (res) ->
+
   # switch user
   $scope.ucActive = false
 
@@ -181,6 +190,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     return pattern.test(emailStr)
   
   $scope.getRoles()
+  $scope.getCdnUrl()
   $timeout(->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
     if !_.isEmpty($rootScope.selectedCompany)

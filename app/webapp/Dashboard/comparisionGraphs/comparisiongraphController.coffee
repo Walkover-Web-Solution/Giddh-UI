@@ -353,7 +353,6 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
       $scope.getData($scope.selectedChart)
 
   $scope.$on 'reloadAll', (event) ->
-    console.log("reload")
     $scope.getData($scope.selectedChart)
 
 compare.controller('comparisiongraphController',comparisiongraphController)

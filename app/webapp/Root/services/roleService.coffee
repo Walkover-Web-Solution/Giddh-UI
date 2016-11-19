@@ -6,6 +6,10 @@ giddh.serviceModule.service 'roleServices', ($resource, $q) ->
       all: {
         method: 'GET'
       }
+      getEnvVar:{
+        method: 'GET'
+        url: '/roles/getEnvVars'
+      }
     }
   )
   roleServices =
@@ -18,5 +22,8 @@ giddh.serviceModule.service 'roleServices', ($resource, $q) ->
 
     getAll: () ->
       @handlePromise((onSuccess,  onFailure) -> Role.all(onSuccess, onFailure))
+
+    getEnvVars: () ->
+      @handlePromise((onSuccess, onFailure) -> Role.getEnvVar(onSuccess, onFailure))
 
   roleServices
