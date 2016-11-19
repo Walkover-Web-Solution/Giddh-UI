@@ -375,13 +375,17 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.signatureUpldComplt = false
     $scope.tempSet = {}
     $scope.defTempData = {}
+    $scope.selectedInvoiceDetails = {}
     # set mode
     $scope.editMode = if mode is 'edit' then true else false
     $scope.tempSet = template.sections
 
     _.extend($scope.defTempData , data)
+
     $scope.defTempData.signatureType = $scope.tempSet.signatureType
+
     showPopUp = $scope.convertIntoOur()
+    angular.copy($scope.defTempData, $scope.selectedInvoiceDetails)
 
     # open dialog
     if(showPopUp)
@@ -462,7 +466,11 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     if $scope.editGenInvoice
       data_ = {}
       angular.copy($scope.defTempData, data_)
+      matchThis = {}
       data_.account.data = data_.account.data.split('\n')
+      angular.copy(data_, matchThis)
+#      if not(_.isEmpty($scope.selectedInvoiceDetails.account.data))
+#        $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.split('/n')
       data = {}
       if not angular.isArray(data_.termsStr)
         data.terms = data_.termsStr.split('\n')
@@ -482,7 +490,25 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
         invoice: data
         updateAccountDetails: false
       }
-      accountService.updateInvoice(obj, sendThis).then($scope.updateGeneratedInvoiceSuccess, $scope.updateGeneratedInvoiceFailure)
+      matchThis.account.data = matchThis.account.data.join("\n")
+#      $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.join("\n")
+
+      if $scope.selectedInvoiceDetails.account.name != matchThis.account.name || $scope.selectedInvoiceDetails.account.attentionTo != matchThis.account.attentionTo || $scope.selectedInvoiceDetails.account.data != matchThis.account.data || $scope.selectedInvoiceDetails.account.mobileNumber != matchThis.account.mobileNumber || $scope.selectedInvoiceDetails.account.email != matchThis.account.email
+        modalService.openConfirmModal(
+          title: 'Update'
+          body: 'Would you also like to update account information in main account?',
+          ok: 'Yes',
+          cancel: 'No'
+        ).then(
+          (res) ->
+            sendThis.updateAccountDetails = true
+            accountService.updateInvoice(obj, sendThis).then($scope.updateGeneratedInvoiceSuccess, $scope.updateGeneratedInvoiceFailure)
+          ,(res) ->
+            sendThis.updateAccountDetails = false
+            accountService.updateInvoice(obj, sendThis).then($scope.updateGeneratedInvoiceSuccess, $scope.updateGeneratedInvoiceFailure)
+        )
+      else
+        accountService.updateInvoice(obj, sendThis).then($scope.updateGeneratedInvoiceSuccess, $scope.updateGeneratedInvoiceFailure)
     $scope.editGenInvoice = true
 
   $scope.updateGeneratedInvoiceSuccess = (res) ->
@@ -499,14 +525,18 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.updatingTempData = true
     dData = {}
     data = {}
+    matchThis = {}
     angular.copy($scope.defTempData, data)
-
     # company setting
     if not(_.isEmpty(data.company.data))
       data.company.data = data.company.data.split('\n')
     #data.company.data.replace(RegExp('\n', 'g'), ',')
     if not(_.isEmpty(data.account.data))
       data.account.data = data.account.data.split('\n')
+
+    angular.copy(data, matchThis)
+    matchThis.account.data = matchThis.account.data.join("\n")
+#    $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.join("\n")
 
     # companyIdentities setting
     if not(_.isEmpty(data.companyIdentities.data))
@@ -520,7 +550,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       data.terms = []
 
     if data.invoiceDetails.dueDate != ""
-      data.invoiceDetails.dueDate = data.invoiceDetails.dueDate
+      if moment(data.invoiceDetails.dueDate, "DD-MM-YYYY", true).isValid()
+        data.invoiceDetails.dueDate = data.invoiceDetails.dueDate
+      else
+        data.invoiceDetails.dueDate = null
     else
       data.invoiceDetails.dueDate = null
 
@@ -545,7 +578,22 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 #          $scope.defTempData.account.data = []
         if dData.invoice.account.data.length == 0
           dData.invoice.account.data = []
-        accountService.genInvoice(obj, dData).then($scope.genInvoiceSuccess, $scope.genInvoiceFailure)
+        if $scope.selectedInvoiceDetails.account.name != matchThis.account.name || $scope.selectedInvoiceDetails.account.attentionTo != matchThis.account.attentionTo || $scope.selectedInvoiceDetails.account.data != matchThis.account.data || $scope.selectedInvoiceDetails.account.mobileNumber != matchThis.account.mobileNumber || $scope.selectedInvoiceDetails.account.email != matchThis.account.email
+          modalService.openConfirmModal(
+            title: 'Update'
+            body: 'Would you also like to update account information in main account?',
+            ok: 'Yes',
+            cancel: 'No'
+          ).then(
+            (res) ->
+              dData.updateAccountDetails = true
+              accountService.genInvoice(obj, dData).then($scope.genInvoiceSuccess, $scope.genInvoiceFailure)
+            ,(res) ->
+              dData.updateAccountDetails = false
+              accountService.genInvoice(obj, dData).then($scope.genInvoiceSuccess, $scope.genInvoiceFailure)
+          )
+        else
+          accountService.genInvoice(obj, dData).then($scope.genInvoiceSuccess, $scope.genInvoiceFailure)
 #        else
 #          toastr.error("Buyer's address can not be left blank.")
 #          $scope.updatingTempData = false

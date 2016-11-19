@@ -16,7 +16,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     "/public/webapp/ng2.js"
   ]
   $rootScope.$stateParams = {}
-  $rootScope.prefixThis = ""
+#  $rootScope.prefixThis = ""
   $rootScope.cmpViewShow = true
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
@@ -122,6 +122,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       window.location = "/thanks"
     ), (res) ->
 
+
   # for ledger
   $rootScope.makeAccountFlatten = (data) ->
     # $rootScope.flatAccntListWithParents = data
@@ -145,6 +146,15 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.onGetRolesFailure = (res) ->
     toastr.error("Something went wrong while fetching role", "Error")
+
+
+  $scope.getCdnUrl = ->
+    roleServices.getEnvVars().then($scope.onGetEnvSuccess, $scope.onGetEnvFailure)
+
+  $scope.onGetEnvSuccess = (res) ->
+    $rootScope.prefixThis = res.envUrl
+
+  $scope.onGetEnvFailure = (res) ->
 
   # switch user
   $scope.ucActive = false
@@ -181,6 +191,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     return pattern.test(emailStr)
   
   $scope.getRoles()
+  $scope.getCdnUrl()
   $timeout(->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
     if !_.isEmpty($rootScope.selectedCompany)
@@ -549,6 +560,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     activeYear.ends = moment(company.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").year()
     if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
     $rootScope.currentFinancialYear = activeYear.year
+
+
+
 
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)
