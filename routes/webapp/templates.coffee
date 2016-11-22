@@ -2,7 +2,6 @@ settings = require('../util/settings')
 router = settings.express.Router({mergeParams: true})
 
 router.post '/', (req, res) ->
-  console.log "from templates"
   args =
     headers:
       'Auth-Key': req.session.authKey

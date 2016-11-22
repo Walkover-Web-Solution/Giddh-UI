@@ -35,7 +35,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "ngFileSaver"
     "gridster"
     "mentio"
-    "textAngular"
+    "ui.tinymce"
   ]
 )
 

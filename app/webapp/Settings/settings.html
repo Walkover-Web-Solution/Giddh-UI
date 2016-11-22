@@ -623,6 +623,7 @@
                       </div>
                       <div class="form-group">
                         <button ng-disabled="ctrl.templateName === undefined" class="btn btn-success" ng-click="ctrl.saveTemplate()" href="javascript:void(0)">Save Template</button>
+                        <button class="btn btn-success mrL1" ng-click="ctrl.resetTemplate()" href="javascript:void(0)">Reset Template</button>
                       </div>
 
                       <div class="form-group pull-right">
@@ -648,15 +649,16 @@
                         <i class="glyphicon glyphicon-edit" ng-hide="item.edit" ng-click="item.edit = true"></i>
                         <i class="glyphicon glyphicon-ok" ng-show="item.edit" ng-click="item.edit = false"></i>
                         <i class="glyphicon glyphicon-remove" ng-click="ctrl.removeWidget(item)"></i>
+                        <p class="widget-text" ng-bind-html="item.data" ng-show="!item.edit"></p>
                         <div ng-if="item.type != 'Image'">
                           <div class="invoice-input" ng-class="{hidden:!item.edit}">
-                            <textarea ng-model="item.data" mentio 
+                            <!-- <textarea ng-model="item.data" mentio 
                              mentio-typed-text="typedTerm" 
                              mentio-items="ctrl.people | filter:label:typedTerm"
                              ng-keypress="ctrl.modifyInput(item.data, $event)">
-                             </textarea>
+                             </textarea> -->
+                             <textarea ui-tinymce="ctrl.tinymceOptions" ng-model="item.data"></textarea>
                           </div>
-                          <p class="widget-text" ng-bind-html="item.data" ng-show="item.edit"></p>
                         </div>
                           <div ng-if="item.type === 'Image' && item.edit" class="mrT2" style="position: relative;">
                             <form class="form-inline" enctype="multipart/form-data">

@@ -339,7 +339,9 @@ module.exports = function (grunt) {
           'angular-gridster',
           'ment.io',
           'trix',
-          'angular-trix'
+          'angular-trix',
+          'tinymce-mention',
+          'angular-ui-tinymce'
         ],
         dependencies: {
           'jquery': 'modernizr',

@@ -4068,3 +4068,7 @@ tr.db-bnk-account > td.reconnectDiv{
 .invoice-input .ta-editor.ta-html,.invoice-input .ta-scroll-window.form-control,.invoice-input .invoice-input, .ta-scroll-window>.ta-bind{
     min-height: initial !important;
 }
+/*
+.invoice-input .mce-container-body .mce-menubar, .invoice-input .mce-container-body .mce-toolbar-grp, .invoice-input .mce-container-body .mce-statusbar{
+    display:none;
+}*/

@@ -1,5 +1,4 @@
-SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsService) ->
-
+SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsService, $http) ->
   @Upload = Upload
   @$rootScope = $rootScope
   @$timeout = $timeout
@@ -18,18 +17,22 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
   ]
   
 
+  @widgetsModel = () ->
+    @model =  [
+      { sizeX: 8, sizeY: 4, row: 1, col: 0, name: "widget_0", data:"", type: 'Image' , edit:false}
+      { sizeX: 8, sizeY: 4, row: 1, col: 8, name: "widget_1", data:"", type: 'String' , edit:false}
+      { sizeX: 8, sizeY: 4, row: 1, col: 17, name: "widget_2", data:"", type: 'String', edit:false}
+      { sizeX: 12, sizeY: 4, row: 2, col: 0, name: "widget_3", data:"", type: 'String', edit:false}
+      { sizeX: 12, sizeY: 4, row: 2, col: 13, name: "widget_4", data:"", type: 'String', edit:false}
+      { sizeX: 24, sizeY: 5, row: 3, col: 0, name: "widget_5", data:"", type: 'Entry' , edit:false}
+      { sizeX: 12, sizeY: 4, row: 4, col: 0, name: "widget_6", data:"", type: 'String', edit:false}
+      { sizeX: 12, sizeY: 4, row: 4, col: 13, name: "widget_7", data:"", type: 'String', edit:false}
+      { sizeX: 24, sizeY: 2, row: 5, col: 0, name: "widget_8", data:"", type: 'String' , edit:false}   
+    ]
+
   # gridstack vars
-  @widgets = [
-    { sizeX: 8, sizeY: 4, row: 1, col: 0, name: "widget_0", data:"", type: 'Image' , edit:false}
-    { sizeX: 8, sizeY: 4, row: 1, col: 8, name: "widget_1", data:"", type: 'String' , edit:false}
-    { sizeX: 8, sizeY: 4, row: 1, col: 17, name: "widget_2", data:"", type: 'String', edit:false}
-    { sizeX: 12, sizeY: 4, row: 2, col: 0, name: "widget_3", data:"", type: 'String', edit:false}
-    { sizeX: 12, sizeY: 4, row: 2, col: 13, name: "widget_4", data:"", type: 'String', edit:false}
-    { sizeX: 24, sizeY: 5, row: 3, col: 0, name: "widget_5", data:"", type: 'Entry' , edit:false}
-    { sizeX: 12, sizeY: 4, row: 4, col: 0, name: "widget_6", data:"", type: 'String', edit:false}
-    { sizeX: 12, sizeY: 4, row: 4, col: 13, name: "widget_7", data:"", type: 'String', edit:false}
-    { sizeX: 24, sizeY: 2, row: 5, col: 0, name: "widget_8", data:"", type: 'String' , edit:false}   
-  ]
+  @widgets = new @widgetsModel()
+
   @gridsterOptions = {
     columns: 24,
     pushing: true,
@@ -57,19 +60,35 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     }
   }
 
+  @getPlaceholders = (query, process, delimeter) ->
+    url = "company/" + $rootScope.selectedCompany.uniqueName + "/placeholders"
+    $http.get(url).then(
+      success = (data) ->
+        process(data)
+      failure = (data) ->
+    )
+
   @tinymceOptions =
     onChange: (e) ->
       # put logic here for keypress and cut/paste changes
       return
     inline: false
-    plugins: 'advlist autolink link image lists charmap print preview'
+    plugins: 'mention'
     skin: 'lightgray'
     theme: 'modern'
+    menubar : false
+    statusbar: false
+    toolbar : 'styleselect | bold italic'
+    mentions : {
+      source: @getPlaceholders(null, process, null)    }
 
   @modifyInput = (text,e) ->
     if e.keyCode == 13
       text += "<br/>"
     console.log text
+
+  @resetTemplate = () ->
+    @widgets = new @widgetsModel()
 
   @showAddTemplate = ->
     $this.showTemplate = true
@@ -86,7 +105,6 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     return _.findWhere($this.widgets, {type: 'Entry'})
 
   @addWidget = ->
-
     getLastRow = $this.getLastRowPos()
     getLastRowPos = getLastRow.row + getLastRow.sizeY
     getLastWidName = "widget_"+$this.getWidgetArrLength()
@@ -167,11 +185,8 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
         toastr.failure("Logo Upload Failed")
       ), (evt) ->
         console.log "file upload progress" ,Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
-    
-
-  
   return
 
-SettingsInvoiceController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr', 'settingsService']
+SettingsInvoiceController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr', 'settingsService', '$http']
 
 giddh.webApp.controller('settingsInvoiceController', SettingsInvoiceController)
