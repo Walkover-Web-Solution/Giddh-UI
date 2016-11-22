@@ -3,8 +3,9 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "postinstall": "bower install && grunt init",
-    "start": "node ./bin/www"
+    "postinstall": "bower install && node postinstall.js",
+    "prestart": "bower --allow-root install && node postinstall.js",
+    "start": "node server.js"
   },
   "dependencies": {
     "angular-pageslide-directive": "^2.1.1",

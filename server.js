@@ -26,6 +26,8 @@ var rest = require('restler');
 
 var app = settings.express();
 
+console.log(process.env)
+
 app.disable('x-powered-by');
 //// Require and setup mashape analytics
 //var analytics = require('mashape-analytics')

@@ -1,6 +1,10 @@
 'use strict'
 
 loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr, $window) ->
+  $scope.showLoginBox = false
+  $scope.toggleLoginBox = (e) ->
+    $scope.showLoginBox = !$scope.showLoginBox
+    e.stopPropagation()
   $scope.loginIsProcessing = false
   $scope.captchaKey = '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi'
   $scope.phoneLoginPopup = false

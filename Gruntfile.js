@@ -97,6 +97,8 @@ module.exports = function (grunt) {
         dest: destDir + 'website/views/index.html',
         options: {
           process: function (content, path) {
+            console.log(process.env.CDN_URL)
+            console.log(process.env.API_URL)
             var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
             // content is your whole HTML body of index page
             // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
@@ -244,11 +246,11 @@ module.exports = function (grunt) {
     env: {
       dev: {
         NODE_ENV: 'DEVELOPMENT',
-        PREFIX_THIS: ''
+        PREFIX_THIS: process.env.CDN_URL
       },
       prod: {
         NODE_ENV: 'PRODUCTION',
-        PREFIX_THIS: 'https://giddh-fs8eefokm8yjj.stackpathdns.com'
+        PREFIX_THIS: process.env.CDN_URL
       }
     },
     preprocess:{
@@ -399,6 +401,8 @@ module.exports = function (grunt) {
   });
 
   grunt.registerTask('customCopy', ['env:dev', 'copy']);
+
+  grunt.registerTask('tempRun', ['copy:indexWebsite'])
 
   grunt.registerTask('default', ['coffeelint', 'customCopy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
 
