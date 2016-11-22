@@ -37,7 +37,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     account: ''
     accUnqName: ''
   }
-
+  $scope.ledgerEmailData = {}
 
   $scope.hideEledger = () ->
     $scope.showEledger = !$scope.showEledger 
