@@ -608,11 +608,6 @@
             </div>
 
             <div ng-if="ctrl.showTemplate" class="clearfix">
-
-              <div class="alert alert-info mrB1" role="alert">
-                To make text bold, wrap with < b > and < /b >, without spaces.
-              </div>
-
               <div class="row">
                 <div class="col-md-12">
                 <section id="invoice-wrapper">
@@ -657,7 +652,7 @@
                              mentio-items="ctrl.people | filter:label:typedTerm"
                              ng-keypress="ctrl.modifyInput(item.data, $event)">
                              </textarea> -->
-                             <textarea ui-tinymce="ctrl.tinymceOptions" ng-model="item.data"></textarea>
+                             <textarea ui-tinymce="tinymceOptions" ng-model="item.data"></textarea>
                           </div>
                         </div>
                           <div ng-if="item.type === 'Image' && item.edit" class="mrT2" style="position: relative;">

@@ -179,6 +179,7 @@ var timetest = require('./public/routes/webapp/timetest')
 var invoice = require('./public/routes/webapp/invoices')
 var templates = require('./public/routes/webapp/templates')
 var proforma = require('./public/routes/webapp/proformas')
+var placeholders = require('./public/routes/webapp/placeholders')
 
 
 app.use('/time-test', timetest);
@@ -187,6 +188,7 @@ app.use('/users', users);
 app.use('/roles', roles);
 app.use('/location', location);
 app.use('/company', company);
+app.use('/app/company/:companyUniqueName/placeholders', placeholders);
 app.use('/company/:companyUniqueName/invoices', invoice);
 app.use('/company/:companyUniqueName/proforma', proforma);
 app.use('/company/:companyUniqueName/groups', groups);

@@ -60,15 +60,27 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     }
   }
 
-  @getPlaceholders = (query, process, delimeter) ->
-    url = "company/" + $rootScope.selectedCompany.uniqueName + "/placeholders"
-    $http.get(url).then(
-      success = (data) ->
-        process(data)
-      failure = (data) ->
-    )
+  $rootScope.placeholders = [
+    { name: 'Tyra Porcelli' } 
+    { name: 'Brigid Reddish' }
+    { name: 'Ashely Buckler' }
+    { name: 'Teddy Whelan' }
+  ]
 
-  @tinymceOptions =
+  # @getPlaceholders = (query, process, delimeter) ->
+  #   @success = (res) ->
+  #      $rootScope.placeholders = res.data.body
+  #   @failure = (res) ->
+  #     toastr.error(res.data.message)
+  #   reqparam = {
+  #     companyUniqueName : $rootScope.selectedCompany.uniqueName
+  #   }
+  #   url = "company/" + $rootScope.selectedCompany.uniqueName + "/placeholders"
+  #   $http.get(url, {reqParam: reqparam}).then(@success, @failure)
+
+  # @getPlaceholders()
+
+  $rootScope.tinymceOptions =
     onChange: (e) ->
       # put logic here for keypress and cut/paste changes
       return
@@ -80,12 +92,14 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     statusbar: false
     toolbar : 'styleselect | bold italic'
     mentions : {
-      source: @getPlaceholders(null, process, null)    }
+      source: $rootScope.placeholders
+       
+    }
 
-  @modifyInput = (text,e) ->
-    if e.keyCode == 13
-      text += "<br/>"
-    console.log text
+  # @modifyInput = (text,e) ->
+  #   if e.keyCode == 13
+  #     text += "<br/>"
+  #   console.log text
 
   @resetTemplate = () ->
     @widgets = new @widgetsModel()
