@@ -3,14 +3,15 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "postinstall": "bower install && node postinstall.js",
-    "prestart": "bower --allow-root install && node postinstall.js",
+    "postinstall": "node_modules/bower/bin/bower --allow-root --config.analytics=false install && node postinstall.js",
+    "prestart": "node_modules/bower/bin/bower --allow-root --config.analytics=false install && node postinstall.js",
     "start": "node server.js"
   },
   "dependencies": {
     "angular-pageslide-directive": "^2.1.1",
     "angular2": "2.0.0-beta.17",
     "body-parser": "~1.13.2",
+    "bower": "^1.8.0",
     "coffee-script": "*",
     "connect-memcached": "^0.2.0",
     "connect-mongo": "^0.8.2",
