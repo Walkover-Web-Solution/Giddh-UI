@@ -384,7 +384,7 @@ link: (scope, elem, attr) ->
     invoker = $parse(attrs.scrolled)
 
     $(elem).on('scroll', (e) ->
-      if $(elem).scrollTop()+$(elem).innerHeight() == elem[0].scrollHeight
+      if $(elem).scrollTop()+$(elem).innerHeight() <= elem[0].scrollHeight
         invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight})
     )
 
