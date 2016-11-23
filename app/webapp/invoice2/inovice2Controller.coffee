@@ -467,7 +467,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       data_ = {}
       angular.copy($scope.defTempData, data_)
       matchThis = {}
-      data_.account.data = data_.account.data.split('\n')
+      if typeof(data_.account.data) == "string"
+        data_.account.data = data_.account.data.split('\n')
       angular.copy(data_, matchThis)
 #      if not(_.isEmpty($scope.selectedInvoiceDetails.account.data))
 #        $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.split('/n')
