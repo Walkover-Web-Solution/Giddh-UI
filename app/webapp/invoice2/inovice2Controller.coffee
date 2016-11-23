@@ -473,7 +473,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 #      if not(_.isEmpty($scope.selectedInvoiceDetails.account.data))
 #        $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.split('/n')
       data = {}
-      if not angular.isArray(data_.termsStr)
+      if not angular.isArray(data_.termsStr) && data._termStr != undefined
         data.terms = data_.termsStr.split('\n')
       else
         data.terms = data_.termsStr
