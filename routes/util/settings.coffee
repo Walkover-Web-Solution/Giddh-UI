@@ -10,7 +10,8 @@ module.exports.envUrl = process.env.API_URL || "http://apitest.giddh.com/"
 module.exports.googleKey = process.env.GOOGLE_KEY || "eWzLFEb_T9VrzFjgE40Bz6_l"
 module.exports.twitterKey = process.env.TWITTER_KEY || "w64afk3ZflEsdFxd6jyB9wt5j"
 module.exports.twitterSecret = process.env.TWITTER_SECRET || "62GfvL1A6FcSEJBPnw59pjVklVI4QqkvmA1uDEttNLbUl2ZRpy"
-
+module.exports.cdnUrl = process.env.CDN_URL || "http://localhost:8000"
+#console.log process.env.CDN_URL
 module.exports.linkedinKey = process.env.LINKEDIN_KEY || "75urm0g3386r26"
 module.exports.linkedinSecret = process.env.LINKEDIN_SECRET || "3AJTvaKNOEG4ISJ0"
 

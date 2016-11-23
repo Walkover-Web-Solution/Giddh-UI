@@ -12,4 +12,12 @@ router.get '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/getEnvVars', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+  data = {envUrl: settings.cdnUrl}
+  res.send data
+
 module.exports = router
