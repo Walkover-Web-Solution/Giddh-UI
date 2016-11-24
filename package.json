@@ -3,7 +3,7 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "postinstall": "node_modules/bower/bin/bower --allow-root --config.analytics=false install && node postinstall.js",
+    "postinstall": "node postinstall.js",
     "prestart": "node_modules/bower/bin/bower --allow-root --config.analytics=false install && node postinstall.js",
     "start": "node server.js"
   },
