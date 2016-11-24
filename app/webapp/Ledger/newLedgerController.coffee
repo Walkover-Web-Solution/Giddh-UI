@@ -600,8 +600,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #   $scope.dLedgerLimit -= 2
 
   $scope.onScrollCredit = (sTop, sHeight) ->
-    if sTop >= sHeight-100
-      $scope.cLedgerLimit += 15
+    $scope.cLedgerLimit += 15
       # $scope.cSpliceIdx += 2
       # $scope.spliceLedger('DEBIT')
     # else if sTop == 0 && $scope.dLedgerLimit > 20
