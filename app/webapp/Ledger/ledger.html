@@ -158,7 +158,7 @@
           <!--ledger table start-->
           <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" >  --> 
           <!-- external ledger code here -->
-          <section ng-class="{'eledger-table':!showPanel, 'eledger-table-w':showPanel}" ng-if="eLedgerData.length > 0 && showEledger">
+          <section class="mrT1" ng-if="eLedgerData.length > 0 && showEledger">
             <div ng-include="'/public/webapp/Ledger/eLedger.html'"></div>
           </section>
           <!-- external ledger code end here -->

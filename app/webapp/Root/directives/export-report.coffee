@@ -325,7 +325,7 @@ angular.module('trialBalance', []).directive('exportReport', [
       top = $(elem).offset().top || 108
       exclude = $(window).innerHeight() - top
       height = $(window).innerHeight() - top
-      $(elem).css("height", height)
+      $(elem).css({"height": height,"min-height":height})
 
     angular.element($window).on 'resize', ->
       setHeight()
@@ -367,7 +367,7 @@ link: (scope, elem, attr) ->
   restrict: "EA"
   link: (scope, elem, attr) ->
     setHeight = () ->
-      height = $(window).innerHeight()
+      height = $(window).innerHeight() - 54
       $(elem).css({"height": height, "overflow-y":"auto"})
     
     $(window).on('resize', (e) ->
@@ -421,5 +421,15 @@ link: (scope, elem, attr) ->
     #   else
     #     attrs.$set("popoverPlacement", "bottom")
     # )
+
+]
+
+.directive 'trigger-resize', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+  restrict: "EA"
+  link: (scope, elem, attrs) ->
+    
+    $(elem).on('click',(e)->
+      $(window).trigger('resize')
+    )
 
 ]
