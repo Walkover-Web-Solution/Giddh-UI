@@ -7,6 +7,7 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
       'date1': @date1
       'date2': @date2
       'combined': @combined
+      'invoiceUniqueName': @invoiceUniqueName
     },
     {
       getAll: {
@@ -20,6 +21,10 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
       generateBulkInvoice: {
         method: 'POST'
         url: '/company/:companyUniqueName/invoices/bulk-generate?combined=:combined'
+      }
+      actionOnInvoice: {
+        method: 'POST'
+        url: '/company/:companyUniqueName/invoices/action'
       }
     })
 
@@ -53,6 +58,12 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Invoice.generateBulkInvoice({
         companyUniqueName: info.companyUniqueName
         combined: info.combined
+      }, data, onSuccess, onFailure))
+
+    performAction: (info, data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.actionOnInvoice({
+        companyUniqueName: info.companyUniqueName
+        invoiceUniqueName: info.invoiceUniqueName
       }, data, onSuccess, onFailure))
 
   invoiceService
