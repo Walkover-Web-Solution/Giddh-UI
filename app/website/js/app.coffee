@@ -74,6 +74,9 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
           email: scope.wlt.consumer.email
           contact: scope.wlt.consumer.contactNo
         order_id: scope.wlt.orderId
+#        notes: {
+#          order_id: scope.wlt.orderId
+#        }
       }
       rzp1 = new Razorpay(options)
       rzp1.open()
