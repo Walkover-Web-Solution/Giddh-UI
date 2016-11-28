@@ -1,5 +1,162 @@
-<div class="container-fluid pd0">
+<div class="container-fluid pd0"  ng-controller="proformaController">
   <uib-tabset justified="false"  class="custom-tabset">
+
+
+  	<!-- view all proforma-->
+    <uib-tab heading="View All" class="background-transparent" select="getAllProforma()">
+    	
+    	<div class="proforma-list" ng-class="{pdT:!showFilters}">
+
+    		<div class="filters" ng-if="showFilters">
+
+				<div class="max120">
+                	<label>Proforma #</label>
+                	<input type="text" class="form-control" placeholder="proforma number" ng-model="filters.proformaNumber">
+                </div>
+
+                <span class="separator"></span>
+
+    			<div class="clearfix max120">
+    			    <label>From</label>
+                    <input type="text" class="form-control"
+                         uib-datepicker-popup="{{format}}" required
+                         datepicker-options="dateOptions"
+                         is-open="fromDatePickerIsOpen"
+                         ng-click="fromDatePickerOpen()"
+                         ng-model="filters.fromDate"
+                         max-date="today"
+                         placeholder="from date"
+                      />
+                </div>
+                <span style="margin:0 0 0 -10px;">To</span>
+                <div class="clearfix max120">
+                    <label>To</label>
+                    <input type="text" class="form-control"
+                         uib-datepicker-popup="{{format}}" required
+                         datepicker-options="dateOptions"
+                         is-open="toDatePickerIsOpen"
+                         ng-click="toDatePickerOpen()"
+                         ng-model="filters.toDate"
+                         min-date="filters.fromDate"
+                         max-date="today"
+                         placeholder="to date"
+                   />
+                </div>
+
+                <span class="separator"></span>
+                
+                <div class="max120 filter-group">
+                	<label>Balance Status</label>
+                	<select class="form-control" ng-model="filters.balanceStatus">
+                		<option>All</option>
+                		<option>paid</option>
+                		<option>unpaid</option>
+                		<option>partial</option>
+                		<option>hold</option>
+                		<option>partial-paid</option>
+                	</select>	
+                </div>
+
+                <span class="separator"></span>
+
+                <div class="max120">
+                	<label>Account Name</label>
+                	<input type="text" class="form-control" placeholder="Account Name" ng-model="filters.accountUniqueName">
+                </div>
+
+                <span class="separator"></span>
+
+                <div class="max120">
+                	<label>Group Name</label>
+                	<input type="text" class="form-control" placeholder="Group Name" ng-model="filters.groupUniqueName">
+                </div>
+
+                <span class="separator"></span>
+
+                <div class="max120">
+                	<label>Company Name</label>
+                	<input type="text" class="form-control" placeholder="Company Name" ng-model="filters.companyName">
+                </div>
+
+                <span class="separator"></span>
+
+                <div class="max120">
+                	<label>Balance</label>
+                	<select class="form-control" ng-model="filters.balanceText">
+                		<option>Equal To</option>
+                		<option>Less Than</option>
+                		<option>Greater Than</option>
+                		<option>Greater Than and Equal To</option>
+                		<option>Less Than and Equal To</option>
+                	</select>
+                </div>
+                <span style="margin:0 0 0 -10px;">-</span>
+				<div class="max120">
+                	<input type="text" class="form-control inline" placeholder="Amount" ng-model="filters.balance">
+                </div>
+
+                <span class="separator"></span>
+
+                <div class="clearfix max120">
+                    <label>Due Date</label>
+                    <input type="text" class="form-control"
+                         uib-datepicker-popup="{{format}}" required
+                         datepicker-options="dateOptions"
+                         is-open="dueDatePickerIsOpen"
+                         ng-click="dueDatePickerOpen()"
+                         ng-model="filters.dueDate"
+                         min-date="filters.fromDate"
+                         max-date="today"
+                         placeholder="Due date"
+                   />
+                </div>
+
+				<span class="separator"></span>
+
+                <div class="max120">
+                	<label>Gand Total</label>
+                	<input type="text" class="form-control" placeholder="Grand Total">
+                </div>
+
+                <span class="separator"></span>
+
+                <button class="btn btn-default mrR1" ng-click="applyFilters()">Go</button>
+                <button class="btn btn-default" ng-click="resetFilters()">Reset</button>
+    		</div>
+    		<i class="glyphicon glyphicon-filter" ng-class="{open:showFilters}" ng-click="showFilters = !showFilters"></i>
+    		<table class="table table-bordered">
+    			<thead>
+    				<th colspan="2">Proforma Number</th>
+    				<th colspan="2">Proforma Date</th>
+    				<th colspan="2">Account Name</th>
+    				<th colspan="2">Company Name</th>
+    				<th colspan="1">Balance Status</th>
+    				<th colspan="1">Balance</th>
+    				<th colspan="2">Due Date</th>
+    				<th colspan="1">Grand Total</th>
+    				<th colspan="1">Delete</th>
+    			</thead>
+    			<tbody>
+    				<tr ng-repeat="proforma in proformaList">
+    					<td colspan="2"><a href="" ng-bind="proforma.proformaNumber" ng-click="loadProforma(proforma)"></a></td>
+    					<td colspan="2" ng-bind="proforma.proformaDate"></td>
+    					<td colspan="2" ng-bind="proforma.accountName"><span ng-if="proforma.accountName.length == 0">No Name</span></td>
+    					<td colspan="2" ng-bind="proforma.companyName"><span ng-if="proforma.companyName.length == 0">No Name</span></td>
+    					<td colspan="1" ng-bind="proforma.balanceStatus"></td>
+    					<td colspan="1" ng-bind="proforma.balance"></td>
+    					<td colspan="2" ng-bind="proforma.dueDate"></td>
+    					<td colspan="1" ng-bind="proforma.grandTotal"></td>
+    					<td colspan="1"><i class="glyphicon glyphicon-trash color-giddh" uib-tooltip="Delete Proforma" tooltip-placement="left"></i></td>
+    				</tr>
+    			</tbody>
+    		</table>
+
+    	</div>
+
+
+    </uib-tab>
+	<!-- view all proforma end-->
+
 
     <uib-tab heading="Create" class="background-transparent">
     	

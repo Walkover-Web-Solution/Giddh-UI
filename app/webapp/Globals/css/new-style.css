@@ -1419,8 +1419,16 @@ li:last-child .angular-ui-tree-handle {
 }
 
 /*helpers*/
+.max50 {
+    max-width: 50px;
+}
+
 .max100 {
     max-width: 100px;
+}
+
+.max120 {
+    max-width: 120px;
 }
 
 .max150 {
@@ -3744,4 +3752,54 @@ tr.db-bnk-account > td.reconnectDiv{
 
 .required{
     color:red;
+}
+
+.proforma-list{
+    position: relative;
+}
+
+.proforma-list > .filters{
+    padding:5px 0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom:5px;
+    position: relative;
+}
+
+.proforma-list > .filters > div{
+    display: inline-block;
+    margin-right:10px;
+}
+
+.proforma-list > .filters .separator{
+    height:60px;
+    width:1px;
+    border:1px solid #ccc;
+    margin-right:10px;
+}
+
+.proforma-list > .filters label{
+    display: inline-block;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.proforma-list > .filters input, .proforma-list > .filters select{
+    border-radius: 0px;
+    height:24px;
+    padding:0 5px;
+    font-size: 12px;
+}
+
+.inline{
+    display: inline-block;
+}
+
+.proforma-list .glyphicon-filter{
+    position: absolute;
+    right:10px;
+    top:-25px;
+}
+
+.glyphicon-filter.open{
+    color:#d35f29;
 }

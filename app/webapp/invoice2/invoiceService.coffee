@@ -21,6 +21,10 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         method: 'POST'
         url: '/company/:companyUniqueName/invoices/bulk-generate?combined=:combined'
       }
+      getAllProforma: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/invoices/proforma/all'
+      }
     })
 
   invoiceService =
@@ -54,5 +58,12 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         companyUniqueName: info.companyUniqueName
         combined: info.combined
       }, data, onSuccess, onFailure))
+
+    getAllProforma: (company) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.getAllProforma({
+        companyUniqueName: company
+      }, onSuccess, onFailure))
+
+
 
   invoiceService
