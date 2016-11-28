@@ -67,18 +67,18 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     { name: 'Teddy Whelan' }
   ]
 
-  # @getPlaceholders = (query, process, delimeter) ->
-  #   @success = (res) ->
-  #      $rootScope.placeholders = res.data.body
-  #   @failure = (res) ->
-  #     toastr.error(res.data.message)
-  #   reqparam = {
-  #     companyUniqueName : $rootScope.selectedCompany.uniqueName
-  #   }
-  #   url = "company/" + $rootScope.selectedCompany.uniqueName + "/placeholders"
-  #   $http.get(url, {reqParam: reqparam}).then(@success, @failure)
+  @getPlaceholders = (query, process, delimeter) ->
+    @success = (res) ->
+       $rootScope.placeholders = res.data.body
+    @failure = (res) ->
+      toastr.error(res.data.message)
+    reqparam = {
+      companyUniqueName : $rootScope.selectedCompany.uniqueName
+    }
+    url = "company/" + $rootScope.selectedCompany.uniqueName + "/placeholders"
+    $http.get(url, {reqParam: reqparam}).then(@success, @failure)
 
-  # @getPlaceholders()
+  @getPlaceholders()
 
   $rootScope.tinymceOptions =
     onChange: (e) ->
@@ -153,7 +153,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
       toastr.success(res.body)
 
     @failure = (res) ->
-      toastr.failure(res.data.message)
+      toastr.error(res.data.message)
 
     if _.isUndefined($this.templateName) || _.isEmpty($this.templateName)
       $this.toastr.warning("Template name can't be empty", "Warning")
