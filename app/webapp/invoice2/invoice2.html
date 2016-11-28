@@ -42,12 +42,16 @@
                               <span ng-show="sortVarInv == 'balanceDue' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
                               <span ng-show="sortVarInv == 'balanceDue' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
                             </th>
-                            <!--<th>Action to perform</th>-->
-                            <!--<th>Status</th>-->
+                            <th>Action to perform</th>
+                            <th ng-click="sortVarInv = 'balanceStatus';reverseInv = !reverseInv">
+                              Status
+                              <span ng-show="sortVarInv == 'balanceStatus' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
+                              <span ng-show="sortVarInv == 'balanceStatus' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
+                            </th>
                             <th></th>
                           </thead>
                           <tfoot>
-                            <td colspan="7">
+                            <td colspan="8">
                               <div class="pagination pull-right">
                                 <ul class="list-inline">
                                   <li>
@@ -84,18 +88,18 @@
                             <td>
                               {{invoice.balanceDue}}
                             </td>
-                            <!--<td>-->
-                              <!--<select class="form-control">-->
-                                <!--<option>&#45;&#45; Select &#45;&#45;</option>-->
-                                <!--<option>Paid</option>-->
-                                <!--<option>Unpaid</option>-->
-                                <!--<option>Cancel</option>-->
-                                <!--<option>Hold</option>-->
-                              <!--</select>-->
-                            <!--</td>-->
-                            <!--<td>-->
-                              <!--{{invoice.balanceStatus}}-->
-                            <!--</td>-->
+                            <td>
+                              <select class="form-control" ng-model="invoice.condition" ng-change="performAction(invoice)">
+                                <option value="">-- Select --</option>
+                                <option value="paid">Paid</option>
+                                <option value="unpaid">Unpaid</option>
+                                <option value="cancel">Cancel</option>
+                                <option value="hold">Hold</option>
+                              </select>
+                            </td>
+                            <td>
+                              {{invoice.balanceStatus}}
+                            </td>
                             <td>
                               <i class="glyphicon glyphicon-trash color-giddh" ng-click="deleteInvoice(invoice)"></i>
                               <!--<i class="glyphicon glyphicon-download" ng-click="downloadInvoice(ledger.invoiceNumber, $event)"></i>-->
@@ -107,28 +111,35 @@
                       </div>
                   </uib-tab>
                   <uib-tab class="mrB1" heading="Generate" select="setTab(1)">
-                    <div class="row mr1">
-                      <div class="col-xs-6">
-                        <ul class="list-inline">
-                          <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
-                          <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
-                          <li><button ng-disabled="!showPreview" class="btn btn-default" ng-click="prevAndGenInv()">Preview & Generate</button></li>
-                        </ul>
+                    <div class="row mr1" ng-if="ledgers.results.length == 0">
+                      <div class="no-data">
+                        <h1>No entries found!</h1>
+                        <img src="/public/webapp/Globals/images/no-data.png" alt="No Data">
                       </div>
-                      <div class="col-xs-6">
-                        <input type="search" class="form-control maxW150 pull-right" placeholder="Search" ng-model="searchInLedger">
-                      </div>
-                      <!--<div class="col-xs-3">-->
-                        <!-- -->
-                      <!--</div>-->
-                      <!--<div class="col-xs-3">-->
-                        <!-- -->
-                      <!--</div>-->
                     </div>
-                    <div class="row mr1 y-scroll" cover-page>
-                      <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
-                      <table class="table table-bordered">
-                        <thead>
+                    <div class="row" ng-if="ledgers.results.length > 0">
+                      <div class="row mr1">
+                        <div class="col-xs-6">
+                          <ul class="list-inline">
+                            <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
+                            <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
+                            <li><button ng-disabled="!showPreview" class="btn btn-default" ng-click="prevAndGenInv()">Preview & Generate</button></li>
+                          </ul>
+                        </div>
+                        <div class="col-xs-6">
+                          <input type="search" class="form-control maxW150 pull-right" placeholder="Search" ng-model="searchInLedger">
+                        </div>
+                        <!--<div class="col-xs-3">-->
+                        <!-- -->
+                        <!--</div>-->
+                        <!--<div class="col-xs-3">-->
+                        <!-- -->
+                        <!--</div>-->
+                      </div>
+                      <div class="row mr1 y-scroll" cover-page>
+                        <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
+                        <table class="table table-bordered">
+                          <thead>
                           <th style="width:3%">
                             <input name="checkall" type="checkbox" ng-model="checkall" ng-change="selectAllLedger(checkall)">
 
@@ -155,23 +166,23 @@
                             <span ng-show="sortVar == 'account.name' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
                             <span ng-show="sortVar == 'account.name' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
                           </th>
-                        </thead>
-                        <tfoot>
-                        <td colspan="7">
-                          <div class="pagination pull-right">
-                            <ul class="list-inline">
-                              <li>
-                                <button class="btn btn-default" ng-disabled="ledgerCurrentPage == 1" ng-click="prevPageLed(); getAllTransaction()">Prev</button>
-                              </li>
-                              <li>{{ledgerCurrentPage}}/{{ledgers.totalPages}}</li>
-                              <li>
-                                <button class="btn btn-default" ng-disabled="ledgerCurrentPage == ledgers.totalPages" ng-click="nextPageLed(); getAllTransaction()">Next</button>
-                              </li>
-                            </ul>
-                          </div>
-                        </td>
-                        </tfoot>
-                        <tbody>
+                          </thead>
+                          <tfoot>
+                          <td colspan="8">
+                            <div class="pagination pull-right">
+                              <ul class="list-inline">
+                                <li>
+                                  <button class="btn btn-default" ng-disabled="ledgerCurrentPage == 1" ng-click="prevPageLed(); getAllTransaction()">Prev</button>
+                                </li>
+                                <li>{{ledgerCurrentPage}}/{{ledgers.totalPages}}</li>
+                                <li>
+                                  <button class="btn btn-default" ng-disabled="ledgerCurrentPage == ledgers.totalPages" ng-click="nextPageLed(); getAllTransaction()">Next</button>
+                                </li>
+                              </ul>
+                            </div>
+                          </td>
+                          </tfoot>
+                          <tbody>
                           <tr ng-repeat="ledger in ledgers.results | orderBy:sortVar:reverse | filter:searchInLedger track by $index" ng-class="{'danger': checkTransaction(ledger.uniqueName)}">
                             <td style="width:3%" rowspan="ledger.transactions.length">
                               <input type="checkbox" ng-model="ledger.checked" ng-change="addThis(ledger, ledger.checked)">
@@ -180,12 +191,12 @@
                               {{ledger.entryDate}}
                             </td>
                             <td colspan="2" style="padding:0;border-top:0px;border-bottom:0px;">
-                              <table class="table table-bordered">
+                              <table class="table">
                                 <tr ng-repeat="transaction in ledger.transactions"  ng-class="{'danger': checkTransaction(ledger.uniqueName)}">
                                   <td style="width:77%">
                                     {{transaction.particular.name}}
                                   </td>
-                                  <td style="width:23%">
+                                  <td style="width:23%; border-left: 1px solid lightgrey;">
                                     {{transaction.amount}}
                                   </td>
                                 </tr>
@@ -201,9 +212,10 @@
                               {{ledger.account.name}}
                             </td>
                           </tr>
-                        </tbody>
-                      </table>
-                      <!--</perfect-scrollbar>-->
+                          </tbody>
+                        </table>
+                        <!--</perfect-scrollbar>-->
+                      </div>
                     </div>
                   </uib-tab>
                   <uib-tab heading="Template" select="setTab(2)">
@@ -274,19 +286,15 @@
                       <option>-- Select --</option>
                       <option>Greater than</option>
                       <option>Greater than and Equals</option>
-                      <option>Lesser than</option>
-                      <option>Lesser than and Equals</option>
+                      <option>Less than</option>
+                      <option>Less than and Equals</option>
                       <option>Equals</option>
                     </select>
-                    <input type="text" class="form-control col-xs-6 mrT1" ng-model="filtersInvoice.balanceDue" placeholder="Balance Due">
+                    <input type="text" class="form-control col-xs-6" ng-model="filtersInvoice.balanceDue" placeholder="Balance Due">
                   </div>
                   <div class="clearfix mrT1">
                     <label>Count</label>
-                    <select class="form-control" ng-model="filtersInvoice.count">
-                      <option selected="true">12</option>
-                      <option>25</option>
-                      <option>50</option>
-                      <option>100</option>
+                    <select class="form-control" ng-model="filtersInvoice.count" ng-options="count for count in counts">
                     </select>
                   </div>
                 </div>
@@ -316,20 +324,16 @@
                   </div>
                   <div class="clearfix mrT1">
                     <label>Count</label>
-                    <select class="form-control" ng-model="filtersLedger.count">
-                      <option selected="true">12</option>
-                      <option>25</option>
-                      <option>50</option>
-                      <option>100</option>
+                    <select class="form-control" ng-model="filtersLedger.count" ng-options="count for count in counts">
                     </select>
                   </div>
                   <div class="clearfix mrT1">
                     <label>Amount</label>
                     <select ng-model="filtersLedger.option" class="col-xs-6 form-control">
                       <option>Greater than</option>
-                      <option>Greater than Equals</option>
+                      <option>Greater than and Equals</option>
                       <option>Less than</option>
-                      <option>Greater than Equals</option>
+                      <option>Less than and Equals</option>
                       <option>Equals</option>
                     </select>
                     <input type="text" class="form-control col-xs-6" ng-model="filtersLedger.entryTotal" placeholder="By amount">
@@ -342,15 +346,11 @@
             </div>
           </div>
         </uib-tab>
+        <!--<uib-tab heading="Proforma">-->
+          <!--<div ng-include="'/public/webapp/invoice2/proforma/proformaContent.html'" ng-controller="proformaController">-->
 
-        <!--proforma-->
-<!--         <uib-tab heading="Proforma">
-          <div ng-include="'/public/webapp/invoice2/proforma/proformaContent.html'" ng-controller="proformaController">
-
-          </div>
-        </uib-tab> -->
-
-        
+          <!--</div>-->
+        <!--</uib-tab>-->
       </uib-tabset>
   </div>
 </div>

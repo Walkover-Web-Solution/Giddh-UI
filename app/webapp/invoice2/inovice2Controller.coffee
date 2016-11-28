@@ -15,6 +15,13 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.filtersLedger = {
     count: 12
   }
+
+  $scope.counts = {
+    12
+    25
+    50
+    100
+  }
   $scope.flyDiv = false
   $scope.invoiceCurrentPage = 1
   $scope.ledgerCurrentPage = 1
@@ -84,6 +91,37 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.toDatePickerOpen = ->
     this.toDatePickerIsOpen = true
   # end of date picker
+
+
+  $scope.performAction = (invoice) ->
+    @success = (res) ->
+      $scope.getAllInvoices()
+    @failure = (res) ->
+      toastr.error(res.data.message)
+    if invoice.account.name == undefined || invoice.account.name == null
+      return
+    else
+      if invoice.condition == "paid"
+        $scope.modalInstance = $uibModal.open(
+          templateUrl: '/public/webapp/invoice2/action/actionTransactions.html',
+          size: "md",
+          backdrop: 'static',
+          scope: $scope,
+          controller: 'actionTransactionController',
+          resolve:{
+            invoicePassed: invoice
+          }
+        )
+      else if invoice.condition != ""
+        infoToSend = {
+          companyUniqueName: $rootScope.selectedCompany.uniqueName
+          invoiceUniqueName: invoice.uniqueName
+        }
+        dataToSend = {
+          action: invoice.condition
+        }
+        invoiceService.performAction(infoToSend, dataToSend).then(@success, @failure)
+
 
   $scope.selectAll = (checkOrNot) ->
 
@@ -221,13 +259,14 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.ledgers = res.body
 
   $scope.getAllTransactionFailure = (res) ->
-    if res.data.code == 'NOT_FOUND'
+    if res.data.code == 'NO_ENTRIES_FOUND'
       $scope.ledgers = {
         results: []
         totalPages: 1
       }
       $scope.buttonStatus()
-    toastr.error(res.data.message)
+    else
+      toastr.error(res.data.message)
 
   $scope.addThis = (ledger, value) ->
     if value == true

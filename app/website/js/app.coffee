@@ -58,7 +58,7 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
 #        key: "rzp_live_xGAsAZIdwkmLJW"
         amount: amount
         name: scope.wlt.company.name
-        description: "Payment for " + scope.wlt.contentType + " " + scope.wlt.contentNumber
+        description: "Pay for " + scope.wlt.contentType + " #" + scope.wlt.contentNumber
         handler: (response)->
 # hit api after success
 #          console.log response, "response after success"
