@@ -42,16 +42,16 @@
                               <span ng-show="sortVarInv == 'balanceDue' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
                               <span ng-show="sortVarInv == 'balanceDue' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
                             </th>
-                            <!--<th>Action to perform</th>-->
-                            <!--<th ng-click="sortVarInv = 'balanceStatus';reverseInv = !reverseInv">-->
-                              <!--Status-->
-                              <!--<span ng-show="sortVarInv == 'balanceStatus' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>-->
-                              <!--<span ng-show="sortVarInv == 'balanceStatus' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>-->
-                            <!--</th>-->
+                            <th>Action to perform</th>
+                            <th ng-click="sortVarInv = 'balanceStatus';reverseInv = !reverseInv">
+                              Status
+                              <span ng-show="sortVarInv == 'balanceStatus' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
+                              <span ng-show="sortVarInv == 'balanceStatus' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
+                            </th>
                             <th></th>
                           </thead>
                           <tfoot>
-                            <td colspan="6">
+                            <td colspan="8">
                               <div class="pagination pull-right">
                                 <ul class="list-inline">
                                   <li>
@@ -88,18 +88,18 @@
                             <td>
                               {{invoice.balanceDue}}
                             </td>
-                            <!--<td>-->
-                              <!--<select class="form-control" ng-model="invoice.condition" ng-change="performAction(invoice)">-->
-                                <!--<option>&#45;&#45; Select &#45;&#45;</option>-->
-                                <!--<option>Paid</option>-->
-                                <!--<option>Unpaid</option>-->
-                                <!--<option>Cancel</option>-->
-                                <!--<option>Hold</option>-->
-                              <!--</select>-->
-                            <!--</td>-->
-                            <!--<td>-->
-                              <!--{{invoice.balanceStatus}}-->
-                            <!--</td>-->
+                            <td>
+                              <select class="form-control" ng-model="invoice.condition" ng-change="performAction(invoice)">
+                                <option value="">-- Select --</option>
+                                <option value="paid">Paid</option>
+                                <option value="unpaid">Unpaid</option>
+                                <option value="cancel">Cancel</option>
+                                <option value="hold">Hold</option>
+                              </select>
+                            </td>
+                            <td>
+                              {{invoice.balanceStatus}}
+                            </td>
                             <td>
                               <i class="glyphicon glyphicon-trash color-giddh" ng-click="deleteInvoice(invoice)"></i>
                               <!--<i class="glyphicon glyphicon-download" ng-click="downloadInvoice(ledger.invoiceNumber, $event)"></i>-->

@@ -94,20 +94,34 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
 
   $scope.performAction = (invoice) ->
+    @success = (res) ->
+      $scope.getAllInvoices()
+    @failure = (res) ->
+      toastr.error(res.data.message)
     if invoice.account.name == undefined || invoice.account.name == null
-      console.log("inside if condition")
+      return
     else
-      console.log("open pop up here", invoice)
-      modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/invoice2/action/actionTransactions.html',
-        size: "md",
-        backdrop: 'static',
-        scope: $scope,
-        controller: 'actionTransactionController',
-        resolve:{
-          invoicePassed: invoice
+      if invoice.condition == "paid"
+        $scope.modalInstance = $uibModal.open(
+          templateUrl: '/public/webapp/invoice2/action/actionTransactions.html',
+          size: "md",
+          backdrop: 'static',
+          scope: $scope,
+          controller: 'actionTransactionController',
+          resolve:{
+            invoicePassed: invoice
+          }
+        )
+      else if invoice.condition != ""
+        infoToSend = {
+          companyUniqueName: $rootScope.selectedCompany.uniqueName
+          invoiceUniqueName: invoice.uniqueName
         }
-      )
+        dataToSend = {
+          action: invoice.condition
+        }
+        invoiceService.performAction(infoToSend, dataToSend).then(@success, @failure)
+
 
   $scope.selectAll = (checkOrNot) ->
 
