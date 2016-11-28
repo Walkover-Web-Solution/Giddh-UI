@@ -506,22 +506,27 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       data_ = {}
       angular.copy($scope.defTempData, data_)
       matchThis = {}
-      if typeof(data_.account.data) == "string"
+      if not(_.isEmpty(data_.account.data))
         data_.account.data = data_.account.data.split('\n')
       angular.copy(data_, matchThis)
 #      if not(_.isEmpty($scope.selectedInvoiceDetails.account.data))
 #        $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.split('/n')
       data = {}
-      if not angular.isArray(data_.termsStr) 
-        data_.termsStr = data_.termsStr || ""
+      if data_.termsStr == undefined
+        data_.termsStr = ""
+      if not angular.isArray(data_.termsStr)
         data.terms = data_.termsStr.split('\n')
       else
         data.terms = data_.termsStr
       data.account = data_.account
       data.entries = data_.entries
       data.invoiceDetails = data_.invoiceDetails
-      if data.invoiceDetails.dueDate != ""
+      if data.invoiceDetails.dueDate != "" && data.invoiceDetails.dueDate != undefined
         data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+        if moment(data.invoiceDetails.dueDate, "DD-MM-YYYY", true).isValid()
+          data.invoiceDetails.dueDate = data.invoiceDetails.dueDate
+        else
+          data.invoiceDetails.dueDate = null
       else
         data.invoiceDetails.dueDate = null
       obj = {
@@ -531,7 +536,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
         invoice: data
         updateAccountDetails: false
       }
-      matchThis.account.data = matchThis.account.data.join("\n")
+#      if matchThis.account.data != "" && matchThis.account.data != undefined
+#        matchThis.account.data = matchThis.account.data.join("\n")
 #      $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.join("\n")
 
       if $scope.selectedInvoiceDetails.account.name != matchThis.account.name || $scope.selectedInvoiceDetails.account.attentionTo != matchThis.account.attentionTo || $scope.selectedInvoiceDetails.account.data != matchThis.account.data || $scope.selectedInvoiceDetails.account.mobileNumber != matchThis.account.mobileNumber || $scope.selectedInvoiceDetails.account.email != matchThis.account.email
@@ -576,7 +582,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       data.account.data = data.account.data.split('\n')
 
     angular.copy(data, matchThis)
-    matchThis.account.data = matchThis.account.data.join("\n")
+    if matchThis.account.data != "" && matchThis.account.data != undefined
+      matchThis.account.data = matchThis.account.data.join("\n")
 #    $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.join("\n")
 
     # companyIdentities setting
@@ -590,7 +597,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     else
       data.terms = []
 
-    if data.invoiceDetails.dueDate != ""
+    if data.invoiceDetails.dueDate != "" && data.invoiceDetails.dueDate != undefined
+      data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
       if moment(data.invoiceDetails.dueDate, "DD-MM-YYYY", true).isValid()
         data.invoiceDetails.dueDate = data.invoiceDetails.dueDate
       else
