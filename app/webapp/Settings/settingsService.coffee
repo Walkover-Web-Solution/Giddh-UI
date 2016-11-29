@@ -8,6 +8,10 @@ giddh.serviceModule.service 'settingsService', ($resource, $q) ->
         method: 'POST',
         url: '/company/:companyUniqueName/templates'
       }
+      getTemplates: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/templates/all'
+      }
     })
 
   settingsService =
@@ -20,6 +24,10 @@ giddh.serviceModule.service 'settingsService', ($resource, $q) ->
 
     save: (reqParam,data) ->
       @handlePromise((onSuccess, onFailure) -> setService.save({companyUniqueName: reqParam.companyUniqueName},data, onSuccess,
+        onFailure))
+
+    getTemplates: (reqParam) ->
+      @handlePromise((onSuccess, onFailure) -> setService.getTemplates({companyUniqueName: reqParam.companyUniqueName},onSuccess,
         onFailure))
 
   settingsService

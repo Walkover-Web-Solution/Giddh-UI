@@ -67,9 +67,26 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     { name: 'Teddy Whelan' }
   ]
 
+  @getAllTemplates = () ->
+    @success = (res) ->
+      $rootScope.invoiceTemplates = res.data.body
+    @failure = (res) ->
+      toastr.error(res.data.message)
+    reqparam = {
+      companyUniqueName : $rootScope.selectedCompany.uniqueName
+    }
+    settingsService.getTemplates(reqparam).then(@success, @failure)
+
+  @getAllTemplates()
+
   @getPlaceholders = (query, process, delimeter) ->
     @success = (res) ->
-       $rootScope.placeholders = res.data.body
+      $rootScope.placeholders = []
+      _.each(res.data.body, (param) ->
+        addThis = {name: param}
+        $rootScope.placeholders.push(addThis)
+      )
+      $rootScope.tinymceOptions.mentions.source = $rootScope.placeholders
     @failure = (res) ->
       toastr.error(res.data.message)
     reqparam = {
@@ -91,6 +108,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     menubar : false
     statusbar: false
     toolbar : 'styleselect | bold italic'
+    delimiter : '$'
     mentions : {
       source: $rootScope.placeholders
        

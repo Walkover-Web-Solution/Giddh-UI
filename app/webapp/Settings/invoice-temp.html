@@ -42,9 +42,11 @@
 				<div gridster="ctrl.gridsterOptions">
 					<ul>
 						<li class="invoice-widget" ng-repeat="item in ctrl.widgets | orderBy:row:true" gridster-item row="item.row" col="item.col" size-x="item.sizeX" size-y="item.sizeY">
-							<div class="move-widget"  ng-if="!item.edit"></div>
-							<i class="glyphicon glyphicon-edit" ng-hide="item.edit" ng-click="item.edit = true"></i>
-							<i class="glyphicon glyphicon-ok" ng-show="item.edit" ng-click="item.edit = false"></i>
+							<div class="move-widget"  ng-if="!item.edit">
+                <label>{{item.type}}</label>
+              </div>
+							<i ng-if="item.type != 'Entry'" class="glyphicon glyphicon-edit" ng-hide="item.edit" ng-click="item.edit = true"></i>
+							<i ng-if="item.type != 'Entry'" class="glyphicon glyphicon-ok" ng-show="item.edit" ng-click="item.edit = false"></i>
 							<i class="glyphicon glyphicon-remove" ng-click="ctrl.removeWidget(item)"></i>
 							<div ng-if="item.type != 'Image'">
 								<div class="invoice-input" ng-class="{hidden:!item.edit}">
