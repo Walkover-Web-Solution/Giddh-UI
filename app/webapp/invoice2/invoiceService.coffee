@@ -7,6 +7,9 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
       'date1': @date1
       'date2': @date2
       'combined': @combined
+      'proforma': @proforma
+      'count':@count
+      'page':@page
     },
     {
       getAll: {
@@ -23,7 +26,15 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
       }
       getAllProforma: {
         method: 'GET'
+        url: '/company/:companyUniqueName/invoices/proforma/all?from=:date1&to=:date2&count=:count&page=:page'
+      }
+      getAllProformaByFilter: {
+        method: 'POST'
         url: '/company/:companyUniqueName/invoices/proforma/all'
+      }
+      deleteProforma: {
+        method: 'DELETE'
+        url: '/company/:companyUniqueName/invoices/proforma/delete'
       }
     })
 
@@ -59,11 +70,25 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         combined: info.combined
       }, data, onSuccess, onFailure))
 
-    getAllProforma: (company) ->
+    getAllProforma: (reqParam) ->
       @handlePromise((onSuccess, onFailure) -> Invoice.getAllProforma({
-        companyUniqueName: company
+        companyUniqueName: reqParam.companyUniqueName
+        date1: reqParam.date1
+        date2: reqParam.date2
+        count: reqParam.count
+        page : reqParam.page
       }, onSuccess, onFailure))
 
+    getAllProformaByFilter: (company, data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.getAllProformaByFilter({
+        companyUniqueName: company
+      }, data, onSuccess, onFailure))
+
+    deleteProforma: (reqParam) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.deleteProforma({
+        companyUniqueName: reqParam.companyUniqueName
+        proforma: reqParam.proforma
+      }, onSuccess, onFailure))
 
 
   invoiceService

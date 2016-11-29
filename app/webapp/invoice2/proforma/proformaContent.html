@@ -9,14 +9,14 @@
 
     		<div class="filters" ng-if="showFilters">
 
-				<div class="max120">
+				<div class="max100">
                 	<label>Proforma #</label>
-                	<input type="text" class="form-control" placeholder="proforma number" ng-model="filters.proformaNumber">
+                	<input type="text" class="form-control" placeholder="" ng-model="filters.proformaNumber">
                 </div>
 
                 <span class="separator"></span>
 
-    			<div class="clearfix max120">
+    			<div class="clearfix max100">
     			    <label>From</label>
                     <input type="text" class="form-control"
                          uib-datepicker-popup="{{format}}" required
@@ -45,42 +45,36 @@
 
                 <span class="separator"></span>
                 
-                <div class="max120 filter-group">
+                <div class="max100 filter-group">
                 	<label>Balance Status</label>
-                	<select class="form-control" ng-model="filters.balanceStatus">
-                		<option>All</option>
-                		<option>paid</option>
-                		<option>unpaid</option>
-                		<option>partial</option>
-                		<option>hold</option>
-                		<option>partial-paid</option>
+                	<select class="form-control" ng-options="status for status in balanceStatuses" ng-model="filters.balanceStatus">
                 	</select>	
                 </div>
 
                 <span class="separator"></span>
 
-                <div class="max120">
+                <div class="max100">
                 	<label>Account Name</label>
-                	<input type="text" class="form-control" placeholder="Account Name" ng-model="filters.accountUniqueName">
+                	<input type="text" class="form-control" placeholder="Account Name" ng-model="filters.accountUniqueName" uib-typeahead="account as account.name for account in fltAccntListPaginated" ng-disabled="filters.groupUniqueName.length != 0">
                 </div>
 
-                <span class="separator"></span>
+                <span style="margin:0 0 0 -10px;">or</span>
 
-                <div class="max120">
+                <div class="max100">
                 	<label>Group Name</label>
-                	<input type="text" class="form-control" placeholder="Group Name" ng-model="filters.groupUniqueName">
+                	<input type="text" class="form-control" placeholder="Group Name" ng-model="filters.groupUniqueName" uib-typeahead="group as group.name for group in flatGroupsList" ng-disabled="filters.accountUniqueName.length != 0">
                 </div>
 
                 <span class="separator"></span>
 
-                <div class="max120">
+                <div class="max100">
                 	<label>Company Name</label>
                 	<input type="text" class="form-control" placeholder="Company Name" ng-model="filters.companyName">
                 </div>
 
                 <span class="separator"></span>
 
-                <div class="max120">
+                <div class="max100">
                 	<label>Balance</label>
                 	<select class="form-control" ng-model="filters.balanceText">
                 		<option>Equal To</option>
@@ -91,13 +85,13 @@
                 	</select>
                 </div>
                 <span style="margin:0 0 0 -10px;">-</span>
-				<div class="max120">
-                	<input type="text" class="form-control inline" placeholder="Amount" ng-model="filters.balance">
+				<div class="max100">
+                	<input type="text" class="form-control inline" placeholder="Amount" ng-model="filters.balanceDue">
                 </div>
 
                 <span class="separator"></span>
 
-                <div class="clearfix max120">
+                <div class="clearfix max100">
                     <label>Due Date</label>
                     <input type="text" class="form-control"
                          uib-datepicker-popup="{{format}}" required
@@ -113,46 +107,74 @@
 
 				<span class="separator"></span>
 
-                <div class="max120">
+                <div class="max100">
                 	<label>Gand Total</label>
-                	<input type="text" class="form-control" placeholder="Grand Total">
+                	<input type="number" class="form-control" placeholder="Grand Total" ng-model="filters.total">
                 </div>
 
                 <span class="separator"></span>
-
+                	<i class="glyphicon glyphicon-refresh mrR"  ng-click="resetFilters()"></i>
+				<span class="separator"></span>
                 <button class="btn btn-default mrR1" ng-click="applyFilters()">Go</button>
-                <button class="btn btn-default" ng-click="resetFilters()">Reset</button>
     		</div>
     		<i class="glyphicon glyphicon-filter" ng-class="{open:showFilters}" ng-click="showFilters = !showFilters"></i>
-    		<table class="table table-bordered">
-    			<thead>
-    				<th colspan="2">Proforma Number</th>
-    				<th colspan="2">Proforma Date</th>
-    				<th colspan="2">Account Name</th>
-    				<th colspan="2">Company Name</th>
-    				<th colspan="1">Balance Status</th>
-    				<th colspan="1">Balance</th>
-    				<th colspan="2">Due Date</th>
-    				<th colspan="1">Grand Total</th>
-    				<th colspan="1">Delete</th>
-    			</thead>
-    			<tbody>
-    				<tr ng-repeat="proforma in proformaList">
-    					<td colspan="2"><a href="" ng-bind="proforma.proformaNumber" ng-click="loadProforma(proforma)"></a></td>
-    					<td colspan="2" ng-bind="proforma.proformaDate"></td>
-    					<td colspan="2" ng-bind="proforma.accountName"><span ng-if="proforma.accountName.length == 0">No Name</span></td>
-    					<td colspan="2" ng-bind="proforma.companyName"><span ng-if="proforma.companyName.length == 0">No Name</span></td>
-    					<td colspan="1" ng-bind="proforma.balanceStatus"></td>
-    					<td colspan="1" ng-bind="proforma.balance"></td>
-    					<td colspan="2" ng-bind="proforma.dueDate"></td>
-    					<td colspan="1" ng-bind="proforma.grandTotal"></td>
-    					<td colspan="1"><i class="glyphicon glyphicon-trash color-giddh" uib-tooltip="Delete Proforma" tooltip-placement="left"></i></td>
-    				</tr>
-    			</tbody>
-    		</table>
+    		<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+    			<div ng-if="proformaList.results.length < 1">No Proforma Found.</div>
+	    		<table class="table table-bordered" ng-if="proformaList.results.length > 0">
+	    			<thead>
+	    				<th colspan="2">Proforma Number</th>
+	    				<th colspan="2">Proforma Date</th>
+	    				<th colspan="2">Account Name</th>
+	    				<th colspan="2">Company Name</th>
+	    				<th colspan="1">Balance Status</th>
+	    				<th colspan="1">Balance</th>
+	    				<th colspan="2">Due Date</th>
+	    				<th colspan="1">Grand Total</th>
+	    				<th colspan="1">Delete</th>
+	    			</thead>
+	    			<tbody>
+	    				<tr ng-repeat="proforma in proformaList.results">
+	    					<td colspan="2"><a href="" ng-bind="proforma.proformaNumber" ng-click="loadProforma(proforma)"></a></td>
+	    					<td colspan="2" ng-bind="proforma.proformaDate"></td>
+	    					<td colspan="2" ng-bind="proforma.accountName"><span ng-if="proforma.accountName.length == 0">No Name</span></td>
+	    					<td colspan="2" ng-bind="proforma.companyName"><span ng-if="proforma.companyName.length == 0">No Name</span></td>
+	    					<td colspan="1" ng-bind="proforma.balanceStatus"></td>
+	    					<td colspan="1" ng-bind="proforma.balance"></td>
+	    					<td colspan="2" ng-bind="proforma.dueDate"></td>
+	    					<td colspan="1" ng-bind="proforma.grandTotal"></td>
+	    					<td colspan="1"><i class="glyphicon glyphicon-trash color-giddh" uib-tooltip="Delete Proforma" tooltip-placement="left" ng-click="deleteProforma(proforma.proformaNumber, $index)"></i></td>
+	    				</tr>
+	    			</tbody>
+	    			<tfoot>
+	    				
+	    				<tr>
+	    					<td colspan="14">
+								<div class="pagination pull-right">
 
+									<div class="mrB1">
+										<label>Set Count</label>
+										<select ng-options="counts for counts in count.set" ng-model="count.val" ng-change="getAllProforma()"></select>
+									</div>
+
+	                                <ul class="list-inline">
+	                                  <li>
+	                                    <button class="btn btn-default" ng-click="proformaList.page = proformaList.page-1; applyFilters()">Prev</button>
+	                                  </li>
+	                                  <li>{{proformaList.page}}/{{proformaList.totalPages}}</li>
+	                                  <li>
+	                                    <button class="btn btn-default" ng-click="proformaList.page = proformaList.page+1; applyFilters()">Next</button>
+	                                  </li>
+	                                </ul>
+	                            </div>
+	    					</td>
+	    				</tr>
+
+	    			</tfoot>
+	    		</table>
+    		</perfect-scrollbar>
+    		
     	</div>
-
+    	
 
     </uib-tab>
 	<!-- view all proforma end-->

@@ -442,7 +442,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.flatAccntQueryFailure = (res) ->
     toastr.error(res.data.message)
 
-
   $scope.workInProgress = false
   $rootScope.getFlatAccountList = (compUname) ->
 #    console.log("work in progress", $scope.workInProgress)

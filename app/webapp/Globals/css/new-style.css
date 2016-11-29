@@ -3682,7 +3682,7 @@ tr.db-bnk-account > td.reconnectDiv{
     padding: 0px 12px;
 }
 
-.custom-tabset ul{
+.custom-tabset ul:not(.dropdown-menu){
     background: transparent !important;
 }
 

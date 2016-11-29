@@ -43,7 +43,7 @@ router.post '/ledgers', (req, res) ->
 
 # get all proforma
 router.get '/proforma/all', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/proforma/list?from=01-11-2015&to=25-11-2016'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/proforma/list?from=' + req.query.from + '&to=' + req.query.to + '&page=' + req.query.page + '&count=' + req.query.count
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -54,8 +54,29 @@ router.get '/proforma/all', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.post '/proforma/all', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/proforma/list?from=' + req.body.fromDate + '&to=' + req.body.toDate + '&page=' + req.body.page + '&count=' + req.body.count
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+      'Content-Type': 'application/json'
+    data: req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
 
-
-
+router.delete '/proforma/delete', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/proforma/' + req.query.proforma
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+      'Content-Type': 'application/json'
+  settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
 
 module.exports = router

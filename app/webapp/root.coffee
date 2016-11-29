@@ -253,7 +253,10 @@ giddh.webApp.run [
   'DAServices'
   'groupService'
   ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService) ->
+    console.log "from app.run"
+    
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
+      console.log event
       $rootScope.showLedgerBox = false
       if _.isEmpty(toParams)
         $rootScope.selAcntUname = undefined
