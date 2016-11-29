@@ -505,12 +505,16 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     if $scope.editGenInvoice
       data_ = {}
       angular.copy($scope.defTempData, data_)
+
       matchThis = {}
+
       if not(_.isEmpty(data_.account.data))
         data_.account.data = data_.account.data.split('\n')
+      else
+        data_.account.data = []
+
       angular.copy(data_, matchThis)
-#      if not(_.isEmpty($scope.selectedInvoiceDetails.account.data))
-#        $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.split('/n')
+
       data = {}
       if data_.termsStr == undefined
         data_.termsStr = ""
@@ -529,10 +533,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
           data.invoiceDetails.dueDate = null
       else
         data.invoiceDetails.dueDate = null
-#      if data.invoiceDetails.dueDate != ""
-#        data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
-#      else
-#        data.invoiceDetails.dueDate = null
       obj = {
         compUname : $rootScope.selectedCompany.uniqueName
       }
@@ -540,9 +540,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
         invoice: data
         updateAccountDetails: false
       }
-#      if matchThis.account.data != "" && matchThis.account.data != undefined
-#        matchThis.account.data = matchThis.account.data.join("\n")
-#      $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.join("\n")
 
       if $scope.selectedInvoiceDetails.account.name != matchThis.account.name || $scope.selectedInvoiceDetails.account.attentionTo != matchThis.account.attentionTo || $scope.selectedInvoiceDetails.account.data != matchThis.account.data || $scope.selectedInvoiceDetails.account.mobileNumber != matchThis.account.mobileNumber || $scope.selectedInvoiceDetails.account.email != matchThis.account.email
         modalService.openConfirmModal(
