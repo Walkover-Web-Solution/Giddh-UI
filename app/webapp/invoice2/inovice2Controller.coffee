@@ -15,6 +15,13 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.filtersLedger = {
     count: 12
   }
+
+  $scope.counts = {
+    12
+    25
+    50
+    100
+  }
   $scope.flyDiv = false
   $scope.invoiceCurrentPage = 1
   $scope.ledgerCurrentPage = 1
@@ -84,6 +91,37 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.toDatePickerOpen = ->
     this.toDatePickerIsOpen = true
   # end of date picker
+
+
+  $scope.performAction = (invoice) ->
+    @success = (res) ->
+      $scope.getAllInvoices()
+    @failure = (res) ->
+      toastr.error(res.data.message)
+    if invoice.account.name == undefined || invoice.account.name == null
+      return
+    else
+      if invoice.condition == "paid"
+        $scope.modalInstance = $uibModal.open(
+          templateUrl: '/public/webapp/invoice2/action/actionTransactions.html',
+          size: "md",
+          backdrop: 'static',
+          scope: $scope,
+          controller: 'actionTransactionController',
+          resolve:{
+            invoicePassed: invoice
+          }
+        )
+      else if invoice.condition != ""
+        infoToSend = {
+          companyUniqueName: $rootScope.selectedCompany.uniqueName
+          invoiceUniqueName: invoice.uniqueName
+        }
+        dataToSend = {
+          action: invoice.condition
+        }
+        invoiceService.performAction(infoToSend, dataToSend).then(@success, @failure)
+
 
   $scope.selectAll = (checkOrNot) ->
 
@@ -221,13 +259,14 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.ledgers = res.body
 
   $scope.getAllTransactionFailure = (res) ->
-    if res.data.code == 'NOT_FOUND'
+    if res.data.code == 'NO_ENTRIES_FOUND'
       $scope.ledgers = {
         results: []
         totalPages: 1
       }
       $scope.buttonStatus()
-    toastr.error(res.data.message)
+    else
+      toastr.error(res.data.message)
 
   $scope.addThis = (ledger, value) ->
     if value == true
@@ -466,12 +505,19 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     if $scope.editGenInvoice
       data_ = {}
       angular.copy($scope.defTempData, data_)
+
       matchThis = {}
-      data_.account.data = data_.account.data.split('\n')
+
+      if not(_.isEmpty(data_.account.data))
+        data_.account.data = data_.account.data.split('\n')
+      else
+        data_.account.data = []
+
       angular.copy(data_, matchThis)
-#      if not(_.isEmpty($scope.selectedInvoiceDetails.account.data))
-#        $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.split('/n')
+
       data = {}
+      if data_.termsStr == undefined
+        data_.termsStr = ""
       if not angular.isArray(data_.termsStr)
         data.terms = data_.termsStr.split('\n')
       else
@@ -479,8 +525,12 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       data.account = data_.account
       data.entries = data_.entries
       data.invoiceDetails = data_.invoiceDetails
-      if data.invoiceDetails.dueDate != ""
+      if data.invoiceDetails.dueDate != "" && data.invoiceDetails.dueDate != undefined
         data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+        if moment(data.invoiceDetails.dueDate, "DD-MM-YYYY", true).isValid()
+          data.invoiceDetails.dueDate = data.invoiceDetails.dueDate
+        else
+          data.invoiceDetails.dueDate = null
       else
         data.invoiceDetails.dueDate = null
       obj = {
@@ -490,8 +540,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
         invoice: data
         updateAccountDetails: false
       }
-      matchThis.account.data = matchThis.account.data.join("\n")
-#      $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.join("\n")
 
       if $scope.selectedInvoiceDetails.account.name != matchThis.account.name || $scope.selectedInvoiceDetails.account.attentionTo != matchThis.account.attentionTo || $scope.selectedInvoiceDetails.account.data != matchThis.account.data || $scope.selectedInvoiceDetails.account.mobileNumber != matchThis.account.mobileNumber || $scope.selectedInvoiceDetails.account.email != matchThis.account.email
         modalService.openConfirmModal(
@@ -535,7 +583,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       data.account.data = data.account.data.split('\n')
 
     angular.copy(data, matchThis)
-    matchThis.account.data = matchThis.account.data.join("\n")
+    if matchThis.account.data != "" && matchThis.account.data != undefined
+      matchThis.account.data = matchThis.account.data.join("\n")
 #    $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.join("\n")
 
     # companyIdentities setting
@@ -549,7 +598,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     else
       data.terms = []
 
-    if data.invoiceDetails.dueDate != ""
+    if data.invoiceDetails.dueDate != "" && data.invoiceDetails.dueDate != undefined
+      data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
       if moment(data.invoiceDetails.dueDate, "DD-MM-YYYY", true).isValid()
         data.invoiceDetails.dueDate = data.invoiceDetails.dueDate
       else
