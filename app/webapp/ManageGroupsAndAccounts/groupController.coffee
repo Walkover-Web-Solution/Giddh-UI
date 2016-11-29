@@ -301,7 +301,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       page: 1
       count: 0
     }
-    if str.length > 2
+    if str.length > 1
       groupService.getFlatAccList(reqParam).then(@success, @failure)
 
   #-------- fetch groups with accounts list-------
