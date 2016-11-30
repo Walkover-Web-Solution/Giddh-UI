@@ -40,6 +40,14 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         method: 'DELETE'
         url: '/company/:companyUniqueName/invoices/proforma/delete'
       }
+      updateBalanceStatus: {
+        method: 'POST'
+        url: '/company/:companyUniqueName/invoices/proforma/updateBalanceStatus'
+      }
+      linkProformaAccount: {
+        method: 'POST'
+        url: '/company/:companyUniqueName/invoices/proforma/link-account'
+      }
     })
 
   invoiceService =
@@ -99,6 +107,16 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         companyUniqueName: reqParam.companyUniqueName
         proforma: reqParam.proforma
       }, onSuccess, onFailure))
+
+    updateBalanceStatus: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.updateBalanceStatus({
+        companyUniqueName: reqParam.companyUniqueName
+      }, data, onSuccess, onFailure))
+
+    linkProformaAccount: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.linkProformaAccount({
+        companyUniqueName: reqParam.companyUniqueName
+      }, data, onSuccess, onFailure))
 
 
   invoiceService

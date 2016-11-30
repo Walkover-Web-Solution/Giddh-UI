@@ -65,12 +65,12 @@
                 	<input type="text" class="form-control" placeholder="Group Name" ng-model="filters.groupUniqueName" uib-typeahead="group as group.name for group in flatGroupsList" ng-disabled="filters.accountUniqueName.length != 0">
                 </div>
 
-                <span class="separator"></span>
+<!--                 <span class="separator"></span>
 
                 <div class="max100">
                 	<label>Company Name</label>
                 	<input type="text" class="form-control" placeholder="Company Name" ng-model="filters.companyName">
-                </div>
+                </div> -->
 
                 <span class="separator"></span>
 
@@ -124,8 +124,8 @@
 	    			<thead>
 	    				<th colspan="2">Proforma Number</th>
 	    				<th colspan="2">Proforma Date</th>
-	    				<th colspan="2">Account Name</th>
-	    				<th colspan="2">Company Name</th>
+	    				<th colspan="2">Account/Company Name</th>
+	    				<th colspan="2">Attention To</th>
 	    				<th colspan="1">Balance Status</th>
 	    				<th colspan="1">Balance</th>
 	    				<th colspan="2">Due Date</th>
@@ -136,9 +136,17 @@
 	    				<tr ng-repeat="proforma in proformaList.results">
 	    					<td colspan="2"><a href="" ng-bind="proforma.proformaNumber" ng-click="loadProforma(proforma)"></a></td>
 	    					<td colspan="2" ng-bind="proforma.proformaDate"></td>
-	    					<td colspan="2" ng-bind="proforma.accountName"><span ng-if="proforma.accountName.length == 0">No Name</span></td>
-	    					<td colspan="2" ng-bind="proforma.companyName"><span ng-if="proforma.companyName.length == 0">No Name</span></td>
-	    					<td colspan="1" ng-bind="proforma.balanceStatus"></td>
+	    					<td colspan="2">
+                                <span ng-bind="proforma.accountName" ng-if="proforma.accountName.length > 0"></span>
+                                <a href="" ng-if="proforma.accountUniqueName == null " ng-click="addNewAccount(proforma, $index)"> (Create Account)</a>
+                            </td>
+	    					<td colspan="2" ng-bind="proforma.attentionTo"><span ng-if="proforma.attentionTo.length == 0">No Name</span></td>
+	    					<td colspan="1">
+                                <span ng-show="!proforma.editStatus" ng-bind="proforma.balanceStatus"></span>
+                                <select ng-options="status for status in balanceStatusOptions" ng-model="proforma.balanceStatus" ng-show="proforma.editStatus"></select>
+                                <i class="glyphicon glyphicon-edit pull-right" ng-show="!proforma.editStatus" ng-click="proforma.editStatus = !proforma.editStatus"></i>
+                                <i class="glyphicon glyphicon-floppy-disk pull-right" ng-show="proforma.editStatus" ng-click="changeBalanceStatus(proforma, $index)"></i>
+                            </td>
 	    					<td colspan="1" ng-bind="proforma.balance"></td>
 	    					<td colspan="2" ng-bind="proforma.dueDate"></td>
 	    					<td colspan="1" ng-bind="proforma.grandTotal"></td>
@@ -190,3 +198,5 @@
     
   </uib-tabset>
 </div>
+
+

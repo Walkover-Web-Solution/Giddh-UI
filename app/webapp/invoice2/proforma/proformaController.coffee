@@ -1,6 +1,6 @@
 'use strict'
 
-proformaController = ($scope, $rootScope, invoiceService, $timeout, toastr, $filter) ->
+proformaController = ($scope, $rootScope, invoiceService, $timeout, toastr, $filter, $uibModal,accountService, groupService, $state) ->
   $rootScope.cmpViewShow = true
   $scope.showSubMenus = false
   $scope.format = "dd-MM-yyyy"
@@ -22,6 +22,7 @@ proformaController = ($scope, $rootScope, invoiceService, $timeout, toastr, $fil
   $scope.count = {}
   $scope.count.set = [10,15,30,35,40,45,50]
   $scope.count.val = $scope.count.set[0]
+  $scope.editStatus = false
   ## Get all Proforma ##
   $scope.getAllProforma = () ->
   	@success = (res) ->
@@ -42,6 +43,7 @@ proformaController = ($scope, $rootScope, invoiceService, $timeout, toastr, $fil
 
   ## proforma filters ##
   $scope.balanceStatuses = ['All', 'paid','unpaid', 'partial-paid', 'hold', 'partial']
+  $scope.balanceStatusOptions = ['paid','unpaid', 'hold', 'cancel']
   $scope.filters = {
       "balanceStatus":$scope.balanceStatuses[0]
       "accountUniqueName": ''
@@ -56,7 +58,7 @@ proformaController = ($scope, $rootScope, invoiceService, $timeout, toastr, $fil
       "dueDateEqual": true
       "dueDateAfter": false
       "dueDateBefore": true
-      "companyName":""
+      "attentionTo":""
       "groupUniqueName":""
       "total" : null
       "totalMoreThan":false
@@ -79,7 +81,7 @@ proformaController = ($scope, $rootScope, invoiceService, $timeout, toastr, $fil
       "dueDateEqual": true
       "dueDateAfter": false
       "dueDateBefore": true
-      "companyName":""
+      "attentionTo":""
       "groupUniqueName":""
       "total" : null
       "totalMoreThan":false
@@ -149,6 +151,159 @@ proformaController = ($scope, $rootScope, invoiceService, $timeout, toastr, $fil
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     reqParam.proforma = num
     invoiceService.deleteProforma(reqParam).then(@success, @failure)
+
+  $scope.changeBalanceStatus = (proforma,index) ->
+    $scope.selectedProforma = proforma
+    $scope.selectedProformaIndex = index
+    @success = (res) ->
+      toastr.success("successfully updated")
+      proforma.editStatus = !proforma.editStatus
+      proforma = res.body
+    @failure = (res) ->
+      toastr.error(res.data.message)
+    data = {}
+    data.action = proforma.balanceStatus
+    data.proformaUniqueName = proforma.uniqueName
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    if proforma.balanceStatus == "paid"
+      $scope.modalInstance = $uibModal.open(
+        template: '<div>
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
+          aria-hidden="true">&times;</span></button>
+            <h3 class="modal-title">Update Grand Total</h3>
+            </div>
+            <div class="modal-body">
+              <input class="form-control" type="text" ng-model="selectedProforma.balance">
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" ng-click="updateBalanceAmount(selectedProforma, selectedProformaIndex)">Update</button>
+            </div>
+        </div>'
+        size: "sm"
+        backdrop: 'static'
+        scope: $scope
+      )
+    else       
+      invoiceService.updateBalanceStatus(reqParam, data).then(@success, @failure)
+
+  $scope.updateBalanceAmount = (proforma,index) ->
+    @success = (res) ->
+      toastr.success("successfully updated")
+      proforma.editStatus = !proforma.editStatus
+      $scope.proformaList.results[index] = res.body
+      $scope.modalInstance.close()
+    @failure = (res) ->
+      toastr.error(res.data.message)
+    data = {}
+    data.action = proforma.balanceStatus
+    data.proformaUniqueName = proforma.uniqueName
+    data.amount = proforma.balance
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    invoiceService.updateBalanceStatus(reqParam, data).then(@success, @failure)
+
+  $scope.gwaList = {
+    page: 1
+    count: 5000
+    totalPages: 0
+    currentPage : 1
+    limit: 5
+  }
+
+  pc.getFlattenGrpWithAccList = (compUname) ->
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+      page: $scope.gwaList.page
+      count: $scope.gwaList.count
+    }
+    groupService.getFlattenGroupAccList(reqParam).then(pc.getFlattenGrpWithAccListSuccess, pc.getFlattenGrpWithAccListFailure)
+
+  pc.getFlattenGrpWithAccListSuccess = (res) ->
+    $scope.flatGrpList = res.body.results
+    index = 0
+    _.each $scope.flatGrpList, (grp, idx) ->
+      if grp.groupUniqueName == "sundry_debtors"
+        index = idx
+    $scope.newAccountModel.group = $scope.flatGrpList[index]
+
+  pc.getFlattenGrpWithAccListFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.newAccountModel = {}  
+  $scope.addNewAccount = (proforma, index) ->
+    pc.selectedProforma = proforma
+    pc.selectedProformaIndex = index
+    $scope.newAccountModel.group = ''
+    $scope.newAccountModel.account = proforma.accountName
+    $scope.newAccountModel.accUnqName = ''
+    pc.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
+    pc.AccmodalInstance = $uibModal.open(
+      templateUrl: $rootScope.prefixThis+'/public/webapp/Ledger/createAccountQuick.html'
+      size: "sm"
+      backdrop: 'static'
+      scope: $scope
+    )
+    #modalInstance.result.then($scope.addNewAccountCloseSuccess, $scope.addNewAccountCloseFailure)
+
+  $scope.addNewAccountConfirm = () ->
+    @success = (res) ->
+      toastr.success('Account created successfully')
+      $scope.proformaList.results[pc.selectedProformaIndex] = res.body
+      pc.AccmodalInstance.close() 
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    $scope.newAccountModel.accUnqName = $scope.newAccountModel.accUnqName.replace(/ |,|\//g, '')
+    $scope.newAccountModel.accUnqName = $scope.newAccountModel.accUnqName.toLowerCase()
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+    }
+    data = {
+      accountName: $scope.newAccountModel.account
+      groupUniqueName: $scope.newAccountModel.group.groupUniqueName
+      accountUniqueName: $scope.newAccountModel.accUnqName
+      proformaUniqueName: pc.selectedProforma.uniqueName
+    }
+    if $scope.newAccountModel.group.groupUniqueName == '' || $scope.newAccountModel.group.groupUniqueName == undefined
+      toastr.error('Please select a group.')
+    else
+      #accountService.createAc(unqNamesObj, newAccount).then(pc.addNewAccountConfirmSuccess, pc.addNewAccountConfirmFailure)
+      invoiceService.linkProformaAccount(reqParam, data).then(@success, @failure) 
+
+  pc.addNewAccountConfirmSuccess = (res) ->
+    toastr.success('Account created successfully')
+    #$rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+    pc.AccmodalInstance.close()
+
+  pc.addNewAccountConfirmFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.genearateUniqueName = (unqName) ->
+    unqName = unqName.replace(/ /g,'')
+    unqName = unqName.toLowerCase()
+    if unqName.length >= 1
+      unq = ''
+      text = ''
+      chars = 'abcdefghijklmnopqrstuvwxyz0123456789'
+      i = 0
+      while i < 3
+        text += chars.charAt(Math.floor(Math.random() * chars.length))
+        i++ 
+      unq = unqName + text
+      $scope.newAccountModel.accUnqName = unq
+    else
+      $scope.newAccountModel.accUnqName = ''
+
+  $scope.genUnq = (unqName) ->
+    $timeout ( ->
+      $scope.genearateUniqueName(unqName)
+    ), 800
+
+
+
 
 
 giddh.webApp.controller 'proformaController', proformaController
