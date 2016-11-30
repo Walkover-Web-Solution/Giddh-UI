@@ -54,6 +54,20 @@ router.get '/proforma/all', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.post '/action', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/invoices/' + req.query.invoiceUniqueName + '/action'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+      'Content-Type': 'application/json'
+    data: req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+
 router.post '/proforma/all', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/proforma/list?from=' + req.body.fromDate + '&to=' + req.body.toDate + '&page=' + req.body.page + '&count=' + req.body.count
   args =
