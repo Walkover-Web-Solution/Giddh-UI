@@ -69,6 +69,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       i++
     ret
 
+
   $scope.prevPageInv = () ->
     $scope.invoiceCurrentPage = $scope.invoiceCurrentPage - 1
 
@@ -185,7 +186,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 #    $scope.resetAllCheckBoxes()
 
   $scope.getAllInvoices = () ->
-    $scope.invoices = {}
     infoToSend = {
       "companyUniqueName": $rootScope.selectedCompany.uniqueName
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
@@ -215,11 +215,13 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     invoiceService.getInvoices(infoToSend, obj).then($scope.getInvoicesSuccess, $scope.getInvoicesFailure)
 
   $scope.getInvoicesSuccess = (res) ->
+    $scope.invoices = {}
     $scope.invoices = res.body
     if $scope.invoices.length == 0
       toastr.error("No invoices found.")
 
   $scope.getInvoicesFailure = (res) ->
+    $scope.invoices = {}
     toastr.error(res.data.message)
 
   $scope.getAllTransaction = () ->
@@ -505,12 +507,16 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     if $scope.editGenInvoice
       data_ = {}
       angular.copy($scope.defTempData, data_)
+
       matchThis = {}
+
       if not(_.isEmpty(data_.account.data))
         data_.account.data = data_.account.data.split('\n')
+      else
+        data_.account.data = []
+
       angular.copy(data_, matchThis)
-#      if not(_.isEmpty($scope.selectedInvoiceDetails.account.data))
-#        $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.split('/n')
+
       data = {}
       if data_.termsStr == undefined
         data_.termsStr = ""
@@ -536,9 +542,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
         invoice: data
         updateAccountDetails: false
       }
-#      if matchThis.account.data != "" && matchThis.account.data != undefined
-#        matchThis.account.data = matchThis.account.data.join("\n")
-#      $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.join("\n")
 
       if $scope.selectedInvoiceDetails.account.name != matchThis.account.name || $scope.selectedInvoiceDetails.account.attentionTo != matchThis.account.attentionTo || $scope.selectedInvoiceDetails.account.data != matchThis.account.data || $scope.selectedInvoiceDetails.account.mobileNumber != matchThis.account.mobileNumber || $scope.selectedInvoiceDetails.account.email != matchThis.account.email
         modalService.openConfirmModal(
