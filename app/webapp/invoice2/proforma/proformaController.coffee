@@ -153,7 +153,8 @@ proformaController = ($scope, $rootScope, invoiceService, $timeout, toastr, $fil
     invoiceService.deleteProforma(reqParam).then(@success, @failure)
 
   $scope.changeBalanceStatus = (proforma,index) ->
-    $scope.selectedProforma = proforma
+    $scope.selectedProforma = {}
+    _.extend($scope.selectedProforma, proforma)
     $scope.selectedProformaIndex = index
     @success = (res) ->
       toastr.success("successfully updated")
@@ -178,7 +179,7 @@ proformaController = ($scope, $rootScope, invoiceService, $timeout, toastr, $fil
               <input class="form-control" type="text" ng-model="selectedProforma.balance">
             </div>
             <div class="modal-footer">
-              <button class="btn btn-default" ng-click="updateBalanceAmount(selectedProforma, selectedProformaIndex)">Update</button>
+              <button class="btn btn-default" ng-click="updateBalanceAmount(selectedProforma, selectedProformaIndex)">Paid</button>
             </div>
         </div>'
         size: "sm"

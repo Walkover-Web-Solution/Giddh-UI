@@ -433,3 +433,13 @@ link: (scope, elem, attr) ->
     )
 
 ]
+
+# .directive 'triggerClick', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+#   restrict: "EA"
+#   link: (scope, elem, attrs) ->
+    
+#     $(elem).on('click',(e)->
+#       $(elem).find('input').trigger('click')
+#     )
+
+# ]
