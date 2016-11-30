@@ -10,6 +10,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
   @tempTypes = [ "Image", "String", "Entry"]
   @tempType = "String"
   @showtoolbar = false
+  @selectedTemplate = {}
 
   @people = [
     { label: 'Joe'},
@@ -85,7 +86,21 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     reqparam = {
       companyUniqueName : $rootScope.selectedCompany.uniqueName
     }
-    settingsService.getTemplates(reqparam).then(@success, @failure)
+    settingsService.getAllTemplates(reqparam).then(@success, @failure)
+
+  @getTemplate = (item) ->
+    @success = (res) ->
+      $this.selectedTemplate = res.body
+      $this.widgets = $this.selectedTemplate.sections
+      $this.showTemplate = !$this.showTemplate
+    @failure = (res) ->
+      if res.data.code != "NOT_FOUND"
+        toastr.error(res.data.message)
+    reqparam = {
+      companyUniqueName : $rootScope.selectedCompany.uniqueName
+      templateUniqueName : item.uniqueName
+    }
+    settingsService.getTemplate(reqparam).then(@success, @failure)
 
   @getPlaceholders = (query, process, delimeter) ->
     @success = (res) ->
@@ -204,6 +219,13 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
 
   @resetUpload =()->
     console.log("resetUpload")
+
+
+  $(document).on('click', (e) ->
+    _.each($this.widgets, (wid) ->
+      wid.edit = false
+    )
+  )
 
   # upload Images
   @uploadImages =(files,type, item)->

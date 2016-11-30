@@ -2,15 +2,20 @@ giddh.serviceModule.service 'settingsService', ($resource, $q) ->
   setService = $resource('/company/:companyUniqueName/templates',
     {
       'companyUniqueName': @companyUniqueName
+      'templateUniqueName': @templateUniqueName
     },
     {
       save: {
         method: 'POST',
         url: '/company/:companyUniqueName/templates'
       }
-      getTemplates: {
+      getAllTemplates: {
         method: 'GET',
         url: '/company/:companyUniqueName/templates/all'
+      }
+      getTemplate: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/templates/:templateUniqueName'
       }
     })
 
@@ -26,8 +31,14 @@ giddh.serviceModule.service 'settingsService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> setService.save({companyUniqueName: reqParam.companyUniqueName},data, onSuccess,
         onFailure))
 
-    getTemplates: (reqParam) ->
-      @handlePromise((onSuccess, onFailure) -> setService.getTemplates({companyUniqueName: reqParam.companyUniqueName},onSuccess,
+    getAllTemplates: (reqParam) ->
+      @handlePromise((onSuccess, onFailure) -> setService.getAllTemplates({companyUniqueName: reqParam.companyUniqueName},onSuccess,
         onFailure))
+
+    getTemplate: (reqParam) ->
+      @handlePromise((onSuccess, onFailure) -> setService.getTemplate({
+            companyUniqueName: reqParam.companyUniqueName,
+            templateUniqueName: reqParam.templateUniqueName}
+      ,onSuccess,onFailure))
 
   settingsService

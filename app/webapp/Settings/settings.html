@@ -614,7 +614,7 @@
                         <label>Template for {{value.type}}</label>
                         <h3 class="lead alC" ng-bind-html="value.name"></h3>
                         <p>
-                          <button class="btn btn-default btn-block">Edit</button>
+                          <button class="btn btn-default btn-block" ng-click="ctrl.getTemplate(value)">Edit</button>
                         <div class="mrT1 alC">
                           <div ng-click="setDefTemp(value)">
                             <switch name="setAsDefault" on="On" off="Off" class="wide" ng-model="value.isDefault"></switch>
@@ -657,17 +657,17 @@
                         <div class="invoice-wrapper-m a4">
                           <div gridster="ctrl.gridsterOptions">
                             <ul>
-                              <li class="invoice-widget" ng-repeat="item in ctrl.widgets | orderBy:row:true" gridster-item row="item.row" col="item.col" size-x="item.sizeX" size-y="item.sizeY" ng-dblclick="item.edit = true">
+                              <li class="invoice-widget" ng-repeat="item in ctrl.widgets | orderBy:row:true" gridster-item row="item.row" col="item.col" size-x="item.sizeX" size-y="item.sizeY" ng-dblclick="item.edit = true;$event.stopPropagation();">
                                 <div class="move-widget"  ng-if="!item.edit">
                                   <label ng-if="item.type == 'Image'">{{item.type}}</label>
                                 </div>
                                 <!--<i ng-if="item.type != 'Entry'" class="glyphicon glyphicon-edit" ng-hide="item.edit" ng-click="item.edit = true"></i>-->
-                                <i style="left:0" class="glyphicon glyphicon-triangle-right" ng-if="item.edit" ng-click="ctrl.showToolbar()"></i>
+                                <i class="glyphicon glyphicon-text-width" ng-if="item.edit" ng-click="item.toolbar = !item.toolbar"></i>
                                 <i ng-if="item.type != 'Entry'" class="glyphicon glyphicon-ok" ng-show="item.edit" ng-click="item.edit = false"></i>
                                 <i ng-show="item.edit" class="glyphicon glyphicon-remove" ng-click="ctrl.removeWidget(item)"></i>
                                 <p class="widget-text" ng-bind-html="item.data" ng-show="!item.edit"></p>
                                 <div ng-show="item.type != 'Image' && item.edit" class="height100per">
-                                  <div class="invoice-input" set-iframe-height ng-class="{hidden:!item.edit}">
+                                  <div class="invoice-input" set-iframe-height ng-class="{hidden:!item.edit, 'hide-toolbar': item.toolbar}">
                                     <!-- <textarea ng-model="item.data" mentio
                                      mentio-typed-text="typedTerm"
                                      mentio-items="ctrl.people | filter:label:typedTerm"

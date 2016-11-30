@@ -3822,12 +3822,16 @@ tr.db-bnk-account > td.reconnectDiv{
 .invoice-widget i.glyphicon{
     position: absolute;
     right:10px;
-    top:10px;
+    top:20px;
     z-index: 100;
+    font-size: 12px;
 }
 .invoice-widget i.glyphicon.glyphicon-remove{
-    top:10px;
-    right:40px;
+    right:35px;
+}
+
+.invoice-widget i.glyphicon.glyphicon-text-width{
+    right: 60px;
 }
 
 .invoice-input{
@@ -4084,3 +4088,7 @@ tr.db-bnk-account > td.reconnectDiv{
 .invoice-input .mce-container-body .mce-menubar, .invoice-input .mce-container-body .mce-toolbar-grp, .invoice-input .mce-container-body .mce-statusbar{
     display:none;
 }*/
+
+.hide-toolbar .mce-toolbar-grp.mce-first{
+    display: none;
+}
