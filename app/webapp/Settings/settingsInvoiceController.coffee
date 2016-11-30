@@ -11,6 +11,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
   @tempType = "String"
   @showtoolbar = false
   @selectedTemplate = {}
+  @updateTemplate = false
 
   @people = [
     { label: 'Joe'},
@@ -90,8 +91,23 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
 
   @getTemplate = (item) ->
     @success = (res) ->
+      $this.widgets = []
       $this.selectedTemplate = res.body
-      $this.widgets = $this.selectedTemplate.sections
+      $this.updateTemplate = true
+      num = 0
+      _.each($this.selectedTemplate.sections, (sect) ->
+        pushThis = {}
+        pushThis.col = sect.column
+        pushThis.row = sect.row
+        pushThis.data = sect.data
+        pushThis.type = sect.entity
+        pushThis.sizeX = sect.width
+        pushThis.sizeY = sect.height
+        pushThis.edit = false
+        pushThis.name = "widget_" + num
+        $this.widgets.push(pushThis)
+        num = num + 1
+      )
       $this.showTemplate = !$this.showTemplate
     @failure = (res) ->
       if res.data.code != "NOT_FOUND"
@@ -101,6 +117,19 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
       templateUniqueName : item.uniqueName
     }
     settingsService.getTemplate(reqparam).then(@success, @failure)
+
+
+  @deleteTemplate = (item) ->
+    @success = (res) ->
+      toastr.success(res.body)
+      $this.getAllTemplates()
+    @failure = (res) ->
+      toastr.error(res.data.message)
+    reqparam = {
+      companyUniqueName : $rootScope.selectedCompany.uniqueName
+      templateUniqueName : item.uniqueName
+    }
+    settingsService.deleteTemplate(reqparam).then(@success, @failure)
 
   @getPlaceholders = (query, process, delimeter) ->
     @success = (res) ->
@@ -145,6 +174,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     @widgets = new @widgetsModel()
 
   @showAddTemplate = ->
+    $this.resetTemplate()
     $this.showTemplate = !$this.showTemplate
 
   @getWidgetArrLength = ->
@@ -221,11 +251,11 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     console.log("resetUpload")
 
 
-  $(document).on('click', (e) ->
-    _.each($this.widgets, (wid) ->
-      wid.edit = false
-    )
-  )
+#  $(document).on('click', (e) ->
+#    _.each($this.widgets, (wid) ->
+#      wid.edit = false
+#    )
+#  )
 
   # upload Images
   @uploadImages =(files,type, item)->

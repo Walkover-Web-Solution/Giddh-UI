@@ -17,6 +17,10 @@ giddh.serviceModule.service 'settingsService', ($resource, $q) ->
         method: 'GET',
         url: '/company/:companyUniqueName/templates/:templateUniqueName'
       }
+      deleteTemplate: {
+        method: 'DELETE',
+        url: '/company/:companyUniqueName/templates/:templateUniqueName'
+      }
     })
 
   settingsService =
@@ -37,6 +41,12 @@ giddh.serviceModule.service 'settingsService', ($resource, $q) ->
 
     getTemplate: (reqParam) ->
       @handlePromise((onSuccess, onFailure) -> setService.getTemplate({
+            companyUniqueName: reqParam.companyUniqueName,
+            templateUniqueName: reqParam.templateUniqueName}
+      ,onSuccess,onFailure))
+
+    deleteTemplate: (reqParam) ->
+      @handlePromise((onSuccess, onFailure) -> setService.deleteTemplate({
             companyUniqueName: reqParam.companyUniqueName,
             templateUniqueName: reqParam.templateUniqueName}
       ,onSuccess,onFailure))
