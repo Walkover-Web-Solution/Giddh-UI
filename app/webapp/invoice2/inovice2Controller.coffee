@@ -69,6 +69,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       i++
     ret
 
+
   $scope.prevPageInv = () ->
     $scope.invoiceCurrentPage = $scope.invoiceCurrentPage - 1
 
@@ -185,7 +186,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 #    $scope.resetAllCheckBoxes()
 
   $scope.getAllInvoices = () ->
-    $scope.invoices = {}
     infoToSend = {
       "companyUniqueName": $rootScope.selectedCompany.uniqueName
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
@@ -215,11 +215,13 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     invoiceService.getInvoices(infoToSend, obj).then($scope.getInvoicesSuccess, $scope.getInvoicesFailure)
 
   $scope.getInvoicesSuccess = (res) ->
+    $scope.invoices = {}
     $scope.invoices = res.body
     if $scope.invoices.length == 0
       toastr.error("No invoices found.")
 
   $scope.getInvoicesFailure = (res) ->
+    $scope.invoices = {}
     toastr.error(res.data.message)
 
   $scope.getAllTransaction = () ->

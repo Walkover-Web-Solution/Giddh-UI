@@ -2,7 +2,8 @@
 
 actionTransactionController = ($scope, $rootScope, invoicePassed, invoiceService, toastr) ->
 
-  $scope.invoiceSelected = invoicePassed
+  $scope.invoiceSelected = {}
+  _.extend($scope.invoiceSelected, invoicePassed)
   $scope.getTransactionList = () ->
     @success = (res) ->
       $scope.getAllInvoices()
