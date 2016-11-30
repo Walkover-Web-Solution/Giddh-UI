@@ -9,6 +9,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
   @showTemplate = false
   @tempTypes = [ "Image", "String", "Entry"]
   @tempType = "String"
+  @showtoolbar = false
 
   @people = [
     { label: 'Joe'},
@@ -24,7 +25,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
       { sizeX: 8, sizeY: 4, row: 1, col: 17, name: "widget_2", data:"", type: 'String', edit:false}
       { sizeX: 12, sizeY: 4, row: 2, col: 0, name: "widget_3", data:"", type: 'String', edit:false}
       { sizeX: 12, sizeY: 4, row: 2, col: 13, name: "widget_4", data:"", type: 'String', edit:false}
-      { sizeX: 24, sizeY: 5, row: 3, col: 0, name: "widget_5", data:"", type: 'Entry' , edit:false}
+      { sizeX: 24, sizeY: 5, row: 3, col: 0, name: "widget_5", data:"Particular will be shown here", type: 'Entry' , edit:false}
       { sizeX: 12, sizeY: 4, row: 4, col: 0, name: "widget_6", data:"", type: 'String', edit:false}
       { sizeX: 12, sizeY: 4, row: 4, col: 13, name: "widget_7", data:"", type: 'String', edit:false}
       { sizeX: 24, sizeY: 2, row: 5, col: 0, name: "widget_8", data:"", type: 'String' , edit:false}   
@@ -67,17 +68,24 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     { name: 'Teddy Whelan' }
   ]
 
+
+  @showToolbar = () ->
+    if !@showtoolbar
+      $rootScope.tinymceOptions.toolbar = 'styleselect | bold italic'
+    else
+      $rootScope.tinymceOptions.toolbar = false
+    @showtoolbar = !@showtoolbar
+
   @getAllTemplates = () ->
     @success = (res) ->
-      $rootScope.invoiceTemplates = res.data.body
+      $rootScope.templateList = res.body
     @failure = (res) ->
-      toastr.error(res.data.message)
+      if res.data.code != "NOT_FOUND"
+        toastr.error(res.data.message)
     reqparam = {
       companyUniqueName : $rootScope.selectedCompany.uniqueName
     }
     settingsService.getTemplates(reqparam).then(@success, @failure)
-
-  @getAllTemplates()
 
   @getPlaceholders = (query, process, delimeter) ->
     @success = (res) ->
@@ -111,7 +119,6 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     delimiter : '$'
     mentions : {
       source: $rootScope.placeholders
-       
     }
 
   # @modifyInput = (text,e) ->
@@ -123,7 +130,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     @widgets = new @widgetsModel()
 
   @showAddTemplate = ->
-    $this.showTemplate = true
+    $this.showTemplate = !$this.showTemplate
 
   @getWidgetArrLength = ->
     return $this.widgets.length
@@ -169,6 +176,8 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     
     @success = (res) ->
       toastr.success(res.body)
+      $this.showTemplate = false
+      $this.getAllTemplates()
 
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -211,13 +220,16 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
         }
       )
       file.upload.then ((res) ->
-        item.data = "<img src=" + res.data.body.path + ">"
+        item.data = res.data.body.path
         toastr.success("Logo uploaded successfully")
       ), ((res) ->
         toastr.failure("Logo Upload Failed")
       ), (evt) ->
         console.log "file upload progress" ,Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
   return
+
+  @setDefTemp = (someValue) ->
+
 
 SettingsInvoiceController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr', 'settingsService', '$http']
 

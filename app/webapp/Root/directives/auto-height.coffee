@@ -69,10 +69,16 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
 
       clickEvent = true
     )
+]
 
-
-
-
+.directive 'setIframeHeight', ['$timeout', ($timeout) ->
+  restrict: 'E|A'
+  link: (scope, elem, attr) ->
+    $timeout ( ->
+      elem = $(elem)
+      input = elem.find('iframe')
+      input[0].style.height = '100%'
+    ),1000
 ]
 
 
