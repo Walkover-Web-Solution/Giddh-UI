@@ -2,6 +2,11 @@
 <!-- <html lang="en" ng-app='giddhWebApp'> -->
 <html lang="en">
 <head>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-K2L9QG');</script>
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -36,7 +41,9 @@
   <!--   <base href="/"> -->
 </head>
 <body class="unresponsive" ng-controller="mainController" >
-
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
   <div ng-include="'/public/webapp/views/header.html'"></div>
   <ui-view></ui-view>
 
@@ -51,6 +58,7 @@
   <!-- Google Tag Manager -->
   <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
   <script   type="text/javascript">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=

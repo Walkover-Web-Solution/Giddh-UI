@@ -93,6 +93,10 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     'todayBtn': true
   }
 
+
+  $scope.fromDatePickerOpen = ->
+    this.fromDatePickerIsOpen = true
+
   $scope.checkForCompany = () ->
     if $rootScope.selectedCompany == undefined
       $rootScope.selectedCompany = localStorageService.get('_selectedCompany')

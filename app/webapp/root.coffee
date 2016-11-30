@@ -253,7 +253,6 @@ giddh.webApp.run [
   'DAServices'
   'groupService'
   ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService) ->
-    console.log "from app.run"
     
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
       $rootScope.showLedgerBox = false
@@ -261,6 +260,14 @@ giddh.webApp.run [
         $rootScope.selAcntUname = undefined
     )
 
+    $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+      window.dataLayer.push({
+        event: 'giddh.pageView',
+        attributes: {
+          route: $location.path()
+        }
+      });
+    )
 #    # check IE browser version
 #    $rootScope.GetIEVersion = () ->
 #      ua = window.navigator.userAgent
