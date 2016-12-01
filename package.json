@@ -3,12 +3,13 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "postinstall": "node postinstall.js",
-    "prestart": "node_modules/bower/bin/bower --allow-root --config.analytics=false install && node postinstall.js",
+    "postinstall": "chmod +x node_modules/bower/bin/bower && bower install || echo Bower Not Installed && node postinstall.js",
+    "prestart": "bower --allow-root install && node postinstall.js",
     "start": "node server.js"
   },
   "dependencies": {
     "angular-pageslide-directive": "^2.1.1",
+    "angular-tribute": "0.0.2",
     "angular2": "2.0.0-beta.17",
     "body-parser": "~1.13.2",
     "bower": "^1.8.0",
@@ -50,6 +51,8 @@
     "karma-phantomjs-launcher": "~0.1.0",
     "karma-requirejs": "0.2.0",
     "karma-script-launcher": "~0.1.0",
+    "medium-editor": "^5.22.1",
+    "medium-editor-tc-mention": "^2.2.4",
     "morgan": "*",
     "multer": "^1.1.0",
     "mustache": "2.1.3",

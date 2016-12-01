@@ -132,7 +132,9 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
   $scope.setTab = (value) ->
     $scope.selectedTab = value
-    $scope.commonGoButtonClick()
+    $timeout ( ->
+      $scope.commonGoButtonClick()
+    ),2000
     if value == 2
       $scope.hideFilters = true
     else
