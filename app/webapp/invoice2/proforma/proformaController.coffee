@@ -1,6 +1,6 @@
 'use strict'
 
-proformaController = ($scope, $rootScope, invoiceService, $timeout, toastr, $filter, $uibModal,accountService, groupService, $state) ->
+proformaController = ($scope, $rootScope, invoiceService,settingsService ,$timeout, toastr, $filter, $uibModal,accountService, groupService, $state) ->
   $rootScope.cmpViewShow = true
   $scope.showSubMenus = false
   $scope.format = "dd-MM-yyyy"
@@ -303,8 +303,20 @@ proformaController = ($scope, $rootScope, invoiceService, $timeout, toastr, $fil
       $scope.genearateUniqueName(unqName)
     ), 800
 
+  pc.getTemplates = () ->
+    @success = (res) ->
+      console.log res
 
+    @failure = (res) ->
+      console.log res
 
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    invoiceService.getTemplates(reqParam).then(@success, @failure)  
 
+  $timeout ( ->
+    pc.getTemplates()
+  ),1000
+  
 
 giddh.webApp.controller 'proformaController', proformaController
