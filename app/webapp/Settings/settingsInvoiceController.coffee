@@ -149,6 +149,29 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     $http.get(url, {reqParam: reqparam}).then(@success, @failure)
 
 
+  @updateTemplates = () ->
+    @success = (res) ->
+      toastr.success(res.body)
+    @failure = (res) ->
+      toastr.error(res.data.message)
+    template = {}
+    template.name = $this.selectedInvoice.name
+    template.uniqueName = $this.selectedInvoice.uniqueName
+    template.type = "invoice"
+    template.sections = []
+    _.each $this.widgets, (wid) ->
+      widget = {}
+      widget.height = wid.sizeY
+      widget.width = wid.sizeX
+      widget.entity = wid.type
+      widget.column = wid.col
+      widget.row = wid.row
+      widget.data = wid.data
+      template.sections.push(widget)
+    reqparam = {}
+    reqparam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    settingsService.update(reqparam, template).then(@success, @failure)
+
   $timeout ( ->
     $this.getPlaceholders()
     $this.getAllTemplates()
