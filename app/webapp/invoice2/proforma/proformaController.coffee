@@ -1,6 +1,8 @@
 'use strict'
 
-proformaController = ($scope, $rootScope, invoiceService, $timeout, toastr, $filter, $uibModal,accountService, groupService, $state) ->
+proformaController = ($scope, $rootScope, invoiceService, localStorageService, $timeout, toastr, $filter, $uibModal,accountService, groupService, $state) ->
+  if _.isUndefined($rootScope.selectedCompany)
+    $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
   $rootScope.cmpViewShow = true
   $scope.showSubMenus = false
   $scope.format = "dd-MM-yyyy"
