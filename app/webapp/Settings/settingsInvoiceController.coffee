@@ -152,6 +152,8 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
   @updateTemplates = () ->
     @success = (res) ->
       toastr.success(res.body)
+      $this.showTemplate = false
+      $this.getAllTemplates()
     @failure = (res) ->
       toastr.error(res.data.message)
     template = {}
