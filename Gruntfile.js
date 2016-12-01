@@ -21,6 +21,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-execute');
   grunt.loadNpmTasks('grunt-processhtml');
 
+// https://test-fs8eefokm8yjj.stackpathdns.com test dev
+
   srcDir = 'app/';
   destDir = 'public/';
   routeSrcDir = 'routes/';
@@ -279,10 +281,11 @@ module.exports = function (grunt) {
           'angular-bootstrap'
         ],
         mainFiles: {
-          // 'bootstrap': 'dist/css/bootstrap.min.css',
           'perfect-scrollbar': 'css/perfect-scrollbar.min.css',
           'angular-toastr': 'dist/angular-toastr.min.css',
-          'ui-select': 'dist/select.min.css'
+          'angular-gridster': 'dist/angular-gridster.min.css',
+          'ui-select': 'dist/select.min.css',
+          'font-awesome': 'css/font-awesome.min.css'
         },
         callback: function(mainFiles, component) {
           return _.map(mainFiles, function(filepath) {
@@ -333,7 +336,14 @@ module.exports = function (grunt) {
           'angular-google-chart',
           'angular-file-saver',
           'intl-tel-input',
-          'international-phone-number'
+          'international-phone-number',
+          'angular-file-saver',
+          'angular-gridster',
+          'ment.io',
+          'trix',
+          'angular-trix',
+          'tinymce-mention',
+          'angular-ui-tinymce'
         ],
         dependencies: {
           'jquery': 'modernizr',

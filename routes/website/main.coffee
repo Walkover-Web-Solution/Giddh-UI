@@ -112,9 +112,7 @@ router.post '/invoice/pay', (req, res) ->
     res.send data
 
 router.post '/invoice-pay-request', (req, res) ->
-  console.log(req.body)
   hUrl = settings.envUrl + 'invoice-pay-request/'+req.body.randomNumber
-  console.log(hUrl)
   settings.client.get hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

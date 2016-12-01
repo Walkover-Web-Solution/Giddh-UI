@@ -37,7 +37,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     account: ''
     accUnqName: ''
   }
-
+  $scope.ledgerEmailData = {}
 
   $scope.hideEledger = () ->
     $scope.showEledger = !$scope.showEledger 
@@ -481,6 +481,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.sortTransactions = (ledger, sortType) ->
     ledger = _.sortBy(ledger, sortType)
+    ledger = ledger.reverse()
     ledger
 
   $scope.removeBankTransactions = () ->
@@ -523,10 +524,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.getLedgerDataSuccess = (res) ->
     #$scope.filterLedgers(res.body.ledgers)
-    $scope.paginateledgerData(res.body.ledgers)
+    $scope.sortTransactions(res.body.ledgers, 'entryDate')
     $scope.ledgerData = res.body
     $scope.countTotalTransactions()
-    $scope.sortTransactions($scope.ledgerData, 'entryDate')
+    $scope.paginateledgerData(res.body.ledgers)
     $scope.showLoader = false
     $rootScope.superLoader = false
 

@@ -12,6 +12,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     {title:'Email/SMS settings', active: false}
     {title: 'Linked Accounts', active:false}
     {title: 'Razorpay', active:false}
+    {title: 'Templates', active:false}
   ]
   $scope.addRazorAccount = false
   $scope.linkRazor = false

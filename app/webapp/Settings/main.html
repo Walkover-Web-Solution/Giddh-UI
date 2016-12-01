@@ -1,0 +1,10 @@
+<div class="col-xs-12">
+  <div  class="middleBody bdrR bdrL row" auto-height style="overflow-y:scroll;">
+    
+      <uib-tabset justified="false">
+        <uib-tab ng-repeat="tab in vm.tabs" heading="{{ tab.heading }}" active="tab.active">
+          <div ng-if="tab.active" ng-include="tab.template"></div>
+        </uib-tab>
+      </uib-tabset>
+  </div>
+</div>
