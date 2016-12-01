@@ -712,6 +712,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   $scope.setItemAccountId = (card) ->
     $scope.banks.toLinkObj.itemAccountId = card.accountId
 
+
   $scope.updateTransactionDate = (date) ->
     obj =  {
       cUnq: $rootScope.selectedCompany.uniqueName

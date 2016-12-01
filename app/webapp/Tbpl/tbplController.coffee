@@ -294,7 +294,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       'fromDate': data.fromDate
       'toDate': data.toDate
     }
-    console.log($scope.hardRefresh)
+#    console.log($scope.hardRefresh)
     if $scope.hardRefresh == true
       reqParam = {
         'companyUniqueName': $rootScope.selectedCompany.uniqueName

@@ -7,7 +7,9 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
       'date1': @date1
       'date2': @date2
       'combined': @combined
-      'invoiceUniqueName': @invoiceUniqueName
+      'proforma': @proforma
+      'count':@count
+      'page':@page
     },
     {
       getAll: {
@@ -25,6 +27,26 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
       actionOnInvoice: {
         method: 'POST'
         url: '/company/:companyUniqueName/invoices/action'
+      }
+      getAllProforma: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/invoices/proforma/all?from=:date1&to=:date2&count=:count&page=:page'
+      }
+      getAllProformaByFilter: {
+        method: 'POST'
+        url: '/company/:companyUniqueName/invoices/proforma/all'
+      }
+      deleteProforma: {
+        method: 'DELETE'
+        url: '/company/:companyUniqueName/invoices/proforma/delete'
+      }
+      updateBalanceStatus: {
+        method: 'POST'
+        url: '/company/:companyUniqueName/invoices/proforma/updateBalanceStatus'
+      }
+      linkProformaAccount: {
+        method: 'POST'
+        url: '/company/:companyUniqueName/invoices/proforma/link-account'
       }
     })
 
@@ -65,5 +87,36 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         companyUniqueName: info.companyUniqueName
         invoiceUniqueName: info.invoiceUniqueName
       }, data, onSuccess, onFailure))
+
+    getAllProforma: (reqParam) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.getAllProforma({
+        companyUniqueName: reqParam.companyUniqueName
+        date1: reqParam.date1
+        date2: reqParam.date2
+        count: reqParam.count
+        page : reqParam.page
+      }, onSuccess, onFailure))
+
+    getAllProformaByFilter: (company, data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.getAllProformaByFilter({
+        companyUniqueName: company
+      }, data, onSuccess, onFailure))
+
+    deleteProforma: (reqParam) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.deleteProforma({
+        companyUniqueName: reqParam.companyUniqueName
+        proforma: reqParam.proforma
+      }, onSuccess, onFailure))
+
+    updateBalanceStatus: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.updateBalanceStatus({
+        companyUniqueName: reqParam.companyUniqueName
+      }, data, onSuccess, onFailure))
+
+    linkProformaAccount: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.linkProformaAccount({
+        companyUniqueName: reqParam.companyUniqueName
+      }, data, onSuccess, onFailure))
+
 
   invoiceService

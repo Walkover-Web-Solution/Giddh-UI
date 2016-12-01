@@ -600,8 +600,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #   $scope.dLedgerLimit -= 2
 
   $scope.onScrollCredit = (sTop, sHeight) ->
-    if sTop >= sHeight-100
-      $scope.cLedgerLimit += 15
+    $scope.cLedgerLimit += 30
       # $scope.cSpliceIdx += 2
       # $scope.spliceLedger('DEBIT')
     # else if sTop == 0 && $scope.dLedgerLimit > 20
@@ -1543,7 +1542,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     toastr.error(res.data.message)
 
   $scope.genearateUniqueName = (unqName) ->
-    unqName = unqName.replace(/ /g,'')
+    unqName = unqName.replace(/ |,|\//g,'')
     unqName = unqName.toLowerCase()
     if unqName.length >= 1
       unq = ''
@@ -1561,7 +1560,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.genUnq = (unqName) ->
     $timeout ( ->
       $scope.genearateUniqueName(unqName)
-    ), 800
+    )
+
+  $scope.validateUniqueName = (unq) ->
+    unq = unq.replace(/ |,|\//g,'')
 
   # $scope.$on 'company-changed', (event,changeData) ->
   #   # when company is changed, redirect to manage company page
