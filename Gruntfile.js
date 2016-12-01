@@ -342,6 +342,7 @@ module.exports = function (grunt) {
           'ment.io',
           'trix',
           'angular-trix',
+          'tinymce',
           'tinymce-mention',
           'angular-ui-tinymce'
         ],
