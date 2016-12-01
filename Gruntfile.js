@@ -353,7 +353,9 @@ module.exports = function (grunt) {
           'angular-bootstrap': 'bootstrap',
           'underscore': 'angular-bootstrap',
           'intl-tel-input': 'jquery',
-          'international-phone-number':'intl-tel-input'
+          'international-phone-number':'intl-tel-input',
+          'tinymce-mention':'tinymce',
+          'angular-ui-tinymce':'tinymce-mention'
         },
         mainFiles: {
           'underscore': 'underscore-min.js',

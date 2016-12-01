@@ -34,7 +34,6 @@ giddh.webApp = angular.module("giddhWebApp",
     "googlechart"
     "ngFileSaver"
     "gridster"
-    "mentio"
     "ui.tinymce"
   ]
 )
