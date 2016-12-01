@@ -3,7 +3,7 @@
   "version": "0.1.1",
   "private": true,
   "scripts": {
-    "postinstall": "bower install && node postinstall.js",
+    "postinstall": "chmod +x node_modules/bower/bin/bower && bower install || echo Bower Not Installed && node postinstall.js",
     "prestart": "bower --allow-root install && node postinstall.js",
     "start": "node server.js"
   },
