@@ -12,6 +12,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
   @showtoolbar = false
   @selectedTemplate = {}
   @updateTemplate = false
+  @templateList = {}
 
   @people = [
     { label: 'Joe'},
@@ -80,7 +81,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
 
   @getAllTemplates = () ->
     @success = (res) ->
-      $rootScope.templateList = res.body
+      $this.templateList = res.body
     @failure = (res) ->
       if res.data.code != "NOT_FOUND"
         toastr.error(res.data.message)
@@ -147,7 +148,11 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     url = "company/" + $rootScope.selectedCompany.uniqueName + "/placeholders"
     $http.get(url, {reqParam: reqparam}).then(@success, @failure)
 
-  @getPlaceholders()
+
+  $timeout ( ->
+    $this.getPlaceholders()
+    $this.getAllTemplates()
+  ),2000
 
   $rootScope.tinymceOptions =
     onChange: (e) ->
