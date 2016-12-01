@@ -3,8 +3,8 @@
 		<button ng-click="ctrl.showAddTemplate()" class="btn btn-primary" ng-class="{'btn-primary':!ctrl.showTemplate, 'btn-success': ctrl.showTemplate}">Add New Template</button>
 	</div>
 	<div ng-if="!ctrl.showTemplate" class="clearfix">
-		<div class="col-xs-3" ng-repeat="value in ctrl.templateList">
-			<a ng-if="value.type == 'invoice'" href="javascript:void(0)" class="thumbnail">
+		<div class="col-xs-3" ng-repeat="value in ctrl.templateList" ng-if="value.type == 'invoice'">
+			<a href="javascript:void(0)" class="thumbnail">
 				<div class="caption">
 					<label>Template for {{value.type}}</label>
 					<h3 class="lead alC" ng-bind-html="value.name"></h3>
@@ -50,7 +50,27 @@
 					</div>
 
 
-					<div ng-if="ctrl.updateTemplate" class="clearfix pdB2 form-inline"></div>
+					<div ng-if="ctrl.updateTemplate" class="clearfix pdB2 form-inline">
+            <div class="form-group">
+              <input type="text" name="ctrl.selectedTemplate.name" ng-model="ctrl.selectedTemplate.name" placeholder="Template Name" class="form-control">
+            </div>
+            <div class="form-group">
+              <button ng-disabled="ctrl.selectedTemplate.name === undefined || ctrl.selectedTemplate.name == ''" class="btn btn-success" ng-click="ctrl.updateTemplate()" href="javascript:void(0)">Update Template</button>
+            </div>
+
+            <div class="form-group pull-right">
+              <a class="btn btn-primary" ng-click="ctrl.addWidget()" href="javascript:void(0)">Add Widget</a>
+            </div>
+            <div class="form-group pull-right mrR1">
+              <select
+                  required
+                  class="form-control"
+                  name="ctrl.tempType"
+                  ng-model="ctrl.tempType"
+                  ng-options="item for item in ctrl.tempTypes">
+              </select>
+            </div>
+          </div>
 
 					<div class="invoice-wrapper-m a4">
 						<div gridster="ctrl.gridsterOptions">
