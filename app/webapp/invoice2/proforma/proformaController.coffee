@@ -1,6 +1,8 @@
 'use strict'
 
-proformaController = ($scope, $rootScope, invoiceService,settingsService ,$timeout, toastr, $filter, $uibModal,accountService, groupService, $state) ->
+proformaController = ($scope, $rootScope, localStorageService,invoiceService,settingsService ,$timeout, toastr, $filter, $uibModal,accountService, groupService, $state) ->
+  if _.isUndefined($rootScope.selectedCompany)
+    $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
   $rootScope.cmpViewShow = true
   $scope.showSubMenus = false
   $scope.format = "dd-MM-yyyy"
@@ -23,6 +25,7 @@ proformaController = ($scope, $rootScope, invoiceService,settingsService ,$timeo
   $scope.count.set = [10,15,30,35,40,45,50]
   $scope.count.val = $scope.count.set[0]
   $scope.editStatus = false
+
   ## Get all Proforma ##
   $scope.getAllProforma = () ->
   	@success = (res) ->
@@ -31,8 +34,7 @@ proformaController = ($scope, $rootScope, invoiceService,settingsService ,$timeo
         $scope.showFilters = true
 
   	@failure = (res) ->
-      toastr.error(res.data.message)
-
+      toastr.error(res.data.message) 
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     reqParam.date1 = $filter('date')($scope.filters.fromDate, 'dd-MM-yyyy')
@@ -306,6 +308,19 @@ proformaController = ($scope, $rootScope, invoiceService,settingsService ,$timeo
   pc.getTemplates = () ->
     @success = (res) ->
       console.log res
+      $scope.templateHtml = "<body style="height:1122px;  width:794px; ">
+  <div>
+    <div style=" height:16%;  width:33%;  top:0%;  left:0%;  position:absolute;  padding:5px;; "></div>
+    <div style=" height:16%;  width:33%;  top:0%;  left:33%;  position:absolute;  padding:5px;; "></div>
+    <div style=" height:16%;  width:33%;  top:0%;  left:66%;  position:absolute;  padding:5px;; "></div>
+    <div style=" height:16%;  width:50%;  top:16%;  left:0%;  position:absolute;  padding:5px;; "></div>
+    <div style=" height:16%;  width:50%;  top:16%;  left:50%;  position:absolute;  padding:5px;; "></div>
+    <div style=" height:20%;  width:100%;  top:33%;  left:0%;  position:absolute;  padding:5px;; "></div>
+    <div style=" height:16%;  width:50%;  top:54%;  left:0%;  position:absolute;  padding:5px;; "></div>
+    <div style=" height:16%;  width:50%;  top:54%;  left:50%;  position:absolute;  padding:5px;; "></div>
+    <div style=" height:8%;  width:100%;  top:70%;  left:0%;  position:absolute;  padding:5px;; "></div>
+  </div>
+</body>"
 
     @failure = (res) ->
       console.log res

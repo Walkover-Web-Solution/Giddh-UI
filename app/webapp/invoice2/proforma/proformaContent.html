@@ -199,7 +199,7 @@
             </div>
 
             <div class="invoice-wrapper-m a4">
-                    
+                <div ng-bind-html="templateHtml"></div>
             </div>
         
         </div>
@@ -210,8 +210,8 @@
 
 
 
-    <uib-tab heading="Settings" class="background-transparent">
-      
+    <uib-tab heading="Template" class="background-transparent">
+       <div ng-include="'/public/webapp/Settings/proforma-temp.html'"></div>
     </uib-tab>
     
   </uib-tabset>

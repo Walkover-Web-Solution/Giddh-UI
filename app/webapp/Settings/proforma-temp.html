@@ -1,9 +1,9 @@
-<div class="pd2" ng-controller="settingsInvoiceController as ctrl">
+<div class="pd2" ng-controller="settingsProformaController as ctrl">
 	<div class="clearfix mrB2 mrT1">
 		<button ng-click="ctrl.showAddTemplate()" class="btn btn-primary" ng-class="{'btn-primary':!ctrl.showTemplate, 'btn-success': ctrl.showTemplate}">Add New Template</button>
 	</div>
 	<div ng-if="!ctrl.showTemplate" class="clearfix">
-		<div class="col-xs-3" ng-repeat="value in ctrl.templateList" ng-if="value.type == 'invoice'">
+		<div class="col-xs-3" ng-repeat="value in ctrl.templateList" ng-if="value.type == 'proforma'">
 			<a href="javascript:void(0)" class="thumbnail">
 				<div class="caption">
 					<label>Template for {{value.type}}</label>
