@@ -149,7 +149,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     $http.get(url, {reqParam: reqparam}).then(@success, @failure)
 
 
-  @updateTemplate = () ->
+  @updateTemplates = () ->
     @success = (res) ->
       toastr.success(res.body)
     @failure = (res) ->
