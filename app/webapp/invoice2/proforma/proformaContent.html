@@ -65,7 +65,7 @@
                 	<input type="text" class="form-control" placeholder="Group Name" ng-model="filters.groupUniqueName" uib-typeahead="group as group.name for group in flatGroupsList" ng-disabled="filters.accountUniqueName.length != 0">
                 </div>
 
-<!--                 <span class="separator"></span>
+            <!--<span class="separator"></span>
 
                 <div class="max100">
                 	<label>Company Name</label>
@@ -182,16 +182,34 @@
     		</perfect-scrollbar>
     		
     	</div>
-    	
-
     </uib-tab>
 	<!-- view all proforma end-->
 
 
+
+
+    <!--create proforma-->
     <uib-tab heading="Create" class="background-transparent">
     	
+
+        <div class="create-proforma">
+
+            <div class="form-group">
+                <select class="form-control" ng-model="create.proforma"></select>
+            </div>
+
+            <div class="invoice-wrapper-m a4">
+                    
+            </div>
+        
+        </div>
+
+
     </uib-tab>
-  
+    <!--create proforma end-->
+
+
+
     <uib-tab heading="Settings" class="background-transparent">
       
     </uib-tab>
