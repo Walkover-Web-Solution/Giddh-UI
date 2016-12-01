@@ -31,7 +31,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
       { sizeX: 24, sizeY: 5, row: 3, col: 0, name: "widget_5", data:"Particular will be shown here", type: 'Entry' , edit:false}
       { sizeX: 12, sizeY: 4, row: 4, col: 0, name: "widget_6", data:"", type: 'String', edit:false}
       { sizeX: 12, sizeY: 4, row: 4, col: 13, name: "widget_7", data:"", type: 'String', edit:false}
-      { sizeX: 24, sizeY: 2, row: 5, col: 0, name: "widget_8", data:"", type: 'String' , edit:false}   
+      { sizeX: 24, sizeY: 4, row: 5, col: 0, name: "widget_8", data:"", type: 'String' , edit:false}
     ]
 
   # gridstack vars
@@ -157,8 +157,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
     @failure = (res) ->
       toastr.error(res.data.message)
     template = {}
-    template.name = $this.selectedInvoice.name
-    template.uniqueName = $this.selectedInvoice.uniqueName
+    template.name = $this.selectedTemplate.name
     template.type = "invoice"
     template.sections = []
     _.each $this.widgets, (wid) ->
@@ -172,6 +171,7 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
       template.sections.push(widget)
     reqparam = {}
     reqparam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    reqparam.templateUniqueName = $this.selectedTemplate.uniqueName
     settingsService.update(reqparam, template).then(@success, @failure)
 
   $timeout ( ->

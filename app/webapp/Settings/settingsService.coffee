@@ -11,7 +11,7 @@ giddh.serviceModule.service 'settingsService', ($resource, $q) ->
       }
       update: {
         method: 'PUT',
-        url: '/company/:companyUniqueName/templates'
+        url: '/company/:companyUniqueName/templates/:templateUniqueName/update'
       }
       getAllTemplates: {
         method: 'GET',
@@ -40,8 +40,10 @@ giddh.serviceModule.service 'settingsService', ($resource, $q) ->
         onFailure))
 
     update: (reqParam, data) ->
-      @handlePromise((onSuccess, onFailure) -> setService.update({companyUniqueName: reqParam.companyUniqueName},data, onSuccess,
-          onFailure))
+      @handlePromise((onSuccess, onFailure) -> setService.update({
+            companyUniqueName: reqParam.companyUniqueName,
+            templateUniqueName: reqParam.templateUniqueName}
+        ,data,onSuccess,onFailure))
 
     getAllTemplates: (reqParam) ->
       @handlePromise((onSuccess, onFailure) -> setService.getAllTemplates({companyUniqueName: reqParam.companyUniqueName},onSuccess,
