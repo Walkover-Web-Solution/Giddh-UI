@@ -177,7 +177,10 @@ var ebanks  = require('./public/routes/webapp/ebanks')
 var magicLink = require('./public/routes/webapp/magic')
 var timetest = require('./public/routes/webapp/timetest')
 var invoice = require('./public/routes/webapp/invoices')
+var templates = require('./public/routes/webapp/templates')
 var proforma = require('./public/routes/webapp/proformas')
+var placeholders = require('./public/routes/webapp/placeholders')
+
 
 app.use('/time-test', timetest);
 app.use('/currency', currency);
@@ -185,6 +188,7 @@ app.use('/users', users);
 app.use('/roles', roles);
 app.use('/location', location);
 app.use('/company', company);
+app.use('/app/company/:companyUniqueName/placeholders', placeholders);
 app.use('/company/:companyUniqueName/invoices', invoice);
 app.use('/company/:companyUniqueName/proforma', proforma);
 app.use('/company/:companyUniqueName/groups', groups);
@@ -194,6 +198,7 @@ app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/profit-loss', profitLoss);
+app.use('/company/:companyUniqueName/templates', templates);
 app.use('/company/:companyUniqueName', reports);
 app.use('/coupon', coupon);
 app.use('/yodlee', yodlee);

@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "angular-pageslide-directive": "^2.1.1",
+    "angular-tribute": "0.0.2",
     "angular2": "2.0.0-beta.17",
     "body-parser": "~1.13.2",
     "coffee-script": "*",
@@ -49,6 +50,8 @@
     "karma-phantomjs-launcher": "~0.1.0",
     "karma-requirejs": "0.2.0",
     "karma-script-launcher": "~0.1.0",
+    "medium-editor": "^5.22.1",
+    "medium-editor-tc-mention": "^2.2.4",
     "morgan": "*",
     "multer": "^1.1.0",
     "mustache": "2.1.3",

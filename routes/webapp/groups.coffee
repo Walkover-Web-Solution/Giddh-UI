@@ -200,9 +200,7 @@ router.post '/:groupUniqueName/accounts', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
-  console.log "in creating account", args, hUrl
   settings.client.post hUrl, args, (data, response) ->
-    console.log "creating account completed", args, hUrl
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
