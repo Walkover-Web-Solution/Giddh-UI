@@ -308,19 +308,6 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   pc.getTemplates = () ->
     @success = (res) ->
       console.log res
-      $scope.templateHtml = "<body style="height:1122px;  width:794px; ">
-  <div>
-    <div style=" height:16%;  width:33%;  top:0%;  left:0%;  position:absolute;  padding:5px;; "></div>
-    <div style=" height:16%;  width:33%;  top:0%;  left:33%;  position:absolute;  padding:5px;; "></div>
-    <div style=" height:16%;  width:33%;  top:0%;  left:66%;  position:absolute;  padding:5px;; "></div>
-    <div style=" height:16%;  width:50%;  top:16%;  left:0%;  position:absolute;  padding:5px;; "></div>
-    <div style=" height:16%;  width:50%;  top:16%;  left:50%;  position:absolute;  padding:5px;; "></div>
-    <div style=" height:20%;  width:100%;  top:33%;  left:0%;  position:absolute;  padding:5px;; "></div>
-    <div style=" height:16%;  width:50%;  top:54%;  left:0%;  position:absolute;  padding:5px;; "></div>
-    <div style=" height:16%;  width:50%;  top:54%;  left:50%;  position:absolute;  padding:5px;; "></div>
-    <div style=" height:8%;  width:100%;  top:70%;  left:0%;  position:absolute;  padding:5px;; "></div>
-  </div>
-</body>"
 
     @failure = (res) ->
       console.log res

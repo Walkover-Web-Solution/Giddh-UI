@@ -192,7 +192,7 @@
     <uib-tab heading="Create" class="background-transparent">
     	
 
-        <div class="create-proforma">
+        <div class="create-proforma y-scroll" cover-page>
 
             <div class="form-group">
                 <select class="form-control" ng-model="create.proforma"></select>
@@ -211,9 +211,10 @@
 
 
     <uib-tab heading="Template" class="background-transparent">
-       <div ng-include="'/public/webapp/Settings/proforma-temp.html'"></div>
+        <div class="y-scroll" ng-include="'/public/webapp/Settings/proforma-temp.html'" cover-page></div>
     </uib-tab>
     
+
   </uib-tabset>
 </div>
 
