@@ -20,6 +20,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   # end of date picker
   $scope.showFilters = false
   $scope.proformaList = []
+  $scope.pTemplateList = []
   pc = @
   $scope.count = {}
   $scope.count.set = [10,15,30,35,40,45,50]
@@ -307,7 +308,9 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
 
   pc.getTemplates = () ->
     @success = (res) ->
-      console.log res
+      _.each res.body, (temp) ->
+        if temp.type == "proforma"
+          $scope.pTemplateList.push(temp)
 
     @failure = (res) ->
       console.log res
@@ -319,6 +322,54 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   $timeout ( ->
     pc.getTemplates()
   ),1000
-  
+
+  $scope.fetchTemplateData = (template) ->
+    @success = (res) ->
+      console.log res
+      #$scope.templateHtml = res.body.html
+    @failure = (res) ->
+      console.log res
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    reqParam.templateUniqueName = template.uniqueName
+    settingsService.getTemplate(reqParam).then(@success, @failure)
+
+
+  $scope.htmlData = {
+    sections : [{
+      styles:{
+        'height':'200px'
+        'width':'300px'
+        'background':'#fff'
+        'clear':'both'
+      }
+      elements:[
+        {
+          type: 'p'
+          value: 'Date:'
+          editable: false
+          linebreak: false
+          styles:{}
+          elements:[
+            {
+              type: 'strong'
+              value: '$invoiceDate'
+
+              editable: true
+              linebreak: false
+              styles:{
+                'font-weight':'bold'
+              },
+              elements: []
+            }
+          ]
+        }
+      ]
+    }]
+    variables: []
+  }
+
+
+
 
 giddh.webApp.controller 'proformaController', proformaController

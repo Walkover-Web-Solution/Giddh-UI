@@ -1,4 +1,4 @@
-<div class="container-fluid pd0"  ng-controller="proformaController">
+<div class="container-fluid pd0">
   <uib-tabset justified="false"  class="custom-tabset">
 
 
@@ -194,12 +194,39 @@
 
         <div class="create-proforma y-scroll" cover-page>
 
-            <div class="form-group">
-                <select class="form-control" ng-model="create.proforma"></select>
+            <div class="form-group max150 pull-left" style="width:150px;">
+              <label>Select Template</label>
+              <select class="form-control" ng-model="create.proformaTemplate" ng-options="temp.name for temp in pTemplateList" ng-change="fetchTemplateData(create.proformaTemplate)"></select>
             </div>
 
             <div class="invoice-wrapper-m a4">
-                <div ng-bind-html="templateHtml"></div>
+                <div
+                class="pull-left" 
+                ng-repeat="section in htmlData" 
+                ng-style="{'height':section.styles.height,'width':section.styles.width,'background':section.styles.background}">
+                  
+                  <p ng-repeat="elem in section.elements" ng-if="!elem.editable">
+                    {{elem.value}}
+
+                    <span ng-repeat="child in elem.elements" ng-if="!child.editable">{{child.value}}
+                      <br ng-if="child.linebreak">
+                    </span>
+                    <input type="text" ng-repeat="child in elem.elements" ng-model="child.value"  ng-if="child.editable" />
+                  </p>
+                  <input type="text" class="form-control"
+                    ng-repeat="elem in section.elements"
+                    ng-if="elem.editable"
+                    uib-datepicker-popup="{{format}}" required
+                     datepicker-options="dateOptions"
+                     is-open="fromDatePickerIsOpen"
+                     ng-click="fromDatePickerOpen()"
+                     ng-model="elem.value"
+                     max-date="today"
+                     placeholder="from date"
+                      />
+                      <br ng-if="elem.linebreak">
+
+                </div>
             </div>
         
         </div>

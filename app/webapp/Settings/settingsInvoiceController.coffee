@@ -313,4 +313,4 @@ SettingsInvoiceController = ($rootScope, Upload, $timeout, toastr, settingsServi
 
 SettingsInvoiceController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr', 'settingsService', '$http']
 
-giddh.webApp.controller('settingsInvoiceController', SettingsInvoiceController)
+giddh.webApp.controller('SettingsInvoiceController', SettingsInvoiceController)

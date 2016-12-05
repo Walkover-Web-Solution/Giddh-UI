@@ -245,6 +245,25 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     index = $this.widgets.indexOf(w)
     $this.widgets.splice index, 1
 
+
+  # $this.extractData = (section) ->
+  #   @success = (res) ->
+  #     console.log res
+  #   @failure = (res) ->
+  #     console.log res
+  #   data = {
+  #     html : "<p style='text-align: center;'>
+  #               <strong>Company:&nbsp;</strong>
+  #               $companyName&nbsp;
+  #             </p>"
+  #   }
+
+  #   $http.post('/parse-html-json', data).then(@success, @failure)
+
+  $this.extractData = (section) ->
+
+
+
   @saveTemplate = ->
     
     @success = (res) ->
@@ -260,9 +279,10 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     else
       template = {}
       template.name = $this.templateName
-      template.type = "invoice"
+      template.type = "proforma"
       template.sections = []
       _.each $this.widgets, (wid) ->
+        $this.extractData(wid)
         widget = {}
         widget.height = wid.sizeY
         widget.width = wid.sizeX
@@ -273,7 +293,8 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
         template.sections.push(widget)
       reqparam = {}
       reqparam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-      settingsService.save(reqparam, template).then(@success, @failure)
+      console.log template
+      #settingsService.save(reqparam, template).then(@success, @failure)
 
   @resetUpload =()->
     console.log("resetUpload")
@@ -311,6 +332,9 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
   @setDefTemp = (someValue) ->
 
 
-settingsInvoiceController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr', 'settingsService', '$http']
+settingsProformaController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr', 'settingsService', '$http']
 
 giddh.webApp.controller('settingsProformaController', settingsProformaController)
+
+
+
