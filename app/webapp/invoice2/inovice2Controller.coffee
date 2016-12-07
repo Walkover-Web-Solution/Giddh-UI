@@ -238,7 +238,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       temp = invoice.invoiceNumber.split("-")
       invoice.invoiceNumberM = temp[0]
       invoice.invoiceNumberP = temp[1]
-      console.log(invoice.invoiceDateObj, invoice.invoiceNumberM)
     )
     $scope.invoices = res.body
     if $scope.invoices.length == 0
@@ -814,6 +813,9 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $timeout ( ->
     $scope.getTemplates()
   ),2000
+
+  $scope.broadcastToProforma = () ->
+    $scope.$broadcast("proformaSelect","")
 
 
 giddh.webApp.controller 'invoice2Controller', invoice2controller
