@@ -26,22 +26,31 @@ proformaController = ($scope, $rootScope, invoiceService, localStorageService, $
   $scope.count.val = $scope.count.set[0]
   $scope.editStatus = false
   ## Get all Proforma ##
+  $scope.gettingProformaInProgress = false
   $scope.getAllProforma = () ->
   	@success = (res) ->
+      $scope.gettingProformaInProgress = false
       $scope.proformaList = res.body
       if res.body.results.length < 1
         $scope.showFilters = true
 
   	@failure = (res) ->
+      $scope.gettingProformaInProgress = false
       toastr.error(res.data.message)
 
-    reqParam = {}
-    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-    reqParam.date1 = $filter('date')($scope.filters.fromDate, 'dd-MM-yyyy')
-    reqParam.date2 = $filter('date')($scope.filters.toDate, 'dd-MM-yyyy')
-    reqParam.count = $scope.count.val
-    reqParam.page = $scope.count.page
-    invoiceService.getAllProforma(reqParam).then(@success, @failure)
+
+
+    if $scope.gettingProformaInProgress
+      return
+    else
+      $scope.gettingProformaInProgress = true
+      reqParam = {}
+      reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+      reqParam.date1 = $filter('date')($scope.filters.fromDate, 'dd-MM-yyyy')
+      reqParam.date2 = $filter('date')($scope.filters.toDate, 'dd-MM-yyyy')
+      reqParam.count = $scope.count.val
+      reqParam.page = $scope.count.page
+      invoiceService.getAllProforma(reqParam).then(@success, @failure)
 
   ## proforma filters ##
   $scope.balanceStatuses = ['All', 'paid','unpaid', 'partial-paid', 'hold', 'partial']
@@ -54,7 +63,7 @@ proformaController = ($scope, $rootScope, invoiceService, localStorageService, $
       "balanceEqual": false
       "balanceMoreThan": false
       "balanceLessThan": false
-      "dueDate": $filter('date')($scope.today, 'dd-MM-yyyy')
+      "dueDate": null
       "fromDate":$filter('date')(d._d, 'dd-MM-yyyy')
       "toDate":$filter('date')($scope.today, 'dd-MM-yyyy')
       "dueDateEqual": true
@@ -77,7 +86,7 @@ proformaController = ($scope, $rootScope, invoiceService, localStorageService, $
       "balanceEqual": false
       "balanceMoreThan": false
       "balanceLessThan": false
-      "dueDate": $filter('date')($scope.today, 'dd-MM-yyyy')
+      "dueDate": null
       "fromDate":$filter('date')(d._d, 'dd-MM-yyyy')
       "toDate":$filter('date')($scope.today, 'dd-MM-yyyy')
       "dueDateEqual": true
@@ -234,6 +243,13 @@ proformaController = ($scope, $rootScope, invoiceService, localStorageService, $
 
   pc.getFlattenGrpWithAccListFailure = (res) ->
     toastr.error(res.data.message)
+
+
+  $scope.$on("proformaSelect", () ->
+    if !$scope.gettingProformaInProgress
+      $scope.getAllProforma()
+      $scope.gettingProformaInProgress
+  )
 
   $scope.newAccountModel = {}  
   $scope.addNewAccount = (proforma, index) ->

@@ -3,7 +3,7 @@
 
 
   	<!-- view all proforma-->
-    <uib-tab heading="View All" class="background-transparent" select="getAllProforma()">
+    <uib-tab heading="View All" class="background-transparent" ng-click="getAllProforma()">
     	
     	<div class="proforma-list" ng-class="{pdT:!showFilters}">
 
@@ -55,14 +55,14 @@
 
                 <div class="max100">
                 	<label>Account Name</label>
-                	<input type="text" class="form-control" placeholder="Account Name" ng-model="filters.accountUniqueName" uib-typeahead="account as account.name for account in fltAccntListPaginated" ng-disabled="filters.groupUniqueName.length != 0">
+                	<input type="text" class="form-control" placeholder="Account Name" ng-model="filters.accountUniqueName" uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue" ng-disabled="filters.groupUniqueName.length != 0">
                 </div>
 
                 <span style="margin:0 0 0 -10px;">or</span>
 
                 <div class="max100">
                 	<label>Group Name</label>
-                	<input type="text" class="form-control" placeholder="Group Name" ng-model="filters.groupUniqueName" uib-typeahead="group as group.name for group in flatGroupsList" ng-disabled="filters.accountUniqueName.length != 0">
+                	<input type="text" class="form-control" placeholder="Group Name" ng-model="filters.groupUniqueName" uib-typeahead="group as group.name for group in flatGroupsList | filter:$viewValue" ng-disabled="filters.accountUniqueName.length != 0">
                 </div>
 
 <!--                 <span class="separator"></span>
