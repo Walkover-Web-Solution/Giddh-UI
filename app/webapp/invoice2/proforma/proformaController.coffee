@@ -306,7 +306,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       $scope.genearateUniqueName(unqName)
     ), 800
 
-  pc.getTemplates = () ->
+  $scope.getTemplates = () ->
     @success = (res) ->
       _.each res.body, (temp) ->
         if temp.type == "proforma"
@@ -319,13 +319,21 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     invoiceService.getTemplates(reqParam).then(@success, @failure)  
 
-  $timeout ( ->
-    pc.getTemplates()
-  ),1000
+  # $timeout ( ->
+  #   $scope.getTemplates()
+  # ),1000
+
+  pc.parseData = (source, dest) ->
+    _.each source.sections, (sec, sIdx) ->
+      _.each dest.sections, (dec,dIdx) ->
+        if sIdx == dIdx
+          dec.styles.left = sec.leftOfBlock + '%'
+          dec.styles.top = sec.topOfBlockt + '%'
 
   $scope.fetchTemplateData = (template) ->
     @success = (res) ->
-      console.log res
+      $scope.htmlData = JSON.parse(res.body.htmlData)
+      pc.parseData(res.body, $scope.htmlData)
       #$scope.templateHtml = res.body.html
     @failure = (res) ->
       console.log res
@@ -349,8 +357,21 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
           value: 'Date:'
           editable: false
           linebreak: false
-          styles:{}
+          styles:{
+            'float':'left'
+          }
           elements:[
+            {
+              type: 'strong'
+              value: 'DATE : '
+
+              editable: true
+              linebreak: false
+              styles:{
+                'font-weight':'bold'
+              },
+              elements: []
+            },
             {
               type: 'strong'
               value: '$invoiceDate'

@@ -31,7 +31,7 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       { sizeX: 24, sizeY: 5, row: 3, col: 0, name: "widget_5", data:"Particular will be shown here", type: 'Entry' , edit:false}
       { sizeX: 12, sizeY: 4, row: 4, col: 0, name: "widget_6", data:"", type: 'String', edit:false}
       { sizeX: 12, sizeY: 4, row: 4, col: 13, name: "widget_7", data:"", type: 'String', edit:false}
-      { sizeX: 24, sizeY: 2, row: 5, col: 0, name: "widget_8", data:"", type: 'String' , edit:false}   
+      { sizeX: 24, sizeY: 3, row: 5, col: 0, name: "widget_8", data:"", type: 'String' , edit:false}   
     ]
 
   # gridstack vars
@@ -90,8 +90,17 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     }
     settingsService.getAllTemplates(reqparam).then(@success, @failure)
 
+  $this.parseData = (source, dest) ->
+    _.each source.sections, (sec, sIdx) ->
+      _.each dest.sections, (dec,dIdx) ->
+        if sIDx == dIdx
+          dec.styles.left = sec.leftOfBlock + '%'
+          dec.styles.top = sec.topOfBlockt + '%'
+
   @getTemplate = (item) ->
     @success = (res) ->
+      @htmlData = JSON.parse(res.body.htmlData)
+      #$this.parseData(res.body, @htmlData)
       $this.widgets = []
       $this.selectedTemplate = res.body
       $this.updateTemplate = true
@@ -245,35 +254,29 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     index = $this.widgets.indexOf(w)
     $this.widgets.splice index, 1
 
+  $this.parseChildren = (data) ->
+    _.each data, (el) ->
+      if el.type == 'Element'
+        if el.children.length > 0
+          $this.parseChildren(el.children)
+      if el.type == 'Text'
+        if el.content == "\n"
+          el.content = "<br>"
+        if el.content == "&nbsp;"
+          el.content = " "
 
-  # $this.extractData = (section) ->
-  #   @success = (res) ->
-  #     console.log res
-  #   @failure = (res) ->
-  #     console.log res
-  #   data = {
-  #     html : "<p style='text-align: center;'>
-  #               <strong>Company:&nbsp;</strong>
-  #               $companyName&nbsp;
-  #             </p>"
-  #   }
-
-  #   $http.post('/parse-html-json', data).then(@success, @failure)
-
-  $this.extractData = (section) ->
-
-
+  $this.matchVariables = (template) ->
+    _.each $rootScope.placeholders, (ph) ->
+      if template.htmlData.indexOf(ph.name) != -1
+        template.variables.push(ph.name)
 
   @saveTemplate = ->
-    
     @success = (res) ->
       toastr.success(res.body)
       $this.showTemplate = false
       $this.getAllTemplates()
-
     @failure = (res) ->
       toastr.error(res.data.message)
-
     if _.isUndefined($this.templateName) || _.isEmpty($this.templateName)
       $this.toastr.warning("Template name can't be empty", "Warning")
     else
@@ -281,8 +284,11 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       template.name = $this.templateName
       template.type = "proforma"
       template.sections = []
+      template.htmlData = {}
+      template.htmlData.sections = []
+      template.variables = []
       _.each $this.widgets, (wid) ->
-        $this.extractData(wid)
+        console.log wid
         widget = {}
         widget.height = wid.sizeY
         widget.width = wid.sizeX
@@ -291,10 +297,19 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
         widget.row = wid.row
         widget.data = wid.data
         template.sections.push(widget)
+        section = {}
+        section.styles = {}
+        section.styles.height = widget.height/24 *100 + '%'
+        section.styles.width = widget.width/24 *100 + '%'
+        section.type = wid.type
+        section.elements = himalaya.parse(wid.data)
+        template.htmlData.sections.push(section)
+
+      template.htmlData = JSON.stringify(template.htmlData)
+      $this.matchVariables(template)
       reqparam = {}
       reqparam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-      console.log template
-      #settingsService.save(reqparam, template).then(@success, @failure)
+      settingsService.save(reqparam, template).then(@success, @failure)
 
   @resetUpload =()->
     console.log("resetUpload")

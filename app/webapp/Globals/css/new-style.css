@@ -3818,7 +3818,7 @@ tr.db-bnk-account > td.reconnectDiv{
 }
 .invoice-wrapper-m.a4{  
   width: 21cm;
-  height: 29.7cm; 
+  height: 27.1cm; 
 }
 .invoice-widget{
     height:200px;
@@ -4153,4 +4153,20 @@ tr.db-bnk-account > td.reconnectDiv{
 
 .create-proforma{
     padding:30px 20px;
+}
+
+.a4-section span>span{
+    margin-right: -1px;
+}
+
+.a4-section span.bold,.a4-section span.bold span{
+    font-weight: bold !important;
+}
+
+.a4-section span.italic,.a4-section span.italic span{
+    font-style: italic !important;
+}
+
+.a4-section span.font20,.a4-section span.font20 span,.a4-section div.font20,.a4-section div.font20 span{
+    font-size: 20px !important;
 }
