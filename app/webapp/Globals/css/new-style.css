@@ -3757,7 +3757,7 @@ tr.db-bnk-account > td.reconnectDiv{
 .invoice-widget{
    width:400px;
    height:400px;
-   border: 1px solid #e0e0e0 ;
+   border: 1px solid black;
    margin:0 5px;
    padding:5px;
    position: relative;
