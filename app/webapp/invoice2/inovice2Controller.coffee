@@ -1,6 +1,6 @@
 'use strict'
 
-invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService, $uibModal, companyServices, $timeout, DAServices, modalService) ->
+invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService, $uibModal, companyServices, $timeout, DAServices, modalService, $filter) ->
   ic = this
   $rootScope.cmpViewShow = true
   $scope.checked = false;
@@ -27,7 +27,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.ledgerCurrentPage = 1
   $scope.sortVar = 'entryDate'
   $scope.reverse = false
-  $scope.sortVarInv = 'invoiceDate'
+  $scope.sortVarInv = ''
   $scope.reverseInv = false
   $scope.hideFilters = false
   $scope.checkall = false
@@ -68,6 +68,19 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       ret.push i
       i++
     ret
+
+  $scope.sortInvoices = (varName, reverseCond) ->
+    $scope.invoices.results = _.sortBy($scope.invoices.results, varName)
+    if varName == "invoiceNumberM"
+      letsC = _.groupBy($scope.invoices.results, varName)
+      createA = []
+      _.each(letsC, (item) ->
+        pushThis = _.sortBy(item, "invoiceNumberP")
+        createA.push(pushThis)
+      )
+      $scope.invoices.results = _.flatten(createA)
+    if reverseCond
+      $scope.invoices.results = $scope.invoices.results.reverse()
 
 
   $scope.prevPageInv = () ->
@@ -218,6 +231,15 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
   $scope.getInvoicesSuccess = (res) ->
     $scope.invoices = {}
+    _.each(res.body.results, (invoice) ->
+      dateDivi = invoice.invoiceDate.split('-')
+#      console.log(invoice.invoiceDate, moment(new Date(dateDivi[2], dateDivi[1], dateDivi[0])).format('DD-MM-YYYY'))
+      invoice.invoiceDateObj = new Date(dateDivi[2], dateDivi[1], dateDivi[0])
+      temp = invoice.invoiceNumber.split("-")
+      invoice.invoiceNumberM = temp[0]
+      invoice.invoiceNumberP = temp[1]
+      console.log(invoice.invoiceDateObj, invoice.invoiceNumberM)
+    )
     $scope.invoices = res.body
     if $scope.invoices.length == 0
       toastr.error("No invoices found.")

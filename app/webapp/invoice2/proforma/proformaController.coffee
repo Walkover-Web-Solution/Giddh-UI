@@ -54,7 +54,7 @@ proformaController = ($scope, $rootScope, invoiceService, localStorageService, $
       "balanceEqual": false
       "balanceMoreThan": false
       "balanceLessThan": false
-      "dueDate": $filter('date')($scope.today, 'dd-MM-yyyy')
+      "dueDate": null
       "fromDate":$filter('date')(d._d, 'dd-MM-yyyy')
       "toDate":$filter('date')($scope.today, 'dd-MM-yyyy')
       "dueDateEqual": true
@@ -77,7 +77,7 @@ proformaController = ($scope, $rootScope, invoiceService, localStorageService, $
       "balanceEqual": false
       "balanceMoreThan": false
       "balanceLessThan": false
-      "dueDate": $filter('date')($scope.today, 'dd-MM-yyyy')
+      "dueDate": null
       "fromDate":$filter('date')(d._d, 'dd-MM-yyyy')
       "toDate":$filter('date')($scope.today, 'dd-MM-yyyy')
       "dueDateEqual": true
