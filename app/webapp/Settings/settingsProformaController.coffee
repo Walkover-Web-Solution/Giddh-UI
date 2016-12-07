@@ -1,6 +1,4 @@
-SettingsInvoiceController = ($scope, $rootScope, Upload, $timeout, toastr, settingsService, $http, localStorageService, $sce) ->
-  if _.isUndefined($rootScope.selectedCompany)
-    $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
+settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsService, $http) ->
   @Upload = Upload
   @$rootScope = $rootScope
   @$timeout = $timeout
@@ -15,8 +13,6 @@ SettingsInvoiceController = ($scope, $rootScope, Upload, $timeout, toastr, setti
   @selectedTemplate = {}
   @updateTemplate = false
   @templateList = {}
-  @defaultUniqueName = "defaultinvoicetemplate"
-  @templateType = "invoice"
 
   @people = [
     { label: 'Joe'},
@@ -35,7 +31,7 @@ SettingsInvoiceController = ($scope, $rootScope, Upload, $timeout, toastr, setti
       { sizeX: 24, sizeY: 5, row: 3, col: 0, name: "widget_5", data:"Particular will be shown here", type: 'Entry' , edit:false}
       { sizeX: 12, sizeY: 4, row: 4, col: 0, name: "widget_6", data:"", type: 'String', edit:false}
       { sizeX: 12, sizeY: 4, row: 4, col: 13, name: "widget_7", data:"", type: 'String', edit:false}
-      { sizeX: 24, sizeY: 2, row: 5, col: 0, name: "widget_8", data:"", type: 'String' , edit:false}
+      { sizeX: 24, sizeY: 3, row: 5, col: 0, name: "widget_8", data:"", type: 'String' , edit:false}   
     ]
 
   # gridstack vars
@@ -94,19 +90,20 @@ SettingsInvoiceController = ($scope, $rootScope, Upload, $timeout, toastr, setti
     }
     settingsService.getAllTemplates(reqparam).then(@success, @failure)
 
-
-  @consoleFields = () ->
-    console.log($this.selectedTemplate)
+  $this.parseData = (source, dest) ->
+    _.each source.sections, (sec, sIdx) ->
+      _.each dest.sections, (dec,dIdx) ->
+        if sIDx == dIdx
+          dec.styles.left = sec.leftOfBlock + '%'
+          dec.styles.top = sec.topOfBlockt + '%'
 
   @getTemplate = (item) ->
     @success = (res) ->
+      @htmlData = JSON.parse(res.body.htmlData)
+      #$this.parseData(res.body, @htmlData)
       $this.widgets = []
       $this.selectedTemplate = res.body
-      $this.selectedTemplate.htmlData = {}
-      $this.selectedTemplate.htmlData.variables = []
-      $this.selectedTemplate.htmlData.sections = []
-      if item.uniqueName != $this.defaultUniqueName
-        $this.updateTemplate = true
+      $this.updateTemplate = true
       num = 0
       _.each($this.selectedTemplate.sections, (sect) ->
         pushThis = {}
@@ -119,30 +116,9 @@ SettingsInvoiceController = ($scope, $rootScope, Upload, $timeout, toastr, setti
         pushThis.edit = false
         pushThis.name = "widget_" + num
         $this.widgets.push(pushThis)
-        $this.selectedTemplate.sections[num].fields = []
-        count = 0
-        sect.dataObject = []
-        sect.dataObject = himalaya.parse(sect.data)
-        $this.selectedTemplate.htmlData.sections.push(sect.dataObject)
-        _.each($rootScope.placeholders, (placeThis) ->
-          if sect.data.contains(placeThis.name)
-            addField = {}
-            addField.name = placeThis.name
-            addField.value = ""
-            $this.selectedTemplate.sections[num].fields.push(addField)
-            $this.selectedTemplate.htmlData.variables.push(addField)
-#            str = $sce.trustAsHtml("<input ng-model='item.fields["+count+"].value' placeholder='{{item.fields["+count+"].name}}' ng-model-options='{ getterSetter: true }' class='form-control'>")
-#            sect.data = sect.data.replace(placeThis.name, str)
-            count++
-        )
-#        sect.data = sect.data.replace(/$/,"<input>");
         num = num + 1
       )
-      console.log($this.selectedTemplate)
-      $this.showTemplate = true
-      $timeout ( ->
-        $scope.$apply(@)
-      ),2000
+      $this.showTemplate = !$this.showTemplate
     @failure = (res) ->
       if res.data.code != "NOT_FOUND"
         toastr.error(res.data.message)
@@ -153,14 +129,9 @@ SettingsInvoiceController = ($scope, $rootScope, Upload, $timeout, toastr, setti
     settingsService.getTemplate(reqparam).then(@success, @failure)
 
 
-  @convertHtmlToJSON = (data) ->
-
-
-
   @deleteTemplate = (item) ->
     @success = (res) ->
       toastr.success(res.body)
-      $this.showTemplate = false
       $this.getAllTemplates()
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -190,13 +161,12 @@ SettingsInvoiceController = ($scope, $rootScope, Upload, $timeout, toastr, setti
   @updateTemplates = () ->
     @success = (res) ->
       toastr.success(res.body)
-      $this.showTemplate = false
-      $this.getAllTemplates()
     @failure = (res) ->
       toastr.error(res.data.message)
     template = {}
-    template.name = $this.selectedTemplate.name
-    template.type = $this.templateType
+    template.name = $this.selectedInvoice.name
+    template.uniqueName = $this.selectedInvoice.uniqueName
+    template.type = "invoice"
     template.sections = []
     _.each $this.widgets, (wid) ->
       widget = {}
@@ -209,21 +179,12 @@ SettingsInvoiceController = ($scope, $rootScope, Upload, $timeout, toastr, setti
       template.sections.push(widget)
     reqparam = {}
     reqparam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-    reqparam.templateUniqueName = $this.selectedTemplate.uniqueName
     settingsService.update(reqparam, template).then(@success, @failure)
 
   $timeout ( ->
     $this.getPlaceholders()
-  ),1000
-  $timeout ( ->
     $this.getAllTemplates()
   ),2000
-
-  @listDoubleClick = (item) ->
-    if item.type == 'Entry'
-      return
-    else
-      item.edit = true
 
   $rootScope.tinymceOptions =
     onChange: (e) ->
@@ -293,24 +254,41 @@ SettingsInvoiceController = ($scope, $rootScope, Upload, $timeout, toastr, setti
     index = $this.widgets.indexOf(w)
     $this.widgets.splice index, 1
 
+  $this.parseChildren = (data) ->
+    _.each data, (el) ->
+      if el.type == 'Element'
+        if el.children.length > 0
+          $this.parseChildren(el.children)
+      if el.type == 'Text'
+        if el.content == "\n"
+          el.content = "<br>"
+        if el.content == "&nbsp;"
+          el.content = " "
+
+  $this.matchVariables = (template) ->
+    _.each $rootScope.placeholders, (ph) ->
+      if template.htmlData.indexOf(ph.name) != -1
+        template.variables.push(ph.name)
+
   @saveTemplate = ->
-    
     @success = (res) ->
       toastr.success(res.body)
       $this.showTemplate = false
       $this.getAllTemplates()
-
     @failure = (res) ->
       toastr.error(res.data.message)
-
     if _.isUndefined($this.templateName) || _.isEmpty($this.templateName)
       $this.toastr.warning("Template name can't be empty", "Warning")
     else
       template = {}
       template.name = $this.templateName
-      template.type = $this.templateType
+      template.type = "proforma"
       template.sections = []
+      template.htmlData = {}
+      template.htmlData.sections = []
+      template.variables = []
       _.each $this.widgets, (wid) ->
+        console.log wid
         widget = {}
         widget.height = wid.sizeY
         widget.width = wid.sizeX
@@ -319,6 +297,16 @@ SettingsInvoiceController = ($scope, $rootScope, Upload, $timeout, toastr, setti
         widget.row = wid.row
         widget.data = wid.data
         template.sections.push(widget)
+        section = {}
+        section.styles = {}
+        section.styles.height = widget.height/24 *100 + '%'
+        section.styles.width = widget.width/24 *100 + '%'
+        section.type = wid.type
+        section.elements = himalaya.parse(wid.data)
+        template.htmlData.sections.push(section)
+
+      template.htmlData = JSON.stringify(template.htmlData)
+      $this.matchVariables(template)
       reqparam = {}
       reqparam.companyUniqueName = $rootScope.selectedCompany.uniqueName
       settingsService.save(reqparam, template).then(@success, @failure)
@@ -359,6 +347,9 @@ SettingsInvoiceController = ($scope, $rootScope, Upload, $timeout, toastr, setti
   @setDefTemp = (someValue) ->
 
 
-SettingsInvoiceController.$inject = ['$scope', '$rootScope', 'Upload', '$timeout', 'toastr', 'settingsService', '$http', 'localStorageService', '$sce']
+settingsProformaController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr', 'settingsService', '$http']
 
-giddh.webApp.controller('SettingsInvoiceController', SettingsInvoiceController)
+giddh.webApp.controller('settingsProformaController', settingsProformaController)
+
+
+

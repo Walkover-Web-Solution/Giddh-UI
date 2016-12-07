@@ -180,8 +180,9 @@ var invoice = require('./public/routes/webapp/invoices')
 var templates = require('./public/routes/webapp/templates')
 var proforma = require('./public/routes/webapp/proformas')
 var placeholders = require('./public/routes/webapp/placeholders')
+var htmlParser = require('./public/routes/webapp/htmlParser')
 
-
+app.use('/parse-html-json', htmlParser)
 app.use('/time-test', timetest);
 app.use('/currency', currency);
 app.use('/users', users);

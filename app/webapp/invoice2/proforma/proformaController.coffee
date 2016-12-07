@@ -1,6 +1,6 @@
 'use strict'
 
-proformaController = ($scope, $rootScope, invoiceService, localStorageService, $timeout, toastr, $filter, $uibModal,accountService, groupService, $state) ->
+proformaController = ($scope, $rootScope, localStorageService,invoiceService,settingsService ,$timeout, toastr, $filter, $uibModal,accountService, groupService, $state) ->
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
   $rootScope.cmpViewShow = true
@@ -20,11 +20,13 @@ proformaController = ($scope, $rootScope, invoiceService, localStorageService, $
   # end of date picker
   $scope.showFilters = false
   $scope.proformaList = []
+  $scope.pTemplateList = []
   pc = @
   $scope.count = {}
   $scope.count.set = [10,15,30,35,40,45,50]
   $scope.count.val = $scope.count.set[0]
   $scope.editStatus = false
+
   ## Get all Proforma ##
   $scope.getAllProforma = () ->
   	@success = (res) ->
@@ -33,8 +35,7 @@ proformaController = ($scope, $rootScope, invoiceService, localStorageService, $
         $scope.showFilters = true
 
   	@failure = (res) ->
-      toastr.error(res.data.message)
-
+      toastr.error(res.data.message) 
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     reqParam.date1 = $filter('date')($scope.filters.fromDate, 'dd-MM-yyyy')
@@ -305,6 +306,89 @@ proformaController = ($scope, $rootScope, invoiceService, localStorageService, $
       $scope.genearateUniqueName(unqName)
     ), 800
 
+  $scope.getTemplates = () ->
+    @success = (res) ->
+      _.each res.body, (temp) ->
+        if temp.type == "proforma"
+          $scope.pTemplateList.push(temp)
+
+    @failure = (res) ->
+      console.log res
+
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    invoiceService.getTemplates(reqParam).then(@success, @failure)  
+
+  # $timeout ( ->
+  #   $scope.getTemplates()
+  # ),1000
+
+  pc.parseData = (source, dest) ->
+    _.each source.sections, (sec, sIdx) ->
+      _.each dest.sections, (dec,dIdx) ->
+        if sIdx == dIdx
+          dec.styles.left = sec.leftOfBlock + '%'
+          dec.styles.top = sec.topOfBlockt + '%'
+
+  $scope.fetchTemplateData = (template) ->
+    @success = (res) ->
+      $scope.htmlData = JSON.parse(res.body.htmlData)
+      pc.parseData(res.body, $scope.htmlData)
+      #$scope.templateHtml = res.body.html
+    @failure = (res) ->
+      console.log res
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    reqParam.templateUniqueName = template.uniqueName
+    settingsService.getTemplate(reqParam).then(@success, @failure)
+
+
+  $scope.htmlData = {
+    sections : [{
+      styles:{
+        'height':'200px'
+        'width':'300px'
+        'background':'#fff'
+        'clear':'both'
+      }
+      elements:[
+        {
+          type: 'p'
+          value: 'Date:'
+          editable: false
+          linebreak: false
+          styles:{
+            'float':'left'
+          }
+          elements:[
+            {
+              type: 'strong'
+              value: 'DATE : '
+
+              editable: true
+              linebreak: false
+              styles:{
+                'font-weight':'bold'
+              },
+              elements: []
+            },
+            {
+              type: 'strong'
+              value: '$invoiceDate'
+
+              editable: true
+              linebreak: false
+              styles:{
+                'font-weight':'bold'
+              },
+              elements: []
+            }
+          ]
+        }
+      ]
+    }]
+    variables: []
+  }
 
 
 
