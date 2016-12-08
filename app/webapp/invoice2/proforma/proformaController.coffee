@@ -348,7 +348,6 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   #         dec.styles.top = sec.topOfBlockt + '%'
 
   pc.checkEditableFields = (data) ->
-    console.log data
     data
 
   $scope.fetchTemplateData = (template, operation) ->

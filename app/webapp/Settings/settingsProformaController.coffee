@@ -97,7 +97,7 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
           dec.styles.left = sec.leftOfBlock + '%'
           dec.styles.top = sec.topOfBlockt + '%'
 
-  @getTemplate = (item) ->
+  @getTemplate = (item, operation) ->
     @success = (res) ->
       @htmlData = JSON.parse(res.body.htmlData)
       #$this.parseData(res.body, @htmlData)
@@ -125,6 +125,7 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     reqparam = {
       companyUniqueName : $rootScope.selectedCompany.uniqueName
       templateUniqueName : item.uniqueName
+      operation:operation
     }
     settingsService.getTemplate(reqparam).then(@success, @failure)
 
@@ -297,6 +298,7 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       $this.getAllTemplates()
     @failure = (res) ->
       toastr.error(res.data.message)
+
     if _.isUndefined($this.templateName) || _.isEmpty($this.templateName)
       $this.toastr.warning("Template name can't be empty", "Warning")
     else
@@ -307,7 +309,8 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       template.htmlData = {}
       template.htmlData.sections = []
       template.variables = []
-      _.each $this.widgets, (wid) ->
+      _.each @widgets, (wid) ->
+        console.log wid.name
         widget = {}
         widget.height = wid.sizeY
         widget.width = wid.sizeX
