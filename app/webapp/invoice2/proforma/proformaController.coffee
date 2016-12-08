@@ -324,12 +324,13 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
 
   $scope.getTemplates = () ->
     @success = (res) ->
+      $scope.pTemplateList = []
       _.each res.body, (temp) ->
         if temp.type == "proforma"
           $scope.pTemplateList.push(temp)
 
     @failure = (res) ->
-      console.log res
+      toastr.error(res.data.message)
 
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
@@ -339,23 +340,27 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   #   $scope.getTemplates()
   # ),1000
 
-  pc.parseData = (source, dest) ->
-    _.each source.sections, (sec, sIdx) ->
-      _.each dest.sections, (dec,dIdx) ->
-        if sIdx == dIdx
-          dec.styles.left = sec.leftOfBlock + '%'
-          dec.styles.top = sec.topOfBlockt + '%'
+  # pc.parseData = (source, dest) ->
+  #   _.each source.sections, (sec, sIdx) ->
+  #     _.each dest.sections, (dec,dIdx) ->
+  #       if sIdx == dIdx
+  #         dec.styles.left = sec.leftOfBlock + '%'
+  #         dec.styles.top = sec.topOfBlockt + '%'
 
-  $scope.fetchTemplateData = (template) ->
+  pc.checkEditableFields = (data) ->
+    console.log data
+    data
+
+  $scope.fetchTemplateData = (template, operation) ->
     @success = (res) ->
-      $scope.htmlData = JSON.parse(res.body.htmlData)
-      pc.parseData(res.body, $scope.htmlData)
-      #$scope.templateHtml = res.body.html
+      $scope.htmlData = pc.checkEditableFields(JSON.parse(res.body.htmlData))
+      #pc.parseData(res.body, $scope.htmlData)
     @failure = (res) ->
-      console.log res
+      toastr.error(res.data.message)
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     reqParam.templateUniqueName = template.uniqueName
+    reqParam.operation = operation
     settingsService.getTemplate(reqParam).then(@success, @failure)
 
 

@@ -153,8 +153,9 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       toastr.error(res.data.message)
     reqparam = {
       companyUniqueName : $rootScope.selectedCompany.uniqueName
+      type: 'proforma'
     }
-    url = "company/" + $rootScope.selectedCompany.uniqueName + "/placeholders"
+    url = "company/" + $rootScope.selectedCompany.uniqueName + "/placeholders?type=" + reqparam.type
     $http.get(url, {reqParam: reqparam}).then(@success, @failure)
 
 
@@ -270,6 +271,25 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       if template.htmlData.indexOf(ph.name) != -1
         template.variables.push(ph.name)
 
+  $this.formatEditables = (elements) ->
+    _.each elements, (elem) ->
+      if elem.type == 'Text'
+        newElem = null
+        _.each $rootScope.placeholders,(pl) ->
+          if elem.type == 'Text' && elem.content.indexOf(pl.name) != -1 && elem.content != pl.name
+            elem.content = elem.content.replace(pl.name, "<p>"+pl.name+"</p>")
+            newElem = himalaya.parse(elem.content)
+            elem.type = 'Element'
+            elem.attributes = {}
+            elem.tagName = 'p'
+            delete elem.content
+            elem.children = newElem
+          else if elem.content == pl.name
+            elem.hasVar = true
+            elem.model = pl.name
+      if elem.children != undefined && elem.children.length > 0
+        $this.formatEditables(elem.children)
+
   @saveTemplate = ->
     @success = (res) ->
       toastr.success(res.body)
@@ -288,7 +308,6 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       template.htmlData.sections = []
       template.variables = []
       _.each $this.widgets, (wid) ->
-        console.log wid
         widget = {}
         widget.height = wid.sizeY
         widget.width = wid.sizeX
@@ -303,6 +322,7 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
         section.styles.width = widget.width/24 *100 + '%'
         section.type = wid.type
         section.elements = himalaya.parse(wid.data)
+        $this.formatEditables(section.elements)
         template.htmlData.sections.push(section)
 
       template.htmlData = JSON.stringify(template.htmlData)
@@ -314,12 +334,6 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
   @resetUpload =()->
     console.log("resetUpload")
 
-
-#  $(document).on('click', (e) ->
-#    _.each($this.widgets, (wid) ->
-#      wid.edit = false
-#    )
-#  )
 
   # upload Images
   @uploadImages =(files,type, item)->
