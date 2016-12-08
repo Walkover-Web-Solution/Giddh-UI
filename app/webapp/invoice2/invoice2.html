@@ -219,9 +219,12 @@
                     </div>
                   </uib-tab>
                   <uib-tab heading="Template" select="setTab(2)">
-                    <div class="y-scroll" ng-include="'/public/webapp/Settings/invoice-temp.html'" cover-page>
+                    <div class="y-scroll" ng-include="'/public/webapp/Invoice/invoiceContent.html'" ng-controller="invoiceController" cover-page>
 
                     </div>
+                    <!--<div class="y-scroll" ng-include="'/public/webapp/Settings/invoice-temp.html'" cover-page>-->
+
+                    <!--</div>-->
                   </uib-tab>
                 </uib-tabset>
               <!--</perfect-scrollbar>-->
