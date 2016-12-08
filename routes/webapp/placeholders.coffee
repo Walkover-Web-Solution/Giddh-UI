@@ -7,7 +7,7 @@ router.get '/', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/placeholders'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/placeholders?type=' + req.query.type
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

@@ -46,8 +46,7 @@ router.get '/:templateUniqueName', (req, res) ->
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
       'Content-Type' :'application/json'
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/templates/' + req.params.templateUniqueName
-  console.log(hUrl)
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/templates/' + req.params.templateUniqueName + '?operation=' + req.query.operation
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
