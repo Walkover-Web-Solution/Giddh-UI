@@ -322,13 +322,18 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       $scope.genearateUniqueName(unqName)
     ), 800
 
+  $scope.create = {
+    proformaTemplate : {}
+  }
+
   $scope.getTemplates = () ->
     @success = (res) ->
       $scope.pTemplateList = []
       _.each res.body, (temp) ->
         if temp.type == "proforma"
           $scope.pTemplateList.push(temp)
-
+      $scope.create.proformaTemplate = $scope.pTemplateList[0]
+      $scope.fetchTemplateData($scope.pTemplateList[0].uniqueName, 'create')
     @failure = (res) ->
       toastr.error(res.data.message)
 
@@ -347,12 +352,30 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   #         dec.styles.left = sec.leftOfBlock + '%'
   #         dec.styles.top = sec.topOfBlockt + '%'
 
-  pc.checkEditableFields = (data) ->
-    data
+  pc.checkEditableFields = (sections) ->
+    $$this = @
+    this.replaceEditables = (elements) ->
+      _.each elements, (elem) ->
+        if elem.type == 'Text' && elem.hasVar
+          _.each pc.templateVariables, (temp) ->
+            if elem.model == temp.key
+              elem.variable = {}
+              angular.copy(temp, elem.variable)
+        else if elem.type == 'Element' && elem.children && elem.children.length > 0
+          $$this.replaceEditables(elem.children)      
+
+    templateVariables = []
+    _.each sections, (sec) ->
+      if sec.elements.length
+        $$this.replaceEditables(sec.elements)
+    console.log sections
 
   $scope.fetchTemplateData = (template, operation) ->
     @success = (res) ->
-      $scope.htmlData = pc.checkEditableFields(JSON.parse(res.body.htmlData))
+      pc.templateVariables = res.body.templateVariables
+      pc.htmlData = JSON.parse(res.body.htmlData)
+      pc.checkEditableFields(pc.htmlData.sections)
+      $scope.htmlData = pc.htmlData
       #pc.parseData(res.body, $scope.htmlData)
     @failure = (res) ->
       toastr.error(res.data.message)
