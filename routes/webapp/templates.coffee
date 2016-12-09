@@ -14,7 +14,7 @@ router.post '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.put '/:templateUniqueName/update', (req, res) ->
+router.put '/update/:templateUniqueName', (req, res) ->
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -41,6 +41,7 @@ router.get '/all', (req, res) ->
 
 
 router.get '/:templateUniqueName', (req, res) ->
+  console.log 'from get'
   args =
     headers:
       'Auth-Key': req.session.authKey

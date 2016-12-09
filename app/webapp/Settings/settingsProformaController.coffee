@@ -160,17 +160,20 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     $http.get(url, {reqParam: reqparam}).then(@success, @failure)
 
 
-  @updateTemplates = () ->
+  @updateProformaTemplates = () ->
     @success = (res) ->
       toastr.success(res.body)
     @failure = (res) ->
       toastr.error(res.data.message)
     template = {}
-    template.name = $this.selectedInvoice.name
-    template.uniqueName = $this.selectedInvoice.uniqueName
-    template.type = "invoice"
+    template.name = $this.selectedTemplate.name
+    template.uniqueName = $this.selectedTemplate.uniqueName
+    template.type = "proforma"
     template.sections = []
-    _.each $this.widgets, (wid) ->
+    template.htmlData = {}
+    template.htmlData.sections = []
+    template.variables = []
+    _.each @widgets, (wid) ->
       widget = {}
       widget.height = wid.sizeY
       widget.width = wid.sizeX
@@ -179,8 +182,21 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       widget.row = wid.row
       widget.data = wid.data
       template.sections.push(widget)
+      section = {}
+      section.styles = {}
+      section.styles.height = widget.height/24 *100 + '%'
+      section.styles.width = widget.width/24 *100 + '%'
+      section.type = wid.type
+      section.elements = himalaya.parse(wid.data)
+      $this.formatEditables(section.elements)
+      template.htmlData.sections.push(section)
+
+    template.htmlData = JSON.stringify(template.htmlData)
+    $this.matchVariables(template)
     reqparam = {}
     reqparam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    reqparam.templateUniqueName = template.uniqueName
+    reqparam.operation = 'update'
     settingsService.update(reqparam, template).then(@success, @failure)
 
   $timeout ( ->
@@ -215,6 +231,7 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
   @showAddTemplate = ->
     $this.resetTemplate()
     $this.showTemplate = !$this.showTemplate
+    $this.updateTemplate = false
 
   @getWidgetArrLength = ->
     return $this.widgets.length
@@ -310,7 +327,6 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       template.htmlData.sections = []
       template.variables = []
       _.each @widgets, (wid) ->
-        console.log wid.name
         widget = {}
         widget.height = wid.sizeY
         widget.width = wid.sizeX
