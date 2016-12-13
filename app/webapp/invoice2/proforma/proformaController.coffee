@@ -421,7 +421,13 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
           "description": "discount",
           "amount": 10,
           "accountUniqueName": "discount"
-          }]
+          },
+          {
+          "description": "discount",
+          "amount": 10,
+          "accountUniqueName": "discount"
+          }
+        ]
       }
     
   $scope.transactions = []

@@ -218,32 +218,20 @@
                     
                     Particulars
                     <table class="table table-bordered">
-                      <thead>
-                        <th>Select Account</th>
-                        <th>Description</th>
-                        <th>Amount</th>
-                      </thead>
-
                       <tbody>
-                        <tr ng-repeat="txn in transactions">
+                        <tr>
                           <td style="width:100%">
-                            <table>
+                            <table class="table" ng-repeat="txn in transactions">
                               <tbody>
                                 <tr>
                                   <td ng-bind="txn.accountUniqueName"></td>
-                                  <td ng-ind="txn.description"></td>
-                                  <td ng-ind="txn.amount"></td>
+                                  <td ng-bind="txn.description"></td>
+                                  <td ng-bind="txn.amount"></td>
                                 </tr>
-                              </tbody>
-                            </table>
-                          </td>
-                          <td style="width:100%" ng-if="txn.discount.count">
-                            <table>
-                              <tbody>
-                                <tr ng-repeat="discount in txn.discount">
+                                <tr ng-if="txn.discount.length > 0" ng-repeat="discount in txn.discount">
                                   <td ng-bind="discount.accountUniqueName"></td>
-                                  <td ng-ind="discount.description"></td>
-                                  <td ng-ind="discount.amount"></td>
+                                  <td ng-bind="discount.description"></td>
+                                  <td ng-bind="discount.amount"></td>
                                 </tr>
                               </tbody>
                             </table>
