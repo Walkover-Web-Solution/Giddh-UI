@@ -194,10 +194,16 @@
 
         <div class="create-proforma y-scroll" cover-page>
 
-            <div class="form-group max150 pull-left" style="width:150px;">
+          <div class="clearfix" style="width:21cm;margin:0 auto">
+            <div class="form-group max150" style="width:150px;">
               <label>Select Template</label>
               <select class="form-control" ng-model="create.proformaTemplate" ng-options="temp.name for temp in pTemplateList" ng-change="fetchTemplateData(create.proformaTemplate, 'create')"></select>
             </div>
+
+            <button class="btn btn-default">Save</button>
+          </div>
+
+            
 
             <div class="invoice-wrapper-m a4 pos-rel">
                 
@@ -218,15 +224,15 @@
                         <input type="text" ng-model="elem.variable.value" ng-if="elem.type=='Text' && section.type == 'String' && elem.hasVar" ng-disabled="!elem.variable.isEditable" ng-class="{isEditable:elem.variable.isEditable}"/>
                         <span ng-if="elem.type=='Element' && elem.children.length > 0" ng-repeat="ele in elem.children" ng-class="{bold:ele.tagName=='strong',italic:ele.tagName=='em',font20:ele.tagName=='h1',hasVar:ele.hasVar}" ng-style="ele.attributes.style">
                           
-                          <span ng-bind-html="ele.content" ng-if="ele.type=='Text' && !ele.hasVar == undefined"></span>
+                          <span ng-bind-html="ele.content" ng-if="ele.type=='Text' && ele.hasVar == undefined"></span>
                           <input type="text" ng-model="ele.variable.value" ng-if="ele.type=='Text' && section.type == 'String' && ele.hasVar" ng-disabled="!ele.variable.isEditable" ng-class="{isEditable:ele.variable.isEditable}"/>
                           <span ng-if="ele.type=='Element' && ele.children.length > 0" ng-repeat="el in ele.children" ng-class="{bold:el.tagName=='strong',italic:el.tagName=='em',font20:el.tagName=='h1',hasVar:el.hasVar}"  ng-style="el.attributes.style">
     
-                            <span ng-bind-html="el.content" ng-if="el.type == 'Text'  && !el.hasVar == undefined"></span>
+                            <span ng-bind-html="el.content" ng-if="el.type == 'Text'  && el.hasVar == undefined"></span>
                             <input type="text" ng-model="el.variable.value" ng-if="el.type=='Text' && section.type == 'String' && el.hasVar" ng-disabled="!el.variable.isEditable" ng-class="{isEditable:el.variable.isEditable}"/>
                             <span ng-if="el.type == 'Element' && el.children.length > 0" ng-repeat="e in el.children" ng-class="{bold:e.tagName=='strong',italic:e.tagName=='em',font20:e.tagName=='h1',hasVar:e.hasVar}"  ng-style="e.attributes.style">
                                 
-                                <span ng-bind-html="e.content" ng-if="e.type== 'Text'  && !e.hasVar == undefined"></span>
+                                <span ng-bind-html="e.content" ng-if="e.type== 'Text'  && e.hasVar == undefined"></span>
                                 <input type="text" ng-model="e.variable.value" ng-if="e.type=='Text' && section.type == 'String' && e.hasVar" ng-disabled="!e.variable.isEditable" ng-class="{isEditable:e.variable.isEditable}"/>
                             </span>
 
