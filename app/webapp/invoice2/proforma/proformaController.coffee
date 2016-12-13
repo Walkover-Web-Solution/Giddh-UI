@@ -29,13 +29,13 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   ## Get all Proforma ##
   $scope.gettingProformaInProgress = false
   $scope.getAllProforma = () ->
-  	@success = (res) ->
+    @success = (res) ->
       $scope.gettingProformaInProgress = false
       $scope.proformaList = res.body
       if res.body.results.length < 1
         $scope.showFilters = true
 
-  	@failure = (res) ->
+    @failure = (res) ->
       $scope.gettingProformaInProgress = false
       toastr.error(res.data.message)
 
@@ -79,7 +79,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     }
 
   pc.filterModel = () ->
-  	@model = {
+    @model = {
       "balanceStatus":$scope.balanceStatuses[0]
       "accountUniqueName": ''
       "balanceDue":null
@@ -99,7 +99,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       "totalMoreThan":false
       "totalLessThan":false
       "totalEqual": true
-    }	
+    } 
 
   pc.getAllProformaByFilter = (data) ->
     @success = (res) ->
@@ -111,7 +111,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     invoiceService.getAllProformaByFilter($rootScope.selectedCompany.uniqueName, data).then(@success, @failure)
 
   $scope.resetFilters = () ->
-  	$scope.filters = new pc.filterModel()
+    $scope.filters = new pc.filterModel()
 
   $scope.applyFilters = () ->
     $scope.filters.page = $scope.proformaList.page
@@ -354,7 +354,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
 
   pc.checkEditableFields = (sections) ->
     $$this = @
-    this.replaceEditables = (elements) ->
+    $$this.replaceEditables = (elements) ->
       _.each elements, (elem) ->
         if elem.type == 'Text' && elem.hasVar
           _.each pc.templateVariables, (temp) ->
@@ -385,55 +385,46 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     reqParam.operation = operation
     settingsService.getTemplate(reqParam).then(@success, @failure)
 
+  pc.buildFields = (sections) ->
+    fields = []
+    $$this = @
+    $$this.getEditables = (elements) ->
+      _.each elements, (elem) ->
+        if elem.type == 'Text' && elem.hasVar && elem.variable.isEditable
+          field = {}
+          field.key = elem.variable.key
+          field.value = elem.variable.value
+          fields.push(field)
+        else if elem.type == 'Element' && elem.children && elem.children.length > 0
+          $$this.getEditables(elem.children)
 
-  $scope.htmlData = {
-    sections : [{
-      styles:{
-        'height':'200px'
-        'width':'300px'
-        'background':'#fff'
-        'clear':'both'
+    _.each sections, (sec) ->
+      if sec.elements.length
+        $$this.getEditables(sec.elements)
+    fields
+
+
+  $scope.createProforma = () ->
+    reqBody = {}
+    reqBody.fields = pc.buildFields($scope.htmlData.sections)
+    reqBody.entries = []
+
+    console.log reqBody
+
+  pc.entryModel = () ->
+    @model = 
+      {
+        "description": "Giddh Subscription",
+        "amount": 110,
+        "accountUniqueName": "sms",
+        "discount":[{
+          "description": "discount",
+          "amount": 10,
+          "accountUniqueName": "discount"
+          }]
       }
-      elements:[
-        {
-          type: 'p'
-          value: 'Date:'
-          editable: false
-          linebreak: false
-          styles:{
-            'float':'left'
-          }
-          elements:[
-            {
-              type: 'strong'
-              value: 'DATE : '
-
-              editable: true
-              linebreak: false
-              styles:{
-                'font-weight':'bold'
-              },
-              elements: []
-            },
-            {
-              type: 'strong'
-              value: '$invoiceDate'
-
-              editable: true
-              linebreak: false
-              styles:{
-                'font-weight':'bold'
-              },
-              elements: []
-            }
-          ]
-        }
-      ]
-    }]
-    variables: []
-  }
-
-
-
+    
+  $scope.transactions = []
+  $scope.transactions.push(new pc.entryModel())
 
 giddh.webApp.controller 'proformaController', proformaController
