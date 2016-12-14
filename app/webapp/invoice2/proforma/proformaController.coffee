@@ -414,23 +414,20 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   pc.entryModel = () ->
     @model = 
       {
-        "description": "Giddh Subscription",
-        "amount": 110,
-        "accountUniqueName": "sms",
-        "discount":[{
-          "description": "discount",
-          "amount": 10,
-          "accountUniqueName": "discount"
-          },
-          {
-          "description": "discount",
-          "amount": 10,
-          "accountUniqueName": "discount"
-          }
-        ]
+        "description": "",
+        "amount": 0,
+        "accountUniqueName": "",
+        "accountName":''
       }
-    
+
   $scope.transactions = []
   $scope.transactions.push(new pc.entryModel())
+
+  $scope.addParticular = (transactions) ->
+    particular = new pc.entryModel()
+    transactions.push(particular)
+
+  $scope.removeParticular = (transactions, index) ->
+    transactions = transactions.splice(index, 1)
 
 giddh.webApp.controller 'proformaController', proformaController

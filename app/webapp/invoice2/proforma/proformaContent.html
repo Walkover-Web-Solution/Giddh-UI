@@ -210,38 +210,73 @@
                 class="pull-left a4-section" 
                 ng-repeat="section in htmlData.sections" 
                 ng-style="section.styles"
-                style="background:#fff;padding:10px;">
+                style="background:#fff;padding:10px">
                   
                   <div ng-repeat="element in section.elements"  
                     ng-style="element.attributes.style" 
-                    ng-if="section.type == 'Entry'">
+                    ng-if="section.type == 'Entry'"
+                    style="overflow-y:auto;height:100%">
                     
-                    Particulars
-                    <table class="table table-bordered">
-                      <tbody>
-                        <tr>
-                          <td style="width:100%">
-                            <table class="table" ng-repeat="txn in transactions">
-                              <tbody>
-                                <tr>
-                                  <td ng-bind="txn.accountUniqueName"></td>
-                                  <td ng-bind="txn.description"></td>
-                                  <td ng-bind="txn.amount"></td>
-                                </tr>
-                                <tr ng-if="txn.discount.length > 0" ng-repeat="discount in txn.discount">
-                                  <td ng-bind="discount.accountUniqueName"></td>
-                                  <td ng-bind="discount.description"></td>
-                                  <td ng-bind="discount.amount"></td>
-                                </tr>
-                              </tbody>
-                            </table>
-                          </td>
-                        </tr>
-                      </tbody>
-
-                    </table>
-
-
+                    <div class="center-block">Particulars</div>
+                      <table class="table table-bordered proforma-particulars body">
+                        <thead>
+                          <th class="col-xs-2">Account</th>
+                          <th class="col-xs-7">Description</th>
+                          <th class="col-xs-3">Amount</th>
+                        </thead>
+                        <tbody>
+                          <tr ng-repeat="txn in transactions">
+                            <td class="pad0 col-xs-2">
+                              <input type="text" class="" ng-model="txn.accountUniqueName" uib-typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | filter:$viewValue">
+                            </td>
+                            <td class="pad0 col-xs-7">
+                              <input type="text" class="" ng-model="txn.description">
+                            </td>
+                            <td class="pad0 col-xs-3 pos-rel">
+                              <input type="text" class="" ng-model="txn.amount">
+                              <i class="glyphicon glyphicon-plus pos-abs" ng-click="addParticular(transactions, 'txn')"></i>
+                              <i class="glyphicon glyphicon-minus pos-abs" ng-click="removeParticular(transactions, $index)"
+                              ng-if="$index != 0"></i>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <table class="table table-bordered">
+                        <tbody>
+                          <tr>
+                            <td class="col-xs-9 text-right">
+                              Sub Total
+                            </td>
+                            <td class="col-xs-3">
+                              9090
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="col-xs-9 text-right">
+                              Discount
+                            </td>
+                            <td class="col-xs-3">
+                              10
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="col-xs-9 text-right">
+                              Tax
+                            </td>
+                            <td class="col-xs-3">
+                              12
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="col-xs-9 text-right">
+                              Grand Total
+                            </td>
+                            <td class="col-xs-3">
+                              9092
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
                   </div>
 
 
