@@ -1,6 +1,6 @@
 'use strict'
 
-loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr, $window) ->
+loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr, $window, $uibModal) ->
   $scope.showLoginBox = false
   $scope.toggleLoginBox = (e) ->
     $scope.showLoginBox = !$scope.showLoginBox
@@ -81,6 +81,45 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
   $scope.loginWithMobile = (e) ->
     $scope.phoneLoginPopup = true
     e.stopPropagation()
+    
+  $scope.signUpWithEmailModal = () ->
+    modalInstance = $uibModal.open(
+      templateUrl: '/public/website/views/signUpEmail.html',
+      size: "md",
+      backdrop: 'static',
+      scope: $scope
+    )
+
+  $scope.verifyMail = false
+  $scope.emailToVerify = ""
+  $scope.signUpWithEmail = (emailId) ->
+    console.log(emailId)
+    dataToSend = {
+      email: emailId
+    }
+    $http.post('/signup-with-email', dataToSend).then(
+      (res) ->
+        $scope.verifyMail = true
+        $scope.emailToVerify = emailId
+      (res) ->
+        $scope.verifyMail = false
+    )
+
+  $scope.verifyEmail = (emailId, code) ->
+    dataToSend = {
+      email: $scope.emailToVerify
+      verificationCode: code
+    }
+    $http.post('/verify-email-now', dataToSend).then(
+      (res) ->
+        $scope.verifyMail = false
+        localStorageService.set("_userDetails", res.data.body.user)
+        $window.sessionStorage.setItem("_ak", res.data.body.authKey)
+        window.location = "/app/#/home/"
+      (res) ->
+        toastr.error(res.data.message)
+        $scope.verifyMail = true
+    )
 
   getOtpSuccess = (res) ->
     $scope.showOtp = true
