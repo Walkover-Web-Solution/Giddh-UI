@@ -10,6 +10,14 @@ options = {
     'x-sent': true
 }
 
+optionsApp = {
+  root: dirName + '/webapp/views',
+  dotfiles: 'deny',
+  headers:
+    'x-timestamp': Date.now(),
+    'x-sent': true
+}
+
 router.get '/', (req, res) ->
   res.sendFile 'index.html', options
 

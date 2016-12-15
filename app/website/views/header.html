@@ -59,6 +59,10 @@
                 <i class="glyphicon glyphicon-phone"></i>
                 Login with Mobile
               </button>
+                <button type="login" class="btn sharp btn-block btn-lg btn-default" ng-click="signUpWithEmailModal($event)" ng-if="!phoneLoginPopup">
+                    <i class="glyphicon glyphicon-envelope"></i>
+                    Login with Email
+                </button>
               <div class="giddh-spinner" style="margin-top:85px" ng-if="phoneLoginPopup && loggingIn"></div>
               <div class="phone-login" ng-if="phoneLoginPopup && !loggingIn">
                 <input type="text"
