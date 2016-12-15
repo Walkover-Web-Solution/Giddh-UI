@@ -1,6 +1,6 @@
 'use strict'
 
-proformaController = ($scope, $rootScope, localStorageService,invoiceService,settingsService ,$timeout, toastr, $filter, $uibModal,accountService, groupService, $state) ->
+proformaController = ($scope, $rootScope, localStorageService,invoiceService,settingsService ,$timeout, toastr, $filter, $uibModal,accountService, groupService, $state, companyServices) ->
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
   $rootScope.cmpViewShow = true
@@ -26,6 +26,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   $scope.count.set = [10,15,30,35,40,45,50]
   $scope.count.val = $scope.count.set[0]
   $scope.editStatus = false
+  $scope.subtotal = 0
   ## Get all Proforma ##
   $scope.gettingProformaInProgress = false
   $scope.getAllProforma = () ->
@@ -365,15 +366,20 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
           $$this.replaceEditables(elem.children)      
 
     templateVariables = []
-    _.each sections, (sec) ->
+    _.each sections, (sec,i) ->
       if sec.elements.length
         $$this.replaceEditables(sec.elements)
-    console.log sections
+      _.each pc.sectionData, (data, j) ->
+        if i==j
+          sec.styles.left = data.leftOfBlock + '%'
+          sec.styles.top = data.topOfBlock + '%'
+
 
   $scope.fetchTemplateData = (template, operation) ->
     @success = (res) ->
       pc.templateVariables = res.body.templateVariables
       pc.htmlData = JSON.parse(res.body.htmlData)
+      pc.sectionData = res.body.sections
       pc.checkEditableFields(pc.htmlData.sections)
       $scope.htmlData = pc.htmlData
       #pc.parseData(res.body, $scope.htmlData)
@@ -403,11 +409,18 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         $$this.getEditables(sec.elements)
     fields
 
+  pc.processAccountDetails = () ->
+    _.each $scope.transactions, (txn) ->
+      if typeof(txn.accountUniqueName) == 'object'
+        account = txn.accountUniqueName
+        txn.accountName = account.name
+        txn.accountUniqueName = account.uniqueName
 
   $scope.createProforma = () ->
     reqBody = {}
     reqBody.fields = pc.buildFields($scope.htmlData.sections)
-    reqBody.entries = []
+    pc.processAccountDetails()
+    reqBody.entries = $scope.transactions
 
     console.log reqBody
 
@@ -423,11 +436,65 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   $scope.transactions = []
   $scope.transactions.push(new pc.entryModel())
 
+  pc.getTaxList = () ->
+    @success = (res) ->
+      pc.taxList = res.body
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    companyServices.getTax($rootScope.selectedCompany.uniqueName).then(@success, @failure)
+  
+  pc.getTaxList()
+
   $scope.addParticular = (transactions) ->
     particular = new pc.entryModel()
     transactions.push(particular)
 
-  $scope.removeParticular = (transactions, index) ->
+  $scope.removeParticular = (transactions, index, txn) ->
     transactions = transactions.splice(index, 1)
+    #$scope.subtotal -= Number(txn.amount)
+    $scope.calcSubtotal()
+
+  $scope.calcSubtotal = () ->
+    $scope.subtotal = 0
+    $scope.taxes = []
+    _.each $scope.transactions, (txn) ->
+      $scope.subtotal += Number(txn.amount)
+      pc.calcTax(txn)
+
+  pc.calcTax = (txn) ->
+    if txn && txn.appliedTaxes.length > 0
+      _.each txn.appliedTaxes, (aTax) ->
+        tax = _.findWhere(pc.taxList, {uniqueName:aTax})
+        ctax = pc.calcTaxAmount(tax, txn)
+        if ctax
+          existingTax = _.findWhere($scope.taxes, {name:ctax.name})
+          if existingTax
+            existingTax.amount += Number(ctax.amount)
+          else
+            $scope.taxes.push(ctax)
+
+  $scope.taxes = []
+  pc.calcTaxAmount = (tax, txn) ->
+    ctax = null
+    _.each tax.taxDetail, (det) ->
+      date = det.date.split('-')
+      date = date[1]+'-'+date[0]+'-'+date[2]
+      date = Math.round(new Date(date).getTime()/1000)
+      if date <= Math.round(new Date().getTime()/1000)
+        ctax = {}
+        ctax.amount = Math.round(det.taxValue/100 * txn.amount)/100
+        ctax.name = tax.name
+    ctax
+    
+  $scope.getTaxes = (account, txn) ->
+    txn.appliedTaxes = account.applicableTaxes
+
+  $scope.taxTotal = 0
+  $scope.$watch('taxes', (newVal, oldVal)->
+    if newVal != oldVal
+      _.each newVal, (tax) ->
+        $scope.taxTotal += tax.amount
+  )
 
 giddh.webApp.controller 'proformaController', proformaController

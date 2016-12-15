@@ -207,7 +207,7 @@
             <div class="invoice-wrapper-m a4 pos-rel">
                 
               <div
-                class="pull-left a4-section" 
+                class="pull-left a4-section pos-abs" 
                 ng-repeat="section in htmlData.sections" 
                 ng-style="section.styles"
                 style="background:#fff;padding:10px">
@@ -227,56 +227,28 @@
                         <tbody>
                           <tr ng-repeat="txn in transactions">
                             <td class="pad0 col-xs-2">
-                              <input type="text" class="" ng-model="txn.accountUniqueName" uib-typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | filter:$viewValue">
+                              <input type="text" class="" ng-model="txn.accountUniqueName" uib-typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | filter:$viewValue | limitTo:5" typeahead-on-select="getTaxes(txn.accountUniqueName, txn)">
                             </td>
                             <td class="pad0 col-xs-7">
                               <input type="text" class="" ng-model="txn.description">
                             </td>
                             <td class="pad0 col-xs-3 pos-rel">
-                              <input type="text" class="" ng-model="txn.amount">
+                              <input type="number" class="" ng-model="txn.amount" ng-change="calcSubtotal()" ng-model-options="{debounce:1000}">
                               <i class="glyphicon glyphicon-plus pos-abs" ng-click="addParticular(transactions, 'txn')"></i>
-                              <i class="glyphicon glyphicon-minus pos-abs" ng-click="removeParticular(transactions, $index)"
+                              <i class="glyphicon glyphicon-minus pos-abs" ng-click="removeParticular(transactions, $index, txn)"
                               ng-if="$index != 0"></i>
                             </td>
                           </tr>
                         </tbody>
                       </table>
-                      <table class="table table-bordered">
-                        <tbody>
-                          <tr>
-                            <td class="col-xs-9 text-right">
-                              Sub Total
-                            </td>
-                            <td class="col-xs-3">
-                              9090
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="col-xs-9 text-right">
-                              Discount
-                            </td>
-                            <td class="col-xs-3">
-                              10
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="col-xs-9 text-right">
-                              Tax
-                            </td>
-                            <td class="col-xs-3">
-                              12
-                            </td>
-                          </tr>
-                          <tr>
-                            <td class="col-xs-9 text-right">
-                              Grand Total
-                            </td>
-                            <td class="col-xs-3">
-                              9092
-                            </td>
-                          </tr>
-                        </tbody>
-                      </table>
+                      <div class="pull-right">
+                        <ul class="list-unstyled mrT" style="font-size:12px">
+                          <li>Sub Total: {{subtotal}}</li>
+                          <li>Discount: <input type="number" ng-model="discount" style="width:50px;height:20px;"></li>
+                          <li ng-repeat="tax in taxes" ng-if="taxes.length > 0">{{tax.name}}: {{tax.amount | number:2}}</li>
+                          <li class="bold">Grand Total: {{subtotal - discount + taxTotal | number:2}}</li>
+                        </ul>
+                      </div>
                   </div>
 
 
