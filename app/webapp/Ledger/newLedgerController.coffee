@@ -1461,9 +1461,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       page: $scope.gwaList.page
       count: $scope.gwaList.count
     }
-    if $scope.working == false
-      $scope.working = true
-      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+    groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
 
   $scope.getGroupsWithDetail = () ->
     if $rootScope.allowed == true

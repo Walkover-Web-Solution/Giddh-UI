@@ -10,6 +10,14 @@ options = {
     'x-sent': true
 }
 
+optionsApp = {
+  root: dirName + '/webapp/views',
+  dotfiles: 'deny',
+  headers:
+    'x-timestamp': Date.now(),
+    'x-sent': true
+}
+
 router.get '/', (req, res) ->
   res.sendFile 'index.html', options
 
@@ -157,6 +165,28 @@ router.post '/login-with-number', (req, res) ->
     else
       req.session.name = data.body.user.uniqueName
       req.session.authKey = data.body.authKey
+    res.send data
+
+router.post '/signup-with-email', (req, res) ->
+  hUrl = settings.envUrl + 'signup-with-email'
+  args =
+    headers:
+      "Content-Type": "application/json"
+    data:req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/verify-email-now', (req, res) ->
+  hUrl = settings.envUrl + 'verify-email'
+  args =
+    headers:
+      "Content-Type": "application/json"
+    data:req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
     res.send data
 
 module.exports = router

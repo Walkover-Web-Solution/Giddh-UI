@@ -99,7 +99,8 @@ router.post '/', (req, res) ->
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
-    hitViaSocket(data)
+    if app.get('env') == 'production'
+      hitViaSocket(data)
     res.send data
 
 #get all Roles

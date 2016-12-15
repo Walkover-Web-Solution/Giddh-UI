@@ -2374,7 +2374,7 @@ i.cls-alert {
 }
 
 .pos-rel {
-    position: relative;
+    position: relative !important;
 }
 
 .error-msg {
@@ -4190,4 +4190,40 @@ tr.db-bnk-account > td.reconnectDiv{
 
 .invoice-wrapper-m.a4 .hasVar input.isEditable{
     border:1px solid #444;
+}
+
+.proforma-particulars tr td{
+    padding:0;
+}
+
+.proforma-particulars tr td input, .proforma-particulars tr td input:focus{
+    height: 34px;
+    width: 100%;
+    border: 0;
+    padding: 0 10px;
+    box-shadow: none;
+    outline: 0;
+}
+
+.proforma-particulars tr td i.glyphicon-plus{
+    right:10px;
+    top:8px;
+}
+
+.proforma-particulars tr td i.glyphicon-minus{
+    right:30px;
+    top:8px;
+}
+
+/*table.table-bordered.head{
+    margin-bottom:0;
+    border-bottom:none;
+}
+
+table.table-bordered.head thead th{
+    border-bottom:0;
+}*/
+
+table.proforma-particulars{
+    margin-bottom: 0;
 }
