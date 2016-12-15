@@ -347,9 +347,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   gc.loadMoreGrpWithAccSuccess = (res) ->
     $scope.gwaList.currentPage += 1
-    list = gc.removeEmptyGroups(res.body.results)
-    if list.length > 0 && res.body.totalPages >= $scope.gwaList.currentPage
-      $scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
+    #list = gc.removeEmptyGroups(res.body.results)
+    if res.body.results.length > 0 && res.body.totalPages >= $scope.gwaList.currentPage
+      _.each res.body.results, (grp) ->
+        $scope.flatAccntWGroupsList.push(grp) 
+      #$scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
     else if res.body.totalPages >= $scope.gwaList.currentPage
       $scope.loadMoreGrpWithAcc($rootScope.selectedCompany.uniqueName)
     else

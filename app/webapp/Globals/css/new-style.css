@@ -3035,7 +3035,7 @@ ul.pills li {
 }
 
 .compoundEntry td, .compoundEntry td input {
-    background: #fddfa4;
+    background: #fddfa4 !important;
 }
 
 .compoundEntry .uncEntry  td,  .compoundEntry .uncEntry td input {
@@ -3991,7 +3991,7 @@ tr.db-bnk-account > td.reconnectDiv{
 }
 
 /* copy the popover code from bootstrap so this will work even without it */
-.popover {
+/*.popover {
     position: absolute;
     top: 0;
     left: 0;
@@ -4076,7 +4076,7 @@ tr.db-bnk-account > td.reconnectDiv{
     border-top-width: 0;
     border-bottom-color: #fff;
 }
-
+*/
 .invoice-input .ta-editor.ta-html,.invoice-input .ta-scroll-window.form-control,.invoice-input .invoice-input, .ta-scroll-window>.ta-bind{
     min-height: initial !important;
 }
