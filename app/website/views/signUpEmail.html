@@ -14,7 +14,8 @@
         </div>
         <div ng-if="verifyMail" class="clearfix form-group form-group-lg pd2">
             <input class="form-control mrT1" ng-model="verificationCode" type="text" placeholder="Enter verification code here">
-            <button class="btn sharp btn-block btn-success btn-lg mrT1" ng-click="verifyEmail(emailToS,verificationCode)">Last step to go</button>
+            <button class="btn sharp btn-block btn-success btn-lg mrT1" ng-click="verifyEmail(emailToS,verificationCode); $event.stopPropagation();">Last step to go</button>
+            <a class="pull-right" style="cursor: pointer;" ng-click="signUpWithEmail(emailToVerify)">Resend code</a>
         </div>
     </div>
 </div>

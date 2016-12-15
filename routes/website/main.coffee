@@ -171,7 +171,6 @@ router.post '/signup-with-email', (req, res) ->
     res.send data
 
 router.post '/verify-email-now', (req, res) ->
-  console.log(req.body)
   hUrl = settings.envUrl + 'verify-email'
   args =
     headers:
