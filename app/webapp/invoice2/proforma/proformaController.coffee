@@ -422,8 +422,6 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     pc.processAccountDetails()
     reqBody.entries = $scope.transactions
 
-    console.log reqBody
-
   pc.entryModel = () ->
     @model = 
       {
