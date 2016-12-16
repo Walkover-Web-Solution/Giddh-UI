@@ -35,6 +35,9 @@
         <li class="">
           <a href="/pricing" ng-class="{white:whiteLinks && !loginPage}" ng-click="goTo('/pricing')">Pricing</a>
         </li>
+        <li ng-hide="loginPage">
+          <button class="btn btn-primary navbar-btn mrL2" ng-click="goTo('/login')">Sign Up</button>
+        </li>
         <li ng-hide="loginPage" class="login-btn" ng-click="toggleLoginBox($event)">
           <button id="loginButton" type="button" class="btn btn-secondary navbar-btn" style="margin-left:20px">
             Login
@@ -56,6 +59,10 @@
                 <i class="glyphicon glyphicon-phone"></i>
                 Login with Mobile
               </button>
+                <button type="login" class="btn sharp btn-block btn-lg btn-default" ng-click="signUpWithEmailModal($event)" ng-if="!phoneLoginPopup">
+                    <i class="glyphicon glyphicon-envelope"></i>
+                    Login with Email
+                </button>
               <div class="giddh-spinner" style="margin-top:85px" ng-if="phoneLoginPopup && loggingIn"></div>
               <div class="phone-login" ng-if="phoneLoginPopup && !loggingIn">
                 <input type="text"
