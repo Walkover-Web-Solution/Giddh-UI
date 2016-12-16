@@ -27,6 +27,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   $scope.count.val = $scope.count.set[0]
   $scope.editStatus = false
   $scope.subtotal = 0
+  $scope.selectedTemplate = null
   ## Get all Proforma ##
   $scope.gettingProformaInProgress = false
   $scope.getAllProforma = () ->
@@ -153,6 +154,18 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     $scope.filters.toDate = $filter('date')($scope.filters.toDate, 'dd-MM-yyyy')
     $scope.filters.dueDate = $filter('date')($scope.filters.dueDate, 'dd-MM-yyyy')
     pc.getAllProformaByFilter($scope.filters)
+
+  # $scope.loadProforma = (proforma) ->
+  #   @success = (res) ->
+  #     console.log res
+  #   @failure = (res) ->
+  #     console.log res
+  #   reqParam = {}
+  #   reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+  #   data = {}
+  #   data.proforma = proforma.uniqueName
+  #   invoiceService.getProforma(reqParam,data).then(@success, @failure)
+
 
   $scope.deleteProforma = (num, index) ->
     @success = (res) ->
@@ -382,6 +395,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       pc.sectionData = res.body.sections
       pc.checkEditableFields(pc.htmlData.sections)
       $scope.htmlData = pc.htmlData
+      $scope.selectedTemplate = res.body.uniqueName
       #pc.parseData(res.body, $scope.htmlData)
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -424,6 +438,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       toastr.error(res.data.message)
 
     reqBody = {}
+    reqBody.templateUniqueName = $scope.selectedTemplate
     reqBody.fields = pc.buildFields($scope.htmlData.sections)
     pc.processAccountDetails()
     reqBody.entries = $scope.transactions

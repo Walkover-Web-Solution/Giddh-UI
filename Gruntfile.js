@@ -97,8 +97,6 @@ module.exports = function (grunt) {
         dest: destDir + 'website/views/index.html',
         options: {
           process: function (content, path) {
-            console.log(process.env.CDN_URL)
-            console.log(process.env.API_URL)
             var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
             // content is your whole HTML body of index page
             // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`

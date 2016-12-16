@@ -151,7 +151,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
     )
     $scope.loggingIn = true
 
-  $scope.signUpWithEmail = (emailId) ->
+  $scope.signUpWithEmail = (emailId, resend) ->
     dataToSend = {
       email: emailId
     }
@@ -159,6 +159,8 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
       (res) ->
         $scope.verifyMail = true
         $scope.emailToVerify = emailId
+        if resend
+          toastr.success(res.data.body)
       (res) ->
         $scope.verifyMail = false
         toastr.error(res.data.message)

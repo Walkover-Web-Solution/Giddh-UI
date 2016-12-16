@@ -56,6 +56,13 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         method: 'POST'
         url: '/company/:companyUniqueName/invoices/proforma'
       }
+<<<<<<< HEAD
+=======
+      getProforma: {
+        method: 'POST'
+        url: '/company/:companyUniqueName/invoices/proforma/get'
+      }
+>>>>>>> master
     })
 
   invoiceService =
@@ -135,5 +142,10 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Invoice.createProforma({
         companyUniqueName: reqParam.companyUniqueName
       }, data, onSuccess, onFailure))
+
+    getProforma: (reqParam,data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.getProforma({
+        companyUniqueName: reqParam.companyUniqueName
+      },data ,onSuccess, onFailure))
 
   invoiceService
