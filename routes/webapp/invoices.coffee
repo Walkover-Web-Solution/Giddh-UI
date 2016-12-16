@@ -163,4 +163,16 @@ router.get '/proforma/templates', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.post '/proforma/get', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/proforma/' + req.body.proforma
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+      'Content-Type': 'application/json'
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
 module.exports = router
