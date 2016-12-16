@@ -172,6 +172,7 @@ router.post '/signup-with-email', (req, res) ->
   args =
     headers:
       "Content-Type": "application/json"
+      'X-Forwarded-For': res.locales.remoteIp
     data:req.body
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
@@ -183,6 +184,7 @@ router.post '/verify-email-now', (req, res) ->
   args =
     headers:
       "Content-Type": "application/json"
+      'X-Forwarded-For': res.locales.remoteIp
     data:req.body
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
