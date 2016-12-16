@@ -102,8 +102,8 @@ revenuechartController = ($scope, $rootScope, localStorageService, toastr, group
       duration.to = $scope.toDate
       duration.from = $scope.fromDate
       $scope.accountList = []
-      $scope.getClosingBalance("revenue_from_operations",duration)
-      $scope.getClosingBalance("other_income",duration)
+      $scope.getClosingBalance($rootScope.groupName.revenueFromOperations,duration)
+      $scope.getClosingBalance($rootScope.groupName.otherIncome,duration)
 
   $scope.getClosingBalance = (groupUniqueName, duration) ->
     objToSend = {}

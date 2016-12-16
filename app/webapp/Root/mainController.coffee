@@ -15,6 +15,13 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     "/node_modules/angular2/bundles/angular2-all.umd.min.js"
     "/public/webapp/ng2.js"
   ]
+  $rootScope.groupName = {
+    sundryDebtors : "sundry_debtors"
+    revenueFromOperations : "revenue_from_operations"
+    indirectExpenses : "indirect_expenses"
+    operatingCost: "operating_cost"
+    otherIncome: "other_income"
+  }
   $rootScope.$stateParams = {}
 #  $rootScope.prefixThis = ""
   $rootScope.cmpViewShow = true

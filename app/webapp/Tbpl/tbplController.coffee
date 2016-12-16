@@ -362,7 +362,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       if grp.childGroups.length > 0
         _.each grp.childGroups, (ch) ->
           count = $scope.countAccounts(ch)
-          if ch.uniqueName == 'sundry_debtors'
+          if ch.uniqueName == $rootScope.groupName.sundryDebtors
             if count > 50
               ch.accounts = []
               if ch.childGroups.length > 0
