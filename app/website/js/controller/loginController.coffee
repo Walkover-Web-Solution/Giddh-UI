@@ -178,7 +178,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
     $scope.verifyEmail = false
     localStorageService.set("_userDetails", res.data.body.user)
     $window.sessionStorage.setItem("_ak", res.data.body.authKey)
-    window.location = 'http://localhost:8000/app/#/home'
+    window.location = '/app/#/home'
 
   verifyEmailFailure = (res) ->
     toastr.error(res.data.message)

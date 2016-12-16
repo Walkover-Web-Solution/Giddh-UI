@@ -189,6 +189,9 @@ router.post '/verify-email-now', (req, res) ->
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
+    else
+      req.session.name = data.body.user.uniqueName
+      req.session.authKey = data.body.authKey
     res.send data
 
 module.exports = router
