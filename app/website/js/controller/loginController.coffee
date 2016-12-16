@@ -93,6 +93,8 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
 
   $scope.verifyMail = false
   $scope.emailToVerify = ""
+  $scope.verifyMailMakeFalse = () ->
+    $scope.verifyMail = false
 
   getOtpSuccess = (res) ->
     $scope.showOtp = true
@@ -159,9 +161,10 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
         $scope.emailToVerify = emailId
       (res) ->
         $scope.verifyMail = false
+        toastr.error(res.data.message)
     )
 
-  $scope.verifyEmail = (emailId, code, e) ->
+  $scope.verifyEmail = (emailId, code) ->
     dataToSend = {
       email: $scope.emailToVerify
       verificationCode: code
@@ -170,14 +173,12 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
       verifyEmailSuccess,
       verifyEmailFailure
     )
-    return false
 
   verifyEmailSuccess = (res) ->
     $scope.verifyEmail = false
     localStorageService.set("_userDetails", res.data.body.user)
     $window.sessionStorage.setItem("_ak", res.data.body.authKey)
-    window.location = "/app/#/home/"
-    return false
+    window.location = '/app/#/home'
 
   verifyEmailFailure = (res) ->
     toastr.error(res.data.message)

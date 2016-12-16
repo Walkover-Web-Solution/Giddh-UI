@@ -2,7 +2,7 @@
 
     <div class="modal-header">
         <label class="form-label mrT1"><h3>Sign Up with Giddh</h3></label>
-        <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
+        <button type="button" class="close" data-dismiss="modal" ng-click="verifyMailMakeFalse();$dismiss();" aria-label="Close"><span
                 aria-hidden="true">&times;</span></button>
     </div>
 
@@ -17,7 +17,7 @@
         <div ng-if="verifyMail" class="clearfix form-group form-group-lg pd2">
             <form class="col-xs-12" name="verifyEmailForm" novalidate>
                 <input class="form-control mrT1" ng-model="verificationCode" type="text" placeholder="Enter verification code here" required>
-                <button ng-disabled="verifyEmailForm.$invalid" class="btn sharp btn-block btn-success btn-lg mrT1" ng-click="verifyEmail(emailToS,verificationCode,$event)">Last step to go</button>
+                <button ng-disabled="verifyEmailForm.$invalid" class="btn sharp btn-block btn-success btn-lg mrT1" ng-click="verifyEmail(emailToS,verificationCode)">Last step to go</button>
             </form>
             <a class="pull-right" style="cursor: pointer;" ng-click="signUpWithEmail(emailToVerify)">Resend code</a>
         </div>
