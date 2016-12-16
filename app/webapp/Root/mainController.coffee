@@ -122,7 +122,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       window.location = "/thanks"
     ), (res) ->
 
-
   # for ledger
   $rootScope.makeAccountFlatten = (data) ->
     # $rootScope.flatAccntListWithParents = data
@@ -559,9 +558,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     activeYear.ends = moment(company.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").year()
     if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
     $rootScope.currentFinancialYear = activeYear.year
-
-
-
 
   $rootScope.$on 'callCheckPermissions', (event, data)->
     $scope.checkPermissions(data)

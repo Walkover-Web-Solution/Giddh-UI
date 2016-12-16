@@ -10,7 +10,11 @@
           <span class="icon-bar"></span>
       </button>
 
-      <a href="/" class="navbar-brand">
+      <a href="/" class="navbar-brand" ng-if="!showBlack">
+        <img class="showWhite" src="/public/website/images/new/giddh-logo-white.png" alt="Giddh - online accounting software" ng-if="!magicLinkPage">
+        <img src="/public/website/images/new/giddh-logo.png" alt="Giddh - online accounting software" ng-class="{'showWhite':magicLinkPage, 'showBlack':!magicLinkPage}">
+      </a>
+      <a href="/" class="navbar-brand" ng-if="showBlack">
         <img src="/public/website/images/new/giddh-logo.png" alt="Giddh - online accounting software">
       </a>
     </div>
