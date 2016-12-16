@@ -418,7 +418,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
 
   $scope.createProforma = () ->
     @success = (res) ->
-      console.log res
+      toastr.success(res.body)
 
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -432,6 +432,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     _.each reqBody.fields, (field) ->
       if field.key == "$accountName" && typeof(field.value) == "object"
         field.value = field.value.uniqueName
+    reqBody.totalDiscount = $scope.discount || 0
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     invoiceService.createProforma(reqParam,reqBody).then(@succes,@failure)
@@ -541,6 +542,12 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   $scope.addQuickAccountConfirmFailure = (res) ->
     toastr.error(res.data.message)
 
-  
+  $scope.taxTotal = 0
+  $scope.$watch('taxes', (newVal, oldVal) ->
+    if newVal != oldVal
+      $scope.taxTotal = 0
+      _.each newVal, (tax) ->
+        $scope.taxTotal += tax.amount
+  )
 
 giddh.webApp.controller 'proformaController', proformaController
