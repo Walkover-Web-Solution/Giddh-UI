@@ -417,10 +417,24 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         txn.accountUniqueName = account.uniqueName
 
   $scope.createProforma = () ->
+    @success = (res) ->
+      console.log res
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
     reqBody = {}
     reqBody.fields = pc.buildFields($scope.htmlData.sections)
     pc.processAccountDetails()
     reqBody.entries = $scope.transactions
+    _.each reqBody.entries,(entry) ->
+      delete entry.appliedTaxes
+    _.each reqBody.fields, (field) ->
+      if field.key == "$accountName" && typeof(field.value) == "object"
+        field.value = field.value.uniqueName
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    invoiceService.createProforma(reqParam,reqBody).then(@succes,@failure)
 
   pc.entryModel = () ->
     @model = 
@@ -488,11 +502,45 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   $scope.getTaxes = (account, txn) ->
     txn.appliedTaxes = account.applicableTaxes
 
-  $scope.taxTotal = 0
-  $scope.$watch('taxes', (newVal, oldVal)->
-    if newVal != oldVal
-      _.each newVal, (tax) ->
-        $scope.taxTotal += tax.amount
-  )
+  $scope.addquickAccount = () ->
+    $scope.newAccountModel.group = ''
+    $scope.newAccountModel.account = ''
+    $scope.newAccountModel.accUnqName = ''
+    pc.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
+    pc.AccModalInstance = $uibModal.open(
+      templateUrl: $rootScope.prefixThis+'/public/webapp/invoice2/addNewAccount.html'
+      size: "sm"
+      backdrop: 'static'
+      scope: $scope
+    )
+    #modalInstance.result.then($scope.addNewAccountCloseSuccess, $scope.addNewAccountCloseFailure)
+
+  $scope.addQuickAccountConfirm = () ->
+    newAccount = {
+      email:""
+      mobileNo:""
+      name:$scope.newAccountModel.account
+      openingBalanceDate: $filter('date')($scope.today, "dd-MM-yyyy")
+      uniqueName:$scope.newAccountModel.accUnqName
+    }
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: $scope.newAccountModel.group.groupUniqueName
+      acntUname: $scope.newAccountModel.accUnqName
+    }
+    if $scope.newAccountModel.group.groupUniqueName == '' || $scope.newAccountModel.group.groupUniqueName == undefined
+      toastr.error('Please select a group.')
+    else
+      accountService.createAc(unqNamesObj, newAccount).then($scope.addQuickAccountConfirmSuccess, $scope.addQuickAccountConfirmFailure) 
+
+  $scope.addQuickAccountConfirmSuccess = (res) ->
+    toastr.success('Account created successfully')
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+    pc.AccModalInstance.close()
+
+  $scope.addQuickAccountConfirmFailure = (res) ->
+    toastr.error(res.data.message)
+
+  
 
 giddh.webApp.controller 'proformaController', proformaController
