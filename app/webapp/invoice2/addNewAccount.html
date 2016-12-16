@@ -1,0 +1,34 @@
+<div>
+    <div class="modal-header">
+        <h3 class="modal-title">Create New Account</h3>
+    </div>
+    <div class="modal-body">
+        <div class="pdL1 pdR1">
+            <div class="clearfix">
+              <label>Select Group</label>
+              <ui-select ng-model="newAccountModel.group" theme="bootstrap">
+                  <ui-select-match  placeholder="Select Group">
+                      <span>{{$select.selected.groupName}}</span>
+                  </ui-select-match>
+                  <ui-select-choices repeat="grp in flatGrpList | filter:$select.search">
+                      <span ng-bind="grp.groupName"></span>
+                  </ui-select-choices>
+              </ui-select>
+            </div>
+            <div class="clearfix mrT1">
+              <label>Account Name</label>
+              <input class="form-control" name="account" type="text" ng-model="newAccountModel.account" placeholder="Enter Account Name">
+            </div>
+            <div class="clearfix mrT1 pdR2 pos-rel">
+              
+              <label>Account Unique Name</label>
+              <input class="form-control" name="account" type="text" ng-model="newAccountModel.accUnqName" placeholder="Enter Account Unique Name" >
+              <i class="glyphicon glyphicon-random pos-abs" style="right:0px;top:30px;color:green" uib-tooltip="Auto Generate UniqueName" tooltip-placement="top" tooltip-append-to-body='true' ng-click="genUnq(newAccountModel.account)"></i>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success" ng-click="addQuickAccountConfirm()" ng-disabled="newAccountModel.group == ''">Create</button>
+        <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+    </div>
+</div>
