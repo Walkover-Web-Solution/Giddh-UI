@@ -200,7 +200,8 @@
                 <label>Select Template</label>
                 <select class="form-control" ng-model="create.proformaTemplate" ng-options="temp.name for temp in pTemplateList" ng-change="fetchTemplateData(create.proformaTemplate, 'create')"></select>
               </div>    
-              <button class="btn btn-default btn-success mr2" ng-click="createProforma()">Create</button>
+              <button class="btn btn-default btn-success mrT2 mrL1" ng-click="createProforma()">Create</button>
+              <button class="btn btn-default btn-success mrT2 mrL1" ng-click="addquickAccount()">Add New Account</button>
               <div class="clearfix"></div>
             </div>
 
@@ -263,9 +264,18 @@
                       type="text"
                       placeholder="{{element.variable.key}}" 
                       ng-model="element.variable.value"
-                      ng-if="element.type=='Text' && section.type == 'String' && element.hasVar" 
+                      ng-if="element.type=='Text' && section.type == 'String' && element.hasVar && element.variable.key != '$accountName'" 
                       ng-disabled="!element.variable.isEditable" 
                       ng-class="{isEditable:element.variable.isEditable}"/>
+                    <input 
+                      type="text"
+                      placeholder="{{element.variable.key}}" 
+                      ng-model="element.variable.value"
+                      ng-if="element.type=='Text' && section.type == 'String' && element.hasVar && element.variable.key == '$accountName'" 
+                      ng-disabled="!element.variable.isEditable" 
+                      ng-class="{isEditable:element.variable.isEditable}"
+                      uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue | limitTo:5"
+                      />
 
                     <span ng-if="element.type=='Element' && element.children.length > 0" ng-repeat="elem in element.children" ng-class="{bold:elem.tagName=='strong',italic:elem.tagName=='em',font20:elem.tagName=='h1',hasVar:elem.hasVar}"  ng-style="elem.attributes.style" >
                         
@@ -274,10 +284,19 @@
                           placeholder="{{elem.variable.key}}"
                           type="text" 
                           ng-model="elem.variable.value" 
-                          ng-if="elem.type=='Text' && section.type == 'String' && elem.hasVar" 
+                          ng-if="elem.type=='Text' && section.type == 'String' && elem.hasVar && elem.variable.key != '$accountName'" 
                           ng-disabled="!elem.variable.isEditable" 
                           ng-class="{isEditable:elem.variable.isEditable}"
                           />
+                        <input 
+                          type="text"
+                          placeholder="{{elem.variable.key}}" 
+                          ng-model="elem.variable.value"
+                          ng-if="elem.type=='Text' && section.type == 'String' && elem.hasVar && elem.variable.key == '$accountName'" 
+                          ng-disabled="!elem.variable.isEditable" 
+                          ng-class="{isEditable:elem.variable.isEditable}"
+                          uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue | limitTo:5"
+                        />
                         <span ng-if="elem.type=='Element' && elem.children.length > 0" ng-repeat="ele in elem.children" ng-class="{bold:ele.tagName=='strong',italic:ele.tagName=='em',font20:ele.tagName=='h1',hasVar:ele.hasVar}" ng-style="ele.attributes.style">
                           
                           <span ng-bind-html="ele.content" ng-if="ele.type=='Text' && ele.hasVar == undefined"></span>
@@ -285,9 +304,18 @@
                             placeholder="{{ele.variable.key}}" 
                             type="text" 
                             ng-model="ele.variable.value" 
-                            ng-if="ele.type=='Text' && section.type == 'String' && ele.hasVar" 
+                            ng-if="ele.type=='Text' && section.type == 'String' && ele.hasVar && ele.variable.key != '$accountName'" 
                             ng-disabled="!ele.variable.isEditable" 
                             ng-class="{isEditable:ele.variable.isEditable}"/>
+                          <input 
+                            type="text"
+                            placeholder="{{ele.variable.key}}" 
+                            ng-model="ele.variable.value"
+                            ng-if="ele.type=='Text' && section.type == 'String' && ele.hasVar && ele.variable.key == '$accountName'" 
+                            ng-disabled="!ele.variable.isEditable" 
+                            ng-class="{isEditable:ele.variable.isEditable}"
+                            uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue | limitTo:5"
+                          />
                           <span ng-if="ele.type=='Element' && ele.children.length > 0" ng-repeat="el in ele.children" ng-class="{bold:el.tagName=='strong',italic:el.tagName=='em',font20:el.tagName=='h1',hasVar:el.hasVar}"  ng-style="el.attributes.style">
     
                             <span ng-bind-html="el.content" ng-if="el.type == 'Text'  && el.hasVar == undefined"></span>
@@ -295,9 +323,18 @@
                               placeholder="{{el.variable.key}}"
                               type="text" 
                               ng-model="el.variable.value" 
-                              ng-if="el.type=='Text' && section.type == 'String' && el.hasVar" 
+                              ng-if="el.type=='Text' && section.type == 'String' && el.hasVar && el.variable.key != '$accountName'" 
                               ng-disabled="!el.variable.isEditable" 
                               ng-class="{isEditable:el.variable.isEditable}"/>
+                            <input 
+                              type="text"
+                              placeholder="{{el.variable.key}}" 
+                              ng-model="el.variable.value"
+                              ng-if="el.type=='Text' && section.type == 'String' && el.hasVar && el.variable.key == '$accountName'" 
+                              ng-disabled="!el.variable.isEditable" 
+                              ng-class="{isEditable:el.variable.isEditable}"
+                              uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue | limitTo:5"
+                            />
                             <span ng-if="el.type == 'Element' && el.children.length > 0" ng-repeat="e in el.children" ng-class="{bold:e.tagName=='strong',italic:e.tagName=='em',font20:e.tagName=='h1',hasVar:e.hasVar}"  ng-style="e.attributes.style">
                                 
                                 <span ng-bind-html="e.content" ng-if="e.type== 'Text'  && e.hasVar == undefined"></span>
@@ -305,9 +342,18 @@
                                   placeholder="{{e.variable.key}}"
                                   type="text" 
                                   ng-model="e.variable.value" 
-                                  ng-if="e.type=='Text' && section.type == 'String' && e.hasVar" 
+                                  ng-if="e.type=='Text' && section.type == 'String' && e.hasVar && e.variable.key != '$accountName'" 
                                   ng-disabled="!e.variable.isEditable" 
                                   ng-class="{isEditable:e.variable.isEditable}"/>
+                                  <input 
+                                    type="text"
+                                    placeholder="{{e.variable.key}}" 
+                                    ng-model="e.variable.value"
+                                    ng-if="e.type=='Text' && section.type == 'String' && e.hasVar && e.variable.key == '$accountName'" 
+                                    ng-disabled="!e.variable.isEditable" 
+                                    ng-class="{isEditable:e.variable.isEditable}"
+                                    uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue | limitTo:5"
+                                  />
                             </span>
 
                           </span>
