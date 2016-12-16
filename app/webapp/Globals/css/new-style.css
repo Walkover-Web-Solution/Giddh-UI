@@ -4227,3 +4227,7 @@ table.table-bordered.head thead th{
 table.proforma-particulars{
     margin-bottom: 0;
 }
+
+.bold{
+    font-weight: bold;
+}
