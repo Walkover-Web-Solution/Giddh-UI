@@ -11,7 +11,7 @@
         <div ng-if="!verifyMail" class="clearfix form-group form-group-lg pd2">
             <form class="col-xs-12" name="getEmailForm" novalidate>
                 <input class="form-control mrT1" ng-model="emailToS" type="email" placeholder="Enter your email address" required>
-                <button ng-disabled="getEmailForm.$invalid" class="btn sharp btn-block btn-success btn-lg mrT1" ng-click="signUpWithEmail(emailToS)">Submit</button>
+                <button ng-disabled="getEmailForm.$invalid" class="btn sharp btn-block btn-success btn-lg mrT1" ng-click="signUpWithEmail(emailToS,false)">Submit</button>
             </form>
         </div>
         <div ng-if="verifyMail" class="clearfix form-group form-group-lg pd2">
@@ -19,7 +19,7 @@
                 <input class="form-control mrT1" ng-model="verificationCode" type="text" placeholder="Enter verification code here" required>
                 <button ng-disabled="verifyEmailForm.$invalid" class="btn sharp btn-block btn-success btn-lg mrT1" ng-click="verifyEmail(emailToS,verificationCode)">Last step to go</button>
             </form>
-            <a class="pull-right" style="cursor: pointer;" ng-click="signUpWithEmail(emailToVerify)">Resend code</a>
+            <a class="pull-right" style="cursor: pointer;" ng-click="signUpWithEmail(emailToVerify,true)">Resend code</a>
         </div>
     </div>
 </div>
