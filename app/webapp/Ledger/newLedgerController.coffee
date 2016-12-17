@@ -721,7 +721,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.selectedTxn = txn
     if $scope.prevTxn != null
       $scope.prevTxn.isOpen = false
-    txn.isOpen = true
+    $scope.selectedTxn.isOpen = true
     $scope.prevTxn = txn
     $scope.calculateEntryTotal(ledger)
     $scope.showLedgerPopover = true
