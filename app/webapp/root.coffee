@@ -382,7 +382,7 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$t
           isError = responseError.data.indexOf("`value` required in setHeader")
           isAuthKeyError = responseError.data.indexOf("Auth-Key")
           #if Auth-Key Error found, redirect to login
-          if isError != -1 and isAuthKeyError != -1
+          if isAuthKeyError != -1
             toastr.error('Your Session has Expired, Please Login Again.')
             $timeout ( ->
               window.location.assign('/login')

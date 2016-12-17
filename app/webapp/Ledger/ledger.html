@@ -221,7 +221,8 @@
                                   popover-placement="{{popover.position}}" 
                                   popover-append-to-body='true' 
                                   popover-enable="!popover.draggable" 
-                                  popover-is-open="txn.isOpen && showLedgerPopover"  
+                                  popover-is-open="txn.isOpen && showLedgerPopover"
+                                  popover-popup-delay="200"  
                                   ng-class="{'failed-entry':blankLedger.failed,  'highlight-txn': txn.isOpen, compoundEntry: blankLedger.isBlankCompEntry}"
                                   set-popover-position
                                   >
@@ -267,6 +268,7 @@
                                   popover-enable="!popover.draggable" 
                                   popover-is-open="txn.isOpen && showLedgerPopover" 
                                   ng-init="getFocus(txn,ledger)"
+                                  popover-popup-delay="200"
                                   set-popover-position
                                   >
                                     <!-- <td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">
@@ -305,7 +307,8 @@
                                   popover-placement="{{popover.position}}" 
                                   popover-append-to-body='true' 
                                   popover-enable="!popover.draggable" 
-                                  popover-is-open="txn.isOpen && showLedgerPopover" 
+                                  popover-is-open="txn.isOpen && showLedgerPopover"
+                                  popover-popup-delay="200"  
                                   ng-class="{'failed-entry':blankLedger.failed,  'highlight-txn': txn.isOpen, compoundEntry: blankLedger.isBlankCompEntry}"
                                   set-popover-position
                                   >
@@ -443,6 +446,7 @@
                                   popover-append-to-body='true' 
                                   popover-enable="!popover.draggable" 
                                   popover-is-open="txn.isOpen && showLedgerPopover"
+                                  popover-popup-delay="200"  
                                   ng-init="getFocus(txn,ledger)"
                                   position = "popover.position"
                                   set-popover-position>
