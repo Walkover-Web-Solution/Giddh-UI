@@ -16,11 +16,11 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     "/public/webapp/ng2.js"
   ]
   $rootScope.groupName = {
-    sundryDebtors : "sundry_debtors"
-    revenueFromOperations : "revenue_from_operations"
-    indirectExpenses : "indirect_expenses"
-    operatingCost: "operating_cost"
-    otherIncome: "other_income"
+    sundryDebtors : "sundrydebtors"
+    revenueFromOperations : "revenuefromoperations"
+    indirectExpenses : "indirectexpenses"
+    operatingCost: "operatingcost"
+    otherIncome: "otherincome"
   }
   $rootScope.$stateParams = {}
 #  $rootScope.prefixThis = ""
