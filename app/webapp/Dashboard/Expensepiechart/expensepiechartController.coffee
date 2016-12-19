@@ -104,8 +104,8 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
       duration.to = $scope.toDate
       duration.from = $scope.fromDate
       $scope.accountList = []
-      $scope.getClosingBalance("operating_cost",duration)
-      $scope.getClosingBalance("indirect_expenses",duration)
+      $scope.getClosingBalance($rootScope.groupName.operatingCost,duration)
+      $scope.getClosingBalance($rootScope.groupName.indirectExpenses,duration)
 
   $scope.getClosingBalance = (groupUniqueName, duration) ->
     objToSend = {}

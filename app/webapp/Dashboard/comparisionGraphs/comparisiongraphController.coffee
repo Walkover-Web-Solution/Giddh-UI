@@ -141,8 +141,8 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
     "options": $scope.chartOptionsWODiff
   }
   $scope.groupArray = {
-    sales: ["revenue_from_operations"]
-    expense: ["indirect_expenses","operating_cost"]
+    sales: [$rootScope.groupName.revenueFromOperations]
+    expense: [$rootScope.groupName.indirectExpenses,$rootScope.groupName.operatingCost]
   }
 
   $scope.salesData = []

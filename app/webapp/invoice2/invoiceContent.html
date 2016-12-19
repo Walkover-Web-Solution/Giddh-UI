@@ -264,7 +264,7 @@
                 {{$select.selected.name}}
               </ui-select-match >
               <ui-select-choices
-                  repeat="acc in queryFltAccnt | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,['revenue_from_operations','sundry_debtors'])" style="margin-left:-30px;">
+                  repeat="acc in queryFltAccnt | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,[groupName.revenueFromOperations,groupName.sundryDebtors])" style="margin-left:-30px;">
                 <span>{{acc.name}} ({{acc.uniqueName}})</span>
               </ui-select-choices>
             </ui-select>
@@ -306,7 +306,7 @@
                 {{$select.selected.name}}
               </ui-select-match >
               <ui-select-choices
-                  repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,['revenue_from_operations','sundry_debtors'])">
+                  repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,[groupName.revenueFromOperations,groupName.sundryDebtors])">
                 <span>{{acc.name}} ({{acc.uniqueName}})</span>
               </ui-select-choices>
             </ui-select>

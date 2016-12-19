@@ -252,7 +252,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     $scope.flatGrpList = res.body.results
     index = 0
     _.each $scope.flatGrpList, (grp, idx) ->
-      if grp.groupUniqueName == "sundry_debtors"
+      if grp.groupUniqueName == $rootScope.groupName.sundryDebtors
         index = idx
     $scope.newAccountModel.group = $scope.flatGrpList[index]
 

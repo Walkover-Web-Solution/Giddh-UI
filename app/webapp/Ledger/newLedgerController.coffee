@@ -13,7 +13,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.format = "dd-MM-yyyy"
   $scope.showPanel = false
   $scope.accountUnq = $stateParams.unqName  
-  $scope.accountToShow = {}
+  $scope.accountToShow = null
   $scope.mergeTransaction = false
   $scope.showEledger = true
   $scope.pageAccount = {}
@@ -227,6 +227,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     # else
     if !_.isNull($rootScope.selectedAccount)
       $scope.accountToShow = $rootScope.selectedAccount.name
+    else
+      unq = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:$stateParams.unqName})
+      $scope.accountToShow = unq.name
 
   $scope.isCurrentAccount =(acnt) ->
     acnt.uniqueName is $scope.accountUnq
@@ -721,7 +724,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.selectedTxn = txn
     if $scope.prevTxn != null
       $scope.prevTxn.isOpen = false
-    txn.isOpen = true
+    $scope.selectedTxn.isOpen = true
     $scope.prevTxn = txn
     $scope.calculateEntryTotal(ledger)
     $scope.showLedgerPopover = true
