@@ -5,24 +5,28 @@ router = settings.express.Router()
 env = app.get('env')
 
 hitViaSocket = (data) ->
+  console.log("inside hit via socket")
   data = JSON.stringify(data)
   data.environment = app.get('env')
-  settings.request {
-    url: 'https://viasocket.com/t/JUXDVNwBZ6dgPacX9zT/giddh-giddh-new-company?authkey=MbK1oT6x1RCoVf2AqL3y'
-    qs:
-      from: 'Giddh'
-      time: +new Date
-    method: 'POST'
-    headers:
-      'Content-Type': 'application/json'
-      'Auth-Key': 'MbK1oT6x1RCoVf2AqL3y'
-    body: data
-  }, (error, response, body) ->
-    if error
-      console.log error
-    else
-      console.log response.statusCode, body, 'from viasocket'
-    return
+  if env == "PRODUCTION" || env == "production"
+    settings.request {
+      url: 'https://viasocket.com/t/JUXDVNwBZ6dgPacX9zT/giddh-giddh-new-company?authkey=MbK1oT6x1RCoVf2AqL3y'
+      qs:
+        from: 'Giddh'
+        time: +new Date
+      method: 'POST'
+      headers:
+        'Content-Type': 'application/json'
+        'Auth-Key': 'MbK1oT6x1RCoVf2AqL3y'
+      body: data
+    }, (error, response, body) ->
+      if error
+        console.log error
+      else
+        console.log response.statusCode, body, 'from viasocket'
+      return
+  else
+    console.log("not hitting via socket ", env)
 
 router.get '/all', (req, res) ->
   args =
@@ -98,8 +102,8 @@ router.post '/', (req, res) ->
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
-    if app.get('env') == 'PRODUCTION'
-      hitViaSocket(data)
+#    if app.get('env') == 'PRODUCTION'
+    hitViaSocket(data)
     res.send data
 
 #get all Roles
