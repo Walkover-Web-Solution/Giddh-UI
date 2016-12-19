@@ -39,7 +39,7 @@
         <li class="">
           <a href="/pricing" ng-class="{white:whiteLinks && !loginPage}" ng-click="goTo('/pricing')">Pricing</a>
         </li>
-        <li ng-hide="loginPage">
+        <li ng-hide="signupPage">
           <button class="btn btn-primary navbar-btn mrL2" ng-click="goTo('/signup')">Sign Up</button>
         </li>
         <li ng-hide="loginPage" class="login-btn" ng-click="toggleLoginBox($event)">
