@@ -321,6 +321,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
 
   gc.getFlattenGrpWithAccListSuccess = (res) ->
+    $scope.gwaList.page = res.body.page
     $scope.gwaList.totalPages = res.body.totalPages
     #$scope.flatAccntWGroupsList = res.body.results
     $scope.flatAccntWGroupsList = gc.removeEmptyGroups(res.body.results)
@@ -334,11 +335,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error(res.data.message)
     $scope.working = false
 
-  $scope.loadMoreGrpWithAcc = (compUname) ->
+  $scope.loadMoreGrpWithAcc = (compUname, str) ->
     $scope.gwaList.page += 1
     reqParam = {
       companyUniqueName: compUname
-      q: ''
+      q: str
       page: $scope.gwaList.page
       count: $scope.gwaList.count
     }
@@ -361,11 +362,15 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     toastr.error(res.data.message)
 
   $scope.searchGrpWithAccounts = (str) ->
+    $scope.gwaList.page = 1
+    $scope.gwaList.currentPage = 1
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     if str.length > 2
       #$scope.hideLoadMore = true
       reqParam.q = str
+      reqParam.page = $scope.gwaList.page
+      reqParam.count = $scope.gwaList.count
       groupService.getFlattenGroupAccList(reqParam).then(gc.getFlattenGrpWithAccListSuccess, gc.getFlattenGrpWithAccListFailure)
     else
       #$scope.hideLoadMore = false
