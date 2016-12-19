@@ -9,8 +9,8 @@ homeController = ($scope, $rootScope, getLedgerState, $state, $location, localSt
       else
         $state.go('company.content.ledgerContent')
     else
-      user = localStorageService.get('_userDetails')
-      window.ga('set','userId',user.uniqueName)
+      #user = localStorageService.get('_userDetails')
+      #window.ga('set','userId',user.uniqueName)
       if (getLedgerState.data.role.uniqueName == 'super_admin' || getLedgerState.data.role.uniqueName == 'super_admin_off_the_record' || getLedgerState.data.role.uniqueName == 'view_only')
         $state.go('dashboard')
       else
