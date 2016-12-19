@@ -264,11 +264,13 @@ giddh.webApp.run [
     )
 
     $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+      user = localStorageService.get('_userDetails')
       window.dataLayer.push({
         event: 'giddh.pageView',
         attributes: {
           route: $location.path()
-        }
+        },
+        userId: user.uniqueName
       });
     )
 #    # check IE browser version
