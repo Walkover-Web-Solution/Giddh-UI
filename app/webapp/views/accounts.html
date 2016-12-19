@@ -48,7 +48,7 @@
       <ul class="acntAccordion" ng-if="showAccountList">
         <li>
           <ul id="ul_0" class="mainUl accBox" style="border-left:none">
-            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList | searchfilter:search.acnt | limitTo:gwaList.limit | filter:searchfilter as filtList" id="li_{{value.groupUniqueName}}" ng-if="value.accountDetails.length > 0">
+            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList | limitTo:gwaList.limit" id="li_{{value.groupUniqueName}}">
               <div 
                 class="title  LIB{{value.groupUniqueName}}" 
                 ng-click="value.open = !value.open"
@@ -57,7 +57,7 @@
               </div>
               <ul class="accBox subAccBox" ng-show="value.open || value.groupUniqueName === selectedGroupUname"
                   id="ul_{{value.groupUniqueName}}">
-                <li class="inrPrnt" ng-repeat="(index,accDtl) in value.accountDetails | filter : isGrpMatch(value, search.acnt) ? '' : search.acnt" id="ac_{{accDtl.uniqueName}}"
+                <li class="inrPrnt" ng-repeat="(index,accDtl) in value.accountDetails" id="ac_{{accDtl.uniqueName}}"
                   tooltip-placement="top" uib-tooltip="{{accDtl.uniqueName}}">
                   <a
                     ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl); getLedgerData(value, accDtl);"

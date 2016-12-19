@@ -1140,11 +1140,11 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   gc.moveToAccountConfirmFailure = (res) ->
     toastr.error(res.data.message)
 
-  gc.isGrpMatch = (g, q) ->
-    p = RegExp(q,"i")
-    if (g.groupName.match(p) || g.groupUniqueName.match(p))
-      return true
-    return false
+  # $scope.isGrpMatch = (g, q) ->
+  #   p = RegExp(q,"i")
+  #   if (g.groupName.match(p) || g.groupUniqueName.match(p))
+  #     return true
+  #   return false
 
   $scope.getTaxList = () ->
     companyServices.getTax($rootScope.selectedCompany.uniqueName).then(gc.getTaxSuccess, gc.getTaxFailure)

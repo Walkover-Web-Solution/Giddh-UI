@@ -24,7 +24,6 @@ hitViaSocket = (data) ->
       console.log response.statusCode, body, 'from viasocket'
     return
 
-
 router.get '/all', (req, res) ->
   args =
     headers:
