@@ -1,5 +1,5 @@
 "use strict"
-homeController = ($scope, $rootScope, getLedgerState, $state, $location) ->
+homeController = ($scope, $rootScope, getLedgerState, $state, $location, localStorageService) ->
 
   $scope.goToLedgerState = () ->
     if getLedgerState.data.shared && getLedgerState.data.firstLogin == false
@@ -9,6 +9,8 @@ homeController = ($scope, $rootScope, getLedgerState, $state, $location) ->
       else
         $state.go('company.content.ledgerContent')
     else
+      user = localStorageService.get('_userDetails')
+      window.ga('set','userId',user.uniqueName)
       if (getLedgerState.data.role.uniqueName == 'super_admin' || getLedgerState.data.role.uniqueName == 'super_admin_off_the_record' || getLedgerState.data.role.uniqueName == 'view_only')
         $state.go('dashboard')
       else
