@@ -331,6 +331,7 @@ app.run [
     $rootScope.magicLinkPage = false
     $rootScope.whiteLinks = false
     $rootScope.loginPage = false
+    $rootScope.signupPage = false
     $rootScope.fixedHeader = false
     $rootScope.showBlack = false
     loc = window.location.pathname
@@ -348,6 +349,9 @@ app.run [
       $rootScope.fixedHeader = true
     if loc == "/payment"
       $rootScope.showBlack = true
+    if loc == "/signup"
+      $rootScope.whiteLinks = true
+      $rootScope.signupPage = true
 
 ]
   

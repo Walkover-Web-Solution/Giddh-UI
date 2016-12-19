@@ -6,11 +6,13 @@
 
           </div>
         </uib-tab>
-        <!--<uib-tab heading="Proforma" select="broadcastToProforma()">-->
-          <!--<div ng-include="'/public/webapp/invoice2/proforma/proformaContent.html'" ng-controller="proformaController">-->
+        <!-- @if NODE_ENV!='PRODUCTION' -->
+        <uib-tab heading="Proforma" select="broadcastToProforma()">
+          <div ng-include="'/public/webapp/invoice2/proforma/proformaContent.html'" ng-controller="proformaController">
 
-          <!--</div>-->
-        <!--</uib-tab>-->
+          </div>
+        </uib-tab>
+        <!-- @endif -->
       </uib-tabset>
   </div>
 </div>

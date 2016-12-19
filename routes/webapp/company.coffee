@@ -24,7 +24,6 @@ hitViaSocket = (data) ->
       console.log response.statusCode, body, 'from viasocket'
     return
 
-
 router.get '/all', (req, res) ->
   args =
     headers:
@@ -99,7 +98,7 @@ router.post '/', (req, res) ->
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
-    if app.get('env') == 'production'
+    if app.get('env') == 'PRODUCTION'
       hitViaSocket(data)
     res.send data
 
@@ -476,7 +475,7 @@ router.get '/:uniqueName/templates', (req, res) ->
     
 # set default template
 router.put '/:uniqueName/templates/:tempUname', (req, res) ->
-  hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/templates/'+req.params.tempUname
+  hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/invoices/templates/'+req.params.tempUname
   args =
     headers:
       'Auth-Key': req.session.authKey

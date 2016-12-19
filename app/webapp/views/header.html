@@ -165,7 +165,7 @@
             <li style="padding:0px;">
               <ul style="max-height: 260px;overflow-y: scroll;background:rgba(0,0,0,0.9);overflow:auto;">
                 <li ng-repeat="company in companyList" ng-click="changeCompany(company, $index,'CHANGE')" id="cmp" ng-class="{'selected-company':selectedCompany.uniqueName == company.uniqueName}">
-                  <span tooltip-placement="top" uib-tooltip="{{company.alias}}">{{company.name}}</span>
+                  <span tooltip-placement="right" uib-tooltip="{{company.alias}}">{{company.name}}</span>
                   <i id="deleteCmp" class="glyphicon glyphicon-trash" ng-if="company.shared" ng-click="deleteCompany(company,$index,company.name,$event)"></i>
                 </li>
               </ul>

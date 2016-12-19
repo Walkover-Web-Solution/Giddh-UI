@@ -155,16 +155,16 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     $scope.filters.dueDate = $filter('date')($scope.filters.dueDate, 'dd-MM-yyyy')
     pc.getAllProformaByFilter($scope.filters)
 
-  # $scope.loadProforma = (proforma) ->
-  #   @success = (res) ->
-  #     console.log res
-  #   @failure = (res) ->
-  #     console.log res
-  #   reqParam = {}
-  #   reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-  #   data = {}
-  #   data.proforma = proforma.uniqueName
-  #   invoiceService.getProforma(reqParam,data).then(@success, @failure)
+  $scope.loadProforma = (proforma) ->
+    @success = (res) ->
+      console.log res
+    @failure = (res) ->
+      console.log res
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    data = {}
+    data.proforma = proforma.uniqueName
+    invoiceService.getProforma(reqParam,data).then(@success, @failure)
 
 
   $scope.deleteProforma = (num, index) ->
