@@ -66,6 +66,9 @@ router.get '/company/verify-email', (req, res) ->
 router.get '/refresh-completed', (req, res) ->
   res.sendFile 'refresh-completed.html', options
 
+router.get '/signup', (req, res) ->
+  res.sendFile 'signup.html', options
+
 router.post '/magic-link', (req, res) ->
   if req.body.data.from != undefined && req.body.data.to != undefined
     hUrl = settings.envUrl + '/magic-link/' + req.body.data.id + '?from=' + req.body.data.from + '&to=' + req.body.data.to
