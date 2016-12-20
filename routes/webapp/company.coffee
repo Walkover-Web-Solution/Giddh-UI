@@ -5,7 +5,6 @@ router = settings.express.Router()
 env = app.get('env')
 
 hitViaSocket = (data) ->
-  console.log("inside hit via socket")
   data = JSON.stringify(data)
   data.environment = app.get('env')
   if env == "PRODUCTION" || env == "production"
@@ -26,7 +25,7 @@ hitViaSocket = (data) ->
         console.log response.statusCode, body, 'from viasocket'
       return
   else
-    console.log("not hitting via socket ", env)
+    console.log("not hitting via socket because we are in ", env)
 
 router.get '/all', (req, res) ->
   args =
