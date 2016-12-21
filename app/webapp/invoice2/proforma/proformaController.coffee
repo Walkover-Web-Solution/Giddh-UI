@@ -379,11 +379,15 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   $scope.getTemplates = () ->
     @success = (res) ->
       $scope.pTemplateList = []
+      index = 0
       _.each res.body, (temp) ->
         if temp.type == "proforma"
           $scope.pTemplateList.push(temp)
-      $scope.create.proformaTemplate = $scope.pTemplateList[0]
-      $scope.fetchTemplateData($scope.pTemplateList[0].uniqueName, 'create')
+      _.each $scope.pTemplateList, (temp, idx) ->
+        if temp.isDefault
+          index = idx
+      $scope.create.proformaTemplate = $scope.pTemplateList[index]
+      $scope.fetchTemplateData($scope.pTemplateList[index], 'create')
     @failure = (res) ->
       toastr.error(res.data.message)
 
@@ -467,11 +471,12 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
 
   $scope.createProforma = (action) ->
     @success = (res) ->
-      toastr.success(res.status)
-
+      toastr.success("Proforma created successfully")
+      $scope.fetchTemplateData($scope.create.proformaTemplate, 'create')
+      $scope.transactions = []
+      $scope.transactions.push(new pc.entryModel())
     @failure = (res) ->
       toastr.error(res.data.message)
-
     reqBody = {}
     reqBody.templateUniqueName = $scope.selectedTemplate
     reqBody.fields = pc.buildFields($scope.htmlData.sections)
@@ -481,12 +486,25 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       delete entry.appliedTaxes
     _.each reqBody.fields, (field) ->
       if field.key == "$accountName" && typeof(field.value) == "object"
-        field.value = field.value.uniqueName
+        if field.value != null
+          acUnq = {}
+          acUnq.key = "$accountUniqueName"
+          acUnq.value = field.value.uniqueName
+          reqBody.fields.push(acUnq)
+          field.value = field.value.name
+        else
+          toastr.error('Account Name cannot be blank')
+      else if field.key == "$accountName" && typeof(field.value) == "string" && field.value != null
+        acUnq = {}
+        acUnq.key = "$accountUniqueName"
+        acUnq.value = ""
+        reqBody.fields.push(acUnq)
+
     reqBody.totalDiscount = $scope.discount || 0
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     if action == 'create'
-      invoiceService.createProforma(reqParam,reqBody).then(@succes,@failure)
+      invoiceService.createProforma(reqParam,reqBody).then(@success,@failure)
     else if action == 'update'
       reqBody.proforma = $scope.currentProforma.uniqueName
       reqBody.fields = pc.templateVariables
@@ -527,7 +545,15 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     $scope.subtotal = 0
     $scope.taxes = []
     _.each $scope.transactions, (txn) ->
-      $scope.subtotal += Number(txn.amount)
+      isDiscount = false
+      _.each txn.accountUniqueName.parentGroups, (pg) ->
+        if pg.uniqueName == 'discount'
+          isDiscount = true
+      if isDiscount
+        if $scope.subtotal > 0
+          $scope.subtotal -= Number(txn.amount)
+      else
+        $scope.subtotal += Number(txn.amount)
       pc.calcTax(txn)
 
   pc.calcTax = (txn) ->
@@ -551,12 +577,14 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       date = Math.round(new Date(date).getTime()/1000)
       if date <= Math.round(new Date().getTime()/1000)
         ctax = {}
-        ctax.amount = Math.round(det.taxValue/100 * txn.amount)/100
+        ctax.amount = Math.round(det.taxValue/100 * txn.amount)
         ctax.name = tax.name
     ctax
     
   $scope.getTaxes = (account, txn) ->
     txn.appliedTaxes = account.applicableTaxes
+    if txn.amount != null
+      $scope.calcSubtotal()
 
   $scope.addquickAccount = () ->
     $scope.newAccountModel.group = ''

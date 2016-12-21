@@ -4,17 +4,20 @@
 	</div>
 	<div ng-if="!ctrl.showTemplate" class="clearfix">
 		<div class="col-xs-3" ng-repeat="value in ctrl.templateList" ng-if="value.type == 'proforma'">
-			<a href="javascript:void(0)" class="thumbnail">
+			<a href="javascript:void(0)" class="thumbnail" style="min-height:225px;">
 				<div class="caption">
 					<label>Template for {{value.type}}</label>
 					<h3 class="lead alC" ng-bind-html="value.name"></h3>
 					<p>
-						<button class="btn btn-default btn-block" ng-click="ctrl.getTemplate(value, 'update')">Edit</button>
-						<button class="btn btn-danger btn-block" ng-click="ctrl.deleteTemplate(value)">Delete</button>
-					<div class="mrT1 alC">
-						<div ng-click="setDefTemp(value)">
-							<switch name="setAsDefault" on="On" off="Off" class="wide" ng-model="value.isDefault"></switch>
+						<button class="btn btn-default btn-block" ng-click="ctrl.getTemplate(value, 'update')" ng-disabled="value.isDefault">Edit</button>
+						<button class="btn btn-danger btn-block" ng-click="ctrl.deleteTemplate(value)" ng-disabled="value.isDefault">Delete</button>
+					<div class="mrT1 alC" ng-show="!value.isDefault">
+						<div ng-click="ctrl.setDefTemp(value)">
+							<switch name="setAsDefault" on="Default" off="Off" class="wide" ng-model="value.isDefault"></switch>
 						</div>
+					</div>
+					<div class="mrT1 alC" ng-show="value.isDefault">
+						<h1 style="font-size:28px">Default</h1>
 					</div>
 					</p>
 				</div>

@@ -39,7 +39,6 @@ router.get '/all', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-
 router.get '/:templateUniqueName', (req, res) ->
   console.log 'from get'
   args =

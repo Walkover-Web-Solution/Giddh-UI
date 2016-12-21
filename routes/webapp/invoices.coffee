@@ -139,6 +139,7 @@ router.post '/proforma/link-account', (req, res) ->
     res.send data
 
 router.post '/proforma', (req, res) ->
+  console.log req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/proforma'
   args =
     headers:
@@ -210,6 +211,20 @@ router.post '/proforma/download', (req, res) ->
       'Content-Type': 'application/json'
     data: req.body
   settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.put '/proforma/templates/default', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/templates/'+ req.body.templateUniqueName + '/default'
+  console.log hUrl
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+      'Content-Type': 'application/json'
+    data: req.body
+  settings.client.put hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data

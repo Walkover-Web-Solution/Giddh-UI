@@ -1,4 +1,4 @@
-settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsService, $http) ->
+settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsService, $http,invoiceService) ->
   @Upload = Upload
   @$rootScope = $rootScope
   @$timeout = $timeout
@@ -288,6 +288,8 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     _.each $rootScope.placeholders, (ph) ->
       if template.htmlData.indexOf(ph.name) != -1
         template.variables.push(ph.name)
+      if ph.name == "$accountName"
+        template.variables.push("$accountUniqueName")
 
   $this.formatEditables = (elements) ->
     _.each elements, (elem) ->
@@ -375,12 +377,22 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
         toastr.failure("Logo Upload Failed")
       ), (evt) ->
         console.log "file upload progress" ,Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
+
+  @setDefTemp = (value) ->
+    @success = (res) ->
+      toastr.success("Default template changed successfully")
+      $this.getAllTemplates()
+    @failure = (res) ->
+      toastr.failure(res.data.message)
+    if value.isDefault
+      reqParam = {}
+      reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+      reqBody = {}
+      reqBody.templateUniqueName = value.uniqueName
+      invoiceService.setDefaultProformaTemplate(reqParam, reqBody).then(@success, @failure)
+
   return
-
-  @setDefTemp = (someValue) ->
-
-
-settingsProformaController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr', 'settingsService', '$http']
+settingsProformaController.$inject = ['$rootScope', 'Upload', '$timeout', 'toastr', 'settingsService', '$http','invoiceService']
 
 giddh.webApp.controller('settingsProformaController', settingsProformaController)
 

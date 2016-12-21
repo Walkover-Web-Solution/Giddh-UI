@@ -72,6 +72,10 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         method: 'POST'
         url: '/company/:companyUniqueName/invoices/proforma/download'
       }
+      setDefaultProformaTemplate: {
+        method: 'PUT'
+        url: '/company/:companyUniqueName/invoices/proforma/templates/default'
+      }
     })
 
   invoiceService =
@@ -169,6 +173,11 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
 
     downloadProforma: (reqParam,data) ->
       @handlePromise((onSuccess, onFailure) -> Invoice.downloadProforma({
+        companyUniqueName: reqParam.companyUniqueName
+      },data ,onSuccess, onFailure))
+
+    setDefaultProformaTemplate: (reqParam,data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.setDefaultProformaTemplate({
         companyUniqueName: reqParam.companyUniqueName
       },data ,onSuccess, onFailure))
 
