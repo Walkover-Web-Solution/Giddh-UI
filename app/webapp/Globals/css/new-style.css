@@ -265,6 +265,10 @@ header .navbar-nav > li.active {
     font-size: 11px;
 }
 
+#accountList{
+    padding-bottom:70px;
+}
+
 /*icons style*/
 [class^="gic-"] {
     background-image: url(../images/iconset.png);

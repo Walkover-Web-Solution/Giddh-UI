@@ -1,5 +1,5 @@
 "use strict"
-homeController = ($scope, $rootScope, getLedgerState, $state, $location) ->
+homeController = ($scope, $rootScope, getLedgerState, $state, $location, localStorageService) ->
 
   $scope.goToLedgerState = () ->
     if getLedgerState.data.shared && getLedgerState.data.firstLogin == false

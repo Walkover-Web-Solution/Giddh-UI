@@ -561,13 +561,13 @@
               <!--<div>-->
                 <!--<switch on="Applied Tax" off="Don't A.T." ng-model="selectedLedger.applyApplicableTaxes" class="wide100" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>-->
               <!--</div>-->
-              <button class="btn btn-sm" ng-click="selectedLedger.isInclusiveTax = !selectedLedger.isInclusiveTax" ng-class="{'btn-primary' : selectedLedger.isInclusiveTax == true, 'btn-default' : selectedLedger.isInclusiveTax == false}">
+              <button class="btn btn-sm" ng-click="selectedLedger.isInclusiveTax = !selectedLedger.isInclusiveTax" ng-class="{'btn-primary' : selectedLedger.isInclusiveTax == true, 'btn-default' : selectedLedger.isInclusiveTax == false}"  ng-if="taxList.length > 0">
                 <span>Inclusive</span>
               </button>
               <!--<label>                -->
                 <!--<input type="checkbox" ng-model="selectedLedger.isInclusiveTax">Inclusive-->
               <!--</label>-->
-              <button class="btn btn-sm" ng-click="selectedLedger.applyApplicableTaxes = !selectedLedger.applyApplicableTaxes" ng-class="{'btn-primary' : selectedLedger.applyApplicableTaxes == true, 'btn-default' : selectedLedger.applyApplicableTaxes == false}" tabindex="0">
+              <button class="btn btn-sm" ng-click="selectedLedger.applyApplicableTaxes = !selectedLedger.applyApplicableTaxes" ng-class="{'btn-primary' : selectedLedger.applyApplicableTaxes == true, 'btn-default' : selectedLedger.applyApplicableTaxes == false}" tabindex="0"  ng-if="taxList.length > 0">
                 <span>Tax as per account</span>
               </button>
               <!--<label>-->
@@ -579,21 +579,21 @@
                 <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'CREDIT'">Cr</span>
                 <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'DEBIT'">Dr</span></label>
             </div>
-            <div class="mrT1 clearfix" style="clear:both">
+            <div class="mrT1 clearfix" style="clear:both" ng-if="taxList.length > 0">
               <hr class="width100">
               <ul class="list-inline pull-left">
                 <li class="tax" ng-repeat="tax in taxList">
                   <div class="checkbox"><label><input type="checkbox" ng-model="tax.isChecked">{{tax.name}}</label></div>
                 </li>
               </ul>
-              <hr  class="width100">
             </div>
+            <hr  class="width100">
           </div>
           <div class="row">
             <div ng-class="{'col-xs-4': !popover.draggable, 'col-xs-2': popover.draggable}">
               <div class="form-group">
                 <!--<label>Voucher Type</label>-->
-<!--                 <select
+                <!--<select
                     class="form-control"
                     name="voucherType"
                     ng-options="item.shortCode as item.name for item in voucherTypeList"
@@ -610,13 +610,13 @@
                 <label style="font-size: 12px;">#{{selectedLedger.voucher.shortCode}} - {{selectedLedger.voucherNo}}</label>
               </div>
             </div>
-            <div ng-class="{'col-xs-4': !popover.draggable, 'col-xs-2': popover.draggable}">
+            <!--<div ng-class="{'col-xs-4': !popover.draggable, 'col-xs-2': popover.draggable}">
               <div class="form-group">
-                <!--<label></label>-->
+                <label></label>
                 <input type="text" name="tag" class="form-control" placeholder="Tag" ng-model="selectedLedger.tag"/>
               </div>
-            </div>
-            <div ng-class="{'col-xs-4': !popover.draggable, 'col-xs-8': popover.draggable}">
+            </div> -->
+            <div ng-class="{'col-xs-8': !popover.draggable, 'col-xs-10': popover.draggable}" style="padding-left:0">
               <!--<div class="form-group" style="margin-bottom:0">-->
                 <!--<label>Voucher no. </label>-->
                 <!--{{selectedLedger.voucher.shortCode}}-{{selectedLedger.voucherNo}}-->

@@ -118,6 +118,19 @@ module.exports = function (grunt) {
           }
         }
       },
+      signUpWebsite: {
+        src: srcDir + 'website/views/signup.html',
+        dest: destDir + 'website/views/signup.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
+      },
       pricingWebsite: {
         src: srcDir + 'website/views/pricing.html',
         dest: destDir + 'website/views/pricing.html',

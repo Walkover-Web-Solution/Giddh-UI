@@ -236,8 +236,12 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 #      console.log(invoice.invoiceDate, moment(new Date(dateDivi[2], dateDivi[1], dateDivi[0])).format('DD-MM-YYYY'))
       invoice.invoiceDateObj = new Date(dateDivi[2], dateDivi[1], dateDivi[0])
       temp = invoice.invoiceNumber.split("-")
-      invoice.invoiceNumberM = temp[0]
-      invoice.invoiceNumberP = temp[1]
+      if temp[0] != "x"
+        invoice.invoiceNumberM = Number(temp[0])
+        invoice.invoiceNumberP = Number(temp[1])
+      else
+        invoice.invoiceNumberM = Number(temp[1])
+        invoice.invoiceNumberP = Number(temp[2])
     )
     $scope.invoices = res.body
     if $scope.invoices.length == 0
