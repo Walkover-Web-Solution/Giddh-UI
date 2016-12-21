@@ -26,14 +26,16 @@
                       <td class="col-xs-4">{{account.currencyCode}}  {{account.amount}}</td>
                       <td class="col-xs-2"><i class="glyphicon glyphicon-refresh" ng-click="refreshBank(account)"></i></td>
                     </tr>
-                    <tr ng-if="account.reconnect" class="db-bnk-account">
+<!--                     <tr ng-if="account.reconnect" class="db-bnk-account">
                       <td class="reconnectDiv text-center col-xs-12">
                         <button class="btn btn-default" ng-click="reconnectBank(account)">Reconnect</button>
                       </td>
-                    </tr>
+                    </tr> -->
                     </tbody>
                   </table>
-
+                  <span class="error-overlay">
+                    
+                  </span>
                 </td>
               </tr>
             </table>

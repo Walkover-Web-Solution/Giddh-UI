@@ -134,7 +134,10 @@
             </thead>
             <tbody>
               <tr ng-repeat="proforma in proformaList.results">
-                <td colspan="2"><a href="" ng-bind="proforma.proformaNumber" ng-click="loadProforma(proforma)"></a></td>
+                <td colspan="2">
+                  <a href="" ng-bind="proforma.proformaNumber" ng-click="loadProforma(proforma)"></a>
+                  <i class="glyphicon glyphicon-save pull-right" ng-click="downloadProforma(proforma)"></i>
+                </td>
                 <td colspan="2" ng-bind="proforma.proformaDate"></td>
                 <td colspan="2">
                                 <span ng-bind="proforma.accountName" ng-if="proforma.accountName.length > 0"></span>
@@ -200,7 +203,7 @@
                 <label>Select Template</label>
                 <select class="form-control" ng-model="create.proformaTemplate" ng-options="temp.name for temp in pTemplateList" ng-change="fetchTemplateData(create.proformaTemplate, 'create')"></select>
               </div>    
-              <button class="btn btn-default btn-success mrT2 mrL1" ng-click="createProforma()">Create</button>
+              <button class="btn btn-default btn-success mrT2 mrL1" ng-click="createProforma('create')">Create</button>
               <button class="btn btn-default btn-success mrT2 mrL1" ng-click="addquickAccount()">Add New Account</button>
               <div class="clearfix"></div>
             </div>

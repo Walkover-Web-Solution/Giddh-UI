@@ -1,6 +1,6 @@
 'use strict'
 
-proformaController = ($scope, $rootScope, localStorageService,invoiceService,settingsService ,$timeout, toastr, $filter, $uibModal,accountService, groupService, $state, companyServices) ->
+proformaController = ($scope, $rootScope, localStorageService,invoiceService,settingsService ,$timeout, toastr, $filter, $uibModal,accountService, groupService, $state, companyServices,FileSaver) ->
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
   $rootScope.cmpViewShow = true
@@ -28,8 +28,15 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   $scope.editStatus = false
   $scope.subtotal = 0
   $scope.selectedTemplate = null
+  $scope.editMode = false
+  $scope.addressList = ''
   ## Get all Proforma ##
   $scope.gettingProformaInProgress = false
+  $scope.popOver = {
+    content: 'Hello, World!',
+    templateUrl: 'proformaDropdown.html',
+    title: 'Title'
+  }
   $scope.getAllProforma = () ->
     @success = (res) ->
       $scope.gettingProformaInProgress = false
@@ -156,16 +163,45 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     pc.getAllProformaByFilter($scope.filters)
 
   $scope.loadProforma = (proforma) ->
+    $scope.currentProforma = proforma
     @success = (res) ->
-      console.log res
+      # res.body.template.htmlData = JSON.parse(res.body.template.htmlData)
+      # $scope.htmlData = res.body.template.htmlData
+      pc.templateVariables = res.body.template.templateVariables
+      pc.htmlData = JSON.parse(res.body.template.htmlData)
+      pc.sectionData = res.body.template.sections
+      pc.checkEditableFields(pc.htmlData.sections)
+      $scope.htmlData = pc.htmlData
+      $scope.transactions = res.body.entries
+      $scope.modalInstance = $uibModal.open(
+        templateUrl: $rootScope.prefixThis+'/public/webapp/invoice2/proforma/prevProforma.html'
+        size: "a4"
+        backdrop: 'static'
+        scope: $scope
+      )
     @failure = (res) ->
-      console.log res
+      toastr.error(res.data.message)
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     data = {}
     data.proforma = proforma.uniqueName
     invoiceService.getProforma(reqParam,data).then(@success, @failure)
 
+  $scope.switchMode = () ->
+    $$this = @
+    $$this.getValues = (elements) ->
+      _.each elements, (elem) ->
+        if elem.type == 'Text' && elem.hasVar && elem.variable.isEditable
+          if typeof(elem.variable.value) == "object"
+            elem.variable.value = elem.variable.value.name
+        else if elem.type == 'Element' && elem.children && elem.children.length > 0
+          $$this.getValues(elem.children)
+    if $scope.editMode
+      _.each $scope.htmlData.sections, (sec) ->
+        if sec.elements.length
+          $$this.getValues(sec.elements)
+      $scope.createProforma('update')
+    $scope.editMode = !$scope.editMode
 
   $scope.deleteProforma = (num, index) ->
     @success = (res) ->
@@ -387,7 +423,6 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
           sec.styles.left = data.leftOfBlock + '%'
           sec.styles.top = data.topOfBlock + '%'
 
-
   $scope.fetchTemplateData = (template, operation) ->
     @success = (res) ->
       pc.templateVariables = res.body.templateVariables
@@ -430,9 +465,9 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         txn.accountName = account.name
         txn.accountUniqueName = account.uniqueName
 
-  $scope.createProforma = () ->
+  $scope.createProforma = (action) ->
     @success = (res) ->
-      toastr.success(res.body)
+      toastr.success(res.status)
 
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -450,7 +485,12 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     reqBody.totalDiscount = $scope.discount || 0
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-    invoiceService.createProforma(reqParam,reqBody).then(@succes,@failure)
+    if action == 'create'
+      invoiceService.createProforma(reqParam,reqBody).then(@succes,@failure)
+    else if action == 'update'
+      reqBody.proforma = $scope.currentProforma.uniqueName
+      reqBody.fields = pc.templateVariables
+      invoiceService.updateProforma(reqParam,reqBody).then(@success, @failure)
 
   pc.entryModel = () ->
     @model = 
@@ -556,6 +596,56 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
 
   $scope.addQuickAccountConfirmFailure = (res) ->
     toastr.error(res.data.message)
+
+  $scope.sendMail = (addressList) ->
+    @success = (res) ->
+      toastr.success(res.body)
+      $scope.showEmailBox = false
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    addresses = addressList.split(',')
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    reqBody = {}
+    reqBody.emailAddresses = addresses
+    reqBody.proformaNumber = $scope.currentProforma.proformaNumber
+    invoiceService.sendMail(reqParam,reqBody).then(@success, @failure)
+
+  pc.b64toBlob = (b64Data, contentType, sliceSize) ->
+    contentType = contentType or ''
+    sliceSize = sliceSize or 512
+    byteCharacters = atob(b64Data)
+    byteArrays = []
+    offset = 0
+    while offset < byteCharacters.length
+      slice = byteCharacters.slice(offset, offset + sliceSize)
+      byteNumbers = new Array(slice.length)
+      i = 0
+      while i < slice.length
+        byteNumbers[i] = slice.charCodeAt(i)
+        i++
+      byteArray = new Uint8Array(byteNumbers)
+      byteArrays.push byteArray
+      offset += sliceSize
+    blob = new Blob(byteArrays, type: contentType)
+    blob
+
+  $scope.downloadProforma = (proforma) ->
+    @success = (res) ->
+      data = pc.b64toBlob(res.body, "application/pdf", 512)
+      blobUrl = URL.createObjectURL(data)
+      FileSaver.saveAs(data, proforma.proformaNumber+".pdf")
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    reqBody = {}
+    reqBody.proformaNumber = proforma.proformaNumber
+    invoiceService.downloadProforma(reqParam, reqBody).then(@success, @failure)
+
 
   $scope.taxTotal = 0
   $scope.$watch('taxes', (newVal, oldVal) ->
