@@ -151,6 +151,19 @@ router.post '/proforma', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.put '/proforma/update', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/proforma/' + req.body.proforma
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+      'Content-Type': 'application/json'
+    data: req.body
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
 router.get '/proforma/templates', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/templates/all'
   args =
@@ -164,7 +177,7 @@ router.get '/proforma/templates', (req, res) ->
     res.send data
 
 router.post '/proforma/get', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/proforma/' + req.body.proforma
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/proforma/' + req.body.proforma 
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -174,5 +187,32 @@ router.post '/proforma/get', (req, res) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
+
+router.post '/proforma/mail', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/proforma/mail'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+      'Content-Type': 'application/json'
+    data: req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/proforma/download', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/proforma/download'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+      'Content-Type': 'application/json'
+    data: req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
 
 module.exports = router

@@ -56,9 +56,21 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         method: 'POST'
         url: '/company/:companyUniqueName/invoices/proforma'
       }
+      updateProforma: {
+        method: 'PUT'
+        url: '/company/:companyUniqueName/invoices/proforma/update'
+      }
       getProforma: {
         method: 'POST'
         url: '/company/:companyUniqueName/invoices/proforma/get'
+      }
+      sendMail: {
+        method: 'POST'
+        url: '/company/:companyUniqueName/invoices/proforma/mail'
+      }
+      downloadProforma: {
+        method: 'POST'
+        url: '/company/:companyUniqueName/invoices/proforma/download'
       }
     })
 
@@ -140,8 +152,23 @@ giddh.serviceModule.service 'invoiceService', ($resource, $q) ->
         companyUniqueName: reqParam.companyUniqueName
       }, data, onSuccess, onFailure))
 
+    updateProforma: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.updateProforma({
+        companyUniqueName: reqParam.companyUniqueName
+      }, data, onSuccess, onFailure))
+
     getProforma: (reqParam,data) ->
       @handlePromise((onSuccess, onFailure) -> Invoice.getProforma({
+        companyUniqueName: reqParam.companyUniqueName
+      },data ,onSuccess, onFailure))
+
+    sendMail: (reqParam,data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.sendMail({
+        companyUniqueName: reqParam.companyUniqueName
+      },data ,onSuccess, onFailure))
+
+    downloadProforma: (reqParam,data) ->
+      @handlePromise((onSuccess, onFailure) -> Invoice.downloadProforma({
         companyUniqueName: reqParam.companyUniqueName
       },data ,onSuccess, onFailure))
 

@@ -3820,6 +3820,10 @@ tr.db-bnk-account > td.reconnectDiv{
   width: 21cm;
   height: 27.1cm; 
 }
+.modal-content .invoice-wrapper-m {
+    background: :transparent;
+    box-shadow: none;
+}
 .invoice-widget{
     height:200px;
     width:200px;
@@ -4205,6 +4209,13 @@ tr.db-bnk-account > td.reconnectDiv{
     outline: 0;
 }
 
+.proforma-particulars tr td input:disabled{
+    background:transparent;
+    border:none;
+    outline: none;
+    box-shadow: none;
+}
+
 .proforma-particulars tr td i.glyphicon-plus{
     right:10px;
     top:8px;
@@ -4230,4 +4241,8 @@ table.proforma-particulars{
 
 .bold{
     font-weight: bold;
+}
+
+.modal-dialog.modal-a4{
+    width:8.5in;
 }
