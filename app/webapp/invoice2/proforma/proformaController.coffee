@@ -379,11 +379,15 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   $scope.getTemplates = () ->
     @success = (res) ->
       $scope.pTemplateList = []
+      index = 0
       _.each res.body, (temp) ->
         if temp.type == "proforma"
           $scope.pTemplateList.push(temp)
-      $scope.create.proformaTemplate = $scope.pTemplateList[0]
-      $scope.fetchTemplateData($scope.pTemplateList[0].uniqueName, 'create')
+      _.each $scope.pTemplateList, (temp, idx) ->
+        if temp.isDefault
+          index = idx
+      $scope.create.proformaTemplate = $scope.pTemplateList[index]
+      $scope.fetchTemplateData($scope.pTemplateList[index], 'create')
     @failure = (res) ->
       toastr.error(res.data.message)
 

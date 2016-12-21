@@ -215,5 +215,19 @@ router.post '/proforma/download', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.put '/proforma/templates/default', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/templates/'+ req.body.templateUniqueName + '/default'
+  console.log hUrl
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+      'Content-Type': 'application/json'
+    data: req.body
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
 
 module.exports = router
