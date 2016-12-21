@@ -248,7 +248,7 @@
                       <div class="pull-right">
                         <ul class="list-unstyled mrT" style="font-size:12px">
                           <li class="bold">Sub Total: {{subtotal}}</li>
-                          <li>Discount: <input type="number" ng-model="discount" style="width:50px;height:20px;"></li>
+                          <!-- <li>Discount: <input type="number" ng-model="discount" style="width:50px;height:20px;"></li> -->
                           <li ng-repeat="tax in taxes" ng-if="taxes.length > 0">{{tax.name}}: {{tax.amount | number:2}}</li>
                           <li class="bold">Total Tax : {{taxTotal | number:2}}</li>
                           <li class="bold">Grand Total: {{subtotal - discount + taxTotal | number:2}}</li>

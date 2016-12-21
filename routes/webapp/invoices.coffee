@@ -139,6 +139,7 @@ router.post '/proforma/link-account', (req, res) ->
     res.send data
 
 router.post '/proforma', (req, res) ->
+  console.log req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/proforma'
   args =
     headers:

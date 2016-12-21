@@ -288,6 +288,8 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     _.each $rootScope.placeholders, (ph) ->
       if template.htmlData.indexOf(ph.name) != -1
         template.variables.push(ph.name)
+      if ph.name == "$accountName"
+        template.variables.push("$accountUniqueName")
 
   $this.formatEditables = (elements) ->
     _.each elements, (elem) ->
