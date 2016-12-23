@@ -577,6 +577,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.$on('openAddManage', () ->
     $(document).find('#AddManage').trigger('click')
   )
+
+  $scope.showAccounts = () ->
+    $rootScope.flyAccounts = true
 #  $scope.addScript()
 
 giddh.webApp.controller 'mainController', mainController
