@@ -4247,6 +4247,9 @@ table.proforma-particulars{
     font-weight: bold;
 }
 
+.widthZero{
+    width: 0px;
+}
 .modal-dialog.modal-a4{
     width:8.5in;
 }

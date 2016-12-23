@@ -22,6 +22,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     operatingCost: "operatingcost"
     otherIncome: "otherincome"
   }
+  $rootScope.flyAccounts = true
   $rootScope.$stateParams = {}
 #  $rootScope.prefixThis = ""
   $rootScope.cmpViewShow = true

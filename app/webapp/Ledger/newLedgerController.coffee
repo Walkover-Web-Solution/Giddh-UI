@@ -529,6 +529,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #$scope.filterLedgers(res.body.ledgers)
     $scope.sortTransactions(res.body.ledgers, 'entryDate')
     $scope.ledgerData = res.body
+    $rootScope.flyAccounts = false
     $scope.countTotalTransactions()
     $scope.paginateledgerData(res.body.ledgers)
     $scope.showLoader = false
