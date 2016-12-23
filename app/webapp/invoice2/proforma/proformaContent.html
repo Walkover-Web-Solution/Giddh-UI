@@ -237,7 +237,7 @@
                               <input type="text" class="" ng-model="txn.description">
                             </td>
                             <td class="pad0 col-xs-3 pos-rel">
-                              <input type="number" class="" ng-model="txn.amount" ng-change="calcSubtotal()" ng-model-options="{debounce:1000}">
+                              <input type="number" class="" ng-model="txn.amount" ng-change="calcSubtotal()" ng-model-options="{debounce:1000}" min="0">
                               <i class="glyphicon glyphicon-plus pos-abs" ng-click="addParticular(transactions, 'txn')"></i>
                               <i class="glyphicon glyphicon-minus pos-abs" ng-click="removeParticular(transactions, $index, txn)"
                               ng-if="$index != 0"></i>
@@ -253,7 +253,7 @@
                           <li>
                             Discount: 
                             <input type="text" ng-model="discount.account" uib-typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in getDiscountAccounts() | filter:$viewValue | limitTo:5">
-                            <input type="number" ng-model="discount.amount" style="width:50px;height:20px;">
+                            <input type="number" ng-model="discount.amount" style="width:50px;height:20px;" min="{{taxTotal}}">
                           </li>
                           <li class="bold">Grand Total: {{subtotal + taxTotal - discount.amount | number:2}}</li>
                         </ul>

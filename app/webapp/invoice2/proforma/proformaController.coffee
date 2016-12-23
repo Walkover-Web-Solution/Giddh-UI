@@ -521,10 +521,10 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         acUnq.key = "$accountUniqueName"
         acUnq.value = ""
         reqBody.fields.push(acUnq)
-
-    reqBody.commonDiscount = {}
-    reqBody.commonDiscount.amount = $scope.discount.amount || null
-    reqBody.commonDiscount.accountUniqueName = $scope.discount.account.uniqueName || ''
+    if $scope.discount.amount && $scope.discount.account
+      reqBody.commonDiscount = {}
+      reqBody.commonDiscount.amount = $scope.discount.amount
+      reqBody.commonDiscount.accountUniqueName = $scope.discount.account.uniqueName
     reqBody.updateAccountDetails = false
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
@@ -792,6 +792,10 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       $scope.taxTotal = 0
       _.each newVal, (tax) ->
         $scope.taxTotal += tax.amount
+  )
+  $scope.$watch('subtotal', (newVal, oldVal) ->
+    if newVal < 0
+      toastr.warning("Subtotal cannot be negative, please adjust your discount amount.")
   )
 
 giddh.webApp.controller 'proformaController', proformaController

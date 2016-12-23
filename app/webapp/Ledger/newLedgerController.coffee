@@ -745,7 +745,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.selectedLedger.index = index
     #if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
     $scope.checkCompEntry(ledger)
-    $scope.blankCheckCompEntry(ledger)
+    #$scope.blankCheckCompEntry(ledger)
     $scope.isTransactionContainsTax(ledger)
     e.stopPropagation() 
 
