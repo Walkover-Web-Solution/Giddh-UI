@@ -514,18 +514,23 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         $$this.getEditables(sec.elements)
     fields
 
-  pc.processAccountDetails = () ->
-    _.each $scope.transactions, (txn) ->
-      if typeof(txn.accountUniqueName) == 'object'
-        account = txn.accountUniqueName
-        txn.accountName = account.name
-        txn.accountUniqueName = account.uniqueName
+  # pc.processAccountDetails = () ->
+  #   _.each $scope.transactions, (txn) ->
+  #     if typeof(txn.accountUniqueName) == 'object'
+  #       account = txn.accountUniqueName
+  #       txn.accountName = account.name
+  #       txn.accountUniqueName = account.uniqueName
 
   pc.removeBlankTrnsactions = (transactions) ->
     txns = []
     _.each transactions, (txn) ->
       if txn.accountUniqueName != ''
         txns.push(txn)
+    _.each txns, (txn) ->
+      if typeof(txn.accountUniqueName) == 'object'
+        account = txn.accountUniqueName
+        txn.accountName = account.name
+        txn.accountUniqueName = account.uniqueName
     return txns
 
   $scope.createProforma = (action) ->
@@ -543,8 +548,9 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     reqBody = {}
     reqBody.templateUniqueName = $scope.selectedTemplate
     reqBody.fields = pc.buildFields($scope.htmlData.sections)
-    pc.processAccountDetails()
-    reqBody.entries = pc.removeBlankTrnsactions($scope.transactions)
+    #pc.processAccountDetails()
+    txns = angular.copy($scope.transactions)
+    reqBody.entries = pc.removeBlankTrnsactions(txns)
     _.each reqBody.entries,(entry) ->
       delete entry.appliedTaxes
     _.each reqBody.fields, (field) ->
@@ -638,7 +644,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         pc.calcTax(txn, prevTxn.amount, 'txn')
 
   pc.calcTax = (txn, amount, condition) ->
-    if txn && txn.appliedTaxes.length > 0
+    if txn && txn.appliedTaxes && txn.appliedTaxes.length > 0
       _.each txn.appliedTaxes, (aTax) ->
         tax = _.findWhere(pc.taxList, {uniqueName:aTax})
         ctax = pc.calcTaxAmount(tax, txn,amount)
@@ -652,12 +658,18 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
             $scope.taxes.push(ctax)
 
   $scope.taxes = []
+  pc.returnDateAsString = (date) ->
+    date = date.split('-')
+    date = date[1]+'-'+date[0]+'-'+date[2]
+    return date
+
   pc.calcTaxAmount = (tax, txn, amount) ->
+    proformaDate = _.findWhere(pc.templateVariables, {key:"$proformaDate"})
+    proformaDate = pc.returnDateAsString(proformaDate.value)
     ctax = null
     _.each tax.taxDetail, (det) ->
-      date = det.date.split('-')
-      date = date[1]+'-'+date[0]+'-'+date[2]
-      date = Math.round(new Date(date).getTime()/1000)
+      date = pc.returnDateAsString(det.date)
+      date = Math.round(new Date(proformaDate).getTime()/1000)
       if date <= Math.round(new Date().getTime()/1000)
         ctax = {}
         ctax.amount = det.taxValue/100 * amount
@@ -786,7 +798,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     $$this = @
     $$this.getEditables = (elements) ->
       _.each elements, (elem) ->
-        if elem.type == 'Text' && elem.hasVar && elem.variable.isEditable
+        if elem.type == 'Text' && elem.hasVar && elem.variable.isEditable || elem.type == 'Text' && elem.hasVar && elem.variable.key == "$accountUniqueName"
           switch elem.variable.key
             when "$accountAddress"
               elem.variable.value = details.address 
@@ -803,7 +815,9 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
             when "$accountPinCode"
               elem.variable.value = details.pincode 
             when "$accountAttentionTo"
-              elem.variable.value = details.attentionTo 
+              elem.variable.value = details.attentionTo
+            when "$accountUniqueName"
+              elem.variable.value = details.uniqueName
 
         else if elem.type == 'Element' && elem.children && elem.children.length > 0
           $$this.getEditables(elem.children)

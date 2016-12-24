@@ -245,7 +245,7 @@
                               <input type="text" class="" ng-model="txn.description">
                             </td>
                             <td class="pad0 col-xs-3 pos-rel">
-                              <input type="number" class="" ng-model="txn.amount" ng-change="calcSubtotal()" ng-model-options="{debounce:1000}" min="0">
+                              <input type="text" class="" numbers-only ng-model="txn.amount" ng-change="calcSubtotal()">
                               <i class="glyphicon glyphicon-plus pos-abs" ng-click="addParticular(transactions, 'txn')"></i>
                               <i class="glyphicon glyphicon-minus pos-abs" ng-click="removeParticular(transactions, $index, txn)"
                               ng-if="$index != 0"></i>
