@@ -21,6 +21,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   $scope.showFilters = false
   $scope.proformaList = []
   $scope.pTemplateList = []
+  $scope.sundryDebtors = []
   pc = @
   $scope.count = {}
   $scope.count.set = [10,15,30,35,40,45,50]
@@ -446,6 +447,36 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         $scope.discount.accounts.push(acc)
     $scope.discount.accounts
 
+  # $scope.getRevenueAccounts = () ->
+  #   accounts = []
+  #   _.each $rootScope.fltAccntListPaginated, (acc) ->
+  #     isDiscount = false
+  #     if acc.parentGroups.length > 0
+  #       _.each acc.parentGroups, (pg) ->
+  #         if pg.uniqueName == $rootScope.groupName.revenueFromOperations
+  #           isDiscount = true
+  #     if isDiscount
+  #       accounts.push(acc)
+  #   accounts
+
+  $scope.revenueAccounts = []
+  $scope.getRevenueAccounts = (query) ->
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      q: query
+      page: 1
+      count: 0
+    }
+    datatosend = {
+      groupUniqueNames: [$rootScope.groupName.revenueFromOperations, 'discount']
+    }
+    return groupService.postFlatAccList(reqParam,datatosend).then(
+      (res) ->
+        $scope.revenueAccounts = res.body.results 
+      (res) ->
+        return []
+    )
+
   $scope.fetchTemplateData = (template, operation) ->
     @success = (res) ->
       pc.templateVariables = res.body.templateVariables
@@ -490,6 +521,13 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         txn.accountName = account.name
         txn.accountUniqueName = account.uniqueName
 
+  pc.removeBlankTrnsactions = (transactions) ->
+    txns = []
+    _.each transactions, (txn) ->
+      if txn.accountUniqueName != ''
+        txns.push(txn)
+    return txns
+
   $scope.createProforma = (action) ->
     $this = @
     $this.success = (res) ->
@@ -497,13 +535,16 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       $scope.fetchTemplateData($scope.create.proformaTemplate, 'create')
       $scope.transactions = []
       $scope.transactions.push(new pc.entryModel())
+      $scope.subtotal = 0
+      $scope.taxes = []
+      $scope.taxTotal = 0
     $this.failure = (res) ->
       toastr.error(res.data.message)
     reqBody = {}
     reqBody.templateUniqueName = $scope.selectedTemplate
     reqBody.fields = pc.buildFields($scope.htmlData.sections)
     pc.processAccountDetails()
-    reqBody.entries = $scope.transactions
+    reqBody.entries = pc.removeBlankTrnsactions($scope.transactions)
     _.each reqBody.entries,(entry) ->
       delete entry.appliedTaxes
     _.each reqBody.fields, (field) ->
@@ -516,10 +557,10 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
           field.value = field.value.name
         else
           toastr.error('Account Name cannot be blank')
-      else if field.key == "$accountName" && typeof(field.value) == "string" && field.value != null
+      else if field.key == "$accountName" && typeof(field.value) == "string" && field.value != null && typeof(pc.selectedAccountDetails) == 'object'
         acUnq = {}
         acUnq.key = "$accountUniqueName"
-        acUnq.value = ""
+        acUnq.value = pc.selectedAccountDetails.uniqueName
         reqBody.fields.push(acUnq)
     if $scope.discount.amount && $scope.discount.account
       reqBody.commonDiscount = {}
@@ -622,11 +663,24 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         ctax.amount = det.taxValue/100 * amount
         ctax.name = tax.name
     ctax
-    
-  $scope.getTaxes = (account, txn) ->
-    txn.appliedTaxes = account.applicableTaxes
-    if txn.amount != null && txn.amount > 0
-      $scope.calcSubtotal()
+  
+  pc.isDiscountAccount = (account) ->
+    isDiscount = false
+    if account.parentGroups.length > 0
+      _.each account.parentGroups, (pg) ->
+        if pg.uniqueName == 'discount'
+          isDiscount = true
+    return isDiscount
+
+  $scope.getTaxes = (account, txn, idx) ->
+    if pc.isDiscountAccount(account) && idx == 0
+      $scope.transactions = []
+      $scope.transactions.push(new pc.entryModel())
+      toastr.error('First account can not be discount account')
+    else
+      txn.appliedTaxes = account.applicableTaxes
+      if txn.amount != null && txn.amount > 0
+        $scope.calcSubtotal()
 
   $scope.addquickAccount = () ->
     $scope.newAccountModel.group = ''
@@ -786,6 +840,16 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
           if field.value != pc.selectedAccountDetails.attentionTo
             $scope.enableCreate = false
 
+  pc.createSundryDebtorsList = () ->
+    _.each $rootScope.fltAccntListPaginated, (acc) ->
+      isSd = false
+      if acc.parentGroups.length > 0
+        _.each acc.parentGroups, (pg) ->
+          if pg.uniqueName == $rootScope.groupName.sundryDebtors
+            isSd = true
+      if isSd
+        $scope.sundryDebtors.push(acc)
+
   $scope.taxTotal = 0
   $scope.$watch('taxes', (newVal, oldVal) ->
     if newVal != oldVal
@@ -798,4 +862,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       toastr.warning("Subtotal cannot be negative, please adjust your discount amount.")
   )
 
+  $rootScope.$on('account-list-updated', ()->
+    pc.createSundryDebtorsList()
+  )
 giddh.webApp.controller 'proformaController', proformaController
