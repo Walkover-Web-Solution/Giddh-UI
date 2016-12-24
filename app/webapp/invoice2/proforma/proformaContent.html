@@ -231,7 +231,15 @@
                         <tbody>
                           <tr ng-repeat="txn in transactions">
                             <td class="pad0 col-xs-2">
-                              <input type="text" class="" ng-model="txn.accountUniqueName" uib-typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | filter:$viewValue | limitTo:5" typeahead-on-select="getTaxes(txn.accountUniqueName, txn)">
+                            <!--   <input type="text" class="" ng-model="txn.accountUniqueName" uib-typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in getRevenueAccounts($viewValue) | filter:$viewValue | limitTo:5" typeahead-on-select="getTaxes(txn.accountUniqueName, txn)"> -->
+                              <ui-select ng-model="txn.accountUniqueName" theme="bootstrap" on-select="getTaxes($item, txn, $index)" append-to-body="false">
+                                  <ui-select-match>
+                                      <span>{{$select.selected.name}}</span>
+                                  </ui-select-match>
+                                  <ui-select-choices repeat="account in revenueAccounts | limitTo:5" refresh="getRevenueAccounts($select.search)">
+                                      <span ng-bind="account.name"></span>
+                                  </ui-select-choices>
+                              </ui-select>
                             </td>
                             <td class="pad0 col-xs-7">
                               <input type="text" class="" ng-model="txn.description">
@@ -247,7 +255,7 @@
                       </table>
                       <div class="pull-right">
                         <ul class="list-unstyled mrT" style="font-size:12px">
-                          <li class="bold">Sub Total: {{subtotal}}</li>
+                          <li class="bold">Sub Total: {{subtotal | number:2}}</li>
                           <li ng-repeat="tax in taxes" ng-if="taxes.length > 0">{{tax.name}}: {{tax.amount | number:2}}</li>
                           <li class="bold">Total Tax : {{taxTotal | number:2}}</li>
                           <li>
@@ -281,7 +289,7 @@
                       ng-model="element.variable.value"
                       ng-if="element.type=='Text' && section.type == 'String' && element.hasVar && element.variable.isEditable && element.variable.key == '$accountName'"  
                       ng-class="{isEditable:element.variable.isEditable}"
-                      uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue | limitTo:5"
+                      uib-typeahead="account as account.name for account in sundryDebtors | filter:$viewValue | limitTo:5"
                       typeahead-on-select="setSelectedAccount(element.variable.value)"
                       />
 
@@ -302,7 +310,7 @@
                           ng-model="elem.variable.value"
                           ng-if="elem.type=='Text' && section.type == 'String' && elem.hasVar && elem.variable.isEditable && elem.variable.key == '$accountName'"  
                           ng-class="{isEditable:elem.variable.isEditable}"
-                          uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue | limitTo:5"
+                          uib-typeahead="account as account.name for account in sundryDebtors | filter:$viewValue | limitTo:5"
                           typeahead-on-select="setSelectedAccount(elem.variable.value)"
                         />
                         <span ng-if="elem.type=='Element' && elem.children.length > 0" ng-repeat="ele in elem.children" ng-class="{bold:ele.tagName=='strong',italic:ele.tagName=='em',font20:ele.tagName=='h1',hasVar:ele.hasVar}" ng-style="ele.attributes.style">
@@ -321,7 +329,7 @@
                             ng-model="ele.variable.value"
                             ng-if="ele.type=='Text' && section.type == 'String' && ele.hasVar && ele.variable.isEditable && ele.variable.key == '$accountName'"  
                             ng-class="{isEditable:ele.variable.isEditable}"
-                            uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue | limitTo:5"
+                            uib-typeahead="account as account.name for account in sundryDebtors | filter:$viewValue | limitTo:5"
                             typeahead-on-select="setSelectedAccount(ele.variable.value)"
                           />
                           <span ng-if="ele.type=='Element' && ele.children.length > 0" ng-repeat="el in ele.children" ng-class="{bold:el.tagName=='strong',italic:el.tagName=='em',font20:el.tagName=='h1',hasVar:el.hasVar}"  ng-style="el.attributes.style">
@@ -340,7 +348,7 @@
                               ng-model="el.variable.value"
                               ng-if="el.type=='Text' && section.type == 'String' && el.hasVar && el.variable.isEditable && el.variable.key == '$accountName'" 
                               ng-class="{isEditable:el.variable.isEditable}"
-                              uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue | limitTo:5"
+                              uib-typeahead="account as account.name for account in sundryDebtors | filter:$viewValue | limitTo:5"
                               typeahead-on-select="setSelectedAccount(el.variable.value)"
                             />
                             <span ng-if="el.type == 'Element' && el.children.length > 0" ng-repeat="e in el.children" ng-class="{bold:e.tagName=='strong',italic:e.tagName=='em',font20:e.tagName=='h1',hasVar:e.hasVar}"  ng-style="e.attributes.style">
@@ -359,7 +367,7 @@
                                     ng-model="e.variable.value"
                                     ng-if="e.type=='Text' && section.type == 'String' && e.hasVar && e.variable.isEditable && e.variable.key == '$accountName'" 
                                     ng-class="{isEditable:e.variable.isEditable}"
-                                    uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue | limitTo:5"
+                                    uib-typeahead="account as account.name for account in sundryDebtors | filter:$viewValue | limitTo:5"
                                     typeahead-on-select="setSelectedAccount(e.variable.value)"
                                   />
                             </span>

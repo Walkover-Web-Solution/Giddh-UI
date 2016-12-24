@@ -161,7 +161,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       uniqueName:"current_assets"
     }
     result = groupService.matchAndReturnGroupObj(item, res.body)
-    $rootScope.flatGroupsList = groupService.flattenGroup([result], [])
+    #$rootScope.flatGroupsList = groupService.flattenGroup([result], [])
     #$scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
     $rootScope.canChangeCompany = true
     #$scope.showAccountList = true

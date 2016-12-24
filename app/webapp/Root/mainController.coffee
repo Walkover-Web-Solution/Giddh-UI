@@ -464,6 +464,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.getFlatAccountListListSuccess = (res) ->
     $scope.workInProgress = false
     $rootScope.fltAccntListPaginated = res.body.results
+    $rootScope.$emit('account-list-updated')
 #    $rootScope.fltAccountLIstFixed = $rootScope.fltAccntListPaginated
     $rootScope.flatAccList.limit = 5
     
