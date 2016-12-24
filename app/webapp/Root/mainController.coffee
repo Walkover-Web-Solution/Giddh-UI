@@ -22,6 +22,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     operatingCost: "operatingcost"
     otherIncome: "otherincome"
   }
+  $rootScope.flyAccounts = true
   $rootScope.$stateParams = {}
 #  $rootScope.prefixThis = ""
   $rootScope.cmpViewShow = true
@@ -577,6 +578,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.$on('openAddManage', () ->
     $(document).find('#AddManage').trigger('click')
   )
+
+  $scope.showAccounts = () ->
+    $rootScope.flyAccounts = true
 #  $scope.addScript()
 
 giddh.webApp.controller 'mainController', mainController

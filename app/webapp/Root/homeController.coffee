@@ -18,6 +18,5 @@ homeController = ($scope, $rootScope, getLedgerState, $state, $location, localSt
 
   $rootScope.setActiveFinancialYear(getLedgerState.data.activeFinancialYear)
 
-
 #init angular app
 giddh.webApp.controller 'homeController', homeController

@@ -1,33 +1,4 @@
 <div>
-  <div class="pdT1 pdB1 form-inline">
-
-    <div ng-hide="canViewSpecificItems">
-      <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add &amp; Manage
-      </button>
-    </div>
-
-
-    <div class="form-group">
-      <div class="input-group">
-        
-        <div class="input-group-addon">
-          <i class="glyphicon glyphicon-search"></i>
-        </div>
-
-        <!-- <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList');" ng-change="checkLength(acntSrch)" ng-model-options="{debounce: 200}"> -->
-
-        <input id="accountSearch" type="text" name="searchGroup" class="form-control" ng-model="search.acnt" placeholder="Search accounts" ng-change="searchGrpWithAccounts(search.acnt)" ng-model-options="{debounce:1000}">
-        <div ng-hide="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(true)" tooltip-placement="right" uib-tooltip="Expand all" >
-          <i class="glyphicon glyphicon-list"></i>
-        </div>
-
-        <div ng-show="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(false)" tooltip-placement="right" uib-tooltip="Collapse all">
-          <i class="glyphicon glyphicon-menu-hamburger"></i>
-        </div>
-      </div>
-    </div>
-  </div>
   <!-- searchbar end -->
   <div class="pdL1 pdR1 mrB1" ng-if="flatAccntWGroupsList.length == 0 && showAccountList && !noGroups ">
     <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{::selectedCompany.name}}</strong> <a
