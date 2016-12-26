@@ -4253,3 +4253,11 @@ table.proforma-particulars{
 .modal-dialog.modal-a4{
     width:8.5in;
 }
+
+#intercom-container .intercom-launcher-frame{
+    left: 20px !important;
+}
+
+#intercom-container .intercom-messenger-frame{
+    left: 20px !important;
+}
