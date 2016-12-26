@@ -1682,3 +1682,11 @@ button.toast-close-button {
 .phone-login .intl-tel-input{
   width:100%;
 }
+
+#intercom-container .intercom-launcher-frame{
+    left: 20px !important;
+}
+
+#intercom-container .intercom-messenger-frame{
+    left: 20px !important;
+}
