@@ -3,18 +3,14 @@
   <div class="row">
         <div class="pdT1 pdB1 form-inline col-xs-2">
 
-            <div ng-hide="canViewSpecificItems">
-                <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add &amp; Manage
-                </button>
-            </div>
+
 
 
             <div class="form-group">
                 <div class="input-group">
 
                     <div class="input-group-addon">
-                        <i class="glyphicon glyphicon-search"></i>
+                        <i class="glyphicon" ng-class="{'glyphicon-plus' : canManageComp, 'glyphicon-search' : !canManageComp}" ng-click="goToManageGroups();"></i>
                     </div>
 
                     <!-- <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList');" ng-change="checkLength(acntSrch)" ng-model-options="{debounce: 200}"> -->

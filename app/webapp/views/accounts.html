@@ -1,4 +1,13 @@
-<div>
+<div class="row">
+    <div class="pdT1 pdB1 form-inline col-xs-12">
+        <div ng-hide="canViewSpecificItems">
+            <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
+                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add &amp; Manage
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row pdL1">
   <!-- searchbar end -->
   <div class="pdL1 pdR1 mrB1" ng-if="flatAccntWGroupsList.length == 0 && showAccountList && !noGroups ">
     <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{::selectedCompany.name}}</strong> <a

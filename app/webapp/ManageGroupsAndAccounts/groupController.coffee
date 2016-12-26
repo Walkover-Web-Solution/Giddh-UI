@@ -113,6 +113,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.goToManageGroups =() ->
 #    $scope.fltAccntListPaginated = []
 #    $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+    if !$rootScope.canManageComp
+      return
     $scope.getFlatAccountListCount5($rootScope.selectedCompany.uniqueName)
     if _.isEmpty($rootScope.selectedCompany)
       toastr.error("Select company first.", "Error")
