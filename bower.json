@@ -16,7 +16,7 @@
   "dependencies": {
     "bootstrap": "~3.3.6",
     "jquery": "~2.0.3",
-    "underscore": "~1.5.2",
+    "underscore": "~1.8.3",
     "modernizr": "~2.6.2",
     "satellizer": "~0.12.1",
     "angular": "~1.5.6",
