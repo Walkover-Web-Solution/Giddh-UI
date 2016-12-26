@@ -1579,6 +1579,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       $('.popover').remove()
 
 
+#  $(document).on 'click', (e) ->
+#    $timeout (->
+#      $rootScope.flyAccounts = false
+#    ), 100
+
+
   $rootScope.$emit('catchBreadcumbs', $scope.accountToShow)
 
 giddh.webApp.controller 'newLedgerController', newLedgerController
