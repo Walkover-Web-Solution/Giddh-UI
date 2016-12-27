@@ -649,8 +649,8 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
 
   $scope.removeParticular = (transactions, index, txn) ->
     transactions = transactions.splice(index, 1)
-    #$scope.subtotal -= Number(txn.amount)
     $scope.calcSubtotal()
+    return 0
 
   $scope.calcSubtotal = () ->
     $scope.subtotal = 0
