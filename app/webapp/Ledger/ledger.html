@@ -163,7 +163,7 @@
           </section>
           <!-- external ledger code end here -->
 
-          <div class="clearfix ledger-container" ng-class="{'ledger-container-w':showPanel}" cover-page>
+          <div class="clearfix ledger-container" ng-class="{'ledger-container-w paddingTop200':showPanel && flyAccounts, 'ledger-container-w paddingTop120': showPanel && !flyAccounts}" cover-page>
             <!--ledger table head 1-->
             <table class="col-xs-12 ledger-head">
               <thead>
