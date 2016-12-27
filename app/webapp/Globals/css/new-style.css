@@ -4262,6 +4262,10 @@ table.proforma-particulars{
     left: 20px !important;
 }
 
+#intercom-container .intercom-borderless-frame{
+    left: 0px !important;
+}
+
 .marginTop{
     margin-top: -54px;
 }
