@@ -2927,7 +2927,14 @@ ul.pills li {
     clear: both;
     overflow: hidden;
     position: relative;
+
+}
+
+.paddingTop200{
     padding-top:200px !important;
+}
+.paddingTop120{
+    padding-top:120px !important;
 }
 
 .ledger-container table th {
