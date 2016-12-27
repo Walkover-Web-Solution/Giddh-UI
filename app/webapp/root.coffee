@@ -33,6 +33,8 @@ giddh.webApp = angular.module("giddhWebApp",
     "mgo-angular-wizard"
     "googlechart"
     "ngFileSaver"
+    "gridster"
+    "ui.tinymce"
   ]
 )
 
@@ -42,6 +44,8 @@ giddh.webApp.config (localStorageServiceProvider) ->
 
 giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   $urlRouterProvider.otherwise('/home')
+  # $rootScope.prefixThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
+  appendThis = ""
   $stateProvider.state('/home',
     url: '/home'
     resolve: {
@@ -90,31 +94,31 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   )
   .state('Reports',
     url: '/reports'
-    templateUrl: '/public/webapp/Reports/reports.html',
+    templateUrl: appendThis+'/public/webapp/Reports/reports.html',
     controller: 'reportsController',
     params: {'frmDt': null, 'toDt': null, 'type': null}
   )
   .state('audit-logs',
     url: '/audit-logs'
-    templateUrl: '/public/webapp/AuditLogs/audit-logs.html',
+    templateUrl: appendThis+'/public/webapp/AuditLogs/audit-logs.html',
     controller:'logsController'
   )
   .state('search',
     url: '/search'
-    templateUrl: '/public/webapp/Search/searchContent.html'
+    templateUrl: appendThis+'/public/webapp/Search/searchContent.html'
     controller: 'searchController'
   )
   .state('invoice',
     url: ''
     abstract: true
-    templateUrl: '/public/webapp/views/home.html'
+    templateUrl: appendThis+'/public/webapp/views/home.html'
     controller: 'invoiceController'
   )
   .state('invoice.accounts',
     url: '/invoice'
     views:{
       'accounts':{
-        templateUrl: '/public/webapp/Invoice/invoiceAccounts.html'
+        templateUrl: appendThis+'/public/webapp/Invoice/invoiceAccounts.html'
       }
       'rightPanel':{
         abstract:true
@@ -126,12 +130,12 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   )
   .state('invoice.accounts.invoiceId',
     url: '/:invId'
-    templateUrl: '/public/webapp/Invoice/invoiceContent.html'
+    templateUrl: appendThis+'/public/webapp/Invoice/invoiceContent.html'
   )
   .state('company'
     url: ''
     abstract: true
-    templateUrl: '/public/webapp/views/home.html'
+    templateUrl: appendThis+'/public/webapp/views/home.html'
     controller:'groupController'
   )
   .state('company.content',
@@ -153,11 +157,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/manage'
     views:{
       'accountsList':{
-        templateUrl: '/public/webapp/views/accounts.html'
+        templateUrl: appendThis+'/public/webapp/views/accounts.html'
         #template: "<div>manage page</div>"
       }
       'rightPanel':{
-        templateUrl: '/public/webapp/ManageCompany/manageCompany.html'
+        templateUrl: appendThis+'/public/webapp/ManageCompany/manageCompany.html'
       }
     }
   )
@@ -167,11 +171,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     # controller: 'userController'
     views:{
       'accountsList':{
-        templateUrl: '/public/webapp/views/accounts.html'
+        templateUrl: appendThis+'/public/webapp/views/accounts.html'
         #template: "<div>user page</div>"
       }
       'rightPanel':{
-        templateUrl: '/public/webapp/UserDetails/userDetails.html'
+        templateUrl: appendThis+'/public/webapp/UserDetails/userDetails.html'
         controller: 'userController'
       }
     }
@@ -180,10 +184,10 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/trial-balance-and-profit-loss',
     views:{
       'accountsList':{
-        templateUrl: '/public/webapp/views/accounts.html'
+        templateUrl: appendThis+'/public/webapp/views/accounts.html'
       }
       'rightPanel':{
-        templateUrl: '/public/webapp/Tbpl/tbpl.html'
+        templateUrl: appendThis+'/public/webapp/Tbpl/tbpl.html'
         controller: 'tbplController'
       }
     }
@@ -192,17 +196,18 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/ledger/:unqName'
     views:{
       'accountsList':{
-        templateUrl: '/public/webapp/views/accounts.html'
+        templateUrl: appendThis+'/public/webapp/views/accounts.html'
       }
       'rightPanel':{
-        templateUrl: '/public/webapp/Ledger/ledger.html'
+        templateUrl: appendThis+'/public/webapp/Ledger/ledger.html'
         controller: 'newLedgerController'
       }
     }
   )
   .state('dashboard',
     url: '/dashboard'
-    templateUrl: '/public/webapp/Dashboard/dashboard.html'
+    templateUrl: appendThis+'/public/webapp/Dashboard/dashboard.html'
+    controller: "dashboardController"
   )
   .state('sindhu',
     url: '/sindhu'
@@ -211,8 +216,36 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   )
   .state('/thankyou',
     url: '/thankyou'
-    templateUrl: '/public/webapp/views/thanks.html'
+    templateUrl: appendThis+'/public/webapp/views/thanks.html'
     controller: 'thankyouController'
+  )
+  .state('proforma',
+    url: ''
+    abstract: true
+    templateUrl: appendThis+'/public/webapp/views/home.html'
+    controller: 'proformaController'
+  )
+  .state('proforma.accounts',
+    url: '/proforma'
+    views:{
+      'accounts':{
+        templateUrl: appendThis+'/public/webapp/invoice2/proforma/proformaAccounts.html'
+      }
+      'rightPanel':{
+        abstract:true
+        templateUrl: appendThis+'/public/webapp/invoice2/proforma/proformaContent.html'
+      }
+    }
+  )
+  .state('settings',
+    url: '/settings'
+    templateUrl: appendThis+'/public/webapp/Settings/settings.html'
+    controller: 'settingsController'
+  )
+  .state('invoice2',
+    url: '/invoice2'
+    templateUrl: appendThis + '/public/webapp/invoice2/invoice2.html'
+    controller: 'invoice2Controller'
   )
   $locationProvider.html5Mode(false)
   return
@@ -228,14 +261,23 @@ giddh.webApp.run [
   'DAServices'
   'groupService'
   ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService) ->
-    $rootScope.$state = $state
-    $rootScope.$stateParams = $stateParams
+    
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
       $rootScope.showLedgerBox = false
       if _.isEmpty(toParams)
         $rootScope.selAcntUname = undefined
     )
 
+    $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+      user = localStorageService.get('_userDetails')
+      window.dataLayer.push({
+        event: 'giddh.pageView',
+        attributes: {
+          route: $location.path()
+        },
+        userId: user.uniqueName
+      });
+    )
 #    # check IE browser version
 #    $rootScope.GetIEVersion = () ->
 #      ua = window.navigator.userAgent
@@ -263,11 +305,15 @@ giddh.webApp.run [
 #      win.close()
 #
 #   $rootScope.firstLogin = true
-
+  
     $rootScope.$on('companyChanged', ->
       DAServices.ClearData()
       localStorageService.remove("_ledgerData")
       localStorageService.remove("_selectedAccount")
+    )
+    $rootScope.$on('company-changed', (event, changeData)->
+      if changeData.type == "CHANGE"
+        $state.go('company.content.manage')
     )
     $rootScope.canChangeCompany = false
 #    $rootScope.flatAccList = {
@@ -343,7 +389,7 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$t
           isError = responseError.data.indexOf("`value` required in setHeader")
           isAuthKeyError = responseError.data.indexOf("Auth-Key")
           #if Auth-Key Error found, redirect to login
-          if isError != -1 and isAuthKeyError != -1
+          if isAuthKeyError != -1
             toastr.error('Your Session has Expired, Please Login Again.')
             $timeout ( ->
               window.location.assign('/login')

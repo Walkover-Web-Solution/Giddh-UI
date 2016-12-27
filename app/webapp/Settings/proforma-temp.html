@@ -1,0 +1,134 @@
+<div class="pd2" ng-controller="settingsProformaController as ctrl">
+	<div class="clearfix mrB2 mrT1">
+		<button ng-click="ctrl.showAddTemplate()" class="btn btn-primary" ng-class="{'btn-primary':!ctrl.showTemplate, 'btn-default': ctrl.showTemplate}"><span ng-if="!ctrl.showTemplate">Add New Template</span><span ng-if="ctrl.showTemplate">Back</span></button>
+	</div>
+	<div ng-if="!ctrl.showTemplate" class="clearfix">
+		<div class="col-xs-3" ng-repeat="value in ctrl.templateList" ng-if="value.type == 'proforma'">
+			<a href="javascript:void(0)" class="thumbnail" style="min-height:225px;">
+				<div class="caption">
+					<label>Template for {{value.type}}</label>
+					<h3 class="lead alC" ng-bind-html="value.name"></h3>
+					<p>
+						<button class="btn btn-default btn-block" ng-click="ctrl.getTemplate(value, 'update')" ng-disabled="value.isFixed">Edit</button>
+						<button class="btn btn-danger btn-block" ng-click="ctrl.deleteTemplate(value)" ng-disabled="value.isDefault || value.isFixed">Delete</button>
+					<div class="mrT1 alC" ng-show="!value.isDefault">
+						<div ng-click="ctrl.setDefTemp(value)">
+							<switch name="setAsDefault" on="Default" off="Off" class="wide" ng-model="value.isDefault"></switch>
+						</div>
+					</div>
+					<div class="mrT1 alC" ng-show="value.isDefault">
+						<h1 style="font-size:28px">Default</h1>
+					</div>
+					</p>
+				</div>
+			</a>
+		</div>
+	</div>
+	<div ng-if="ctrl.showTemplate" class="clearfix">
+		<div class="row">
+			<div class="col-md-12">
+				<section id="invoice-wrapper">
+					<div ng-if="!ctrl.updateTemplate" class="clearfix pdB2 form-inline">
+						<div class="form-group">
+							<input type="text" name="ctrl.templateName" ng-model="ctrl.templateName" placeholder="Template Name" class="form-control">
+						</div>
+						<div class="form-group">
+							<button ng-disabled="ctrl.templateName === undefined" class="btn btn-success" ng-click="ctrl.saveTemplate()" href="javascript:void(0)">Save Template</button>
+							<button class="btn btn-success mrL1" ng-click="ctrl.resetTemplate()" href="javascript:void(0)">Reset Template</button>
+						</div>
+
+						<div class="form-group pull-right">
+							<a class="btn btn-primary" ng-click="ctrl.addWidget()" href="javascript:void(0)">Add Widget</a>
+						</div>
+						<div class="form-group pull-right mrR1">
+							<select
+									required
+									class="form-control"
+									name="ctrl.tempType"
+									ng-model="ctrl.tempType"
+									ng-options="item for item in ctrl.tempTypes">
+							</select>
+						</div>
+
+					</div>
+
+
+					<div ng-if="ctrl.updateTemplate" class="clearfix pdB2 form-inline">
+            <div class="form-group">
+              <input type="text" name="ctrl.selectedTemplate.name" ng-model="ctrl.selectedTemplate.name" placeholder="Template Name" class="form-control">
+            </div>
+            <div class="form-group">
+              <button ng-disabled="ctrl.selectedTemplate.name === undefined || ctrl.selectedTemplate.name == ''" class="btn btn-success" ng-click="ctrl.updateProformaTemplates()" href="javascript:void(0)">Update Template</button>
+            </div>
+
+            <div class="form-group pull-right">
+              <a class="btn btn-primary" ng-click="ctrl.addWidget()" href="javascript:void(0)">Add Widget</a>
+            </div>
+            <div class="form-group pull-right mrR1">
+              <select
+                  required
+                  class="form-control"
+                  name="ctrl.tempType"
+                  ng-model="ctrl.tempType"
+                  ng-options="item for item in ctrl.tempTypes">
+              </select>
+            </div>
+          </div>
+
+					<div class="invoice-wrapper-m a4">
+						<div gridster="ctrl.gridsterOptions">
+							<ul>
+								<li class="invoice-widget" ng-repeat="item in ctrl.widgets | orderBy:row:true" gridster-item row="item.row" col="item.col" size-x="item.sizeX" size-y="item.sizeY" ng-dblclick="item.edit = true;$event.stopPropagation();">
+									<div class="move-widget"  ng-if="!item.edit">
+										<label ng-if="item.type == 'Image'">{{item.type}}</label>
+									</div>
+									<!--<i ng-if="item.type != 'Entry'" class="glyphicon glyphicon-edit" ng-hide="item.edit" ng-click="item.edit = true"></i>-->
+									<i class="glyphicon glyphicon-text-width" ng-if="item.edit" ng-click="item.toolbar = !item.toolbar"></i>
+									<i ng-if="item.type != 'Entry'" class="glyphicon glyphicon-ok" ng-show="item.edit" ng-click="item.edit = false"></i>
+									<i ng-show="item.edit" class="glyphicon glyphicon-remove" ng-click="ctrl.removeWidget(item)"></i>
+									<p class="widget-text" ng-bind-html="item.data" ng-show="!item.edit"></p>
+									<div ng-show="item.type != 'Image' && item.edit" class="height100per">
+										<div class="invoice-input" set-iframe-height ng-class="{hidden:!item.edit, 'hide-toolbar': item.toolbar}">
+											<!-- <textarea ng-model="item.data" mentio
+                       mentio-typed-text="typedTerm"
+                       mentio-items="ctrl.people | filter:label:typedTerm"
+                       ng-keypress="ctrl.modifyInput(item.data, $event)">
+                       </textarea> -->
+											<textarea class="height100per" ui-tinymce="tinymceOptions" ng-model="item.data"></textarea>
+										</div>
+									</div>
+									<div ng-if="item.type === 'Image' && item.edit" class="mrT2" style="position: relative;">
+										<form class="form-inline" enctype="multipart/form-data">
+											<div class="form-group" ng-hide="item.uploadFile">
+												<button type="file"
+																ng-model="item.uploadFile"
+																class="btn btn-primary"
+																ngf-select="ctrl.uploadImages($files,'logo', item)"
+																ngf-pattern="image/*"
+																accept="image/*"
+																ngf-max-size="200KB"
+																ngf-multiple="false"
+														>
+													<i class="glyphicon glyphicon-folder-open"></i>
+													&nbsp; Upload Logo</button><br/>
+												<small>* Image size should be max 200KB</small>
+											</div>
+											<div class="form-group" ng-if="item.uploadFile">
+												<img ngf-src="item.uploadFile" style="max-height:60px"><br>
+												<a href="javascript:void(0)" ng-click="item.uploadFile = null">Reset Logo</a>
+											</div>
+										</form>
+									</div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</section>
+
+			</div>
+		</div>
+		<!-- end row -->
+
+
+	</div>
+</div>

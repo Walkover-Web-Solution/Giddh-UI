@@ -1,6 +1,7 @@
 "use strict"
 
 userController = ($scope, $rootScope, toastr, userServices, localStorageService, $timeout, $uibModal, modalService, $filter, groupService, $window) ->
+  
   $scope.userAuthKey = undefined
   $scope.noData = false
   $scope.subListData = []

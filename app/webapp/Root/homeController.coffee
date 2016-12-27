@@ -1,5 +1,5 @@
 "use strict"
-homeController = ($scope, $rootScope, getLedgerState, $state) ->
+homeController = ($scope, $rootScope, getLedgerState, $state, $location, localStorageService) ->
 
   $scope.goToLedgerState = () ->
     if getLedgerState.data.shared && getLedgerState.data.firstLogin == false
@@ -17,7 +17,6 @@ homeController = ($scope, $rootScope, getLedgerState, $state) ->
   $scope.goToLedgerState()
 
   $rootScope.setActiveFinancialYear(getLedgerState.data.activeFinancialYear)
-
 
 #init angular app
 giddh.webApp.controller 'homeController', homeController

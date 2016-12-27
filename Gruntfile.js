@@ -19,6 +19,9 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-env');
   grunt.loadNpmTasks('grunt-execute');
+  grunt.loadNpmTasks('grunt-processhtml');
+
+// https://test-fs8eefokm8yjj.stackpathdns.com test dev
 
   srcDir = 'app/';
   destDir = 'public/';
@@ -71,9 +74,114 @@ module.exports = function (grunt) {
           expand: true,
           dot: true,
           cwd: srcDir,
-          src: ['**/**/images/*', '**/**/images/new/*', '**/**/css/*', '**/**/fonts/*', '**/views/*', '**/ng2/*', '**/ng2/**/*', '**/*.coffee','**/**/*.*'],
+          src: ['**/**/images/*', '**/**/images/new/*', '**/**/css/*', '**/**/fonts/*', '**/views/*', '**/ng2/*',
+              '**/ng2/**/*', '**/*.coffee','**/**/*.*', '!webapp/views/index.html', '!website/views/index.html'],
           dest: destDir
         }]
+      },
+      index: {
+        src: srcDir + 'webapp/views/index.html',
+        dest: destDir + 'webapp/views/index.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
+      },
+      indexWebsite: {
+        src: srcDir + 'website/views/index.html',
+        dest: destDir + 'website/views/index.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
+      },
+      loginWebsite: {
+        src: srcDir + 'website/views/login.html',
+        dest: destDir + 'website/views/login.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
+      },
+      signUpWebsite: {
+        src: srcDir + 'website/views/signup.html',
+        dest: destDir + 'website/views/signup.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
+      },
+      pricingWebsite: {
+        src: srcDir + 'website/views/pricing.html',
+        dest: destDir + 'website/views/pricing.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
+      },
+      magicWebsite: {
+        src: srcDir + 'website/views/magic.html',
+        dest: destDir + 'website/views/magic.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
+      },
+      aboutWebsite: {
+        src: srcDir + 'website/views/about.html',
+        dest: destDir + 'website/views/about.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
+      },
+      paymentWebsite: {
+        src: srcDir + 'website/views/payment.html',
+        dest: destDir + 'website/views/payment.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
       }
     },
     watch: {
@@ -84,7 +192,7 @@ module.exports = function (grunt) {
         files: [
           srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '**/**/*.css', routeSrcDir + "/**/*.coffee", srcDir + '/**/*.js', srcDir + '/**/**/*.js', srcDir + '/webapp/ng2/**/*.js',  srcDir + '/**/*.coffee'
         ],
-        tasks: ['coffee', 'copy', 'clean', 'cssmin', 'concat', 'env:dev', 'preprocess:dev']
+        tasks: ['env:dev','coffee', 'copy', 'clean', 'cssmin', 'concat',  'preprocess:dev']
       }
     },
     karma: {
@@ -148,10 +256,12 @@ module.exports = function (grunt) {
     },
     env: {
       dev: {
-        NODE_ENV: 'DEVELOPMENT'
+        NODE_ENV: 'DEVELOPMENT',
+        PREFIX_THIS: process.env.CDN_URL
       },
       prod: {
-        NODE_ENV: 'PRODUCTION'
+        NODE_ENV: 'PRODUCTION',
+        PREFIX_THIS: process.env.CDN_URL
       }
     },
     preprocess:{
@@ -182,10 +292,11 @@ module.exports = function (grunt) {
           'angular-bootstrap'
         ],
         mainFiles: {
-          // 'bootstrap': 'dist/css/bootstrap.min.css',
           'perfect-scrollbar': 'css/perfect-scrollbar.min.css',
           'angular-toastr': 'dist/angular-toastr.min.css',
-          'ui-select': 'dist/select.min.css'
+          'angular-gridster': 'dist/angular-gridster.min.css',
+          'ui-select': 'dist/select.min.css',
+          'font-awesome': 'css/font-awesome.min.css'
         },
         callback: function(mainFiles, component) {
           return _.map(mainFiles, function(filepath) {
@@ -234,14 +345,28 @@ module.exports = function (grunt) {
           'angular-fullpage.js',
           'angular-wizard',
           'angular-google-chart',
-          'angular-file-saver'
+          'angular-file-saver',
+          'intl-tel-input',
+          'international-phone-number',
+          'angular-file-saver',
+          'angular-gridster',
+          'ment.io',
+          'trix',
+          'angular-trix',
+          'tinymce',
+          'tinymce-mention',
+          'angular-ui-tinymce'
         ],
         dependencies: {
           'jquery': 'modernizr',
           'angular': 'jquery',
           'bootstrap': 'angular',
           'angular-bootstrap': 'bootstrap',
-          'underscore': 'angular-bootstrap'
+          'underscore': 'angular-bootstrap',
+          'intl-tel-input': 'jquery',
+          'international-phone-number':'intl-tel-input',
+          'tinymce-mention':'tinymce',
+          'angular-ui-tinymce':'tinymce-mention'
         },
         mainFiles: {
           'underscore': 'underscore-min.js',
@@ -266,6 +391,22 @@ module.exports = function (grunt) {
       target: {
         src: ['git_revision.js']
       }
+    },
+    processhtml:{
+      dist: {
+        options: {
+          process: true,
+        },
+        files: [
+          {
+            expand: true,
+            cwd: srcDir,
+            src: ['*.html'],
+            dest: destDir,
+            ext: '.html'
+          }
+        ]
+      }
     }
   });
 
@@ -273,11 +414,15 @@ module.exports = function (grunt) {
     grunt.log.writeln(target + ': ' + filepath + ' has ' + action);
   });
 
-  grunt.registerTask('default', ['coffeelint', 'copy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
+  grunt.registerTask('customCopy', ['env:dev', 'copy']);
 
-  grunt.registerTask('init', ['copy', 'coffee', 'env:dev', 'clean','bower_concat', 'cssmin', 'concat', 'preprocess:dev'])
+  grunt.registerTask('tempRun', ['copy:indexWebsite'])
 
-  grunt.registerTask('init-prod', ['copy', 'coffee', 'env:prod', 'clean', 'bower_concat',  'cssmin', 'concat', 'uglify', 'preprocess:prod'])
+  grunt.registerTask('default', ['coffeelint', 'customCopy', 'coffee', 'watch', 'bower_concat', 'cssmin', 'concat'])
+
+  grunt.registerTask('init', ['env:dev', 'copy', 'coffee', 'clean','bower_concat', 'cssmin', 'concat', 'preprocess:dev'])
+
+  grunt.registerTask('init-prod', ['env:prod', 'copy', 'coffee', 'clean', 'bower_concat',  'cssmin', 'concat', 'uglify', 'preprocess:prod'])
 
   grunt.registerTask('test', [
     'coffee',
@@ -285,4 +430,5 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('addCommitInfo', ['execute']);
+
 };

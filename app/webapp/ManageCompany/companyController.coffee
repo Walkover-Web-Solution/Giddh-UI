@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService, accountService, $filter, $http) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService, accountService, $filter, $http, $location) ->
 
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
@@ -803,7 +803,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       )
     $scope.modal = {}
     $scope.modal.modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/Globals/modals/fixUploadIssueModal.html',
+      templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/fixUploadIssueModal.html',
       size: "lg",
       backdrop: 'static',
       scope: $scope
@@ -1018,7 +1018,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         newTax : newTax
       }
       $scope.updateTax.modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/Globals/modals/update-tax.html'
+        templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/update-tax.html'
         size: "md"
         backdrop: 'static'
         scope: $scope
@@ -1415,7 +1415,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
           $scope.banks.mfaForm = res.body.yodleeMfaResponse.fieldInfo.questionAns
           $scope.banks.showToken = false
       $scope.banks.modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/Globals/modals/yodleeMfaModal.html'
+        templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/yodleeMfaModal.html'
         size: "sm"
         backdrop: 'static'
         scope: $scope
@@ -1633,6 +1633,18 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   # connect bank
   $scope.connectBank = ()->
+    if $scope.linkedAccountsExist == false
+      $scope.modalInstance = $uibModal.open(
+        templateUrl: $rootScope.prefixThis+'/public/webapp/ManageCompany/saltedgeTerms.html'
+        size: "a4"
+        backdrop: 'static'
+        scope: $scope
+      )
+      $scope.modalInstance.result.then($scope.connectBnk)
+    else
+      userServices.connectBankAc($rootScope.selectedCompany.uniqueName).then($scope.connectBankSuccess, $scope.connectBankFailure)
+
+  $scope.connectBnk = () ->
     userServices.connectBankAc($rootScope.selectedCompany.uniqueName).then($scope.connectBankSuccess, $scope.connectBankFailure)
 
 
@@ -1641,7 +1653,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     url = res.body.token_URL + '?token=' + res.body.token
     $scope.connectUrl = url
     modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/Globals/modals/connectBankModal.html',
+      templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/connectBankModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope,
@@ -1662,7 +1674,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     url = res.body.connectUrl
     $scope.connectUrl = url
     modalInstance = $uibModal.open(
-      templateUrl: '/public/webapp/Globals/modals/refreshBankAccountsModal.html',
+      templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/refreshBankAccountsModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope
@@ -1690,7 +1702,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     url = res.body.connectUrl
     $scope.connectUrl = url
     $uibModal.open(
-      templateUrl: '/public/webapp/Globals/modals/refreshBankAccountsModal.html',
+      templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/refreshBankAccountsModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope
@@ -1701,7 +1713,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.setActiveTab = () ->
     $scope.afterConnectSuccess  = true
-    $scope.loadYodlee()
+#    $scope.loadYodlee()
   #  Linked methods end here
 
   $scope.getSharedList = () ->

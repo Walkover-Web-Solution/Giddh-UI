@@ -7,23 +7,25 @@ env = app.get('env')
 hitViaSocket = (data) ->
   data = JSON.stringify(data)
   data.environment = app.get('env')
-  settings.request {
-    url: 'https://viasocket.com/t/JUXDVNwBZ6dgPacX9zT/giddh-giddh-new-company?authkey=MbK1oT6x1RCoVf2AqL3y'
-    qs:
-      from: 'Giddh'
-      time: +new Date
-    method: 'POST'
-    headers:
-      'Content-Type': 'application/json'
-      'Auth-Key': 'MbK1oT6x1RCoVf2AqL3y'
-    body: data
-  }, (error, response, body) ->
-    if error
-      console.log error
-    else
-      console.log response.statusCode, body, 'from viasocket'
-    return
-
+  if env == "PRODUCTION" || env == "production"
+    settings.request {
+      url: 'https://viasocket.com/t/JUXDVNwBZ6dgPacX9zT/giddh-giddh-new-company?authkey=MbK1oT6x1RCoVf2AqL3y'
+      qs:
+        from: 'Giddh'
+        time: +new Date
+      method: 'POST'
+      headers:
+        'Content-Type': 'application/json'
+        'Auth-Key': 'MbK1oT6x1RCoVf2AqL3y'
+      body: data
+    }, (error, response, body) ->
+      if error
+        console.log error
+      else
+        console.log response.statusCode, body, 'from viasocket'
+      return
+  else
+    console.log("not hitting via socket because we are in ", env)
 
 router.get '/all', (req, res) ->
   args =
@@ -99,7 +101,8 @@ router.post '/', (req, res) ->
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
-    hitViaSocket(data)
+    else
+      hitViaSocket(data)
     res.send data
 
 #get all Roles
@@ -475,7 +478,7 @@ router.get '/:uniqueName/templates', (req, res) ->
     
 # set default template
 router.put '/:uniqueName/templates/:tempUname', (req, res) ->
-  hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/templates/'+req.params.tempUname
+  hUrl = settings.envUrl+'company/'+req.params.uniqueName+'/invoices/templates/'+req.params.tempUname
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -525,11 +528,141 @@ router.get '/:uniqueName/ebanks/token', (req, res) ->
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
-    console.log data
     res.send data
 
 router.delete '/:companyUniqueName/login/:loginId',(req,res) ->
   hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName+'/login/'+req.params.loginId
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+
+router.get '/:companyUniqueName/cropped-flatten-account', (req,res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName+'/cropped-flatten-accounts'
+  if req.query.query != ''
+    hUrl = hUrl + '?q='+req.query.query
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/:companyUniqueName/cropped-flatten-account', (req,res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName+'/cropped-flatten-accounts'
+  if req.query.query != ''
+    hUrl = hUrl + '?q='+req.query.query
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.get '/:companyUniqueName/settings', (req,res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/settings'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.put '/:companyUniqueName/settings', (req,res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/settings'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/:companyUniqueName/settings/webhooks', (req,res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/settings/webhooks'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.delete '/:companyUniqueName/settings/webhooks/:webhookUniqueName', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/settings/webhooks/'+req.params.webhookUniqueName
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+
+router.get '/:companyUniqueName/razorpay', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/razorpay'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+
+router.post '/:companyUniqueName/razorpay', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/razorpay'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.put '/:companyUniqueName/razorpay', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/razorpay'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.delete '/:companyUniqueName/razorpay', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/razorpay'
   args =
     headers:
       'Auth-Key': req.session.authKey

@@ -1,0 +1,444 @@
+<div class="container-fluid pd0"  ng-controller="proformaController">
+  <uib-tabset justified="false"  class="custom-tabset">
+
+
+    <!-- view all proforma-->
+    <uib-tab heading="View All" class="background-transparent" ng-click="getAllProforma()">
+      
+      <div class="proforma-list" ng-class="{pdT:!showFilters}">
+
+        <div class="filters" ng-if="showFilters">
+
+        <div class="max100">
+                  <label>Proforma #</label>
+                  <input type="text" class="form-control" placeholder="" ng-model="filters.proformaNumber">
+                </div>
+
+                <span class="separator"></span>
+
+          <div class="clearfix max100">
+              <label>From</label>
+                    <input type="text" class="form-control"
+                         uib-datepicker-popup="{{format}}" required
+                         datepicker-options="dateOptions"
+                         is-open="fromDatePickerIsOpen"
+                         ng-click="fromDatePickerOpen()"
+                         ng-model="filters.fromDate"
+                         max-date="today"
+                         placeholder="from date"
+                      />
+                </div>
+                <span style="margin:0 0 0 -10px;">To</span>
+                <div class="clearfix max120">
+                    <label>To</label>
+                    <input type="text" class="form-control"
+                         uib-datepicker-popup="{{format}}" required
+                         datepicker-options="dateOptions"
+                         is-open="toDatePickerIsOpen"
+                         ng-click="toDatePickerOpen()"
+                         ng-model="filters.toDate"
+                         min-date="filters.fromDate"
+                         max-date="today"
+                         placeholder="to date"
+                   />
+                </div>
+
+                <span class="separator"></span>
+                
+                <div class="max100 filter-group">
+                  <label>Balance Status</label>
+                  <select class="form-control" ng-options="status for status in balanceStatuses" ng-model="filters.balanceStatus">
+                  </select> 
+                </div>
+
+                <span class="separator"></span>
+
+                <div class="max100">
+                  <label>Account Name</label>
+                  <input type="text" class="form-control" placeholder="Account Name" ng-model="filters.accountUniqueName" uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue" ng-disabled="filters.groupUniqueName.length != 0">
+                </div>
+
+                <span style="margin:0 0 0 -10px;">or</span>
+
+                <div class="max100">
+                  <label>Group Name</label>
+                  <input type="text" class="form-control" placeholder="Group Name" ng-model="filters.groupUniqueName" uib-typeahead="group as group.name for group in flatGroupsList | filter:$viewValue" ng-disabled="filters.accountUniqueName.length != 0">
+                </div>
+
+<!--                 <span class="separator"></span>
+
+                <div class="max100">
+                  <label>Company Name</label>
+                  <input type="text" class="form-control" placeholder="Company Name" ng-model="filters.companyName">
+                </div> -->
+
+                <span class="separator"></span>
+
+                <div class="max100">
+                  <label>Balance</label>
+                  <select class="form-control" ng-model="filters.balanceText">
+                    <option>Equal To</option>
+                    <option>Less Than</option>
+                    <option>Greater Than</option>
+                    <option>Greater Than and Equal To</option>
+                    <option>Less Than and Equal To</option>
+                  </select>
+                </div>
+                <span style="margin:0 0 0 -10px;">-</span>
+        <div class="max100">
+                  <input type="text" class="form-control inline" placeholder="Amount" ng-model="filters.balanceDue">
+                </div>
+
+                <span class="separator"></span>
+
+                <div class="clearfix max100">
+                    <label>Due Date</label>
+                    <input type="text" class="form-control"
+                         uib-datepicker-popup="{{format}}" required
+                         datepicker-options="dateOptions"
+                         is-open="dueDatePickerIsOpen"
+                         ng-click="dueDatePickerOpen()"
+                         ng-model="filters.dueDate"
+                         min-date="filters.fromDate"
+                         max-date="today"
+                         placeholder="Due date"
+                   />
+                </div>
+
+        <span class="separator"></span>
+
+                <div class="max100">
+                  <label>Gand Total</label>
+                  <input type="number" class="form-control" placeholder="Grand Total" ng-model="filters.total">
+                </div>
+
+                <span class="separator"></span>
+                  <i class="glyphicon glyphicon-refresh mrR"  ng-click="resetFilters()"></i>
+        <span class="separator"></span>
+                <button class="btn btn-default mrR1" ng-click="applyFilters()">Go</button>
+        </div>
+        <i class="glyphicon glyphicon-filter" ng-class="{open:showFilters}" ng-click="showFilters = !showFilters"></i>
+        <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+          <div ng-if="proformaList.results.length < 1">No Proforma Found.</div>
+          <table class="table table-bordered" ng-if="proformaList.results.length > 0">
+            <thead>
+              <th colspan="2">Proforma Number</th>
+              <th colspan="2">Proforma Date</th>
+              <th colspan="2">Account/Company Name</th>
+              <th colspan="2">Attention To</th>
+              <th colspan="1">Balance Status</th>
+              <th colspan="1">Balance</th>
+              <th colspan="2">Due Date</th>
+              <th colspan="1">Grand Total</th>
+              <th colspan="1">Delete</th>
+            </thead>
+            <tbody>
+              <tr ng-repeat="proforma in proformaList.results">
+                <td colspan="2">
+                  <a href="" ng-bind="proforma.proformaNumber" ng-click="loadProforma(proforma)"></a>
+                  <i class="glyphicon glyphicon-save pull-right" ng-click="downloadProforma(proforma)"></i>
+                </td>
+                <td colspan="2" ng-bind="proforma.proformaDate"></td>
+                <td colspan="2">
+                                <span ng-bind="proforma.accountName" ng-if="proforma.accountName.length > 0"></span>
+                                <a href="" ng-if="proforma.accountUniqueName == null " ng-click="addNewAccount(proforma, $index)"> (Create Account)</a>
+                            </td>
+                <td colspan="2" ng-bind="proforma.attentionTo"><span ng-if="proforma.attentionTo.length == 0">No Name</span></td>
+                <td colspan="1">
+                                <span ng-show="!proforma.editStatus" ng-bind="proforma.balanceStatus"></span>
+                                <select ng-options="status for status in balanceStatusOptions" ng-model="proforma.balanceStatus" ng-show="proforma.editStatus"></select>
+                                <i class="glyphicon glyphicon-edit pull-right" ng-show="!proforma.editStatus" ng-click="proforma.editStatus = !proforma.editStatus"></i>
+                                <i class="glyphicon glyphicon-floppy-disk pull-right" ng-show="proforma.editStatus" ng-click="changeBalanceStatus(proforma, $index)"></i>
+                            </td>
+                <td colspan="1" ng-bind="proforma.balance"></td>
+                <td colspan="2" ng-bind="proforma.dueDate"></td>
+                <td colspan="1" ng-bind="proforma.grandTotal"></td>
+                <td colspan="1"><i class="glyphicon glyphicon-trash color-giddh" uib-tooltip="Delete Proforma" tooltip-placement="left" ng-click="deleteProforma(proforma.proformaNumber, $index)"></i></td>
+              </tr>
+            </tbody>
+            <tfoot>
+              
+              <tr>
+                <td colspan="14">
+                <div class="pagination pull-right">
+
+                  <div class="mrB1">
+                    <label>Set Count</label>
+                    <select ng-options="counts for counts in count.set" ng-model="count.val" ng-change="getAllProforma()"></select>
+                  </div>
+
+                                  <ul class="list-inline">
+                                    <li>
+                                      <button class="btn btn-default" ng-click="proformaList.page = proformaList.page-1; applyFilters()">Prev</button>
+                                    </li>
+                                    <li>{{proformaList.page}}/{{proformaList.totalPages}}</li>
+                                    <li>
+                                      <button class="btn btn-default" ng-click="proformaList.page = proformaList.page+1; applyFilters()">Next</button>
+                                    </li>
+                                  </ul>
+                              </div>
+                </td>
+              </tr>
+
+            </tfoot>
+          </table>
+        </perfect-scrollbar>
+        
+      </div>
+    </uib-tab>
+  <!-- view all proforma end-->
+
+
+
+
+    <!--create proforma-->
+    <uib-tab heading="Create" class="background-transparent" select="getTemplates()">
+      
+
+        <div class="create-proforma y-scroll" cover-page>
+
+            <div style="width:21cm;margin:0 auto;" >
+
+              <div class="form-group max150 pull-left" style="width:150px;">
+                <label>Select Template</label>
+                <select class="form-control" ng-model="create.proformaTemplate" ng-options="temp.name for temp in pTemplateList" ng-change="fetchTemplateData(create.proformaTemplate, 'create')"></select>
+              </div>    
+              <button class="btn btn-default btn-success mrT2 mrL1" ng-click="createProforma('create')">Create</button>
+              <button class="btn btn-default btn-success mrT2 mrL" ng-click="addquickAccount()">Add New Account</button>
+              <div class="clearfix"></div>
+            </div>
+
+            <div class="invoice-wrapper-m a4 pos-rel">
+                
+              <div
+                class="pull-left a4-section pos-abs" 
+                ng-repeat="section in htmlData.sections" 
+                ng-style="section.styles"
+                style="background:#fff;padding:10px">
+                  
+                  <div ng-repeat="element in section.elements"  
+                    ng-style="element.attributes.style" 
+                    ng-if="section.type == 'Entry'"
+                    style="overflow-y:auto;height:100%">
+                    
+                    <div class="center-block">Particulars</div>
+                      <table class="table table-bordered proforma-particulars body">
+                        <thead>
+                          <th class="col-xs-2">Account</th>
+                          <th class="col-xs-7">Description</th>
+                          <th class="col-xs-3">Amount</th>
+                        </thead>
+                        <tbody>
+                          <tr ng-repeat="txn in transactions">
+                            <td class="pad0 col-xs-2">
+                            <!--   <input type="text" class="" ng-model="txn.accountUniqueName" uib-typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in getRevenueAccounts($viewValue) | filter:$viewValue | limitTo:5" typeahead-on-select="getTaxes(txn.accountUniqueName, txn)"> -->
+                              <ui-select ng-model="txn.accountUniqueName" theme="bootstrap" on-select="getTaxes($item, txn, $index)" append-to-body="false">
+                                  <ui-select-match>
+                                      <span>{{$select.selected.name}}</span>
+                                  </ui-select-match>
+                                  <ui-select-choices repeat="account in revenueAccounts | limitTo:5" refresh="getRevenueAccounts($select.search)">
+                                      <span ng-bind="account.name"></span>
+                                  </ui-select-choices>
+                              </ui-select>
+                            </td>
+                            <td class="pad0 col-xs-7">
+                              <input type="text" class="" ng-model="txn.description">
+                            </td>
+                            <td class="pad0 col-xs-3 pos-rel" style="overflow-x: hidden;">
+                              <input type="number" style="width:150%;" ng-model="txn.amount" ng-change="calcSubtotal()">
+                              <i class="glyphicon glyphicon-plus pos-abs" ng-click="addParticular(transactions, 'txn')"></i>
+                              <i class="glyphicon glyphicon-minus pos-abs" ng-click="removeParticular(transactions, $index, txn)"
+                              ng-if="$index != 0"></i>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                      <div class="pull-right">
+                        <ul class="list-unstyled mrT" style="font-size:12px">
+                          <li class="bold">Discount Total: {{discountTotal | number:2}}</li>
+                          <li class="bold">Sub Total: {{subtotal | number:2}}</li>
+                          <li ng-repeat="tax in taxes" ng-if="taxes.length > 0">{{tax.name}}: {{tax.amount | number:2}}</li>
+                          <li class="bold">Total Tax : {{taxTotal | number:2}}</li>
+                          <li>
+                            <input type="text" ng-model="discount.account" uib-typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in getDiscountAccounts() | filter:$viewValue | limitTo:5">
+                            <input type="number" ng-model="discount.amount" style="width:50px;height:20px;" min="{{taxTotal}}">
+                          </li>
+                          <li class="bold">Grand Total: {{subtotal + taxTotal - discount.amount | number:2}}</li>
+                        </ul>
+                      </div>
+                  </div>
+
+
+                  <div 
+                    ng-repeat="element in section.elements"  
+                    ng-style="element.attributes.style" 
+                    ng-class="{font20:element.tagName=='h1',hasVar:element.hasVar}"
+                    ng-if="section.type != 'Entry'">
+                    <img style="max-height:60px" ng-src="{{element.content}}" ng-if="section.type=='Image'">
+                    <span ng-bind-html="element.content" ng-if="element.type=='Text' && section.type == 'String' && element.hasVar == undefined"></span>
+                    <span ng-bind-html="element.variable.value" ng-if="element.type=='Text' && section.type == 'String' && element.hasVar && !element.variable.isEditable && element.variable.key != '$accountName'"></span>
+                    <input 
+                      type="text"
+                      placeholder="{{element.variable.key}}" 
+                      ng-model="element.variable.value"
+                      ng-if="element.type=='Text' && section.type == 'String' && element.hasVar && element.variable.isEditable && element.variable.key != '$accountName' && element.variable.key != '$proformaDate'"  
+                      ng-class="{isEditable:element.variable.isEditable}"/>
+                    <input 
+                      type="text"
+                      placeholder="{{element.variable.key}}" 
+                      ng-model="element.variable.value"
+                      ng-if="element.type=='Text' && section.type == 'String' && element.hasVar && element.variable.isEditable && element.variable.key == '$accountName'"  
+                      ng-class="{isEditable:element.variable.isEditable}"
+                      uib-typeahead="account as account.name for account in sundryDebtors | filter:$viewValue | limitTo:5"
+                      typeahead-on-select="setSelectedAccount(element.variable.value)"
+                      />
+                      <input 
+                      type="text"
+                      placeholder="{{element.variable.key}}" 
+                      ng-model="element.variable.value"
+                      ng-if="element.type=='Text' && section.type == 'String' && element.hasVar && element.variable.isEditable && element.variable.key == '$proformaDate'"  
+                      ng-class="{isEditable:element.variable.isEditable}"
+                      ng-change="updateProformaDate(element.variable.value)"
+                      />
+
+                    <span ng-if="element.type=='Element' && element.children.length > 0" ng-repeat="elem in element.children" ng-class="{bold:elem.tagName=='strong',italic:elem.tagName=='em',font20:elem.tagName=='h1',hasVar:elem.hasVar}"  ng-style="elem.attributes.style" >
+                        
+                        <span ng-bind-html="elem.content" ng-if="elem.type=='Text' && elem.hasVar == undefined"></span>
+                        <span ng-bind-html="elem.variable.value" ng-if="elem.type=='Text' && section.type == 'String' && elem.hasVar && !elem.variable.isEditable && elem.variable.key != '$accountName'"></span>
+                        <input 
+                          placeholder="{{elem.variable.key}}"
+                          type="text" 
+                          ng-model="elem.variable.value" 
+                          ng-if="elem.type=='Text' && section.type == 'String' && elem.hasVar && elem.variable.isEditable && elem.variable.key != '$accountName' && elem.variable.key != '$proformaDate'" 
+                          ng-class="{isEditable:elem.variable.isEditable}"
+                          />
+                        <input 
+                          type="text"
+                          placeholder="{{elem.variable.key}}" 
+                          ng-model="elem.variable.value"
+                          ng-if="elem.type=='Text' && section.type == 'String' && elem.hasVar && elem.variable.isEditable && elem.variable.key == '$accountName'"  
+                          ng-class="{isEditable:elem.variable.isEditable}"
+                          uib-typeahead="account as account.name for account in sundryDebtors | filter:$viewValue | limitTo:5"
+                          typeahead-on-select="setSelectedAccount(elem.variable.value)"
+                        />
+                        <input 
+                          type="text"
+                          placeholder="{{elem.variable.key}}" 
+                          ng-model="elem.variable.value"
+                          ng-if="elem.type=='Text' && section.type == 'String' && elem.hasVar && elem.variable.isEditable && elem.variable.key == '$proformaDate'"  
+                          ng-class="{isEditable:elem.variable.isEditable}"
+                          ng-change="updateProformaDate(elem.variable.value)"
+                        />
+                        <span ng-if="elem.type=='Element' && elem.children.length > 0" ng-repeat="ele in elem.children" ng-class="{bold:ele.tagName=='strong',italic:ele.tagName=='em',font20:ele.tagName=='h1',hasVar:ele.hasVar}" ng-style="ele.attributes.style">
+                          
+                          <span ng-bind-html="ele.content" ng-if="ele.type=='Text' && ele.hasVar == undefined"></span>
+                          <span ng-bind-html="ele.variable.value" ng-if="ele.type=='Text' && section.type == 'String' && ele.hasVar && !ele.variable.isEditable && ele.variable.key != '$accountName'"></span>
+                          <input
+                            placeholder="{{ele.variable.key}}" 
+                            type="text" 
+                            ng-model="ele.variable.value" 
+                            ng-if="ele.type=='Text' && section.type == 'String' && ele.hasVar && ele.variable.isEditable && ele.variable.key != '$accountName' && ele.variable.key != '$proformaDate' " 
+                            ng-class="{isEditable:ele.variable.isEditable}"/>
+                          <input 
+                            type="text"
+                            placeholder="{{ele.variable.key}}" 
+                            ng-model="ele.variable.value"
+                            ng-if="ele.type=='Text' && section.type == 'String' && ele.hasVar && ele.variable.isEditable && ele.variable.key == '$accountName'"  
+                            ng-class="{isEditable:ele.variable.isEditable}"
+                            uib-typeahead="account as account.name for account in sundryDebtors | filter:$viewValue | limitTo:5"
+                            typeahead-on-select="setSelectedAccount(ele.variable.value)"
+                          />
+                          <input 
+                            type="text"
+                            placeholder="{{ele.variable.key}}" 
+                            ng-model="ele.variable.value"
+                            ng-if="ele.type=='Text' && section.type == 'String' && ele.hasVar && ele.variable.isEditable && ele.variable.key == '$proformaDate'"  
+                            ng-class="{isEditable:ele.variable.isEditable}"
+                            ng-change="updateProformaDate(ele.variable.value)"
+                          />
+                          <span ng-if="ele.type=='Element' && ele.children.length > 0" ng-repeat="el in ele.children" ng-class="{bold:el.tagName=='strong',italic:el.tagName=='em',font20:el.tagName=='h1',hasVar:el.hasVar}"  ng-style="el.attributes.style">
+    
+                            <span ng-bind-html="el.content" ng-if="el.type == 'Text'  && el.hasVar == undefined"></span>
+                            <span ng-bind-html="el.variable.value" ng-if="el.type=='Text' && section.type == 'String' && el.hasVar && !el.variable.isEditable && el.variable.key != '$accountName'"></span>
+                            <input 
+                              placeholder="{{el.variable.key}}"
+                              type="text" 
+                              ng-model="el.variable.value" 
+                              ng-if="el.type=='Text' && section.type == 'String' && el.hasVar && el.variable.isEditable && el.variable.key != '$accountName' && el.variable.key != '$proformaDate'" 
+                              ng-class="{isEditable:el.variable.isEditable}"/>
+                            <input 
+                              type="text"
+                              placeholder="{{el.variable.key}}" 
+                              ng-model="el.variable.value"
+                              ng-if="el.type=='Text' && section.type == 'String' && el.hasVar && el.variable.isEditable && el.variable.key == '$accountName'" 
+                              ng-class="{isEditable:el.variable.isEditable}"
+                              uib-typeahead="account as account.name for account in sundryDebtors | filter:$viewValue | limitTo:5"
+                              typeahead-on-select="setSelectedAccount(el.variable.value)"
+                            />
+                            <input 
+                              type="text"
+                              placeholder="{{el.variable.key}}" 
+                              ng-model="el.variable.value"
+                              ng-if="el.type=='Text' && section.type == 'String' && el.hasVar && el.variable.isEditable && el.variable.key == '$proformaDate'" 
+                              ng-class="{isEditable:el.variable.isEditable}"
+                              ng-change="updateProformaDate(el.variable.value)"
+                            />
+                            <span ng-if="el.type == 'Element' && el.children.length > 0" ng-repeat="e in el.children" ng-class="{bold:e.tagName=='strong',italic:e.tagName=='em',font20:e.tagName=='h1',hasVar:e.hasVar}"  ng-style="e.attributes.style">
+                                
+                                <span ng-bind-html="e.content" ng-if="e.type== 'Text'  && e.hasVar == undefined"></span>
+                                <span ng-bind-html="el.variable.value" ng-if="el.type=='Text' && section.type == 'String' && el.hasVar && !el.variable.isEditable && el.variable.key != '$accountName'"></span>
+                                <input 
+                                  placeholder="{{e.variable.key}}"
+                                  type="text" 
+                                  ng-model="e.variable.value" 
+                                  ng-if="e.type=='Text' && section.type == 'String' && e.hasVar && e.variable.isEditable && e.variable.key != '$accountName' && e.variable.key != '$proformaDate'" 
+                                  ng-class="{isEditable:e.variable.isEditable}"/>
+                                  <input 
+                                    type="text"
+                                    placeholder="{{e.variable.key}}" 
+                                    ng-model="e.variable.value"
+                                    ng-if="e.type=='Text' && section.type == 'String' && e.hasVar && e.variable.isEditable && e.variable.key == '$accountName'" 
+                                    ng-class="{isEditable:e.variable.isEditable}"
+                                    uib-typeahead="account as account.name for account in sundryDebtors | filter:$viewValue | limitTo:5"
+                                    typeahead-on-select="setSelectedAccount(e.variable.value)"
+                                  />
+                                  <input 
+                                    type="text"
+                                    placeholder="{{e.variable.key}}" 
+                                    ng-model="e.variable.value"
+                                    ng-if="e.type=='Text' && section.type == 'String' && e.hasVar && e.variable.isEditable && e.variable.key == '$proformaDate'" 
+                                    ng-class="{isEditable:e.variable.isEditable}"
+                                    ng-change="updateProformaDate(e.variable.value)"
+                                  />
+                            </span>
+
+                          </span>
+
+                        </span>
+
+                    </span>
+
+
+                  </div>
+              </div>
+
+
+            </div>
+        
+        </div>
+
+
+    </uib-tab>
+    <!--create proforma end-->
+
+
+
+    <uib-tab heading="Template" class="background-transparent">
+        <div class="y-scroll" ng-include="'/public/webapp/Settings/proforma-temp.html'" cover-page></div>
+    </uib-tab>
+    
+
+  </uib-tabset>
+</div>
+
+

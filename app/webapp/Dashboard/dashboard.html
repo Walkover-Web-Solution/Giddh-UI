@@ -1,29 +1,28 @@
 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20" auto-height>
   <section id="dashboard" class="clearfix">
+    <!--<div class="row">-->
+      <!--<button class="btn btn-success pull-right" ng-click="hardRefresh()">Refresh All</button>-->
+    <!--</div>-->
     <div class="container-fluid row mrT2">
       <div class="col-xs-12">
         <div class="col-xs-4 padding-0">
           <live-account ng-controller="liveaccountsController"></live-account>
         </div>
-        <div class="col-xs-8 padding-0">
-          <history ng-controller="historicalgraphController"></history>
-        </div>
-      </div>
-    </div>
-    <div class="container-fluid row mrT2">
-      <div class="col-xs-12">
-        <div class="col-xs-12 padding-0">
-          <compare-graph ng-controller="comparisiongraphController"></compare-graph>
-        </div>
-      </div>
-    </div>
-    <div class="container-fluid row mrT2">
-      <div class="col-xs-12">
-        <div class="col-xs-6 padding-0">
+        <div class="col-xs-4 padding-0">
           <pie-chart ng-controller="piechartController"></pie-chart>
         </div>
-        <div class="col-xs-6 padding-0">
+        <div class="col-xs-4 padding-0">
           <revenue-chart ng-controller="revenuechartController"></revenue-chart>
+        </div>
+      </div>
+    </div>
+    <div class="container-fluid row mrT2">
+      <div class="col-xs-12">
+        <div class="col-xs-6 padding-0">
+          <compare-graph ng-controller="comparisiongraphController"></compare-graph>
+        </div>
+        <div class="col-xs-6 padding-0">
+          <history ng-controller="historicalgraphController"></history>
         </div>
       </div>
     </div>

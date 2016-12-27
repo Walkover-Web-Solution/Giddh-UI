@@ -189,8 +189,16 @@ angular.module('exportDirectives', [])
             group.closingBalance = obj.closingBalance.amount + $filter('recType')(obj.closingBalance.type, obj.closingBalance.amount)
             #group.closingBalanceType = obj.closingBalance.type
             if obj.isVisible
-              total.ob += obj.forwardedBalance.amount
-              total.cb += obj.closingBalance.amount
+              if obj.forwardedBalance.type == "DEBIT"
+                total.ob = total.ob + obj.forwardedBalance.amount
+              else
+                total.ob = total.ob - obj.forwardedBalance.amount
+              if obj.closingBalance.type == "DEBIT"
+                total.cb = total.cb + obj.closingBalance.amount
+              else
+                total.cb = total.cb - obj.closingBalance.amount
+#              total.ob += obj.forwardedBalance.amount
+#              total.cb += obj.closingBalance.amount
               total.cr += obj.creditTotal
               total.dr += obj.debitTotal
               groups.push(group)
@@ -238,6 +246,16 @@ angular.module('exportDirectives', [])
           total.cb = $filter('number')(total.cb, 2)
           total.dr = $filter('number')(total.dr, 2)
           total.cr = $filter('number')(total.cr, 2)
+          if total.ob < 0
+            total.ob = total.ob * -1
+            total.ob = total.ob + " Cr"
+          else
+            total.ob = total.ob + " Dr"
+          if total.cb < 0
+            total.cb = total.cb * -1
+            total.cb = total.cb + " Cr"
+          else
+            total.cb = total.cb + " Dr"
           OBT = total.ob.toString()
           DBT = total.dr.toString()
           CDT = total.cr.toString()
@@ -411,11 +429,19 @@ angular.module('exportDirectives', [])
                             account.ClosingBalanceType = acc.closingBalance.type
                             account.OpeningBalance = acc.openingBalance.amount + $filter('recType')(acc.openingBalance.type, acc.openingBalance.amount)
                             childGroup.subAccounts.push account
-                            total.ob += acc.openingBalance.amount
-                            total.cb += acc.closingBalance.amount
+                            if acc.openingBalance.type == "DEBIT"
+                              total.ob = total.ob + acc.openingBalance.amount
+                            else
+                              total.ob = total.ob - acc.openingBalance.amount
+                            if acc.closingBalance.type == "DEBIT"
+                              total.cb = total.cb + acc.closingBalance.amount
+                            else
+                              total.cb = total.cb - acc.closingBalance.amount
+#                            total.ob += acc.openingBalance.amount
+#                            total.cb += acc.closingBalance.amount
                             total.cr += acc.creditTotal
                             total.dr += acc.debitTotal
-                      
+
                       if grp.childGroups.length > 0
                         sortData(grp.childGroups, childGroup.subGroups)
 
@@ -448,6 +474,16 @@ angular.module('exportDirectives', [])
           total.cb = $filter('number')(total.cb, 2)
           total.dr = $filter('number')(total.dr, 2)
           total.cr = $filter('number')(total.cr, 2)
+          if total.ob < 0
+            total.ob = total.ob * -1
+            total.ob = total.ob + " Cr"
+          else
+            total.ob = total.ob + " Dr"
+          if total.cb < 0
+            total.cb = total.cb * -1
+            total.cb = total.cb + " Cr"
+          else
+            total.cb = total.cb + " Dr"
           # write table footer
           pdf.line(10, colY, 200, colY)
           pdf.text(10, colY + 5, "TOTAL")

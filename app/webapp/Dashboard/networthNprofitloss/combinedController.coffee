@@ -185,13 +185,13 @@ combinedController = ($scope, $rootScope, localStorageService, toastr, groupServ
     $state.go('Reports',{'frmDt': $scope.fromDate, 'toDt': $scope.toDate, 'type': 'networth'})
 
   $scope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.setDateByFinancialYear()
       $scope.getComData($scope.fromDate,$scope.toDate)
 
 combined.controller('combinedController',combinedController)
 
-.directive 'combined', () ->{
+.directive 'combined',[($locationProvider,$rootScope) -> {
   restrict: 'E',
-  templateUrl: '/public/webapp/Dashboard/networthNprofitloss/combined.html'
-}
+  templateUrl: 'https://test-fs8eefokm8yjj.stackpathdns.com/public/webapp/Dashboard/networthNprofitloss/combined.html'
+}]

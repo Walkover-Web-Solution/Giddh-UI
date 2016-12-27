@@ -141,8 +141,8 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
     "options": $scope.chartOptionsWODiff
   }
   $scope.groupArray = {
-    sales: ["revenue_from_operations"]
-    expense: ["indirect_expenses","operating_cost"]
+    sales: [$rootScope.groupName.revenueFromOperations]
+    expense: [$rootScope.groupName.indirectExpenses,$rootScope.groupName.operatingCost]
   }
 
   $scope.salesData = []
@@ -349,13 +349,17 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
     setDate+"-"+toDate
 
   $scope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.getData($scope.selectedChart)
+
+  $scope.$on 'reloadAll', (event) ->
+    $scope.getData($scope.selectedChart)
 
 compare.controller('comparisiongraphController',comparisiongraphController)
 
-.directive 'compareGraph', () ->{
+.directive('compareGraph',[($locationProvider) -> {
   restrict: 'E'
-  templateUrl: '/public/webapp/Dashboard/comparisionGraphs/compare.html'
+  templateUrl: 'https://test-fs8eefokm8yjj.stackpathdns.com/public/webapp/Dashboard/comparisionGraphs/compare.html'
 #  controller: 'comparisiongraphController'
-}
+}]
+)

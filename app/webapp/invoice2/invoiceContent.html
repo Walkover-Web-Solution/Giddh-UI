@@ -1,0 +1,348 @@
+<div class="row">
+  <div class="add-transition" ng-class="{'col-xs-12' : flyDiv == false || hideFilters == true, 'col-xs-10' : flyDiv == true && hideFilters == false}" auto-height>
+    <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
+    <uib-tabset class="custom-tabset">
+      <uib-tab class="mrB1" heading="View" select="setTab(0)">
+        <div class="row mr1" ng-if="invoices.results.length == 0">
+          <div class="no-data">
+            <h1>No invoices found!</h1>
+            <img src="/public/webapp/Globals/images/no-data.png" alt="No Data">
+          </div>
+        </div>
+        <div class="row mr1 y-scroll" ng-if="invoices.results.length > 0" cover-page>
+          <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
+          <table class="table table-bordered">
+            <thead>
+            <th ng-click="sortVarInv = 'invoiceNumberM';reverseInv = !reverseInv;sortInvoices(sortVarInv, reverseInv)">
+              Invoice number
+              <span ng-show="sortVarInv == 'invoiceNumberM' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
+              <span ng-show="sortVarInv == 'invoiceNumberM' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
+            </th>
+            <th ng-click="sortVarInv = 'account.name';reverseInv = !reverseInv;sortInvoices(sortVarInv, reverseInv)">
+              Account
+              <span ng-show="sortVarInv == 'account.name' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
+              <span ng-show="sortVarInv == 'account.name' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
+            </th>
+            <th ng-click="sortVarInv = 'invoiceDateObj';reverseInv = !reverseInv;sortInvoices(sortVarInv, reverseInv)">
+              Invoice date
+              <span ng-show="sortVarInv == 'invoiceDateObj' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
+              <span ng-show="sortVarInv == 'invoiceDateObj' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
+            </th>
+            <th ng-click="sortVarInv = 'grandTotal';reverseInv = !reverseInv;sortInvoices(sortVarInv, reverseInv)">
+              Total Amount
+              <span ng-show="sortVarInv == 'grandTotal' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
+              <span ng-show="sortVarInv == 'grandTotal' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
+            </th>
+            <th ng-click="sortVarInv = 'balanceDue';reverseInv = !reverseInv;sortInvoices(sortVarInv, reverseInv)">
+              Balance due
+              <span ng-show="sortVarInv == 'balanceDue' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
+              <span ng-show="sortVarInv == 'balanceDue' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
+            </th>
+            <th>Action to perform</th>
+            <th ng-click="sortVarInv = 'balanceStatus';reverseInv = !reverseInv;sortInvoices(sortVarInv, reverseInv)">
+              Status
+              <span ng-show="sortVarInv == 'balanceStatus' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
+              <span ng-show="sortVarInv == 'balanceStatus' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
+            </th>
+            <th></th>
+            </thead>
+            <tfoot>
+            <td colspan="8">
+              <div class="pagination pull-right">
+                <ul class="list-inline">
+                  <li>
+                    <button class="btn btn-default" ng-disabled="invoiceCurrentPage == 1" ng-click="prevPageInv(); getAllInvoices()">Prev</button>
+                  </li>
+                  <li>{{invoiceCurrentPage}}/{{invoices.totalPages}}</li>
+                  <li>
+                    <button class="btn btn-default" ng-disabled="invoiceCurrentPage == invoices.totalPages" ng-click="nextPageInv(); getAllInvoices()">Next</button>
+                  </li>
+                </ul>
+              </div>
+            </td>
+            </tfoot>
+            <tbody>
+            <tr ng-repeat="invoice in invoices.results">
+              <!--<td>-->
+              <!--<input type="checkbox">-->
+              <!--</td>-->
+              <td>
+                <a href="javascript:void(0)" ng-click="prevGenerateInv(invoice)">
+                  {{invoice.invoiceNumber}}
+                </a>
+                <!--<label ng-model="invoice.invoiceNumber">{{invoice.invoiceNumber}}</label>-->
+              </td>
+              <td>
+                {{invoice.account.name}}
+              </td>
+              <td>
+                {{invoice.invoiceDate}}
+              </td>
+              <td>
+                {{invoice.grandTotal}}
+              </td>
+              <td>
+                {{invoice.balanceDue}}
+              </td>
+              <td>
+                <select class="form-control" ng-model="invoice.condition" ng-change="performAction(invoice)">
+                  <option value="">-- Select --</option>
+                  <option value="paid">Paid</option>
+                  <option value="unpaid">Unpaid</option>
+                  <option value="cancel">Cancel</option>
+                  <option value="hold">Hold</option>
+                </select>
+              </td>
+              <td>
+                {{invoice.balanceStatus}}
+              </td>
+              <td>
+                <i class="glyphicon glyphicon-trash color-giddh" ng-click="deleteInvoice(invoice)"></i>
+                <!--<i class="glyphicon glyphicon-download" ng-click="downloadInvoice(ledger.invoiceNumber, $event)"></i>-->
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <!--</perfect-scrollbar>-->
+        </div>
+      </uib-tab>
+      <uib-tab class="mrB1" select="setTab(1)">
+        <uib-tab-heading>Generate</uib-tab-heading>
+          <div class="row mr1" ng-if="ledgers.results.length == 0">
+          <div class="no-data">
+            <h1>No entries found!</h1>
+            <img src="/public/webapp/Globals/images/no-data.png" alt="No Data">
+          </div>
+        </div>
+        <div class="row" ng-if="ledgers.results.length > 0">
+          <div class="row mr1">
+            <div class="col-xs-6">
+              <ul class="list-inline">
+                <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
+                <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
+                <li><button ng-disabled="!showPreview" class="btn btn-default" ng-click="prevAndGenInv()">Preview & Generate</button></li>
+                <li><a tooltip-placement="right" uib-tooltip="How to generate invoice?" style="cursor:pointer;" href="http://faq.giddh.com/invoice/how-to-make-invoice" target="_blank"><i class="glyphicon glyphicon-question-sign"></i></a></li>
+              </ul>
+            </div>
+            <div class="col-xs-6">
+              <input type="search" class="form-control maxW150 pull-right" placeholder="Search" ng-model="searchInLedger">
+            </div>
+            <!--<div class="col-xs-3">-->
+            <!-- -->
+            <!--</div>-->
+            <!--<div class="col-xs-3">-->
+            <!-- -->
+            <!--</div>-->
+          </div>
+          <div class="row mr1 y-scroll" cover-page>
+            <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
+            <table class="table table-bordered">
+              <thead>
+              <th style="width:3%">
+                <input name="checkall" type="checkbox" ng-model="checkall" ng-change="selectAllLedger(checkall)">
+
+              </th>
+              <th style="width:10%" ng-click="sortVar = 'entryDate';reverse = !reverse">
+                Date
+                <span ng-show="sortVar == 'entryDate' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
+                <span ng-show="sortVar == 'entryDate' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
+              </th>
+              <th style="width:23%">Particular</th>
+              <th style="width:7%">Amount</th>
+              <th style="width:30%" ng-click="sortVar = 'description';reverse = !reverse">
+                Description
+                <span ng-show="sortVar == 'description' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
+                <span ng-show="sortVar == 'description' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
+              </th>
+              <th style="width:7%" ng-click="sortVar = 'total.amount';reverse = !reverse">
+                Total
+                <span ng-show="sortVar == 'total.amount' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
+                <span ng-show="sortVar == 'total.amount' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
+              </th>
+              <th style="width:20%" ng-click="sortVar = 'account.name';reverse = !reverse">
+                Account
+                <span ng-show="sortVar == 'account.name' && !reverseInv" class="glyphicon glyphicon-chevron-down"></span>
+                <span ng-show="sortVar == 'account.name' && reverseInv" class="glyphicon glyphicon-chevron-up"></span>
+              </th>
+              </thead>
+              <tfoot>
+              <td colspan="8">
+                <div class="pagination pull-right">
+                  <ul class="list-inline">
+                    <li>
+                      <button class="btn btn-default" ng-disabled="ledgerCurrentPage == 1" ng-click="prevPageLed(); getAllTransaction()">Prev</button>
+                    </li>
+                    <li>{{ledgerCurrentPage}}/{{ledgers.totalPages}}</li>
+                    <li>
+                      <button class="btn btn-default" ng-disabled="ledgerCurrentPage == ledgers.totalPages" ng-click="nextPageLed(); getAllTransaction()">Next</button>
+                    </li>
+                  </ul>
+                </div>
+              </td>
+              </tfoot>
+              <tbody>
+              <tr ng-repeat="ledger in ledgers.results | orderBy:sortVar:reverse | filter:searchInLedger track by $index" ng-class="{'danger': checkTransaction(ledger.uniqueName)}">
+                <td style="width:3%" rowspan="ledger.transactions.length">
+                  <input type="checkbox" ng-model="ledger.checked" ng-change="addThis(ledger, ledger.checked)">
+                </td>
+                <td style="width:10%" rowspan="ledger.transactions.length">
+                  {{ledger.entryDate}}
+                </td>
+                <td colspan="2" style="padding:0;border-top:0px;border-bottom:0px;">
+                  <table class="table">
+                    <tr ng-repeat="transaction in ledger.transactions"  ng-class="{'danger': checkTransaction(ledger.uniqueName)}">
+                      <td style="width:77%">
+                        {{transaction.particular.name}}
+                      </td>
+                      <td style="width:23%; border-left: 1px solid lightgrey;">
+                        {{transaction.amount}}
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td style="width:33%">
+                  {{ledger.description}}
+                </td>
+                <td style="width:7%" rowspan="ledger.transactions.length">
+                  {{ledger.total.amount}}
+                </td>
+                <td style="width:20%" rowspan="ledger.transactions.length">
+                  {{ledger.account.name}}
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <!--</perfect-scrollbar>-->
+          </div>
+        </div>
+      </uib-tab>
+      <uib-tab heading="Template" select="setTab(2)">
+        <div class="y-scroll" ng-include="'/public/webapp/Invoice/invoiceContent.html'" cover-page ng-controller="invoiceController">
+
+        </div>
+        <!--<div class="y-scroll" ng-include="'/public/webapp/Settings/invoice-temp.html'" cover-page>-->
+
+        <!--</div>-->
+      </uib-tab>
+    </uib-tabset>
+    <!--</perfect-scrollbar>-->
+  </div>
+  <div class="graph-filters add-transition" ng-class="{'col-xs-1 mrT5 pos-abs right0' : flyDiv == false, 'col-xs-2 pos-abs right0 background-color-giddh' : flyDiv == true}" ng-hide="hideFilters">
+    <label class="pos-abs filter-btn mrB1" ng-class="{'witClr' : flyDiv == true}" ng-click="flyDiv = !flyDiv">
+      Filters
+    </label>
+    <div ng-show="flyDiv" class="mrT5 pd1 pos-abs" ng-class="{'flying-div' : flyDiv == true}" auto-height>
+      <div class="clearfix">
+        <label>From</label>
+        <input type="text" class="form-control"
+               uib-datepicker-popup="{{format}}" required
+               datepicker-options="dateOptions"
+               is-open="fromDatePickerIsOpen"
+               ng-click="fromDatePickerOpen()"
+               ng-model="dateData.fromDate"
+               max-date="today"
+               placeholder="from date"
+            />
+      </div>
+      <div class="clearfix mrT1">
+        <label>To</label>
+        <input type="text" class="form-control"
+               uib-datepicker-popup="{{format}}" required
+               datepicker-options="dateOptions"
+               is-open="toDatePickerIsOpen"
+               ng-click="toDatePickerOpen()"
+               ng-model="dateData.toDate"
+               min-date="dateData.fromDate"
+               max-date="today"
+               placeholder="to date"
+            />
+      </div>
+      <div ng-if="selectedTab == 0">
+        <div class="clearfix mrT1">
+          <label>Account</label>
+          <div class="input-group">
+            <ui-select allow-clear ng-model="filtersInvoice.account" theme="bootstrap">
+              <ui-select-match placeholder="Select Accounts" reset-search-input="true">
+                {{$select.selected.name}}
+              </ui-select-match >
+              <ui-select-choices
+                  repeat="acc in queryFltAccnt | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,[groupName.revenueFromOperations,groupName.sundryDebtors])" style="margin-left:-30px;">
+                <span>{{acc.name}} ({{acc.uniqueName}})</span>
+              </ui-select-choices>
+            </ui-select>
+                    <span class="input-group-btn">
+                      <button type="button" ng-click="filtersInvoice.account = undefined" class="btn btn-default">
+                        <span class="glyphicon glyphicon-trash"></span>
+                      </button>
+                    </span>
+          </div>
+        </div>
+        <div class="clearfix mrT1">
+          <label>Invoice Number</label>
+          <input type="text" class="form-control" ng-model="filtersInvoice.invoiceNumber" placeholder="Invoice number">
+        </div>
+        <div class="clearfix mrT1">
+          <label>Balance Due</label>
+          <select ng-model="filtersInvoice.option" class="col-xs-6 form-control">
+            <option>-- Select --</option>
+            <option>Greater than</option>
+            <option>Greater than and Equals</option>
+            <option>Less than</option>
+            <option>Less than and Equals</option>
+            <option>Equals</option>
+          </select>
+          <input type="text" class="form-control col-xs-6" ng-model="filtersInvoice.balanceDue" placeholder="Balance Due">
+        </div>
+        <div class="clearfix mrT1">
+          <label>Count</label>
+          <select class="form-control" ng-model="filtersInvoice.count" ng-options="count for count in counts">
+          </select>
+        </div>
+      </div>
+      <div ng-if="selectedTab == 1">
+        <div class="clearfix mrT1">
+          <label>Account</label>
+          <div class="input-group">
+            <ui-select allow-clear ng-model="filtersLedger.account" theme="bootstrap">
+              <ui-select-match placeholder="Select Accounts" reset-search-input="true">
+                {{$select.selected.name}}
+              </ui-select-match >
+              <ui-select-choices
+                  repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,[groupName.revenueFromOperations,groupName.sundryDebtors])">
+                <span>{{acc.name}} ({{acc.uniqueName}})</span>
+              </ui-select-choices>
+            </ui-select>
+                    <span class="input-group-btn">
+                      <button type="button" ng-click="filtersLedger.account = undefined" class="btn btn-default">
+                        <span class="glyphicon glyphicon-trash"></span>
+                      </button>
+                    </span>
+          </div>
+        </div>
+        <div class="clearfix mrT1">
+          <label>Description</label>
+          <input type="text" class="form-control" ng-model="filtersLedger.description" placeholder="By description">
+        </div>
+        <div class="clearfix mrT1">
+          <label>Count</label>
+          <select class="form-control" ng-model="filtersLedger.count" ng-options="count for count in counts">
+          </select>
+        </div>
+        <div class="clearfix mrT1">
+          <label>Amount</label>
+          <select ng-model="filtersLedger.option" class="col-xs-6 form-control">
+            <option>Greater than</option>
+            <option>Greater than and Equals</option>
+            <option>Less than</option>
+            <option>Less than and Equals</option>
+            <option>Equals</option>
+          </select>
+          <input type="text" class="form-control col-xs-6" ng-model="filtersLedger.entryTotal" placeholder="By amount">
+        </div>
+      </div>
+      <div class="clearfix mrT1">
+        <button class="btn btn-primary" ng-click="commonGoButtonClick()">GO</button>
+      </div>
+    </div>
+  </div>
+</div>

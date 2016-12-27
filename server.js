@@ -10,9 +10,9 @@ var session = require('express-session');
 var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
-var mongoose = require('mongoose');
-var MongoStore = require('connect-mongo')(session);
-var MemcachedStore = require('connect-memcached')(session);
+//var mongoose = require('mongoose');
+// var MongoStore = require('connect-mongo')(session);
+//var MemcachedStore = require('connect-memcached')(session);
 //global.sessionTTL = 1000 * 60
 //Example POST method invocation 
 var Client = require('node-rest-client').Client; 
@@ -42,12 +42,6 @@ var port = process.env.PORT || 8000;
 //enabling cors
 app.use(cors())
 
-app.use(function (req, res, next) {
-    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-    res.header('Expires', '-1');
-    res.header('Pragma', 'no-cache');
-    next()
-});
 
 //set engine
 app.set('public', __dirname + '/public/');
@@ -84,13 +78,13 @@ app.use(session({
     secure: false,
     maxAge: sessionTTL
   },
-  store: new MongoStore({
-    url: settings.mongoUrl,
-    autoRemove: 'interval',
-    autoRemoveInterval: sessionTTL,
-    ttl: sessionTTL,
-    touchAfter: sessionTTL - 300
-  })
+  // store: new MongoStore({
+  //   url: settings.mongoUrl,
+  //   autoRemove: 'interval',
+  //   autoRemoveInterval: sessionTTL,
+  //   ttl: sessionTTL,
+  //   touchAfter: sessionTTL - 300
+  // })
   // store   : new MemcachedStore({
   //   hosts: ['127.0.0.1:11211'],
   //   secret: 'keyboardcat'
@@ -151,6 +145,17 @@ global.mStorage = multer.diskStorage({
   }
 })
 
+
+// disable browser cache
+app.use(function (req, res, next) {
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    next()
+});
+
+
+
 var parseUploads = multer({storage: mStorage}).single('file');
 
 var currency = require('./public/routes/webapp/currency');
@@ -170,12 +175,21 @@ var coupon = require('./public/routes/webapp/coupon')
 var yodlee = require('./public/routes/webapp/yodlee')
 var ebanks  = require('./public/routes/webapp/ebanks')
 var magicLink = require('./public/routes/webapp/magic')
+var timetest = require('./public/routes/webapp/timetest')
+var invoice = require('./public/routes/webapp/invoices')
+var templates = require('./public/routes/webapp/templates')
+var proforma = require('./public/routes/webapp/proformas')
+var placeholders = require('./public/routes/webapp/placeholders')
 
+app.use('/time-test', timetest);
 app.use('/currency', currency);
 app.use('/users', users);
 app.use('/roles', roles);
 app.use('/location', location);
 app.use('/company', company);
+app.use('/app/company/:companyUniqueName/placeholders', placeholders);
+app.use('/company/:companyUniqueName/invoices', invoice);
+app.use('/company/:companyUniqueName/proforma', proforma);
 app.use('/company/:companyUniqueName/groups', groups);
 app.use('/company/:companyUniqueName/accounts', accounts);
 app.use('/company/:companyUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
@@ -183,6 +197,7 @@ app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/profit-loss', profitLoss);
+app.use('/company/:companyUniqueName/templates', templates);
 app.use('/company/:companyUniqueName', reports);
 app.use('/coupon', coupon);
 app.use('/yodlee', yodlee);
@@ -208,6 +223,7 @@ function redirectUnmatched(req, res) {
 app.listen(port, function () {
   console.log('Express Server running at port', this.address().port);
 });
+
 /*
  |--------------------------------------------------------------------------
  | Error Handlers

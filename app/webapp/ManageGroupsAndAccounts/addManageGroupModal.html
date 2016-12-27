@@ -1,7 +1,7 @@
 <div id="getGroupModal">
 
   <div class="modal-header themeBg">
-    <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
+    <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); search.flataccount = ''" aria-label="Close"><span
         aria-hidden="true">&times;</span></button>
     <h3 class="modal-title">Manage Groups &amp; Accounts</h3>
   </div>
@@ -22,7 +22,7 @@
                   <i class="glyphicon glyphicon-search"></i>
                 </div>
 
-                <input type="text" name="grpSrch" class="form-control" ng-model="keyWord" placeholder="Search groups" ng-keyup="setScrollToTop(grpSrch, 'addMngGrpScrBar')" trial-accordion="search">
+                <input type="text" name="grpSrch" class="form-control" ng-model="keyWord" placeholder="Search groups" ng-keyup="setScrollToTop(grpSrch, 'addMngGrpScrBar')" trial-accordion="search" ng-model-options="{debounce:1000}">
                 
 
               </div>
@@ -85,15 +85,15 @@
               <div class="input-group-addon">
                 <i class="glyphicon glyphicon-search"></i>
               </div>
-              <input type="text" name="accountsSearch" ng-model="accountsSearch" class="form-control" placeholder="Search accounts" ng-model-options="{debounce: 200}">
+              <input type="text" name="accountsSearch" ng-model="search.flataccount" class="form-control" placeholder="Search accounts" ng-change="searchAccountsC5(search.flataccount)" ng-model-options="{debounce:1000}">
             </div>
           </div>
 
         <section class="pr" style="height: 378px">
-            <div class="search-loading" ng-hide="showAccountListDetails || showListGroupsNow || fltAccntListPaginated.length > 0">
+            <div class="search-loading" ng-hide="showAccountListDetails || showListGroupsNow || fltAccntListcount5.length > 0">
               <span class="spinner small"></span> Loading…
             </div>
-            <div ng-if="showAccountListDetails">
+            <div ng-if="showAccountListDetails" ng-hide="search.flataccount.length > 2">
 
               <div class="pdL1 pdR1 mrB1" ng-if="groupAccntList.length == 0">
                 <h4 class="list-group-item-heading small">Oops, there are no accounts in <strong>{{selectedGroup.name}}</strong>
@@ -129,12 +129,12 @@
               </div>
             </div>
 
-            <div ng-if="accountsSearch.length > 0 || isEmptyObject(selectedGroup)">
+            <div ng-if="search.flataccount.length > 0 || isEmptyObject(selectedGroup)">
               <h3 class="mrB1 mrL1 small">Accounts from <strong>all group</strong></h3>
               <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
               ng-class="{'minimizeBoth': accountsSearch.length > 0}">
                 <div class="list-group">
-                  <a ng-repeat="value in fltAccntListPaginated | filter:accountsSearch | limitTo: flatAccList.limit | filter:addManageAccSearch as addManageSearchList"
+                  <a ng-repeat="value in fltAccntListcount5 | filter:accountsSearch | limitTo: flatAccListC5.limit  | orderBy:value.uniqueName | filter:addManageAccSearch as addManageSearchList "
                      href="javascript:void(0)" ng-click="showAccountDtl(value)"
                      class="list-group-item"
                      ng-class="{'active': selectedAccntMenu === value}">
@@ -144,7 +144,7 @@
                       ng-bind-html="value.name | highlight: accountsSearch"></h4>
                   </a>
                 </div>
-                <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreAcc(selectedCompany.uniqueName)" ng-if="fltAccntListPaginated.length > 5 && addManageSearchList.length >= flatAccList.limit" >Load More</a>
+                <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreAcc(selectedCompany.uniqueName, search.flataccount)" ng-if="flatAccListC5.currentPage <= flatAccListC5.totalPages">Load More</a>
               </perfect-scrollbar>
             </div>
         <!-- uib-tooltip="{{value.parentGroups[0].name}}"tooltip-placement="bottom" ng-if="value.parentGroups[0].name!=selectedGroup.name" -->

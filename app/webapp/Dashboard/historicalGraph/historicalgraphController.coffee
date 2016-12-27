@@ -5,7 +5,7 @@ history = angular.module('historicalModule',[])
 historicalgraphController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, $timeout, reportService) ->
   $scope.dataAvailable = false
   $scope.errorMessage = ""
-  $scope.groupArray = ["revenue_from_operations","indirect_expenses","operating_cost"]
+  $scope.groupArray = [$rootScope.groupName.revenueFromOperations,$rootScope.groupName.indirectExpenses,$rootScope.groupName.operatingCost]
   $scope.monthArray = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   $scope.chartData = {
   "type": "ComboChart",
@@ -99,9 +99,9 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
         'interval': "monthly"
       }
       graphParam = {
-        'groups': ["indirect_expenses","operating_cost"]
+        'groups': [$rootScope.groupName.indirectExpenses,$rootScope.groupName.operatingCost]
       }
-      $scope.getHistoryData(reqParam, {"groups":["revenue_from_operations"]})
+      $scope.getHistoryData(reqParam, {"groups":[$rootScope.groupName.revenueFromOperations]})
       $scope.getHistoryData(reqParam, graphParam)
 
   $scope.getGraphParam = (groupUName) ->
@@ -188,15 +188,15 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
   $scope.setDateByFinancialYear()
 
   $scope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.setDateByFinancialYear()
       $scope.getHistory($scope.fromDate,$scope.toDate)
 
 
 history.controller('historicalgraphController',historicalgraphController)
 
-.directive 'history', () ->{
+.directive 'history',[($locationProvider,$rootScope) -> {
   restrict: 'E'
-  templateUrl: '/public/webapp/Dashboard/historicalGraph/historicalGraph.html'
+  templateUrl: 'https://test-fs8eefokm8yjj.stackpathdns.com/public/webapp/Dashboard/historicalGraph/historicalGraph.html'
 #  controller: 'historicalgraphController'
-}
+}]

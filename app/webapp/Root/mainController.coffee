@@ -1,6 +1,30 @@
 "use strict"
 
 mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location) ->
+  $rootScope.scriptArrayHead = [
+    "/public/webapp/newRelic.js"
+    "/public/webapp/core_bower.min.js"
+    "/public/webapp/_extras.js"
+    "/public/webapp/app.js"
+    "/public/webapp/app.min.js"
+  ]
+  $rootScope.scriptArrayBody = [
+    "/node_modules/rxjs/bundles/Rx.umd.js"
+    "/node_modules/es6-shim/es6-shim.js"
+    "/node_modules/angular2/bundles/angular2-polyfills.js"
+    "/node_modules/angular2/bundles/angular2-all.umd.min.js"
+    "/public/webapp/ng2.js"
+  ]
+  $rootScope.groupName = {
+    sundryDebtors : "sundrydebtors"
+    revenueFromOperations : "revenuefromoperations"
+    indirectExpenses : "indirectexpenses"
+    operatingCost: "operatingcost"
+    otherIncome: "otherincome"
+  }
+  $rootScope.flyAccounts = true
+  $rootScope.$stateParams = {}
+#  $rootScope.prefixThis = ""
   $rootScope.cmpViewShow = true
   $rootScope.showLedgerBox = true
   $rootScope.showLedgerLoader = false
@@ -26,12 +50,34 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     currentPage : 1
     limit: 5
   }
+  $rootScope.queryFltAccnt = []
   $rootScope.fltAccntListPaginated = []
   $rootScope.fltAccountListFixed = []
   $rootScope.CompanyList = []
   $rootScope.companyIndex = 0
   $rootScope.selectedAccount = {}
   $rootScope.hasOwnCompany = false
+  $rootScope.sharedEntity = ""
+  $rootScope.croppedAcntList = []
+
+  $scope.addScript = () ->
+    _.each($rootScope.scriptArrayHead, (script) ->
+      sc = document.createElement("script")
+      sc.src = $scope.prefixUrl(script)
+      sc.type = "text/javascript"
+      document.head.appendChild(sc)
+    )
+    _.each($rootScope.scriptArrayBody, (script) ->
+      sc = document.createElement("script")
+      sc.src = $scope.prefixUrl(script)
+      sc.type = "text/javascript"
+      document.body.appendChild(sc)
+    )
+
+  $scope.prefixUrl = (path) ->
+    str = "http://1." + location.host + path
+    console.log(str)
+    return str
 
   $scope.runSetupWizard = () ->
     $rootScope.setupModalInstance = $uibModal.open(
@@ -80,6 +126,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       # don't need to clear below
       # _userDetails, _currencyList
       localStorageService.clearAll()
+      window.sessionStorage.clear()
       window.location = "/thanks"
     ), (res) ->
 
@@ -106,6 +153,15 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.onGetRolesFailure = (res) ->
     toastr.error("Something went wrong while fetching role", "Error")
+
+
+  $scope.getCdnUrl = ->
+    roleServices.getEnvVars().then($scope.onGetEnvSuccess, $scope.onGetEnvFailure)
+
+  $scope.onGetEnvSuccess = (res) ->
+    $rootScope.prefixThis = res.envUrl
+
+  $scope.onGetEnvFailure = (res) ->
 
   # switch user
   $scope.ucActive = false
@@ -142,6 +198,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     return pattern.test(emailStr)
   
   $scope.getRoles()
+  $scope.getCdnUrl()
   $timeout(->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
     if !_.isEmpty($rootScope.selectedCompany)
@@ -332,6 +389,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.checkPermissions($rootScope.selectedCompany)
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
+#    $rootScope.getCroppedAccountList(company.uniqueName, '')
 
 
   $rootScope.getParticularAccount = (searchThis) ->
@@ -344,6 +402,52 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.removeAccountFromPaginatedList = (account) ->
     $rootScope.fltAccntListPaginated = _.without($rootScope.fltAccntListPaginated,account)
+
+  $scope.gettingCroppedAccount = false
+  $rootScope.getCroppedAccountList = (compUname, query) ->
+    reqParam = {
+      cUname: compUname
+      query: query
+    }
+    data = {}
+    if $scope.gettingCroppedAccount == false || !_.isEmpty(query)
+      $scope.gettingCroppedAccount = true
+      companyServices.getCroppedAcnt(reqParam, data).then($scope.getCroppedAccListSuccess, $scope.getCroppedAccListFailure)
+
+  $scope.getCroppedAccListSuccess = (res) ->
+    $scope.gettingCroppedAccount = false
+    $rootScope.croppedAcntList = res.body.results
+
+  $scope.getCroppedAccListFailure = (res) ->
+    $scope.gettingCroppedAccount = false
+    toastr.error(res.data.message)
+
+  $rootScope.getFlatAccntsByQuery = (query) ->
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      q: query
+      page: 1
+      count: 0
+    }
+    groupService.getFlatAccList(reqParam).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)
+
+  $rootScope.postFlatAccntsByQuery = (query,data) ->
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      q: query
+      page: 1
+      count: 0
+    }
+    datatosend = {
+      groupUniqueNames: data
+    }
+    groupService.postFlatAccList(reqParam,datatosend).then($scope.flatAccntQuerySuccess, $scope.flatAccntQueryFailure)
+
+  $scope.flatAccntQuerySuccess = (res) ->
+    $rootScope.queryFltAccnt = res.body.results
+
+  $scope.flatAccntQueryFailure = (res) ->
+    toastr.error(res.data.message)
 
   $scope.workInProgress = false
   $rootScope.getFlatAccountList = (compUname) ->
@@ -361,6 +465,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.getFlatAccountListListSuccess = (res) ->
     $scope.workInProgress = false
     $rootScope.fltAccntListPaginated = res.body.results
+    $rootScope.$emit('account-list-updated')
 #    $rootScope.fltAccountLIstFixed = $rootScope.fltAccntListPaginated
     $rootScope.flatAccList.limit = 5
     
@@ -438,11 +543,13 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     changeData.index = index
     changeData.type = method
     $scope.$broadcast('company-changed', changeData)
+    $rootScope.$emit('company-changed', changeData)
     #$scope.tabs[0].active = true
 
   $rootScope.allowed = true
   $rootScope.doWeHavePermission = (company) ->
     str = company.sharedEntity
+    $rootScope.sharedEntity = str
     if str == null
       $rootScope.allowed = true
     else
@@ -471,5 +578,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.$on('openAddManage', () ->
     $(document).find('#AddManage').trigger('click')
   )
+
+  $scope.showAccounts = () ->
+    $rootScope.flyAccounts = true
+#  $scope.addScript()
 
 giddh.webApp.controller 'mainController', mainController

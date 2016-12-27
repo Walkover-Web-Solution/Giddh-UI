@@ -86,14 +86,14 @@ liveaccountsController = ($rootScope, $scope, $uibModal, userServices, localStor
     toastr.error(res.data.message, "Error")
 
   $scope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.getLiveData()
 
 
 liveaccount.controller('liveaccountsController',liveaccountsController)
 
-.directive 'liveAccount', [() -> {
+.directive 'liveAccount', [($locationProvider,$rootScope) -> {
   restrict: 'E'
-  templateUrl: '/public/webapp/Dashboard/Liveaccounts/liveaccounts.html'
+  templateUrl: 'https://test-fs8eefokm8yjj.stackpathdns.com/public/webapp/Dashboard/Liveaccounts/liveaccounts.html'
 #  controller: 'liveaccountsController'
 }]

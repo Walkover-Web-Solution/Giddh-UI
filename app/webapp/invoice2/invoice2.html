@@ -1,0 +1,25 @@
+<div class="container-fluid">
+  <div class="row">
+    <uib-tabset justified="false">
+        <uib-tab heading="Invoice" select="commonGoButtonClick()">
+          <div ng-include="'/public/webapp/invoice2/invoiceContent.html'">
+
+          </div>
+        </uib-tab>
+      <!-- @if NODE_ENV='DEVELOPMENT' || NODE_ENV='development' -->
+        <uib-tab heading="Proforma (Beta)" select="broadcastToProforma()">
+          <div ng-include="'/public/webapp/invoice2/proforma/proformaContent.html'" ng-controller="proformaController">
+
+          </div>
+        </uib-tab>
+      <!-- @endif -->
+      </uib-tabset>
+  </div>
+</div>
+
+<script type="text/ng-template" id="accountPopUpInvoice.html">
+  <a href="javascript:void(0)" class="account-list-item" set-drop-overflow style="border-bottom:1px solid #e0e0e0;">
+    <span class="account-list-item" ng-bind-html="match.label | uibTypeaheadHighlight:query" style="display: block;font-size:12px"></span>
+    <span class="account-list-item" ng-bind-html="match.model.uniqueName | uibTypeaheadHighlight:query" style="display: block;font-size:10px"></span>
+  </a>
+</script>

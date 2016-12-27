@@ -49,7 +49,7 @@ h1 {
 }
 #three, #four{
   height: 2in;
-  overflow:hidden;
+  overflow:auto !important;
 }
 #five{
   height: 2.5in;
@@ -253,7 +253,35 @@ textarea:disabled, input:disabled{
               <textarea ng-disabled="genMode && editMode || genPrevMode" class="form-control" ng-model="defTempData.company.data" placeholder="Address and other details" rows="5"></textarea>
             </div>
           </section>
-          <section class="col-xs-5 col-xs-offset-2 no-border" id="four">
+          <section class="col-xs-2 no-border" id="ten">
+            <div class="txtAreaWrap" ng-if="!genPrevMode">
+              <h4 class="mrB">Due Date:</h4>
+              <input ng-disabled="!genMode && !editMode" type="text" class="form-control"
+                     uib-datepicker-popup="{{format}}" required
+                     datepicker-options="dateOptions"
+                     is-open="fromDatePickerIsOpen"
+                     ng-click="fromDatePickerOpen()"
+                     ng-model="defTempData.invoiceDetails.dueDate"
+                     min-date="today"
+                     placeholder="due date"
+                  />
+              <!--<input ng-disabled="!genMode && !editMode" ng-model="defTempData.invoiceDetails.dueDate">-->
+            </div>
+            <div class="txtAreaWrap" ng-if="genPrevMode">
+              <h4 class="mrB">Due Date:</h4>
+              <input ng-disabled="!editGenInvoice" type="text" class="form-control"
+                     uib-datepicker-popup="{{format}}" required
+                     datepicker-options="dateOptions"
+                     is-open="fromDatePickerIsOpen"
+                     ng-click="fromDatePickerOpen()"
+                     ng-model="defTempData.invoiceDetails.dueDate"
+                     min-date="today"
+                     placeholder="due date"
+                  />
+              <!--<input ng-disabled="!editGenInvoice" ng-model="defTempData.invoiceDetails.dueDate">-->
+            </div>
+          </section>
+          <section class="col-xs-5 no-border" id="four">
             <!-- if logo or invoiceDetails false then show invoice no -->
             <section class="form-inline clearfix mrB1" ng-if="!tempSet.logo">
               <div class="form-group mrR">
@@ -278,6 +306,8 @@ textarea:disabled, input:disabled{
                 <input ng-if="defTempData.account.attentionTo.length > 0 || genMode" ng-disabled="!genMode" class="form-control" ng-model="defTempData.account.attentionTo" placeholder="Attention To">
               <!--</div>-->
               <textarea ng-disabled="!genMode && !editMode" class="form-control" ng-model="defTempData.account.data" rows="4"  placeholder="Buyer Address and other details"></textarea>
+              <input ng-disabled="!genMode && !editMode" class="form-control" ng-model="defTempData.account.email" placeholder="Buyer email">
+              <input ng-disabled="!genMode && !editMode" class="form-control" ng-model="defTempData.account.mobileNumber" placeholder="Buyer mobile number" maxlength="15">
             </div>
             <div class="txtAreaWrap" ng-if="genPrevMode">
               <!--<div class="form-inline">-->
@@ -289,6 +319,8 @@ textarea:disabled, input:disabled{
                 <input ng-disabled="!editGenInvoice" class="form-control" ng-model="defTempData.account.attentionTo" placeholder="Attention To">
               <!--</div>-->
               <textarea ng-disabled="!editGenInvoice" class="form-control" ng-model="defTempData.account.data"  placeholder="Buyer Address and other details" rows="4"></textarea>
+              <input ng-disabled="!editGenInvoice" class="form-control" ng-model="defTempData.account.email" placeholder="Buyer email">
+              <input ng-disabled="!editGenInvoice" class="form-control" ng-model="defTempData.account.mobileNumber" placeholder="Buyer mobile number" maxlength="15">
             </div>
           </section>
           <!--<section class="col-xs-5" ng-if="defTempData.account.attentionTo.length > 0 || genMode">-->
@@ -490,18 +522,18 @@ textarea:disabled, input:disabled{
           <hr>
           <div class="row">
             <section class="col-xs-12" id="eight">
-              <div class="txtAreaWrap">
+              <div class="txtAreaWrap pos-rel" style="height:100%">
                 
-                <div ng-if="editMode">
-                  <textarea ng-disabled="!editMode" class="form-control" ng-model="defTempData.termsStr" placeholder="Enter your terms" rows="5"></textarea>
+                <div ng-if="editMode" style="height:100%;">
+                  <textarea ng-disabled="!editMode" class="form-control" ng-model="defTempData.termsStr" placeholder="Enter your terms" style="width:100%;height:100%"></textarea>
                 </div>
                 <!-- end if editmode -->
 
-                <pre ng-if="!editMode">
-                  <ol style="list-style: none">
-                    <li ng-repeat="item in defTempData.terms track by $index">{{item}}</li>
-                  </ol>
-                </pre>
+                <textarea ng-if="!editMode" ng-disabled="!editGenInvoice" style="width:100%;height:100%" ng-model="defTempData.termsStr">
+                  <!--<ol style="list-style: none">-->
+                    <!--<li ng-repeat="item in defTempData.terms track by $index">{{item}}</li>-->
+                  <!--</ol>-->
+                </textarea>
 
               </div>
             </section>

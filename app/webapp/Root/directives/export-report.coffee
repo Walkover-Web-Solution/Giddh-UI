@@ -315,3 +315,131 @@ angular.module('trialBalance', []).directive('exportReport', [
     })
     
 ]
+
+.directive 'coverPage', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: "EA"
+  link: (scope, elem, attr) ->
+    interval = Number(attr.timeout) || 2000
+
+    setHeight = () ->
+      top = $(elem).offset().top || 108
+      exclude = $(window).innerHeight() - top
+      height = $(window).innerHeight() - top
+      $(elem).css({"height": height,"min-height":height})
+
+    angular.element($window).on 'resize', ->
+      setHeight()
+
+    $timeout ( ->
+      angular.element($window).triggerHandler('resize')
+    ), interval
+]
+
+.directive 'customSort', ['$window', '$timeout', '$scope', '$filter', ($window, $timeout, $scope, $filter) ->
+  restrict: "A"
+  transclude: true
+  scope: {
+    order: '='
+    sort: '='
+  }
+  template :"<a ng-click='sort_by(order)' style='color: #555555;'>"+
+    "<span ng-transclude></span>"+
+    "<i ng-class='selectedCls(order)'></i>"+
+    "</a>"
+link: (scope, elem, attr) ->
+  scope.sort_by = (newSortingOrder) ->
+    sort = scope.sort;
+
+    if sort.sortingOrder == newSortingOrder
+      sort.reverse = !sort.reverse
+
+    sort.sortingOrder = newSortingOrder
+
+  scope.selectedCls = (column) ->
+    if column == scope.sort.sortingOrder
+      ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'))
+    else
+      'icon-sort'
+
+]
+
+.directive 'getFullHeight', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: "EA"
+  link: (scope, elem, attr) ->
+    setHeight = () ->
+      height = $(window).innerHeight() - 54
+      $(elem).css({"height": height, "overflow-y":"auto"})
+    
+    $(window).on('resize', (e) ->
+      setHeight()
+    )
+
+    setHeight()
+]
+
+
+.directive 'ledgerScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+  restrict: "EA"
+  link: (scope, elem, attrs) ->
+    invoker = $parse(attrs.scrolled)
+
+    $(elem).on('scroll', (e) ->
+      if $(elem).scrollTop()+$(elem).innerHeight() >= elem[0].scrollHeight
+        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight})
+    )
+
+]
+
+.directive 'setPopoverPosition', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: "EA"
+  link: (scope, elem, attrs) ->
+    
+    # setPos = () ->
+    #   $timeout ( ->
+    #     frame = $(window).height() / 3 * 2
+    #     offset = $(elem).offset().top
+        
+    #     if offset > frame
+    #       attrs.$set("popoverPlacement", "top")
+    #     else
+    #       attrs.$set("popoverPlacement", "bottom")
+
+    #   ), 500
+
+    # setPos()
+
+    $(elem).on('mouseover', (e)->
+      if e.pageY > $(window).height() / 3 * 2
+        attrs.$set("popoverPlacement", "top")
+      else
+        attrs.$set("popoverPlacement", "bottom")
+    )
+
+    # $(elem).find('input').on('focus', (e) ->
+    #   if $(e.currentTarget).offset().top > $(window).height() / 3 * 2
+    #     attrs.$set("popoverPlacement", "top")
+    #   else
+    #     attrs.$set("popoverPlacement", "bottom")
+    # )
+
+]
+
+.directive 'trigger-resize', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+  restrict: "EA"
+  link: (scope, elem, attrs) ->
+    
+    $(elem).on('click',(e)->
+      $(window).trigger('resize')
+    )
+
+]
+
+# .directive 'triggerClick', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+#   restrict: "EA"
+#   link: (scope, elem, attrs) ->
+    
+#     $(elem).on('click',(e)->
+#       $(elem).find('input').trigger('click')
+#     )
+
+# ]

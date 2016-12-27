@@ -11,6 +11,15 @@ router.get '/', (req, res) ->
       to: req.query.toDate
       from: req.query.fromDate
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/trial-balance'
+  if req.query.refresh == "true"
+    args =
+      headers:
+        'Auth-Key': req.session.authKey
+        'X-Forwarded-For': res.locales.remoteIp
+      parameters:
+        to: req.query.toDate
+        from: req.query.fromDate
+        refresh: true
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

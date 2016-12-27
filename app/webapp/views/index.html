@@ -2,6 +2,11 @@
 <!-- <html lang="en" ng-app='giddhWebApp'> -->
 <html lang="en">
 <head>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-K2L9QG');</script>
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,14 +16,12 @@
   <!-- LIBRARIES INCLUDE -->
   
   <link rel="stylesheet" type="text/css" href="/public/webapp/Globals/css/giddh.min.css">
-
-
-
+  <script  type="text/javascript" src="/bower_components/tinymce/tinymce.min.js"></script>
   <!-- @if NODE_ENV='PRODUCTION' -->
-  <script  type="text/javascript" src='/public/webapp/newRelic.js'></script>
+  <script  type="text/javascript" src="/public/webapp/newRelic.js"></script>
   <!-- @endif -->
  <!--data-cfasync="false" -->
-  <script  type="text/javascript" src='/public/webapp/core_bower.min.js'></script>
+  <script  type="text/javascript" src="/public/webapp/core_bower.min.js"></script>
   <script type="text/javascript" src="/public/webapp/_extras.js"></script>
   <!-- including app Js Files -->
   <!-- @if NODE_ENV='DEVELOPMENT' -->
@@ -39,21 +42,23 @@
   <!--   <base href="/"> -->
 </head>
 <body class="unresponsive" ng-controller="mainController" >
-
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
   <div ng-include="'/public/webapp/views/header.html'"></div>
   <ui-view></ui-view>
 
-  
   <script type="text/javascript" src="/node_modules/rxjs/bundles/Rx.umd.js"></script>
   <script type="text/javascript" src="/node_modules/es6-shim/es6-shim.js"></script>
   <script type="text/javascript" src="/node_modules/angular2/bundles/angular2-polyfills.js"></script>
-  <script type="text/javascript" src="/node_modules/angular2/bundles/angular2-all.umd.dev.js"></script>
+  <script type="text/javascript" src="/node_modules/angular2/bundles/angular2-all.umd.min.js"></script>
   <script  type="text/javascript" src="/public/webapp/ng2.js"></script>
 
   <!-- @if NODE_ENV='PRODUCTION' -->
   <!-- Google Tag Manager -->
   <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
   height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+
   <script   type="text/javascript">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
   new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
   j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -65,8 +70,7 @@
 
   <!-- @if NODE_ENV='PRODUCTION' -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-
   <!-- @endif -->
+
 </body>
 </html>

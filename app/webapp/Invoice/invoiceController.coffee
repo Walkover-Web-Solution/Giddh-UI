@@ -1,5 +1,5 @@
 "use strict"
-invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices, $state,  Upload, ledgerService, companyServices, accountService, modalService) ->
+invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices, $state,  Upload, ledgerService, companyServices, accountService, modalService, $location) ->
 
   $rootScope.selectedCompany = {}
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -40,6 +40,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     invoiceDetails:
       invoiceNumber: '##########'
       invoiceDate: '11-12-2016'
+      dueDate: ''
     company:
       name: 'Walkover Web Solutions Pvt. ltd.'
       data: ['405-406 Capt. C.S. Naidu Arcade','10/2 Old Palasiya','Indore Madhya Pradesh','CIN: 02830948209eeri','Email: account@giddh.com']
@@ -150,7 +151,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       # with accounts, group data
       $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
 #      $scope.getSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,'sundry_debtors')
-      $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,['sundry_debtors','revenue_from_operations'])
+      $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,[$rootScope.groupName.sundryDebtors,$rootScope.groupName.revenueFromOperations])
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
 
   $scope.makeAccountsList = (res) ->
@@ -160,7 +161,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       uniqueName:"current_assets"
     }
     result = groupService.matchAndReturnGroupObj(item, res.body)
-    $rootScope.flatGroupsList = groupService.flattenGroup([result], [])
+    #$rootScope.flatGroupsList = groupService.flattenGroup([result], [])
     #$scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
     $rootScope.canChangeCompany = true
     #$scope.showAccountList = true
@@ -330,6 +331,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.selectedAccountCategory = data.category
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
+    $rootScope.$stateParams.invId = acData.uniqueName
     $scope.entriesForInvoice = []
     # call invoice load func
     $scope.getTemplates()
@@ -402,7 +404,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     # open dialog
     if(showPopUp)
       $scope.modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/Invoice/prevInvoiceTemp.html'
+        templateUrl: $rootScope.prefixThis+'/public/webapp/Invoice/prevInvoiceTemp.html'
         size: "a4"
         backdrop: 'static'
         scope: $scope
@@ -434,7 +436,10 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       file.upload.then ((res) ->
         $timeout ->
           # $scope.logoWrapShow = false
-          $scope.defTempData.signature.path = res.data.body.path
+          if type == 'logo'
+            $scope.defTempData.logo.path = res.data.body.path
+          else
+            $scope.defTempData.signature.path = res.data.body.path
           toastr.success("Logo Uploaded Successfully", res.data.status)
       ), ((res) ->
 #        console.log res, "error"
@@ -515,6 +520,11 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       data.terms = data.termsStr.split('\n')
     else
       data.terms = []
+
+    if data.invoiceDetails.dueDate != ""
+      data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+    else
+      data.invoiceDetails.dueDate = null
 
     if stype is 'save'
       companyServices.updtInvTempData($rootScope.selectedCompany.uniqueName, data).then($scope.saveTempSuccess, $scope.saveTempFailure)

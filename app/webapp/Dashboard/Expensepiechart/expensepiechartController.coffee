@@ -4,7 +4,7 @@ pie = angular.module('piechartModule', [
   "googlechart"
 ])
 
-piechartController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, $timeout) ->
+piechartController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, $timeout, $http) ->
   $scope.unq = 1
   $scope.series = ['Expense']
   $scope.chartData = []
@@ -57,6 +57,8 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
   $scope.chartDataAvailable = false
   $scope.errorMessage = ""
   $scope.accountList = []
+  $scope.fromDate = ""
+  $scope.toDate = ""
 
   $scope.setDateByFinancialYear = () ->
     presentYear = $scope.getPresentFinancialYear()
@@ -64,9 +66,14 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
     if $rootScope.currentFinancialYear == undefined
       $rootScope.currentFinancialYear = moment($rootScope.selectedCompany.activeFinancialYear.financialYearStarts,"DD-MM-YYYY").get("years") + "-"+ moment($rootScope.selectedCompany.activeFinancialYear.financialYearEnds,"DD-MM-YYYY").get("years")
     if $rootScope.currentFinancialYear == presentYear
-      setDate = moment().format('DD-MM-YYYY')
+      $scope.toDate = moment().format('DD-MM-YYYY')
+      if moment().get('months') > 4
+        $scope.fromDate = moment().set({'date':1, 'month': 3}).format('DD-MM-YYYY')
+      else
+        $scope.fromDate = moment().subtract(1,'years').set({'date':1, 'month': 3}).format('DD-MM-YYYY')
     else
-      setDate = $rootScope.selectedCompany.activeFinancialYear.financialYearEnds
+      $scope.toDate = $rootScope.selectedCompany.activeFinancialYear.financialYearEnds
+      $scope.fromDate = $rootScope.selectedCompany.activeFinancialYear.financialYearStarts
     setDate
 
   $scope.getPresentFinancialYear = () ->
@@ -93,11 +100,12 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
       $scope.chartOptions.title = moment($rootScope.selectedCompany.activeFinancialYear.financialYearStarts,"DD-MM-YYYY").get("years") + "-"+ moment($rootScope.selectedCompany.activeFinancialYear.financialYearEnds,"DD-MM-YYYY").get("years")
       $scope.myChartObject.options.title = $scope.chartOptions.title
       duration = {}
-      duration.from = $scope.setDateByFinancialYear()
-      duration.to = duration.from
+      $scope.setDateByFinancialYear()
+      duration.to = $scope.toDate
+      duration.from = $scope.fromDate
       $scope.accountList = []
-      $scope.getClosingBalance("operating_cost",duration)
-      $scope.getClosingBalance("indirect_expenses",duration)
+      $scope.getClosingBalance($rootScope.groupName.operatingCost,duration)
+      $scope.getClosingBalance($rootScope.groupName.indirectExpenses,duration)
 
   $scope.getClosingBalance = (groupUniqueName, duration) ->
     objToSend = {}
@@ -105,6 +113,8 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
     objToSend.selGrpUname = groupUniqueName
     objToSend.fromDate = duration.from
     objToSend.toDate = duration.to
+#    url = 'https://apitest.giddh.com/company/'+objToSend.compUname+'/groups/'+objToSend.selGrpUname+'/closing-balance?from='+objToSend.fromDate+'&to='+objToSend.toDate
+#    $http.get(url).then($scope.getClosingBalSuccess, $scope.getClosingBalFailure)
     groupService.getClosingBal(objToSend).then($scope.getClosingBalSuccess,$scope.getClosingBalFailure)
 
   $scope.getClosingBalSuccess = (res) ->
@@ -162,16 +172,16 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
 
 
   $scope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.getExpenseData()
 
 
 
 pie.controller('piechartController', piechartController)
 
-.directive 'pieChart',[() -> {
+.directive 'pieChart',[($locationProvider,$rootScope) -> {
   restrict: 'E'
-  templateUrl: '/public/webapp/Dashboard/Expensepiechart/expensepiechart.html'
+  templateUrl: 'https://test-fs8eefokm8yjj.stackpathdns.com/public/webapp/Dashboard/Expensepiechart/expensepiechart.html'
 #  controller: 'piechartController'
   link: (scope,elem,attr) ->
   #    console.log "pie chart scope : ",scope

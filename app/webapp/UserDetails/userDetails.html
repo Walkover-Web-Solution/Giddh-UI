@@ -8,7 +8,7 @@
             <p class="lead">Main Auth-key</p>
             <form name="authKeyForm" novalidate role="form">
               <div class="form-group">
-                <textarea class="form-control" ng-model="userAuthKey" ng-readonly="true"></textarea>
+                <input id="authKey" class="form-control" ng-model="userAuthKey" ng-readonly="true" value="{{userAuthKey}}"/>
               </div>
               <div class="form-group">
                 <button class="btn btn-primary" ng-click="regenerateKey()">Regenerate Auth Key</button>
@@ -331,7 +331,7 @@
         <!--</uib-tab>-->
         <!-- end of yodlee tabs -->
         <!--mobile number verification-->
-        <uib-tab ng-if="canManageCompany" heading="{{tabs[3].title}}" active="tabs[3].active" select="getUserDetails()">
+        <uib-tab heading="{{tabs[3].title}}" active="tabs[3].active" select="getUserDetails()">
 <!--           <div class="pd2 clearfix" style="padding-bottom:0">
             <h1 class="mrB">Verified Mobile Number: {{userNumber}}</h1>
             <hr>

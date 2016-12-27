@@ -64,9 +64,14 @@ revenuechartController = ($scope, $rootScope, localStorageService, toastr, group
     if $rootScope.currentFinancialYear == undefined
       $rootScope.currentFinancialYear = moment($rootScope.selectedCompany.activeFinancialYear.financialYearStarts,"DD-MM-YYYY").get("years") + "-"+ moment($rootScope.selectedCompany.activeFinancialYear.financialYearEnds,"DD-MM-YYYY").get("years")
     if $rootScope.currentFinancialYear == presentYear
-      setDate = moment().format('DD-MM-YYYY')
+      $scope.toDate = moment().format('DD-MM-YYYY')
+      if moment().get('months') > 4
+        $scope.fromDate = moment().set({'date':1, 'month': 3}).format('DD-MM-YYYY')
+      else
+        $scope.fromDate = moment().subtract(1,'years').set({'date':1, 'month': 3}).format('DD-MM-YYYY')
     else
-      setDate = $rootScope.selectedCompany.activeFinancialYear.financialYearEnds
+      $scope.toDate = $rootScope.selectedCompany.activeFinancialYear.financialYearEnds
+      $scope.fromDate = $rootScope.selectedCompany.activeFinancialYear.financialYearStarts
     setDate
 
   $scope.getPresentFinancialYear = () ->
@@ -93,11 +98,12 @@ revenuechartController = ($scope, $rootScope, localStorageService, toastr, group
       $scope.chartOptions.title = moment($rootScope.selectedCompany.activeFinancialYear.financialYearStarts,"DD-MM-YYYY").get("years") + "-"+ moment($rootScope.selectedCompany.activeFinancialYear.financialYearEnds,"DD-MM-YYYY").get("years")
       $scope.myChartObject.options.title = $scope.chartOptions.title
       duration = {}
-      duration.from = $scope.setDateByFinancialYear()
-      duration.to = duration.from
+      $scope.setDateByFinancialYear()
+      duration.to = $scope.toDate
+      duration.from = $scope.fromDate
       $scope.accountList = []
-      $scope.getClosingBalance("revenue_from_operations",duration)
-      $scope.getClosingBalance("other_income",duration)
+      $scope.getClosingBalance($rootScope.groupName.revenueFromOperations,duration)
+      $scope.getClosingBalance($rootScope.groupName.otherIncome,duration)
 
   $scope.getClosingBalance = (groupUniqueName, duration) ->
     objToSend = {}
@@ -162,14 +168,14 @@ revenuechartController = ($scope, $rootScope, localStorageService, toastr, group
 
 
   $scope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.getRevenueData()
 
 
 
 revenue.controller('revenuechartController', revenuechartController)
 
-.directive 'revenueChart',[() -> {
+.directive 'revenueChart',[($locationProvider,$rootScope) -> {
   restrict: 'E'
-  templateUrl: '/public/webapp/Dashboard/revenuepiechart/revenuepiechart.html'
+  templateUrl: 'https://test-fs8eefokm8yjj.stackpathdns.com/public/webapp/Dashboard/revenuepiechart/revenuepiechart.html'
 }]

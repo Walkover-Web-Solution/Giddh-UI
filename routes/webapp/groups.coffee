@@ -42,6 +42,23 @@ router.get '/flatten-accounts', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.post '/flatten-accounts', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+      'Content-Type': 'application/json'
+    parameters:
+      'q':req.query.q
+      'page': req.query.page
+      'count':req.query.count
+    data: req.body
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/flatten-accounts'
+  settings.client.post hUrl, authHead, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
 router.get '/with-accounts', (req, res) ->
   authHead = 
     headers:
@@ -140,6 +157,7 @@ router.get '/:groupUniqueName/shared-with', (req, res) ->
     res.send data
 
 router.delete '/:groupUniqueName', (req, res) ->
+  console.log "from groups API"
   authHead = 
     headers:
       'Auth-Key': req.session.authKey
@@ -182,9 +200,7 @@ router.post '/:groupUniqueName/accounts', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
-  console.log "in creating account", args, hUrl
   settings.client.post hUrl, args, (data, response) ->
-    console.log "creating account completed", args, hUrl
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data

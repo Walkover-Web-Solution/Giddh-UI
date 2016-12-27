@@ -25,7 +25,7 @@
 </head>
 <body ng-controller="loginController">
   
-  <ng-include src="'public/website/views/header.html'"></ng-include>
+  <ng-include src="'public/website/views/header.html'" ng-controller="homeCtrl"></ng-include>
 
   <section id="videoBg" class="intro login">
     <!-- banner content -->
@@ -36,7 +36,7 @@
             <h1 class="brand-heading arvo">Come back soon!</h1>
             
             
-            <a class="btn btn-lg btn-info" href="/login">login again</a>
+            <a class="btn btn-lg btn-info" href="/login" onclick="goTo('/login', 'state')">login again</a>
             
 
 
@@ -60,6 +60,17 @@ jQuery(document).ready(function($){
   });
   $(window).trigger('resize');
 });
+</script>
+<script type="text/javascript">
+  (function(){
+    
+    function goTo (state){
+      window.location = state
+    } 
+
+  })();
+ 
+
 </script>
 </body>
 </html>

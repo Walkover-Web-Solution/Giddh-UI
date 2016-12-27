@@ -25,6 +25,10 @@ ______\////////////________
 
 }
 
+html, body{
+    height:100%;
+}
+
 /*start super loader*/
 .load-bar-wrap {
     position: fixed;
@@ -259,6 +263,10 @@ header .navbar-nav > li.active {
 
 .dshUl li .subTitle {
     font-size: 11px;
+}
+
+#accountList{
+    padding-bottom:70px;
 }
 
 /*icons style*/
@@ -1415,8 +1423,16 @@ li:last-child .angular-ui-tree-handle {
 }
 
 /*helpers*/
+.max50 {
+    max-width: 50px;
+}
+
 .max100 {
     max-width: 100px;
+}
+
+.max120 {
+    max-width: 120px;
 }
 
 .max150 {
@@ -2181,6 +2197,10 @@ i.cls-alert {
     width: 100%;
 }
 
+.h100{
+    height:100%;
+}
+
 .ui-select-match-item.btn {
     padding: 0;
 }
@@ -2197,14 +2217,14 @@ i.cls-alert {
     min-width: 150px;
 }
 
-.graph-filters td > .btn, .graph-filters td {
+/*.graph-filters td > .btn, .graph-filters td {
     max-width: 30px;
     min-width: 30px;
 }
-
-.graph-filters td > .btn, .graph-filters td > .btn-sm {
+*/
+/*.graph-filters td > .btn, .graph-filters td > .btn-sm {
     padding: 0;
-}
+}*/
 
 .account-card {
     width: 300px;
@@ -2358,7 +2378,7 @@ i.cls-alert {
 }
 
 .pos-rel {
-    position: relative;
+    position: relative !important;
 }
 
 .error-msg {
@@ -2653,7 +2673,7 @@ body.unresponsive {
 }
 
 input.isNotEditable:disabled {
-    background:: 0 0;
+    background: 0 0;
 }
 
 /*tax table setting*/
@@ -2872,6 +2892,8 @@ ul.pills li {
 .left-col, .right-col {
     width: 50%;
     float: left;
+    height:100%;
+    position: relative;
 }
 
 .left-col {
@@ -2885,24 +2907,43 @@ ul.pills li {
     border-top: none;
 }
 
+.col-container{
+    height: -moz-calc(100% - 160px);  
+    height: -webkit-calc(100% -160px);     
+    height: calc(100% - 160px);
+    overflow-y: auto;
+}
+
 /* ledger container */
 .ledger-container {
     clear: both;
     overflow: hidden;
     position: relative;
-    margin-top:65px;
-    padding-bottom:220px;
+    margin-top:10px;
+    padding-bottom:10px;
 }
 
 .ledger-container-w{
     clear: both;
     overflow: hidden;
     position: relative;
-    margin-top:-120px !important;
+    padding-top:200px !important;
 }
 
 .ledger-container table th {
     padding: 10px 10px;
+}
+
+.ledger-footer{
+    position: absolute;
+    bottom: 30px;
+    left:0;
+    right:0;
+}
+
+.ledger-header thead tr:nth-child(1) th{
+    padding:2px 10px;
+    font-size:14px;
 }
 
 /*.ledger-container-w table th {*/
@@ -2940,6 +2981,10 @@ ul.pills li {
 .t-h-bg3 th, .t-h-bg3 td {
     background: #f5f5f5;
     color: #333;
+}
+
+.ledger-table-body{
+    height: 100%;
 }
 
 .ledger-table-body table tbody.ledger-main{
@@ -2994,7 +3039,7 @@ ul.pills li {
 }
 
 .compoundEntry td, .compoundEntry td input {
-    background: #fddfa4;
+    background: #fddfa4 !important;
 }
 
 .compoundEntry .uncEntry  td,  .compoundEntry .uncEntry td input {
@@ -3003,6 +3048,11 @@ ul.pills li {
 
 .highlight-txn td, .highlight-txn td input {
     background: #fddfa4;
+}
+
+.add-entry-row .ledger-row td, .add-entry-row .ledger-row td input {
+    background: #5c534d;
+    color:#fff;
 }
 
 .ledger-panel {
@@ -3103,6 +3153,10 @@ ul.pills li {
     margin-top:10px;
 }
 
+.tax .checkbox{
+    margin:0 5px 5px 0;
+}
+
 .bottom0 {
     bottom: 0;
 }
@@ -3141,10 +3195,17 @@ ul.pills li {
     z-index: 1;
 }
 
+.reconnectDiv .row{
+    position: relative;
+    top: 30%;
+}
+
 .reconnectButton {
     position: relative;
     top: 40%;
     left: 36%;
+    width: 85px;
+    margin-top: 5px;
 }
 
 /* company list dropdown styles */
@@ -3258,12 +3319,11 @@ ul.pills li {
 
 .download-invoice-ledger {
     position: absolute;
-    right: 15px;
+    right: 0;
     top: 0px;
-    height: 30px;
-    padding: 1px 0px 1px 10px;
+    height: 34px;
+    padding:0 15px;
     cursor: pointer;
-    overflow: hidden;
 }
 
 .download-invoice-ledger > i{
@@ -3279,6 +3339,10 @@ ul.pills li {
     -webkit-transition: 0.5s linear all;
     transition: 0.5s linear all;
     opacity: 1;
+}
+
+.add-entry-row{
+    border-top: 2px solid #5c534d;
 }
 
 .pos-rel{
@@ -3432,7 +3496,7 @@ ul.pills li {
 }
 
 .panel-margin{
-    margin-top: 220px;
+    padding-top: 220px;
 }
 
 .top0{
@@ -3443,7 +3507,7 @@ ul.pills li {
     background:#fddfa4;
 }
 
-@media only screen and (max-width: 1366px) and (orientation : landscape) {
+@media only screen and (max-width: 1440px) and (orientation : landscape) {
     .pop-panel{
         max-width:480px;
     }
@@ -3612,4 +3676,596 @@ tr.db-bnk-account > td.reconnectDiv{
 .padding-0{
     padding-left: 0;
     padding-right: 0;
+}
+
+.pdL-0{
+    padding-left: 0;
+}
+
+.custom-tabset{
+    padding: 0px 12px;
+}
+
+.custom-tabset ul:not(.dropdown-menu){
+    background: transparent !important;
+}
+
+.custom-tabset ul li{
+    border: 0px;
+}
+
+.custom-tabset ul li a{
+    border: 0px !important;
+    border-bottom: 1px solid #ddd !important;
+}
+
+.y-scroll{
+    overflow-y:auto !important;
+}
+
+.cursor-pointer{
+    cursor:pointer;
+}
+
+@-webkit-keyframes reducetime {
+    0% {width: 0;}
+    100% { width: 100%; }
+}
+
+.background-color-giddh{
+    background: #d35f29;
+    height: 50px;
+}
+
+.color-giddh{
+    color: #d35f29;
+}
+
+
+.flying-div{
+    right: 0px;
+    height: 100%;
+    background: white;
+    width: 100%;
+    float: right;
+    border-left: lightgrey 1px solid;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.right300{
+    right: 300px;
+}
+
+.right0{
+    right: 0px;
+}
+
+.filter-btn{
+    right: 20px;
+    z-index: 2;
+    bottom: 0;
+}
+
+.add-transition {
+    -webkit-transition: width 0.5s;
+    -moz-transition: width 0.5s;
+    -ms-transition: width 0.5s;
+    -o-transition: width 0.5s;
+    transition: width 0.5s;
+}
+
+.required{
+    color:red;
+}
+
+.invoice-widget{
+   width:400px;
+   height:400px;
+   border: 1px solid #e0e0e0 ;
+   margin:0 5px;
+   padding:5px;
+   position: relative;
+}
+
+.invoice-widget textarea{
+   position: absolute;
+   top:40px;
+   bottom:0;
+   left:0;
+   right:0;
+   z-index: 1;
+}
+
+.invoice-widget > .matter{
+   height:100%;
+   width:100%;
+   z-index: 2;
+   left: 0;
+   right: 0;
+   top: 40px;
+   bottom: 0;
+   position:absolute;
+}/*new invoice page*/
+#invoice-wrapper{
+  width: 21cm;
+  margin: 0 auto;
+}
+.gridster-loaded .gridster-item{
+    background-color: rgba(242, 242, 242, 0.24);
+}
+.gridster-item-heading{
+    position: relative;
+    min-height: 24px;
+    background-color: #ddd;
+}
+
+#remove-widget{
+  position : absolute ;
+  top : 4px;
+  right : 10px;
+  z-index: 1;
+}
+#invoice-wrapper .thumb{
+    width: 48px;
+}
+.gridster-item-body .textarea.form-control{
+    height: 100%
+}
+
+.invoice-wrapper-m {
+  background: #d9edf7;
+  display: block;
+  margin: 0 auto;
+  margin-bottom: 0.5cm;
+  box-shadow: 0 0 0.5cm rgba(0,0,0,0.5);
+  padding:10px;
+}
+.invoice-wrapper-m.a4{  
+  width: 21cm;
+  height: 27.1cm; 
+}
+.modal-content .invoice-wrapper-m {
+    background: :transparent;
+    box-shadow: none;
+}
+.invoice-widget{
+    height:200px;
+    width:200px;
+    background:#fff !important;
+    position: relative;
+    padding:5px;;
+}
+.invoice-widget i.glyphicon{
+    position: absolute;
+    right:10px;
+    top:20px;
+    z-index: 100;
+    font-size: 12px;
+}
+.invoice-widget i.glyphicon.glyphicon-remove{
+    right:35px;
+}
+
+.invoice-widget i.glyphicon.glyphicon-text-width{
+    right: 60px;
+}
+
+.invoice-input{
+    height: 100%;
+    width:100%;
+    /*padding:5px;*/
+    /*margin:20px 0 0 0;*/
+    background: transparent;
+}
+.invoice-input.hidden{
+    visibility: hidden;
+}
+.invoice-input textarea{
+/*    height: 100%;*/
+    width:100%;
+    margin:0;
+    border:0;
+}
+
+.invoice-input textarea:focus, .invoice-input textarea:active{
+    outline: 0;
+    box-shadow: 0;
+    padding:0 10px;
+}
+
+.widget-text{
+    overflow:hidden;
+    margin-top:20px;
+}
+#trix-toolbar-1 .button_groups, #trix-toolbar-1 .button_groups button{
+    display:none;
+}
+
+.move-widget{
+    position:absolute;
+    top:20px;
+    left:20px;
+    right:20px;
+    bottom:20px;
+    z-index: 99;
+}
+
+
+.ta-hidden-input {
+    width: 1px;
+    height: 1px;
+    border: none;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    top: -10000px;
+    left: -10000px;
+    opacity: 0;
+    overflow: hidden;
+}
+
+/* add generic styling for the editor */
+.ta-root.focussed > .ta-scroll-window.form-control {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(102, 175, 233, 0.6);
+}
+
+.ta-editor.ta-html, .ta-scroll-window.form-control {
+    min-height: 300px;
+    height: auto;
+    overflow: auto;
+    font-family: inherit;
+    font-size: 100%;
+}
+
+.ta-scroll-window.form-control {
+    position: relative;
+    padding: 0;
+}
+
+.ta-scroll-window > .ta-bind {
+    height: auto;
+    min-height: 300px;
+    padding: 6px 12px;
+}
+
+.ta-editor:focus {
+    user-select: text;
+}
+
+/* add the styling for the awesomness of the resizer */
+.ta-resizer-handle-overlay {
+    z-index: 100;
+    position: absolute;
+    display: none;
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-info {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    border: 1px solid black;
+    background-color: #FFF;
+    padding: 0 4px;
+    opacity: 0.7;
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-background {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    left: 5px;
+    top: 5px;
+    border: 1px solid black;
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-corner {
+    width: 10px;
+    height: 10px;
+    position: absolute;
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-corner-tl{
+    top: 0;
+    left: 0;
+    border-left: 1px solid black;
+    border-top: 1px solid black;
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-corner-tr{
+    top: 0;
+    right: 0;
+    border-right: 1px solid black;
+    border-top: 1px solid black;
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-corner-bl{
+    bottom: 0;
+    left: 0;
+    border-left: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.ta-resizer-handle-overlay > .ta-resizer-handle-corner-br{
+    bottom: 0;
+    right: 0;
+    border: 1px solid black;
+    cursor: se-resize;
+    background-color: white;
+}
+
+/* copy the popover code from bootstrap so this will work even without it */
+/*.popover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1060;
+    display: none;
+    max-width: 276px;
+    padding: 1px;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    text-align: left;
+    white-space: normal;
+    background-color: #fff;
+    -webkit-background-clip: padding-box;
+            background-clip: padding-box;
+    border: 1px solid #ccc;
+    border: 1px solid rgba(0, 0, 0, .2);
+    border-radius: 6px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, .2);
+}
+.popover.top {
+    margin-top: -10px;
+}
+.popover.bottom {
+    margin-top: 10px;
+}
+.popover-title {
+    padding: 8px 14px;
+    margin: 0;
+    font-size: 14px;
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #ebebeb;
+    border-radius: 5px 5px 0 0;
+}
+.popover-content {
+    padding: 9px 14px;
+}
+.popover > .arrow,
+.popover > .arrow:after {
+    position: absolute;
+    display: block;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+}
+.popover > .arrow {
+    border-width: 11px;
+}
+.popover > .arrow:after {
+    content: "";
+    border-width: 10px;
+}
+.popover.top > .arrow {
+    bottom: -11px;
+    left: 50%;
+    margin-left: -11px;
+    border-top-color: #999;
+    border-top-color: rgba(0, 0, 0, .25);
+    border-bottom-width: 0;
+}
+.popover.top > .arrow:after {
+    bottom: 1px;
+    margin-left: -10px;
+    content: " ";
+    border-top-color: #fff;
+    border-bottom-width: 0;
+}
+.popover.bottom > .arrow {
+    top: -11px;
+    left: 50%;
+    margin-left: -11px;
+    border-top-width: 0;
+    border-bottom-color: #999;
+    border-bottom-color: rgba(0, 0, 0, .25);
+}
+.popover.bottom > .arrow:after {
+    top: 1px;
+    margin-left: -10px;
+    content: " ";
+    border-top-width: 0;
+    border-bottom-color: #fff;
+}
+*/
+.invoice-input .ta-editor.ta-html,.invoice-input .ta-scroll-window.form-control,.invoice-input .invoice-input, .ta-scroll-window>.ta-bind{
+    min-height: initial !important;
+}
+
+.height100per{
+    height: 100%;
+}
+
+.mce-panel{
+    border:0 solid #cacaca;
+    border:0 solid rgba(0,0,0,0.2) !important;
+    height:100%;
+    background-color:#f0f0f0;
+    overflow-y:auto;
+}
+/*
+.invoice-input .mce-container-body .mce-menubar, .invoice-input .mce-container-body .mce-toolbar-grp, .invoice-input .mce-container-body .mce-statusbar{
+    display:none;
+}*/
+
+.hide-toolbar .mce-toolbar-grp.mce-first{
+    display: none;
+}
+
+.proforma-list{
+    position: relative;
+}
+
+.proforma-list > .filters{
+    padding:5px 0;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom:5px;
+    position: relative;
+}
+
+.proforma-list > .filters > div{
+    display: inline-block;
+    margin-right:10px;
+}
+
+.proforma-list > .filters .separator{
+    height:60px;
+    width:1px;
+    border:1px solid #ccc;
+    margin-right:10px;
+}
+
+.proforma-list > .filters label{
+    display: inline-block;
+    white-space: nowrap;
+    font-size: 12px;
+}
+
+.proforma-list > .filters input, .proforma-list > .filters select{
+    border-radius: 0px;
+    height:24px;
+    padding:0 5px;
+    font-size: 12px;
+}
+
+.inline{
+    display: inline-block;
+}
+
+.proforma-list .glyphicon-filter{
+    position: absolute;
+    right:10px;
+    top:-25px;
+}
+
+.glyphicon-filter.open{
+    color:#d35f29;
+}
+
+.create-proforma{
+    padding:30px 20px;
+}
+
+.a4-section span>span{
+    margin-right: -1px;
+}
+
+.a4-section span.bold,.a4-section span.bold span{
+    font-weight: bold !important;
+}
+
+.a4-section span.italic,.a4-section span.italic span{
+    font-style: italic !important;
+}
+
+.a4-section span.font20,.a4-section span.font20 span,.a4-section div.font20,.a4-section div.font20 span{
+    font-size: 20px !important;
+}
+
+/*.invoice-wrapper-m.a4 .hasVar{
+    display: inline-block;
+    width:30px;
+
+}*/
+
+.invoice-wrapper-m.a4 .hasVar input, .invoice-wrapper-m.a4 .hasVar input:focus{
+    border:0;
+    box-shadow: none;
+}
+
+.invoice-wrapper-m.a4 .hasVar input:disabled{
+    background:#fff;
+    border:none;
+    box-shadow: none;
+}
+
+.invoice-wrapper-m.a4 .hasVar input.isEditable{
+    border:1px solid #444;
+}
+
+.proforma-particulars tr td{
+    padding:0;
+}
+
+.proforma-particulars tr td input, .proforma-particulars tr td input:focus{
+    height: 34px;
+    width: 100%;
+    border: 0;
+    padding: 0 10px;
+    box-shadow: none;
+    outline: 0;
+}
+
+.proforma-particulars tr td input:disabled{
+    background:transparent;
+    border:none;
+    outline: none;
+    box-shadow: none;
+}
+
+.proforma-particulars tr td i.glyphicon-plus{
+    right:10px;
+    top:8px;
+}
+
+.proforma-particulars tr td i.glyphicon-minus{
+    right:30px;
+    top:8px;
+}
+
+/*table.table-bordered.head{
+    margin-bottom:0;
+    border-bottom:none;
+}
+
+table.table-bordered.head thead th{
+    border-bottom:0;
+}*/
+
+table.proforma-particulars{
+    margin-bottom: 0;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.width0{
+    width: 0px;
+}
+.modal-dialog.modal-a4{
+    width:8.5in;
+}
+
+#intercom-container .intercom-launcher-frame{
+    left: 20px !important;
+}
+
+#intercom-container .intercom-messenger-frame{
+    left: 20px !important;
+}
+
+#intercom-container .intercom-borderless-frame{
+    left: 0px !important;
+}
+
+.marginTop{
+    margin-top: -54px;
 }
