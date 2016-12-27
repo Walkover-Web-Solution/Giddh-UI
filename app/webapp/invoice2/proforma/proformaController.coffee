@@ -718,12 +718,14 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     return account.applicableTaxes
 
   pc.checkDiscountAccountFromParents = (accountUnq) ->
+    isDiscout = false
     account = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:accountUnq})
     _.each account.parentGroups, (pg) ->
       if pg.uniqueName == 'discount'
-        return true
+        isDiscout = true
       else
-        return false
+        isDiscout = false
+    isDiscout
 
   pc.isDiscountAccount = (account) ->
     isDiscount = false
