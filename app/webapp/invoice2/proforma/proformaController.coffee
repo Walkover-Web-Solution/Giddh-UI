@@ -128,7 +128,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     $scope.filters = new pc.filterModel()
 
   $scope.applyFilters = () ->
-    $scope.filters.page = $scope.proformaList.page
+    $scope.filters.page = $scope.proformaList.page || null
     $scope.filters.count = $scope.count.val
     pc.prevBalanceStatus = $scope.filters.balanceStatus
     if $scope.filters.accountUniqueName != undefined && $scope.filters.accountUniqueName != ''
@@ -185,16 +185,21 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       $scope.transactions = res.body.entries
       $scope.subtotal = res.body.subTotal
       $scope.taxTotal = res.body.taxTotal
+      $scope.taxes = res.body.taxes
       $scope.discountTotal = res.body.discountTotal || 0
       if res.body.commonDiscount == null then res.body.commonDiscount = {} else res.body.commonDiscount = res.body.commonDiscount
       $scope.discount.amount = res.body.commonDiscount.amount || null
       $scope.discount.account = res.body.commonDiscount.accountUniqueName || null
-      $scope.modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/invoice2/proforma/prevProforma.html'
-        size: "a4"
-        backdrop: 'static'
-        scope: $scope
-      )
+      #$scope.calcSubtotal()
+      $timeout ( ->
+        $scope.modalInstance = $uibModal.open(
+          templateUrl: $rootScope.prefixThis+'/public/webapp/invoice2/proforma/prevProforma.html'
+          size: "a4"
+          backdrop: 'static'
+          scope: $scope
+        )
+      ),500
+      # console.log $scope.taxes, $scope.taxTotal
     @failure = (res) ->
       toastr.error(res.data.message)
     reqParam = {}
@@ -654,9 +659,13 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     prevTxn = null
     _.each $scope.transactions, (txn,idx) ->
       isDiscount = false
-      _.each txn.accountUniqueName.parentGroups, (pg) ->
-        if pg.uniqueName == 'discount'
-          isDiscount = true
+      if typeof(txn.accountUniqueName) == 'object'
+        _.each txn.accountUniqueName.parentGroups, (pg) ->
+          if pg.uniqueName == 'discount'
+            isDiscount = true
+      else if typeof(txn.accountUniqueName) == 'string'
+        txn.appliedTaxes = pc.getTaxesFromAccountUniqueName(txn)
+        isDiscount = pc.checkDiscountAccountFromParents(txn.accountUniqueName)
       if isDiscount
         $scope.discountTotal += Number(txn.amount)
         if $scope.subtotal > 0
@@ -704,6 +713,18 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         ctax.name = tax.name
     ctax
   
+  pc.getTaxesFromAccountUniqueName = (txn) ->
+    account = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.accountUniqueName})
+    return account.applicableTaxes
+
+  pc.checkDiscountAccountFromParents = (accountUnq) ->
+    account = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:accountUnq})
+    _.each account.parentGroups, (pg) ->
+      if pg.uniqueName == 'discount'
+        return true
+      else
+        return false
+
   pc.isDiscountAccount = (account) ->
     isDiscount = false
     if account.parentGroups.length > 0
