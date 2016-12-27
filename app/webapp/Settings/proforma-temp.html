@@ -3,7 +3,7 @@
 		<button ng-click="ctrl.showAddTemplate()" class="btn btn-primary" ng-class="{'btn-primary':!ctrl.showTemplate, 'btn-default': ctrl.showTemplate}"><span ng-if="!ctrl.showTemplate">Add New Template</span><span ng-if="ctrl.showTemplate">Back</span></button>
 	</div>
 	<div ng-if="!ctrl.showTemplate" class="clearfix">
-		<div class="col-xs-3" ng-repeat="value in ctrl.templateList" ng-if="value.type == 'proforma'">
+		<div class="col-xs-3" ng-repeat="value in ctrl.templateList | orderBy:value.name" ng-if="value.type == 'proforma'">
 			<a href="javascript:void(0)" class="thumbnail" style="min-height:225px;">
 				<div class="caption">
 					<label>Template for {{value.type}}</label>
