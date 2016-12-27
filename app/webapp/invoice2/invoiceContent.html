@@ -106,8 +106,9 @@
           <!--</perfect-scrollbar>-->
         </div>
       </uib-tab>
-      <uib-tab class="mrB1" heading="Generate" select="setTab(1)">
-        <div class="row mr1" ng-if="ledgers.results.length == 0">
+      <uib-tab class="mrB1" select="setTab(1)">
+        <uib-tab-heading>Generate</uib-tab-heading>
+          <div class="row mr1" ng-if="ledgers.results.length == 0">
           <div class="no-data">
             <h1>No entries found!</h1>
             <img src="/public/webapp/Globals/images/no-data.png" alt="No Data">
@@ -120,6 +121,7 @@
                 <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
                 <li><button ng-disabled="!canGenerateInvoice" class="btn btn-default" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
                 <li><button ng-disabled="!showPreview" class="btn btn-default" ng-click="prevAndGenInv()">Preview & Generate</button></li>
+                <li><a tooltip-placement="right" uib-tooltip="How to generate invoice?" style="cursor:pointer;" href="http://faq.giddh.com/invoice/how-to-make-invoice" target="_blank"><i class="glyphicon glyphicon-question-sign"></i></a></li>
               </ul>
             </div>
             <div class="col-xs-6">
