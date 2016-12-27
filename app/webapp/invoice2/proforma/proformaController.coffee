@@ -36,6 +36,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   $scope.discount = {}
   $scope.discount.amount = 0
   $scope.discount.accounts = []
+  $scope.discountTotal = 0
   ## Get all Proforma ##
   $scope.gettingProformaInProgress = false
   $scope.popOver = {
@@ -184,8 +185,9 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       $scope.transactions = res.body.entries
       $scope.subtotal = res.body.subTotal
       $scope.taxTotal = res.body.taxTotal
+      $scope.discountTotal = res.body.discountTotal || 0
       if res.body.commonDiscount == null then res.body.commonDiscount = {} else res.body.commonDiscount = res.body.commonDiscount
-      $scope.discount.amount = Math.abs(res.body.commonDiscount.amount) || null
+      $scope.discount.amount = res.body.commonDiscount.amount || null
       $scope.discount.account = res.body.commonDiscount.accountUniqueName || null
       $scope.modalInstance = $uibModal.open(
         templateUrl: $rootScope.prefixThis+'/public/webapp/invoice2/proforma/prevProforma.html'
@@ -215,7 +217,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         if sec.elements.length
           $$this.getValues(sec.elements)
       $scope.createProforma('update')
-    $scope.editMode = !$scope.editMode
+    $scope.editMode = true
 
   $scope.deleteProforma = (num, index) ->
     @success = (res) ->
@@ -556,6 +558,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         $scope.taxTotal = 0
       else if action == 'update'
         toastr.success("Proforma updated successfully")
+        $scope.editMode = !$scope.editMode
     $this.failure = (res) ->
       toastr.error(res.data.message)
     reqBody = {}
@@ -645,6 +648,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
 
   $scope.calcSubtotal = () ->
     $scope.subtotal = 0
+    $scope.discountTotal = 0
     $scope.taxes = []
     prevTxn = null
     _.each $scope.transactions, (txn,idx) ->
@@ -653,6 +657,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         if pg.uniqueName == 'discount'
           isDiscount = true
       if isDiscount
+        $scope.discountTotal += Number(txn.amount)
         if $scope.subtotal > 0
           $scope.subtotal -= Number(txn.amount)
         if prevTxn
@@ -691,8 +696,8 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     ctax = null
     _.each tax.taxDetail, (det) ->
       date = pc.returnDateAsString(det.date)
-      date = Math.round(new Date(proformaDate).getTime()/1000)
-      if date <= Math.round(new Date().getTime()/1000)
+      pDate = Math.round(new Date(proformaDate).getTime()/1000)
+      if pDate >= Math.round(new Date(date).getTime()/1000)
         ctax = {}
         ctax.amount = det.taxValue/100 * amount
         ctax.name = tax.name
@@ -888,6 +893,13 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
             isSd = true
       if isSd
         $scope.sundryDebtors.push(acc)
+
+  $scope.updateProformaDate = (date) ->
+    if date.length == 10
+      _.each pc.templateVariables, (tp) ->
+        if tp.key == "$proformaDate"
+          tp.value = date
+      $scope.calcSubtotal()
 
   $scope.taxTotal = 0
   $scope.$watch('taxes', (newVal, oldVal) ->
