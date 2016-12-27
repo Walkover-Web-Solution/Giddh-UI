@@ -555,6 +555,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         $scope.transactions.push(new pc.entryModel())
         $scope.subtotal = 0
         $scope.taxes = []
+        $scope.discountTotal = 0
         $scope.taxTotal = 0
       else if action == 'update'
         toastr.success("Proforma updated successfully")
