@@ -81,7 +81,7 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
 
   @getAllTemplates = () ->
     @success = (res) ->
-      $this.templateList = res.body
+      $this.templateList = _.sortBy(res.body, 'name')
     @failure = (res) ->
       if res.data.code != "NOT_FOUND"
         toastr.error(res.data.message)
@@ -288,8 +288,8 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     _.each $rootScope.placeholders, (ph) ->
       if template.htmlData.indexOf(ph.name) != -1
         template.variables.push(ph.name)
-      # if ph.name == "$accountName"
-      #   template.variables.push("$accountUniqueName")
+      if template.htmlData.indexOf('$accountName') != -1  && template.htmlData.indexOf("$accountUniqueName") == -1
+        template.variables.push("$accountUniqueName")
 
   $this.formatEditables = (elements) ->
     _.each elements, (elem) ->
