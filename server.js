@@ -60,14 +60,15 @@ app.use('/node_modules', settings.express.static(__dirname + '/node_modules'));
 app.use('/public', settings.express.static(__dirname + '/public'));
 
 //set ttl for session expiry, format : milliseconds * seconds * minutes
-if (app.get('env') === 'development') {
-  // one hour
-  sessionTTL = 1000 * 60 * 60
-}
-else{
-  // ten minutes
-  sessionTTL = 1000 * 60 * 10
-}
+sessionTTL = 1000*60*30
+// if (app.get('env') === 'development') {
+//   // one hour
+//   sessionTTL = 1000 * 60 * 60
+// }
+// else{
+//   // ten minutes
+//   sessionTTL = 1000 * 60 * 60
+// }
 
 app.use(session({
   secret: "keyboardcat",

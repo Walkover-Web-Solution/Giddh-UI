@@ -8,115 +8,111 @@
       <div class="proforma-list" ng-class="{pdT:!showFilters}">
 
         <div class="filters" ng-if="showFilters">
+          <div class="max100">
+            <label>Proforma #</label>
+            <input type="text" class="form-control" placeholder="" ng-model="filters.proformaNumber">
+          </div>
 
-        <div class="max100">
-                  <label>Proforma #</label>
-                  <input type="text" class="form-control" placeholder="" ng-model="filters.proformaNumber">
-                </div>
-
-                <span class="separator"></span>
+          <div class="separator"></div>
 
           <div class="clearfix max100">
-              <label>From</label>
-                    <input type="text" class="form-control"
-                         uib-datepicker-popup="{{format}}" required
-                         datepicker-options="dateOptions"
-                         is-open="fromDatePickerIsOpen"
-                         ng-click="fromDatePickerOpen()"
-                         ng-model="filters.fromDate"
-                         max-date="today"
-                         placeholder="from date"
-                      />
-                </div>
-                <span style="margin:0 0 0 -10px;">To</span>
-                <div class="clearfix max120">
-                    <label>To</label>
-                    <input type="text" class="form-control"
-                         uib-datepicker-popup="{{format}}" required
-                         datepicker-options="dateOptions"
-                         is-open="toDatePickerIsOpen"
-                         ng-click="toDatePickerOpen()"
-                         ng-model="filters.toDate"
-                         min-date="filters.fromDate"
-                         max-date="today"
-                         placeholder="to date"
-                   />
-                </div>
+            <label>From</label>
+            <input type="text" class="form-control"
+             uib-datepicker-popup="{{format}}" required
+             datepicker-options="dateOptions"
+             is-open="fromDatePickerIsOpen"
+             ng-click="fromDatePickerOpen()"
+             ng-model="filters.fromDate"
+             max-date="today"
+             placeholder="from date"
+              />
+          </div>
+                <!-- <span style="margin:0 0 0 -10px;">To</span> -->
+          <div class="clearfix max120">
+            <label>To</label>
+            <input type="text" class="form-control"
+             uib-datepicker-popup="{{format}}" required
+             datepicker-options="dateOptions"
+             is-open="toDatePickerIsOpen"
+             ng-click="toDatePickerOpen()"
+             ng-model="filters.toDate"
+             min-date="filters.fromDate"
+             max-date="today"
+             placeholder="to date"
+            />
+          </div>
 
-                <span class="separator"></span>
+          <div class="separator"></div>
                 
-                <div class="max100 filter-group">
-                  <label>Balance Status</label>
-                  <select class="form-control" ng-options="status for status in balanceStatuses" ng-model="filters.balanceStatus">
-                  </select> 
-                </div>
+          <div class="max100 filter-group">
+            <label>Balance Status</label>
+            <select class="form-control" ng-options="status for status in balanceStatuses" ng-model="filters.balanceStatus">
+            </select> 
+          </div>
 
-                <span class="separator"></span>
+          <div class="separator"></div>
 
-                <div class="max100">
-                  <label>Account Name</label>
-                  <input type="text" class="form-control" placeholder="Account Name" ng-model="filters.accountUniqueName" uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue" ng-disabled="filters.groupUniqueName.length != 0">
-                </div>
+          <div class="max100">
+            <label>Account Name</label>
+            <input type="text" class="form-control" placeholder="Account Name" ng-model="filters.accountUniqueName" uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue" ng-disabled="filters.groupUniqueName.length != 0">
+          </div>
 
-                <span style="margin:0 0 0 -10px;">or</span>
+          <div style="margin:20px 0 0 -10px;">or</div>
 
-                <div class="max100">
-                  <label>Group Name</label>
-                  <input type="text" class="form-control" placeholder="Group Name" ng-model="filters.groupUniqueName" uib-typeahead="group as group.name for group in flatGroupsList | filter:$viewValue" ng-disabled="filters.accountUniqueName.length != 0">
-                </div>
+          <div class="max100">
+            <label>Group Name</label>
+            <input type="text" class="form-control" placeholder="Group Name" ng-model="filters.groupUniqueName" uib-typeahead="group as group.name for group in flatGroupsList | filter:$viewValue" ng-disabled="filters.accountUniqueName.length != 0">
+          </div>
 
-<!--                 <span class="separator"></span>
+          <!--<span class="separator"></span>
 
-                <div class="max100">
-                  <label>Company Name</label>
-                  <input type="text" class="form-control" placeholder="Company Name" ng-model="filters.companyName">
-                </div> -->
+          <div class="max100">
+            <label>Company Name</label>
+            <input type="text" class="form-control" placeholder="Company Name" ng-model="filters.companyName">
+          </div> -->
 
-                <span class="separator"></span>
+          <div class="separator"></div>
 
-                <div class="max100">
-                  <label>Balance</label>
-                  <select class="form-control" ng-model="filters.balanceText">
-                    <option>Equal To</option>
-                    <option>Less Than</option>
-                    <option>Greater Than</option>
-                    <option>Greater Than and Equal To</option>
-                    <option>Less Than and Equal To</option>
-                  </select>
-                </div>
-                <span style="margin:0 0 0 -10px;">-</span>
-        <div class="max100">
-                  <input type="text" class="form-control inline" placeholder="Amount" ng-model="filters.balanceDue">
-                </div>
+          <div class="max100">
+            <label>Balance</label>
+            <select class="form-control" ng-model="filters.balanceText">
+              <option>Equal To</option>
+              <option>Less Than</option>
+              <option>Greater Than</option>
+              <option>Greater Than and Equal To</option>
+              <option>Less Than and Equal To</option>
+            </select>
+          </div>
+          <div style="margin:20px 0 0 -10px;">-</div>
+          <div class="max100 mrT2">
+            <input type="text" class="form-control inline" placeholder="Amount" ng-model="filters.balanceDue">
+          </div>
+          <div class="separator"></div>
+          <div class="clearfix max100">
+            <label>Due Date</label>
+            <input type="text" class="form-control"
+             uib-datepicker-popup="{{format}}" required
+             datepicker-options="dateOptions"
+             is-open="dueDatePickerIsOpen"
+             ng-click="dueDatePickerOpen()"
+             ng-model="filters.dueDate"
+             min-date="filters.fromDate"
+             max-date="today"
+             placeholder="Due date"
+            />
+          </div>
 
-                <span class="separator"></span>
-
-                <div class="clearfix max100">
-                    <label>Due Date</label>
-                    <input type="text" class="form-control"
-                         uib-datepicker-popup="{{format}}" required
-                         datepicker-options="dateOptions"
-                         is-open="dueDatePickerIsOpen"
-                         ng-click="dueDatePickerOpen()"
-                         ng-model="filters.dueDate"
-                         min-date="filters.fromDate"
-                         max-date="today"
-                         placeholder="Due date"
-                   />
-                </div>
-
-        <span class="separator"></span>
-
-                <div class="max100">
-                  <label>Gand Total</label>
-                  <input type="number" class="form-control" placeholder="Grand Total" ng-model="filters.total">
-                </div>
-
-                <span class="separator"></span>
-                  <i class="glyphicon glyphicon-refresh mrR"  ng-click="resetFilters()"></i>
-        <span class="separator"></span>
-                <button class="btn btn-default mrR1" ng-click="applyFilters()">Go</button>
+          <div class="separator"></div>
+          <div class="max100">
+            <label>Gand Total</label>
+            <input type="number" class="form-control" placeholder="Grand Total" ng-model="filters.total">
+          </div>
+          <div class="separator"></div>
+          <i class="glyphicon glyphicon-refresh mrR"  ng-click="resetFilters()" style="vertical-align: bottom;"></i>
+          <div class="separator"></div>
+          <button class="btn btn-default mrR1" ng-click="applyFilters()" style="vertical-align: bottom;">Go</button>
         </div>
+        
         <i class="glyphicon glyphicon-filter" ng-class="{open:showFilters}" ng-click="showFilters = !showFilters"></i>
         <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
           <div ng-if="proformaList.results.length < 1">No Proforma Found.</div>

@@ -128,7 +128,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     $scope.filters = new pc.filterModel()
 
   $scope.applyFilters = () ->
-    $scope.filters.page = $scope.proformaList.page || null
+    $scope.filters.page = $scope.proformaList.page || 1
     $scope.filters.count = $scope.count.val
     pc.prevBalanceStatus = $scope.filters.balanceStatus
     if $scope.filters.accountUniqueName != undefined && $scope.filters.accountUniqueName != ''
