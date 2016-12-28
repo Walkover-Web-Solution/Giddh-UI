@@ -1694,3 +1694,7 @@ button.toast-close-button {
 #intercom-container .intercom-borderless-frame{
     left: 0px !important;
 }
+
+#intercom-container .intercom-launcher-badge-frame{
+    left: 16px !important;
+}

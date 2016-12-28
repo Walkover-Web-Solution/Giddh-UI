@@ -4275,6 +4275,10 @@ table.proforma-particulars{
     left: 0px !important;
 }
 
+#intercom-container .intercom-launcher-badge-frame{
+    left: 16px !important;
+}
+
 .marginTop{
     margin-top: -54px;
 }
