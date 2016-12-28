@@ -216,6 +216,7 @@ router.get '/:groupUniqueName/closing-balance', (req, res) ->
     parameters:
       from: req.query.fromDate
       to: req.query.toDate
+      refresh: req.query.refresh
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

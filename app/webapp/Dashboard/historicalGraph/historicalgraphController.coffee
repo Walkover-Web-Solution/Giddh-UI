@@ -53,6 +53,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
   }
   }
   $scope.secondTime = 0
+  $scope.hardRefresh = false
 
   $scope.setDateByFinancialYear = () ->
     presentYear = $scope.getPresentFinancialYear()
@@ -97,6 +98,7 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
         'fromDate': fromDate
         'toDate': toDate
         'interval': "monthly"
+        'refresh': $scope.hardRefresh
       }
       graphParam = {
         'groups': [$rootScope.groupName.indirectExpenses,$rootScope.groupName.operatingCost]
@@ -114,10 +116,12 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
     reportService.newHistoricData(reqParam, graphParam).then $scope.getHistoryDataSuccess, $scope.getHistoryDataFailure
 
   $scope.getHistoryDataSuccess = (res) ->
+    $scope.hardRefresh = false
     $scope.graphData.push(res.body.groups)
     $scope.combineCategoryWise(_.flatten($scope.graphData))
 
   $scope.getHistoryDataFailure = (res) ->
+    $scope.hardRefresh = false
     if res.data.code == "INVALID_DATE"
       if $scope.secondTime <= 0
         $scope.secondTime = $scope.secondTime + 1
@@ -191,6 +195,12 @@ historicalgraphController = ($scope, $rootScope, localStorageService, toastr, gr
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.setDateByFinancialYear()
       $scope.getHistory($scope.fromDate,$scope.toDate)
+
+
+  $scope.$on 'reloadAll', (event) ->
+    $scope.hardRefresh = true
+    $scope.setDateByFinancialYear()
+    $scope.getHistory($scope.fromDate,$scope.toDate)
 
 
 history.controller('historicalgraphController',historicalgraphController)

@@ -10,6 +10,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       'q':@q
       'page':@page
       'count':@count
+      'refressh':@refresh
     },
     {
       add: {
@@ -76,7 +77,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       }
       getClosingBal: {
         method: 'GET'
-        url: '/company/:companyUniqueName/groups/:groupUniqueName/closing-balance?fromDate=:date1&toDate=:date2'
+        url: '/company/:companyUniqueName/groups/:groupUniqueName/closing-balance?fromDate=:date1&toDate=:date2&refresh=:refresh'
       }
       deleteLogs: {
         method: 'DELETE'
@@ -206,6 +207,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
         groupUniqueName: obj.selGrpUname
         date1: obj.fromDate
         date2: obj.toDate
+        refresh: obj.refresh
       }, onSuccess, onFailure))
 
     matchAndReturnObj: (src, dest)->

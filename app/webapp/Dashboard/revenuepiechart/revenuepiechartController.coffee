@@ -57,6 +57,7 @@ revenuechartController = ($scope, $rootScope, localStorageService, toastr, group
   $scope.chartDataAvailable = false
   $scope.errorMessage = ""
   $scope.accountList = []
+  $scope.hardRefresh = false
 
   $scope.setDateByFinancialYear = () ->
     presentYear = $scope.getPresentFinancialYear()
@@ -111,13 +112,16 @@ revenuechartController = ($scope, $rootScope, localStorageService, toastr, group
     objToSend.selGrpUname = groupUniqueName
     objToSend.fromDate = duration.from
     objToSend.toDate = duration.to
+    objToSend.refresh = $scope.hardRefresh
     groupService.getClosingBal(objToSend).then($scope.getClosingBalSuccess,$scope.getClosingBalFailure)
 
   $scope.getClosingBalSuccess = (res) ->
+    $scope.hardRefresh = false
     $scope.extractAccounts(res.body[0])
     $scope.generateChartData($scope.accountList)
 
   $scope.getClosingBalFailure = (res) ->
+    $scope.hardRefresh = false
     $scope.chartDataAvailable = false
     $scope.errorMessage = res.data.message
 
@@ -170,6 +174,11 @@ revenuechartController = ($scope, $rootScope, localStorageService, toastr, group
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.getRevenueData()
+
+
+  $scope.$on 'reloadAll', (event) ->
+    $scope.hardRefresh = true
+    $scope.getRevenueData()
 
 
 

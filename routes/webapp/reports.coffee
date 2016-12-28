@@ -28,6 +28,7 @@ router.post '/group-history', (req, res) ->
       to: req.query.toDate
       from: req.query.fromDate
       interval: req.query.interval
+      refresh: req.query.refresh
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/group-history'
@@ -105,6 +106,7 @@ router.get '/dashboard', (req, res) ->
       to: req.query.toDate
       from: req.query.fromDate
       interval: req.query.interval
+      refresh: req.query.refresh
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/dashboard'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
