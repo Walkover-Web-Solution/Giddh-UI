@@ -1,6 +1,6 @@
 'use strict'
 
-angular.module('giddhApp').service 'sindhuServices', ($resource, $q) ->
+adminPanel.service 'sindhuServices', ($resource, $q) ->
   sindhu = $resource('/sindhu',
       {
         'uniqueName': @uniqueName,

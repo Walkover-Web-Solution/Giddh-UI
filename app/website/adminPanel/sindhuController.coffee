@@ -1,5 +1,19 @@
 "use strict"
 
+adminApp = angular.module('adminApp', [
+  "satellizer"
+  "ui.bootstrap"
+  "LocalStorageModule"
+  "ngResource"
+  "toastr"
+  "ngVidBg"
+  "fullPage.js"
+  "vcRecaptcha"
+  "valid-number"
+  "razor-pay"
+  "internationalPhoneNumber"
+])
+
 adminController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr, $window) ->
   $scope.loginIsProcessing = false
   $scope.captchaKey = '6LcgBiATAAAAAMhNd_HyerpTvCHXtHG6BG-rtcmi'
@@ -170,4 +184,4 @@ adminController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
 
 
 
-angular.module('giddhApp').controller 'sindhuController', adminController
+angular.module('adminApp').controller 'sindhuController', adminController
