@@ -9,7 +9,7 @@
 					<label>Template for {{value.type}}</label>
 					<h3 class="lead alC" ng-bind-html="value.name"></h3>
 					<p>
-						<button class="btn btn-default btn-block" ng-click="ctrl.getTemplate(value, 'update')" ng-disabled="value.isFixed">Edit</button>
+						<button class="btn btn-default btn-block" ng-click="ctrl.getTemplate(value, 'update')">Edit</button>
 						<button class="btn btn-danger btn-block" ng-click="ctrl.deleteTemplate(value)" ng-disabled="value.isDefault || value.isFixed">Delete</button>
 					<div class="mrT1 alC" ng-show="!value.isDefault">
 						<div ng-click="ctrl.setDefTemp(value)">

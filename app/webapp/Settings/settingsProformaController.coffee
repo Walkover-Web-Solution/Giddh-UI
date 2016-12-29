@@ -322,35 +322,40 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       $this.toastr.warning("Template name can't be empty", "Warning")
     else
       template = {}
-      template.name = $this.templateName
-      template.type = "proforma"
-      template.sections = []
-      template.htmlData = {}
-      template.htmlData.sections = []
-      template.variables = []
-      _.each @widgets, (wid) ->
-        widget = {}
-        widget.height = wid.sizeY
-        widget.width = wid.sizeX
-        widget.entity = wid.type
-        widget.column = wid.col
-        widget.row = wid.row
-        widget.data = wid.data
-        template.sections.push(widget)
-        section = {}
-        section.styles = {}
-        section.styles.height = widget.height/24 *100 + '%'
-        section.styles.width = widget.width/24 *100 + '%'
-        section.type = wid.type
-        section.elements = himalaya.parse(wid.data)
-        $this.formatEditables(section.elements)
-        template.htmlData.sections.push(section)
-
-      template.htmlData = JSON.stringify(template.htmlData)
+      $this.convertSectionToHtmlData(template)
       $this.matchVariables(template)
       reqparam = {}
       reqparam.companyUniqueName = $rootScope.selectedCompany.uniqueName
       settingsService.save(reqparam, template).then(@success, @failure)
+
+
+  @convertSectionToHtmlData = (template) ->
+    template.name = $this.templateName
+    template.type = "proforma"
+    template.sections = []
+    template.htmlData = {}
+    template.htmlData.sections = []
+    template.variables = []
+    _.each @widgets, (wid) ->
+      widget = {}
+      widget.height = wid.sizeY
+      widget.width = wid.sizeX
+      widget.entity = wid.type
+      widget.column = wid.col
+      widget.row = wid.row
+      widget.data = wid.data
+      template.sections.push(widget)
+      section = {}
+      section.styles = {}
+      section.styles.height = widget.height/24 *100 + '%'
+      section.styles.width = widget.width/24 *100 + '%'
+      section.type = wid.type
+      section.elements = himalaya.parse(wid.data)
+      $this.formatEditables(section.elements)
+      template.htmlData.sections.push(section)
+
+    template.htmlData = JSON.stringify(template.htmlData)
+    return template
 
   @resetUpload =()->
     console.log("resetUpload")
