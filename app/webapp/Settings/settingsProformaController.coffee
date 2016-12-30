@@ -100,7 +100,7 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
   @getTemplate = (item, operation) ->
     @success = (res) ->
       @htmlData = JSON.parse(res.body.htmlData)
-      #$this.parseData(res.body, @htmlData)
+      # $this.parseData(res.body, @htmlData)
       $this.widgets = []
       $this.selectedTemplate = res.body
       $this.updateTemplate = true
