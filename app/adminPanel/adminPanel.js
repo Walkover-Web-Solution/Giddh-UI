@@ -23,7 +23,6 @@ adminPanel = angular.module('adminPanel', [
       controller: 'adminPanelController',
       controllerAs: 'admin'
     })
-	
 })
 
 .config([

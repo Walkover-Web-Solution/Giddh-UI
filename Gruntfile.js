@@ -385,6 +385,57 @@ module.exports = function (grunt) {
         process: function(src) {
           return "\n" + src + "\n\n";
         }
+      },
+      webCoreJS:{
+        dest: 'public/website/website_corejs.min.js',
+        bowerOptions: {
+          relative: false
+        },
+        include: [
+          'modernizr',
+          'jquery',
+          'jquery-ui',
+          'angular',
+          'bootstrap',
+          'angular-bootstrap',
+          'satellizer',
+          'angular-resource',
+          'angular-ui-router',
+          'angular-translate',
+          'angular-local-storage',
+          'angular-toastr',
+          'angular-vidbg',
+          'fullpage.js',
+          'angular-fullpage.js',
+          'intl-tel-input',
+          'international-phone-number'
+        ],
+        dependencies: {
+          'jquery': 'modernizr',
+          'angular': 'jquery',
+          'bootstrap': 'angular',
+          'angular-bootstrap': 'bootstrap',
+          'underscore': 'angular-bootstrap',
+          'intl-tel-input': 'jquery',
+          'international-phone-number':'intl-tel-input'
+        },
+        mainFiles: {
+          'underscore': 'underscore-min.js',
+          'angular-bootstrap': 'ui-bootstrap-tpls.min.js',
+          'perfect-scrollbar': 'js/min/perfect-scrollbar.jquery.min.js',
+          'moment': 'min/moment-with-locales.min.js',
+          'angular-toastr': 'dist/angular-toastr.tpls.min.js'
+        },
+        callback: function(mainFiles, component) {
+          console.log(mainFiles)
+          return _.map(mainFiles, function(filepath) {
+            var min = filepath.replace(/\.js$/, '.min.js');
+            return grunt.file.exists(min) ? min : filepath;
+          });
+        },
+        process: function(src) {
+          return "\n" + src + "\n\n";
+        }
       }
     },
     execute: {
