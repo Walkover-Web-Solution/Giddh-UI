@@ -398,6 +398,7 @@ module.exports = function (grunt) {
           'angular',
           'bootstrap',
           'angular-bootstrap',
+          'underscore',
           'satellizer',
           'angular-resource',
           'angular-ui-router',
