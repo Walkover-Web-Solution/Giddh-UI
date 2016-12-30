@@ -188,7 +188,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       $scope.taxes = res.body.taxes
       $scope.discountTotal = res.body.discountTotal || 0
       if res.body.commonDiscount == null then res.body.commonDiscount = {} else res.body.commonDiscount = res.body.commonDiscount
-      $scope.discount.amount = res.body.commonDiscount.amount || null
+      $scope.discount.amount = Math.abs(res.body.commonDiscount.amount) || null
       $scope.discount.account = res.body.commonDiscount.accountUniqueName || null
       #$scope.calcSubtotal()
       $timeout ( ->
@@ -564,6 +564,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         $scope.taxTotal = 0
       else if action == 'update'
         toastr.success("Proforma updated successfully")
+        $scope.transactions = res.body.entries
         $scope.editMode = !$scope.editMode
     $this.failure = (res) ->
       toastr.error(res.data.message)
@@ -669,7 +670,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       if isDiscount
         $scope.discountTotal += Number(txn.amount)
         if $scope.subtotal > 0
-          $scope.subtotal -= Number(txn.amount)
+          $scope.subtotal -= Math.abs(Number(txn.amount))
         if prevTxn
           #prevTxn.amount -= Number(txn.amount)
           pc.calcTax(prevTxn, prevTxn.amount, 'discount')
