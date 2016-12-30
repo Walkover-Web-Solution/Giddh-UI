@@ -1,5 +1,4 @@
 adminPanel.controller('adminLoginController', ['$scope','$auth','localStorageService', 'toastr','$state','$window',function($scope,$auth,localStorageService, toastr, $state, $window){
-	console.log('login')
 	$this = this;
 
 
