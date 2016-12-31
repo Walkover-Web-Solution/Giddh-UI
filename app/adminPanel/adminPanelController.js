@@ -1,4 +1,4 @@
-adminPanel.controller('adminPanelController', ['$scope','$state', function($scope, $state){
+adminPanel.controller('adminPanelController', ['$scope','$state','$http' ,function($scope, $state, $http){
 	
 	$this = this;
 	
@@ -8,7 +8,11 @@ adminPanel.controller('adminPanelController', ['$scope','$state', function($scop
 	
 	$this.title = 'Admin Panel'
 
-
+	// var getCompaniesList = function (){
+	// 	url = '/admin/companies'
+	// 	$http.post(url)
+	// }
+	
 
 
 	return $this;
