@@ -180,6 +180,7 @@ var invoice = require('./public/routes/webapp/invoices')
 var templates = require('./public/routes/webapp/templates')
 var proforma = require('./public/routes/webapp/proformas')
 var placeholders = require('./public/routes/webapp/placeholders')
+var adminPanel = require('./public/routes/adminPanel/adminPanel')
 
 app.use('/time-test', timetest);
 app.use('/currency', currency);
@@ -202,6 +203,7 @@ app.use('/company/:companyUniqueName', reports);
 app.use('/coupon', coupon);
 app.use('/yodlee', yodlee);
 app.use('/ebanks', ebanks);
+app.use('/admin', adminPanel);
 //app.use('/magic', magicLink);
 /*
  # set all route above this snippet
