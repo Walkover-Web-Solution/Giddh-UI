@@ -224,6 +224,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       $scope.createProforma('update')
     $scope.editMode = true
 
+
   $scope.deleteProforma = (num, index) ->
     @success = (res) ->
       $scope.proformaList.results.splice(index, 1)
@@ -498,6 +499,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     @success = (res) ->
       pc.templateVariables = res.body.templateVariables
       pc.htmlData = JSON.parse(res.body.htmlData)
+      console.log pc.htmlData
       pc.sectionData = res.body.sections
       pc.checkEditableFields(pc.htmlData.sections)
       $scope.htmlData = pc.htmlData
@@ -566,6 +568,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         toastr.success("Proforma updated successfully")
         $scope.transactions = res.body.entries
         $scope.editMode = !$scope.editMode
+        $scope.getAllProforma()
     $this.failure = (res) ->
       toastr.error(res.data.message)
     reqBody = {}

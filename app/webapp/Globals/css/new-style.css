@@ -3883,7 +3883,25 @@ tr.db-bnk-account > td.reconnectDiv{
 .widget-text{
     overflow:hidden;
     margin-top:20px;
+/*    height: 90%;
+    overflow-y: auto;*/
 }
+
+.widget-text h1, .widget-text h2,.widget-text h3,.widget-text h4,.widget-text h5,.widget-text h6{
+    font-weight: bold;
+}
+.widget-text h1{
+    font-size: 2em;
+}
+
+.widget-text h2{
+    font-size: 1.5em;
+}
+
+.widget-text h3{
+    font-size: 1.17em;
+}
+
 #trix-toolbar-1 .button_groups, #trix-toolbar-1 .button_groups button{
     display:none;
 }

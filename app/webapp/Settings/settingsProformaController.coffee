@@ -189,9 +189,9 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       section.type = wid.type
       section.elements = himalaya.parse(wid.data)
       $this.formatEditables(section.elements)
-      template.htmlData.sections.push(section)
-
+      template.htmlData.sections.push(section)  
     template.htmlData = JSON.stringify(template.htmlData)
+    console.log template.htmlData
     $this.matchVariables(template)
     reqparam = {}
     reqparam.companyUniqueName = $rootScope.selectedCompany.uniqueName
@@ -362,18 +362,21 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
 
 
   # upload Images
-  @uploadImages =(files,type, item)->
+  @uploadImages =(files,type, item, reset)->
     angular.forEach files, (file) ->
       file.fType = type
 #      console.log file
+      fileData = {
+        file: file
+        fType: type
+      }
+      if reset
+        fileData.file = ""
       file.upload = Upload.upload(
         url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/logo'
         # file: file
         # fType: type
-        data : {
-          file: file
-          fType: type
-        }
+        data : fileData
       )
       file.upload.then ((res) ->
         item.data = res.data.body.path

@@ -367,7 +367,7 @@ link: (scope, elem, attr) ->
   restrict: "EA"
   link: (scope, elem, attr) ->
     setHeight = () ->
-      height = $(window).innerHeight() - 54
+      height = $(window).innerHeight() - 54 - 54
       $(elem).css({"height": height, "overflow-y":"auto"})
     
     $(window).on('resize', (e) ->
@@ -443,3 +443,14 @@ link: (scope, elem, attr) ->
 #     )
 
 # ]
+
+.filter 'numberlimit', ->
+  (floatNum) ->
+    if floatNum != undefined
+      decimal = floatNum.toString().split('.')
+      if decimal[1] && decimal[1].length > 2
+        decimal[1] = decimal[1][0] + decimal[1][1]
+        floatNum = decimal[0] + decimal[1]
+    else
+      floatNum = 0
+    floatNum      

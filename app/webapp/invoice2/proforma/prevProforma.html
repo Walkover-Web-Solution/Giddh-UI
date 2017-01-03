@@ -37,7 +37,7 @@
               <th class="col-xs-3">Amount</th>
             </thead>
             <tbody>
-              <tr ng-repeat="txn in transactions">
+              <tr ng-repeat="txn in transactions" ng-if="txn.amount > 0">
                 <td class="col-xs-2">
                   <!-- <input type="text" class="" ng-model="txn.accountUniqueName" uib-typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | filter:$viewValue | limitTo:5" typeahead-on-select="getTaxes(txn.accountUniqueName, txn)" ng-disabled="!editMode"> -->
 

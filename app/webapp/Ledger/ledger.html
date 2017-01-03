@@ -575,7 +575,7 @@
               <!--</label>-->
             </div>
             <div class="mrT2 pull-right">
-              <label>Total: <span ng-bind="selectedLedger.total.amount | number:2"></span>
+              <label>Total: <span ng-bind="selectedLedger.total.amount | numberlimit"></span>
                 <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'CREDIT'">Cr</span>
                 <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'DEBIT'">Dr</span></label>
             </div>
