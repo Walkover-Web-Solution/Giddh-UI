@@ -175,9 +175,10 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       # $scope.htmlData = res.body.template.htmlData
       pc.templateVariables = res.body.template.templateVariables
       selectedAccount = _.findWhere(pc.templateVariables, {key:"$accountUniqueName"})
-      account = {}
-      account.uniqueName = selectedAccount.value
-      $scope.setSelectedAccount(account)
+      if selectedAccount
+        account = {}
+        account.uniqueName = selectedAccount.value
+        $scope.setSelectedAccount(account)
       pc.htmlData = JSON.parse(res.body.template.htmlData)
       pc.sectionData = res.body.template.sections
       pc.checkEditableFields(pc.htmlData.sections)
