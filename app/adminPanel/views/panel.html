@@ -1,11 +1,8 @@
-<h1>{{admin.title}}</h1>
-
-
-<div class="container-fluid mrT1 pd1">
+<div class="container-fluid pd2">
   <div class="row">
-    <div class="form-group mrL1 pull-right maxW150 pos-rel">
-      <input class="pull-right maxW150" placeholder="Search" ng-model="query"/>
-      <i class="glyphicon glyphicon-search pos-abs"/>
+    <div class="pull-right maxW150 pos-rel pdR1">
+      <input class="form-control" placeholder="Search" ng-model="query"/>
+      <i class="glyphicon glyphicon-search pos-abs" style="right: 22px;top:10px"/>
     </div>
   </div>
   <div class="row mrT1 pd1">
@@ -17,22 +14,22 @@
         <th>Mobile No.</th>
         <th>Expiry Date</th>
         <th>Last activity</th>
-        <th>Account balance</th>
-        <th>Shared With</th>
+        <th>Primary Account balance</th>
+        <th>Secondary Account balance</th>
         <th>Subscription plan</th>
-        <th>Monthly API hits</th>
+        <th>Total API hits</th>
         </thead>
         <tbody>
-        <tr ng-repeat="company in companies">
-          <td>{{company.name}}</td>
-          <td>{{company.createdBy.email}}</td>
-          <td>{{company.companySubscription.createdAt}}</td>
+        <tr ng-repeat="company in admin.companies | filter:query">
+          <td>{{company.companyName}}</td>
+          <td>{{company.createdBy}}</td>
+          <td>{{company.companyCreatedAt}}</td>
           <td>{{company.contactNo}}</td>
-          <td>{{company.companySubscription.expiry}}</td>
-          <td>{{company.lastActivity}}</td>
-          <td>{{company.companySubscription.servicePlan.amount | number:2}}</td>
-          <td><button class="btn btn-default" ng-click="showSharedWithDetails(company.sharedWith)">open list</button></td>
-          <td>{{company.companySubscription.servicePlan.planName}}</td>
+          <td>{{company.subscriptionExpiringAt}}</td>
+          <td>{{company.lastActivityAt}}</td>
+          <td>{{company.primaryAccBalance}}</td>
+          <td>{{company.secondaryAccBalance}}</td>
+          <td>{{company.planName}}</td>
           <td>{{company.apiHits}}</td>
         </tr>
         </tbody>
