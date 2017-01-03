@@ -499,7 +499,6 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     @success = (res) ->
       pc.templateVariables = res.body.templateVariables
       pc.htmlData = JSON.parse(res.body.htmlData)
-      console.log pc.htmlData
       pc.sectionData = res.body.sections
       pc.checkEditableFields(pc.htmlData.sections)
       $scope.htmlData = pc.htmlData
@@ -601,7 +600,8 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     reqBody.updateAccountDetails = false
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-    pc.checkAccountDetailsChange(reqBody)
+    if pc.selectedAccountDetails != undefined
+      pc.checkAccountDetailsChange(reqBody)
     if !$scope.enableCreate
       modalService.openConfirmModal(
         title: 'Update Account Details',
