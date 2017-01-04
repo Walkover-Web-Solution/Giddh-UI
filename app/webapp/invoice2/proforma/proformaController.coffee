@@ -620,6 +620,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
           ()->
             reqBody.updateAccountDetails = true
             if action == 'create'
+              reqBody.fields = _.uniq(reqBody.fields, (p)-> return p.key)
               invoiceService.createProforma(reqParam,reqBody).then($this.success,$this.failure)
             else if action == 'update'
               reqBody.proforma = $scope.currentProforma.uniqueName
