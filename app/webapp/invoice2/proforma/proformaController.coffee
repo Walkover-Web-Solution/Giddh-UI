@@ -507,7 +507,8 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       pc.checkEditableFields(pc.htmlData.sections)
       $scope.htmlData = pc.htmlData
       $scope.selectedTemplate = res.body.uniqueName
-      $scope.discount = {} 
+      $scope.discount = {}
+      pc.selectedAccountDetails = undefined
       #pc.getDiscountAccounts()
       #pc.parseData(res.body, $scope.htmlData)
     @failure = (res) ->
