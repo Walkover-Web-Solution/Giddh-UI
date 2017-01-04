@@ -36,7 +36,24 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
 
   # gridstack vars
   @widgets = new @widgetsModel()
+  @widgetOverflow = false
+  $this.onWidgetChange = (event, $element, widget) ->
+    totalSizeY = 0
+    widgets = _.groupBy(@widgets, 'row')
+    angular.forEach(widgets, (value, key) ->
+       max = _.max(value, (val)-> return val.sizeY)
+       totalSizeY += max.sizeY     
+    )
+    $this.checkWidgetOverFlow(totalSizeY)
 
+  $this.checkWidgetOverFlow = (sizeY) ->
+    if sizeY > $this.maxRows
+      toastr.warning('Max Page Size Exceeded.')
+      @widgetOverflow = true
+    else
+      @widgetOverflow = false
+
+  $this.maxRows = 20
   @gridsterOptions = {
     columns: 24,
     pushing: true,
@@ -53,14 +70,17 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     mobileModeEnabled: true, # whether or not to toggle mobile mode when screen width is less than mobileBreakPoint
     minColumns: 1, # the minimum columns the grid must have
     minRows: 2, # the minimum height of the grid, in rows
-    maxRows: 20, 
     resizable: {
-       enabled: true,
-       handles: ['e','s', 'se', 'sw', 'nw']
+      enabled: true,
+      handles: ['e','s', 'se', 'sw', 'nw']
+      stop: (event, $element, widget) ->
+        $this.onWidgetChange(event, $element, widget)
     },
     draggable: {
        enabled: true 
        handle: '.move-widget'
+       stop: (event, $element, widget) ->
+        $this.onWidgetChange(event, $element, widget)
     }
   }
 
@@ -225,6 +245,7 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
   #   console.log text
 
   @resetTemplate = () ->
+    @widgetOverflow = false
     @widgets = new @widgetsModel()
 
   @showAddTemplate = ->
@@ -247,7 +268,6 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     getLastRow = $this.getLastRowPos()
     getLastRowPos = getLastRow.row + getLastRow.sizeY
     getLastWidName = "widget_"+$this.getWidgetArrLength()
-    
     # init obj with default param
     newWidget = { sizeX: 12, sizeY: 2, row: getLastRowPos, col: 0, name: getLastWidName, data:"", type: $this.tempType }
     
@@ -267,10 +287,12 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
         console.log "Else case"
 
     $this.widgets.push(newWidget)
+    $this.onWidgetChange()
 
   @removeWidget = (w) ->
     index = $this.widgets.indexOf(w)
     $this.widgets.splice index, 1
+    $this.onWidgetChange()
 
   $this.parseChildren = (data) ->
     _.each data, (el) ->

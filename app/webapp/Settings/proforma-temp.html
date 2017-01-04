@@ -31,12 +31,15 @@
 		<div class="row">
 			<div class="col-md-12">
 				<section id="invoice-wrapper">
+					<div style="width:100%;color:red;font-size: 12px;" ng-if="ctrl.widgetOverflow">
+						The Template Page size has been exceeded, please move the wigets within the blue area to create a template
+					</div>
 					<div ng-if="!ctrl.updateTemplate" class="clearfix pdB2 form-inline">
 						<div class="form-group">
 							<input type="text" name="ctrl.templateName" ng-model="ctrl.templateName" placeholder="Template Name" class="form-control">
 						</div>
 						<div class="form-group">
-							<button ng-disabled="ctrl.templateName === undefined" class="btn btn-success" ng-click="ctrl.saveTemplate()" href="javascript:void(0)">Save Template</button>
+							<button ng-disabled="ctrl.templateName === undefined || ctrl.widgetOverflow" class="btn btn-success" ng-click="ctrl.saveTemplate()" href="javascript:void(0)">Save Template</button>
 							<button class="btn btn-success mrL1" ng-click="ctrl.resetTemplate()" href="javascript:void(0)">Reset Template</button>
 						</div>
 
@@ -57,26 +60,26 @@
 
 
 					<div ng-if="ctrl.updateTemplate" class="clearfix pdB2 form-inline">
-            <div class="form-group">
-              <input type="text" name="ctrl.selectedTemplate.name" ng-model="ctrl.selectedTemplate.name" placeholder="Template Name" class="form-control">
-            </div>
-            <div class="form-group">
-              <button ng-disabled="ctrl.selectedTemplate.name === undefined || ctrl.selectedTemplate.name == ''" class="btn btn-success" ng-click="ctrl.updateProformaTemplates()" href="javascript:void(0)">Update Template</button>
-            </div>
+			            <div class="form-group">
+			              <input type="text" name="ctrl.selectedTemplate.name" ng-model="ctrl.selectedTemplate.name" placeholder="Template Name" class="form-control">
+			            </div>
+			            <div class="form-group">
+			              <button ng-disabled="ctrl.selectedTemplate.name === undefined || ctrl.selectedTemplate.name == ''  || ctrl.widgetOverflow" class="btn btn-success" ng-click="ctrl.updateProformaTemplates()" href="javascript:void(0)">Update Template</button>
+			            </div>
 
-            <div class="form-group pull-right">
-              <a class="btn btn-primary" ng-click="ctrl.addWidget()" href="javascript:void(0)">Add Widget</a>
-            </div>
-            <div class="form-group pull-right mrR1">
-              <select
-                  required
-                  class="form-control"
-                  name="ctrl.tempType"
-                  ng-model="ctrl.tempType"
-                  ng-options="item for item in ctrl.tempTypes">
-              </select>
-            </div>
-          </div>
+			            <div class="form-group pull-right">
+			              <a class="btn btn-primary" ng-click="ctrl.addWidget()" href="javascript:void(0)">Add Widget</a>
+			            </div>
+			            <div class="form-group pull-right mrR1">
+			              <select
+			                  required
+			                  class="form-control"
+			                  name="ctrl.tempType"
+			                  ng-model="ctrl.tempType"
+			                  ng-options="item for item in ctrl.tempTypes">
+			              </select>
+			            </div>
+			          </div>
 
 					<div class="invoice-wrapper-m a4">
 						<div gridster="ctrl.gridsterOptions">
