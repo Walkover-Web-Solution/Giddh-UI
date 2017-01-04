@@ -162,17 +162,16 @@
                     <label>Set Count</label>
                     <select ng-options="counts for counts in count.set" ng-model="count.val" ng-change="getAllProforma()"></select>
                   </div>
-
-                                  <ul class="list-inline">
-                                    <li>
-                                      <button class="btn btn-default" ng-click="proformaList.page = proformaList.page-1; applyFilters()">Prev</button>
-                                    </li>
-                                    <li>{{proformaList.page}}/{{proformaList.totalPages}}</li>
-                                    <li>
-                                      <button class="btn btn-default" ng-click="proformaList.page = proformaList.page+1; applyFilters()">Next</button>
-                                    </li>
-                                  </ul>
-                              </div>
+                    <ul class="list-inline">
+                      <li>
+                        <button class="btn btn-default" ng-click="proformaList.page = proformaList.page-1; applyFilters()">Prev</button>
+                      </li>
+                      <li>{{proformaList.page}}/{{proformaList.totalPages}}</li>
+                      <li>
+                        <button class="btn btn-default" ng-click="proformaList.page = proformaList.page+1; applyFilters()">Next</button>
+                      </li>
+                    </ul>
+                  </div>
                 </td>
               </tr>
 

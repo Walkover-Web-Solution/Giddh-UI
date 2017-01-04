@@ -305,6 +305,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       q: ''
       page: $scope.gwaList.page
       count: $scope.gwaList.count
+      showEmptyGroups: true
     }
     groupService.getFlattenGroupAccList(reqParam).then(pc.getFlattenGrpWithAccListSuccess, pc.getFlattenGrpWithAccListFailure)
 

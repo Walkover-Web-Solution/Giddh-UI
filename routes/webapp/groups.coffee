@@ -21,6 +21,7 @@ router.get '/flatten-groups-accounts', (req, res) ->
       'q':req.query.q
       'page': req.query.page
       'count':req.query.count
+      'showEmptyGroups':req.query.showEmptyGroups || false
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/flatten-groups-with-accounts'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
