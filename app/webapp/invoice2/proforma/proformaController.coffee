@@ -573,6 +573,10 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         $scope.transactions = res.body.entries
         $scope.editMode = !$scope.editMode
         $scope.getAllProforma()
+        account = {}
+        account.uniqueName = res.body.account.uniqueName
+        $scope.setSelectedAccount(account)
+      $scope.enableCreate = true
     $this.failure = (res) ->
       toastr.error(res.data.message)
     reqBody = {}

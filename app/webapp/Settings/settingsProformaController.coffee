@@ -191,7 +191,6 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       $this.formatEditables(section.elements)
       template.htmlData.sections.push(section)  
     template.htmlData = JSON.stringify(template.htmlData)
-    console.log template.htmlData
     $this.matchVariables(template)
     reqparam = {}
     reqparam.companyUniqueName = $rootScope.selectedCompany.uniqueName
