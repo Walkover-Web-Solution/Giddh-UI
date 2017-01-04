@@ -174,6 +174,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       # res.body.template.htmlData = JSON.parse(res.body.template.htmlData)
       # $scope.htmlData = res.body.template.htmlData
       pc.templateVariables = res.body.template.templateVariables
+      pc.selectedAccountDetails = undefined
       selectedAccount = _.findWhere(pc.templateVariables, {key:"$accountUniqueName"})
       if selectedAccount
         account = {}
@@ -520,7 +521,8 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     $$this = @
     $$this.getEditables = (elements) ->
       _.each elements, (elem) ->
-        if elem.type == 'Text' && elem.hasVar && elem.variable.isEditable
+        #if elem.type == 'Text' && elem.hasVar && elem.variable.isEditable
+        if elem.type == 'Text' && elem.hasVar
           field = {}
           field.key = elem.variable.key
           field.value = elem.variable.value
@@ -621,6 +623,8 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
               invoiceService.updateProforma(reqParam,reqBody).then($this.success, $this.failure)
         )
     else if action == 'create' && $scope.enableCreate
+      reqBody.fields = angular.extend(pc.templateVariables,reqBody.fields)
+      reqBody.fields = _.uniq(reqBody.fields, (p)-> return p.key)
       invoiceService.createProforma(reqParam,reqBody).then($this.success,$this.failure)
     else if action == 'update' && $scope.enableCreate
       reqBody.proforma = $scope.currentProforma.uniqueName
