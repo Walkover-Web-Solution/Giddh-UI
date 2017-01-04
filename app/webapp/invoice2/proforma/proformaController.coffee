@@ -416,6 +416,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       $scope.transactions.push(new pc.entryModel())
       $scope.taxes = []
       $scope.subtotal = 0
+      pc.selectedAccountDetails = undefined
     @failure = (res) ->
       toastr.error(res.data.message)
 
@@ -621,6 +622,18 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
               reqBody.fields = angular.extend(pc.templateVariables,reqBody.fields)
               reqBody.fields = _.uniq(reqBody.fields, (p)-> return p.key)
               invoiceService.updateProforma(reqParam,reqBody).then($this.success, $this.failure)
+
+          () ->
+            reqBody.updateAccountDetails = false
+            if action == 'create'
+              reqBody.fields = _.uniq(reqBody.fields, (p)-> return p.key)
+              invoiceService.createProforma(reqParam,reqBody).then($this.success,$this.failure)
+            else if action == 'update'
+              reqBody.proforma = $scope.currentProforma.uniqueName
+              #reqBody.fields = null
+              reqBody.fields = angular.extend(pc.templateVariables,reqBody.fields)
+              reqBody.fields = _.uniq(reqBody.fields, (p)-> return p.key)
+              invoiceService.updateProforma(reqParam,reqBody).then($this.success, $this.failure)
         )
     else if action == 'create' && $scope.enableCreate
       reqBody.fields = angular.extend(pc.templateVariables,reqBody.fields)
@@ -682,7 +695,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         if prevTxn
           #prevTxn.amount -= Number(txn.amount)
           pc.calcTax(prevTxn, prevTxn.amount, 'discount')
-          prevTxn.amount -= Number(txn.amount)
+          prevTxn.amount -= Math.abs(Number(txn.amount))
           pc.calcTax(prevTxn, prevTxn.amount, 'txn')
       else
         $scope.subtotal += Number(txn.amount)
