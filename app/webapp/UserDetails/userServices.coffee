@@ -111,6 +111,10 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
           method: 'GET'
           url: '/company/:companyUniqueName/login/:loginId/token/reconnect'
         }
+        changeTwoWayAuth: {
+          method: 'PUT'
+          url: '/users/:uniqueName/settings'
+        }
       }
   )
 
@@ -230,6 +234,10 @@ giddh.serviceModule.service 'userServices', ($resource, $q) ->
     reconnectAccount: (reqParam) ->
       @handlePromise((onSuccess, onFailure) ->
         UserSET.reconnectAccount({companyUniqueName: reqParam.companyUniqueName, loginId: reqParam.loginId}, onSuccess, onFailure)
+    )
+    changeTwoWayAuth: (reqParam, data) ->
+      @handlePromise((onSuccess, onFailure) ->
+        UserSET.changeTwoWayAuth({uniqueName:reqParam.uniqueName}, data, onSuccess, onFailure)
     )
 
   userServices

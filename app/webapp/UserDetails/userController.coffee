@@ -7,15 +7,16 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.subListData = []
   $scope.uTransData = {}
   $scope.cSubsData = false
+  $scope.twoWayAuth = false
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
   $scope.tabs = [
     {title:'Auth Key', active: true}
     {title:'Wallet', active: false}
-    {title:'Subscription List', active: false}
     {title:'Mobile Number', active: false}
   ]
   $scope.expandLongCode = false
-
+  selectedUser = localStorageService.get('_userDetails')
+  $scope.twoWayAuth = selectedUser.authenticateTwoWay
   $scope.getUserAuthKey = () ->
     $scope.userAuthKey = $window.sessionStorage.getItem('_ak')
 
@@ -682,6 +683,18 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 #  $scope.refreshTokenFailure = (res) ->
 #    toastr.error(res.data.message, "Error")
   
+  ##########Two way Authentication############
+  $scope.changeTwoWayAuth = (condition) ->
+    @success = (res) ->
+      toastr.success(res.body)
+    @failure = (res) ->
+      toastr.error(res.data.message)
+      condition = false
+    data = {}
+    data.authenticateTwoWay = condition
+    reqParam = {}
+    reqParam.uniqueName = selectedUser.uniqueName
+    userServices.changeTwoWayAuth(reqParam, data).then(@success, @failure)
 
   $scope.$on 'company-changed', (event,changeData) ->
     # when company is changed, redirect to manage company page
