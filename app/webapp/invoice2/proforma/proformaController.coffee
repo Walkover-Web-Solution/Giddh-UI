@@ -37,6 +37,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   $scope.discount.amount = 0
   $scope.discount.accounts = []
   $scope.discountTotal = 0
+  $scope.grandTotal = 0
   ## Get all Proforma ##
   $scope.gettingProformaInProgress = false
   $scope.popOver = {
@@ -188,6 +189,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       $scope.subtotal = res.body.subTotal
       $scope.taxTotal = res.body.taxTotal
       $scope.taxes = res.body.taxes
+      $scope.grandTotal = res.body.grandTotal
       $scope.discountTotal = res.body.discountTotal || 0
       if res.body.commonDiscount == null then res.body.commonDiscount = {} else res.body.commonDiscount = res.body.commonDiscount
       $scope.discount.amount = Math.abs(res.body.commonDiscount.amount) || null

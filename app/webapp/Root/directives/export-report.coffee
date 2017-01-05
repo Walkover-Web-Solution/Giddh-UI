@@ -424,7 +424,7 @@ link: (scope, elem, attr) ->
 
 ]
 
-.directive 'trigger-resize', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+.directive 'triggerResize', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
   restrict: "EA"
   link: (scope, elem, attrs) ->
     
@@ -433,6 +433,7 @@ link: (scope, elem, attr) ->
     )
 
 ]
+
 
 # .directive 'triggerClick', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
 #   restrict: "EA"
@@ -454,3 +455,5 @@ link: (scope, elem, attr) ->
     else
       floatNum = 0
     floatNum      
+
+
