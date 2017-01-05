@@ -8,10 +8,26 @@ adminPanel.controller('adminPanelController', ['$scope','$state','$http' ,functi
 	
 	$this.title = 'Admin Panel'
 	$scope.companies = []
+    $scope.paginationDetails = {}
+    $scope.counts = [
+        20,
+        50,
+        100
+    ]
+    $scope.countPage = 20
+    $scope.pageNo = 1
 
-	var getCompaniesList = function (){
-		url = '/admin/companies'
-		data =  {
+	$scope.getCompaniesList = function (){
+        this.success = function(res){
+            $scope.paginationDetails = res.data.body
+            $scope.companies = res.data.body.results
+        }
+
+        this.failure = function(res){
+            console.log(res)
+        }
+        url = '/admin/companies'
+		filter =  {
 		    companyName : "",
 		    companyUniqueName : "",
 		    createdBy : "",
@@ -21,19 +37,25 @@ adminPanel.controller('adminPanelController', ['$scope','$state','$http' ,functi
 		    subscriptionPlan : "",
 		    sort : {"companyName": "DESC", "createdBy": "ASC", "subscriptionExpiringAt":"DESC", "primaryAccBalance": "DESC" , "secondaryAccBalance": "DESC" , "apiHits": "DESC"}
 		}
+        data = {
+            params: {
+                page: $scope.pageNo,
+                count: $scope.countPage
+            },
+            filters: filter
+        }
 		$http.post(url, data).then(this.success, this.failure)
-
-		this.success = function(res){
-			$scope.companies = res.data.body.results
-		}
-
-		this.failure = function(res){
-			console.log(res)
-		}
-
 	}
+    
+    $scope.nextPage = function(){
+        $scope.pageNo = $scope.pageNo + 1
+    }
+    
+    $scope.prevPage = function(){
+        $scope.pageNo = $scope.pageNo - 1
+    }
 	
-	getCompaniesList()
+	$scope.getCompaniesList()
 
 	return $this;
 }])

@@ -3,11 +3,27 @@
 
 <div class="container-fluid mrT1 pd1">
   <div class="row">
-    <div class="form-group mrL1 pull-right maxW150 pos-rel">
-      <input class="pull-right maxW150" placeholder="Search" ng-model="query"/>
-      <i class="glyphicon glyphicon-search pos-abs"/>
+      <div class="form-group mrL1 col-xs-2 pull-right">
+          <label>Items per page</label>
+          <select class="form-control" ng-model="countPage" ng-options="count for count in counts">
+          </select>
+      </div>
+    <div class="input-group mrL1 pos-rel col-xs-2 pull-right">
+        <!--<div class="input-group">-->
+            <input class="input-control" placeholder="Search" ng-model="query"/>
+            <span class="input-grp-btn">
+                <i class="glyphicon glyphicon-search"/>
+            </span>
+        <!--</div>-->
     </div>
   </div>
+    <div class="row">
+        <div class="proforma-list" ng-class="{pdT:!showFilters}">
+            <div class="filters" ng-if="showFilters">
+
+            </div>
+        </div>
+    </div>
   <div class="row mrT1 pd1">
       <table class="table table-bordered">
         <thead>
@@ -22,17 +38,32 @@
         <th>Subscription plan</th>
         <th>Monthly API hits</th>
         </thead>
+        <tfoot>
+        <td colspan="10">
+          <div class="pagination pull-right">
+            <ul class="list-inline">
+              <li>
+                <button class="btn btn-default" ng-disabled="paginationDetails.page == 1" ng-click="prevPage(); getCompaniesList();">Prev</button>
+              </li>
+              <li>{{paginationDetails.page}}/{{paginationDetails.totalPages}}</li>
+              <li>
+                <button class="btn btn-default" ng-disabled="paginationDetails.page == paginationDetails.totalPages" ng-click="nextPage(); getCompaniesList();">Next</button>
+              </li>
+            </ul>
+          </div>
+        </td>
+        </tfoot>
         <tbody>
         <tr ng-repeat="company in companies">
-          <td>{{company.name}}</td>
-          <td>{{company.createdBy.email}}</td>
-          <td>{{company.companySubscription.createdAt}}</td>
+          <td>{{company.companyName}}</td>
+          <td>{{company.createdByUniqueName}}</td>
+          <td>{{company.companyCreatedAt}}</td>
           <td>{{company.contactNo}}</td>
-          <td>{{company.companySubscription.expiry}}</td>
-          <td>{{company.lastActivity}}</td>
-          <td>{{company.companySubscription.servicePlan.amount | number:2}}</td>
+          <td>{{company.subscriptionExpiringAt}}</td>
+          <td>{{company.lastActivityAt}}</td>
+          <td>{{company.primaryAccBalance | number:2}}</td>
           <td><button class="btn btn-default" ng-click="showSharedWithDetails(company.sharedWith)">open list</button></td>
-          <td>{{company.companySubscription.servicePlan.planName}}</td>
+          <td>{{company.planName}}</td>
           <td>{{company.apiHits}}</td>
         </tr>
         </tbody>
