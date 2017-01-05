@@ -577,6 +577,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         account = {}
         account.uniqueName = res.body.account.uniqueName
         $scope.setSelectedAccount(account)
+      $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
       $scope.enableCreate = true
     $this.failure = (res) ->
       toastr.error(res.data.message)
@@ -938,6 +939,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
             $scope.enableCreate = false
 
   pc.createSundryDebtorsList = () ->
+    $scope.sundryDebtors = []
     _.each $rootScope.fltAccntListPaginated, (acc) ->
       isSd = false
       if acc.parentGroups.length > 0
