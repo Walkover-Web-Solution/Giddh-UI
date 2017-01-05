@@ -270,7 +270,7 @@ module.exports = function (grunt) {
     env: {
       dev: {
         NODE_ENV: 'DEVELOPMENT',
-        PREFIX_THIS: ""
+        PREFIX_THIS: process.env.CDN_URL
       },
       prod: {
         NODE_ENV: 'PRODUCTION',
