@@ -667,6 +667,7 @@ body.light .navbar.transparent{
     margin: 0 auto;
     width: 360px;
     height: auto;
+    box-shadow: 0px 1px 2px 0px;
 }
 .mrB1{margin-bottom: 10px}
 .giddh-logo{
@@ -830,4 +831,28 @@ header .navbar {
      height: initial; 
      position: relative; 
     transform: translateY(50%);
+}
+
+.filters ul{
+    margin:0;
+    padding:0 5px;
+}
+
+.filters ul li{
+    max-width:13%;
+}
+
+.filters ul input{
+    padding:0 5px;
+    width:100%;
+}
+.filters ul li label{
+    max-width:100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.orange{
+    color:orange;
 }

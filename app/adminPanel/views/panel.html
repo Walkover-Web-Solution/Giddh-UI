@@ -4,31 +4,33 @@
       <input class="form-control" placeholder="Search" ng-model="query"/>
       <i class="glyphicon glyphicon-search pos-abs" style="right: 22px;top:10px"/>
     </div>
+    <i class="glyphicon glyphicon-filter pull-right mr1" ng-click="showfilters = !showfilters" ng-class="{orange:showfilters}"></i>
   </div>
-  <div class="row">
+  <div class="row" ng-show="showfilters">
       <div class="filters">
-          <ul>
-              <li ng-repeat="(key,value) in filters"></li>
-              <li></li>
-              <li></li>
-              <li></li>
-              <li></li>
+          <ul class="list-inline">
+              <li ng-repeat="(key,value) in filters">
+                
+                <div ng-if="key != 'sort'">
+                  <label>{{key}}</label>
+                  <input type="text" name="{{key}}" ng-model="filters[key]">
+                </div>
+              </li>
+              <li>
+                <button class="btn btn-default" ng-click="getCompaniesList()">Go</button>
+              </li>
           </ul>
       </div>
   </div>
   <div class="row pd1">
       <table class="table table-bordered">
         <thead>
-        <th>Name</th>
-        <th>Created By</th>
-        <th>Created At</th>
-        <th>Mobile No.</th>
-        <th>Expiry Date</th>
-        <th>Last activity</th>
-        <th>Primary Account balance</th>
-        <th>Secondary Account balance</th>
-        <th>Subscription plan</th>
-        <th>Total API hits</th>
+        <th ng-repeat="option in sortOptions">
+          <span ng-bind="option.name" ng-if="!option.show"></span>
+          <span style="cursor: pointer" ng-bind="option.name" ng-if="option.show" ng-click="sortColumn(option.value);option.value == null ? option.value = true : option.value = !option.value;"></span>
+          <i class="glyphicon glyphicon-sort" ng-show="option.value != null"></i>
+          <!-- <i class="glyphicon glyphicon-sort-by-alphabet-alt" ng-show="option.value != null && option.value"></i> -->
+        </th>
         </thead>
         <tfoot>
         <td colspan="10">
