@@ -47,7 +47,7 @@
           </div>
           <div class="form-group mrR1 pull-right" style="margin-top:-5px;">
               <label>Items per page</label>
-              <select class="form-control" ng-model="countPage" ng-options="count for count in counts" style="border-radius: -0px;">
+              <select class="form-control" ng-change="getCompaniesList()" ng-model="countPage" ng-options="count for count in counts" style="border-radius: -0px;">
               </select>
           </div>
         </td>
