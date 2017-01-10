@@ -279,6 +279,9 @@ app.controller 'homeCtrl', [
     )
     $scope.goTo = (state) ->
       window.location = state
+      
+    $scope.goToNewTab = (state) ->
+      window.open(state,"_blank")
 ]
 
 app.config [
