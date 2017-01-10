@@ -175,12 +175,12 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       # res.body.template.htmlData = JSON.parse(res.body.template.htmlData)
       # $scope.htmlData = res.body.template.htmlData
       pc.templateVariables = res.body.template.templateVariables
-      pc.selectedAccountDetails = undefined
-      selectedAccount = _.findWhere(pc.templateVariables, {key:"$accountUniqueName"})
-      if selectedAccount
-        account = {}
-        account.uniqueName = selectedAccount.value
-        $scope.setSelectedAccount(account)
+      pc.selectedAccountDetails = res.body.account
+      # selectedAccount = _.findWhere(pc.templateVariables, {key:"$accountUniqueName"})
+      # if selectedAccount
+      #   account = {}
+      #   account.uniqueName = selectedAccount.value
+      #   $scope.setSelectedAccount(account)
       pc.htmlData = JSON.parse(res.body.template.htmlData)
       pc.sectionData = res.body.template.sections
       pc.checkEditableFields(pc.htmlData.sections)
@@ -578,7 +578,9 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         $scope.getAllProforma()
         account = {}
         account.uniqueName = res.body.account.uniqueName
-        $scope.setSelectedAccount(account)
+        pc.selectedAccountDetails = res.body.account
+        pc.setSelectedAccountDetails(pc.selectedAccountDetails, account)
+        #$scope.setSelectedAccount(account)
       $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
       $scope.enableCreate = true
     $this.failure = (res) ->
