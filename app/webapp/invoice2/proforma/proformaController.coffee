@@ -574,13 +574,17 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       else if action == 'update'
         toastr.success("Proforma updated successfully")
         $scope.transactions = res.body.entries
-        $scope.editMode = !$scope.editMode
         $scope.getAllProforma()
+        $scope.subtotal = res.body.subTotal
+        $scope.taxTotal = res.body.taxTotal
+        $scope.taxes = res.body.taxes
+        $scope.grandTotal = res.body.grandTotal
         account = {}
         account.uniqueName = res.body.account.uniqueName
         pc.selectedAccountDetails = res.body.account
         pc.setSelectedAccountDetails(pc.selectedAccountDetails, account)
         #$scope.setSelectedAccount(account)
+        $scope.editMode = !$scope.editMode
       $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
       $scope.enableCreate = true
     $this.failure = (res) ->
