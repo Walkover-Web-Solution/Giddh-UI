@@ -26,7 +26,6 @@ router.get '/sindhu', (req,res) ->
 #   res.sendFile 'sindhu.html', panelOption
 
 router.get '/', (req, res) ->
-  console.log(dirName)
   res.sendFile 'index.html', options
 
 router.get '/index', (req, res) ->

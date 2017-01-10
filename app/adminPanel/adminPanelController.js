@@ -1,4 +1,4 @@
-adminPanel.controller('adminPanelController', ['$scope','$state','$http' ,function($scope, $state, $http){
+adminPanel.controller('adminPanelController', ['$scope','$state','$http', 'toastr' ,function($scope, $state, $http,toastr){
 	
 	$this = this;
 	$this.superLoader = true
@@ -16,6 +16,19 @@ adminPanel.controller('adminPanelController', ['$scope','$state','$http' ,functi
     ]
     $scope.countPage = 20
     $scope.pageNo = 1
+    $scope.filters = {
+        companyName : "",
+        companyUniqueName : "",
+        createdBy : "",
+        primaryBillerBalance : "",
+        secondaryBillerBalance :"",
+        mobileNo : "",
+        subscriptionPlan : "",
+        sort : {"companyName": "DESC", "createdBy": "ASC", "subscriptionExpiringAt":"DESC", "primaryAccBalance": "DESC" , "secondaryAccBalance": "DESC" , "apiHits": "DESC"}
+    }
+
+
+
 
 	$scope.getCompaniesList = function (){
         this.success = function(res){
@@ -24,19 +37,10 @@ adminPanel.controller('adminPanelController', ['$scope','$state','$http' ,functi
         }
 
         this.failure = function(res){
-            console.log(res)
+            toastr.error(res.data.message)
         }
         url = '/admin/companies'
-		filter =  {
-		    companyName : "",
-		    companyUniqueName : "",
-		    createdBy : "",
-		    primaryBillerBalance : "",
-		    secondaryBillerBalance :"",
-		    mobileNo : "",
-		    subscriptionPlan : "",
-		    sort : {"companyName": "DESC", "createdBy": "ASC", "subscriptionExpiringAt":"DESC", "primaryAccBalance": "DESC" , "secondaryAccBalance": "DESC" , "apiHits": "DESC"}
-		}
+		filter =  $scope.filters
         data = {
             params: {
                 page: $scope.pageNo,

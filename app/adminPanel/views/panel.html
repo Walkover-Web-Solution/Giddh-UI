@@ -1,4 +1,4 @@
-<div class="container-fluid pd2">
+<div class="container-fluid pd1">
   <div class="row">
     <div class="pull-right maxW150 pos-rel pdR1">
       <input class="form-control" placeholder="Search" ng-model="query"/>
@@ -6,13 +6,17 @@
     </div>
   </div>
   <div class="row">
-      <div class="proforma-list" ng-class="{pdT:!showFilters}">
-          <div class="filters" ng-if="showFilters">
-
-          </div>
+      <div class="filters">
+          <ul>
+              <li ng-repeat="(key,value) in filters"></li>
+              <li></li>
+              <li></li>
+              <li></li>
+              <li></li>
+          </ul>
       </div>
   </div>
-  <div class="row mrT1 pd1">
+  <div class="row pd1">
       <table class="table table-bordered">
         <thead>
         <th>Name</th>
@@ -41,7 +45,7 @@
           </div>
           <div class="form-group mrR1 pull-right" style="margin-top:-5px;">
               <label>Items per page</label>
-              <select class="form-control" ng-model="countPage" ng-options="count for count in counts" style="border-radius: -5px;">
+              <select class="form-control" ng-model="countPage" ng-options="count for count in counts" style="border-radius: -0px;">
               </select>
           </div>
         </td>
