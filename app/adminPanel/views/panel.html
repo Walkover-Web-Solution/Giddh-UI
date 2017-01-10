@@ -3,20 +3,15 @@
     <div class="pull-right maxW150 pos-rel pdR1">
       <input class="form-control" placeholder="Search" ng-model="query"/>
       <i class="glyphicon glyphicon-search pos-abs" style="right: 22px;top:10px"/>
-      <div class="form-group mrL1 col-xs-2 pull-right">
-          <label>Items per page</label>
-          <select class="form-control" ng-model="countPage" ng-options="count for count in counts">
-          </select>
-      </div>
     </div>
   </div>
-    <div class="row">
-        <div class="proforma-list" ng-class="{pdT:!showFilters}">
-            <div class="filters" ng-if="showFilters">
+  <div class="row">
+      <div class="proforma-list" ng-class="{pdT:!showFilters}">
+          <div class="filters" ng-if="showFilters">
 
-            </div>
-        </div>
-    </div>
+          </div>
+      </div>
+  </div>
   <div class="row mrT1 pd1">
       <table class="table table-bordered">
         <thead>
@@ -43,6 +38,11 @@
                 <button class="btn btn-default" ng-disabled="paginationDetails.page == paginationDetails.totalPages" ng-click="nextPage(); getCompaniesList();">Next</button>
               </li>
             </ul>
+          </div>
+          <div class="form-group mrR1 pull-right" style="margin-top:-5px;">
+              <label>Items per page</label>
+              <select class="form-control" ng-model="countPage" ng-options="count for count in counts" style="border-radius: -5px;">
+              </select>
           </div>
         </td>
         </tfoot>
