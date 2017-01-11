@@ -66,7 +66,7 @@
         </uib-tab>
         <!-- end of auth tab tab -->
 
-        <uib-tab heading="{{tabs[1].title}}" active="tabs[1].active">
+        <uib-tab heading="{{tabs[1].title}}" active="tabs[1].active" select="getSubscriptionList()">
           <div class="pd2">
             <h3 class="fs16 mrB1">Payment details</h3>
             <label class="mrB1">Current Balance
@@ -172,19 +172,15 @@
             <!-- end of section -->
             
 
-          </div>
-        </uib-tab>
-        <!-- end of wallet tab -->
-
-        <uib-tab heading="{{tabs[2].title}}" active="tabs[2].active" select="getSubscriptionList()">
-          <div class="pd2">
+            <!-- subscription list-->
             <!-- no data start -->
-            <div class="no-data" ng-hide="cSubsData" style="margin-top:0">
-              <h1>Sorry, No Data Found!</h1>
-              <img src="/public/webapp/Globals/images/no-data.png" alt="">
+            <div class="no-data" ng-hide="cSubsData" style="margin-top:20px">
+              <h1>Sorry, No subscriptions Found!</h1>
+              <!-- <img src="/public/webapp/Globals/images/no-data.png" alt=""> -->
             </div>
             <!-- nodata end -->
-
+            <hr class="mrT2">
+            <h1 ng-show="cSubsData" class="mrT1 mrB1">Subscription List</h1>
             <table ng-show="cSubsData" class="table table-striped table-bordered">
               <thead>
                 <tr>
@@ -205,8 +201,16 @@
                 </tr>
               </tbody>
             </table>
+            <!-- /subscription list-->
           </div>
         </uib-tab>
+        <!-- end of wallet tab -->
+
+<!--         <uib-tab heading="{{tabs[2].title}}" active="tabs[2].active" select="getSubscriptionList()">
+          <div class="pd2">
+
+          </div>
+        </uib-tab> -->
         <!-- end of subscription list tab -->
 
         <!--Linked account tab starts here-->
@@ -331,8 +335,8 @@
         <!--</uib-tab>-->
         <!-- end of yodlee tabs -->
         <!--mobile number verification-->
-        <uib-tab heading="{{tabs[3].title}}" active="tabs[3].active" select="getUserDetails()">
-<!--           <div class="pd2 clearfix" style="padding-bottom:0">
+        <uib-tab heading="{{tabs[2].title}}" active="tabs[2].active" select="getUserDetails()">
+          <!--<div class="pd2 clearfix" style="padding-bottom:0">
             <h1 class="mrB">Verified Mobile Number: {{userNumber}}</h1>
             <hr>
           </div> -->
@@ -400,6 +404,13 @@
                   </div>
                 </div>
               </div>
+              <hr class="mrT1 mrB2">
+              <!--two way auth-->
+              <h1 class="mrB1">Two Way Authentication</h1>
+              <span ng-click="changeTwoWayAuth(twoWayAuth)">
+                <switch name="twowayauth" on="On" off="Off" ng-model="twoWayAuth" class="wide"></switch>
+              </span>
+              <p class="mrT1">Two way Authentication is <span class="bold" ng-show="twoWayAuth">ON</span><span class="bold" ng-show="!twoWayAuth">OFF</span>. <span  ng-show="twoWayAuth">You will need two enter verification code at the time of login.</span></p>
             </div>
           </section>
         </uib-tab>

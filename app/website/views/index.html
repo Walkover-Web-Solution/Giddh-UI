@@ -1,11 +1,7 @@
 <!DOCTYPE HTML>
 <html lang="en" ng-app='giddhApp'>
 <head>
-  <!-- <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-K2L9QG');</script> -->
+
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -47,8 +43,8 @@
   <script type="text/javascript" src="<<PREFIX_THIS>>/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
 </head>
 <body ng-controller="homeCtrl" id="page-top" class="light">
-  <!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <ng-include src="'/public/website/views/header.html'"></ng-include>
 
   <!-- end navigation -->
@@ -151,11 +147,6 @@
           <div class="col-sm-12">
             <h2 class="arvo">What can you do with Giddh?</h2>
             <figure>
-              <h2 class="mrB0">GST Ready!</h2>
-              <figcaption>Giddh is ready to work with GST</figcaption>
-             <!--  <p>Alrea</p>  -->
-            </figure>
-            <figure>
               <h2 class="mrB0">Accounts</h2>
               <figcaption>Manage. Share. Merge and Move</figcaption>
               <p>Add and Manage your accounts by adding related information. Share them with stakeholders. Merge two accounts. Move them from one group to another. You can do it all at ease.</p> 
@@ -209,41 +200,5 @@
   <ng-include src="'/public/website/views/footer.html'"></ng-include>
 
 </body>
-<!-- <script>
-  window.intercomSettings = {
-    app_id: "e77157qf"
-  };
-</script>
-<script>(function () {
-  var w = window;
-  var ic = w.Intercom;
-  if (typeof ic === "function") {
-    ic('reattach_activator');
-    ic('update', intercomSettings);
-  } else {
-    var d = document;
-    var i = function () {
-      i.c(arguments)
-    };
-    i.q = [];
-    i.c = function (args) {
-      i.q.push(args)
-    };
-    w.Intercom = i;
-    function l() {
-      var s = d.createElement('script');
-      s.type = 'text/javascript';
-      s.async = true;
-      s.src = 'https://widget.intercom.io/widget/e77157qf';
-      var x = d.getElementsByTagName('script')[0];
-      x.parentNode.insertBefore(s, x);
-    }
 
-    if (w.attachEvent) {
-      w.attachEvent('onload', l);
-    } else {
-      w.addEventListener('load', l, false);
-    }
-  }
-})()</script> -->
 </html>

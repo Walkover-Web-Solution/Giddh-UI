@@ -10,7 +10,7 @@ var session = require('express-session');
 var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
-//var mongoose = require('mongoose');
+// var mongoose = require('mongoose');
 // var MongoStore = require('connect-mongo')(session);
 //var MemcachedStore = require('connect-memcached')(session);
 //global.sessionTTL = 1000 * 60
@@ -60,14 +60,15 @@ app.use('/node_modules', settings.express.static(__dirname + '/node_modules'));
 app.use('/public', settings.express.static(__dirname + '/public'));
 
 //set ttl for session expiry, format : milliseconds * seconds * minutes
-if (app.get('env') === 'development') {
-  // one hour
-  sessionTTL = 1000 * 60 * 60
-}
-else{
-  // ten minutes
-  sessionTTL = 1000 * 60 * 10
-}
+sessionTTL = 1000*60*30
+// if (app.get('env') === 'development') {
+//   // one hour
+//   sessionTTL = 1000 * 60 * 60
+// }
+// else{
+//   // ten minutes
+//   sessionTTL = 1000 * 60 * 60
+// }
 
 app.use(session({
   secret: "keyboardcat",
@@ -77,7 +78,7 @@ app.use(session({
   cookie: {
     secure: false,
     maxAge: sessionTTL
-  },
+  }
   // store: new MongoStore({
   //   url: settings.mongoUrl,
   //   autoRemove: 'interval',

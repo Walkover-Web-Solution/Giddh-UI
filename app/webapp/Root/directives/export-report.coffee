@@ -324,7 +324,7 @@ angular.module('trialBalance', []).directive('exportReport', [
     setHeight = () ->
       top = $(elem).offset().top || 108
       exclude = $(window).innerHeight() - top
-      height = $(window).innerHeight() - top
+      height = $(window).outerHeight(true) - top
       $(elem).css({"height": height,"min-height":height})
 
     angular.element($window).on 'resize', ->
@@ -367,7 +367,7 @@ link: (scope, elem, attr) ->
   restrict: "EA"
   link: (scope, elem, attr) ->
     setHeight = () ->
-      height = $(window).innerHeight() - 54
+      height = $(window).innerHeight() - 54 - 54
       $(elem).css({"height": height, "overflow-y":"auto"})
     
     $(window).on('resize', (e) ->
@@ -424,7 +424,7 @@ link: (scope, elem, attr) ->
 
 ]
 
-.directive 'trigger-resize', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+.directive 'triggerResize', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
   restrict: "EA"
   link: (scope, elem, attrs) ->
     
@@ -433,6 +433,7 @@ link: (scope, elem, attr) ->
     )
 
 ]
+
 
 # .directive 'triggerClick', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
 #   restrict: "EA"
@@ -443,3 +444,16 @@ link: (scope, elem, attr) ->
 #     )
 
 # ]
+
+.filter 'numberlimit', ->
+  (floatNum) ->
+    if floatNum != undefined
+      decimal = floatNum.toString().split('.')
+      if decimal[1] && decimal[1].length > 2
+        decimal[1] = decimal[1][0] + decimal[1][1]
+        floatNum = decimal[0] + decimal[1]
+    else
+      floatNum = 0
+    floatNum      
+
+

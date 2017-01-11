@@ -36,7 +36,24 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
 
   # gridstack vars
   @widgets = new @widgetsModel()
+  @widgetOverflow = false
+  $this.onWidgetChange = (event, $element, widget) ->
+    totalSizeY = 0
+    widgets = _.groupBy(@widgets, 'row')
+    angular.forEach(widgets, (value, key) ->
+       max = _.max(value, (val)-> return val.sizeY)
+       totalSizeY += max.sizeY     
+    )
+    $this.checkWidgetOverFlow(totalSizeY)
 
+  $this.checkWidgetOverFlow = (sizeY) ->
+    if sizeY > $this.maxRows
+      toastr.warning('Max Page Size Exceeded.')
+      @widgetOverflow = true
+    else
+      @widgetOverflow = false
+
+  $this.maxRows = 20
   @gridsterOptions = {
     columns: 24,
     pushing: true,
@@ -53,14 +70,17 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     mobileModeEnabled: true, # whether or not to toggle mobile mode when screen width is less than mobileBreakPoint
     minColumns: 1, # the minimum columns the grid must have
     minRows: 2, # the minimum height of the grid, in rows
-    maxRows: 20, 
     resizable: {
-       enabled: true,
-       handles: ['e','s', 'se', 'sw', 'nw']
+      enabled: true,
+      handles: ['e','s', 'se', 'sw', 'nw']
+      stop: (event, $element, widget) ->
+        $this.onWidgetChange(event, $element, widget)
     },
     draggable: {
        enabled: true 
        handle: '.move-widget'
+       stop: (event, $element, widget) ->
+        $this.onWidgetChange(event, $element, widget)
     }
   }
 
@@ -81,7 +101,7 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
 
   @getAllTemplates = () ->
     @success = (res) ->
-      $this.templateList = res.body
+      $this.templateList = _.sortBy(res.body, 'name')
     @failure = (res) ->
       if res.data.code != "NOT_FOUND"
         toastr.error(res.data.message)
@@ -100,7 +120,7 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
   @getTemplate = (item, operation) ->
     @success = (res) ->
       @htmlData = JSON.parse(res.body.htmlData)
-      #$this.parseData(res.body, @htmlData)
+      # $this.parseData(res.body, @htmlData)
       $this.widgets = []
       $this.selectedTemplate = res.body
       $this.updateTemplate = true
@@ -189,8 +209,7 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       section.type = wid.type
       section.elements = himalaya.parse(wid.data)
       $this.formatEditables(section.elements)
-      template.htmlData.sections.push(section)
-
+      template.htmlData.sections.push(section)  
     template.htmlData = JSON.stringify(template.htmlData)
     $this.matchVariables(template)
     reqparam = {}
@@ -226,6 +245,7 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
   #   console.log text
 
   @resetTemplate = () ->
+    @widgetOverflow = false
     @widgets = new @widgetsModel()
 
   @showAddTemplate = ->
@@ -248,7 +268,6 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     getLastRow = $this.getLastRowPos()
     getLastRowPos = getLastRow.row + getLastRow.sizeY
     getLastWidName = "widget_"+$this.getWidgetArrLength()
-    
     # init obj with default param
     newWidget = { sizeX: 12, sizeY: 2, row: getLastRowPos, col: 0, name: getLastWidName, data:"", type: $this.tempType }
     
@@ -268,10 +287,12 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
         console.log "Else case"
 
     $this.widgets.push(newWidget)
+    $this.onWidgetChange()
 
   @removeWidget = (w) ->
     index = $this.widgets.indexOf(w)
     $this.widgets.splice index, 1
+    $this.onWidgetChange()
 
   $this.parseChildren = (data) ->
     _.each data, (el) ->
@@ -288,8 +309,8 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
     _.each $rootScope.placeholders, (ph) ->
       if template.htmlData.indexOf(ph.name) != -1
         template.variables.push(ph.name)
-      # if ph.name == "$accountName"
-      #   template.variables.push("$accountUniqueName")
+      if template.htmlData.indexOf('$accountName') != -1  && template.htmlData.indexOf("$accountUniqueName") == -1
+        template.variables.push("$accountUniqueName")
 
   $this.formatEditables = (elements) ->
     _.each elements, (elem) ->
@@ -322,53 +343,61 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
       $this.toastr.warning("Template name can't be empty", "Warning")
     else
       template = {}
-      template.name = $this.templateName
-      template.type = "proforma"
-      template.sections = []
-      template.htmlData = {}
-      template.htmlData.sections = []
-      template.variables = []
-      _.each @widgets, (wid) ->
-        widget = {}
-        widget.height = wid.sizeY
-        widget.width = wid.sizeX
-        widget.entity = wid.type
-        widget.column = wid.col
-        widget.row = wid.row
-        widget.data = wid.data
-        template.sections.push(widget)
-        section = {}
-        section.styles = {}
-        section.styles.height = widget.height/24 *100 + '%'
-        section.styles.width = widget.width/24 *100 + '%'
-        section.type = wid.type
-        section.elements = himalaya.parse(wid.data)
-        $this.formatEditables(section.elements)
-        template.htmlData.sections.push(section)
-
-      template.htmlData = JSON.stringify(template.htmlData)
+      $this.convertSectionToHtmlData(template)
       $this.matchVariables(template)
       reqparam = {}
       reqparam.companyUniqueName = $rootScope.selectedCompany.uniqueName
       settingsService.save(reqparam, template).then(@success, @failure)
+
+
+  @convertSectionToHtmlData = (template) ->
+    template.name = $this.templateName
+    template.type = "proforma"
+    template.sections = []
+    template.htmlData = {}
+    template.htmlData.sections = []
+    template.variables = []
+    _.each @widgets, (wid) ->
+      widget = {}
+      widget.height = wid.sizeY
+      widget.width = wid.sizeX
+      widget.entity = wid.type
+      widget.column = wid.col
+      widget.row = wid.row
+      widget.data = wid.data
+      template.sections.push(widget)
+      section = {}
+      section.styles = {}
+      section.styles.height = widget.height/24 *100 + '%'
+      section.styles.width = widget.width/24 *100 + '%'
+      section.type = wid.type
+      section.elements = himalaya.parse(wid.data)
+      $this.formatEditables(section.elements)
+      template.htmlData.sections.push(section)
+
+    template.htmlData = JSON.stringify(template.htmlData)
+    return template
 
   @resetUpload =()->
     console.log("resetUpload")
 
 
   # upload Images
-  @uploadImages =(files,type, item)->
+  @uploadImages =(files,type, item, reset)->
     angular.forEach files, (file) ->
       file.fType = type
 #      console.log file
+      fileData = {
+        file: file
+        fType: type
+      }
+      if reset
+        fileData.file = ""
       file.upload = Upload.upload(
         url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/logo'
         # file: file
         # fType: type
-        data : {
-          file: file
-          fType: type
-        }
+        data : fileData
       )
       file.upload.then ((res) ->
         item.data = res.data.body.path

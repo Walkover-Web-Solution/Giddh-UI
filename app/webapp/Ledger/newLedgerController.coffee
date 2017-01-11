@@ -383,7 +383,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.getAccountDetailSuccess = (res) ->
     if res.body.yodleeAdded == true && $rootScope.canUpdate
       #get bank transaction here
-      $scope.getBankTransactions(res.body.uniqueName)
+      $timeout ( ->
+        $scope.getBankTransactions(res.body.uniqueName)
+      ), 2000
+      
 
   $scope.getBankTransactions = (accountUniqueName) ->
     unqObj = {

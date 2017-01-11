@@ -29,6 +29,14 @@ html, body{
     height:100%;
 }
 
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+
 /*start super loader*/
 .load-bar-wrap {
     position: fixed;
@@ -2927,7 +2935,14 @@ ul.pills li {
     clear: both;
     overflow: hidden;
     position: relative;
+
+}
+
+.paddingTop200{
     padding-top:200px !important;
+}
+.paddingTop120{
+    padding-top:120px !important;
 }
 
 .ledger-container table th {
@@ -3214,7 +3229,7 @@ ul.pills li {
     width: 100%;
     background: rgba(0, 0, 0, 0.9);
     color: #fff;
-    z-index: 1100;
+    z-index: 100;
     list-style-type: none;
     padding: 0px;
 }
@@ -3876,7 +3891,25 @@ tr.db-bnk-account > td.reconnectDiv{
 .widget-text{
     overflow:hidden;
     margin-top:20px;
+/*    height: 90%;
+    overflow-y: auto;*/
 }
+
+.widget-text h1, .widget-text h2,.widget-text h3,.widget-text h4,.widget-text h5,.widget-text h6{
+    font-weight: bold;
+}
+.widget-text h1{
+    font-size: 2em;
+}
+
+.widget-text h2{
+    font-size: 1.5em;
+}
+
+.widget-text h3{
+    font-size: 1.17em;
+}
+
 #trix-toolbar-1 .button_groups, #trix-toolbar-1 .button_groups button{
     display:none;
 }
@@ -4123,13 +4156,15 @@ tr.db-bnk-account > td.reconnectDiv{
 .proforma-list > .filters > div{
     display: inline-block;
     margin-right:10px;
+    vertical-align: middle;
 }
 
 .proforma-list > .filters .separator{
-    height:60px;
+    height:22px;
     width:1px;
     border:1px solid #ccc;
     margin-right:10px;
+    vertical-align: bottom;
 }
 
 .proforma-list > .filters label{
@@ -4264,6 +4299,10 @@ table.proforma-particulars{
 
 #intercom-container .intercom-borderless-frame{
     left: 0px !important;
+}
+
+#intercom-container .intercom-launcher-badge-frame{
+    left: 16px !important;
 }
 
 .marginTop{

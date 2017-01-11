@@ -163,7 +163,7 @@
           </section>
           <!-- external ledger code end here -->
 
-          <div class="clearfix ledger-container" ng-class="{'ledger-container-w':showPanel}" cover-page>
+          <div class="clearfix ledger-container" ng-class="{'ledger-container-w paddingTop200':showPanel && flyAccounts, 'ledger-container-w paddingTop120': showPanel && !flyAccounts}" cover-page>
             <!--ledger table head 1-->
             <table class="col-xs-12 ledger-head">
               <thead>
@@ -575,7 +575,7 @@
               <!--</label>-->
             </div>
             <div class="mrT2 pull-right">
-              <label>Total: <span ng-bind="selectedLedger.total.amount | number:2"></span>
+              <label>Total: <span ng-bind="selectedLedger.total.amount | numberlimit"></span>
                 <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'CREDIT'">Cr</span>
                 <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'DEBIT'">Dr</span></label>
             </div>

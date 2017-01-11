@@ -170,6 +170,19 @@ module.exports = function (grunt) {
           }
         }
       },
+      joinusWebsite: {
+        src: srcDir + 'website/views/joinus.html',
+        dest: destDir + 'website/views/joinus.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
+      },
       paymentWebsite: {
         src: srcDir + 'website/views/payment.html',
         dest: destDir + 'website/views/payment.html',
@@ -398,6 +411,7 @@ module.exports = function (grunt) {
           'angular',
           'bootstrap',
           'angular-bootstrap',
+          'underscore',
           'satellizer',
           'angular-resource',
           'angular-ui-router',

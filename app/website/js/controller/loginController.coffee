@@ -14,6 +14,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
   $rootScope.homePage = false
   $scope.loginBtnTxt = "Get OTP"
   $scope.loggingIn = false
+  $scope.twoWayVfyCode = null
   # check string has whitespace
   $scope.hasWhiteSpace = (s) ->
     return /\s/g.test(s)
@@ -51,6 +52,34 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
         $scope.responseMsg = response.data.message
     )
 
+  $scope.TwoWayLogin = (code) ->
+    @success = (res) ->
+      console.log res
+      localStorageService.set("_userDetails", res.data.body.user)
+      $window.sessionStorage.setItem("_ak", res.data.body.authKey)
+      window.location = "/app/#/home/"
+
+    @failure = (res) ->
+      toastr.error(res.data.message, "Error")
+      $timeout (->
+        window.location = "/index"
+      ),3000
+
+    $scope.twoWayUserData.oneTimePassword = code
+    url = '/verify-number'
+    $http.post(url,  $scope.twoWayUserData).then(@success, @failure)
+
+  loginWithTwoWayAuthentication = (res) ->
+    $scope.twoWayUserData = {}
+    $scope.twoWayUserData.countryCode = res.countryCode
+    $scope.twoWayUserData.mobileNumber = res.contactNumber
+    modalInstance = $uibModal.open(
+      templateUrl: '/public/website/views/twoWayAuthSignIn.html',
+      size: "md",
+      backdrop: 'static',
+      scope: $scope
+    )
+
   $scope.authenticate = (provider) ->
     $scope.loginIsProcessing = true
     $auth.authenticate(provider).then((response) ->
@@ -62,9 +91,12 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
         ),3000
       else
         #user is registered and redirect it to app
-        localStorageService.set("_userDetails", response.data.userDetails)
-        $window.sessionStorage.setItem("_ak", response.data.result.body.authKey)
-        window.location = "/app/#/home/"
+        if response.data.result.body.authKey
+          localStorageService.set("_userDetails", response.data.userDetails)
+          $window.sessionStorage.setItem("_ak", response.data.result.body.authKey)
+          window.location = "/app/#/home/"
+        else
+          loginWithTwoWayAuthentication(response.data.result.body)
     ).catch (response) ->
       $scope.loginIsProcessing = false
       #user is not registerd with us

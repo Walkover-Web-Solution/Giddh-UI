@@ -473,7 +473,8 @@ body {
 	min-height: 80px;
 	margin-bottom: 0;
 	border: 0;
-    font-family: Helvetica;
+  font-family: Helvetica;
+  background: rgba(0, 0, 0, 0.12)
 }
 .navbar-brand{
 	height: 80px;
@@ -1693,4 +1694,80 @@ button.toast-close-button {
 
 #intercom-container .intercom-borderless-frame{
     left: 0px !important;
+}
+
+#intercom-container .intercom-launcher-badge-frame{
+    left: 16px !important;
+}
+
+
+/*join us*/
+.feature {
+    padding: 60px 0;
+    margin: 0 auto;
+    float: none;
+    overflow: hidden;
+}
+
+.feature .caption p {
+    font-size: 18px;
+    line-height: 29px;
+}
+.feature .caption h3 {
+    margin: 0 0 23px;
+    color: #ff4d31;
+    font-size: 28px;
+}
+
+#affiliate {
+    margin: 0 auto;
+    float: none;
+}
+.benefits {
+  padding: 25px 0;
+  font-size: 16px;
+}
+.benefits-content h2 {
+    margin: 0 0 15px;
+    color: #e34a26;
+}
+.benefits-content p {
+    font-size: 18px;
+    line-height: 29px;
+}
+
+.benefits-icon img {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+}
+
+.screen_thumbnail img {
+    object-fit: contain;
+    object-position: top;
+/*    width: auto;*/
+    height: 240px;
+}
+
+.feature .caption {
+    display: table-cell;
+    vertical-align: middle;
+    padding: 40px 0;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    top: 0;
+    left: 0;  
+}
+.feature .caption.first {
+  padding: 25px 0;
+}
+
+@media only screen and (max-width: 900px) {
+  .screen_thumbnail img {
+      object-fit: contain;
+      object-position: top;
+      width: 100%;
+      height: 240px;
+  }
 }

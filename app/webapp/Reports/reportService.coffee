@@ -7,6 +7,7 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
       'date1': @date1
       'date2': @date2
       'interval': @interval
+      'refresh': @refresh
     },
     {
       historicData: {
@@ -15,7 +16,7 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
       },
       newHistoricData: {
         method: 'POST',
-        url: '/company/:companyUniqueName/group-history?fromDate=:date1&toDate=:date2&interval=:interval'
+        url: '/company/:companyUniqueName/group-history?fromDate=:date1&toDate=:date2&interval=:interval&refresh=:refresh'
       },
       plHistoricData: {
         method: 'GET',
@@ -64,6 +65,7 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
         date1: argData.fromDate
         date2: argData.toDate
         interval: argData.interval
+        refresh: argData.refresh
       }, data, onSuccess,  onFailure))
 
     plGraphData: (argData, onSuccess, onFailure) ->
@@ -104,6 +106,7 @@ giddh.serviceModule.service 'reportService', ($resource, $q) ->
         date1: argData.fromDate
         date2: argData.toDate
         interval: argData.interval
+        refresh: argData.refresh
       }, onSuccess,  onFailure))
 
   reportService

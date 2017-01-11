@@ -37,7 +37,7 @@
               <th class="col-xs-3">Amount</th>
             </thead>
             <tbody>
-              <tr ng-repeat="txn in transactions">
+              <tr ng-repeat="txn in transactions" ng-if="txn.amount > 0">
                 <td class="col-xs-2">
                   <!-- <input type="text" class="" ng-model="txn.accountUniqueName" uib-typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | filter:$viewValue | limitTo:5" typeahead-on-select="getTaxes(txn.accountUniqueName, txn)" ng-disabled="!editMode"> -->
 
@@ -64,13 +64,17 @@
             <ul class="list-unstyled mrT" style="font-size:12px">
               <li class="bold">Discount Total: {{discountTotal | number:2}}</li>
               <li class="bold">Sub Total: {{subtotal | number:2}}</li>
-              <li ng-repeat="tax in taxes" ng-if="taxes.length > 0">{{tax.name}}: {{tax.amount | number:2}}</li>
+              <li ng-repeat="tax in taxes" ng-if="taxes.length > 0">
+                <span ng-if="tax.name.length">{{tax.name}}: {{tax.amount | number:2}}</span>
+                <span ng-if="tax.accountName.length">{{tax.accountName}}: {{tax.amount | number:2}}</span>
+              </li>
               <li class="bold">Total Tax : {{taxTotal | number:2}}</li>
               <li>
                 <input type="text" ng-model="discount.account" uib-typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in getDiscountAccounts() | filter:$viewValue | limitTo:5" ng-disabled="!editMode">
-                <input type="text" ng-model="discount.amount" style="width:50px;height:20px;" min="{{taxTotal}}"  ng-disabled="!editMode">
+                <input type="text" ng-model="discount.amount" style="width:50px;height:20px;"  ng-disabled="!editMode">
               </li>
-              <li class="bold">Grand Total: {{subtotal + taxTotal - discount.amount | number:2}}</li>
+              <!-- <li class="bold">Grand Total: {{subtotal + taxTotal - discount.amount | number:2}}</li> -->
+              <li class="bold">Grand Total: {{grandTotal | number:2}}</li>
             </ul>
           </div>
       </div>
@@ -177,11 +181,14 @@
             <ul class="list-unstyled mrT" style="font-size:12px">
               <li class="bold">Discount Total: {{discountTotal | number:2}}</li>
               <li class="bold">Sub Total: {{subtotal | number:2}}</li>
-              <li ng-repeat="tax in taxes" ng-if="taxes.length > 0">{{tax.name}}: {{tax.amount | number:2}}</li>
+              <li ng-repeat="tax in taxes" ng-if="taxes.length > 0">
+                <span ng-if="tax.name.length">{{tax.name}}: {{tax.amount | number:2}}</span>
+                <span ng-if="tax.accountName.length">{{tax.accountName}}: {{tax.amount | number:2}}</span>
+              </li>
               <li class="bold">Total Tax : {{taxTotal | number:2}}</li>
               <li>
                 <input type="text" ng-model="discount.account" uib-typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in getDiscountAccounts() | filter:$viewValue | limitTo:5" ng-disabled="!editMode">
-                <input type="number" ng-model="discount.amount" style="width:50px;height:20px;" ng-disabled="!editMode">
+                <input type="number" ng-model="discount.amount" style="width:50px;height:20px;" ng-disabled="!editMode" min="0" ng-maxlength="4">
               </li>
               <li class="bold">Grand Total: {{subtotal + taxTotal - discount.amount | number:2}}</li>
             </ul>

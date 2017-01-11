@@ -31,6 +31,9 @@ router.get '/', (req, res) ->
 router.get '/index', (req, res) ->
   res.sendFile 'index.html', options
 
+router.get '/affiliate', (req,res) ->
+  res.sendFile 'joinus.html', options
+
 router.get '/about', (req, res) ->
   res.sendFile 'about.html', options
 
@@ -191,6 +194,21 @@ router.post '/signup-with-email', (req, res) ->
 
 router.post '/verify-email-now', (req, res) ->
   hUrl = settings.envUrl + 'verify-email'
+  args =
+    headers:
+      "Content-Type": "application/json"
+      'X-Forwarded-For': res.locales.remoteIp
+    data:req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    else
+      req.session.name = data.body.user.uniqueName
+      req.session.authKey = data.body.authKey
+    res.send data
+
+router.post '/verify-number', (req, res) ->
+  hUrl = settings.envUrl + '/verify-number'
   args =
     headers:
       "Content-Type": "application/json"

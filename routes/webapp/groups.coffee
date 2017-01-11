@@ -21,6 +21,7 @@ router.get '/flatten-groups-accounts', (req, res) ->
       'q':req.query.q
       'page': req.query.page
       'count':req.query.count
+      'showEmptyGroups':req.query.showEmptyGroups || false
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/flatten-groups-with-accounts'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
@@ -216,6 +217,7 @@ router.get '/:groupUniqueName/closing-balance', (req, res) ->
     parameters:
       from: req.query.fromDate
       to: req.query.toDate
+      refresh: req.query.refresh
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

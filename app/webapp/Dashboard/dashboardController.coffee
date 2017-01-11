@@ -20,7 +20,7 @@ dashboardController = ($scope, $rootScope, toastr) ->
 
   toastr.warning("Data can be delayed by one hour")
 
-#  $scope.hardRefresh = () ->
-#    $scope.$broadcast('reloadAll')
+  $scope.hardRefresh = () ->
+    $scope.$broadcast('reloadAll')
 
 dashboard.controller 'dashboardController',dashboardController
