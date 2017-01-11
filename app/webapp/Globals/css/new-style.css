@@ -4319,3 +4319,7 @@ table.proforma-particulars{
 .marginTop{
     margin-top: -54px;
 }
+
+.steps-indicator li.current:last-child a:before{
+    background-color:#393;
+}
