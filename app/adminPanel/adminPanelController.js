@@ -1,7 +1,7 @@
-adminPanel.controller('adminPanelController', ['$scope','$state','$http', 'toastr' ,function($scope, $state, $http,toastr){
+adminPanel.controller('adminPanelController', ['$rootScope','$scope','$state','$http', 'toastr' ,function($rootScope, $scope, $state, $http, toastr){
 	
 	$this = this;
-	$this.superLoader = true
+	$scope.superLoader = false
 	var loggedIn = false
 	var ak = window.sessionStorage.getItem('_ak')
 	ak ? loggedIn = true : $state.go('login')
@@ -99,11 +99,11 @@ adminPanel.controller('adminPanelController', ['$scope','$state','$http', 'toast
         sort = {}
         _.each($scope.sortOptions, function(option){
             if(option.value != null){
-                if(option.value == true || option.value == 'ASC'){
-                    option.value = 'DESC'
-                }
-                else{
+                if(option.value == true){
                     option.value = 'ASC'
+                }
+                else if (option.value == false){
+                    option.value = 'DESC'
                 }
                 sort[option.key] = option.value
             }
@@ -112,14 +112,17 @@ adminPanel.controller('adminPanelController', ['$scope','$state','$http', 'toast
     }
 
 	$scope.getCompaniesList = function (){
+        $scope.superLoader = true
         this.success = function(res){
             $scope.paginationDetails = res.data.body
             $scope.companies = res.data.body.results
             //$scope.sortOptions = new sortModel()
+            $scope.superLoader = false
         }
 
         this.failure = function(res){
             toastr.error(res.data.message)
+            $scope.superLoader = false
         }
         url = '/admin/companies'
 		filter =  $scope.filters

@@ -1,4 +1,13 @@
-<div class="container-fluid pd1">
+<div class="loader" ng-show="superLoader">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+
+  <h1>Loading Panel</h1>
+</div>
+<div class="container-fluid pd1"  ng-hide="superLoader">
   <div class="row">
     <div class="pull-right maxW150 pos-rel pdR1">
       <input class="form-control" placeholder="Search" ng-model="query"/>

@@ -51,4 +51,4 @@ adminPanel = angular.module('adminPanel', [
         }
       });
     }
-]);
+])
