@@ -66,13 +66,17 @@
       </script>
 
       <!-- middle body -->
-      <div class="col-xs-7">
-        <div class="bdrR bdrL row" id="middleBody">
+      <div class="col-xs-7  pos-rel">
+        <div class="bdrR bdrL row " id="middleBody">
 
           <div ng-if="showGroupDetails" ng-include="'/public/webapp/ManageGroupsAndAccounts/groupOperations.html'"></div>
 
           <div ng-include="'/public/webapp/ManageGroupsAndAccounts/accountOperations.html'" ng-if="showAccountDetails"></div>
 
+        </div>
+
+        <div class="scroll-btn text-center" scroll-btn  ng-if="showAccountDetails || showGroupDetails">
+          <i class="glyphicon glyphicon-chevron-down" style="vertical-align: sub;color: #fff;"></i>
         </div>
       </div>
 

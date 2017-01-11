@@ -861,7 +861,7 @@ header .navbar-nav > li.active {
 }
 
 #getGroupModal {
-    height: 500px;
+    height: 550px;
     overflow: hidden;
 }
 
@@ -870,10 +870,21 @@ header .navbar-nav > li.active {
 }
 
 #middleBody {
-    height: 434px;
+    height: 488px;
     overflow-x: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
+}
+
+.scroll-btn{
+    position: absolute;
+    right: 30px;
+    bottom: 20px;
+    height: 25px;
+    width: 25px;
+    background: rgb(185, 178, 178);
+    border-radius: 50%;
+    cursor: pointer;
 }
 
 /*typography styles*/

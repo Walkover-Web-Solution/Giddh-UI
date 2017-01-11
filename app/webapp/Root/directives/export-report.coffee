@@ -457,3 +457,15 @@ link: (scope, elem, attr) ->
     floatNum      
 
 
+.directive 'scrollBtn', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+  restrict: "EA"
+  link: (scope, elem, attrs) ->
+    
+    $(elem).on('click',(e)->
+      top = $('#middleBody').scrollTop()
+      $('#middleBody').animate({
+        'scrollTop' : top + 100
+      })
+    )
+
+]
