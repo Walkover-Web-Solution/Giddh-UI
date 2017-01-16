@@ -54,16 +54,15 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
 
   $scope.TwoWayLogin = (code) ->
     @success = (res) ->
-      console.log res
       localStorageService.set("_userDetails", res.data.body.user)
       $window.sessionStorage.setItem("_ak", res.data.body.authKey)
       window.location = "/app/#/home/"
 
     @failure = (res) ->
       toastr.error(res.data.message, "Error")
-      $timeout (->
-        window.location = "/index"
-      ),3000
+      # $timeout (->
+      #   window.location = "/index"
+      # ),3000
 
     $scope.twoWayUserData.oneTimePassword = code
     url = '/verify-number'
