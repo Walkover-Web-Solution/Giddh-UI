@@ -4323,3 +4323,52 @@ table.proforma-particulars{
 .steps-indicator li.current:last-child a:before{
     background-color:#393;
 }
+
+/*** stock inventory**/
+.stock-bar{
+    padding:10px;
+    margin:0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.stock-bar ul{
+    height:24px;
+}
+
+.stock-bar ul li{
+    max-width:250px;
+}
+
+.stock-bar ul li input, .stock-bar ul li input:focus,.stock-bar ul li input:active{
+    border:1px solid #ccc;
+    box-shadow: none;
+    outline: none;
+}
+
+.stock-bar ul li .input-group i{
+    color:#ccc;
+}
+
+.h100{
+    height:100%;
+}
+
+.sidebar{
+    width:320px;
+    height:100%;
+    border-right:1px solid #e0e0e0;
+    border-left:1px solid #e0e0e0;
+    padding:20px;
+}
+
+.stock-operations{
+/*    margin-left: 320px;
+    margin-right: 320px;*/
+    min-width: 480px;
+}
+
+/*@media (max-width:1168px) {
+    .sidebar{
+        width:220px;
+    }
+}*/

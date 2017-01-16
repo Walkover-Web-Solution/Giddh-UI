@@ -10,8 +10,8 @@ var session = require('express-session');
 var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
-// var mongoose = require('mongoose');
-// var MongoStore = require('connect-mongo')(session);
+var mongoose = require('mongoose');
+var MongoStore = require('connect-mongo')(session);
 //var MemcachedStore = require('connect-memcached')(session);
 //global.sessionTTL = 1000 * 60
 //Example POST method invocation 
@@ -78,14 +78,14 @@ app.use(session({
   cookie: {
     secure: false,
     maxAge: sessionTTL
-  }
-  // store: new MongoStore({
-  //   url: settings.mongoUrl,
-  //   autoRemove: 'interval',
-  //   autoRemoveInterval: sessionTTL,
-  //   ttl: sessionTTL,
-  //   touchAfter: sessionTTL - 300
-  // })
+  },
+  store: new MongoStore({
+    url: settings.mongoUrl,
+    autoRemove: 'interval',
+    autoRemoveInterval: sessionTTL,
+    ttl: sessionTTL,
+    touchAfter: sessionTTL - 300
+  })
   // store   : new MemcachedStore({
   //   hosts: ['127.0.0.1:11211'],
   //   secret: 'keyboardcat'
@@ -181,6 +181,7 @@ var invoice = require('./public/routes/webapp/invoices')
 var templates = require('./public/routes/webapp/templates')
 var proforma = require('./public/routes/webapp/proformas')
 var placeholders = require('./public/routes/webapp/placeholders')
+var inventory = require('./public/routes/webapp/inventory')
 var adminPanel = require('./public/routes/adminPanel/adminPanel')
 
 app.use('/time-test', timetest);
@@ -198,6 +199,7 @@ app.use('/company/:companyUniqueName/accounts/:accountUniqueName/ledgers', ledge
 app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
+app.use('/company/:companyUniqueName/stock-group', inventory)
 app.use('/company/:companyUniqueName/profit-loss', profitLoss);
 app.use('/company/:companyUniqueName/templates', templates);
 app.use('/company/:companyUniqueName', reports);
@@ -205,6 +207,7 @@ app.use('/coupon', coupon);
 app.use('/yodlee', yodlee);
 app.use('/ebanks', ebanks);
 app.use('/admin', adminPanel);
+
 //app.use('/magic', magicLink);
 /*
  # set all route above this snippet

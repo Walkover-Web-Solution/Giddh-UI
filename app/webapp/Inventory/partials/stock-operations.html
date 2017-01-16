@@ -1,0 +1,59 @@
+<section>
+		
+		<aside class="row greyBg bdrB pd1 mrB1">
+			<label>Add/Modify Group</label>
+		</aside>
+
+
+
+		<aside class="col-xs-6">
+			
+			<form name="addStockGroup" ng-model="stock.addStockGroup" novalidate>
+				<label>Add New Group</label>
+				<hr>
+				<div class="form-group">
+					<label>Name<span class="required">*</span></label>
+					<input type="text" name="stockName" class="form-control" ng-model="stock.addStockGroup.stockName" required>
+				</div>
+
+				<div class="form-group">
+					<label>Unique Name<span class="required">*</span></label>
+					<input type="text" name="stockUnqName" class="form-control" ng-model="stock.addStockGroup.stockUnqName" required>
+				</div>
+
+				<div class="form-group">
+					<label>Parent Stock Group</label>
+					<input type="text" name="parentStockGroupUniqueName" class="form-control" ng-model="stock.addStockGroup.parentStockGroupUniqueName" disabled>
+				</div>
+
+				<button type="submit" class="btn btn-md btn-default" ng-click="stock.addGroup(stock.addStockGroup)" ng-disabled="stock.addStockGroup.stockName.length < 2 || stock.addStockGroup.stockUnqName.length < 2">Add</button>
+			</form>
+
+		</aside>
+
+		<aside class="col-xs-6 bdrL">
+			
+			<form name="addStockGroup">
+				<label>Modify Group</label>
+				<hr>
+				<div class="form-group">
+					<label>Name</label>
+					<input type="text" name="stockName" class="form-control">
+				</div>
+
+				<div class="form-group">
+					<label>Unique Name</label>
+					<input type="text" name="stockUnqName" class="form-control">
+				</div>
+
+				<div class="form-group">
+					<label>Parent Stock Group</label>
+					<input type="text" name="parentStockGroupUniqueName" class="form-control" disabled>
+				</div>
+
+				<button type="submit" class="btn btn-md btn-default">Modify</button>
+			</form>
+
+		</aside>
+
+</section>

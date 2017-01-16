@@ -35,6 +35,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "ngFileSaver"
     "gridster"
     "ui.tinymce"
+    "inventory"
   ]
 )
 
@@ -209,10 +210,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: appendThis+'/public/webapp/Dashboard/dashboard.html'
     controller: "dashboardController"
   )
-  .state('sindhu',
-    url: '/sindhu'
-    templateUrl: '/public/webapp/adminPanel/sindhu.html'
-    controller: 'adminController'
+  .state('inventory',
+    url: '/inventory'
+    templateUrl: '/public/webapp/Inventory/inventory.html'
+    controller: 'stockController'
+    controllerAs: 'stock'
   )
   .state('/thankyou',
     url: '/thankyou'
