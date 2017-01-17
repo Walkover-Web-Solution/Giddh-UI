@@ -451,7 +451,7 @@ link: (scope, elem, attr) ->
       decimal = floatNum.toString().split('.')
       if decimal[1] && decimal[1].length > 2
         decimal[1] = decimal[1][0] + decimal[1][1]
-        floatNum = decimal[0] + decimal[1]
+        floatNum = decimal[0] + '.' + decimal[1]
     else
       floatNum = 0
     floatNum      
