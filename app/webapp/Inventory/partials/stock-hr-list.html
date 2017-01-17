@@ -1,0 +1,22 @@
+<ul class="list-unstyled stock-grp-list">
+	<li class="bdrL pdL" ng-repeat="grp in stock.groupListHr">
+		<a href="javascript:void(0)" ng-click="stock.loadStockGroup(grp)">{{grp.name}}</a>
+		<div ng-if="grp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
+	</li>
+</ul>
+
+<script type="text/ng-template" id="stockgrplist.html">
+	<ul class="list-unstyled">
+		<li class="bdrL pdL" ng-repeat="cgp in grp.childStockGroups">
+			<a href="javascript:void(0)"  ng-click="stock.loadStockGroup(cgp)">{{cgp.name}}</a>
+			<ul class="list-unstyled">
+				<li class="bdrL pdL" ng-repeat="ccgp in cgp.childStockGroups">
+					<a href="javascript:void(0)"  ng-click="stock.loadStockGroup(ccgp)">{{ccgp.name}}</a>
+					<div ng-if="ccgp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</script>
+
+

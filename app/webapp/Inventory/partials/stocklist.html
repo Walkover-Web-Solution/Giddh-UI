@@ -1,5 +1,11 @@
-<ul class="list-unstyled">
-	<li ng-repeat="stk in stock.stockList">
-		<a href="javascript:void(0)">{{stk.name}}</a>
+<ul class="list-unstyled stock-grp-list">
+	<li class="bdrL pdL" ng-repeat="grp in stock.stockList">
+		<a href="javascript:void(0)">{{grp.name}}</a>
+		<ul class="list-unstyled">
+			<li class="bdrL pdL" ng-repeat="stk in grp.stocks">
+				<a href="javascript:void(0)">{{stk.name}}</a>
+			</li>
+		</ul>
 	</li>
 </ul>
+

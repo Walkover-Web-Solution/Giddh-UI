@@ -4372,3 +4372,8 @@ table.proforma-particulars{
         width:220px;
     }
 }*/
+
+.stock-grp-list li > a{
+    text-decoration: none;
+    color:#444;
+}

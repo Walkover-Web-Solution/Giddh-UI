@@ -1,6 +1,7 @@
 angular.module('inventoryController', [])
 
-.controller('stockController', ['$scope','$rootScope','stockService','localStorageService' ,function($scope, $rootScope, stockService, localStorageService){
+.controller('stockController', ['$scope','$rootScope','stockService','localStorageService', 'toastr' ,function($scope, $rootScope, stockService, localStorageService, toastr){
+	
 	var stock = this;
 	if(_.isUndefined($rootScope.selectedCompany)){
     	$rootScope.selectedCompany = localStorageService.get('_selectedCompany')
@@ -18,26 +19,10 @@ angular.module('inventoryController', [])
 		return false
 	}
 
-	stock.stockList = [
-		{
-			name: 'Stock 1'
-		},
-		{
-			name: 'Stock 1'
-		},
-		{
-			name: 'Stock 1'
-		},
-		{
-			name: 'Stock 1'
-		}
-
-	] 
-
 	// get flattten stock groups
 	stock.getStockGroups = function(){
 		this.success = function(res){
-			console.log(res)
+			stock.stockList = res.body
 		},
 		this.failure = function(res){
 			console.log(res)
@@ -53,7 +38,7 @@ angular.module('inventoryController', [])
 	// get heirarchical stock groups
 	stock.getHeirarchicalStockGroups = function(){
 		this.success = function(res){
-			console.log(res)
+			stock.groupListHr = res.body
 		},
 		this.failure = function(res){
 			console.log(res)
@@ -77,12 +62,16 @@ angular.module('inventoryController', [])
 	stock.addStockGroup = {}
 	stock.addStockGroup.stockName = ''
 	stock.addStockGroup.stockUnqName = ''
-	stock.addGroup = function(obj, form){
+	stock.updateStockGroup = {}
+	stock.updateStockGroup.stockName = ''
+	stock.updateStockGroup.stockUnqName = ''
+	stock.addGroup = function(obj){
 		this.success = function(res){
-			console.log(res)
+			toastr.success('Group addedd successfully')
+			stock.getHeirarchicalStockGroups()
 		}
 		this.failure = function(res){
-			console.log(res)
+			toastr.error(res.data.message)
 		}
 		var data = {
 		    "name":obj.stockName,
@@ -94,6 +83,33 @@ angular.module('inventoryController', [])
 		}
 		stockService.addGroup(reqParam, data).then(this.success, this.failure)
 	}
+
+	//update Stock group
+	stock.updateGroup = function(obj){
+		this.success = function(res){
+			console.log(res)
+		}
+		this.failure = function(res){
+			console.log(res)
+		}
+		var data = {
+		    "name":obj.stockName,
+		    "parentStockGroupUniqueName":obj.parentStockGroupUniqueName
+		}
+		var reqParam = {
+			companyUniqueName: $rootScope.selectedCompany.uniqueName,
+			stockGroupUniqueName:obj.stockUnqName
+		}
+		stockService.updateStockGroup(reqParam, data).then(this.success, this.failure)
+	}
+
+	//load stock group
+	stock.loadStockGroup = function(grp){
+		stock.updateStockGroup.stockName = grp.name
+		stock.updateStockGroup.stockUnqName = grp.uniqueName
+		stock.addStockGroup.parentStockGroupUniqueName = grp.uniqueName
+	}
+
 
 	// to hide sidebar
 	$(document).on('click', function(e){

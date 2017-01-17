@@ -5,7 +5,8 @@ angular.module('inventoryServices', [])
 .service('stockService', ['$resource', '$q', function($resource, $q){
 	
 	var stock = $resource('/company/:companyUniqueName/stock-group', {
-		'companyUniqueName': this.companyUniqueName
+		'companyUniqueName': this.companyUniqueName,
+		'stockGroupUniqueName' : this.stockGroupUniqueName
 	},
 	{
 		get: {
@@ -19,6 +20,10 @@ angular.module('inventoryServices', [])
 		addGroup: {
 			method: 'POST',
 			url: '/company/:companyUniqueName/stock-group'
+		},
+		updateGroup: {
+			method: 'PUT',
+			url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName'
 		}
 	})
 
@@ -58,6 +63,16 @@ angular.module('inventoryServices', [])
 	    	return this.handlePromise(function(onSuccess, onFailure){
 	    		return stock.addGroup({
 	    			companyUniqueName: reqParam.companyUniqueName
+	    		}, data,  onSuccess, onFailure)
+
+	    	})
+	    },
+
+	    updateStockGroup: function(reqParam, data){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.updateGroup({
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			stockGroupUniqueName: reqParam.stockGroupUniqueName
 	    		}, data,  onSuccess, onFailure)
 
 	    	})

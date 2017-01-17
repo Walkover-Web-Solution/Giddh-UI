@@ -33,25 +33,25 @@
 
 		<aside class="col-xs-6 bdrL">
 			
-			<form name="addStockGroup">
+			<form name="updateStockGroup" ng-model="stock.updateStockGroup" novalidate>
 				<label>Modify Group</label>
 				<hr>
 				<div class="form-group">
 					<label>Name</label>
-					<input type="text" name="stockName" class="form-control">
+					<input type="text" name="stockName" class="form-control" ng-model="stock.updateStockGroup.stockName" required>
 				</div>
 
 				<div class="form-group">
 					<label>Unique Name</label>
-					<input type="text" name="stockUnqName" class="form-control">
+					<input type="text" name="stockUnqName" class="form-control" ng-model="stock.updateStockGroup.stockUnqName" required>
 				</div>
 
 				<div class="form-group">
 					<label>Parent Stock Group</label>
-					<input type="text" name="parentStockGroupUniqueName" class="form-control" disabled>
+					<input type="text" name="parentStockGroupUniqueName" class="form-control" disabled ng-model="stock.updateStockGroup.parentStockGroupUniqueName" required>
 				</div>
 
-				<button type="submit" class="btn btn-md btn-default">Modify</button>
+				<button type="submit" class="btn btn-md btn-default" ng-click="stock.updateGroup(stock.updateStockGroup)"  ng-disabled="stock.updateStockGroup.stockName.length < 2">Modify</button>
 			</form>
 
 		</aside>
