@@ -15,7 +15,7 @@ angular.module('inventoryServices', [])
 		},
 		getHeirarchy: {
 			method: 'GET',
-			url: '/company/:companyUniqueName/stock-group/groups-with-stocks-hierarchy'
+			url: '/company/:companyUniqueName/stock-group/groups-with-stocks-hierarchy-min'
 		},
 		addGroup: {
 			method: 'POST',
@@ -24,6 +24,10 @@ angular.module('inventoryServices', [])
 		updateGroup: {
 			method: 'PUT',
 			url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName'
+		},
+		getStockGroups: {
+			method: 'GET',
+			url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName/stocks'
 		}
 	})
 
@@ -74,6 +78,16 @@ angular.module('inventoryServices', [])
 	    			companyUniqueName: reqParam.companyUniqueName,
 	    			stockGroupUniqueName: reqParam.stockGroupUniqueName
 	    		}, data,  onSuccess, onFailure)
+
+	    	})
+	    },
+
+	    getStockGroups: function(reqParam){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.getStockGroups({
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			stockGroupUniqueName: reqParam.stockGroupUniqueName
+	    		}, onSuccess, onFailure)
 
 	    	})
 	    }

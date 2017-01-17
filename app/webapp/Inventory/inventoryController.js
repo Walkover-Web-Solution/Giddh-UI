@@ -69,6 +69,8 @@ angular.module('inventoryController', [])
 		this.success = function(res){
 			toastr.success('Group addedd successfully')
 			stock.getHeirarchicalStockGroups()
+			stock.addStockGroup = {}
+			stock.updateStockGroup = {}
 		}
 		this.failure = function(res){
 			toastr.error(res.data.message)
@@ -108,7 +110,43 @@ angular.module('inventoryController', [])
 		stock.updateStockGroup.stockName = grp.name
 		stock.updateStockGroup.stockUnqName = grp.uniqueName
 		stock.addStockGroup.parentStockGroupUniqueName = grp.uniqueName
+		stock.selectedStockGrp = grp
+		//stock.getStockGroups(grp)
 	}
+
+	// get stocks of selected group
+	stock.getStockGroups = function(grp){
+		stock.selectedStockGrp = grp
+		this.success = function(res){
+			console.log(res)
+			stock.selectedStockGrp.childStockGroups = res.body
+		}
+		this.failure = function(res){
+			console.log(res)
+		}
+		reqParam = {
+			companyUniqueName: $rootScope.selectedCompany.uniqueName,
+			stockGroupUniqueName: grp.uniqueName
+		}
+
+		stockService.getStockGroups(reqParam).then(this.success, this.failure)
+	}
+
+	// get all stocks
+	stock.getAllStocks = function(){
+		this.success = function(res){
+			console.log(res)
+			stock.selectedStockGrp.childStockGroups = res.body
+		}
+		this.failure = function(res){
+			console.log(res)
+		}
+		reqParam = {
+			companyUniqueName: $rootScope.selectedCompany.uniqueName
+		}
+		stockService.getAllStocks(reqParam).then(this.success, this.failure)
+	}
+
 
 
 	// to hide sidebar

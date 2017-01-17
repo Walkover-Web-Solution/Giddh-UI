@@ -27,8 +27,8 @@ router.get '/groups-with-stocks-flatten', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.get '/groups-with-stocks-hierarchy', (req, res) ->
-  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/stock-group/groups-with-stocks-hierarchy'
+router.get '/groups-with-stocks-hierarchy-min', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/stock-group'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -48,8 +48,19 @@ router.put '/:stockGroupUniqueName', (req, res) ->
     data:
       req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-group/' + req.params.stockGroupUniqueName
-  console.log(hUrl, 'update stock')
   settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.get '/:stockGroupUniqueName/stocks', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+ req.params.companyUniqueName + '/stock-group/' + req.params.stockGroupUniqueName + '/stocks'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data

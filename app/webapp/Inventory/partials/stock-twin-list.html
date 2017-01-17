@@ -1,0 +1,25 @@
+
+<section class="stock-twin-list">
+	
+	<div ng-if="stock.selectedStockGrp.stocks.length > 0">
+		<label>Stocks from {{stock.selectedStockGrp.name}}</label>
+		<ul class="list-unstyled">
+			<li ng-repeat="stk in stock.selectedStockGrp.stocks">
+				<a href="javascript:void(0)">{{stk.name}}</a>
+			</li>
+		</ul>
+	</div>
+
+	<hr>
+
+	<div>
+		<label>All Stocks</label>
+		<ul class="list-unstyled">
+			<li ng-repeat="stk in stock.allStocks">
+				<a href="javascript:void(0)">{{stk.name}}</a>
+			</li>
+		</ul>
+	</div>
+
+
+</section>
