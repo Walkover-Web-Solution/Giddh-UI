@@ -28,6 +28,10 @@ angular.module('inventoryServices', [])
 		getStockGroups: {
 			method: 'GET',
 			url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName/stocks'
+		},
+		createStock: {
+			method: 'POST',
+			url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName/stock'
 		}
 	})
 
@@ -88,6 +92,16 @@ angular.module('inventoryServices', [])
 	    			companyUniqueName: reqParam.companyUniqueName,
 	    			stockGroupUniqueName: reqParam.stockGroupUniqueName
 	    		}, onSuccess, onFailure)
+
+	    	})
+	    },
+
+	    createStock: function(reqParam, data){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.createStock({
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			stockGroupUniqueName: reqParam.stockGroupUniqueName
+	    		}, data,  onSuccess, onFailure)
 
 	    	})
 	    }

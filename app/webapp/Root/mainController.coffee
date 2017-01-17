@@ -21,6 +21,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     indirectExpenses : "indirectexpenses"
     operatingCost: "operatingcost"
     otherIncome: "otherincome"
+    purchase: "purchases"
+    sales:"sales"
   }
   $rootScope.flyAccounts = true
   $rootScope.$stateParams = {}

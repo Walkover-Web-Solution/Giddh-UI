@@ -1,6 +1,6 @@
 angular.module('inventoryController', [])
 
-.controller('stockController', ['$scope','$rootScope','stockService','localStorageService', 'toastr' ,function($scope, $rootScope, stockService, localStorageService, toastr){
+.controller('stockController', ['$scope','$rootScope','stockService','localStorageService','groupService' ,'toastr' ,function($scope, $rootScope, stockService, localStorageService,groupService, toastr){
 	
 	var stock = this;
 	if(_.isUndefined($rootScope.selectedCompany)){
@@ -89,7 +89,9 @@ angular.module('inventoryController', [])
 	//update Stock group
 	stock.updateGroup = function(obj){
 		this.success = function(res){
-			console.log(res)
+			toastr.success('Updated successfully')
+			stock.getHeirarchicalStockGroups()
+			stock.updateStockGroup = {}
 		}
 		this.failure = function(res){
 			console.log(res)
@@ -104,6 +106,32 @@ angular.module('inventoryController', [])
 		}
 		stockService.updateStockGroup(reqParam, data).then(this.success, this.failure)
 	}
+
+	//Add new stock
+	stock.addStock = function(stockItem){
+		this.success = function(res){
+			console.log(res)
+		}
+		this.failure = function(res){
+			toastr.error(res.data.message)
+		}
+		var reqParam = {
+			companyUniqueName: $rootScope.selectedCompany.uniqueName,
+			stockGroupUniqueName: stock.selectedStockGrp.uniqueName
+		}
+		var data = {
+		    "name":stockItem.stockName,
+		    "openingQuantity":stockItem.stockQty,
+		    "openingAmount":stockItem.stockAmount,
+		    "openingStockUnitName":stockItem.stockType,
+		    "purchaseAccountUniqueName":stockItem.stockPurchaseAccount,
+		    "purchaseRate":stockItem.stockPurchaseRate,
+		    "salesRate":stockItem.stockSalesAccount,
+		    "salesAccountUniqueName":stockItem.stockSalesRate,
+		}
+		stockService.createStock(reqParam, data).then(this.success, this.failure)
+	}
+
 
 	//load stock group
 	stock.loadStockGroup = function(grp){
@@ -144,10 +172,52 @@ angular.module('inventoryController', [])
 		reqParam = {
 			companyUniqueName: $rootScope.selectedCompany.uniqueName
 		}
-		stockService.getAllStocks(reqParam).then(this.success, this.failure)
+		//stockService.getAllStocks(reqParam).then(this.success, this.failure)
+	}
+	stock.getAllStocks()
+
+
+	//get purchase accounts
+	stock.getPurchaseAccounts = function(query) {
+	    var reqParam = {
+	      companyUniqueName: $rootScope.selectedCompany.uniqueName,
+	      q: query,
+	      page: 1,
+	      count: 0
+	    }
+	    var data = {
+	      groupUniqueNames: [$rootScope.groupName.purchase]
+	    }
+	    return groupService.postFlatAccList(reqParam,data).then(
+	      function(res){
+	      	stock.purchaseAccounts = res.body.results 
+	      },
+	      function(res){
+	      	return []
+	      }  
+	    )
 	}
 
-
+	//get sales accounts
+	stock.getSalesAccounts = function(query) {
+	    var reqParam = {
+	      companyUniqueName: $rootScope.selectedCompany.uniqueName,
+	      q: query,
+	      page: 1,
+	      count: 0
+	    }
+	    var data = {
+	      groupUniqueNames: [$rootScope.groupName.sales]
+	    }
+	    return groupService.postFlatAccList(reqParam,data).then(
+	      function(res){
+	      	stock.salesAccounts = res.body.results 
+	      },
+	      function(res){
+	      	return []
+	      }  
+	    )
+	}
 
 	// to hide sidebar
 	$(document).on('click', function(e){
