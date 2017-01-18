@@ -16,7 +16,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   ]
   $scope.expandLongCode = false
   selectedUser = localStorageService.get('_userDetails')
-  $scope.twoWayAuth = selectedUser.authenticateTwoWay
+  #$scope.twoWayAuth = selectedUser.authenticateTwoWay
   $scope.getUserAuthKey = () ->
     $scope.userAuthKey = $window.sessionStorage.getItem('_ak')
 
@@ -601,6 +601,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     $rootScope.basicInfo = res.body
     $scope.userNumber = res.body.contactNo
     $scope.phoneNumber = res.body.contactNo
+    $scope.twoWayAuth = res.body.authenticateTwoWay
 
   #Get user details failure
   $scope.getUserDetailFailure = (res)->
