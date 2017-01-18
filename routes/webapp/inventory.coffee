@@ -73,7 +73,8 @@ router.post '/:stockGroupUniqueName/stock', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     data:
       req.body
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-group' + req.params.stockGroupUniqueName + '/stock'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-group/' + req.params.stockGroupUniqueName + '/stock'
+  console.log(hUrl)
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

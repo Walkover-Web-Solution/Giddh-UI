@@ -124,10 +124,10 @@ angular.module('inventoryController', [])
 		    "openingQuantity":stockItem.stockQty,
 		    "openingAmount":stockItem.stockAmount,
 		    "openingStockUnitName":stockItem.stockType,
-		    "purchaseAccountUniqueName":stockItem.stockPurchaseAccount,
+		    "purchaseAccountUniqueName":stockItem.stockPurchaseAccount.uniqueName,
 		    "purchaseRate":stockItem.stockPurchaseRate,
-		    "salesRate":stockItem.stockSalesAccount,
-		    "salesAccountUniqueName":stockItem.stockSalesRate,
+		    "salesRate":stockItem.stockSalesRate,
+		    "salesAccountUniqueName":stockItem.stockSalesAccount.uniqueName,
 		}
 		stockService.createStock(reqParam, data).then(this.success, this.failure)
 	}
