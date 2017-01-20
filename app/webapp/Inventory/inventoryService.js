@@ -6,7 +6,11 @@ angular.module('inventoryServices', [])
 	
 	var stock = $resource('/company/:companyUniqueName/stock-group', {
 		'companyUniqueName': this.companyUniqueName,
-		'stockGroupUniqueName' : this.stockGroupUniqueName
+		'stockGroupUniqueName' : this.stockGroupUniqueName,
+		'stockUniqueName': this.stockUniqueName,
+		'q': this.q,
+		'page': this.page,
+		'count': this.count
 	},
 	{
 		get: {
@@ -32,7 +36,32 @@ angular.module('inventoryServices', [])
 		createStock: {
 			method: 'POST',
 			url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName/stock'
+		},
+		updateStockItem: {
+			method: 'PUT',
+			url: '/company/:companyUniqueName/stock-group/update-stock-item'
+		},
+		getAllStocks: {
+			method: 'GET',
+			url: '/company/:companyUniqueName/stock-group/stocks'
+		},
+		getStockDetail: {
+			method: 'GET',
+			url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName'
+		},
+		getStockType: {
+			method: 'GET',
+			url: '/company/:companyUniqueName/stock-group/unit-types'
+		},
+		getFilteredStockGroups: {
+			method: 'GET',
+			url: '/company/:companyUniqueName/stock-group/hierarchical-stock-groups'
+		},
+		getStock: {
+			method: 'GET',
+			url: '/company/:companyUniqueName/stock-group/get-stock-detail'
 		}
+
 	})
 
 	stockService = {
@@ -49,10 +78,13 @@ angular.module('inventoryServices', [])
 	        return deferred.promise;
 	    },
 
-	    getStockGroups: function(reqParam){
+	    getStockGroupsFlatten: function(reqParam){
 	    	return this.handlePromise(function(onSuccess, onFailure){
 	    		return stock.get({
-	    			companyUniqueName: reqParam.companyUniqueName
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			page:reqParam.page,
+	    			q:reqParam.q,
+	    			count:reqParam.count
 	    		}, onSuccess, onFailure)
 
 	    	})
@@ -103,6 +135,68 @@ angular.module('inventoryServices', [])
 	    			stockGroupUniqueName: reqParam.stockGroupUniqueName
 	    		}, data,  onSuccess, onFailure)
 
+	    	})
+	    },
+
+	    updateStockItem: function(reqParam, data){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.updateStockItem({
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			stockGroupUniqueName: reqParam.stockGroupUniqueName,
+	    			stockUniqueName: reqParam.stockUniqueName
+	    		}, data,  onSuccess, onFailure)
+
+	    	})
+	    },
+
+	    getAllStocks: function(reqParam){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.getAllStocks({
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			q: reqParam.q,
+	    			page:reqParam.page,
+	    			count:reqParam.count
+	    		}, onSuccess, onFailure)
+
+	    	})
+	    },
+
+	    getStockDetail: function(reqParam){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.getStockDetail({
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			stockGroupUniqueName: reqParam.stockGroupUniqueName
+	    		}, onSuccess, onFailure)
+
+	    	})
+	    },
+
+	    getStockUnits: function(){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.getStockType({
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    		}, onSuccess, onFailure)
+	    	})
+	    },
+
+	    getFilteredStockGroups: function(){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.getFilteredStockGroups({
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			q: reqParam.q,
+	    			page:reqParam.page,
+	    			count:reqParam.count
+	    		}, onSuccess, onFailure)
+	    	})
+	    },
+
+	    getStock: function(){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.getStock({
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			stockGroupUniqueName : reqParam.stockGroupUniqueName,
+	    			stockUniqueName: reqParam.stockUniqueName
+	    		}, onSuccess, onFailure)
 	    	})
 	    }
 

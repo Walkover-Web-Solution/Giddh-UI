@@ -1,22 +1,30 @@
 
 <section class="stock-twin-list">
 	
-	<div ng-if="stock.selectedStockGrp.stocks.length > 0">
-		<label>Stocks from {{stock.selectedStockGrp.name}}</label>
-		<ul class="list-unstyled">
-			<li ng-repeat="stk in stock.selectedStockGrp.stocks">
-				<a href="javascript:void(0)">{{stk.name}}</a>
+	<div style="height: 50%;" class="pdT">
+		<label ng-if="stock.selectedStockGrp.stocks.length > 0"><span class="uppercase">Stocks from </span>{{stock.selectedStockGrp.name}}</label>
+		<label ng-if="stock.selectedStockGrp.stocks.length == 0"><span class="uppercase">No stocks in</span> {{stock.selectedStockGrp.name}}</label>
+		<label ng-if="stock.selectedStockGrp == undefined"><span class="uppercase">No Group Selected</span></label>
+		<div class="input-group width100 mrT" ng-show="stock.selectedStockGrp.stocks.length > 0">
+			<input class="width100" type="search" ng-model="grpStockSrch">
+			<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
+		</div>
+		<ul class="list-unstyled list-group" style="height:calc(100% - 160px);overflow-y:auto;">
+			<li ng-repeat="stk in stock.selectedStockGrp.stocks | filter:grpStockSrch">
+				<a href="javascript:void(0)" ng-click="stock.selectStock(stk)">{{stk.name}}</a>
 			</li>
 		</ul>
 	</div>
 
-	<hr>
-
-	<div>
-		<label>All Stocks</label>
-		<ul class="list-unstyled">
+	<div style="height: 50%;" class="mrT bdrT pdT">
+		<label><span class="uppercase">All Stocks</span></label>
+		<div class="input-group width100 mrT">
+			<input class="width100" type="search" name="stocksearch" ng-model="allstocksrch" ng-change="stock.getAllStocks(allstocksrch)" ng-model-options="{debounce:500}">
+			<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
+		</div>
+		<ul class="list-unstyled" style="height:calc(100% - 160px);overflow-y:auto;">
 			<li ng-repeat="stk in stock.allStocks">
-				<a href="javascript:void(0)">{{stk.name}}</a>
+				<a href="javascript:void(0)" ng-click="stock.selectStock(stk)">{{stk.name}}</a>
 			</li>
 		</ul>
 	</div>

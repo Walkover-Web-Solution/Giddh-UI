@@ -4351,7 +4351,9 @@ table.proforma-particulars{
     max-width:250px;
 }
 
-.stock-bar ul li input, .stock-bar ul li input:focus,.stock-bar ul li input:active{
+.stock-bar ul li input, .stock-bar ul li input:focus,.stock-bar ul li input:active,
+.stock-twin-list input, .stock-twin-list input:focus,.stock-twin-list input:active,
+.search-input input, .search-input input:focus,.search-input input:active{
     border:1px solid #ccc;
     box-shadow: none;
     outline: none;
@@ -4385,7 +4387,54 @@ table.proforma-particulars{
     }
 }*/
 
+.stock-grp.list{
+    height: calc(100% - 200px);
+    overflow-y: auto;
+}
+
 .stock-grp-list li > a{
     text-decoration: none;
     color:#444;
+}
+
+.stock-grp-list li{
+    padding:5px;
+    border-bottom:1px solid #e0e0e0;
+}
+
+.stock-grp-list li:last-child{
+    border-bottom:0;
+}
+
+.stock-grp-list li:first-child{
+    border-top:1px solid #e0e0e0;
+}
+
+.stock-grp-list li > a{
+    color:#444;
+}
+
+.stock-grp-list li:last-child{
+    padding-bottom:0;
+}
+
+.stock-twin-list{
+    height:100%;
+}
+
+.stock-twin-list ul li{
+    padding:5px;
+    border-top:1px solid #e0e0e0;
+}
+
+.stock-twin-list ul li:first-child{
+    border:0;
+}
+
+.stock-twin-list ul li > a{
+    color:#444;
+}
+
+.uppercase{
+    text-transform: uppercase;
 }

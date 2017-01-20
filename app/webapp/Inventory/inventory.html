@@ -1,9 +1,9 @@
 <!-- top row-->
 <div class="row stock-bar">
 	<ul class="list-inline">
-		<li>
+		<li  ng-if="stock.showStockReport">
 			<div class="input-group">
-				<input type="search" name="stocksearch" ng-focus="stock.sideBarOn($event)" ng-click="$event.stopPropagation()">
+				<input type="search" name="stocksearch" ng-focus="stock.sideBarOn($event)" ng-click="$event.stopPropagation()" ng-model="stockFlattenSearch">
 				<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
 			</div>
 		</li>
@@ -22,7 +22,7 @@
 
 <!--sidebar-->
 	<section class="sidebar greyBg pull-left" ng-show="stock.showSidebar && stock.showStockReport" ng-click="$event.stopPropagation();">
-		<div ng-include="'/public/webapp/Inventory/partials/stocklist.html'"></div>
+		<div class="h100" ng-include="'/public/webapp/Inventory/partials/stocklist.html'"></div>
 	</section>
 <!--/sidebar-->
 
