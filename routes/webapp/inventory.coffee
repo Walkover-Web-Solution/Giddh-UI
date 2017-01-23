@@ -27,9 +27,20 @@ router.post '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/get-stock-report', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-group/' + req.query.stockGroupUniqueName + '/stock/' + req.query.stockUniqueName + '/report?from=' + req.query.from + '&to=' + req.query.to
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
 router.get '/groups-with-stocks-flatten', (req, res) ->
   hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/flatten-stock-groups-with-stocks?page=' + req.query.page + '&count=' + req.query.count + '&q=' + req.query.q
-  console.log(req.query, hUrl)
   args =
     headers:
       'Auth-Key': req.session.authKey

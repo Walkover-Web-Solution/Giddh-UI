@@ -1,14 +1,40 @@
 angular.module('inventoryController', [])
 
-.controller('stockController', ['$scope','$rootScope','stockService','localStorageService','groupService' ,'toastr' ,function($scope, $rootScope, stockService, localStorageService,groupService, toastr){
+.controller('stockController', ['$scope','$rootScope','stockService','localStorageService','groupService' ,'toastr','$filter' ,function($scope, $rootScope, stockService, localStorageService,groupService, toastr, $filter){
 	
 	var stock = this;
 	if(_.isUndefined($rootScope.selectedCompany)){
     	$rootScope.selectedCompany = localStorageService.get('_selectedCompany')
 	}
-	stock.showSidebar = false
+	stock.showSidebar = true
 	stock.showStockReport = true
+	stock.today = new Date()
+	stock.fromDate = {date: new Date(moment().subtract(1, 'month').utc())}
+	stock.toDate = {date: new Date()}
+	stock.fromDatePickerIsOpen = false
+	stock.toDatePickerIsOpen = false
+	stock.format = "dd-MM-yyyy"
+	stock.dateOptions = {
+	    'year-format': "'yy'",
+	    'starting-day': 1,
+	    'showWeeks': false,
+	    'show-button-bar': false,
+	    'year-range': 1,
+	    'todayBtn': false
+	}
 
+	stock.fromDatePickerOpen = function(e){
+		stock.fromDatePickerIsOpen = true
+		stock.toDatePickerIsOpen = false
+		e.stopPropagation()
+	}
+    	
+  	stock.toDatePickerOpen = function(e){
+  		stock.fromDatePickerIsOpen = false
+  		stock.toDatePickerIsOpen = true
+  		e.stopPropagation()
+  	}
+    	
 	stock.sideBarOn = function(e){
 		stock.showSidebar = true;
 		e.stopPropagation();
@@ -23,15 +49,20 @@ angular.module('inventoryController', [])
 	stock.stockGroup = {}
 	stock.stockGroup.list = []
 	stock.stockGroup.page = 1
-	stock.stockGroup.count = 2
+	stock.stockGroup.count = 5
 	stock.stockGroup.totalPages = null
-	stock.getStockGroupsFlatten = function(query,page){
+	stock.getStockGroupsFlatten = function(query,page, call){
 		this.success = function(res){
 			if(stock.stockGroup.list.length < 1){
 				stock.stockGroup.list = res.body.results
-			}else{
-				stock.stockGroup.list.push(res.body.results)
+			}else if(call == 'get'){
+				angular.forEach(res.body.results, function(result){
+					stock.stockGroup.list.push(result)
+				})
+			}else if(call == 'search'){
+				stock.stockGroup.list = res.body.results
 			}
+
 			stock.stockGroup.page = res.body.page
 			stock.stockGroup.totalPages = res.body.totalPages
 		},
@@ -46,7 +77,7 @@ angular.module('inventoryController', [])
 		reqParam.count = stock.stockGroup.count
 		stockService.getStockGroupsFlatten(reqParam).then(this.success, this.failure)
 	}
-	stock.getStockGroupsFlatten('', 1)
+	stock.getStockGroupsFlatten('', 1,'get')
 
 	// get heirarchical stock groups
 	stock.getHeirarchicalStockGroups = function(){
@@ -70,6 +101,31 @@ angular.module('inventoryController', [])
 		stock.getHeirarchicalStockGroups();
 	}
 
+	//get stock report
+	stock.report = {
+		page: 1
+	}
+	stock.getStockReport = function(stk, grp){
+		stock.selectedReportStock = stk
+		stock.selectedReportGrp = grp
+		this.success = function(res){
+			stock.report = res.body
+			//stock.report.page = 
+		}
+		this.failure = function(res){
+			toastr.error(res.data.message)
+		}
+		reqParam = {
+			companyUniqueName: $rootScope.selectedCompany.uniqueName,
+			stockGroupUniqueName: grp.uniqueName,
+			stockUniqueName: stk.uniqueName,
+			to:$filter('date')(stock.toDate.date, 'dd-MM-yyyy'),
+			from:$filter('date')(stock.fromDate.date, 'dd-MM-yyyy'),
+			page:stock.report.page
+		}
+		stockService.getStockReport(reqParam).then(this.success, this.failure)
+
+	}
 
 	//add stock group
 	stock.addStockGroup = {}

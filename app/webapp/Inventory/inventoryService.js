@@ -10,7 +10,9 @@ angular.module('inventoryServices', [])
 		'stockUniqueName': this.stockUniqueName,
 		'q': this.q,
 		'page': this.page,
-		'count': this.count
+		'count': this.count,
+		'from' :this.from,
+		'to': this.to
 	},
 	{
 		get: {
@@ -60,6 +62,11 @@ angular.module('inventoryServices', [])
 		getStock: {
 			method: 'GET',
 			url: '/company/:companyUniqueName/stock-group/get-stock-detail'
+		}
+		,
+		getStockReport: {
+			method: 'GET',
+			url: '/company/:companyUniqueName/stock-group/get-stock-report'
 		}
 
 	})
@@ -196,6 +203,18 @@ angular.module('inventoryServices', [])
 	    			companyUniqueName: reqParam.companyUniqueName,
 	    			stockGroupUniqueName : reqParam.stockGroupUniqueName,
 	    			stockUniqueName: reqParam.stockUniqueName
+	    		}, onSuccess, onFailure)
+	    	})
+	    },
+
+	    getStockReport: function(){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.getStockReport({
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			stockGroupUniqueName : reqParam.stockGroupUniqueName,
+	    			stockUniqueName: reqParam.stockUniqueName,
+	    			from: reqParam.from,
+	    			to: reqParam.to
 	    		}, onSuccess, onFailure)
 	    	})
 	    }

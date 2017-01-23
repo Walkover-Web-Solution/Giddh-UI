@@ -4372,7 +4372,7 @@ table.proforma-particulars{
     height:100%;
     border-right:1px solid #e0e0e0;
     border-left:1px solid #e0e0e0;
-    padding:20px;
+    padding:10px;
 }
 
 .stock-operations{
@@ -4437,4 +4437,8 @@ table.proforma-particulars{
 
 .uppercase{
     text-transform: uppercase;
+}
+
+.mrL320{
+    margin-left: 320px;
 }

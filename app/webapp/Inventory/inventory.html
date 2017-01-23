@@ -3,7 +3,7 @@
 	<ul class="list-inline">
 		<li  ng-if="stock.showStockReport">
 			<div class="input-group">
-				<input type="search" name="stocksearch" ng-focus="stock.sideBarOn($event)" ng-click="$event.stopPropagation()" ng-model="stockFlattenSearch">
+				<input type="search" name="stocksearch" ng-focus="stock.sideBarOn($event)" ng-click="$event.stopPropagation()" ng-model="stockFlattenSearch" ng-model-options="{debounce:500}" ng-change="stock.getStockGroupsFlatten(stockFlattenSearch, 1, 'search')">
 				<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
 			</div>
 		</li>
@@ -28,8 +28,8 @@
 
 <!--main section-->
 	<!--stock report section-->
-	<section class="h100" ng-if="stock.showStockReport">
-		<h1 class="pd2">Stock Report</h1>
+	<section class="h100" ng-if="stock.showStockReport" ng-class="{mrL320: stock.showSidebar && stock.showStockReport}">
+		<div class="h100" ng-include="'/public/webapp/Inventory/partials/stock-report.html'"></div>
 	</section>
 	<!--/stock report section-->
 

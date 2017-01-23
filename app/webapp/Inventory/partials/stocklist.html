@@ -4,10 +4,10 @@
 		<a href="javascript:void(0)" ng-click="grp.showStocks = !grp.showStocks">{{grp.name}}</a>
 		<ul class="list-unstyled" ng-if="grp.stocks.length > 0 && grp.showStocks">
 			<li class="bdrL pdL" ng-repeat="stk in grp.stocks">
-				<a href="javascript:void(0)">{{stk.name}}</a>
+				<a href="javascript:void(0)" ng-click="stock.getStockReport(stk, grp)">{{stk.name}}</a>
 			</li>
 		</ul>
 	</li>
-	<a href="javascript:void(0)" ng-click="stock.stockGroup.page = stock.stockGroup.page+1;stock.getStockGroupsFlatten(stockFlattenSearch, stock.stockGroup.page)" ng-if="stock.stockGroup.page < stock.stockGroup.totalPages">Load More</a>
+	<a href="javascript:void(0)" ng-click="stock.stockGroup.page = stock.stockGroup.page+1;stock.getStockGroupsFlatten(stockFlattenSearch, stock.stockGroup.page, 'get')" ng-if="stock.stockGroup.page < stock.stockGroup.totalPages">Load More</a>
 </ul>
 
