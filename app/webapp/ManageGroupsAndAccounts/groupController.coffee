@@ -1256,6 +1256,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $scope.fetchingUnq = false
   num = 1
   $scope.autoFillUnq = (unq) ->
+    unq = unq.replace(/ |,|\//g,'')
+    unq = unq.toLowerCase()
     $this = @
     $scope.fetchingUnq = true
     $this.success = (res) ->
@@ -1267,7 +1269,6 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       $scope.fetchingUnq = false
     if $scope.acntCase == 'Add' && unq != undefined && unq.length > 2
       $timeout ( ->
-        console.log unq
         reqParams = {
           compUname: $rootScope.selectedCompany.uniqueName
           acntUname: unq
