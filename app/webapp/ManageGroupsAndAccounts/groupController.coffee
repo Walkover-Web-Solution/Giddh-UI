@@ -727,8 +727,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     gc.showBreadCrumbs([_.pick($scope.selectedGroup,'uniqueName','name')])
 
   gc.setAdditionalAccountDetails = ()->
-    $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.datePicker.accountOpeningBalanceDate,
-        "dd-MM-yyyy")
+    $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.datePicker.accountOpeningBalanceDate,"dd-MM-yyyy")
     if(_.isUndefined($scope.selectedAccount.mobileNo) || _.isEmpty($scope.selectedAccount.mobileNo))
       $scope.selectedAccount.mobileNo = ""
     if(_.isUndefined($scope.selectedAccount.email) || _.isEmpty($scope.selectedAccount.email))

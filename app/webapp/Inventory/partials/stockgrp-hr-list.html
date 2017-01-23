@@ -1,0 +1,27 @@
+<label>Stock Groups</label>
+<hr class="mrT mrB">
+<div class="input-group width100 mrT search-input">
+	<input class="width100" type="search" ng-model="grpStockSrch" ng-model-options="{debounce:1000}" ng-change="stock.getStockGroupsByQuery(grpStockSrch)">
+	<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
+</div>
+
+<ul class="list-unstyled stock-grp-list">
+	<li class="pdL1" ng-repeat="grp in stock.groupListHr">
+		<a href="javascript:void(0)" ng-click="stock.loadStockGroup(grp)">{{grp.name}}</a>
+		<div ng-if="grp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
+	</li>
+</ul>
+
+<script type="text/ng-template" id="stockgrplist.html">
+	<ul class="list-unstyled">
+		<li class="pdL1 bdrL" ng-repeat="grp in grp.childStockGroups">
+			<a href="javascript:void(0)"  ng-click="stock.loadStockGroup(grp)">-{{grp.name}}</a>
+			<ul class="list-unstyled">
+				<li class="pdL1 bdrL" ng-repeat="grp in grp.childStockGroups">
+					<a href="javascript:void(0)"  ng-click="stock.loadStockGroup(grp)">-{{grp.name}}</a>
+					<div ng-if="grp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
+				</li>
+			</ul>
+		</li>
+	</ul>
+</script>

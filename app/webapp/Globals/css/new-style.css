@@ -400,8 +400,16 @@ header .navbar-nav > li.active {
     padding-left: 5px
 }
 
+.pdL0 {
+    padding-left: 0
+}
+
 .pdR {
     padding-right: 5px
+}
+
+.pdR0 {
+    padding-right: 0
 }
 
 .pdT1 {
@@ -470,6 +478,10 @@ header .navbar-nav > li.active {
 
 .pd0 {
     padding: 0;
+}
+
+.mr0{
+    margin:0;
 }
 
 .mr {
@@ -4322,4 +4334,111 @@ table.proforma-particulars{
 
 .steps-indicator li.current:last-child a:before{
     background-color:#393;
+}
+
+/*** stock inventory**/
+.stock-bar{
+    padding:10px;
+    margin:0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.stock-bar ul{
+    height:24px;
+}
+
+.stock-bar ul li{
+    max-width:250px;
+}
+
+.stock-bar ul li input, .stock-bar ul li input:focus,.stock-bar ul li input:active,
+.stock-twin-list input, .stock-twin-list input:focus,.stock-twin-list input:active,
+.search-input input, .search-input input:focus,.search-input input:active{
+    border:1px solid #ccc;
+    box-shadow: none;
+    outline: none;
+}
+
+.stock-bar ul li .input-group i{
+    color:#ccc;
+}
+
+.h100{
+    height:100%;
+}
+
+.sidebar{
+    width:320px;
+    height:100%;
+    border-right:1px solid #e0e0e0;
+    border-left:1px solid #e0e0e0;
+    padding:10px;
+}
+
+.stock-operations{
+/*    margin-left: 320px;
+    margin-right: 320px;*/
+    min-width: 480px;
+}
+
+/*@media (max-width:1168px) {
+    .sidebar{
+        width:220px;
+    }
+}*/
+
+.stock-grp.list{
+    height: calc(100% - 200px);
+    overflow-y: auto;
+}
+
+.stock-grp-list li > a{
+    text-decoration: none;
+    color:#444;
+}
+
+.stock-grp-list li{
+    padding:5px;
+    border-bottom:1px solid #e0e0e0;
+}
+
+.stock-grp-list li:last-child{
+    border-bottom:0;
+}
+
+.stock-grp-list li:first-child{
+    border-top:1px solid #e0e0e0;
+}
+
+.stock-grp-list li > a{
+    color:#444;
+}
+
+.stock-grp-list li:last-child{
+    padding-bottom:0;
+}
+
+.stock-twin-list{
+    height:100%;
+}
+
+.stock-twin-list ul li{
+    padding:5px;
+    border-top:1px solid #e0e0e0;
+}
+
+.stock-twin-list ul li:first-child{
+    border:0;
+}
+
+.stock-twin-list ul li > a{
+    color:#444;
+}
+
+.uppercase{
+    text-transform: uppercase;
+}
+
+.mrL320{
+    margin-left: 320px;
 }
