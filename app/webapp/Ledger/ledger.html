@@ -706,7 +706,7 @@
             </div>
             <div class="mrT2 pull-right bdrR pdR" ng-if="selectedTxn.inventory != null && selectedTxn.inventory.quantity > 0">
               <label>Rate:
-                <input type="text" ng-model="selectedTxn.rate" ng-init="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity" ng-change="selectedTxn.inventory.quantity = selectedTxn.amount/selectedTxn.rate">
+                <input type="text" ng-model="selectedTxn.rate" ng-init="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity" ng-change="selectedTxn.amount = selectedTxn.inventory.quantity*selectedTxn.rate">
               </label>
             </div>
             <div class="mrT1 clearfix" style="clear:both" ng-if="taxList.length > 0">
