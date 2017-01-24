@@ -6,7 +6,6 @@
   <span></span>
   <span></span>
 </div>
-
 <!-- <div class="page-loader" ng-show="accountUnq.length != '' && showLoader">
   <div class="giddh-spinner vertical-center-spinner"></div>
 </div> -->
@@ -168,8 +167,8 @@
             <table class="col-xs-12 ledger-head">
               <thead>
                 <tr class="t-h-bg1">
-                  <th class="col-xs-6">Debit - {{accountToShow}} is receiving</th>
-                  <th class="col-xs-6">Credit - {{accountToShow}} is giving</th>
+                  <th class="col-xs-6">Debit - {{accountToShow.name}} is receiving</th>
+                  <th class="col-xs-6">Credit - {{accountToShow.name}} is giving</th>
                 </tr>
               </thead>
             </table>
@@ -191,7 +190,11 @@
                             <!-- <i class="glyphicon glyphicon-sort pull-left mrL"></i> -->
                           </th>
                           <th class="col-xs-5">Paticular</th>
-                          <th class="col-xs-3">Amount</th>
+                          <th class="col-xs-3">
+                            <!-- <span class="col-xs-6 pad0" ng-if="accountToShow.stock != null">Qty</span> -->
+                            <!-- <span class="pad0" ng-class="{'col-xs-6':accountToShow.stock != null, 'col-xs-12':accountToShow.stock == null}">Amount</span> -->
+                            Amount
+                          </th>
                         </tr>
                         <tr class="bg3">
                           <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
@@ -233,11 +236,38 @@
                                       <input class="form-control" ng-model="blankLedger.entryDate" ng-focus="selectTxn(blankLedger,txn, $index, $event)" accesskey="L">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" is-open="txn.isblankOpen" input-focus ng-model-options="{debounce: 200}" ng-focus="selectTxn(blankLedger,txn, $index, $event)">
-                                     <!--  <input name="ledgerDrN" class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | limitTo: 25" typeahead-template-url="accountPopUp.html" input-focus is-open="txn.isblankOpen" ng-model-options="{debounce: 200}" ng-focus="openClosePopOver(txn,ledger)" > -->
+                                      <input 
+                                        class="form-control"
+                                        ng-model="txn.particular" 
+                                        typeahead-append-to-body="true" 
+                                        uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" 
+                                        typeahead-template-url="accountPopUp.html" 
+                                        is-open="txn.isblankOpen" 
+                                        input-focus 
+                                        ng-model-options="{debounce: 200}" 
+                                        ng-focus="selectTxn(blankLedger,txn, $index, $event)"
+                                      >
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
-                                      <input type="text" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="selectTxn(blankLedger,txn, $index, $event)">
+                                      <input type="text"
+                                        placeholder="Quantity"
+                                        ng-if="accountToShow.stock != null || txn.particular.stock != null"
+                                        class="form-control background-transparent pull-left bdrR bdrR0"
+                                        ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null}"
+                                        ng-model="txn.inventory.quantity"
+                                        ng-keyup="triggerPanelFocus($event)" 
+                                        ng-focus="selectTxn(blankLedger,txn, $index, $event)"
+                                        ng-change="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity"
+                                        >
+
+                                      <input type="text" 
+                                        class="form-control"
+                                        ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null, 'pull-left':accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.particular.stock != null}" 
+                                        ng-model="txn.amount" 
+                                        ng-keyup="triggerPanelFocus($event)" 
+                                        ng-focus="selectTxn(blankLedger,txn, $index, $event)"
+                                        ng-change="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity"
+                                      >
                                     </td>
                                   </tr>
                                 </tbody>
@@ -281,11 +311,33 @@
                                       <!--<input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" input-focus is-open="txn.isblankOpen">-->
                                       <input name="ledgerDrO" class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" is-open="txn.isblankOpen" ng-model-options="{debounce: 200}">
                                     </td>
-                                    <td class="col-xs-3" style="position: relative">
-                                      <input type="text" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger, $event)">
-                                        <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber, $event)" tooltip-append-to-body="true" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="top">  
-                                          <i class="glyphicon glyphicon-download pull-left" style="font-size:19px;" ></i>
-                                        </span>
+                                    <td class="col-xs-3" style="position: relative">                                      
+                                      <input type="text"
+                                        placeholder="Quantity"
+                                        class="form-control background-transparent pull-left bdrR bdrR0"
+                                        ng-model="txn.inventory.quantity"
+                                        ng-if="accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null"
+                                        ng-class="{'width50':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null,'pull-left':accountToShow.stock != null}"
+                                        ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true"
+                                        ng-keyup="triggerPanelFocus($event)"
+                                        ng-focus="openClosePopOver(txn,ledger, $event)"> 
+                                      <input type="text" 
+                                        class="form-control background-transparent"
+                                        ng-class="{'width50':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null,'pull-left':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null}"  
+                                        ng-model="txn.amount" 
+                                        ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" 
+                                        ng-keyup="triggerPanelFocus($event)" 
+                                        ng-focus="openClosePopOver(txn,ledger, $event)"
+                                        ng-change="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity"> 
+                                      <span 
+                                        class="download-invoice-ledger" 
+                                        ng-if="ledger.invoiceGenerated" 
+                                        ng-click="downloadInvoice(ledger.invoiceNumber, $event)" 
+                                        tooltip-append-to-body="true" 
+                                        uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" 
+                                        tooltip-placement="top">  
+                                        <i class="glyphicon glyphicon-download pull-left" style="font-size:19px;" ></i>
+                                      </span>
                                     </td>
                                   </tr>
                                 </tbody>
@@ -323,8 +375,23 @@
                                       <input name="ledgerDrN" class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" input-focus is-open="txn.isblankOpen" ng-model-options="{debounce: 200}" ng-focus="selectTxn(blankLedger,txn, $index, $event)">
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
-                                      <input type="text" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="selectTxn(blankLedger,txn, $index, $event)">
-                                      <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber, $event)" tooltip-append-to-body="false" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="left">  <i class="glyphicon glyphicon-download pull-left" style="font-size:19px;"></i>
+                                      <input type="text"
+                                        placeholder="Quantity"
+                                        ng-if="accountToShow.stock != null || txn.particular.stock != null"
+                                        class="form-control background-transparent pull-left bdrR bdrR0"
+                                        ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null}"
+                                        ng-model="txn.inventory.quantity"
+                                        ng-keyup="triggerPanelFocus($event)" 
+                                        ng-focus="selectTxn(blankLedger,txn, $index, $event)"
+                                        ng-change="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity">
+
+                                      <input type="text" 
+                                        class="form-control"
+                                        ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null, 'pull-left':accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.particular.stock != null}" 
+                                        ng-model="txn.amount" 
+                                        ng-keyup="triggerPanelFocus($event)" 
+                                        ng-focus="selectTxn(blankLedger,txn, $index, $event)"
+                                      >
                                       </span>
                                     </td>
                                   </tr>
@@ -417,7 +484,23 @@
                                       <input name="ledgerCrN" class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" input-focus is-open="txn.isblankOpen" ng-model-options="{debounce: 200}" ng-focus="selectTxn(blankLedger,txn, $index, $event)">
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
-                                      <input type="text" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="selectTxn(blankLedger,txn, $index, $event)">
+                                      <input type="text"
+                                        placeholder="Quantity"
+                                        ng-if="accountToShow.stock != null || txn.particular.stock != null"
+                                        class="form-control background-transparent pull-left bdrR bdrR0"
+                                        ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null}"
+                                        ng-model="txn.inventory.quantity"
+                                        ng-keyup="triggerPanelFocus($event)" 
+                                        ng-focus="selectTxn(blankLedger,txn, $index, $event)"
+                                        ng-change="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity">
+
+                                      <input type="text" 
+                                        class="form-control"
+                                        ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null, 'pull-left':accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.particular.stock != null}" 
+                                        ng-model="txn.amount" 
+                                        ng-keyup="triggerPanelFocus($event)" 
+                                        ng-focus="selectTxn(blankLedger,txn, $index, $event)"
+                                      >
                                     </td>
                                   </tr>
                                 </tbody>
@@ -461,10 +544,31 @@
                                       <input name="ledgerCrO" class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" is-open="txn.isblankOpen" ng-model-options="{debounce: 200}" >
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
-                                      <input type="text" class="form-control background-transparent"  ng-model="txn.amount" ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" ng-keyup="triggerPanelFocus($event)" ng-focus="openClosePopOver(txn,ledger, $event)">
-                                      <span class="download-invoice-ledger" ng-if="ledger.invoiceGenerated" ng-click="downloadInvoice(ledger.invoiceNumber,$event)" >
-                                        <i class="glyphicon glyphicon-download pull-left true" tooltip-append-to-body="false" uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" tooltip-placement="left"></i>
-                                      </span>
+                                     <input type="text"
+                                        placeholder="Quantity"
+                                        class="form-control background-transparent pull-left bdrR bdrR0"
+                                        ng-model="txn.inventory.quantity"
+                                        ng-if="accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null"
+                                        ng-class="{'width50':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null,'pull-left':accountToShow.stock != null}"
+                                        ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true"
+                                        ng-keyup="triggerPanelFocus($event)"
+                                        ng-focus="openClosePopOver(txn,ledger, $event)"> 
+                                      <input type="text" 
+                                        class="form-control background-transparent"
+                                        ng-class="{'width50':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null,'pull-left':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null}"  
+                                        ng-model="txn.amount" 
+                                        ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true" 
+                                        ng-keyup="triggerPanelFocus($event)" 
+                                        ng-focus="openClosePopOver(txn,ledger, $event)"
+                                        ng-change="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity"> 
+                                      <span 
+                                        class="download-invoice-ledger" 
+                                        ng-if="ledger.invoiceGenerated" 
+                                        ng-click="downloadInvoice(ledger.invoiceNumber, $event)" 
+                                        tooltip-append-to-body="true" 
+                                        uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" 
+                                        tooltip-placement="top">  
+                                        <i class="glyphicon glyphicon-download pull-left" style="font-size:19px;" ></i>
                                     </td>
                                   </tr>
                                 </tbody>
@@ -501,7 +605,23 @@
                                       <input name="ledgerCrN" class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" input-focus is-open="txn.isblankOpen" ng-model-options="{debounce: 200}" ng-focus="selectTxn(blankLedger,txn, $index, $event)">
                                     </td>
                                     <td class="col-xs-3" style="position: relative">
-                                      <input type="text" class="form-control"  ng-model="txn.amount" ng-keyup="triggerPanelFocus($event)" ng-focus="selectTxn(blankLedger,txn, $index, $event)">
+                                     <input type="text"
+                                        placeholder="Quantity"
+                                        ng-if="accountToShow.stock != null || txn.particular.stock != null"
+                                        class="form-control background-transparent pull-left bdrR bdrR0"
+                                        ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null}"
+                                        ng-model="txn.inventory.quantity"
+                                        ng-keyup="triggerPanelFocus($event)" 
+                                        ng-focus="selectTxn(blankLedger,txn, $index, $event)"
+                                        ng-change="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity">
+
+                                      <input type="text" 
+                                        class="form-control"
+                                        ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null, 'pull-left':accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.particular.stock != null}" 
+                                        ng-model="txn.amount" 
+                                        ng-keyup="triggerPanelFocus($event)" 
+                                        ng-focus="selectTxn(blankLedger,txn, $index, $event)"
+                                      >
                                     </td>
                                   </tr>
                                 </tbody>
@@ -574,10 +694,15 @@
                 <!--<input type="checkbox" ng-model="selectedLedger.applyApplicableTaxes">Applied taxes-->
               <!--</label>-->
             </div>
-            <div class="mrT2 pull-right">
+            <div class="mrT2 pull-right pdL">
               <label>Total: <span ng-bind="selectedLedger.total.amount | numberlimit"></span>
                 <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'CREDIT'">Cr</span>
                 <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'DEBIT'">Dr</span></label>
+            </div>
+            <div class="mrT2 pull-right bdrR pdR" ng-if="selectedTxn.inventory != null && selectedTxn.inventory.quantity > 0">
+              <label>Rate:
+                <input type="text" ng-model="selectedTxn.rate" ng-init="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity" ng-change="selectedTxn.inventory.quantity = selectedTxn.amount/selectedTxn.rate">
+              </label>
             </div>
             <div class="mrT1 clearfix" style="clear:both" ng-if="taxList.length > 0">
               <hr class="width100">
@@ -661,8 +786,4 @@
       })
     } 
   })
-
-
-
-
 </script>

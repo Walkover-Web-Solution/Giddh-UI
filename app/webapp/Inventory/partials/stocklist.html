@@ -11,3 +11,11 @@
 	<a href="javascript:void(0)" ng-click="stock.stockGroup.page = stock.stockGroup.page+1;stock.getStockGroupsFlatten(stockFlattenSearch, stock.stockGroup.page, 'get')" ng-if="stock.stockGroup.page < stock.stockGroup.totalPages">Load More</a>
 </ul>
 
+<p ng-if="stock.stockGroup.list.length < 1">
+	No Stocks Found 
+	<br>
+	Go to <a href="javascript:void(0)" ng-click="stock.showStockReport = false">Manage Stocks</a> to create new stocks.
+</p>
+
+
+

@@ -6,6 +6,7 @@ angular.module('inventoryController', [])
 	if(_.isUndefined($rootScope.selectedCompany)){
     	$rootScope.selectedCompany = localStorageService.get('_selectedCompany')
 	}
+
 	stock.showSidebar = true
 	stock.showStockReport = true
 	stock.today = new Date()
@@ -436,7 +437,6 @@ angular.module('inventoryController', [])
 	    stockService.getStockUnits(reqParam).then(this.success, this.failure)
 	}
 	stock.getStockUnits()
-
 
 	// to hide sidebar
 	$(document).on('click', function(e){

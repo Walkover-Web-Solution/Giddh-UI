@@ -2,6 +2,7 @@
 newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state) ->
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
+  lc = this
   $scope.pageLoader = false
   #date time picker code starts here
   $scope.today = new Date()
@@ -226,10 +227,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #   $scope.accountToShow = $scope.accountUnq
     # else
     if !_.isNull($rootScope.selectedAccount)
-      $scope.accountToShow = $rootScope.selectedAccount.name
+      $scope.accountToShow = $rootScope.selectedAccount
     else
       unq = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:$stateParams.unqName})
-      $scope.accountToShow = unq.name
+      $scope.accountToShow = unq
 
   $scope.isCurrentAccount =(acnt) ->
     acnt.uniqueName is $scope.accountUnq
@@ -725,6 +726,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.prevTxn = null
   $scope.selectTxn = (ledger, txn, index ,e) ->
     #setPopoverPlacement(e.clientY)
+    if $scope.accountToShow.stock != null && txn.inventory == undefined
+      txn.inventory = {}
     $scope.selectedTxn = txn
     if $scope.prevTxn != null
       $scope.prevTxn.isOpen = false
@@ -823,6 +826,16 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       ledger.isBlankCompEntry = false 
       $scope.blankLedger.isBlankCompEntry = false
 
+  # lc.formatInventoryTxns = (ledger) ->
+  #   if ledger.transactions.length > 0
+  #     _.each ledger.transactions, (txn) ->
+  #       if txn.inventory != undefined && txn.inventory.quantity != null && Number(txn.inventory.quantity) > 0
+  #         txn.inventory.stock = {}
+  #         if txn.particular.stock != null
+  #           txn.inventory.stock.uniqueName = txn.particular.uniqueName
+  #         else
+  #           txn.inventory.stock.uniqueName = $scope.accountToShow.uniqueName
+
   $scope.doingEntry = false
   $scope.lastSelectedLedger = {}
   $scope.saveUpdateLedger = (ledger) ->
@@ -831,6 +844,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.lastSelectedLedger = ledger
     $scope.dLedgerLimitBeforeUpdate = $scope.dLedgerLimit
     $scope.cLedgerLimitBeforeUpdate = $scope.cLedgerLimit
+    #lc.formatInventoryTxns(ledger)
     if $scope.doingEntry == true
       return
 
@@ -1349,7 +1363,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.dlinv = blobUrl
     # $scope.dlname = "abc.pdf"
     #$window.open(blobUrl)
-    FileSaver.saveAs(data, $scope.accountToShow+ '-' + invoiceNumber+".pdf")
+    FileSaver.saveAs(data, $scope.accountToShow.name+ '-' + invoiceNumber+".pdf")
 
   # common failure message
   $scope.multiActionWithInvFailure=(res)->
@@ -1588,6 +1602,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 #    ), 100
 
 
-  $rootScope.$emit('catchBreadcumbs', $scope.accountToShow)
+  $rootScope.$emit('catchBreadcumbs', $scope.accountToShow.name)
 
 giddh.webApp.controller 'newLedgerController', newLedgerController

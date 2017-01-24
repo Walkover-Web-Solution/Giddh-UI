@@ -63,7 +63,7 @@
 
 <!-- add/modify stock item-->
 
-<section class="" ng-if="stock.selectedStockGrp" ng-class="{mrT1 : stock.selectedStockItem == null}">
+<section class="" ng-if="stock.selectedStockGrp.uniqueName" ng-class="{mrT1 : stock.selectedStockItem == null}">
 	<aside class="row greyBg bdrB bdrT pd1 mrB1">
 		<label>
 			<span ng-if="stock.selectedStockItem == null">Add</span>

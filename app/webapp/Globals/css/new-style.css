@@ -428,6 +428,10 @@ header .navbar-nav > li.active {
     padding-left: 10px
 }
 
+.pdl1imp{
+    padding-left:10px !important;
+}
+
 .pdR1 {
     padding-right: 10px
 }
@@ -617,7 +621,11 @@ header .navbar-nav > li.active {
 }
 
 .bdrR {
-    border-right: 1px solid #ddd
+    border-right: 1px solid #ddd !important
+}
+
+.bdrR0{
+    border-radius: 0;
 }
 
 .pa {
@@ -2226,6 +2234,10 @@ i.cls-alert {
 
 .width100 {
     width: 100%;
+}
+
+.width50 {
+    width: 50% !important;
 }
 
 .h100{
