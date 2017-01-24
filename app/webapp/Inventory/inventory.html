@@ -3,7 +3,7 @@
 	<ul class="list-inline">
 		<li  ng-if="stock.showStockReport">
 			<div class="input-group">
-				<input type="search" name="stocksearch" ng-focus="stock.sideBarOn($event)" ng-click="$event.stopPropagation()" ng-model="stockFlattenSearch" ng-model-options="{debounce:500}" ng-change="stock.getStockGroupsFlatten(stockFlattenSearch, 1, 'search')">
+				<input type="search" name="stocksearch" ng-focus="stock.sideBarOn($event)" ng-click="$event.stopPropagation()" ng-model="stockFlattenSearch" ng-model-options="{debounce:500}" ng-change="stock.getStockGroupsFlatten(stockFlattenSearch, 1, 'search')" placeholder="search stocks">
 				<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
 			</div>
 		</li>
