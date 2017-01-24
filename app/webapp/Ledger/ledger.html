@@ -320,7 +320,8 @@
                                         ng-class="{'width50':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null,'pull-left':accountToShow.stock != null}"
                                         ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true"
                                         ng-keyup="triggerPanelFocus($event)"
-                                        ng-focus="openClosePopOver(txn,ledger, $event)"> 
+                                        ng-focus="openClosePopOver(txn,ledger, $event)"
+                                        ng-change="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity"> 
                                       <input type="text" 
                                         class="form-control background-transparent"
                                         ng-class="{'width50':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null,'pull-left':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null}"  
@@ -391,6 +392,7 @@
                                         ng-model="txn.amount" 
                                         ng-keyup="triggerPanelFocus($event)" 
                                         ng-focus="selectTxn(blankLedger,txn, $index, $event)"
+                                        ng-change="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity"
                                       >
                                       </span>
                                     </td>
@@ -500,6 +502,7 @@
                                         ng-model="txn.amount" 
                                         ng-keyup="triggerPanelFocus($event)" 
                                         ng-focus="selectTxn(blankLedger,txn, $index, $event)"
+                                        ng-change="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity"
                                       >
                                     </td>
                                   </tr>
@@ -552,7 +555,8 @@
                                         ng-class="{'width50':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null,'pull-left':accountToShow.stock != null}"
                                         ng-disabled="ledger.isBankTransaction != undefined && ledger.isBankTransaction == true"
                                         ng-keyup="triggerPanelFocus($event)"
-                                        ng-focus="openClosePopOver(txn,ledger, $event)"> 
+                                        ng-focus="openClosePopOver(txn,ledger, $event)"
+                                        ng-change="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity"> 
                                       <input type="text" 
                                         class="form-control background-transparent"
                                         ng-class="{'width50':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null,'pull-left':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null}"  
@@ -621,6 +625,7 @@
                                         ng-model="txn.amount" 
                                         ng-keyup="triggerPanelFocus($event)" 
                                         ng-focus="selectTxn(blankLedger,txn, $index, $event)"
+                                        ng-change="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity"
                                       >
                                     </td>
                                   </tr>
