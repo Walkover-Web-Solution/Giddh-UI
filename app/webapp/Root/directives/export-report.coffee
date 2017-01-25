@@ -429,7 +429,9 @@ link: (scope, elem, attr) ->
   link: (scope, elem, attrs) ->
     
     $(elem).on('click',(e)->
-      $(window).trigger('resize')
+      $timeout ( ->
+        $(window).trigger('resize')
+      ), 500
     )
 
 ]

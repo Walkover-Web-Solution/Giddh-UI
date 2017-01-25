@@ -226,12 +226,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #   $rootScope.selectedAccount = $scope.accountUnq
     #   $scope.accountToShow = $scope.accountUnq
     # else
-    if !_.isNull($rootScope.selectedAccount) && $rootScope.selectedAccount.uniqueName == $stateParams.unqName
-      $scope.accountToShow = $rootScope.selectedAccount
-    else if !_.isNull($rootScope.selectedAccount) && $rootScope.selectedAccount.uniqueName != $stateParams.unqName
-      unq = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:$stateParams.unqName})
-      localStorageService.set('_selectedAccount', unq)
-      $scope.accountToShow = unq
+    if !_.isNull($rootScope.selectedAccount)
+      if $rootScope.selectedAccount.uniqueName != $stateParams.unqName
+        unq = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:$stateParams.unqName})
+        localStorageService.set('_selectedAccount', unq)
+        $scope.accountToShow = unq
+      else
+        $scope.accountToShow = $rootScope.selectedAccount
     else
       unq = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:$stateParams.unqName})
       localStorageService.set('_selectedAccount', unq)
@@ -685,6 +686,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       $scope.selectedTaxes = _.without($scope.selectedTaxes, tax)
 #    item.sharedData.taxes = $scope.selectedTaxes
 
+  $scope.isSelectedAccount()
   $scope.getLedgerData(true)
 
   $timeout ( ->
@@ -1605,12 +1607,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 #      $rootScope.flyAccounts = false
 #    ), 100
 
-  $rootScope.$on('account-list-updated', ()->
+  $rootScope.$on('account-selected', ()->
     $scope.isSelectedAccount()
     $rootScope.$emit('catchBreadcumbs', $scope.accountToShow.name)
   )
-  #
 
 giddh.webApp.controller 'newLedgerController', newLedgerController
-
-

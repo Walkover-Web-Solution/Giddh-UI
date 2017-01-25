@@ -148,6 +148,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     DAServices.LedgerSet(data, acData)
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
+    $rootScope.$emit('account-selected')
 
 
   #Expand or  Collapse all account menus
