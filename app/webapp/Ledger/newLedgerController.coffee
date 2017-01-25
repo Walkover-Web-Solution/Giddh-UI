@@ -226,10 +226,15 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #   $rootScope.selectedAccount = $scope.accountUnq
     #   $scope.accountToShow = $scope.accountUnq
     # else
-    if !_.isNull($rootScope.selectedAccount)
+    if !_.isNull($rootScope.selectedAccount) && $rootScope.selectedAccount.uniqueName == $stateParams.unqName
       $scope.accountToShow = $rootScope.selectedAccount
+    else if !_.isNull($rootScope.selectedAccount) && $rootScope.selectedAccount.uniqueName != $stateParams.unqName
+      unq = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:$stateParams.unqName})
+      localStorageService.set('_selectedAccount', unq)
+      $scope.accountToShow = unq
     else
       unq = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:$stateParams.unqName})
+      localStorageService.set('_selectedAccount', unq)
       $scope.accountToShow = unq
 
   $scope.isCurrentAccount =(acnt) ->
