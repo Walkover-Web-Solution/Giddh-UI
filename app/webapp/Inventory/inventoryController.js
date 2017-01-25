@@ -198,6 +198,7 @@ angular.module('inventoryController', [])
 		stockItem.stockSalesAccount = stockItem.stockSalesAccount || {}
 		var data = {
 		    "name":stockItem.stockName,
+		    "uniqueName":stockItem.stockUnqName,
 		    "openingQuantity":stockItem.stockQty,
 		    "openingAmount":stockItem.stockAmount,
 		    "openingStockUnitName":stockItem.stockType.name,
@@ -218,6 +219,7 @@ angular.module('inventoryController', [])
 				}
 			})
 			$rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+			stock.getAllStocks()
 			toastr.success('Stock Updated successfully')
 		}
 
@@ -228,6 +230,7 @@ angular.module('inventoryController', [])
 		stockItem.stockSalesAccount = stockItem.stockSalesAccount || {}
 		var data = {
 			"name":stockItem.stockName,
+			"uniqueName":stockItem.stockUnqName,
 		    "openingQuantity":stockItem.stockQty,
 		    "openingAmount":stockItem.stockAmount,
 		    "openingStockUnitName":stockItem.stockType.name,
@@ -238,7 +241,7 @@ angular.module('inventoryController', [])
 		}
 		var reqParam = {
 			companyUniqueName: $rootScope.selectedCompany.uniqueName,
-			stockGroupUniqueName: stock.selectedStockGrp.uniqueName,
+			stockGroupUniqueName: stock.selectedStockItem.stockGroup.uniqueName,
 			stockUniqueName: stock.selectedStockItem.uniqueName
 		}
 		stockService.updateStockItem(reqParam, data).then(this.success, this.failure)
@@ -383,6 +386,7 @@ angular.module('inventoryController', [])
 			res.body.mappedSalesAccount = res.body.mappedSalesAccount || {}
 			stock.selectedStockItem = res.body
 			stock.addStockItem.stockName = stock.selectedStockItem.name
+			stock.addStockItem.stockUnqName = stock.selectedStockItem.uniqueName
 			stock.addStockItem.stockType = stock.selectedStockItem.openingStockUnit
 			stock.addStockItem.stockQty = stock.selectedStockItem.openingQuantity
 			stock.addStockItem.stockAmount = stock.selectedStockItem.openingAmount
