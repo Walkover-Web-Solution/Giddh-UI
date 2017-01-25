@@ -185,6 +185,7 @@ angular.module('inventoryController', [])
 			stock.selectedStockGrp.stocks.push(res.body)
 			stock.getAllStocks()
 			stock.addStockItem = {}
+			$rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
 		}
 		this.failure = function(res){
 			toastr.error(res.data.message)
@@ -216,6 +217,7 @@ angular.module('inventoryController', [])
 					stock.selectedStockGrp.stocks[idx] = res.body
 				}
 			})
+			$rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
 			toastr.success('Stock Updated successfully')
 		}
 
@@ -375,7 +377,7 @@ angular.module('inventoryController', [])
 
 	//select stock
 	stock.selectedStockItem = null
-	stock.selectStock = function(stk){
+	stock.selectStock = function(stk, parent){
 		this.success = function(res){
 			res.body.mappedPurchaseAccount = res.body.mappedPurchaseAccount || {}
 			res.body.mappedSalesAccount = res.body.mappedSalesAccount || {}
@@ -384,17 +386,19 @@ angular.module('inventoryController', [])
 			stock.addStockItem.stockType = stock.selectedStockItem.openingStockUnit
 			stock.addStockItem.stockQty = stock.selectedStockItem.openingQuantity
 			stock.addStockItem.stockAmount = stock.selectedStockItem.openingAmount
-			stock.addStockItem.stockPurchaseAccount = stock.selectedStockItem.mappedPurchaseAccount.name
+			stock.addStockItem.stockPurchaseAccount = stock.selectedStockItem.mappedPurchaseAccount
 			stock.addStockItem.stockPurchaseRate = stock.selectedStockItem.mappedPurchaseAccount.rate
-			stock.addStockItem.stockSalesAccount = stock.selectedStockItem.mappedSalesAccount.name
+			stock.addStockItem.stockSalesAccount = stock.selectedStockItem.mappedSalesAccount
 			stock.addStockItem.stockSalesRate = stock.selectedStockItem.mappedSalesAccount.rate
 		}
 		this.failure = function(res){
 			toastr.error(res.data.message)
 		}
+		var uniqueName;
+		parent != undefined ? uniqueName = parent.uniqueName : uniqueName = stk.stockGroup.uniqueName
 		reqParam = {
 			companyUniqueName : $rootScope.selectedCompany.uniqueName,
-			stockGroupUniqueName: stock.selectedStockGrp.uniqueName || stk.stockGroup.uniqueName,
+			stockGroupUniqueName: uniqueName,
 			stockUniqueName: stk.uniqueName
 		}
 		stockService.getStock(reqParam).then(this.success, this.failure)

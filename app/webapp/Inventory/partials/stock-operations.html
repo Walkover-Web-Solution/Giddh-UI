@@ -63,7 +63,7 @@
 
 <!-- add/modify stock item-->
 
-<section class="" ng-if="stock.selectedStockGrp.uniqueName" ng-class="{mrT1 : stock.selectedStockItem == null}">
+<section class="" ng-if="stock.selectedStockGrp.uniqueName || stock.selectedStockItem.uniqueName" ng-class="{mrT1 : stock.selectedStockItem == null}">
 	<aside class="row greyBg bdrB bdrT pd1 mrB1">
 		<label>
 			<span ng-if="stock.selectedStockItem == null">Add</span>
@@ -116,7 +116,7 @@
 					<label>Purchase Acc</label>
 					<!-- <input type="text" name="stockPurchaseAccount" class="form-control" ng-model="stock.addStockItem.stockPurchaseAccount" required> -->
 	                <ui-select ng-model="stock.addStockItem.stockPurchaseAccount" theme="bootstrap">
-	                  <ui-select-match>
+	                  <ui-select-match allow-clear="true" placeholder="select purchase account">
 	                      <span>{{$select.selected.name}}</span>
 	                  </ui-select-match>
 	                  <ui-select-choices repeat="account in stock.purchaseAccounts | limitTo:5" refresh="stock.getPurchaseAccounts($select.search)">
@@ -135,7 +135,7 @@
 					<label>Sales Acc</label>
 					<!-- <input type="text" name="stockSalesAccount" class="form-control" ng-model="stock.addStockItem.stockSalesAccount" required> -->
 					<ui-select ng-model="stock.addStockItem.stockSalesAccount" theme="bootstrap">
-	                  <ui-select-match>
+	                  <ui-select-match  allow-clear="true" placeholder="select sales account">
 	                      <span>{{$select.selected.name}}</span>
 	                  </ui-select-match>
 	                  <ui-select-choices repeat="account in stock.salesAccounts | limitTo:5" refresh="stock.getSalesAccounts($select.search)">
@@ -149,7 +149,7 @@
 					<input type="text" name="stockSalesRate" class="form-control" ng-model="stock.addStockItem.stockSalesRate" required>
 				</div>				
 			</div>
-			<button type="submit" class="btn btn-md btn-default"  ng-disabled="stock.addStockItem.stockName.length < 2 && stock.addStockItem.stockType.length < 1">
+			<button type="submit" class="btn btn-md btn-d               fault"  ng-disabled="stock.addStockItem.stockName.length < 2 && stock.addStockItem.stockType.length < 1">
 				<span ng-if="stock.selectedStockItem == null" ng-click="stock.addStock(stock.addStockItem)">Add</span>
 				<span  ng-if="stock.selectedStockItem != null" ng-click="stock.updateStock(stock.addStockItem)">Modify</span>
 			</button>
