@@ -685,7 +685,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       $scope.selectedTaxes = _.without($scope.selectedTaxes, tax)
 #    item.sharedData.taxes = $scope.selectedTaxes
 
-  $scope.isSelectedAccount()
   $scope.getLedgerData(true)
 
   $timeout ( ->
@@ -1606,7 +1605,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 #      $rootScope.flyAccounts = false
 #    ), 100
 
-
-  $rootScope.$emit('catchBreadcumbs', $scope.accountToShow.name)
+  $rootScope.$on('account-list-updated', ()->
+    $scope.isSelectedAccount()
+    $rootScope.$emit('catchBreadcumbs', $scope.accountToShow.name)
+  )
+  #
 
 giddh.webApp.controller 'newLedgerController', newLedgerController
+
+
