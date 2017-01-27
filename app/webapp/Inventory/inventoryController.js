@@ -188,7 +188,7 @@ angular.module('inventoryController', [])
 			$rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
 		}
 		this.failure = function(res){
-			toastr.error(res.data.message)
+			toastr.error(res.data.message || 'Something went Wrong, please check all input values')
 		}
 		var reqParam = {
 			companyUniqueName: $rootScope.selectedCompany.uniqueName,
@@ -389,6 +389,7 @@ angular.module('inventoryController', [])
 			stock.addStockItem.stockUnqName = stock.selectedStockItem.uniqueName
 			stock.addStockItem.stockType = stock.selectedStockItem.openingStockUnit
 			stock.addStockItem.stockQty = stock.selectedStockItem.openingQuantity
+			stock.addStockItem.stockClosingQty = stock.selectedStockItem.closingQuantity
 			stock.addStockItem.stockAmount = stock.selectedStockItem.openingAmount
 			stock.addStockItem.stockPurchaseAccount = stock.selectedStockItem.mappedPurchaseAccount
 			stock.addStockItem.stockPurchaseRate = stock.selectedStockItem.mappedPurchaseAccount.rate

@@ -204,6 +204,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     tag:null
     transactions:[{
       amount:0
+      rate:0
       particular:{
         name:""
         uniqueName:""
@@ -1589,6 +1590,17 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.validateUniqueName = (unq) ->
     unq = unq.replace(/ |,|\//g,'')
+
+  $scope.onValueChange = (value) ->
+    switch value
+      when 'qty'
+        if $scope.selectedTxn.rate > 0
+          $scope.selectedTxn.amount = $scope.selectedTxn.rate * $scope.selectedTxn.inventory.quantity
+      when 'amount'
+        $scope.selectedTxn.rate = $scope.selectedTxn.amount/$scope.selectedTxn.inventory.quantity
+      when 'rate'
+        $scope.selectedTxn.amount = $scope.selectedTxn.rate * $scope.selectedTxn.inventory.quantity
+
 
   # $scope.$on 'company-changed', (event,changeData) ->
   #   # when company is changed, redirect to manage company page

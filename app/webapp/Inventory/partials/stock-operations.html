@@ -89,7 +89,7 @@
 				</div>				
 			</div>
 			<div class="row mr0">
-				<div class="form-group col-xs-6 pdL0 pdR">
+				<div class="form-group col-xs-3 pdL0 pdR">
 					<label>Stock Unit<span class="required">*</span></label>
 					<!-- <input type="text" name="stockType" class="form-control" ng-model="stock.addStockItem.stockType" required> -->
 					<ui-select ng-model="stock.addStockItem.stockType" theme="bootstrap">
@@ -104,11 +104,17 @@
 
 				<div class="form-group col-xs-3 pdR pdL">
 					<label>Open. Qty</label>
-					<input type="text" name="stockQty" class="form-control" ng-model="stock.addStockItem.stockQty" required>
+					<input type="number" name="stockQty" class="form-control" ng-model="stock.addStockItem.stockQty">
+				</div>
+
+				<div class="form-group col-xs-3 pdR pdL">
+					<label>Closing. Qty</label>
+					<input type="number" name="stockQty" class="form-control" ng-model="stock.addStockItem.stockClosingQty">
 				</div>	
+				
 				<div class="form-group col-xs-3 pdR0 pdL">
 					<label>Amount</label>
-					<input type="text" name="stockAmount" class="form-control" ng-model="stock.addStockItem.stockAmount" required>
+					<input type="number" name="stockAmount" class="form-control" ng-model="stock.addStockItem.stockAmount">
 				</div>				
 			</div>
 			<div class="row mr0">
@@ -127,7 +133,7 @@
 
 				<div class="form-group col-xs-6 pdR0 pdL">
 					<label>Purchase Rate</label>
-					<input type="text" name="stockPurchaseRate" class="form-control" ng-model="stock.addStockItem.stockPurchaseRate" required>
+					<input type="number" name="stockPurchaseRate" class="form-control" ng-model="stock.addStockItem.stockPurchaseRate">
 				</div>				
 			</div>
 			<div class="row mr0">
@@ -146,10 +152,10 @@
 
 				<div class="form-group col-xs-6 pdR0 pdL">
 					<label>Sales Rate</label>
-					<input type="text" name="stockSalesRate" class="form-control" ng-model="stock.addStockItem.stockSalesRate" required>
+					<input type="number" name="stockSalesRate" class="form-control" ng-model="stock.addStockItem.stockSalesRate" required>
 				</div>				
 			</div>
-			<button type="submit" class="btn btn-md btn-d               fault"  ng-disabled="stock.addStockItem.stockName.length < 2 && stock.addStockItem.stockType.length < 1">
+			<button type="submit" class="btn btn-md btn-default"  ng-disabled="stock.addStockItem.stockName.length < 2 && stock.addStockItem.stockType.length < 1">
 				<span ng-if="stock.selectedStockItem == null" ng-click="stock.addStock(stock.addStockItem)">Add</span>
 				<span  ng-if="stock.selectedStockItem != null" ng-click="stock.updateStock(stock.addStockItem)">Modify</span>
 			</button>
