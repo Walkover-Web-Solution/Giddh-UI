@@ -457,7 +457,7 @@ header .navbar-nav > li.active {
 }
 
 .pdR3 {
-    padding-right: 30px
+    padding-right: 30px !important;
 }
 
 .pdT4 {
