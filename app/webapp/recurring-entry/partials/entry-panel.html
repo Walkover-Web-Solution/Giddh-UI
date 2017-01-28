@@ -1,0 +1,59 @@
+<!--tax list-->
+	<div class="oh pull-left oyAuto" ng-if="ledger.taxes.length > 0" style="max-height:90%;">
+		<label>Taxes</label>
+		<ul class="list-unstyled">
+			<li ng-repeat="tax in ledger.taxes">
+				<label class="checkbox-inline">
+		      		<input type="checkbox" ng-model="tax.isSelected">
+		      		{{tax.name}}
+		    	</label>
+			</li>
+		</ul>
+	</div>
+
+
+<!--/tax list-->
+
+
+<!-- description-->
+<div class="form-group max200 pull-left mrL1 mrR1">
+  <label for="comment">Description:</label>
+  <textarea class="form-control" rows="2" id="description" ng-model="ledger.description"></textarea>
+
+  <label class="mrT1" for="comment">Tags</label>
+  <input type="text" class="form-control" id="tag" ng-model="entry.tag">
+</div>
+<!-- /description-->
+
+<div class="checkbox pull-left">
+	<!-- unconfirmed entry-->
+	<div class="checkbox">
+	  <label><input type="checkbox" ng-model="ledger.unconfirmedEntry">Unconfirmed Entry</label>
+	</div>
+	<!-- /unconfirmed entry-->
+
+
+	<!-- Inclusive tax-->
+	<div class="checkbox">
+	  <label><input type="checkbox" ng-model="ledger.isInclusiveTax">Inclusive Tax</label>
+	</div>
+	<!-- /Inclusive tax-->
+
+	<!-- Applicable Taxes-->
+	<div class="checkbox">
+	  <label><input type="checkbox" ng-model="ledger.applyApplicableTaxes">As Per Applicable Taxes</label>
+	</div>
+	<!-- /Applicable Taxes-->	
+</div>
+
+
+<!-- prorated date-->
+<div class="form-group max200 pull-left mrL1">
+  <label>Pro Rated Date</label>
+  <input type="text" ng-model="ledger.proratedDate" ng-init="ledger.proratedDate = recEntry.today">
+</div>
+<!-- /prorated date-->
+
+<!--save button-->
+<button class="btn btn-md-btn-primary pa" style="right:82px;bottom:10px;" ng-click="recEntry.addNewTxn(ledger)">Add Transaction</button>
+<button class="btn btn-md btn-success pa" style="right:10px;bottom:10px;" ng-click="recEntry.createEntry(ledger)">Save</button>

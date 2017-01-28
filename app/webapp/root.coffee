@@ -36,6 +36,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "gridster"
     "ui.tinymce"
     "inventory"
+    "recurringEntry"
   ]
 )
 
@@ -215,6 +216,12 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/Inventory/inventory.html'
     controller: 'stockController'
     controllerAs: 'stock'
+  )
+  .state('recurring-entry',
+    url: '/recurring-entry'
+    templateUrl: '/public/webapp/recurring-entry/recurring-entry.html'
+    controller: 'recurringEntryController'
+    controllerAs: 'recEntry'
   )
   .state('/thankyou',
     url: '/thankyou'

@@ -1,0 +1,71 @@
+<section class="col-xs-12 pd2 h100">
+	
+
+	<div class="recurring-entry-grid">
+		<div class="row mar0">
+			<i class="glyphicon glyphicon-plus pull-right f24 cp" ng-click="recEntry.addNewEntry()"></i>
+		</div>
+		<div class="re-header">
+				
+			<div class="col-xs-1 text-center">
+				Date
+			</div>
+			<div class="col-xs-3 text-center">
+				Base Account	
+			</div>
+			<div class="col-xs-3 text-center">
+				Particular
+			</div>
+			<div class="col-xs-1 text-center">
+				Quantity
+			</div>
+			<div class="col-xs-1 text-center">
+				Duration
+			</div>
+			<div class="col-xs-1 text-center">
+				Amount
+			</div>
+			<div class="col-xs-1 text-center">
+				Voucher Type
+			</div>
+			<div class="col-xs-1 text-center">
+				Type
+			</div>
+
+		</div>	
+
+		<div class="re-body">
+			
+			<div 
+				class="" 
+				ng-repeat="ledger in recEntry.rows" >
+					
+					<div 
+					class="row"
+					ng-class="{'animate':entry.showPanel}"
+					ng-dblclick="recEntry.selectEntry(entry, $index)"
+					ng-repeat="entry in ledger.transactions"
+					ng-include="'/public/webapp/recurring-entry/partials/rec-entry-list.html'"	
+					>
+					
+				</div>
+			</div>
+
+
+
+
+		</div>
+
+
+	</div>
+
+
+</section>
+
+
+<script type="text/ng-template" id="accountPopUp.html">
+  <a href="javascript:void(0)" class="account-list-item" set-drop-overflow style="border-bottom:1px solid #e0e0e0;">
+    <span class="account-list-item" ng-bind-html="match.label | uibTypeaheadHighlight:query" style="display: block;font-size:12px"></span>
+    <span class="account-list-item" ng-bind-html="match.model.uniqueName | uibTypeaheadHighlight:query" style="display: block;font-size:10px"></span>
+  </a>
+</script>

@@ -1,0 +1,51 @@
+	<div class="col-xs-1 text-center">
+		<input type="text" ng-model="ledger.entryDate" placeholder="entry date"  ng-disabled="!entry.showPanel"/>	
+	</div>
+	<div class="col-xs-3 text-center">
+		<input type="text"
+		    ng-disabled="!entry.showPanel" 
+			typeahead-append-to-body="true" 
+			uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | filter:$viewValue | limitTo: 10"
+			typeahead-template-url="accountPopUp.html"
+			ng-model="ledger.baseAccount">		
+	</div>
+	<div class="col-xs-3 text-center">
+		<input type="text"
+			ng-disabled="!entry.showPanel" 
+			typeahead-append-to-body="true" 
+			uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | filter:$viewValue | limitTo: 10"
+			typeahead-template-url="accountPopUp.html"
+			ng-model="entry.particular">
+	</div>
+	<div class="col-xs-1 text-center">
+		<input type="text"  
+			ng-disabled="!entry.showPanel"
+			ng-model="entry.qty">
+	</div>
+	<div class="col-xs-1 text-center">
+		<select  ng-disabled="!entry.showPanel" ng-model="ledger.duration" ng-options="duration for duration in recEntry.durationList">
+			<option value="Duration">Duration</option>
+		</select>
+	</div>
+	<div class="col-xs-1 text-center">
+		<input type="text"  
+			ng-disabled="!entry.showPanel"
+			ng-model="entry.amount">
+	</div>
+	<div class="col-xs-1 text-center">
+		<select  ng-disabled="!entry.showPanel" ng-model="entry.voucher" ng-options="voucher as voucher.name for voucher in recEntry.voucherTypes">
+			<option value="Voucher">Voucher Type</option>
+		</select>
+	</div>
+	<div class="col-xs-1 text-center">
+		<select type="text"  
+			ng-disabled="!entry.showPanel"
+			ng-model="entry.type"
+			ng-options="type for type in recEntry.entryTypes">	
+		</select>
+	</div>
+
+	<div class="row-panel" 
+		ng-show="entry.showPanel" 
+		ng-include="'/public/webapp/recurring-entry/partials/entry-panel.html'">		
+	</div>				
