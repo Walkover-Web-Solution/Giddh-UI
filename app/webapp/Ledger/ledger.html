@@ -702,14 +702,19 @@
                 <!--<input type="checkbox" ng-model="selectedLedger.applyApplicableTaxes">Applied taxes-->
               <!--</label>-->
             </div>
-            <div class="mrT2 pull-right pdL">
+            <div class="mrT2 pull-right pdL" ng-if="selectedLedger.total.amount > 0">
               <label>Total: <span ng-bind="selectedLedger.total.amount | numberlimit"></span>
                 <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'CREDIT'">Cr</span>
                 <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'DEBIT'">Dr</span></label>
             </div>
             <div class="mrT2 pull-right bdrR pdR" ng-if="selectedTxn.inventory != null && selectedTxn.inventory.quantity > 0">
               <label>Rate:
-                <input type="text" ng-model="selectedTxn.rate" ng-init="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity" ng-change="selectedTxn.amount = selectedTxn.inventory.quantity*selectedTxn.rate">
+                <input 
+                  type="number" 
+                  ng-model="selectedTxn.rate" 
+                  ng-init="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity" 
+                  ng-change="selectedTxn.amount = selectedTxn.inventory.quantity*selectedTxn.rate"
+                  style="max-width:64px;border:0;">
               </label>
             </div>
             <div class="mrT1 clearfix" style="clear:both" ng-if="taxList.length > 0">
@@ -769,7 +774,7 @@
             <button ng-if="(selectedLedger.uniqueName == undefined || selectedLedger.uniqueName == '') && ((selectedLedger.transactions[0].particular.uniqueName != '' && selectedLedger.transactions[0].particular.uniqueName != undefined) || (selectedLedger.transactions[1].particular.uniqueName != '' && selectedLedger.transactions[1].particular.uniqueName != undefined)) && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default mrL1" ng-click="resetLedger()">Reset</button>
             <i ng-if="(selectedLedger.uniqueName != undefined && selectedLedger.uniqueName != '') && selectedLedger.invoiceGenerated == false && (selectedLedger.isBankTransaction == false || selectedLedger.isBankTransaction == undefined)" class="pull-right glyphicon glyphicon-trash mrR1 pos-abs" uib-tooltip="Delete" tooltip-placement="left" style="top:9px;right:1px;color:#d35f29;" ng-click="deleteEntryConfirm(selectedLedger);deleteMultipleTransactions()" uib-tooltip=""></i>
             <button class="btn btn-sm close-panel pull-right pos-rel" ng-click="closePanel()" ng-if="popover.draggable">Close</button>
-            <a class="pull-right anShrt" href="javascript:void(0)" ng-click="addNewAccount()">Add New Account (Shortcut)</a>
+            <a class="pull-right anShrt" href="javascript:void(0)" ng-click="addNewAccount()">New Account</a>
           </div>
         </div>
       </div>
