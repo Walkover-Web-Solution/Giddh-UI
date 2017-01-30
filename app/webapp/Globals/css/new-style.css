@@ -3056,6 +3056,7 @@ ul.pills li {
     outline: none;
     box-shadow: none;
     padding: 0;
+    height:38px;
 }
 
 .ledger-container table tr.bg3 th {
@@ -4453,4 +4454,11 @@ table.proforma-particulars{
 
 .mrL320{
     margin-left: 320px;
+}
+
+.rate{
+    font-size:10px;
+    right:calc(50% + 10px);
+    top:22px;
+    color:#9e9c9c;
 }

@@ -258,7 +258,7 @@
                                         ng-keyup="triggerPanelFocus($event)" 
                                         ng-focus="selectTxn(blankLedger,txn, $index, $event)"
                                         ng-change="onValueChange('qty' , txn)">
-                                      <span class="pa" style="right:calc(50% + 10px);top:10px;font-size:12px;color:#9e9c9c" ng-if="txn.rate > 0">x{{txn.rate}}</span>
+                                      <span class="pa rate" ng-if="txn.rate > 0">x{{txn.rate | numberlimit }}/{{accountToShow.stock.unit}}</span>
                                       <input type="text" 
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null, 'pull-left':accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.particular.stock != null}" 
@@ -321,7 +321,7 @@
                                         ng-keyup="triggerPanelFocus($event)"
                                         ng-focus="openClosePopOver(txn,ledger, $event)"
                                         ng-change="onValueChange('qty', txn)">                                       
-                                      <span class="pa" style="right:calc(50% + 10px);top:10px;font-size:12px;color:#9e9c9c" ng-if="txn.rate > 0">x{{txn.rate}}</span>
+                                      <span class="pa rate" ng-if="txn.rate > 0">x{{txn.rate | numberlimit }}/{{accountToShow.stock.unit}}</span>
                                       <input type="text" 
                                         class="form-control background-transparent text-right pdR3"
                                         ng-class="{'width50':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null,'pull-left':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null}"  
@@ -385,7 +385,7 @@
                                         ng-keyup="triggerPanelFocus($event)" 
                                         ng-focus="selectTxn(blankLedger,txn, $index, $event)"
                                         ng-change="onValueChange('qty', txn)">
-                                      <span class="pa" style="right:calc(50% + 10px);top:10px;font-size:12px;color:#9e9c9c" ng-if="txn.rate > 0">x{{txn.rate}}</span>
+                                      <span class="pa rate" ng-if="txn.rate > 0">x{{txn.rate | numberlimit }}/{{accountToShow.stock.unit}}</span>
                                       <input type="text" 
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null, 'pull-left':accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.particular.stock != null}" 
@@ -495,7 +495,7 @@
                                         ng-keyup="triggerPanelFocus($event)" 
                                         ng-focus="selectTxn(blankLedger,txn, $index, $event)"
                                         ng-change="onValueChange('qty', txn)">
-                                      <span class="pa" style="right:calc(50% + 10px);top:10px;font-size:12px;color:#9e9c9c" ng-if="txn.rate > 0">x{{txn.rate}}</span>
+                                      <span class="pa rate"  ng-if="txn.rate > 0">x{{txn.rate | numberlimit }}/{{accountToShow.stock.unit}}</span>
                                       <input type="text" 
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null, 'pull-left':accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.particular.stock != null}" 
@@ -557,7 +557,7 @@
                                         ng-keyup="triggerPanelFocus($event)"
                                         ng-focus="openClosePopOver(txn,ledger, $event)"
                                         ng-change="onValueChange('qty', txn)"> 
-                                      <span class="pa" style="right:calc(50% + 10px);top:10px;font-size:12px;color:#9e9c9c" ng-if="txn.rate > 0">x{{txn.rate}}</span>
+                                      <span class="pa rate"  ng-if="txn.rate > 0">x{{txn.rate | numberlimit }}/{{accountToShow.stock.unit}}</span>
                                       <input type="text" 
                                         class="form-control background-transparent text-right pdR3"
                                         ng-class="{'width50':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null,'pull-left':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.inventory != null || txn.particular.stock != null}"  
@@ -621,7 +621,7 @@
                                         ng-keyup="triggerPanelFocus($event)" 
                                         ng-focus="selectTxn(blankLedger,txn, $index, $event)"
                                         ng-change="onValueChange('qty', txn)">
-                                      <span class="pa" style="right:calc(50% + 10px);top:10px;font-size:12px;color:#9e9c9c" ng-if="txn.rate > 0">x{{txn.rate}}</span>
+                                      <span class="pa rate" ng-if="txn.rate > 0">x{{txn.rate | numberlimit }}/{{accountToShow.stock.unit}}</span>
                                       <input type="text" 
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null, 'pull-left':accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.particular.stock != null}" 
