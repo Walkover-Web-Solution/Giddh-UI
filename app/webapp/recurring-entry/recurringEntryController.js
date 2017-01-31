@@ -1,6 +1,6 @@
 angular.module('recurringEntryController', [])
 
-.controller('recurringEntryController', ['$scope','$rootScope','stockService','localStorageService','groupService' ,'toastr','$filter','companyServices' ,function($scope, $rootScope, stockService, localStorageService,groupService, toastr, $filter,companyServices){
+.controller('recurringEntryController', ['$scope','$rootScope','stockService','localStorageService','groupService' ,'toastr','$filter','companyServices','recurringEntryService' ,function($scope, $rootScope, stockService, localStorageService,groupService, toastr, $filter,companyServices,recurringEntryService){
 	
 	if (_.isUndefined($rootScope.selectedCompany)) $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
 
@@ -14,11 +14,11 @@ angular.module('recurringEntryController', [])
 
 	//durations list
 	recEntry.durationList = [
-		'Weekly',
-		'Monthly',
-		'Quarterly',
-		'Half Yearly',
-		'Yearly'
+		'WEEKLY',
+		'MONTHLY',
+		'QUATERLY',
+		'HALF YEARLY',
+		'YEARLY'
 	]
 
 	//voucher types
@@ -81,7 +81,10 @@ angular.module('recurringEntryController', [])
 		    {
 		      "amount": 0,
 		      "particular": "",
-		      "type": "debit"
+		      "type": "debit",
+		      "inventory":{
+		    	"quantity":0
+		      }
 		    }
 		  ],
 		  "voucherType": "sales",
@@ -89,7 +92,7 @@ angular.module('recurringEntryController', [])
 		  "applyApplicableTaxes": "false",
 		  "isInclusiveTax": "false",
 		  "unconfirmedEntry": "false",
-		  "tag": "$crnNumber",
+		  "tag": "",
 		  "description": "",
 		  "showPanel":true,
 		  "taxes": [],
@@ -103,7 +106,10 @@ angular.module('recurringEntryController', [])
 		this.txn = {
 			"amount": 0,
 		    "particular": "",
-		    "type": "debit"
+		    "type": "debit",
+		    "inventory":{
+		    	"quantity":0
+		    }
 		}
 		return this.txn;
 	}
@@ -142,8 +148,44 @@ angular.module('recurringEntryController', [])
 
 	//create recurring entry
 	recEntry.createEntry = function(ledger){
-		console.log(ledger)
+		this.success = function(res){
+			console.log(res)
+		}
+
+		this.failure = function(res){
+			console.log(res)
+		}
+
+		var entry = {}
+		entry = _.extend(ledger, entry)
+		entry.transactions = recEntry.formatTxns(entry.transactions)
+		entry.voucherType = ledger.voucher.name
+		var reqParam = {}
+		reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+		reqParam.accountUniqueName = ledger.baseAccount.uniqueName
+		delete entry.baseAccount
+		delete entry.showPanel
+		delete entry.voucher
+		console.log(entry)
+		recurringEntryService.createReccuringEntry(reqParam, entry).then(this.success, this.failure)
 	}
+
+	//format and prepare transactions
+	 recEntry.formatTxns = function(transactions){
+	 	var txns = []
+	 	_.each(transactions,function(txn){
+	 		var tx = new recEntry.txnModel()
+	 		tx = _.extendOwn(tx, txn)
+	 		particular = {}
+	 		particular.name = tx.particular.name
+	 		particular.uniqueName = tx.particular.uniqueName
+	 		tx.particular = particular
+	 		delete tx.showPanel
+	 		delete tx.inventory
+	 		txns.push(tx)
+	 	})
+	 	return txns;
+	 }
 
 	return recEntry;
 }])

@@ -20,10 +20,10 @@
 	<div class="col-xs-1 text-center">
 		<input type="text"  
 			ng-disabled="!entry.showPanel"
-			ng-model="entry.qty">
+			ng-model="entry.inventory.quantity">
 	</div>
 	<div class="col-xs-1 text-center">
-		<select  ng-disabled="!entry.showPanel" ng-model="ledger.duration" ng-options="duration for duration in recEntry.durationList">
+		<select  ng-disabled="!entry.showPanel" ng-model="ledger.durationType" ng-options="duration for duration in recEntry.durationList">
 			<option value="Duration">Duration</option>
 		</select>
 	</div>
@@ -32,11 +32,13 @@
 			ng-disabled="!entry.showPanel"
 			ng-model="entry.amount">
 	</div>
+
 	<div class="col-xs-1 text-center">
-		<select  ng-disabled="!entry.showPanel" ng-model="entry.voucher" ng-options="voucher as voucher.name for voucher in recEntry.voucherTypes">
+		<select  ng-disabled="!entry.showPanel" ng-model="ledger.voucher" ng-options="voucher as voucher.name for voucher in recEntry.voucherTypes">
 			<option value="Voucher">Voucher Type</option>
 		</select>
 	</div>
+
 	<div class="col-xs-1 text-center">
 		<select type="text"  
 			ng-disabled="!entry.showPanel"
@@ -49,3 +51,5 @@
 		ng-show="entry.showPanel" 
 		ng-include="'/public/webapp/recurring-entry/partials/entry-panel.html'">		
 	</div>				
+
+

@@ -1,6 +1,7 @@
 var stock = angular.module('inventory', [
 	'inventoryServices',
-	'inventoryController'
+	'inventoryController',
+	'recurringEntryService'
 ])
 
 // .config(['',function() {

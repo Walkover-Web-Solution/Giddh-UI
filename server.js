@@ -182,6 +182,7 @@ var proforma = require('./public/routes/webapp/proformas')
 var placeholders = require('./public/routes/webapp/placeholders')
 var inventory = require('./public/routes/webapp/inventory')
 var adminPanel = require('./public/routes/adminPanel/adminPanel')
+var recEntry = require('./public/routes/webapp/recurringEntry')
 
 app.use('/time-test', timetest);
 app.use('/currency', currency);
@@ -201,6 +202,7 @@ app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/stock-group', inventory)
 app.use('/company/:companyUniqueName/profit-loss', profitLoss);
 app.use('/company/:companyUniqueName/templates', templates);
+app.use('/company/:companyUniqueName/recurring-entry', recEntry);
 app.use('/company/:companyUniqueName', reports);
 app.use('/coupon', coupon);
 app.use('/yodlee', yodlee);
