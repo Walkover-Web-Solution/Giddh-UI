@@ -5,13 +5,13 @@ angular.module('recurringEntryController', [])
 	if (_.isUndefined($rootScope.selectedCompany)) $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
 
 	var recEntry = this;
-
+	
 	recEntry.today = $filter('date')(new Date(), "dd-MM-yyyy")
 	recEntry.format = 'dd-MM-yyyy'
 
 
 	recEntry.rows = []
-
+	recEntry.selectedEntry = null
 	//durations list
 	recEntry.durationList = [
 		'WEEKLY',
@@ -59,8 +59,8 @@ angular.module('recurringEntryController', [])
 
 	//entry types
 	recEntry.entryTypes = [
-		'debit',
-		'credit'
+		'DEBIT',
+		'CREDIT'
 	]  
 
 	//tax list
@@ -68,10 +68,22 @@ angular.module('recurringEntryController', [])
 
 	//select entry on double click, show current entry panel, hide previous
 	recEntry.selectEntry = function(entry, index){
-		recEntry.prevEntry = recEntry.selectedEntry || {}
+		if(recEntry.selectedEntry != null){
+			recEntry.prevEntry = recEntry.selectedEntry
+		}
 		recEntry.selectedEntry = entry
-		entry.showPanel = !entry.showPanel
-		recEntry.prevEntry.showPanel = false
+		//recEntry.selectedEntry.index = index
+		recEntry.selectedEntry.showPanel = !recEntry.selectedEntry.showPanel
+		// if(recEntry.prevEntry != undefined && recEntry.prevEntry.index != index){
+		// 	recEntry.prevEntry.showPanel = !recEntry.prevEntry.showPanel
+		// }
+		// if(recEntry.selectedEntry != undefined && recEntry.selectedEntry.index != index){
+		// 	recEntry.prevEntry = recEntry.selectedEntry
+		// } 
+		// recEntry.selectedEntry = entry
+		// recEntry.selectedEntry.index = index
+		// entry.showPanel = !entry.showPanel
+		// if(recEntry.prevEntry != undefined) recEntry.prevEntry.showPanel = false
 	}
 
 	//blank entry model 
@@ -87,7 +99,7 @@ angular.module('recurringEntryController', [])
 		      }
 		    }
 		  ],
-		  "voucherType": "sales",
+		  "voucherType": recEntry.voucherTypes[0],
 		  "entryDate": recEntry.today,
 		  "applyApplicableTaxes": "false",
 		  "isInclusiveTax": "false",
@@ -96,7 +108,8 @@ angular.module('recurringEntryController', [])
 		  "description": "",
 		  "showPanel":true,
 		  "taxes": [],
-		  "isRecurring":true
+		  "isRecurring":true,
+		  "duration":recEntry.durationList[0]
 		}
 		return this.model;
 	}
@@ -145,6 +158,22 @@ angular.module('recurringEntryController', [])
 	}
 	recEntry.getTaxList()
 
+	//get all recurring entries
+	recEntry.getAllEntries = function(){
+		this.success = function(res){
+			console.log(res)
+			recEntry.rows = res.body.results
+		}
+
+		this.failure = function(res){
+			toastr.error(res.data.message)
+		}
+		reqParam = {}
+		reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+		recurringEntryService.getEntries(reqParam).then(this.success, this.failure)
+	}
+	recEntry.getAllEntries()
+
 
 	//create recurring entry
 	recEntry.createEntry = function(ledger){
@@ -159,14 +188,13 @@ angular.module('recurringEntryController', [])
 		var entry = {}
 		entry = _.extend(ledger, entry)
 		entry.transactions = recEntry.formatTxns(entry.transactions)
-		entry.voucherType = ledger.voucher.name
+		entry.taxes = recEntry.formatTaxes(entry.taxes)
+		entry.voucherType = ledger.voucherType.name
 		var reqParam = {}
 		reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-		reqParam.accountUniqueName = ledger.baseAccount.uniqueName
-		delete entry.baseAccount
+		reqParam.accountUniqueName = ledger.account.uniqueName
+		delete entry.account
 		delete entry.showPanel
-		delete entry.voucher
-		console.log(entry)
 		recurringEntryService.createReccuringEntry(reqParam, entry).then(this.success, this.failure)
 	}
 
@@ -186,6 +214,32 @@ angular.module('recurringEntryController', [])
 	 	})
 	 	return txns;
 	 }
+
+	// format and return taxes
+	recEntry.formatTaxes = function(taxes) {
+		var taxList = []
+		_.each(taxes, function(tax){
+			if(tax.isSelected){
+				taxList.push(tax.uniqueName)
+			}
+		})
+		return taxList
+	}
+
+
+	//get duration types 
+	recEntry.getDuration = function(){
+		this.success = function(res){
+			recEntry.durationList = res.body.durationTypes
+		},
+		this.failure = function(res){
+			toastr.error(res.data.message)
+		}
+		reqParam = {}
+		reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+		recurringEntryService.getDuration(reqParam).then(this.success, this.failure)
+	}
+	recEntry.getDuration()
 
 	return recEntry;
 }])

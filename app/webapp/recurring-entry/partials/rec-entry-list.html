@@ -7,7 +7,7 @@
 			typeahead-append-to-body="true" 
 			uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | filter:$viewValue | limitTo: 10"
 			typeahead-template-url="accountPopUp.html"
-			ng-model="ledger.baseAccount">		
+			ng-model="ledger.account">		
 	</div>
 	<div class="col-xs-3 text-center">
 		<input type="text"
@@ -19,11 +19,12 @@
 	</div>
 	<div class="col-xs-1 text-center">
 		<input type="text"  
-			ng-disabled="!entry.showPanel"
-			ng-model="entry.inventory.quantity">
+			ng-disabled="!entry.showPanel || !(entry.particular.stock != null || entry.baseAccount.stock != null)"
+			ng-model="entry.inventory.quantity"
+		>
 	</div>
 	<div class="col-xs-1 text-center">
-		<select  ng-disabled="!entry.showPanel" ng-model="ledger.durationType" ng-options="duration for duration in recEntry.durationList">
+		<select  ng-disabled="!entry.showPanel" ng-model="ledger.duration" ng-options="duration for duration in recEntry.durationList">
 			<option value="Duration">Duration</option>
 		</select>
 	</div>

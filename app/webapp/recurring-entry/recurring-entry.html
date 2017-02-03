@@ -4,7 +4,16 @@
 	<div class="recurring-entry-grid">
 		<div class="row mar0">
 			<i class="glyphicon glyphicon-plus pull-right f24 cp" ng-click="recEntry.addNewEntry()"></i>
+			<i class="glyphicon glyphicon-filter pull-right f24 cp mrR1" ng-class="{'warning':recEntry.showFilters}" ng-click="recEntry.showFilters = !recEntry.showFilters"></i>
 		</div>
+
+
+		<div class="filters" ng-include="'/public/webapp/recurring-entry/partials/filters.html'" ng-if="recEntry.showFilters">
+			
+		</div>
+
+
+
 		<div class="re-header">
 				
 			<div class="col-xs-1 text-center">
@@ -43,7 +52,7 @@
 					<div 
 					class="row"
 					ng-class="{'animate':entry.showPanel}"
-					ng-dblclick="recEntry.selectEntry(entry, $index)"
+					ng-dblclick="recEntry.selectEntry(entry, $parent.$index)"
 					ng-repeat="entry in ledger.transactions"
 					ng-include="'/public/webapp/recurring-entry/partials/rec-entry-list.html'"	
 					>

@@ -14,6 +14,14 @@ angular.module('recurringEntryService', [])
 		create: {
 			method: 'POST',
 			url: '/company/:companyUniqueName/recurring-entry'
+		},
+		get:{
+			method: 'GET',
+			url: '/company/:companyUniqueName/recurring-entry'
+		},
+		getDuration:{
+			method: 'GET',
+			url: '/company/:companyUniqueName/recurring-entry/duration-type'
 		}
 	})
 	recurringEntryService = {
@@ -37,6 +45,20 @@ angular.module('recurringEntryService', [])
 	    			accountUniqueName: reqParam.accountUniqueName
 	    		}, data, onSuccess, onFailure)
 
+	    	})
+	    },
+	    getEntries: function(reqParam, data){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return recEntry.get({
+	    			companyUniqueName: reqParam.companyUniqueName
+	    		}, onSuccess, onFailure)
+	    	})
+	    },
+	    getDuration: function(reqParam, data){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return recEntry.getDuration({
+	    			companyUniqueName: reqParam.companyUniqueName
+	    		}, onSuccess, onFailure)
 	    	})
 	    }
 	}

@@ -4535,3 +4535,18 @@ table.proforma-particulars{
     border:1px solid #f0f0f0;
 }
 
+.recurring-entry-grid .re-body .row.animate input:disabled{
+    background: #e0e0e0;
+}
+
+
+.recurring-entry-grid .filters{
+    padding:10px 0;
+    border-top:1px solid #e0e0e0;
+}
+
+.recurring-entry-grid .filters ul li input, .recurring-entry-grid .filters ul li input:focus{
+    border-radius: 0;
+    height:100%;
+    width:100%;
+}
