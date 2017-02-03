@@ -1,6 +1,6 @@
 angular.module('inventoryController', [])
 
-.controller('stockController', ['$scope','$rootScope','stockService','localStorageService','groupService' ,'toastr','$filter' ,function($scope, $rootScope, stockService, localStorageService,groupService, toastr, $filter){
+.controller('stockController', ['$scope','$rootScope','stockService','localStorageService','groupService' ,'toastr','$filter','modalService' ,function($scope, $rootScope, stockService, localStorageService,groupService, toastr, $filter,modalService){
 	
 	var stock = this;
 	if(_.isUndefined($rootScope.selectedCompany)){
@@ -164,15 +164,16 @@ angular.module('inventoryController', [])
 			stock.updateStockGroup = {}
 		}
 		this.failure = function(res){
-			console.log(res)
+			toastr.error(res.data.message)
 		}
 		var data = {
 		    "name":obj.stockName,
-		    "parentStockGroupUniqueName":obj.parentStockGroupUniqueName
+		    "parentStockGroupUniqueName":stock.selectedStockGrp.parentStockGroupUniqueName,
+		    "uniqueName":obj.stockUnqName
 		}
 		var reqParam = {
 			companyUniqueName: $rootScope.selectedCompany.uniqueName,
-			stockGroupUniqueName:obj.stockUnqName
+			stockGroupUniqueName:stock.selectedStockGrp.uniqueName
 		}
 		stockService.updateStockGroup(reqParam, data).then(this.success, this.failure)
 	}
@@ -309,6 +310,7 @@ angular.module('inventoryController', [])
 				stock.parentGroupsList = []
 			}
 			var parent = res.body.parentStockGroup || {}
+			if(res.body.parentStockGroup) stock.updateStockGroup.parentStockGroupUniqueName = res.body.parentStockGroup.uniqueName
 			stock.closeOtherStockGroups(stockGroup, parent)
 			stockGroup.childStockGroups = res.body.childStockGroups
 			stock.selectedStockItem = null
@@ -408,6 +410,40 @@ angular.module('inventoryController', [])
 		}
 		stockService.getStock(reqParam).then(this.success, this.failure)
 	}
+
+	// delete stock
+	stock.confirmStockDelete = function(stk){
+		reqParam = {
+			companyUniqueName : $rootScope.selectedCompany.uniqueName,
+			stockGroupUniqueName: stk.stockGroup.uniqueName,
+			stockUniqueName: stk.uniqueName
+		}
+		modalService.openConfirmModal({
+		  title: 'Delete Stock',
+		  body: 'Do you want to delete ' + stk.name + ' ?',
+		  ok: 'Yes',
+		  cancel: 'No'
+		}).then(function(res) {
+		  stock.deleteStock(reqParam)
+		}, function(res) {
+		  $dismiss()
+		})
+
+	}	
+
+	stock.deleteStock = function(reqParam){
+		this.success = function(res){
+			toastr.success(res.body)
+			stock.getAllStocks()
+			stock.loadStockGroup(stock.selectedStockGrp)
+		}
+		this.failure = function(res){
+			toastr.error(res.data.message)
+		}
+		stockService.deleteStock(reqParam).then(this.success, this.failure)
+	}
+
+
 
 	//get sales accounts
 	stock.getSalesAccounts = function(query) {

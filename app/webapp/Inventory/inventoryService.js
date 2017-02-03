@@ -67,7 +67,12 @@ angular.module('inventoryServices', [])
 		getStockReport: {
 			method: 'GET',
 			url: '/company/:companyUniqueName/stock-group/get-stock-report'
+		},
+		deleteStock: {
+			method: 'DELETE',
+			url: '/company/:companyUniqueName/stock-group/delete-stock'
 		}
+
 
 	})
 
@@ -215,6 +220,17 @@ angular.module('inventoryServices', [])
 	    			stockUniqueName: reqParam.stockUniqueName,
 	    			from: reqParam.from,
 	    			to: reqParam.to
+	    		}, onSuccess, onFailure)
+	    	})
+	    }
+	    ,
+
+	    deleteStock: function(){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.deleteStock({
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			stockGroupUniqueName : reqParam.stockGroupUniqueName,
+	    			stockUniqueName: reqParam.stockUniqueName
 	    		}, onSuccess, onFailure)
 	    	})
 	    }
