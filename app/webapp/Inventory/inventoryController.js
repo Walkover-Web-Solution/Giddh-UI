@@ -172,7 +172,7 @@ angular.module('inventoryController', [])
 		}
 		var reqParam = {
 			companyUniqueName: $rootScope.selectedCompany.uniqueName,
-			stockGroupUniqueName:obj.stockUnqName
+			stockGroupUniqueName: stock.selectedStockGrp.uniqueName
 		}
 		stockService.updateStockGroup(reqParam, data).then(this.success, this.failure)
 	}
@@ -303,6 +303,8 @@ angular.module('inventoryController', [])
 	stock.getStockGroupDetail = function(stockGroup){
 		this.success = function(res){
 			stockGroup.stocks = res.body.stocks
+			res.body.parentStockGroup = res.body.parentStockGroup || {}
+			stock.updateStockGroup.parentStockGroupUniqueName = res.body.parentStockGroup.uniqueName
 			if(res.body.childStockGroups.length > 0 && stock.prevselectedStockGrp != undefined){
 				stock.parentGroupsList.push(stockGroup.uniqueName)
 			}else if(res.body.childStockGroups.length == 0 && stock.prevselectedStockGrp == undefined){
