@@ -147,7 +147,6 @@ router.get '/hierarchical-stock-groups', (req, res) ->
 
 router.get '/get-stock-detail', (req, res) ->
   hUrl = settings.envUrl + 'company/'+ req.params.companyUniqueName + '/stock-group/' + req.query.stockGroupUniqueName + '/stock/' + req.query.stockUniqueName
-  console.log(hUrl, req.query, req.params)
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -170,5 +169,28 @@ router.get '/:stockGroupUniqueName', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.delete '/delete-stock', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+ req.params.companyUniqueName + '/stock-group/' + req.query.stockGroupUniqueName + '/stock/' + req.query.stockUniqueName
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.delete '/delete-stockgrp', (req, res) ->
+  hUrl = settings.envUrl + 'company/'+ req.params.companyUniqueName + '/stock-group/' + req.query.stockGroupUniqueName
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
 
 module.exports = router

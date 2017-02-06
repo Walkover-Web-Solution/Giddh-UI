@@ -29,11 +29,12 @@
 				</div>
 
 				<button type="submit" class="btn btn-md btn-default" ng-click="stock.addGroup(stock.addStockGroup)" ng-disabled="stock.addStockGroup.stockName.length < 2 || stock.addStockGroup.stockUnqName.length < 2">Add</button>
+				<button type="submit" class="btn btn-md btn-default mrL1" ng-click="stock.addStockGroup.parentStockGroupUniqueName = '';stock.addStockGroup.stockName = '';stock.addStockGroup.stockUnqName=''">Clear</button>
 			</form>
 
 		</aside>
 
-		<aside class="col-xs-6 bdrL" ng-if="stock.selectedStockGrp">
+		<aside class="col-xs-6 bdrL" ng-if="stock.selectedStockGrp.uniqueName">
 			
 			<form name="updateStockGroup" ng-model="stock.updateStockGroup" novalidate>
 				<label>Modify Group</label>
@@ -50,10 +51,18 @@
 
 				<div class="form-group">
 					<label>Parent Stock Group</label>
-					<input type="text" name="parentStockGroupUniqueName" class="form-control" disabled ng-model="stock.updateStockGroup.parentStockGroupUniqueName" required>
+					<input 
+						type="text" 
+						name="parentStockGroupUniqueName" 
+						class="form-control"  
+						ng-model="stock.updateStockGroup.parentStockGroupUniqueName" 
+						typeahead-append-to-body="true" 
+                        uib-typeahead="stockGrp as stockGrp.name for stockGrp in stock.stockGroup.list | filter:$viewValue | limitTo: 10" 
+                        typeahead-on-select="stock.setModificationState($item)"
+						>
 				</div>
 
-				<button type="submit" class="btn btn-md btn-default" ng-click="stock.updateGroup(stock.updateStockGroup)"  ng-disabled="stock.updateStockGroup.stockName.length < 2">Modify</button>
+				<button type="submit" class="btn btn-md btn-default" ng-click="stock.updateGroup(stock.updateStockGroup)"  ng-disabled="stock.updateStockGroup.stockName.length < 2" ng-bind="stock.modificationState"></button>
 			</form>
 
 		</aside>
@@ -80,7 +89,7 @@
 			<div class="row mr0">
 				<div class="form-group col-xs-6 pdL0 pdR">
 					<label>Name<span class="required">*</span></label>
-					<input type="text" name="stockName" class="form-control" ng-model="stock.addStockItem.stockName" required>
+					<input type="text" name="stockName" class="form-control" ng-model="stock.addStockItem.stockName" required minlength="2">
 				</div>
 
 				<div class="form-group col-xs-6 pdR0 pdL">
@@ -89,7 +98,7 @@
 				</div>				
 			</div>
 			<div class="row mr0">
-				<div class="form-group col-xs-3 pdL0 pdR">
+				<div class="form-group col-xs-6 pdL0 pdR">
 					<label>Stock Unit<span class="required">*</span></label>
 					<!-- <input type="text" name="stockType" class="form-control" ng-model="stock.addStockItem.stockType" required> -->
 					<ui-select ng-model="stock.addStockItem.stockType" theme="bootstrap">
@@ -107,10 +116,10 @@
 					<input type="number" name="stockQty" class="form-control" ng-model="stock.addStockItem.stockQty">
 				</div>
 
-				<div class="form-group col-xs-3 pdR pdL">
+<!-- 				<div class="form-group col-xs-3 pdR pdL">
 					<label>Closing. Qty</label>
 					<input type="number" name="stockQty" class="form-control" ng-model="stock.addStockItem.stockClosingQty">
-				</div>	
+				</div>	 -->
 				
 				<div class="form-group col-xs-3 pdR0 pdL">
 					<label>Amount</label>
@@ -155,9 +164,9 @@
 					<input type="number" name="stockSalesRate" class="form-control" ng-model="stock.addStockItem.stockSalesRate" required>
 				</div>				
 			</div>
-			<button type="submit" class="btn btn-md btn-default"  ng-disabled="stock.addStockItem.stockName.length < 2 && stock.addStockItem.stockType.length < 1">
-				<span ng-if="stock.selectedStockItem == null" ng-click="stock.addStock(stock.addStockItem)">Add</span>
-				<span  ng-if="stock.selectedStockItem != null" ng-click="stock.updateStock(stock.addStockItem)">Modify</span>
+			<button type="submit" class="btn btn-md btn-default pad0"  ng-disabled="addStockGroup.stockName.$invalid">
+				<span style="padding:6px 12px;display:block" ng-if="stock.selectedStockItem == null" ng-click="stock.addStock(stock.addStockItem)">Add</span>
+				<span style="padding:6px 12px;display:block"  ng-if="stock.selectedStockItem != null" ng-click="stock.updateStock(stock.addStockItem)">Modify</span>
 			</button>
 		</form>
 

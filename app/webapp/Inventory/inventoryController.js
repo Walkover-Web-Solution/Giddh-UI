@@ -162,13 +162,18 @@ angular.module('inventoryController', [])
 			toastr.success('Updated successfully')
 			stock.getHeirarchicalStockGroups()
 			stock.updateStockGroup = {}
+			stock.modificationState = "Modify"
 		}
 		this.failure = function(res){
 			console.log(res)
 		}
+		if(typeof(obj.parentStockGroupUniqueName) == 'object'){
+			obj.parentStockGroupUniqueName = obj.parentStockGroupUniqueName.uniqueName
+		}
 		var data = {
 		    "name":obj.stockName,
-		    "parentStockGroupUniqueName":obj.parentStockGroupUniqueName
+		    "parentStockGroupUniqueName":obj.parentStockGroupUniqueName,
+		    "uniqueName": obj.stockUnqName
 		}
 		var reqParam = {
 			companyUniqueName: $rootScope.selectedCompany.uniqueName,
@@ -312,6 +317,7 @@ angular.module('inventoryController', [])
 			}
 			var parent = res.body.parentStockGroup || {}
 			stock.closeOtherStockGroups(stockGroup, parent)
+			stock.setModificationState(res.body) 
 			stockGroup.childStockGroups = res.body.childStockGroups
 			stock.selectedStockItem = null
 			stock.addStockItem = {}
@@ -411,6 +417,45 @@ angular.module('inventoryController', [])
 		stockService.getStock(reqParam).then(this.success, this.failure)
 	}
 
+	//delete stock
+	stock.deleteStock = function(stk){
+		this.success= function(res){
+			toastr.success(res.body)
+			stock.getStockGroupDetail(stock.selectedStockGrp)
+			stock.getAllStocks()
+		}
+		this.failure = function(res){
+
+		}
+		var stockGroupUniqueName;
+		stk.stockGroup != undefined ? stockGroupUniqueName = stk.stockGroup.uniqueName : stockGroupUniqueName = stock.selectedStockGrp.uniqueName
+		reqParam = {
+			companyUniqueName : $rootScope.selectedCompany.uniqueName,
+			stockGroupUniqueName: stockGroupUniqueName,
+			stockUniqueName: stk.uniqueName
+		}
+		stockService.deleteStock(reqParam).then(this.success, this.failure)
+
+	}
+
+
+	// delete stock group
+	stock.deleteStockGrp = function(grp){
+		this.success = function(res){
+			toastr.success(res.body)
+			stock.getHeirarchicalStockGroups()
+		}
+		this.failure = function(res){
+			toastr.error(res.data.message)
+		}
+		reqParam = {
+			companyUniqueName : $rootScope.selectedCompany.uniqueName,
+			stockGroupUniqueName: grp.uniqueName
+		}
+		stockService.deleteStockGrp(reqParam).then(this.success, this.failure)
+
+	}
+
 	//get sales accounts
 	stock.getSalesAccounts = function(query) {
 	    var reqParam = {
@@ -439,7 +484,7 @@ angular.module('inventoryController', [])
 		}
 
 		this.failure = function(res){
-
+			toastr.error(res.data.message)
 		}
 
 		var reqParam = {
@@ -448,6 +493,16 @@ angular.module('inventoryController', [])
 	    stockService.getStockUnits(reqParam).then(this.success, this.failure)
 	}
 	stock.getStockUnits()
+
+	// check whether to move selected stock grp to another
+	stock.modificationState = "Modify"
+	stock.setModificationState = function(grp){
+		if(stock.selectedStockGrp.uniqueName != grp.uniqueName)
+			stock.modificationState = "Modify and Move"
+		else
+			stock.modificationState = "Modify"
+	}
+
 
 	// to hide sidebar
 	$(document).on('click', function(e){

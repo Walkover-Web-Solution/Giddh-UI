@@ -348,6 +348,11 @@ header .navbar-nav > li.active {
     padding-right: 0;
 }
 
+.pdR0 {
+    padding-right: 0 !important;
+}
+
+
 .pdL25 {
     padding-left: 25px
 }

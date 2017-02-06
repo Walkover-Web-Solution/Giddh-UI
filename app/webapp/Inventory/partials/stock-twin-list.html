@@ -10,8 +10,9 @@
 			<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
 		</div>
 		<ul class="list-unstyled list-group" style="height:calc(100% - 80px);overflow-y:auto;">
-			<li ng-repeat="stk in stock.selectedStockGrp.stocks | filter:grpStockSrch">
+			<li class="pr" ng-repeat="stk in stock.selectedStockGrp.stocks | filter:grpStockSrch">
 				<a href="javascript:void(0)" ng-click="stock.selectStock(stk, stock.selectedStockGrp)">{{stk.name}}</a>
+				<i class="glyphicon glyphicon-trash pa cp" style="right:20px;top:10px;" ng-click="stock.deleteStock(stk)"></i>
 			</li>
 		</ul>
 	</div>
@@ -23,8 +24,9 @@
 			<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
 		</div>
 		<ul class="list-unstyled" style="height:calc(100% - 160px);overflow-y:auto;">
-			<li ng-repeat="stk in stock.allStocks">
+			<li class="pr" ng-repeat="stk in stock.allStocks">
 				<a href="javascript:void(0)" ng-click="stock.selectStock(stk)">{{stk.name}}</a>
+				<i class="glyphicon glyphicon-trash pa cp" style="right:20px;top:10px;" ng-click="stock.deleteStock(stk)"></i>
 			</li>
 		</ul>
 	</div>
