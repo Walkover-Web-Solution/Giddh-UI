@@ -14,7 +14,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.format = "dd-MM-yyyy"
   $scope.showPanel = false
   $scope.accountUnq = $stateParams.unqName  
-  $scope.accountToShow = null
+  $scope.accountToShow = {}
   $scope.mergeTransaction = false
   $scope.showEledger = true
   $scope.pageAccount = {}
@@ -1591,15 +1591,16 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.validateUniqueName = (unq) ->
     unq = unq.replace(/ |,|\//g,'')
 
-  $scope.onValueChange = (value) ->
-    switch value
-      when 'qty'
-        if $scope.selectedTxn.rate > 0
+  $scope.onValueChange = (value, txn) ->
+    if txn.particular.stock != null &&  txn.particular.stock != undefined || $scope.accountToShow.stock != null
+      switch value
+        when 'qty'
+          if $scope.selectedTxn.rate > 0
+            $scope.selectedTxn.amount = $scope.selectedTxn.rate * $scope.selectedTxn.inventory.quantity
+        when 'amount'
+          $scope.selectedTxn.rate = $scope.selectedTxn.amount/$scope.selectedTxn.inventory.quantity
+        when 'rate'
           $scope.selectedTxn.amount = $scope.selectedTxn.rate * $scope.selectedTxn.inventory.quantity
-      when 'amount'
-        $scope.selectedTxn.rate = $scope.selectedTxn.amount/$scope.selectedTxn.inventory.quantity
-      when 'rate'
-        $scope.selectedTxn.amount = $scope.selectedTxn.rate * $scope.selectedTxn.inventory.quantity
 
 
   # $scope.$on 'company-changed', (event,changeData) ->
@@ -1621,7 +1622,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $rootScope.$on('account-selected', ()->
     $scope.isSelectedAccount()
-    $rootScope.$emit('catchBreadcumbs', $scope.accountToShow.name)
+    #$rootScope.$emit('catchBreadcumbs', $scope.accountToShow.name)
   )
 
 giddh.webApp.controller 'newLedgerController', newLedgerController
