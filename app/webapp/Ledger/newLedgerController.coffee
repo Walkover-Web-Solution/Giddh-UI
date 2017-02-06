@@ -735,6 +735,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #setPopoverPlacement(e.clientY)
     if $scope.accountToShow.stock != null && txn.inventory == undefined
       txn.inventory = {}
+    txn.rate = $filter('number')(Number(txn), 4)
     $scope.selectedTxn = txn
     if $scope.prevTxn != null
       $scope.prevTxn.isOpen = false
@@ -1602,6 +1603,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         when 'rate'
           $scope.selectedTxn.amount = $scope.selectedTxn.rate * $scope.selectedTxn.inventory.quantity
 
+  $scope.checkStockAccount = (item, txn) ->
+    if(item.stock == null && $scope.accountToShow.stock == null)
+      txn.inventory = null
+    
 
   # $scope.$on 'company-changed', (event,changeData) ->
   #   # when company is changed, redirect to manage company page
