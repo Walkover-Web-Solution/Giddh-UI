@@ -23,6 +23,7 @@ var cors = require('cors')
 var requestIp = require('request-ip');
 var multer = require('multer');
 var rest = require('restler');
+var Raven = require('raven');
 
 var app = settings.express();
 
@@ -37,6 +38,22 @@ app.disable('x-powered-by');
 //})
 //
 //app.use(agent)
+
+//SENTRY.IO START: Must configure Raven before doing anything else with it
+Raven.config('https://9f2f538e36c9425f8f9b4edc27a572e6:d59791f669014198a6da61f2c14a3f46@sentry.io/136011').install();
+// The request handler must be the first middleware on the app
+app.use(Raven.requestHandler());
+// The error handler must be before any other error middleware
+app.use(Raven.errorHandler());
+// Optional fallthrough error handler
+app.use(function onError(err, req, res, next) {
+    // The error id is attached to `res.sentry` to be returned
+    // and optionally displayed to the user for support.
+    res.statusCode = 500;
+    res.end(res.sentry + '\n');
+});
+//SENTRY.IO END
+
 var port = process.env.PORT || 8000;
 //enabling cors
 app.use(cors())
