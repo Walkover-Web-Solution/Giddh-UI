@@ -99,6 +99,10 @@ angular.module('recurringEntryController', [])
 		      }
 		    }
 		  ],
+		  "recurringEntryDetail": {
+		  	"account":{},
+		  	"durationType": ''
+		  },
 		  "voucherType": recEntry.voucherTypes[0],
 		  "entryDate": recEntry.today,
 		  "applyApplicableTaxes": "false",
@@ -108,8 +112,8 @@ angular.module('recurringEntryController', [])
 		  "description": "",
 		  "showPanel":true,
 		  "taxes": [],
-		  "isRecurring":true,
-		  "duration":recEntry.durationList[0]
+		  "isRecurring":true
+		  // "duration":recEntry.durationList[0]
 		}
 		return this.model;
 	}
