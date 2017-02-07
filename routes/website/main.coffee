@@ -1,4 +1,5 @@
 settings = require('../util/settings')
+requestIp = require('request-ip')
 router = settings.express.Router()
 
 dirName = settings.path.resolve(__dirname, '..', '..')
@@ -26,10 +27,20 @@ router.get '/sindhu', (req,res) ->
 #   res.sendFile 'sindhu.html', panelOption
 
 router.get '/', (req, res) ->
-  res.sendFile 'index.html', options
+  ip = requestIp.getClientIp(req)
+  geo = settings.geoIp.lookup(ip)
+  if geo != null && geo.country != 'IN'
+    res.sendFile 'other-country.html'
+  else
+    res.sendFile 'index.html', options
 
 router.get '/index', (req, res) ->
-  res.sendFile 'index.html', options
+  ip = requestIp.getClientIp(req)
+  geo = settings.geoIp.lookup(ip)
+  if geo != null && geo.country != 'IN'
+    res.sendFile 'other-country.html'
+  else
+    res.sendFile 'index.html', options
 
 router.get '/affiliate', (req,res) ->
   res.sendFile 'joinus.html', options
