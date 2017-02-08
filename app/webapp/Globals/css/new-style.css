@@ -4459,6 +4459,114 @@ table.proforma-particulars{
     margin-left: 320px;
 }
 
+/* recurring entry */
+
+.recurring-entry-grid >  .row{
+    margin:0 0 10px;
+}
+
+.recurring-entry-grid .re-header{
+    background:#337ab7;
+    overflow: hidden;
+}
+
+.recurring-entry-grid .re-header > div:not(last-child){
+    border-right:1px solid #fff;
+    color:#fff;
+    padding:5px;
+}
+
+.recurring-entry-grid .re-body .row{
+    padding:0;
+    margin:0;
+    border:1px solid #e0e0e0;
+    border-top:none;
+    max-height: 42px;
+    transition: max-height 0.15s ease-out;
+}
+
+.recurring-entry-grid .recurring-entry{
+    overflow: hidden;
+}
+
+.recurring-entry-grid .recurring-entry.animate{
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.7);
+    max-height: 800px;
+    transition: max-height 0.5s ease-out;
+}
+
+.recurring-entry-grid .re-body .row > div:not(.row-panel){
+    padding:0;
+    height:42px;
+}
+
+.recurring-entry-grid .re-body .row > div > input:disabled, .recurring-entry-grid .re-body .row > div > input:active, .recurring-entry-grid .re-body .row > div > select{
+    width:100%;
+    height:100%;
+    padding:5px;
+    background: transparent;
+    border: none;
+    outline:none;
+    box-shadow: none;
+    text-align: center;
+}
+
+.recurring-entry-grid .re-body .row > div > input{
+    width:100%;
+    height:100%;
+    padding:5px;
+    text-align: center;
+}
+
+.recurring-entry-grid .re-body .row > div > input:focus{
+    border: none;
+    outline:none;
+    box-shadow: none;
+}
+
+.recurring-entry-grid .re-body .row > .row-panel{
+    width:100%;
+    height:auto;
+    padding:10px;
+    background: #fff;
+    overflow: hidden;
+    border-top:1px solid #f5f5f5;
+    position: relative;
+}
+
+.recurring-entry-grid .re-body .row.animate{
+    max-height: 300px;
+    transition: max-height 0.3s ease-out;
+}
+
+.recurring-entry-grid .re-body .row.animate input{
+    border:1px solid #f0f0f0;
+}
+
+.recurring-entry-grid .re-body .row.animate input:disabled{
+    background: #e0e0e0;
+}
+
+
+.recurring-entry-grid .filters{
+    padding:10px 0;
+    border-top:1px solid #e0e0e0;
+}
+
+.recurring-entry-grid .filters ul li input, .recurring-entry-grid .filters ul li input:focus{
+    border-radius: 0;
+    height:100%;
+    width:100%;
+}
+
+.r82{
+    right:82px;
+}
+
+.r100{
+    right: 100px;
+}
+
 .rate{
     font-size:10px;
     right:calc(50% + 10px);

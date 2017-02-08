@@ -8,7 +8,8 @@ angular.module('recurringEntryService', [])
 		'page': this.page,
 		'count': this.count,
 		'from' :this.from,
-		'to': this.to
+		'to': this.to,
+		'recurringentryUniqueName': this.recurringentryUniqueName
 	},
 	{
 		create: {
@@ -22,6 +23,14 @@ angular.module('recurringEntryService', [])
 		getDuration:{
 			method: 'GET',
 			url: '/company/:companyUniqueName/recurring-entry/duration-type'
+		},
+		update: {
+			method: 'PUT',
+			url: '/company/:companyUniqueName/recurring-entry/update'
+		},
+		delete:{
+			method: 'DELETE',
+			url: '/company/:companyUniqueName/recurring-entry/delete'
 		}
 	})
 	recurringEntryService = {
@@ -59,6 +68,26 @@ angular.module('recurringEntryService', [])
 	    		return recEntry.getDuration({
 	    			companyUniqueName: reqParam.companyUniqueName
 	    		}, onSuccess, onFailure)
+	    	})
+	    },
+	    update: function(reqParam, data){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return recEntry.update({
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			accountUniqueName: reqParam.accountUniqueName,
+	    			recurringentryUniqueName: reqParam.recurringentryUniqueName
+	    		}, data, onSuccess, onFailure)
+
+	    	})
+	    },
+	    delete: function(reqParam, data){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return recEntry.delete({
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			accountUniqueName: reqParam.accountUniqueName,
+	    			recurringentryUniqueName: reqParam.recurringentryUniqueName
+	    		}, data, onSuccess, onFailure)
+
 	    	})
 	    }
 	}
