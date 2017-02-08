@@ -2,12 +2,15 @@
 		<input type="text" ng-model="ledger.entryDate" placeholder="entry date"  ng-disabled="!entry.showPanel"/>	
 	</div>
 	<div class="col-xs-3 text-center">
-		<input type="text"
-		    ng-disabled="!entry.showPanel" 
+		<input 
+			class="background-transparent"
+			type="text"
+		    ng-disabled="!entry.showPanel || !ledger.newEntry" 
 			typeahead-append-to-body="true" 
 			uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | filter:$viewValue | limitTo: 10"
 			typeahead-template-url="accountPopUp.html"
-			ng-model="ledger.account">		
+			ng-model="ledger.recurringEntryDetail.account"
+			ng-dblclick="$event.stopPropagation()">		
 	</div>
 	<div class="col-xs-3 text-center">
 		<input type="text"
@@ -15,40 +18,50 @@
 			typeahead-append-to-body="true" 
 			uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | filter:$viewValue | limitTo: 10"
 			typeahead-template-url="accountPopUp.html"
-			ng-model="entry.particular">
+			ng-model="entry.particular"
+			ng-dblclick="$event.stopPropagation()">
 	</div>
 	<div class="col-xs-1 text-center">
 		<input type="text"  
-			ng-disabled="!entry.showPanel || !(entry.particular.stock != null || entry.baseAccount.stock != null)"
+			ng-disabled="!entry.showPanel || !(entry.particular.stock != null || ledger.recurringEntryDetail.account.stock != null)"
 			ng-model="entry.inventory.quantity"
+			ng-dblclick="$event.stopPropagation()"
 		>
 	</div>
 	<div class="col-xs-1 text-center">
-		<select  ng-disabled="!entry.showPanel" ng-model="ledger.duration" ng-options="duration for duration in recEntry.durationList">
-			<option value="Duration">Duration</option>
-		</select>
+		<input type="text"
+			ng-disabled="!entry.showPanel" 
+			typeahead-append-to-body="true" 
+			uib-typeahead="duration for duration in recEntry.durationList | filter:$viewValue"
+			ng-model="ledger.recurringEntryDetail.durationType"
+			ng-dblclick="$event.stopPropagation()">
 	</div>
 	<div class="col-xs-1 text-center">
 		<input type="text"  
 			ng-disabled="!entry.showPanel"
-			ng-model="entry.amount">
+			ng-model="entry.amount"
+			ng-dblclick="$event.stopPropagation()">
 	</div>
 
 	<div class="col-xs-1 text-center">
-		<select  ng-disabled="!entry.showPanel" ng-model="ledger.voucher" ng-options="voucher as voucher.name for voucher in recEntry.voucherTypes">
-			<option value="Voucher">Voucher Type</option>
-		</select>
+		<input type="text"
+			ng-disabled="!entry.showPanel" 
+			typeahead-append-to-body="true" 
+			uib-typeahead="voucher as voucher.name for voucher in recEntry.voucherTypes | filter:$viewValue"
+			ng-model="ledger.voucher"
+			ng-dblclick="$event.stopPropagation()">	
 	</div>
 
 	<div class="col-xs-1 text-center">
-		<select type="text"  
-			ng-disabled="!entry.showPanel"
+		<input type="text"
+			ng-disabled="!entry.showPanel" 
+			typeahead-append-to-body="true" 
+			uib-typeahead="type for type in recEntry.entryTypes | filter:$viewValue"
 			ng-model="entry.type"
-			ng-options="type for type in recEntry.entryTypes">	
-		</select>
+			ng-dblclick="$event.stopPropagation()">
 	</div>
 
-	<div class="row-panel" 
+	<div class="row-panel pr" 
 		ng-show="entry.showPanel" 
 		ng-include="'/public/webapp/recurring-entry/partials/entry-panel.html'">		
 	</div>				

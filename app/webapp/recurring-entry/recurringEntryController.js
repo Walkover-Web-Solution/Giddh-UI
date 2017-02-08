@@ -21,6 +21,16 @@ angular.module('recurringEntryController', [])
 		'YEARLY'
 	]
 
+	//btn style
+	recEntry.btnStyle = {
+		add: {
+			"right":"82px"
+		},
+		update:{
+			"right:":"100px"
+		}
+	}
+
 	//voucher types
 	recEntry.voucherTypes = [
 	    {
@@ -66,24 +76,30 @@ angular.module('recurringEntryController', [])
 	//tax list
 	recEntry.taxes = []
 
+	//select and highlight ledger
+	recEntry.selectLedger = function(ledger){
+		if(recEntry.selectedLedger){
+			recEntry.prevLedger = recEntry.selectedLedger
+		}
+		recEntry.selectedLedger = ledger
+		recEntry.selectedLedger.highlight = true
+		if(recEntry.prevLedger && recEntry.prevLedger != recEntry.selectedLedger){
+			recEntry.prevLedger.highlight = false
+		}
+	}
+
+
 	//select entry on double click, show current entry panel, hide previous
-	recEntry.selectEntry = function(entry, index){
+	recEntry.selectEntry = function(entry, index, ledger){
 		if(recEntry.selectedEntry != null){
 			recEntry.prevEntry = recEntry.selectedEntry
 		}
 		recEntry.selectedEntry = entry
-		//recEntry.selectedEntry.index = index
 		recEntry.selectedEntry.showPanel = !recEntry.selectedEntry.showPanel
-		// if(recEntry.prevEntry != undefined && recEntry.prevEntry.index != index){
-		// 	recEntry.prevEntry.showPanel = !recEntry.prevEntry.showPanel
-		// }
-		// if(recEntry.selectedEntry != undefined && recEntry.selectedEntry.index != index){
-		// 	recEntry.prevEntry = recEntry.selectedEntry
-		// } 
-		// recEntry.selectedEntry = entry
-		// recEntry.selectedEntry.index = index
-		// entry.showPanel = !entry.showPanel
-		// if(recEntry.prevEntry != undefined) recEntry.prevEntry.showPanel = false
+		if(recEntry.prevEntry && recEntry.prevEntry != recEntry.selectedEntry){
+			recEntry.prevEntry.showPanel = false
+		}
+		recEntry.selectLedger(ledger)
 	}
 
 	//blank entry model 
@@ -93,13 +109,17 @@ angular.module('recurringEntryController', [])
 		    {
 		      "amount": 0,
 		      "particular": "",
-		      "type": "debit",
+		      "type": recEntry.entryTypes[0],
 		      "inventory":{
 		    	"quantity":0
 		      }
 		    }
 		  ],
-		  "voucherType": recEntry.voucherTypes[0],
+		  "recurringEntryDetail": {
+		  	"account":'',
+		  	"durationType": recEntry.durationList[1]
+		  },
+		  "voucher":recEntry.voucherTypes[0] ,
 		  "entryDate": recEntry.today,
 		  "applyApplicableTaxes": "false",
 		  "isInclusiveTax": "false",
@@ -109,7 +129,8 @@ angular.module('recurringEntryController', [])
 		  "showPanel":true,
 		  "taxes": [],
 		  "isRecurring":true,
-		  "duration":recEntry.durationList[0]
+		  "newEntry" : true
+		  // "duration":recEntry.durationList[0]
 		}
 		return this.model;
 	}
@@ -139,6 +160,7 @@ angular.module('recurringEntryController', [])
 	//add new transaction
 	recEntry.addNewTxn = function(ledger){
 		var txn = new recEntry.txnModel()
+		txn.newTxn = true
 		ledger.transactions.push(txn)
 	}
 
@@ -161,7 +183,6 @@ angular.module('recurringEntryController', [])
 	//get all recurring entries
 	recEntry.getAllEntries = function(){
 		this.success = function(res){
-			console.log(res)
 			recEntry.rows = res.body.results
 		}
 
@@ -178,22 +199,24 @@ angular.module('recurringEntryController', [])
 	//create recurring entry
 	recEntry.createEntry = function(ledger){
 		this.success = function(res){
-			console.log(res)
+			ledger = angular.copy(res.body[0], ledger)
+			toastr.success('Entry created successfully')
 		}
 
 		this.failure = function(res){
-			console.log(res)
+			toastr.error(res.data.message)
 		}
 
 		var entry = {}
-		entry = _.extend(ledger, entry)
+		entry = angular.copy(ledger, entry)
 		entry.transactions = recEntry.formatTxns(entry.transactions)
 		entry.taxes = recEntry.formatTaxes(entry.taxes)
-		entry.voucherType = ledger.voucherType.name
+		entry.voucherType = ledger.voucher.name
+		entry.duration = ledger.recurringEntryDetail.durationType
 		var reqParam = {}
 		reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-		reqParam.accountUniqueName = ledger.account.uniqueName
-		delete entry.account
+		reqParam.accountUniqueName = ledger.recurringEntryDetail.account.uniqueName
+		delete entry.recurringEntryDetail
 		delete entry.showPanel
 		recurringEntryService.createReccuringEntry(reqParam, entry).then(this.success, this.failure)
 	}
@@ -241,5 +264,52 @@ angular.module('recurringEntryController', [])
 	}
 	recEntry.getDuration()
 
+	// update existing entry
+	recEntry.updateEntry = function(ledger){
+		this.success = function(res){
+			ledger = _.extendOwn(ledger, res.body)
+			toastr.success('Entry updated successfully')
+		}
+		this.failure = function(res){
+			toastr.error(res.data.message)
+		}
+		var entry = angular.copy(ledger, entry)
+		entry.duration = ledger.recurringEntryDetail.durationType
+		entry.voucherType = ledger.voucher.name
+		entry.isRecurring = true
+		var reqParam = {}
+		reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+		reqParam.accountUniqueName = ledger.recurringEntryDetail.account.uniqueName
+		reqParam.recurringentryUniqueName = ledger.recurringEntryDetail.uniqueName
+		delete entry.recurringEntryDetail 
+		delete entry.updatedBy
+		delete entry.updatedAt
+		delete entry.voucher
+		delete entry.voucherNo
+		recurringEntryService.update(reqParam, entry).then(this.success, this.failure)
+
+	}
+
+	//delete entry
+	recEntry.deleteEntry = function(ledger, index){
+		this.success = function(res){
+			toastr.success(res.body)
+			recEntry.rows.splice(index, 1)
+		}
+		this.failure = function(res){
+			toastr.error(res.data.message)
+		}
+		var reqParam = {}
+		reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+		reqParam.accountUniqueName = ledger.recurringEntryDetail.account.uniqueName
+		reqParam.recurringentryUniqueName = ledger.recurringEntryDetail.uniqueName
+		recurringEntryService.delete(reqParam).then(this.success, this.failure)
+	}
+
+
+	// remove blank transaction
+	recEntry.removeTxn = function(ledger, index){
+		ledger.transactions.splice(index, 1)
+	}
 	return recEntry;
 }])

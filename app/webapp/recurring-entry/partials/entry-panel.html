@@ -1,3 +1,5 @@
+<i class="glyphicon glyphicon-remove pa cp" style="top:10px;right:5px;" ng-click="recEntry.removeTxn(ledger, $index)" ng-if="entry.newTxn"></i>
+
 <!--tax list-->
 	<div class="oh pull-left oyAuto" ng-if="ledger.taxes.length > 0" style="max-height:90%;">
 		<label>Taxes</label>
@@ -18,7 +20,7 @@
 <!-- description-->
 <div class="form-group max200 pull-left mrL1 mrR1">
   <label for="comment">Description:</label>
-  <textarea class="form-control" rows="2" id="description" ng-model="ledger.description"></textarea>
+  <textarea class="form-control" rows="2" id="description" ng-model="ledger.description" ng-dblclick="$event.stopPropagation()"></textarea>
 
   <label class="mrT1" for="comment">Tags</label>
   <input type="text" class="form-control" id="tag" ng-model="ledger.tag">
@@ -28,7 +30,7 @@
 <div class="checkbox pull-left">
 	<!-- unconfirmed entry-->
 	<div class="checkbox">
-	  <label><input type="checkbox" ng-model="ledger.unconfirmedEntry">Unconfirmed Entry</label>
+	  <label><input type="checkbox" ng-model="ledger.unconfirmedEntry" >Unconfirmed Entry</label>
 	</div>
 	<!-- /unconfirmed entry-->
 
@@ -48,12 +50,16 @@
 
 
 <!-- prorated date-->
-<div class="form-group max200 pull-left mrL1">
+<div class="form-group max200 pull-left mrL1" ng-if="ledger.newEntry">
   <label>Pro Rated Date</label>
-  <input type="text" ng-model="ledger.proratedDate" ng-init="ledger.proratedDate = recEntry.today">
+  <input type="text" ng-model="ledger.proratedDate" ng-init="ledger.proratedDate = recEntry.today" ng-dblclick="$event.stopPropagation()">
 </div>
 <!-- /prorated date-->
 
 <!--save button-->
-<button class="btn btn-md-btn-primary pa" style="right:82px;bottom:10px;" ng-click="recEntry.addNewTxn(ledger)">Add Transaction</button>
-<button class="btn btn-md btn-success pa" style="right:10px;bottom:10px;" ng-click="recEntry.createEntry(ledger)">Save</button>
+<div class="pa oh" style="right:10px;bottom:10px">
+	<button class="btn btn-md btn-warning pull-left" ng-click="recEntry.deleteEntry(ledger, $parent.$index)" ng-if="!ledger.newEntry">Delete Entry</button>
+	<button class="btn btn-md btn-default pull-left mrL1" ng-click="recEntry.addNewTxn(ledger)">Add Transaction</button>
+	<button class="btn btn-md btn-success pull-left mrL1" ng-click="recEntry.createEntry(ledger)" ng-if="ledger.newEntry">Save</button>
+	<button class="btn btn-md btn-success pull-left mrL1" ng-click="recEntry.updateEntry(ledger)" ng-if="!ledger.newEntry">Update</button>
+</div>
