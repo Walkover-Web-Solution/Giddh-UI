@@ -86,7 +86,7 @@ angular.module('inventoryController', [])
 			stock.groupListHr = res.body
 		},
 		this.failure = function(res){
-			console.log(res)
+			toastr.error(res.data.message)
 		}
 
 		var reqParam = {}
@@ -165,7 +165,7 @@ angular.module('inventoryController', [])
 			stock.modificationState = "Modify"
 		}
 		this.failure = function(res){
-			console.log(res)
+			toastr.error(res.data.message)
 		}
 		if(typeof(obj.parentStockGroupUniqueName) == 'object'){
 			obj.parentStockGroupUniqueName = obj.parentStockGroupUniqueName.uniqueName
@@ -273,7 +273,7 @@ angular.module('inventoryController', [])
 			stock.selectedStockGrp.childStockGroups = res.body
 		}
 		this.failure = function(res){
-			console.log(res)
+			toastr.error(res.data.message)
 		}
 		reqParam = {
 			companyUniqueName: $rootScope.selectedCompany.uniqueName,
@@ -425,7 +425,7 @@ angular.module('inventoryController', [])
 			stock.getAllStocks()
 		}
 		this.failure = function(res){
-
+			toastr.error(res.data.message)
 		}
 		var stockGroupUniqueName;
 		stk.stockGroup != undefined ? stockGroupUniqueName = stk.stockGroup.uniqueName : stockGroupUniqueName = stock.selectedStockGrp.uniqueName
