@@ -14,11 +14,11 @@
   Please select an Account to load its Ledger
 </section>
 
-<div id="ledger" class="oyAuto" ng-show="!showLoader" cover-page>
+<div id="ledger" class="oyAuto" ng-show="!showLoader" cover-page ng-class="{'mtop-neg-54':!flyAccounts}">
  <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
     <section class="container-fluid" ng-if="accountUnq.length > 0">
       <div class="pdT1">
-        <div class="ledger-top-panel clearfix" ng-class="{'while-panel':showPanel}" ng-hide="showPanel">
+        <div class="ledger-top-panel clearfix" ng-class="{'while-panel':showPanel, 'mLeft295':!flyAccounts}" ng-hide="showPanel">
           <div class="form-inline pdB1 ledgHead">
             <form name="fromToDateForm" novalidate class="form-group mrR1 pull-left">
               <div class="form-group">
