@@ -217,12 +217,12 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     controller: 'stockController'
     controllerAs: 'stock'
   )
-  # .state('recurring-entry',
-  #   url: '/recurring-entry'
-  #   templateUrl: '/public/webapp/recurring-entry/recurring-entry.html'
-  #   controller: 'recurringEntryController'
-  #   controllerAs: 'recEntry'
-  # )
+  .state('recurring-entry',
+    url: '/recurring-entry'
+    templateUrl: '/public/webapp/recurring-entry/recurring-entry.html'
+    controller: 'recurringEntryController'
+    controllerAs: 'recEntry'
+  )
   .state('/thankyou',
     url: '/thankyou'
     templateUrl: appendThis+'/public/webapp/views/thanks.html'

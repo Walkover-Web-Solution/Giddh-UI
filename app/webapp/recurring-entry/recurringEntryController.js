@@ -5,7 +5,7 @@ angular.module('recurringEntryController', [])
 	if (_.isUndefined($rootScope.selectedCompany)) $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
 
 	var recEntry = this;
-	
+	recEntry.showLoader = true
 	recEntry.today = $filter('date')(new Date(), "dd-MM-yyyy")
 	recEntry.format = 'dd-MM-yyyy'
 
@@ -184,10 +184,12 @@ angular.module('recurringEntryController', [])
 	recEntry.getAllEntries = function(){
 		this.success = function(res){
 			recEntry.rows = res.body.results
+			recEntry.showLoader = false
 		}
 
 		this.failure = function(res){
 			toastr.error(res.data.message)
+			recEntry.showLoader = false
 		}
 		reqParam = {}
 		reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
