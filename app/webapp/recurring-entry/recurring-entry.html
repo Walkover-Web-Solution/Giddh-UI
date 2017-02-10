@@ -1,4 +1,4 @@
-<section class="col-xs-12 pd2 h100">
+<section class="col-xs-12 pd2 h100 oyAuto" cover-page>
 	
 <div class="loader mrT4" ng-if="recEntry.showLoader">
 	  <span></span>
@@ -11,13 +11,13 @@
 	<div class="recurring-entry-grid" ng-if="!recEntry.showLoader">
 		<div class="row mar0">
 			<i class="glyphicon glyphicon-plus pull-right f24 cp" ng-click="recEntry.addNewEntry()"></i>
-			<i class="glyphicon glyphicon-filter pull-right f24 cp mrR1" ng-class="{'warning':recEntry.showFilters}" ng-click="recEntry.showFilters = !recEntry.showFilters"></i>
+			<!-- <i class="glyphicon glyphicon-filter pull-right f24 cp mrR1" ng-class="{'warning':recEntry.showFilters}" ng-click="recEntry.showFilters = !recEntry.showFilters"></i> -->
 		</div>
 
-
+<!-- 
 		<div class="filters" ng-include="'/public/webapp/recurring-entry/partials/filters.html'" ng-if="recEntry.showFilters">
 			
-		</div>
+		</div> -->
 
 
 
