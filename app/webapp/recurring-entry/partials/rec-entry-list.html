@@ -8,7 +8,6 @@
 		    ng-disabled="!entry.showPanel || !ledger.newEntry" 
 			typeahead-append-to-body="true" 
 			uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | filter:$viewValue | limitTo: 10"
-			typeahead-template-url="accountPopUp.html"
 			ng-model="ledger.recurringEntryDetail.account"
 			ng-dblclick="$event.stopPropagation()">		
 	</div>
@@ -17,7 +16,6 @@
 			ng-disabled="!entry.showPanel" 
 			typeahead-append-to-body="true" 
 			uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | filter:$viewValue | limitTo: 10"
-			typeahead-template-url="accountPopUp.html"
 			ng-model="entry.particular"
 			ng-dblclick="$event.stopPropagation()">
 	</div>
