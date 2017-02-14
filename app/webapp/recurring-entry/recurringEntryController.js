@@ -34,35 +34,35 @@ angular.module('recurringEntryController', [])
 	//voucher types
 	recEntry.voucherTypes = [
 	    {
-	      name: "Sales",
+	      name: "sales",
 	      shortCode: "sal"
 	    },
 	    {
-	      name: "Purchases",
+	      name: "purchase",
 	      shortCode: "pur"
 	    },
 	    {
-	      name: "Receipt",
+	      name: "receipt",
 	      shortCode: "rcpt"
 	    },
 	    {
-	      name: "Payment",
+	      name: "payment",
 	      shortCode: "pay"
 	    },
 	    {
-	      name: "Journal",
+	      name: "journal",
 	      shortCode: "jr"
 	    },
 	    {
-	      name: "Contra",
+	      name: "contra",
 	      shortCode: "cntr"
 	    },
 	    {
-	      name: "Debit Note",
+	      name: "debit note",
 	      shortCode: "debit note"
 	    },
 	    {
-	      name: "Credit Note",
+	      name: "dredit note",
 	      shortCode: "credit note"
 	    }
 	  ]
@@ -152,9 +152,12 @@ angular.module('recurringEntryController', [])
 	recEntry.addNewEntry = function(){
 		var entry = new recEntry.entryModel()
 		entry.taxes = recEntry.taxes
-		recEntry.rows.unshift(entry)
-		if(recEntry.prevEntry) recEntry.prevEntry.showPanel = false
-		
+		if(!recEntry.rows[0]['newEntry']){
+			recEntry.rows.unshift(entry)
+			recEntry.selectEntry(entry.transactions[0], 0, entry)
+		}else{
+			recEntry.selectEntry(entry.transactions[0], 0, entry)
+		}
 	}
 
 	//add new transaction
@@ -301,11 +304,16 @@ angular.module('recurringEntryController', [])
 		this.failure = function(res){
 			toastr.error(res.data.message)
 		}
-		var reqParam = {}
-		reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-		reqParam.accountUniqueName = ledger.recurringEntryDetail.account.uniqueName
-		reqParam.recurringentryUniqueName = ledger.recurringEntryDetail.uniqueName
-		recurringEntryService.delete(reqParam).then(this.success, this.failure)
+		if(ledger.newEntry){
+			recEntry.rows.splice(index, 1)
+		}else{
+			var reqParam = {}
+			reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+			reqParam.accountUniqueName = ledger.recurringEntryDetail.account.uniqueName
+			reqParam.recurringentryUniqueName = ledger.recurringEntryDetail.uniqueName
+			recurringEntryService.delete(reqParam).then(this.success, this.failure)			
+		}
+
 	}
 
 
