@@ -20,43 +20,63 @@
 			ng-dblclick="$event.stopPropagation()">
 	</div>
 	<div class="col-xs-1 text-center">
-		<input type="text"  
+		<input type="number"  
 			ng-disabled="!entry.showPanel || !(entry.particular.stock != null || ledger.recurringEntryDetail.account.stock != null)"
 			ng-model="entry.inventory.quantity"
 			ng-dblclick="$event.stopPropagation()"
 		>
 	</div>
 	<div class="col-xs-1 text-center">
-		<input type="text"
+		<!-- <input type="text"
 			ng-disabled="!entry.showPanel" 
 			typeahead-append-to-body="true" 
 			uib-typeahead="duration for duration in recEntry.durationList | filter:$viewValue"
 			ng-model="ledger.recurringEntryDetail.durationType"
-			ng-dblclick="$event.stopPropagation()">
+			ng-dblclick="$event.stopPropagation()"> -->
+		<select 
+			ng-options="duration for duration in recEntry.durationList"
+			ng-model="ledger.recurringEntryDetail.durationType"
+			ng-dblclick="$event.stopPropagation()"
+			ng-disabled="!entry.showPanel"
+		></select>	
 	</div>
 	<div class="col-xs-1 text-center">
-		<input type="text"  
+		<input type="number"  
 			ng-disabled="!entry.showPanel"
 			ng-model="entry.amount"
 			ng-dblclick="$event.stopPropagation()">
 	</div>
 
 	<div class="col-xs-1 text-center">
-		<input type="text"
+<!-- 		<input type="text"
 			ng-disabled="!entry.showPanel" 
-			typeahead-append-to-body="true" 
-			uib-typeahead="voucher as voucher.name for voucher in recEntry.voucherTypes | filter:$viewValue"
 			ng-model="ledger.voucher"
-			ng-dblclick="$event.stopPropagation()">	
+			ng-dblclick="$event.stopPropagation()"
+			ng-show="!entry.showPanel"
+			> -->
+			<select 
+				ng-options="voucher.name for voucher in recEntry.voucherTypes track by voucher.name"
+				ng-model="ledger.voucher"
+				ng-dblclick="$event.stopPropagation()"
+				ng-disabled="!entry.showPanel"
+			>
+			</select>	
 	</div>
 
 	<div class="col-xs-1 text-center">
-		<input type="text"
+<!-- 		<input type="text"
 			ng-disabled="!entry.showPanel" 
 			typeahead-append-to-body="true" 
 			uib-typeahead="type for type in recEntry.entryTypes | filter:$viewValue"
 			ng-model="entry.type"
-			ng-dblclick="$event.stopPropagation()">
+			ng-dblclick="$event.stopPropagation()"> -->
+		<select 
+			ng-options="type for type in recEntry.entryTypes"
+			ng-model="entry.type"
+			ng-dblclick="$event.stopPropagation()"
+			ng-disabled="!entry.showPanel"
+		>
+		</select>
 	</div>
 
 	<div class="row-panel pr" 
