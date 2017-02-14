@@ -52,14 +52,14 @@
 <!-- prorated date-->
 <div class="form-group max200 pull-left mrL1 pr" ng-if="ledger.newEntry">
   <label>Pro Rated Date</label>
-  <input type="text" ng-model="ledger.proratedDate" ng-init="ledger.proratedDate = recEntry.today" ng-dblclick="$event.stopPropagation()">
+  <input class="width100" type="text" ng-model="ledger.proratedDate" ng-init="ledger.proratedDate = recEntry.today" ng-dblclick="$event.stopPropagation()">
   <i class="glyphicon glyphicon-remove pa" style="top:27px;right:10px" ng-click="ledger.proratedDate = ''"></i>
 </div>
 <!-- /prorated date-->
 
 <!--save button-->
 <div class="pa oh" style="right:10px;bottom:10px">
-	<button class="btn btn-md btn-warning pull-left" ng-click="recEntry.deleteEntry(ledger, $parent.$index)">Delete Entry</button>
+	<button class="btn btn-md btn-warning pull-left" ng-click="recEntry.deleteEntry(ledger)">Delete Entry</button>
 	<button class="btn btn-md btn-default pull-left mrL1" ng-click="recEntry.addNewTxn(ledger)">Add Transaction</button>
 	<button class="btn btn-md btn-success pull-left mrL1" ng-click="recEntry.createEntry(ledger)" ng-if="ledger.newEntry">Save</button>
 	<button class="btn btn-md btn-success pull-left mrL1" ng-click="recEntry.updateEntry(ledger)" ng-if="!ledger.newEntry">Update</button>

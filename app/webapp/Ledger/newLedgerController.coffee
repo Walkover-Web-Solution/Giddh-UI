@@ -736,7 +736,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if $scope.accountToShow.stock != null && txn.inventory == undefined
       txn.inventory = {}
       txn.rate = $scope.accountToShow.stock.rate
-    if txn.inventory.stock != undefined
+    if txn.inventory && txn.inventory.stock
       txn.rate = txn.amount/txn.inventory.quantity
     #txn.rate = $filter('number')(Number(txn.rate), 4)
     $scope.selectedTxn = txn

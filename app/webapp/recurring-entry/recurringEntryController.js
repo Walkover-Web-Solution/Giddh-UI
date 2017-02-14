@@ -152,9 +152,11 @@ angular.module('recurringEntryController', [])
 	recEntry.addNewEntry = function(){
 		var entry = new recEntry.entryModel()
 		entry.taxes = recEntry.taxes
-		if(!recEntry.rows[0]['newEntry']){
+		if(recEntry.rows.length > 0 && !recEntry.rows[0]['newEntry']){
 			recEntry.rows.unshift(entry)
 			recEntry.selectEntry(entry.transactions[0], 0, entry)
+		}else if(recEntry.rows.length == 0){
+			recEntry.rows.unshift(entry)
 		}else{
 			recEntry.selectEntry(entry.transactions[0], 0, entry)
 		}
@@ -297,16 +299,18 @@ angular.module('recurringEntryController', [])
 
 	//delete entry
 	recEntry.deleteEntry = function(ledger, index){
+		var idx;
 		this.success = function(res){
 			toastr.success(res.body)
-			recEntry.rows.splice(index, 1)
+			recEntry.rows.splice(idx, 1)
 		}
 		this.failure = function(res){
 			toastr.error(res.data.message)
 		}
 		if(ledger.newEntry){
-			recEntry.rows.splice(index, 1)
+			recEntry.rows.splice(0, 1)
 		}else{
+			idx = recEntry.getLedgerIndex(ledger)
 			var reqParam = {}
 			reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
 			reqParam.accountUniqueName = ledger.recurringEntryDetail.account.uniqueName
@@ -316,6 +320,16 @@ angular.module('recurringEntryController', [])
 
 	}
 
+	//get ledger index
+	recEntry.getLedgerIndex = function(ledger){
+		var ledgerIndex;
+		_.each(recEntry.rows, function(ldr, index){
+			if(!ledger.newEntry && ledger.uniqueName && ledger.uniqueName == ldr.uniqueName){
+				ledgerIndex = index
+			}
+		})
+		return ledgerIndex
+	}
 
 	// remove blank transaction
 	recEntry.removeTxn = function(ledger, index){
