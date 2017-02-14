@@ -246,10 +246,11 @@
                                         input-focus 
                                         ng-model-options="{debounce: 200}" 
                                         ng-focus="selectTxn(blankLedger,txn, $index, $event)"
+                                        typeahead-on-select="checkStockAccount($item, txn)"
                                       >
                                     </td>
                                     <td class="col-xs-5" style="position: relative">
-                                      <input type="text"
+                                      <input type="number"
                                         placeholder="Quantity"
                                         ng-if="accountToShow.stock != null || txn.particular.stock != null"
                                         class="form-control background-transparent pull-left bdrR bdrR0"
@@ -258,13 +259,13 @@
                                         ng-keyup="triggerPanelFocus($event)" 
                                         ng-focus="selectTxn(blankLedger,txn, $index, $event)"
                                         ng-change="onValueChange('qty' , txn)">
-                                      <span class="pa rate" ng-if="txn.rate > 0 || txn.particular.stock.rate > 0">
-                                        x{{txn.rate || txn.particular.stock.rate | number:4 }}
+                                      <span class="pa rate" ng-if="accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
+                                        x{{txn.rate || txn.particular.stock.rate || accountToShow.stock.rate | number:4 }}
                                         <span ng-if="accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name">
-                                          /{{accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name}}
+                                          /{{accountToShow.stock.openingStockUnit.shortCode || txn.particular.stock.openingStockUnit.shortCode || txn.inventory.unit.code}}
                                         </span>
                                       </span>
-                                      <input type="text" 
+                                      <input type="number" 
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null, 'pull-left':accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount" 
@@ -338,7 +339,7 @@
                                       <span class="pa rate" ng-if="txn.rate > 0 || txn.particular.stock.rate > 0">
                                         x{{txn.rate || txn.particular.stock.rate | number:4 }}
                                         <span ng-if="accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name">
-                                          /{{accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name}}
+                                          /{{accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.code}}
                                         </span>
                                       </span>
                                       <input type="text" 
@@ -395,7 +396,7 @@
                                       <input name="ledgerDrN" class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" input-focus is-open="txn.isblankOpen" ng-model-options="{debounce: 200}" ng-focus="selectTxn(blankLedger,txn, $index, $event)">
                                     </td>
                                     <td class="col-xs-5" style="position: relative">
-                                      <input type="text"
+                                      <input type="number"
                                         placeholder="Quantity"
                                         ng-if="accountToShow.stock != null || txn.particular.stock != null"
                                         class="form-control background-transparent pull-left bdrR bdrR0"
@@ -404,13 +405,13 @@
                                         ng-keyup="triggerPanelFocus($event)" 
                                         ng-focus="selectTxn(blankLedger,txn, $index, $event)"
                                         ng-change="onValueChange('qty', txn)">
-                                      <span class="pa rate" ng-if="txn.rate > 0 || txn.particular.stock.rate > 0">
+                                      <span class="pa rate" ng-if="accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
                                         x{{txn.rate || txn.particular.stock.rate | number:4 }}
                                         <span ng-if="accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name">
-                                          /{{accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name}}
+                                          /{{accountToShow.stock.openingStockUnit.shortCode || txn.particular.stock.openingStockUnit.shortCode || txn.inventory.unit.code}}
                                         </span>
                                       </span>
-                                      <input type="text" 
+                                      <input type="number" 
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null, 'pull-left':accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount" 
@@ -510,7 +511,7 @@
                                       <input name="ledgerCrN" class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" input-focus is-open="txn.isblankOpen" ng-model-options="{debounce: 200}" ng-focus="selectTxn(blankLedger,txn, $index, $event)">
                                     </td>
                                     <td class="col-xs-5" style="position: relative">
-                                      <input type="text"
+                                      <input type="number"
                                         placeholder="Quantity"
                                         ng-if="accountToShow.stock != null || txn.particular.stock != null"
                                         class="form-control background-transparent pull-left bdrR bdrR0"
@@ -525,7 +526,7 @@
                                           /{{accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name}}
                                         </span>
                                       </span>
-                                      <input type="text" 
+                                      <input type="number" 
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':accountToShow.stock != null || txn.particular.stock != null, 'pull-left':accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount" 
@@ -589,7 +590,7 @@
                                       <span class="pa rate" ng-if="txn.rate > 0 || txn.particular.stock.rate > 0">
                                         x{{txn.rate || txn.particular.stock.rate | number:4 }}
                                         <span ng-if="accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name">
-                                          /{{accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name}}
+                                          /{{accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.code}}
                                         </span>
                                       </span>
                                       <input type="text" 
@@ -746,12 +747,11 @@
                 <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'CREDIT'">Cr</span>
                 <span ng-if="selectedLedger.total.amount != 0 && selectedLedger.total.type == 'DEBIT'">Dr</span></label>
             </div>
-            <div class="mrT2 pull-right bdrR pdR" ng-if="selectedTxn.inventory != null && selectedTxn.inventory.quantity > 0">
+            <div class="mrT2 pull-right bdrR pdR">
               <label>Rate:
                 <input 
                   type="number" 
                   ng-model="selectedTxn.rate" 
-                  ng-init="selectedTxn.rate = selectedTxn.amount/selectedTxn.inventory.quantity" 
                   ng-change="selectedTxn.amount = selectedTxn.inventory.quantity*selectedTxn.rate"
                   style="max-width:64px;border:0;">
               </label>

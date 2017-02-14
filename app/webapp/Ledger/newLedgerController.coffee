@@ -735,7 +735,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #setPopoverPlacement(e.clientY)
     if $scope.accountToShow.stock != null && txn.inventory == undefined
       txn.inventory = {}
-    txn.rate = $filter('number')(Number(txn), 4)
+      txn.rate = $scope.accountToShow.stock.rate
+    if txn.inventory.stock != undefined
+      txn.rate = txn.amount/txn.inventory.quantity
+    #txn.rate = $filter('number')(Number(txn.rate), 4)
     $scope.selectedTxn = txn
     if $scope.prevTxn != null
       $scope.prevTxn.isOpen = false
@@ -743,6 +746,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.prevTxn = txn
     $scope.calculateEntryTotal(ledger)
     $scope.showLedgerPopover = true
+    $scope.matchInventory(txn)
     $scope.ledgerBeforeEdit = {}
     angular.copy(ledger,$scope.ledgerBeforeEdit)
     if $scope.popover.draggable
@@ -762,12 +766,17 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.checkCompEntry(ledger)
     #$scope.blankCheckCompEntry(ledger)
     $scope.isTransactionContainsTax(ledger)
-    e.stopPropagation() 
+    e.stopPropagation()
 
   $scope.$watch('selectedTxn.amount', (newVal, oldVal) ->
     if newVal != oldVal
       $scope.calculateEntryTotal($scope.selectedLedger)
   )
+
+  $scope.matchInventory = (txn) ->
+    match = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
+    if match && match.stock != null && txn.inventory == null
+      txn.inventory = angular.copy(match.stock, txn.inventory)
 
   $scope.setEntryTotal = (pre,post, condition) ->
     if condition != 'delete'
@@ -913,6 +922,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             particular.name = txn.particular.name
             particular.uniqueName = txn.particular.uniqueName
             txn.particular = particular
+          if txn.inventory.quantity == "" || txn.inventory.quantity == undefined || txn.inventory.quantity == null
+            delete txn.inventory
   #      ledger.isInclusiveTax = false
         unqNamesObj = {
           compUname: $rootScope.selectedCompany.uniqueName
@@ -968,6 +979,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           $scope.addEntryFailure(response,[])
     else
       toastr.error("Select voucher type.")
+
 
   $scope.checkTaxCondition = (ledger) ->
     transactions = []
@@ -1593,7 +1605,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     unq = unq.replace(/ |,|\//g,'')
 
   $scope.onValueChange = (value, txn) ->
-    if txn.particular.stock != null &&  txn.particular.stock != undefined || $scope.accountToShow.stock != null
+    if txn.particular.stock != null &&  txn.particular.stock != undefined || $scope.accountToShow.stock != null || txn.inventory.stock
       switch value
         when 'qty'
           if $scope.selectedTxn.rate > 0
@@ -1606,7 +1618,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.checkStockAccount = (item, txn) ->
     if(item.stock == null && $scope.accountToShow.stock == null)
       txn.inventory = null
-    
+    else if $scope.accountToShow.stock == null && item.stock != null
+      txn.rate = item.stock.rate
+    else if item.stock != null && $scope.accountToShow.stock == null
+      txn.rate = $scope.accountToShow.stock.rate
+
 
   # $scope.$on 'company-changed', (event,changeData) ->
   #   # when company is changed, redirect to manage company page

@@ -184,6 +184,7 @@ angular.module('inventoryController', [])
 
 	//Add new stock
 	stock.addStockItem = {}
+	stock.addStockItem.newStock = true
 	stock.addStock = function(stockItem){
 		this.success = function(res){
 			toastr.success('Stock Item added successfully')
@@ -262,6 +263,7 @@ angular.module('inventoryController', [])
 		stock.addStockGroup.parentStockGroupUniqueName = grp.uniqueName
 		stock.prevselectedStockGrp = stock.selectedStockGrp
 		stock.selectedStockGrp = grp
+		stock.selectedStockItem = null
 		stock.getStockGroupDetail(grp)
 		//stock.getStockGroups(grp)
 	}
