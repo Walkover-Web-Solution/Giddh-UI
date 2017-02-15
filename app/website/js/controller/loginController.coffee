@@ -217,4 +217,13 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
     toastr.error(res.data.message)
     $scope.verifyMail = true
 
+  # $scope.notifyUser = (user) ->
+  #   this.success = (res) ->
+      
+  #   this.failure = (res) ->
+      
+  #   data = {user: user}
+
+  #   $http.post('/global-user', data).then(this.success, this.failure)
+
 angular.module('giddhApp').controller 'loginController', loginController

@@ -34,6 +34,7 @@ router.get '/', (req, res) ->
   else
     res.sendFile 'index.html', options
 
+
 router.get '/index', (req, res) ->
   ip = requestIp.getClientIp(req)
   geo = settings.geoIp.lookup(ip)
@@ -232,5 +233,33 @@ router.post '/verify-number', (req, res) ->
       req.session.name = data.body.user.uniqueName
       req.session.authKey = data.body.authKey
     res.send data
+
+hitViaSocket = (data) ->
+  data = JSON.stringify(data)
+  data.environment = app.get('env')
+  if data.isNewUser
+    settings.request {
+      url: 'https://viasocket.com/t/fDR1TMJLvMQgwyjBUMVs/giddh-giddh-login?authkey=MbK1oT6x1RCoVf2AqL3y'
+      qs:
+        from: 'Giddh'
+        time: +new Date
+      method: 'POST'
+      headers:
+        'Content-Type': 'application/json'
+        'Auth-Key': 'MbK1oT6x1RCoVf2AqL3y'
+      body: data.user
+    }, (error, response, body) ->
+      if error
+        console.log error
+      else
+        console.log response.statusCode, body, 'from viasocket'
+      return
+
+
+
+router.post '/global-user', (req, res) ->
+  data = req.body
+  hitViaSocket(data)
+  res.status(200).send('success')
 
 module.exports = router
