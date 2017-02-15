@@ -922,7 +922,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             particular.name = txn.particular.name
             particular.uniqueName = txn.particular.uniqueName
             txn.particular = particular
-          if txn.inventory.quantity == "" || txn.inventory.quantity == undefined || txn.inventory.quantity == null
+          if txn.inventory && (txn.inventory.quantity == "" || txn.inventory.quantity == undefined || txn.inventory.quantity == null)
             delete txn.inventory
   #      ledger.isInclusiveTax = false
         unqNamesObj = {
@@ -1605,7 +1605,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     unq = unq.replace(/ |,|\//g,'')
 
   $scope.onValueChange = (value, txn) ->
-    if txn.particular.stock != null &&  txn.particular.stock != undefined || $scope.accountToShow.stock != null || txn.inventory.stock
+    if txn.particular.stock != null &&  txn.particular.stock != undefined || $scope.accountToShow.stock != null || (txn.inventory && txn.inventory.stock)
       switch value
         when 'qty'
           if $scope.selectedTxn.rate > 0

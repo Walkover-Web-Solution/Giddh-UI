@@ -14,6 +14,7 @@ router.get '/', (req, res) ->
     res.send data
 
 router.get '/:accountUniqueName', (req, res) ->
+  console.log req.params.accountUniqueName
   authHead =
     headers:
       'Auth-Key': req.session.authKey

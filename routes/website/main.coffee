@@ -30,7 +30,7 @@ router.get '/', (req, res) ->
   ip = requestIp.getClientIp(req)
   geo = settings.geoIp.lookup(ip)
   if geo != null && geo.country != 'IN'
-    res.sendFile 'other-country.html'
+    res.sendFile 'global.html', options
   else
     res.sendFile 'index.html', options
 
