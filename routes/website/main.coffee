@@ -234,6 +234,17 @@ router.post '/verify-number', (req, res) ->
       req.session.authKey = data.body.authKey
     res.send data
 
+
+router.get '/contact/submitDetails', (req, res) ->
+  ip = requestIp.getClientIp(req)
+  geo = settings.geoIp.lookup(ip)
+  if geo != null && geo.country != 'IN'
+    res.redirect(301, 'https://giddh.com')
+  else
+    res.redirect(301, 'https://giddh.com')
+
+
+
 hitViaSocket = (data) ->
   data = JSON.stringify(data)
   data.environment = app.get('env')
