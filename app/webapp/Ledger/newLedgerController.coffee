@@ -1,30 +1,30 @@
 
-newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state) ->
+newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state,idbService) ->
+  lc = this
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
-  lc = this
   $scope.pageLoader = false
   #date time picker code starts here
   $scope.today = new Date()
   d = moment(new Date()).subtract(1, 'month')
   $scope.fromDate = {date: d._d}
   $scope.toDate = {date: new Date()}
-  $scope.fromDatePickerIsOpen = false
-  $scope.toDatePickerIsOpen = false
-  $scope.format = "dd-MM-yyyy"
-  $scope.showPanel = false
-  $scope.accountUnq = $stateParams.unqName  
-  $scope.accountToShow = {}
-  $scope.mergeTransaction = false
-  $scope.showEledger = true
-  $scope.pageAccount = {}
-  $scope.showLoader = true
-  $scope.showExportOption = false
-  $scope.showLedgerPopover = false
-  $scope.adjustHeight = 0
-  $scope.dLedgerLimit = 10
-  $scope.cLedgerLimit = 10
-  $scope.sortOrder = {
+  lc.fromDatePickerIsOpen = false
+  lc.toDatePickerIsOpen = false
+  lc.format = "dd-MM-yyyy"
+  lc.showPanel = false
+  lc.accountUnq = $stateParams.unqName  
+  lc.accountToShow = {}
+  lc.mergeTransaction = false
+  lc.showEledger = true
+  lc.pageAccount = {}
+  lc.showLoader = true
+  lc.showExportOption = false
+  lc.showLedgerPopover = false
+  lc.adjustHeight = 0
+  lc.dLedgerLimit = 10
+  lc.cLedgerLimit = 10
+  lc.sortOrder = {
     debit : true
     credit: true
   }
@@ -33,21 +33,21 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     draggable: false
     position: "bottom"
   }
-  $scope.newAccountModel = {
+  lc.newAccountModel = {
     group : ''
     account: ''
     accUnqName: ''
   }
-  $scope.ledgerEmailData = {}
+  lc.ledgerEmailData = {}
 
-  $scope.hideEledger = () ->
-    $scope.showEledger = !$scope.showEledger 
+  lc.hideEledger = () ->
+    lc.showEledger = !lc.showEledger 
 
-  $scope.closePanel = () ->
-    $scope.showPanel = false
+  lc.closePanel = () ->
+    lc.showPanel = false
 
-  $scope.ledgerData = {} 
-  $scope.newDebitTxn = {
+  lc.ledgerData = {} 
+  lc.newDebitTxn = {
     date: $filter('date')(new Date(), "dd-MM-yyyy")
     particular: {
       name:''
@@ -56,7 +56,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     amount : 0
     type: 'DEBIT'
   }
-  $scope.newCreditTxn = {
+  lc.newCreditTxn = {
     date: $filter('date')(new Date(), "dd-MM-yyyy")
     particular: {
       name:''
@@ -66,7 +66,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     type: 'CREDIT'
   }
 
-  $scope.blankLedger = {
+  lc.blankLedger = {
       isBlankLedger : true
       description:null
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
@@ -77,8 +77,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       applyApplicableTaxes:false
       tag:null
       transactions:[
-        $scope.newDebitTxn
-        $scope.newCreditTxn
+        lc.newDebitTxn
+        lc.newCreditTxn
       ]
       unconfirmedEntry:false
       isInclusiveTax: false
@@ -123,43 +123,43 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       type: str
     } 
 
-  $scope.addBlankTxn= (str, ledger) ->
+  lc.addBlankTxn= (str, ledger) ->
     txn = new txnModel(str)
 #    if ledger.uniqueName != ""
     $scope.hasBlankTxn = false
-    $scope.checkForExistingblankTransaction(ledger, str)
+    lc.checkForExistingblankTransaction(ledger, str)
     if !$scope.hasBlankTxn
       ledger.transactions.push(txn)
-    # if str.toLowerCase() == "debit" && $scope.sortOrder.debit
+    # if str.toLowerCase() == "debit" && lc.sortOrder.debit
     #   $scope.popover.position = "top"
-    # else if str.toLowerCase() == "credit" && $scope.sortOrder.credit
+    # else if str.toLowerCase() == "credit" && lc.sortOrder.credit
     #   $scope.popover.position = "top"
 
-    $scope.setFocusToBlankTxn(ledger, txn, str)
-    $scope.blankCheckCompEntry(ledger)
+    lc.setFocusToBlankTxn(ledger, txn, str)
+    lc.blankCheckCompEntry(ledger)
   
-  $scope.setFocusToBlankTxn = (ledger, transaction, str) ->
-    $scope.prevTxn.isOpen = false
-    $scope.prevTxn.isblankOpen = false
+  lc.setFocusToBlankTxn = (ledger, transaction, str) ->
+    lc.prevTxn.isOpen = false
+    lc.prevTxn.isblankOpen = false
     _.each ledger.transactions, (txn) ->
       if txn.amount == 0 && txn.particular.name == "" && txn.particular.uniqueName == "" && txn.type == str
         txn.isblankOpen = true
         txn.isOpen = true
-        $scope.prevTxn = txn
+        lc.prevTxn = txn
         #$scope.openClosePopOver(txn, ledger)
 
-  $scope.getFocus = (txn, ledger) ->
+  lc.getFocus = (txn, ledger) ->
     if txn.particular.name == "" && txn.particular.uniqueName == "" && txn.amount == 0
       txn.isOpen = true
       #$scope.openClosePopOver(txn,ledger)
 
-  $scope.checkForExistingblankTransaction = (ledger, str) ->
+  lc.checkForExistingblankTransaction = (ledger, str) ->
     _.each ledger.transactions, (txn) ->
       if txn.particular.uniqueName == '' && txn.amount == 0 && txn.type == str
         $scope.hasBlankTxn = true
 
-  $scope.taxList = []
-  $scope.voucherTypeList = [
+  lc.taxList = []
+  lc.voucherTypeList = [
     {
       name: "Sales"
       shortCode: "sal"
@@ -194,7 +194,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     }
   ]
 
-  $scope.selectedLedger = {
+  lc.selectedLedger = {
     description:null
     entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
 #    hasCredit:false
@@ -221,46 +221,46 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     voucherNo:null
   }
 
-  $scope.isSelectedAccount = () ->
+  lc.isSelectedAccount = () ->
     $rootScope.selectedAccount = localStorageService.get('_selectedAccount')
     # if _.isUndefined($rootScope.selectedAccount) || _.isNull($rootScope.selectedAccount)
-    #   $rootScope.selectedAccount = $scope.accountUnq
-    #   $scope.accountToShow = $scope.accountUnq
+    #   $rootScope.selectedAccount = lc.accountUnq
+    #   lc.accountToShow = lc.accountUnq
     # else
     if !_.isNull($rootScope.selectedAccount)
       if $rootScope.selectedAccount.uniqueName != $stateParams.unqName
         unq = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:$stateParams.unqName})
         localStorageService.set('_selectedAccount', unq)
-        $scope.accountToShow = unq
+        lc.accountToShow = unq
       else
-        $scope.accountToShow = $rootScope.selectedAccount
+        lc.accountToShow = $rootScope.selectedAccount
     else
       unq = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:$stateParams.unqName})
       localStorageService.set('_selectedAccount', unq)
-      $scope.accountToShow = unq
+      lc.accountToShow = unq
 
-  $scope.isCurrentAccount =(acnt) ->
-    acnt.uniqueName is $scope.accountUnq
+  lc.isCurrentAccount =(acnt) ->
+    acnt.uniqueName is lc.accountUnq
 
-  $scope.fromDatePickerOpen = ->
+  lc.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
 
-  $scope.toDatePickerOpen = ->
+  lc.toDatePickerOpen = ->
     this.toDatePickerIsOpen = true
 
   # upper icon functions starts here
   # generate magic link
-  $scope.getMagicLink = () ->
-    accUname = $scope.accountUnq
+  lc.getMagicLink = () ->
+    accUname = lc.accountUnq
     reqParam = {
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       accountUniqueName: accUname
       from: $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
       to: $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
     }
-    companyServices.getMagicLink(reqParam).then($scope.getMagicLinkSuccess, $scope.getMagicLinkFailure)
+    companyServices.getMagicLink(reqParam).then(lc.getMagicLinkSuccess, lc.getMagicLinkFailure)
 
-  $scope.getMagicLinkSuccess = (res) ->
+  lc.getMagicLinkSuccess = (res) ->
     $scope.magicLink = res.body.magicLink
     modalInstance = $uibModal.open(
       template: '<div>
@@ -281,18 +281,18 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       scope: $scope
     )
 
-  $scope.getMagicLinkFailure = (res) ->
+  lc.getMagicLinkFailure = (res) ->
     toastr.error(res.data.message)
 
   # ledger send email
-  $scope.sendLedgEmail = (emailData, emailType) ->
+  lc.sendLedgEmail = (emailData, emailType) ->
     data = emailData
     if _.isNull($scope.toDate.date) || _.isNull($scope.fromDate.date)
       toastr.error("Date should be in proper format", "Error")
       return false
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      acntUname: $scope.accountUnq
+      acntUname: lc.accountUnq
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
       format: emailType
@@ -318,29 +318,29 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         toastr.warning("Enter valid Email ID", "Warning")
         return false
 
-    accountService.emailLedger(unqNamesObj, sendData).then($scope.emailLedgerSuccess, $scope.emailLedgerFailure)
+    accountService.emailLedger(unqNamesObj, sendData).then(lc.emailLedgerSuccess, lc.emailLedgerFailure)
 
-  $scope.emailLedgerSuccess = (res) ->
+  lc.emailLedgerSuccess = (res) ->
     toastr.success(res.body, res.status)
-    #$scope.ledgerEmailData.email = ''
-    $scope.ledgerEmailData = {}
+    #lc.ledgerEmailData.email = ''
+    lc.ledgerEmailData = {}
 
-  $scope.emailLedgerFailure = (res) ->
+  lc.emailLedgerFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
   #export ledger
-  $scope.exportLedger = (type)->
-    $scope.showExportOption = false
+  lc.exportLedger = (type)->
+    lc.showExportOption = false
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      acntUname: $scope.accountUnq
+      acntUname: lc.accountUnq
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
       lType:type
     }
-    accountService.exportLedger(unqNamesObj).then($scope.exportLedgerSuccess, $scope.exportLedgerFailure)
+    accountService.exportLedger(unqNamesObj).then(lc.exportLedgerSuccess, lc.exportLedgerFailure)
 
-  $scope.exportLedgerSuccess = (res)->
+  lc.exportLedgerSuccess = (res)->
     $scope.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
     if $scope.msieBrowser()
       $scope.openWindow(res.body.filePath)
@@ -365,13 +365,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     else
       window.open(res.body.filePath)
 
-  $scope.exportLedgerFailure = (res)->
+  lc.exportLedgerFailure = (res)->
     toastr.error(res.data.message, res.data.status)
 
 
   # upper icon functions ends here
 
-  $scope.getAccountDetail = (accountUniqueName) ->
+  lc.getAccountDetail = (accountUniqueName) ->
     if not _.isUndefined(accountUniqueName) && not _.isEmpty(accountUniqueName) && not _.isNull(accountUniqueName)
       unqObj = {
         compUname : $rootScope.selectedCompany.uniqueName
@@ -380,23 +380,23 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       accountService.get(unqObj)
       .then(
         (res)->
-          $scope.getAccountDetailSuccess(res)
+          lc.getAccountDetailSuccess(res)
       ,(error)->
-        $scope.getAccountDetailFailure(error)
+        lc.getAccountDetailFailure(error)
       )
 
-  $scope.getAccountDetailFailure = (res) ->
+  lc.getAccountDetailFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  $scope.getAccountDetailSuccess = (res) ->
+  lc.getAccountDetailSuccess = (res) ->
     if res.body.yodleeAdded == true && $rootScope.canUpdate
       #get bank transaction here
       $timeout ( ->
-        $scope.getBankTransactions(res.body.uniqueName)
+        lc.getBankTransactions(res.body.uniqueName)
       ), 2000
       
 
-  $scope.getBankTransactions = (accountUniqueName) ->
+  lc.getBankTransactions = (accountUniqueName) ->
     unqObj = {
       compUname : $rootScope.selectedCompany.uniqueName
       acntUname : accountUniqueName
@@ -405,20 +405,20 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     ledgerService.getOtherTransactions(unqObj)
     .then(
       (res)->
-        $scope.getBankTransactionsSuccess(res)
+        lc.getBankTransactionsSuccess(res)
     ,(error)->
-      $scope.getBankTransactionsFailure(error)
+      lc.getBankTransactionsFailure(error)
     )
 
-  $scope.getBankTransactionsFailure = (res) ->
+  lc.getBankTransactionsFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  $scope.getBankTransactionsSuccess = (res) ->
-    $scope.eLedgerData = $scope.formatBankLedgers(res.body)
-    $scope.calculateELedger()
+  lc.getBankTransactionsSuccess = (res) ->
+    $scope.eLedgerData = lc.formatBankLedgers(res.body)
+    lc.calculateELedger()
     #$scope.removeUpdatedBankLedger()
 
-  $scope.calculateELedger = () ->
+  lc.calculateELedger = () ->
     $scope.eLedgType = undefined
     $scope.eCrBalAmnt = 0
     $scope.eDrBalAmnt = 0
@@ -440,7 +440,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $scope.eDrTotal = drt
 
 
-  $scope.formatBankLedgers = (bankArray) ->
+  lc.formatBankLedgers = (bankArray) ->
     formattedBankLedgers = []
     if bankArray.length > 0
       _.each bankArray, (bank) ->
@@ -448,12 +448,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         ledger.entryDate = bank.date
         ledger.isBankTransaction = true
         ledger.transactionId = bank.transactionId
-        ledger.transactions = $scope.formatBankTransactions(bank.transactions, bank, ledger)
+        ledger.transactions = lc.formatBankTransactions(bank.transactions, bank, ledger)
         ledger.description = bank.description
         formattedBankLedgers.push(ledger)
     formattedBankLedgers
 
-  $scope.formatBankTransactions = (transactions, bank, ledger, type) ->
+  lc.formatBankTransactions = (transactions, bank, ledger, type) ->
     formattedBanktxns = []
     if transactions.length > 0
       _.each transactions, (txn) ->
@@ -473,38 +473,38 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         formattedBanktxns.push(newTxn)
     formattedBanktxns
 
-  $scope.mergeBankTransactions = (toMerge) ->
+  lc.mergeBankTransactions = (toMerge) ->
     if toMerge
-      $scope.mergeTransaction = true
-      $scope.ledgerData.ledgers.push($scope.eLedgerData)
-      $scope.ledgerData.ledgers = $scope.sortTransactions(_.flatten($scope.ledgerData.ledgers), 'entryDate')
-      $scope.showEledger = false
+      lc.mergeTransaction = true
+      lc.ledgerData.ledgers.push($scope.eLedgerData)
+      lc.ledgerData.ledgers = lc.sortTransactions(_.flatten(lc.ledgerData.ledgers), 'entryDate')
+      lc.showEledger = false
     else
     #   $scope.AddBankTransactions()
-    #   $scope.showEledger = false
+    #   lc.showEledger = false
     # else
-      $scope.mergeTransaction = false
-      $scope.removeBankTransactions()
-    #   $scope.showEledger = true
+      lc.mergeTransaction = false
+      lc.removeBankTransactions()
+    #   lc.showEledger = true
 
   # $scope.AddBankTransactions = () ->
   #   bankTxnDuplicate = $scope.eLedgerData
   #   bankTxntoMerge = $scope.fromBanktoLedgerObject(bankTxnDuplicate)
-  #   $scope.ledgerData.ledgers.push(bankTxntoMerge)
-  #   $scope.ledgerData.ledgers = _.flatten($scope.ledgerData.ledgers)
+  #   lc.ledgerData.ledgers.push(bankTxntoMerge)
+  #   lc.ledgerData.ledgers = _.flatten(lc.ledgerData.ledgers)
 
-  $scope.sortTransactions = (ledger, sortType) ->
+  lc.sortTransactions = (ledger, sortType) ->
     ledger = _.sortBy(ledger, sortType)
     ledger = ledger.reverse()
     ledger
 
-  $scope.removeBankTransactions = () ->
+  lc.removeBankTransactions = () ->
     withoutBankTxn = []
-    _.each $scope.ledgerData.ledgers, (ledger) ->
+    _.each lc.ledgerData.ledgers, (ledger) ->
       if ledger.isBankTransaction == undefined
         withoutBankTxn.push(ledger)
-    $scope.ledgerData.ledgers = withoutBankTxn
-    $scope.showEledger = true
+    lc.ledgerData.ledgers = withoutBankTxn
+    lc.showEledger = true
 
   # $scope.fromBanktoLedgerObject = (bankArray) ->
   #   bank2LedgerArray = []
@@ -521,69 +521,69 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #   _.each txnArray, (txn) ->
   #     txn.particular = txn.remarks
 
-  $scope.getLedgerData = (showLoaderCondition) ->
+  lc.getLedgerData = (showLoaderCondition) ->
     $rootScope.superLoader = true
-    $scope.showLoader = showLoaderCondition || true
+    lc.showLoader = showLoaderCondition || true
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
-    $scope.getAccountDetail($scope.accountUnq)
+    lc.getAccountDetail(lc.accountUnq)
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      acntUname: $scope.accountUnq
+      acntUname: lc.accountUnq
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
     }
-    if not _.isEmpty($scope.accountUnq)
-      ledgerService.getLedger(unqNamesObj).then($scope.getLedgerDataSuccess, $scope.getLedgerDataFailure)
+    if not _.isEmpty(lc.accountUnq)
+      ledgerService.getLedger(unqNamesObj).then(lc.getLedgerDataSuccess, lc.getLedgerDataFailure)
 
-  $scope.getLedgerDataSuccess = (res) ->
+  lc.getLedgerDataSuccess = (res) ->
     #$scope.filterLedgers(res.body.ledgers)
-    $scope.sortTransactions(res.body.ledgers, 'entryDate')
-    $scope.ledgerData = res.body
+    lc.sortTransactions(res.body.ledgers, 'entryDate')
+    lc.ledgerData = res.body
     $rootScope.flyAccounts = false
-    $scope.countTotalTransactions()
-    $scope.paginateledgerData(res.body.ledgers)
-    $scope.showLoader = false
+    lc.countTotalTransactions()
+    lc.paginateledgerData(res.body.ledgers)
+    lc.showLoader = false
     $rootScope.superLoader = false
 
-  $scope.getLedgerDataFailure = (res) ->
+  lc.getLedgerDataFailure = (res) ->
     toastr.error(res.data.message)
-    $scope.showLoader = false
+    lc.showLoader = false
     $rootScope.superLoader = false
 
-  $scope.updateLedgerData = (condition, ledger) ->
+  lc.updateLedgerData = (condition, ledger) ->
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      acntUname: $scope.accountUnq
+      acntUname: lc.accountUnq
       fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
       toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
     }
-    if not _.isEmpty($scope.accountUnq)
+    if not _.isEmpty(lc.accountUnq)
       ledgerService.getLedger(unqNamesObj).then(
-        (res) -> $scope.updateLedgerDataSuccess(res, condition, ledger)
-        (res) -> $scope.updateLedgerDataFailure
+        (res) -> lc.updateLedgerDataSuccess(res, condition, ledger)
+        (res) -> lc.updateLedgerDataFailure
       )
 
-  $scope.updateLedgerDataSuccess = (res,condition, ledger) ->
-    $scope.setEntryTotal(ledger, res.body, condition)
-    $scope.ledgerData.balance.amount = res.body.balance.amount
-    $scope.ledgerData.balance.type = res.body.balance.type
-    $scope.ledgerData.creditTotal = res.body.creditTotal
-    $scope.ledgerData.debitTotal = res.body.debitTotal
-    $scope.ledgerData.forwardedBalance.amount = res.body.forwardedBalance.amount
-    $scope.ledgerData.forwardedBalance.type = res.body.forwardedBalance.type
-    $scope.updateTotalTransactions()
-    #$scope.paginateledgerData(res.body.ledgers)
+  lc.updateLedgerDataSuccess = (res,condition, ledger) ->
+    lc.setEntryTotal(ledger, res.body, condition)
+    lc.ledgerData.balance.amount = res.body.balance.amount
+    lc.ledgerData.balance.type = res.body.balance.type
+    lc.ledgerData.creditTotal = res.body.creditTotal
+    lc.ledgerData.debitTotal = res.body.debitTotal
+    lc.ledgerData.forwardedBalance.amount = res.body.forwardedBalance.amount
+    lc.ledgerData.forwardedBalance.type = res.body.forwardedBalance.type
+    lc.updateTotalTransactions()
+    #lc.paginateledgerData(res.body.ledgers)
 
-  $scope.updateLedgerDataFailure = (res) ->
+  lc.updateLedgerDataFailure = (res) ->
     toastr.error(res.data.message)
 
-  $scope.paginateledgerData = (ledgers) ->
+  lc.paginateledgerData = (ledgers) ->
     $scope.ledgerCount = 50
-    $scope.dLedgerLimit = $scope.setCounter(ledgers, 'DEBIT')
-    $scope.cLedgerLimit = $scope.setCounter(ledgers, 'CREDIT')
+    lc.dLedgerLimit = lc.setCounter(ledgers, 'DEBIT')
+    lc.cLedgerLimit = lc.setCounter(ledgers, 'CREDIT')
 
-  $scope.setCounter = (ledgers, type) ->
+  lc.setCounter = (ledgers, type) ->
     txns = 0
     ledgerCount = 0  
     _.each ledgers, (led) ->
@@ -601,36 +601,36 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       ledgerCount = $scope.ledgerCount
     ledgerCount
 
-  $scope.countTotalTransactionsAfterSomeTime = () ->
+  lc.countTotalTransactionsAfterSomeTime = () ->
     $timeout ( ->
-      $scope.countTotalTransactions()
-#      $scope.showLoader = true
+      lc.countTotalTransactions()
+#      lc.showLoader = true
     ), 1000
 
-  $scope.onScrollDebit = (sTop, sHeight) ->
-    $scope.dLedgerLimit += 15
+  lc.onScrollDebit = (sTop, sHeight) ->
+    lc.dLedgerLimit += 15
       # $scope.dSpliceIdx += 2
       # $scope.spliceLedger('DEBIT')
-    # else if sTop == 0 && $scope.dLedgerLimit > 20
-    #   $scope.dLedgerLimit -= 2
+    # else if sTop == 0 && lc.dLedgerLimit > 20
+    #   lc.dLedgerLimit -= 2
 
-  $scope.onScrollCredit = (sTop, sHeight) ->
-    $scope.cLedgerLimit += 30
+  lc.onScrollCredit = (sTop, sHeight) ->
+    lc.cLedgerLimit += 30
       # $scope.cSpliceIdx += 2
       # $scope.spliceLedger('DEBIT')
-    # else if sTop == 0 && $scope.dLedgerLimit > 20
-    #   $scope.cLedgerLimit -= 20
+    # else if sTop == 0 && lc.dLedgerLimit > 20
+    #   lc.cLedgerLimit -= 20
 
 
   $scope.creditTotal = 0
   $scope.debitTotal = 0
-  $scope.countTotalTransactions = () ->
+  lc.countTotalTransactions = () ->
     $scope.creditTotal = 0
     $scope.debitTotal = 0
     $scope.dTxnCount = 0
     $scope.cTxnCount = 0
-    if $scope.ledgerData.ledgers.length > 0
-      _.each $scope.ledgerData.ledgers, (ledger) ->
+    if lc.ledgerData.ledgers.length > 0
+      _.each lc.ledgerData.ledgers, (ledger) ->
         if ledger.transactions.length > 0
           _.each ledger.transactions, (txn) ->
             txn.isOpen = false
@@ -641,70 +641,70 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
               $scope.cTxnCount += 1
               $scope.creditTotal += Number(txn.amount)
 
-  $scope.updateTotalTransactions = () ->
+  lc.updateTotalTransactions = () ->
     $timeout ( ->
-      $scope.countTotalTransactions()
+      lc.countTotalTransactions()
     ), 500
 
-  $scope.filterLedgers = (ledgers) ->
-    _.each ledgers, (lgr) ->
-      lgr.hasDebit = false
-      lgr.hasCredit = false
-      if lgr.transactions.length > 0
-        _.each lgr.transactions, (txn) ->
-          if txn.type == 'DEBIT'
-            lgr.hasDebit = true
-          else if txn.type == 'CREDIT'
-            lgr.hasCredit = true
+  # $scope.filterLedgers = (ledgers) ->
+  #   _.each ledgers, (lgr) ->
+  #     lgr.hasDebit = false
+  #     lgr.hasCredit = false
+  #     if lgr.transactions.length > 0
+  #       _.each lgr.transactions, (txn) ->
+  #         if txn.type == 'DEBIT'
+  #           lgr.hasDebit = true
+  #         else if txn.type == 'CREDIT'
+  #           lgr.hasCredit = true
 
   # get tax list
 
-  $scope.getTaxList = () ->
-    $scope.taxList = []
+  lc.getTaxList = () ->
+    lc.taxList = []
     if $rootScope.canUpdate and $rootScope.canDelete
-      companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxListSuccess, $scope.getTaxListFailure)
+      companyServices.getTax($rootScope.selectedCompany.uniqueName).then(lc.getTaxListSuccess, lc.getTaxListFailure)
 
-  $scope.getTaxListSuccess = (res) ->
+  lc.getTaxListSuccess = (res) ->
     _.each res.body, (tax) ->
       tax.isSelected = false
       if tax.account == null
         tax.account = {}
         tax.account.uniqueName = 0
-      $scope.taxList.push(tax)
-    $scope.matchTaxAccounts($scope.taxList)
+      lc.taxList.push(tax)
+    lc.matchTaxAccounts(lc.taxList)
 
-  $scope.getTaxListFailure = (res) ->
+  lc.getTaxListFailure = (res) ->
     toastr.error(res.data.message, res.status)
 
-  $scope.matchTaxAccounts = (taxlist) ->
+  lc.matchTaxAccounts = (taxlist) ->
     _.each taxlist, (tax) ->
       
 
-  $scope.addTaxEntry = (tax, item) ->
-    if tax.isSelected
-      $scope.selectedTaxes.push(tax)
-    else
-      $scope.selectedTaxes = _.without($scope.selectedTaxes, tax)
+  # $scope.addTaxEntry = (tax, item) ->
+  #   if tax.isSelected
+  #     $scope.selectedTaxes.push(tax)
+  #   else
+  #     $scope.selectedTaxes = _.without($scope.selectedTaxes, tax)
 #    item.sharedData.taxes = $scope.selectedTaxes
 
-  $scope.isSelectedAccount()
-  $scope.getLedgerData(true)
+  lc.isSelectedAccount()
+  lc.getLedgerData(true)
 
   $timeout ( ->
-    $scope.getTaxList()
+    lc.getTaxList()
   ), 2000
 
-  $scope.flatAccListC5 = {
-      page: 1
-      count: 5
-      totalPages: 0
-      currentPage : 1
-    }
+  # $scope.flatAccListC5 = {
+  #     page: 1
+  #     count: 5
+  #     totalPages: 0
+  #     currentPage : 1
+  #   }
 
-  $scope.exportOptions = () ->
-    $scope.showExportOption = !$scope.showExportOption
+  lc.exportOptions = () ->
+    lc.showExportOption = !lc.showExportOption
 
-  $scope.calculateEntryTotal = (ledger) ->
+  lc.calculateEntryTotal = (ledger) ->
     if ledger != undefined
       ledger.entryTotal = {}
       ledger.entryTotal.amount = 0
@@ -730,27 +730,27 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #     $scope.popover.position = "bottom"
   #   return false
 
-  $scope.prevTxn = null
-  $scope.selectTxn = (ledger, txn, index ,e) ->
+  lc.prevTxn = null
+  lc.selectTxn = (ledger, txn, index ,e) ->
     #setPopoverPlacement(e.clientY)
-    if $scope.accountToShow.stock != null && txn.inventory == undefined
+    if lc.accountToShow.stock != null && txn.inventory == undefined
       txn.inventory = {}
-      txn.rate = $scope.accountToShow.stock.rate
+      txn.rate = lc.accountToShow.stock.rate
     if txn.inventory && txn.inventory.stock
       txn.rate = txn.amount/txn.inventory.quantity
     #txn.rate = $filter('number')(Number(txn.rate), 4)
     $scope.selectedTxn = txn
-    if $scope.prevTxn != null
-      $scope.prevTxn.isOpen = false
+    if lc.prevTxn != null
+      lc.prevTxn.isOpen = false
     $scope.selectedTxn.isOpen = true
-    $scope.prevTxn = txn
-    $scope.calculateEntryTotal(ledger)
-    $scope.showLedgerPopover = true
-    $scope.matchInventory(txn)
+    lc.prevTxn = txn
+    lc.calculateEntryTotal(ledger)
+    lc.showLedgerPopover = true
+    lc.matchInventory(txn)
     $scope.ledgerBeforeEdit = {}
     angular.copy(ledger,$scope.ledgerBeforeEdit)
     if $scope.popover.draggable
-      $scope.showPanel = true
+      lc.showPanel = true
     #else
       #$scope.openClosePopOver(txn, ledger)
     if ledger.isBankTransaction != undefined
@@ -760,25 +760,25 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         else if transaction.type == 'CREDIT'
           ledger.voucher.shortCode = "pay"
       )
-    $scope.selectedLedger = ledger
-    $scope.selectedLedger.index = index
+    lc.selectedLedger = ledger
+    lc.selectedLedger.index = index
     #if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
-    $scope.checkCompEntry(ledger)
-    #$scope.blankCheckCompEntry(ledger)
+    lc.checkCompEntry(ledger)
+    #lc.blankCheckCompEntry(ledger)
     $scope.isTransactionContainsTax(ledger)
     e.stopPropagation()
 
   $scope.$watch('selectedTxn.amount', (newVal, oldVal) ->
     if newVal != oldVal
-      $scope.calculateEntryTotal($scope.selectedLedger)
+      lc.calculateEntryTotal(lc.selectedLedger)
   )
 
-  $scope.matchInventory = (txn) ->
+  lc.matchInventory = (txn) ->
     match = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
     if match && match.stock != null && txn.inventory == null
       txn.inventory = angular.copy(match.stock, txn.inventory)
 
-  $scope.setEntryTotal = (pre,post, condition) ->
+  lc.setEntryTotal = (pre,post, condition) ->
     if condition != 'delete'
       _.each post.ledgers, (led) ->
         if pre.uniqueName == led.uniqueName
@@ -786,31 +786,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           if condition == 'update'
             $scope.updatedLedgerTotal = led.total
 
-  #$scope.openClosePopoverForLedger = (txn, ledger) ->
-    # _.each $scope.ledgerData.ledgers, (iledger) ->
-    #   _.each iledger.transactions, (itxn) ->
-    #     itxn.isOpen = false
-    # txn.isOpen = true
-
-  # $scope.openClosePopoverForeLedger = (txn, ledger) ->
-  #   _.each $scope.eLedgerData, (iledger) ->
-  #     _.each iledger.transactions, (itxn) ->
-  #       itxn.isOpen = false
-  #   txn.isOpen = true
-
-  # $scope.openClosePopoverForBlankLedger = (txn, ledger) ->
-  #   _.each $scope.blankLedger.transactions, (itxn) ->
-  #     itxn.isOpen = false
-  #   txn.isOpen = true
-
-  $scope.openClosePopOver = (txn, ledger, e) ->
-    if $scope.prevTxn != null
-      $scope.prevTxn.isOpen = false
+  lc.openClosePopOver = (txn, ledger, e) ->
+    if lc.prevTxn != null
+      lc.prevTxn.isOpen = false
     txn.isOpen = true
     txn.isblankOpen = true
-    $scope.prevTxn = txn
+    lc.prevTxn = txn
     $scope.selectedTxn = txn
-    $scope.selectedLedger = ledger
+    lc.selectedLedger = ledger
 
     if $(e.currentTarget).offset().top > $(window).height() / 3 * 2
       $scope.popover.position = "top"
@@ -821,27 +804,27 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     # $scope.openClosePopoverForBlankLedger(txn, ledger)
     # $scope.openClosePopoverForeLedger(txn, ledger)
 
-  $scope.checkCompEntry = (ledger) ->
+  lc.checkCompEntry = (ledger) ->
     unq = ledger.uniqueName
     ledger.isCompoundEntry = true
-    _.each $scope.ledgerData.ledgers, (lgr) ->
+    _.each lc.ledgerData.ledgers, (lgr) ->
       if unq == lgr.uniqueName
         lgr.isCompoundEntry = true
       else
         lgr.isCompoundEntry = false
-    if unq == $scope.blankLedger.uniqueName
-      $scope.blankLedger.isCompoundEntry = true
+    if unq == lc.blankLedger.uniqueName
+      lc.blankLedger.isCompoundEntry = true
     else
-      $scope.blankLedger.isCompoundEntry = false
+      lc.blankLedger.isCompoundEntry = false
 
-  $scope.blankCheckCompEntry = (ledger) ->
+  lc.blankCheckCompEntry = (ledger) ->
     if ledger.isBlankLedger
       _.each ledger.transactions, (txn) ->
         if txn.particular.uniqueName != undefined && txn.particular.uniqueName.length > 0
           ledger.isBlankCompEntry = true
     else
       ledger.isBlankCompEntry = false 
-      $scope.blankLedger.isBlankCompEntry = false
+      lc.blankLedger.isBlankCompEntry = false
 
   # lc.formatInventoryTxns = (ledger) ->
   #   if ledger.transactions.length > 0
@@ -851,21 +834,21 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #         if txn.particular.stock != null
   #           txn.inventory.stock.uniqueName = txn.particular.uniqueName
   #         else
-  #           txn.inventory.stock.uniqueName = $scope.accountToShow.uniqueName
+  #           txn.inventory.stock.uniqueName = lc.accountToShow.uniqueName
 
-  $scope.doingEntry = false
-  $scope.lastSelectedLedger = {}
-  $scope.saveUpdateLedger = (ledger) ->
+  lc.doingEntry = false
+  lc.lastSelectedLedger = {}
+  lc.saveUpdateLedger = (ledger) ->
     # $scope.pageLoader = true
-    # $scope.showLoader = true
-    $scope.lastSelectedLedger = ledger
-    $scope.dLedgerLimitBeforeUpdate = $scope.dLedgerLimit
-    $scope.cLedgerLimitBeforeUpdate = $scope.cLedgerLimit
+    # lc.showLoader = true
+    lc.lastSelectedLedger = ledger
+    lc.dLedgerLimitBeforeUpdate = lc.dLedgerLimit
+    lc.cLedgerLimitBeforeUpdate = lc.cLedgerLimit
     #lc.formatInventoryTxns(ledger)
-    if $scope.doingEntry == true
+    if lc.doingEntry == true
       return
 
-    $scope.doingEntry = true
+    lc.doingEntry = true
     $scope.ledgerTxnChanged = false
     if ledger.isBankTransaction
       $scope.btIndex = ledger.index
@@ -875,7 +858,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         #add new entry
         unqNamesObj = {
           compUname: $rootScope.selectedCompany.uniqueName
-          acntUname: $scope.accountUnq
+          acntUname: lc.accountUnq
         }
         delete ledger.uniqueName
         delete ledger.voucherNo
@@ -895,23 +878,23 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         )
         ledger.transactions = transactionsArray
         ledger.voucherType = ledger.voucher.shortCode
-        $scope.addTaxesToLedger(ledger)
+        lc.addTaxesToLedger(ledger)
         if ledger.transactions.length > 0
           if ledger.transactions.length > 1
-            $scope.matchTaxTransactions(ledger.transactions, $scope.taxList)
-            $scope.checkManualTaxTransaction(ledger.transactions, $scope.ledgerBeforeEdit.transactions)
-            $scope.checkTaxCondition(ledger)
+            lc.matchTaxTransactions(ledger.transactions, lc.taxList)
+            lc.checkManualTaxTransaction(ledger.transactions, $scope.ledgerBeforeEdit.transactions)
+            lc.checkTaxCondition(ledger)
           ledgerService.createEntry(unqNamesObj, ledger).then(
-            (res) -> $scope.addEntrySuccess(res, ledger)
-            (res) -> $scope.addEntryFailure(res,rejectedTransactions, ledger))
+            (res) -> lc.addEntrySuccess(res, ledger)
+            (res) -> lc.addEntryFailure(res,rejectedTransactions, ledger))
         else
-          $scope.doingEntry = false
+          lc.doingEntry = false
           ledger.transactions = rejectedTransactions
           response = {}
           response.data = {}
           response.data.message = "There must be at least a transaction to make an entry."
           response.data.status = "Error"
-          $scope.addEntryFailure(response,[])
+          lc.addEntryFailure(response,[])
 #          toastr.error("There must be at least a transaction to make an entry.")
       else
         #update entry
@@ -927,33 +910,33 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #      ledger.isInclusiveTax = false
         unqNamesObj = {
           compUname: $rootScope.selectedCompany.uniqueName
-          acntUname: $scope.accountUnq
+          acntUname: lc.accountUnq
           entUname: ledger.uniqueName
         }
         # transactionsArray = []
-        # _.every($scope.blankLedger.transactions,(led) ->
+        # _.every(lc.blankLedger.transactions,(led) ->
         #   delete led.date
         #   delete led.parentGroups
         # )
         # _.each(ledger.)
-        # transactionsArray = _.reject($scope.blankLedger.transactions, (led) ->
+        # transactionsArray = _.reject(lc.blankLedger.transactions, (led) ->
         #   led.particular.uniqueName == ""
         # )
-        $scope.addTaxesToLedger(ledger)
+        lc.addTaxesToLedger(ledger)
 #        console.log ledger
         #ledger.transactions.push(transactionsArray)
-        ledger.voucher = _.findWhere($scope.voucherTypeList,{'shortCode':ledger.voucher.shortCode})
+        ledger.voucher = _.findWhere(lc.voucherTypeList,{'shortCode':ledger.voucher.shortCode})
         ledger.voucherType = ledger.voucher.shortCode
         if ledger.transactions.length > 0
-          $scope.matchTaxTransactions(ledger.transactions, $scope.taxList)
-          $scope.matchTaxTransactions($scope.ledgerBeforeEdit.transactions, $scope.taxList)
-          $scope.checkManualTaxTransaction(ledger.transactions, $scope.ledgerBeforeEdit.transactions)
-          updatedTxns = $scope.updateEntryTaxes(ledger.transactions)
+          lc.matchTaxTransactions(ledger.transactions, lc.taxList)
+          lc.matchTaxTransactions($scope.ledgerBeforeEdit.transactions, lc.taxList)
+          lc.checkManualTaxTransaction(ledger.transactions, $scope.ledgerBeforeEdit.transactions)
+          updatedTxns = lc.updateEntryTaxes(ledger.transactions)
           ledger.transactions = updatedTxns
-          $scope.checkTaxCondition(ledger)
+          lc.checkTaxCondition(ledger)
           isModified = false
           if ledger.taxes.length > 0
-            isModified = $scope.checkPrincipleModifications(ledger, $scope.ledgerBeforeEdit.transactions)
+            isModified = lc.checkPrincipleModifications(ledger, $scope.ledgerBeforeEdit.transactions)
           if isModified
             $scope.selectedTxn.isOpen = false
             modalService.openConfirmModal(
@@ -962,26 +945,26 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
               ok: 'Yes',
               cancel: 'No'
             ).then(
-                (res) -> $scope.UpdateEntry(ledger, unqNamesObj, true),
-                (res) -> $scope.UpdateEntry(ledger, unqNamesObj, false)
+                (res) -> lc.UpdateEntry(ledger, unqNamesObj, true),
+                (res) -> lc.UpdateEntry(ledger, unqNamesObj, false)
             )
           else
            ledgerService.updateEntry(unqNamesObj, ledger).then(
-             (res) -> $scope.updateEntrySuccess(res, ledger)
-             (res) -> $scope.updateEntryFailure(res, ledger)
+             (res) -> lc.updateEntrySuccess(res, ledger)
+             (res) -> lc.updateEntryFailure(res, ledger)
            )
         else
-          $scope.doingEntry = false
+          lc.doingEntry = false
           response = {}
           response.data = {}
           response.data.message = "There must be at least a transaction to make an entry."
           response.data.status = "Error"
-          $scope.addEntryFailure(response,[])
+          lc.addEntryFailure(response,[])
     else
       toastr.error("Select voucher type.")
 
 
-  $scope.checkTaxCondition = (ledger) ->
+  lc.checkTaxCondition = (ledger) ->
     transactions = []
     _.each ledger.transactions, (txn) ->
       if ledger.isInclusiveTax && !txn.isTax
@@ -989,9 +972,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if ledger.isInclusiveTax
       ledger.transactions = transactions
 
-  $scope.checkPrincipleModifications = (ledger, uTxnList) ->
-    withoutTaxesLedgerTxn = $scope.getPrincipleTxnOnly(ledger.transactions)
-    withoutTaxesUtxnList = $scope.getPrincipleTxnOnly(uTxnList)
+  lc.checkPrincipleModifications = (ledger, uTxnList) ->
+    withoutTaxesLedgerTxn = lc.getPrincipleTxnOnly(ledger.transactions)
+    withoutTaxesUtxnList = lc.getPrincipleTxnOnly(uTxnList)
     isModified = false
     if withoutTaxesLedgerTxn.length == withoutTaxesUtxnList.length
       _.each withoutTaxesLedgerTxn, (txn, idx) ->
@@ -1003,7 +986,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       isModified = true
     isModified
 
-  $scope.checkManualTaxTransaction = (txnList, uTxnList) ->
+  lc.checkManualTaxTransaction = (txnList, uTxnList) ->
     #console.log txnList.length, uTxnList.length
     _.each txnList, (txn) ->
       txn.isManualTax = true
@@ -1012,25 +995,25 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           txn.isManualTax = false
     return 
 
-  $scope.getPrincipleTxnOnly = (txnList) ->
+  lc.getPrincipleTxnOnly = (txnList) ->
     transactions = []
     _.each txnList, (txn) ->
       if txn.isTax == undefined || !txn.isTax
         transactions.push(txn)
     transactions
 
-  $scope.addTaxesToLedger = (ledger) ->
+  lc.addTaxesToLedger = (ledger) ->
     ledger.taxes = []
-    _.each($scope.taxList, (tax) ->
+    _.each(lc.taxList, (tax) ->
       if tax.isChecked == true
         ledger.taxes.push(tax.uniqueName)
     )
 
-  $scope.updateEntryTaxes = (txnList) ->
+  lc.updateEntryTaxes = (txnList) ->
     transactions = []
     if txnList.length > 1
       _.each txnList, (txn, idx) ->
-        _.each $scope.taxList, (tax) ->
+        _.each lc.taxList, (tax) ->
           if txn.particular.uniqueName == tax.account.uniqueName && !tax.isChecked
             if !txn.isManualTax
               txn.toRemove = true 
@@ -1043,7 +1026,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.isTransactionContainsTax = (ledger) ->
     if ledger.taxes != undefined && ledger.taxes.length > 0
-      _.each($scope.taxList, (tax) ->
+      _.each(lc.taxList, (tax) ->
         tax.isChecked = false
         _.each(ledger.taxes, (taxe) ->
           if taxe == tax.uniqueName
@@ -1051,7 +1034,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         )
       )
     else
-      _.each($scope.taxList, (tax) ->
+      _.each(lc.taxList, (tax) ->
         tax.isChecked = false
         _.each(ledger.transactions, (txn) ->
           if txn.particular.uniqueName == tax.account.uniqueName
@@ -1059,71 +1042,30 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         )
       )
 
-  $scope.UpdateEntry = (ledger, unqNamesObj,removeTax) ->
+  lc.UpdateEntry = (ledger, unqNamesObj,removeTax) ->
     if removeTax == true
       $scope.txnAfterRmovingTax = []
-      $scope.removeTaxTxnOnPrincipleTxnModified(ledger.transactions)
+      lc.removeTaxTxnOnPrincipleTxnModified(ledger.transactions)
       ledger.transactions = $scope.txnAfterRmovingTax
     if ledger.transactions.length > 0
       ledgerService.updateEntry(unqNamesObj, ledger).then(
-        (res) -> $scope.updateEntrySuccess(res, ledger)
-        (res) -> $scope.updateEntryFailure(res, ledger)
+        (res) -> lc.updateEntrySuccess(res, ledger)
+        (res) -> lc.updateEntryFailure(res, ledger)
       )
 
-  $scope.matchTaxTransactions = (txnList, taxList) ->
+  lc.matchTaxTransactions = (txnList, taxList) ->
     _.each txnList, (txn) ->
       _.each taxList, (tax) ->
         if txn.particular.uniqueName == tax.account.uniqueName
           txn.isTax = true
 
-  # $scope.checkIfPrincipleTxnIsModified = (ledger, uTxnList, unqNamesObj) ->
-  #   $scope.ledgerTxnChanged = false
-  #   txnList = ledger.transactions
-  #   if txnList.length <= 1
-  #     $scope.UpdateEntry(ledger, unqNamesObj, false)
-  #     return
-  #   if ledger.transactions.length != uTxnList.length
-  #     modalService.openConfirmModal(
-  #       title: 'Update'
-  #       body: 'Transactions updated, Would you also like to update tax transactions?',
-  #       ok: 'Yes',
-  #       cancel: 'No'
-  #     ).then(
-  #       (res) -> $scope.UpdateEntry(ledger, unqNamesObj, true),
-  #       (res) -> $scope.UpdateEntry(ledger, unqNamesObj, false)
-  #     )
-  #   else
-  #     openModal = false
-  #     _.each txnList, (txn, i) ->
-  #       _.each uTxnList, (uTxn, j) ->
-  #         if txn.isTax == undefined && i == j && txn.particular.uniqueName == uTxn.particular.uniqueName && txn.amount != uTxn.amount
-  #           openModal = true
-  #     if openModal == true
-  #       modalService.openConfirmModal(
-  #         title: 'Update'
-  #         body: 'Principle transaction updated, Would you also like to update tax transactions?',
-  #         ok: 'Yes',
-  #         cancel: 'No'
-  #       ).then(
-  #           (res) -> $scope.UpdateEntry(ledger, unqNamesObj, true),
-  #           (res) -> $scope.UpdateEntry(ledger, unqNamesObj, false)
-  #       )
-  #     else
-  #       $scope.UpdateEntry(ledger, unqNamesObj, false)
-
-
-  $scope.removeTaxTxnOnPrincipleTxnModified = (txnList) ->
+  lc.removeTaxTxnOnPrincipleTxnModified = (txnList) ->
     _.each txnList, (txn) ->
       if !txn.isTax
         $scope.txnAfterRmovingTax.push(txn)
 
-
-  $scope.removeUpdatedBankLedger = () ->
-    if $scope.btIndex != undefined
-      $scope.eLedgerData.splice($scope.btIndex, 1)
-
-  $scope.resetBlankLedger = () ->
-    $scope.newDebitTxn = {
+  lc.resetBlankLedger = () ->
+    lc.newDebitTxn = {
       date: $filter('date')(new Date(), "dd-MM-yyyy")
       particular: {
         name:''
@@ -1132,7 +1074,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       amount : 0
       type: 'DEBIT'
     }
-    $scope.newCreditTxn = {
+    lc.newCreditTxn = {
       date: $filter('date')(new Date(), "dd-MM-yyyy")
       particular: {
         name:''
@@ -1141,7 +1083,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       amount : 0
       type: 'CREDIT'
     }
-    $scope.blankLedger = {
+    lc.blankLedger = {
       isBlankLedger : true
       description:null
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
@@ -1152,8 +1094,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       applyApplicableTaxes:false
       tag:null
       transactions:[
-        $scope.newDebitTxn
-        $scope.newCreditTxn
+        lc.newDebitTxn
+        lc.newCreditTxn
       ]
       unconfirmedEntry:false
       isInclusiveTax: false
@@ -1166,101 +1108,101 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       voucherNo:null
     }
 
-  $scope.addEntrySuccess = (res, ledger) ->
-    $scope.doingEntry = false
+  lc.addEntrySuccess = (res, ledger) ->
+    lc.doingEntry = false
     ledger.failed = false
     toastr.success("Entry created successfully", "Success")
     #addThisLedger = {}
-    #_.extend(addThisLedger,$scope.selectedLedger)
-    #$scope.ledgerData.ledgers.push(res.body)
-    #$scope.getLedgerData(false)
-    $scope.resetBlankLedger()
-    $scope.selectedLedger = $scope.blankLedger
-    _.each($scope.taxList, (tax) ->
+    #_.extend(addThisLedger,lc.selectedLedger)
+    #lc.ledgerData.ledgers.push(res.body)
+    #lc.getLedgerData(false)
+    lc.resetBlankLedger()
+    lc.selectedLedger = lc.blankLedger
+    _.each(lc.taxList, (tax) ->
       tax.isChecked = false
     )
     $scope.selectedTxn.isOpen = false
-    if $scope.mergeTransaction
+    if lc.mergeTransaction
       $timeout ( ->
-        $scope.mergeBankTransactions($scope.mergeTransaction)
+        lc.mergeBankTransactions(lc.mergeTransaction)
       ), 2000
-    $scope.updateLedgerData('new',res.body[0])
-    $scope.pushNewEntryToLedger(res.body)
+    lc.updateLedgerData('new',res.body[0])
+    lc.pushNewEntryToLedger(res.body)
     if ledger.isBankTransaction
-      $scope.updateBankLedger(ledger)
+      lc.updateBankLedger(ledger)
     # $timeout ( ->
     #   $scope.pageLoader = false
-    #   $scope.showLoader = false
+    #   lc.showLoader = false
     # ), 1000
 
-  $scope.addEntryFailure = (res, rejectedTransactions, ledger) ->
-    $scope.doingEntry = false
+  lc.addEntryFailure = (res, rejectedTransactions, ledger) ->
+    lc.doingEntry = false
     ledger.failed = true
     toastr.error(res.data.message, res.data.status)
     if rejectedTransactions.length > 0
       _.each(rejectedTransactions, (rTransaction) ->
-        $scope.selectedLedger.transactions.push(rTransaction)
+        lc.selectedLedger.transactions.push(rTransaction)
       )
     # $timeout ( ->
     #   $scope.pageLoader = false
-    #   $scope.showLoader = false
+    #   lc.showLoader = false
     # ), 1000
 
-  $scope.updateBankLedger = (ledger) ->
+  lc.updateBankLedger = (ledger) ->
     _.each $scope.eLedgerData, (eledger, idx) ->
       if ledger.transactionId == eledger.transactionId
         $scope.eLedgerData.splice(idx, 1)
-    $scope.getLedgerData()
+    lc.getLedgerData()
 
-  $scope.pushNewEntryToLedger = (newLedgers) ->
+  lc.pushNewEntryToLedger = (newLedgers) ->
     _.each newLedgers, (ledger) ->
-      $scope.calculateEntryTotal(ledger)
-      $scope.ledgerData.ledgers.push(ledger)
+      lc.calculateEntryTotal(ledger)
+      lc.ledgerData.ledgers.push(ledger)
 
-  $scope.resetLedger = () ->
-    $scope.resetBlankLedger()
-    $scope.selectedLedger = $scope.blankLedger
-    _.each($scope.taxList, (tx) ->
+  lc.resetLedger = () ->
+    lc.resetBlankLedger()
+    lc.selectedLedger = lc.blankLedger
+    _.each(lc.taxList, (tx) ->
       tx.isChecked = false
     )
 
-  $scope.updateEntrySuccess = (res, ledger) ->
-    $scope.doingEntry = false
+  lc.updateEntrySuccess = (res, ledger) ->
+    lc.doingEntry = false
     ledger.failed = false
     toastr.success("Entry updated successfully.", "Success")
     #addThisLedger = {}
-    #_.extend(addThisLedger,$scope.blankLedger)
-#    $scope.ledgerData.ledgers.push(addThisLedger)
-    #$scope.getLedgerData(false)
+    #_.extend(addThisLedger,lc.blankLedger)
+#    lc.ledgerData.ledgers.push(addThisLedger)
+    #lc.getLedgerData(false)
     _.extend(ledger, res.body)
-    $scope.resetBlankLedger()
-    $scope.selectedLedger = $scope.blankLedger
+    lc.resetBlankLedger()
+    lc.selectedLedger = lc.blankLedger
     $scope.selectedTxn.isOpen = false
-    if $scope.mergeTransaction
-      $scope.mergeBankTransactions($scope.mergeTransaction)
-    $scope.dLedgerLimit = $scope.dLedgerLimitBeforeUpdate
+    if lc.mergeTransaction
+      lc.mergeBankTransactions(lc.mergeTransaction)
+    lc.dLedgerLimit = lc.dLedgerLimitBeforeUpdate
     #$scope.openClosePopOver(res.body.transactions[0], res.body)
-    $scope.updateLedgerData('update',res.body)
+    lc.updateLedgerData('update',res.body)
     $timeout ( ->
       ledger.total = $scope.updatedLedgerTotal
       # $scope.pageLoader = false
-      # $scope.showLoader = false
+      # lc.showLoader = false
     ), 2000
     
-  $scope.updateEntryFailure = (res, ledger) ->
-    $scope.doingEntry = false
+  lc.updateEntryFailure = (res, ledger) ->
+    lc.doingEntry = false
     ledger.failed = true
     toastr.error(res.data.message, res.data.status)
     # $timeout ( ->
     #   $scope.pageLoader = false
-    #   $scope.showLoader = false
+    #   lc.showLoader = false
     # ), 1000
     
-  $scope.closePopOverSingleLedger = (ledger) ->
+  lc.closePopOverSingleLedger = (ledger) ->
     _.each ledger.transactions, (txn) ->
       txn.isOpen = false
 
-  $scope.deleteEntryConfirm = (ledger) ->
+  lc.deleteEntryConfirm = (ledger) ->
     modalService.openConfirmModal(
       title: 'Delete'
       body: 'Are you sure you want to delete this entry?',
@@ -1268,84 +1210,74 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       cancel: 'No'
     ).then(
       (res) -> 
-        $scope.deleteEntry(ledger)
+        lc.deleteEntry(ledger)
       (res) -> 
         $dismiss()
     )
 
-  $scope.deleteEntry = (ledger) ->
+  lc.deleteEntry = (ledger) ->
     # $scope.pageLoader = true
-    # $scope.showLoader = true
-    $scope.lastSelectedLedger = ledger
+    # lc.showLoader = true
+    lc.lastSelectedLedger = ledger
     if (ledger.uniqueName == undefined || _.isEmpty(ledger.uniqueName)) && (ledger.isBankTransaction)
       return
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      acntUname: $scope.accountUnq
+      acntUname: lc.accountUnq
       entUname: ledger.uniqueName
     }
     if unqNamesObj.acntUname != '' || unqNamesObj.acntUname != undefined
       ledgerService.deleteEntry(unqNamesObj).then((res) ->
-        $scope.deleteEntrySuccess(ledger, res)
-      , $scope.deleteEntryFailure)
+        lc.deleteEntrySuccess(ledger, res)
+      , lc.deleteEntryFailure)
 
-  $scope.deleteEntrySuccess = (item, res) ->
+  lc.deleteEntrySuccess = (item, res) ->
     toastr.success("Entry deleted successfully","Success")
-    # withoutLedger  = _.without($scope.ledgerData.ledgers,item)
-    # $scope.ledgerData.ledgers = withoutLedger
-    $scope.removeDeletedLedger(item)
-    $scope.resetBlankLedger()
-    $scope.selectedLedger = $scope.blankLedger
-    #$scope.getLedgerData(false)
-    if $scope.mergeTransaction
+    lc.removeDeletedLedger(item)
+    lc.resetBlankLedger()
+    lc.selectedLedger = lc.blankLedger
+    #lc.getLedgerData(false)
+    if lc.mergeTransaction
       $timeout ( ->
-        $scope.mergeBankTransactions($scope.mergeTransaction)
+        lc.mergeBankTransactions(lc.mergeTransaction)
       ), 2000
-#    $scope.calculateLedger($scope.ledgerData, "deleted")
-    $scope.updateLedgerData('delete')
-    # $timeout ( ->
-    #   $scope.pageLoader = false
-    #   $scope.showLoader = false
-    # ), 1000
-    
-  
-  $scope.deleteEntryFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
-    # $timeout ( ->
-    #   $scope.pageLoader = false
-    #   $scope.showLoader = false
-    # ), 1000
+#    $scope.calculateLedger(lc.ledgerData, "deleted")
+    lc.updateLedgerData('delete')
 
-  $scope.removeDeletedLedger = (item) ->
+  
+  lc.deleteEntryFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  lc.removeDeletedLedger = (item) ->
     index = 0
-    _.each $scope.ledgerData.ledgers, (led, idx ) ->
+    _.each lc.ledgerData.ledgers, (led, idx ) ->
       if led.uniqueName == item.uniqueName
         index = idx
-    $scope.ledgerData.ledgers.splice(index, 1)
+    lc.ledgerData.ledgers.splice(index, 1)
 
   # select multiple transactions, from same or different entries
-  $scope.allSelected = []  
-  $scope.selectMultiple = (ledger, txn, index) ->
+  lc.allSelected = []  
+  lc.selectMultiple = (ledger, txn, index) ->
     cTxn = {}
     if txn.isSelected == true
       cTxn.unq = ledger.uniqueName
       cTxn.index = index
       cTxn.txn = txn 
-      $scope.allSelected.push(cTxn)
+      lc.allSelected.push(cTxn)
 
-  $scope.deleteMultipleTransactions = () ->
-    if $scope.allSelected.length > 0
-      _.each $scope.ledgerData.ledgers, (ledger) ->
-        _.each $scope.allSelected, (t) ->
+  lc.deleteMultipleTransactions = () ->
+    if lc.allSelected.length > 0
+      _.each lc.ledgerData.ledgers, (ledger) ->
+        _.each lc.allSelected, (t) ->
           if ledger.uniqueName = t.unq
             ledger.transactions.splice(t.index, 1)
-    $scope.allSelected = []
+    lc.allSelected = []
 
-  $scope.redirectToState = (state) ->
+  lc.redirectToState = (state) ->
     $state.go(state)
 
 
-  $scope.b64toBlob = (b64Data, contentType, sliceSize) ->
+  lc.b64toBlob = (b64Data, contentType, sliceSize) ->
     contentType = contentType or ''
     sliceSize = sliceSize or 512
     byteCharacters = atob(b64Data)
@@ -1365,128 +1297,35 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     blob
 
 
-  $scope.downloadInvoice = (invoiceNumber, e) ->
+  lc.downloadInvoice = (invoiceNumber, e) ->
     e.stopPropagation()
     obj =
       compUname: $rootScope.selectedCompany.uniqueName
-      acntUname: $scope.accountUnq
+      acntUname: lc.accountUnq
     data=
       invoiceNumber: [invoiceNumber]
       template: ''
     accountService.downloadInvoice(obj, data).then((res) ->
-      $scope.downloadInvSuccess(res, invoiceNumber)
-    , $scope.multiActionWithInvFailure)
+      lc.downloadInvSuccess(res, invoiceNumber)
+    , lc.multiActionWithInvFailure)
 
-  $scope.downloadInvSuccess = (res, invoiceNumber)->
-    data = $scope.b64toBlob(res.body, "application/pdf", 512)
+  lc.downloadInvSuccess = (res, invoiceNumber)->
+    data = lc.b64toBlob(res.body, "application/pdf", 512)
     blobUrl = URL.createObjectURL(data)
     $scope.dlinv = blobUrl
-    # $scope.dlname = "abc.pdf"
-    #$window.open(blobUrl)
-    FileSaver.saveAs(data, $scope.accountToShow.name+ '-' + invoiceNumber+".pdf")
+    FileSaver.saveAs(data, lc.accountToShow.name+ '-' + invoiceNumber+".pdf")
 
   # common failure message
-  $scope.multiActionWithInvFailure=(res)->
+  lc.multiActionWithInvFailure=(res)->
     toastr.error(res.data.message, res.data.status)
 
-  #export ledger
-#  $scope.exportLedger = ()->
-#    unqNamesObj = {
-#      compUname: $rootScope.selectedCompany.uniqueName
-#      selGrpUname: $scope.selectedGroupUname
-#      acntUname: $rootScope.selectedAccount.uniqueName
-#      fromDate: $filter('date')($scope.fromDate.date, "dd-MM-yyyy")
-#      toDate: $filter('date')($scope.toDate.date, "dd-MM-yyyy")
-#    }
-#    accountService.exportLedger(unqNamesObj).then($scope.exportLedgerSuccess, $scope.exportLedgerFailure)
-#
-#  $scope.exportLedgerSuccess = (res)->
-#    $scope.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
-#    if $scope.msieBrowser()
-#      $scope.openWindow(res.body.filePath)
-#    else if $scope.isSafari
-#      modalInstance = $uibModal.open(
-#        template: '<div>
-#            <div class="modal-header">
-#              <h3 class="modal-title">Download File</h3>
-#            </div>
-#            <div class="modal-body">
-#              <p class="mrB">To download your file Click on button</p>
-#              <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
-#            </div>
-#            <div class="modal-footer">
-#              <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
-#            </div>
-#        </div>'
-#        size: "sm"
-#        backdrop: 'static'
-#        scope: $scope
-#      )
-#    else
-#      window.open(res.body.filePath)
-#
-#  $scope.exportLedgerFailure = (res)->
-#    toastr.error(res.data.message, res.data.status)
-
-  $scope.isScrolledIntoView = (elem,top,height) ->
-    docViewTop = top
-    docViewBottom = docViewTop + height
-    elemTop = $(elem).offset().top
-    elemBottom = elemTop + $(elem).height()
-    ((elemBottom <= docViewBottom) && (elemTop >= docViewTop))
-
-  $scope.stopProp = (e) ->
-    e.stopPropagation()
-
-  # $scope.onledgerScroll = (top,height,e) ->
-  #   if top >= height-100
-  #     $scope.cLedgerLimit += 10
-  #     $scope.dLedgerLimit += 10
-
-
-  #### ledger scroll functions ####
-
-  # splicedTxns = []
-  # count = 40
-  # page = 1
-  # idx = 0
-  # scrolledBottom = false
-
-  # getTransactionCount = (ledgers) ->
-  #   txns = 0
-  #   _.each ledgers, (ledger) ->
-  #     txns += ledger.transactions.length
-  #   txns
-
-  # onLedgerScrollBottom = () ->
-  #   temp = $scope.ledgerDataDupe.ledgers.splice(0, count)
-  #   page += 1
-  #   if temp.length > 0
-  #     splicedTxns.push(temp)
-
-  # onLedgerScrollTop = () ->
-  #   if splicedTxns.length > 1
-  #     $scope.ledgerDataDupe.ledgers = splicedTxns[splicedTxns.length - 1].concat($scope.ledgerDataDupe.ledgers)
-  #     splicedTxns = splicedTxns.splice(splicedTxns.length - 1, 1)
-  #   else if splicedTxns.length == 1
-  #     $scope.ledgerDataDupe.ledgers = splicedTxns[0].concat($scope.ledgerDataDupe.ledgers)
-  #     splicedTxns = []
-  #   console.log $scope.ledgerDataDupe.ledgers.length
-
-  # $scope.onledgerScroll = (pos) ->
-  #   if pos == "bottom"
-  #     onLedgerScrollBottom()
-  #   else if pos == "top"
-  #     onLedgerScrollTop()
-  #   console.log $scope.ledgerDataDupe.ledgers.length
-
-  $scope.triggerPanelFocus = (e) ->
+  lc.triggerPanelFocus = (e) ->
     if e.keyCode == 13
       $('#saveUpdate').focus()
       e.stopPropagation()
       return false
 
-  $scope.gwaList = {
+  lc.gwaList = {
     page: 1
     count: 5000
     totalPages: 0
@@ -1494,17 +1333,17 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     limit: 5
   }
 
-  $scope.getFlattenGrpWithAccList = (compUname) ->
+  lc.getFlattenGrpWithAccList = (compUname) ->
 #    console.log("working  : ",$scope.working)
     reqParam = {
       companyUniqueName: compUname
       q: ''
-      page: $scope.gwaList.page
-      count: $scope.gwaList.count
+      page: lc.gwaList.page
+      count: lc.gwaList.count
     }
-    groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+    groupService.getFlattenGroupAccList(reqParam).then(lc.getFlattenGrpWithAccListSuccess, lc.getFlattenGrpWithAccListFailure)
 
-  $scope.getGroupsWithDetail = () ->
+  lc.getGroupsWithDetail = () ->
     if $rootScope.allowed == true
       groupService.getGroupsWithoutAccountsInDetail($rootScope.selectedCompany.uniqueName).then(
         (success)->
@@ -1512,9 +1351,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         (failure) ->
           toastr.error('Failed to get Detailed Groups List')
       )
-  $scope.getGroupsWithDetail()
+  lc.getGroupsWithDetail()
 
-  $scope.markFixedGrps = (flatGrpList) ->
+  lc.markFixedGrps = (flatGrpList) ->
     temp = []
     _.each $scope.detGrpList, (detGrp) ->
       _.each flatGrpList, (fGrp) ->
@@ -1525,27 +1364,27 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         temp.push(grp)
     temp
 
-  $scope.getFlattenGrpWithAccListSuccess = (res) ->
-    $scope.gwaList.totalPages = res.body.totalPages
-    $scope.flatGrpList = $scope.markFixedGrps(res.body.results)
+  lc.getFlattenGrpWithAccListSuccess = (res) ->
+    lc.gwaList.totalPages = res.body.totalPages
+    $scope.flatGrpList = lc.markFixedGrps(res.body.results)
     #$scope.removeEmptyGroups(res.body.results)
     #$scope.flatAccntWGroupsList = $scope.grpWithoutEmptyAccounts
     #console.log($scope.flatAccntWGroupsList)
     #$scope.showAccountList = true
-    $scope.gwaList.limit = 5
+    lc.gwaList.limit = 5
     #$rootScope.companyLoaded = true
     #$scope.working = false
 
-  $scope.getFlattenGrpWithAccListFailure = (res) ->
+  lc.getFlattenGrpWithAccListFailure = (res) ->
     toastr.error(res.data.message)
     #$scope.working = false
 
-  $scope.addNewAccount = () ->
-    $scope.newAccountModel.group = ''
-    $scope.newAccountModel.account = ''
-    $scope.newAccountModel.accUnqName = ''
+  lc.addNewAccount = () ->
+    lc.newAccountModel.group = ''
+    lc.newAccountModel.account = ''
+    lc.newAccountModel.accUnqName = ''
     $scope.selectedTxn.isOpen = false
-    $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
+    lc.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
     $scope.AccmodalInstance = $uibModal.open(
       templateUrl: $rootScope.prefixThis+'/public/webapp/Ledger/createAccountQuick.html'
       size: "sm"
@@ -1554,33 +1393,33 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     )
     #modalInstance.result.then($scope.addNewAccountCloseSuccess, $scope.addNewAccountCloseFailure)
 
-  $scope.addNewAccountConfirm = () ->
+  lc.addNewAccountConfirm = () ->
     newAccount = {
       email:""
       mobileNo:""
-      name:$scope.newAccountModel.account
+      name:lc.newAccountModel.account
       openingBalanceDate: $filter('date')($scope.today, "dd-MM-yyyy")
-      uniqueName:$scope.newAccountModel.accUnqName
+      uniqueName:lc.newAccountModel.accUnqName
     }
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: $scope.newAccountModel.group.groupUniqueName
-      acntUname: $scope.newAccountModel.accUnqName
+      selGrpUname: lc.newAccountModel.group.groupUniqueName
+      acntUname: lc.newAccountModel.accUnqName
     }
-    if $scope.newAccountModel.group.groupUniqueName == '' || $scope.newAccountModel.group.groupUniqueName == undefined
+    if lc.newAccountModel.group.groupUniqueName == '' || lc.newAccountModel.group.groupUniqueName == undefined
       toastr.error('Please select a group.')
     else
-      accountService.createAc(unqNamesObj, newAccount).then($scope.addNewAccountConfirmSuccess, $scope.addNewAccountConfirmFailure) 
+      accountService.createAc(unqNamesObj, newAccount).then(lc.addNewAccountConfirmSuccess, lc.addNewAccountConfirmFailure) 
 
-  $scope.addNewAccountConfirmSuccess = (res) ->
+  lc.addNewAccountConfirmSuccess = (res) ->
     toastr.success('Account created successfully')
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
     $scope.AccmodalInstance.close()
 
-  $scope.addNewAccountConfirmFailure = (res) ->
+  lc.addNewAccountConfirmFailure = (res) ->
     toastr.error(res.data.message)
 
-  $scope.genearateUniqueName = (unqName) ->
+  lc.genearateUniqueName = (unqName) ->
     unqName = unqName.replace(/ |,|\//g,'')
     unqName = unqName.toLowerCase()
     if unqName.length >= 1
@@ -1592,20 +1431,20 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         text += chars.charAt(Math.floor(Math.random() * chars.length))
         i++ 
       unq = unqName + text
-      $scope.newAccountModel.accUnqName = unq
+      lc.newAccountModel.accUnqName = unq
     else
-      $scope.newAccountModel.accUnqName = ''
+      lc.newAccountModel.accUnqName = ''
 
-  $scope.genUnq = (unqName) ->
+  lc.genUnq = (unqName) ->
     $timeout ( ->
-      $scope.genearateUniqueName(unqName)
+      lc.genearateUniqueName(unqName)
     )
 
-  $scope.validateUniqueName = (unq) ->
+  lc.validateUniqueName = (unq) ->
     unq = unq.replace(/ |,|\//g,'')
 
-  $scope.onValueChange = (value, txn) ->
-    if txn.particular.stock != null &&  txn.particular.stock != undefined || $scope.accountToShow.stock != null || (txn.inventory && txn.inventory.stock)
+  lc.onValueChange = (value, txn) ->
+    if txn.particular.stock != null &&  txn.particular.stock != undefined || lc.accountToShow.stock != null || (txn.inventory && txn.inventory.stock)
       switch value
         when 'qty'
           if $scope.selectedTxn.rate > 0
@@ -1615,13 +1454,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         when 'rate'
           $scope.selectedTxn.amount = $scope.selectedTxn.rate * $scope.selectedTxn.inventory.quantity
 
-  $scope.checkStockAccount = (item, txn) ->
-    if(item.stock == null && $scope.accountToShow.stock == null)
+  lc.checkStockAccount = (item, txn) ->
+    if(item.stock == null && lc.accountToShow.stock == null)
       txn.inventory = null
-    else if $scope.accountToShow.stock == null && item.stock != null
+    else if lc.accountToShow.stock == null && item.stock != null
       txn.rate = item.stock.rate
-    else if item.stock != null && $scope.accountToShow.stock == null
-      txn.rate = $scope.accountToShow.stock.rate
+    else if item.stock != null && lc.accountToShow.stock == null
+      txn.rate = lc.accountToShow.stock.rate
 
 
   # $scope.$on 'company-changed', (event,changeData) ->
@@ -1629,7 +1468,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #   if changeData.type == 'CHANGE'
   #     # $scope.redirectToState('company.content.manage')
   #     $state.go('company.content.ledgerContent', {unqName: ""})
-  #     $scope.showLoader = true
+  #     lc.showLoader = true
 
   $scope.$watch 'popover.draggable', (newVal, oldVal) ->
     if newVal != oldVal
@@ -1642,8 +1481,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 #    ), 100
 
   $rootScope.$on('account-selected', ()->
-    $scope.isSelectedAccount()
-    #$rootScope.$emit('catchBreadcumbs', $scope.accountToShow.name)
+    lc.isSelectedAccount()
+    #$rootScope.$emit('catchBreadcumbs', lc.accountToShow.name)
   )
+
+  return lc
 
 giddh.webApp.controller 'newLedgerController', newLedgerController
