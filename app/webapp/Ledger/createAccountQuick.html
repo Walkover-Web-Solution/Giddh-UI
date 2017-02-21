@@ -23,12 +23,12 @@
               
               <label>Account Unique Name</label>
               <input class="form-control" name="account" type="text" ng-model="newAccountModel.accUnqName" placeholder="Enter Account Unique Name" >
-              <i class="glyphicon glyphicon-random pos-abs" style="right:0px;top:30px;color:green" uib-tooltip="Auto Generate UniqueName" tooltip-placement="top" tooltip-append-to-body='true' ng-click="genUnq(newAccountModel.account)"></i>
+              <i class="glyphicon glyphicon-random pos-abs" style="right:0px;top:30px;color:green" uib-tooltip="Auto Generate UniqueName" tooltip-placement="top" tooltip-append-to-body='true' ng-click="lc.genUnq(newAccountModel.account)"></i>
             </div>
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-success" ng-click="validateUniqueName(newAccountModel.accUnqName);addNewAccountConfirm()" ng-disabled="newAccountModel.group == ''">Create</button>
+        <button class="btn btn-success" ng-click="lc.validateUniqueName(newAccountModel.accUnqName);lc.addNewAccountConfirm()" ng-disabled="newAccountModel.group == ''">Create</button>
         <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
     </div>
 </div>

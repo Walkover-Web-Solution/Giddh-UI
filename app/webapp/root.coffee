@@ -203,6 +203,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       'rightPanel':{
         templateUrl: appendThis+'/public/webapp/Ledger/ledger.html'
         controller: 'newLedgerController'
+        controllerAs: 'lc'
       }
     }
   )
