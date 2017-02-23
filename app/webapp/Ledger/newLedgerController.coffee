@@ -181,7 +181,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           #lc.ledgersUpdated = true
           # lc.ledgerData.ledgers = lc.tempLedgers
           $scope.$apply()
-        lc.countTotalTransactionsAfterSomeTime()
         return
 
       requestSearchable.onerror = (e) ->
@@ -242,7 +241,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.ledgerData.ledgers = []
       lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page || 1
     lc.dbConfig.success = (e) ->
-      i0 = performance.now()
       db = e.target.result
       search = db.transaction([ 'ledgers' ], 'readwrite').objectStore('ledgers')
 
@@ -266,7 +264,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         console.log 'error', e
         return
 
-      i1 = performance.now()
       db.close()
       return
 
@@ -288,7 +285,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     return
 
   lc.filterByQuery = (ledger, query) ->
-    t0 = performance.now()
     hasQuery = false
     for key of ledger
       if !hasQuery
@@ -303,8 +299,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             if ledger[key].toString().toLowerCase().indexOf(query.toLowerCase()) != -1
               return hasQuery = true
               break
-    t1 = performance.now()
-    console.log(t1-t0, 'inside filter')
     hasQuery
 
   ################################### indexedDB functions end ############################
@@ -813,7 +807,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.ledgerData.forwardedBalance = res.body.forwardedBalance
     lc.ledgerData.creditTotal = res.body.creditTotal
     lc.ledgerData.debitTotal = res.body.debitTotal
-    #lc.countTotalTransactionsAfterSomeTime()
+    lc.countTotalTransactions(res.body.ledgers)
     #lc.paginateledgerData(res.body.ledgers)
     lc.addToIdb(res.body.ledgers, $rootScope.selectedAccount.uniqueName)
     lc.showLoader = false
@@ -847,7 +841,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.ledgerData.debitTotal = res.body.debitTotal
     lc.ledgerData.forwardedBalance.amount = res.body.forwardedBalance.amount
     lc.ledgerData.forwardedBalance.type = res.body.forwardedBalance.type
-    lc.updateTotalTransactions()
+    #lc.updateTotalTransactions()
     #lc.paginateledgerData(res.body.ledgers)
 
   lc.updateLedgerDataFailure = (res) ->
@@ -876,21 +870,21 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       ledgerCount = $scope.ledgerCount
     ledgerCount
 
-  lc.countTotalTransactionsAfterSomeTime = () ->
+  lc.countTotalTransactionsAfterSomeTime = (ledgers) ->
     $timeout ( ->
-      lc.countTotalTransactions()
+      lc.countTotalTransactions(ledgers)
 #      lc.showLoader = true
     ), 1000
 
   $scope.creditTotal = 0
   $scope.debitTotal = 0
-  lc.countTotalTransactions = () ->
+  lc.countTotalTransactions = (ledgers) ->
     $scope.creditTotal = 0
     $scope.debitTotal = 0
     $scope.dTxnCount = 0
     $scope.cTxnCount = 0
-    if lc.ledgerData.ledgers.length > 0
-      _.each lc.ledgerData.ledgers, (ledger) ->
+    if ledgers.length > 0
+      _.each ledgers, (ledger) ->
         if ledger.transactions.length > 0
           _.each ledger.transactions, (txn) ->
             txn.isOpen = false
@@ -901,10 +895,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
               $scope.cTxnCount += 1
               $scope.creditTotal += Number(txn.amount)
 
-  lc.updateTotalTransactions = () ->
-    $timeout ( ->
-      lc.countTotalTransactions()
-    ), 500
+  # lc.updateTotalTransactions = () ->
+  #   $timeout ( ->
+  #     lc.countTotalTransactions()
+  #   ), 500
 
   # $scope.filterLedgers = (ledgers) ->
   #   _.each ledgers, (lgr) ->
