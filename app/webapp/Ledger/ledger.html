@@ -1,11 +1,21 @@
 
-<div class="loader mrT4" ng-if="lc.showLoader && lc.accountUnq.length != ''">
+<!-- <div class="loader mrT4" ng-if="lc.showLoader && lc.accountUnq.length != ''">
   <span></span>
   <span></span>
   <span></span>
   <span></span>
   <span></span>
+</div> -->
+
+<div class="col-xs-12 mrT4" ng-if="lc.accountUnq.length && lc.showLoader || lc.savedLedgers < lc.totalLedgers">
+  <uib-progressbar class="progress-striped active" max="lc.progressBar.max" value="lc.progressBar.value" type="{{lc.progressBar.type}}">
+    <i>
+      <span ng-show="lc.showLoader">Fetching Ledgers..</span>
+      <span ng-show="!lc.showLoader">{{lc.savedLedgers}} / {{lc.totalLedgers}} ledgers loaded</span>
+    </i>
+  </uib-progressbar>
 </div>
+
 <!-- <div class="page-loader" ng-show="lc.accountUnq.length != '' && lc.showLoader">
   <div class="giddh-spinner vertical-center-spinner"></div>
 </div> -->
@@ -14,7 +24,7 @@
   Please select an Account to load its Ledger
 </section>
 
-<div id="ledger" class="oyAuto" ng-show="!lc.showLoader" cover-page ng-class="{'mtop-neg-54':!flyAccounts}">
+<div id="ledger" class="oyAuto" ng-show="!lc.showLoader && lc.savedLedgers == lc.totalLedgers" cover-page ng-class="{'mtop-neg-54':!flyAccounts}">
  <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
 
     <section class="container-fluid" ng-if="lc.accountUnq.length > 0">
