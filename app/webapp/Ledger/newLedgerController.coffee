@@ -46,8 +46,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.closePanel = () ->
     lc.showPanel = false
 
+  lc.progressBar = {
+    max : 6000,
+    value: 0,
+    type: 'success'
+  }
   ################################### indexedDB functions ############################
   lc.totalLedgers = 0
+  lc.savedLedgers = 0
   lc.pageCount = 50
   lc.page = 1
   lc.dbConfig = 
@@ -96,6 +102,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           addReq.onsuccess = (e) ->
             #lc.ledgerData.ledgers.push(ledger)
             lc.savedLedgers += 1
+            lc.progressBar.value += 1
 
           addReq.onerror = (e) ->
             console.log e.target.error
@@ -165,7 +172,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         # console.log('succ', e)
         cursor = e.target.result
         if cursor
-          if lc.ledgerData.ledgers.length < 200
+          if lc.ledgerData.ledgers.length < 500
             lc.ledgerData.ledgers.push cursor.value
           else
             lc.ledgerData.ledgers.splice(-0, lc.ledgerData.ledgers.length/2)
@@ -174,6 +181,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           #lc.ledgersUpdated = true
           # lc.ledgerData.ledgers = lc.tempLedgers
           $scope.$apply()
+        lc.countTotalTransactionsAfterSomeTime()
         return
 
       requestSearchable.onerror = (e) ->
@@ -215,21 +223,26 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.page += 1
       #lc.ledgerData.ledgers = []
       lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page
-    else
-      lc.filterPage += 1
-      lc.filterLedgers $rootScope.selectedAccount.uniqueName, lc.query, lc.filterPage
+    # else
+    #   lc.filterPage += 1
+    #   lc.filterLedgers $rootScope.selectedAccount.uniqueName, lc.query, lc.filterPage
     return
 
   lc.onScrollCredit = (sTop, sHeight) ->
-    if lc.page > 1
+    if lc.page > 1 && !lc.query
       lc.page -= 1
       #lc.ledgerData.ledgers = []
       lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page
     return
 
   lc.filterLedgers = (accountname, query, page) ->
-
+    if query
+      lc.ledgerData.ledgers = []
+    else
+      lc.ledgerData.ledgers = []
+      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page || 1
     lc.dbConfig.success = (e) ->
+      i0 = performance.now()
       db = e.target.result
       search = db.transaction([ 'ledgers' ], 'readwrite').objectStore('ledgers')
 
@@ -242,19 +255,18 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         cursor = e.target.result
         if cursor
           if query and lc.filterByQuery(cursor.value, query)
-            lc.filtered.push cursor.value
-          else if !query
-            lc.filtered.push cursor.value
+            lc.ledgerData.ledgers.push cursor.value
           cursor.continue()
-        else
-          lc.ledgerData.ledgers = lc.filtered
-          $scope.$apply()
+        # else
+        #   lc.ledgerData.ledgers = lc.filtered
+        $scope.$apply()
         return
 
       requestSearchable.onerror = (e) ->
         console.log 'error', e
         return
 
+      i1 = performance.now()
       db.close()
       return
 
@@ -276,6 +288,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     return
 
   lc.filterByQuery = (ledger, query) ->
+    t0 = performance.now()
     hasQuery = false
     for key of ledger
       if !hasQuery
@@ -290,11 +303,15 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             if ledger[key].toString().toLowerCase().indexOf(query.toLowerCase()) != -1
               return hasQuery = true
               break
+    t1 = performance.now()
+    console.log(t1-t0, 'inside filter')
     hasQuery
 
   ################################### indexedDB functions end ############################
 
-  lc.ledgerData = {} 
+  lc.ledgerData = {
+    ledgers: []
+  }
   lc.newDebitTxn = {
     date: $filter('date')(new Date(), "dd-MM-yyyy")
     particular: {
@@ -771,6 +788,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #     txn.particular = txn.remarks
 
   lc.getLedgerData = (showLoaderCondition) ->
+    lc.progressBar.value = 0
     $rootScope.superLoader = true
     lc.showLoader = showLoaderCondition || true
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
@@ -788,15 +806,20 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.getLedgerDataSuccess = (res) ->
     #$scope.filterLedgers(res.body.ledgers)
     lc.totalLedgers = res.body.ledgers.length
+    lc.progressBar.max = lc.totalLedgers
     lc.sortTransactions(res.body.ledgers, 'entryDate')
-    lc.ledgerData = {}
     lc.ledgerData.ledgers = []
-    $rootScope.flyAccounts = false
-    #lc.countTotalTransactions()
+    lc.ledgerData.balance = res.body.balance
+    lc.ledgerData.forwardedBalance = res.body.forwardedBalance
+    lc.ledgerData.creditTotal = res.body.creditTotal
+    lc.ledgerData.debitTotal = res.body.debitTotal
+    #lc.countTotalTransactionsAfterSomeTime()
     #lc.paginateledgerData(res.body.ledgers)
     lc.addToIdb(res.body.ledgers, $rootScope.selectedAccount.uniqueName)
     lc.showLoader = false
     $rootScope.superLoader = false
+    $rootScope.flyAccounts = false
+    lc.progressBar.value = 1000
 
   lc.getLedgerDataFailure = (res) ->
     toastr.error(res.data.message)
