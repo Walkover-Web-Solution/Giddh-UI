@@ -25,8 +25,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.dLedgerLimit = 10
   lc.cLedgerLimit = 10
   lc.sortOrder = {
-    debit : true
-    credit: true
+    debit : false
+    credit: false
   }
   $scope.popover = {
     templateUrl: 'panel'
@@ -45,6 +45,254 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.closePanel = () ->
     lc.showPanel = false
+
+  ################################### indexedDB functions ############################
+  lc.totalLedgers = 0
+  lc.pageCount = 50
+  lc.page = 1
+  lc.dbConfig = 
+    name: 'giddh'
+    storeName: 'ledgers'
+    version: 1
+    success: (e) ->
+    failure: (e) ->
+    upgrade: (e) ->
+
+  lc.parseLedgerDate = (date) ->
+    date = date.split('-')
+    date = new Date(date[2], date[1], date[0]).getTime()
+    date
+
+  lc.addToIdb = (ledgers, accountname) ->
+    lc.savedLedgers = 0
+    lc.dbConfig.success = (e) ->
+      db = e.target.result
+      search = db.transaction([ 'ledgers' ], 'readwrite').objectStore('ledgers')
+      account = search.index('account')
+
+      lc.prevLedgerCount = account.count()
+      #console.log(lc.prevLedgerCount.result, accountname + ' ' + '/xff')
+      keyRange = IDBKeyRange.bound(accountname + ' ', accountname + ' ' + '\xFF', true, true)
+
+
+      # account.openCursor().onsuccess = (e) ->
+      #   cursor = e.target.result
+      #   if cursor
+      #     console.log cursor.value
+
+      delReq = search.delete(keyRange)
+
+      delReq.onsuccess = (e) ->
+        ledgers.forEach (ledger, index) ->
+
+          ledger.accUniqueName = accountname + " " + ledger.uniqueName
+          ledger.accountUniqueName = accountname
+          ledger.index = index
+          date = lc.parseLedgerDate(ledger.entryDate)
+          ledger.timestamp = Math.floor(date / 1000)
+
+          addReq = search.put(ledger)
+
+          addReq.onsuccess = (e) ->
+            #lc.ledgerData.ledgers.push(ledger)
+            lc.savedLedgers += 1
+
+          addReq.onerror = (e) ->
+            console.log e.target.error
+            return
+
+      delReq.onerror = (e) ->
+        console.log('failed', e.target.error)
+
+      #search.clear()
+      
+
+    lc.dbConfig.failure = (e) ->
+      toastr.error(e.target.error)
+      return
+
+    lc.dbConfig.upgrade = (e) ->
+      db = e.target.result
+      if !db.objectStoreNames.contains(accountname)
+        search = db.createObjectStore('ledgers', keyPath: 'accUniqueName')
+        search.createIndex 'entryIndex', [
+          'accountUniqueName'
+          'index'
+        ], unique: true
+        search.createIndex 'dateIndex', [
+          'accountUniqueName'
+          'timestamp'
+        ], unique: false
+        search.createIndex 'account', [
+          'accountUniqueName'
+        ], unique: false
+      return
+
+    lc.dbConfig.onblocked = (e) ->
+      toastr.error(e.target.error)
+      
+    dbInstance = idbService.openDb(lc.dbConfig)
+
+  ###read ledgers ###
+  lc.ledgersUpdated = false
+  lc.readLedgers = (accountname, page) ->
+    lc.ledgersUpdated = false
+    lc.filtered = []
+    lc.tempLedgers = []
+    lc.filterPage = 1
+    lc.dbConfig.success = (e) ->
+      db = e.target.result
+      # var entries = db.transaction(['ledgers'], 'readwrite').objectStore('ledgers')
+      # var ledgers = entries.get(accountname)
+      # ledgers.onsuccess = function(e){
+      #   $scope.ledgers = ledgers.result.data.slice((page-1) * $scope.pageCount, page*$scope.pageCount+1)
+      #   $scope.$apply()
+      # }
+      # ledgers.onerror = function(e){
+      #   alert(ledgers.result.error)
+      # }
+      search = db.transaction([ 'ledgers' ], 'readwrite').objectStore('ledgers')
+      keyRange = IDBKeyRange.bound([
+        accountname
+        (page - 1) * lc.pageCount
+      ], [
+        accountname
+        page * lc.pageCount
+      ])
+      requestSearchable = search.index('entryIndex', true, false).openCursor(keyRange)
+
+      requestSearchable.onsuccess = (e) ->
+        # console.log('succ', e)
+        cursor = e.target.result
+        if cursor
+          if lc.ledgerData.ledgers.length < 200
+            lc.ledgerData.ledgers.push cursor.value
+          else
+            lc.ledgerData.ledgers.splice(-0, lc.ledgerData.ledgers.length/2)
+          cursor.continue()
+        else
+          #lc.ledgersUpdated = true
+          # lc.ledgerData.ledgers = lc.tempLedgers
+          $scope.$apply()
+        return
+
+      requestSearchable.onerror = (e) ->
+        console.log 'error', e
+        return
+
+      #db.close()
+      return
+
+    lc.dbConfig.failure = (e) ->
+      console.log e.target.error
+      return
+
+    lc.dbConfig.upgrade = (e) ->
+      db = e.target.result
+      if !db.objectStoreNames.contains(lc.dbConfig.storeName)
+        entries = db.createObjectStore('ledgers', keyPath: 'account')
+        search = db.createObjectStore('search', keyPath: 'results')
+      return
+
+    idbService.openDb lc.dbConfig
+    return
+
+  $scope.$watch('lc.savedLedgers', (newVal, oldVal)->
+    if(newVal == lc.totalLedgers)
+      lc.readLedgers($rootScope.selectedAccount.uniqueName, 1)
+    
+  )
+
+  $scope.$watch('lc.ledgersUpdated', (newVal, oldVal)->
+    # if(newVal)
+    #   lc.ledgerData.ledgers = lc.ledgerData.ledgers.splice(0, (lc.ledgerData.ledgers.length/2)-1)
+    #   _.each lc.tempLedgers, (ledger) ->
+    #     lc.ledgerData.ledgers.push(ledger)
+  )
+
+  lc.onScrollDebit = (sTop, sHeight) ->
+    if !lc.query
+      lc.page += 1
+      #lc.ledgerData.ledgers = []
+      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page
+    else
+      lc.filterPage += 1
+      lc.filterLedgers $rootScope.selectedAccount.uniqueName, lc.query, lc.filterPage
+    return
+
+  lc.onScrollCredit = (sTop, sHeight) ->
+    if lc.page > 1
+      lc.page -= 1
+      #lc.ledgerData.ledgers = []
+      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page
+    return
+
+  lc.filterLedgers = (accountname, query, page) ->
+
+    lc.dbConfig.success = (e) ->
+      db = e.target.result
+      search = db.transaction([ 'ledgers' ], 'readwrite').objectStore('ledgers')
+
+      keyRange = IDBKeyRange.bound(accountname + ' ', accountname + ' ' + '\xFF', true, true)
+
+      requestSearchable = search.openCursor(keyRange)
+
+      requestSearchable.onsuccess = (e) ->
+        # console.log('succ', e)
+        cursor = e.target.result
+        if cursor
+          if query and lc.filterByQuery(cursor.value, query)
+            lc.filtered.push cursor.value
+          else if !query
+            lc.filtered.push cursor.value
+          cursor.continue()
+        else
+          lc.ledgerData.ledgers = lc.filtered
+          $scope.$apply()
+        return
+
+      requestSearchable.onerror = (e) ->
+        console.log 'error', e
+        return
+
+      db.close()
+      return
+
+    lc.dbConfig.failure = (e) ->
+      console.log e.target.error, 'update failed'
+      return
+
+    lc.dbConfig.upgrade = (e) ->
+      db = e.target.result
+      if !db.objectStoreNames.contains(accountname)
+        search = db.createObjectStore('ledgers', keyPath: 'accUniqueName')
+        search.createIndex 'entryIndex', [
+          'accountUniqueName'
+          'index'
+        ], unique: true
+      return
+
+    idbService.openDb lc.dbConfig
+    return
+
+  lc.filterByQuery = (ledger, query) ->
+    hasQuery = false
+    for key of ledger
+      if !hasQuery
+        switch typeof ledger[key]
+          when 'object'
+            hasQuery = lc.filterByQuery(ledger[key], query)
+          when 'string'
+            if ledger[key].toLowerCase().indexOf(query.toLowerCase()) != -1
+              return hasQuery = true
+              break
+          when 'number'
+            if ledger[key].toString().toLowerCase().indexOf(query.toLowerCase()) != -1
+              return hasQuery = true
+              break
+    hasQuery
+
+  ################################### indexedDB functions end ############################
 
   lc.ledgerData = {} 
   lc.newDebitTxn = {
@@ -223,21 +471,22 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.isSelectedAccount = () ->
     $rootScope.selectedAccount = localStorageService.get('_selectedAccount')
+    lc.accountToShow = $rootScope.selectedAccount
     # if _.isUndefined($rootScope.selectedAccount) || _.isNull($rootScope.selectedAccount)
     #   $rootScope.selectedAccount = lc.accountUnq
     #   lc.accountToShow = lc.accountUnq
     # else
-    if !_.isNull($rootScope.selectedAccount)
-      if $rootScope.selectedAccount.uniqueName != $stateParams.unqName
-        unq = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:$stateParams.unqName})
-        localStorageService.set('_selectedAccount', unq)
-        lc.accountToShow = unq
-      else
-        lc.accountToShow = $rootScope.selectedAccount
-    else
-      unq = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:$stateParams.unqName})
-      localStorageService.set('_selectedAccount', unq)
-      lc.accountToShow = unq
+    # if !_.isNull($rootScope.selectedAccount)
+    #   if $rootScope.selectedAccount.uniqueName != $stateParams.unqName
+    #     unq = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:$stateParams.unqName})
+    #     localStorageService.set('_selectedAccount', unq)
+    #     lc.accountToShow = unq
+    #   else
+    #     lc.accountToShow = $rootScope.selectedAccount
+    # else
+    #   unq = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:$stateParams.unqName})
+    #   localStorageService.set('_selectedAccount', unq)
+    #   lc.accountToShow = unq
 
   lc.isCurrentAccount =(acnt) ->
     acnt.uniqueName is lc.accountUnq
@@ -538,11 +787,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.getLedgerDataSuccess = (res) ->
     #$scope.filterLedgers(res.body.ledgers)
+    lc.totalLedgers = res.body.ledgers.length
     lc.sortTransactions(res.body.ledgers, 'entryDate')
-    lc.ledgerData = res.body
+    lc.ledgerData = {}
+    lc.ledgerData.ledgers = []
     $rootScope.flyAccounts = false
-    lc.countTotalTransactions()
-    lc.paginateledgerData(res.body.ledgers)
+    #lc.countTotalTransactions()
+    #lc.paginateledgerData(res.body.ledgers)
+    lc.addToIdb(res.body.ledgers, $rootScope.selectedAccount.uniqueName)
     lc.showLoader = false
     $rootScope.superLoader = false
 
@@ -606,21 +858,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.countTotalTransactions()
 #      lc.showLoader = true
     ), 1000
-
-  lc.onScrollDebit = (sTop, sHeight) ->
-    lc.dLedgerLimit += 15
-      # $scope.dSpliceIdx += 2
-      # $scope.spliceLedger('DEBIT')
-    # else if sTop == 0 && lc.dLedgerLimit > 20
-    #   lc.dLedgerLimit -= 2
-
-  lc.onScrollCredit = (sTop, sHeight) ->
-    lc.cLedgerLimit += 30
-      # $scope.cSpliceIdx += 2
-      # $scope.spliceLedger('DEBIT')
-    # else if sTop == 0 && lc.dLedgerLimit > 20
-    #   lc.cLedgerLimit -= 20
-
 
   $scope.creditTotal = 0
   $scope.debitTotal = 0
@@ -1461,7 +1698,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       txn.rate = item.stock.rate
     else if item.stock != null && lc.accountToShow.stock == null
       txn.rate = lc.accountToShow.stock.rate
-
 
   # $scope.$on 'company-changed', (event,changeData) ->
   #   # when company is changed, redirect to manage company page

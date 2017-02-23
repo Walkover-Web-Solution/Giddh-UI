@@ -40,7 +40,7 @@
                 <li class="inrPrnt" ng-repeat="(index,accDtl) in value.accountDetails" id="ac_{{accDtl.uniqueName}}"
                   tooltip-placement="top" uib-tooltip="{{accDtl.uniqueName}}">
                   <a
-                    ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl); getLedgerData(value, accDtl);"
+                    ng-click="setLedgerData(value, accDtl);"
                      ng-class="{'active': accDtl.uniqueName === selectedAccountUniqueName}" 
                      ui-sref="company.content.ledgerContent({unqName:accDtl.uniqueName})">
                     <div class="clearfix">
