@@ -57,7 +57,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.pageCount = 50
   lc.page = 1
   lc.dbConfig = 
-    name: 'giddh'
+    name: 'giddh_1'
     storeName: 'ledgers'
     version: 1
     success: (e) ->
@@ -142,7 +142,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   ###read ledgers ###
   lc.ledgersUpdated = false
-  lc.readLedgers = (accountname, page) ->
+  lc.readLedgers = (accountname, page, pos) ->
     lc.ledgersUpdated = false
     lc.filtered = []
     lc.tempLedgers = []
@@ -172,7 +172,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         # console.log('succ', e)
         cursor = e.target.result
         if cursor
-          if lc.ledgerData.ledgers.length < 500
+          if lc.ledgerData.ledgers.length < 300
             lc.ledgerData.ledgers.push cursor.value
           else
             lc.ledgerData.ledgers.splice(-0, lc.ledgerData.ledgers.length/2)
@@ -196,9 +196,19 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
     lc.dbConfig.upgrade = (e) ->
       db = e.target.result
-      if !db.objectStoreNames.contains(lc.dbConfig.storeName)
-        entries = db.createObjectStore('ledgers', keyPath: 'account')
-        search = db.createObjectStore('search', keyPath: 'results')
+      if !db.objectStoreNames.contains(accountname)
+        search = db.createObjectStore('ledgers', keyPath: 'accUniqueName')
+        search.createIndex 'entryIndex', [
+          'accountUniqueName'
+          'index'
+        ], unique: true
+        search.createIndex 'dateIndex', [
+          'accountUniqueName'
+          'timestamp'
+        ], unique: false
+        search.createIndex 'account', [
+          'accountUniqueName'
+        ], unique: false
       return
 
     idbService.openDb lc.dbConfig
@@ -206,7 +216,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.$watch('lc.savedLedgers', (newVal, oldVal)->
     if(newVal == lc.totalLedgers)
-      lc.readLedgers($rootScope.selectedAccount.uniqueName, 1)
+      lc.readLedgers($rootScope.selectedAccount.uniqueName, 1, 'bottom')
     
   )
 
@@ -217,21 +227,24 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #     lc.ledgerData.ledgers.push(ledger)
   )
 
-  lc.onScrollDebit = (sTop, sHeight) ->
-    if !lc.query
+  lc.onScrollDebit = (sTop, sHeight, pos) ->
+    if !lc.query and pos == 'bottom'
       lc.page += 1
       #lc.ledgerData.ledgers = []
-      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page
-    # else
-    #   lc.filterPage += 1
-    #   lc.filterLedgers $rootScope.selectedAccount.uniqueName, lc.query, lc.filterPage
+      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
+    else if !lc.query and pos == 'top' and lc.page > 1
+      lc.page -= 1
+      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
     return
 
   lc.onScrollCredit = (sTop, sHeight) ->
-    if lc.page > 1 && !lc.query
-      lc.page -= 1
+    if !lc.query and pos == 'bottom'
+      lc.page += 1
       #lc.ledgerData.ledgers = []
-      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page
+      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
+    else if !lc.query and pos == 'top' and lc.page > 1
+      lc.page -= 1
+      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
     return
 
   lc.filterLedgers = (accountname, query, page) ->
@@ -279,6 +292,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           'accountUniqueName'
           'index'
         ], unique: true
+        search.createIndex 'dateIndex', [
+          'accountUniqueName'
+          'timestamp'
+        ], unique: false
+        search.createIndex 'account', [
+          'accountUniqueName'
+        ], unique: false
       return
 
     idbService.openDb lc.dbConfig
