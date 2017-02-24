@@ -5,9 +5,9 @@ giddh.serviceModule.service 'idbService', [
   ($rootScope) ->
     idbService = {}
     # set browser specific values
-    indexedDB = window.indexedDB or window.mozIndexedDB or window.webkitIndexedDB or window.msIndexedDB
-    IDBTransaction = window.IDBTransaction or window.webkitIDBTransaction or window.msIDBTransaction or READ_WRITE: 'readwrite'
-    IDBKeyRange = window.IDBKeyRange or window.webkitIDBKeyRange or window.msIDBKeyRange
+    #indexedDB = window.indexedDB or window.mozIndexedDB or window.webkitIndexedDB or window.msIndexedDB
+    #IDBTransaction = window.IDBTransaction or window.webkitIDBTransaction or window.msIDBTransaction or READ_WRITE: 'readwrite'
+    #IDBKeyRange = window.IDBKeyRange or window.webkitIDBKeyRange or window.msIDBKeyRange
     # create a new database
 
     idbService.openDb = (dbConfig) ->
