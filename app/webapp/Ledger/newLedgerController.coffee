@@ -232,9 +232,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.page += 1
       #lc.ledgerData.ledgers = []
       lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
-    else if !lc.query and pos == 'top' and lc.page > 1
-      lc.page -= 1
-      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
+    # else if !lc.query and pos == 'top' and lc.page > 1
+    #   lc.page -= 1
+    #   lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
     return
 
   lc.onScrollCredit = (sTop, sHeight) ->
@@ -242,9 +242,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.page += 1
       #lc.ledgerData.ledgers = []
       lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
-    else if !lc.query and pos == 'top' and lc.page > 1
-      lc.page -= 1
-      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
+    # else if !lc.query and pos == 'top' and lc.page > 1
+    #   lc.page -= 1
+    #   lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
     return
 
   lc.filterLedgers = (accountname, query, page) ->
