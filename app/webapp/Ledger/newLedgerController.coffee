@@ -24,6 +24,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.adjustHeight = 0
   lc.dLedgerLimit = 10
   lc.cLedgerLimit = 10
+  lc.entrySettings = {}
   lc.sortOrder = {
     debit : false
     credit: false
@@ -57,7 +58,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.pageCount = 50
   lc.page = 1
   lc.dbConfig = 
-    name: 'giddh_1'
+    name: 'giddh_db'
     storeName: 'ledgers'
     version: 1
     success: (e) ->
@@ -237,7 +238,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #   lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
     return
 
-  lc.onScrollCredit = (sTop, sHeight) ->
+  lc.onScrollCredit = (sTop, sHeight, pos) ->
     if !lc.query and pos == 'bottom'
       lc.page += 1
       #lc.ledgerData.ledgers = []
@@ -861,6 +862,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.ledgerData.debitTotal = res.body.debitTotal
     lc.ledgerData.forwardedBalance.amount = res.body.forwardedBalance.amount
     lc.ledgerData.forwardedBalance.type = res.body.forwardedBalance.type
+    lc.countTotalTransactions(res.body.ledgers)
     #lc.updateTotalTransactions()
     #lc.paginateledgerData(res.body.ledgers)
 
@@ -1010,8 +1012,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if lc.accountToShow.stock != null && txn.inventory == undefined
       txn.inventory = {}
       txn.rate = lc.accountToShow.stock.rate
-    if txn.inventory && txn.inventory.stock
+    if txn.inventory && txn.inventory.quantity
       txn.rate = txn.amount/txn.inventory.quantity
+    if txn.particular.stock
+      txn.rate = txn.particular.stock.rate
     #txn.rate = $filter('number')(Number(txn.rate), 4)
     $scope.selectedTxn = txn
     if lc.prevTxn != null
@@ -1735,6 +1739,31 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       txn.rate = item.stock.rate
     else if item.stock != null && lc.accountToShow.stock == null
       txn.rate = lc.accountToShow.stock.rate
+
+  lc.getEntrySettings = () ->
+    @success = (res) ->
+      lc.entrySettings = res.body
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {
+      compUname: $rootScope.selectedCompany.uniqueName
+    }
+
+    ledgerService.getSettings(reqParam).then(@success, @failure)
+
+  lc.getEntrySettings()
+
+  lc.updateEntrySettings = (status) ->
+    @success = (res) ->
+      console.log(res)
+    @failure = (res) ->
+      console.log(res)
+
+    data = lc.entrySettings
+    reqParam = {}
+    reqParam.compUname = $rootScope.selectedCompany.uniqueName
+    ledgerService.updateEntrySettings(reqParam, data).then(@success, @failure)
 
   # $scope.$on 'company-changed', (event,changeData) ->
   #   # when company is changed, redirect to manage company page
