@@ -156,6 +156,11 @@
                     <switch  ng-model="lc.mergeTransaction" class="small" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>
                   </div>
                 </a>
+                <a class="pull-right mrL1" style="margin-top:9px">
+                  <div ng-click="lc.updateEntrySettings(lc.entrySettings.status)">
+                    <switch  ng-model="lc.entrySettings.status" class="small" uib-tooltip="Turn default date on for ledgers" tooltip-placement="bottom" ></switch>
+                  </div>
+                </a>
               </div>
             </div>
           </div>
@@ -488,7 +493,7 @@
                     </table>
 
                     <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="10" auto-height on-scroll="onScrollCredit(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="600"> -->
-                    <div class="col-container" ledger-scroller data-scrolled="lc.onScrollCredit(top, height)">
+                    <div class="col-container" ledger-scroller data-scrolled="lc.onScrollCredit(top, height, position)">
                       <table class="width100">
                         <tbody>
                           <!--Add entry row for nomral order-->

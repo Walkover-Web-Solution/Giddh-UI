@@ -326,6 +326,8 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       $scope.balSheet.liabTotal += $scope.plData.closingBalance
     if $scope.data.closingBalance.amount is 0 and $scope.data.creditTotal is 0 and $scope.data.debitTotal is 0 and $scope.data.forwardedBalance.amount is 0
       $scope.noData = true
+    else
+      $scope.noData = false
     $scope.showTbplLoader = false
     $scope.hardRefresh = false
 
