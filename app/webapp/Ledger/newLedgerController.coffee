@@ -1756,9 +1756,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.updateEntrySettings = (status) ->
     @success = (res) ->
-      console.log(res)
+      lc.entrySettings = res.body
     @failure = (res) ->
-      console.log(res)
+      toastr.error(res.data.message)
 
     data = lc.entrySettings
     reqParam = {}
