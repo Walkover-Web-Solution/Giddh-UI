@@ -2,6 +2,7 @@ settings = require('../util/settings')
 router = settings.express.Router({mergeParams: true})
 
 router.get '/', (req, res) ->
+  console.log encodeURIComponent('%')
   authHead =
     headers:
       'Auth-Key': req.session.authKey
@@ -335,7 +336,7 @@ router.post '/:accountUniqueName/magic-link', (req, res) ->
     res.send data
 
 router.get '/:accountUniqueName/tax-hierarchy', (req, res) ->
-  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/accounts/'+ encodeURIComponent(req.params.accountUniqueName) +'/tax-hierarchy'
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/accounts/'+ encodeURIComponent(req.params.accountUniqueName) + '/tax-hierarchy'
   args =
     headers:
       'Auth-Key': req.session.authKey
