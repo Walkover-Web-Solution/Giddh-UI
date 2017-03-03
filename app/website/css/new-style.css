@@ -1771,3 +1771,14 @@ button.toast-close-button {
       height: 240px;
   }
 }
+
+.other-country{
+  position: absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  right:0;
+  background: #444;
+  opacity: 0.8;
+  text-align: center;
+}
