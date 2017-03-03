@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html lang="en" ng-app='giddhApp'>
+<html lang="en" ng-app='giddhApp' ng-class="{oh:geo.country != 'IN'}">
 <head>
 
   <meta charset="UTF-8"/>
@@ -42,10 +42,12 @@
   <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
   <script type="text/javascript" src="<<PREFIX_THIS>>/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
 </head>
-<body ng-controller="homeCtrl" id="page-top" class="light">
+<body ng-controller="homeCtrl" id="page-top" class="light" ng-style ng-class="{oh:geo.country != 'IN'}">
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <div ng-class="{'other-country': geo.country != 'IN'}">  
+  <div ng-class="{'other-country': geo.country != 'IN'}" ng-if="geo.country != 'IN'">
+    <iframe src="dev.giddh.com/global" style="height:100%;width:100%;padding: 0;margin:0"></iframe>
+  </div>  
     <ng-include src="'/public/website/views/header.html'"></ng-include>
 
     <!-- end navigation -->
@@ -203,7 +205,7 @@
 
     <!-- include footer -->
     <ng-include src="'/public/website/views/footer.html'"></ng-include>
-  </div>
+
 </body>
 
 </html>

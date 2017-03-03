@@ -283,13 +283,15 @@ app.controller 'homeCtrl', [
     $scope.goToNewTab = (state) ->
       window.open(state,"_blank")
 
-    getLocation = () ->
 
+    $scope.geo = {}
+    $scope.geo.country = 'IN'
+    getLocation = () ->
       @success = (res) ->
-        console.log res
+        $scope.geo = res.data
 
       @failure = (res) ->
-        console.log res
+        #toastr.error(res.data)
 
       $http.get('/user-location').then(@success, @failure)
 
