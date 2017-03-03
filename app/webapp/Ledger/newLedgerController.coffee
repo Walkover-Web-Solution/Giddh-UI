@@ -1757,6 +1757,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.updateEntrySettings = (status) ->
     @success = (res) ->
       lc.entrySettings = res.body
+      if res.body.status
+        toastr.success('Default Date Set for Ledgers')
+      else
+        toastr.success('Default Date unset for Ledgers')
     @failure = (res) ->
       toastr.error(res.data.message)
 
