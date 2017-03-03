@@ -27,21 +27,11 @@ router.get '/sindhu', (req,res) ->
 #   res.sendFile 'sindhu.html', panelOption
 
 router.get '/', (req, res) ->
-  ip = requestIp.getClientIp(req)
-  geo = settings.geoIp.lookup(ip)
-  if geo != null && geo.country != 'IN'
-    res.sendFile 'global.html', options
-  else
-    res.sendFile 'index.html', options
+  res.sendFile 'index.html', options
 
 
 router.get '/index', (req, res) ->
-  ip = requestIp.getClientIp(req)
-  geo = settings.geoIp.lookup(ip)
-  if geo != null && geo.country != 'IN'
-    res.sendFile 'other-country.html'
-  else
-    res.sendFile 'index.html', options
+  res.sendFile 'index.html', options
 
 router.get '/affiliate', (req,res) ->
   res.sendFile 'joinus.html', options
@@ -272,5 +262,13 @@ router.post '/global-user', (req, res) ->
   data = req.body
   hitViaSocket(data)
   res.status(200).send('success')
+
+router.get '/user-location', (req, res) ->
+  ip = requestIp.getClientIp(req)
+  geo = settings.geoIp.lookup(ip)
+  if geo != null
+    res.send geo
+  else
+    res.send('unable to retrieve location')
 
 module.exports = router
