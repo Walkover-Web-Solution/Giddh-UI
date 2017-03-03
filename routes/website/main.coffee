@@ -256,8 +256,6 @@ hitViaSocket = (data) ->
         console.log response.statusCode, body, 'from viasocket'
       return
 
-
-
 router.post '/global-user', (req, res) ->
   data = req.body
   hitViaSocket(data)
@@ -269,6 +267,10 @@ router.get '/user-location', (req, res) ->
   if geo != null
     res.send geo
   else
+    res.status(404)
     res.send('unable to retrieve location')
+
+router.get '/global', (req, res) ->
+  res.sendFile('global.html', options)
 
 module.exports = router

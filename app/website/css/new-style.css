@@ -1779,6 +1779,6 @@ button.toast-close-button {
   bottom:0;
   right:0;
   background: #444;
-  opacity: 0.8;
   text-align: center;
+  z-index: 9999;
 }
