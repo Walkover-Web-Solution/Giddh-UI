@@ -291,6 +291,7 @@ app.controller 'homeCtrl', [
         $scope.geo = res.data
 
       @failure = (res) ->
+        console.log res
         #toastr.error(res.data)
 
       $http.get('/user-location').then(@success, @failure)
