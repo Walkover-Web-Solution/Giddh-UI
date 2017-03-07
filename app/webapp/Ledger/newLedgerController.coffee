@@ -60,7 +60,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.dbConfig = 
     name: 'giddh_db'
     storeName: 'ledgers'
-    version: 1
+    version: 12
     success: (e) ->
     failure: (e) ->
     upgrade: (e) ->
@@ -90,6 +90,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       delReq = search.delete(keyRange)
 
       delReq.onsuccess = (e) ->
+
+        drObjs = [];
+        crObjs = [];
+        drObjsCount = 0;
+        crObjsCount = 0;
+
         ledgers.forEach (ledger, index) ->
 
           ledger.accUniqueName = accountname + " " + ledger.uniqueName
@@ -109,6 +115,59 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             console.log e.target.error
             return
 
+        ledgers.forEach (ledger, index) ->
+          ledger.transactions.forEach (tr, index) -> 
+            if ( tr.type == 'CREDIT')
+              crObj = {};
+              crObj.uniqueId = ledger.accUniqueName + ' ' + crObjsCount
+              crObj.accLedgerUniqueName = ledger.accUniqueName
+              crObj.timestamp = ledger.timestamp
+              crObj.accountUniqueName = accountname
+              crObj.transaction = tr
+              crObj.ltIndex = index
+              crObj.tIndex = crObjsCount
+              crObj.company = $rootScope.selectedCompany.uniqueName
+              crObjsCount++
+              crObjs.push(crObj)
+            else
+              drObj = {};
+              drObj.uniqueId = ledger.accUniqueName + ' ' +  drObjsCount
+              drObj.accLedgerUniqueName = ledger.accUniqueName
+              drObj.accountUniqueName = accountname
+              drObj.timestamp = ledger.timestamp
+              drObj.transaction = tr
+              drObj.ltIndex = index #lt = LedgerTransaction's
+              drObj.tIndex = drObjsCount
+              drObj.company = $rootScope.selectedCompany.uniqueName
+              drObjsCount++
+              drObjs.push(drObj)
+          return
+
+        drOS = db.transaction([ 'drTransactions' ], 'readwrite').objectStore('drTransactions')
+        drOS.clear()
+        drObjs.forEach (drOb) -> 
+          addDrReq = drOS.put(drOb)
+          addDrReq.onsuccess = (e) ->
+            # lc.savedLedgers += 1
+            # lc.progressBar.value += 1
+            console.log e.target.result
+
+          addDrReq.onerror = (e) ->
+            console.log e.target.error
+            return
+        crOS = db.transaction([ 'crTransactions' ], 'readwrite').objectStore('crTransactions')
+        crOS.clear()
+        crObjs.forEach (crOb) -> 
+          addCrReq = crOS.put(crOb)
+          addCrReq.onsuccess = (e) ->
+            # lc.savedLedgers += 1
+            # lc.progressBar.value += 1
+            console.log e.target.result
+
+          addCrReq.onerror = (e) ->
+            console.log e.target.error
+            return
+
       delReq.onerror = (e) ->
         console.log('failed', e.target.error)
 
@@ -121,7 +180,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
     lc.dbConfig.upgrade = (e) ->
       db = e.target.result
-      if !db.objectStoreNames.contains(accountname)
+      console.log db.objectStoreNames
+      if !db.objectStoreNames.contains('ledgers')
         search = db.createObjectStore('ledgers', keyPath: 'accUniqueName')
         search.createIndex 'entryIndex', [
           'accountUniqueName'
@@ -133,6 +193,36 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         ], unique: false
         search.createIndex 'account', [
           'accountUniqueName'
+        ], unique: false
+      if !db.objectStoreNames.contains('drTransactions')
+        abc = db.createObjectStore('drTransactions', keyPath: 'uniqueId')
+        # abc.createIndex 'accLedgerUniqueName+ltIndex', [
+        #   'accLedgerUniqueName'
+        #   'ltIndex'
+        # ], unique: true
+        abc.createIndex 'accLedgerUniqueName+timestamp', [
+          'accLedgerUniqueName'
+          'timestamp'
+        ], unique: false
+        abc.createIndex 'company+accountUniqueName+tIndex', [
+          'company'
+          'accountUniqueName'
+          'tIndex'
+        ], unique: false
+      if !db.objectStoreNames.contains('crTransactions')
+        abd = db.createObjectStore('crTransactions', keyPath: 'uniqueId')
+        # abd.createIndex 'accLedgerUniqueName+ltIndex', [
+        #   'accLedgerUniqueName'
+        #   'ltIndex'
+        # ], unique: true
+        abd.createIndex 'accLedgerUniqueName+timestamp', [
+          'accLedgerUniqueName'
+          'timestamp'
+        ], unique: false
+        abd.createIndex 'company+accountUniqueName+tIndex', [
+          'company'
+          'accountUniqueName'
+          'tIndex'
         ], unique: false
       return
 
@@ -159,6 +249,55 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       # ledgers.onerror = function(e){
       #   alert(ledgers.result.error)
       # }
+
+      #MAYANK
+      console.log $rootScope.selectedCompany
+      keyRange = IDBKeyRange.bound([
+        $rootScope.selectedCompany.uniqueName
+        accountname
+        0
+      ], [
+        $rootScope.selectedCompany.uniqueName
+        accountname
+        5
+      ])
+      drOS = db.transaction([ 'drTransactions' ], 'readonly').objectStore('drTransactions')
+      drSearch = drOS.index('company+accountUniqueName+tIndex', true, false).openCursor(keyRange, 'prev')
+      drSearch.onsuccess = (e) ->
+        cursor = e.target.result
+        if cursor
+          console.log cursor, cursor.direction
+          # keyRange = IDBKeyRange.only()
+          # search = db.transaction([ 'ledgers' ], 'readwrite').objectStore('ledgers')
+          # searchReq = search.get(cursor.value.accLedgerUniqueName)
+          # searchReq.onsuccess = (e) -> 
+          #   console.log e, searchReq.result
+          # searchReq.onerror = (e) -> 
+          #   console.log 'error', e
+
+          cursor.continue()
+      drSearch.onerror = (e) -> 
+        console.log 'error', e
+
+      crOS = db.transaction([ 'crTransactions' ], 'readonly').objectStore('crTransactions')
+      crSearch = crOS.index('company+accountUniqueName+tIndex', true, false).openCursor(keyRange, 'prev')
+      crSearch.onsuccess = (e) ->
+        cursor = e.target.result
+        if cursor
+          console.log cursor, cursor.direction
+          # search = db.transaction([ 'ledgers' ], 'readwrite').objectStore('ledgers')
+          # searchReq = search.get(cursor.value.accLedgerUniqueName)
+          # searchReq.onsuccess = (e) -> 
+          #   console.log e, searchReq.result
+          # searchReq.onerror = (e) -> 
+          #   console.log 'error', e
+          cursor.continue()
+      crSearch.onerror = (e) -> 
+        console.log 'error', e
+
+      #MAYANK
+
+
       search = db.transaction([ 'ledgers' ], 'readwrite').objectStore('ledgers')
       keyRange = IDBKeyRange.bound([
         accountname
