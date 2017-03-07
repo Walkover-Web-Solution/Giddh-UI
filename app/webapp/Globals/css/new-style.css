@@ -4581,3 +4581,24 @@ table.proforma-particulars{
 .mLeft295{
     margin-left:295px;
 }
+
+.txn-row td input{
+    width:100%;
+}
+
+.txn-row td{
+    border:1px solid #ccc;
+    border-top:0;
+}
+
+.left-col .txn-row td:first-child{
+    border-left:0;
+}
+
+.left-col .txn-row td:last-child{
+    border-right:0;
+}
+
+.right-col .txn-row td:first-child{
+    border-left:0;
+}
