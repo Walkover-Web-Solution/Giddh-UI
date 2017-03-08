@@ -27,6 +27,28 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     debit : true
     credit: true
   }
+  # $scope.options = {
+  #   applyClass: 'btn-green',
+  #   locale: {
+  #     applyLabel: "Apply",
+  #     fromLabel: "From",
+  #     format: "YYYY-MM-DD",
+  # # //format: "D-MMM-YY", //will give you 6-Jan-17
+  # # //format: "D-MMMM-YY", //will give you 6-January-17
+  #     toLabel: "To",
+  #     cancelLabel: 'Cancel',
+  #     customRangeLabel: 'Custom range'
+  #   },
+  #   ranges: {
+  #     'Today': [moment(), moment()],
+  #     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+  #     'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+  #     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+  #     'This Month': [moment().startOf('month'), moment().endOf('month')],
+  #     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+  #   }
+  # }
+
   $scope.popover = {
     templateUrl: 'panel'
     draggable: false
@@ -1584,6 +1606,47 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 #      $rootScope.flyAccounts = false
 #    ), 100
 
+
+
+
+
+# daterangepicker
+  $scope.date = {
+      startDate: moment().subtract(1, 'days'),
+      endDate: moment()
+    };
+  $scope.singleDate = moment()
+  $scope.opts = {
+      locale:
+        applyClass: 'btn-green'
+        applyLabel: 'Apply'
+        fromLabel: 'From'
+        format: 'YYYY-MM-DD'
+        toLabel: 'To'
+        cancelLabel: 'Cancel'
+        customRangeLabel: 'Custom range'
+      ranges:
+        'Last 7 Days': [
+          moment().subtract(6, 'days')
+          moment()
+        ]
+        'Last 30 Days': [
+          moment().subtract(29, 'days')
+          moment()
+      ]
+  }
+  $scope.setStartDate = ->
+    $scope.date.startDate = moment().subtract(4, 'days').toDate()
+
+  $scope.setRange = ->
+    $scope.date =
+        startDate: moment().subtract(5, 'days')
+        endDate: moment()
+
+    #Watch for date changes
+  $scope.$watch 'date', ((newDate) ->
+      console.log 'New date set: ', newDate
+      ), false
 
   $rootScope.$emit('catchBreadcumbs', $scope.accountToShow)
 

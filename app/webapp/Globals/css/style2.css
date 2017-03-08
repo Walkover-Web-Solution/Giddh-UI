@@ -1,23 +1,383 @@
 @charset "utf-8";
-/*
-________/\\\\\\\\\\\\______
-_______/\\\/////////\\_____
-______\//\\\______\///_____
-_______\////\\\____________
-__________\////\\\_________
-_____________\////\\\______
-______/\\\______\//\\\_____
-_____\///\\\\\\\\\\\/______
-______\////////////________
 
-  TITLE:    Styles for giddh.com
-  AUTHOR:   @THEMECHANIC
-  VERSION:  1
-*/
+body {
+    font-family: 'Roboto', sans-serif
+}
 
-/*google fonts*/
+/*icomoon fonts*/
+.icon-options:before {
+  content: "\e908";
+}
+.icon-child:before {
+  content: "\e900";
+}
+.icon-download:before {
+  content: "\e901";
+}
+.icon-share:before {
+  content: "\e902";
+}
+.icon-magic_link:before {
+  content: "\e903";
+}
+.icon-dropdown:before {
+  content: "\e904";
+}
+.icon-plus:before {
+  content: "\e905";
+}
+.icon-search:before {
+  content: "\e906";
+}
+.icon-building:before {
+  content: "\e907";
+}
+.icon-folder:before {
+  content: "\f2334";
+}
+.icon-folderminus:before {
+  content: "\f2332";
+}
+.icon-folderplus:before {
+  content: "\f2333";
+}
+.icon-minus:before {
+  content: "\e909";
+}
 
 
+
+a,button,input {
+     transition: all 0.3s ease;
+}
+
+/*input*/
+.form-control {
+    background: #f8f8f8 !important;
+    border: 1px solid #ded3c0;
+    border-radius: 2px;
+    padding: 12px !important;
+    outline: 0;
+    color: #616161;
+    box-shadow: none;
+}
+.form-control:focus {
+    border-radius: 0 !important;
+    outline: 0;
+    border: 1px solid #f7b995 !important;
+    box-shadow: none;
+}
+
+.sidebar {
+    background: #e7e7e6;
+}
+.acntAccordion a {
+    color: #616161;
+}
+.acntAccordion .title {
+    background-image: none; 
+}
+.acntAccordion .title a {
+    font-size: 14px;
+}
+.subAccBox li a span {
+    font-size: 12px;
+}
+.company-name span {
+    color: #616161 !important;
+}
+.acntAccordion .title.active {
+    background-image: none;
+}
+header, header .navbar {
+    background-color: #fff;
+/*    border-bottom: 1px solid #eee;*/
+}
 .hamburger_menu {
     background: #525252;
+}
+
+.company-name.open span {
+    color: #fff;
+}
+.fyear {
+    font-size: 14px;
+}
+
+.t-h-bg1 th {
+    background: #f3f0e6;
+    color: #616161;
+    border: 1px solid #c4c6c7;
+    padding: 11px !important;
+    font-weight: 400;
+}
+table {
+      /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.accountName {
+    color: #ff782d;
+    text-transform: capitalize;
+}
+
+.icomoon_ico {
+    color: #424242/*ff782d*/;
+}
+.icomoon_ico:hover {
+    color: #ff782d;
+}
+.export-ledger-options.left>.arrow, .export-ledger-options>.arrow {
+    top: 0;
+    border-bottom-color: #fff;
+}
+.export-ledger-options>.arrow {
+    transform: none;
+}
+.export-ledger-options {
+    left: 0;
+    top: 55px;
+    -moz-transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out;
+    margin: 0 auto;
+    right: 0;
+    position: absolute;
+    background: none;
+}
+
+.export-ledger-options .list-unstyled {
+    padding-left: 0;
+    list-style: none;
+    position: relative;
+    float: left;
+    background: #000;
+}
+.export-ledger-options>ul>li {
+    width: 100%;
+    border-bottom: 1px solid #d4d3d3;
+    color: #616161;
+}
+.ledgHead {
+    float: left;
+    width: 100%;
+}
+.ledgHead input[type=search] {
+min-width: 220px;
+}
+.ledger-container table th {
+    font-weight: 500;
+}
+/*btn*/
+.btn-primary {
+    background: #525252;
+}
+.btn {
+    padding: 6px 16px;
+    border: 0;
+    border-radius: 0px;
+    font-size: 14px;
+}
+#AddManage {
+    margin: 6px;
+    padding: 10px 5px;
+}
+.btn-default {
+    background: #eee;
+    border: 1px solid #ccc;
+}
+/*btn end*/
+.ledger-main .form-control {
+    background: #fff !important;
+}
+.ledger-header thead th {
+    background: #fff;
+    border-right: 1px solid #c4c6c7;
+}
+.t-h-bg2 th {
+    padding: 7px !important;
+}
+
+.compoundEntry td, .compoundEntry td .form-control {
+    background: #f3f0e6 !important;
+}
+.ledger-table-body table tbody.ledger-main tr td {
+    padding: 0;
+}
+
+.ledger-container table tr.bg3 th {
+    border: 1px solid #c4c6c7;
+    border-left: 0;
+}
+.highlight_info {
+    color: #ff782d/* 95756E*/;
+}
+.midlight_info {
+    color: #95756E;
+    font-weight: 500;
+}
+.tcount {
+    font-weight: 500;
+}
+.ledger-panel {
+    box-shadow: 0px 3px 28px 0 rgba(0, 0, 0, 0.14);
+    border: 1px solid #ccc;
+    color: #616161;
+}
+.ledger-panel .form-control {
+    border: 1px solid #ccc;
+}
+.ledger-panel .btn {
+    background: #eee;
+    border: 1px solid #ccc;
+}
+.ledger-panel .btn:hover, .ledger-panel .btn-primary {
+    background: #f3f0e6;
+    border-color: #ff782d;
+    color: #616161;
+}
+.checkbox {
+    position: relative;
+}
+
+.checkbox input[type=checkbox]:before {
+    content: ' ';
+    position: absolute;
+    width: 2px;
+    padding: 7px;
+    background: #f3f0e6;
+    border: 1px solid #c4c6c7;
+    border-radius: 2px;
+    left: -3px;
+    top: -2px;
+    z-index: 99;
+}
+.checkbox input[type=checkbox]:checked:after {
+    content: ' ';
+    position: absolute;
+    width: 2px;
+    padding: 4px;
+    background: #ff782d;
+    left: 1px;
+    top: 2px;
+    z-index: 99;
+}
+.tax-list {
+    padding: 10px 0;
+}
+#user-dropdown {
+    color: #616161;
+}
+.btn-default:hover {
+    border: 1px solid #ccc;
+    background: #f3f0e6;
+    color: #616161;
+    box-shadow: 0px 3px 11px #e6e3d8;
+}
+.marginTop {
+margin-top: 0;
+}
+
+#accountSearch  {
+    min-height: 54px;
+    border: 0;
+    background: #d35f29 !important;
+    color: #fff;
+    padding: 7px 10px !important;
+    width: 232px;
+}
+#accountSearch:focus  {
+border: 0 !important;
+outline: 0;
+}
+#accountSearch::-webkit-input-placeholder {
+    color: #fff;
+}
+.ledger_search i {
+    color: #fff;
+}
+.ledger_search .input-group-addon {
+    background: #d35f29;
+    color: #fff;
+    border-top: 0;
+    border-bottom: 0;
+}
+.acntAccordion .accBox {
+    background: none;
+}
+.acntAccordion .title, .acntAccordion .title.active {
+    position: relative;
+}
+.acntAccordion .mainLiAclist .title:before {
+    content: '\f2333';
+    font-family: 'icomoon' !important;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: -9px;
+    font-weight: 600;
+}
+.parent-Group {
+    padding-left: 15px;
+}
+.parent-Group li {
+
+}
+.smlSquare.ASS {
+    background: none;
+}
+.subAccBox li a {
+    font-weight: 500;
+}
+.subAccBox li a.active, .subAccBox li a:hover {
+    color: #d35f29;
+    background: none;
+}
+.subAccBox li a span {
+    font-size: 13px;
+    text-transform: capitalize;
+}
+.load-more {
+    margin-left: 10px;
+}
+.acntAccordion {
+    margin-top: 11px;
+}
+#cmpWrp i {
+    color: #525252;
+}
+.company-name {
+    font-weight: 500;
+}
+#ledger {
+    border-top: 1px solid #eee;
+}
+.export-ledger-options ..dropdown_theme {
+    left: -30px;
+}
+.dropdown_theme {
+    box-shadow: 0 3px 28px 0 rgba(0,0,0,.14);
+    color: #616161;
+    border: 1px solid #d4d3d3;
+}
+.export-ledger-options .list-unstyled {
+    background: #fff;
+    left: -80px;
+    width: 151px;
+}
+.export-ledger-options>.arrow {
+    transform: none;
+    top: -10px;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+.icon-options {
+    color: #d35f29;
+    background: #f3f0e6;
+    padding: 4px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+.daterangepicker.ltr .ranges {
+    float: right;
 }

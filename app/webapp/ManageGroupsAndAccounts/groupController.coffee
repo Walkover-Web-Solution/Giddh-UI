@@ -325,8 +325,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   gc.getFlattenGrpWithAccListSuccess = (res) ->
     $scope.gwaList.page = res.body.page
     $scope.gwaList.totalPages = res.body.totalPages
-    #$scope.flatAccntWGroupsList = res.body.results
-    $scope.flatAccntWGroupsList = gc.removeEmptyGroups(res.body.results)
+    $scope.flatAccntWGroupsList = res.body.results
+    #$scope.flatAccntWGroupsList = gc.removeEmptyGroups(res.body.results)
 #    console.log($scope.flatAccntWGroupsList)
     $scope.showAccountList = true
     $scope.gwaList.limit = 5
