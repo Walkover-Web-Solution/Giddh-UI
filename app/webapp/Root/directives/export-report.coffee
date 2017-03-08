@@ -385,9 +385,9 @@ link: (scope, elem, attr) ->
 
     $(elem).on('scroll', (e) ->
       if $(elem).scrollTop()+$(elem).innerHeight() >= elem[0].scrollHeight
-        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'bottom'})
+        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'next'})
       else if $(elem).scrollTop() == 0
-        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'top'})
+        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
     )
 
 ]
