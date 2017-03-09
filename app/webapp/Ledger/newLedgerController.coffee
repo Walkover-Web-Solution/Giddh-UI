@@ -6,7 +6,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.pageLoader = false
   #date time picker code starts here
   lc.today = new Date()
-  d = moment(new Date()).subtract(1, 'month')
+  d = moment(new Date()).subtract(7, 'month')
   lc.fromDate = {date: d._d}
   lc.toDate = {date: new Date()}
   lc.fromDatePickerIsOpen = false
@@ -113,7 +113,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
           addReq.onsuccess = (e) ->
             #lc.ledgerData.ledgers.push(ledger)
-            lc.savedLedgers += 1
+            # lc.savedLedgers += 1
             lc.progressBar.value += 1
 
           addReq.onerror = (e) ->
@@ -170,7 +170,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         crObjs.forEach (crOb) -> 
           addCrReq = crOS.put(crOb)
           addCrReq.onsuccess = (e) ->
-            # lc.savedLedgers += 1
+            lc.savedLedgers += 1
             # lc.progressBar.value += 1
             console.log e.target.result
 
@@ -249,6 +249,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.tempLedgers = []
     lc.filterPage = 1
     type = type || null
+    t0 = performance.now()
+    console.log "readLedger Started: ", t0
     lc.dbConfig.success = (e) ->
       db = e.target.result
 
@@ -260,13 +262,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           keyRange = IDBKeyRange.upperBound([
             $rootScope.selectedCompany.uniqueName
             accountname
-            if lc.dfirstLedger then lc.dfirstLedger.lIndex else 0
+            if lc.dLedgerContainer.firstLedger != null then lc.dLedgerContainer.firstLedger.lIndex else 0
           ], false)
         if ( pos == 'next' ) 
           keyRange = IDBKeyRange.lowerBound([
             $rootScope.selectedCompany.uniqueName
             accountname
-            if lc.dlastLedger then lc.dlastLedger.lIndex else 0
+            if lc.dLedgerContainer.lastLedger != null then lc.dLedgerContainer.lastLedger.lIndex else 0
           ], false)
         if pos == null
           keyRange = IDBKeyRange.lowerBound([
@@ -277,44 +279,27 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
 
         drTrCount = 0
+        pos = pos || 'next'
         drOS = db.transaction([ 'drTransactions' ], 'readonly').objectStore('drTransactions')
-        drSearch = drOS.index('company+accountUniqueName+lIndex', true).openCursor(keyRange, pos || 'next')
+        drSearch = drOS.index('company+accountUniqueName+lIndex', true).openCursor(keyRange, pos)
 
         # _.each(lc.dLedgerData,  (key, index) ->
         #   console.log key, index
         #   if (key.lIndex == 0)
         #     delete lc.dLedgerData[key.uniqueName]
-        # )   
+        # )
 
-        extraRemoved = 0
         drSearch.onsuccess = (e) ->
           cursor = e.target.result
           if cursor
             # lc.dLedgerData[cursor.value.uniqueName] = cursor.value
-            lc.cLedgerContainer.add cursor.value
-            if lc.dfirstLedger == null
-              lc.dfirstLedger = cursor.value
+            if pos == 'next'
+              lc.dLedgerContainer.add cursor.value, lc.pageCount
+            else if pos = 'prev'
+              lc.dLedgerContainer.addAtTop cursor.value, lc.pageCount
 
-            lc.dlastLedger = cursor.value
             drTrCount += cursor.value.transactions.length
-            toRemove = cursor.value.transactions.length
-            # while toRemove > 0
-            #   tempFistLedger = _.min(lc.dLedgerData, lIndex)
-            #   delete lc.dLedgerData[tempFistLedger.uniqueName]
-            #   toRemove -= tempFistLedger.transactions.length
-              # if toRemove > 0
-                  
-            
-            # isDeleted = false
-            # _.each(lc.dLedgerData,  (key, index) ->
-            #   console.log key, index
-            #   if key.lIndex < lc.dfirstLedger.lIndex + drTrCount
-            #     delete lc.dLedgerData[key.uniqueName]
-            #     isDeleted = true
-            #   if isDeleted
-            #     isDeleted = false
-            #     lc.dfirstLedger = key.value
-            # )
+
             if drTrCount >= lc.pageCount
               return
             cursor.continue()
@@ -328,13 +313,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           keyRange = IDBKeyRange.upperBound([
             $rootScope.selectedCompany.uniqueName
             accountname
-            if lc.cfirstLedger then lc.cfirstLedger.lIndex else 0
+            if lc.cLedgerContainer.firstLedger != null then lc.cLedgerContainer.firstLedger.lIndex else 0
           ], false)
         if ( pos == 'next' ) 
           keyRange = IDBKeyRange.lowerBound([
             $rootScope.selectedCompany.uniqueName
             accountname
-            if lc.clastLedger then lc.clastLedger.lIndex else 0
+            if lc.cLedgerContainer.lastLedger != null then lc.cLedgerContainer.lastLedger.lIndex else 0
           ], false)
         if pos == null
           keyRange = IDBKeyRange.lowerBound([
@@ -343,16 +328,18 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             0
           ])
         crTrCount = 0
+        pos = pos || 'next'
         crOS = db.transaction([ 'crTransactions' ], 'readonly').objectStore('crTransactions')
-        crSearch = crOS.index('company+accountUniqueName+lIndex', true).openCursor(keyRange, pos || 'next')
+        crSearch = crOS.index('company+accountUniqueName+lIndex', true).openCursor(keyRange, pos)
         crSearch.onsuccess = (e) ->
           cursor = e.target.result
           if cursor
             # lc.cLedgerData[cursor.value.uniqueName] = cursor.value
-            lc.dLedgerContainer.add cursor.value
-            if lc.cfirstLedger == null
-              lc.cfirstLedger = cursor.value
-            lc.clastLedger = cursor.value
+            if pos == 'next'
+              lc.cLedgerContainer.add cursor.value, lc.pageCount
+            else if pos = 'prev'
+              lc.cLedgerContainer.addAtTop cursor.value, lc.pageCount
+
             crTrCount += cursor.value.transactions.length
             if crTrCount >= lc.pageCount
               return
@@ -392,7 +379,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       # requestSearchable.onerror = (e) ->
       #   console.log 'error', e
       #   return
-
+      t1 = performance.now()
+      console.log  t1-t0
       db.close()
       return
 
@@ -420,10 +408,158 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     idbService.openDb lc.dbConfig
     return
 
-  $scope.$watch('lc.savedLedgers', (newVal, oldVal)->
-    if(newVal != oldVal)
-      lc.readLedgers($rootScope.selectedAccount.uniqueName, 1, 'next')
-  )
+  lc.readLedgersWithQuery = (accountname, query, page, pos, type) ->
+    type = type || null
+    t0 = performance.now()
+    console.log "readLedger with query Started: ", t0
+    lc.dbConfig.success = (e) ->
+      db = e.target.result
+      filteredLedgers = []
+      ledger = db.transaction([ 'ledgers' ], 'readwrite').objectStore('ledgers')
+      ledgerSearch = ledger.index('entryIndex').openCursor()
+      ledgerSearch.onsuccess = (e) ->
+        # console.log('succ', e)
+        cursor = e.target.result
+        if cursor
+          if lc.filterByQuery(cursor.value, query)
+            filteredLedgers.push cursor.value.index
+          cursor.continue()
+        return
+
+      ledgerSearch.onerror = (e) ->
+        console.log 'error', e
+        return
+
+      #MAYANK
+      #DEBIT READ STARTS
+      if type == 'dr' || type == null
+        if ( pos == 'prev' )
+          keyRange = IDBKeyRange.upperBound([
+            $rootScope.selectedCompany.uniqueName
+            accountname
+            Number.MAX_SAFE_INTEGER
+          ], false)
+        if ( pos == 'next' ) 
+          keyRange = IDBKeyRange.lowerBound([
+            $rootScope.selectedCompany.uniqueName
+            accountname
+            Number.MIN_SAFE_INTEGER
+          ], false)
+        if pos == null
+          keyRange = IDBKeyRange.lowerBound([
+            $rootScope.selectedCompany.uniqueName
+            accountname
+            Number.MIN_SAFE_INTEGER
+          ])
+
+
+        drTrCount = 0
+        pos = pos || 'next'
+        drOS = db.transaction([ 'drTransactions' ], 'readonly').objectStore('drTransactions')
+        drSearch = drOS.index('company+accountUniqueName+lIndex', true).openCursor(keyRange, pos)
+
+        # _.each(lc.dLedgerData,  (key, index) ->
+        #   console.log key, index
+        #   if (key.lIndex == 0)
+        #     delete lc.dLedgerData[key.uniqueName]
+        # )
+
+        drSearch.onsuccess = (e) ->
+          cursor = e.target.result
+          if cursor
+            # lc.dLedgerData[cursor.value.uniqueName] = cursor.value
+            if filteredLedgers.indexOf(cursor.value.lIndex) > -1
+              if pos == 'next'
+                lc.dLedgerContainer.add cursor.value, lc.pageCount
+              else if pos = 'prev'
+                lc.dLedgerContainer.addAtTop cursor.value, lc.pageCount
+
+              drTrCount += cursor.value.transactions.length
+
+            if drTrCount >= lc.pageCount
+              return
+            cursor.continue()
+
+        drSearch.onerror = (e) -> 
+          console.log 'error', e
+
+      #CREDIT READ STARTS
+      if type == 'cr' || type == null
+        if ( pos == 'prev' )
+          keyRange = IDBKeyRange.upperBound([
+            $rootScope.selectedCompany.uniqueName
+            accountname
+            Number.MAX_SAFE_INTEGER
+          ], false)
+        if ( pos == 'next' ) 
+          keyRange = IDBKeyRange.lowerBound([
+            $rootScope.selectedCompany.uniqueName
+            accountname
+            Number.MIN_SAFE_INTEGER
+          ], false)
+        if pos == null
+          keyRange = IDBKeyRange.lowerBound([
+            $rootScope.selectedCompany.uniqueName
+            accountname
+            Number.MIN_SAFE_INTEGER
+          ])
+        crTrCount = 0
+        pos = pos || 'next'
+        crOS = db.transaction([ 'crTransactions' ], 'readonly').objectStore('crTransactions')
+        crSearch = crOS.index('company+accountUniqueName+lIndex', true).openCursor(keyRange, pos)
+        crSearch.onsuccess = (e) ->
+          cursor = e.target.result
+          if cursor
+            # lc.cLedgerData[cursor.value.uniqueName] = cursor.value
+            if filteredLedgers.indexOf(cursor.value.lIndex) > -1
+              if pos == 'next'
+                lc.cLedgerContainer.add cursor.value, lc.pageCount
+              else if pos = 'prev'
+                lc.cLedgerContainer.addAtTop cursor.value, lc.pageCount
+
+              crTrCount += cursor.value.transactions.length
+
+            if crTrCount >= lc.pageCount
+              return
+            cursor.continue()
+
+        crSearch.onerror = (e) -> 
+          console.log 'error', e
+
+      #MAYANK
+      t1 = performance.now()
+      console.log  t1-t0
+      db.close()
+      return
+
+    lc.dbConfig.failure = (e) ->
+      console.log e.target.error
+      return
+
+    lc.dbConfig.upgrade = (e) ->
+      db = e.target.result
+      if !db.objectStoreNames.contains(accountname)
+        search = db.createObjectStore('ledgers', keyPath: 'accUniqueName')
+        search.createIndex 'entryIndex', [
+          'accountUniqueName'
+          'index'
+        ], unique: true
+        search.createIndex 'dateIndex', [
+          'accountUniqueName'
+          'timestamp'
+        ], unique: false
+        search.createIndex 'account', [
+          'accountUniqueName'
+        ], unique: false
+      return
+
+    idbService.openDb lc.dbConfig
+    return
+
+  # $scope.$watch('lc.savedLedgers', (newVal, oldVal)->
+  #   if(newVal == lc.totalLedgers)
+  #     lc.readLedgers($rootScope.selectedAccount.uniqueName, 1, 'next')
+  # )
 
   $scope.$watch('lc.ledgersUpdated', (newVal, oldVal)->
     # if(newVal)
@@ -436,7 +572,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if !lc.query and pos == 'next'
       lc.page += 1
       #lc.ledgerData.ledgers = []
-      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
+      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos, 'dr'
+      $scope.$apply()
+    else if !lc.query and pos == 'prev'
+      lc.page += 1
+      #lc.ledgerData.ledgers = []
+      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos, 'dr'
       $scope.$apply()
     # else if !lc.query and pos == 'top' and lc.page > 1
     #   lc.page -= 1
@@ -452,7 +593,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if !lc.query and pos == 'next'
       lc.page += 1
       #lc.ledgerData.ledgers = []
-      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
+      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos, 'cr'
+      $scope.$apply()
+    else if !lc.query and pos == 'prev' 
+      lc.page += 1
+      #lc.ledgerData.ledgers = []
+      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos, 'cr'
       $scope.$apply()
     # else if !lc.query and pos == 'top' and lc.page > 1
     #   lc.page -= 1
@@ -461,36 +607,39 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.filterLedgers = (accountname, query, page) ->
     if query
-      lc.ledgerData.ledgers = []
+      lc.dLedgerContainer = new lc.ledgerContainer()
+      lc.cLedgerContainer = new lc.ledgerContainer()
+      lc.readLedgersWithQuery accountname, query, lc.page || 1, 'next'
     else
-      lc.ledgerData.ledgers = []
-      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page || 1
-    lc.dbConfig.success = (e) ->
-      db = e.target.result
-      search = db.transaction([ 'ledgers' ], 'readwrite').objectStore('ledgers')
+      lc.dLedgerContainer = new lc.ledgerContainer()
+      lc.cLedgerContainer = new lc.ledgerContainer()
+      lc.readLedgers accountname, lc.page || 1, 'next'
+    # lc.dbConfig.success = (e) ->
+    #   db = e.target.result
+    #   search = db.transaction([ 'ledgers' ], 'readwrite').objectStore('ledgers')
 
-      keyRange = IDBKeyRange.bound(accountname + ' ', accountname + ' ' + '\xFF', true, true)
+    #   keyRange = IDBKeyRange.bound(accountname + ' ', accountname + ' ' + '\xFF', true, true)
 
-      requestSearchable = search.openCursor(keyRange)
+    #   requestSearchable = search.openCursor(keyRange)
 
-      requestSearchable.onsuccess = (e) ->
-        # console.log('succ', e)
-        cursor = e.target.result
-        if cursor
-          if query and lc.filterByQuery(cursor.value, query)
-            lc.ledgerData.ledgers.push cursor.value
-          cursor.continue()
-        # else
-        #   lc.ledgerData.ledgers = lc.filtered
-        $scope.$apply()
-        return
+    #   requestSearchable.onsuccess = (e) ->
+    #     # console.log('succ', e)
+    #     cursor = e.target.result
+    #     if cursor
+    #       if query and lc.filterByQuery(cursor.value, query)
+    #         lc.ledgerData.ledgers.push cursor.value
+    #       cursor.continue()
+    #     # else
+    #     #   lc.ledgerData.ledgers = lc.filtered
+    #     $scope.$apply()
+    #     return
 
-      requestSearchable.onerror = (e) ->
-        console.log 'error', e
-        return
+    #   requestSearchable.onerror = (e) ->
+    #     console.log 'error', e
+    #     return
 
-      db.close()
-      return
+    #   db.close()
+    return
 
     lc.dbConfig.failure = (e) ->
       console.log e.target.error, 'update failed'
@@ -538,6 +687,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.ledgerData = {
     ledgers: []
   }
+
   lc.newDebitTxn = {
     date: $filter('date')(new Date(), "dd-MM-yyyy")
     particular: {
@@ -547,6 +697,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     amount : 0
     type: 'DEBIT'
   }
+
   lc.newCreditTxn = {
     date: $filter('date')(new Date(), "dd-MM-yyyy")
     particular: {
@@ -1029,16 +1180,19 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       ledgerService.getLedger(unqNamesObj).then(lc.getLedgerDataSuccess, lc.getLedgerDataFailure)
 
   lc.getLedgerDataSuccess = (res) ->
+    lc.totalLedgers= res.body.ledgers.length
+    # lc.dLedgerData = {}
+    # lc.cLedgerData = {}
+    # lc.cLedgerContainer = new lc.ledgerContainer(lc.cLedgerData)
+    # lc.dLedgerContainer = new lc.ledgerContainer(lc.dLedgerData)
     lc.cLedgerContainer = new lc.ledgerContainer()
     lc.dLedgerContainer = new lc.ledgerContainer()
-    lc.dLedgerData = {}
-    lc.dLedgerContainer.ledgerData = lc.dLedgerData
-    lc.cLedgerData = {}
-    lc.cLedgerContainer.ledgerData = lc.cLedgerData
     #lc.filterLedgers(res.body.ledgers)
     #lc.sortTransactions(res.body.ledgers, 'entryDate')
     #lc.ledgerData = res.body
     lc.addToIdb(res.body.ledgers, $rootScope.selectedAccount.uniqueName)
+    # lc.dLedgerData = lc.dLedgerContainer.ledgerData
+    # lc.cLedgerData = lc.cLedgerContainer.ledgerData
     #lc.filterTxnType(res.body.ledgers)
     # lc.dLedgerData = lc.filterLedgers(res.body.ledgers, 'DEBIT')
     $rootScope.flyAccounts = false
@@ -1123,22 +1277,22 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.creditTotal = 0
   $scope.debitTotal = 0
   lc.countTotalTransactions = (ledgers) ->
-    $scope.creditTotal = 0
-    $scope.debitTotal = 0
-    $scope.dTxnCount = 0
-    $scope.cTxnCount = 0
-    if ledgers.length > 0
-      _.each ledgers, (ledger) ->
-        if ledger.transactions.length > 0
-          _.each ledger.transactions, (txn) ->
-            txn.isOpen = false
-            if txn.type == 'DEBIT'
-              $scope.dTxnCount += 1
-              $scope.debitTotal += Number(txn.amount)
-            else
-              $scope.cTxnCount += 1
-              $scope.creditTotal += Number(txn.amount)
-
+    # $scope.creditTotal = 0
+    # $scope.debitTotal = 0
+    # $scope.dTxnCount = 0
+    # $scope.cTxnCount = 0
+    # if ledgers.length > 0
+    #   _.each ledgers, (ledger) ->
+    #     if ledger.transactions.length > 0
+    #       _.each ledger.transactions, (txn) ->
+    #         txn.isOpen = false
+    #         if txn.type == 'DEBIT'
+    #           $scope.dTxnCount += 1
+    #           $scope.debitTotal += Number(txn.amount)
+    #         else
+    #           $scope.cTxnCount += 1
+    #           $scope.creditTotal += Number(txn.amount)
+    return
 
   # lc.updateTotalTransactions = () ->
   #   $timeout ( ->
@@ -2039,10 +2193,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       $('.popover').remove()
 
 
- $(document).on 'click', (e) ->
-  if lc.prevTxn
-    lc.prevTxn.isOpen = false
-  return 0
+  $(document).on 'click', (e) ->
+    if lc.prevTxn
+      lc.prevTxn.isOpen = false
+    return 0
 
   $rootScope.$on('account-selected', ()->
     lc.isSelectedAccount()
@@ -2062,20 +2216,66 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #     trCount -= o.transactions.length
   # }
 
-  lc.ledgerContainer = (ledgerData) -> 
-    this.ledgerData = ledgerData
+  lc.ledgerContainer = () -> 
+    this.ledgerData = {}
     this.trCount = 0
+    this.firstLedger = null
+    this.lastLedger = null
     return this
   lc.ledgerContainer.prototype.add = (o) -> 
-    this.trCount += o.transactions.length
-    this.ledgerData[o.uniqueName] = o
+    if ! this.ledgerData.hasOwnProperty(o.uniqueName)
+      this.trCount += o.transactions.length
+      this.ledgerData[o.uniqueName] = o
+      if this.firstLedger == null
+        this.firstLedger = this.ledgerData[o.uniqueName]
+      this.lastLedger = this.ledgerData[o.uniqueName]
+    return
+  lc.ledgerContainer.prototype.add = (o, count) -> 
+    if ! this.ledgerData.hasOwnProperty(o.uniqueName)
+      this.trCount += o.transactions.length
+      this.ledgerData[o.uniqueName] = o
+      while this.trCount > count + count/3
+        this.removeTop()
+      tempTop = this.top()
+      this.firstLedger = tempTop
+      this.lastLedger = this.ledgerData[o.uniqueName]
+    return
+  lc.ledgerContainer.prototype.addAtTop = (o, count) -> 
+    if ! this.ledgerData.hasOwnProperty(o.uniqueName)
+      this.trCount += o.transactions.length
+      this.ledgerData[o.uniqueName] = o
+      while this.trCount > count + count/3
+        this.removeBottom()
+      this.firstLedger = this.ledgerData[o.uniqueName]
+      tempBottom = this.bottom()
+      this.lastLedger = tempBottom
+    return
   lc.ledgerContainer.prototype.top = () -> 
-    return _.min(this.ledgerData, lIndex)
+    least = Number.MAX_SAFE_INTEGER
+    topKey = null
+    for key in Object.keys(this.ledgerData)
+      if this.ledgerData[key].lIndex < least
+        least = this.ledgerData[key].lIndex
+        topKey = key
+    return this.ledgerData[topKey]
+  lc.ledgerContainer.prototype.bottom = () -> 
+    last = Number.MIN_SAFE_INTEGER
+    bottomKey = null
+    for key in Object.keys(this.ledgerData)
+      if this.ledgerData[key].lIndex > last
+        last = this.ledgerData[key].lIndex
+        bottomKey = key
+    return this.ledgerData[bottomKey]
   lc.ledgerContainer.prototype.remove = (o) -> 
     delete this.ledgerData[o.uniqueName]
     this.trCount -= o.transactions.length
-  lc.ledgerContainer.prototype.removeTop = (o) -> 
+    return
+  lc.ledgerContainer.prototype.removeTop = () -> 
     this.remove(this.top())
+    return
+  lc.ledgerContainer.prototype.removeBottom = () -> 
+    this.remove(this.bottom())
+    return
 
   return lc
 

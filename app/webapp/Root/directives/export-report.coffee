@@ -460,6 +460,17 @@ link: (scope, elem, attr) ->
       floatNum = 0
     floatNum      
 
+.filter 'orderObjectBy', ->
+  (items, field, reverse) ->
+    filtered = []
+    angular.forEach items, (item) ->
+      filtered.push item
+      return
+    filtered.sort (a, b) ->
+      if a[field] > b[field] then 1 else -1
+    if reverse
+      filtered.reverse()
+    filtered
 
 .directive 'scrollBtn', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
   restrict: "EA"
@@ -471,5 +482,4 @@ link: (scope, elem, attr) ->
         'scrollTop' : top + 100
       })
     )
-
 ]
