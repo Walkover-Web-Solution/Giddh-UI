@@ -385,9 +385,9 @@ link: (scope, elem, attr) ->
 
     $(elem).on('scroll', (e) ->
       if $(elem).scrollTop()+$(elem).innerHeight() >= elem[0].scrollHeight
-        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'bottom'})
+        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'next'})
       else if $(elem).scrollTop() == 0
-        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'top'})
+        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
     )
 
 ]
@@ -460,6 +460,17 @@ link: (scope, elem, attr) ->
       floatNum = 0
     floatNum      
 
+.filter 'orderObjectBy', ->
+  (items, field, reverse) ->
+    filtered = []
+    angular.forEach items, (item) ->
+      filtered.push item
+      return
+    filtered.sort (a, b) ->
+      if a[field] > b[field] then 1 else -1
+    if reverse
+      filtered.reverse()
+    filtered
 
 .directive 'scrollBtn', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
   restrict: "EA"
@@ -471,5 +482,4 @@ link: (scope, elem, attr) ->
         'scrollTop' : top + 100
       })
     )
-
 ]

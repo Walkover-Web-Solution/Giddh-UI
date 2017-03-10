@@ -24,7 +24,7 @@
   Please select an Account to load its Ledger
 </section>
 
-<div id="ledger" class="oyAuto" ng-show="!lc.showLoader && lc.savedLedgers == lc.totalLedgers" cover-page ng-class="{'mtop-neg-54':!flyAccounts}">
+<div id="ledger" class="oyAuto" ng-show="!lc.showLoader" cover-page ng-class="{'mtop-neg-54':!flyAccounts}">
  <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
 
     <section class="container-fluid" ng-if="lc.accountUnq.length > 0">
@@ -71,6 +71,9 @@
               <div class="form-group">
                 <button type="button" class="btn btn-default mrL1" ng-click="lc.getLedgerData()" ng-disabled="fromToDateForm.$invalid">
                   GO
+                </button>
+                <button type="button" class="btn btn-default mrL1" ng-click="lc.readLedgers(lc.accountToShow.uniqueName, 1, 'next')" >
+                  READ LEDGER
                 </button>
               </div>
 
@@ -267,7 +270,7 @@
                           </tr>
 
                           <!--ledgers-->
-                          <tr ng-repeat="(key, value) in lc.dLedgerData">
+                          <tr ng-repeat="(key, value) in lc.dLedgerContainer.ledgerData | orderObjectBy : 'lIndex' : false">
                             <td colspan="100">
                               <table class="width100">
                                 <tbody>
@@ -403,7 +406,7 @@
                           </tr>
 
                           <!--ledgers-->
-                          <tr ng-repeat="(key, value) in lc.cLedgerData">
+                          <tr ng-repeat="(key, value) in lc.cLedgerContainer.ledgerData | orderObjectBy : 'lIndex' : false">
                             <td colspan="100">
                               <table class="width100">
                                 <tbody>
