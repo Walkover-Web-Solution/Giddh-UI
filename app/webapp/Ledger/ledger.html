@@ -72,9 +72,9 @@
                 <button type="button" class="btn btn-default mrL1" ng-click="lc.getLedgerData()" ng-disabled="fromToDateForm.$invalid">
                   GO
                 </button>
-                <button type="button" class="btn btn-default mrL1" ng-click="lc.readLedgers(lc.accountToShow.uniqueName, 1, 'next')" >
+<!--                 <button type="button" class="btn btn-default mrL1" ng-click="lc.readLedgers(lc.accountToShow.uniqueName, 1, 'next')" >
                   READ LEDGER
-                </button>
+                </button> -->
               </div>
 
             </form>
@@ -149,11 +149,11 @@
                   <i class="glyphicon glyphicon-link pull-right"></i>
                 </a>
 
-                <a class="pull-right mrL1" style="margin-top:9px">
+<!--                 <a class="pull-right mrL1" style="margin-top:9px">
                   <div ng-click="togglePopoverDrag()">
                     <switch ng-model="popover.draggable" class="small" uib-tooltip="Switch between draggable and fixed popover. " tooltip-placement="bottom" ></switch>
                   </div>
-                </a>
+                </a> -->
                 <a class="pull-right mrL1" ng-if="elc.ledgerData.length > 0" style="margin-top:9px">
                   <div ng-click="lc.mergeBankTransactions(lc.mergeTransaction)">
                     <switch  ng-model="lc.mergeTransaction" class="small" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>
@@ -252,10 +252,10 @@
                                     popover-popup-delay="200"
                                     set-popover-position
                                     ng-click="$event.stopPropagation()"
-                                    ng-if="txn.type == 'DEBIT'">
+                                    >
                                     <td class="col-xs-2">
                                       <input type="text" 
-                                      ng-model="lc.blankLedger.entryDate"
+                                      ng-model="txn.date"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
                                     <td class="col-xs-6">
@@ -285,7 +285,7 @@
                                 <tbody>
                                   <tr
                                     class="txn-row"
-                                    ng-class="{compoundEntry: value.isCompoundEntry}"  
+                                    ng-class="{compoundEntry: value.isCompoundEntry, uncEntry : value.unconfirmedEntry}"  
                                     ng-repeat="txn in value.transactions"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
@@ -307,10 +307,19 @@
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       ng-focus="lc.slctxn(value, txn, $event)">
                                     </td>
-                                    <td class="col-xs-4">
+                                    <td class="col-xs-4 pos-rel">
                                       <input type="number" 
                                         ng-model="txn.amount"
                                         ng-focus="lc.slctxn(value, txn, $event)">
+                                        <span 
+                                        class="download-invoice-ledger" 
+                                        ng-if="value.invoiceGenerated" 
+                                        ng-click="lc.downloadInvoice(value.invoiceNumber, $event)" 
+                                        tooltip-append-to-body="true" 
+                                        uib-tooltip="Download invoice : {{value.invoiceNumber}}" 
+                                        tooltip-placement="top"> 
+                                        <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
+                                      </span>
                                     </td>
                                   </tr>
                                 </tbody>
@@ -334,7 +343,7 @@
                         </td>
                       </tr>
                       <tr class="t-h-bg2 bdr-w-t h42">
-                        <td colspan="6" class="col-xs-6 text-left bold">Debit Total: {{debitTotal | number:2}} </td>
+                        <td colspan="6" class="col-xs-6 text-left bold">Debit Total: {{lc.ledgerData.debitTotal | number:2}} </td>
                         <td colspan="6" class="col-xs-6 text-right bdr-w-t bold">Reckoning : {{lc.ledgerData.debitTotal | number:2}}</td>
                       </tr>
                   </tbody>
@@ -394,10 +403,10 @@
                                     popover-popup-delay="200"
                                     set-popover-position
                                     ng-click="$event.stopPropagation()"
-                                    ng-if="txn.type == 'DEBIT'">
+                                    >
                                     <td class="col-xs-2">
                                       <input type="text" 
-                                      ng-model="lc.blankLedger.entryDate"
+                                      ng-model="txn.date"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
                                     <td class="col-xs-6">
@@ -427,7 +436,7 @@
                                 <tbody>
                                   <tr
                                     class="txn-row"
-                                    ng-class="{compoundEntry: value.isCompoundEntry}" 
+                                    ng-class="{compoundEntry: value.isCompoundEntry, uncEntry : value.unconfirmedEntry}" 
                                     ng-repeat="txn in value.transactions"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
@@ -453,6 +462,15 @@
                                       <input type="number" 
                                         ng-model="txn.amount"
                                         ng-focus="lc.slctxn(value, txn, $event)">
+                                        <span 
+                                        class="download-invoice-ledger" 
+                                        ng-if="value.invoiceGenerated" 
+                                        ng-click="lc.downloadInvoice(value.invoiceNumber, $event)" 
+                                        tooltip-append-to-body="true" 
+                                        uib-tooltip="Download invoice : {{value.invoiceNumber}}" 
+                                        tooltip-placement="top"> 
+                                        <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
+                                      </span>
                                     </td>
                                   </tr>
                                 </tbody>
@@ -476,7 +494,7 @@
                         </td>
                       </tr>
                       <tr class="t-h-bg2 bdr-w-t h42">
-                        <td colspan="6" class="col-xs-6 text-left bold">Credit Total: {{creditTotal | number:2}}</td>
+                        <td colspan="6" class="col-xs-6 text-left bold">Credit Total: {{lc.ledgerData.creditTotal | number:2}}</td>
                         <td colspan="6" class="col-xs-6 text-right bold">Reckoning: {{lc.ledgerData.creditTotal | number:2}}</td>
                       </tr>
                   </tbody>

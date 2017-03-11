@@ -3096,7 +3096,7 @@ ul.pills li {
     background: #fddfa4 !important;
 }
 
-.compoundEntry .uncEntry  td,  .compoundEntry .uncEntry td input {
+ .uncEntry  td, .uncEntry td input {
     background: #ffccb4;
 }
 

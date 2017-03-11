@@ -85,6 +85,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     date
 
   lc.addToIdb = (ledgers, accountname) ->
+    lc.cNonemptyTxn = 0
+    lc.dNonemptyTxn = 0
     lc.savedLedgers = 0
     lc.isLedgerSeeded = false
     lc.dbConfig.success = (e) ->
@@ -574,7 +576,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     @blankLedger = {
       isBlankLedger : true
       description:''
-      entryDate:''
+      entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
       invoiceGenerated:false
       isCompoundEntry:false
       applyApplicableTaxes: false
@@ -792,7 +794,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           <h3 class="modal-title">Magic Link</h3>
           </div>
           <div class="modal-body">
-            <input id="magicLink" class="form-control" type="text" ng-model="magicLink">
+            <input id="magicLink" class="form-control" type="text" ng-model="lc.magicLink">
           </div>
           <div class="modal-footer">
             <button class="btn btn-default" ngclipboard data-clipboard-target="#magicLink">Copy</button>
@@ -864,8 +866,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.exportLedgerSuccess = (res)->
     lc.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
-    if lc.msieBrowser()
-      lc.openWindow(res.body.filePath)
+    if $rootScope.msieBrowser()
+      $rootScope.openWindow(res.body.filePath)
     else if lc.isSafari       
       modalInstance = $uibModal.open(
         template: '<div>
@@ -2086,6 +2088,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.ledgerBeforeEdit = {}
     lc.checkCompEntry(ledger)
     angular.copy(ledger,lc.ledgerBeforeEdit)
+    lc.isTransactionContainsTax(ledger)
     if lc.prevLedger.uniqueName != ledger.uniqueName
       lc.prevLedger = ledger
     if lc.cLedgerContainer.ledgerData['0']
@@ -2096,15 +2099,23 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       e.stopPropagation()
 
   lc.dBlankTxn = {
-    amount:0
-    particular: ''
+    date: $filter('date')(new Date(), "dd-MM-yyyy")
+    particular: {
+      name:''
+      uniqueName:''
+    }
+    amount : 0
     type: 'DEBIT'
   }
 
   lc.cBlankTxn = {
-      amount:0
-      particular: ''
-      type: 'CREDIT'
+    date: $filter('date')(new Date(), "dd-MM-yyyy")
+    particular: {
+      name:''
+      uniqueName:''
+    }
+    amount : 0
+    type: 'CREDIT'
   }
 
 
