@@ -201,9 +201,9 @@
                         <tr class="t-h-bg2">
                           <!-- <th class="col-xs-1"></th> -->
                           <th class="col-xs-2">
-                            <span ng-click="lc.sortOrder.debit = !lc.sortOrder.debit" class="cursor-pointer">
-                              <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="lc.sortOrder.debit"></i>
-                              <i class="glyphicon glyphicon-sort-by-order" ng-if="!lc.sortOrder.debit"></i>
+                            <span ng-click="lc.sortOrder.debit = lc.sortDirectionInvert(lc.sortOrder.debit)" class="cursor-pointer">
+                              <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="lc.sortOrder.debit == lc.sortDirection.asc"></i>
+                              <i class="glyphicon glyphicon-sort-by-order" ng-if="lc.sortOrder.debit == lc.sortDirection.desc"></i>
                               Date
                             </span>
                             <!-- <i class="glyphicon glyphicon-sort pull-left mrL"></i> -->
@@ -274,7 +274,7 @@
                           <!--ledgers-->
                           <tr 
                             id="{{value.uniqueName}}"
-                            ng-repeat="(key, value) in lc.dLedgerContainer.ledgerData | orderObjectBy : 'lIndex' : false"
+                            ng-repeat="(key, value) in lc.dLedgerContainer.ledgerData | orderObjectBy : 'lIndex' : lc.sortOrder.debit == lc.sortDirection.desc"
                             ng-dblclick="lc.getMatchingTxn(value, 'CR')">
                             <td colspan="100">
                               <table class="width100">
@@ -346,9 +346,9 @@
                         <tr class="t-h-bg2">
                          <!--  <th class="col-xs-1"></th> -->
                           <th class="col-xs-2">
-                            <span ng-click="lc.sortOrder.credit = !lc.sortOrder.credit" class="cursor-pointer">
-                                <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="lc.sortOrder.credit"></i>
-                                <i class="glyphicon glyphicon-sort-by-order" ng-if="!lc.sortOrder.credit"></i>
+                            <span ng-click="lc.sortOrder.credit = lc.sortDirectionInvert(lc.sortOrder.credit)" class="cursor-pointer">
+                                <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="lc.sortOrder.credit == lc.sortDirection.asc"></i>
+                                <i class="glyphicon glyphicon-sort-by-order" ng-if="lc.sortOrder.credit == lc.sortDirection.desc"></i>
                                 Date
                             </span>
                             
@@ -416,7 +416,7 @@
                           <!--ledgers-->
                           <tr 
                             id="{{value.uniqueName}}"
-                            ng-repeat="(key, value) in lc.cLedgerContainer.ledgerData | orderObjectBy : 'lIndex' : false"
+                            ng-repeat="(key, value) in lc.cLedgerContainer.ledgerData | orderObjectBy : 'lIndex' : lc.sortOrder.credit == lc.sortDirection.desc"
                             ng-dblclick="lc.getMatchingTxn(value, 'DR')">
                             <td colspan="100">
                               <table class="width100">
