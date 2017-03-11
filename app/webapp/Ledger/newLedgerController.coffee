@@ -36,8 +36,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.scrollDirection = Object.freeze({'next' : 0, 'prev' : 1})
 
   lc.sortOrder = {
-    debit : lc.sortDirection.asc
-    credit: lc.sortDirection.asc
+    debit : lc.sortDirection.desc
+    credit: lc.sortDirection.desc
   }
   lc.popover = {
     templateUrl: 'panel'
@@ -67,6 +67,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.totalLedgers = 0
   lc.savedLedgers = 0
   lc.isLedgerSeeded = false
+  lc.cNonemptyTxn = 0
+  lc.dNonemptyTxn = 0
   lc.pageCount = 50
   lc.page = 1
   lc.dbConfig = 
@@ -124,8 +126,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           ledger.transactions.forEach (tr, index) -> 
             if ( tr.type == 'CREDIT')
               crTrans.push tr
+              lc.cNonemptyTxn++
             else
               drTrans.push tr
+              lc.dNonemptyTxn++
           crObj = {};
           crObj.uniqueId = ledger.accUniqueName
           crObj = _.extend(crObj, ledger)
@@ -159,6 +163,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           addDrReq = drOS.put(drOb)
           addDrReq.onsuccess = (e) ->
             drSavedLedgersCount += 1
+
             # lc.progressBar.value += 1
             if drSavedLedgersCount == lc.savedLedgers && crSavedLedgersCount == lc.savedLedgers
               lc.isLedgerSeeded = true

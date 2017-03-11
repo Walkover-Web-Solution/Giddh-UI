@@ -217,7 +217,7 @@
                         </tr>
                         <tr class="bg3">
                           <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
-                            <span class="pull-left tcount">Total Transactions: {{dTxnCount}}</span>
+                            <span class="pull-left tcount">Total Transactions: {{lc.dNonemptyTxn}}</span>
                             <span ng-if="lc.ledgerData.forwardedBalance.type == 'DEBIT' && lc.ledgerData.forwardedBalance.amount > 0">Opening Balance : {{lc.ledgerData.forwardedBalance.amount | number:2}}</span>
                             <!-- <span ng-if="lc.ledgerData.forwardedBalance.type == 'CREDIT'">B/F : 0</span> -->
                           </th>
@@ -363,7 +363,7 @@
                         </tr>
                         <tr class="bg3">
                           <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
-                            <span class="pull-left tcount">Total Transactions: {{cTxnCount}}</span>
+                            <span class="pull-left tcount">Total Transactions: {{lc.cNonemptyTxn}}</span>
                             <span ng-if="lc.ledgerData.forwardedBalance.type == 'CREDIT' && lc.ledgerData.forwardedBalance.amount > 0">B/F : {{lc.ledgerData.forwardedBalance.amount | number:2}}</span>
                            <!--  <span ng-if="lc.ledgerData.forwardedBalance.type == 'DEBIT'">B/F : 0</span> -->
                           </th>
