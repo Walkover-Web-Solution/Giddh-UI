@@ -1,20 +1,20 @@
 
-<!-- <div class="loader mrT4" ng-if="lc.showLoader && lc.accountUnq.length != ''">
+<div class="loader mrT4" ng-if="lc.showLoader && lc.accountUnq.length">
   <span></span>
   <span></span>
   <span></span>
   <span></span>
   <span></span>
-</div> -->
+</div>
 
-<div class="col-xs-12 mrT4" ng-if="lc.accountUnq.length && lc.showLoader || lc.savedLedgers < lc.totalLedgers">
+<!-- <div class="col-xs-12 mrT4" ng-if="lc.accountUnq.length && lc.showLoader || lc.savedLedgers < lc.totalLedgers">
   <uib-progressbar class="progress-striped active" max="lc.progressBar.max" value="lc.progressBar.value" type="{{lc.progressBar.type}}">
     <i>
       <span ng-show="lc.showLoader">Fetching Ledgers..</span>
       <span ng-show="!lc.showLoader">{{lc.savedLedgers}} / {{lc.totalLedgers}} ledgers loaded</span>
     </i>
   </uib-progressbar>
-</div>
+</div> -->
 
 <!-- <div class="page-loader" ng-show="lc.accountUnq.length != '' && lc.showLoader">
   <div class="giddh-spinner vertical-center-spinner"></div>
@@ -225,7 +225,7 @@
                       </thead>
                     </table>
                     <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScrollDebit(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84" min-height="600" > -->
-                    <div class="col-container" ledger-scroller data-scrolled="lc.onScrollDebit(top, height, position)">
+                    <div class="col-container" ledger-scroller data-scrolled="lc.onScrollDebit(top, height, position)" data-scrollto="lc.drMatch">
                       <table class="width100">
                         <tbody>
 
@@ -235,8 +235,10 @@
                               <table class="width100">
                                 <tbody>
                                   <tr
-                                    class="txn-row" 
+                                    class="txn-row"
+                                    ng-class="{compoundEntry: lc.blankLedger.isCompoundEntry}"
                                     ng-repeat="txn in lc.blankLedger.transactions"
+                                    ng-if="txn.type == 'DEBIT'"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
                                     popover-placement="{{lc.popover.position}}" 
@@ -256,12 +258,12 @@
                                       <input type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
-                                      ng-focus="lc.slctxn(blankLedger, txn, $event)">
+                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
                                     <td class="col-xs-4">
                                       <input type="number" 
                                         ng-model="txn.amount"
-                                        ng-focus="lc.slctxn(blankLedger, txn, $event)">
+                                        ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
                                   </tr>
                                 </tbody>
@@ -270,12 +272,16 @@
                           </tr>
 
                           <!--ledgers-->
-                          <tr ng-repeat="(key, value) in lc.dLedgerContainer.ledgerData | orderObjectBy : 'lIndex' : false">
+                          <tr 
+                            id="{{value.uniqueName}}"
+                            ng-repeat="(key, value) in lc.dLedgerContainer.ledgerData | orderObjectBy : 'lIndex' : false"
+                            ng-dblclick="lc.getMatchingTxn(value, 'CR')">
                             <td colspan="100">
                               <table class="width100">
                                 <tbody>
                                   <tr
-                                    class="txn-row" 
+                                    class="txn-row"
+                                    ng-class="{compoundEntry: value.isCompoundEntry}"  
                                     ng-repeat="txn in value.transactions"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
@@ -362,17 +368,19 @@
                     </table>
 
                     <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="10" auto-height on-scroll="onScrollCredit(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="600"> -->
-                    <div class="col-container" ledger-scroller data-scrolled="lc.onScrollCredit(top, height, position)">
+                    <div class="col-container" ledger-scroller data-scrolled="lc.onScrollCredit(top, height, position)" data-scrollto="lc.crMatch">
                       <table class="width100">
                         <tbody>
                           <!--Add entry row for nomral order-->
-                                                    <tr>
+                          <tr>
                             <td colspan="100">
                               <table class="width100">
                                 <tbody>
                                   <tr
-                                    class="txn-row" 
+                                    class="txn-row"
+                                    ng-class="{compoundEntry: lc.blankLedger.isCompoundEntry}" 
                                     ng-repeat="txn in lc.blankLedger.transactions"
+                                    ng-if="txn.type == 'CREDIT'"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
                                     popover-placement="{{lc.popover.position}}" 
@@ -392,12 +400,12 @@
                                       <input type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
-                                      ng-focus="lc.slctxn(blankLedger, txn, $event)">
+                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
                                     <td class="col-xs-4">
                                       <input type="number" 
                                         ng-model="txn.amount"
-                                        ng-focus="lc.slctxn(blankLedger, txn, $event)">
+                                        ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
                                   </tr>
                                 </tbody>
@@ -406,12 +414,16 @@
                           </tr>
 
                           <!--ledgers-->
-                          <tr ng-repeat="(key, value) in lc.cLedgerContainer.ledgerData | orderObjectBy : 'lIndex' : false">
+                          <tr 
+                            id="{{value.uniqueName}}"
+                            ng-repeat="(key, value) in lc.cLedgerContainer.ledgerData | orderObjectBy : 'lIndex' : false"
+                            ng-dblclick="lc.getMatchingTxn(value, 'DR')">
                             <td colspan="100">
                               <table class="width100">
                                 <tbody>
                                   <tr
-                                    class="txn-row" 
+                                    class="txn-row"
+                                    ng-class="{compoundEntry: value.isCompoundEntry}" 
                                     ng-repeat="txn in value.transactions"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
@@ -573,7 +585,7 @@
           <div class="clearfix" ng-if="canUpdate">
             <button accesskey="x" ng-if="(lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="lc.addBlankTxn('DEBIT', lc.selectedLedger)">Add in DR</button>
             <button accesskey="c" ng-if="(lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="lc.addBlankTxn('CREDIT', lc.selectedLedger)">Add in CR</button>
-            <button id="saveUpdate" ng-if="(lc.selectedLedger.transactions[0].particular.uniqueName != '' && lc.selectedLedger.transactions[0].particular.uniqueName != undefined) || (lc.selectedLedger.transactions[1].particular.uniqueName != '' && lc.selectedLedger.transactions[1].particular.uniqueName != undefined)" class="pull-left mrR1 btn btn-sm btn-success min150" ng-click="lc.saveUpdateLedger(lc.selectedLedger)" ng-disabled="doingEntry">
+            <button id="saveUpdate" class="pull-left mrR1 btn btn-sm btn-success min150" ng-click="lc.saveUpdateLedger(lc.selectedLedger)" ng-disabled="doingEntry">
               <span ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') || lc.selectedLedger.isBankTransaction == true">Save</span>
               <span ng-if="(lc.selectedLedger.uniqueName != undefined && lc.selectedLedger.uniqueName != '') && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)">Update</span>
             </button>

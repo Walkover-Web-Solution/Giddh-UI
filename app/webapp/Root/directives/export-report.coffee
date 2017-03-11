@@ -346,20 +346,20 @@ angular.module('trialBalance', []).directive('exportReport', [
     "<span ng-transclude></span>"+
     "<i ng-class='selectedCls(order)'></i>"+
     "</a>"
-link: (scope, elem, attr) ->
-  scope.sort_by = (newSortingOrder) ->
-    sort = scope.sort;
+  link: (scope, elem, attr) ->
+    scope.sort_by = (newSortingOrder) ->
+      sort = scope.sort;
 
-    if sort.sortingOrder == newSortingOrder
-      sort.reverse = !sort.reverse
+      if sort.sortingOrder == newSortingOrder
+        sort.reverse = !sort.reverse
 
-    sort.sortingOrder = newSortingOrder
+      sort.sortingOrder = newSortingOrder
 
-  scope.selectedCls = (column) ->
-    if column == scope.sort.sortingOrder
-      ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'))
-    else
-      'icon-sort'
+    scope.selectedCls = (column) ->
+      if column == scope.sort.sortingOrder
+        ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'))
+      else
+        'icon-sort'
 
 ]
 
@@ -380,14 +380,25 @@ link: (scope, elem, attr) ->
 
 .directive 'ledgerScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
   restrict: "EA"
+  scope : {
+    scrollto : '=scrollto'
+  }
   link: (scope, elem, attrs) ->
     invoker = $parse(attrs.scrolled)
 
     $(elem).on('scroll', (e) ->
       if $(elem).scrollTop()+$(elem).innerHeight() >= elem[0].scrollHeight
         invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'next'})
-      else if $(elem).scrollTop() == 0
+      else if $(elem).scrollTop() <= 100
         invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
+    )
+
+    scope.$watch('scrollto', (newVal, oldVal)->
+      if newVal != oldVal && newVal.transactions.length && newVal.uniqueName
+        $(elem).animate({
+            scrollTop: $("#" + newVal.uniqueName).offset().top
+        }, 200)
+        
     )
 
 ]
