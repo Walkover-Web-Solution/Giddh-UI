@@ -81,7 +81,7 @@
 
 
             <div class="form-group mrL1 pull-right maxW150 pos-rel" >
-              <input type="search" class="form-control maxW150" placeholder="Search ledger" ng-model="particularSearch" ng-keyup="lc.countTotalTransactionsAfterSomeTime()" ng-model-options="{debounce: 1000}" ng-change="lc.filterLedgers(lc.accountToShow.uniqueName, particularSearch, 1)">
+              <input type="search" class="form-control maxW150" placeholder="Search ledger" ng-model="lc.query" ng-keyup="lc.countTotalTransactionsAfterSomeTime()" ng-model-options="{debounce: 1000}" ng-change="lc.filterLedgers(lc.accountToShow.uniqueName, lc.query, 1)">
               <i class="glyphicon glyphicon-search pos-abs"  style="right:5px;top:10px;"></i>
             </div>
           
