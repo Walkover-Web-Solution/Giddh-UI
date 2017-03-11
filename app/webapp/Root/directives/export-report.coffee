@@ -380,9 +380,6 @@ angular.module('trialBalance', []).directive('exportReport', [
 
 .directive 'ledgerScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
   restrict: "EA"
-  scope : {
-    scrollto : '=scrollto'
-  }
   link: (scope, elem, attrs) ->
     invoker = $parse(attrs.scrolled)
 
@@ -393,8 +390,18 @@ angular.module('trialBalance', []).directive('exportReport', [
         invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
     )
 
+]
+
+
+.directive 'columnScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+  restrict: "EA"
+  scope : {
+    scrollto : '=scrollto'
+  }
+  link: (scope, elem, attrs) ->
+
     scope.$watch('scrollto', (newVal, oldVal)->
-      if newVal != oldVal && newVal.transactions.length && newVal.uniqueName
+      if newVal && newVal != oldVal && newVal.transactions.length && newVal.uniqueName
         $(elem).animate({
             scrollTop: $("#" + newVal.uniqueName).offset().top
         }, 200)
@@ -402,6 +409,8 @@ angular.module('trialBalance', []).directive('exportReport', [
     )
 
 ]
+
+
 
 .directive 'setPopoverPosition', ['$window', '$timeout', ($window, $timeout) ->
   restrict: "EA"

@@ -202,8 +202,8 @@
                           <!-- <th class="col-xs-1"></th> -->
                           <th class="col-xs-2">
                             <span ng-click="lc.sortOrder.debit = lc.sortDirectionInvert(lc.sortOrder.debit)" class="cursor-pointer">
-                              <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="lc.sortOrder.debit == lc.sortDirection.asc"></i>
-                              <i class="glyphicon glyphicon-sort-by-order" ng-if="lc.sortOrder.debit == lc.sortDirection.desc"></i>
+                              <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="lc.sortOrder.debit == lc.sortDirection.desc"></i>
+                              <i class="glyphicon glyphicon-sort-by-order" ng-if="lc.sortOrder.debit == lc.sortDirection.asc"></i>
                               Date
                             </span>
                             <!-- <i class="glyphicon glyphicon-sort pull-left mrL"></i> -->
@@ -225,7 +225,11 @@
                       </thead>
                     </table>
                     <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScrollDebit(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84" min-height="600" > -->
-                    <div class="col-container" ledger-scroller data-scrolled="lc.onScrollDebit(top, height, position)" data-scrollto="lc.drMatch">
+                    <div class="col-container" 
+                      ledger-scroller
+                      column-scroller 
+                      data-scrolled="lc.onScrollDebit(top, height, position)" 
+                      data-scrollto="lc.drMatch">
                       <table class="width100">
                         <tbody>
 
@@ -347,8 +351,8 @@
                          <!--  <th class="col-xs-1"></th> -->
                           <th class="col-xs-2">
                             <span ng-click="lc.sortOrder.credit = lc.sortDirectionInvert(lc.sortOrder.credit)" class="cursor-pointer">
-                                <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="lc.sortOrder.credit == lc.sortDirection.asc"></i>
-                                <i class="glyphicon glyphicon-sort-by-order" ng-if="lc.sortOrder.credit == lc.sortDirection.desc"></i>
+                                <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="lc.sortOrder.credit == lc.sortDirection.desc"></i>
+                                <i class="glyphicon glyphicon-sort-by-order" ng-if="lc.sortOrder.credit == lc.sortDirection.asc"></i>
                                 Date
                             </span>
                             
@@ -368,7 +372,7 @@
                     </table>
 
                     <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="10" auto-height on-scroll="onScrollCredit(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="600"> -->
-                    <div class="col-container" ledger-scroller data-scrolled="lc.onScrollCredit(top, height, position)" data-scrollto="lc.crMatch">
+                    <div class="col-container" ledger-scroller column-scroller data-scrolled="lc.onScrollCredit(top, height, position)" data-scrollto="lc.crMatch">
                       <table class="width100">
                         <tbody>
                           <!--Add entry row for nomral order-->
