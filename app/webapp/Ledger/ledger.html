@@ -255,7 +255,7 @@
                                     >
                                     <td class="col-xs-2">
                                       <input type="text" 
-                                      ng-model="txn.date"
+                                      ng-model="lc.blankLedger.entryDate"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
                                     <td class="col-xs-5">
@@ -320,7 +320,7 @@
                                       ng-model="value.entryDate"
                                       ng-focus="lc.slctxn(value, txn, $event)">
                                     </td>
-                                    <td class="col-xs-6">
+                                    <td class="col-xs-5">
                                       <input type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
@@ -443,10 +443,10 @@
                                     >
                                     <td class="col-xs-2">
                                       <input type="text" 
-                                      ng-model="txn.date"
+                                      ng-model="lc.blankLedger.entryDate"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
-                                    <td class="col-xs-6">
+                                    <td class="col-xs-5">
                                       <input type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
@@ -508,7 +508,7 @@
                                       ng-model="value.entryDate"
                                       ng-focus="lc.slctxn(value, txn, $event)">
                                     </td>
-                                    <td class="col-xs-6">
+                                    <td class="col-xs-5">
                                       <input type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"

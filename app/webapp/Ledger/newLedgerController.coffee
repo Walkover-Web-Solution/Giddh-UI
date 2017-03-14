@@ -392,10 +392,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.$watch('lc.isLedgerSeeded', (newVal, oldVal)->
     if( !oldVal && newVal)
-      lc.cLedgerContainer = new lc.ledgerContainer()
-      lc.dLedgerContainer = new lc.ledgerContainer()
+      # lc.cLedgerContainer = new lc.ledgerContainer()
+      # lc.dLedgerContainer = new lc.ledgerContainer()
       lc.readLedgers($rootScope.selectedAccount.uniqueName, 1, 'next')
-    #lc.isLedgerSeeded = false
+    lc.isLedgerSeeded = false
     lc.showLoader = false
   )
 
@@ -1180,6 +1180,21 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.creditTotal = 0
   $scope.debitTotal = 0
   lc.countTotalTransactions = (ledgers) ->
+    # lc.cNonemptyTxn = 0
+    # lc.dNonemptyTxn = 0
+
+    # lc.dbConfig.success = (e) ->
+    #   db = e.target.result
+    #   drOS = db.transaction([ 'drTransactions' ], 'readwrite').objectStore('drTransactions')
+    #   dCountReq = drOS.count()
+    #   dCountReq.onsuccess = (e) ->
+    #     lc.dNonemptyTxn = e.target.result
+    #   crOS = db.transaction([ 'crTransactions' ], 'readwrite').objectStore('crTransactions')
+    #   cCountReq = crOS.count()
+    #   cCountReq.onsuccess = (e) ->
+    #     lc.cNonemptyTxn = e.target.result
+
+    # dbInstance = idbService.openDb(lc.dbConfig)
     # $scope.creditTotal = 0
     # $scope.debitTotal = 0
     # $scope.dTxnCount = 0
@@ -1366,7 +1381,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if !ledger.uniqueName
       lc.blankLedger.isCompoundEntry = true
       if lc.prevLedger
-        lc.prevLedger.isCompoundEntry = false
+        lc.cLedgerContainer.ledgerData[lc.prevLedger.uniqueName].isCompoundEntry = false
+        lc.dLedgerContainer.ledgerData[lc.prevLedger.uniqueName].isCompoundEntry = false
     else
       if lc.cLedgerContainer.ledgerData[ledger.uniqueName]
         lc.cLedgerContainer.ledgerData[ledger.uniqueName].isCompoundEntry = true
@@ -1762,11 +1778,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.selectedTxn.isOpen = false
     if lc.mergeTransaction
       lc.mergeBankTransactions(lc.mergeTransaction)
-    lc.dLedgerLimit = lc.dLedgerLimitBeforeUpdate
+    #lc.dLedgerLimit = lc.dLedgerLimitBeforeUpdate
     #lc.openClosePopOver(res.body.transactions[0], res.body)
-    #lc.updateLedgerData('update',res.body)
+    lc.updateLedgerData('update',res.body)
     $timeout ( ->
       ledger.total = lc.updatedLedgerTotal
+      #lc.countTotalTransactions()
       # lc.pageLoader = false
       # lc.showLoader = false
     ), 2000
