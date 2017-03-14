@@ -218,6 +218,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     type = type || null
     lc.dbConfig.success = (e) ->
       db = e.target.result
+      #console.log "Inside readledgers."
 
       #DEBIT READ STARTS
       if type == 'dr' || type == null
@@ -270,7 +271,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
         crSearch.onerror = (e) -> 
           #console.log 'error', e
-
       db.close()
       return
 
@@ -392,8 +392,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.$watch('lc.isLedgerSeeded', (newVal, oldVal)->
     if( !oldVal && newVal)
+      lc.cLedgerContainer = new lc.ledgerContainer()
+      lc.dLedgerContainer = new lc.ledgerContainer()
       lc.readLedgers($rootScope.selectedAccount.uniqueName, 1, 'next')
-    lc.isLedgerSeeded = false
+    #lc.isLedgerSeeded = false
     lc.showLoader = false
   )
 
@@ -1753,7 +1755,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #_.extend(addThisLedger,lc.blankLedger)
 #    lc.ledgerData.ledgers.push(addThisLedger)
     #lc.getLedgerData(false)
-    _.extend(ledger, res.body)
+    #_.extend(ledger, res.body)
+    lc.updateEntryOnUI(res.body)
     lc.resetBlankLedger()
     lc.selectedLedger = lc.blankLedger
     lc.selectedTxn.isOpen = false
@@ -1761,7 +1764,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.mergeBankTransactions(lc.mergeTransaction)
     lc.dLedgerLimit = lc.dLedgerLimitBeforeUpdate
     #lc.openClosePopOver(res.body.transactions[0], res.body)
-    lc.updateLedgerData('update',res.body)
+    #lc.updateLedgerData('update',res.body)
     $timeout ( ->
       ledger.total = lc.updatedLedgerTotal
       # lc.pageLoader = false
@@ -1777,6 +1780,24 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #   lc.showLoader = false
     # ), 1000
     
+  lc.createLedger = (ledger, type) ->
+    txns = []
+    tLdr = {}
+    tLdr = angular.copy(ledger, tLdr)
+    if tLdr.transactions.length
+      _.each tLdr.transactions, (txn) ->
+        if txn.type == type
+          txns.push(txn)
+      tLdr.transactions = txns
+    tLdr
+
+  lc.updateEntryOnUI = (ledger) ->
+    if ledger.transactions.length
+      dLedger = lc.createLedger(ledger, 'DEBIT')
+      cLedger = lc.createLedger(ledger, 'CREDIT')
+      lc.cLedgerContainer.ledgerData[ledger.uniqueName] = _.extend(lc.cLedgerContainer.ledgerData[ledger.uniqueName], cLedger)
+      lc.dLedgerContainer.ledgerData[ledger.uniqueName] = _.extend(lc.dLedgerContainer.ledgerData[ledger.uniqueName], dLedger)
+
   lc.closePopOverSingleLedger = (ledger) ->
     _.each ledger.transactions, (txn) ->
       txn.isOpen = false

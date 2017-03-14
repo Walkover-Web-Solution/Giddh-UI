@@ -258,16 +258,34 @@
                                       ng-model="txn.date"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
-                                    <td class="col-xs-6">
+                                    <td class="col-xs-5">
                                       <input type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
-                                      uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+                                      uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+                                      typeahead-template-url="accountPopUp.html"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
-                                    <td class="col-xs-4">
-                                      <input type="number" 
+                                    <td class="col-xs-5 pos-rel">
+                                      <input type="number"
+                                        placeholder="Quantity"
+                                        ng-if="lc.accountToShow.stock != null || txn.particular.stock != null"
+                                        class="form-control background-transparent pull-left bdrR bdrR0"
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null}"
+                                        ng-model="txn.inventory.quantity"
+                                        ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                        ng-change="lc.onValueChange('qty' , txn)">
+                                      <span class="pa rate" ng-if="accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
+                                        x{{txn.rate || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
+                                        <span ng-if="lc.accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name">
+                                          /{{lc.accountToShow.stock.openingStockUnit.shortCode || txn.particular.stock.openingStockUnit.shortCode || txn.inventory.unit.code}}
+                                        </span>
+                                      </span>
+                                      <input type="number"
+                                        class="form-control text-right pdR3"
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount"
-                                        ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
+                                        ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                        ng-change="lc.onValueChange('amount', txn)">                                     
                                     </td>
                                   </tr>
                                 </tbody>
@@ -287,6 +305,7 @@
                                     class="txn-row"
                                     ng-class="{compoundEntry: value.isCompoundEntry, uncEntry : value.unconfirmedEntry}"  
                                     ng-repeat="txn in value.transactions"
+                                    ng-if="txn.type == 'DEBIT'"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
                                     popover-placement="{{lc.popover.position}}" 
@@ -304,13 +323,31 @@
                                     <td class="col-xs-6">
                                       <input type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
-                                      uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+                                      uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+                                      typeahead-template-url="accountPopUp.html"
                                       ng-focus="lc.slctxn(value, txn, $event)">
                                     </td>
-                                    <td class="col-xs-4 pos-rel">
-                                      <input type="number" 
+                                    <td class="col-xs-5 pos-rel">
+                                      <input type="number"
+                                        placeholder="Quantity"
+                                        ng-if="lc.accountToShow.stock != null || txn.particular.stock != null"
+                                        class="form-control background-transparent pull-left bdrR bdrR0"
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null}"
+                                        ng-model="txn.inventory.quantity"
+                                        ng-focus="lc.slctxn(value, txn, $event)"
+                                        ng-change="lc.onValueChange('qty' , txn)">
+                                      <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
+                                        x{{txn.rate || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
+                                        <span ng-if="lc.accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name">
+                                          /{{lc.accountToShow.stock.openingStockUnit.shortCode || txn.particular.stock.openingStockUnit.shortCode || txn.inventory.unit.code}}
+                                        </span>
+                                      </span>
+                                      <input type="number"
+                                        class="form-control text-right pdR3"
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount"
-                                        ng-focus="lc.slctxn(value, txn, $event)">
+                                        ng-focus="lc.slctxn(value, txn, $event)"
+                                        ng-change="lc.onValueChange('amount', txn)">
                                         <span 
                                         class="download-invoice-ledger" 
                                         ng-if="value.invoiceGenerated" 
@@ -319,7 +356,7 @@
                                         uib-tooltip="Download invoice : {{value.invoiceNumber}}" 
                                         tooltip-placement="top"> 
                                         <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
-                                      </span>
+                                      </span>                                     
                                     </td>
                                   </tr>
                                 </tbody>
@@ -412,13 +449,31 @@
                                     <td class="col-xs-6">
                                       <input type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
-                                      uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+                                      uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+                                      typeahead-template-url="accountPopUp.html"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
-                                    <td class="col-xs-4">
-                                      <input type="number" 
+                                    <td class="col-xs-5 pos-rel">
+                                      <input type="number"
+                                        placeholder="Quantity"
+                                        ng-if="lc.accountToShow.stock != null || txn.particular.stock != null"
+                                        class="form-control background-transparent pull-left bdrR bdrR0"
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null}"
+                                        ng-model="txn.inventory.quantity"
+                                        ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                        ng-change="lc.onValueChange('qty' , txn)">
+                                      <span class="pa rate" ng-if="accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
+                                        x{{txn.rate || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
+                                        <span ng-if="lc.accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name">
+                                          /{{lc.accountToShow.stock.openingStockUnit.shortCode || txn.particular.stock.openingStockUnit.shortCode || txn.inventory.unit.code}}
+                                        </span>
+                                      </span>
+                                      <input type="number"
+                                        class="form-control text-right pdR3"
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount"
-                                        ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
+                                        ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                        ng-change="lc.onValueChange('amount', txn)">                                     
                                     </td>
                                   </tr>
                                 </tbody>
@@ -438,6 +493,7 @@
                                     class="txn-row"
                                     ng-class="{compoundEntry: value.isCompoundEntry, uncEntry : value.unconfirmedEntry}" 
                                     ng-repeat="txn in value.transactions"
+                                    ng-if="txn.type == 'CREDIT'"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
                                     popover-placement="{{lc.popover.position}}" 
@@ -455,13 +511,31 @@
                                     <td class="col-xs-6">
                                       <input type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
-                                      uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+                                      uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+                                      typeahead-template-url="accountPopUp.html"
                                       ng-focus="lc.slctxn(value, txn, $event)">
                                     </td>
-                                    <td class="col-xs-4">
-                                      <input type="number" 
+                                    <td class="col-xs-5 pos-rel">
+                                      <input type="number"
+                                        placeholder="Quantity"
+                                        ng-if="lc.accountToShow.stock != null || txn.particular.stock != null"
+                                        class="form-control background-transparent pull-left bdrR bdrR0"
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null}"
+                                        ng-model="txn.inventory.quantity"
+                                        ng-focus="lc.slctxn(value, txn, $event)"
+                                        ng-change="lc.onValueChange('qty' , txn)">
+                                      <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
+                                        x{{txn.rate || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
+                                        <span ng-if="lc.accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name">
+                                          /{{lc.accountToShow.stock.openingStockUnit.shortCode || txn.particular.stock.openingStockUnit.shortCode || txn.inventory.unit.code}}
+                                        </span>
+                                      </span>
+                                      <input type="number"
+                                        class="form-control text-right pdR3"
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount"
-                                        ng-focus="lc.slctxn(value, txn, $event)">
+                                        ng-focus="lc.slctxn(value, txn, $event)"
+                                        ng-change="lc.onValueChange('amount', txn)">
                                         <span 
                                         class="download-invoice-ledger" 
                                         ng-if="value.invoiceGenerated" 
@@ -470,7 +544,7 @@
                                         uib-tooltip="Download invoice : {{value.invoiceNumber}}" 
                                         tooltip-placement="top"> 
                                         <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
-                                      </span>
+                                      </span>                                     
                                     </td>
                                   </tr>
                                 </tbody>
@@ -552,8 +626,8 @@
               <label>Rate:
                 <input 
                   type="number" 
-                  ng-model="selectedTxn.rate" 
-                  ng-change="selectedTxn.amount = selectedTxn.inventory.quantity*selectedTxn.rate"
+                  ng-model="lc.selectedTxn.rate" 
+                  ng-change="lc.selectedTxn.amount = lc.selectedTxn.inventory.quantity*lc.selectedTxn.rate"
                   style="max-width:64px;border:0;">
               </label>
             </div>
