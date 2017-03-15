@@ -268,15 +268,15 @@
                                     <td class="col-xs-5 pos-rel">
                                       <input type="number"
                                         placeholder="Quantity"
-                                        ng-if="lc.accountToShow.stock != null || txn.particular.stock != null"
+                                        ng-if="lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null"
                                         class="form-control background-transparent pull-left bdrR bdrR0"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null}"
                                         ng-model="txn.inventory.quantity"
                                         ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
                                         ng-change="lc.onValueChange('qty' , txn)">
-                                      <span class="pa rate" ng-if="accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
+                                      <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
                                         x{{txn.rate || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
-                                        <span ng-if="lc.accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name">
+                                        <span ng-if="lc.accountToShow.stock.openingStockUnit || txn.particular.stock.openingStockUnit || txn.inventory.unit.name">
                                           /{{lc.accountToShow.stock.openingStockUnit.shortCode || txn.particular.stock.openingStockUnit.shortCode || txn.inventory.unit.code}}
                                         </span>
                                       </span>
@@ -330,21 +330,21 @@
                                     <td class="col-xs-5 pos-rel">
                                       <input type="number"
                                         placeholder="Quantity"
-                                        ng-if="lc.accountToShow.stock != null || txn.particular.stock != null"
+                                        ng-if="lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null"
                                         class="form-control background-transparent pull-left bdrR bdrR0"
-                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null}"
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null}"
                                         ng-model="txn.inventory.quantity"
                                         ng-focus="lc.slctxn(value, txn, $event)"
                                         ng-change="lc.onValueChange('qty' , txn)">
-                                      <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
-                                        x{{txn.rate || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
-                                        <span ng-if="lc.accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name">
+                                      <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0 || txn.inventory != null">
+                                        x{{txn.rate || txn.amount/txn.inventory.quantity || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
+                                        <span ng-if="lc.accountToShow.stock.openingStockUnit || txn.particular.stock.openingStockUnit || txn.inventory.unit.name || txn.inventory != null">
                                           /{{lc.accountToShow.stock.openingStockUnit.shortCode || txn.particular.stock.openingStockUnit.shortCode || txn.inventory.unit.code}}
                                         </span>
                                       </span>
                                       <input type="number"
                                         class="form-control text-right pdR3"
-                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null}" 
                                         ng-model="txn.amount"
                                         ng-focus="lc.slctxn(value, txn, $event)"
                                         ng-change="lc.onValueChange('amount', txn)">
@@ -462,9 +462,9 @@
                                         ng-model="txn.inventory.quantity"
                                         ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
                                         ng-change="lc.onValueChange('qty' , txn)">
-                                      <span class="pa rate" ng-if="accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
+                                      <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
                                         x{{txn.rate || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
-                                        <span ng-if="lc.accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name">
+                                        <span ng-if="lc.accountToShow.stock.openingStockUnit || txn.particular.stock.openingStockUnit || txn.inventory.unit.name">
                                           /{{lc.accountToShow.stock.openingStockUnit.shortCode || txn.particular.stock.openingStockUnit.shortCode || txn.inventory.unit.code}}
                                         </span>
                                       </span>
@@ -518,21 +518,21 @@
                                     <td class="col-xs-5 pos-rel">
                                       <input type="number"
                                         placeholder="Quantity"
-                                        ng-if="lc.accountToShow.stock != null || txn.particular.stock != null"
+                                        ng-if="lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null"
                                         class="form-control background-transparent pull-left bdrR bdrR0"
-                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null}"
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null}"
                                         ng-model="txn.inventory.quantity"
                                         ng-focus="lc.slctxn(value, txn, $event)"
                                         ng-change="lc.onValueChange('qty' , txn)">
-                                      <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
-                                        x{{txn.rate || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
-                                        <span ng-if="lc.accountToShow.stock.openingStockUnitName || txn.particular.stock.openingStockUnitName || txn.inventory.unit.name">
+                                      <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0 || txn.inventory != null">
+                                        x{{txn.rate || txn.amount/txn.inventory.quantity || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
+                                        <span ng-if="lc.accountToShow.stock.openingStockUnit || txn.particular.stock.openingStockUnit || txn.inventory.unit.name || txn.inventory != null">
                                           /{{lc.accountToShow.stock.openingStockUnit.shortCode || txn.particular.stock.openingStockUnit.shortCode || txn.inventory.unit.code}}
                                         </span>
                                       </span>
                                       <input type="number"
                                         class="form-control text-right pdR3"
-                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null}" 
                                         ng-model="txn.amount"
                                         ng-focus="lc.slctxn(value, txn, $event)"
                                         ng-change="lc.onValueChange('amount', txn)">

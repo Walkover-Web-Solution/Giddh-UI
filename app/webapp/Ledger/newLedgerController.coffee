@@ -205,7 +205,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       
 
     lc.dbConfig.failure = (e) ->
-      toastr.error(e.target.error)
+      toastr.error(e.target.error.message)
       return
 
     lc.dbConfig.upgrade = (e) ->
@@ -1388,7 +1388,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.checkCompEntry = (ledger) ->
     if !ledger.uniqueName
       lc.blankLedger.isCompoundEntry = true
-      if lc.prevLedger
+      if lc.prevLedger.uniqueName
         lc.cLedgerContainer.ledgerData[lc.prevLedger.uniqueName].isCompoundEntry = false
         lc.dLedgerContainer.ledgerData[lc.prevLedger.uniqueName].isCompoundEntry = false
     else
@@ -2127,6 +2127,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       txn.isOpen = true
     if lc.prevTxn && lc.prevTxn != txn
       lc.prevTxn.isOpen = false
+    if lc.accountToShow.stock != null && txn.inventory == undefined
+      txn.inventory = {}
+      txn.rate = lc.accountToShow.stock.rate
+    if txn.inventory && txn.inventory.quantity
+      txn.rate = txn.amount/txn.inventory.quantity
+    if txn.particular.stock
+      txn.rate = txn.particular.stock.rate
     lc.prevTxn = txn
     lc.selectedLedger = ledger
     lc.selectedTxn = txn

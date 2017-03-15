@@ -11,7 +11,7 @@ router.get '/', (req, res) ->
       to: req.query.toDate
       from: req.query.fromDate
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/ledgers'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/ledgers'
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
