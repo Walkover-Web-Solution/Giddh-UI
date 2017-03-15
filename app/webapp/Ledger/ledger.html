@@ -201,7 +201,7 @@
                         <tr class="t-h-bg2">
                           <!-- <th class="col-xs-1"></th> -->
                           <th class="col-xs-2">
-                            <span ng-click="lc.sortOrder.debit = lc.sortDirectionInvert(lc.sortOrder.debit)" class="cursor-pointer">
+                            <span ng-click="lc.sortOrder.debit = lc.sortDirectionInvert(lc.sortOrder.debit); lc.sortOrderChange('dr')" class="cursor-pointer">
                               <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="lc.sortOrder.debit == lc.sortDirection.desc"></i>
                               <i class="glyphicon glyphicon-sort-by-order" ng-if="lc.sortOrder.debit == lc.sortDirection.asc"></i>
                               Date
@@ -396,7 +396,7 @@
                         <tr class="t-h-bg2">
                          <!--  <th class="col-xs-1"></th> -->
                           <th class="col-xs-2">
-                            <span ng-click="lc.sortOrder.credit = lc.sortDirectionInvert(lc.sortOrder.credit)" class="cursor-pointer">
+                            <span ng-click="lc.sortOrder.credit = lc.sortDirectionInvert(lc.sortOrder.credit); lc.sortOrderChange('cr')" class="cursor-pointer">
                                 <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="lc.sortOrder.credit == lc.sortDirection.desc"></i>
                                 <i class="glyphicon glyphicon-sort-by-order" ng-if="lc.sortOrder.credit == lc.sortDirection.asc"></i>
                                 Date

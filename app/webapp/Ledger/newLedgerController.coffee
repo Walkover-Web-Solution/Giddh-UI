@@ -33,6 +33,19 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     else if lc.sortDirection.desc == dir
       return lc.sortDirection.asc
 
+  lc.sortOrderChange = (type) ->
+    if type == 'dr'
+      lc.dLedgerContainer = new lc.ledgerContainer()
+    else if type == 'cr'
+      lc.cLedgerContainer = new lc.ledgerContainer()
+    else
+      return 0
+    if !lc.query
+      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, 'next', type
+    else if lc.query
+      lc.readLedgersFiltered $rootScope.selectedAccount.uniqueName, lc.page, 'next', type
+
+
   lc.scrollDirection = Object.freeze({'next' : 0, 'prev' : 1})
 
   lc.sortOrder = {
@@ -167,7 +180,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           if drSavedLedgersCount == lc.savedLedgers && crSavedLedgersCount == lc.savedLedgers
             lc.isLedgerSeeded = true
         drOS = drTrans.objectStore('drTransactions')
-        drOS.clear()
+        drOS.delete(keyRange)
         drObjs.forEach (drOb) -> 
           addDrReq = drOS.put(drOb)
           addDrReq.onsuccess = (e) ->
@@ -185,7 +198,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           if drSavedLedgersCount == lc.savedLedgers && crSavedLedgersCount == lc.savedLedgers
             lc.isLedgerSeeded = true
         crOS = crTrans.objectStore('crTransactions')
-        crOS.clear()
+        crOS.delete(keyRange)
         crObjs.forEach (crOb) -> 
           addCrReq = crOS.put(crOb)
           addCrReq.onsuccess = (e) ->
@@ -261,7 +274,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
       #CREDIT READ STARTS
       if type == 'cr' || type == null
-        keyAndDir = lc.generateKeyRange(accountname, lc.cLedgerContainer, lc.sortOrder.debit, pos)
+        keyAndDir = lc.generateKeyRange(accountname, lc.cLedgerContainer, lc.sortOrder.credit, pos)
 
         crTrCount = 0
         pos = pos || 'next'
@@ -335,7 +348,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
       #CREDIT READ STARTS
       if type == 'cr' || type == null
-        keyAndDir = lc.generateKeyRange(accountUniqueName, lc.cLedgerContainer, lc.sortOrder.debit, pos)
+        keyAndDir = lc.generateKeyRange(accountUniqueName, lc.cLedgerContainer, lc.sortOrder.credit, pos)
 
         crTrCount = 0
         crTrans = db.transaction([ 'crTransactions' ], 'readonly')
@@ -439,56 +452,21 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   # )
 
   lc.onScrollDebit = (sTop, sHeight, pos) ->
-    if !lc.query and pos == 'next'
-      lc.page += 1
-      #lc.ledgerData.ledgers = []
+    if !lc.query
       lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos, 'dr'
       $scope.$apply()
-    else if !lc.query and pos == 'prev'
-      lc.page += 1
-      #lc.ledgerData.ledgers = []
-      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos, 'dr'
-      $scope.$apply()
-    else if lc.query and pos == 'next'
-      lc.page += 1
+    else if lc.query
       lc.readLedgersFiltered $rootScope.selectedAccount.uniqueName, lc.page, pos, 'dr'
       $scope.$apply()
-    else if lc.query and pos == 'prev'
-      lc.page += 1
-      lc.readLedgersFiltered $rootScope.selectedAccount.uniqueName, lc.page, pos, 'dr'
-      $scope.$apply()
-    # else if !lc.query and pos == 'top' and lc.page > 1
-    #   lc.page -= 1
-    #   lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
-    #Mayank\
-    # if !lc.query and pos == 'next'
-
-    # else if !lc.query and pos == 'prev'
-    #mayank
     return
 
   lc.onScrollCredit = (sTop, sHeight, pos) ->
-    if !lc.query and pos == 'next'
-      lc.page += 1
-      #lc.ledgerData.ledgers = []
+    if !lc.query
       lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos, 'cr'
       $scope.$apply()
-    else if !lc.query and pos == 'prev' 
-      lc.page += 1
-      #lc.ledgerData.ledgers = []
-      lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos, 'cr'
-      $scope.$apply()
-    else if lc.query and pos == 'next'
-      lc.page += 1
+    else if lc.query
       lc.readLedgersFiltered $rootScope.selectedAccount.uniqueName, lc.page, pos, 'cr'
       $scope.$apply()
-    else if lc.query and pos == 'prev'
-      lc.page += 1
-      lc.readLedgersFiltered $rootScope.selectedAccount.uniqueName, lc.page, pos, 'cr'
-      $scope.$apply()
-    # else if !lc.query and pos == 'top' and lc.page > 1
-    #   lc.page -= 1
-    #   lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos
     return
 
   lc.filterLedgers = (accountname, query, page) ->
@@ -1427,11 +1405,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if !ledger.uniqueName
       ledger = lc.blankLedger
     else
-      ctxn = lc.cLedgerContainer.ledgerData[ledger.uniqueName].transactions
-      dtxn = lc.dLedgerContainer.ledgerData[ledger.uniqueName].transactions
       transactions = []
-      transactions.push(dtxn)
-      transactions.push(ctxn)
+      if lc.cLedgerContainer.ledgerData[ledger.uniqueName]
+        ctxn = lc.cLedgerContainer.ledgerData[ledger.uniqueName].transactions
+        transactions.push(ctxn)
+      if lc.dLedgerContainer.ledgerData[ledger.uniqueName]
+        dtxn = lc.dLedgerContainer.ledgerData[ledger.uniqueName].transactions
+        transactions.push(dtxn)
       transactions = _.flatten(transactions)
       ledger.transactions = transactions
     ledger
