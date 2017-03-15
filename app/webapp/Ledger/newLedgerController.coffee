@@ -446,7 +446,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.$watch('lc.isLedgerSeeded', (newVal, oldVal)->
     if( !oldVal && newVal)
-      console.log "readingLedger."
       lc.cLedgerContainer = new lc.ledgerContainer()
       lc.dLedgerContainer = new lc.ledgerContainer()
       lc.readLedgers($rootScope.selectedAccount.uniqueName, 1, 'next')
@@ -1377,8 +1376,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if !ledger.uniqueName
       lc.blankLedger.isCompoundEntry = true
       if lc.prevLedger.uniqueName
-        lc.cLedgerContainer.ledgerData[lc.prevLedger.uniqueName].isCompoundEntry = false
-        lc.dLedgerContainer.ledgerData[lc.prevLedger.uniqueName].isCompoundEntry = false
+        if lc.cLedgerContainer.ledgerData[lc.prevLedger.uniqueName]
+          lc.cLedgerContainer.ledgerData[lc.prevLedger.uniqueName].isCompoundEntry = false
+        if lc.dLedgerContainer.ledgerData[lc.prevLedger.uniqueName]
+          lc.dLedgerContainer.ledgerData[lc.prevLedger.uniqueName].isCompoundEntry = false
     else
       if lc.cLedgerContainer.ledgerData[ledger.uniqueName]
         lc.cLedgerContainer.ledgerData[ledger.uniqueName].isCompoundEntry = true
