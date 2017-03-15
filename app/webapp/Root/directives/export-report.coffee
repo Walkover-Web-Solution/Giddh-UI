@@ -386,7 +386,7 @@ angular.module('trialBalance', []).directive('exportReport', [
     $(elem).on('scroll', (e) ->
       if $(elem).scrollTop()+$(elem).innerHeight() >= elem[0].scrollHeight
         invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'next'})
-      else if $(elem).scrollTop() <= 100
+      else if $(elem).scrollTop() == 0
         invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
     )
 
