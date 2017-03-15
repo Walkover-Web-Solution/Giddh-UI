@@ -122,12 +122,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           addReq = search.put(ledger)
 
           addReq.onsuccess = (e) ->
-            console.log "ledgerSaved"
             lc.progressBar.value += 1
             lc.savedLedgers += 1
 
           addReq.onerror = (e) ->
-            console.log "Error", e
             return
 
         ledgers.forEach (ledger, index) ->
@@ -166,7 +164,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
         drTrans = db.transaction([ 'drTransactions' ], 'readwrite')
         drTrans.oncomplete = (e) ->
-          console.log "DEBIT: ", drSavedLedgersCount, lc.savedLedgers, crSavedLedgersCount
           if drSavedLedgersCount == lc.savedLedgers && crSavedLedgersCount == lc.savedLedgers
             lc.isLedgerSeeded = true
         drOS = drTrans.objectStore('drTransactions')
@@ -175,7 +172,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           addDrReq = drOS.put(drOb)
           addDrReq.onsuccess = (e) ->
             drSavedLedgersCount += 1
-
+            if drSavedLedgersCount == lc.savedLedgers && crSavedLedgersCount == lc.savedLedgers
+              lc.isLedgerSeeded = true
             # lc.progressBar.value += 1
             # console.log 'dr', e.target.result, drSavedLedgersCount, lc.savedLedgers, crSavedLedgersCount
 
@@ -184,7 +182,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             return
         crTrans = db.transaction([ 'crTransactions' ], 'readwrite')
         crTrans.oncomplete = (e) ->
-          console.log "DEBIT: ", drSavedLedgersCount, lc.savedLedgers, crSavedLedgersCount
           if drSavedLedgersCount == lc.savedLedgers && crSavedLedgersCount == lc.savedLedgers
             lc.isLedgerSeeded = true
         crOS = crTrans.objectStore('crTransactions')
@@ -193,6 +190,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           addCrReq = crOS.put(crOb)
           addCrReq.onsuccess = (e) ->
             crSavedLedgersCount += 1
+            if drSavedLedgersCount == lc.savedLedgers && crSavedLedgersCount == lc.savedLedgers
+              lc.isLedgerSeeded = true
             # lc.progressBar.value += 1
             # console.log 'cr', e.target.result, drSavedLedgersCount, lc.savedLedgers, crSavedLedgersCount
 
