@@ -185,8 +185,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           addDrReq = drOS.put(drOb)
           addDrReq.onsuccess = (e) ->
             drSavedLedgersCount += 1
-            if drSavedLedgersCount == lc.savedLedgers && crSavedLedgersCount == lc.savedLedgers
-              lc.isLedgerSeeded = true
             # lc.progressBar.value += 1
             # console.log 'dr', e.target.result, drSavedLedgersCount, lc.savedLedgers, crSavedLedgersCount
 
@@ -203,8 +201,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           addCrReq = crOS.put(crOb)
           addCrReq.onsuccess = (e) ->
             crSavedLedgersCount += 1
-            if drSavedLedgersCount == lc.savedLedgers && crSavedLedgersCount == lc.savedLedgers
-              lc.isLedgerSeeded = true
             # lc.progressBar.value += 1
             # console.log 'cr', e.target.result, drSavedLedgersCount, lc.savedLedgers, crSavedLedgersCount
 
@@ -2297,34 +2293,58 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     sortDir = if sortDir == null then lc.sortDirection.asc else sortDir
     if sortDir == lc.sortDirection.asc
       if ( scrollDir == 'prev' )
-        keyRange = IDBKeyRange.upperBound([
-          $rootScope.selectedCompany.uniqueName
-          accUniqueName
-          ledgerContainer.getFirstLIndex()
-        ], true)
+        keyRange = IDBKeyRange.bound(
+          [
+            $rootScope.selectedCompany.uniqueName
+            accUniqueName
+            Number.MIN_SAFE_INTEGER
+          ],
+          [
+            $rootScope.selectedCompany.uniqueName
+            accUniqueName
+            ledgerContainer.getFirstLIndex()
+          ])
         fetchDirection = 'prev'
       if ( scrollDir == 'next' || scrollDir == null) 
-        keyRange = IDBKeyRange.lowerBound([
-          $rootScope.selectedCompany.uniqueName
-          accUniqueName
-          ledgerContainer.getLastLIndex()
-        ], true)
+        keyRange = IDBKeyRange.bound(
+          [
+            $rootScope.selectedCompany.uniqueName
+            accUniqueName
+            ledgerContainer.getLastLIndex()
+          ],
+          [
+            $rootScope.selectedCompany.uniqueName
+            accUniqueName
+            Number.MAX_SAFE_INTEGER
+          ])
         fetchDirection = 'next'
 
     else if sortDir == lc.sortDirection.desc
       if ( scrollDir == 'prev' )
-        keyRange = IDBKeyRange.lowerBound([
-          $rootScope.selectedCompany.uniqueName
-          accUniqueName
-          ledgerContainer.getLastLIndex()
-        ], true)
+        keyRange = IDBKeyRange.bound(
+          [
+            $rootScope.selectedCompany.uniqueName
+            accUniqueName
+            ledgerContainer.getLastLIndex()
+          ],
+          [
+            $rootScope.selectedCompany.uniqueName
+            accUniqueName
+            Number.MAX_SAFE_INTEGER
+          ])
         fetchDirection = 'next'
       if ( scrollDir == 'next' || scrollDir == null ) 
-        keyRange = IDBKeyRange.upperBound([
-          $rootScope.selectedCompany.uniqueName
-          accUniqueName
-          ledgerContainer.getFirstLIndex()
-        ], true)
+        keyRange = IDBKeyRange.bound(
+          [
+            $rootScope.selectedCompany.uniqueName
+            accUniqueName
+            Number.MIN_SAFE_INTEGER
+          ],
+          [
+            $rootScope.selectedCompany.uniqueName
+            accUniqueName
+            ledgerContainer.getFirstLIndex()
+          ])
         fetchDirection = 'prev'
     return { 'keyRange' : keyRange, 'scrollDir' : fetchDirection }
 
