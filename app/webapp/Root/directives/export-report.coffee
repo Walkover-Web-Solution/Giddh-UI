@@ -346,20 +346,20 @@ angular.module('trialBalance', []).directive('exportReport', [
     "<span ng-transclude></span>"+
     "<i ng-class='selectedCls(order)'></i>"+
     "</a>"
-link: (scope, elem, attr) ->
-  scope.sort_by = (newSortingOrder) ->
-    sort = scope.sort;
+  link: (scope, elem, attr) ->
+    scope.sort_by = (newSortingOrder) ->
+      sort = scope.sort;
 
-    if sort.sortingOrder == newSortingOrder
-      sort.reverse = !sort.reverse
+      if sort.sortingOrder == newSortingOrder
+        sort.reverse = !sort.reverse
 
-    sort.sortingOrder = newSortingOrder
+      sort.sortingOrder = newSortingOrder
 
-  scope.selectedCls = (column) ->
-    if column == scope.sort.sortingOrder
-      ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'))
-    else
-      'icon-sort'
+    scope.selectedCls = (column) ->
+      if column == scope.sort.sortingOrder
+        ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'))
+      else
+        'icon-sort'
 
 ]
 
@@ -385,10 +385,32 @@ link: (scope, elem, attr) ->
 
     $(elem).on('scroll', (e) ->
       if $(elem).scrollTop()+$(elem).innerHeight() >= elem[0].scrollHeight
-        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight})
+        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'next'})
+      else if $(elem).scrollTop() == 0
+        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
     )
 
 ]
+
+
+.directive 'columnScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+  restrict: "EA"
+  scope : {
+    scrollto : '=scrollto'
+  }
+  link: (scope, elem, attrs) ->
+
+    scope.$watch('scrollto', (newVal, oldVal)->
+      if newVal && newVal != oldVal && newVal.transactions.length && newVal.uniqueName
+        $(elem).animate({
+            scrollTop: $("#" + newVal.uniqueName).offset().top
+        }, 200)
+        
+    )
+
+]
+
+
 
 .directive 'setPopoverPosition', ['$window', '$timeout', ($window, $timeout) ->
   restrict: "EA"
@@ -458,6 +480,17 @@ link: (scope, elem, attr) ->
       floatNum = 0
     floatNum      
 
+.filter 'orderObjectBy', ->
+  (items, field, reverse) ->
+    filtered = []
+    angular.forEach items, (item) ->
+      filtered.push item
+      return
+    filtered.sort (a, b) ->
+      if a[field] > b[field] then 1 else -1
+    if reverse
+      filtered.reverse()
+    filtered
 
 .directive 'scrollBtn', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
   restrict: "EA"
@@ -469,5 +502,4 @@ link: (scope, elem, attr) ->
         'scrollTop' : top + 100
       })
     )
-
 ]
