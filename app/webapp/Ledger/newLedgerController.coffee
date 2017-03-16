@@ -997,8 +997,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.mergeBankTransactions = (toMerge) ->
     if toMerge
       lc.mergeTransaction = true
-      lc.ledgerData.ledgers.push(lc.eLedgerData)
-      lc.ledgerData.ledgers = lc.sortTransactions(_.flatten(lc.ledgerData.ledgers), 'entryDate')
+      _.each lc.eLedgerData, (ld) ->
+        if ld.uniqueName.length < 1 then ld.uniqueName = ld.transactionId else ld.uniqueName
+        if ld.transactions[0].type == 'DEBIT'
+          lc.dLedgerContainer.addAtTop(ld)
+        else if ld.transactions[0].type == 'CREDIT'
+          lc.cLedgerContainer.addAtTop(ld)
+      # lc.ledgerData.ledgers.push(lc.eLedgerData)
+      # lc.ledgerData.ledgers = lc.sortTransactions(_.flatten(lc.ledgerData.ledgers), 'entryDate')
       lc.showEledger = false
     else
     #   lc.AddBankTransactions()
@@ -1021,10 +1027,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.removeBankTransactions = () ->
     withoutBankTxn = []
-    _.each lc.ledgerData.ledgers, (ledger) ->
-      if ledger.isBankTransaction == undefined
-        withoutBankTxn.push(ledger)
-    lc.ledgerData.ledgers = withoutBankTxn
+    _.each lc.cLedgerContainer.ledgerData, (ledger) ->
+      if ledger.isBankTransaction 
+        lc.cLedgerContainer.remove(ledger)
+    _.each lc.dLedgerContainer.ledgerData, (ledger) ->
+      if ledger.isBankTransaction 
+        lc.dLedgerContainer.remove(ledger)
     lc.showEledger = true
 
   # lc.fromBanktoLedgerObject = (bankArray) ->
@@ -1431,7 +1439,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.doingEntry = false
   lc.lastSelectedLedger = {}
   lc.saveUpdateLedger = (ledger) ->
-    ledger = lc.buildLedger(ledger)
+    if !ledger.isBankTransaction
+      ledger = lc.buildLedger(ledger)
     # lc.pageLoader = true
     # lc.showLoader = true
     lc.lastSelectedLedger = ledger
