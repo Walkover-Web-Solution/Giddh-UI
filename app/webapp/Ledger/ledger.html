@@ -154,7 +154,7 @@
                     <switch ng-model="popover.draggable" class="small" uib-tooltip="Switch between draggable and fixed popover. " tooltip-placement="bottom" ></switch>
                   </div>
                 </a> -->
-                <a class="pull-right mrL1" ng-if="elc.ledgerData.length > 0" style="margin-top:9px">
+                <a class="pull-right mrL1" ng-if="lc.eLedgerData.length > 0" style="margin-top:9px">
                   <div ng-click="lc.mergeBankTransactions(lc.mergeTransaction)">
                     <switch  ng-model="lc.mergeTransaction" class="small" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>
                   </div>
@@ -176,7 +176,7 @@
           <!--ledger table start-->
           <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" >  --> 
           <!-- external ledger code here -->
-          <section class="mrT1" ng-if="elc.ledgerData.length > 0 && lc.showEledger">
+          <section class="mrT1" ng-if="lc.eLedgerData.length > 0 && lc.showEledger">
             <div ng-include="'/public/webapp/Ledger/eLedger.html'"></div>
           </section>
           <!-- external ledger code end here -->
