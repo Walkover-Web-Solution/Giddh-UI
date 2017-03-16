@@ -296,7 +296,7 @@
                           <!--ledgers-->
                           <tr 
                             id="{{value.uniqueName}}"
-                            ng-repeat="(key, value) in lc.dLedgerContainer.ledgerData | orderObjectBy : 'lIndex' : lc.sortOrder.debit == lc.sortDirection.desc"
+                            ng-repeat="(key, value) in lc.dLedgerContainer.ledgerData | orderObjectBy : 'index' : lc.sortOrder.debit == lc.sortDirection.desc"
                             ng-dblclick="lc.getMatchingTxn(value, 'CR')">
                             <td colspan="100">
                               <table class="width100">
@@ -484,7 +484,7 @@
                           <!--ledgers-->
                           <tr 
                             id="{{value.uniqueName}}"
-                            ng-repeat="(key, value) in lc.cLedgerContainer.ledgerData | orderObjectBy : 'lIndex' : lc.sortOrder.credit == lc.sortDirection.desc"
+                            ng-repeat="(key, value) in lc.cLedgerContainer.ledgerData | orderObjectBy : 'index' : lc.sortOrder.credit == lc.sortDirection.desc"
                             ng-dblclick="lc.getMatchingTxn(value, 'DR')">
                             <td colspan="100">
                               <table class="width100">

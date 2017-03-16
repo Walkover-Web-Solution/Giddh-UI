@@ -401,10 +401,18 @@ angular.module('trialBalance', []).directive('exportReport', [
   link: (scope, elem, attrs) ->
 
     scope.$watch('scrollto', (newVal, oldVal)->
-      if newVal && newVal != oldVal && newVal.transactions.length && newVal.uniqueName
+      if newVal && newVal.to && newVal != oldVal && newVal.to.transactions.length && newVal.to.uniqueName
+        a = $("#" + newVal.first.uniqueName).offset().top
+        x = $("#" + newVal.to.uniqueName).offset().top
+        console.log x-a, a, x
         $(elem).animate({
-            scrollTop: $("#" + newVal.uniqueName).offset().top
+            scrollTop: x-a
         }, 200)
+      # if newVal && newVal != oldVal && newVal.transactions.length && newVal.uniqueName
+      #   x = $("#" + newVal.uniqueName).offset().top
+      #   $(elem).animate({
+      #       scrollTop: x
+      #   }, 200)
         
     )
 

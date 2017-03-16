@@ -603,8 +603,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             crObj.transactions = []
             lc.dLedgerContainer.add(crObj, lc.pageCount)
           lc.dLedgerContainer.ledgerData[ledger.uniqueName].transactions.push(txn)
+          lc.drMatch = lc.scrollMatchObject(lc.dLedgerContainer.ledgerData[ledger.uniqueName], 'dr')
         else
           lc.blankLedger.transactions.push(txn)
+
       else if str == 'CREDIT'
         if ledger.uniqueName
           if ! lc.dLedgerContainer.ledgerData[ledger.uniqueName]
@@ -616,6 +618,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             crObj.transactions = []
             lc.cLedgerContainer.add(crObj, lc.pageCount)
           lc.cLedgerContainer.ledgerData[ledger.uniqueName].transactions.push(txn)
+          lc.crMatch = lc.scrollMatchObject(lc.cLedgerContainer.ledgerData[ledger.uniqueName], 'cr')
         else
           lc.blankLedger.transactions.push(txn)
     #lc.prevTxn = txn
@@ -2393,10 +2396,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         if e.target.result
           if type == 'CR'
             lc.cLedgerContainer.ledgerData['0'] = e.target.result
-            lc.crMatch = e.target.result
+            lc.crMatch = lc.scrollMatchObject(e.target.result, 'cr')
           else if type == 'DR'
             lc.dLedgerContainer.ledgerData['0'] = e.target.result
-            lc.drMatch = e.target.result
+            lc.drMatch = lc.scrollMatchObject(e.target.result, 'dr')
 
     lc.dbConfig.onerror = (e) ->
       e
@@ -2406,14 +2409,27 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.getMatchingTxn = (ledger, type) ->
     if type == 'CR'
-      lc.crMatch = lc.cLedgerContainer.ledgerData[ledger.uniqueName]
+      lc.crMatch = lc.scrollMatchObject(lc.cLedgerContainer.ledgerData[ledger.uniqueName], 'cr')
       # if !lc.crMatch
       #   lc.getMatchingTxnFromIdb(ledger, type)
     else if type == 'DR'
-      lc.drMatch = lc.dLedgerContainer.ledgerData[ledger.uniqueName]
+      lc.drMatch = lc.scrollMatchObject(lc.dLedgerContainer.ledgerData[ledger.uniqueName], 'dr')
       # if !lc.drMatch
       #   lc.getMatchingTxnFromIdb(ledger, type)
-      
-  return lc
 
+  lc.scrollMatchObject = (to, type) -> 
+    first = null
+    if type == 'dr'
+      if lc.sortOrder.debit == lc.sortDirection.desc
+        first = lc.dLedgerContainer.bottom()
+      else
+        first = lc.dLedgerContainer.top()
+    else
+      if lc.sortOrder.credit == lc.sortDirection.desc
+        first = lc.cLedgerContainer.bottom()
+      else
+        first = lc.cLedgerContainer.top()
+    return {"first": first, "to": to}
+
+  return lc
 giddh.webApp.controller 'newLedgerController', newLedgerController
