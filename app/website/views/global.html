@@ -50,7 +50,7 @@
 		}
 	</style>
 	<body>
-		<div class="blueBg homeContent" id="global_cnt">
+		<div class="blueBg homeContent" ng-if="!browserIE" id="global_cnt">
 			<div class="container">
 				<h1 class="text-center">We are not present in your country yet</h1>
 				<h2 class="text-center">leave us your email and we will get in touch once we launch in your country</h2>
@@ -72,6 +72,10 @@
 			</div>
 		</div>
 
+		<div class="" ng-if="browserIE">
+		<h1>404 error</h1>
+
+		</div>
 <!-- 		  <script  type="text/javascript" src='<<PREFIX_THIS>>/public/webapp/core_bower.min.js'></script>
 		  <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/app.js"></script>
 		  <script src="<<PREFIX_THIS>>/public/website/js/controller/loginController.js"></script> -->
