@@ -384,7 +384,7 @@ app.run [
     alert 'It is InternetExplorer'
     location.pathname = '/global'
   else
-    location.pathname = '/'
+    # location.pathname = '/'
     console.log "it is not ie"
 ]
   
