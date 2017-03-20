@@ -370,9 +370,7 @@ app.run [
       $rootScope.whiteLinks = true
       $rootScope.signupPage = true
 
-
-##detect if browser is IE##
-
+  ##detect if browser is IE##
   isIE = ->
     ua = navigator.userAgent
 
