@@ -346,20 +346,20 @@ angular.module('trialBalance', []).directive('exportReport', [
     "<span ng-transclude></span>"+
     "<i ng-class='selectedCls(order)'></i>"+
     "</a>"
-link: (scope, elem, attr) ->
-  scope.sort_by = (newSortingOrder) ->
-    sort = scope.sort;
+  link: (scope, elem, attr) ->
+    scope.sort_by = (newSortingOrder) ->
+      sort = scope.sort;
 
-    if sort.sortingOrder == newSortingOrder
-      sort.reverse = !sort.reverse
+      if sort.sortingOrder == newSortingOrder
+        sort.reverse = !sort.reverse
 
-    sort.sortingOrder = newSortingOrder
+      sort.sortingOrder = newSortingOrder
 
-  scope.selectedCls = (column) ->
-    if column == scope.sort.sortingOrder
-      ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'))
-    else
-      'icon-sort'
+    scope.selectedCls = (column) ->
+      if column == scope.sort.sortingOrder
+        ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'))
+      else
+        'icon-sort'
 
 ]
 
@@ -367,7 +367,7 @@ link: (scope, elem, attr) ->
   restrict: "EA"
   link: (scope, elem, attr) ->
     setHeight = () ->
-      height = $(window).innerHeight() - 54
+      height = $(window).innerHeight() - 54 - 54
       $(elem).css({"height": height, "overflow-y":"auto"})
     
     $(window).on('resize', (e) ->
@@ -385,10 +385,40 @@ link: (scope, elem, attr) ->
 
     $(elem).on('scroll', (e) ->
       if $(elem).scrollTop()+$(elem).innerHeight() >= elem[0].scrollHeight
-        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight})
+        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'next'})
+      else if $(elem).scrollTop() == 0
+        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
     )
 
 ]
+
+
+.directive 'columnScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+  restrict: "EA"
+  scope : {
+    scrollto : '=scrollto'
+  }
+  link: (scope, elem, attrs) ->
+
+    scope.$watch('scrollto', (newVal, oldVal)->
+      if newVal && newVal.to && newVal != oldVal && newVal.to.transactions.length && newVal.to.uniqueName
+        a = $("#" + newVal.first.uniqueName).offset().top
+        x = $("#" + newVal.to.uniqueName).offset().top
+        console.log x-a, a, x
+        $(elem).animate({
+            scrollTop: x-a
+        }, 200)
+      # if newVal && newVal != oldVal && newVal.transactions.length && newVal.uniqueName
+      #   x = $("#" + newVal.uniqueName).offset().top
+      #   $(elem).animate({
+      #       scrollTop: x
+      #   }, 200)
+        
+    )
+
+]
+
+
 
 .directive 'setPopoverPosition', ['$window', '$timeout', ($window, $timeout) ->
   restrict: "EA"
@@ -424,15 +454,18 @@ link: (scope, elem, attr) ->
 
 ]
 
-.directive 'trigger-resize', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+.directive 'triggerResize', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
   restrict: "EA"
   link: (scope, elem, attrs) ->
     
     $(elem).on('click',(e)->
-      $(window).trigger('resize')
+      $timeout ( ->
+        $(window).trigger('resize')
+      ), 500
     )
 
 ]
+
 
 # .directive 'triggerClick', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
 #   restrict: "EA"
@@ -443,3 +476,38 @@ link: (scope, elem, attr) ->
 #     )
 
 # ]
+
+.filter 'numberlimit', ->
+  (floatNum) ->
+    if floatNum != undefined
+      decimal = floatNum.toString().split('.')
+      if decimal[1] && decimal[1].length > 2
+        decimal[1] = decimal[1][0] + decimal[1][1]
+        floatNum = decimal[0] + '.' + decimal[1]
+    else
+      floatNum = 0
+    floatNum      
+
+.filter 'orderObjectBy', ->
+  (items, field, reverse) ->
+    filtered = []
+    angular.forEach items, (item) ->
+      filtered.push item
+      return
+    filtered.sort (a, b) ->
+      if a[field] > b[field] then 1 else -1
+    if reverse
+      filtered.reverse()
+    filtered
+
+.directive 'scrollBtn', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+  restrict: "EA"
+  link: (scope, elem, attrs) ->
+    
+    $(elem).on('click',(e)->
+      top = $('#middleBody').scrollTop()
+      $('#middleBody').animate({
+        'scrollTop' : top + 100
+      })
+    )
+]

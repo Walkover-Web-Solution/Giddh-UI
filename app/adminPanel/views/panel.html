@@ -1,0 +1,81 @@
+<div class="loader" ng-show="superLoader">
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+  <span></span>
+
+  <h1>Loading Panel</h1>
+</div>
+<div class="container-fluid pd1"  ng-hide="superLoader">
+  <div class="row">
+    <div class="pull-right maxW150 pos-rel pdR1">
+      <input class="form-control" placeholder="Search" ng-model="query"/>
+      <i class="glyphicon glyphicon-search pos-abs" style="right: 22px;top:10px"/>
+    </div>
+    <i class="glyphicon glyphicon-filter pull-right mr1" ng-click="showfilters = !showfilters" ng-class="{orange:showfilters}"></i>
+  </div>
+  <div class="row" ng-show="showfilters">
+      <div class="filters">
+          <ul class="list-inline">
+              <li ng-repeat="(key,value) in filters">
+                
+                <div ng-if="key != 'sort'">
+                  <label>{{key}}</label>
+                  <input type="text" name="{{key}}" ng-model="filters[key]">
+                </div>
+              </li>
+              <li>
+                <button class="btn btn-default" ng-click="getCompaniesList()">Go</button>
+              </li>
+          </ul>
+      </div>
+  </div>
+  <div class="row pd1">
+      <table class="table table-bordered">
+        <thead>
+        <th ng-repeat="option in sortOptions">
+          <span ng-bind="option.name" ng-if="!option.show"></span>
+          <span style="cursor: pointer" ng-bind="option.name" ng-if="option.show" ng-click="sortColumn(option.value);option.value == null ? option.value = true : option.value = !option.value;"></span>
+          <i class="glyphicon glyphicon-sort" ng-show="option.value != null"></i>
+          <!-- <i class="glyphicon glyphicon-sort-by-alphabet-alt" ng-show="option.value != null && option.value"></i> -->
+        </th>
+        </thead>
+        <tfoot>
+        <td colspan="10">
+          <div class="pagination pull-right">
+            <ul class="list-inline">
+              <li>
+                <button class="btn btn-default" ng-disabled="paginationDetails.page == 1" ng-click="prevPage(); getCompaniesList();">Prev</button>
+              </li>
+              <li>{{paginationDetails.page}}/{{paginationDetails.totalPages}}</li>
+              <li>
+                <button class="btn btn-default" ng-disabled="paginationDetails.page == paginationDetails.totalPages" ng-click="nextPage(); getCompaniesList();">Next</button>
+              </li>
+            </ul>
+          </div>
+          <div class="form-group mrR1 pull-right" style="margin-top:-5px;">
+              <label>Items per page</label>
+              <select class="form-control" ng-change="getCompaniesList()" ng-model="countPage" ng-options="count for count in counts" style="border-radius: -0px;">
+              </select>
+          </div>
+        </td>
+        </tfoot>
+        <tbody>
+          <tr ng-repeat="company in companies">
+            <td>{{company.companyName}}</td>
+            <td>{{company.createdByUniqueName}}</td>
+            <td>{{company.companyCreatedAt}}</td>
+            <td>{{company.contactNo}}</td>
+            <td>{{company.subscriptionExpiringAt}}</td>
+            <td>{{company.lastActivityAt}}</td>
+            <td>{{company.primaryAccBalance}}</td>
+            <td>{{company.secondaryAccBalance}}</td>
+            <td>{{company.planName}}</td>
+            <td>{{company.apiHits}}</td>
+          </tr>
+        </tbody>
+      </table>
+  </div>
+</div>
+

@@ -11,6 +11,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       'page':@page
       'count':@count
       'refressh':@refresh
+      'showEmptyGroups':@showEmptyGroups
     },
     {
       add: {
@@ -33,7 +34,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       }
       getFlattenGrpWithAcc: {
         method: 'GET'
-        url: '/company/:companyUniqueName/groups/flatten-groups-accounts?q=:q&page=:page&count=:count'
+        url: '/company/:companyUniqueName/groups/flatten-groups-accounts?q=:q&page=:page&count=:count&showEmptyGroups=:showEmptyGroups'
       }
       getFlatAccList: {
         method: 'GET'
@@ -131,7 +132,7 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
 
 #   Get flatten groups with accounts list
     getFlattenGroupAccList: (reqParam, onSuccess, onFailure) ->
-      @handlePromise((onSuccess, onFailure) -> Group.getFlattenGrpWithAcc({companyUniqueName: reqParam.companyUniqueName, q:reqParam.q, page:reqParam.page, count:reqParam.count},
+      @handlePromise((onSuccess, onFailure) -> Group.getFlattenGrpWithAcc({companyUniqueName: reqParam.companyUniqueName, q:reqParam.q, page:reqParam.page, count:reqParam.count, showEmptyGroups:reqParam.showEmptyGroups},
         onSuccess, onFailure))
 
 #   Get sub goups with accounts

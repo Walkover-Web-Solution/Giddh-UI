@@ -1,0 +1,176 @@
+
+<!-- add/modify stock group-->
+<section ng-if="stock.selectedStockItem == null">
+		
+		<aside class="row greyBg bdrB pd1 mrB1">
+			<label>Add/Modify Stock Group</label>
+		</aside>
+
+
+
+		<aside class="col-xs-6">
+			
+			<form name="addStockGroup" ng-model="stock.addStockGroup" novalidate>
+				<label>Add New Group</label>
+				<hr>
+				<div class="form-group">
+					<label>Name<span class="required">*</span></label>
+					<input type="text" name="stockName" class="form-control" ng-model="stock.addStockGroup.stockName" required>
+				</div>
+
+				<div class="form-group">
+					<label>Unique Name<span class="required">*</span></label>
+					<input type="text" name="stockUnqName" class="form-control" ng-model="stock.addStockGroup.stockUnqName" required>
+				</div>
+
+				<div class="form-group">
+					<label>Parent Stock Group</label>
+					<input type="text" name="parentStockGroupUniqueName" class="form-control" ng-model="stock.addStockGroup.parentStockGroupUniqueName" disabled>
+				</div>
+
+				<button type="submit" class="btn btn-md btn-default" ng-click="stock.addGroup(stock.addStockGroup)" ng-disabled="stock.addStockGroup.stockName.length < 2 || stock.addStockGroup.stockUnqName.length < 2">Add</button>
+				<button type="submit" class="btn btn-md btn-default mrL1" ng-click="stock.addStockGroup.parentStockGroupUniqueName = '';stock.addStockGroup.stockName = '';stock.addStockGroup.stockUnqName=''">Clear</button>
+			</form>
+
+		</aside>
+
+		<aside class="col-xs-6 bdrL" ng-if="stock.selectedStockGrp.uniqueName">
+			
+			<form name="updateStockGroup" ng-model="stock.updateStockGroup" novalidate>
+				<label>Modify Group</label>
+				<hr>
+				<div class="form-group">
+					<label>Name</label>
+					<input type="text" name="stockName" class="form-control" ng-model="stock.updateStockGroup.stockName" required>
+				</div>
+
+				<div class="form-group">
+					<label>Unique Name</label>
+					<input type="text" name="stockUnqName" class="form-control" ng-model="stock.updateStockGroup.stockUnqName" required>
+				</div>
+
+				<div class="form-group">
+					<label>Parent Stock Group</label>
+					<input 
+						type="text" 
+						name="parentStockGroupUniqueName" 
+						class="form-control"  
+						ng-model="stock.updateStockGroup.parentStockGroupUniqueName" 
+						typeahead-append-to-body="true" 
+                        uib-typeahead="stockGrp as stockGrp.name for stockGrp in stock.stockGroup.list | filter:$viewValue | limitTo: 10" 
+                        typeahead-on-select="stock.setModificationState($item)"
+						>
+				</div>
+
+				<button type="submit" class="btn btn-md btn-default" ng-click="stock.updateGroup(stock.updateStockGroup)"  ng-disabled="stock.updateStockGroup.stockName.length < 2" ng-bind="stock.modificationState"></button>
+			</form>
+
+		</aside>
+		<div class="clearfix"></div>
+</section>
+
+
+<!-- add/modify stock item-->
+
+<section class="" ng-if="stock.selectedStockGrp.uniqueName || stock.selectedStockItem.uniqueName" ng-class="{mrT1 : stock.selectedStockItem == null}">
+	<aside class="row greyBg bdrB bdrT pd1 mrB1">
+		<label>
+			<span ng-if="stock.selectedStockItem == null">Add</span>
+			<span ng-if="stock.selectedStockItem != null">Modify</span> 
+			Stock Item
+		</label>
+	</aside>
+
+	<aside class="col-xs-6">
+		
+		<form name="addStockGroup" ng-model="stock.addStockItem" novalidate>
+			<!-- <label>Add New Stock</label> -->
+			<hr>
+			<div class="row mr0">
+				<div class="form-group col-xs-6 pdL0 pdR">
+					<label>Name<span class="required">*</span></label>
+					<input type="text" name="stockName" class="form-control" ng-model="stock.addStockItem.stockName" required minlength="2">
+				</div>
+
+				<div class="form-group col-xs-6 pdR0 pdL">
+					<label>Unique Name<span class="required">*</span></label>
+					<input type="text" name="stockUnqName" class="form-control" ng-model="stock.addStockItem.stockUnqName" required>
+				</div>				
+			</div>
+			<div class="row mr0">
+				<div class="form-group pdL0 pdR" ng-class="{'col-xs-6':!stock.selectedStockItem, 'col-xs-3':stock.selectedStockItem}">
+					<label>Stock Unit<span class="required">*</span></label>
+					<!-- <input type="text" name="stockType" class="form-control" ng-model="stock.addStockItem.stockType" required> -->
+					<ui-select ng-model="stock.addStockItem.stockType" theme="bootstrap">
+	                  <ui-select-match>
+	                      <span>{{$select.selected.name}}</span>
+	                  </ui-select-match>
+	                  <ui-select-choices repeat="unit in stock.stockUnitTypes">
+	                      <span ng-bind="unit.name"></span>
+	                  </ui-select-choices>
+	                </ui-select>
+				</div>
+
+				<div class="form-group col-xs-3 pdR pdL">
+					<label>Open. Qty</label>
+					<input type="number" name="stockQty" class="form-control" ng-model="stock.addStockItem.stockQty">
+				</div>
+
+				<div class="form-group col-xs-3 pdR pdL" ng-if="stock.selectedStockItem">
+					<label>Closing. Qty</label>
+					<input type="number" name="stockQty" class="form-control" ng-model="stock.addStockItem.stockClosingQty" disabled>
+				</div>	
+				
+				<div class="form-group col-xs-3 pdR0 pdL">
+					<label>Amount</label>
+					<input type="number" name="stockAmount" class="form-control" ng-model="stock.addStockItem.stockAmount">
+				</div>				
+			</div>
+			<div class="row mr0">
+				<div class="form-group col-xs-6 pdL0 pdR">
+					<label>Purchase Acc</label>
+					<!-- <input type="text" name="stockPurchaseAccount" class="form-control" ng-model="stock.addStockItem.stockPurchaseAccount" required> -->
+	                <ui-select ng-model="stock.addStockItem.stockPurchaseAccount" theme="bootstrap">
+	                  <ui-select-match allow-clear="true" placeholder="select purchase account">
+	                      <span>{{$select.selected.name}}</span>
+	                  </ui-select-match>
+	                  <ui-select-choices repeat="account in stock.purchaseAccounts | filter:$select.search | limitTo:5" refresh="stock.getPurchaseAccounts($select.search)">
+	                      <span ng-bind="account.name"></span>
+	                  </ui-select-choices>
+	                </ui-select>
+				</div>
+
+				<div class="form-group col-xs-6 pdR0 pdL">
+					<label>Purchase Rate</label>
+					<input type="number" name="stockPurchaseRate" class="form-control" ng-model="stock.addStockItem.stockPurchaseRate">
+				</div>				
+			</div>
+			<div class="row mr0">
+				<div class="form-group col-xs-6 pdL0 pdR">
+					<label>Sales Acc</label>
+					<!-- <input type="text" name="stockSalesAccount" class="form-control" ng-model="stock.addStockItem.stockSalesAccount" required> -->
+					<ui-select ng-model="stock.addStockItem.stockSalesAccount" theme="bootstrap">
+	                  <ui-select-match  allow-clear="true" placeholder="select sales account">
+	                      <span>{{$select.selected.name}}</span>
+	                  </ui-select-match>
+	                  <ui-select-choices repeat="account in stock.salesAccounts | filter:$select.search | limitTo:5" refresh="stock.getSalesAccounts($select.search)">
+	                      <span ng-bind="account.name"></span>
+	                  </ui-select-choices>
+	                </ui-select>
+				</div>
+
+				<div class="form-group col-xs-6 pdR0 pdL">
+					<label>Sales Rate</label>
+					<input type="number" name="stockSalesRate" class="form-control" ng-model="stock.addStockItem.stockSalesRate" required>
+				</div>				
+			</div>
+			<button type="submit" class="btn btn-md btn-default pad0"  ng-disabled="addStockGroup.stockName.$invalid">
+				<span style="padding:6px 12px;display:block" ng-if="stock.selectedStockItem == null" ng-click="stock.addStock(stock.addStockItem)">Add</span>
+				<span style="padding:6px 12px;display:block"  ng-if="stock.selectedStockItem != null" ng-click="stock.updateStock(stock.addStockItem)">Modify</span>
+			</button>
+		</form>
+
+	</aside>
+
+
+</section>

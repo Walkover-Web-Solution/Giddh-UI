@@ -1,0 +1,35 @@
+
+<section class="stock-twin-list">
+	
+	<div style="height: 50%;" class="pdT">
+		<label ng-if="stock.selectedStockGrp.stocks.length > 0"><span class="uppercase">Stocks from </span>{{stock.selectedStockGrp.name}}</label>
+		<label ng-if="stock.selectedStockGrp.stocks.length == 0"><span class="uppercase">No stocks in</span> {{stock.selectedStockGrp.name}}</label>
+		<label ng-if="stock.selectedStockGrp == undefined"><span class="uppercase">No Group Selected</span></label>
+		<div class="input-group width100 mrT" ng-show="stock.selectedStockGrp.stocks.length > 0">
+			<input class="width100" type="search" ng-model="grpStockSrch">
+			<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
+		</div>
+		<ul class="list-unstyled list-group" style="height:calc(100% - 80px);overflow-y:auto;">
+			<li class="pr" ng-repeat="stk in stock.selectedStockGrp.stocks | filter:grpStockSrch">
+				<a href="javascript:void(0)" ng-click="stock.selectStock(stk, stock.selectedStockGrp)">{{stk.name}}</a>
+				<i class="glyphicon glyphicon-trash pa cp" style="right:20px;top:10px;" ng-click="stock.deleteStock(stk)"></i>
+			</li>
+		</ul>
+	</div>
+
+	<div style="height: 50%;" class="mrT bdrT pdT">
+		<label><span class="uppercase">All Stocks</span></label>
+		<div class="input-group width100 mrT">
+			<input class="width100" type="search" name="stocksearch" ng-model="allstocksrch" ng-change="stock.getAllStocks(allstocksrch)" ng-model-options="{debounce:500}">
+			<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
+		</div>
+		<ul class="list-unstyled" style="height:calc(100% - 160px);overflow-y:auto;">
+			<li class="pr" ng-repeat="stk in stock.allStocks">
+				<a href="javascript:void(0)" ng-click="stock.selectStock(stk)">{{stk.name}}</a>
+				<i class="glyphicon glyphicon-trash pa cp" style="right:20px;top:10px;" ng-click="stock.deleteStock(stk)"></i>
+			</li>
+		</ul>
+	</div>
+
+
+</section>

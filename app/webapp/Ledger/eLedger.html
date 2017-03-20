@@ -1,7 +1,7 @@
  <section id="eledgerwrap" class="pdL2 pdR2">
   <div class="alert alert-danger fade in pr" style="padding-right:15px"> 
-    <button type="button" ng-click="hideEledger()"class="close" trigger-resize>
-      <span style="font-size:12px;font-weight:normal">Close</span>
+    <button type="button" ng-click="lc.hideEledger()" class="close" >
+      <span style="font-size:12px;font-weight:normal" trigger-resize>Close</span>
     </button> 
     
     <table class="table ledgerTable" style="margin-bottom:0">
@@ -34,9 +34,17 @@
 
               <tr>
                 <td class="nopad" colspan="100%">
-                  <table class="eledger-inner" ng-repeat="eledger in eLedgerData">
+                  <table class="eledger-inner" ng-repeat="eledger in lc.eLedgerData">
                     <tbody>
-                      <tr ng-repeat="txn in eledger.transactions" ng-if="txn.type == 'DEBIT'" ng-click="selectTxn(eledger, txn, $index, $event)"   uib-popover-template="popover.templateUrl" popover-trigger="outsideClick" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover" popover-popup-delay="200">
+                      <tr ng-repeat="txn in eledger.transactions" 
+                        ng-if="txn.type == 'DEBIT'" 
+                        ng-click="lc.slctxn(eledger, txn, $event)"   
+                        uib-popover-template="lc.popover.templateUrl" 
+                        popover-trigger="outsideClick" 
+                        popover-placement="bottom"
+                        popover-append-to-body='true' 
+                        popover-is-open="txn.isOpen" 
+                        popover-popup-delay="200">
                         <!--<td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">-->
                           <!--<input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">-->
                         <!--</td>-->
@@ -44,8 +52,8 @@
                           <input class="form-control background-transparent" ng-model="eledger.entryDate" ng-disabled="true">
                         </td>
                         <td class="col-xs-5">
-                          <!--<input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-append-to-body="true" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)" typeahead-template-url="accountPopUp.html">-->
-                          <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)" ng-model-options="{debounce: 200}">
+                          <!--<input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-append-to-body="true" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForlc.blankLedger(txn, ledger)" typeahead-template-url="accountPopUp.html">-->
+                          <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForlc.blankLedger(txn, ledger)" ng-model-options="{debounce: 200}">
                         </td>
                         <td class="col-xs-3">
                           <input class="form-control background-transparent" ng-model="txn.amount" ng-disabled="true" ng-keyup="triggerPanelFocus($event)">
@@ -75,9 +83,18 @@
             <tbody class="ledgerBodyContent" id="">
               <tr>
                 <td class="nopad" colspan="100%">
-                  <table class="eledger-inner" ng-repeat="eledger in eLedgerData">
+                  <table class="eledger-inner" ng-repeat="eledger in lc.eLedgerData">
                     <tbody>
-                      <tr ng-repeat="txn in eledger.transactions" ng-if="txn.type == 'CREDIT'" ng-click="selectTxn(eledger, txn, $index, $event)"   uib-popover-template="popover.templateUrl" popover-trigger="outsideClick" popover-placement="bottom" popover-append-to-body='true' popover-enable="!popover.draggable" popover-is-open="txn.isOpen && showLedgerPopover"  popover-popup-delay="200">
+                      <tr 
+                        ng-repeat="txn in eledger.transactions" 
+                        ng-if="txn.type == 'CREDIT'" 
+                        ng-click="lc.slctxn(eledger, txn, $event)"   
+                        uib-popover-template="lc.popover.templateUrl" 
+                        popover-trigger="outsideClick" 
+                        popover-placement="bottom" 
+                        popover-append-to-body='true'  
+                        popover-is-open="txn.isOpen"  
+                        popover-popup-delay="200">
                         <!--<td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">-->
                           <!--<input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">-->
                         <!--</td>-->
@@ -85,8 +102,8 @@
                           <input class="form-control background-transparent" ng-model="eledger.entryDate" ng-disabled="true">
                         </td>
                         <td class="col-xs-5">
-                          <!--<input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-append-to-body="true" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)" typeahead-template-url="accountPopUp.html">-->
-                          <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForBlankLedger(txn, ledger)" ng-model-options="{debounce: 200}">
+                          <!--<input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-append-to-body="true" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForlc.blankLedger(txn, ledger)" typeahead-template-url="accountPopUp.html">-->
+                          <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForlc.blankLedger(txn, ledger)" ng-model-options="{debounce: 200}">
                         </td>
                         <td class="col-xs-3">
                           <input class="form-control background-transparent" ng-model="txn.amount" ng-disabled="true">

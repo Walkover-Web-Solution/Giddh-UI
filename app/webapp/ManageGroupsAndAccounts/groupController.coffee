@@ -148,6 +148,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     DAServices.LedgerSet(data, acData)
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
+    $rootScope.$emit('account-selected')
 
 
   #Expand or  Collapse all account menus
@@ -693,6 +694,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.acntCase = "Update"
     $scope.isFixedAcc = res.body.isFixed
     gc.showBreadCrumbs(data.parentGroups)
+    $scope.fetchingUnq = false
 #    console.log $scope.selectedAccount
 
 
@@ -726,8 +728,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     gc.showBreadCrumbs([_.pick($scope.selectedGroup,'uniqueName','name')])
 
   gc.setAdditionalAccountDetails = ()->
-    $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.datePicker.accountOpeningBalanceDate,
-        "dd-MM-yyyy")
+    $scope.selectedAccount.openingBalanceDate = $filter('date')($scope.datePicker.accountOpeningBalanceDate,"dd-MM-yyyy")
     if(_.isUndefined($scope.selectedAccount.mobileNo) || _.isEmpty($scope.selectedAccount.mobileNo))
       $scope.selectedAccount.mobileNo = ""
     if(_.isUndefined($scope.selectedAccount.email) || _.isEmpty($scope.selectedAccount.email))
@@ -1253,7 +1254,30 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     condition = _.contains(checkInThis, tax.uniqueName)
     condition
 
-
+  $scope.fetchingUnq = false
+  num = 1
+  $scope.autoFillUnq = (unq) ->
+    unq = unq.replace(/ |,|\//g,'')
+    unq = unq.toLowerCase()
+    $this = @
+    $scope.fetchingUnq = true
+    $this.success = (res) ->
+      $scope.autoFillUnq(unq+num)
+      num += 1
+    $this.failure = (res) ->
+      $scope.selectedAccount.uniqueName = unq
+      num = 1
+      $scope.fetchingUnq = false
+    if $scope.acntCase == 'Add' && unq != undefined && unq.length > 2
+      $timeout ( ->
+        reqParams = {
+          compUname: $rootScope.selectedCompany.uniqueName
+          acntUname: unq
+        }
+        accountService.get(reqParams).then($this.success, $this.failure)
+      ), 1000
+    else if unq == undefined
+      $scope.selectedAccount.uniqueName == null
 
   $scope.$watch('toMerge.mergedAcc', (newVal,oldVal) ->
     if newVal != oldVal && newVal < 1

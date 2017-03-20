@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html ng-app="adminPanel">
+<head>
+	<title>Giddh Admin Panel</title>
+	<link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/public/website/css/new-style.css" rel="stylesheet">
+	<link href="/public/adminPanel/css/admin-panel.css" rel="stylesheet">
+</head>
+<body>
+
+
+	<ng-include src="'/public/adminPanel/views/header.html'"></ng-include>
+
+	<div style="margin-top:54px; height:100%">
+		<ui-view></ui-view>	
+	</div>
+	
+
+
+
+
+
+	<script  type="text/javascript" src='/public/webapp/core_bower.min.js'></script>
+	<script  type="text/javascript" src='/public/adminPanel/adminPanel.js'></script>
+	<script  type="text/javascript" src='/public/adminPanel/adminLoginController.js'></script>
+	<script  type="text/javascript" src='/public/adminPanel/adminPanelController.js'></script>
+</body>
+</html>

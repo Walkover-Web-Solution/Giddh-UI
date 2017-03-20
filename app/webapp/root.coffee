@@ -36,6 +36,8 @@ giddh.webApp = angular.module("giddhWebApp",
     "gridster"
     "ui.tinymce"
     "daterangepicker"
+    "inventory"
+    "recurringEntry"
   ]
 )
 
@@ -202,6 +204,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       'rightPanel':{
         templateUrl: appendThis+'/public/webapp/Ledger/ledger.html'
         controller: 'newLedgerController'
+        controllerAs: 'lc'
       }
     }
   )
@@ -209,6 +212,18 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/dashboard'
     templateUrl: appendThis+'/public/webapp/Dashboard/dashboard.html'
     controller: "dashboardController"
+  )
+  .state('inventory',
+    url: '/inventory'
+    templateUrl: '/public/webapp/Inventory/inventory.html'
+    controller: 'stockController'
+    controllerAs: 'stock'
+  )
+  .state('recurring-entry',
+    url: '/recurring-entry'
+    templateUrl: '/public/webapp/recurring-entry/recurring-entry.html'
+    controller: 'recurringEntryController'
+    controllerAs: 'recEntry'
   )
   .state('/thankyou',
     url: '/thankyou'
@@ -274,31 +289,31 @@ giddh.webApp.run [
         userId: user.uniqueName
       });
     )
-#    # check IE browser version
-#    $rootScope.GetIEVersion = () ->
-#      ua = window.navigator.userAgent
-#      msie = ua.indexOf('MSIE ')
-#      trident = ua.indexOf('Trident/')
-#      edge = ua.indexOf('Edge/')
-#      if (msie > 0)
-#        toastr.error('For Best User Expreince, upgrade to IE 11+')
-#    $rootScope.GetIEVersion()
-#    # check browser
-#    $rootScope.msieBrowser = ()->
-#      ua = window.navigator.userAgent
-#      msie = ua.indexOf('MSIE')
-#      if msie > 0 or !!navigator.userAgent.match(/Trident.*rv\:11\./)
-#        return true
-#      else
-#        console.info window.navigator.userAgent, 'otherbrowser', msie
-#        return false
+      #    # check IE browser version
+      #    $rootScope.GetIEVersion = () ->
+      #      ua = window.navigator.userAgent
+      #      msie = ua.indexOf('MSIE ')
+      #      trident = ua.indexOf('Trident/')
+      #      edge = ua.indexOf('Edge/')
+      #      if (msie > 0)
+      #        toastr.error('For Best User Expreince, upgrade to IE 11+')
+      #    $rootScope.GetIEVersion()
+      #    # check browser
+    $rootScope.msieBrowser = ()->
+      ua = window.navigator.userAgent
+      msie = ua.indexOf('MSIE')
+      if msie > 0 or !!navigator.userAgent.match(/Trident.*rv\:11\./)
+        return true
+      else
+        console.info window.navigator.userAgent, 'otherbrowser', msie
+        return false
 #    # open window for IE
-#    $rootScope.openWindow = (url) ->
-#      win = window.open()
-#      win.document.write('sep=,\r\n', url)
-#      win.document.close()
-#      win.document.execCommand('SaveAs', true, 'abc' + ".xls")
-#      win.close()
+    $rootScope.openWindow = (url) ->
+      win = window.open()
+      win.document.write('sep=,\r\n', url)
+      win.document.close()
+      win.document.execCommand('SaveAs', true, 'abc' + ".xls")
+      win.close()
 #
 #   $rootScope.firstLogin = true
   

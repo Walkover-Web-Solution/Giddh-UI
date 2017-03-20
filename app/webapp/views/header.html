@@ -91,6 +91,26 @@
                         </div>
                       </a>
                     </li>
+                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="inventory">
+                      <a href="" >
+                        <div class="media">
+                          <div class="media-body">
+                            <div class="title">Inventory</div>
+                            <div class="subTitle">Manage Inventory</div>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="recurring-entry">
+                      <a href="" >
+                        <div class="media">
+                          <div class="media-body">
+                            <div class="title">Recurring Entry</div>
+                            <div class="subTitle">Add and Edit Recurring Entries</div>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
                     <li class="dmLi" ui-sref="Reports">
                         <a href="" >
                           <div class="media">
@@ -106,7 +126,7 @@
                           <div class="media">
                             <div class="media-body">
                               <div class="title">Audit Logs</div>
-                              <div class="subTitle">View and edit all your <b>done</b> entries.</div>
+                              <div class="subTitle">View all Logs</div>
                             </div>
                           </div>
                         </a>

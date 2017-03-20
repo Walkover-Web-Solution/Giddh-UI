@@ -448,13 +448,12 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.editMode = if mode is 'edit' then true else false
     $scope.tempSet = template.sections
 
-    _.extend($scope.defTempData , data)
-
+    #_.extend($scope.defTempData , data)
+    angular.copy(data, $scope.defTempData)
     $scope.defTempData.signatureType = $scope.tempSet.signatureType
-
-    showPopUp = $scope.convertIntoOur()
     angular.copy($scope.defTempData, $scope.selectedInvoiceDetails)
-
+    showPopUp = $scope.convertIntoOur()
+    
     # open dialog
     if(showPopUp)
       $scope.modalInstance = $uibModal.open(
@@ -570,7 +569,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
         updateAccountDetails: false
       }
 
-      if $scope.selectedInvoiceDetails.account.name != matchThis.account.name || $scope.selectedInvoiceDetails.account.attentionTo != matchThis.account.attentionTo || $scope.selectedInvoiceDetails.account.data != matchThis.account.data || $scope.selectedInvoiceDetails.account.mobileNumber != matchThis.account.mobileNumber || $scope.selectedInvoiceDetails.account.email != matchThis.account.email
+      if $scope.selectedInvoiceDetails.account.name != matchThis.account.name || $scope.selectedInvoiceDetails.account.attentionTo != matchThis.account.attentionTo || $scope.selectedInvoiceDetails.account.data[0] != matchThis.account.data[0] || $scope.selectedInvoiceDetails.account.mobileNumber != matchThis.account.mobileNumber || $scope.selectedInvoiceDetails.account.email != matchThis.account.email
         modalService.openConfirmModal(
           title: 'Update'
           body: 'Would you also like to update account information in main account?',

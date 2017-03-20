@@ -26,6 +26,14 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
         method: 'DELETE',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/:entryUniqueName'
       }
+      getEntrySettings: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/entry-settings'
+      }
+      updateEntrySettings: {
+        method: 'PUT',
+        url: '/company/:companyUniqueName/update-entry-settings'
+      }
     }
   )
 
@@ -100,5 +108,15 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
         accountsUniqueName: unqNamesObj.acntUname
         transactionId: unqNamesObj.trId
       }, onSuccess, onFailure))
+
+    getSettings: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> Ledger.getEntrySettings({
+        companyUniqueName: unqNamesObj.compUname
+      }, onSuccess, onFailure))
+
+    updateEntrySettings: (unqNamesObj, data) ->
+      @handlePromise((onSuccess, onFailure) -> Ledger.updateEntrySettings({
+        companyUniqueName: unqNamesObj.compUname
+      }, data, onSuccess, onFailure))
 
   ledgerService

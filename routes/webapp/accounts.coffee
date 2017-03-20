@@ -2,6 +2,7 @@ settings = require('../util/settings')
 router = settings.express.Router({mergeParams: true})
 
 router.get '/', (req, res) ->
+  console.log encodeURIComponent('%')
   authHead =
     headers:
       'Auth-Key': req.session.authKey
@@ -19,7 +20,7 @@ router.get '/:accountUniqueName', (req, res) ->
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName)
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
@@ -28,7 +29,7 @@ router.get '/:accountUniqueName', (req, res) ->
 
 router.put '/:accountUniqueName', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName)
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -42,7 +43,7 @@ router.put '/:accountUniqueName', (req, res) ->
 
 router.put '/:accountUniqueName/move', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/move'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/move'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -56,7 +57,7 @@ router.put '/:accountUniqueName/move', (req, res) ->
 
 router.put '/:accountUniqueName/merge', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/merge'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/merge'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -83,7 +84,7 @@ router.put '/:accountUniqueName/merge', (req, res) ->
 
 router.post '/:accountUniqueName/un-merge', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/un-merge'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/un-merge'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -100,7 +101,7 @@ router.post '/:accountUniqueName/un-merge', (req, res) ->
 
 router.put '/:accountUniqueName/share', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/share'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/share'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -118,7 +119,7 @@ router.delete '/:accountUniqueName', (req, res) ->
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName)
   settings.client.delete hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
@@ -126,7 +127,7 @@ router.delete '/:accountUniqueName', (req, res) ->
 
 router.get '/:accountUniqueName/shared-with', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/shared-with'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/shared-with'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -139,7 +140,7 @@ router.get '/:accountUniqueName/shared-with', (req, res) ->
 
 router.put '/:accountUniqueName/unshare', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/unshare'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/unshare'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -153,7 +154,7 @@ router.put '/:accountUniqueName/unshare', (req, res) ->
 
 router.get '/:accountUniqueName/export-ledger', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/export-ledger'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/export-ledger'
   if req.query.ltype == 'condensed'
     hUrl = hUrl + '-condensed'
   else
@@ -178,7 +179,7 @@ router.get '/:accountUniqueName/xls-imports', (req, res) ->
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/xls-imports'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/xls-imports'
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
@@ -191,7 +192,7 @@ router.get '/:accountUniqueName/eledgers', (req, res) ->
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/eledgers'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/eledgers'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
@@ -204,7 +205,6 @@ router.delete '/:accountUniqueName/eledgers/:transactionId', (req, res) ->
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'eledgers/' + req.params.transactionId
-  console.log "actual URL is: ",hUrl
   settings.client.delete hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
@@ -224,7 +224,7 @@ router.post '/:accountUniqueName/mail-ledger', (req, res) ->
     data: req.body
 
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/mail-ledger'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/mail-ledger'
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
@@ -233,7 +233,7 @@ router.post '/:accountUniqueName/mail-ledger', (req, res) ->
 # get invoices
 router.get '/:accountUniqueName/invoices', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/invoices'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/invoices'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -255,7 +255,7 @@ router.post '/:accountUniqueName/invoices/preview', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName+'/accounts/' + req.params.accountUniqueName + '/invoices/preview'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName+'/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/invoices/preview'
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
@@ -269,7 +269,7 @@ router.post '/:accountUniqueName/invoices/generate', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName+'/accounts/' + req.params.accountUniqueName + '/invoices/generate'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName+'/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/invoices/generate'
   settings.client.post hUrl, args, (data, response) ->
     # console.log data
     if data.status == 'error' || data.status == undefined
@@ -285,7 +285,7 @@ router.post '/:accountUniqueName/invoices/download', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName+'/accounts/' + req.params.accountUniqueName + '/invoices/download'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName+'/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/invoices/download'
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
@@ -294,7 +294,7 @@ router.post '/:accountUniqueName/invoices/download', (req, res) ->
 # preview of generated invoice
 router.get '/:accountUniqueName/invoices/:invoiceUniqueID/preview', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/invoices/'+req.params.invoiceUniqueID+'/preview'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/invoices/'+req.params.invoiceUniqueID+'/preview'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -313,7 +313,7 @@ router.post '/:accountUniqueName/invoices/mail', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName+'/accounts/' + req.params.accountUniqueName + '/invoices/mail'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName+'/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/invoices/mail'
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
@@ -329,14 +329,14 @@ router.post '/:accountUniqueName/magic-link', (req, res) ->
       to: req.query.to
       from: req.query.from
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + req.params.accountUniqueName + '/magic-link'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/magic-link'
   settings.client.post hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
 
 router.get '/:accountUniqueName/tax-hierarchy', (req, res) ->
-  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/accounts/'+req.params.accountUniqueName+'/tax-hierarchy'
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/accounts/'+ encodeURIComponent(req.params.accountUniqueName) + '/tax-hierarchy'
   args =
     headers:
       'Auth-Key': req.session.authKey

@@ -37,6 +37,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
   $scope.discount.amount = 0
   $scope.discount.accounts = []
   $scope.discountTotal = 0
+  $scope.grandTotal = 0
   ## Get all Proforma ##
   $scope.gettingProformaInProgress = false
   $scope.popOver = {
@@ -174,10 +175,12 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       # res.body.template.htmlData = JSON.parse(res.body.template.htmlData)
       # $scope.htmlData = res.body.template.htmlData
       pc.templateVariables = res.body.template.templateVariables
-      selectedAccount = _.findWhere(pc.templateVariables, {key:"$accountUniqueName"})
-      account = {}
-      account.uniqueName = selectedAccount.value
-      $scope.setSelectedAccount(account)
+      pc.selectedAccountDetails = res.body.account
+      # selectedAccount = _.findWhere(pc.templateVariables, {key:"$accountUniqueName"})
+      # if selectedAccount
+      #   account = {}
+      #   account.uniqueName = selectedAccount.value
+      #   $scope.setSelectedAccount(account)
       pc.htmlData = JSON.parse(res.body.template.htmlData)
       pc.sectionData = res.body.template.sections
       pc.checkEditableFields(pc.htmlData.sections)
@@ -186,6 +189,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       $scope.subtotal = res.body.subTotal
       $scope.taxTotal = res.body.taxTotal
       $scope.taxes = res.body.taxes
+      $scope.grandTotal = res.body.grandTotal
       $scope.discountTotal = res.body.discountTotal || 0
       if res.body.commonDiscount == null then res.body.commonDiscount = {} else res.body.commonDiscount = res.body.commonDiscount
       $scope.discount.amount = Math.abs(res.body.commonDiscount.amount) || null
@@ -223,6 +227,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
           $$this.getValues(sec.elements)
       $scope.createProforma('update')
     $scope.editMode = true
+
 
   $scope.deleteProforma = (num, index) ->
     @success = (res) ->
@@ -302,6 +307,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       q: ''
       page: $scope.gwaList.page
       count: $scope.gwaList.count
+      showEmptyGroups: true
     }
     groupService.getFlattenGroupAccList(reqParam).then(pc.getFlattenGrpWithAccListSuccess, pc.getFlattenGrpWithAccListFailure)
 
@@ -413,6 +419,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       $scope.transactions.push(new pc.entryModel())
       $scope.taxes = []
       $scope.subtotal = 0
+      pc.selectedAccountDetails = undefined
     @failure = (res) ->
       toastr.error(res.data.message)
 
@@ -502,7 +509,8 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       pc.checkEditableFields(pc.htmlData.sections)
       $scope.htmlData = pc.htmlData
       $scope.selectedTemplate = res.body.uniqueName
-      $scope.discount = {} 
+      $scope.discount = {}
+      pc.selectedAccountDetails = undefined
       #pc.getDiscountAccounts()
       #pc.parseData(res.body, $scope.htmlData)
     @failure = (res) ->
@@ -518,7 +526,8 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     $$this = @
     $$this.getEditables = (elements) ->
       _.each elements, (elem) ->
-        if elem.type == 'Text' && elem.hasVar && elem.variable.isEditable
+        #if elem.type == 'Text' && elem.hasVar && elem.variable.isEditable
+        if elem.type == 'Text' && elem.hasVar
           field = {}
           field.key = elem.variable.key
           field.value = elem.variable.value
@@ -565,7 +574,19 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       else if action == 'update'
         toastr.success("Proforma updated successfully")
         $scope.transactions = res.body.entries
+        $scope.getAllProforma()
+        $scope.subtotal = res.body.subTotal
+        $scope.taxTotal = res.body.taxTotal
+        $scope.taxes = res.body.taxes
+        $scope.grandTotal = res.body.grandTotal
+        account = {}
+        account.uniqueName = res.body.account.uniqueName
+        pc.selectedAccountDetails = res.body.account
+        pc.setSelectedAccountDetails(pc.selectedAccountDetails, account)
+        #$scope.setSelectedAccount(account)
         $scope.editMode = !$scope.editMode
+      $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+      $scope.enableCreate = true
     $this.failure = (res) ->
       toastr.error(res.data.message)
     reqBody = {}
@@ -598,7 +619,8 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     reqBody.updateAccountDetails = false
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-    pc.checkAccountDetailsChange(reqBody)
+    if pc.selectedAccountDetails != undefined
+      pc.checkAccountDetailsChange(reqBody)
     if !$scope.enableCreate
       modalService.openConfirmModal(
         title: 'Update Account Details',
@@ -608,6 +630,19 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
           ()->
             reqBody.updateAccountDetails = true
             if action == 'create'
+              reqBody.fields = _.uniq(reqBody.fields, (p)-> return p.key)
+              invoiceService.createProforma(reqParam,reqBody).then($this.success,$this.failure)
+            else if action == 'update'
+              reqBody.proforma = $scope.currentProforma.uniqueName
+              #reqBody.fields = null
+              reqBody.fields = angular.extend(pc.templateVariables,reqBody.fields)
+              reqBody.fields = _.uniq(reqBody.fields, (p)-> return p.key)
+              invoiceService.updateProforma(reqParam,reqBody).then($this.success, $this.failure)
+
+          () ->
+            reqBody.updateAccountDetails = false
+            if action == 'create'
+              reqBody.fields = _.uniq(reqBody.fields, (p)-> return p.key)
               invoiceService.createProforma(reqParam,reqBody).then($this.success,$this.failure)
             else if action == 'update'
               reqBody.proforma = $scope.currentProforma.uniqueName
@@ -617,6 +652,8 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
               invoiceService.updateProforma(reqParam,reqBody).then($this.success, $this.failure)
         )
     else if action == 'create' && $scope.enableCreate
+      reqBody.fields = angular.extend(pc.templateVariables,reqBody.fields)
+      reqBody.fields = _.uniq(reqBody.fields, (p)-> return p.key)
       invoiceService.createProforma(reqParam,reqBody).then($this.success,$this.failure)
     else if action == 'update' && $scope.enableCreate
       reqBody.proforma = $scope.currentProforma.uniqueName
@@ -674,7 +711,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
         if prevTxn
           #prevTxn.amount -= Number(txn.amount)
           pc.calcTax(prevTxn, prevTxn.amount, 'discount')
-          prevTxn.amount -= Number(txn.amount)
+          prevTxn.amount -= Math.abs(Number(txn.amount))
           pc.calcTax(prevTxn, prevTxn.amount, 'txn')
       else
         $scope.subtotal += Number(txn.amount)
@@ -910,6 +947,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
             $scope.enableCreate = false
 
   pc.createSundryDebtorsList = () ->
+    $scope.sundryDebtors = []
     _.each $rootScope.fltAccntListPaginated, (acc) ->
       isSd = false
       if acc.parentGroups.length > 0

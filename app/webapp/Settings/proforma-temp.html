@@ -51,12 +51,15 @@
 		<div class="row">
 			<div class="col-md-12">
 				<section id="invoice-wrapper">
+					<div style="width:100%;color:red;font-size: 12px;" ng-if="ctrl.widgetOverflow">
+						The Template Page size has been exceeded, please move the wigets within the blue area to create a template
+					</div>
 					<div ng-if="!ctrl.updateTemplate" class="clearfix pdB2 form-inline">
 						<div class="form-group">
 							<input type="text" name="ctrl.templateName" ng-model="ctrl.templateName" placeholder="Template Name" class="form-control">
 						</div>
 						<div class="form-group">
-							<button ng-disabled="ctrl.templateName === undefined" class="btn btn-success" ng-click="ctrl.saveTemplate()" href="javascript:void(0)">Save Template</button>
+							<button ng-disabled="ctrl.templateName === undefined || ctrl.widgetOverflow" class="btn btn-success" ng-click="ctrl.saveTemplate()" href="javascript:void(0)">Save Template</button>
 							<button class="btn btn-success mrL1" ng-click="ctrl.resetTemplate()" href="javascript:void(0)">Reset Template</button>
 						</div>
 
@@ -77,46 +80,42 @@
 
 
 					<div ng-if="ctrl.updateTemplate" class="clearfix pdB2 form-inline">
-            <div class="form-group">
-              <input type="text" name="ctrl.selectedTemplate.name" ng-model="ctrl.selectedTemplate.name" placeholder="Template Name" class="form-control">
-            </div>
-            <div class="form-group">
-              <button ng-disabled="ctrl.selectedTemplate.name === undefined || ctrl.selectedTemplate.name == ''" class="btn btn-success" ng-click="ctrl.updateProformaTemplates()" href="javascript:void(0)">Update Template</button>
-            </div>
+			            <div class="form-group">
+			              <input type="text" name="ctrl.selectedTemplate.name" ng-model="ctrl.selectedTemplate.name" placeholder="Template Name" class="form-control">
+			            </div>
+			            <div class="form-group">
+			              <button ng-disabled="ctrl.selectedTemplate.name === undefined || ctrl.selectedTemplate.name == ''  || ctrl.widgetOverflow" class="btn btn-success" ng-click="ctrl.updateProformaTemplates()" href="javascript:void(0)">Update Template</button>
+			            </div>
 
-            <div class="form-group pull-right">
-              <a class="btn btn-primary" ng-click="ctrl.addWidget()" href="javascript:void(0)">Add Widget</a>
-            </div>
-            <div class="form-group pull-right mrR1">
-              <select
-                  required
-                  class="form-control"
-                  name="ctrl.tempType"
-                  ng-model="ctrl.tempType"
-                  ng-options="item for item in ctrl.tempTypes">
-              </select>
-            </div>
-          </div>
+			            <div class="form-group pull-right">
+			              <a class="btn btn-primary" ng-click="ctrl.addWidget()" href="javascript:void(0)">Add Widget</a>
+			            </div>
+			            <div class="form-group pull-right mrR1">
+			              <select
+			                  required
+			                  class="form-control"
+			                  name="ctrl.tempType"
+			                  ng-model="ctrl.tempType"
+			                  ng-options="item for item in ctrl.tempTypes">
+			              </select>
+			            </div>
+			          </div>
 
 					<div class="invoice-wrapper-m a4">
 						<div gridster="ctrl.gridsterOptions">
 							<ul>
 								<li class="invoice-widget" ng-repeat="item in ctrl.widgets | orderBy:row:true" gridster-item row="item.row" col="item.col" size-x="item.sizeX" size-y="item.sizeY" ng-dblclick="item.edit = true;$event.stopPropagation();">
 									<div class="move-widget"  ng-if="!item.edit">
-										<label ng-if="item.type == 'Image'">{{item.type}}</label>
+										<label ng-if="item.type == 'Image' && item.data.length < 1">{{item.type}}</label>
 									</div>
+									<img src="{{item.data}}" ng-if="item.type == 'Image' && !item.edit" style="max-height:60px">
 									<!--<i ng-if="item.type != 'Entry'" class="glyphicon glyphicon-edit" ng-hide="item.edit" ng-click="item.edit = true"></i>-->
 									<i class="glyphicon glyphicon-text-width" ng-if="item.edit" ng-click="item.toolbar = !item.toolbar"></i>
 									<i ng-if="item.type != 'Entry'" class="glyphicon glyphicon-ok" ng-show="item.edit" ng-click="item.edit = false"></i>
 									<i ng-show="item.edit" class="glyphicon glyphicon-remove" ng-click="ctrl.removeWidget(item)" ng-if="item.type != 'Entry'"></i>
-									<p class="widget-text" ng-bind-html="item.data" ng-show="!item.edit"></p>
+									<p class="widget-text" ng-bind-html="item.data" ng-show="!item.edit && item.type != 'Image'"></p>
 									<div ng-show="item.type != 'Image' && item.edit" class="height100per">
 										<div class="invoice-input" set-iframe-height ng-class="{hidden:!item.edit, 'hide-toolbar': item.toolbar}">
-											<!-- <textarea ng-model="item.data" mentio
-                       mentio-typed-text="typedTerm"
-                       mentio-items="ctrl.people | filter:label:typedTerm"
-                       ng-keypress="ctrl.modifyInput(item.data, $event)">
-                       </textarea> -->
 											<textarea class="height100per" ui-tinymce="tinymceOptions" ng-model="item.data"></textarea>
 										</div>
 									</div>
@@ -138,7 +137,7 @@
 											</div>
 											<div class="form-group" ng-if="item.uploadFile">
 												<img ngf-src="item.uploadFile" style="max-height:60px"><br>
-												<a href="javascript:void(0)" ng-click="item.uploadFile = null">Reset Logo</a>
+												<a href="javascript:void(0)" ng-click="ctrl.uploadImages($files,'logo', item, true)">Reset Logo</a>
 											</div>
 										</form>
 									</div>

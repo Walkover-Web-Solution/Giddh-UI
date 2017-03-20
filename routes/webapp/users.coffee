@@ -165,4 +165,20 @@ router.put '/system_admin/verify-number', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+#two way auth
+router.put '/:uniqueName/settings', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+      'Content-Type': 'application/json'
+    data: req.body
+  hUrl = settings.envUrl + 'users/' + req.params.uniqueName + '/settings'
+  settings.client.put hUrl, authHead, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    # else
+    #   req.session.authKey = data.body.authKey
+    res.send data
+
 module.exports = router
