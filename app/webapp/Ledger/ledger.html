@@ -22,7 +22,7 @@
 
  <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
     <section class="container-fluid" ng-if="accountUnq.length > 0">
-      <div class="pdT1">
+      <div class="pdT2">
         <div class="ledger-top-panel clearfix" ng-class="{'while-panel':showPanel}" ng-hide="showPanel">
           <div class="form-inline pdB1 ledgHead">
 
@@ -36,8 +36,7 @@
               <div class="form-group">
               <!--   <label>From</label> -->
 
-                <input date-range-picker id="daterange3" name="daterange3" class="form-control date-picker" type="text"
-                           ng-model="date" options="opts" required/>
+                <input date-range-picker id="daterange3" name="daterange3" class="form-control date-picker date-range-picker" type="text" ng-model="date" options="opts" required/>
 
                 <p class="input-group maxW110">
                   <input type="text" class="form-control"

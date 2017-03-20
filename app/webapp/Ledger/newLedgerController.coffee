@@ -27,6 +27,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     debit : true
     credit: true
   }
+
+  $scope.datePicker.date = {startDate: d._d, endDate: new Date()};
+
+
   # $scope.options = {
   #   applyClass: 'btn-green',
   #   locale: {
@@ -1618,14 +1622,17 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.singleDate = moment()
   $scope.opts = {
       locale:
+        separator: " - "
         applyClass: 'btn-green'
         applyLabel: 'Apply'
         fromLabel: 'From'
-        format: 'YYYY-MM-DD'
+        format: 'DD-MM-YYYY'
         toLabel: 'To'
         cancelLabel: 'Cancel'
         customRangeLabel: 'Custom range'
       ranges:
+        'Today': [moment(), moment()]
+        'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')]
         'Last 7 Days': [
           moment().subtract(6, 'days')
           moment()
@@ -1633,7 +1640,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         'Last 30 Days': [
           moment().subtract(29, 'days')
           moment()
-      ]
+        ]
+        'This Month': [moment().startOf('month'), moment().endOf('month')]
+        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
   }
   $scope.setStartDate = ->
     $scope.date.startDate = moment().subtract(4, 'days').toDate()

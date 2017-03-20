@@ -1,28 +1,48 @@
-<div class="pd2" ng-controller="settingsProformaController as ctrl">
-	<div class="clearfix mrB2 mrT1">
-		<button ng-click="ctrl.showAddTemplate()" class="btn btn-primary" ng-class="{'btn-primary':!ctrl.showTemplate, 'btn-default': ctrl.showTemplate}"><span ng-if="!ctrl.showTemplate">Add New Template</span><span ng-if="ctrl.showTemplate">Back</span></button>
+<div class="pdT2 container-fluid" ng-controller="settingsProformaController as ctrl">
+	<div class="clearfix pdR1 mrB2 mrT1 text-right col-xs-12">
+		<button ng-click="ctrl.showAddTemplate()" class="btn btn-primary md-btn" ng-class="{'btn-primary':!ctrl.showTemplate, 'btn-default': ctrl.showTemplate}"><span ng-if="!ctrl.showTemplate">Add New Template</span><span ng-if="ctrl.showTemplate">Back</span></button>
 	</div>
 	<div ng-if="!ctrl.showTemplate" class="clearfix">
-		<div class="col-xs-3" ng-repeat="value in ctrl.templateList" ng-if="value.type == 'proforma'">
+		<div class="template_list" ng-repeat="value in ctrl.templateList" ng-if="value.type == 'proforma'">
 			<a href="javascript:void(0)" class="thumbnail" style="min-height:225px;">
 				<div class="caption">
-					<label>Template for {{value.type}}</label>
-					<h3 class="lead alC" ng-bind-html="value.name"></h3>
-					<p>
+				<div class="templateInfo">
+					<!-- <label>Template for {{value.type}}</label> -->
+					<h3 class="lead templateName alC" ng-bind-html="value.name"></h3>
+
+					<h2 ng-show="value.isFixed" class="mrT" style="margin-bottom: 40px;">Fixed</h2>
+
+					<div class="mrT1 alC switch_state">
+		              <div ng-click="ctrl.setDefTemp(value)" class="switch_div">
+		                <switch name="setAsDefault" on="on" off="Off" class="wide" ng-model="value.isDefault"></switch>
+		              </div>
+		              <label ng-show="value.isDefault" class="mrT text-left">Default Selected</label>
+		              <label ng-if="!value.isDefault || !value.isDefault"class="mrT">Set as default</label>
+            		</div>
+
+					<!-- <p>
 						<button class="btn btn-default btn-block" ng-click="ctrl.getTemplate(value, 'update')" ng-if="!value.isFixed">Edit</button>
 						<button class="btn btn-danger btn-block" ng-click="ctrl.deleteTemplate(value)" ng-disabled="value.isDefault" ng-if="!value.isFixed">Delete</button>
 					<div class="mrT1 alC" ng-show="!value.isDefault">
 						<div ng-click="ctrl.setDefTemp(value)">
 							<switch name="setAsDefault" on="Default" off="Off" class="wide" ng-model="value.isDefault"></switch>
 						</div>
-					</div>
-					<div class="mrT1 alC" ng-show="value.isDefault">
+					</div> -->
+
+					<!-- <div class="mrT1 alC" ng-show="value.isDefault">
 						<h1 style="font-size:28px">Default</h1>
 					</div>
 					<div class="mrT1 alC" ng-show="value.isFixed">
 						<h1 style="font-size:28px">Fixed</h1>
-					</div>
+					</div> -->
 					</p>
+					</div>
+
+					<div class="template_action">
+	                <button ng-click="ctrl.deleteTemplate(value)" ng-disabled="value.isDefault" ng-if="!value.isFixed" class="btn btn-default mrB1">Delete</button>
+	                <button ng-click="ctrl.getTemplate(value, 'update')" ng-if="!value.isFixed" class="btn btn-default">Edit</button>
+              		</div>
+
 				</div>
 			</a>
 		</div>
