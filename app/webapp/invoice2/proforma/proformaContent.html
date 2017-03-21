@@ -204,7 +204,7 @@
 
               <div class="form-group max150 pull-left" style="width:150px;">
                 <label>Select Template</label>
-                <select class="form-control" ng-model="create.proformaTemplate" ng-options="temp.name for temp in pTemplateList" ng-change="fetchTemplateData(create.proformaTemplate, 'create')"></select>
+                <select class="form-control" style="padding:5px !important;" ng-model="create.proformaTemplate" ng-options="temp.name for temp in pTemplateList" ng-change="fetchTemplateData(create.proformaTemplate, 'create')"></select>
               </div>    
               <button class="btn md-btn btn-success mrT2 mrL1" ng-click="createProforma('create')">Create</button>
               <button class="btn md-btn btn-primary mrT2 mrL" ng-click="addquickAccount()">Add New Account</button>

@@ -16,7 +16,7 @@ angular.module('recurringEntryController', [])
 	recEntry.durationList = [
 		'WEEKLY',
 		'MONTHLY',
-		'QUATERLY',
+		'QUARTERLY',
 		'HALF YEARLY',
 		'YEARLY'
 	]

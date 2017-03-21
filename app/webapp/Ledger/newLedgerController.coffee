@@ -39,7 +39,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         applyClass: 'btn-green'
         applyLabel: 'Apply'
         fromLabel: 'From'
-        format: 'dd-MM-yyyy'
+        format: 'D-MMM-YY'
         toLabel: 'To'
         cancelLabel: 'Cancel'
         customRangeLabel: 'Custom range'
@@ -54,6 +54,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         ]
         'Last 30 Days': [
           moment().subtract(29, 'days')
+          moment()
+        ]
+        'Last 6 Months': [
+          moment().subtract(6, 'months')
           moment()
         ]
         'Last 1 Year': [
