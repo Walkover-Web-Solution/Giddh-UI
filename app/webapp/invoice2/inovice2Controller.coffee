@@ -16,6 +16,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     count: 12
   }
 
+  $scope.currentPage = ->
+    currentPage = @value
+    console.log currentPage
+
   $scope.counts = {
     12
     25

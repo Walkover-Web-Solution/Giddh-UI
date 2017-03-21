@@ -13,7 +13,7 @@ SettingsTaxController = ($rootScope, Upload, $timeout, toastr) ->
   @taxTypes = [
     "MONTHLY"
     "YEARLY"
-    "QUATERLY"
+    "QUARTERLY"
     "HALFYEARLY"
   ]
  

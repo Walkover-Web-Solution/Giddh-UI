@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <uib-tabset justified="false">
+    <!-- <uib-tabset justified="false" class="parentTab">
         <uib-tab heading="Invoice" select="commonGoButtonClick()">
           <div ng-include="'/public/webapp/invoice2/invoiceContent.html'">
 
@@ -11,7 +11,19 @@
 
           </div>
         </uib-tab>
-      </uib-tabset>
+      </uib-tabset> -->
+      <div class="select_wrap pos-abs">
+      <select ng-model="currentPage" class="selectTag" ng-init="currentPage = 'INVOICE'">
+
+        <option value="INVOICE">Invoice</option>
+        <option value="PROFORMA">Proforma</option>
+      </select>
+      <span class="icon-dropdown"></span>
+      </div>
+      <div>
+        <section ng-if="currentPage == 'INVOICE'" ng-include="'/public/webapp/invoice2/invoiceContent.html'"></section>
+        <section ng-if="currentPage == 'PROFORMA'" ng-include="'/public/webapp/invoice2/proforma/proformaContent.html'" ng-controller="proformaController"></section>  
+      </div>
   </div>
 </div>
 

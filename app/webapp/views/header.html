@@ -11,8 +11,8 @@
 <header class="clearfix">
   <div class="container-fluid">
     <nav class="navbar navbar-inverse">
-      <ul class="nav navbar-nav">
-        <li uib-dropdown style="margin-left:-15px;" ng-show="canManageComp || canViewSpecificItems">
+      <ul class="nav navbar-nav" ng-controller="groupController">
+        <li class="hamburger_menu" uib-dropdown style="margin-left:-15px;" ng-show="canManageComp || canViewSpecificItems">
           <a href id="page-dropdown" uib-dropdown-toggle>
             <i class="glyphicon glyphicon-menu-hamburger"></i>
           </a>
@@ -168,12 +168,60 @@
           </ul>
         </li>
 
-        <li ng-if="cmpViewShow" class="company-name" uib-dropdown style="border-left:2px solid #fff;">
+        <!-- books search -->
+        <li>
+            <div class="row">
+        <div class="ledger_search form-inline col-xs-12">
+
+
+
+
+            <div class="form-group">
+                <div class="input-group">
+
+                      <!-- by mustafa -->
+<!--                     <div class="input-group-addon">
+                        <i class="glyphicon" ng-class="{'glyphicon-plus' : canManageComp, 'glyphicon-search' : !canManageComp}" ng-click="goToManageGroups();"></i>
+                    </div>
+ -->
+                    <!-- <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList');" ng-change="checkLength(acntSrch)" ng-model-options="{debounce: 200}"> -->
+
+                    <input id="accountSearch" type="text" name="searchGroup" class="form-control" ng-model="search.acnt" placeholder="Search accounts" ng-change="searchGrpWithAccounts(search.acnt)" ng-focus="showAccounts($event)" ng-click="$event.stopPropagation()" ng-model-options="{debounce:1000}">
+                      
+                    
+                    <div ng-hide="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(true); $event.stopPropagation()" tooltip-placement="right" uib-tooltip="Expand all" >
+                        <span class="icon-plus" aria-hidden="true"></span>
+                    </div>
+
+                    <div ng-show="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(false)" tooltip-placement="right" uib-tooltip="Collapse all">
+                        <span class="icon-minus"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </li>
+
+        <li>
+            <div ng-hide="canViewSpecificItems">
+                <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
+                    <span class="icon-plus" aria-hidden="true"></span> Add &amp; Manage
+                </button>
+            </div>
+        </li>
+
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+
+      <!-- company dropdown -->
+        <li ng-if="cmpViewShow" class="company-name" uib-dropdown>
           <a id="cmpWrp" class="clearfix" style="cursor:pointer;position: relative;" uib-dropdown-toggle>
-            <i class="gic-24 icon-building-w"></i>
+          <span class="icon-dropdown"></span>
+            <i class="icon-building"></i>
             <div class="cText">
               <span class="cName">{{selectedCompany.name}}</span>
-              <span ng-bind="currentFinancialYear" style="font-size:12px;"></span>
+              <span ng-bind="currentFinancialYear" class="fyear"></span>
             </div>
             <!-- <i class="glyphicon glyphicon-chevron-down pull-right" style="right: -10px"></i> -->
           </a>
@@ -183,7 +231,7 @@
               <button id="createCompanyBtn" class="btn btn-primary btn-sm" ng-click="createNewCompany()">Create Company</button>
             </li>
             <li style="padding:0px;">
-              <ul style="max-height: 260px;overflow-y: scroll;background:rgba(0,0,0,0.9);overflow:auto;">
+              <ul style="max-height: 260px;overflow-y: scroll;overflow:auto;">
                 <li ng-repeat="company in companyList" ng-click="changeCompany(company, $index,'CHANGE')" id="cmp" ng-class="{'selected-company':selectedCompany.uniqueName == company.uniqueName}">
                   <span tooltip-placement="right" uib-tooltip="{{company.alias}}">{{company.name}}</span>
                   <i id="deleteCmp" class="glyphicon glyphicon-trash" ng-if="company.shared" ng-click="deleteCompany(company,$index,company.name,$event)"></i>
@@ -192,9 +240,9 @@
             </li>
           </ul>
         </li>
-      </ul>
+      <!-- company dropdown end -->
 
-      <ul class="nav navbar-nav navbar-right">
+
         <li uib-dropdown
           tooltip-placement="left" 
           uib-tooltip="{{basicInfo.email}}"
@@ -204,9 +252,7 @@
             id="user-dropdown" 
             uib-dropdown-toggle
           >
-            <i class="glyphicon glyphicon-user"></i>
-            {{basicInfo.name}}
-            <span class="caret"></span>
+            {{userName}}
           </a>
           <ul class="dropdown-menu" aria-labelledby="user-dropdown">
             <li><a href="javascript:void(0)" ng-click="createNewCompany()">Create Company</a></li>
@@ -219,6 +265,9 @@
         </li>
       </ul>
     </nav>
+  </div>
+  <div class="accounts-side-bar greyBg" ng-show="flyAccounts">
+    <div ng-include="'/public/webapp/views/accounts.html'"></div>
   </div>
 </header>
 

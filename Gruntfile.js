@@ -244,7 +244,7 @@ module.exports = function (grunt) {
           'public/webapp/ng2.js': ['public/webapp/ng2/**/*.services.js','public/webapp/ng2/**/*.component.js','public/webapp/ng2/*.js'],
           'public/webapp/newRelic.js': ['app/webapp/Globals/modified_lib/newRelic.js'],
           'public/webapp/_extras.js': ['app/webapp/Globals/modified_lib/angular-charts.js', 'app/webapp/Globals/modified_lib/jspdf.debug.js'],
-          'public/webapp/Globals/css/giddh.min.css': ['public/webapp/Globals/css/all_bower.css', 'public/webapp/Globals/css/modiefied-bootstrap.css', 'public/webapp/Globals/css/new-style.css']
+          'public/webapp/Globals/css/giddh.min.css': ['public/webapp/Globals/css/all_bower.css', 'public/webapp/Globals/css/modiefied-bootstrap.css', 'public/webapp/Globals/css/new-style.css', 'public/webapp/Globals/css/style2.css']
         }
       }
     },
@@ -270,11 +270,11 @@ module.exports = function (grunt) {
     env: {
       dev: {
         NODE_ENV: 'DEVELOPMENT',
-        PREFIX_THIS: process.env.CDN_URL
+        PREFIX_THIS: 'http://localhost:8000'
       },
       prod: {
         NODE_ENV: 'PRODUCTION',
-        PREFIX_THIS: process.env.CDN_URL
+        PREFIX_THIS: 'http://localhost:8000'
       }
     },
     preprocess:{
@@ -368,7 +368,8 @@ module.exports = function (grunt) {
           'angular-trix',
           'tinymce',
           'tinymce-mention',
-          'angular-ui-tinymce'
+          'angular-ui-tinymce',
+          'bootstrap-daterangepicker'
         ],
         dependencies: {
           'jquery': 'modernizr',

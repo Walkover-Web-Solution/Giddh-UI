@@ -1,5 +1,5 @@
-
 <div class="loader mrT4" ng-if="lc.showLoader && lc.accountUnq.length">
+
   <span></span>
   <span></span>
   <span></span>
@@ -24,18 +24,33 @@
   Please select an Account to load its Ledger
 </section>
 
-<div id="ledger" class="oyAuto" ng-show="!lc.showLoader" cover-page ng-class="{'mtop-neg-54':!flyAccounts}">
+
+<div id="ledger" class="oyAuto" ng-show="!lc.showLoader" cover-page>
  <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
 
     <section class="container-fluid" ng-if="lc.accountUnq.length > 0">
-      <div class="pdT1">
-        <div class="ledger-top-panel clearfix" ng-class="{'while-panel':lc.showPanel, 'mLeft295':!flyAccounts}" ng-hide="lc.showPanel">
+      <div class="pdT2">
+        <div class="ledger-top-panel clearfix" ng-class="{'while-panel':lc.showPanel}" ng-hide="lc.showPanel">
+
           <div class="form-inline pdB1 ledgHead">
-            <form name="fromToDateForm" novalidate class="form-group mrR1 pull-left">
-              <div class="form-group">
+
+          <!-- ledger search -->
+<!--             <div  >
+              <input type="search" class="form-control" placeholder="Search ledger" ng-model="particularSearch" ng-keyup="countTotalTransactionsAfterSomeTime()" ng-model-options="{debounce: 1000}">
+              <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
+            </div> -->
+            <div class="form-group mrR2 pull-left pos-rel" >
+              <input type="search" class="form-control" placeholder="Search ledger" ng-model="lc.query" ng-keyup="lc.countTotalTransactionsAfterSomeTime()" ng-model-options="{debounce: 1000}" ng-change="lc.filterLedgers(lc.accountToShow.uniqueName, lc.query, 1)" ng-disabled="!lc.readLedgersFinished">
+             <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
+            </div>
+
+            <form name="fromToDateForm" style="width: 300px;" novalidate class="form-group mrR1 pull-left">
+              <div class="form-group dateRange">
               <!--   <label>From</label> -->
 
-                <p class="input-group maxW110">
+                <input date-range-picker id="daterange3" name="daterange3" class="form-control date-picker date-range-picker" type="text" ng-model="cDate" options="opts" required/>
+
+<!--                 <p class="input-group maxW110">
                   <input type="text" class="form-control"
                          uib-datepicker-popup="{{lc.format}}" required
                          datepicker-options="dateOptions"
@@ -45,13 +60,10 @@
                          max-date="lc.today"
                          placeholder="from date"
                           />
-              <!--<span class="input-group-btn">-->
-                <!--<button type="button" class="btn btn-default" ng-click="fromDatePickerOpen()"><i-->
-                    <!--class="glyphicon glyphicon-calendar"></i></button>-->
-              <!--</span>-->
+
                 </p>
-              </div>
-              <div class="form-group">
+              </div> -->
+<!--               <div class="form-group">
                 <label>to</label>
 
                 <p class="input-group maxW110">
@@ -62,11 +74,12 @@
                          ng-click="lc.toDatePickerOpen()"
                          ng-model="lc.toDate.date" min-date="lc.fromDate.date" max-date="lc.today" placeholder="to date"
                          />
-              <!--<span class="input-group-btn">-->
-                <!--<button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i-->
-                    <!--class="glyphicon glyphicon-calendar"></i></button>-->
-              <!--</span>-->
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+              </span>
                 </p>
+              </div> -->
               </div>
               <div class="form-group">
                 <button type="button" class="btn btn-default mrL1" ng-click="lc.getLedgerData()" ng-disabled="fromToDateForm.$invalid">
@@ -79,45 +92,41 @@
 
             </form>
 
-
-            <div class="form-group mrL1 pull-right maxW150 pos-rel" >
-              <input type="search" class="form-control maxW150" placeholder="Search ledger" ng-model="lc.query" ng-keyup="lc.countTotalTransactionsAfterSomeTime()" ng-model-options="{debounce: 1000}" ng-change="lc.filterLedgers(lc.accountToShow.uniqueName, lc.query, 1)" ng-disabled="!lc.readLedgersFinished">
-              <i class="glyphicon glyphicon-search pos-abs"  style="right:5px;top:10px;"></i>
-            </div>
           
             <div option-list>
-              <a id="showHide" class="pull-right mrL1" href="javascript:void(0)">
-                <i class="glyphicon glyphicon-th-list"></i>
-              </a>
-              <div class="ol-options">
+              
+              <!-- <a id="showHide" class="pull-right mrL1" href="javascript:void(0)">
+                <i class="icon-options"></i>
+              </a> -->
 
-                <!-- <a class="pull-right" href="javascript:void(0)" title=""  uib-tooltip="Show List" tooltip-placement="left" ng-click="showImportList()" >
-                  <i class="glyphicon glyphicon-list-alt" ></i>
-                </a> -->
+
+              <a class="icomoon_ico pull-right mrL1" href="javascript:void(0)" title="" uib-tooltip="Generate Magic Link" tooltip-placement="left" ng-click="lc.getMagicLink()">
+                  <i class="icon-magic_link"></i>
+                </a>
+
+
+                
 
                 <div class="form-group pull-right mrL1 pdf-export">
-                  <a class="pull-right" href="javascript:void(0)" title=""  uib-tooltip="Export" tooltip-placement="right" ng-click="lc.exportOptions()" >
-                    <i class="glyphicon glyphicon-cloud-download pull-right" ></i>
-                  </a>
-                  <div class="export-ledger-options" ng-show="lc.showExportOption">
-                    <span class="arrow"></span>
-                    <ul class="list-unstyled">
-                      <li ng-click="lc.exportLedger('detailed')">Detailed</li>
-                      <li ng-click="lc.exportLedger('condensed')">Condensed</li>
-                    </ul>
+
+                  <a class="pull-right icomoon_ico" href="javascript:void(0)" title="" uib-tooltip="Export" tooltip-placement="right" ng-click="lc.exportOptions()" >
+                    <i class="icon-download"></i>
+                    </a>
+
+                    <div class="export-ledger-options" ng-show="lc.showExportOption">
+                      <span class="arrow"></span>
+                      <ul class="list-unstyled dropdown_theme">
+                        <li ng-click="lc.exportLedger('detailed')">Detailed</li>
+                        <li ng-click="lc.exportLedger('condensed')">Condensed</li>
+                      </ul>
+                    </div>
+
                   </div>
                 </div>
 
-                <!-- <form class="pull-right mrL1" enctype="multipart/form-data">
-                  <a class="" type="file" ngf-select="importLedger($files, $invalidFiles)" accept=".xls, .xlsx" ngf-max-size="100MB" ng-disabled="!canUpdate">
-                     <i class="glyphicon glyphicon-copy" uib-tooltip="Import" tooltip-placement="left"></i>
-                  </a>
-                </form> -->
-
-
-                <span class="pull-right mrL1" uib-dropdown  auto-close="outsideClick">
-                  <a href id="simple-dropdown" uib-dropdown-toggle>
-                    <i uib-tooltip="Send Ledger" tooltip-placement="right" class="glyphicon glyphicon-envelope" ></i>
+               <span class="pull-right mrL1" uib-dropdown  auto-close="outsideClick">
+                  <a href id="simple-dropdown" class="icomoon_ico" uib-dropdown-toggle>
+                    <i uib-tooltip="Send Ledger" tooltip-placement="right" class="icon-share"></i>
                   </a>
                   <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
                     <li>
@@ -145,10 +154,6 @@
                   </ul>
                 </span>
 
-                <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Generate Magic Link" tooltip-placement="left" ng-click="lc.getMagicLink()">
-                  <i class="glyphicon glyphicon-link pull-right"></i>
-                </a>
-
 <!--                 <a class="pull-right mrL1" style="margin-top:9px">
                   <div ng-click="togglePopoverDrag()">
                     <switch ng-model="popover.draggable" class="small" uib-tooltip="Switch between draggable and fixed popover. " tooltip-placement="bottom" ></switch>
@@ -159,11 +164,30 @@
                     <switch  ng-model="lc.mergeTransaction" class="small" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>
                   </div>
                 </a>
-                <a class="pull-right mrL1" style="margin-top:9px">
+<!--                 <a class="pull-right mrL1" style="margin-top:9px">
                   <div ng-click="lc.updateEntrySettings(lc.entrySettings.status)">
                     <switch  ng-model="lc.entrySettings.status" class="small" uib-tooltip="Turn default date on for ledgers" tooltip-placement="bottom" ></switch>
                   </div>
-                </a>
+                </a> -->
+
+              <div class="ol-options">
+
+                <!-- <a class="pull-right" href="javascript:void(0)" title=""  uib-tooltip="Show List" tooltip-placement="left" ng-click="showImportList()" >
+                  <i class="glyphicon glyphicon-list-alt" ></i>
+                </a> -->
+
+
+                <!-- <form class="pull-right mrL1" enctype="multipart/form-data">
+                  <a class="" type="file" ngf-select="importLedger($files, $invalidFiles)" accept=".xls, .xlsx" ngf-max-size="100MB" ng-disabled="!canUpdate">
+                     <i class="glyphicon glyphicon-copy" uib-tooltip="Import" tooltip-placement="left"></i>
+                  </a>
+                </form> -->
+
+
+               
+
+                
+
               </div>
             </div>
           </div>
@@ -186,8 +210,10 @@
             <table class="col-xs-12 ledger-head">
               <thead>
                 <tr class="t-h-bg1">
-                  <th class="col-xs-6">Debit - {{lc.accountToShow.name}} is receiving</th>
-                  <th class="col-xs-6">Credit - {{lc.accountToShow.name}} is giving</th>
+
+                  <th class="col-xs-6">Debit - <span class="accountName">{{lc.accountUnq.name}}</span> is receiving</th>
+                  <th class="col-xs-6">Credit - <span class="accountName">{{lc.accountUnq.name}}</span> is giving</th>
+
                 </tr>
               </thead>
             </table>
@@ -199,15 +225,17 @@
                     <table class="width100 ledger-header">
                       <thead>
                         <tr class="t-h-bg2">
-                          <!-- <th class="col-xs-1"></th> -->
+
                           <th class="col-xs-2">
                             <span ng-click="lc.sortOrder.debit = lc.sortDirectionInvert(lc.sortOrder.debit); lc.sortOrderChange('dr')" class="cursor-pointer">
                               <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="lc.sortOrder.debit == lc.sortDirection.desc"></i>
                               <i class="glyphicon glyphicon-sort-by-order" ng-if="lc.sortOrder.debit == lc.sortDirection.asc"></i>
+
                               Date
                             </span>
                             <!-- <i class="glyphicon glyphicon-sort pull-left mrL"></i> -->
                           </th>
+
                           <th class="col-xs-5">Paticular</th>
                           <th class="col-xs-5">
                             <!-- <span class="col-xs-6 pad0" ng-if="lc.accountToShow.stock != null">Qty</span> -->
@@ -218,7 +246,7 @@
                         <tr class="bg3">
                           <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
                             <span class="pull-left tcount">Total Transactions: {{lc.dNonemptyTxn}}</span>
-                            <span ng-if="lc.ledgerData.forwardedBalance.type == 'DEBIT' && lc.ledgerData.forwardedBalance.amount > 0">Opening Balance : {{lc.ledgerData.forwardedBalance.amount | number:2}}</span>
+                            <span ng-if="lc.ledgerData.forwardedBalance.type == 'DEBIT' && lc.ledgerData.forwardedBalance.amount > 0"><span class="highlight_info">Opening Balance : {{lc.ledgerData.forwardedBalance.amount | number:2}}</span></span>
                             <!-- <span ng-if="lc.ledgerData.forwardedBalance.type == 'CREDIT'">B/F : 0</span> -->
                           </th>
                         </tr>
@@ -237,10 +265,9 @@
                           <tr>
                             <td colspan="100">
                               <table class="width100">
-                                <tbody>
+                                <tbody class="ledger-main">
                                   <tr
-                                    class="txn-row"
-                                    ng-class="{compoundEntry: lc.blankLedger.isCompoundEntry}"
+                                    class="ledger-row"
                                     ng-repeat="txn in lc.blankLedger.transactions"
                                     ng-if="txn.type == 'DEBIT'"
                                     uib-popover-template="lc.popover.templateUrl" 
@@ -254,12 +281,12 @@
                                     ng-click="$event.stopPropagation()"
                                     >
                                     <td class="col-xs-2">
-                                      <input type="text" 
+                                      <input class="form-control" type="text" 
                                       ng-model="lc.blankLedger.entryDate"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input type="text" ng-model="txn.particular"
+                                      <input class="form-control" placeholder="{{lc.accountUnq}} receiving via?" type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
@@ -300,10 +327,9 @@
                             ng-dblclick="lc.getMatchingTxn(value, 'CR')">
                             <td colspan="100">
                               <table class="width100">
-                                <tbody>
+                                <tbody class="ledger-main">
                                   <tr
-                                    class="txn-row"
-                                    ng-class="{compoundEntry: value.isCompoundEntry, uncEntry : value.unconfirmedEntry}"  
+                                    class="ledger-row"
                                     ng-repeat="txn in value.transactions"
                                     ng-if="txn.type == 'DEBIT'"
                                     uib-popover-template="lc.popover.templateUrl" 
@@ -316,12 +342,12 @@
                                     set-popover-position
                                     ng-click="$event.stopPropagation()">
                                     <td class="col-xs-2">
-                                      <input type="text" 
+                                      <input class="form-control type="text" 
                                       ng-model="value.entryDate"
                                       ng-focus="lc.slctxn(value, txn, $event)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input type="text" ng-model="txn.particular"
+                                      <input class="form-control type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
@@ -380,8 +406,9 @@
                         </td>
                       </tr>
                       <tr class="t-h-bg2 bdr-w-t h42">
-                        <td colspan="6" class="col-xs-6 text-left bold">Debit Total: {{lc.ledgerData.debitTotal | number:2}} </td>
-                        <td colspan="6" class="col-xs-6 text-right bdr-w-t bold">Reckoning : {{lc.ledgerData.debitTotal | number:2}}</td>
+
+                        <td colspan="6" class="col-xs-6 text-left bold"><span class="midlight_info">Debit Total: {{lc.ledgerData.debitTotal | number:2}}</span> </td>
+                        <td colspan="6" class="col-xs-6 text-right bdr-w-t bold"><span class="highlight_info">Reckoning : {{lc.ledgerData.debitTotal | number:2}}</span></td>
                       </tr>
                   </tbody>
                 </table>
@@ -395,6 +422,7 @@
                       <thead>
                         <tr class="t-h-bg2">
                          <!--  <th class="col-xs-1"></th> -->
+
                           <th class="col-xs-2">
                             <span ng-click="lc.sortOrder.credit = lc.sortDirectionInvert(lc.sortOrder.credit); lc.sortOrderChange('cr')" class="cursor-pointer">
                                 <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="lc.sortOrder.credit == lc.sortDirection.desc"></i>
@@ -404,8 +432,10 @@
                             
                             <!-- <i class="glyphicon glyphicon-sort pull-left"></i> -->
                           </th>
+
                           <th class="col-xs-5">Paticular</th>
                           <th class="col-xs-5">Amount</th>
+
                         </tr>
                         <tr class="bg3">
                           <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
@@ -425,10 +455,9 @@
                           <tr>
                             <td colspan="100">
                               <table class="width100">
-                                <tbody>
+                                <tbody class="ledger-main">
                                   <tr
-                                    class="txn-row"
-                                    ng-class="{compoundEntry: lc.blankLedger.isCompoundEntry}" 
+                                    class="ledger-row"
                                     ng-repeat="txn in lc.blankLedger.transactions"
                                     ng-if="txn.type == 'CREDIT'"
                                     uib-popover-template="lc.popover.templateUrl" 
@@ -442,12 +471,13 @@
                                     ng-click="$event.stopPropagation()"
                                     >
                                     <td class="col-xs-2">
-                                      <input type="text" 
+                                      <input class="form-control" type="text" 
                                       ng-model="lc.blankLedger.entryDate"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input type="text" ng-model="txn.particular"
+                                      <input type="text" class="form-control" ng-model="txn.particular"
+                                      placeholder="{{lc.accountUnq}} giving via?"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
@@ -488,10 +518,9 @@
                             ng-dblclick="lc.getMatchingTxn(value, 'DR')">
                             <td colspan="100">
                               <table class="width100">
-                                <tbody>
+                                <tbody class="ledger-main">
                                   <tr
-                                    class="txn-row"
-                                    ng-class="{compoundEntry: value.isCompoundEntry, uncEntry : value.unconfirmedEntry}" 
+                                    class="ledger-row"
                                     ng-repeat="txn in value.transactions"
                                     ng-if="txn.type == 'CREDIT'"
                                     uib-popover-template="lc.popover.templateUrl" 
@@ -504,12 +533,12 @@
                                     set-popover-position
                                     ng-click="$event.stopPropagation()">
                                     <td class="col-xs-2">
-                                      <input type="text" 
+                                      <input class="form-control" type="text" 
                                       ng-model="value.entryDate"
                                       ng-focus="lc.slctxn(value, txn, $event)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input type="text" ng-model="txn.particular"
+                                      <input class="form-control" type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
@@ -568,8 +597,8 @@
                         </td>
                       </tr>
                       <tr class="t-h-bg2 bdr-w-t h42">
-                        <td colspan="6" class="col-xs-6 text-left bold">Credit Total: {{lc.ledgerData.creditTotal | number:2}}</td>
-                        <td colspan="6" class="col-xs-6 text-right bold">Reckoning: {{lc.ledgerData.creditTotal | number:2}}</td>
+                        <td colspan="6" class="col-xs-6 text-left bold"><span class="midlight_info">Credit Total: {{lc.ledgerData.creditTotal | number:2}}</span></td>
+                        <td colspan="6" class="col-xs-6 text-right bold"><span class="highlight_info">Reckoning: {{lc.ledgerData.creditTotal | number:2}}</span></td>
                       </tr>
                   </tbody>
                 </table>
@@ -633,9 +662,10 @@
             </div>
             <div class="mrT1 clearfix" style="clear:both" ng-if="lc.taxList.length > 0">
               <hr class="width100">
-              <ul class="list-inline pull-left">
+
+              <ul class="list-inline pull-left tax-list">
                 <li class="tax" ng-repeat="tax in lc.taxList">
-                  <div class="checkbox"><label><input type="checkbox" ng-model="tax.isChecked">{{tax.name}}</label></div>
+                  <div class="checkbox"><label><input type="checkbox" ng-model="tax.isChecked">{{tax.name}}<span></span></label></div>
                 </li>
               </ul>
             </div>
@@ -679,11 +709,12 @@
             </div>
           </div>
           <div class="clearfix" ng-if="canUpdate">
+
             <button accesskey="x" ng-if="(lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="lc.addBlankTxn('DEBIT', lc.selectedLedger)">Add in DR</button>
             <button accesskey="c" ng-if="(lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="lc.addBlankTxn('CREDIT', lc.selectedLedger)">Add in CR</button>
             <button id="saveUpdate" class="pull-left mrR1 btn btn-sm btn-success min150" ng-click="lc.saveUpdateLedger(lc.selectedLedger)" ng-disabled="doingEntry">
               <span ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') || lc.selectedLedger.isBankTransaction == true">Save</span>
-              <span ng-if="(lc.selectedLedger.uniqueName != undefined && lc.selectedLedger.uniqueName != '') && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)">Update</span>
+              <span class="btn-primary" ng-if="(lc.selectedLedger.uniqueName != undefined && lc.selectedLedger.uniqueName != '') && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)">Update</span>
             </button>
             <button ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') && ((lc.selectedLedger.transactions[0].particular.uniqueName != '' && lc.selectedLedger.transactions[0].particular.uniqueName != undefined) || (lc.selectedLedger.transactions[1].particular.uniqueName != '' && lc.selectedLedger.transactions[1].particular.uniqueName != undefined)) && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default mrL1" ng-click="lc.resetLedger()">Reset</button>
             <i ng-if="(lc.selectedLedger.uniqueName != undefined && lc.selectedLedger.uniqueName != '') && lc.selectedLedger.invoiceGenerated == false && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right glyphicon glyphicon-trash mrR1 pos-abs" uib-tooltip="Delete" tooltip-placement="left" style="top:9px;right:1px;color:#d35f29;" ng-click="lc.deleteEntryConfirm(lc.selectedLedger);lc.deleteMultipleTransactions()" uib-tooltip=""></i>
@@ -713,4 +744,8 @@
       })
     } 
   })
+
+
 </script>
+
+

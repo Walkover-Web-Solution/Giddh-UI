@@ -1,8 +1,16 @@
 <!DOCTYPE html>
-<html>
+<html ng-app='giddhApp'>
 	<head>
 		<title>Giddh ~ Accounting at its Rough! Bookkeeping and Accounting Software</title>
 		<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+		<script src="http://localhost:8000/public/webapp/newRelic.js"></script>
+<!--   <script src="<<PREFIX_THIS>>/bower_components/intl-tel-input/build/js/intlTelInput.min.js"></script> -->
+  <script  type="text/javascript" src='http://localhost:8000/public/website/website_corejs.min.js'></script>
+  <script type="text/javascript" src="http://localhost:8000/public/website/js/app.js"></script>
+    <script src="http://localhost:8000/public/website/js/controller/loginController.js"></script>
+    <!-- recaptcha -->
+  <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
+  <script type="text/javascript" src="http://localhost:8000/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
 	</head>
 	<style type="text/css">
 		.center-block {
@@ -50,7 +58,7 @@
 		}
 	</style>
 	<body>
-		<div class="blueBg homeContent" id="global_cnt">
+		<div class="blueBg homeContent" ng-if="!browserIE" id="global_cnt">
 			<div class="container">
 				<h1 class="text-center">We are not present in your country yet</h1>
 				<h2 class="text-center">leave us your email and we will get in touch once we launch in your country</h2>
@@ -72,9 +80,11 @@
 			</div>
 		</div>
 
-<!-- 		  <script  type="text/javascript" src='<<PREFIX_THIS>>/public/webapp/core_bower.min.js'></script>
-		  <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/app.js"></script>
-		  <script src="<<PREFIX_THIS>>/public/website/js/controller/loginController.js"></script> -->
+		<div class="" ng-if="browserIE">
+			
+		<h1>404 error</h1>
+
+		</div>
 
 	</body>
 </html>

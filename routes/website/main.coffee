@@ -36,6 +36,9 @@ router.get '/index', (req, res) ->
 router.get '/affiliate', (req,res) ->
   res.sendFile 'joinus.html', options
 
+router.get '/global', (req,res) ->
+  res.sendFile 'global.html', options
+
 router.get '/about', (req, res) ->
   res.sendFile 'about.html', options
 
