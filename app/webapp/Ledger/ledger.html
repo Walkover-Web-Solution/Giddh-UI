@@ -44,7 +44,7 @@
               <div class="form-group dateRange">
               <!--   <label>From</label> -->
 
-                <input date-range-picker id="daterange3" name="daterange3" class="form-control date-picker date-range-picker" type="text" ng-model="date" options="opts" required/>
+                <input date-range-picker id="daterange3" name="daterange3" class="form-control date-picker date-range-picker" type="text" ng-model="cDate" options="opts" required/>
 
 <!--                 <p class="input-group maxW110">
                   <input type="text" class="form-control"
@@ -160,11 +160,11 @@
                     <switch  ng-model="lc.mergeTransaction" class="small" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>
                   </div>
                 </a>
-                <a class="pull-right mrL1" style="margin-top:9px">
+<!--                 <a class="pull-right mrL1" style="margin-top:9px">
                   <div ng-click="lc.updateEntrySettings(lc.entrySettings.status)">
                     <switch  ng-model="lc.entrySettings.status" class="small" uib-tooltip="Turn default date on for ledgers" tooltip-placement="bottom" ></switch>
                   </div>
-                </a>
+                </a> -->
 
               <div class="ol-options">
 
@@ -207,8 +207,8 @@
               <thead>
                 <tr class="t-h-bg1">
 
-                  <th class="col-xs-6">Debit - <span class="accountName">{{lc.accountToShow.name}}</span> is receiving</th>
-                  <th class="col-xs-6">Credit - <span class="accountName">{{lc.accountToShow.name}}</span> is giving</th>
+                  <th class="col-xs-6">Debit - <span class="accountName">{{lc.accountUnq.name}}</span> is receiving</th>
+                  <th class="col-xs-6">Credit - <span class="accountName">{{lc.accountUnq.name}}</span> is giving</th>
 
                 </tr>
               </thead>

@@ -28,21 +28,26 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $rootScope.flyAccounts = true
   
   ###date range picker ###
-  $scope.date = {
-    startDate: moment().subtract(1, 'days'),
-    endDate: moment()
+  $scope.cDate = {
+    startDate: moment().subtract(1, 'days')._d,
+    endDate: moment()._d
   };
+
   $scope.singleDate = moment()
   $scope.opts = {
       locale:
         applyClass: 'btn-green'
         applyLabel: 'Apply'
         fromLabel: 'From'
-        format: 'YYYY-MM-DD'
+        format: 'dd-MM-yyyy'
         toLabel: 'To'
         cancelLabel: 'Cancel'
         customRangeLabel: 'Custom range'
       ranges:
+        'Last 1 Day': [
+          moment().subtract(1, 'days')
+          moment()
+        ]
         'Last 7 Days': [
           moment().subtract(6, 'days')
           moment()
@@ -50,15 +55,24 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         'Last 30 Days': [
           moment().subtract(29, 'days')
           moment()
-      ]
+        ]
+        'Last 1 Year': [
+          moment().subtract(12, 'months')
+          moment()
+        ]
+      eventHandlers : {
+        'apply.daterangepicker' : (e, picker) ->
+          $scope.cDate.startDate = e.model.startDate._d
+          $scope.cDate.endDate = e.model.endDate._d
+      }
   }
-  $scope.setStartDate = ->
-    $scope.date.startDate = moment().subtract(4, 'days').toDate()
+  # $scope.setStartDate = ->
+  #   $scope.cDate.startDate = moment().subtract(4, 'days').toDate()
 
-  $scope.setRange = ->
-    $scope.date =
-        startDate: moment().subtract(5, 'days')
-        endDate: moment()
+  # $scope.setRange = ->
+  #   $scope.cDate =
+  #       startDate: moment().subtract(5, 'days')
+  #       endDate: moment()
   ###date range picker end###
 
   lc.sortDirection = Object.freeze({'asc' : 0, 'desc' : 1})
@@ -88,7 +102,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     credit: lc.sortDirection.desc
   }
 
-  # $scope.datePicker.date = {startDate: d._d, endDate: new Date()};
+  # $scope.cDatePicker.date = {startDate: d._d, endDate: new Date()};
 
 
   # $scope.options = {
@@ -844,8 +858,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     reqParam = {
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       accountUniqueName: accUname
-      from: $filter('date')(lc.fromDate.date, 'dd-MM-yyyy')
-      to: $filter('date')(lc.toDate.date, 'dd-MM-yyyy')
+      from: $filter('date')($scope.cDate.startDate, 'dd-MM-yyyy')
+      to: $filter('date')($scope.cDate.endDate, 'dd-MM-yyyy')
     }
     companyServices.getMagicLink(reqParam).then(lc.getMagicLinkSuccess, lc.getMagicLinkFailure)
 
@@ -876,14 +890,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   # ledger send email
   lc.sendLedgEmail = (emailData, emailType) ->
     data = emailData
-    if _.isNull(lc.toDate.date) || _.isNull(lc.fromDate.date)
+    if _.isNull(lc.toDate.date) || _.isNull($scope.cDate.startDate)
       toastr.error("Date should be in proper format", "Error")
       return false
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: lc.accountUnq
-      toDate: $filter('date')(lc.toDate.date, "dd-MM-yyyy")
-      fromDate: $filter('date')(lc.fromDate.date, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
+      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
       format: emailType
     }
     sendData = {
@@ -923,8 +937,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: lc.accountUnq
-      fromDate: $filter('date')(lc.fromDate.date, "dd-MM-yyyy")
-      toDate: $filter('date')(lc.toDate.date, "dd-MM-yyyy")
+      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
       lType:type
     }
     accountService.exportLedger(unqNamesObj).then(lc.exportLedgerSuccess, lc.exportLedgerFailure)
@@ -1127,8 +1141,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: lc.accountUnq
-      fromDate: $filter('date')(lc.fromDate.date, "dd-MM-yyyy")
-      toDate: $filter('date')(lc.toDate.date, "dd-MM-yyyy")
+      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
     }
     if not _.isEmpty(lc.accountUnq)
       ledgerService.getLedger(unqNamesObj).then(lc.getLedgerDataSuccess, lc.getLedgerDataFailure)
@@ -1193,8 +1207,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: lc.accountUnq
-      fromDate: $filter('date')(lc.fromDate.date, "dd-MM-yyyy")
-      toDate: $filter('date')(lc.toDate.date, "dd-MM-yyyy")
+      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
     }
     if not _.isEmpty(lc.accountUnq)
       ledgerService.getLedger(unqNamesObj).then(
