@@ -1,6 +1,6 @@
 "use strict"
 
-mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location) ->
+mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location, DAServices) ->
   $rootScope.scriptArrayHead = [
     "/public/webapp/newRelic.js"
     "/public/webapp/core_bower.min.js"
@@ -677,6 +677,14 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       if grp.accountDetails.length > 0
         newList.push(grp)
     newList
+
+  $scope.setLedgerData = (data, acData) ->
+    $scope.selectedAccountUniqueName = acData.uniqueName
+    $rootScope.selectedAccount = acData
+    DAServices.LedgerSet(data, acData)
+    localStorageService.set("_ledgerData", data)
+    localStorageService.set("_selectedAccount", acData)
+    $rootScope.$emit('account-selected')
 
   $(document).on('click', (e)->
     $rootScope.flyAccounts = false
