@@ -890,3 +890,11 @@ input[type="checkbox"]:after {
     font-size: 8px;
     color: #525252;
 }
+.ranges li {
+    color: #525252;
+}
+.ranges li.active, .ranges li:hover {
+    background-color: #525252;
+    border: 1px solid #525252;
+    color: #fff;
+}
