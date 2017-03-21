@@ -898,3 +898,6 @@ input[type="checkbox"]:after {
     border: 1px solid #525252;
     color: #fff;
 }
+.no-data h1 {
+    font-weight: 300;
+}

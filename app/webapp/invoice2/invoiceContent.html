@@ -12,8 +12,8 @@
       <uib-tab class="mrB1" heading="View" select="setTab(0)">
         <div class="row mr1" ng-if="invoices.results.length == 0">
           <div class="no-data">
-            <h1>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</h1>
-                <button class="danger-btn">Go to here</button>
+            <h1>No Invoice Found!</h1>
+            <h1>Either generate new invoice or change date</h1>
           </div>
         </div>
         <div class="container-fluid pdT2 y-scroll" ng-if="invoices.results.length > 0" cover-page>
@@ -209,8 +209,9 @@
         <uib-tab-heading>Generate</uib-tab-heading>
           <div class="row mr1" ng-if="ledgers.results.length == 0">
           <div class="no-data">
-            <h1>No entries found!</h1>
-            <img src="/public/webapp/Globals/images/no-data.png" alt="No Data">
+            <h1>No Entry found in sales!</h1>
+            <h1>Have to do some sales before creating invoice</h1>
+            <a onclick="GoTosales()" class="btn btn-primary">Go to Sales</a>
           </div>
         </div>
         <div class="" ng-if="ledgers.results.length > 0">
@@ -527,3 +528,9 @@
     </div> -->
   <!-- </div> -->
 </div>
+<script type="text/javascript">
+  function GoTosales() {
+      var orig = location.origin;
+      window.location.href = orig + '/app/#/ledger/sales';
+  }
+</script>
