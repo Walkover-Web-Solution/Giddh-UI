@@ -241,9 +241,7 @@ min-width: 220px;
 .tax-list {
     padding: 10px 0;
 }
-#user-dropdown {
-    color: #616161;
-}
+
 .btn-default:hover {
     border: 1px solid #ccc;
     background: #f3f0e6;
@@ -808,4 +806,87 @@ input[type="checkbox"]:after {
 }
 .checkbox label, .radio label {
     padding-left: 0;
+}
+.selectTag {
+    z-index: 9;
+    height: 49px;
+    border: 0;
+    width: 200px;
+    color: #d35f29;
+    background: #dddddd;
+    left: 0;
+    padding-left: 16px;
+    font-size: 17px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    -webkit-border-radius: 0;
+}
+.selectTag:focus {
+    outline: 0;
+}
+.selectTag:after {
+    content: "\e904";
+    position: absolute;
+    font-family: icomoon!important;
+    speak: none;
+    font-style: normal;
+    font-weight: 400;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.daterangepicker .input-mini {
+    padding: 0 6px 0 28px !important;
+    border-radius: 0;
+}
+.dateRange {
+    max-width: 215px;
+    width: 100%;
+}
+.daterangepicker td, .daterangepicker th {
+    font-weight: 400;
+}
+.daterangepicker td.active, .daterangepicker td.active:hover {
+    background-color: #d35f29;
+    border-color: transparent;
+    color: #fff;
+}
+.daterangepicker td.in-range {
+    background-color: #eae7da;
+    border-color: transparent;
+    color: #000;
+    border-radius: 0;
+}
+
+.daterangepicker.dropdown-menu {
+    box-shadow: 0 3px 28px 0 rgba(0,0,0,.14);
+    color: #616161;
+    border: 1px solid #ccc;
+}
+.daterangepicker .input-mini.active {
+    border: 1px solid #f7b995;
+    border-radius: 4px;
+}
+#user-dropdown {
+    color: #fff;
+    background: #d35f29;
+    border-radius: 100%;
+    width: 48px;
+    height: 48px;
+    margin: 2px 6px;
+    text-align: center;
+    padding: 12px 0;
+}
+.select_wrap {
+    z-index: 9;
+}
+
+.select_wrap .icon-dropdown {
+    position: absolute;
+    right: 11px;
+    top: 22px;
+    font-size: 8px;
+    color: #525252;
 }
