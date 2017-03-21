@@ -383,10 +383,8 @@ app.run [
 
     if isIE()
       $rootScope.browserIE = true
-      alert 'It is InternetExplorer'
       location.pathname = '/global'
     else
-      # location.pathname = '/'
       console.log "it is not ie"
 ]
   
