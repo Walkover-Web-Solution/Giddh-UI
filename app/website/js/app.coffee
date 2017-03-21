@@ -369,23 +369,25 @@ app.run [
     if loc == "/signup"
       $rootScope.whiteLinks = true
       $rootScope.signupPage = true
+  
+    ##detect if browser is IE##
+    isIE = ->
+      ua = navigator.userAgent
 
-  ##detect if browser is IE##
-  isIE = ->
-    ua = navigator.userAgent
+      ### MSIE used to detect old browsers and Trident used to newer ones###
 
-    ### MSIE used to detect old browsers and Trident used to newer ones###
+      is_ie = ua.indexOf('MSIE ') > -1 or ua.indexOf('Trident/') > -1
+      is_ie
 
-    is_ie = ua.indexOf('MSIE ') > -1 or ua.indexOf('Trident/') > -1
-    is_ie
+    $rootScope.browserIE = false
 
-  if isIE()
-    $rootScope.browserIE = true
-    alert 'It is InternetExplorer'
-    location.pathname = '/global'
-  else
-    # location.pathname = '/'
-    console.log "it is not ie"
+    if isIE()
+      $rootScope.browserIE = true
+      alert 'It is InternetExplorer'
+      location.pathname = '/global'
+    else
+      # location.pathname = '/'
+      console.log "it is not ie"
 ]
   
 
