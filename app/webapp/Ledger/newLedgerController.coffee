@@ -25,6 +25,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.dLedgerLimit = 10
   lc.cLedgerLimit = 10
   lc.entrySettings = {}
+  $rootScope.flyAccounts = true
 
   lc.sortDirection = Object.freeze({'asc' : 0, 'desc' : 1})
   lc.sortDirectionInvert = (dir) ->

@@ -46,7 +46,7 @@
 
                 <input date-range-picker id="daterange3" name="daterange3" class="form-control date-picker date-range-picker" type="text" ng-model="date" options="opts" required/>
 
-                <p class="input-group maxW110">
+<!--                 <p class="input-group maxW110">
                   <input type="text" class="form-control"
                          uib-datepicker-popup="{{lc.format}}" required
                          datepicker-options="dateOptions"
@@ -56,13 +56,10 @@
                          max-date="lc.today"
                          placeholder="from date"
                           />
-              <!--<span class="input-group-btn">-->
-                <!--<button type="button" class="btn btn-default" ng-click="fromDatePickerOpen()"><i-->
-                    <!--class="glyphicon glyphicon-calendar"></i></button>-->
-              <!--</span>-->
+
                 </p>
-              </div>
-              <div class="form-group">
+              </div> -->
+<!--               <div class="form-group">
                 <label>to</label>
 
                 <p class="input-group maxW110">
@@ -73,12 +70,12 @@
                          ng-click="lc.toDatePickerOpen()"
                          ng-model="lc.toDate.date" min-date="lc.fromDate.date" max-date="lc.today" placeholder="to date"
                          />
-              <!--<span class="input-group-btn">-->
-                <!--<button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i-->
-                    <!--class="glyphicon glyphicon-calendar"></i></button>-->
-              <!--</span>-->
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+              </span>
                 </p>
-              </div>
+              </div> -->
               <div class="form-group">
                 <button type="button" class="btn btn-default mrL1" ng-click="lc.getLedgerData()" ng-disabled="fromToDateForm.$invalid">
                   GO

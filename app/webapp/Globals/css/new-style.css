@@ -4636,3 +4636,13 @@ table.proforma-particulars{
 .right-col .txn-row td:first-child{
     border-left:0;
 }
+
+.accounts-side-bar{
+    width: 320px;
+    position: absolute;
+    z-index: 999;
+    left: 0;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.6);
+    margin:0; 
+}
+    

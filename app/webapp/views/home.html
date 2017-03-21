@@ -29,13 +29,14 @@
   <div class="row">
     <!-- left side -->
     <!--<button><i class="glyphicon glyphicon-menu-hamburger" ng-click="flyAccounts = !flyAccounts"></i></button>-->
-    <div class="greyBg col-xs-2 sidebar" class="add-transition" ng-hide="!flyAccounts">
+<!--     <div class="greyBg col-xs-2 sidebar" class="add-transition" ng-hide="!flyAccounts">
       <div id="left" auto-height>
         <div ui-view="accounts"></div>
       </div>
-    </div> 
+    </div>  -->
     <!-- main section -->
-    <div ng-class="{'col-xs-12' : flyAccounts == false, 'col-xs-10 marginTop' : flyAccounts == true}">
+    <!-- <div ng-class="{'col-xs-12' : flyAccounts == false, 'col-xs-10 marginTop' : flyAccounts == true}"> -->
+    <div class="col-xs-12">  
       <div class="row">
         <div ui-view="rightPanel"></div>
       </div>
