@@ -96,7 +96,7 @@
               </a> -->
 
 
-              <a class="icomoon_ico pull-right mrL1" href="javascript:void(0)" title="" uib-tooltip="Generate Magic Link" tooltip-placement="left" ng-click="getMagicLink()">
+              <a class="icomoon_ico pull-right mrL1" href="javascript:void(0)" title="" uib-tooltip="Generate Magic Link" tooltip-placement="left" ng-click="lc.getMagicLink()">
                   <i class="icon-magic_link"></i>
                 </a>
 
@@ -109,13 +109,13 @@
                     <i class="icon-download"></i>
                     </a>
 
-                    <div class="export-ledger-options" ng-show="showExportOption">
-                    <span class="arrow"></span>
-                    <ul class="list-unstyled dropdown_theme">
-                      <li ng-click="lc.exportLedger('detailed')">Detailed</li>
-                      <li ng-click="lc.exportLedger('condensed')">Condensed</li>
-                    </ul>
-                  </div>
+                    <div class="export-ledger-options" ng-show="lc.showExportOption">
+                      <span class="arrow"></span>
+                      <ul class="list-unstyled dropdown_theme">
+                        <li ng-click="lc.exportLedger('detailed')">Detailed</li>
+                        <li ng-click="lc.exportLedger('condensed')">Condensed</li>
+                      </ul>
+                    </div>
 
                   </div>
                 </div>
@@ -282,7 +282,7 @@
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
                                     <td class="col-xs-5">
-                                      <input class="form-control" type="text" ng-model="txn.particular"
+                                      <input class="form-control" placeholder="{{lc.accountUnq}} receiving via?" type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
@@ -473,6 +473,7 @@
                                     </td>
                                     <td class="col-xs-5">
                                       <input type="text" class="form-control" ng-model="txn.particular"
+                                      placeholder="{{lc.accountUnq}} giving via?"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"

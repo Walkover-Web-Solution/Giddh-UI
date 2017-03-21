@@ -26,6 +26,40 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.cLedgerLimit = 10
   lc.entrySettings = {}
   $rootScope.flyAccounts = true
+  
+  ###date range picker ###
+  $scope.date = {
+    startDate: moment().subtract(1, 'days'),
+    endDate: moment()
+  };
+  $scope.singleDate = moment()
+  $scope.opts = {
+      locale:
+        applyClass: 'btn-green'
+        applyLabel: 'Apply'
+        fromLabel: 'From'
+        format: 'YYYY-MM-DD'
+        toLabel: 'To'
+        cancelLabel: 'Cancel'
+        customRangeLabel: 'Custom range'
+      ranges:
+        'Last 7 Days': [
+          moment().subtract(6, 'days')
+          moment()
+        ]
+        'Last 30 Days': [
+          moment().subtract(29, 'days')
+          moment()
+      ]
+  }
+  $scope.setStartDate = ->
+    $scope.date.startDate = moment().subtract(4, 'days').toDate()
+
+  $scope.setRange = ->
+    $scope.date =
+        startDate: moment().subtract(5, 'days')
+        endDate: moment()
+  ###date range picker end###
 
   lc.sortDirection = Object.freeze({'asc' : 0, 'desc' : 1})
   lc.sortDirectionInvert = (dir) ->
