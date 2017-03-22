@@ -186,6 +186,7 @@ var appRoutes = require('./public/routes/webapp/main');
 var users = require('./public/routes/webapp/users');
 var roles = require('./public/routes/webapp/roles');
 var trialBalance = require('./public/routes/webapp/trialBal');
+var balanceSheet = require('./public/routes/webapp/balancesheet')
 var upload = require('./public/routes/webapp/upload');
 var profitLoss = require('./public/routes/webapp/profitLoss')
 var reports = require('./public/routes/webapp/reports')
@@ -215,6 +216,7 @@ app.use('/company/:companyUniqueName/groups', groups);
 app.use('/company/:companyUniqueName/accounts', accounts);
 app.use('/company/:companyUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
 app.use('/company/:companyUniqueName/trial-balance', trialBalance);
+app.use('/company/:companyUniqueName/balance-sheet', balanceSheet);
 app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/stock-group', inventory)

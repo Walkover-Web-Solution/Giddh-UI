@@ -308,7 +308,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.count = 0
   $scope.detailedGroups = []
   $scope.getTrialBalSuccess = (res) ->
-    $scope.makeDataForPl(res.body)
+    # $scope.makeDataForPl(res.body)
     $scope.exportData = []
     $scope.addUIKey(res.body.groupDetails)
     $scope.count = 0
@@ -318,12 +318,12 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     $scope.removeSd($scope.detailedGroups)
     $scope.data = res.body
     $scope.data.groupDetails = $scope.orderGroups($scope.detailedGroups)
-    $scope.balSheet.assetTotal = $scope.calCulateTotalAssets($scope.balSheet.assets)
-    $scope.balSheet.liabTotal = $scope.calCulateTotalLiab($scope.balSheet.liabilities)
-    if $scope.inProfit == false
-      $scope.balSheet.assetTotal += $scope.plData.closingBalance
-    else if $scope.inProfit == true
-      $scope.balSheet.liabTotal += $scope.plData.closingBalance
+    # $scope.balSheet.assetTotal = $scope.calCulateTotalAssets($scope.balSheet.assets)
+    # $scope.balSheet.liabTotal = $scope.calCulateTotalLiab($scope.balSheet.liabilities)
+    # if $scope.inProfit == false
+    #   $scope.balSheet.assetTotal += $scope.plData.closingBalance
+    # else if $scope.inProfit == true
+    #   $scope.balSheet.liabTotal += $scope.plData.closingBalance
     if $scope.data.closingBalance.amount is 0 and $scope.data.creditTotal is 0 and $scope.data.debitTotal is 0 and $scope.data.forwardedBalance.amount is 0
       $scope.noData = true
     else
@@ -874,7 +874,12 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     }
     trialBalService.getBalSheet(reqParam).then(@success, @failure)
 
-  #$scope.getBalanceSheetData()
+  $scope.getBalanceSheetData()
+
+  $scope.getBalanceSheetDataSuccess = (res) ->
+    $scope.balSheetGrps = res.body.groupDetais;
+    $scope.balSheet.assets = balSheetGrps.filter(grp -> grp.getCategory == 'assets')
+    console.log($scope.balSheet.assets)
 
   $scope.$on 'company-changed' , (event, data) ->
     if data.type == 'CHANGE'
