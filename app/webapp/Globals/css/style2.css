@@ -177,7 +177,7 @@ min-width: 220px;
 .btn {
     padding: 6px 16px;
     border: 0;
-    border-radius: 0px;
+    border-radius: 2px;
     font-size: 14px;
 }
 #AddManage {
@@ -900,4 +900,30 @@ input[type="checkbox"]:after {
 }
 .no-data h1 {
     font-weight: 300;
+}
+.download-invoice-ledger {
+   padding-right: 6px;
+   padding-left: 0;
+}
+.popover.bottom>.arrow:after {
+    margin-left: 0;
+    border-top-width: none;
+    top: 1px;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid #fff;
+    border-left: 15px solid transparent;
+    left: -15px;
+    z-index: 9;
+}
+.ledger-panel .btn-success {
+    background: #3fab63;
+}
+.ledger-panel .btn-success:hover {
+    background: #57C17A;
+}
+.btn-row {
+    margin-top: 14px;
+}
+a, button, input {
+    outline: none;
 }

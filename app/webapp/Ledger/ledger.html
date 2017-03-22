@@ -78,7 +78,7 @@
               </div> -->
               </div>
               <div class="form-group">
-                <button type="button" class="btn btn-default mrL1" ng-click="lc.getLedgerData()" ng-disabled="fromToDateForm.$invalid">
+                <button type="button" class="btn btn-primary mrL1" ng-click="lc.getLedgerData()" ng-disabled="fromToDateForm.$invalid">
                   GO
                 </button>
 <!--                 <button type="button" class="btn btn-default mrL1" ng-click="lc.readLedgers(lc.accountToShow.uniqueName, 1, 'next')" >
@@ -232,7 +232,7 @@
                             <!-- <i class="glyphicon glyphicon-sort pull-left mrL"></i> -->
                           </th>
 
-                          <th class="col-xs-5">Paticular</th>
+                          <th class="col-xs-7">Paticular</th>
                           <th class="col-xs-5">
                             <!-- <span class="col-xs-6 pad0" ng-if="lc.accountToShow.stock != null">Qty</span> -->
                             <!-- <span class="pad0" ng-class="{'col-xs-6':lc.accountToShow.stock != null, 'col-xs-12':lc.accountToShow.stock == null}">Amount</span> -->
@@ -281,7 +281,7 @@
                                       ng-model="lc.blankLedger.entryDate"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
-                                    <td class="col-xs-5">
+                                    <td class="col-xs-7">
                                       <input class="form-control" placeholder="{{lc.accountUnq}} receiving via?" type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
@@ -342,7 +342,7 @@
                                       ng-model="value.entryDate"
                                       ng-focus="lc.slctxn(value, txn, $event)">
                                     </td>
-                                    <td class="col-xs-5">
+                                    <td class="col-xs-7">
                                       <input class="form-control type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
@@ -429,7 +429,7 @@
                             <!-- <i class="glyphicon glyphicon-sort pull-left"></i> -->
                           </th>
 
-                          <th class="col-xs-5">Paticular</th>
+                          <th class="col-xs-7">Paticular</th>
                           <th class="col-xs-5">Amount</th>
 
                         </tr>
@@ -471,7 +471,7 @@
                                       ng-model="lc.blankLedger.entryDate"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
                                     </td>
-                                    <td class="col-xs-5">
+                                    <td class="col-xs-7">
                                       <input type="text" class="form-control" ng-model="txn.particular"
                                       placeholder="{{lc.accountUnq}} giving via?"
                                       typeahead-append-to-body="true" 
@@ -533,7 +533,7 @@
                                       ng-model="value.entryDate"
                                       ng-focus="lc.slctxn(value, txn, $event)">
                                     </td>
-                                    <td class="col-xs-5">
+                                    <td class="col-xs-7">
                                       <input class="form-control" type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
@@ -653,7 +653,7 @@
                   type="number" 
                   ng-model="lc.selectedTxn.rate" 
                   ng-change="lc.selectedTxn.amount = lc.selectedTxn.inventory.quantity*lc.selectedTxn.rate"
-                  style="max-width:64px;border:0;">
+                  style="max-width:64px;">
               </label>
             </div>
             <div class="mrT1 clearfix" style="clear:both" ng-if="lc.taxList.length > 0">
@@ -704,13 +704,13 @@
               </div>
             </div>
           </div>
-          <div class="clearfix" ng-if="canUpdate">
+          <div class="clearfix btn-row" ng-if="canUpdate">
 
             <button accesskey="x" ng-if="(lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="lc.addBlankTxn('DEBIT', lc.selectedLedger)">Add in DR</button>
             <button accesskey="c" ng-if="(lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="lc.addBlankTxn('CREDIT', lc.selectedLedger)">Add in CR</button>
-            <button id="saveUpdate" class="pull-left mrR1 btn btn-sm btn-success min150" ng-click="lc.saveUpdateLedger(lc.selectedLedger)" ng-disabled="doingEntry">
+            <button id="saveUpdate" class="pull-left mrR1 btn btn-sm btn-success" ng-click="lc.saveUpdateLedger(lc.selectedLedger)" ng-disabled="doingEntry">
               <span ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') || lc.selectedLedger.isBankTransaction == true">Save</span>
-              <span class="btn-primary" ng-if="(lc.selectedLedger.uniqueName != undefined && lc.selectedLedger.uniqueName != '') && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)">Update</span>
+              <span ng-if="(lc.selectedLedger.uniqueName != undefined && lc.selectedLedger.uniqueName != '') && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)">Update</span>
             </button>
             <button ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') && ((lc.selectedLedger.transactions[0].particular.uniqueName != '' && lc.selectedLedger.transactions[0].particular.uniqueName != undefined) || (lc.selectedLedger.transactions[1].particular.uniqueName != '' && lc.selectedLedger.transactions[1].particular.uniqueName != undefined)) && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default mrL1" ng-click="lc.resetLedger()">Reset</button>
             <i ng-if="(lc.selectedLedger.uniqueName != undefined && lc.selectedLedger.uniqueName != '') && lc.selectedLedger.invoiceGenerated == false && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right glyphicon glyphicon-trash mrR1 pos-abs" uib-tooltip="Delete" tooltip-placement="left" style="top:9px;right:1px;color:#d35f29;" ng-click="lc.deleteEntryConfirm(lc.selectedLedger);lc.deleteMultipleTransactions()" uib-tooltip=""></i>
