@@ -6,7 +6,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.pageLoader = false
   #date time picker code starts here
   lc.today = new Date()
-  d = moment(new Date()).subtract(1, 'month')
+  d = moment(new Date()).subtract(7, 'month')
   lc.fromDate = {date: d._d}
   lc.toDate = {date: new Date()}
   lc.fromDatePickerIsOpen = false
@@ -721,7 +721,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             crObj.accountUniqueName = $rootScope.selectedAccount.uniqueName
             crObj.company = $rootScope.selectedCompany.uniqueName
             crObj.transactions = []
-            lc.dLedgerContainer.add(crObj, lc.pageCount)
+            lc.dLedgerContainer.add(crObj)
           lc.dLedgerContainer.ledgerData[ledger.uniqueName].transactions.push(txn)
           lc.drMatch = lc.scrollMatchObject(lc.dLedgerContainer.ledgerData[ledger.uniqueName], 'dr')
         else
@@ -736,7 +736,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             crObj.accountUniqueName = $rootScope.selectedAccount.uniqueName
             crObj.company = $rootScope.selectedCompany.uniqueName
             crObj.transactions = []
-            lc.cLedgerContainer.add(crObj, lc.pageCount)
+            lc.cLedgerContainer.add(crObj)
           lc.cLedgerContainer.ledgerData[ledger.uniqueName].transactions.push(txn)
           lc.crMatch = lc.scrollMatchObject(lc.cLedgerContainer.ledgerData[ledger.uniqueName], 'cr')
         else
@@ -2028,8 +2028,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     toastr.error(res.data.message, res.data.status)
 
   lc.removeDeletedLedger = (item) ->
-    delete lc.dLedgerContainer.ledgerData[item.uniqueName]
-    delete lc.cLedgerContainer.ledgerData[item.uniqueName]
+    lc.dLedgerContainer.remove(item.uniqueName)
+    lc.cLedgerContainer.remove(item.uniqueName)
     # index = 0
     # _.each lc.ledgerData.ledgers, (led, idx ) ->
     #   if led.uniqueName == item.uniqueName
@@ -2296,12 +2296,16 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.checkCompEntry(ledger)
     angular.copy(ledger,lc.ledgerBeforeEdit)
     lc.isTransactionContainsTax(ledger)
+    console.log lc.prevLedger.uniqueName, ledger.uniqueName
     if lc.prevLedger.uniqueName != ledger.uniqueName
+      if lc.cLedgerContainer.ledgerData[lc.prevLedger.uniqueName] && lc.cLedgerContainer.ledgerData[lc.prevLedger.uniqueName].isExtra
+        lc.cLedgerContainer.remove(lc.prevLedger)
+        console.log "RemovedCR: ", lc.prevLedger.uniqueName
+      if lc.dLedgerContainer.ledgerData[lc.prevLedger.uniqueName] && lc.dLedgerContainer.ledgerData[lc.prevLedger.uniqueName].isExtra
+        lc.dLedgerContainer.remove(lc.prevLedger)
+        console.log "RemovedDR: ", lc.prevLedger.uniqueName
       lc.prevLedger = ledger
-    if lc.cLedgerContainer.ledgerData['0']
-      delete lc.cLedgerContainer.ledgerData['0']
-    if lc.dLedgerContainer.ledgerData['0']
-      delete lc.dLedgerContainer.ledgerData['0']
+
     if e
       e.stopPropagation()
 
@@ -2405,6 +2409,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     this.lastLedger = null
     return this
 
+  lc.ledgerContainer.prototype.add = (o) -> 
+    if ! this.ledgerData.hasOwnProperty(o.uniqueName)
+      this.trCount += o.transactions.length
+      this.ledgerData[o.uniqueName] = o
+    return
+
   lc.ledgerContainer.prototype.add = (o, count) -> 
     if ! this.ledgerData.hasOwnProperty(o.uniqueName)
       this.trCount += o.transactions.length
@@ -2436,7 +2446,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     topKey = null
     ref = Object.keys(this.ledgerData)
     for key in ref
-      if this.ledgerData[key].index < least
+      if !this.ledgerData[key].isExtra && this.ledgerData[key].index < least
         least = this.ledgerData[key].index
         topKey = key
     return this.ledgerData[topKey]
@@ -2446,14 +2456,20 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     bottomKey = null
     ref = Object.keys(this.ledgerData)
     for key in ref
-      if this.ledgerData[key].index > last
+      if !this.ledgerData[key].isExtra && this.ledgerData[key].index > last
         last = this.ledgerData[key].index
         bottomKey = key
     return this.ledgerData[bottomKey]
 
-  lc.ledgerContainer.prototype.remove = (o) -> 
-    delete this.ledgerData[o.uniqueName]
-    this.trCount -= o.transactions.length
+  lc.ledgerContainer.prototype.remove = (o) ->
+    if (typeof(o) == 'object') 
+      this.trCount -= o.transactions.length
+      delete this.ledgerData[o.uniqueName]
+    
+    if (typeof(o) == 'string') 
+      this.trCount -= this.ledgerData[o].transactions.length
+      delete this.ledgerData[o]
+    
     return
 
   lc.ledgerContainer.prototype.removeTop = () -> 
@@ -2544,11 +2560,15 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       searchReq.onsuccess = (e) ->
         if e.target.result
           if type == 'CR'
-            lc.cLedgerContainer.ledgerData['0'] = e.target.result
-            lc.crMatch = lc.scrollMatchObject(e.target.result, 'cr')
+            crObj = e.target.result
+            crObj.isExtra = true
+            lc.cLedgerContainer.add(crObj)
+            lc.crMatch = lc.scrollMatchObject(crObj, 'cr')
           else if type == 'DR'
-            lc.dLedgerContainer.ledgerData['0'] = e.target.result
-            lc.drMatch = lc.scrollMatchObject(e.target.result, 'dr')
+            drObj = e.target.result
+            drObj.isExtra = true
+            lc.dLedgerContainer.add(drObj)
+            lc.drMatch = lc.scrollMatchObject(drObj, 'dr')
 
     lc.dbConfig.onerror = (e) ->
       e
@@ -2558,11 +2578,17 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.getMatchingTxn = (ledger, type) ->
     if type == 'CR'
-      lc.crMatch = lc.scrollMatchObject(lc.cLedgerContainer.ledgerData[ledger.uniqueName], 'cr')
+      if lc.cLedgerContainer.ledgerData[ledger.uniqueName]
+        lc.crMatch = lc.scrollMatchObject(lc.cLedgerContainer.ledgerData[ledger.uniqueName], 'cr')
+      else
+        lc.getMatchingTxnFromIdb(ledger, type)
       # if !lc.crMatch
       #   lc.getMatchingTxnFromIdb(ledger, type)
     else if type == 'DR'
-      lc.drMatch = lc.scrollMatchObject(lc.dLedgerContainer.ledgerData[ledger.uniqueName], 'dr')
+      if lc.dLedgerContainer.ledgerData[ledger.uniqueName]
+        lc.drMatch = lc.scrollMatchObject(lc.dLedgerContainer.ledgerData[ledger.uniqueName], 'dr')
+      else
+        lc.getMatchingTxnFromIdb(ledger, type)
       # if !lc.drMatch
       #   lc.getMatchingTxnFromIdb(ledger, type)
 
