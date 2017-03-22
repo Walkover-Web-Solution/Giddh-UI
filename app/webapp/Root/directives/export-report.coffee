@@ -404,9 +404,10 @@ angular.module('trialBalance', []).directive('exportReport', [
       if newVal && newVal.to && newVal != oldVal && newVal.to.transactions.length && newVal.to.uniqueName
         a = $("#" + newVal.first.uniqueName).offset().top
         x = $("#" + newVal.to.uniqueName).offset().top
+        scrollVal = x-a
         console.log x-a, a, x
         $(elem).animate({
-            scrollTop: x-a
+            scrollTop: scrollVal
         }, 200)
       # if newVal && newVal != oldVal && newVal.transactions.length && newVal.uniqueName
       #   x = $("#" + newVal.uniqueName).offset().top
