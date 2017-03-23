@@ -4,13 +4,11 @@
 	</div>
 	<div ng-if="!ctrl.showTemplate" class="clearfix">
 		<div class="template_list" ng-repeat="value in ctrl.templateList" ng-if="value.type == 'proforma'">
-			<a href="javascript:void(0)" class="thumbnail" style="min-height:225px;">
+			<a href="javascript:void(0)" class="thumbnail" style="min-height:181px;">
 				<div class="caption">
 				<div class="templateInfo">
 					<!-- <label>Template for {{value.type}}</label> -->
 					<h3 class="lead templateName alC" ng-bind-html="value.name"></h3>
-
-					<h2 ng-show="value.isFixed" class="mrT" style="margin-bottom: 40px;">Fixed</h2>
 
 					<div class="mrT1 alC switch_state">
 		              <div ng-click="ctrl.setDefTemp(value)" class="switch_div">
@@ -39,6 +37,8 @@
 					</div>
 
 					<div class="template_action">
+<!-- 					<h2 ng-show="value.isFixed" class="mrT">Fixed</h2> -->
+					<button ng-disabled="value.isFixed" ng-show="value.isFixed" class="btn btn-default mrB1">Fixed</button>
 	                <button ng-click="ctrl.deleteTemplate(value)" ng-disabled="value.isDefault" ng-if="!value.isFixed" class="btn btn-default mrB1">Delete</button>
 	                <button ng-click="ctrl.getTemplate(value, 'update')" ng-if="!value.isFixed" class="btn btn-default">Edit</button>
               		</div>

@@ -3,12 +3,12 @@
   <uib-tabset justified="false" class="childTab">
 
 
-       <label class="pos-abs filter-btn mrB1" ng-click="flyDiv = !flyDiv">
-      Filters <span class="icon-options"></span>
+       <label class="pos-abs filter-btn mrB1" ng-click="flyDiv = !flyDiv" ng-hide="hideFilters">
+      <label>Filters</label> <span class="icon-options"></span>
     </label>
 
     <!-- view all proforma-->
-    <uib-tab heading="View All" class="background-transparent" ng-click="applyFilters()">
+    <uib-tab heading="View All" class="background-transparent" ng-click="applyFilters()" select = "setTab(0)">
       
       <div class="proforma-list pdT2 container-fluid" ng-class="{pdT:!showFilters}">
 
@@ -195,7 +195,7 @@
 
 
     <!--create proforma-->
-    <uib-tab heading="Create" class="background-transparent" select="getTemplates()">
+    <uib-tab heading="Create" class="background-transparent" select="getTemplates(); setTab(1)">
       
 
         <div class="create-proforma y-scroll" cover-page>
@@ -436,7 +436,7 @@
 
 
 
-    <uib-tab heading="Template" class="background-transparent">
+    <uib-tab heading="Template" class="background-transparent" select="setTab(2)">
         <div class="y-scroll" ng-include="'/public/webapp/Settings/proforma-temp.html'" style="padding-bottom:50px;" cover-page></div>
     </uib-tab>
     
