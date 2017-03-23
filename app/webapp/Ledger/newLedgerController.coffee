@@ -34,42 +34,42 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   };
 
   $scope.singleDate = moment()
-  $scope.opts = {
-      locale:
-        applyClass: 'btn-green'
-        applyLabel: 'Apply'
-        fromLabel: 'From'
-        format: 'D-MMM-YY'
-        toLabel: 'To'
-        cancelLabel: 'Cancel'
-        customRangeLabel: 'Custom range'
-      ranges:
-        'Last 1 Day': [
-          moment().subtract(1, 'days')
-          moment()
-        ]
-        'Last 7 Days': [
-          moment().subtract(6, 'days')
-          moment()
-        ]
-        'Last 30 Days': [
-          moment().subtract(29, 'days')
-          moment()
-        ]
-        'Last 6 Months': [
-          moment().subtract(6, 'months')
-          moment()
-        ]
-        'Last 1 Year': [
-          moment().subtract(12, 'months')
-          moment()
-        ]
-      eventHandlers : {
-        'apply.daterangepicker' : (e, picker) ->
-          $scope.cDate.startDate = e.model.startDate._d
-          $scope.cDate.endDate = e.model.endDate._d
-      }
-  }
+  # $scope.opts = {
+  #     locale:
+  #       applyClass: 'btn-green'
+  #       applyLabel: 'Apply'
+  #       fromLabel: 'From'
+  #       format: 'D-MMM-YY'
+  #       toLabel: 'To'
+  #       cancelLabel: 'Cancel'
+  #       customRangeLabel: 'Custom range'
+  #     ranges:
+  #       'Last 1 Day': [
+  #         moment().subtract(1, 'days')
+  #         moment()
+  #       ]
+  #       'Last 7 Days': [
+  #         moment().subtract(6, 'days')
+  #         moment()
+  #       ]
+  #       'Last 30 Days': [
+  #         moment().subtract(29, 'days')
+  #         moment()
+  #       ]
+  #       'Last 6 Months': [
+  #         moment().subtract(6, 'months')
+  #         moment()
+  #       ]
+  #       'Last 1 Year': [
+  #         moment().subtract(12, 'months')
+  #         moment()
+  #       ]
+  #     eventHandlers : {
+  #       'apply.daterangepicker' : (e, picker) ->
+  #         $scope.cDate.startDate = e.model.startDate._d
+  #         $scope.cDate.endDate = e.model.endDate._d
+  #     }
+  # }
   # $scope.setStartDate = ->
   #   $scope.cDate.startDate = moment().subtract(4, 'days').toDate()
 
@@ -867,9 +867,19 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     voucherNo:null
   }
 
-  lc.isSelectedAccount = () ->
-    $rootScope.selectedAccount = localStorageService.get('_selectedAccount')
-    lc.accountToShow = $rootScope.selectedAccount
+  # lc.isSelectedAccount = () ->
+  #   #$rootScope.selectedAccount = localStorageService.get('_selectedAccount')
+  #   if _.isEmpty($rootScope.selectedAccount)
+  #     lc.accountToShow = $rootScope.selectedAccount
+  #   else
+  #     cash = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:'cash'})
+  #     if cash
+  #       #$state.go('company.content.ledgerContent', {uniqueName:'cash'}, {notify: false})
+  #       lc.getAccountDetail('cash')
+  #     else
+  #       #$state.go('company.content.ledgerContent', {uniqueName:'sales'}, {notify: false})
+  #       lc.getAccountDetail('sales')
+
     # if _.isUndefined($rootScope.selectedAccount) || _.isNull($rootScope.selectedAccount)
     #   $rootScope.selectedAccount = lc.accountUnq
     #   lc.accountToShow = lc.accountUnq
@@ -1036,12 +1046,25 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     toastr.error(res.data.message, res.data.status)
 
   lc.getAccountDetailSuccess = (res) ->
+    localStorageService.set('_selectedAccount', res.body)
+    $rootScope.selectedAccount = res.body
+    lc.getLedgerData(true)
     if res.body.yodleeAdded == true && $rootScope.canUpdate
       #get bank transaction here
       $timeout ( ->
         lc.getBankTransactions(res.body.uniqueName)
       ), 2000
-      
+
+  lc.loadDefaultAccount = () ->
+    cash = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:'cash'})
+    if cash
+      #$state.go('company.content.ledgerContent', {uniqueName:'cash'}, {notify: false})
+      lc.accountUnq = 'cash'
+      lc.getAccountDetail(lc.accountUnq)
+    else
+      #$state.go('company.content.ledgerContent', {uniqueName:'sales'}, {notify: false})
+      lc.accountUnq = 'sales'
+      lc.getAccountDetail(lc.accountUnq)    
 
   lc.getBankTransactions = (accountUniqueName) ->
     unqObj = {
@@ -1181,7 +1204,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.showLoader = showLoaderCondition || true
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
-    lc.getAccountDetail(lc.accountUnq)
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: lc.accountUnq
@@ -1387,12 +1409,17 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #     lc.selectedTaxes = _.without(lc.selectedTaxes, tax)
 #    item.sharedData.taxes = lc.selectedTaxes
 
-  lc.isSelectedAccount()
-  lc.getLedgerData(true)
+  #lc.isSelectedAccount()
 
   $timeout ( ->
     lc.getTaxList()
+
   ), 2000
+
+  if lc.accountUnq
+    lc.getAccountDetail(lc.accountUnq)
+  else
+    lc.loadDefaultAccount()  
 
   # lc.flatAccListC5 = {
   #     page: 1
@@ -2320,10 +2347,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.prevTxn.isOpen = false
     return 0
 
-  $rootScope.$on('account-selected', ()->
-    lc.isSelectedAccount()
-    #$rootScope.$emit('catchBreadcumbs', lc.accountToShow.name)
-  )
+  # $rootScope.$on('account-selected', ()->
+  #   lc.getAccountDetail(lc.accountUnq)
+  #   #lc.isSelectedAccount()
+  #   #$rootScope.$emit('catchBreadcumbs', lc.accountToShow.name)
+  # )
 
   lc.commonOnUpgrade = (db) ->
     if db.objectStoreNames.contains('ledgers')
@@ -2556,6 +2584,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if lc.showLogs
       console.log arguments
 
+  lc.uploadInvoiceImg = (files, type) ->
+    console.log files, type
 
   return lc
 giddh.webApp.controller 'newLedgerController', newLedgerController

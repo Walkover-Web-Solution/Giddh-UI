@@ -581,6 +581,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.$on('openAddManage', () ->
     $(document).find('#AddManage').trigger('click')
+    return false
   )
 
   $scope.showAccounts = (e) ->
@@ -685,6 +686,15 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
     $rootScope.$emit('account-selected')
+    return false
+
+  # $scope.goToLedgerCash = () ->
+  #   $state.go('company.content.ledgerContent',{unqName:'cash'})
+
+  $rootScope.toggleAcMenus = () ->
+    _.each $scope.flatAccntWGroupsList, (grp) ->
+      grp.open = !grp.open
+
 
   $(document).on('click', (e)->
     $rootScope.flyAccounts = false
