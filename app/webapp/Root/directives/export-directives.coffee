@@ -635,6 +635,28 @@ angular.module('exportDirectives', [])
             scope.accordion.collapseAll()
     }
 ])
+
+.directive 'selectOnClick', [
+  '$window'
+  ($window) ->
+    # Linker function
+    (scope, element, attrs) ->
+      element.bind 'click', ->
+        if !$window.getSelection().toString()
+          @setSelectionRange 0, @value.length
+]
+
+# module.directive('selectOnClick', ['$window', function ($window) {
+#   // Linker function
+#   return function (scope, element, attrs) {
+#     element.bind('click', function () {
+#       if (!$window.getSelection().toString()) {
+#         this.setSelectionRange(0, this.value.length)
+#       }
+#     });
+#   };
+# }]);
+
 .directive('clearSearch',[
   '$rootScope'
   '$compile'
