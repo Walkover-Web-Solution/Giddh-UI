@@ -35,9 +35,13 @@
           <div class="form-inline pdB1 ledgHead">
 
           <!-- ledger search -->
-            <div class="form-group mrR2 pull-left pos-rel" >
+<!--             <div  >
               <input type="search" class="form-control" placeholder="Search ledger" ng-model="particularSearch" ng-keyup="countTotalTransactionsAfterSomeTime()" ng-model-options="{debounce: 1000}">
               <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
+            </div> -->
+            <div class="form-group mrR2 pull-left pos-rel" >
+              <input type="search" class="form-control" placeholder="Search ledger" ng-model="lc.query" ng-keyup="lc.countTotalTransactionsAfterSomeTime()" ng-model-options="{debounce: 1000}" ng-change="lc.filterLedgers(lc.accountToShow.uniqueName, lc.query, 1)" ng-disabled="!lc.readLedgersFinished">
+             <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
             </div>
 
             <form name="fromToDateForm" style="width: 300px;" novalidate class="form-group mrR1 pull-left">
@@ -207,8 +211,8 @@
               <thead>
                 <tr class="t-h-bg1">
 
-                  <th class="col-xs-6">Debit - <span class="accountName">{{lc.accountUnq.name}}</span> is receiving</th>
-                  <th class="col-xs-6">Credit - <span class="accountName">{{lc.accountUnq.name}}</span> is giving</th>
+                  <th class="col-xs-6">Debit - <span class="accountName">{{lc.accountUnq}}</span> is receiving</th>
+                  <th class="col-xs-6">Credit - <span class="accountName">{{lc.accountUnq}}</span> is giving</th>
 
                 </tr>
               </thead>
@@ -638,6 +642,7 @@
               <button class="btn btn-sm" ng-click="lc.selectedLedger.applyApplicableTaxes = !lc.selectedLedger.applyApplicableTaxes" ng-class="{'btn-primary' : lc.selectedLedger.applyApplicableTaxes == true, 'btn-default' : lc.selectedLedger.applyApplicableTaxes == false}" tabindex="0"  ng-if="lc.taxList.length > 0">
                 <span>Tax as per account</span>
               </button>
+              <input type="file" />
               <!--<label>-->
                 <!--<input type="checkbox" ng-model="lc.selectedLedger.applyApplicableTaxes">Applied taxes-->
               <!--</label>-->

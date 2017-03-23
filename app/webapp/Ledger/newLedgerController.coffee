@@ -157,8 +157,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   }
   ################################### indexedDB functions ############################
 
-  lc.drLoadCompleted = false
-  lc.crLoadCompleted = false
+  lc.showLogs = true
+  lc.readLedgersFinished = false
   lc.filteredLedgers = []
   lc.totalLedgers = 0
   lc.savedLedgers = 0
@@ -185,6 +185,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.dNonemptyTxn = 0
     lc.savedLedgers = 0
     lc.isLedgerSeeded = false
+    drTransSeeded = false
+    crTransSeeded = false
     lc.dbConfig.success = (e) ->
       db = e.target.result
       search = db.transaction([ 'ledgers' ], 'readwrite').objectStore('ledgers')
@@ -244,9 +246,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
         drTrans = db.transaction([ 'drTransactions' ], 'readwrite')
         drTrans.oncomplete = (e) ->
-          drSavedLedgersCount = lc.savedLedgers
-          if drSavedLedgersCount == lc.savedLedgers && crSavedLedgersCount == lc.savedLedgers
-            lc.isLedgerSeeded = true
+          drTransSeeded = true
+          if crTransSeeded
+            lc.onLedgerSeeded()
         drOS = drTrans.objectStore('drTransactions')
         drOS.delete(keyRange)
         drObjs.forEach (drOb) -> 
@@ -261,9 +263,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             return
         crTrans = db.transaction([ 'crTransactions' ], 'readwrite')
         crTrans.oncomplete = (e) ->
-          crSavedLedgersCount = lc.savedLedgers
-          if drSavedLedgersCount == lc.savedLedgers && crSavedLedgersCount == lc.savedLedgers
-            lc.isLedgerSeeded = true
+          crTransSeeded = true
+          if drTransSeeded
+            lc.onLedgerSeeded()
+
         crOS = crTrans.objectStore('crTransactions')
         crOS.delete(keyRange)
         crObjs.forEach (crOb) -> 
@@ -296,27 +299,41 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       
     dbInstance = idbService.openDb(lc.dbConfig)
 
+  lc.onLedgerSeeded = () ->
+    lc.cLedgerContainer = new lc.ledgerContainer()
+    lc.dLedgerContainer = new lc.ledgerContainer()
+    lc.readLedgers($rootScope.selectedAccount.uniqueName, 1, 'next')
+    lc.isLedgerSeeded = false
+    lc.showLoader = false
+
+
   ###read ledgers ###
-  lc.ledgersUpdated = false
   lc.readLedgers = (accountname, page, pos, type) ->
-    lc.ledgersUpdated = false
-    # lc.filtered = []
-    # lc.tempLedgers = []
-    # lc.filterPage = 1
+    lc.readLedgersFinished = false
     type = type || null
+    if type == null 
+      drLoadCompleted = false
+      crLoadCompleted = false
+    else if type == 'dr'
+      crLoadCompleted = true
+    else if type == 'cr'
+      drLoadCompleted = true
     lc.dbConfig.success = (e) ->
       db = e.target.result
       #console.log "Inside readledgers."
 
       #DEBIT READ STARTS
       if type == 'dr' || type == null
-        lc.drLoadCompleted = false
         keyAndDir = lc.generateKeyRange(accountname, lc.dLedgerContainer, lc.sortOrder.debit, pos)
 
         drTrCount = 0
         drTrans = db.transaction([ 'drTransactions' ], 'readonly')
         drTrans.oncomplete = (e) ->
-          lc.drLoadCompleted = true
+          drLoadCompleted = true
+          if crLoadCompleted
+            $scope.$apply ()->
+              lc.readLedgersFinished = true
+
           return
         drOS = drTrans.objectStore('drTransactions')
         drSearch = drOS.index('company+accountUniqueName+index', true).openCursor(keyAndDir.keyRange, keyAndDir.scrollDir)
@@ -340,14 +357,16 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
       #CREDIT READ STARTS
       if type == 'cr' || type == null
-        lc.crLoadCompleted = false
         keyAndDir = lc.generateKeyRange(accountname, lc.cLedgerContainer, lc.sortOrder.credit, pos)
 
         crTrCount = 0
         pos = pos || 'next'
         crTrans = db.transaction([ 'crTransactions' ], 'readonly')
         crTrans.oncomplete = (e) ->
-          lc.crLoadCompleted = true
+          crLoadCompleted = true
+          if drLoadCompleted
+            $scope.$apply ()->
+              lc.readLedgersFinished = true
           return
         crOS = crTrans.objectStore('crTransactions')
         crSearch = crOS.index('company+accountUniqueName+index', true).openCursor(keyAndDir.keyRange, keyAndDir.scrollDir)
@@ -384,18 +403,28 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     return
 
   lc.readLedgersFiltered = (accountUniqueName, page, pos, type) ->
+    lc.readLedgersFinished = false
     type = type || null
+    if type == null 
+      drLoadCompleted = false
+      crLoadCompleted = false
+    else if type == 'dr'
+      crLoadCompleted = true
+    else if type == 'cr'
+      drLoadCompleted = true
     lc.dbConfig.success = (e) ->
       db = e.target.result
       #DEBIT READ STARTS
       if type == 'dr' || type == null
-        lc.drLoadCompleted = false
         keyAndDir = lc.generateKeyRange(accountUniqueName, lc.dLedgerContainer, lc.sortOrder.debit, pos)
 
         drTrCount = 0
         drTrans = db.transaction([ 'drTransactions' ], 'readonly')
         drTrans.oncomplete = () ->
-          lc.drLoadCompleted = true
+          drLoadCompleted = true
+          if crLoadCompleted
+            $scope.$apply ()->
+              lc.readLedgersFinished = true
           return
         drOS = drTrans.objectStore('drTransactions')
         drSearch = drOS.index('company+accountUniqueName+index', true).openCursor(keyAndDir.keyRange, keyAndDir.scrollDir)
@@ -420,13 +449,15 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
       #CREDIT READ STARTS
       if type == 'cr' || type == null
-        lc.crLoadCompleted = false
         keyAndDir = lc.generateKeyRange(accountUniqueName, lc.cLedgerContainer, lc.sortOrder.credit, pos)
 
         crTrCount = 0
         crTrans = db.transaction([ 'crTransactions' ], 'readonly')
         crTrans.oncomplete = (e) ->
-          lc.crLoadCompleted = true
+          crLoadCompleted = true
+          if drLoadCompleted
+            $scope.$apply ()->
+              lc.readLedgersFinished = true
           return
         crOS = crTrans.objectStore('crTransactions')
         crSearch = crOS.index('company+accountUniqueName+index', true).openCursor(keyAndDir.keyRange, keyAndDir.scrollDir)
@@ -510,14 +541,23 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     idbService.openDb lc.dbConfig
     return
 
-  $scope.$watch('lc.isLedgerSeeded', (newVal, oldVal)->
-    if( !oldVal && newVal)
-      lc.cLedgerContainer = new lc.ledgerContainer()
-      lc.dLedgerContainer = new lc.ledgerContainer()
-      lc.readLedgers($rootScope.selectedAccount.uniqueName, 1, 'next')
-    lc.isLedgerSeeded = false
-    lc.showLoader = false
-  )
+  # $scope.$watch('lc.isLedgerSeeded', (newVal, oldVal)->
+  #   if( !oldVal && newVal)
+  #     lc.cLedgerContainer = new lc.ledgerContainer()
+  #     lc.dLedgerContainer = new lc.ledgerContainer()
+  #     lc.readLedgers($rootScope.selectedAccount.uniqueName, 1, 'next')
+  #   lc.isLedgerSeeded = false
+  #   lc.showLoader = false
+  # )
+
+  # $scope.$watch('lc.readLedgersFinished', (newVal, oldVal) -> 
+  #   if ( newVal && !oldVal )
+  #     lc.log "Read Ledgers Finished."
+  #     # $scope.$apply()
+  #     lc.readLedgersFinished = false
+  #   else if !newVal && !oldVal
+  #     lc.readLedgersFinished = false
+  # )
 
   # $scope.$watch('lc.savedLedgers', (newVal, oldVal)->
   #   if(newVal > 0 && newVal == lc.totalLedgers)
@@ -528,19 +568,19 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.onScrollDebit = (sTop, sHeight, pos) ->
     if !lc.query
       lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos, 'dr'
-      $scope.$apply()
+      # $scope.$apply()
     else if lc.query
       lc.readLedgersFiltered $rootScope.selectedAccount.uniqueName, lc.page, pos, 'dr'
-      $scope.$apply()
+      # $scope.$apply()
     return
 
   lc.onScrollCredit = (sTop, sHeight, pos) ->
     if !lc.query
       lc.readLedgers $rootScope.selectedAccount.uniqueName, lc.page, pos, 'cr'
-      $scope.$apply()
+      # $scope.$apply()
     else if lc.query
       lc.readLedgersFiltered $rootScope.selectedAccount.uniqueName, lc.page, pos, 'cr'
-      $scope.$apply()
+      # $scope.$apply()
     return
 
   lc.filterLedgers = (accountname, query, page) ->
@@ -2497,7 +2537,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       # if !lc.drMatch
       #   lc.getMatchingTxnFromIdb(ledger, type)
 
-  lc.scrollMatchObject = (to, type) -> 
+  lc.scrollMatchObject = (to, type) ->
     first = null
     if type == 'dr'
       if lc.sortOrder.debit == lc.sortDirection.desc
@@ -2510,6 +2550,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       else
         first = lc.cLedgerContainer.top()
     return {"first": first, "to": to}
+
+
+  lc.log = () -> 
+    if lc.showLogs
+      console.log arguments
 
 
   return lc

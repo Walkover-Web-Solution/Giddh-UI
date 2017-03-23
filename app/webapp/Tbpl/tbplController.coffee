@@ -863,6 +863,19 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
         total += obj.closingBalance.amount
     total
 
+  $scope.getBalanceSheetData = () ->
+    @success = (res) ->
+      console.log res
+    @failure = (res) ->
+      console.log res
+    reqParam = {
+      'companyUniqueName': $rootScope.selectedCompany.uniqueName
+      'refresh': false
+    }
+    trialBalService.getBalSheet(reqParam).then(@success, @failure)
+
+  #$scope.getBalanceSheetData()
+
   $scope.$on 'company-changed' , (event, data) ->
     if data.type == 'CHANGE'
       $state.reload()

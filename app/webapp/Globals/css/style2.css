@@ -917,9 +917,11 @@ input[type="checkbox"]:after {
 }
 .ledger-panel .btn-success {
     background: #3fab63;
+    border-color: #349655;
 }
 .ledger-panel .btn-success:hover {
     background: #57C17A;
+    border-color: #349655;
 }
 .btn-row {
     margin-top: 14px;
