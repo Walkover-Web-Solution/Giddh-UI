@@ -384,9 +384,7 @@ app.run [
 
     if isIE()
       $rootScope.browserIE = true
-      location.pathname = '/global'
-    else
-      console.log "it is not ie"
+      window.location.pathname = '/IE' 
 ]
   
 
