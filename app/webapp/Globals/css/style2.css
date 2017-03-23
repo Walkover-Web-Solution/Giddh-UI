@@ -927,3 +927,7 @@ input[type="checkbox"]:after {
 a, button, input {
     outline: none;
 }
+.Inpt_dwn {
+    padding-right: 25px !important;
+    text-align: right;
+}
