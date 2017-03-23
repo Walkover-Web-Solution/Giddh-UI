@@ -149,24 +149,25 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
     $rootScope.$emit('account-selected')
+    return false
 
 
   #Expand or  Collapse all account menus
-  $scope.toggleAcMenus = (state) ->
-    if !_.isEmpty($scope.flatAccntWGroupsList)
-      _.each($scope.flatAccntWGroupsList, (e) ->
-        e.open = state
-        $scope.showSubMenus = state
-      )
+  # $scope.toggleAcMenus = (state) ->
+  #   if !_.isEmpty($scope.flatAccntWGroupsList)
+  #     _.each($scope.flatAccntWGroupsList, (e) ->
+  #       e.open = state
+  #       $scope.showSubMenus = state
+  #     )
 
   # trigger expand or collapse func
-  $scope.checkLength = (val)->
-    if val is '' || _.isUndefined(val)
-      $scope.toggleAcMenus(false)
-    else if val.length >= 4
-      $scope.toggleAcMenus(true)
-    else
-      $scope.toggleAcMenus(false)
+  # $scope.checkLength = (val)->
+  #   if val is '' || _.isUndefined(val)
+  #     $scope.toggleAcMenus(false)
+  #   else if val.length >= 4
+  #     $scope.toggleAcMenus(true)
+  #   else
+  #     $scope.toggleAcMenus(false)
   # end acCntrl
 
   $scope.getGroups =() ->

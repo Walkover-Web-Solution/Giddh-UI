@@ -81,7 +81,7 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
     $scope.$broadcast('company-changed', changeData)
     $scope.showSuccessMsg = true
     WizardHandler.wizard().next()
-    $state.go('company.content.ledgerContent',{unqName:'cash'})
+    $state.go('company.content.ledgerContent')
     $rootScope.setupModalInstance.close()
 
   #create company failure
