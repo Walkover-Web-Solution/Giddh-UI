@@ -631,11 +631,11 @@ input[type="checkbox"]:after {
     padding: 7px 4px;
 }*/
 .switch.wide.checked small {
-    left: 41px;
+    left: 31px;
     background: #fff;
 }
 .switch.wide {
-    width: 73px;
+    width: 62px;
     height: 34px;
 }
 .switch {
@@ -663,7 +663,7 @@ input[type="checkbox"]:after {
     display: none;
 }
 .switch_div {
-    max-width: 100px;
+    max-width: 80px;
     float: left;
     width: 100%;
 }
