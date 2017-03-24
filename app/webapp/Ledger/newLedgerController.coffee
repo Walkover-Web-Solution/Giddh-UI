@@ -1048,6 +1048,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.getAccountDetailSuccess = (res) ->
     localStorageService.set('_selectedAccount', res.body)
     $rootScope.selectedAccount = res.body
+    lc.accountToShow = $rootScope.selectedAccount
     lc.getLedgerData(true)
     if res.body.yodleeAdded == true && $rootScope.canUpdate
       #get bank transaction here
@@ -2280,7 +2281,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       txn.isOpen = true
     if lc.prevTxn && lc.prevTxn != txn
       lc.prevTxn.isOpen = false
-    if lc.accountToShow.stock != null && txn.inventory == undefined
+    if lc.accountToShow.stock != null && lc.accountToShow.stock != undefined && txn.inventory == undefined
       txn.inventory = {}
       txn.rate = lc.accountToShow.stock.rate
     if txn.inventory && txn.inventory.quantity
@@ -2585,7 +2586,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       console.log arguments
 
   lc.uploadInvoiceImg = (files, type) ->
-    console.log files, type
+    console.log files
 
   return lc
 giddh.webApp.controller 'newLedgerController', newLedgerController
