@@ -1,7 +1,7 @@
 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  suppress-scroll-x="true">
 
 <!-- active="tab.active" disable="tab.disabled" -->
-<uib-tabset ng-hide="showTbplLoader">
+<uib-tabset>
 
   <uib-tab heading="Trial Balance" active="true">
 
@@ -79,7 +79,7 @@
     <!-- nodata end -->
 
     <!-- loader -->
-    <div class="loader" ng-show="showTbplLoader">
+<!--     <div class="loader" ng-show="showTbplLoader">
       <span></span>
       <span></span>
       <span></span>
@@ -87,7 +87,7 @@
       <span></span>
 
       <h1>loading ledger</h1>
-    </div>
+    </div> -->
 
     <!-- end of row -->
     <div ng-if="!noData">

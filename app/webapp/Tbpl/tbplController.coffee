@@ -852,8 +852,6 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     liabilities = []
     income = []
     expenses = []
-    $scope.balSheet.assets = []
-    $scope.balSheet.liabilities = []
     _.each data, (grp) ->
       switch grp.category
         when 'assets'
