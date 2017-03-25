@@ -6,7 +6,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.pageLoader = false
   #date time picker code starts here
   lc.today = new Date()
-  d = moment(new Date()).subtract(7, 'month')
+  d = moment(new Date()).subtract(1, 'month')
   lc.fromDate = {date: d._d}
   lc.toDate = {date: new Date()}
   lc.fromDatePickerIsOpen = false
@@ -158,7 +158,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   }
   ################################### indexedDB functions ############################
 
-  lc.showLogs = true
+  lc.showLogs = false
   lc.readLedgersFinished = false
   lc.filteredLedgers = []
   lc.totalLedgers = 0
@@ -502,10 +502,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
       ledgerTrans = db.transaction([ 'ledgers' ], 'readwrite')
       ledgerTrans.onerror = (e) -> 
-        console.log('transaction error')
+        lc.log('transaction error')
         db.close()
       ledgerTrans.onabort = (e) ->
-        console.log('transaction abort')
+        lc.log('transaction abort')
         db.close()
       ledgerTrans.oncomplete = (e) ->
         lc.readLedgersFiltered(accountUniqueName, page, pos, type)
@@ -520,7 +520,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         # console.log('succ', e)
         cursor = e.target.result
         if cursor
-          if lc.filterByQuery(cursor.value, query)
+          if lc.filterByQueryNew(cursor.value, query)
             lc.filteredLedgers.push cursor.value.index
           cursor.continue()
         return
@@ -585,7 +585,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     return
 
   lc.filterLedgers = (accountname, query, page) ->
-    console.log query
+    lc.log query
     if query
       lc.dLedgerContainer = new lc.ledgerContainer()
       lc.cLedgerContainer = new lc.ledgerContainer()
@@ -607,6 +607,62 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
     idbService.openDb lc.dbConfig
     return
+# {
+#             "transactions": [{
+#                 "particular": {
+#                     "name": "Sales",
+#                     "uniqueName": "sales"
+#                 },
+#                 "amount": 200,
+#                 "inventory": null
+#             }],
+#             "total": {
+#                 "amount": 200,
+#                 },
+#             "invoiceNumber": "",
+#             "entryDate": "25-03-2017",
+#             "voucher": {
+#                 "name": "sales",
+#             },
+#             "voucherNo": 1,
+#             "attachedFile": "",
+#             "description": "",
+#             "tag": ""
+#         }
+
+  lc.filterByQueryNew = (ledger, query) ->
+    for txn in ledger.transactions
+      if ( lc.filterItemByQuery(txn.particular, query) ||
+        lc.filterItemByQuery(txn.amount, query) ||
+        lc.filterItemByQuery(txn.inventory, query)
+      )
+        return true
+    if (
+      lc.filterItemByQuery(ledger.total.amount, query) ||
+      lc.filterItemByQuery(ledger.invoiceNumber, query) ||
+      lc.filterItemByQuery(ledger.entryDate, query) ||
+      lc.filterItemByQuery(ledger.voucher, query) ||
+      lc.filterItemByQuery(ledger.voucherNo, query) ||
+      lc.filterItemByQuery(ledger.attachedFile, query) ||
+      lc.filterItemByQuery(ledger.description, query) ||
+      lc.filterItemByQuery(ledger.tag, query)
+    )
+      return true
+    return false
+
+  lc.filterItemByQuery = (item, query) ->
+    switch typeof item
+      when 'object'
+        for key of item
+          if lc.filterItemByQuery(item[key], query)
+            return true
+      when 'string'
+        if item.toLowerCase().indexOf(query.toLowerCase()) != -1
+          return true
+      when 'number'
+        if item.toString().toLowerCase().indexOf(query.toLowerCase()) != -1
+          return true
+    return false
 
   lc.filterByQuery = (ledger, query) ->
     hasQuery = false
@@ -1230,6 +1286,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.ledgerData.forwardedBalance = res.body.forwardedBalance
     lc.ledgerData.creditTotal = res.body.creditTotal
     lc.ledgerData.debitTotal = res.body.debitTotal
+    lc.ledgerData.reckoningCreditTotal = res.body.creditTotal
+    lc.ledgerData.reckoningDebitTotal = res.body.debitTotal
+    if lc.ledgerData.balance.type == 'DEBIT'
+      lc.ledgerData.reckoningCreditTotal -= lc.ledgerData.balance.amount
+    else if lc.ledgerData.balance.type == 'CREDIT'
+      lc.ledgerData.reckoningDebitTotal -= lc.ledgerData.balance.amount
     lc.addToIdb(res.body.ledgers, $rootScope.selectedAccount.uniqueName)
     # lc.dLedgerData = lc.dLedgerContainer.ledgerData
     # lc.cLedgerData = lc.cLedgerContainer.ledgerData
@@ -2297,14 +2359,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.checkCompEntry(ledger)
     angular.copy(ledger,lc.ledgerBeforeEdit)
     lc.isTransactionContainsTax(ledger)
-    console.log lc.prevLedger.uniqueName, ledger.uniqueName
+    lc.log lc.prevLedger.uniqueName, ledger.uniqueName
     if lc.prevLedger.uniqueName != ledger.uniqueName
       if lc.cLedgerContainer.ledgerData[lc.prevLedger.uniqueName] && lc.cLedgerContainer.ledgerData[lc.prevLedger.uniqueName].isExtra
         lc.cLedgerContainer.remove(lc.prevLedger)
-        console.log "RemovedCR: ", lc.prevLedger.uniqueName
+        lc.log "RemovedCR: ", lc.prevLedger.uniqueName
       if lc.dLedgerContainer.ledgerData[lc.prevLedger.uniqueName] && lc.dLedgerContainer.ledgerData[lc.prevLedger.uniqueName].isExtra
         lc.dLedgerContainer.remove(lc.prevLedger)
-        console.log "RemovedDR: ", lc.prevLedger.uniqueName
+        lc.log "RemovedDR: ", lc.prevLedger.uniqueName
       lc.prevLedger = ledger
 
     if e
