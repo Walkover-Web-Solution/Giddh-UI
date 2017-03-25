@@ -1,32 +1,14 @@
 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  suppress-scroll-x="true">
 
 <!-- active="tab.active" disable="tab.disabled" -->
-<uib-tabset ng-if="!noData" ng-hide="showTbplLoader">
+<uib-tabset ng-hide="showTbplLoader">
+
   <uib-tab heading="Trial Balance" active="true">
-
-    <!-- no data start -->
-    <div class="no-data" ng-show="noData">
-      <h1>Sorry, No Data Found!</h1>
-      <img src="/public/webapp/Globals/images/no-data.png" alt="">
-    </div>
-    <!-- nodata end -->
-
-    <!-- loader -->
-    <div class="loader" ng-show="showTbplLoader">
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-      <span></span>
-
-      <h1>loading ledger</h1>
-    </div>
 
     <!-- <div class="page-loader" ng-show="showTbplLoader">
       <div class="giddh-spinner vertical-center-spinner"></div>
       </div> -->
     <!--  -->
-
     <div class="row pd15">
       <div class="pull-left mrL1">
         <form class="form-inline" name="fromToDateForm" novalidate>
@@ -80,15 +62,35 @@
       <!-- end of coloumn -->
       <div class="tbplList pull-right">
         <ul class="list-inline color-codes pull-right">
-          <li><span class="circle liabilities">Liabilities</span></li>
-          <li><span class="circle assets">Assets</span></li>
-          <li><span class="circle income">Income</span></li>
-          <li><span class="circle expenses">Expenses</span></li>
+          <li><span class="circle liabilities"></span><span>Liabilities</span></li>
+          <li><span class="circle assets"></span><span>Assets</span></li>
+          <li><span class="circle income"></span><span>Income</span></li>
+          <li><span class="circle expenses"></span><span>Expenses</span></li>
         </ul>
       </div>
       <!-- end of second coloumn -->
     </div>
+
+    <!-- no data start -->
+    <div class="no-data" ng-if="noData">
+      <h1>Sorry, No Data Found!</h1>
+      <img src="/public/webapp/Globals/images/no-data.png" alt="">
+    </div>
+    <!-- nodata end -->
+
+    <!-- loader -->
+    <div class="loader" ng-show="showTbplLoader">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+
+      <h1>loading ledger</h1>
+    </div>
+
     <!-- end of row -->
+    <div ng-if="!noData">
     <div class="pd15">
       <div class="row mrB2">
         <div class="form-inline col-xs-6">
@@ -250,6 +252,7 @@
         </section>
       </script>      
       <!-- end template -->
+    </div>
     </div>
     <!-- tab Content Main box end -->
   </uib-tab>
