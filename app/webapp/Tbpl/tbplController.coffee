@@ -1,6 +1,6 @@
 "use strict"
 
-tbplController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window, companyServices, $state) ->
+tbplController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window, companyServices, $state, FileSaver) ->
   tb = this
   $scope.showTbplLoader = true
   $scope.inProfit = true
@@ -59,6 +59,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   }
 
   $scope.hardRefresh = false
+  $scope.bsHardRefresh = false
 
   $scope.fyChecked = false
 
@@ -70,6 +71,28 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
 
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
   $scope.activeFinancialYear = localStorageService.get("activeFY")
+
+  tb.getActiveFinancialYearIndex = (activeFY, financialYears) ->
+    $scope.tempFYIndex = 0
+    _.each financialYears, (fy, index) ->
+      if fy.uniqueName == activeFY.uniqueName
+        if(index == 0)
+          $scope.tempFYIndex = index
+        else
+          $scope.tempFYIndex = index * -1
+    return $scope.tempFYIndex 
+
+  $scope.getFYs = (companyUniqueName) ->
+    @fySuccess = (res) ->
+      $scope.financialYears = res.body.financialYears
+      $scope.activeFYIndex = tb.getActiveFinancialYearIndex($scope.activeFinancialYear, $scope.financialYears)
+    @fyFailure = (res) ->
+      toastr.error(res.data.message)
+    companyServices.getFY(companyUniqueName).then @fySuccess, @fyFailure    
+
+  $scope.activeFYIndex = 0
+  $scope.financialYears = []
+  $scope.getFYs($rootScope.selectedCompany.uniqueName)
 
   # financial year functions
   $rootScope.setActiveFinancialYear($scope.activeFinancialYear)
@@ -108,6 +131,25 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     )
     return Number((eTtl).toFixed(2))
 
+
+  $scope.filterBSData = (data) ->
+    $scope.balSheet.assets = []
+    $scope.balSheet.liabilities = []
+    _.each data, (grp) ->
+      switch grp.category
+        when 'assets'
+          $scope.balSheet.assets.push(grp)
+        when 'liabilities'
+          $scope.balSheet.liabilities.push(grp)
+
+  $scope.makeDataForBS = (data) ->
+    $scope.filterBSData(data.groupDetails)
+    $scope.balSheet.assetTotal = $scope.calCulateTotalAssets($scope.balSheet.assets)
+    $scope.balSheet.liabTotal = $scope.calCulateTotalLiab($scope.balSheet.liabilities)
+    if $scope.inProfit == false
+      $scope.balSheet.assetTotal += $scope.plData.closingBalance
+    else if $scope.inProfit == true
+      $scope.balSheet.liabTotal += $scope.plData.closingBalance
 
   $scope.filterPlData = (data) ->
     filterPlData = {}
@@ -282,6 +324,9 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
 
   $scope.setRefresh = () ->
     $scope.hardRefresh = true
+
+  $scope.setRefreshForBalanceSheet = () ->
+    $scope.bsHardRefresh = true
 
   $scope.getTrialBal = (data) ->
     $scope.showTbplLoader = true
@@ -813,10 +858,10 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       switch grp.category
         when 'assets'
           assets.push(grp)
-          $scope.balSheet.assets.push(grp)
+          # $scope.balSheet.assets.push(grp)
         when 'liabilities'
           liabilities.push(grp)
-          $scope.balSheet.liabilities.push(grp)
+          # $scope.balSheet.liabilities.push(grp)
         when 'income'
           income.push(grp)
         when 'expenses'
@@ -864,22 +909,65 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     total
 
   $scope.getBalanceSheetData = () ->
-    @success = (res) ->
-      console.log res
-    @failure = (res) ->
-      console.log res
     reqParam = {
       'companyUniqueName': $rootScope.selectedCompany.uniqueName
-      'refresh': false
+      'refresh': $scope.bsHardRefresh
+      'fy': $scope.activeFYIndex
     }
-    trialBalService.getBalSheet(reqParam).then(@success, @failure)
-
-  $scope.getBalanceSheetData()
+    trialBalService.getBalSheet(reqParam).then $scope.getBalanceSheetDataSuccess, $scope.getBalanceSheetDataFailure
 
   $scope.getBalanceSheetDataSuccess = (res) ->
-    $scope.balSheetGrps = res.body.groupDetais;
-    $scope.balSheet.assets = balSheetGrps.filter(grp -> grp.getCategory == 'assets')
-    console.log($scope.balSheet.assets)
+    $scope.makeDataForBS(res.body)
+    $scope.bsHardRefresh = false
+
+  $scope.getBalanceSheetDataFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+    $scope.bsHardRefresh = false
+
+  $timeout (->
+    $scope.getBalanceSheetData()
+  ), 1000
+  
+
+  $scope.changeFYIdx = (item) ->
+    _.each $scope.financialYears, (fy, index) ->
+      if(fy.uniqueName == item.uniqueName)
+        if index == 0
+          $scope.activeFYIndex = index
+        else
+          $scope.activeFYIndex = index * -1
+
+  $scope.downloadBSExcel = () ->
+    reqParam = {
+      'companyUniqueName': $rootScope.selectedCompany.uniqueName
+    }
+    trialBalService.downloadBSExcel(reqParam).then $scope.downloadBSExcelSuccess, $scope.downloadBSExcelFailure
+
+  $scope.downloadBSExcelSuccess = (res) ->
+    data = tb.b64toBlob(res.body, "application/xml", 512)
+    FileSaver.saveAs(data, "balancesheet.xlsx")
+
+  tb.b64toBlob = (b64Data, contentType, sliceSize) ->
+    contentType = contentType or ''
+    sliceSize = sliceSize or 512
+    byteCharacters = atob(b64Data)
+    byteArrays = []
+    offset = 0
+    while offset < byteCharacters.length
+      slice = byteCharacters.slice(offset, offset + sliceSize)
+      byteNumbers = new Array(slice.length)
+      i = 0
+      while i < slice.length
+        byteNumbers[i] = slice.charCodeAt(i)
+        i++
+      byteArray = new Uint8Array(byteNumbers)
+      byteArrays.push byteArray
+      offset += sliceSize
+    blob = new Blob(byteArrays, type: contentType)
+    blob
+
+  $scope.downloadBSExcelFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   $scope.$on 'company-changed' , (event, data) ->
     if data.type == 'CHANGE'

@@ -31,11 +31,20 @@ router.get '/balance-sheet', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      fy: req.query.fy
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/balance-sheet'
+  if req.query.refresh == "true"
+    args =
+      headers:
+        'Auth-Key': req.session.authKey
+        'X-Forwarded-For': res.locales.remoteIp
+      parameters:
+        fy: req.query.fy
+        refresh: true
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
-    res.send data
-
+    res.send data 
 
 module.exports = router
