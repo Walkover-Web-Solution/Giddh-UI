@@ -691,9 +691,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   # $scope.goToLedgerCash = () ->
   #   $state.go('company.content.ledgerContent',{unqName:'cash'})
 
-  $rootScope.toggleAcMenus = () ->
+  $rootScope.toggleAcMenus = (condition) ->
+    $scope.showSubMenus = condition
     _.each $scope.flatAccntWGroupsList, (grp) ->
-      grp.open = !grp.open
+      grp.open = condition
 
 
   $(document).on('click', (e)->

@@ -290,7 +290,10 @@
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
-                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
+                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                      is-open="txn.isOpen"
+                                      trigger-focus
+                                      txn="txn">
                                     </td>
                                     <td class="col-xs-6 pos-rel">
                                       <input type="number"
@@ -351,7 +354,10 @@
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
-                                      ng-focus="lc.slctxn(value, txn, $event)">
+                                      ng-focus="lc.slctxn(value, txn, $event)"
+                                      is-open="txn.isOpen"
+                                      trigger-focus
+                                      txn="txn">
                                     </td>
                                     <td class="col-xs-6 pos-rel">
                                       <input type="number"
@@ -481,7 +487,10 @@
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
-                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)">
+                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                      is-open="txn.isOpen"
+                                      trigger-focus
+                                      txn="txn">
                                     </td>
                                     <td class="col-xs-6 pos-rel">
                                       <input type="number"
@@ -542,7 +551,10 @@
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
-                                      ng-focus="lc.slctxn(value, txn, $event)">
+                                      ng-focus="lc.slctxn(value, txn, $event)"
+                                      is-open="txn.isOpen"
+                                      trigger-focus
+                                      txn="txn">
                                     </td>
                                     <td class="col-xs-6 pos-rel">
                                       <input type="number"

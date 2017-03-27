@@ -643,7 +643,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.filterItemByQuery(ledger.entryDate, query) ||
       lc.filterItemByQuery(ledger.voucher, query) ||
       lc.filterItemByQuery(ledger.voucherNo, query) ||
-      lc.filterItemByQuery(ledger.attachedFile, query) ||
+      #lc.filterItemByQuery(ledger.attachedFile, query) ||
       lc.filterItemByQuery(ledger.description, query) ||
       lc.filterItemByQuery(ledger.tag, query)
     )
