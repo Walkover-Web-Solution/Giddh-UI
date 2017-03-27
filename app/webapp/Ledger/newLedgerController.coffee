@@ -2078,8 +2078,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     toastr.error(res.data.message, res.data.status)
 
   lc.removeDeletedLedger = (item) ->
-    lc.dLedgerContainer.remove(item.uniqueName)
-    lc.cLedgerContainer.remove(item.uniqueName)
+    if lc.dLedgerContainer.ledgerData[item.uniqueName]
+      lc.dLedgerContainer.remove(item)
+    if lc.cLedgerContainer.ledgerData[item.uniqueName]
+      lc.cLedgerContainer.remove(item)
     # index = 0
     # _.each lc.ledgerData.ledgers, (led, idx ) ->
     #   if led.uniqueName == item.uniqueName
