@@ -323,6 +323,7 @@
                           <!--ledgers-->
                           <tr 
                             id="{{value.uniqueName}}"
+                            ng-class="{'unconfirmedEntry':lc.unconfirmedEntry}"
                             ng-repeat="(key, value) in lc.dLedgerContainer.ledgerData | orderObjectBy : 'index' : lc.sortOrder.debit == lc.sortDirection.desc"
                             ng-dblclick="lc.getMatchingTxn(value, 'CR')">
                             <td colspan="100">
@@ -347,7 +348,7 @@
                                       ng-focus="lc.slctxn(value, txn, $event)" select-on-click>
                                     </td>
                                     <td class="col-xs-6">
-                                      <input class="form-control type="text" ng-model="txn.particular"
+                                      <input class="form-control" type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
@@ -514,6 +515,7 @@
                           <!--ledgers-->
                           <tr 
                             id="{{value.uniqueName}}"
+                            ng-class="{'unconfirmedEntry':lc.unconfirmedEntry}"
                             ng-repeat="(key, value) in lc.cLedgerContainer.ledgerData | orderObjectBy : 'index' : lc.sortOrder.credit == lc.sortDirection.desc"
                             ng-dblclick="lc.getMatchingTxn(value, 'DR')">
                             <td colspan="100">
