@@ -1303,6 +1303,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if res.body.ledgers.length < 1
       lc.showLoader = false
     #lc.showLoader = false
+    lc.blankLedger.transactions[0].isOpen = true
     $rootScope.superLoader = false
 
   lc.getLedgerDataFailure = (res) ->
@@ -1854,7 +1855,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       )
     else
       _.each(lc.taxList, (tax) ->
-        tax.isChecked = false
+        #tax.isChecked = false
         _.each(ledger.transactions, (txn) ->
           if txn.particular.uniqueName == tax.account.uniqueName
             tax.isChecked = true
@@ -2335,6 +2336,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     reqParam.compUname = $rootScope.selectedCompany.uniqueName
     ledgerService.updateEntrySettings(reqParam, data).then(@success, @failure)
 
+  lc.clearTaxSelection = (txn, ledger) ->
+    if ledger.uniqueName != lc.prevLedger.uniqueName
+      _.each lc.taxList, (tax) ->
+        tax.isChecked = false
 
 
   lc.prevTxn = null
@@ -2351,6 +2356,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       txn.rate = txn.amount/txn.inventory.quantity
     if txn.particular.stock
       txn.rate = txn.particular.stock.rate
+    lc.clearTaxSelection(txn, ledger)
     lc.prevTxn = txn
     lc.selectedLedger = ledger
     lc.selectedTxn = txn
@@ -2677,5 +2683,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.uploadInvoiceImg = (files, type) ->
     console.log files
 
+  lc.onBankTxnSelect = ($item, $model, $label, $event, txn) ->
+    $timeout ( ->
+      txn.isOpen = true
+    ), 200
+    
   return lc
 giddh.webApp.controller 'newLedgerController', newLedgerController
