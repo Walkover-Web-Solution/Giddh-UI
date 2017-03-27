@@ -127,16 +127,19 @@ table {
 .icomoon_ico:hover {
     color: #ff782d;
 }
+.export-ledger-options>.arrow:after {
+    content: ' ';
+}
 .export-ledger-options.left>.arrow, .export-ledger-options>.arrow {
     top: 0;
-    border-bottom-color: #fff;
+    border-bottom-color: #d4d3d3;
 }
-.export-ledger-options>.arrow {
+.export-ledger-options>.arrow, .export-ledger-options>.arrow:after {
     transform: none;
 }
 .export-ledger-options {
     left: 0;
-    top: 55px;
+    top: 48px;
     -moz-transition: opacity 1s ease-in-out;
     transition: opacity 1s ease-in-out;
     margin: 0 auto;
@@ -311,7 +314,12 @@ outline: 0;
     text-transform: capitalize;
 }
 .load-more {
-    margin-left: 10px;
+    padding: 8px 10px;
+    display: block;
+    background: #f5f5f5;
+    color: #d35f29 !important;
+    margin: 20px 0px;
+    font-weight: 500;
 }
 .acntAccordion {
     margin-top: 11px;
@@ -338,9 +346,9 @@ outline: 0;
     left: -80px;
     width: 151px;
 }
-.export-ledger-options>.arrow {
+.export-ledger-options>.arrow, .export-ledger-options>.arrow:after {
     transform: none;
-    top: -10px;
+    top: -9px;
     left: 0;
     right: 0;
     margin: 0 auto;
@@ -916,6 +924,7 @@ input[type="checkbox"]:after {
 }
 .ledger-panel .btn-success:hover {
     background: #57C17A;
+    color: #fff;
     border-color: #349655;
 }
 .btn-row {
@@ -955,4 +964,43 @@ input[type=number]::-webkit-inner-spin-button {
 
 input[type=number] {
     -moz-appearance:textfield;
+}
+
+.accounts-side-bar {
+    box-shadow: 0 3px 28px 0 rgba(0,0,0,.14);
+    border: 1px solid #ccc;
+    border-top: 0;
+    border-left: 0;
+    background: #fdfdfd;
+}
+.export-ledger-options>.arrow:after {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 8px solid #fff;
+    position: absolute;
+    top: 2px;
+    left: -6px;
+    z-index: 9999999999;
+}
+.navbar-right .dropdown-menu, .pull-right>.dropdown-menu {
+    top: 46px;
+}
+
+.datePickr .dropdown-menu {
+    box-shadow: 0 3px 28px 0 rgba(0,0,0,.14);
+    color: #616161;
+    border: 1px solid #ccc;
+}
+.datePickr .dropdown-menu table {
+    border: 1px solid #fff;
+    padding: 4px;
+    border-radius: 4px;
+    background-color: #fff;
+}
+.datePickr .dropdown-menu table th, .datePickr .dropdown-menu table td {
+    white-space: nowrap;
+    text-align: center;
+    min-width: 32px;
 }
