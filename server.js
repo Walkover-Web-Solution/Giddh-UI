@@ -55,7 +55,6 @@ app.use(function onError(err, req, res, next) {
 //SENTRY.IO END
 
 var port = process.env.PORT || 8000;
-console.log(process.env)
 //enabling cors
 app.use(cors())
 
