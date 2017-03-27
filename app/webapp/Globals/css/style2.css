@@ -1004,3 +1004,6 @@ input[type=number] {
     text-align: center;
     min-width: 32px;
 }
+.flow_visible {
+    overflow: visible !important;
+}
