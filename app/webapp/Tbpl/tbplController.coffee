@@ -3,6 +3,8 @@
 tbplController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window, companyServices, $state, FileSaver) ->
   tb = this
   $scope.showTbplLoader = true
+  $scope.showBSLoader = true
+  $scope.showPLLoader = true
   $scope.inProfit = true
   $scope.expanded = false
   $scope.today = new Date()
@@ -60,6 +62,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
 
   $scope.hardRefresh = false
   $scope.bsHardRefresh = false
+  $scope.plHardRefresh = false
 
   $scope.fyChecked = false
 
@@ -327,6 +330,9 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
 
   $scope.setRefreshForBalanceSheet = () ->
     $scope.bsHardRefresh = true
+
+  $scope.setRefreshForProfitLoss = () ->
+    $scope.plHardRefresh = true
 
   $scope.getTrialBal = (data) ->
     $scope.showTbplLoader = true
@@ -907,6 +913,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     total
 
   $scope.getBalanceSheetData = () ->
+    $scope.showBSLoader = true
     reqParam = {
       'companyUniqueName': $rootScope.selectedCompany.uniqueName
       'refresh': $scope.bsHardRefresh
@@ -914,19 +921,43 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     }
     trialBalService.getBalSheet(reqParam).then $scope.getBalanceSheetDataSuccess, $scope.getBalanceSheetDataFailure
 
+  $scope.getProfitLossData = () ->
+    $scope.showPLLoader = true
+    reqParam = {
+      'companyUniqueName': $rootScope.selectedCompany.uniqueName
+      'refresh': $scope.plHardRefresh
+      'fy': $scope.activeFYIndex
+    }
+    trialBalService.getPL(reqParam).then $scope.getPLSuccess, $scope.getPLFailure
+
   $scope.getBalanceSheetDataSuccess = (res) ->
     $scope.makeDataForBS(res.body)
     $scope.bsHardRefresh = false
+    $scope.showBSLoader = false
+
+  $scope.getPLSuccess = (res) ->
+    $scope.makeDataForPl(res.body)
+    $scope.plHardRefresh = false
+    $scope.showPLLoader = false
 
   $scope.getBalanceSheetDataFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
     $scope.bsHardRefresh = false
+    $scope.showBSLoader = false
+
+  $scope.getPLFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+    $scope.plHardRefresh = false
+    $scope.showPLLoader = false
 
   $timeout (->
     $scope.getBalanceSheetData()
   ), 1000
-  
 
+  $timeout (->
+    $scope.getProfitLossData()
+  ), 1000
+  
   $scope.changeFYIdx = (item) ->
     _.each $scope.financialYears, (fy, index) ->
       if(fy.uniqueName == item.uniqueName)
@@ -938,12 +969,30 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.downloadBSExcel = () ->
     reqParam = {
       'companyUniqueName': $rootScope.selectedCompany.uniqueName
+      'fy': $scope.activeFYIndex
     }
     trialBalService.downloadBSExcel(reqParam).then $scope.downloadBSExcelSuccess, $scope.downloadBSExcelFailure
+
+  $scope.downloadPLExcel = () ->
+    reqParam = {
+      'companyUniqueName': $rootScope.selectedCompany.uniqueName
+      'fy': $scope.activeFYIndex
+    }
+    trialBalService.downloadPLExcel(reqParam).then $scope.downloadPLExcelSuccess, $scope.downloadPLExcelFailure
 
   $scope.downloadBSExcelSuccess = (res) ->
     data = tb.b64toBlob(res.body, "application/xml", 512)
     FileSaver.saveAs(data, "balancesheet.xlsx")
+
+  $scope.downloadPLExcelSuccess = (res) ->
+    data = tb.b64toBlob(res.body, "application/xml", 512)
+    FileSaver.saveAs(data, "profitloss.xlsx")
+
+  $scope.downloadBSExcelFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.downloadPLExcelFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   tb.b64toBlob = (b64Data, contentType, sliceSize) ->
     contentType = contentType or ''
@@ -962,10 +1011,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       byteArrays.push byteArray
       offset += sliceSize
     blob = new Blob(byteArrays, type: contentType)
-    blob
-
-  $scope.downloadBSExcelFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
+    blob  
 
   $scope.$on 'company-changed' , (event, data) ->
     if data.type == 'CHANGE'

@@ -16,6 +16,10 @@ giddh.serviceModule.service 'trialBalService', ($resource, $q) ->
         method: 'GET',
         url: '/company/:companyUniqueName/trial-balance/balance-sheet'
       }
+      getPL: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/trial-balance/profit-loss'
+      }
     })
 
   balanceSheet = $resource('/company/:companyUniqueName/balance-sheet', {},
@@ -23,6 +27,14 @@ giddh.serviceModule.service 'trialBalService', ($resource, $q) ->
       downloadBSExcel: {
         method: 'GET',
         url: '/company/:companyUniqueName/balance-sheet/balance-sheet-collapsed-download'
+      }
+    })
+
+  profitLoss = $resource('/company/:companyUniqueName/profit-loss', {},
+    {
+      downloadPLExcel: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/profit-loss/profit-loss-collapsed-download'
       }
     })
 
@@ -43,6 +55,13 @@ giddh.serviceModule.service 'trialBalService', ($resource, $q) ->
         onFailure))
 
     downloadBSExcel: (reqParam, onSuccess, onFailure) ->
-      @handlePromise((onSuccess, onFailure) -> balanceSheet.downloadBSExcel({companyUniqueName: reqParam.companyUniqueName}, onSuccess, onFailure))
+      @handlePromise((onSuccess, onFailure) -> balanceSheet.downloadBSExcel({companyUniqueName: reqParam.companyUniqueName, fy: reqParam.fy}, onSuccess, onFailure))
+
+    getPL: (reqParam, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> trialBal.getPL({companyUniqueName: reqParam.companyUniqueName, refresh: reqParam.refresh, fy: reqParam.fy}, onSuccess,
+        onFailure))
+
+    downloadPLExcel: (reqParam, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> profitLoss.downloadPLExcel({companyUniqueName: reqParam.companyUniqueName, fy: reqParam.fy}, onSuccess, onFailure))
 
   trialBalService

@@ -7,6 +7,8 @@ router.get '/balance-sheet-collapsed-download', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
+  	parameters:
+  	  fy: req.query.fy
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/balance-sheet-collapsed-download'
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
