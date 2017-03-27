@@ -1288,10 +1288,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.ledgerData.debitTotal = res.body.debitTotal
     lc.ledgerData.reckoningCreditTotal = res.body.creditTotal
     lc.ledgerData.reckoningDebitTotal = res.body.debitTotal
-    if lc.ledgerData.balance.type == 'DEBIT'
-      lc.ledgerData.reckoningCreditTotal -= lc.ledgerData.balance.amount
-    else if lc.ledgerData.balance.type == 'CREDIT'
-      lc.ledgerData.reckoningDebitTotal -= lc.ledgerData.balance.amount
+    if lc.ledgerData.balance.type == 'CREDIT'
+      lc.ledgerData.reckoningCreditTotal += lc.ledgerData.balance.amount
+    else if lc.ledgerData.balance.type == 'DEBIT'
+      lc.ledgerData.reckoningDebitTotal += lc.ledgerData.balance.amount
     lc.addToIdb(res.body.ledgers, $rootScope.selectedAccount.uniqueName)
     # lc.dLedgerData = lc.dLedgerContainer.ledgerData
     # lc.cLedgerData = lc.cLedgerContainer.ledgerData

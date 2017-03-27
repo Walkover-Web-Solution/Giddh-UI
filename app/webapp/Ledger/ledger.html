@@ -402,7 +402,7 @@
                       
                       <tr class="t-h-bg3 bdr-w-t">
                         <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
-                          <span ng-if="lc.ledgerData.balance.type == 'CREDIT'">C/F: Cr {{lc.ledgerData.balance.amount | number:2}}</span>
+                          <span ng-if="lc.ledgerData.balance.type == 'DEBIT'">C/F: Dr {{lc.ledgerData.balance.amount | number:2}}</span>
                         </td>
                       </tr>
                       <tr class="t-h-bg2 bdr-w-t h42">
@@ -593,7 +593,7 @@
                   
                       <tr class="t-h-bg3">
                         <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
-                          <span  ng-if="lc.ledgerData.balance.type == 'DEBIT'">C/F: Dr {{lc.ledgerData.balance.amount | number:2}}</span>
+                          <span  ng-if="lc.ledgerData.balance.type == 'CREDIT'">C/F: Cr {{lc.ledgerData.balance.amount | number:2}}</span>
                         </td>
                       </tr>
                       <tr class="t-h-bg2 bdr-w-t h42">
