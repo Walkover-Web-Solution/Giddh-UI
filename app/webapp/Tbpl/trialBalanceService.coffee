@@ -11,6 +11,10 @@ giddh.serviceModule.service 'trialBalService', ($resource, $q) ->
         method: 'GET',
         url: '/company/:companyUniqueName/trial-balance'
       }
+      getBalSheet: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/trial-balance/balance-sheet'
+      }
     })
 
   trialBalService =
@@ -23,6 +27,10 @@ giddh.serviceModule.service 'trialBalService', ($resource, $q) ->
 
     getAllFor: (reqParam, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> trialBal.getAll({companyUniqueName: reqParam.companyUniqueName, fromDate: reqParam.fromDate, toDate: reqParam.toDate, refresh: reqParam.refresh}, onSuccess,
+        onFailure))
+
+    getBalSheet: (reqParam, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> trialBal.getBalSheet({companyUniqueName: reqParam.companyUniqueName, refresh: reqParam.refresh}, onSuccess,
         onFailure))
 
   trialBalService

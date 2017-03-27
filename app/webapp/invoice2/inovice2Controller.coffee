@@ -1,6 +1,6 @@
 'use strict'
 
-invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService, $uibModal, companyServices, $timeout, DAServices, modalService, $filter) ->
+invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService, $uibModal, companyServices, $timeout, DAServices, modalService, $filter, FileSaver) ->
   ic = this
   $rootScope.cmpViewShow = true
   $scope.checked = false;
@@ -15,6 +15,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.filtersLedger = {
     count: 12
   }
+
+  $scope.currentPage = ->
+    currentPage = @value
+    console.log currentPage
 
   $scope.counts = {
     12
@@ -483,21 +487,39 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.selectedInvoice = {}
     $scope.getAllInvoices()
 
-  $scope.downInv=()->
+  $scope.downloadInv=()->
     obj =
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $scope.selectedInvoice.account.uniqueName
     data=
       invoiceNumber: [$scope.selectedInvoice.invoiceNumber]
       template: $scope.tempType.uniqueName
-    accountService.downloadInvoice(obj, data).then($scope.downInvSuccess, $scope.multiActionWithInvFailure)
+    accountService.downloadInvoice(obj, data).then($scope.downloadInvSuccess, $scope.multiActionWithInvFailure)
 
-  $scope.downInvSuccess=(res)->
-    dataUri = 'data:application/pdf;base64,' + res.body
-    a = document.createElement('a')
-    a.download = $scope.selectedInvoice.invoiceNumber+".pdf"
-    a.href = dataUri
-    a.click()
+  $scope.b64toBlob = (b64Data, contentType, sliceSize) ->
+    contentType = contentType or ''
+    sliceSize = sliceSize or 512
+    byteCharacters = atob(b64Data)
+    byteArrays = []
+    offset = 0
+    while offset < byteCharacters.length
+      slice = byteCharacters.slice(offset, offset + sliceSize)
+      byteNumbers = new Array(slice.length)
+      i = 0
+      while i < slice.length
+        byteNumbers[i] = slice.charCodeAt(i)
+        i++
+      byteArray = new Uint8Array(byteNumbers)
+      byteArrays.push byteArray
+      offset += sliceSize
+    blob = new Blob(byteArrays, type: contentType)
+    blob
+
+  $scope.downloadInvSuccess=(res)->
+    data = $scope.b64toBlob(res.body, "application/pdf", 512)
+    blobUrl = URL.createObjectURL(data)
+    ic.dlinv = blobUrl
+    FileSaver.saveAs(data, $scope.selectedInvoice.invoiceNumber+".pdf")
 
 
   # mail Invoice
@@ -809,6 +831,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   # Helper methods ends here
 
   $scope.selectAllLedger = (condition) ->
+    $scope.checkall = Boolean(condition)
     _.each $scope.ledgers.results, (ledger) ->
       ledger.checked = condition
       $scope.addThis(ledger, condition)

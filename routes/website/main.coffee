@@ -36,6 +36,9 @@ router.get '/index', (req, res) ->
 router.get '/affiliate', (req,res) ->
   res.sendFile 'joinus.html', options
 
+router.get '/global', (req,res) ->
+  res.sendFile 'global.html', options
+
 router.get '/about', (req, res) ->
   res.sendFile 'about.html', options
 
@@ -80,6 +83,9 @@ router.get '/refresh-completed', (req, res) ->
 
 router.get '/signup', (req, res) ->
   res.sendFile 'signup.html', options
+
+router.get '/IE', (req, res) ->
+  res.sendFile 'incompatible-browser.html', options
 
 router.post '/magic-link', (req, res) ->
   if req.body.data.from != undefined && req.body.data.to != undefined

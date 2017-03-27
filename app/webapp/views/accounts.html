@@ -1,13 +1,5 @@
-<div class="row">
-    <div class="pdT1 pdB1 form-inline col-xs-12">
-        <div ng-hide="canViewSpecificItems">
-            <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
-                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add &amp; Manage
-            </button>
-        </div>
-    </div>
-</div>
-<div class="row pdL1">
+
+<div class="" ng-click="$event.stopPropagation()">
   <!-- searchbar end -->
   <div class="pdL1 pdR1 mrB1" ng-if="flatAccntWGroupsList.length == 0 && showAccountList && !noGroups ">
     <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{::selectedCompany.name}}</strong> <a
@@ -16,7 +8,7 @@
   <div class="pdL1 pdR1 mrB1" ng-if="flatAccntWGroupsList.length == 0 && showAccountList && noGroups">
     <h4 class="list-group-item-heading">Oops, No Accounts Found :(</h4>
   </div>
-  <perfect-scrollbar id="accountList" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height additional-height="70">
+  <perfect-scrollbar id="accountList" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height additional-height="80">
     <div class="menu acList">
       <div class="loader" ng-if="!showAccountList && companyList.length > 0">
         <span></span>
@@ -28,7 +20,7 @@
       <ul class="acntAccordion" ng-if="showAccountList">
         <li>
           <ul id="ul_0" class="mainUl accBox" style="border-left:none">
-            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList | limitTo:gwaList.limit" id="li_{{value.groupUniqueName}}">
+            <li class="mainLiAclist parent-Group" ng-repeat="value in flatAccntWGroupsList | limitTo:gwaList.limit" id="li_{{value.groupUniqueName}}">
               <div 
                 class="title  LIB{{value.groupUniqueName}}" 
                 ng-click="value.open = !value.open"
@@ -54,7 +46,7 @@
             </li> 
           </ul>
         </li>
-        <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreGrpWithAcc(selectedCompany.uniqueName, search.acnt);$event.stopPropagation()" ng-if="gwaList.currentPage <= gwaList.totalPages" >Load More</a>
+        <a href="javascript:void(0)" class="load-more" ng-click="loadMoreGrpWithAcc(selectedCompany.uniqueName, search.acnt);$event.stopPropagation()" ng-if="gwaList.currentPage <= gwaList.totalPages" >Load More</a>
       </ul>
 
     </div>

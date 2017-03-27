@@ -149,24 +149,25 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
     $rootScope.$emit('account-selected')
+    return false
 
 
   #Expand or  Collapse all account menus
-  $scope.toggleAcMenus = (state) ->
-    if !_.isEmpty($scope.flatAccntWGroupsList)
-      _.each($scope.flatAccntWGroupsList, (e) ->
-        e.open = state
-        $scope.showSubMenus = state
-      )
+  # $scope.toggleAcMenus = (state) ->
+  #   if !_.isEmpty($scope.flatAccntWGroupsList)
+  #     _.each($scope.flatAccntWGroupsList, (e) ->
+  #       e.open = state
+  #       $scope.showSubMenus = state
+  #     )
 
   # trigger expand or collapse func
-  $scope.checkLength = (val)->
-    if val is '' || _.isUndefined(val)
-      $scope.toggleAcMenus(false)
-    else if val.length >= 4
-      $scope.toggleAcMenus(true)
-    else
-      $scope.toggleAcMenus(false)
+  # $scope.checkLength = (val)->
+  #   if val is '' || _.isUndefined(val)
+  #     $scope.toggleAcMenus(false)
+  #   else if val.length >= 4
+  #     $scope.toggleAcMenus(true)
+  #   else
+  #     $scope.toggleAcMenus(false)
   # end acCntrl
 
   $scope.getGroups =() ->
@@ -308,87 +309,87 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       groupService.getFlatAccList(reqParam).then(@success, @failure)
 
   #-------- fetch groups with accounts list-------
-  $scope.working = false
-  $scope.getFlattenGrpWithAccList = (compUname) ->
-#    console.log("working  : ",$scope.working)
-    $rootScope.companyLoaded = false
-    reqParam = {
-      companyUniqueName: compUname
-      q: ''
-      page: $scope.gwaList.page
-      count: $scope.gwaList.count
-    }
-    if $scope.working == false
-      $scope.working = true
-      groupService.getFlattenGroupAccList(reqParam).then(gc.getFlattenGrpWithAccListSuccess, gc.getFlattenGrpWithAccListFailure)
+#   $scope.working = false
+#   $scope.getFlattenGrpWithAccList = (compUname) ->
+# #    console.log("working  : ",$scope.working)
+#     $rootScope.companyLoaded = false
+#     reqParam = {
+#       companyUniqueName: compUname
+#       q: ''
+#       page: $scope.gwaList.page
+#       count: $scope.gwaList.count
+#     }
+#     if $scope.working == false
+#       $scope.working = true
+#       groupService.getFlattenGroupAccList(reqParam).then(gc.getFlattenGrpWithAccListSuccess, gc.getFlattenGrpWithAccListFailure)
 
 
-  gc.getFlattenGrpWithAccListSuccess = (res) ->
-    $scope.gwaList.page = res.body.page
-    $scope.gwaList.totalPages = res.body.totalPages
-    #$scope.flatAccntWGroupsList = res.body.results
-    $scope.flatAccntWGroupsList = gc.removeEmptyGroups(res.body.results)
-#    console.log($scope.flatAccntWGroupsList)
-    $scope.showAccountList = true
-    $scope.gwaList.limit = 5
-    $rootScope.companyLoaded = true
-    $scope.working = false
+#   gc.getFlattenGrpWithAccListSuccess = (res) ->
+#     $scope.gwaList.page = res.body.page
+#     $scope.gwaList.totalPages = res.body.totalPages
+#     $scope.flatAccntWGroupsList = res.body.results
+#     #$scope.flatAccntWGroupsList = gc.removeEmptyGroups(res.body.results)
+# #    console.log($scope.flatAccntWGroupsList)
+#     $scope.showAccountList = true
+#     $scope.gwaList.limit = 5
+#     $rootScope.companyLoaded = true
+#     $scope.working = false
 
-  gc.getFlattenGrpWithAccListFailure = (res) ->
-    toastr.error(res.data.message)
-    $scope.working = false
+#   gc.getFlattenGrpWithAccListFailure = (res) ->
+#     toastr.error(res.data.message)
+#     $scope.working = false
 
-  $scope.loadMoreGrpWithAcc = (compUname, str) ->
-    $scope.gwaList.page += 1
-    reqParam = {
-      companyUniqueName: compUname
-      q: str
-      page: $scope.gwaList.page
-      count: $scope.gwaList.count
-    }
-    groupService.getFlattenGroupAccList(reqParam).then(gc.loadMoreGrpWithAccSuccess, gc.loadMoreGrpWithAccFailure)
-    $scope.gwaList.limit += 5
+#   $scope.loadMoreGrpWithAcc = (compUname, str) ->
+#     $scope.gwaList.page += 1
+#     reqParam = {
+#       companyUniqueName: compUname
+#       q: str
+#       page: $scope.gwaList.page
+#       count: $scope.gwaList.count
+#     }
+#     groupService.getFlattenGroupAccList(reqParam).then(gc.loadMoreGrpWithAccSuccess, gc.loadMoreGrpWithAccFailure)
+#     $scope.gwaList.limit += 5
 
-  gc.loadMoreGrpWithAccSuccess = (res) ->
-    $scope.gwaList.currentPage += 1
-    #list = gc.removeEmptyGroups(res.body.results)
-    if res.body.results.length > 0 && res.body.totalPages >= $scope.gwaList.currentPage
-      _.each res.body.results, (grp) ->
-        $scope.flatAccntWGroupsList.push(grp) 
-      #$scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
-    else if res.body.totalPages >= $scope.gwaList.currentPage
-      $scope.loadMoreGrpWithAcc($rootScope.selectedCompany.uniqueName)
-    else
-      $scope.hideLoadMore = true
+#   gc.loadMoreGrpWithAccSuccess = (res) ->
+#     $scope.gwaList.currentPage += 1
+#     #list = gc.removeEmptyGroups(res.body.results)
+#     if res.body.results.length > 0 && res.body.totalPages >= $scope.gwaList.currentPage
+#       _.each res.body.results, (grp) ->
+#         $scope.flatAccntWGroupsList.push(grp) 
+#       #$scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
+#     else if res.body.totalPages >= $scope.gwaList.currentPage
+#       $scope.loadMoreGrpWithAcc($rootScope.selectedCompany.uniqueName)
+#     else
+#       $scope.hideLoadMore = true
 
-  gc.loadMoreGrpWithAccFailure = (res) ->
-    toastr.error(res.data.message)
+#   gc.loadMoreGrpWithAccFailure = (res) ->
+#     toastr.error(res.data.message)
 
-  $scope.searchGrpWithAccounts = (str) ->
-    $scope.gwaList.page = 1
-    $scope.gwaList.currentPage = 1
-    reqParam = {}
-    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-    if str.length > 2
-      #$scope.hideLoadMore = true
-      reqParam.q = str
-      reqParam.page = $scope.gwaList.page
-      reqParam.count = $scope.gwaList.count
-      groupService.getFlattenGroupAccList(reqParam).then(gc.getFlattenGrpWithAccListSuccess, gc.getFlattenGrpWithAccListFailure)
-    else
-      #$scope.hideLoadMore = false
-      reqParam.q = ''
-      groupService.getFlattenGroupAccList(reqParam).then(gc.getFlattenGrpWithAccListSuccess, gc.getFlattenGrpWithAccListFailure)
-    if str.length < 1
-      $scope.flatAccListC5.limit = 5
-      #$scope.hideLoadMore = false
+#   $scope.searchGrpWithAccounts = (str) ->
+#     $scope.gwaList.page = 1
+#     $scope.gwaList.currentPage = 1
+#     reqParam = {}
+#     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+#     if str.length > 2
+#       #$scope.hideLoadMore = true
+#       reqParam.q = str
+#       reqParam.page = $scope.gwaList.page
+#       reqParam.count = $scope.gwaList.count
+#       groupService.getFlattenGroupAccList(reqParam).then(gc.getFlattenGrpWithAccListSuccess, gc.getFlattenGrpWithAccListFailure)
+#     else
+#       #$scope.hideLoadMore = false
+#       reqParam.q = ''
+#       groupService.getFlattenGroupAccList(reqParam).then(gc.getFlattenGrpWithAccListSuccess, gc.getFlattenGrpWithAccListFailure)
+#     if str.length < 1
+#       $scope.flatAccListC5.limit = 5
+#       #$scope.hideLoadMore = false
 
-  gc.removeEmptyGroups = (grpList) ->
-    newList = []
-    _.each grpList, (grp) ->
-      if grp.accountDetails.length > 0
-        newList.push(grp)
-    newList
+#   gc.removeEmptyGroups = (grpList) ->
+#     newList = []
+#     _.each grpList, (grp) ->
+#       if grp.accountDetails.length > 0
+#         newList.push(grp)
+#     newList
 
   #-------------------Functions for API side search and fetching flat account list end here-----------------------------------------------#
 

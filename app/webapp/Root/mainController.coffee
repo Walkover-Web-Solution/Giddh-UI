@@ -1,6 +1,6 @@
 "use strict"
 
-mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location) ->
+mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location, DAServices) ->
   $rootScope.scriptArrayHead = [
     "/public/webapp/newRelic.js"
     "/public/webapp/core_bower.min.js"
@@ -24,7 +24,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     purchase: "purchases"
     sales:"sales"
   }
-  $rootScope.flyAccounts = true
+  $rootScope.flyAccounts = false
   $rootScope.$stateParams = {}
 #  $rootScope.prefixThis = ""
   $rootScope.cmpViewShow = true
@@ -203,6 +203,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.getCdnUrl()
   $timeout(->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
+    $scope.userName = $rootScope.basicInfo.name.split(" ")
+    $scope.userName = $scope.userName[0][0]+$scope.userName[1][0]
     if !_.isEmpty($rootScope.selectedCompany)
       $rootScope.cmpViewShow = true
   ,1000)
@@ -579,10 +581,125 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.$on('openAddManage', () ->
     $(document).find('#AddManage').trigger('click')
+    return false
   )
 
-  $scope.showAccounts = () ->
+  $scope.showAccounts = (e) ->
     $rootScope.flyAccounts = true
-#  $scope.addScript()
+    e.stopPropagation()
+  # $scope.addScript()
+
+  # for accounts list
+  $scope.gwaList = {
+    page: 1
+    count: 5
+    totalPages: 0
+    currentPage : 1
+    limit: 5
+  }
+  $scope.working = false
+  $scope.getFlattenGrpWithAccList = (compUname) ->
+  #   console.log("working  : ",$scope.working)
+    $rootScope.companyLoaded = false
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+      page: $scope.gwaList.page
+      count: $scope.gwaList.count
+    }
+    if $scope.working == false
+      $scope.working = true
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+
+
+  $scope.getFlattenGrpWithAccListSuccess = (res) ->
+    $scope.gwaList.page = res.body.page
+    $scope.gwaList.totalPages = res.body.totalPages
+    $scope.flatAccntWGroupsList = res.body.results
+    #$scope.flatAccntWGroupsList = gc.removeEmptyGroups(res.body.results)
+  #   console.log($scope.flatAccntWGroupsList)
+    $scope.showAccountList = true
+    $scope.gwaList.limit = 5
+    $rootScope.companyLoaded = true
+    $scope.working = false
+
+  $scope.getFlattenGrpWithAccListFailure = (res) ->
+    toastr.error(res.data.message)
+    $scope.working = false
+
+  $scope.loadMoreGrpWithAcc = (compUname, str) ->
+    $scope.gwaList.page += 1
+    reqParam = {
+      companyUniqueName: compUname
+      q: str
+      page: $scope.gwaList.page
+      count: $scope.gwaList.count
+    }
+    groupService.getFlattenGroupAccList(reqParam).then($scope.loadMoreGrpWithAccSuccess, $scope.loadMoreGrpWithAccFailure)
+    $scope.gwaList.limit += 5
+
+  $scope.loadMoreGrpWithAccSuccess = (res) ->
+    $scope.gwaList.currentPage += 1
+    #list = gc.removeEmptyGroups(res.body.results)
+    if res.body.results.length > 0 && res.body.totalPages >= $scope.gwaList.currentPage
+      _.each res.body.results, (grp) ->
+        $scope.flatAccntWGroupsList.push(grp) 
+      #$scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
+    else if res.body.totalPages >= $scope.gwaList.currentPage
+      $scope.loadMoreGrpWithAcc($rootScope.selectedCompany.uniqueName)
+    else
+      $scope.hideLoadMore = true
+
+  $scope.loadMoreGrpWithAccFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.searchGrpWithAccounts = (str) ->
+    $scope.gwaList.page = 1
+    $scope.gwaList.currentPage = 1
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    if str.length > 2
+      #$scope.hideLoadMore = true
+      reqParam.q = str
+      reqParam.page = $scope.gwaList.page
+      reqParam.count = $scope.gwaList.count
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+    else
+      #$scope.hideLoadMore = false
+      reqParam.q = ''
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+    if str.length < 1
+      $scope.flatAccListC5.limit = 5
+      #$scope.hideLoadMore = false
+
+  $scope.removeEmptyGroups = (grpList) ->
+    newList = []
+    _.each grpList, (grp) ->
+      if grp.accountDetails.length > 0
+        newList.push(grp)
+    newList
+
+  $scope.setLedgerData = (data, acData) ->
+    $scope.selectedAccountUniqueName = acData.uniqueName
+    $rootScope.selectedAccount = acData
+    DAServices.LedgerSet(data, acData)
+    localStorageService.set("_ledgerData", data)
+    localStorageService.set("_selectedAccount", acData)
+    $rootScope.$emit('account-selected')
+    return false
+
+  # $scope.goToLedgerCash = () ->
+  #   $state.go('company.content.ledgerContent',{unqName:'cash'})
+
+  $rootScope.toggleAcMenus = (condition) ->
+    $scope.showSubMenus = condition
+    _.each $scope.flatAccntWGroupsList, (grp) ->
+      grp.open = condition
+
+
+  $(document).on('click', (e)->
+    $rootScope.flyAccounts = false
+    return false
+  )
 
 giddh.webApp.controller 'mainController', mainController

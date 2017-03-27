@@ -278,15 +278,23 @@ angular.module('trialBalance', []).directive('exportReport', [
 
 
 .directive 'triggerFocus', ['$window', '$timeout', ($window, $timeout) ->
-
+  scope:
+    txn: '=txn'
+    isOpen: '=isOpen'
   link: (scope, elem, attr) ->
 
     idx = parseInt(attr.index)
     tL = attr.txnlength - 1
-    txn = JSON.parse(attr.txn)
 
-    if idx == tL && txn.particular.name == "" && txn.particular.uniqueName == "" && txn.amount == 0
-      $(elem).trigger('click')
+    scope.$watch('isOpen', (newVal, oldVal) ->
+      if newVal
+        $timeout ( ->
+          if scope.txn.particular.name == "" && scope.txn.particular.uniqueName == ""
+            $(elem).trigger('focus')
+        ), 200
+    )
+
+   
     
 ]
 
@@ -302,6 +310,11 @@ angular.module('trialBalance', []).directive('exportReport', [
           $(elem).trigger('focus')
         ), 200
     )
+
+    # $(elem).on('click', (e)->
+    #   if scope.isOpen
+    #     $(elem).trigger('focus')
+    # )
     
 ]
 
@@ -401,10 +414,19 @@ angular.module('trialBalance', []).directive('exportReport', [
   link: (scope, elem, attrs) ->
 
     scope.$watch('scrollto', (newVal, oldVal)->
-      if newVal && newVal != oldVal && newVal.transactions.length && newVal.uniqueName
+      if newVal && newVal.to && newVal != oldVal && newVal.to.transactions.length && newVal.to.uniqueName
+        a = $("#" + newVal.first.uniqueName).offset().top
+        x = $("#" + newVal.to.uniqueName).offset().top
+        scrollVal = x-a
+        console.log x-a, a, x
         $(elem).animate({
-            scrollTop: $("#" + newVal.uniqueName).offset().top
+            scrollTop: scrollVal
         }, 200)
+      # if newVal && newVal != oldVal && newVal.transactions.length && newVal.uniqueName
+      #   x = $("#" + newVal.uniqueName).offset().top
+      #   $(elem).animate({
+      #       scrollTop: x
+      #   }, 200)
         
     )
 
