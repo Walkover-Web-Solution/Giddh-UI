@@ -300,7 +300,7 @@
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null}"
                                         ng-model="txn.inventory.quantity"
                                         ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
-                                        ng-change="lc.onValueChange('qty' , txn)">
+                                        ng-change="lc.onValueChange('qty' , txn)" ignore-mouse-wheel>
                                       <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
                                         x{{txn.rate || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
                                         <span ng-if="lc.accountToShow.stock.openingStockUnit || txn.particular.stock.openingStockUnit || txn.inventory.unit.name">
@@ -312,7 +312,7 @@
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount"
                                         ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
-                                        ng-change="lc.onValueChange('amount', txn)">                                     
+                                        ng-change="lc.onValueChange('amount', txn)" ignore-mouse-wheel>                                     
                                     </td>
                                   </tr>
                                 </tbody>
@@ -361,7 +361,7 @@
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null}"
                                         ng-model="txn.inventory.quantity"
                                         ng-focus="lc.slctxn(value, txn, $event)"
-                                        ng-change="lc.onValueChange('qty' , txn)">
+                                        ng-change="lc.onValueChange('qty' , txn)" ignore-mouse-wheel>
                                       <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0 || txn.inventory != null">
                                         x{{txn.rate || txn.amount/txn.inventory.quantity || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
                                         <span ng-if="lc.accountToShow.stock.openingStockUnit || txn.particular.stock.openingStockUnit || txn.inventory.unit.name || txn.inventory != null">
@@ -373,7 +373,7 @@
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated}" 
                                         ng-model="txn.amount"
                                         ng-focus="lc.slctxn(value, txn, $event)"
-                                        ng-change="lc.onValueChange('amount', txn)">
+                                        ng-change="lc.onValueChange('amount', txn)" ignore-mouse-wheel>
                                         <span 
                                         class="download-invoice-ledger" 
                                         ng-if="value.invoiceGenerated" 
@@ -491,7 +491,7 @@
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null}"
                                         ng-model="txn.inventory.quantity"
                                         ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
-                                        ng-change="lc.onValueChange('qty' , txn)">
+                                        ng-change="lc.onValueChange('qty' , txn)" ignore-mouse-wheel>
                                       <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
                                         x{{txn.rate || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
                                         <span ng-if="lc.accountToShow.stock.openingStockUnit || txn.particular.stock.openingStockUnit || txn.inventory.unit.name">
@@ -503,7 +503,7 @@
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount"
                                         ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
-                                        ng-change="lc.onValueChange('amount', txn)">                                     
+                                        ng-change="lc.onValueChange('amount', txn)" ignore-mouse-wheel>                                     
                                     </td>
                                   </tr>
                                 </tbody>
@@ -552,7 +552,7 @@
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null}"
                                         ng-model="txn.inventory.quantity"
                                         ng-focus="lc.slctxn(value, txn, $event)"
-                                        ng-change="lc.onValueChange('qty' , txn)">
+                                        ng-change="lc.onValueChange('qty' , txn)" ignore-mouse-wheel>
                                       <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0 || txn.inventory != null">
                                         x{{txn.rate || txn.amount/txn.inventory.quantity || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
                                         <span ng-if="lc.accountToShow.stock.openingStockUnit || txn.particular.stock.openingStockUnit || txn.inventory.unit.name || txn.inventory != null">
@@ -642,7 +642,6 @@
               <button class="btn btn-sm" ng-click="lc.selectedLedger.applyApplicableTaxes = !lc.selectedLedger.applyApplicableTaxes" ng-class="{'btn-primary' : lc.selectedLedger.applyApplicableTaxes == true, 'btn-default' : lc.selectedLedger.applyApplicableTaxes == false}" tabindex="0"  ng-if="lc.taxList.length > 0">
                 <span>Tax as per account</span>
               </button>
-              <input type="file" />
               <!--<label>-->
                 <!--<input type="checkbox" ng-model="lc.selectedLedger.applyApplicableTaxes">Applied taxes-->
               <!--</label>-->
@@ -658,7 +657,7 @@
                   type="number"
                   ng-model="lc.selectedTxn.rate"
                   ng-change="lc.selectedTxn.amount = lc.selectedTxn.inventory.quantity*lc.selectedTxn.rate"
-                  style="max-width:64px;">
+                  style="max-width:64px;" ignore-mouse-wheel>
               </label>
             </div>
             <div class="mrT1 clearfix" style="clear:both" ng-if="lc.taxList.length > 0">
@@ -748,5 +747,4 @@
 
 
 </script>
-
 
