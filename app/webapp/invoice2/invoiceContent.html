@@ -22,7 +22,7 @@
           <!-- filters -->
 
                           <div ng-hide="flyDiv" class="pos-rel filterForm" ng-class="{'flying-div' : flyDiv == true}">
-      <div class="form-group">
+      <div class="form-group datePickr">
         <label>From</label>
         <input type="text" class="form-control"
                uib-datepicker-popup="{{format}}" required
@@ -34,7 +34,7 @@
                placeholder="from date"
             />
       </div>
-      <div class="form-group">
+      <div class="form-group datePickr">
         <label>To</label>
         <input type="text" class="form-control"
                uib-datepicker-popup="{{format}}" required
