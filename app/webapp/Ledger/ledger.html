@@ -323,7 +323,6 @@
                           <!--ledgers-->
                           <tr 
                             id="{{value.uniqueName}}"
-                            ng-class="{'unconfirmedEntry':lc.unconfirmedEntry}"
                             ng-repeat="(key, value) in lc.dLedgerContainer.ledgerData | orderObjectBy : 'index' : lc.sortOrder.debit == lc.sortDirection.desc"
                             ng-dblclick="lc.getMatchingTxn(value, 'CR')">
                             <td colspan="100">
@@ -515,7 +514,6 @@
                           <!--ledgers-->
                           <tr 
                             id="{{value.uniqueName}}"
-                            ng-class="{'unconfirmedEntry':lc.unconfirmedEntry}"
                             ng-repeat="(key, value) in lc.cLedgerContainer.ledgerData | orderObjectBy : 'index' : lc.sortOrder.credit == lc.sortDirection.desc"
                             ng-dblclick="lc.getMatchingTxn(value, 'DR')">
                             <td colspan="100">
