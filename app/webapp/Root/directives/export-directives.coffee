@@ -646,6 +646,29 @@ angular.module('exportDirectives', [])
           @setSelectionRange 0, @value.length
 ]
 
+.directive 'ignoreMouseWheel',[
+  '$rootScope'
+  ($rootScope) ->
+    {
+      restrict: 'A'
+      link: (scope, element, attrs) ->
+        element.bind 'mousewheel', (event) ->
+          element.blur()
+    }
+]
+
+
+# .directive( 'ignoreMouseWheel', function( $rootScope ) {
+#   return {
+#     restrict: 'A',
+#     link: function( scope, element, attrs ){
+#       element.bind('mousewheel', function ( event ) {
+#         element.blur();
+#       } );
+#     }
+#   }
+# } );
+
 # module.directive('selectOnClick', ['$window', function ($window) {
 #   // Linker function
 #   return function (scope, element, attrs) {

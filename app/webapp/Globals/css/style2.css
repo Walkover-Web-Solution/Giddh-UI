@@ -264,9 +264,7 @@ margin-top: 0;
 border: 0 !important;
 outline: 0;
 }
-#accountSearch::-webkit-input-placeholder {
-    color: #fff;
-}
+
 .ledger_search i {
     color: #fff;
 }
@@ -872,12 +870,9 @@ input[type="checkbox"]:after {
 #user-dropdown {
     color: #fff;
     background: #d35f29;
-    border-radius: 100%;
-    width: 48px;
-    height: 48px;
-    margin: 2px 6px;
+    width: 60px;
     text-align: center;
-    padding: 12px 0;
+    padding: 15px 0;
 }
 .select_wrap {
     z-index: 9;
@@ -932,4 +927,32 @@ a, button, input {
 .Inpt_dwn {
     padding-right: 25px !important;
     text-align: right;
+}
+
+
+/*placeholder webkit css*/
+#accountSearch::-webkit-input-placeholder {
+    color: #fff;
+}
+#accountSearch::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #fff;
+}
+#accountSearch::-moz-placeholder { /* Firefox 19+ */
+  color: #fff;
+}
+#accountSearch:-ms-input-placeholder { /* IE 10+ */
+  color: #fff;
+}
+#accountSearch:-moz-placeholder { /* Firefox 18- */
+  color: #fff;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
 }

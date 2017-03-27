@@ -33,6 +33,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     endDate: moment()._d
   };
 
+
   $scope.singleDate = moment()
   # $scope.opts = {
   #     locale:
