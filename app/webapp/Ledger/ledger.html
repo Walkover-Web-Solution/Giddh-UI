@@ -40,7 +40,7 @@
               <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
             </div> -->
             <div class="form-group mrR2 pull-left pos-rel" >
-              <input type="search" class="form-control" placeholder="Search ledger" ng-model="lc.query" ng-keyup="lc.countTotalTransactionsAfterSomeTime()" ng-model-options="{debounce: 1000}" ng-change="lc.filterLedgers(lc.accountToShow.uniqueName, lc.query, 1)" ng-disabled="!lc.readLedgersFinished">
+              <input type="search" class="form-control" placeholder="Search ledger" ng-model="lc.query" ng-model-options="{debounce: 1000}" ng-change="lc.filterLedgers(lc.accountToShow.uniqueName, lc.query, 1)" ng-disabled="!lc.readLedgersFinished">
              <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
             </div>
 
@@ -93,7 +93,7 @@
             </form>
 
           
-            <div option-list>
+            <div option-list class="mrR">
               
               <!-- <a id="showHide" class="pull-right mrL1" href="javascript:void(0)">
                 <i class="icon-options"></i>

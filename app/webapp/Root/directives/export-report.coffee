@@ -418,7 +418,7 @@ angular.module('trialBalance', []).directive('exportReport', [
         a = $("#" + newVal.first.uniqueName).offset().top
         x = $("#" + newVal.to.uniqueName).offset().top
         scrollVal = x-a
-        console.log x-a, a, x
+        # console.log x-a, a, x
         $(elem).animate({
             scrollTop: scrollVal
         }, 200)
