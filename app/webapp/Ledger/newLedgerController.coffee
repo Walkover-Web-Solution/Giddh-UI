@@ -35,49 +35,49 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
 
   $scope.singleDate = moment()
-  # $scope.opts = {
-  #     locale:
-  #       applyClass: 'btn-green'
-  #       applyLabel: 'Apply'
-  #       fromLabel: 'From'
-  #       format: 'D-MMM-YY'
-  #       toLabel: 'To'
-  #       cancelLabel: 'Cancel'
-  #       customRangeLabel: 'Custom range'
-  #     ranges:
-  #       'Last 1 Day': [
-  #         moment().subtract(1, 'days')
-  #         moment()
-  #       ]
-  #       'Last 7 Days': [
-  #         moment().subtract(6, 'days')
-  #         moment()
-  #       ]
-  #       'Last 30 Days': [
-  #         moment().subtract(29, 'days')
-  #         moment()
-  #       ]
-  #       'Last 6 Months': [
-  #         moment().subtract(6, 'months')
-  #         moment()
-  #       ]
-  #       'Last 1 Year': [
-  #         moment().subtract(12, 'months')
-  #         moment()
-  #       ]
-  #     eventHandlers : {
-  #       'apply.daterangepicker' : (e, picker) ->
-  #         $scope.cDate.startDate = e.model.startDate._d
-  #         $scope.cDate.endDate = e.model.endDate._d
-  #     }
-  # }
-  # $scope.setStartDate = ->
-  #   $scope.cDate.startDate = moment().subtract(4, 'days').toDate()
+  $scope.opts = {
+      locale:
+        applyClass: 'btn-green'
+        applyLabel: 'Apply'
+        fromLabel: 'From'
+        format: 'D-MMM-YY'
+        toLabel: 'To'
+        cancelLabel: 'Cancel'
+        customRangeLabel: 'Custom range'
+      ranges:
+        'Last 1 Day': [
+          moment().subtract(1, 'days')
+          moment()
+        ]
+        'Last 7 Days': [
+          moment().subtract(6, 'days')
+          moment()
+        ]
+        'Last 30 Days': [
+          moment().subtract(29, 'days')
+          moment()
+        ]
+        'Last 6 Months': [
+          moment().subtract(6, 'months')
+          moment()
+        ]
+        'Last 1 Year': [
+          moment().subtract(12, 'months')
+          moment()
+        ]
+      eventHandlers : {
+        'apply.daterangepicker' : (e, picker) ->
+          $scope.cDate.startDate = e.model.startDate._d
+          $scope.cDate.endDate = e.model.endDate._d
+      }
+  }
+  $scope.setStartDate = ->
+    $scope.cDate.startDate = moment().subtract(4, 'days').toDate()
 
-  # $scope.setRange = ->
-  #   $scope.cDate =
-  #       startDate: moment().subtract(5, 'days')
-  #       endDate: moment()
+  $scope.setRange = ->
+    $scope.cDate =
+        startDate: moment().subtract(5, 'days')
+        endDate: moment()
   ###date range picker end###
 
   lc.sortDirection = Object.freeze({'asc' : 0, 'desc' : 1})
@@ -171,7 +171,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.dbConfig = 
     name: 'giddh_db'
     storeName: 'ledgers'
-    version: 17
+    version: 20
     success: (e) ->
     failure: (e) ->
     upgrade: (e) ->
