@@ -365,7 +365,7 @@
               <tbody>
               <tr ng-repeat="ledger in ledgers.results | orderBy:sortVar:reverse | filter:searchInLedger track by $index" ng-class="{'danger': checkTransaction(ledger.uniqueName)}">
                 <td style="width:3%" rowspan="ledger.transactions.length">
-                  <input type="checkbox" ng-model="ledger.checked" ng-change="addThis(ledger, ledger.checked)">
+                  <input type="checkbox" ng-model="ledger.checked">
                 </td>
                 <td style="width:10%" rowspan="ledger.transactions.length">
                   {{ledger.entryDate}}
