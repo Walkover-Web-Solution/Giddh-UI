@@ -268,6 +268,7 @@
                                 <tbody class="ledger-main">
                                   <tr
                                     class="ledger-row"
+                                    ng-class="{compoundEntry: lc.blankLedger.isCompoundEntry || lc.blankLedger.failed}"
                                     ng-repeat="txn in lc.blankLedger.transactions"
                                     ng-if="txn.type == 'DEBIT'"
                                     uib-popover-template="lc.popover.templateUrl" 
@@ -327,7 +328,8 @@
                           <tr 
                             id="{{value.uniqueName}}"
                             ng-repeat="(key, value) in lc.dLedgerContainer.ledgerData | orderObjectBy : 'index' : lc.sortOrder.debit == lc.sortDirection.desc"
-                            ng-dblclick="lc.getMatchingTxn(value, 'CR')">
+                            ng-dblclick="lc.getMatchingTxn(value, 'CR')"
+                            ng-class="{compoundEntry: value.isCompoundEntry || value.failed}">
                             <td colspan="100">
                               <table class="width100">
                                 <tbody class="ledger-main">
@@ -464,6 +466,7 @@
                                 <tbody class="ledger-main">
                                   <tr
                                     class="ledger-row"
+                                    ng-class="{compoundEntry: lc.blankLedger.isCompoundEntry || lc.blankLedger.failed}"
                                     ng-repeat="txn in lc.blankLedger.transactions"
                                     ng-if="txn.type == 'CREDIT'"
                                     uib-popover-template="lc.popover.templateUrl" 
@@ -524,7 +527,8 @@
                           <tr 
                             id="{{value.uniqueName}}"
                             ng-repeat="(key, value) in lc.cLedgerContainer.ledgerData | orderObjectBy : 'index' : lc.sortOrder.credit == lc.sortDirection.desc"
-                            ng-dblclick="lc.getMatchingTxn(value, 'DR')">
+                            ng-dblclick="lc.getMatchingTxn(value, 'DR')"
+                            ng-class="{compoundEntry: value.isCompoundEntry || value.failed}">
                             <td colspan="100">
                               <table class="width100">
                                 <tbody class="ledger-main">
