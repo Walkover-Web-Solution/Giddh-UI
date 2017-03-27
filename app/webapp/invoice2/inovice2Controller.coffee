@@ -836,6 +836,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       ledger.checked = condition
       $scope.addThis(ledger, condition)
 
+  $scope.unCheckSelectedEntries = (srchString) ->
+    if srchString.length > 1
+      $scope.selectAllLedger(false)
+
   $timeout ( ->
     $scope.getTemplates()
   ),2000
