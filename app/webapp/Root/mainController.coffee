@@ -548,6 +548,14 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     changeData.type = method
     $scope.$broadcast('company-changed', changeData)
     $rootScope.$emit('company-changed', changeData)
+    $scope.gwaList = {
+      page: 1
+      count: 5
+      totalPages: 0
+      currentPage : 1
+      limit: 5
+    }
+    return false
     #$scope.tabs[0].active = true
 
   $rootScope.allowed = true
@@ -600,7 +608,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.working = false
   $scope.getFlattenGrpWithAccList = (compUname) ->
   #   console.log("working  : ",$scope.working)
+    console.log $scope.gwaList.currentPage
     $rootScope.companyLoaded = false
+    $scope.showAccountList = false
     reqParam = {
       companyUniqueName: compUname
       q: ''

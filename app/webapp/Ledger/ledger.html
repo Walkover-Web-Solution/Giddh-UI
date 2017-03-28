@@ -329,7 +329,7 @@
                             id="{{value.uniqueName}}"
                             ng-repeat="(key, value) in lc.dLedgerContainer.ledgerData | orderObjectBy : 'index' : lc.sortOrder.debit == lc.sortDirection.desc"
                             ng-dblclick="lc.getMatchingTxn(value, 'CR')"
-                            ng-class="{compoundEntry: value.isCompoundEntry || value.failed}">
+                            ng-class="{compoundEntry: value.isCompoundEntry || value.failed, uncfr:value.unconfirmedEntry}">
                             <td colspan="100">
                               <table class="width100">
                                 <tbody class="ledger-main">
@@ -528,7 +528,7 @@
                             id="{{value.uniqueName}}"
                             ng-repeat="(key, value) in lc.cLedgerContainer.ledgerData | orderObjectBy : 'index' : lc.sortOrder.credit == lc.sortDirection.desc"
                             ng-dblclick="lc.getMatchingTxn(value, 'DR')"
-                            ng-class="{compoundEntry: value.isCompoundEntry || value.failed}">
+                            ng-class="{compoundEntry: value.isCompoundEntry || value.failed, uncfr:value.unconfirmedEntry}">
                             <td colspan="100">
                               <table class="width100">
                                 <tbody class="ledger-main">

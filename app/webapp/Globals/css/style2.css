@@ -1011,3 +1011,6 @@ input[type=number] {
 .ledger-main .form-control:focus {
     border-color: #d35f29 !important;
 }
+.uncfr .form-control {
+   background: #f7edcd !important;
+}
