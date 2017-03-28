@@ -29,10 +29,10 @@
  <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
 
     <section class="container-fluid" ng-if="lc.accountUnq.length > 0">
-      <div class="pdT2">
+      <div class="pdT1">
         <div class="ledger-top-panel clearfix" ng-class="{'while-panel':lc.showPanel}" ng-hide="lc.showPanel">
 
-          <div class="form-inline pdB1 ledgHead">
+          <div class="form-inline ledgHead">
 
           <!-- ledger search -->
 <!--             <div  >
@@ -82,7 +82,7 @@
               </div> -->
               </div>
               <div class="form-group">
-                <button type="button" class="btn btn-primary mrL1" ng-click="lc.getLedgerData()" ng-disabled="fromToDateForm.$invalid">
+                <button type="button" class="btn btn-primary mrL1" ng-click="lc.getLedgerData(false, true)" ng-disabled="fromToDateForm.$invalid">
                   GO
                 </button>
 <!--                 <button type="button" class="btn btn-default mrL1" ng-click="lc.readLedgers(lc.accountToShow.uniqueName, 1, 'next')" >
@@ -205,7 +205,7 @@
           </section>
           <!-- external ledger code end here -->
 
-          <div class="clearfix ledger-container" ng-class="{'ledger-container-w paddingTop200':lc.showPanel && flyAccounts, 'ledger-container-w paddingTop120': lc.showPanel && !flyAccounts}" cover-page>
+          <div class="clearfix ledger-container" ng-class="{'ledger-container-w paddingTop200':lc.showPanel && flyAccounts, 'ledger-container-w paddingTop120': lc.showPanel && !flyAccounts}" table-height>
             <!--ledger table head 1-->
             <table class="col-xs-12 ledger-head">
               <thead>
@@ -262,7 +262,7 @@
                         <tbody>
 
                           <!--Add entry row for normal order-->
-                          <tr>
+                          <tr ng-if="canUpdate">
                             <td colspan="100">
                               <table class="width100">
                                 <tbody class="ledger-main">
@@ -284,7 +284,9 @@
                                     <td class="col-xs-2">
                                       <input class="form-control" type="text" 
                                       ng-model="lc.blankLedger.entryDate"
-                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)" select-on-click>
+                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)" 
+                                      select-on-click
+                                      mask='39-19-9999'>
                                     </td>
                                     <td class="col-xs-6">
                                       <input class="form-control" placeholder="{{lc.accountUnq}} receiving via?" type="text" ng-model="txn.particular"
@@ -349,7 +351,9 @@
                                     <td class="col-xs-2">
                                       <input class="form-control type="text" 
                                       ng-model="value.entryDate"
-                                      ng-focus="lc.slctxn(value, txn, $event)" select-on-click>
+                                      ng-focus="lc.slctxn(value, txn, $event)" 
+                                      select-on-click
+                                      mask='39-19-9999'>
                                     </td>
                                     <td class="col-xs-6">
                                       <input class="form-control type="text" ng-model="txn.particular"
@@ -460,7 +464,7 @@
                       <table class="width100">
                         <tbody>
                           <!--Add entry row for nomral order-->
-                          <tr>
+                          <tr ng-if="canUpdate">
                             <td colspan="100">
                               <table class="width100">
                                 <tbody class="ledger-main">
@@ -482,7 +486,10 @@
                                     <td class="col-xs-2">
                                       <input class="form-control" type="text" 
                                       ng-model="lc.blankLedger.entryDate"
-                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)" select-on-click>
+                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                      select-on-click
+                                      mask='39-19-9999'
+                                      >
                                     </td>
                                     <td class="col-xs-6">
                                       <input type="text" class="form-control" ng-model="txn.particular"
@@ -548,7 +555,9 @@
                                     <td class="col-xs-2">
                                       <input class="form-control" type="text" 
                                       ng-model="value.entryDate"
-                                      ng-focus="lc.slctxn(value, txn, $event)" select-on-click>
+                                      ng-focus="lc.slctxn(value, txn, $event)" 
+                                      select-on-click
+                                      mask='39-19-9999'>
                                     </td>
                                     <td class="col-xs-6">
                                       <input class="form-control" type="text" ng-model="txn.particular"

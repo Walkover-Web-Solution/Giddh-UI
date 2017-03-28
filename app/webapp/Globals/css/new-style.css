@@ -4640,7 +4640,7 @@ table.proforma-particulars{
 .accounts-side-bar{
     width: 320px;
     position: absolute;
-    z-index: 999;
+    z-index: 9999;
     left: 0;
     box-shadow: 0px 2px 5px rgba(0,0,0,0.6);
     margin:0; 

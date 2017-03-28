@@ -336,8 +336,9 @@ angular.module('trialBalance', []).directive('exportReport', [
 
     setHeight = () ->
       top = $(elem).offset().top || 108
-      exclude = $(window).innerHeight() - top
-      height = $(window).outerHeight(true) - top
+      console.log top
+      exclude = $(window).innerHeight() - 54
+      height = $(window).outerHeight(true) - 54
       $(elem).css({"height": height,"min-height":height})
 
     angular.element($window).on 'resize', ->
@@ -382,6 +383,20 @@ angular.module('trialBalance', []).directive('exportReport', [
     setHeight = () ->
       height = $(window).innerHeight() - 54 - 54
       $(elem).css({"height": height, "overflow-y":"auto"})
+    
+    $(window).on('resize', (e) ->
+      setHeight()
+    )
+
+    setHeight()
+]
+
+.directive 'tableHeight', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: "EA"
+  link: (scope, elem, attr) ->
+    setHeight = () ->
+      height = $(window).innerHeight() - 112
+      $(elem).css({"height": height})
     
     $(window).on('resize', (e) ->
       setHeight()
