@@ -336,7 +336,6 @@ angular.module('trialBalance', []).directive('exportReport', [
 
     setHeight = () ->
       top = $(elem).offset().top || 108
-      console.log top
       exclude = $(window).innerHeight() - 54
       height = $(window).outerHeight(true) - 54
       $(elem).css({"height": height,"min-height":height})
