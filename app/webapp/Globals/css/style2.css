@@ -1007,3 +1007,7 @@ input[type=number] {
 .flow_visible {
     overflow: visible !important;
 }
+
+.uncfr .form-control {
+   background: #f7edcd !important;
+}
