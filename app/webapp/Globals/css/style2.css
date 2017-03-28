@@ -204,7 +204,7 @@ min-width: 220px;
 }
 
 .compoundEntry td, .compoundEntry td .form-control {
-    background: #f3f0e6 !important;
+    background: #f7de8a !important;
 }
 .ledger-table-body table tbody.ledger-main tr td {
     padding: 0;
@@ -1006,4 +1006,8 @@ input[type=number] {
 }
 .flow_visible {
     overflow: visible !important;
+}
+
+.ledger-main .form-control:focus {
+    border-color: #d35f29 !important;
 }
