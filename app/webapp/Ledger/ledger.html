@@ -39,7 +39,7 @@
               <input type="search" class="form-control" placeholder="Search ledger" ng-model="particularSearch" ng-keyup="countTotalTransactionsAfterSomeTime()" ng-model-options="{debounce: 1000}">
               <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
             </div> -->
-            <div class="form-group mrR2 pull-left pos-rel" >
+            <div class="form-group mrL2 pull-right pos-rel" >
               <input type="search" class="form-control" placeholder="Search ledger" ng-model="lc.query" ng-model-options="{debounce: 1000}" ng-change="lc.filterLedgers(lc.accountToShow.uniqueName, lc.query, 1)" ng-disabled="!lc.readLedgersFinished">
              <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
             </div>
@@ -221,7 +221,7 @@
               <!--left column-->
               <div class="left-col">
                   <!--ledger table body debit section-->
-                  <section class="col-xs-12 pad0 bdr-w-t h100">
+                  <section class="col-xs-12 pad0 h100">
                     <table class="width100 ledger-header">
                       <thead>
                         <tr class="t-h-bg2">
@@ -244,7 +244,7 @@
                           </th>
                         </tr>
                         <tr class="bg3">
-                          <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
+                          <th colspan="12" class="col-xs-12 text-right h32">
                             <span class="pull-left tcount">Total Transactions: {{lc.dNonemptyTxn}}</span>
                             <span ng-if="lc.ledgerData.forwardedBalance.type == 'DEBIT' && lc.ledgerData.forwardedBalance.amount > 0"><span class="highlight_info">Opening Balance : {{lc.ledgerData.forwardedBalance.amount | number:2}}</span></span>
                             <!-- <span ng-if="lc.ledgerData.forwardedBalance.type == 'CREDIT'">B/F : 0</span> -->
@@ -356,7 +356,7 @@
                                       mask='39-19-9999'>
                                     </td>
                                     <td class="col-xs-6">
-                                      <input class="form-control type="text" ng-model="txn.particular"
+                                      <input class="form-control" type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
@@ -412,15 +412,15 @@
                 <table class="width100 ledger-footer">
                   <tbody>
                       
-                      <tr class="t-h-bg3 bdr-w-t">
-                        <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
+                      <tr class="t-h-bg3">
+                        <td colspan="12" class="col-xs-12 text-right white h32">
                           <span ng-if="lc.ledgerData.balance.type == 'DEBIT'">C/F: Dr {{lc.ledgerData.balance.amount | number:2}}</span>
                         </td>
                       </tr>
-                      <tr class="t-h-bg2 bdr-w-t h42">
+                      <tr class="t-h-bg2 h42">
 
                         <td colspan="6" class="col-xs-6 text-left bold"><span class="midlight_info">Debit Total: {{lc.ledgerData.debitTotal | number:2}}</span> </td>
-                        <td colspan="6" class="col-xs-6 text-right bdr-w-t bold"><span class="highlight_info">Reckoning : {{lc.ledgerData.reckoningDebitTotal | number:2}}</span></td>
+                        <td colspan="6" class="col-xs-6 text-right bold"><span class="highlight_info">Reckoning : {{lc.ledgerData.reckoningDebitTotal | number:2}}</span></td>
                       </tr>
                   </tbody>
                 </table>
@@ -428,7 +428,7 @@
               <!--right column-->
               <div class="right-col">
                   <!--ledger table body debit section-->
-                  <section class="col-xs-12 pad0 bdr-w-t h100">
+                  <section class="col-xs-12 pad0 h100">
 
                     <table class="width100  ledger-header">
                       <thead>
@@ -450,7 +450,7 @@
 
                         </tr>
                         <tr class="bg3">
-                          <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
+                          <th colspan="12" class="col-xs-12 text-right h32">
                             <span class="pull-left tcount">Total Transactions: {{lc.cNonemptyTxn}}</span>
                             <span ng-if="lc.ledgerData.forwardedBalance.type == 'CREDIT' && lc.ledgerData.forwardedBalance.amount > 0">B/F : {{lc.ledgerData.forwardedBalance.amount | number:2}}</span>
                            <!--  <span ng-if="lc.ledgerData.forwardedBalance.type == 'DEBIT'">B/F : 0</span> -->
@@ -617,11 +617,11 @@
                   <tbody>
                   
                       <tr class="t-h-bg3">
-                        <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
+                        <td colspan="12" class="col-xs-12 text-right white h32">
                           <span  ng-if="lc.ledgerData.balance.type == 'CREDIT'">C/F: Cr {{lc.ledgerData.balance.amount | number:2}}</span>
                         </td>
                       </tr>
-                      <tr class="t-h-bg2 bdr-w-t h42">
+                      <tr class="t-h-bg2 h42">
                         <td colspan="6" class="col-xs-6 text-left bold"><span class="midlight_info">Credit Total: {{lc.ledgerData.creditTotal | number:2}}</span></td>
                         <td colspan="6" class="col-xs-6 text-right bold"><span class="highlight_info">Reckoning: {{lc.ledgerData.reckoningCreditTotal | number:2}}</span></td>
                       </tr>
