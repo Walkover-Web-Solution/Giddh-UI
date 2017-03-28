@@ -471,10 +471,13 @@ header {
     border: 1px solid #fff;
     border-top: 0;
 }
-#companyList li:hover {
+#companyList li ul li:hover {
     background: #e7e7e6;
 }
-#companyList li.selected-company {
+#companyList li {
+    background: #fff;
+}
+#companyList li.selected-company, #companyList li.selected-company:hover {
     background: #f5834e;
     color: #fff;
 }
@@ -1012,5 +1015,11 @@ input[type=number] {
     border-color: #d35f29 !important;
 }
 .uncfr .form-control {
-   background: #f7edcd !important;
+   background: #e6e6e6 !important;
+}
+.ledger-header thead th:last-child, .ledger-container table tr.bg3 th:last-child {
+    border-right: 0;
+}
+.create-company:hover {
+    background: none !important;
 }
