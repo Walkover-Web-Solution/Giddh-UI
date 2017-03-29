@@ -1652,7 +1652,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       ledger.transactions = transactions
     ledger
 
+
+  # lc.invoiceFile = {}
   # lc.getInvoiceFile = () ->
+  #   console.log lc.invoiceFile
   #   data = null
   #   f = document.getElementById('invoiceFile').files[0]
   #   r = new FileReader()
@@ -1663,9 +1666,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.doingEntry = false
   lc.lastSelectedLedger = {}
   lc.saveUpdateLedger = (ledger) ->
-    # file = lc.getInvoiceFile()
-    # console.log file
-    return false
     if !ledger.isBankTransaction
       ledger = lc.buildLedger(ledger)
     # lc.pageLoader = true
