@@ -25,7 +25,7 @@
                 class="title  LIB{{value.groupUniqueName}}" 
                 ng-click="value.open = !value.open"
                 ng-class="{'active' : value.open || value.groupUniqueName === selectedGroupUname}">
-                <a ng-bind-html="value.groupName | highlight: search.acnt"></a>
+                <a ng-bind-html="value.groupName | highlight: search.acnt" class="ellp max250"></a>
               </div>
               <ul class="accBox subAccBox" ng-show="value.open || value.groupUniqueName === selectedGroupUname"
                   id="ul_{{value.groupUniqueName}}">
@@ -37,7 +37,7 @@
                      ui-sref="company.content.ledgerContent({unqName:accDtl.uniqueName})">
                     <div class="clearfix">
                       <i ng-class="accDtl.charId == 1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
-                      <span ng-bind-html="accDtl.name" class="ellp max100"></span>
+                      <span ng-bind-html="accDtl.name" class="ellp max250"></span>
                       <span class="ng-hide">{{accDtl.uniqueName}}</span>
                     </div>
                   </a>

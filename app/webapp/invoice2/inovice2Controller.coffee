@@ -350,8 +350,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
   $scope.generateBulkInvoiceSuccess = (res) ->
     $scope.checkall = false
-    checkboxA = document.getElementsByName('checkall')
-    checkboxA[0].checked = false
+    # checkboxA = document.getElementsByName('checkall')
+    # checkboxA[0].checked = false
     if angular.isArray(res.body)
       $scope.inCaseOfFailedInvoice = res.body
       
@@ -456,6 +456,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     angular.copy(data, $scope.defTempData)
     $scope.defTempData.signatureType = $scope.tempSet.signatureType
     angular.copy($scope.defTempData, $scope.selectedInvoiceDetails)
+    #console.log $scope.selectedInvoice
     showPopUp = $scope.convertIntoOur()
     
     # open dialog
@@ -633,8 +634,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       data.account.data = data.account.data.split('\n')
 
     angular.copy(data, matchThis)
-    if matchThis.account.data != "" && matchThis.account.data != undefined
-      matchThis.account.data = matchThis.account.data.join("\n")
+    if matchThis.account.data == "" || matchThis.account.data == undefined
+      matchThis.account.data = [""]
 #    $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.join("\n")
 
     # companyIdentities setting
@@ -678,7 +679,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 #          $scope.defTempData.account.data = []
         if dData.invoice.account.data.length == 0
           dData.invoice.account.data = []
-        if $scope.selectedInvoiceDetails.account.name != matchThis.account.name || $scope.selectedInvoiceDetails.account.attentionTo != matchThis.account.attentionTo || $scope.selectedInvoiceDetails.account.data != matchThis.account.data || $scope.selectedInvoiceDetails.account.mobileNumber != matchThis.account.mobileNumber || $scope.selectedInvoiceDetails.account.email != matchThis.account.email
+        if not _.isEqual($scope.selectedInvoiceDetails, matchThis)
           modalService.openConfirmModal(
             title: 'Update'
             body: 'Would you also like to update account information in main account?',

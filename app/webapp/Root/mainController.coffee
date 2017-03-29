@@ -601,7 +601,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.showAccounts = (e) ->
     $rootScope.flyAccounts = true
-    e.stopPropagation()
+    #e.stopPropagation()
   # $scope.addScript()
 
   # for accounts list
@@ -718,7 +718,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
 
   $(document).on('click', (e)->
-    $rootScope.flyAccounts = false
+    if e.target.id != 'accountSearch'
+      $rootScope.flyAccounts = false
     return false
   )
 
