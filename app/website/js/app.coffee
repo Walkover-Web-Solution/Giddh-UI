@@ -291,6 +291,7 @@ app.controller 'homeCtrl', [
         $scope.geo = res.data
 
       @failure = (res) ->
+        console.log res
         #toastr.error(res.data)
 
       $http.get('/user-location').then(@success, @failure)
@@ -383,11 +384,7 @@ app.run [
 
     if isIE()
       $rootScope.browserIE = true
-      alert 'It is InternetExplorer'
-      location.pathname = '/global'
-    else
-      # location.pathname = '/'
-      console.log "it is not ie"
+      window.location.pathname = '/IE' 
 ]
   
 

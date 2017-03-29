@@ -964,6 +964,16 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
           tp.value = date
       $scope.calcSubtotal()
 
+  $scope.setTab = (value) ->
+    $scope.selectedTab = value
+    $timeout ( ->
+      $scope.commonGoButtonClick()
+    ),2000
+    if value == 2
+      $scope.hideFilters = true
+    else
+      $scope.hideFilters = false
+
   $scope.taxTotal = 0
   $scope.$watch('taxes', (newVal, oldVal) ->
     if newVal != oldVal

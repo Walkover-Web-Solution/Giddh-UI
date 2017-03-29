@@ -278,15 +278,23 @@ angular.module('trialBalance', []).directive('exportReport', [
 
 
 .directive 'triggerFocus', ['$window', '$timeout', ($window, $timeout) ->
-
+  scope:
+    txn: '=txn'
+    isOpen: '=isOpen'
   link: (scope, elem, attr) ->
 
     idx = parseInt(attr.index)
     tL = attr.txnlength - 1
-    txn = JSON.parse(attr.txn)
 
-    if idx == tL && txn.particular.name == "" && txn.particular.uniqueName == "" && txn.amount == 0
-      $(elem).trigger('click')
+    scope.$watch('isOpen', (newVal, oldVal) ->
+      if newVal
+        $timeout ( ->
+          if scope.txn.particular.name == "" && scope.txn.particular.uniqueName == ""
+            $(elem).trigger('focus')
+        ), 200
+    )
+
+   
     
 ]
 
@@ -302,6 +310,11 @@ angular.module('trialBalance', []).directive('exportReport', [
           $(elem).trigger('focus')
         ), 200
     )
+
+    # $(elem).on('click', (e)->
+    #   if scope.isOpen
+    #     $(elem).trigger('focus')
+    # )
     
 ]
 
@@ -323,8 +336,8 @@ angular.module('trialBalance', []).directive('exportReport', [
 
     setHeight = () ->
       top = $(elem).offset().top || 108
-      exclude = $(window).innerHeight() - top
-      height = $(window).outerHeight(true) - top
+      exclude = $(window).innerHeight() - 54
+      height = $(window).outerHeight(true) - 54
       $(elem).css({"height": height,"min-height":height})
 
     angular.element($window).on 'resize', ->
@@ -377,6 +390,20 @@ angular.module('trialBalance', []).directive('exportReport', [
     setHeight()
 ]
 
+.directive 'tableHeight', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: "EA"
+  link: (scope, elem, attr) ->
+    setHeight = () ->
+      height = $(window).innerHeight() - 112
+      $(elem).css({"height": height})
+    
+    $(window).on('resize', (e) ->
+      setHeight()
+    )
+
+    setHeight()
+]
+
 
 .directive 'ledgerScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
   restrict: "EA"
@@ -404,9 +431,10 @@ angular.module('trialBalance', []).directive('exportReport', [
       if newVal && newVal.to && newVal != oldVal && newVal.to.transactions.length && newVal.to.uniqueName
         a = $("#" + newVal.first.uniqueName).offset().top
         x = $("#" + newVal.to.uniqueName).offset().top
-        console.log x-a, a, x
+        scrollVal = x-a
+        # console.log x-a, a, x
         $(elem).animate({
-            scrollTop: x-a
+            scrollTop: scrollVal
         }, 200)
       # if newVal && newVal != oldVal && newVal.transactions.length && newVal.uniqueName
       #   x = $("#" + newVal.uniqueName).offset().top

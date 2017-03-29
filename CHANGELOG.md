@@ -2,6 +2,36 @@
 
 ## Update
 
+## IndexedDB Integraton
+
+- ([4280b7e](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/4280b7ec3f22e30d0ea8f0dd49ae6e5e825a7eed))
+    1.) IndexedDB integrtion for ledger
+
+# 2.05
+
+## Update
+
+<<<<<<< HEAD
+## IndexedDB Integraton
+
+- ([4280b7e](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/4280b7ec3f22e30d0ea8f0dd49ae6e5e825a7eed))
+    1.) IndexedDB integrtion for ledger
+
+# 2.05
+
+## Update
+
+## IndexedDB Integraton
+
+- ([4280b7e](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/4280b7ec3f22e30d0ea8f0dd49ae6e5e825a7eed))
+    1.) IndexedDB integrtion for ledger
+
+# 2.05
+
+## Update
+
+=======
+>>>>>>> master
 ## Bug fixes, UI updates, Ledger improvements for large data
 
 - ([93e08f1](https://github.com/Walkover-Web-Solution/Giddh-UI/commit/93e08f1dfc37a2a3c93460d7814ec21300f2494e))

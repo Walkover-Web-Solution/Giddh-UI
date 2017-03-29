@@ -53,7 +53,13 @@
                         </td>
                         <td class="col-xs-5">
                           <!--<input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-append-to-body="true" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForlc.blankLedger(txn, ledger)" typeahead-template-url="accountPopUp.html">-->
-                          <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForlc.blankLedger(txn, ledger)" ng-model-options="{debounce: 200}">
+                          <input class="form-control" 
+                          ng-model="txn.particular" 
+                          typeahead-append-to-body="true" 
+                          uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" 
+                          typeahead-template-url="accountPopUp.html"
+                          typeahead-on-select="lc.onBankTxnSelect($item, $model, $label, $event, txn)" 
+                         >
                         </td>
                         <td class="col-xs-3">
                           <input class="form-control background-transparent" ng-model="txn.amount" ng-disabled="true" ng-keyup="triggerPanelFocus($event)">
@@ -103,7 +109,13 @@
                         </td>
                         <td class="col-xs-5">
                           <!--<input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-append-to-body="true" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForlc.blankLedger(txn, ledger)" typeahead-template-url="accountPopUp.html">-->
-                          <input class="form-control" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForlc.blankLedger(txn, ledger)" ng-model-options="{debounce: 200}">
+                          <input class="form-control" 
+                          ng-model="txn.particular" 
+                          typeahead-append-to-body="true" 
+                          uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" 
+                          typeahead-template-url="accountPopUp.html"
+                          typeahead-on-select="lc.onBankTxnSelect($item, $model, $label, $event, txn)" 
+                        >
                         </td>
                         <td class="col-xs-3">
                           <input class="form-control background-transparent" ng-model="txn.amount" ng-disabled="true">
@@ -139,20 +151,7 @@
             <span ng-if="eLedgType == 'DEBIT'">{{eCrBalAmnt | number:2}}</span>
           </td>
         </tr>
-        <tr class="total greyBg">
-          <td colspan="2" style="width:36%" class="bdrL">
-            <span class="pull-right">Total</span>
-          </td>
-          <td style="width:14%" class="bdrR alR">
-            <span>{{eDrTotal | number:2}}</span>
-          </td>
-          <td colspan="2" style="width:36%" class="bdrL">
-            <span class="pull-right">Total</span>
-          </td>
-          <td style="width:14%" class="bdrR alR">
-            <span>{{eCrTotal | number:2}}</span>
-          </td>
-        </tr>
+
       </tfoot>
       <!-- end main tfoot -->
     </table>

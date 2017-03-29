@@ -75,10 +75,14 @@
               <tr>
                 <td>Auto mail when generated</td>
                 <td>
-                  <input type="checkbox" ng-model="settings.invoiceSettings.autoMail">
+                  <!-- <input type="checkbox" ng-model="settings.invoiceSettings.autoMail"> -->
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!settings.invoiceSettings.autoMail" ng-click="settings.invoiceSettings.autoMail = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="settings.invoiceSettings.autoMail" ng-click="settings.invoiceSettings.autoMail = false">
                 </td>
                 <td>
-                  <input type="checkbox" ng-model="settings.proformaSettings.autoMail">
+                  <!-- <input type="checkbox" ng-model="settings.proformaSettings.autoMail"> -->
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!settings.proformaSettings.autoMail" ng-click="settings.proformaSettings.autoMail = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="settings.proformaSettings.autoMail" ng-click="settings.proformaSettings.autoMail = false">
                 </td>
               </tr>
 <!--               <tr>
@@ -151,10 +155,14 @@
               <tr>
                 <td>Create entry after payment using any payment gateway</td>
                 <td>
-                  <input type="checkbox" ng-model="settings.invoiceSettings.createPaymentEntry">
+                  <!-- <input type="checkbox" ng-model="settings.invoiceSettings.createPaymentEntry"> -->
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!settings.invoiceSettings.createPaymentEntry" ng-click="settings.invoiceSettings.createPaymentEntry = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="settings.invoiceSettings.createPaymentEntry" ng-click="settings.invoiceSettings.createPaymentEntry = false">
                 </td>
                 <td>
-                  <input type="checkbox" ng-model="settings.proformaSettings.createPaymentEntry">
+                  <!-- <input type="checkbox" ng-model="settings.proformaSettings.createPaymentEntry"> -->
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!settings.proformaSettings.createPaymentEntry" ng-click="settings.proformaSettings.createPaymentEntry = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="settings.proformaSettings.createPaymentEntry" ng-click="settings.proformaSettings.createPaymentEntry = false">
                 </td>
               </tr>
               </tbody>
@@ -393,7 +401,7 @@
 
             <div style="overflow:hidden">
               <h3 class="fs16 mrB1 mrT2">MSG91</h3>
-              <form name="msg91_keys" ng-submit="msg91_keys.$valid && saveMsg91()">
+              <form name="msg91_keys">
                 <div class="form-group">
                   <label>Auth Key</label>
                   <input type="text" placeholder="enter auth-key" class="form-control max350" ng-model="msg91.authKey"/>
@@ -402,7 +410,7 @@
                   <label>Sender ID</label>
                   <input type="text" placeholder="enter sender Id" class="form-control max350" ng-model="msg91.senderId"/>
                 </div>
-                <button type="submit" class="btn btn-success pull-left" ng-disabled="msg91_keys.$invalid">Save</button>
+                <button type="submit" class="btn btn-success pull-left" ng-disabled="msg91_keys.$invalid" ng-click="saveMsg91()">Save</button>
               </form>
             </div>
 
@@ -410,7 +418,7 @@
 
             <div style="overflow:hidden">
               <h3 class="fs16 mrB1 mrT1">SendGrid</h3>
-              <form name="sGrid_keys" ng-submit="sGrid_keys.$valid && saveSendGrid()">
+              <form name="sGrid_keys">
                 <div class="form-group">
                   <label>Auth Key</label>
                   <input type="text" placeholder="enter auth-key" class="form-control max350" ng-model="sGrid.authKey"/>
@@ -419,7 +427,7 @@
                   <label>Email Subject</label>
                   <input type="text" placeholder="enter email subject" class="form-control max350" ng-model="sGrid.subject"/>
                 </div>
-                <button type="submit" class="btn btn-success pull-left" ng-disabled="sGrid_keys.$invalid">Save</button>
+                <button type="submit" class="btn btn-success pull-left" ng-disabled="sGrid_keys.$invalid" ng-click="saveSendGrid()">Save</button>
               </form>
             </div>
 
@@ -504,7 +512,8 @@
                       <div class="account-number">
                         <b>Account</b>: {{card.accountNumber}}
                       </div>
-                      <div class="account-date">
+<!-- by mustafa
+<div class="account-date">
                         <b>Entries From</b>:
                         <a href="javascript:void(0)">
                           {{card.transactionDate | date}}
@@ -520,7 +529,7 @@
                               min-date="beforeThreeMonths"
                               placeholder="from date"/>
                         </a>
-                      </div>
+                      </div> -->
                       <div class="balance">
                         {{card.currencyCode}} {{card.amount}}
                       </div>
@@ -585,7 +594,8 @@
               </div>
             </div>
             <div class="row pd1">
-              <input type="checkbox" ng-model="razorPayDetail.autoCapturePayment"> Automatic capture on payment
+               <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!razorPayDetail.autoCapturePayment" ng-click="razorPayDetail.autoCapturePayment = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="razorPayDetail.autoCapturePayment" ng-click="razorPayDetail.autoCapturePayment = false"> Automatic capture on payment
             </div>
             <div class="row">
               <div class="col-xs-3 pdL1">

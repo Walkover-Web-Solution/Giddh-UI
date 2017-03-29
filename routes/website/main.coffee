@@ -84,6 +84,9 @@ router.get '/refresh-completed', (req, res) ->
 router.get '/signup', (req, res) ->
   res.sendFile 'signup.html', options
 
+router.get '/IE', (req, res) ->
+  res.sendFile 'incompatible-browser.html', options
+
 router.post '/magic-link', (req, res) ->
   if req.body.data.from != undefined && req.body.data.to != undefined
     hUrl = settings.envUrl + '/magic-link/' + req.body.data.id + '?from=' + req.body.data.from + '&to=' + req.body.data.to

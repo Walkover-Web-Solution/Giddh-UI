@@ -127,16 +127,19 @@ table {
 .icomoon_ico:hover {
     color: #ff782d;
 }
+.export-ledger-options>.arrow:after {
+    content: ' ';
+}
 .export-ledger-options.left>.arrow, .export-ledger-options>.arrow {
     top: 0;
-    border-bottom-color: #fff;
+    border-bottom-color: #d4d3d3;
 }
-.export-ledger-options>.arrow {
+.export-ledger-options>.arrow, .export-ledger-options>.arrow:after {
     transform: none;
 }
 .export-ledger-options {
     left: 0;
-    top: 55px;
+    top: 48px;
     -moz-transition: opacity 1s ease-in-out;
     transition: opacity 1s ease-in-out;
     margin: 0 auto;
@@ -177,7 +180,7 @@ min-width: 220px;
 .btn {
     padding: 6px 16px;
     border: 0;
-    border-radius: 0px;
+    border-radius: 2px;
     font-size: 14px;
 }
 #AddManage {
@@ -201,7 +204,7 @@ min-width: 220px;
 }
 
 .compoundEntry td, .compoundEntry td .form-control {
-    background: #f3f0e6 !important;
+    background: #f7de8a !important;
 }
 .ledger-table-body table tbody.ledger-main tr td {
     padding: 0;
@@ -264,9 +267,7 @@ margin-top: 0;
 border: 0 !important;
 outline: 0;
 }
-#accountSearch::-webkit-input-placeholder {
-    color: #fff;
-}
+
 .ledger_search i {
     color: #fff;
 }
@@ -313,7 +314,12 @@ outline: 0;
     text-transform: capitalize;
 }
 .load-more {
-    margin-left: 10px;
+    padding: 8px 10px;
+    display: block;
+    background: #f5f5f5;
+    color: #d35f29 !important;
+    margin: 20px 0px;
+    font-weight: 500;
 }
 .acntAccordion {
     margin-top: 11px;
@@ -340,9 +346,9 @@ outline: 0;
     left: -80px;
     width: 151px;
 }
-.export-ledger-options>.arrow {
+.export-ledger-options>.arrow, .export-ledger-options>.arrow:after {
     transform: none;
-    top: -10px;
+    top: -9px;
     left: 0;
     right: 0;
     margin: 0 auto;
@@ -465,10 +471,13 @@ header {
     border: 1px solid #fff;
     border-top: 0;
 }
-#companyList li:hover {
+#companyList li ul li:hover {
     background: #e7e7e6;
 }
-#companyList li.selected-company {
+#companyList li {
+    background: #fff;
+}
+#companyList li.selected-company, #companyList li.selected-company:hover {
     background: #f5834e;
     color: #fff;
 }
@@ -631,11 +640,11 @@ input[type="checkbox"]:after {
     padding: 7px 4px;
 }*/
 .switch.wide.checked small {
-    left: 40px;
+    left: 31px;
     background: #fff;
 }
 .switch.wide {
-    width: 73px;
+    width: 62px;
     height: 34px;
 }
 .switch {
@@ -652,7 +661,7 @@ input[type="checkbox"]:after {
     left: 20px;
 }
 .switch small {
-    top: 0px;
+    top: 2px;
     left: 0px;
 }
 .switch.wide small {
@@ -663,7 +672,7 @@ input[type="checkbox"]:after {
     display: none;
 }
 .switch_div {
-    max-width: 100px;
+    max-width: 80px;
     float: left;
     width: 100%;
 }
@@ -872,12 +881,9 @@ input[type="checkbox"]:after {
 #user-dropdown {
     color: #fff;
     background: #d35f29;
-    border-radius: 100%;
-    width: 48px;
-    height: 48px;
-    margin: 2px 6px;
+    width: 60px;
     text-align: center;
-    padding: 12px 0;
+    padding: 15px 0;
 }
 .select_wrap {
     z-index: 9;
@@ -897,4 +903,123 @@ input[type="checkbox"]:after {
     background-color: #525252;
     border: 1px solid #525252;
     color: #fff;
+}
+.no-data h1 {
+    font-weight: 300;
+}
+.download-invoice-ledger {
+   padding-right: 6px;
+   padding-left: 0;
+}
+.popover.bottom>.arrow:after {
+    margin-left: 0;
+    border-top-width: none;
+    top: 1px;
+    border-right: 15px solid transparent;
+    border-bottom: 15px solid #fff;
+    border-left: 15px solid transparent;
+    left: -15px;
+    z-index: 9;
+}
+.ledger-panel .btn-success {
+    background: #3fab63;
+    border-color: #349655;
+}
+.ledger-panel .btn-success:hover {
+    background: #57C17A;
+    color: #fff;
+    border-color: #349655;
+}
+.btn-row {
+    margin-top: 14px;
+}
+a, button, input {
+    outline: none;
+}
+.Inpt_dwn {
+    padding-right: 25px !important;
+    text-align: right;
+}
+
+
+/*placeholder webkit css*/
+#accountSearch::-webkit-input-placeholder {
+    color: #fff;
+}
+#accountSearch::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #fff;
+}
+#accountSearch::-moz-placeholder { /* Firefox 19+ */
+  color: #fff;
+}
+#accountSearch:-ms-input-placeholder { /* IE 10+ */
+  color: #fff;
+}
+#accountSearch:-moz-placeholder { /* Firefox 18- */
+  color: #fff;
+}
+
+input[type=number]::-webkit-outer-spin-button,
+input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance:textfield;
+}
+
+.accounts-side-bar {
+    box-shadow: 0 3px 28px 0 rgba(0,0,0,.14);
+    border: 1px solid #ccc;
+    border-top: 0;
+    border-left: 0;
+    background: #fdfdfd;
+}
+.export-ledger-options>.arrow:after {
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 8px solid #fff;
+    position: absolute;
+    top: 2px;
+    left: -6px;
+    z-index: 9999999999;
+}
+.navbar-right .dropdown-menu, .pull-right>.dropdown-menu {
+    top: 46px;
+}
+
+.datePickr .dropdown-menu {
+    box-shadow: 0 3px 28px 0 rgba(0,0,0,.14);
+    color: #616161;
+    border: 1px solid #ccc;
+}
+.datePickr .dropdown-menu table {
+    border: 1px solid #fff;
+    padding: 4px;
+    border-radius: 4px;
+    background-color: #fff;
+}
+.datePickr .dropdown-menu table th, .datePickr .dropdown-menu table td {
+    white-space: nowrap;
+    text-align: center;
+    min-width: 32px;
+}
+.flow_visible {
+    overflow: visible !important;
+}
+
+.ledger-main .form-control:focus {
+    border-color: #d35f29 !important;
+}
+.uncfr .form-control {
+   background: #e6e6e6 !important;
+}
+.ledger-header thead th:last-child, .ledger-container table tr.bg3 th:last-child {
+    border-right: 0;
+}
+.create-company:hover {
+    background: none !important;
 }

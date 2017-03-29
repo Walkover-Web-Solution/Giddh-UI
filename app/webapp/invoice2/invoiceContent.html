@@ -1,19 +1,19 @@
 
 <div class="row">
-  <div class="add-transition col-xs-12" ng-class="{hideFilters == true, : flyDiv == true && hideFilters == false}" auto-height>
+  <div class="add-transition col-xs-12" auto-height>
     <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
 
 
     <uib-tabset class="childTab">
-        <span class="pos-abs filter-btn mrB1" ng-click="flyDiv = !flyDiv">
+        <span class="pos-abs filter-btn mrB1" ng-click="flyDiv = !flyDiv" ng-hide="hideFilters">
         <label>Filters</label><span class="icon-options"></span>
     </span>
     
       <uib-tab class="mrB1" heading="View" select="setTab(0)">
         <div class="row mr1" ng-if="invoices.results.length == 0">
           <div class="no-data">
-            <h1>Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical Latin literature from 45 BC, making it over 2000 years old.</h1>
-                <button class="danger-btn">Go to here</button>
+            <h1>No Invoice Found!</h1>
+            <h1>Either generate new invoice or change date</h1>
           </div>
         </div>
         <div class="container-fluid pdT2 y-scroll" ng-if="invoices.results.length > 0" cover-page>
@@ -22,7 +22,7 @@
           <!-- filters -->
 
                           <div ng-hide="flyDiv" class="pos-rel filterForm" ng-class="{'flying-div' : flyDiv == true}">
-      <div class="form-group">
+      <div class="form-group datePickr">
         <label>From</label>
         <input type="text" class="form-control"
                uib-datepicker-popup="{{format}}" required
@@ -34,7 +34,7 @@
                placeholder="from date"
             />
       </div>
-      <div class="form-group">
+      <div class="form-group datePickr">
         <label>To</label>
         <input type="text" class="form-control"
                uib-datepicker-popup="{{format}}" required
@@ -209,8 +209,9 @@
         <uib-tab-heading>Generate</uib-tab-heading>
           <div class="row mr1" ng-if="ledgers.results.length == 0">
           <div class="no-data">
-            <h1>No entries found!</h1>
-            <img src="/public/webapp/Globals/images/no-data.png" alt="No Data">
+            <h1>No Entry found in sales!</h1>
+            <h1>Have to do some sales before creating invoice</h1>
+            <a onclick="GoTosales()" class="btn btn-primary">Go to Sales</a>
           </div>
         </div>
         <div class="" ng-if="ledgers.results.length > 0">
@@ -310,7 +311,7 @@
               <li><a tooltip-placement="right" uib-tooltip="How to generate invoice?" style="cursor:pointer;" href="http://faq.giddh.com/invoice/how-to-make-invoice" target="_blank"><i class="glyphicon glyphicon-question-sign"></i></a></li>
               </ul>
               <span>
-                <input type="search" class="form-control maxW150 pull-right" placeholder="Search" ng-model="searchInLedger">
+                <input type="search" class="form-control maxW150 pull-right" placeholder="Search" ng-model="searchInLedger" ng-change="unCheckSelectedEntries(searchInLedger)">
               </span>
             </div>
 
@@ -320,8 +321,9 @@
             <table class="table basic table-bordered">
               <thead class="t-h-bg1">
               <th style="width:3%">
-                <input name="checkall" type="checkbox" ng-model="checkall" ng-change="selectAllLedger(checkall)">
-
+                <!-- <input name="checkall" type="checkbox" ng-model="checkall" ng-change="selectAllLedger(checkall)"> -->
+                <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!checkall" ng-click="selectAllLedger(true)">
+                <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="checkall" ng-click="selectAllLedger(false)">
               </th>
               <th style="width:10%" ng-click="sortVar = 'entryDate';reverse = !reverse">
                 Date
@@ -364,7 +366,9 @@
               <tbody>
               <tr ng-repeat="ledger in ledgers.results | orderBy:sortVar:reverse | filter:searchInLedger track by $index" ng-class="{'danger': checkTransaction(ledger.uniqueName)}">
                 <td style="width:3%" rowspan="ledger.transactions.length">
-                  <input type="checkbox" ng-model="ledger.checked" ng-change="addThis(ledger, ledger.checked)">
+                  <!-- <input type="checkbox" ng-model="ledger.checked"> -->
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!ledger.checked" ng-click="ledger.checked = true;addThis(ledger, ledger.checked)">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="ledger.checked" ng-click="ledger.checked = false;addThis(ledger, ledger.checked)">
                 </td>
                 <td style="width:10%" rowspan="ledger.transactions.length">
                   {{ledger.entryDate}}
@@ -527,3 +531,9 @@
     </div> -->
   <!-- </div> -->
 </div>
+<script type="text/javascript">
+  function GoTosales() {
+      var orig = location.origin;
+      window.location.href = orig + '/app/#/ledger/sales';
+  }
+</script>

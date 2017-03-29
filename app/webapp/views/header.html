@@ -41,7 +41,7 @@
                         </div>
                       </a>
                     </li>
-                    <li class="dmLi" ui-sref="company.content.ledgerContent">
+<!--                     <li class="dmLi" ui-sref="company.content.ledgerContent">
                         <a href="" >
                           <div class="media">
                             <div class="media-body">
@@ -50,7 +50,7 @@
                             </div>
                           </div>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="dmLi" ui-sref="company.content.tbpl">
                       <a href="" >
                         <div class="media">
@@ -193,7 +193,7 @@
                         <span class="icon-plus" aria-hidden="true"></span>
                     </div>
 
-                    <div ng-show="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(false)" tooltip-placement="right" uib-tooltip="Collapse all">
+                    <div ng-show="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(false); $event.stopPropagation()" tooltip-placement="right" uib-tooltip="Collapse all">
                         <span class="icon-minus"></span>
                     </div>
                 </div>
