@@ -1014,3 +1014,19 @@ input[type=number] {
 .uncfr .form-control {
    background: #f7edcd !important;
 }
+
+.active.end-date.in-range.available {
+    background: #d35f29;
+    color: #fff;
+    border-radius: 0 4px 4px 0;
+}
+.fixedDate {
+    float: left;
+    margin: 10px;
+}
+.fixedDate input {
+    min-width: 186px;
+}
+.dateblock {
+    float: left;
+}
