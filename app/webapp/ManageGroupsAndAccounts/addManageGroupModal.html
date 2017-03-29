@@ -138,7 +138,7 @@
               <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
               ng-class="{'minimizeBoth': accountsSearch.length > 0}">
                 <div class="list-group">
-                  <a ng-repeat="value in accountsListShort | filter:accountsSearch | limitTo: flatAccListC5.limit  | orderBy:value.uniqueName"
+                  <a ng-repeat="value in gc.accountsListShort | filter:accountsSearch | limitTo: flatAccListC5.limit  | orderBy:value.uniqueName"
                      href="javascript:void(0)" ng-click="showAccountDtl(value)"
                      class="list-group-item"
                      ng-class="{'active': selectedAccntMenu === value}">
