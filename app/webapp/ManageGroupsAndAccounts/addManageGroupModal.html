@@ -1,4 +1,4 @@
-<div id="getGroupModal">
+<div id="getGroupModal" ng-controller="groupController as gc">
 
   <div class="modal-header themeBg">
     <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); search.flataccount = ''" aria-label="Close"><span
@@ -138,7 +138,7 @@
               <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
               ng-class="{'minimizeBoth': accountsSearch.length > 0}">
                 <div class="list-group">
-                  <a ng-repeat="value in fltAccntListcount5 | filter:accountsSearch | limitTo: flatAccListC5.limit  | orderBy:value.uniqueName | filter:addManageAccSearch as addManageSearchList "
+                  <a ng-repeat="value in accountsListShort | filter:accountsSearch | limitTo: flatAccListC5.limit  | orderBy:value.uniqueName"
                      href="javascript:void(0)" ng-click="showAccountDtl(value)"
                      class="list-group-item"
                      ng-class="{'active': selectedAccntMenu === value}">
@@ -148,8 +148,9 @@
                       ng-bind-html="value.name | highlight: accountsSearch"></h4>
                   </a>
                 </div>
-                <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreAcc(selectedCompany.uniqueName, search.flataccount)" ng-if="flatAccListC5.currentPage <= flatAccListC5.totalPages">Load More</a>
-              </perfect-scrollbar>
+
+                <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreAcc(selectedCompany.uniqueName, search.flataccount)" ng-if="flatAccListC5.currentPage < flatAccListC5.totalPages">Load More</a>
+              <!-- </perfect-scrollbar> -->
             </div>
         <!-- uib-tooltip="{{value.parentGroups[0].name}}"tooltip-placement="bottom" ng-if="value.parentGroups[0].name!=selectedGroup.name" -->
         </section>

@@ -1522,6 +1522,10 @@ li:last-child .angular-ui-tree-handle {
     max-width: 200px;
 }
 
+.max250 {
+    max-width: 250px;
+}
+
 .max350 {
     max-width: 350px;
 }
