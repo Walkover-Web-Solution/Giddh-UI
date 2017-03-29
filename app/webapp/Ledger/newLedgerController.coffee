@@ -1652,10 +1652,20 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       ledger.transactions = transactions
     ledger
 
+  # lc.getInvoiceFile = () ->
+  #   data = null
+  #   f = document.getElementById('invoiceFile').files[0]
+  #   r = new FileReader()
+  #   r.onloadend = (e) ->
+  #     data = e.target.result
+  #   console.log data
 
   lc.doingEntry = false
   lc.lastSelectedLedger = {}
   lc.saveUpdateLedger = (ledger) ->
+    # file = lc.getInvoiceFile()
+    # console.log file
+    return false
     if !ledger.isBankTransaction
       ledger = lc.buildLedger(ledger)
     # lc.pageLoader = true
@@ -2408,7 +2418,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.blankLedger.transactions.push(lc.cBlankTxn)
 
   $scope.$on 'company-changed', (event,changeData) ->
-    lc.loadDefaultAccount()
+    if changeData.type == 'CHANGE'
+      lc.loadDefaultAccount()
     #$state.reload()
   #   # when company is changed, redirect to manage company page
   #   if changeData.type == 'CHANGE'
