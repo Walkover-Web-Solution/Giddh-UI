@@ -11,7 +11,7 @@ app = angular.module("giddhApp", [
   "valid-number"
   "razor-pay"
   "internationalPhoneNumber"
-  "FileSaver"
+  "ngFileSaver"
   ]
 )
 app.config (ipnConfig) ->
