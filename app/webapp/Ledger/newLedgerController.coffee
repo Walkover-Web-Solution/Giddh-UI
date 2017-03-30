@@ -2417,7 +2417,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.blankLedger.transactions.push(lc.dBlankTxn)
   lc.blankLedger.transactions.push(lc.cBlankTxn)
 
-  $scope.$on 'company-changed', (event,changeData) ->
+  $rootScope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
       lc.loadDefaultAccount()
     #$state.reload()
