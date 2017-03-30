@@ -1,5 +1,5 @@
 "use strict"
-searchController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $uibModal, companyServices, $location) ->
+searchController = ($scope, $rootScope, localStorageService, toastr, groupService, $filter, reportService, $uibModal, companyServices, $location, FileSaver) ->
 
   $scope.today = new Date()
   $scope.dateOptions = {
@@ -179,6 +179,26 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     "closeBalType"
     "uniqueName"
   ]
+
+  $scope.createCSV = () ->
+    header = $scope.getCSVHeader()
+    title = ''
+    _.each header, (head) ->
+      title += head + ','
+    title += '\r\n'
+
+    row = ''
+    _.each $scope.searchResData, (data) ->
+      if data.name.indexOf(',')
+        data.name.replace(',', '')
+      row += data.name + ',' + data.openingBalance + ',' + data.openBalType + ',' + data.debitTotal + ',' + data.creditTotal + ',' + data.closingBalance + ',' + data.closeBalType + ',' + data.uniqueName
+      row += '\r\n'
+
+    csv = title + row
+    blob = new Blob([csv], type: "application/octet-binary")
+    FileSaver.saveAs(blob, $scope.searchFormData.group.name+".csv")
+
+
 
   # init some func when page load
   $scope.getGrpsforSearch()
