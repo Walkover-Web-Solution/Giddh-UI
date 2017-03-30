@@ -416,7 +416,8 @@ do ->
 
 app.controller 'magicCtrl', [
   '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter',
-  ($scope, toastr, $http, $location, $rootScope, $filter) ->
+  ($scope, toastr, $http, $location, $rootScope, $filter, FileSaver) ->
+    ml = this
     $rootScope.magicLinkPage = true
     $scope.magicReady = false
     $scope.magicLinkId = window.location.search.split('=')
@@ -492,11 +493,8 @@ app.controller 'magicCtrl', [
 
     $scope.downloadInvoice = (invoiceNumber) ->
       @success = (res) ->
-        dataUri = 'data:application/pdf;base64,' + res.body
-        a = document.createElement('a')
-        a.download = invoiceNumber + ".pdf"
-        a.href = dataUri
-        a.click()
+        blobData = ml.b64toBlob(res.body, "application/pdf", 512)
+        FileSaver.saveAs(blobData, invoiceNumber + ".pdf")
       @failure = (res) ->
         toastr.error(res.message)
       _data = {
@@ -506,6 +504,25 @@ app.controller 'magicCtrl', [
       $http.post($scope.downloadInvoiceUrl, data:_data).then @success, @failure  
 
     $scope.getData($scope.data)
+
+    ml.b64toBlob = (b64Data, contentType, sliceSize) ->
+      contentType = contentType or ''
+      sliceSize = sliceSize or 512
+      byteCharacters = atob(b64Data)
+      byteArrays = []
+      offset = 0
+      while offset < byteCharacters.length
+        slice = byteCharacters.slice(offset, offset + sliceSize)
+        byteNumbers = new Array(slice.length)
+        i = 0
+        while i < slice.length
+          byteNumbers[i] = slice.charCodeAt(i)
+          i++
+        byteArray = new Uint8Array(byteNumbers)
+        byteArrays.push byteArray
+        offset += sliceSize
+      blob = new Blob(byteArrays, type: contentType)
+      blob
 
     $scope.getDataByDate = () ->
       $scope.data.from = $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
