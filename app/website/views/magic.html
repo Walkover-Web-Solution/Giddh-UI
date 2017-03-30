@@ -24,9 +24,7 @@
   <link href="<<PREFIX_THIS>>/bower_components/intl-tel-input/build/css/intlTelInput.css" rel="stylesheet">
   <!-- LIBRARIES -->
   <script src="<<PREFIX_THIS>>/public/webapp/newRelic.js"></script>
-  <script src="<<PREFIX_THIS>>/bower_components/file-saver.js/FileSaver.js"></script>
   <script  type="text/javascript" src='<<PREFIX_THIS>>/public/webapp/core_bower.min.js'></script>
-    <script src="<<PREFIX_THIS>>/bower_components/angular-file-saver/dist/angular-file-saver.js"></script>
   <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/app.js"></script>
   <script src="<<PREFIX_THIS>>/public/website/js/controller/loginController.js"></script>
   <!-- recaptcha -->
@@ -211,16 +209,14 @@
                             <tr class="text-left bdrB" ng-repeat="txn in ledger.transactions | filter:particularSearch" ng-if="txn.type == 'DEBIT'">
                               <td class="col-xs-3" style="padding:10px;">{{ledger.entryDate}}</td>
                               <td class="col-xs-6 bdrL" style="padding:10px;">{{txn.particular.name}}</td>
-                              <td class="col-xs-3 bdrL pr" style="padding:10px;">{{txn.amount}}
+                              <td class="col-xs-3 bdrL" style="padding:10px;">{{txn.amount}}
                                 <span
-                                  class="download-invoice-ledger pa" 
+                                  class="download-invoice-ledger" 
                                   ng-if="ledger.invoiceGenerated" 
-                                  tooltip-append-to-body="true"
-                                  ng-click="downloadInvoice(ledger.invoiceNumber)"
+                                  tooltip-append-to-body="true" 
                                   uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" 
-                                  tooltip-placement="top"
-                                  style="right:5px;"> 
-                                  <i class="glyphicon glyphicon-download" style="font-size:15px" ></i>
+                                  tooltip-placement="top"> 
+                                  <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
                                 </span>
                               </td>
                             </tr>
@@ -280,16 +276,14 @@
                             <tr class="text-left bdrB" ng-repeat="txn in ledger.transactions | filter:particularSearch" ng-if="txn.type == 'CREDIT'">
                               <td class="col-xs-3" style="padding:10px;">{{ledger.entryDate}}</td>
                               <td class="col-xs-6 bdrL" style="padding:10px;">{{txn.particular.name}}</td>
-                              <td class="col-xs-3 bdrL pr" style="padding:10px;">{{txn.amount}}
+                              <td class="col-xs-3 bdrL" style="padding:10px;">{{txn.amount}}
                                 <span 
-                                  class="download-invoice-ledger pa" 
+                                  class="download-invoice-ledger" 
                                   ng-if="ledger.invoiceGenerated" 
                                   tooltip-append-to-body="true" 
-                                  ng-click="downloadInvoice(ledger.invoiceNumber)"
                                   uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" 
-                                  tooltip-placement="top"
-                                  style="right:5px;"> 
-                                  <i class="glyphicon glyphicon-download" style="font-size:15px;" ></i>
+                                  tooltip-placement="top"> 
+                                  <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
                                 </span>
                               </td>
                             </tr>
@@ -369,6 +363,4 @@
     </section>
     
     <ng-include src="'/public/website/views/footer.html'"></ng-include>
-
-</body>
-</html>
+</body></html>

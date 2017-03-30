@@ -11,7 +11,6 @@ app = angular.module("giddhApp", [
   "valid-number"
   "razor-pay"
   "internationalPhoneNumber"
-  "ngFileSaver"
   ]
 )
 app.config (ipnConfig) ->
@@ -416,16 +415,14 @@ do ->
   ]
 
 app.controller 'magicCtrl', [
-  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter', 'FileSaver',
-  ($scope, toastr, $http, $location, $rootScope, $filter, FileSaver) ->
-    ml = this
+  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter',
+  ($scope, toastr, $http, $location, $rootScope, $filter) ->
     $rootScope.magicLinkPage = true
     $scope.magicReady = false
     $scope.magicLinkId = window.location.search.split('=')
     $scope.magicLinkId = $scope.magicLinkId[1]
     $scope.ledgerData = []
     $scope.magicUrl = '/magic-link'
-    $scope.downloadInvoiceUrl = $scope.magicUrl + '/download-invoice'
     $scope.today = new Date()
     $scope.fromDate = {date: new Date()}
     $scope.toDate = {date: new Date()}
@@ -492,39 +489,7 @@ app.controller 'magicCtrl', [
           $scope.showError = true
       )
 
-    $scope.downloadInvoice = (invoiceNumber) ->
-      @success = (res) ->
-        blobData = ml.b64toBlob(res.data.body, "application/pdf", 512)
-        FileSaver.saveAs(blobData, invoiceNumber + ".pdf")
-      @failure = (res) ->
-        toastr.error(res.message)
-      _data = {
-        id: $scope.data.id
-        invoiceNum: invoiceNumber
-      }
-      $http.post($scope.downloadInvoiceUrl, data:_data).then @success, @failure  
-
     $scope.getData($scope.data)
-
-    ml.b64toBlob = (b64Data, contentType, sliceSize) ->
-      contentType = contentType or ''
-      sliceSize = sliceSize or 512
-      # b64Data = b64Data.replace(/\s/g, '')
-      byteCharacters = atob(b64Data)
-      byteArrays = []
-      offset = 0
-      while offset < byteCharacters.length
-        slice = byteCharacters.slice(offset, offset + sliceSize)
-        byteNumbers = new Array(slice.length)
-        i = 0
-        while i < slice.length
-          byteNumbers[i] = slice.charCodeAt(i)
-          i++
-        byteArray = new Uint8Array(byteNumbers)
-        byteArrays.push byteArray
-        offset += sliceSize
-      blob = new Blob(byteArrays, type: contentType)
-      blob
 
     $scope.getDataByDate = () ->
       $scope.data.from = $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
