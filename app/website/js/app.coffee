@@ -492,20 +492,17 @@ app.controller 'magicCtrl', [
 
     $scope.downloadInvoice = (invoiceNumber) ->
       @success = (res) ->
-        console.log(invoiceNumber)
+        dataUri = 'data:application/pdf;base64,' + res.body
+        a = document.createElement('a')
+        a.download = invoiceNumber + ".pdf"
+        a.href = dataUri
+        a.click()
       @failure = (res) ->
-        if(res.data == undefined)
-          console.log('has data')
-          toastr.error(res.data.message)
-        else
-          console.log('no data')
-        $scope.showError = true
-        console.log('failed')
+        toastr.error(res.message)
       _data = {
         id: $scope.data.id
         invoiceNum: invoiceNumber
       }
-      console.log(_data)
       $http.post($scope.downloadInvoiceUrl, data:_data).then @success, @failure  
 
     $scope.getData($scope.data)
