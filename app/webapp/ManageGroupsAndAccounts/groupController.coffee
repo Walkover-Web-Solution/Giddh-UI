@@ -227,7 +227,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     limit : 5
   }
 
-
+  gc.accountsListShort = []
   $scope.getFlatAccountListCount5 = (compUname) ->
     reqParam = {
       companyUniqueName: compUname
@@ -242,7 +242,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   gc.getFlatAccountListCount5ListSuccess = (res) ->
 #    console.log res.body.res
     #$scope.workInProgress = false
-    $scope.fltAccntListcount5 = res.body.results
+    #$scope.fltAccntListcount5 = res.body.results
+    gc.accountsListShort = res.body.results
     $scope.flatAccListC5.totalPages = res.body.totalPages
 
   gc.getFlatAccountListCount5ListFailure = (res) ->
@@ -275,18 +276,22 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       page: $scope.flatAccListC5.page
       count: $scope.flatAccListC5.count
     }
-    groupService.getFlatAccList(reqParam).then(gc.loadMoreAccSuccess, gc.loadMoreAccFailure)
+    groupService.getFlatAccList(reqParam).then($scope.loadMoreAccSuccess, gc.loadMoreAccFailure)
     #$scope.flatAccList.limit += 5
     #$scope.flatAccListC5.limit += 5
     
-  gc.loadMoreAccSuccess = (res) ->
-    $scope.flatAccListC5.currentPage += 1
+  $scope.loadMoreAccSuccess = (res) ->
     list = res.body.results
-    if res.body.totalPages >= $scope.flatAccListC5.currentPage
-     $scope.fltAccntListcount5 = _.union($scope.fltAccntListcount5, list)
+    if res.body.totalPages > $scope.flatAccListC5.currentPage
+     #$scope.fltAccntListcount5 = _.union($scope.fltAccntListcount5, list)
+      _.each res.body.results, (acc) ->
+        #$scope.fltAccntListcount5.push(acc)
+        gc.accountsListShort.push(acc)
+      
     else
      $scope.hideAccLoadMore = true
     $scope.flatAccListC5.limit += 5
+    $scope.flatAccListC5.currentPage = res.body.page
     $scope.flatAccListC5.totalPages = res.body.totalPages
 
   gc.loadMoreAccFailure = (res) ->
@@ -1296,6 +1301,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   $rootScope.$on 'catchBreadcumbs', (e, breadcrumbs) ->
     $scope.accountToShow = breadcrumbs
+
+  return
 
 #init angular app
 giddh.webApp.controller 'groupController', groupController

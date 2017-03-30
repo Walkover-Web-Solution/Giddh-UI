@@ -38,6 +38,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "daterangepicker"
     "inventory"
     "recurringEntry"
+    "ngMask"
   ]
 )
 
@@ -322,10 +323,10 @@ giddh.webApp.run [
       localStorageService.remove("_ledgerData")
       localStorageService.remove("_selectedAccount")
     )
-    $rootScope.$on('company-changed', (event, changeData)->
-      if changeData.type == "CHANGE"
-        $state.go('company.content.manage')
-    )
+    # $rootScope.$on('company-changed', (event, changeData)->
+    #   if changeData.type == "CHANGE"
+    #     $state.go('company.content.manage')
+    # )
     $rootScope.canChangeCompany = false
 #    $rootScope.flatAccList = {
 #      page: 1

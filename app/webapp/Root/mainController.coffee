@@ -45,6 +45,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.hideHeader = false
   $rootScope.phoneVerified = false
   $rootScope.stateParams = null
+  $rootScope.search = {}
+  $rootScope.search.acnt = ''
   $rootScope.flatAccList = {
     page: 1
     count: 20000
@@ -472,6 +474,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $rootScope.$emit('account-list-updated')
 #    $rootScope.fltAccountLIstFixed = $rootScope.fltAccntListPaginated
     $rootScope.flatAccList.limit = 5
+    $scope.$broadcast('account-list-updated')
     
   $scope.getFlatAccountListFailure = (res) ->
     $scope.workInProgress = false
@@ -523,6 +526,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.changeCompany = (company, index, method) ->
 #    console.log("method we get here is : ", method)
     # select and set active financial year
+    $scope.getFlattenGrpWithAccList(company.uniqueName)
     $scope.setFYonCompanychange(company)
     #check permissions on selected company
     $rootScope.doWeHavePermission(company)
@@ -548,14 +552,17 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     changeData.type = method
     $scope.$broadcast('company-changed', changeData)
     $rootScope.$emit('company-changed', changeData)
+    url = $location.url()
+    if url.indexOf('ledger') == -1
+      $state.go('company.content.ledgerContent')
     $scope.gwaList = {
       page: 1
-      count: 5
+      count: 10
       totalPages: 0
       currentPage : 1
-      limit: 5
+      limit: 10
     }
-    return false
+    #return false
     #$scope.tabs[0].active = true
 
   $rootScope.allowed = true
@@ -594,7 +601,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.showAccounts = (e) ->
     $rootScope.flyAccounts = true
-    e.stopPropagation()
+    #e.stopPropagation()
   # $scope.addScript()
 
   # for accounts list
@@ -608,7 +615,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.working = false
   $scope.getFlattenGrpWithAccList = (compUname) ->
   #   console.log("working  : ",$scope.working)
-    console.log $scope.gwaList.currentPage
     $rootScope.companyLoaded = false
     $scope.showAccountList = false
     reqParam = {
@@ -629,9 +635,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     #$scope.flatAccntWGroupsList = gc.removeEmptyGroups(res.body.results)
   #   console.log($scope.flatAccntWGroupsList)
     $scope.showAccountList = true
-    $scope.gwaList.limit = 5
+    $scope.gwaList.limit = 10
     $rootScope.companyLoaded = true
     $scope.working = false
+    $rootScope.toggleAcMenus(true)
 
   $scope.getFlattenGrpWithAccListFailure = (res) ->
     toastr.error(res.data.message)
@@ -641,21 +648,22 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.gwaList.page += 1
     reqParam = {
       companyUniqueName: compUname
-      q: str
+      q: str || $rootScope.search.acnt
       page: $scope.gwaList.page
       count: $scope.gwaList.count
     }
     groupService.getFlattenGroupAccList(reqParam).then($scope.loadMoreGrpWithAccSuccess, $scope.loadMoreGrpWithAccFailure)
-    $scope.gwaList.limit += 5
+    $scope.gwaList.limit += 10
 
   $scope.loadMoreGrpWithAccSuccess = (res) ->
     $scope.gwaList.currentPage += 1
     #list = gc.removeEmptyGroups(res.body.results)
     if res.body.results.length > 0 && res.body.totalPages >= $scope.gwaList.currentPage
       _.each res.body.results, (grp) ->
+        grp.open = true
         $scope.flatAccntWGroupsList.push(grp) 
       #$scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
-    else if res.body.totalPages >= $scope.gwaList.currentPage
+    else if res.body.totalPages > $scope.gwaList.currentPage
       $scope.loadMoreGrpWithAcc($rootScope.selectedCompany.uniqueName)
     else
       $scope.hideLoadMore = true
@@ -664,6 +672,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     toastr.error(res.data.message)
 
   $scope.searchGrpWithAccounts = (str) ->
+    $rootScope.search.acnt = str
     $scope.gwaList.page = 1
     $scope.gwaList.currentPage = 1
     reqParam = {}
@@ -678,8 +687,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       #$scope.hideLoadMore = false
       reqParam.q = ''
       groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
-    if str.length < 1
-      $scope.flatAccListC5.limit = 5
+    # if str.length < 1
+    #   $scope.flatAccListC5.limit = 5
       #$scope.hideLoadMore = false
 
   $scope.removeEmptyGroups = (grpList) ->
@@ -695,6 +704,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     DAServices.LedgerSet(data, acData)
     localStorageService.set("_ledgerData", data)
     localStorageService.set("_selectedAccount", acData)
+    $rootScope.accClicked = true
     $rootScope.$emit('account-selected')
     return false
 
@@ -708,7 +718,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
 
   $(document).on('click', (e)->
-    $rootScope.flyAccounts = false
+    if e.target.id != 'accountSearch'
+      $rootScope.flyAccounts = false
     return false
   )
 

@@ -57,7 +57,8 @@
     "angular-ui-tinymce": "^0.0.17",
     "tinymce": "^4.4.3",
     "tinymce-mention": "^4.0.1",
-    "angular-daterangepicker": "^0.2.2"
+    "angular-daterangepicker": "^0.2.2",
+    "ngMask": "angular-mask#^3.1.1"
   },
   "resolutions": {
     "angular": "~1.4.4",

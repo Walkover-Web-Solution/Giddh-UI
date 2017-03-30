@@ -25,6 +25,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.dLedgerLimit = 10
   lc.cLedgerLimit = 10
   lc.entrySettings = {}
+  lc.firstLoad = true
   $rootScope.flyAccounts = true
   
   $scope.creditTotal = 0
@@ -32,7 +33,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   ###date range picker ###
   $scope.cDate = {
-    startDate: moment().subtract(1, 'days')._d,
+    startDate: moment().subtract(30, 'days')._d,
     endDate: moment()._d
   };
 
@@ -1118,15 +1119,21 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       ), 2000
 
   lc.loadDefaultAccount = () ->
-    cash = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:'cash'})
-    if cash
-      #$state.go('company.content.ledgerContent', {uniqueName:'cash'}, {notify: false})
+    
+    @success = (res) ->
       lc.accountUnq = 'cash'
       lc.getAccountDetail(lc.accountUnq)
-    else
-      #$state.go('company.content.ledgerContent', {uniqueName:'sales'}, {notify: false})
+
+    @failure = (res) ->
       lc.accountUnq = 'sales'
-      lc.getAccountDetail(lc.accountUnq)    
+      lc.getAccountDetail(lc.accountUnq)
+
+    unqObj = {
+      compUname : $rootScope.selectedCompany.uniqueName
+      acntUname : 'cash'
+    }
+    accountService.get(unqObj).then(@success, @failure)
+          
 
   lc.getBankTransactions = (accountUniqueName) ->
     unqObj = {
@@ -1260,7 +1267,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   # lc.renameBankTxnKeys = (txnArray) ->
   #   _.each txnArray, (txn) ->
   #     txn.particular = txn.remarks
-  lc.getLedgerData = (showLoaderCondition) ->
+  lc.getLedgerData = (showLoaderCondition, firstLoad) ->
+    if firstLoad
+      lc.firstLoad = false
+      $rootScope.accClicked = false
     lc.progressBar.value = 0
     $rootScope.superLoader = true
     lc.showLoader = showLoaderCondition || true
@@ -1285,7 +1295,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if res.body.ledgers.length < 1
       lc.showLoader = false
     #lc.showLoader = false
-    lc.blankLedger.transactions[0].isOpen = true
+    if lc.firstLoad || $rootScope.accClicked
+      lc.blankLedger.transactions[0].isOpen = true
     $rootScope.superLoader = false
 
   lc.getLedgerDataFailure = (res) ->
@@ -1471,7 +1482,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.getAccountDetail(lc.accountUnq)
   else
     lc.loadDefaultAccount()  
-
+  # $scope.$on('account-list-updated', ()->
+  #   lc.loadDefaultAccount() 
+  # )
   # lc.flatAccListC5 = {
   #     page: 1
   #     count: 5
@@ -1639,6 +1652,16 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       ledger.transactions = transactions
     ledger
 
+
+  # lc.invoiceFile = {}
+  # lc.getInvoiceFile = () ->
+  #   console.log lc.invoiceFile
+  #   data = null
+  #   f = document.getElementById('invoiceFile').files[0]
+  #   r = new FileReader()
+  #   r.onloadend = (e) ->
+  #     data = e.target.result
+  #   console.log data
 
   lc.doingEntry = false
   lc.lastSelectedLedger = {}
@@ -2280,12 +2303,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if txn.particular.stock != null &&  txn.particular.stock != undefined || lc.accountToShow.stock != null || (txn.inventory && txn.inventory.stock)
       switch value
         when 'qty'
-          if lc.selectedTxn.rate > 0
+          if lc.selectedTxn.rate > 0 && lc.selectedTxn.inventory && lc.selectedTxn.inventory.quantity
             lc.selectedTxn.amount = lc.selectedTxn.rate * lc.selectedTxn.inventory.quantity
         when 'amount'
-          lc.selectedTxn.rate = lc.selectedTxn.amount/lc.selectedTxn.inventory.quantity
+          if lc.selectedTxn.inventory && lc.selectedTxn.inventory.quantity
+            lc.selectedTxn.rate = lc.selectedTxn.amount/lc.selectedTxn.inventory.quantity
         when 'rate'
-          lc.selectedTxn.amount = lc.selectedTxn.rate * lc.selectedTxn.inventory.quantity
+          if lc.selectedTxn.inventory && lc.selectedTxn.inventory.quantity
+            lc.selectedTxn.amount = lc.selectedTxn.rate * lc.selectedTxn.inventory.quantity
 
   lc.checkStockAccount = (item, txn) ->
     if(item.stock == null && lc.accountToShow.stock == null)
@@ -2392,7 +2417,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.blankLedger.transactions.push(lc.dBlankTxn)
   lc.blankLedger.transactions.push(lc.cBlankTxn)
 
-  # $scope.$on 'company-changed', (event,changeData) ->
+  $rootScope.$on 'company-changed', (event,changeData) ->
+    if changeData.type == 'CHANGE'
+      lc.loadDefaultAccount()
+    #$state.reload()
   #   # when company is changed, redirect to manage company page
   #   if changeData.type == 'CHANGE'
   #     # lc.redirectToState('company.content.manage')

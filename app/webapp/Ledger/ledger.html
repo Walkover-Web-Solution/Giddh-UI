@@ -29,17 +29,17 @@
  <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
 
     <section class="container-fluid" ng-if="lc.accountUnq.length > 0">
-      <div class="pdT2">
+      <div class="pdT1">
         <div class="ledger-top-panel clearfix" ng-class="{'while-panel':lc.showPanel}" ng-hide="lc.showPanel">
 
-          <div class="form-inline pdB1 ledgHead">
+          <div class="form-inline ledgHead">
 
           <!-- ledger search -->
 <!--             <div  >
               <input type="search" class="form-control" placeholder="Search ledger" ng-model="particularSearch" ng-keyup="countTotalTransactionsAfterSomeTime()" ng-model-options="{debounce: 1000}">
               <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
             </div> -->
-            <div class="form-group mrR2 pull-left pos-rel" >
+            <div class="form-group mrL2 pull-right pos-rel" >
               <input type="search" class="form-control" placeholder="Search ledger" ng-model="lc.query" ng-model-options="{debounce: 1000}" ng-change="lc.filterLedgers(lc.accountToShow.uniqueName, lc.query, 1)" ng-disabled="!lc.readLedgersFinished">
              <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
             </div>
@@ -82,7 +82,7 @@
               </div> -->
               </div>
               <div class="form-group">
-                <button type="button" class="btn btn-primary mrL1" ng-click="lc.getLedgerData()" ng-disabled="fromToDateForm.$invalid">
+                <button type="button" class="btn btn-primary mrL1" ng-click="lc.getLedgerData(false, true)" ng-disabled="fromToDateForm.$invalid">
                   GO
                 </button>
 <!--                 <button type="button" class="btn btn-default mrL1" ng-click="lc.readLedgers(lc.accountToShow.uniqueName, 1, 'next')" >
@@ -205,7 +205,7 @@
           </section>
           <!-- external ledger code end here -->
 
-          <div class="clearfix ledger-container" ng-class="{'ledger-container-w paddingTop200':lc.showPanel && flyAccounts, 'ledger-container-w paddingTop120': lc.showPanel && !flyAccounts}" cover-page>
+          <div class="clearfix ledger-container" ng-class="{'ledger-container-w paddingTop200':lc.showPanel && flyAccounts, 'ledger-container-w paddingTop120': lc.showPanel && !flyAccounts}" table-height>
             <!--ledger table head 1-->
             <table class="col-xs-12 ledger-head">
               <thead>
@@ -221,7 +221,7 @@
               <!--left column-->
               <div class="left-col">
                   <!--ledger table body debit section-->
-                  <section class="col-xs-12 pad0 bdr-w-t h100">
+                  <section class="col-xs-12 pad0 h100">
                     <table class="width100 ledger-header">
                       <thead>
                         <tr class="t-h-bg2">
@@ -244,7 +244,7 @@
                           </th>
                         </tr>
                         <tr class="bg3">
-                          <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
+                          <th colspan="12" class="col-xs-12 text-right h32">
                             <span class="pull-left tcount">Total Transactions: {{lc.dNonemptyTxn}}</span>
                             <span ng-if="lc.ledgerData.forwardedBalance.type == 'DEBIT' && lc.ledgerData.forwardedBalance.amount > 0"><span class="highlight_info">Opening Balance : {{lc.ledgerData.forwardedBalance.amount | number:2}}</span></span>
                             <!-- <span ng-if="lc.ledgerData.forwardedBalance.type == 'CREDIT'">B/F : 0</span> -->
@@ -262,7 +262,7 @@
                         <tbody>
 
                           <!--Add entry row for normal order-->
-                          <tr>
+                          <tr ng-if="canUpdate">
                             <td colspan="100">
                               <table class="width100">
                                 <tbody class="ledger-main">
@@ -284,7 +284,9 @@
                                     <td class="col-xs-2">
                                       <input class="form-control" type="text" 
                                       ng-model="lc.blankLedger.entryDate"
-                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)" select-on-click>
+                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)" 
+                                      select-on-click
+                                      mask='39-19-9999'>
                                     </td>
                                     <td class="col-xs-6">
                                       <input class="form-control" placeholder="{{lc.accountUnq}} receiving via?" type="text" ng-model="txn.particular"
@@ -349,10 +351,12 @@
                                     <td class="col-xs-2">
                                       <input class="form-control type="text" 
                                       ng-model="value.entryDate"
-                                      ng-focus="lc.slctxn(value, txn, $event)" select-on-click>
+                                      ng-focus="lc.slctxn(value, txn, $event)" 
+                                      select-on-click
+                                      mask='39-19-9999'>
                                     </td>
                                     <td class="col-xs-6">
-                                      <input class="form-control type="text" ng-model="txn.particular"
+                                      <input class="form-control" type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
@@ -408,15 +412,15 @@
                 <table class="width100 ledger-footer">
                   <tbody>
                       
-                      <tr class="t-h-bg3 bdr-w-t">
-                        <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
+                      <tr class="t-h-bg3">
+                        <td colspan="12" class="col-xs-12 text-right white h32">
                           <span ng-if="lc.ledgerData.balance.type == 'DEBIT'">C/F: Dr {{lc.ledgerData.balance.amount | number:2}}</span>
                         </td>
                       </tr>
-                      <tr class="t-h-bg2 bdr-w-t h42">
+                      <tr class="t-h-bg2 h42">
 
                         <td colspan="6" class="col-xs-6 text-left bold"><span class="midlight_info">Debit Total: {{lc.ledgerData.debitTotal | number:2}}</span> </td>
-                        <td colspan="6" class="col-xs-6 text-right bdr-w-t bold"><span class="highlight_info">Reckoning : {{lc.ledgerData.reckoningDebitTotal | number:2}}</span></td>
+                        <td colspan="6" class="col-xs-6 text-right bold"><span class="highlight_info">Reckoning : {{lc.ledgerData.reckoningDebitTotal | number:2}}</span></td>
                       </tr>
                   </tbody>
                 </table>
@@ -424,7 +428,7 @@
               <!--right column-->
               <div class="right-col">
                   <!--ledger table body debit section-->
-                  <section class="col-xs-12 pad0 bdr-w-t h100">
+                  <section class="col-xs-12 pad0 h100">
 
                     <table class="width100  ledger-header">
                       <thead>
@@ -446,7 +450,7 @@
 
                         </tr>
                         <tr class="bg3">
-                          <th colspan="12" class="col-xs-12 text-right bdr-w-t h32">
+                          <th colspan="12" class="col-xs-12 text-right h32">
                             <span class="pull-left tcount">Total Transactions: {{lc.cNonemptyTxn}}</span>
                             <span ng-if="lc.ledgerData.forwardedBalance.type == 'CREDIT' && lc.ledgerData.forwardedBalance.amount > 0">B/F : {{lc.ledgerData.forwardedBalance.amount | number:2}}</span>
                            <!--  <span ng-if="lc.ledgerData.forwardedBalance.type == 'DEBIT'">B/F : 0</span> -->
@@ -460,7 +464,7 @@
                       <table class="width100">
                         <tbody>
                           <!--Add entry row for nomral order-->
-                          <tr>
+                          <tr ng-if="canUpdate">
                             <td colspan="100">
                               <table class="width100">
                                 <tbody class="ledger-main">
@@ -482,7 +486,10 @@
                                     <td class="col-xs-2">
                                       <input class="form-control" type="text" 
                                       ng-model="lc.blankLedger.entryDate"
-                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)" select-on-click>
+                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                      select-on-click
+                                      mask='39-19-9999'
+                                      >
                                     </td>
                                     <td class="col-xs-6">
                                       <input type="text" class="form-control" ng-model="txn.particular"
@@ -548,7 +555,9 @@
                                     <td class="col-xs-2">
                                       <input class="form-control" type="text" 
                                       ng-model="value.entryDate"
-                                      ng-focus="lc.slctxn(value, txn, $event)" select-on-click>
+                                      ng-focus="lc.slctxn(value, txn, $event)" 
+                                      select-on-click
+                                      mask='39-19-9999'>
                                     </td>
                                     <td class="col-xs-6">
                                       <input class="form-control" type="text" ng-model="txn.particular"
@@ -608,11 +617,11 @@
                   <tbody>
                   
                       <tr class="t-h-bg3">
-                        <td colspan="12" class="col-xs-12 text-right bdr-w-t white h32">
+                        <td colspan="12" class="col-xs-12 text-right white h32">
                           <span  ng-if="lc.ledgerData.balance.type == 'CREDIT'">C/F: Cr {{lc.ledgerData.balance.amount | number:2}}</span>
                         </td>
                       </tr>
-                      <tr class="t-h-bg2 bdr-w-t h42">
+                      <tr class="t-h-bg2 h42">
                         <td colspan="6" class="col-xs-6 text-left bold"><span class="midlight_info">Credit Total: {{lc.ledgerData.creditTotal | number:2}}</span></td>
                         <td colspan="6" class="col-xs-6 text-right bold"><span class="highlight_info">Reckoning: {{lc.ledgerData.reckoningCreditTotal | number:2}}</span></td>
                       </tr>
@@ -732,6 +741,11 @@
               <span ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') || lc.selectedLedger.isBankTransaction == true">Save</span>
               <span ng-if="(lc.selectedLedger.uniqueName != undefined && lc.selectedLedger.uniqueName != '') && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)">Update</span>
             </button>
+            
+            <!--file upload-->
+            <!-- <input type="file" ng-model="lc.invoiceFile" name="invoiceFile" id="invoiceFile" ng-change="lc.getInvoiceFile()"> -->
+            <!--file upload-->
+
             <button ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') && ((lc.selectedLedger.transactions[0].particular.uniqueName != '' && lc.selectedLedger.transactions[0].particular.uniqueName != undefined) || (lc.selectedLedger.transactions[1].particular.uniqueName != '' && lc.selectedLedger.transactions[1].particular.uniqueName != undefined)) && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default mrL1" ng-click="lc.resetLedger()">Reset</button>
             <i ng-if="(lc.selectedLedger.uniqueName != undefined && lc.selectedLedger.uniqueName != '') && lc.selectedLedger.invoiceGenerated == false && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right glyphicon glyphicon-trash mrR1 pos-abs" uib-tooltip="Delete" tooltip-placement="left" style="top:9px;right:1px;color:#d35f29;" ng-click="lc.deleteEntryConfirm(lc.selectedLedger);lc.deleteMultipleTransactions()" uib-tooltip=""></i>
             <button class="btn btn-sm close-panel pull-right pos-rel" ng-click="lc.closePanel()" ng-if="popover.draggable">Close</button>

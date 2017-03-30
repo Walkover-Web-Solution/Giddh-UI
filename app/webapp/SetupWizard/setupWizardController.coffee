@@ -79,6 +79,7 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
     changeData.data = res.body
     changeData.type = 'CHANGE'
     $scope.$broadcast('company-changed', changeData)
+    $rootScope.$emit('company-changed', changeData)
     $scope.showSuccessMsg = true
     WizardHandler.wizard().next()
     $state.go('company.content.ledgerContent')

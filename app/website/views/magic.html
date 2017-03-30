@@ -156,7 +156,7 @@
 
                 <h3 class="ledgerHead">
                   <span tooltip-placement="top" uib-tooltip="{{accountName}}" class="ellp">{{accountName}}</span>
-                  <span>&nbsp;is <strong>receiving</strong></span>
+                  <span> is <strong>receiving</strong></span>
                 </h3>
               </div>
             </th>
@@ -166,8 +166,8 @@
                   <span class="icon48 icon-out"></span>
 
                   <h3 class="ledgerHead">
-                    <span>&nbsp;is <strong>giving</strong></span>
                     <span tooltip-placement="top" uib-tooltip="{{accountName}}" class="ellp">{{accountName}}</span>
+                    <span> is <strong>giving</strong></span>
                   </h3>
                 </div>
               </div>
@@ -209,7 +209,16 @@
                             <tr class="text-left bdrB" ng-repeat="txn in ledger.transactions | filter:particularSearch" ng-if="txn.type == 'DEBIT'">
                               <td class="col-xs-3" style="padding:10px;">{{ledger.entryDate}}</td>
                               <td class="col-xs-6 bdrL" style="padding:10px;">{{txn.particular.name}}</td>
-                              <td class="col-xs-3 bdrL" style="padding:10px;">{{txn.amount}}</td>
+                              <td class="col-xs-3 bdrL" style="padding:10px;">{{txn.amount}}
+                                <span
+                                  class="download-invoice-ledger" 
+                                  ng-if="ledger.invoiceGenerated" 
+                                  tooltip-append-to-body="true" 
+                                  uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" 
+                                  tooltip-placement="top"> 
+                                  <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
+                                </span>
+                              </td>
                             </tr>
                           </tbody>
                         </table>
@@ -267,7 +276,16 @@
                             <tr class="text-left bdrB" ng-repeat="txn in ledger.transactions | filter:particularSearch" ng-if="txn.type == 'CREDIT'">
                               <td class="col-xs-3" style="padding:10px;">{{ledger.entryDate}}</td>
                               <td class="col-xs-6 bdrL" style="padding:10px;">{{txn.particular.name}}</td>
-                              <td class="col-xs-3 bdrL" style="padding:10px;">{{txn.amount}}</td>
+                              <td class="col-xs-3 bdrL" style="padding:10px;">{{txn.amount}}
+                                <span 
+                                  class="download-invoice-ledger" 
+                                  ng-if="ledger.invoiceGenerated" 
+                                  tooltip-append-to-body="true" 
+                                  uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" 
+                                  tooltip-placement="top"> 
+                                  <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
+                                </span>
+                              </td>
                             </tr>
                           </tbody>
                         </table>
