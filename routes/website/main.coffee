@@ -98,7 +98,7 @@ router.post '/magic-link', (req, res) ->
     res.send data
 
 router.post '/magic-link/download-invoice', (req, res) ->
-  hUrl = settings.envUrl + '/magic-link' + req.body.data.id + '/download-invoice/' + req.body.data.invoiceNum
+  hUrl = settings.envUrl + '/magic-link/' + req.body.data.id + '/download-invoice/' + req.body.data.invoiceNum
   settings.client.get hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
