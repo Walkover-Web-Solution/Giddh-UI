@@ -743,7 +743,8 @@
             </button>
             
             <!--file upload-->
-            <!-- <input type="file" ng-model="lc.invoiceFile" name="invoiceFile" id="invoiceFile" ng-change="lc.getInvoiceFile()"> -->
+            <input type="file" name="invoiceFile" id="invoiceFile" file-model="lc.invoiceFile" ng-click="$event.stopPropagation()">
+            <button class="btn btn-sm btn-default" ng-click="lc.getInvoiceFile()">upload</button>
             <!--file upload-->
 
             <button ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') && ((lc.selectedLedger.transactions[0].particular.uniqueName != '' && lc.selectedLedger.transactions[0].particular.uniqueName != undefined) || (lc.selectedLedger.transactions[1].particular.uniqueName != '' && lc.selectedLedger.transactions[1].particular.uniqueName != undefined)) && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default mrL1" ng-click="lc.resetLedger()">Reset</button>
