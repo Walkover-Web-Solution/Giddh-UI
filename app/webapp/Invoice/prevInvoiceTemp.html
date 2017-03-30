@@ -216,18 +216,26 @@ textarea:disabled, input:disabled{
                         <i class="glyphicon glyphicon-folder-open"></i> 
                         &nbsp; Upload Logo</button><br/>
                       <small>* Logo size should be max 200KB</small> -->
+
+                    <div class="upload_div">
                       <input type="file" name="invoiceLogo" id="invoiceLogo" file-model="logoFile" ng-click="$event.stopPropagation()">
-                      <button class="btn btn-sm btn-default" ng-click="uploadLogo('logo')">upload</button>
+                      <label for="invoiceLogo" class="upload-btn"><i class="glyphicon glyphicon-upload"></i> Upload Image</label>
+                      <button class="btn btn-md btn-default" ng-click="uploadLogo('logo')">Upload</button>
+                    </div>
+                      <!-- <input type="file" name="invoiceLogo" id="invoiceLogo" file-model="logoFile" ng-click="$event.stopPropagation()">
+                      <button class="btn btn-sm btn-default" ng-click="uploadLogo('logo')">upload</button> -->
                     </span>
                   </div>
                   <div class="form-group" ng-show="logoUpldComplt">
                     <img ngf-src="logoFile" class="thumb">
-                    <a href="javascript:void(0)" ng-click="resetLogo()">Reset Logo</a>
+                    <button class="btn btn-md btn-default" ng-click="resetLogo()">Reset Logo</button>
+                    <!-- <a href="javascript:void(0)" ng-click="resetLogo()">Reset Logo</a> -->
                   </div>
                 </form>
                 <div ng-show="defTempData.logo.path !== ''" ng-hide="logoWrapShow">
                   <img src="{{defTempData.logo.path}}" class="" height="50px">
-                  <a href="javascript:void(0)" ng-click="showUploadWrap()">Change Logo</a>
+                  <button class="btn btn-md btn-default" ng-click="showUploadWrap()">Change Logo</button>
+                  <!-- <a href="javascript:void(0)" ng-click="showUploadWrap()">Change Logo</a> -->
                 </div>
               </aside>
             </section>
@@ -506,18 +514,27 @@ textarea:disabled, input:disabled{
                         <i class="glyphicon glyphicon-folder-open"></i>
                         &nbsp; Upload Signature</button><br/>
                       <small>* Signature size should be max 200KB</small> -->
+
+                    <div class="upload_div">
                       <input type="file" name="invoiceSign" id="invoiceSign" file-model="logoFile" ng-click="$event.stopPropagation()">
-                      <button class="btn btn-sm btn-default" ng-click="uploadLogo('signature')">upload</button>
+                      <label for="invoiceSign" class="upload-btn"><i class="glyphicon glyphicon-upload"></i> Upload Image</label>
+                      <button class="btn btn-md btn-default" ng-click="uploadLogo('signature')">Upload</button>
+                    </div>
+
+<!--                       <input type="file" name="invoiceSign" id="invoiceSign" file-model="logoFile" ng-click="$event.stopPropagation()">
+                      <button class="btn btn-sm btn-default" ng-click="uploadLogo('signature')">upload</button> -->
                     </span>
                 </div>
                 <div class="form-group" ng-show="signatureUpldComplt">
                   <img ngf-src="logoFile" class="thumb">
-                  <a href="javascript:void(0)" ng-click="resetSignature()">Reset Signature</a>
+                  <button class="btn btn-md btn-default" ng-click="resetSignature()">Reset Signature</button>
+                  <!-- <a href="javascript:void(0)" ng-click="resetSignature()">Reset Signature</a> -->
                 </div>
               </form>
               <div ng-show="defTempData.signature.path !== ''" ng-hide="signatureWrapShow">
                 <img src="{{defTempData.signature.path}}" class="" height="50px">
-                <a href="javascript:void(0)" ng-click="showUploadSignatureWrap()">Change Signature</a>
+                <button class="btn btn-md btn-default" ng-click="showUploadSignatureWrap()">Change Signature</button>
+               <!--  <a href="javascript:void(0)" ng-click="showUploadSignatureWrap()">Change Signature</a> -->
               </div>
             </aside>
           </section>

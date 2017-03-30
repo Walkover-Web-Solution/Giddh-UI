@@ -1023,3 +1023,22 @@ input[type=number] {
 .create-company:hover {
     background: none !important;
 }
+
+
+.upload-btn {
+    background: #f3f0e6;
+    border: 1px solid #f7de8a;
+    padding: 6px;
+    border-radius: 2px;
+}
+.upload_div input[type="file"] {
+    display: none;
+}
+.upload_div {
+    width: 100%;
+    margin: 10px 0;
+    float: left;
+}
+/*.upload_div i {
+    margin-right: 3px;
+}*/
