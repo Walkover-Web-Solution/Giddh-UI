@@ -494,8 +494,11 @@ app.controller 'magicCtrl', [
       @success = (res) ->
         console.log(invoiceNumber)
       @failure = (res) ->
-        toastr.error(error.data.message)
-        $scope.magicReady = true
+        if(res.data == undefined)
+          console.log('has data')
+          toastr.error(res.data.message)
+        else
+          console.log('no data')
         $scope.showError = true
         console.log('failed')
       _data = {
