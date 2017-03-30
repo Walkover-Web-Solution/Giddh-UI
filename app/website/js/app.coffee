@@ -493,7 +493,7 @@ app.controller 'magicCtrl', [
 
     $scope.downloadInvoice = (invoiceNumber) ->
       @success = (res) ->
-        blobData = ml.b64toBlob(res.body, "application/pdf", 512)
+        blobData = ml.b64toBlob(res.body, "application/pdf;base64", 512)
         FileSaver.saveAs(blobData, invoiceNumber + ".pdf")
       @failure = (res) ->
         toastr.error(res.message)
