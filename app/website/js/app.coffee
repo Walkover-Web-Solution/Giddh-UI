@@ -423,6 +423,7 @@ app.controller 'magicCtrl', [
     $scope.magicLinkId = $scope.magicLinkId[1]
     $scope.ledgerData = []
     $scope.magicUrl = '/magic-link'
+    $scope.downloadInvoiceUrl = $scope.magicUrl + '/download-invoice/'
     $scope.today = new Date()
     $scope.fromDate = {date: new Date()}
     $scope.toDate = {date: new Date()}
@@ -488,6 +489,21 @@ app.controller 'magicCtrl', [
           $scope.magicReady = true
           $scope.showError = true
       )
+
+    $scope.downloadInvoice = (invoiceNumber) ->
+      @success = (res) ->
+        console.log(invoiceNumber)
+      @failure = (res) ->
+        toastr.error(error.data.message)
+        $scope.magicReady = true
+        $scope.showError = true
+        console.log('failed')
+      _data = {
+        id: data.id
+        invoiceNum: invoiceNumber
+      }
+      console.log(_data)
+      $http.post($scope.downloadInvoiceUrl, data:_data).then @success, @failure  
 
     $scope.getData($scope.data)
 
