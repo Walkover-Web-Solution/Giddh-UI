@@ -415,7 +415,7 @@ do ->
   ]
 
 app.controller 'magicCtrl', [
-  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter',
+  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter', 'FileSaver',
   ($scope, toastr, $http, $location, $rootScope, $filter, FileSaver) ->
     ml = this
     $rootScope.magicLinkPage = true
