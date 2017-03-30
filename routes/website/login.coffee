@@ -7,7 +7,6 @@ googleLoginUrl = settings.envUrl + 'signup-with-google'
 linkedinLoginUrl =  settings.envUrl + 'signup-with-linkedIn'
 twitterLoginUrl =  settings.envUrl + 'signup-with-twitter'
 
-
 hitViaSocket = (data) ->
   data = JSON.stringify(data)
   data.environment = app.get('env')
@@ -37,6 +36,7 @@ hitViaSocket = (data) ->
 ####
 
 router.post '/google', (req, res, next) ->
+  console.log req.body
   googleAccessTokenUrl = 'https://accounts.google.com/o/oauth2/token'
   params =
     code: req.body.code
