@@ -371,7 +371,8 @@ module.exports = function (grunt) {
           'angular-ui-tinymce',
           'bootstrap-daterangepicker',
           'ngMask',
-          'file-saver.js'
+          'file-saver.js',
+          'angular-upload'
         ],
         dependencies: {
           'jquery': 'modernizr',

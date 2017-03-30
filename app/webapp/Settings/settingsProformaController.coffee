@@ -383,29 +383,54 @@ settingsProformaController = ($rootScope, Upload, $timeout, toastr, settingsServ
 
 
   # upload Images
-  @uploadImages =(files,type, item, reset)->
-    angular.forEach files, (file) ->
-      file.fType = type
-#      console.log file
-      fileData = {
-        file: file
-        fType: type
-      }
-      if reset
-        fileData.file = ""
-      file.upload = Upload.upload(
-        url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/logo'
-        # file: file
-        # fType: type
-        data : fileData
-      )
-      file.upload.then ((res) ->
+#   @uploadImages =(files,type, item, reset)->
+#     angular.forEach files, (file) ->
+#       file.fType = type
+# #      console.log file
+#       fileData = {
+#         file: file
+#         fType: type
+#       }
+#       if reset
+#         fileData.file = ""
+#       file.upload = Upload.upload(
+#         url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/logo'
+#         # file: file
+#         # fType: type
+#         data : fileData
+#       )
+#       file.upload.then ((res) ->
+#         item.data = res.data.body.path
+#         toastr.success("Logo uploaded successfully")
+#       ), ((res) ->
+#         toastr.failure("Logo Upload Failed")
+#       ), (evt) ->
+#         console.log "file upload progress" ,Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
+  
+  @uploadImages =(type, item, reset)->
+    if reset
+      item.data = ""
+      item.showImage = false
+    else
+      file = document.getElementById('proformaLogo').files[0]
+      formData = new FormData()
+      formData.append('file', file)
+      formData.append('company', $rootScope.selectedCompany.uniqueName)
+      formData.append('type', type)
+    
+      @success = (res) ->
         item.data = res.data.body.path
+        item.showImage = true
         toastr.success("Logo uploaded successfully")
-      ), ((res) ->
+
+      @failure = (res) ->
         toastr.failure("Logo Upload Failed")
-      ), (evt) ->
-        console.log "file upload progress" ,Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
+
+      url = '/upload/' + $rootScope.selectedCompany.uniqueName + '/logo'
+      $http.post(url, formData, {
+        transformRequest: angular.identity,
+        headers: {'Content-Type': undefined}
+      }).then(@success, @failure)
 
   @setDefTemp = (value) ->
     @success = (res) ->

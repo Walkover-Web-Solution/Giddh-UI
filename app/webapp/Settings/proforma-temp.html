@@ -121,8 +121,8 @@
 									</div>
 									<div ng-if="item.type === 'Image' && item.edit" class="mrT2" style="position: relative;">
 										<form class="form-inline" enctype="multipart/form-data">
-											<div class="form-group" ng-hide="item.uploadFile">
-												<button type="file"
+											<div class="form-group" ng-hide="item.showImage">
+<!-- 												<button type="file"
 																ng-model="item.uploadFile"
 																class="btn btn-primary"
 																ngf-select="ctrl.uploadImages($files,'logo', item)"
@@ -133,11 +133,15 @@
 														>
 													<i class="glyphicon glyphicon-folder-open"></i>
 													&nbsp; Upload Logo</button><br/>
-												<small>* Image size should be max 200KB</small>
+												<small>* Image size should be max 200KB</small> -->
+
+												<input type="file" name="proformaLogo" id="proformaLogo" file-model="item.uploadFile" ng-click="$event.stopPropagation()">
+            									<button class="btn btn-sm btn-default" ng-click="ctrl.uploadImages('logo', item, false)">upload</button>
+
 											</div>
-											<div class="form-group" ng-if="item.uploadFile">
+											<div class="form-group" ng-if="item.showImage">
 												<img ngf-src="item.uploadFile" style="max-height:60px"><br>
-												<a href="javascript:void(0)" ng-click="ctrl.uploadImages($files,'logo', item, true)">Reset Logo</a>
+												<a href="javascript:void(0)" ng-click="ctrl.uploadImages('logo', item, true)">Reset Logo</a>
 											</div>
 										</form>
 									</div>
