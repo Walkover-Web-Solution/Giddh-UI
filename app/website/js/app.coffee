@@ -423,7 +423,7 @@ app.controller 'magicCtrl', [
     $scope.magicLinkId = $scope.magicLinkId[1]
     $scope.ledgerData = []
     $scope.magicUrl = '/magic-link'
-    $scope.downloadInvoiceUrl = $scope.magicUrl + '/download-invoice/'
+    $scope.downloadInvoiceUrl = $scope.magicUrl + '/download-invoice'
     $scope.today = new Date()
     $scope.fromDate = {date: new Date()}
     $scope.toDate = {date: new Date()}
@@ -499,7 +499,7 @@ app.controller 'magicCtrl', [
         $scope.showError = true
         console.log('failed')
       _data = {
-        id: data.id
+        id: $scope.data.id
         invoiceNum: invoiceNumber
       }
       console.log(_data)
