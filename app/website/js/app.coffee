@@ -493,8 +493,7 @@ app.controller 'magicCtrl', [
 
     $scope.downloadInvoice = (invoiceNumber) ->
       @success = (res) ->
-        blobData = ml.b64toBlob(res.body, "application/pdf", 512)
-        console.log(blobData)
+        blobData = ml.b64toBlob(res.data.body, "application/pdf", 512)
         FileSaver.saveAs(blobData, invoiceNumber + ".pdf")
       @failure = (res) ->
         toastr.error(res.message)
@@ -509,10 +508,8 @@ app.controller 'magicCtrl', [
     ml.b64toBlob = (b64Data, contentType, sliceSize) ->
       contentType = contentType or ''
       sliceSize = sliceSize or 512
-      b64Data = b64Data.replace(/\s/g, '')
-      console.log(b64Data)
+      # b64Data = b64Data.replace(/\s/g, '')
       byteCharacters = atob(b64Data)
-      console.log(byteCharacters)
       byteArrays = []
       offset = 0
       while offset < byteCharacters.length
