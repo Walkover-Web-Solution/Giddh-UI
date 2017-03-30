@@ -160,7 +160,7 @@
                 <button ng-show="srchDataSet.length > 1" class="btn btn-default mrR1" ng-click="removeSearchRow()">Delete Row</button>
                 <button ng-if="inSrchmode" ng-click="resetQuery()" class="btn btn-info mrR1">Reset Query</button>
                 
-                <button type="button" class="btn btn-success" ng-csv="searchResData" csv-header="getCSVHeader()"  filename="{{ searchFormData.group.name }}.csv" field-separator="," decimal-separator="." csv-column-order="order" ng-click="$event.stopPropagation()">Download CSV</button>
+                <button type="button" class="btn btn-success" ng-csv="searchResData" csv-header="getCSVHeader()"  filename="{{ searchFormData.group.name }}.csv" field-separator="," decimal-separator="." csv-column-order="order">Download CSV</button>
                 <button type="button" class="btn btn-success mrL1" ng-click="openEmailDialog()">Send as Email</button>
                 <button type="button" class="btn btn-success mrL1" ng-click="openSmsDialog()">Send as Sms</button>
               </div>

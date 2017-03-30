@@ -148,7 +148,7 @@ global.mStorage = multer.diskStorage({
         cb(null, Date.now() + '.xlsx')
         break;
       default:
-        cb(null, file.originalname)
+        cb(null, Date.now() + '.xml');
     }
     // if (file.mimetype === "application/vnd.ms-excel"){
     //   cb(null, Date.now() + '.xls')
@@ -200,7 +200,6 @@ var placeholders = require('./public/routes/webapp/placeholders')
 var inventory = require('./public/routes/webapp/inventory')
 var adminPanel = require('./public/routes/adminPanel/adminPanel')
 var recEntry = require('./public/routes/webapp/recurringEntry')
-var invoiceUpload = require('./public/routes/webapp/invoiceUpload')
 
 app.use('/time-test', timetest);
 app.use('/currency', currency);
@@ -215,7 +214,6 @@ app.use('/company/:companyUniqueName/groups', groups);
 app.use('/company/:companyUniqueName/accounts', accounts);
 app.use('/company/:companyUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
 app.use('/company/:companyUniqueName/trial-balance', trialBalance);
-app.use('/app/upload-invoice',parseUploads, invoiceUpload);
 app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/stock-group', inventory)

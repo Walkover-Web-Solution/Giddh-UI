@@ -1,5 +1,5 @@
 
-newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, groupService, $uibModal, companyServices, $state,idbService, $http) ->
+newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state,idbService) ->
   lc = this
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
@@ -1653,25 +1653,15 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     ledger
 
 
-  lc.invoiceFile = {}
-  lc.getInvoiceFile = () ->
-    file = document.getElementById('invoiceFile').files[0]
-    formData = new FormData()
-    formData.append('file', file)
-    formData.append('company', $rootScope.selectedCompany.uniqueName)
-
-    @success = (res) ->
-      lc.selectedLedger.attachedFile = res.data.body.uniqueName
-      toastr.success('file uploaded successfully')
-
-    @failure = (res) ->
-      toastr.error(res.data.message)
-
-    url = 'upload-invoice'
-    $http.post(url, formData, {
-      transformRequest: angular.identity,
-      headers: {'Content-Type': undefined}
-    }).then(@success, @failure)
+  # lc.invoiceFile = {}
+  # lc.getInvoiceFile = () ->
+  #   console.log lc.invoiceFile
+  #   data = null
+  #   f = document.getElementById('invoiceFile').files[0]
+  #   r = new FileReader()
+  #   r.onloadend = (e) ->
+  #     data = e.target.result
+  #   console.log data
 
   lc.doingEntry = false
   lc.lastSelectedLedger = {}
@@ -2705,6 +2695,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.log = () -> 
     if lc.showLogs
       console.log arguments
+
+  lc.uploadInvoiceImg = (files, type) ->
+    console.log files
 
   lc.onBankTxnSelect = ($item, $model, $label, $event, txn) ->
     $timeout ( ->
