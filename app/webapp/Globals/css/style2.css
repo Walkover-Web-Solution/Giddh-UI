@@ -589,8 +589,9 @@ input[type="checkbox"]:after {
     background: #57C17A;
 }
 .btn-danger {
-    background: #EF5350;
+    background: #EF5350 !important;
     border-radius: 2px;
+    color: #fff !important;
 }
 .btn-danger:hover {
     background: #F44336;
