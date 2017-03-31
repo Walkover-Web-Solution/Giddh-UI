@@ -483,6 +483,7 @@ app.controller 'magicCtrl', [
           $scope.ledgerData = success.data.body.ledgerTransactions
           $scope.filterLedgers($scope.ledgerData.ledgers)
           $scope.countTotalTransactions()
+          $scope.calReckoningTotal()
           $scope.magicReady = true
           $scope.showError = false
           $scope.assignDates($scope.ledgerData.ledgers[0].entryDate, $scope.ledgerData.ledgers[$scope.ledgerData.ledgers.length-1].entryDate)
@@ -586,6 +587,8 @@ app.controller 'magicCtrl', [
 
     $scope.creditTotal = 0
     $scope.debitTotal = 0
+    $scope.reckoningDebitTotal = 0
+    $scope.reckoningCreditTotal = 0
     $scope.countTotalTransactions = () ->
       $scope.creditTotal = 0
       $scope.debitTotal = 0
@@ -603,7 +606,13 @@ app.controller 'magicCtrl', [
                 $scope.cTxnCount += 1
                 $scope.creditTotal += Number(txn.amount)
 
-
+    $scope.calReckoningTotal = () ->
+      if $scope.ledgerData.balance.type == 'CREDIT'
+        $scope.reckoningDebitTotal += $scope.ledgerData.balance.amount
+        $scope.reckoningCreditTotal += $scope.ledgerData.forwardedBalance.amount
+      else if lc.ledgerData.balance.type == 'DEBIT'    
+        $scope.reckoningCreditTotal += $scope.ledgerData.balance.amount
+        $scope.reckoningDebitTotal += $scope.ledgerData.forwardedBalance.amount
 ]
 
 

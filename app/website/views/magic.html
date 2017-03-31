@@ -211,7 +211,7 @@
                             <tr class="text-left bdrB" ng-repeat="txn in ledger.transactions | filter:particularSearch" ng-if="txn.type == 'DEBIT'">
                               <td class="col-xs-3" style="padding:10px;">{{ledger.entryDate}}</td>
                               <td class="col-xs-6 bdrL" style="padding:10px;">{{txn.particular.name}}</td>
-                              <td class="col-xs-3 bdrL pr" style="padding:10px;">{{txn.amount}}
+                              <td class="col-xs-3 bdrL pr" align="right" style="padding:10px;">{{txn.amount}}
                                 <span
                                   class="download-invoice-ledger pa" 
                                   ng-if="ledger.invoiceGenerated" 
@@ -280,7 +280,7 @@
                             <tr class="text-left bdrB" ng-repeat="txn in ledger.transactions | filter:particularSearch" ng-if="txn.type == 'CREDIT'">
                               <td class="col-xs-3" style="padding:10px;">{{ledger.entryDate}}</td>
                               <td class="col-xs-6 bdrL" style="padding:10px;">{{txn.particular.name}}</td>
-                              <td class="col-xs-3 bdrL pr" style="padding:10px;">{{txn.amount}}
+                              <td class="col-xs-3 bdrL pr" align="right" style="padding:10px;">{{txn.amount}}
                                 <span 
                                   class="download-invoice-ledger pa" 
                                   ng-if="ledger.invoiceGenerated" 
@@ -345,14 +345,14 @@
             </tr>
             <tr class="total greyBg">
               <td colspan="2" style="width:36%" class="bdrL">
-                <span class="pull-left">Debit Total:{{debitTotal | number:2 }}</span>
+                <span class="pull-left">Debit Total:{{reckoningDebitTotal | number:2 }}</span>
                 <span class="pull-right">Reckoning</span>
               </td>
               <td style="width:14%" class="bdrR alR">
                 <span>{{ledgerData.debitTotal | number:2}}</span>
               </td>
               <td colspan="2" style="width:36%" class="bdrL">
-                <span class="pull-left">Credit Total:{{creditTotal | number:2 }}</span>
+                <span class="pull-left">Credit Total:{{reckoningCreditTotal | number:2 }}</span>
                 <span class="pull-right">Reckoning</span>
               </td>
               <td style="width:14%" class="bdrR alR">
