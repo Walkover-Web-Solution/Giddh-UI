@@ -1683,44 +1683,44 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
 
   $scope.invoiceFile = {}
-  $scope.getInvoiceFile = (files) ->
-    file = files[0]
-    formData = new FormData()
-    formData.append('file', file)
-    formData.append('company', $rootScope.selectedCompany.uniqueName)
+  # $scope.getInvoiceFile = (files) ->
+  #   file = files[0]
+  #   formData = new FormData()
+  #   formData.append('file', file)
+  #   formData.append('company', $rootScope.selectedCompany.uniqueName)
 
-    @success = (res) ->
-      lc.selectedLedger.attachedFile = res.data.body.uniqueName
-      toastr.success('file uploaded successfully')
+  #   @success = (res) ->
+  #     lc.selectedLedger.attachedFile = res.data.body.uniqueName
+  #     toastr.success('file uploaded successfully')
 
-    @failure = (res) ->
-      toastr.error(res.data.message)
+  #   @failure = (res) ->
+  #     toastr.error(res.data.message)
 
-    url = 'upload-invoice'
-    $http.post(url, formData, {
-      transformRequest: angular.identity,
-      headers: {'Content-Type': undefined}
-    }).then(@success, @failure)
+  #   url = 'upload-invoice'
+  #   $http.post(url, formData, {
+  #     transformRequest: angular.identity,
+  #     headers: {'Content-Type': undefined}
+  #   }).then(@success, @failure)
 
-  lc.downloadAttachedFile = (file, e) ->
-    e.stopPropagation()
-    @success = (res) ->
-      data = lc.b64toBlob(res.body.uploadedFile, "image/"+res.body.fileType)
-      blobUrl = URL.createObjectURL(data)
-      FileSaver.saveAs(data, res.body.name)
+  # lc.downloadAttachedFile = (file, e) ->
+  #   e.stopPropagation()
+  #   @success = (res) ->
+  #     data = lc.b64toBlob(res.body.uploadedFile, "image/"+res.body.fileType)
+  #     blobUrl = URL.createObjectURL(data)
+  #     FileSaver.saveAs(data, res.body.name)
 
-    @failure = (res) ->
-      toastr.error(res.data.message)
-    reqParam = {
-      companyUniqueName: $rootScope.selectedCompany.uniqueName
-      accountsUniqueName: $rootScope.selectedAccount.uniqueName
-      file:file
-    }
-    ledgerService.downloadInvoiceFile(reqParam).then(@success, @failure)
+  #   @failure = (res) ->
+  #     toastr.error(res.data.message)
+  #   reqParam = {
+  #     companyUniqueName: $rootScope.selectedCompany.uniqueName
+  #     accountsUniqueName: $rootScope.selectedAccount.uniqueName
+  #     file:file
+  #   }
+  #   ledgerService.downloadInvoiceFile(reqParam).then(@success, @failure)
 
-  lc.deleteAttachedFile = () ->
-    lc.selectedLedger.attachedFile = ''
-    lc.selectedLedger.attachedFileName = ''
+  # lc.deleteAttachedFile = () ->
+  #   lc.selectedLedger.attachedFile = ''
+  #   lc.selectedLedger.attachedFileName = ''
 
 
   lc.doingEntry = false
