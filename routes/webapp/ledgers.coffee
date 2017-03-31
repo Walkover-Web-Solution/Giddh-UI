@@ -30,6 +30,22 @@ router.delete '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+#download invoice attachement
+router.get '/invoice-file', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      to: req.query.toDate
+      from: req.query.fromDate
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/ledger/upload/' + req.query.fileName
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+
 #Get ledgers
 router.get '/:ledgerUniqueName', (req, res) ->
   authHead =
@@ -99,6 +115,8 @@ router.post '/paymentTransactions', (req, res) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
+
+
 
     
 module.exports = router
