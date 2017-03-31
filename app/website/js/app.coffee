@@ -587,8 +587,8 @@ app.controller 'magicCtrl', [
 
     $scope.creditTotal = 0
     $scope.debitTotal = 0
-    $scope.reckoningDebitTotal = $scope.ledgerData.debitTotal
-    $scope.reckoningCreditTotal = $scope.ledgerData.creditTotal
+    $scope.reckoningDebitTotal = 0
+    $scope.reckoningCreditTotal = 0
     $scope.countTotalTransactions = () ->
       $scope.creditTotal = 0
       $scope.debitTotal = 0
@@ -607,15 +607,12 @@ app.controller 'magicCtrl', [
                 $scope.creditTotal += Number(txn.amount)
 
     $scope.calReckoningTotal = () ->
-      console.log($scope.ledgerData)
-      console.log($scope.reckoningCreditTotal)
-      console.log($scope.reckoningDebitTotal)
+      $scope.reckoningDebitTotal = $scope.ledgerData.debitTotal
+      $scope.reckoningCreditTotal = $scope.ledgerData.creditTotal
       if $scope.ledgerData.balance.type == 'CREDIT'
-        console.log('type credit')
         $scope.reckoningDebitTotal += $scope.ledgerData.balance.amount
         $scope.reckoningCreditTotal += $scope.ledgerData.forwardedBalance.amount
       else if $scope.ledgerData.balance.type == 'DEBIT'
-        console.log('type debit')    
         $scope.reckoningCreditTotal += $scope.ledgerData.balance.amount
         $scope.reckoningDebitTotal += $scope.ledgerData.forwardedBalance.amount
       console.log('value after checks')

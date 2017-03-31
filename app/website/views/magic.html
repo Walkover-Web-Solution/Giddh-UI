@@ -65,7 +65,7 @@
           <div class="form-inline pdB1 ledgHead">
             <form name="fromToDateForm" novalidate class="form-group mrR1">
               <div class="form-group">
-              <!--   <label>From</label> -->
+                <label>From</label>
                 <p class="input-group maxW150">
                   <input type="text" class="form-control"
                         uib-datepicker-popup="{{format}}" required
@@ -345,18 +345,18 @@
             </tr>
             <tr class="total greyBg">
               <td colspan="2" style="width:36%" class="bdrL">
-                <span class="pull-left">Debit Total:{{reckoningDebitTotal | number:2 }}</span>
+                <span class="pull-left">Debit Total:{{debitTotal | number:2 }}</span>
                 <span class="pull-right">Reckoning</span>
               </td>
               <td style="width:14%" class="bdrR alR">
                 <span>{{ledgerData.debitTotal | number:2}}</span>
               </td>
               <td colspan="2" style="width:36%" class="bdrL">
-                <span class="pull-left">Credit Total:{{reckoningCreditTotal | number:2 }}</span>
+                <span class="pull-left">Credit Total:{{creditTotal | number:2 }}</span>
                 <span class="pull-right">Reckoning</span>
               </td>
               <td style="width:14%" class="bdrR alR">
-                <span>{{ledgerData.creditTotal | number:2}}</span>
+                <span>{{reckoning | number:2}}</span>
               </td>
             </tr>
 
