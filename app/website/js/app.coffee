@@ -615,9 +615,6 @@ app.controller 'magicCtrl', [
       else if $scope.ledgerData.balance.type == 'DEBIT'
         $scope.reckoningCreditTotal += $scope.ledgerData.balance.amount
         $scope.reckoningDebitTotal += $scope.ledgerData.forwardedBalance.amount
-      console.log('value after checks')
-      console.log($scope.reckoningCreditTotal)
-      console.log($scope.reckoningDebitTotal)
 ]
 
 
