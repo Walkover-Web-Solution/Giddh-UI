@@ -1302,8 +1302,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if res.body.ledgers.length < 1
       lc.showLoader = false
     #lc.showLoader = false
-    if lc.firstLoad || $rootScope.accClicked
-      lc.blankLedger.transactions[0].isOpen = true
+    #if lc.firstLoad || $rootScope.accClicked
+      #lc.blankLedger.transactions[0].isOpen = true
     $rootScope.superLoader = false
 
   lc.getLedgerDataFailure = (res) ->
