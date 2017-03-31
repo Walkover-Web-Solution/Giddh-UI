@@ -216,21 +216,9 @@
       </uib-tab>
       <uib-tab class="mrB1" select="setTab(1)">
         <uib-tab-heading>Generate</uib-tab-heading>
-          <div class="row mr1" ng-if="ledgers.results.length == 0">
-          <div class="no-data">
-            <h1>No Entry found in sales!</h1>
-            <h1>Have to do some sales before creating invoice</h1>
-            <a onclick="GoTosales()" class="btn btn-primary">Go to Sales</a>
-          </div>
-        </div>
-        <div class="" ng-if="ledgers.results.length > 0">
-
-
-          <div class="container-fluid pdT2 y-scroll" cover-page>
-
 
 <!-- filters start -->
-          <div ng-hide="flyDiv" class="pos-rel filterForm" ng-class="{'flying-div' : flyDiv == true}">
+          <div ng-hide="flyDiv" class="pos-rel filterForm row" style="margin:0;padding-left:15px;" ng-class="{'flying-div' : flyDiv == true}">
       <div class="form-group">
         <label>From</label>
         <input type="text" class="form-control"
@@ -308,6 +296,19 @@
     </div>
 
 <!-- filters end -->
+
+          <div class="row mr1" ng-if="ledgers.results.length == 0">
+          <div class="no-data">
+            <h1>No Entry found in sales!</h1>
+            <h1>Have to do some sales before creating invoice</h1>
+            <a onclick="GoTosales()" class="btn btn-primary">Go to Sales</a>
+          </div>
+        </div>
+        <div class="" ng-if="ledgers.results.length > 0">
+
+
+          <div class="container-fluid y-scroll" cover-page ng-class="{'pdT2' : flyDiv}">
+
 
 
 

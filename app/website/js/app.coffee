@@ -474,7 +474,7 @@ app.controller 'magicCtrl', [
       $scope.fromDate.date = from
       $scope.toDate.date = to
 
-    $scope.getData = (data) ->
+    $scope.getData = (data, updateDates) ->
       $scope.magicReady = false
       _data = data
       $http.post($scope.magicUrl, data:_data).then(
@@ -486,7 +486,8 @@ app.controller 'magicCtrl', [
           $scope.calReckoningTotal()
           $scope.magicReady = true
           $scope.showError = false
-          $scope.assignDates($scope.ledgerData.ledgers[0].entryDate, $scope.ledgerData.ledgers[$scope.ledgerData.ledgers.length-1].entryDate)
+          if updateDates
+            $scope.assignDates($scope.ledgerData.ledgers[0].entryDate, $scope.ledgerData.ledgers[$scope.ledgerData.ledgers.length-1].entryDate)
         (error)->
           toastr.error(error.data.message)
           $scope.magicReady = true
@@ -505,7 +506,7 @@ app.controller 'magicCtrl', [
       }
       $http.post($scope.downloadInvoiceUrl, data:_data).then @success, @failure  
 
-    $scope.getData($scope.data)
+    $scope.getData($scope.data, true)
 
     ml.b64toBlob = (b64Data, contentType, sliceSize) ->
       contentType = contentType or ''
@@ -527,10 +528,10 @@ app.controller 'magicCtrl', [
       blob = new Blob(byteArrays, type: contentType)
       blob
 
-    $scope.getDataByDate = () ->
+    $scope.getDataByDate = (updateDates) ->
       $scope.data.from = $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
       $scope.data.to = $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
-      $scope.getData($scope.data)
+      $scope.getData($scope.data, updateDates)
 
     #for contact form
         # check string has whitespace
@@ -615,9 +616,6 @@ app.controller 'magicCtrl', [
       else if $scope.ledgerData.balance.type == 'DEBIT'
         $scope.reckoningCreditTotal += $scope.ledgerData.balance.amount
         $scope.reckoningDebitTotal += $scope.ledgerData.forwardedBalance.amount
-      console.log('value after checks')
-      console.log($scope.reckoningCreditTotal)
-      console.log($scope.reckoningDebitTotal)
 ]
 
 
