@@ -11,6 +11,7 @@ app = angular.module("giddhApp", [
   "valid-number"
   "razor-pay"
   "internationalPhoneNumber"
+  "ngFileSaver"
   ]
 )
 app.config (ipnConfig) ->
@@ -415,14 +416,16 @@ do ->
   ]
 
 app.controller 'magicCtrl', [
-  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter',
-  ($scope, toastr, $http, $location, $rootScope, $filter) ->
+  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter', 'FileSaver',
+  ($scope, toastr, $http, $location, $rootScope, $filter, FileSaver) ->
+    ml = this
     $rootScope.magicLinkPage = true
     $scope.magicReady = false
     $scope.magicLinkId = window.location.search.split('=')
     $scope.magicLinkId = $scope.magicLinkId[1]
     $scope.ledgerData = []
     $scope.magicUrl = '/magic-link'
+    $scope.downloadInvoiceUrl = $scope.magicUrl + '/download-invoice'
     $scope.today = new Date()
     $scope.fromDate = {date: new Date()}
     $scope.toDate = {date: new Date()}
@@ -471,7 +474,7 @@ app.controller 'magicCtrl', [
       $scope.fromDate.date = from
       $scope.toDate.date = to
 
-    $scope.getData = (data) ->
+    $scope.getData = (data, updateDates) ->
       $scope.magicReady = false
       _data = data
       $http.post($scope.magicUrl, data:_data).then(
@@ -480,21 +483,55 @@ app.controller 'magicCtrl', [
           $scope.ledgerData = success.data.body.ledgerTransactions
           $scope.filterLedgers($scope.ledgerData.ledgers)
           $scope.countTotalTransactions()
+          $scope.calReckoningTotal()
           $scope.magicReady = true
           $scope.showError = false
-          $scope.assignDates($scope.ledgerData.ledgers[0].entryDate, $scope.ledgerData.ledgers[$scope.ledgerData.ledgers.length-1].entryDate)
+          if updateDates
+            $scope.assignDates($scope.ledgerData.ledgers[0].entryDate, $scope.ledgerData.ledgers[$scope.ledgerData.ledgers.length-1].entryDate)
         (error)->
           toastr.error(error.data.message)
           $scope.magicReady = true
           $scope.showError = true
       )
 
-    $scope.getData($scope.data)
+    $scope.downloadInvoice = (invoiceNumber) ->
+      @success = (res) ->
+        blobData = ml.b64toBlob(res.data.body, "application/pdf", 512)
+        FileSaver.saveAs(blobData, invoiceNumber + ".pdf")
+      @failure = (res) ->
+        toastr.error(res.message)
+      _data = {
+        id: $scope.data.id
+        invoiceNum: invoiceNumber
+      }
+      $http.post($scope.downloadInvoiceUrl, data:_data).then @success, @failure  
 
-    $scope.getDataByDate = () ->
+    $scope.getData($scope.data, true)
+
+    ml.b64toBlob = (b64Data, contentType, sliceSize) ->
+      contentType = contentType or ''
+      sliceSize = sliceSize or 512
+      # b64Data = b64Data.replace(/\s/g, '')
+      byteCharacters = atob(b64Data)
+      byteArrays = []
+      offset = 0
+      while offset < byteCharacters.length
+        slice = byteCharacters.slice(offset, offset + sliceSize)
+        byteNumbers = new Array(slice.length)
+        i = 0
+        while i < slice.length
+          byteNumbers[i] = slice.charCodeAt(i)
+          i++
+        byteArray = new Uint8Array(byteNumbers)
+        byteArrays.push byteArray
+        offset += sliceSize
+      blob = new Blob(byteArrays, type: contentType)
+      blob
+
+    $scope.getDataByDate = (updateDates) ->
       $scope.data.from = $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
       $scope.data.to = $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
-      $scope.getData($scope.data)
+      $scope.getData($scope.data, updateDates)
 
     #for contact form
         # check string has whitespace
@@ -551,6 +588,8 @@ app.controller 'magicCtrl', [
 
     $scope.creditTotal = 0
     $scope.debitTotal = 0
+    $scope.reckoningDebitTotal = 0
+    $scope.reckoningCreditTotal = 0
     $scope.countTotalTransactions = () ->
       $scope.creditTotal = 0
       $scope.debitTotal = 0
@@ -568,7 +607,15 @@ app.controller 'magicCtrl', [
                 $scope.cTxnCount += 1
                 $scope.creditTotal += Number(txn.amount)
 
-
+    $scope.calReckoningTotal = () ->
+      $scope.reckoningDebitTotal = $scope.ledgerData.debitTotal
+      $scope.reckoningCreditTotal = $scope.ledgerData.creditTotal
+      if $scope.ledgerData.balance.type == 'CREDIT'
+        $scope.reckoningDebitTotal += $scope.ledgerData.balance.amount
+        $scope.reckoningCreditTotal += $scope.ledgerData.forwardedBalance.amount
+      else if $scope.ledgerData.balance.type == 'DEBIT'
+        $scope.reckoningCreditTotal += $scope.ledgerData.balance.amount
+        $scope.reckoningDebitTotal += $scope.ledgerData.forwardedBalance.amount
 ]
 
 

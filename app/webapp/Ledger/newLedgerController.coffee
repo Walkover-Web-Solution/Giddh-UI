@@ -1,5 +1,5 @@
 
-newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state,idbService) ->
+newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, groupService, $uibModal, companyServices, $state,idbService, $http) ->
   lc = this
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
@@ -740,6 +740,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   blankLedgerModel = () ->
     @blankLedger = {
       isBlankLedger : true
+      attachedFileName: ''
+      attachedFile: ''
       description:''
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
       invoiceGenerated:false
@@ -771,6 +773,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.addBlankTxn= (str, ledger) ->
     txn = new txnModel(str)
+    txn.isBlank = true
 #    if ledger.uniqueName != ""
     lc.hasBlankTxn = false
     lc.checkForExistingblankTransaction(ledger, str)
@@ -1060,6 +1063,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     accountService.exportLedger(unqNamesObj).then(lc.exportLedgerSuccess, lc.exportLedgerFailure)
 
   lc.exportLedgerSuccess = (res)->
+    # blob = new Blob([res.body.filePath], {type:'file'})
+    # fileName = res.body.filePath.split('/')
+    # fileName = fileName[fileName.length-1]
+    # FileSaver.saveAs(blob, fileName)
     lc.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
     if $rootScope.msieBrowser()
       $rootScope.openWindow(res.body.filePath)
@@ -1295,8 +1302,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if res.body.ledgers.length < 1
       lc.showLoader = false
     #lc.showLoader = false
-    if lc.firstLoad || $rootScope.accClicked
-      lc.blankLedger.transactions[0].isOpen = true
+    #if lc.firstLoad || $rootScope.accClicked
+      #lc.blankLedger.transactions[0].isOpen = true
     $rootScope.superLoader = false
 
   lc.getLedgerDataFailure = (res) ->
@@ -1345,12 +1352,34 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.ledgerData.forwardedBalance = res.body.forwardedBalance
     lc.ledgerData.creditTotal = res.body.creditTotal
     lc.ledgerData.debitTotal = res.body.debitTotal
-    lc.ledgerData.reckoningCreditTotal = res.body.creditTotal
-    lc.ledgerData.reckoningDebitTotal = res.body.debitTotal
-    if lc.ledgerData.balance.type == 'CREDIT'
-      lc.ledgerData.reckoningCreditTotal += lc.ledgerData.balance.amount
-    else if lc.ledgerData.balance.type == 'DEBIT'
-      lc.ledgerData.reckoningDebitTotal += lc.ledgerData.balance.amount
+    if lc.ledgerData.forwardedBalance.amount == 0
+      recTotal = 0
+      if lc.ledgerData.creditTotal > lc.ledgerData.debitTotal then  recTotal = lc.ledgerData.creditTotal else recTotal = lc.ledgerData.debitTotal
+      lc.ledgerData.reckoningCreditTotal = recTotal
+      lc.ledgerData.reckoningDebitTotal = recTotal
+    else
+      if lc.ledgerData.forwardedBalance.type == 'DEBIT'
+        if lc.ledgerData.forwardedBalance.amount + lc.ledgerData.debitTotal <= lc.ledgerData.creditTotal
+          lc.ledgerData.reckoningCreditTotal = lc.ledgerData.creditTotal
+          lc.ledgerData.reckoningDebitTotal = lc.ledgerData.creditTotal
+        else
+          lc.ledgerData.reckoningCreditTotal = lc.ledgerData.forwardedBalance.amount + lc.ledgerData.debitTotal
+          lc.ledgerData.reckoningDebitTotal = lc.ledgerData.forwardedBalance.amount + lc.ledgerData.debitTotal
+      else
+        if lc.ledgerData.forwardedBalance.amount + lc.ledgerData.creditTotal <= lc.ledgerData.debitTotal
+          lc.ledgerData.reckoningCreditTotal = lc.ledgerData.debitTotal
+          lc.ledgerData.reckoningDebitTotal = lc.ledgerData.debitTotal
+        else
+          lc.ledgerData.reckoningCreditTotal = lc.ledgerData.forwardedBalance.amount + lc.ledgerData.creditTotal
+          lc.ledgerData.reckoningDebitTotal = lc.ledgerData.forwardedBalance.amount + lc.ledgerData.creditTotal
+    # lc.ledgerData.reckoningCreditTotal = res.body.creditTotal
+    # lc.ledgerData.reckoningDebitTotal = res.body.debitTotal
+    # if lc.ledgerData.balance.type == 'CREDIT'
+    #   lc.ledgerData.reckoningDebitTotal += lc.ledgerData.balance.amount
+    #   lc.ledgerData.reckoningCreditTotal += lc.ledgerData.forwardedBalance.amount
+    # else if lc.ledgerData.balance.type == 'DEBIT'    
+    #   lc.ledgerData.reckoningCreditTotal += lc.ledgerData.balance.amount
+    #   lc.ledgerData.reckoningDebitTotal += lc.ledgerData.forwardedBalance.amount
     lc.addToIdb(res.body.ledgers, $rootScope.selectedAccount.uniqueName)
 
   lc.updateLedgerDataSuccess = (res,condition, ledger) ->
@@ -1653,15 +1682,46 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     ledger
 
 
-  # lc.invoiceFile = {}
-  # lc.getInvoiceFile = () ->
-  #   console.log lc.invoiceFile
-  #   data = null
-  #   f = document.getElementById('invoiceFile').files[0]
-  #   r = new FileReader()
-  #   r.onloadend = (e) ->
-  #     data = e.target.result
-  #   console.log data
+  $scope.invoiceFile = {}
+  # $scope.getInvoiceFile = (files) ->
+  #   file = files[0]
+  #   formData = new FormData()
+  #   formData.append('file', file)
+  #   formData.append('company', $rootScope.selectedCompany.uniqueName)
+
+  #   @success = (res) ->
+  #     lc.selectedLedger.attachedFile = res.data.body.uniqueName
+  #     toastr.success('file uploaded successfully')
+
+  #   @failure = (res) ->
+  #     toastr.error(res.data.message)
+
+  #   url = 'upload-invoice'
+  #   $http.post(url, formData, {
+  #     transformRequest: angular.identity,
+  #     headers: {'Content-Type': undefined}
+  #   }).then(@success, @failure)
+
+  # lc.downloadAttachedFile = (file, e) ->
+  #   e.stopPropagation()
+  #   @success = (res) ->
+  #     data = lc.b64toBlob(res.body.uploadedFile, "image/"+res.body.fileType)
+  #     blobUrl = URL.createObjectURL(data)
+  #     FileSaver.saveAs(data, res.body.name)
+
+  #   @failure = (res) ->
+  #     toastr.error(res.data.message)
+  #   reqParam = {
+  #     companyUniqueName: $rootScope.selectedCompany.uniqueName
+  #     accountsUniqueName: $rootScope.selectedAccount.uniqueName
+  #     file:file
+  #   }
+  #   ledgerService.downloadInvoiceFile(reqParam).then(@success, @failure)
+
+  # lc.deleteAttachedFile = () ->
+  #   lc.selectedLedger.attachedFile = ''
+  #   lc.selectedLedger.attachedFileName = ''
+
 
   lc.doingEntry = false
   lc.lastSelectedLedger = {}
@@ -2418,7 +2478,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.blankLedger.transactions.push(lc.cBlankTxn)
 
   $rootScope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       lc.loadDefaultAccount()
     #$state.reload()
   #   # when company is changed, redirect to manage company page
@@ -2695,9 +2755,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.log = () -> 
     if lc.showLogs
       console.log arguments
-
-  lc.uploadInvoiceImg = (files, type) ->
-    console.log files
 
   lc.onBankTxnSelect = ($item, $model, $label, $event, txn) ->
     $timeout ( ->

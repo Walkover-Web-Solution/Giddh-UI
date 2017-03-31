@@ -318,7 +318,7 @@ body {
 }
 
 .pr {
-    position: relative
+    position: relative !important
 }
 .pr h1, .pr label {
     display: inline;
@@ -1818,3 +1818,10 @@ button.toast-close-button {
     text-shadow: 1px 1px 1px #076bd2;
     margin: 20px 20px 0;
     }
+.download-invoice-ledger {
+    position: absolute;
+    float: right;
+    width: 29px;
+    right: 0;
+    padding: 2px 7px;
+}
