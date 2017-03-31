@@ -1824,4 +1824,5 @@ button.toast-close-button {
     width: 29px;
     right: 0;
     padding: 2px 7px;
+    cursor: pointer;
 }
