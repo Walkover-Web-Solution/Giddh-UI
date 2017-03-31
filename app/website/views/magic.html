@@ -211,15 +211,14 @@
                             <tr class="text-left bdrB" ng-repeat="txn in ledger.transactions | filter:particularSearch" ng-if="txn.type == 'DEBIT'">
                               <td class="col-xs-3" style="padding:10px;">{{ledger.entryDate}}</td>
                               <td class="col-xs-6 bdrL" style="padding:10px;">{{txn.particular.name}}</td>
-                              <td class="col-xs-3 bdrL pr" align="right" style="padding:10px;">{{txn.amount}}
+                              <td class="col-xs-3 bdrL pr" align="right" style="padding:10px;padding-right:20px;">{{txn.amount}}
                                 <span
                                   class="download-invoice-ledger pa" 
                                   ng-if="ledger.invoiceGenerated" 
                                   tooltip-append-to-body="true"
                                   ng-click="downloadInvoice(ledger.invoiceNumber)"
                                   uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" 
-                                  tooltip-placement="top"
-                                  style="right:5px;"> 
+                                  tooltip-placement="top"> 
                                   <i class="glyphicon glyphicon-download" style="font-size:15px" ></i>
                                 </span>
                               </td>
@@ -280,15 +279,14 @@
                             <tr class="text-left bdrB" ng-repeat="txn in ledger.transactions | filter:particularSearch" ng-if="txn.type == 'CREDIT'">
                               <td class="col-xs-3" style="padding:10px;">{{ledger.entryDate}}</td>
                               <td class="col-xs-6 bdrL" style="padding:10px;">{{txn.particular.name}}</td>
-                              <td class="col-xs-3 bdrL pr" align="right" style="padding:10px;">{{txn.amount}}
+                              <td class="col-xs-3 bdrL pr" align="right" style="padding:10px;padding-right:20px;">{{txn.amount}}
                                 <span 
                                   class="download-invoice-ledger pa" 
                                   ng-if="ledger.invoiceGenerated" 
                                   tooltip-append-to-body="true" 
                                   ng-click="downloadInvoice(ledger.invoiceNumber)"
                                   uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" 
-                                  tooltip-placement="top"
-                                  style="right:5px;"> 
+                                  tooltip-placement="top"> 
                                   <i class="glyphicon glyphicon-download" style="font-size:15px;" ></i>
                                 </span>
                               </td>

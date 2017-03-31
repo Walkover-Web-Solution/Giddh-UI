@@ -318,7 +318,7 @@ body {
 }
 
 .pr {
-    position: relative
+    position: relative !important
 }
 .pr h1, .pr label {
     display: inline;
