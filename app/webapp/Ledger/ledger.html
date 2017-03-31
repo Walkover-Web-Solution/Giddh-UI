@@ -758,7 +758,7 @@
           <div class="clearfix btn-row" ng-if="canUpdate">
 
             <div class="row" style="margin:0">
-  
+              <button accesskey="x" ng-if="(lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="lc.addBlankTxn('DEBIT', lc.selectedLedger)">Add in DR</button>
               <button accesskey="c" ng-if="(lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="lc.addBlankTxn('CREDIT', lc.selectedLedger)">Add in CR</button>
               <button id="saveUpdate" class="pull-left mrR1 btn btn-sm btn-success" ng-click="lc.saveUpdateLedger(lc.selectedLedger)" ng-disabled="doingEntry">
                 <span ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') || lc.selectedLedger.isBankTransaction == true">Save</span>
