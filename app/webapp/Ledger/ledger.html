@@ -384,7 +384,7 @@
                                       </span>
                                       <input type="number"
                                         class="form-control text-right pdR3"
-                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated || value.attachedFile.length > 0}" 
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated}" 
                                         ng-model="txn.amount"
                                         ng-focus="lc.slctxn(value, txn, $event)"
                                         ng-change="lc.onValueChange('amount', txn)" ignore-mouse-wheel>
@@ -599,7 +599,7 @@
                                       </span>
                                       <input type="number"
                                         class="form-control text-right pdR3"
-                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated || value.attachedFile.length > 0}" 
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated}" 
                                         ng-model="txn.amount"
                                         ng-focus="lc.slctxn(value, txn, $event)"
                                         ng-change="lc.onValueChange('amount', txn)">
