@@ -20,7 +20,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "unique-name"
     "ui.router"
     "trialBalance"
-    'ngFileUpload'
+    "ngFileUpload"
     "exportDirectives"
     "serviceModule"
     "chart.js"
@@ -38,7 +38,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "daterangepicker"
     "inventory"
     "recurringEntry"
-    "ngMask"
+    "ui.mask"
   ]
 )
 

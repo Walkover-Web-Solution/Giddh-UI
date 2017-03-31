@@ -294,7 +294,10 @@ angular.module('trialBalance', []).directive('exportReport', [
         ), 200
     )
 
-   
+    # $(elem).on('click', (e)->
+    #   if scope.isOpen
+        
+    # )
     
 ]
 
@@ -302,10 +305,11 @@ angular.module('trialBalance', []).directive('exportReport', [
 .directive 'inputFocus', ['$window', '$timeout', ($window, $timeout) ->
   scope: 
     isOpen: '=isOpen'
+    txn: '=txn'
   link: (scope, elem, attr) ->
 
     scope.$watch('isOpen', (newVal, oldVal) ->
-      if newVal
+      if newVal && scope.txn.isBlank
         $timeout ( ->
           $(elem).trigger('focus')
         ), 200
@@ -538,4 +542,22 @@ angular.module('trialBalance', []).directive('exportReport', [
         'scrollTop' : top + 100
       })
     )
+]
+
+.directive 'fileModel', [
+  '$parse'
+  ($parse) ->
+    {
+      restrict: 'A'
+      link: (scope, element, attrs) ->
+        model = $parse(attrs.fileModel)
+        modelSetter = model.assign
+        element.bind 'change', ->
+          scope.$apply ->
+            modelSetter scope, element[0].files[0]
+            return
+          return
+        return
+
+    }
 ]
