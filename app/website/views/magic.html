@@ -216,9 +216,10 @@
                                   class="download-invoice-ledger pa" 
                                   ng-if="ledger.invoiceGenerated" 
                                   tooltip-append-to-body="true"
+                                  ng-mouseover="$event.stopPropagation()"
                                   ng-click="downloadInvoice(ledger.invoiceNumber)"
                                   uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" 
-                                  tooltip-placement="top" style="top:11px;right:2px;"> 
+                                  tooltip-placement="bottom" style="top:11px;right:2px;"> 
                                   <i class="glyphicon glyphicon-download" style="font-size:15px" ></i>
                                 </span>
                               </td>
@@ -286,7 +287,7 @@
                                   tooltip-append-to-body="true" 
                                   ng-click="downloadInvoice(ledger.invoiceNumber)"
                                   uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" 
-                                  tooltip-placement="top" style="top:11px;right:2px;"> 
+                                  tooltip-placement="bottom" style="top:11px;right:2px;"> 
                                   <i class="glyphicon glyphicon-download" style="font-size:15px;" ></i>
                                 </span>
                               </td>
