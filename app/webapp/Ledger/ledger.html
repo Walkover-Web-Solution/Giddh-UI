@@ -286,7 +286,8 @@
                                       ng-model="lc.blankLedger.entryDate"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)" 
                                       select-on-click
-                                      mask='39-19-9999'>
+                                      ui-mask="99-99-9999"
+                                      placeholder='dd-mm-yyyy'>
                                     </td>
                                     <td class="col-xs-6">
                                       <input class="form-control" placeholder="{{lc.accountUnq}} receiving via?" type="text" ng-model="txn.particular"
@@ -349,11 +350,12 @@
                                     set-popover-position
                                     ng-click="$event.stopPropagation()">
                                     <td class="col-xs-2">
-                                      <input class="form-control type="text" 
+                                      <input class="form-control" type="text" 
                                       ng-model="value.entryDate"
                                       ng-focus="lc.slctxn(value, txn, $event)" 
                                       select-on-click
-                                      mask='39-19-9999'>
+                                      ui-mask="99-99-9999"
+                                      placeholder='dd-mm-yyyy'>
                                     </td>
                                     <td class="col-xs-6">
                                       <input class="form-control" type="text" ng-model="txn.particular"
@@ -488,7 +490,8 @@
                                       ng-model="lc.blankLedger.entryDate"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
                                       select-on-click
-                                      mask='39-19-9999'
+                                      ui-mask="99-99-9999"
+                                      placeholder='dd-mm-yyyy'
                                       >
                                     </td>
                                     <td class="col-xs-6">
@@ -557,7 +560,8 @@
                                       ng-model="value.entryDate"
                                       ng-focus="lc.slctxn(value, txn, $event)" 
                                       select-on-click
-                                      mask='39-19-9999'>
+                                      ui-mask="99-99-9999"
+                                      placeholder='dd-mm-yyyy'>
                                     </td>
                                     <td class="col-xs-6">
                                       <input class="form-control" type="text" ng-model="txn.particular"
@@ -743,12 +747,15 @@
             </button>
             
             <!--file upload-->
-            <div class="upload_div">
-              <input type="file" name="invoiceFile" id="invoiceFile" file-model="lc.invoiceFile" ng-click="$event.stopPropagation()">
-              <label for="invoiceFile" class="upload-btn"><i class="glyphicon glyphicon-upload"></i> Upload Image</label>
-              <button class="btn btn-md btn-default" ng-click="lc.getInvoiceFile()">Upload</button>
-              <button class="btn btn-md btn-danger">Delete</button>
+            <!-- <div class="upload_div" ng-if="lc.selectedLedger.attachedFileName.length == 0">
+              <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
+              <label for="invoiceFile" class="upload-btn"><i class="glyphicon glyphicon-upload" ></i>Upload Image</label>
             </div>
+            <label ng-if="lc.selectedLedger.attachedFileName.length > 0">
+                File: {{lc.selectedLedger.attachedFileName}}  
+            </label> -->
+              <!-- <button class="btn btn-md btn-default" ng-click="lc.getInvoiceFile()">Upload</button> -->
+            <!-- <button class="btn btn-md btn-danger" ng-if="lc.selectedLedger.attachedFile.length > 0">Delete</button> -->
             <!--file upload-->
 
             <button ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') && ((lc.selectedLedger.transactions[0].particular.uniqueName != '' && lc.selectedLedger.transactions[0].particular.uniqueName != undefined) || (lc.selectedLedger.transactions[1].particular.uniqueName != '' && lc.selectedLedger.transactions[1].particular.uniqueName != undefined)) && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default mrL1" ng-click="lc.resetLedger()">Reset</button>

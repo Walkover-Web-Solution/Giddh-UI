@@ -642,8 +642,7 @@ angular.module('exportDirectives', [])
     # Linker function
     (scope, element, attrs) ->
       element.bind 'click', ->
-        if !$window.getSelection().toString()
-          @setSelectionRange 0, @value.length
+        $(this).select()
 ]
 
 .directive 'ignoreMouseWheel',[

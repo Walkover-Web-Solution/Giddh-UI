@@ -771,6 +771,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.addBlankTxn= (str, ledger) ->
     txn = new txnModel(str)
+    txn.isBlank = true
 #    if ledger.uniqueName != ""
     lc.hasBlankTxn = false
     lc.checkForExistingblankTransaction(ledger, str)
@@ -1655,25 +1656,25 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     ledger
 
 
-  lc.invoiceFile = {}
-  lc.getInvoiceFile = () ->
-    file = document.getElementById('invoiceFile').files[0]
-    formData = new FormData()
-    formData.append('file', file)
-    formData.append('company', $rootScope.selectedCompany.uniqueName)
+  $scope.invoiceFile = {}
+  # $scope.getInvoiceFile = (files) ->
+  #   file = files[0]
+  #   formData = new FormData()
+  #   formData.append('file', file)
+  #   formData.append('company', $rootScope.selectedCompany.uniqueName)
 
-    @success = (res) ->
-      lc.selectedLedger.attachedFile = res.data.body.uniqueName
-      toastr.success('file uploaded successfully')
+  #   @success = (res) ->
+  #     lc.selectedLedger.attachedFile = res.data.body.uniqueName
+  #     toastr.success('file uploaded successfully')
 
-    @failure = (res) ->
-      toastr.error(res.data.message)
+  #   @failure = (res) ->
+  #     toastr.error(res.data.message)
 
-    url = 'upload-invoice'
-    $http.post(url, formData, {
-      transformRequest: angular.identity,
-      headers: {'Content-Type': undefined}
-    }).then(@success, @failure)
+  #   url = 'upload-invoice'
+  #   $http.post(url, formData, {
+  #     transformRequest: angular.identity,
+  #     headers: {'Content-Type': undefined}
+  #   }).then(@success, @failure)
 
   lc.doingEntry = false
   lc.lastSelectedLedger = {}
@@ -2430,7 +2431,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.blankLedger.transactions.push(lc.cBlankTxn)
 
   $rootScope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       lc.loadDefaultAccount()
     #$state.reload()
   #   # when company is changed, redirect to manage company page

@@ -38,7 +38,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "daterangepicker"
     "inventory"
     "recurringEntry"
-    "ngMask"
+    "ui.mask"
   ]
 )
 
