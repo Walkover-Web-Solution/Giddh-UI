@@ -1346,14 +1346,34 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.ledgerData.forwardedBalance = res.body.forwardedBalance
     lc.ledgerData.creditTotal = res.body.creditTotal
     lc.ledgerData.debitTotal = res.body.debitTotal
-    lc.ledgerData.reckoningCreditTotal = res.body.creditTotal
-    lc.ledgerData.reckoningDebitTotal = res.body.debitTotal
-    if lc.ledgerData.balance.type == 'CREDIT'
-      lc.ledgerData.reckoningDebitTotal += lc.ledgerData.balance.amount
-      lc.ledgerData.reckoningCreditTotal += lc.ledgerData.forwardedBalance.amount
-    else if lc.ledgerData.balance.type == 'DEBIT'    
-      lc.ledgerData.reckoningCreditTotal += lc.ledgerData.balance.amount
-      lc.ledgerData.reckoningDebitTotal += lc.ledgerData.forwardedBalance.amount
+    if lc.ledgerData.forwardedBalance.amount == 0
+      recTotal = 0
+      if lc.ledgerData.creditTotal > lc.ledgerData.debitTotal then  recTotal = lc.ledgerData.creditTotal else recTotal = lc.ledgerData.debitTotal
+      lc.ledgerData.reckoningCreditTotal = recTotal
+      lc.ledgerData.reckoningDebitTotal = recTotal
+    else
+      if lc.ledgerData.forwardedBalance.type == 'DEBIT'
+        if lc.ledgerData.forwardedBalance.amount + lc.ledgerData.debitTotal <= lc.ledgerData.creditTotal
+          lc.ledgerData.reckoningCreditTotal = lc.ledgerData.creditTotal
+          lc.ledgerData.reckoningDebitTotal = lc.ledgerData.creditTotal
+        else
+          lc.ledgerData.reckoningCreditTotal = lc.ledgerData.forwardedBalance.amount + lc.ledgerData.debitTotal
+          lc.ledgerData.reckoningDebitTotal = lc.ledgerData.forwardedBalance.amount + lc.ledgerData.debitTotal
+      else
+        if lc.ledgerData.forwardedBalance.amount + lc.ledgerData.creditTotal <= lc.ledgerData.debitTotal
+          lc.ledgerData.reckoningCreditTotal = lc.ledgerData.debitTotal
+          lc.ledgerData.reckoningDebitTotal = lc.ledgerData.debitTotal
+        else
+          lc.ledgerData.reckoningCreditTotal = lc.ledgerData.forwardedBalance.amount + lc.ledgerData.creditTotal
+          lc.ledgerData.reckoningDebitTotal = lc.ledgerData.forwardedBalance.amount + lc.ledgerData.creditTotal
+    # lc.ledgerData.reckoningCreditTotal = res.body.creditTotal
+    # lc.ledgerData.reckoningDebitTotal = res.body.debitTotal
+    # if lc.ledgerData.balance.type == 'CREDIT'
+    #   lc.ledgerData.reckoningDebitTotal += lc.ledgerData.balance.amount
+    #   lc.ledgerData.reckoningCreditTotal += lc.ledgerData.forwardedBalance.amount
+    # else if lc.ledgerData.balance.type == 'DEBIT'    
+    #   lc.ledgerData.reckoningCreditTotal += lc.ledgerData.balance.amount
+    #   lc.ledgerData.reckoningDebitTotal += lc.ledgerData.forwardedBalance.amount
     lc.addToIdb(res.body.ledgers, $rootScope.selectedAccount.uniqueName)
 
   lc.updateLedgerDataSuccess = (res,condition, ledger) ->
