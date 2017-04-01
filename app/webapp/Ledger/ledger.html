@@ -252,14 +252,9 @@
                         </tr>
                       </thead>
                     </table>
-                    <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScrollDebit(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84" min-height="600" > -->
-                    <div class="col-container" 
-                      ledger-scroller
-                      column-scroller 
-                      data-scrolled="lc.onScrollDebit(top, height, position)" 
-                      data-scrollto="lc.drMatch">
-                      <table class="width100">
-                        <tbody>
+
+                    <table class="width100">
+                      <tbody>
 
                           <!--Add entry row for normal order-->
                           <tr ng-if="canUpdate">
@@ -326,6 +321,17 @@
                               </table>
                             </td>
                           </tr>
+                      </tbody>
+                    </table>
+                    <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height on-scroll="onScrollDebit(scrollTop, scrollHeight, event)" id="mainLedgerContent" additional-height="84" min-height="600" > -->
+                    <div class="col-container" 
+                      column-scroller 
+                      data-scrolled="lc.onScrollDebit(top, height, position)" 
+                      data-scrollto="lc.drMatch"
+                      data-ledger-container="lc.dLedgerContainer"
+                      data-sort-order="lc.sortOrder.debit" >
+                      <table class="width100">
+                        <tbody>
 
                           <!--ledgers-->
                           <tr 
@@ -470,10 +476,8 @@
                       </thead>
                     </table>
 
-                    <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="10" auto-height on-scroll="onScrollCredit(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="600"> -->
-                    <div class="col-container" ledger-scroller column-scroller data-scrolled="lc.onScrollCredit(top, height, position)" data-scrollto="lc.crMatch">
-                      <table class="width100">
-                        <tbody>
+                    <table>
+                      <tbody>
                           <!--Add entry row for nomral order-->
                           <tr ng-if="canUpdate">
                             <td colspan="100">
@@ -541,7 +545,18 @@
                               </table>
                             </td>
                           </tr>
-
+                      </tbody>
+                    </table>
+                    <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="10" auto-height on-scroll="onScrollCredit(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="600"> -->
+                    <div class="col-container"
+                      column-scroller
+                      data-scrolled="lc.onScrollCredit(top, height, position)"
+                      data-scrollto="lc.crMatch"
+                      data-ledger-container="lc.cLedgerContainer"
+                      data-sort-order="lc.sortOrder.credit" >
+                      <table class="width100">
+                        <tbody>
+                          
                           <!--ledgers-->
                           <tr 
                             id="{{value.uniqueName}}"
