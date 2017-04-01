@@ -378,7 +378,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
         $rootScope.setCompany(cdt)
         $rootScope.companyIndex = cdt.index
     else
-      $scope.changeCompany($scope.companyList[0],0,'SELECT')
+      $scope.changeCompany($scope.companyList[0],0,'CHANGE')
       $rootScope.setCompany($scope.companyList[0])
       $rootScope.companyIndex = 0
 

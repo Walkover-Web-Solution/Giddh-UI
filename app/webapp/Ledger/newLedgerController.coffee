@@ -1155,6 +1155,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     localStorageService.set('_selectedAccount', res.body)
     $rootScope.selectedAccount = res.body
     lc.accountToShow = $rootScope.selectedAccount
+    $state.go($state.current, {unqName: res.body.uniqueName}, {notify: false})
     lc.getLedgerData(true)
     if res.body.yodleeAdded == true && $rootScope.canUpdate
       #get bank transaction here
@@ -2515,8 +2516,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.blankLedger.transactions.push(lc.cBlankTxn)
 
   $rootScope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
+    if changeData.type == 'CHANGE' 
       lc.loadDefaultAccount()
+    # else if changeData.type == 'SELECT'
+    #   console.log 'load same account'
     #$state.reload()
   #   # when company is changed, redirect to manage company page
   #   if changeData.type == 'CHANGE'
