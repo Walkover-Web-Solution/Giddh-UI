@@ -216,11 +216,11 @@
 
       <li class="header-btn fixedDate">
         <span class="dateblock">
-          <input ng-hide="showUnivdate" date-range-picker class="form-control date-picker date-range-picker" type="text" ng-model="cDate" options="opts" required/>
-          <span ng-show="showUnivdate" ng-click="showUnivdate = false">Last 1 month</span>  
+          <input ng-show="!showUnivdate" ng-click="showUnivdate = true" ng-init="showUnivdate = true" date-range-picker class="form-control date-picker date-range-picker" type="text" ng-model="cDate" options="opts" required/>
+        <span ng-show="showUnivdate" class="fix_date" tooltip-placement="bottom" uib-tooltip="Change fix date" ng-click="showUnivdate = false"><b>Fixed date:</b> Last 1 month</span>  
         </span>
         
-          <button class="btn btn-primary mrL1" ng-click="showUnivdate = true" ng-hide="showUnivdate">Fixed</button>
+          <!-- <button class="btn btn-primary mrL1" ng-hide="showUnivdate">Fixed</button> -->
       </li>
 
       <!-- company dropdown -->

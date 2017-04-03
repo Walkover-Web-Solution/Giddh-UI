@@ -1060,3 +1060,10 @@ input[type=number] {
     margin-right: 3px;
 }*/
 
+
+.fix_date {
+    font-size: 14px;
+    position: relative;
+    top: 16px;
+    cursor: pointer;
+}
