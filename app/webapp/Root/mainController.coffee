@@ -24,6 +24,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     purchase: "purchases"
     sales:"sales"
   }
+
+  $scope.onTourStart = () ->
+    console.log 'tour'
+
   $rootScope.flyAccounts = false
   $rootScope.$stateParams = {}
 #  $rootScope.prefixThis = ""

@@ -27,6 +27,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.entrySettings = {}
   lc.firstLoad = true
   $rootScope.flyAccounts = true
+
   
   $scope.creditTotal = 0
   $scope.debitTotal = 0

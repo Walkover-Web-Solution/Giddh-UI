@@ -253,17 +253,19 @@
                   </div>
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" ng-model="selected.filteredGroupsAndAccounts.forfilter.cb.val" ng-change="filterGraph(selected.filteredGroupsAndAccounts.forfilter.cb)"> Closing Balance
+                      <input type="checkbox" ng-model="selected.filteredGroupsAndAccounts.forfilter.cb.val" ng-change="filterGraph(selected.filteredGroupsAndAccounts.forfilter.cb)" ng-click="$event.stopPropagation()"> Closing Balance
+                    </label>
+<!--                     <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!selected.filteredGroupsAndAccounts.forfilter.cb.val" ng-click="selected.filteredGroupsAndAccounts.forfilter.cb.val = true;filterGraph(selected.filteredGroupsAndAccounts.forfilter.cb)">
+                    <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="selected.filteredGroupsAndAccounts.forfilter.cb.val" ng-click="selected.filteredGroupsAndAccounts.forfilter.cb.val = false;filterGraph(selected.filteredGroupsAndAccounts.forfilter.cb)"> -->
+                  </div>
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" ng-model="selected.filteredGroupsAndAccounts.forfilter.cr.val" ng-change="filterGraph(selected.filteredGroupsAndAccounts.forfilter.cr)" ng-click="$event.stopPropagation()"> Credit Total
                     </label>
                   </div>
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" ng-model="selected.filteredGroupsAndAccounts.forfilter.cr.val" ng-change="filterGraph(selected.filteredGroupsAndAccounts.forfilter.cr)"> Credit Total
-                    </label>
-                  </div>
-                  <div class="checkbox">
-                    <label>
-                      <input type="checkbox" ng-model="selected.filteredGroupsAndAccounts.forfilter.dr.val" ng-change="filterGraph(selected.filteredGroupsAndAccounts.forfilter.dr)"> Debit Total
+                      <input type="checkbox" ng-model="selected.filteredGroupsAndAccounts.forfilter.dr.val" ng-change="filterGraph(selected.filteredGroupsAndAccounts.forfilter.dr)" ng-click="$event.stopPropagation()"> Debit Total
                     </label>
                   </div>
                 </div>

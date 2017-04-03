@@ -71,6 +71,7 @@ app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(settings.express.static(settings.path.join(__dirname, 'public')));
+app.use('/app/bower_components', settings.express.static(__dirname + '/bower_components'));
 app.use('/bower_components', settings.express.static(__dirname + '/bower_components'));
 app.use('/node_modules', settings.express.static(__dirname + '/node_modules'));
 app.use('/public', settings.express.static(__dirname + '/public'));

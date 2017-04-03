@@ -39,6 +39,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "inventory"
     "recurringEntry"
     "ui.mask"
+    "bm.uiTour"
   ]
 )
 

@@ -25,7 +25,7 @@
 </section>
 
 
-<div id="ledger" class="oyAuto" ng-show="!lc.showLoader" cover-page>
+<div id="ledger" class="oyAuto" ng-show="!lc.showLoader" cover-page ui-tour ui-tour-on-start="onTourStart()">
   <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
 
     <section class="container-fluid" ng-if="lc.accountUnq.length > 0">
@@ -672,9 +672,8 @@
         </div>
       </div>
     </section>
-<!--  </perfect-scrollbar> -->
-<!-- </perfect-scrollbar> -->
 </div> 
+
 <script type="text/ng-template" id="panel">
     <div class="ledger-panel" ng-click="$event.stopPropagation()" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': lc.showPanel, 'top0':hideHeader}">
       <div class="wrapper">

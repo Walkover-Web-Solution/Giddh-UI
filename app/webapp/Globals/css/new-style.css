@@ -4670,4 +4670,7 @@ table.proforma-particulars{
     box-shadow: 0px 2px 5px rgba(0,0,0,0.6);
     margin:0; 
 }
-    
+
+.tour-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
