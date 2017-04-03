@@ -507,8 +507,7 @@
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
                                       select-on-click
                                       ui-mask="99-99-9999"
-                                      placeholder='dd-mm-yyyy'
-                                      >
+                                      placeholder='dd-mm-yyyy'>
                                     </td>
                                     <td class="col-xs-6">
                                       <input accesskey="r" type="text" class="form-control" ng-model="txn.particular"
@@ -524,7 +523,7 @@
                                     <td class="col-xs-6 pos-rel">
                                       <input type="number"
                                         placeholder="Quantity"
-                                        ng-if="lc.accountToShow.stock != null || txn.particular.stock != null"
+                                        ng-if="lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null"
                                         class="form-control background-transparent pull-left bdrR bdrR0"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null}"
                                         ng-model="txn.inventory.quantity"

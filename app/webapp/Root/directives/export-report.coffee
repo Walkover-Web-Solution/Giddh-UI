@@ -450,11 +450,11 @@ angular.module('trialBalance', []).directive('exportReport', [
       else
         mouseScrollDirection = 0 #up
       scrollableArea = elem[0].scrollHeight - $(elem).innerHeight()
-      margin = Math.floor(scrollableArea / 10)
+      margin = 300  #Math.floor(scrollableArea / 10) #replace with function for dynamic
       if scope.ledgerContainer
         if !scope.ledgerContainer.scrollDisable
           if (
-            (
+            ( # == sign represents Xnor
               (scope.sortOrder == 1 && scope.ledgerContainer.upperBoundReached) ==
               (scope.sortOrder == 0 && scope.ledgerContainer.lowerBoundReached)
             ) && mouseScrollDirection == 0 &&

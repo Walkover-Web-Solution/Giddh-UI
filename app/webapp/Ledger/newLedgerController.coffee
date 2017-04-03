@@ -345,7 +345,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           return
         drOS = drTrans.objectStore('drTransactions')
         drSearch = drOS.index('company+accountUniqueName+index', true).openCursor(keyAndDir.keyRange, keyAndDir.scrollDir)
-
+        
         drSearch.onsuccess = (e) ->
           cursor = e.target.result
           if cursor
@@ -365,13 +365,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
               scrollDir == 'prev' && lc.sortOrder.debit == lc.sortDirection.desc
             )
               lc.dLedgerContainer.upperBoundReached = true
-              console.log "Reached upperBoundReached dr"
             if (
               scrollDir == 'prev' && lc.sortOrder.debit == lc.sortDirection.asc ||
               scrollDir == 'next' && lc.sortOrder.debit == lc.sortDirection.desc
             )
               lc.dLedgerContainer.lowerBoundReached = true
-              console.log "Reached lowerBoundReached dr"
 
         drSearch.onerror = (e) -> 
           #console.log 'error', e
@@ -391,11 +389,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           return
         crOS = crTrans.objectStore('crTransactions')
         crSearch = crOS.index('company+accountUniqueName+index', true).openCursor(keyAndDir.keyRange, keyAndDir.scrollDir)
-
+        
         crSearch.onsuccess = (e) ->
           cursor = e.target.result
           if cursor
-            # lc.cLedgerData[cursor.value.uniqueName] = cursor.value
             if keyAndDir.scrollDir == 'next'
               lc.cLedgerContainer.add cursor.value, lc.pageCount
             else if keyAndDir.scrollDir = 'prev'
@@ -411,13 +408,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
               scrollDir == 'prev' && lc.sortOrder.credit == lc.sortDirection.desc
             )
               lc.cLedgerContainer.upperBoundReached = true
-              console.log "Reached upperBoundReached cr"
             if (
               scrollDir == 'prev' && lc.sortOrder.credit == lc.sortDirection.asc ||
               scrollDir == 'next' && lc.sortOrder.credit == lc.sortDirection.desc
             )
               lc.cLedgerContainer.lowerBoundReached = true
-              console.log "Reached lowerBoundReached cr"
 
         crSearch.onerror = (e) -> 
           #console.log 'error', e
@@ -456,6 +451,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         drTrans = db.transaction([ 'drTransactions' ], 'readonly')
         drTrans.oncomplete = () ->
           drLoadCompleted = true
+          lc.dLedgerContainer.scrollDisable = false
           if crLoadCompleted
             $scope.$apply ()->
               lc.readLedgersFinished = true
@@ -478,10 +474,16 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
               return
             cursor.continue()
           else
-            if scrollDir == 'next'
-              console.log "Reached End dr f"
-            if scrollDir == 'prev'
-              console.log "Reached Top dr f"
+            if (
+              scrollDir == 'next' && lc.sortOrder.debit == lc.sortDirection.asc ||
+              scrollDir == 'prev' && lc.sortOrder.debit == lc.sortDirection.desc
+            )
+              lc.dLedgerContainer.upperBoundReached = true
+            if (
+              scrollDir == 'prev' && lc.sortOrder.debit == lc.sortDirection.asc ||
+              scrollDir == 'next' && lc.sortOrder.debit == lc.sortDirection.desc
+            )
+              lc.dLedgerContainer.lowerBoundReached = true
 
         drSearch.onerror = (e) -> 
           #console.log 'error', e
@@ -494,6 +496,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         crTrans = db.transaction([ 'crTransactions' ], 'readonly')
         crTrans.oncomplete = (e) ->
           crLoadCompleted = true
+          lc.cLedgerContainer.scrollDisable = false
           if drLoadCompleted
             $scope.$apply ()->
               lc.readLedgersFinished = true
@@ -516,10 +519,16 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
               return
             cursor.continue()
           else
-            if scrollDir == 'next'
-              console.log "Reached End cr f"
-            if scrollDir == 'prev'
-              console.log "Reached Top cr f"
+            if (
+              scrollDir == 'next' && lc.sortOrder.credit == lc.sortDirection.asc ||
+              scrollDir == 'prev' && lc.sortOrder.credit == lc.sortDirection.desc
+            )
+              lc.cLedgerContainer.upperBoundReached = true
+            if (
+              scrollDir == 'prev' && lc.sortOrder.credit == lc.sortDirection.asc ||
+              scrollDir == 'next' && lc.sortOrder.credit == lc.sortDirection.desc
+            )
+              lc.cLedgerContainer.lowerBoundReached = true
 
         crSearch.onerror = (e) -> 
           #console.log 'error', e
@@ -2613,7 +2622,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if ! this.ledgerData.hasOwnProperty(o.uniqueName)
       this.trCount += o.transactions.length
       this.ledgerData[o.uniqueName] = o
-      while this.trCount > count + count/3
+      while this.trCount > this.maxTransactions(count)
         this.removeTop()
         this.lowerBoundReached = false
       tempTop = this.top()
@@ -2627,7 +2636,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if ! this.ledgerData.hasOwnProperty(o.uniqueName)
       this.trCount += o.transactions.length
       this.ledgerData[o.uniqueName] = o
-      while this.trCount > count + count/3
+      while this.trCount > this.maxTransactions(count)
         this.removeBottom()
         this.upperBoundReached = false
       tempBottom = this.bottom()
@@ -2680,6 +2689,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     return if this.firstLedger != null then this.firstLedger.index else Number.MAX_SAFE_INTEGER
   lc.ledgerContainer.prototype.getLastIndex = () ->
     return if this.lastLedger != null then this.lastLedger.index else Number.MIN_SAFE_INTEGER
+  lc.ledgerContainer.prototype.maxTransactions = (count) ->
+    return count + 30 #count + count/2 #replace for dynamic calculations
 
   lc.generateKeyRange = (accUniqueName, ledgerContainer, sortDir, scrollDir) ->
     sortDir = if sortDir == null then lc.sortDirection.asc else sortDir
