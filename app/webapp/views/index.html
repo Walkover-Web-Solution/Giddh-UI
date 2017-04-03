@@ -26,11 +26,11 @@
  <!--data-cfasync="false" -->
   <script  type="text/javascript" src="/public/webapp/core_bower.min.js"></script>
   <script type="text/javascript" src="/public/webapp/_extras.js"></script>
-  <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+<!--   <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
   <script src="bower_components/ngSmoothScroll/lib/angular-smooth-scroll.js"></script>
   <script src="bower_components/ez-ng/dist/ez-ng.js"></script>
   <script src="bower_components/angular-hotkeys/build/hotkeys.js"></script>
-  <script src="bower_components/angular-ui-tour/dist/angular-ui-tour.js"></script>
+  <script src="bower_components/angular-ui-tour/dist/angular-ui-tour.js"></script> -->
   <!-- including app Js Files -->
   <!-- @if NODE_ENV='DEVELOPMENT' -->
   <script  type="text/javascript" src="/public/webapp/app.js"></script>
@@ -68,9 +68,9 @@
 
   <!-- <div ng-include="'/public/webapp/views/footer.html'"><div/> -->
   
-  <footer class="inconsolata" ui-tour ui-tour-on-start="onTourStart()" >
+  <footer class="inconsolata">
     <div>
-      <a href="https://giddh.com/about" target="_Blank" ng-click="$event.stopPropagation()"  id="mainMenu" tour-step tour-step-title="Main Menu" tour-step-content="Navigate the site using this menu." tour-step-order="0" tour-step-placement="top" >About us</a>|
+      <a href="https://giddh.com/about" target="_Blank" ng-click="$event.stopPropagation()" >About us</a>|
       <a href="http://blog.giddh.com/"  target="_Blank" ng-click="$event.stopPropagation()">Blog</a>|
       <a href="https://trello.com/b/PArZrnyg/giddh" target="_Blank" ng-click="$event.stopPropagation()">Upcoming</a>|
       <a href="https://giddh.com//terms"  target="_Blank" ng-click="$event.stopPropagation()">Terms of use</a>|
