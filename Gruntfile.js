@@ -371,8 +371,7 @@ module.exports = function (grunt) {
           'angular-ui-tinymce',
           'file-saver.js',
           'angular-upload',
-          'angular-ui-mask',
-          'angular-tour'
+          'angular-ui-mask'
         ],
         dependencies: {
           'jquery': 'modernizr',
