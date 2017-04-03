@@ -64,6 +64,60 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.sharedEntity = ""
   $rootScope.croppedAcntList = []
 
+  ###Date range picker###
+  # $scope.fixedDate = {
+  #   startDate: moment().subtract(30, 'days')._d,
+  #   endDate: moment()._d
+  # };
+
+
+  # $scope.singleDate = moment()
+  # $scope.fixedDateOptions = {
+  #     locale:
+  #       applyClass: 'btn-green'
+  #       applyLabel: 'Apply'
+  #       fromLabel: 'From'
+  #       format: 'D-MMM-YY'
+  #       toLabel: 'To'
+  #       cancelLabel: 'Cancel'
+  #       customRangeLabel: 'Custom range'
+  #     ranges:
+  #       'Last 1 Day': [
+  #         moment().subtract(1, 'days')
+  #         moment()
+  #       ]
+  #       'Last 7 Days': [
+  #         moment().subtract(6, 'days')
+  #         moment()
+  #       ]
+  #       'Last 30 Days': [
+  #         moment().subtract(29, 'days')
+  #         moment()
+  #       ]
+  #       'Last 6 Months': [
+  #         moment().subtract(6, 'months')
+  #         moment()
+  #       ]
+  #       'Last 1 Year': [
+  #         moment().subtract(12, 'months')
+  #         moment()
+  #       ]
+  #     eventHandlers : {
+  #       'apply.daterangepicker' : (e, picker) ->
+  #         $scope.fixedDate.startDate = e.model.startDate._d
+  #         $scope.fixedDate.endDate = e.model.endDate._d
+  #     }
+  # }
+  $scope.setStartDate = ->
+    $scope.fixedDate.startDate = moment().subtract(4, 'days').toDate()
+
+  $scope.setRange = ->
+    $scope.fixedDate =
+        startDate: moment().subtract(5, 'days')
+        endDate: moment()
+  ###date range picker end###
+
+
   $scope.addScript = () ->
     _.each($rootScope.scriptArrayHead, (script) ->
       sc = document.createElement("script")
@@ -425,7 +479,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
         $rootScope.setCompany(cdt)
         $rootScope.companyIndex = cdt.index
     else
-      $scope.changeCompany($scope.companyList[0],0,'SELECT')
+      $scope.changeCompany($scope.companyList[0],0,'CHANGE')
       $rootScope.setCompany($scope.companyList[0])
       $rootScope.companyIndex = 0
 

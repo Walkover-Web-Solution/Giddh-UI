@@ -346,6 +346,7 @@
                                     class="ledger-row"
                                     ng-repeat="txn in value.transactions"
                                     ng-if="txn.type == 'DEBIT'"
+                                    ng-show="txn.hide || !txn.isTax"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
                                     popover-placement="{{lc.popover.position}}" 
@@ -403,7 +404,7 @@
                                         tooltip-placement="top"> 
                                         <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
                                       </span>
-                                      <span 
+<!--                                       <span 
                                         class="download-invoice-ledger" 
                                         ng-if="value.attachedFile.length > 0" 
                                         ng-click="lc.downloadAttachedFile(value.attachedFile, $event)" 
@@ -411,7 +412,7 @@
                                         uib-tooltip="Download file : {{value.attachedFileName}}" 
                                         tooltip-placement="top"> 
                                         <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
-                                      </span>                                     
+                                      </span>    -->                                  
                                     </td>
                                   </tr>
                                 </tbody>
@@ -627,7 +628,7 @@
                                         tooltip-placement="top"> 
                                         <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
                                       </span>
-                                      <span 
+<!--                                       <span 
                                         class="download-invoice-ledger" 
                                         ng-if="value.attachedFile.length > 0" 
                                         ng-click="lc.downloadAttachedFile(value.attachedFile, $event)" 
@@ -635,7 +636,7 @@
                                         uib-tooltip="Download file : {{value.attachedFileName}}" 
                                         tooltip-placement="top"> 
                                         <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
-                                      </span>                                      
+                                      </span>    -->                                   
                                     </td>
                                   </tr>
                                 </tbody>
@@ -773,7 +774,7 @@
           <div class="clearfix btn-row" ng-if="canUpdate">
 
             <div class="row" style="margin:0">
-  
+              <button accesskey="x" ng-if="(lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="lc.addBlankTxn('DEBIT', lc.selectedLedger)">Add in DR</button>
               <button accesskey="c" ng-if="(lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="lc.addBlankTxn('CREDIT', lc.selectedLedger)">Add in CR</button>
               <button id="saveUpdate" class="pull-left mrR1 btn btn-sm btn-success" ng-click="lc.saveUpdateLedger(lc.selectedLedger)" ng-disabled="doingEntry">
                 <span ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') || lc.selectedLedger.isBankTransaction == true">Save</span>
@@ -781,12 +782,12 @@
               </button>
               
               <!--file upload-->
-              <div class="upload_div" ng-if="lc.selectedLedger.attachedFileName.length == 0">
+<!--               <div class="upload_div" ng-if="lc.selectedLedger.attachedFileName.length == 0">
                 <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
                 <label for="invoiceFile" class="upload-btn"><i class="glyphicon glyphicon-upload" ></i>Upload Image</label>
-              </div>
+              </div> -->
              <!--  <button class="btn btn-md btn-default" ng-click="lc.getInvoiceFile()">Upload</button> -->
-              <button class="btn btn-md btn-danger" ng-if="lc.selectedLedger.attachedFile.length > 0" ng-click="lc.deleteAttachedFile()">Delete</button>
+<!--               <button class="btn btn-md btn-danger" ng-if="lc.selectedLedger.attachedFile.length > 0" ng-click="lc.deleteAttachedFile()">Delete</button> -->
               <!--file upload-->
 
               <button ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') && ((lc.selectedLedger.transactions[0].particular.uniqueName != '' && lc.selectedLedger.transactions[0].particular.uniqueName != undefined) || (lc.selectedLedger.transactions[1].particular.uniqueName != '' && lc.selectedLedger.transactions[1].particular.uniqueName != undefined)) && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default mrL1" ng-click="lc.resetLedger()">Reset</button>

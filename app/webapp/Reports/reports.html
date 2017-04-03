@@ -94,7 +94,7 @@
                   <div style="height: 50px;"></div>
                 </perfect-scrollbar>
               </div>
-              <div ng-if="showPLGraphFilters && sharedEntity == null">
+<!--               <div ng-if="showPLGraphFilters && sharedEntity == null">
                 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height suppress-  scroll-x="true">
                   <h1 class="page-title" style="margin-left:15px; margin-bottom:15px;">Generate Graph</h1>
                   
@@ -154,7 +154,7 @@
                   </div>
                   <div style="height: 50px;"></div>
                 </perfect-scrollbar>
-              </div>
+              </div> -->
               <div ng-if="showNWfilters && sharedEntity == null">
                 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height suppress-  scroll-x="true">
                   <h1 class="page-title" style="margin-left:15px; margin-bottom:15px;">Generate Graph</h1>
@@ -292,7 +292,9 @@
               </perfect-scrollbar>
             </div>
           </uib-tab>
-          <uib-tab ng-if="sharedEntity == null" heading="{{tabs[1].title}}" active="tabs[1].active" select="showPLFilter()">
+
+          <!--profit and chart commented temporarily-->
+<!--           <uib-tab ng-if="sharedEntity == null" heading="{{tabs[1].title}}" active="tabs[1].active" select="showPLFilter()">
               <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
                 <div class="loader mrT4" ng-hide="chartDataAvailable">
                     <span></span>
@@ -313,7 +315,10 @@
                 </div>
                 <div class="fixScroll"></div>
               </perfect-scrollbar>
-          </uib-tab>
+          </uib-tab> -->
+          <!--profit and chart commented temporarily-->
+
+          
           <uib-tab ng-if="sharedEntity == null" heading="{{tabs[2].title}}" active="tabs[2].active" select="showNWfilter()">
               <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
                 <div class="loader mrT4" ng-hide="chartDataAvailable">

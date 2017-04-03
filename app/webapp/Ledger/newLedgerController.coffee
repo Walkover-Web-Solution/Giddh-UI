@@ -42,7 +42,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.opts = {
       locale:
         applyClass: 'btn-green'
-        applyLabel: 'Apply'
+        applyLabel: 'Go'
         fromLabel: 'From'
         format: 'D-MMM-YY'
         toLabel: 'To'
@@ -73,6 +73,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         'apply.daterangepicker' : (e, picker) ->
           $scope.cDate.startDate = e.model.startDate._d
           $scope.cDate.endDate = e.model.endDate._d
+          lc.getLedgerData(false, true)
       }
   }
   $scope.setStartDate = ->
@@ -1155,6 +1156,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     localStorageService.set('_selectedAccount', res.body)
     $rootScope.selectedAccount = res.body
     lc.accountToShow = $rootScope.selectedAccount
+    $state.go($state.current, {unqName: res.body.uniqueName}, {notify: false})
     lc.getLedgerData(true)
     if res.body.yodleeAdded == true && $rootScope.canUpdate
       #get bank transaction here
@@ -1719,45 +1721,45 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     ledger
 
 
-  $scope.invoiceFile = {}
-  $scope.getInvoiceFile = (files) ->
-    file = files[0]
-    formData = new FormData()
-    formData.append('file', file)
-    formData.append('company', $rootScope.selectedCompany.uniqueName)
+  # $scope.invoiceFile = {}
+  # $scope.getInvoiceFile = (files) ->
+  #   file = files[0]
+  #   formData = new FormData()
+  #   formData.append('file', file)
+  #   formData.append('company', $rootScope.selectedCompany.uniqueName)
 
-    @success = (res) ->
-      lc.selectedLedger.attachedFile = res.data.body.uniqueName
-      toastr.success('file uploaded successfully')
+  #   @success = (res) ->
+  #     lc.selectedLedger.attachedFile = res.data.body.uniqueName
+  #     toastr.success('file uploaded successfully')
 
-    @failure = (res) ->
-      toastr.error(res.data.message)
+  #   @failure = (res) ->
+  #     toastr.error(res.data.message)
 
-    url = 'upload-invoice'
-    $http.post(url, formData, {
-      transformRequest: angular.identity,
-      headers: {'Content-Type': undefined}
-    }).then(@success, @failure)
+  #   url = 'upload-invoice'
+  #   $http.post(url, formData, {
+  #     transformRequest: angular.identity,
+  #     headers: {'Content-Type': undefined}
+  #   }).then(@success, @failure)
 
-  lc.downloadAttachedFile = (file, e) ->
-    e.stopPropagation()
-    @success = (res) ->
-      data = lc.b64toBlob(res.body.uploadedFile, "image/"+res.body.fileType)
-      blobUrl = URL.createObjectURL(data)
-      FileSaver.saveAs(data, res.body.name)
+  # lc.downloadAttachedFile = (file, e) ->
+  #   e.stopPropagation()
+  #   @success = (res) ->
+  #     data = lc.b64toBlob(res.body.uploadedFile, "image/"+res.body.fileType)
+  #     blobUrl = URL.createObjectURL(data)
+  #     FileSaver.saveAs(data, res.body.name)
 
-    @failure = (res) ->
-      toastr.error(res.data.message)
-    reqParam = {
-      companyUniqueName: $rootScope.selectedCompany.uniqueName
-      accountsUniqueName: $rootScope.selectedAccount.uniqueName
-      file:file
-    }
-    ledgerService.downloadInvoiceFile(reqParam).then(@success, @failure)
+  #   @failure = (res) ->
+  #     toastr.error(res.data.message)
+  #   reqParam = {
+  #     companyUniqueName: $rootScope.selectedCompany.uniqueName
+  #     accountsUniqueName: $rootScope.selectedAccount.uniqueName
+  #     file:file
+  #   }
+  #   ledgerService.downloadInvoiceFile(reqParam).then(@success, @failure)
 
-  lc.deleteAttachedFile = () ->
-    lc.selectedLedger.attachedFile = ''
-    lc.selectedLedger.attachedFileName = ''
+  # lc.deleteAttachedFile = () ->
+  #   lc.selectedLedger.attachedFile = ''
+  #   lc.selectedLedger.attachedFileName = ''
 
 
   lc.doingEntry = false
@@ -2467,6 +2469,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if txn.particular.stock
       txn.rate = txn.particular.stock.rate
     lc.clearTaxSelection(txn, ledger)
+    lc.showTaxTxns(ledger)
     lc.prevTxn = txn
     lc.selectedLedger = ledger
     lc.selectedTxn = txn
@@ -2515,8 +2518,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.blankLedger.transactions.push(lc.cBlankTxn)
 
   $rootScope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
+    if changeData.type == 'CHANGE' 
       lc.loadDefaultAccount()
+    # else if changeData.type == 'SELECT'
+    #   console.log 'load same account'
     #$state.reload()
   #   # when company is changed, redirect to manage company page
   #   if changeData.type == 'CHANGE'
@@ -2802,6 +2807,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $timeout ( ->
       txn.isOpen = true
     ), 200
+
+  lc.showTaxTxns = (ledger) ->
+    if ledger.transactions.length > 1
+      _.each ledger.transactions, (txn) ->
+        if txn.isTax
+          txn.hide = !txn.hide
+    if lc.prevLedger.transactions && lc.prevLedger.uniqueName != ledger.uniqueName
+      lc.showTaxTxns(lc.prevLedger)
     
   return lc
 giddh.webApp.controller 'newLedgerController', newLedgerController

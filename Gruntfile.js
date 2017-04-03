@@ -369,7 +369,6 @@ module.exports = function (grunt) {
           'tinymce',
           'tinymce-mention',
           'angular-ui-tinymce',
-          'bootstrap-daterangepicker',
           'file-saver.js',
           'angular-upload',
           'angular-ui-mask'
