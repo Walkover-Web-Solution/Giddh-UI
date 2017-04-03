@@ -1150,7 +1150,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       )
 
   lc.getAccountDetailFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
+    if lc.accountUnq != 'sales'
+      toastr.error(res.data.message, res.data.status)
+    else
+      lc.getAccountDetail($rootScope.fltAccntListPaginated[0].uniqueName)
 
   lc.getAccountDetailSuccess = (res) ->
     localStorageService.set('_selectedAccount', res.body)
