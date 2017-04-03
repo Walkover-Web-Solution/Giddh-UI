@@ -34,6 +34,10 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
         method: 'PUT',
         url: '/company/:companyUniqueName/update-entry-settings'
       }
+      getInvoiceFile: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/invoice-file'
+      }
     }
   )
 
@@ -118,5 +122,12 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Ledger.updateEntrySettings({
         companyUniqueName: unqNamesObj.compUname
       }, data, onSuccess, onFailure))
+
+    downloadInvoiceFile: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> Ledger.getInvoiceFile({
+        companyUniqueName: unqNamesObj.companyUniqueName,
+        accountsUniqueName: unqNamesObj.accountsUniqueName,
+        fileName:unqNamesObj.file
+      }, onSuccess, onFailure))
 
   ledgerService

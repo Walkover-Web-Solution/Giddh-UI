@@ -5,7 +5,7 @@ router = settings.express.Router()
 
 # upload logo
 router.post '/:companyName/logo', (req, res) ->
-  url = settings.envUrl + 'company/' + req.params.companyName + '/logo?type='+ req.body.fType
+  url = settings.envUrl + 'company/' + req.params.companyName + '/logo?type='+ req.body.type
   rest.post(url,
     multipart: true
     headers:
@@ -74,5 +74,7 @@ router.post '/:companyName/import-ledger', (req, res) ->
     status: 'Success'
     body: message: 'Uploaded File is being processed, you can check status later'
   res.send mRes
+
+
 
 module.exports = router

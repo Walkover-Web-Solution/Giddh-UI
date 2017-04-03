@@ -1,12 +1,12 @@
 
-newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, Upload, groupService, $uibModal, companyServices, $state,idbService) ->
+newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, groupService, $uibModal, companyServices, $state,idbService, $http) ->
   lc = this
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
   lc.pageLoader = false
   #date time picker code starts here
   lc.today = new Date()
-  d = moment(new Date()).subtract(1, 'month')
+  d = moment(new Date()).subtract(8, 'month')
   lc.fromDate = {date: d._d}
   lc.toDate = {date: new Date()}
   lc.fromDatePickerIsOpen = false
@@ -25,6 +25,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.dLedgerLimit = 10
   lc.cLedgerLimit = 10
   lc.entrySettings = {}
+  lc.firstLoad = true
   $rootScope.flyAccounts = true
   
   $scope.creditTotal = 0
@@ -32,7 +33,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   ###date range picker ###
   $scope.cDate = {
-    startDate: moment().subtract(1, 'days')._d,
+    startDate: moment().subtract(30, 'days')._d,
     endDate: moment()._d
   };
 
@@ -314,7 +315,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
 
   ###read ledgers ###
-  lc.readLedgers = (accountname, page, pos, type) ->
+  lc.readLedgers = (accountname, page, scrollDir, type) ->
     lc.readLedgersFinished = false
     type = type || null
     if type == null 
@@ -330,12 +331,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
       #DEBIT READ STARTS
       if type == 'dr' || type == null
-        keyAndDir = lc.generateKeyRange(accountname, lc.dLedgerContainer, lc.sortOrder.debit, pos)
+        keyAndDir = lc.generateKeyRange(accountname, lc.dLedgerContainer, lc.sortOrder.debit, scrollDir)
 
         drTrCount = 0
         drTrans = db.transaction([ 'drTransactions' ], 'readonly')
         drTrans.oncomplete = (e) ->
           drLoadCompleted = true
+          lc.dLedgerContainer.scrollDisable = false
           if crLoadCompleted
             $scope.$apply ()->
               lc.readLedgersFinished = true
@@ -356,19 +358,32 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             if drTrCount >= lc.pageCount
               return
             cursor.continue()
+          else
+            if (
+              scrollDir == 'next' && lc.sortOrder.debit == lc.sortDirection.asc ||
+              scrollDir == 'prev' && lc.sortOrder.debit == lc.sortDirection.desc
+            )
+              lc.dLedgerContainer.upperBoundReached = true
+              console.log "Reached upperBoundReached dr"
+            if (
+              scrollDir == 'prev' && lc.sortOrder.debit == lc.sortDirection.asc ||
+              scrollDir == 'next' && lc.sortOrder.debit == lc.sortDirection.desc
+            )
+              lc.dLedgerContainer.lowerBoundReached = true
+              console.log "Reached lowerBoundReached dr"
 
         drSearch.onerror = (e) -> 
           #console.log 'error', e
 
       #CREDIT READ STARTS
       if type == 'cr' || type == null
-        keyAndDir = lc.generateKeyRange(accountname, lc.cLedgerContainer, lc.sortOrder.credit, pos)
+        keyAndDir = lc.generateKeyRange(accountname, lc.cLedgerContainer, lc.sortOrder.credit, scrollDir)
 
         crTrCount = 0
-        pos = pos || 'next'
         crTrans = db.transaction([ 'crTransactions' ], 'readonly')
         crTrans.oncomplete = (e) ->
           crLoadCompleted = true
+          lc.cLedgerContainer.scrollDisable = false
           if drLoadCompleted
             $scope.$apply ()->
               lc.readLedgersFinished = true
@@ -389,6 +404,19 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             if crTrCount >= lc.pageCount
               return
             cursor.continue()
+          else
+            if (
+              scrollDir == 'next' && lc.sortOrder.credit == lc.sortDirection.asc ||
+              scrollDir == 'prev' && lc.sortOrder.credit == lc.sortDirection.desc
+            )
+              lc.cLedgerContainer.upperBoundReached = true
+              console.log "Reached upperBoundReached cr"
+            if (
+              scrollDir == 'prev' && lc.sortOrder.credit == lc.sortDirection.asc ||
+              scrollDir == 'next' && lc.sortOrder.credit == lc.sortDirection.desc
+            )
+              lc.cLedgerContainer.lowerBoundReached = true
+              console.log "Reached lowerBoundReached cr"
 
         crSearch.onerror = (e) -> 
           #console.log 'error', e
@@ -407,7 +435,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     idbService.openDb lc.dbConfig
     return
 
-  lc.readLedgersFiltered = (accountUniqueName, page, pos, type) ->
+  lc.readLedgersFiltered = (accountUniqueName, page, scrollDir, type) ->
     lc.readLedgersFinished = false
     type = type || null
     if type == null 
@@ -421,7 +449,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       db = e.target.result
       #DEBIT READ STARTS
       if type == 'dr' || type == null
-        keyAndDir = lc.generateKeyRange(accountUniqueName, lc.dLedgerContainer, lc.sortOrder.debit, pos)
+        keyAndDir = lc.generateKeyRange(accountUniqueName, lc.dLedgerContainer, lc.sortOrder.debit, scrollDir)
 
         drTrCount = 0
         drTrans = db.transaction([ 'drTransactions' ], 'readonly')
@@ -448,13 +476,18 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             if drTrCount >= lc.pageCount
               return
             cursor.continue()
+          else
+            if scrollDir == 'next'
+              console.log "Reached End dr f"
+            if scrollDir == 'prev'
+              console.log "Reached Top dr f"
 
         drSearch.onerror = (e) -> 
           #console.log 'error', e
 
       #CREDIT READ STARTS
       if type == 'cr' || type == null
-        keyAndDir = lc.generateKeyRange(accountUniqueName, lc.cLedgerContainer, lc.sortOrder.credit, pos)
+        keyAndDir = lc.generateKeyRange(accountUniqueName, lc.cLedgerContainer, lc.sortOrder.credit, scrollDir)
 
         crTrCount = 0
         crTrans = db.transaction([ 'crTransactions' ], 'readonly')
@@ -481,6 +514,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             if crTrCount >= lc.pageCount
               return
             cursor.continue()
+          else
+            if scrollDir == 'next'
+              console.log "Reached End cr f"
+            if scrollDir == 'prev'
+              console.log "Reached Top cr f"
 
         crSearch.onerror = (e) -> 
           #console.log 'error', e
@@ -498,7 +536,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     idbService.openDb lc.dbConfig
     return
 
-  lc.readLedgersWithQuery = (accountUniqueName, query, page, pos, type) ->
+  lc.readLedgersWithQuery = (accountUniqueName, query, page, scrollDir, type) ->
     type = type || null
     lc.dbConfig.success = (e) ->
       db = e.target.result
@@ -512,7 +550,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         lc.log('transaction abort')
         db.close()
       ledgerTrans.oncomplete = (e) ->
-        lc.readLedgersFiltered(accountUniqueName, page, pos, type)
+        lc.readLedgersFiltered(accountUniqueName, page, scrollDir, type)
             
       ledger = ledgerTrans.objectStore('ledgers')
       keyRange = IDBKeyRange.lowerBound([
@@ -739,6 +777,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   blankLedgerModel = () ->
     @blankLedger = {
       isBlankLedger : true
+      attachedFileName: ''
+      attachedFile: ''
       description:''
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
       invoiceGenerated:false
@@ -770,6 +810,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.addBlankTxn= (str, ledger) ->
     txn = new txnModel(str)
+    txn.isBlank = true
 #    if ledger.uniqueName != ""
     lc.hasBlankTxn = false
     lc.checkForExistingblankTransaction(ledger, str)
@@ -1059,6 +1100,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     accountService.exportLedger(unqNamesObj).then(lc.exportLedgerSuccess, lc.exportLedgerFailure)
 
   lc.exportLedgerSuccess = (res)->
+    # blob = new Blob([res.body.filePath], {type:'file'})
+    # fileName = res.body.filePath.split('/')
+    # fileName = fileName[fileName.length-1]
+    # FileSaver.saveAs(blob, fileName)
     lc.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
     if $rootScope.msieBrowser()
       $rootScope.openWindow(res.body.filePath)
@@ -1118,15 +1163,21 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       ), 2000
 
   lc.loadDefaultAccount = () ->
-    cash = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:'cash'})
-    if cash
-      #$state.go('company.content.ledgerContent', {uniqueName:'cash'}, {notify: false})
+    
+    @success = (res) ->
       lc.accountUnq = 'cash'
       lc.getAccountDetail(lc.accountUnq)
-    else
-      #$state.go('company.content.ledgerContent', {uniqueName:'sales'}, {notify: false})
+
+    @failure = (res) ->
       lc.accountUnq = 'sales'
-      lc.getAccountDetail(lc.accountUnq)    
+      lc.getAccountDetail(lc.accountUnq)
+
+    unqObj = {
+      compUname : $rootScope.selectedCompany.uniqueName
+      acntUname : 'cash'
+    }
+    accountService.get(unqObj).then(@success, @failure)
+          
 
   lc.getBankTransactions = (accountUniqueName) ->
     unqObj = {
@@ -1260,7 +1311,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   # lc.renameBankTxnKeys = (txnArray) ->
   #   _.each txnArray, (txn) ->
   #     txn.particular = txn.remarks
-  lc.getLedgerData = (showLoaderCondition) ->
+  lc.getLedgerData = (showLoaderCondition, firstLoad) ->
+    if firstLoad
+      lc.firstLoad = false
+      $rootScope.accClicked = false
     lc.progressBar.value = 0
     $rootScope.superLoader = true
     lc.showLoader = showLoaderCondition || true
@@ -1285,7 +1339,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if res.body.ledgers.length < 1
       lc.showLoader = false
     #lc.showLoader = false
-    lc.blankLedger.transactions[0].isOpen = true
+    #if lc.firstLoad || $rootScope.accClicked
+      #lc.blankLedger.transactions[0].isOpen = true
     $rootScope.superLoader = false
 
   lc.getLedgerDataFailure = (res) ->
@@ -1334,12 +1389,34 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.ledgerData.forwardedBalance = res.body.forwardedBalance
     lc.ledgerData.creditTotal = res.body.creditTotal
     lc.ledgerData.debitTotal = res.body.debitTotal
-    lc.ledgerData.reckoningCreditTotal = res.body.creditTotal
-    lc.ledgerData.reckoningDebitTotal = res.body.debitTotal
-    if lc.ledgerData.balance.type == 'CREDIT'
-      lc.ledgerData.reckoningCreditTotal += lc.ledgerData.balance.amount
-    else if lc.ledgerData.balance.type == 'DEBIT'
-      lc.ledgerData.reckoningDebitTotal += lc.ledgerData.balance.amount
+    if lc.ledgerData.forwardedBalance.amount == 0
+      recTotal = 0
+      if lc.ledgerData.creditTotal > lc.ledgerData.debitTotal then  recTotal = lc.ledgerData.creditTotal else recTotal = lc.ledgerData.debitTotal
+      lc.ledgerData.reckoningCreditTotal = recTotal
+      lc.ledgerData.reckoningDebitTotal = recTotal
+    else
+      if lc.ledgerData.forwardedBalance.type == 'DEBIT'
+        if lc.ledgerData.forwardedBalance.amount + lc.ledgerData.debitTotal <= lc.ledgerData.creditTotal
+          lc.ledgerData.reckoningCreditTotal = lc.ledgerData.creditTotal
+          lc.ledgerData.reckoningDebitTotal = lc.ledgerData.creditTotal
+        else
+          lc.ledgerData.reckoningCreditTotal = lc.ledgerData.forwardedBalance.amount + lc.ledgerData.debitTotal
+          lc.ledgerData.reckoningDebitTotal = lc.ledgerData.forwardedBalance.amount + lc.ledgerData.debitTotal
+      else
+        if lc.ledgerData.forwardedBalance.amount + lc.ledgerData.creditTotal <= lc.ledgerData.debitTotal
+          lc.ledgerData.reckoningCreditTotal = lc.ledgerData.debitTotal
+          lc.ledgerData.reckoningDebitTotal = lc.ledgerData.debitTotal
+        else
+          lc.ledgerData.reckoningCreditTotal = lc.ledgerData.forwardedBalance.amount + lc.ledgerData.creditTotal
+          lc.ledgerData.reckoningDebitTotal = lc.ledgerData.forwardedBalance.amount + lc.ledgerData.creditTotal
+    # lc.ledgerData.reckoningCreditTotal = res.body.creditTotal
+    # lc.ledgerData.reckoningDebitTotal = res.body.debitTotal
+    # if lc.ledgerData.balance.type == 'CREDIT'
+    #   lc.ledgerData.reckoningDebitTotal += lc.ledgerData.balance.amount
+    #   lc.ledgerData.reckoningCreditTotal += lc.ledgerData.forwardedBalance.amount
+    # else if lc.ledgerData.balance.type == 'DEBIT'    
+    #   lc.ledgerData.reckoningCreditTotal += lc.ledgerData.balance.amount
+    #   lc.ledgerData.reckoningDebitTotal += lc.ledgerData.forwardedBalance.amount
     lc.addToIdb(res.body.ledgers, $rootScope.selectedAccount.uniqueName)
 
   lc.updateLedgerDataSuccess = (res,condition, ledger) ->
@@ -1471,7 +1548,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.getAccountDetail(lc.accountUnq)
   else
     lc.loadDefaultAccount()  
-
+  # $scope.$on('account-list-updated', ()->
+  #   lc.loadDefaultAccount() 
+  # )
   # lc.flatAccListC5 = {
   #     page: 1
   #     count: 5
@@ -1638,6 +1717,47 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       transactions = _.flatten(transactions)
       ledger.transactions = transactions
     ledger
+
+
+  $scope.invoiceFile = {}
+  $scope.getInvoiceFile = (files) ->
+    file = files[0]
+    formData = new FormData()
+    formData.append('file', file)
+    formData.append('company', $rootScope.selectedCompany.uniqueName)
+
+    @success = (res) ->
+      lc.selectedLedger.attachedFile = res.data.body.uniqueName
+      toastr.success('file uploaded successfully')
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    url = 'upload-invoice'
+    $http.post(url, formData, {
+      transformRequest: angular.identity,
+      headers: {'Content-Type': undefined}
+    }).then(@success, @failure)
+
+  lc.downloadAttachedFile = (file, e) ->
+    e.stopPropagation()
+    @success = (res) ->
+      data = lc.b64toBlob(res.body.uploadedFile, "image/"+res.body.fileType)
+      blobUrl = URL.createObjectURL(data)
+      FileSaver.saveAs(data, res.body.name)
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      accountsUniqueName: $rootScope.selectedAccount.uniqueName
+      file:file
+    }
+    ledgerService.downloadInvoiceFile(reqParam).then(@success, @failure)
+
+  lc.deleteAttachedFile = () ->
+    lc.selectedLedger.attachedFile = ''
+    lc.selectedLedger.attachedFileName = ''
 
 
   lc.doingEntry = false
@@ -2280,12 +2400,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if txn.particular.stock != null &&  txn.particular.stock != undefined || lc.accountToShow.stock != null || (txn.inventory && txn.inventory.stock)
       switch value
         when 'qty'
-          if lc.selectedTxn.rate > 0
+          if lc.selectedTxn.rate > 0 && lc.selectedTxn.inventory && lc.selectedTxn.inventory.quantity
             lc.selectedTxn.amount = lc.selectedTxn.rate * lc.selectedTxn.inventory.quantity
         when 'amount'
-          lc.selectedTxn.rate = lc.selectedTxn.amount/lc.selectedTxn.inventory.quantity
+          if lc.selectedTxn.inventory && lc.selectedTxn.inventory.quantity
+            lc.selectedTxn.rate = lc.selectedTxn.amount/lc.selectedTxn.inventory.quantity
         when 'rate'
-          lc.selectedTxn.amount = lc.selectedTxn.rate * lc.selectedTxn.inventory.quantity
+          if lc.selectedTxn.inventory && lc.selectedTxn.inventory.quantity
+            lc.selectedTxn.amount = lc.selectedTxn.rate * lc.selectedTxn.inventory.quantity
 
   lc.checkStockAccount = (item, txn) ->
     if(item.stock == null && lc.accountToShow.stock == null)
@@ -2392,7 +2514,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.blankLedger.transactions.push(lc.dBlankTxn)
   lc.blankLedger.transactions.push(lc.cBlankTxn)
 
-  # $scope.$on 'company-changed', (event,changeData) ->
+  $rootScope.$on 'company-changed', (event,changeData) ->
+    if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
+      lc.loadDefaultAccount()
+    #$state.reload()
   #   # when company is changed, redirect to manage company page
   #   if changeData.type == 'CHANGE'
   #     # lc.redirectToState('company.content.manage')
@@ -2464,6 +2589,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     this.trCount = 0
     this.firstLedger = null
     this.lastLedger = null
+    this.lowerBoundReached = false
+    this.upperBoundReached = false
+    this.scrollDisable = false
     return this
 
   lc.ledgerContainer.prototype.add = (o) -> 
@@ -2478,6 +2606,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       this.ledgerData[o.uniqueName] = o
       while this.trCount > count + count/3
         this.removeTop()
+        this.lowerBoundReached = false
       tempTop = this.top()
       this.firstLedger = tempTop
       # this.lastLedger = this.ledgerData[o.uniqueName]
@@ -2491,6 +2620,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       this.ledgerData[o.uniqueName] = o
       while this.trCount > count + count/3
         this.removeBottom()
+        this.upperBoundReached = false
       tempBottom = this.bottom()
       this.lastLedger = tempBottom
       # this.firstLedger = this.ledgerData[o.uniqueName]
@@ -2667,9 +2797,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.log = () -> 
     if lc.showLogs
       console.log arguments
-
-  lc.uploadInvoiceImg = (files, type) ->
-    console.log files
 
   lc.onBankTxnSelect = ($item, $model, $label, $event, txn) ->
     $timeout ( ->
