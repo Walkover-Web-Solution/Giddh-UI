@@ -157,6 +157,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   # download CSV
   $scope.getCSVHeader=()->
+    console.log($scope.searchResData)
     return  [
       "Name"
       "Opening Bal."
