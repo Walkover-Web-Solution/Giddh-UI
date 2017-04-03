@@ -6,7 +6,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.pageLoader = false
   #date time picker code starts here
   lc.today = new Date()
-  d = moment(new Date()).subtract(1, 'month')
+  d = moment(new Date()).subtract(8, 'month')
   lc.fromDate = {date: d._d}
   lc.toDate = {date: new Date()}
   lc.fromDatePickerIsOpen = false
@@ -42,7 +42,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.opts = {
       locale:
         applyClass: 'btn-green'
-        applyLabel: 'Apply'
+        applyLabel: 'Go'
         fromLabel: 'From'
         format: 'D-MMM-YY'
         toLabel: 'To'
@@ -73,6 +73,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         'apply.daterangepicker' : (e, picker) ->
           $scope.cDate.startDate = e.model.startDate._d
           $scope.cDate.endDate = e.model.endDate._d
+          lc.getLedgerData(false, true)
       }
   }
   $scope.setStartDate = ->
@@ -315,7 +316,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
 
   ###read ledgers ###
-  lc.readLedgers = (accountname, page, pos, type) ->
+  lc.readLedgers = (accountname, page, scrollDir, type) ->
     lc.readLedgersFinished = false
     type = type || null
     if type == null 
@@ -331,12 +332,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
       #DEBIT READ STARTS
       if type == 'dr' || type == null
-        keyAndDir = lc.generateKeyRange(accountname, lc.dLedgerContainer, lc.sortOrder.debit, pos)
+        keyAndDir = lc.generateKeyRange(accountname, lc.dLedgerContainer, lc.sortOrder.debit, scrollDir)
 
         drTrCount = 0
         drTrans = db.transaction([ 'drTransactions' ], 'readonly')
         drTrans.oncomplete = (e) ->
           drLoadCompleted = true
+          lc.dLedgerContainer.scrollDisable = false
           if crLoadCompleted
             $scope.$apply ()->
               lc.readLedgersFinished = true
@@ -357,19 +359,32 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             if drTrCount >= lc.pageCount
               return
             cursor.continue()
+          else
+            if (
+              scrollDir == 'next' && lc.sortOrder.debit == lc.sortDirection.asc ||
+              scrollDir == 'prev' && lc.sortOrder.debit == lc.sortDirection.desc
+            )
+              lc.dLedgerContainer.upperBoundReached = true
+              console.log "Reached upperBoundReached dr"
+            if (
+              scrollDir == 'prev' && lc.sortOrder.debit == lc.sortDirection.asc ||
+              scrollDir == 'next' && lc.sortOrder.debit == lc.sortDirection.desc
+            )
+              lc.dLedgerContainer.lowerBoundReached = true
+              console.log "Reached lowerBoundReached dr"
 
         drSearch.onerror = (e) -> 
           #console.log 'error', e
 
       #CREDIT READ STARTS
       if type == 'cr' || type == null
-        keyAndDir = lc.generateKeyRange(accountname, lc.cLedgerContainer, lc.sortOrder.credit, pos)
+        keyAndDir = lc.generateKeyRange(accountname, lc.cLedgerContainer, lc.sortOrder.credit, scrollDir)
 
         crTrCount = 0
-        pos = pos || 'next'
         crTrans = db.transaction([ 'crTransactions' ], 'readonly')
         crTrans.oncomplete = (e) ->
           crLoadCompleted = true
+          lc.cLedgerContainer.scrollDisable = false
           if drLoadCompleted
             $scope.$apply ()->
               lc.readLedgersFinished = true
@@ -390,6 +405,19 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             if crTrCount >= lc.pageCount
               return
             cursor.continue()
+          else
+            if (
+              scrollDir == 'next' && lc.sortOrder.credit == lc.sortDirection.asc ||
+              scrollDir == 'prev' && lc.sortOrder.credit == lc.sortDirection.desc
+            )
+              lc.cLedgerContainer.upperBoundReached = true
+              console.log "Reached upperBoundReached cr"
+            if (
+              scrollDir == 'prev' && lc.sortOrder.credit == lc.sortDirection.asc ||
+              scrollDir == 'next' && lc.sortOrder.credit == lc.sortDirection.desc
+            )
+              lc.cLedgerContainer.lowerBoundReached = true
+              console.log "Reached lowerBoundReached cr"
 
         crSearch.onerror = (e) -> 
           #console.log 'error', e
@@ -408,7 +436,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     idbService.openDb lc.dbConfig
     return
 
-  lc.readLedgersFiltered = (accountUniqueName, page, pos, type) ->
+  lc.readLedgersFiltered = (accountUniqueName, page, scrollDir, type) ->
     lc.readLedgersFinished = false
     type = type || null
     if type == null 
@@ -422,7 +450,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       db = e.target.result
       #DEBIT READ STARTS
       if type == 'dr' || type == null
-        keyAndDir = lc.generateKeyRange(accountUniqueName, lc.dLedgerContainer, lc.sortOrder.debit, pos)
+        keyAndDir = lc.generateKeyRange(accountUniqueName, lc.dLedgerContainer, lc.sortOrder.debit, scrollDir)
 
         drTrCount = 0
         drTrans = db.transaction([ 'drTransactions' ], 'readonly')
@@ -449,13 +477,18 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             if drTrCount >= lc.pageCount
               return
             cursor.continue()
+          else
+            if scrollDir == 'next'
+              console.log "Reached End dr f"
+            if scrollDir == 'prev'
+              console.log "Reached Top dr f"
 
         drSearch.onerror = (e) -> 
           #console.log 'error', e
 
       #CREDIT READ STARTS
       if type == 'cr' || type == null
-        keyAndDir = lc.generateKeyRange(accountUniqueName, lc.cLedgerContainer, lc.sortOrder.credit, pos)
+        keyAndDir = lc.generateKeyRange(accountUniqueName, lc.cLedgerContainer, lc.sortOrder.credit, scrollDir)
 
         crTrCount = 0
         crTrans = db.transaction([ 'crTransactions' ], 'readonly')
@@ -482,6 +515,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
             if crTrCount >= lc.pageCount
               return
             cursor.continue()
+          else
+            if scrollDir == 'next'
+              console.log "Reached End cr f"
+            if scrollDir == 'prev'
+              console.log "Reached Top cr f"
 
         crSearch.onerror = (e) -> 
           #console.log 'error', e
@@ -499,7 +537,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     idbService.openDb lc.dbConfig
     return
 
-  lc.readLedgersWithQuery = (accountUniqueName, query, page, pos, type) ->
+  lc.readLedgersWithQuery = (accountUniqueName, query, page, scrollDir, type) ->
     type = type || null
     lc.dbConfig.success = (e) ->
       db = e.target.result
@@ -513,7 +551,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         lc.log('transaction abort')
         db.close()
       ledgerTrans.oncomplete = (e) ->
-        lc.readLedgersFiltered(accountUniqueName, page, pos, type)
+        lc.readLedgersFiltered(accountUniqueName, page, scrollDir, type)
             
       ledger = ledgerTrans.objectStore('ledgers')
       keyRange = IDBKeyRange.lowerBound([
@@ -1112,7 +1150,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       )
 
   lc.getAccountDetailFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
+    if lc.accountUnq != 'sales'
+      toastr.error(res.data.message, res.data.status)
+    else
+      lc.getAccountDetail($rootScope.fltAccntListPaginated[0].uniqueName)
 
   lc.getAccountDetailSuccess = (res) ->
     localStorageService.set('_selectedAccount', res.body)
@@ -2431,6 +2472,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if txn.particular.stock
       txn.rate = txn.particular.stock.rate
     lc.clearTaxSelection(txn, ledger)
+    if !txn.isTax && ledger.uniqueName != lc.prevLedger.uniqueName
+      lc.showTaxTxns(ledger)
     lc.prevTxn = txn
     lc.selectedLedger = ledger
     lc.selectedTxn = txn
@@ -2555,6 +2598,9 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     this.trCount = 0
     this.firstLedger = null
     this.lastLedger = null
+    this.lowerBoundReached = false
+    this.upperBoundReached = false
+    this.scrollDisable = false
     return this
 
   lc.ledgerContainer.prototype.add = (o) -> 
@@ -2569,6 +2615,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       this.ledgerData[o.uniqueName] = o
       while this.trCount > count + count/3
         this.removeTop()
+        this.lowerBoundReached = false
       tempTop = this.top()
       this.firstLedger = tempTop
       # this.lastLedger = this.ledgerData[o.uniqueName]
@@ -2582,6 +2629,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       this.ledgerData[o.uniqueName] = o
       while this.trCount > count + count/3
         this.removeBottom()
+        this.upperBoundReached = false
       tempBottom = this.bottom()
       this.lastLedger = tempBottom
       # this.firstLedger = this.ledgerData[o.uniqueName]
@@ -2763,6 +2811,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $timeout ( ->
       txn.isOpen = true
     ), 200
+
+  lc.showTaxTxns = (ledger) ->
+    if ledger.transactions.length > 1
+      _.each ledger.transactions, (txn) ->
+        if txn.isTax
+          txn.hide = !txn.hide
+    if lc.prevLedger.transactions && lc.prevLedger.uniqueName != ledger.uniqueName
+      lc.showTaxTxns(lc.prevLedger)
     
   return lc
 giddh.webApp.controller 'newLedgerController', newLedgerController
