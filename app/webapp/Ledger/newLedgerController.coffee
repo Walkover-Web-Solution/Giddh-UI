@@ -2472,7 +2472,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if txn.particular.stock
       txn.rate = txn.particular.stock.rate
     lc.clearTaxSelection(txn, ledger)
-    lc.showTaxTxns(ledger)
+    if !txn.isTax && ledger.uniqueName != lc.prevLedger.uniqueName
+      lc.showTaxTxns(ledger)
     lc.prevTxn = txn
     lc.selectedLedger = ledger
     lc.selectedTxn = txn

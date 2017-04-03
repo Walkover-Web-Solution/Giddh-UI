@@ -26,7 +26,7 @@
 
 
 <div id="ledger" class="oyAuto" ng-show="!lc.showLoader" cover-page>
- <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
+  <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
 
     <section class="container-fluid" ng-if="lc.accountUnq.length > 0">
       <div class="pdT1">
@@ -35,10 +35,10 @@
           <div class="form-inline ledgHead">
 
           <!-- ledger search -->
-<!--             <div  >
+          <!--<div>
               <input type="search" class="form-control" placeholder="Search ledger" ng-model="particularSearch" ng-keyup="countTotalTransactionsAfterSomeTime()" ng-model-options="{debounce: 1000}">
               <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
-            </div> -->
+              </div>-->
             <div class="form-group mrL2 pull-right pos-rel" >
               <input type="search" class="form-control" placeholder="Search ledger" ng-model="lc.query" ng-model-options="{debounce: 1000}" ng-change="lc.filterLedgers(lc.accountToShow.uniqueName, lc.query, 1)" ng-disabled="!lc.readLedgersFinished">
              <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
@@ -285,7 +285,7 @@
                                       placeholder='dd-mm-yyyy'>
                                     </td>
                                     <td class="col-xs-6">
-                                      <input class="form-control" placeholder="{{lc.accountUnq}} receiving via?" type="text" ng-model="txn.particular"
+                                      <input accesskey="l" class="form-control" placeholder="{{lc.accountUnq}} receiving via?" type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
@@ -313,6 +313,7 @@
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount"
+                                        ng-keyup="lc.triggerPanelFocus($event)"
                                         ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
                                         ng-change="lc.onValueChange('amount', txn)" ignore-mouse-wheel>                                     
                                     </td>
@@ -394,6 +395,7 @@
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated}" 
                                         ng-model="txn.amount"
                                         ng-focus="lc.slctxn(value, txn, $event)"
+                                        ng-keyup="lc.triggerPanelFocus($event)"
                                         ng-change="lc.onValueChange('amount', txn)" ignore-mouse-wheel>
                                       <span 
                                         class="download-invoice-ledger" 
@@ -477,7 +479,7 @@
                       </thead>
                     </table>
 
-                    <table>
+                    <table class="width100">
                       <tbody>
                           <!--Add entry row for nomral order-->
                           <tr ng-if="canUpdate">
@@ -509,7 +511,7 @@
                                       >
                                     </td>
                                     <td class="col-xs-6">
-                                      <input type="text" class="form-control" ng-model="txn.particular"
+                                      <input accesskey="r" type="text" class="form-control" ng-model="txn.particular"
                                       placeholder="{{lc.accountUnq}} giving via?"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
@@ -538,6 +540,7 @@
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount"
+                                        ng-keyup="lc.triggerPanelFocus($event)"
                                         ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
                                         ng-change="lc.onValueChange('amount', txn)" ignore-mouse-wheel>                                     
                                     </td>
@@ -618,6 +621,7 @@
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated}" 
                                         ng-model="txn.amount"
                                         ng-focus="lc.slctxn(value, txn, $event)"
+                                        ng-keyup="lc.triggerPanelFocus($event)"
                                         ng-change="lc.onValueChange('amount', txn)">
                                         <span 
                                         class="download-invoice-ledger" 
