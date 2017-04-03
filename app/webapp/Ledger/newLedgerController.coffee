@@ -42,7 +42,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $scope.opts = {
       locale:
         applyClass: 'btn-green'
-        applyLabel: 'Apply'
+        applyLabel: 'Go'
         fromLabel: 'From'
         format: 'D-MMM-YY'
         toLabel: 'To'
@@ -73,6 +73,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         'apply.daterangepicker' : (e, picker) ->
           $scope.cDate.startDate = e.model.startDate._d
           $scope.cDate.endDate = e.model.endDate._d
+          lc.getLedgerData(false, true)
       }
   }
   $scope.setStartDate = ->
@@ -2468,6 +2469,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if txn.particular.stock
       txn.rate = txn.particular.stock.rate
     lc.clearTaxSelection(txn, ledger)
+    lc.showTaxTxns(ledger)
     lc.prevTxn = txn
     lc.selectedLedger = ledger
     lc.selectedTxn = txn
@@ -2805,6 +2807,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     $timeout ( ->
       txn.isOpen = true
     ), 200
+
+  lc.showTaxTxns = (ledger) ->
+    if ledger.transactions.length > 1
+      _.each ledger.transactions, (txn) ->
+        if txn.isTax
+          txn.hide = !txn.hide
+    if lc.prevLedger.transactions && lc.prevLedger.uniqueName != ledger.uniqueName
+      lc.showTaxTxns(lc.prevLedger)
     
   return lc
 giddh.webApp.controller 'newLedgerController', newLedgerController

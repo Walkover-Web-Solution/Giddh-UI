@@ -64,7 +64,15 @@ html, body{
       -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
     height:100%;
+    overflow-y: auto;
 }
+/*
+.footer{
+    width:100%;
+    height:100px;
+    background:#fff;
+}
+*/
 
 input[type=number]::-webkit-inner-spin-button, 
 input[type=number]::-webkit-outer-spin-button { 
@@ -205,6 +213,14 @@ header .navbar-btn.btn-sm {
 
 header .navbar-nav > li.active {
     margin-left: -15px;
+}
+
+.header-container{
+    position:fixed;
+    top:0;
+    left:0;
+    right:0;
+    z-index: 1040;
 }
 
 /*header nav links override*/
@@ -2586,7 +2602,9 @@ i.cls-alert {
 
 /*make un-responsive*/
 body.unresponsive {
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-top:54px;
 }
 
 .navbar-right.navbar-nav > li > a {

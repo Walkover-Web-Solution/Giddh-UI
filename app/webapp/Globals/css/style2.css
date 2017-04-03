@@ -1043,3 +1043,50 @@ input[type=number] {
 /*.upload_div i {
     margin-right: 3px;
 }*/
+
+.inconsolata, body, input, textarea, button, select{
+    font-family: 'Inconsolata', Arial, serif;
+    font-weight: 400;
+}
+.inconsolata-b{
+    font-family: 'Inconsolata', Arial, serif;
+    font-weight: 700;
+}
+
+footer{
+    background-color: #26263A;
+    padding: 40px;
+    text-align: center;
+    color: #C5C5B8;
+    font-size: 17px;
+    margin-top:20px;
+}
+footer>div{
+    margin-bottom: 10px;
+}
+footer>div>a{
+    margin:0 22px;
+    letter-spacing: 1px;
+    color: #C5C5B8;
+    padding: 10px 0;
+}
+footer>div>a:hover{
+    text-decoration: none;
+    color: #fff;
+}
+footer>div>a:first-child{
+    margin-left: 0
+}
+footer>div>a:last-child{
+    margin-right: 0
+}
+footer small{
+    color: #565B5B
+}
+footer small a{
+    color: #565B5B; 
+}
+
+.daterangepicker .daterangepicker_input{
+    display: none !important;
+}
