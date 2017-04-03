@@ -165,6 +165,19 @@
                   <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="settings.proformaSettings.createPaymentEntry" ng-click="settings.proformaSettings.createPaymentEntry = false">
                 </td>
               </tr>
+              <tr>
+                <td>Show Seal according to status of payment</td>
+                <td>
+                  <!-- <input type="checkbox" ng-model="settings.invoiceSettings.createPaymentEntry"> -->
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!settings.invoiceSettings.showSeal" ng-click="settings.invoiceSettings.showSeal = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="settings.invoiceSettings.showSeal" ng-click="settings.invoiceSettings.showSeal = false">
+                </td>
+                <td>
+                  <!-- <input type="checkbox" ng-model="settings.proformaSettings.createPaymentEntry"> -->
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!settings.proformaSettings.showSeal" ng-click="settings.proformaSettings.showSeal = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="settings.proformaSettings.showSeal" ng-click="settings.proformaSettings.showSeal = false">
+                </td>
+              </tr>
               </tbody>
             </table>
             <button class="btn btn-primary" ng-click="saveSettings()">Save</button>
