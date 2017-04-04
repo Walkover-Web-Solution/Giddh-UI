@@ -1833,3 +1833,13 @@ button.toast-close-button {
 .green {
   color: #00796b;
 }
+.ledgHead .form-group{
+  float: left;
+}
+.ledgHead .label {
+    margin-left: 7px;
+    overflow: hidden;
+    vertical-align: middle;
+    position: relative;
+    top: -4px;
+}
