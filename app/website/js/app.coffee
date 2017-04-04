@@ -479,7 +479,8 @@ app.controller 'magicCtrl', [
       _data = data
       $http.post($scope.magicUrl, data:_data).then(
         (success)->
-          $scope.companyName = success.data.body.companyName
+          $scope.companyName = success.data.body.companyName.split(" ")
+          $scope.companyName = $scope.companyName[0]
           $scope.accountName = success.data.body.account.name
           $scope.ledgerData = success.data.body.ledgerTransactions
           $scope.filterLedgers($scope.ledgerData.ledgers)
