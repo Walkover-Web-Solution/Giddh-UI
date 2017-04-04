@@ -44,7 +44,7 @@
              <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
             </div>
 
-            <form name="fromToDateForm" style="width: 550px;" novalidate class="form-group mrR1 pull-left">
+            <form name="fromToDateForm" style="width: 530px;" novalidate class="form-group mrR1 pull-left">
               <div class="form-group dateRange">
               <!--   <label>From</label> -->
 
@@ -624,7 +624,7 @@
                                         ng-model="txn.amount"
                                         ng-focus="lc.slctxn(value, txn, $event)"
                                         ng-keyup="lc.triggerPanelFocus($event)"
-                                        ng-change="lc.onValueChange('amount', txn)">
+                                        ng-change="lc.onValueChange('amount', txn)" ignore-mouse-wheel>
                                         <span 
                                         class="download-invoice-ledger" 
                                         ng-if="value.invoiceGenerated" 
