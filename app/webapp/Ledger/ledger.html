@@ -624,7 +624,7 @@
                                         ng-model="txn.amount"
                                         ng-focus="lc.slctxn(value, txn, $event)"
                                         ng-keyup="lc.triggerPanelFocus($event)"
-                                        ng-change="lc.onValueChange('amount', txn)">
+                                        ng-change="lc.onValueChange('amount', txn)" ignore-mouse-wheel>
                                         <span 
                                         class="download-invoice-ledger" 
                                         ng-if="value.invoiceGenerated" 
