@@ -1,3 +1,7 @@
+
+@import url('../css/fjala.css');
+/*font-family: 'Fjalla One', sans-serif;*/
+
 body {
   -webkit-overflow-scrolling: touch;
 }
@@ -1842,4 +1846,43 @@ button.toast-close-button {
     vertical-align: middle;
     position: relative;
     top: -4px;
+}
+.magic_header .navbar-header{
+  text-align: center;
+  float: none;
+}
+.magicHead {
+  padding: 15px;
+    text-align: center;
+    display: inline-block;
+    margin: 0 auto;
+    float: none;
+}
+.accountName {
+  vertical-align: text-top;
+  font-family: 'Fjalla One', sans-serif;
+    font-size: 2.4em;
+    text-transform: uppercase;
+  display: inline-block;
+  color: #000;
+}
+.magic_header .navbar-brand {
+  float: right;
+  padding: 3px 15px;
+  height: auto;
+}
+.magic_header .navbar-brand>img {
+    display: block;
+    width: 130px;
+}
+.w7 {
+  padding: 7px;
+      position: relative;
+    top: 22px;
+}
+.magic_header.affix .navbar-brand img {
+    height: auto;
+}
+.magic_header.navbar.affix {
+  height: 80px;
 }

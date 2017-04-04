@@ -1,24 +1,16 @@
 <!-- data-spy="affix" data-offset-top="100" target="page-top" -->
-<nav role="navigation" class="navbar navbar-custom navbar-fixed-top" ng-class="{'transparent':!magicLinkPage, 'fixedHeader' : fixedHeader}">
+<nav role="navigation" class="magic_header navbar navbar-custom navbar-fixed-top" ng-class="{'transparent':!magicLinkPage, 'fixedHeader' : fixedHeader}">
   <div class="container-fluid">
     <div class="navbar-header">
-      <button data-target=".navbar-main-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
-          <!-- <i class="glyphicon glyphicon-th-list"></i> -->
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-      </button>
 
-      <a href="/" class="navbar-brand" ng-if="!showBlack">
-        <img class="showWhite" src="/public/website/images/new/giddh-logo-white.png" alt="Giddh - online accounting software" ng-if="!magicLinkPage">
-        <img src="/public/website/images/new/giddh-logo.png" alt="Giddh - online accounting software" ng-class="{'showWhite':magicLinkPage, 'showBlack':!magicLinkPage}">
-      </a>
-      <a href="/" class="navbar-brand" ng-if="showBlack">
-        <img src="/public/website/images/new/giddh-logo.png" alt="Giddh - online accounting software">
-      </a>
-      <div class="accountName">
-      {{companyName}}
+      <div class="magicHead">
+        <div class="accountName">
+              {{companyName}}Walkover
+        </div>
+        <span class="w7">powered by</span>
+          <a href="/" class="navbar-brand" ng-if="showBlack">
+            <img src="/public/website/images/new/giddh-logo.png" alt="Giddh - online accounting software">
+          </a>
       </div>
     </div>
     
