@@ -1826,3 +1826,10 @@ button.toast-close-button {
     padding: 2px 7px;
     cursor: pointer;
 }
+.sub_footer {
+  background: #E34A26;
+  color: #fff;
+}
+.green {
+  color: #00796b;
+}
