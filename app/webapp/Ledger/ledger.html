@@ -44,7 +44,7 @@
              <i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
             </div>
 
-            <form name="fromToDateForm" style="width: 300px;" novalidate class="form-group mrR1 pull-left">
+            <form name="fromToDateForm" style="width: 530px;" novalidate class="form-group mrR1 pull-left">
               <div class="form-group dateRange">
               <!--   <label>From</label> -->
 
@@ -84,6 +84,9 @@
               <div class="form-group">
                 <button type="button" class="btn btn-primary mrL1" ng-click="lc.getLedgerData(false, true)" ng-disabled="fromToDateForm.$invalid">
                   GO
+                </button>
+                <button type="button" class="btn btn-primary mrL1" ng-click="lc.showAllTaxTransaction()" ng-if="lc.hasTaxTransactions">
+                  {{lc.taxTransactionsVisibility}}
                 </button>
 <!--                 <button type="button" class="btn btn-default mrL1" ng-click="lc.readLedgers(lc.accountToShow.uniqueName, 1, 'next')" >
                   READ LEDGER
@@ -281,7 +284,8 @@
                                       ng-model="lc.blankLedger.entryDate"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)" 
                                       select-on-click
-                                      mask='39-19-9999'>
+                                      ui-mask="99-99-9999"
+                                      placeholder='dd-mm-yyyy'>
                                     </td>
                                     <td class="col-xs-6">
                                       <input accesskey="l" class="form-control" placeholder="{{lc.accountUnq}} receiving via?" type="text" ng-model="txn.particular"
@@ -346,7 +350,7 @@
                                     class="ledger-row"
                                     ng-repeat="txn in value.transactions"
                                     ng-if="txn.type == 'DEBIT'"
-                                    ng-show="txn.hide || !txn.isTax"
+                                    ng-show="(txn.hide || !txn.isTax) || lc.showAllTaxTransactions"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
                                     popover-placement="{{lc.popover.position}}" 
@@ -361,7 +365,8 @@
                                       ng-model="value.entryDate"
                                       ng-focus="lc.slctxn(value, txn, $event)" 
                                       select-on-click
-                                      mask='39-19-9999'>
+                                      ui-mask="99-99-9999"
+                                      placeholder='dd-mm-yyyy'>
                                     </td>
                                     <td class="col-xs-6">
                                       <input class="form-control" type="text" ng-model="txn.particular"
@@ -571,6 +576,7 @@
                                     class="ledger-row"
                                     ng-repeat="txn in value.transactions"
                                     ng-if="txn.type == 'CREDIT'"
+                                    ng-show="(txn.hide || !txn.isTax) || lc.showAllTaxTransactions"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
                                     popover-placement="{{lc.popover.position}}" 

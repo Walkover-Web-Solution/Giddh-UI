@@ -26,6 +26,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.cLedgerLimit = 10
   lc.entrySettings = {}
   lc.firstLoad = true
+  lc.hasTaxTransactions = false
   $rootScope.flyAccounts = true
 
   
@@ -350,6 +351,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         drSearch.onsuccess = (e) ->
           cursor = e.target.result
           if cursor
+            if !lc.hasTaxTransactions
+              lc.checkForTaxTransactions(cursor.value)
             if keyAndDir.scrollDir == 'next'
               lc.dLedgerContainer.add cursor.value, lc.pageCount
             else if keyAndDir.scrollDir = 'prev'
@@ -394,6 +397,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         crSearch.onsuccess = (e) ->
           cursor = e.target.result
           if cursor
+            if !lc.hasTaxTransactions
+              lc.checkForTaxTransactions(cursor.value)
             if keyAndDir.scrollDir == 'next'
               lc.cLedgerContainer.add cursor.value, lc.pageCount
             else if keyAndDir.scrollDir = 'prev'
@@ -819,6 +824,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       type: str
     } 
 
+  lc.checkForTaxTransactions = (ledger) ->
+    if ledger.transactions.length > 1
+      tax = _.findWhere(ledger.transactions, {isTax: true})
+      if tax
+        lc.hasTaxTransactions = true
+
   lc.addBlankTxn= (str, ledger) ->
     txn = new txnModel(str)
     txn.isBlank = true
@@ -1144,6 +1155,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
 
   # upper icon functions ends here
+  lc.sortFlatAccListAlphabetically = (list, property) ->
+    sortedList = []
+    _.each list, (item) ->
+      sortedList.push(item[property])
+    sortedList = sortedList.sort()
+    return sortedList
 
   lc.getAccountDetail = (accountUniqueName) ->
     if not _.isUndefined(accountUniqueName) && not _.isEmpty(accountUniqueName) && not _.isNull(accountUniqueName)
@@ -1163,12 +1180,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if lc.accountUnq != 'sales'
       toastr.error(res.data.message, res.data.status)
     else
-      lc.getAccountDetail($rootScope.fltAccntListPaginated[0].uniqueName)
+      sortedAccList = lc.sortFlatAccListAlphabetically($rootScope.fltAccntListPaginated, 'uniqueName')
+      lc.getAccountDetail(sortedAccList[0])
 
   lc.getAccountDetailSuccess = (res) ->
     localStorageService.set('_selectedAccount', res.body)
     $rootScope.selectedAccount = res.body
     lc.accountToShow = $rootScope.selectedAccount
+    lc.accountUnq = res.body.uniqueName
     $state.go($state.current, {unqName: res.body.uniqueName}, {notify: false})
     lc.getLedgerData(true)
     if res.body.yodleeAdded == true && $rootScope.canUpdate
@@ -1177,7 +1196,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         lc.getBankTransactions(res.body.uniqueName)
       ), 2000
 
-  lc.loadDefaultAccount = () ->
+  lc.loadDefaultAccount = (acc) ->
     
     @success = (res) ->
       lc.accountUnq = 'cash'
@@ -1327,9 +1346,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #   _.each txnArray, (txn) ->
   #     txn.particular = txn.remarks
   lc.getLedgerData = (showLoaderCondition, firstLoad) ->
-    if firstLoad
-      lc.firstLoad = false
-      $rootScope.accClicked = false
     lc.progressBar.value = 0
     $rootScope.superLoader = true
     lc.showLoader = showLoaderCondition || true
@@ -2484,6 +2500,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.clearTaxSelection(txn, ledger)
     if !txn.isTax && ledger.uniqueName != lc.prevLedger.uniqueName
       lc.showTaxTxns(ledger)
+    else if !txn.isTax && ledger.uniqueName == lc.prevLedger.uniqueName
+      _.each ledger.transactions, (txn) ->
+        if txn.isTax
+          txn.hide = true
     lc.prevTxn = txn
     lc.selectedLedger = ledger
     lc.selectedTxn = txn
@@ -2691,7 +2711,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.ledgerContainer.prototype.getLastIndex = () ->
     return if this.lastLedger != null then this.lastLedger.index else Number.MIN_SAFE_INTEGER
   lc.ledgerContainer.prototype.maxTransactions = (count) ->
-    return count + 30 #count + count/2 #replace for dynamic calculations
+    return count * 3 + 30 #count + count/2 #replace for dynamic calculations
 
   lc.generateKeyRange = (accUniqueName, ledgerContainer, sortDir, scrollDir) ->
     sortDir = if sortDir == null then lc.sortDirection.asc else sortDir
@@ -2827,10 +2847,18 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.showTaxTxns = (ledger) ->
     if ledger.transactions.length > 1
       _.each ledger.transactions, (txn) ->
-        if txn.isTax
+        if txn.isTax 
           txn.hide = !txn.hide
     if lc.prevLedger.transactions && lc.prevLedger.uniqueName != ledger.uniqueName
       lc.showTaxTxns(lc.prevLedger)
-    
+
+  lc.taxTransactionsVisibility = "Show all Tax Transactions"
+  lc.showAllTaxTransaction = () ->
+    lc.showAllTaxTransactions = !lc.showAllTaxTransactions
+    if lc.showAllTaxTransactions
+      lc.taxTransactionsVisibility = "Hide all Tax Transactions"
+    else
+      lc.taxTransactionsVisibility = "Show all Tax Transactions"
+
   return lc
 giddh.webApp.controller 'newLedgerController', newLedgerController
