@@ -285,10 +285,11 @@
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)" 
                                       select-on-click
                                       ui-mask="99-99-9999"
+                                      model-view-value="true"
                                       placeholder='dd-mm-yyyy'>
                                     </td>
                                     <td class="col-xs-6">
-                                      <input accesskey="l" class="form-control" placeholder="{{lc.accountUnq}} receiving via?" type="text" ng-model="txn.particular"
+                                      <input id="addDebitEntry" accesskey="l" class="form-control" placeholder="{{lc.accountUnq}} receiving via?" type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
@@ -313,6 +314,7 @@
                                         </span>
                                       </span>
                                       <input type="number"
+                                        id="addDebitAmount"
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount"
@@ -366,6 +368,7 @@
                                       ng-focus="lc.slctxn(value, txn, $event)" 
                                       select-on-click
                                       ui-mask="99-99-9999"
+                                      model-view-value="true"
                                       placeholder='dd-mm-yyyy'>
                                     </td>
                                     <td class="col-xs-6">
@@ -505,15 +508,18 @@
                                     ng-click="$event.stopPropagation()"
                                     >
                                     <td class="col-xs-2">
-                                      <input class="form-control" type="text" 
+                                      <input class="form-control" 
+                                      id="addCreditDate"
+                                      type="text" 
                                       ng-model="lc.blankLedger.entryDate"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
                                       select-on-click
                                       ui-mask="99-99-9999"
+                                      model-view-value="true"
                                       placeholder='dd-mm-yyyy'>
                                     </td>
                                     <td class="col-xs-6">
-                                      <input accesskey="r" type="text" class="form-control" ng-model="txn.particular"
+                                      <input id="addCreditEntry" accesskey="r" type="text" class="form-control" ng-model="txn.particular"
                                       placeholder="{{lc.accountUnq}} giving via?"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
@@ -539,6 +545,7 @@
                                         </span>
                                       </span>
                                       <input type="number"
+                                        id="addCreditAmount"
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount"
@@ -591,7 +598,8 @@
                                       ng-model="value.entryDate"
                                       ng-focus="lc.slctxn(value, txn, $event)" 
                                       select-on-click
-                                      mask='39-19-9999'>
+                                      ui-mask="99-99-9999"
+                                      model-view-value="true">
                                     </td>
                                     <td class="col-xs-6">
                                       <input class="form-control" type="text" ng-model="txn.particular"
@@ -679,7 +687,7 @@
       </div>
     </section>
 </div> 
-
+<onboarding-popover enabled="onboardingEnabled" steps="onboardingSteps" step-index='stepIndex'></onboarding-popover>
 <script type="text/ng-template" id="panel">
     <div class="ledger-panel" ng-click="$event.stopPropagation()" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': lc.showPanel, 'top0':hideHeader}">
       <div class="wrapper">
