@@ -284,6 +284,7 @@
                                       ng-model="lc.blankLedger.entryDate"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)" 
                                       select-on-click
+                                      model-view-value="true"
                                       ui-mask="99-99-9999"
                                       placeholder='dd-mm-yyyy'>
                                     </td>
@@ -361,8 +362,9 @@
                                     set-popover-position
                                     ng-click="$event.stopPropagation()">
                                     <td class="col-xs-2">
-                                      <input class="form-control type="text" 
+                                      <input class="form-control" type="text" 
                                       ng-model="value.entryDate"
+                                      model-view-value="true"
                                       ng-focus="lc.slctxn(value, txn, $event)" 
                                       select-on-click
                                       ui-mask="99-99-9999"
@@ -509,6 +511,7 @@
                                       ng-model="lc.blankLedger.entryDate"
                                       ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
                                       select-on-click
+                                      model-view-value="true"
                                       ui-mask="99-99-9999"
                                       placeholder='dd-mm-yyyy'>
                                     </td>
