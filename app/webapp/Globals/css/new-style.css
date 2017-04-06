@@ -4412,18 +4412,20 @@ table.proforma-particulars{
 }
 
 /*** stock inventory**/
-.stock-bar{
+/*.stock-bar{
     padding:10px;
     margin:0;
     border-bottom: 1px solid #e0e0e0;
-}
+}*/
 
 .stock-bar ul{
-    height:24px;
+    float: right;
+    height:auto;
 }
 
 .stock-bar ul li{
     max-width:250px;
+    text-align: right;
 }
 
 .stock-bar ul li input, .stock-bar ul li input:focus,.stock-bar ul li input:active,
@@ -4681,4 +4683,26 @@ table.proforma-particulars{
     width: 100%;
     float: left;
     display: inline-table;
+}
+
+
+
+.top_row {
+    padding: 9px 0;
+    border-bottom: 1px solid #d6d6d6;
+    overflow: hidden;
+}
+.sidebar {
+    background: #f3f0e6 !important;
+}
+.search_box {
+    position: relative;
+}
+.search_box i {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    z-index: 99;
+    color: #525252;
 }
