@@ -4483,10 +4483,6 @@ table.proforma-particulars{
     border-bottom:0;
 }
 
-.stock-grp-list li:first-child{
-    border-top:1px solid #e0e0e0;
-}
-
 .stock-grp-list li > a{
     color:#444;
 }
@@ -4686,7 +4682,7 @@ table.proforma-particulars{
 }
 
 
-
+/*stock page*/
 .top_row {
     padding: 9px 0;
     border-bottom: 1px solid #d6d6d6;
@@ -4705,4 +4701,8 @@ table.proforma-particulars{
     right: 10px;
     z-index: 99;
     color: #525252;
+}
+
+.stock-grp-list li:first-child{
+    border-top:0;
 }
