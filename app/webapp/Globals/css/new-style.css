@@ -4677,7 +4677,7 @@ table.proforma-particulars{
 .parent_body {
     padding-bottom: 52px;
     position: relative;
-    overflow: scroll;
+    overflow: hidden;
     display: inline-block;
     width: 100%;
 }
