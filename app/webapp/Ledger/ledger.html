@@ -336,7 +336,7 @@
                       data-ledger-container="lc.dLedgerContainer"
                       data-sort-order="lc.sortOrder.debit" >
                       <table class="width100">
-                        <tbody>
+                        <tbody class="parent_body">
 
                           <!--ledgers-->
                           <tr 
@@ -564,7 +564,7 @@
                       data-ledger-container="lc.cLedgerContainer"
                       data-sort-order="lc.sortOrder.credit" >
                       <table class="width100">
-                        <tbody>
+                        <tbody class="parent_body">
                           
                           <!--ledgers-->
                           <tr 
@@ -789,12 +789,12 @@
               </button>
               
               <!--file upload-->
-<!--               <div class="upload_div" ng-if="lc.selectedLedger.attachedFileName.length == 0">
+              <div class="upload_div" ng-hide="lc.selectedLedger.attachedFile.length > 0" ng-if="lc.selectedLedger.attachedFileName.length == 0">
                 <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
-                <label for="invoiceFile" class="upload-btn"><i class="glyphicon glyphicon-upload" ></i>Upload Image</label>
-              </div> -->
+                <label for="invoiceFile" class="upload-btn"><i class="glyphicon glyphicon-upload" ></i> Upload Image</label>
+              </div>
              <!--  <button class="btn btn-md btn-default" ng-click="lc.getInvoiceFile()">Upload</button> -->
-<!--               <button class="btn btn-md btn-danger" ng-if="lc.selectedLedger.attachedFile.length > 0" ng-click="lc.deleteAttachedFile()">Delete</button> -->
+              <button class="upload-btn" ng-if="lc.selectedLedger.attachedFile.length > 0" ng-click="lc.deleteAttachedFile()"><label><i class="glyphicon glyphicon-trash" ></i> Delete Image</label></button>
               <!--file upload-->
 
 <!--               <button ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') && ((lc.selectedLedger.transactions[0].particular.uniqueName != '' && lc.selectedLedger.transactions[0].particular.uniqueName != undefined) || (lc.selectedLedger.transactions[1].particular.uniqueName != '' && lc.selectedLedger.transactions[1].particular.uniqueName != undefined)) && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default mrL1" ng-click="lc.resetLedger()">Reset</button>

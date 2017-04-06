@@ -68,50 +68,50 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.sharedEntity = ""
   $rootScope.croppedAcntList = []
 
-  ###Date range picker###
-  # $scope.fixedDate = {
-  #   startDate: moment().subtract(30, 'days')._d,
-  #   endDate: moment()._d
-  # };
+  ##Date range picker###
+  $scope.fixedDate = {
+    startDate: moment().subtract(30, 'days')._d,
+    endDate: moment()._d
+  };
 
 
-  # $scope.singleDate = moment()
-  # $scope.fixedDateOptions = {
-  #     locale:
-  #       applyClass: 'btn-green'
-  #       applyLabel: 'Apply'
-  #       fromLabel: 'From'
-  #       format: 'D-MMM-YY'
-  #       toLabel: 'To'
-  #       cancelLabel: 'Cancel'
-  #       customRangeLabel: 'Custom range'
-  #     ranges:
-  #       'Last 1 Day': [
-  #         moment().subtract(1, 'days')
-  #         moment()
-  #       ]
-  #       'Last 7 Days': [
-  #         moment().subtract(6, 'days')
-  #         moment()
-  #       ]
-  #       'Last 30 Days': [
-  #         moment().subtract(29, 'days')
-  #         moment()
-  #       ]
-  #       'Last 6 Months': [
-  #         moment().subtract(6, 'months')
-  #         moment()
-  #       ]
-  #       'Last 1 Year': [
-  #         moment().subtract(12, 'months')
-  #         moment()
-  #       ]
-  #     eventHandlers : {
-  #       'apply.daterangepicker' : (e, picker) ->
-  #         $scope.fixedDate.startDate = e.model.startDate._d
-  #         $scope.fixedDate.endDate = e.model.endDate._d
-  #     }
-  # }
+  $scope.singleDate = moment()
+  $scope.fixedDateOptions = {
+      locale:
+        applyClass: 'btn-green'
+        applyLabel: 'Apply'
+        fromLabel: 'From'
+        format: 'D-MMM-YY'
+        toLabel: 'To'
+        cancelLabel: 'Cancel'
+        customRangeLabel: 'Custom range'
+      ranges:
+        'Last 1 Day': [
+          moment().subtract(1, 'days')
+          moment()
+        ]
+        'Last 7 Days': [
+          moment().subtract(6, 'days')
+          moment()
+        ]
+        'Last 30 Days': [
+          moment().subtract(29, 'days')
+          moment()
+        ]
+        'Last 6 Months': [
+          moment().subtract(6, 'months')
+          moment()
+        ]
+        'Last 1 Year': [
+          moment().subtract(12, 'months')
+          moment()
+        ]
+      eventHandlers : {
+        'apply.daterangepicker' : (e, picker) ->
+          $scope.fixedDate.startDate = e.model.startDate._d
+          $scope.fixedDate.endDate = e.model.endDate._d
+      }
+  }
   $scope.setStartDate = ->
     $scope.fixedDate.startDate = moment().subtract(4, 'days').toDate()
 

@@ -1016,15 +1016,31 @@ input[type=number] {
     border-color: #d35f29 !important;
 }
 .uncfr .form-control {
-   background: #e6e6e6 !important;
+   background: #f7edcd !important;
 }
+
+.active.end-date.in-range.available {
+    background: #d35f29;
+    color: #fff;
+    border-radius: 0 4px 4px 0;
+}
+.fixedDate {
+    float: left;
+    margin: 10px;
+}
+.fixedDate input {
+    min-width: 186px;
+}
+.dateblock {
+    float: left;
+}
+
 .ledger-header thead th:last-child, .ledger-container table tr.bg3 th:last-child {
     border-right: 0;
 }
 .create-company:hover {
     background: none !important;
 }
-
 
 .upload-btn {
     background: #f3f0e6;
@@ -1043,6 +1059,13 @@ input[type=number] {
 /*.upload_div i {
     margin-right: 3px;
 }*/
+
+.fix_date {
+    font-size: 14px;
+    position: relative;
+    top: 16px;
+    cursor: pointer;
+}
 
 .inconsolata, body, input, textarea, button, select{
     font-family: 'Inconsolata', Arial, serif;
