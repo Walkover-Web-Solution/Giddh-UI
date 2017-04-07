@@ -25,8 +25,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     sales:"sales"
   }
 
-  $scope.onTourStart = () ->
-    console.log 'tour'
 
   $rootScope.flyAccounts = false
   $rootScope.$stateParams = {}
@@ -774,11 +772,20 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     _.each $scope.flatAccntWGroupsList, (grp) ->
       grp.open = condition
 
+  $scope.runTour = () ->
+    $rootScope.$emit('run-tour')
 
   $(document).on('click', (e)->
     if e.target.id != 'accountSearch'
       $rootScope.flyAccounts = false
     return false
+  )
+
+  $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+    if toState.name == "company.content.ledgerContent" && toParams.unqName == 'cash'
+      $rootScope.ledgerState = true
+    else
+      $rootScope.ledgerState = false
   )
 
 giddh.webApp.controller 'mainController', mainController
