@@ -1,5 +1,5 @@
 
-newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, groupService, $uibModal, companyServices, $state,idbService, $http) ->
+newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, groupService, $uibModal, companyServices, $state,idbService, $http, nzTour, $q ) ->
   lc = this
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
@@ -28,91 +28,171 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.firstLoad = true
   lc.hasTaxTransactions = false
   $rootScope.flyAccounts = true
-  $scope.stepIndex = 0
-  $scope.onboardingSteps = [
-    {
-      title: "Welcome!",
-      position: "centered",
-      description: "This is the ledger page. Here, you can view, add, modify or delete all your ledger entries from an account. Click on next to proceed.",
-      width: 300
-    },
-    {
-      title: "Select Account",
-      position: "right",
-      description: "Type 'purchases' in this box to select the purchase account from the list and then click next.",
-      attachTo:'#addDebitEntry'
-      width: 300
-      yOffset: -100
-      overlay:false
-    },
-    {
-      title: "Enter Transaction Amount",
-      position: "right",
-      description: "Enter amount for this transaction and click next.",
-      attachTo:'#addDebitAmount'
-      width: 300
-      yOffset: -100
-      overlay:false
-    },
-    {
-      title: "Save Entry",
-      position: "right",
-      description: "Click the Save Button to save this entry.",
-      attachTo:'#saveUpdate'
-      width: 300
-      yOffset: -100
-      overlay:false
-    },
-    {
-      title: "Change date",
-      position: "left",
-      description: "You can also create entries in back dates, change the date here and click on next.",
-      attachTo:'#addCreditDate'
-      width: 300
-      yOffset: -100
-      overlay:false
-    },
-    {
-      title: "Select Account",
-      position: "left",
-      description: "Type 'sales' in this box to select the sales account from the list.",
-      attachTo:'#addCreditEntry'
-      width: 300
-      yOffset: -100
-      overlay:false
-    },
-    {
-      title: "Enter Transaction Amount",
-      position: "left",
-      description: "Enter amount for this transaction and click next.",
-      attachTo:'#addCreditAmount'
-      width: 300
-      yOffset: -100
-      overlay:false
-    },
-    {
-      title: "Save Entry",
-      position: "bottom",
-      description: "Click the Save Button to save this entry.",
-      attachTo:'#saveUpdate'
-      width: 300
-      xOffset: -120
-      yOffset: -60 
-      overlay:false
-    },
-    {
-      title: "Success!",
-      position: "centered",
-      description: "Now Wasn't that Easy! You just created ledger entries for these transactions. Click on close to continue creating entries.",
-      width: 300
-    }
-  ]
-
-  $scope.onboardingEnabled = false
-  
-
   $scope.creditTotal = 0
   $scope.debitTotal = 0
+
+  ## code for nzTour ##
+  lc.lastTourStep = 0
+
+  lc.onBlankAccountSelect = ($item, $model, $label, $event) ->
+    if ($item.uniqueName == 'purchases' || $item.uniqueName == 'sales') && lc.pausedBeforeAccountSelection
+      tour.config.showNext = true
+      nzTour.next()
+      lc.pausedBeforeAccountSelection = false
+
+  tour = 
+    config: {
+      mask:{
+        clickThrough: false
+        visibleOnNoTarget: true
+      }
+      placementPriority: ['bottom', 'right', 'top','left']
+      onClose: () -> 
+        alert('You can always restart the tour from the user menu dropdown on the right top corner of your screen.')
+      onComplete: () ->
+        console.log 'completed'
+    }
+    steps: [
+      {
+        target: ''
+        content: 'Welcome To the Giddh Ledger. This is the page where you can add, modify or delete all your ledger Entries. Let us help you with getting started, please click next.'
+      },
+      {
+        target: '.left-col'
+        content: 'This is the DEBIT side of ledger, All the transactions where you RECIEVE something go here.'
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      },
+      {
+        target: '.right-col'
+        content: 'This is the CREDIT side of ledger, All the transactions where you GIVE something go here.'
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      },
+      {
+        target: '.debit-blank-row'
+        content: 'This is where you can start creating entries, there will always be a blank row on both sides of the ledger for you to add new entries.'
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      },
+      {
+        target: '#addDebitEntry'
+        content: "This is the input box for the account from which you are recieving something. "
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      },
+      {
+        target: '#addDebitDate'
+        content: "This is the date for which you want to create the entry, it will always show the current date, however, you can change it to a previous date if you want to create a back-date entry."
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      },
+      {
+        target: '#addDebitAmount'
+        content: "This is the input box for the Amount for your entry."
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      },
+      {
+        target: '.left-col'
+        content: "Let us create an entry for SALES account. In the input box for account, select the 'sales' account."
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          tour.config.showNext = false
+          lc.pausedBeforeAccountSelection = true
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      },
+      {
+        target: '#addDebitAmount'
+        content: "Great! Now enter the transaction amount for your entry."
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      },
+      {
+        target: '#saveUpdate'
+        content: "Now that we have the date, account and transaction amount for the debit entry, click on this button to save it!"
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          tour.config.showNext = false
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      }
+      {
+        target: ''
+        content: 'Congratulations, You just created your first debit entry! Now lets go ahead and create a credit entry, click next to continue.'
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      },
+      {
+        target: '.right-col'
+        content: "Let us create an entry for purchase account. In the input box for account, select the 'purchases' account."
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          tour.config.showNext = false
+          lc.pausedBeforeAccountSelection = true
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      },
+      {
+        target: '#addCreditAmount'
+        content: "Great! Now enter the transaction amount for your entry."
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      },
+      {
+        target: '#saveUpdate'
+        content: "Now that we have the date, account and transaction amount for the credit entry, click on this button to save it!"
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          tour.config.showNext = false
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      },
+      {
+        target: ''
+        content: "Now wasn't that easy! This is how you can use ledger to create and update entries. Please click on finish to exit the tour."
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          d = $q.defer();
+          d.resolve()
+          return d.promise
+      }
+      
+    ]
+
+
 
   ###date range picker ###
   $scope.cDate = {
@@ -390,14 +470,23 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       
     dbInstance = idbService.openDb(lc.dbConfig)
 
+  lc.runTour = true
   lc.onLedgerSeeded = () ->
     lc.cLedgerContainer = new lc.ledgerContainer()
     lc.dLedgerContainer = new lc.ledgerContainer()
     lc.readLedgers($rootScope.selectedAccount.uniqueName, 1, 'next')
     lc.isLedgerSeeded = false
     lc.showLoader = false
-    $scope.onboardingEnabled = true
+    if !lc.runTour
+      nzTour.next()
 
+  lc.onLedgerReadComplete = () ->
+    if $rootScope.firstLogin && lc.runTour && Object.keys(lc.dLedgerContainer.ledgerData).length == 0
+      nzTour.start(tour).then(
+        () ->
+          lc.runTour = false
+      )
+    return
 
   ###read ledgers ###
   lc.readLedgers = (accountname, page, scrollDir, type) ->
@@ -426,6 +515,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           if crLoadCompleted
             $scope.$apply ()->
               lc.readLedgersFinished = true
+            lc.onLedgerReadComplete()
           return
         drOS = drTrans.objectStore('drTransactions')
         drSearch = drOS.index('company+accountUniqueName+index', true).openCursor(keyAndDir.keyRange, keyAndDir.scrollDir)
@@ -472,6 +562,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           if drLoadCompleted
             $scope.$apply ()->
               lc.readLedgersFinished = true
+            lc.onLedgerReadComplete()
           return
         crOS = crTrans.objectStore('crTransactions')
         crSearch = crOS.index('company+accountUniqueName+index', true).openCursor(keyAndDir.keyRange, keyAndDir.scrollDir)
@@ -1271,6 +1362,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.accountToShow = $rootScope.selectedAccount
     lc.accountUnq = res.body.uniqueName
     $state.go($state.current, {unqName: res.body.uniqueName}, {notify: false})
+    if res.body.uniqueName == 'cash'
+      $rootScope.ledgerState = true
     lc.getLedgerData(true)
     if res.body.yodleeAdded == true && $rootScope.canUpdate
       #get bank transaction here
@@ -1531,7 +1624,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #   lc.ledgerData.reckoningCreditTotal += lc.ledgerData.balance.amount
     #   lc.ledgerData.reckoningDebitTotal += lc.ledgerData.forwardedBalance.amount
     lc.addToIdb(res.body.ledgers, $rootScope.selectedAccount.uniqueName)
-
+      
   lc.updateLedgerDataSuccess = (res,condition, ledger) ->
     # lc.setEntryTotal(ledger, res.body, condition)
     lc.fetchLedgerDataSuccess(res)
@@ -2643,6 +2736,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #     # lc.redirectToState('company.content.manage')
   #     $state.go('company.content.ledgerContent', {unqName: ""})
   #     lc.showLoader = true
+
+  $rootScope.$on 'run-tour', () ->
+    if lc.lastTourStep > 0
+      nzTour.start(tour)
+      nzTour.gotoStep(lc.lastTourStep+1)
+    else
+      nzTour.start(tour)
 
   $scope.$watch 'popover.draggable', (newVal, oldVal) ->
     if newVal != oldVal
