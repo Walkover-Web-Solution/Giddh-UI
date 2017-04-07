@@ -60,8 +60,7 @@
     "angular-daterangepicker": "^0.2.2",
     "ngMask": "angular-mask#^3.1.1",
     "angular-upload": "^1.0.12",
-    "angular-ui-mask": "^1.8.7",
-    "ngOnboarding": "^0.1.7",
+    "angular-ui-mask": "^1.8.7"
     "nz-tour": "^1.2.1"
   },
   "resolutions": {

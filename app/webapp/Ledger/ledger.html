@@ -25,7 +25,7 @@
 </section>
 
 
-<div id="ledger" class="oyAuto" ng-show="!lc.showLoader" cover-page ui-tour ui-tour-on-start="onTourStart()">
+<div id="ledger" class="oyAuto" ng-show="!lc.showLoader" cover-page>
   <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
 
     <section class="container-fluid" ng-if="lc.accountUnq.length > 0">
@@ -339,7 +339,7 @@
                       data-ledger-container="lc.dLedgerContainer"
                       data-sort-order="lc.sortOrder.debit" >
                       <table class="width100">
-                        <tbody>
+                        <tbody class="parent_body">
 
                           <!--ledgers-->
                           <tr 
@@ -571,7 +571,7 @@
                       data-ledger-container="lc.cLedgerContainer"
                       data-sort-order="lc.sortOrder.credit" >
                       <table class="width100">
-                        <tbody>
+                        <tbody class="parent_body">
                           
                           <!--ledgers-->
                           <tr 

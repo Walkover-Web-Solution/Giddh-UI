@@ -4674,3 +4674,15 @@ table.proforma-particulars{
 .tour-backdrop {
     background-color: rgba(0, 0, 0, 0.5);
 }
+.parent_body {
+    padding-bottom: 52px;
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    width: 100%;
+}
+.parent_body tr {
+    width: 100%;
+    float: left;
+    display: inline-table;
+}
