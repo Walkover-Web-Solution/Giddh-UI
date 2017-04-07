@@ -1,7 +1,7 @@
 
 
 <!--sidebar-->
-	<section class="sidebar greyBg pull-left" ng-show="stock.showSidebar && stock.showStockReport" ng-click="$event.stopPropagation();" cover-page>
+	<section class="sidebar greyBg pull-left" ng-click="$event.stopPropagation();" cover-page>
 
 		<div ng-if="stock.showStockReport">
 			<div class="input-group col-xs-12 search_box">
@@ -15,10 +15,11 @@
 
 
 <!-- top row-->
-<div class="stock-bar col-xs-10">
-	<div class="row"> </div>
+<div class="stock-bar">
+	<div class="row"> 
 	<div class="top_row">
 		<div class="pull-right">
+		<span ng-if="stock.selectedStockItem == null">Add</span>
 			<button type="button" class="btn btn-primary mrL1">Custom Stock Unit</button>
 			<button type="button" class="btn btn-primary mrL1">Add Group</button>
 			<button class="btn btn-md btn-primary" ng-click="stock.toggleViews()">
@@ -28,28 +29,34 @@
 			</button>
 		</div>
 	</div>
-	<ul class="list-inline">
-		<li>
-
-		</li>
-	</ul>
+	</div>
 
 </div>
 
 <!-- /top row-->
 
 <!--main section-->
-	<!--stock report section-->
-	<section class="h100" ng-if="stock.showStockReport" ng-class="{mrL320: stock.showSidebar && stock.showStockReport}" cover-page>
-		<div class="h100" ng-include="'/public/webapp/Inventory/partials/stock-report.html'"></div>
-	</section>
-	<!--/stock report section-->
+	
+	<section class="wrap_content">
+		
 
-	<!--manage stock section-->
-	<section class="h100" ng-if="!stock.showStockReport" cover-page>
-		<div class="h100" ng-include="'/public/webapp/Inventory/partials/manage-stocks.html'"></div>
+		<!--stock report section-->
+		<section class="h100" ng-hide="stock.selectedStockItem == null" ng-if="stock.showStockReport" ng-class="{mrL320: stock.showSidebar && stock.showStockReport}" cover-page>
+			<div class="h100" ng-include="'/public/webapp/Inventory/partials/stock-report.html'"></div>
+		</section>
+		<!--/stock report section-->
+
+		<!--manage stock section-->
+		<section class="h100" ng-if="!stock.showStockReport" cover-page>
+			<div class="h100" ng-include="'/public/webapp/Inventory/partials/manage-stocks.html'"></div>
+		</section>
+		<!--/manage stock section-->
+
+		<!--operations-->
+		<aside ng-if="stock.selectedStockItem == null" class="stock-operations col-xs-12 pdB2" cover-page ng-include="'/public/webapp/Inventory/partials/stock-operations.html'"></aside>
+		<!--operations-->
+
 	</section>
-	<!--/manage stock section-->
 
 
 <!--/main section-->

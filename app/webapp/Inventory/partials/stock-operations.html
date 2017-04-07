@@ -1,6 +1,6 @@
 
 <!-- add/modify stock group-->
-<section ng-if="stock.selectedStockItem == null">
+<section ng-hide="stock.selectedStockItem == null">
 		
 		<aside class="row greyBg bdrB pd1 mrB1">
 			<label>Add/Modify Stock Group</label>
@@ -72,20 +72,23 @@
 
 <!-- add/modify stock item-->
 
-<section class="" ng-if="stock.selectedStockGrp.uniqueName || stock.selectedStockItem.uniqueName" ng-class="{mrT1 : stock.selectedStockItem == null}">
-	<aside class="row greyBg bdrB bdrT pd1 mrB1">
+<section class="col-xs-12 col-md-9 col-lg-6" ng-if="stock.selectedStockGrp.uniqueName || stock.selectedStockItem.uniqueName || stock.selectedStockItem == null" ng-class="{mrT1 : stock.selectedStockItem == null}">
+<div class="row">
+				<aside class="form_title">
 		<label>
 			<span ng-if="stock.selectedStockItem == null">Add</span>
 			<span ng-if="stock.selectedStockItem != null">Modify</span> 
 			Stock Item
 		</label>
 	</aside>
-
-	<aside class="col-xs-6">
+</div>
+	<aside>
+	<div class="row">
 		
-		<form name="addStockGroup" ng-model="stock.addStockItem" novalidate>
+		<form name="addStockGroup" class="form-theme" ng-model="stock.addStockItem" novalidate>
 			<!-- <label>Add New Stock</label> -->
-			<hr>
+
+
 			<div class="row mr0">
 				<div class="form-group col-xs-6 pdL0 pdR">
 					<label>Name<span class="required">*</span></label>
@@ -98,7 +101,7 @@
 				</div>				
 			</div>
 			<div class="row mr0">
-				<div class="form-group pdL0 pdR" ng-class="{'col-xs-6':!stock.selectedStockItem, 'col-xs-3':stock.selectedStockItem}">
+				<div class="form-group col-xs-3 pdL0 pdR" ng-class="{'col-xs-3':!stock.selectedStockItem, 'col-xs-3':stock.selectedStockItem}">
 					<label>Stock Unit<span class="required">*</span></label>
 					<!-- <input type="text" name="stockType" class="form-control" ng-model="stock.addStockItem.stockType" required> -->
 					<ui-select ng-model="stock.addStockItem.stockType" theme="bootstrap">
@@ -111,23 +114,29 @@
 	                </ui-select>
 				</div>
 
-				<div class="form-group col-xs-3 pdR pdL">
+				<div class="form-group col-xs-3 pdR">
 					<label>Open. Qty</label>
 					<input type="number" name="stockQty" class="form-control" ng-model="stock.addStockItem.stockQty">
 				</div>
 
-				<div class="form-group col-xs-3 pdR pdL" ng-if="stock.selectedStockItem">
+				<div class="form-group col-xs-3 pdL">
+					<label>Rate per stock unit</label>
+					<input type="number" name="stockPurchaseRate" class="form-control" ng-model="stock.addStockItem.stockPurchaseRate">
+				</div>	
+				<!-- <div class="form-group col-xs-3 pdR pdL" ng-if="stock.selectedStockItem">
 					<label>Closing. Qty</label>
 					<input type="number" name="stockQty" class="form-control" ng-model="stock.addStockItem.stockClosingQty" disabled>
-				</div>	
+				</div> -->	
 				
+
+
 				<div class="form-group col-xs-3 pdR0 pdL">
 					<label>Amount</label>
 					<input type="number" name="stockAmount" class="form-control" ng-model="stock.addStockItem.stockAmount">
 				</div>				
 			</div>
-			<div class="row mr0">
-				<div class="form-group col-xs-6 pdL0 pdR">
+			<div class="row mr0 col-xs-6 pdL0 pdR">
+				<div class="form-group col-xs-12 pdL0 pdR">
 					<label>Purchase Acc</label>
 					<!-- <input type="text" name="stockPurchaseAccount" class="form-control" ng-model="stock.addStockItem.stockPurchaseAccount" required> -->
 	                <ui-select ng-model="stock.addStockItem.stockPurchaseAccount" theme="bootstrap">
@@ -140,13 +149,31 @@
 	                </ui-select>
 				</div>
 
-				<div class="form-group col-xs-6 pdR0 pdL">
+				<!-- <div class="form-group col-xs-5 pdR1 pdL0">
 					<label>Purchase Rate</label>
 					<input type="number" name="stockPurchaseRate" class="form-control" ng-model="stock.addStockItem.stockPurchaseRate">
+				</div>	 -->
+
+				<div class="form-group col-xs-5 pdR0 pdL0" ng-class="{'col-xs-3':!stock.selectedStockItem, 'col-xs-3':stock.selectedStockItem}">
+					<label>Unit<span class="required">*</span></label>
+					<!-- <input type="text" name="stockType" class="form-control" ng-model="stock.addStockItem.stockType" required> -->
+					<ui-select ng-model="stock.addStockItem.stockType" theme="bootstrap">
+	                  <ui-select-match>
+	                      <span>{{}}</span>
+	                  </ui-select-match>
+	                  <ui-select-choices repeat="unit in stock.stockUnitTypes">
+	                      <span ng-bind="unit.name"></span>
+	                  </ui-select-choices>
+	                </ui-select>
+				</div>
+
+				<div class="form-group col-xs-5 pdR1 pdL">
+					<label>Rate</label>
+					<input type="number" name="stockPurchaseRate" class="form-control" />
 				</div>				
 			</div>
-			<div class="row mr0">
-				<div class="form-group col-xs-6 pdL0 pdR">
+			<div class="row mr0 col-xs-6 pdL pdR0">
+				<div class="form-group col-xs-12 pdL0 pdR">
 					<label>Sales Acc</label>
 					<!-- <input type="text" name="stockSalesAccount" class="form-control" ng-model="stock.addStockItem.stockSalesAccount" required> -->
 					<ui-select ng-model="stock.addStockItem.stockSalesAccount" theme="bootstrap">
@@ -159,16 +186,36 @@
 	                </ui-select>
 				</div>
 
-				<div class="form-group col-xs-6 pdR0 pdL">
+				<!-- <div class="form-group col-xs-6 pdR0 pdL">
 					<label>Sales Rate</label>
 					<input type="number" name="stockSalesRate" class="form-control" ng-model="stock.addStockItem.stockSalesRate" required>
+				</div>	 -->	
+
+				<div class="form-group col-xs-5 pdR0 pdL0" ng-class="{'col-xs-3':!stock.selectedStockItem, 'col-xs-3':stock.selectedStockItem}">
+					<label>Unit<span class="required">*</span></label>
+					<!-- <input type="text" name="stockType" class="form-control" ng-model="stock.addStockItem.stockType" required> -->
+					<ui-select ng-model="stock.addStockItem.stockType" theme="bootstrap">
+	                  <ui-select-match>
+	                      <span>{{}}</span>
+	                  </ui-select-match>
+	                  <ui-select-choices repeat="unit in stock.stockUnitTypes">
+	                      <span ng-bind="unit.name"></span>
+	                  </ui-select-choices>
+	                </ui-select>
+				</div>
+
+				<div class="form-group col-xs-6 pdR1 pdL">
+					<label>Rate</label>
+					<input type="number" name="stockSalesRate" class="form-control" required>
 				</div>				
+
 			</div>
 			<button type="submit" class="btn btn-md btn-default pad0"  ng-disabled="addStockGroup.stockName.$invalid">
 				<span style="padding:6px 12px;display:block" ng-if="stock.selectedStockItem == null" ng-click="stock.addStock(stock.addStockItem)">Add</span>
 				<span style="padding:6px 12px;display:block"  ng-if="stock.selectedStockItem != null" ng-click="stock.updateStock(stock.addStockItem)">Modify</span>
 			</button>
 		</form>
+	</div>
 
 	</aside>
 

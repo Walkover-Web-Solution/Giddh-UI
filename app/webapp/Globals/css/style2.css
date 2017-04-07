@@ -1113,3 +1113,68 @@ footer small a{
 .daterangepicker .daterangepicker_input{
     display: none !important;
 }
+
+
+
+/*stock page*/
+.top_row {
+    padding: 9px 10px;
+    border-bottom: 1px solid #d6d6d6;
+    overflow: hidden;
+}
+.sidebar {
+    background: #f3f0e6 !important;
+}
+.search_box {
+    position: relative;
+}
+.search_box i {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 10px;
+    z-index: 99;
+    color: #525252;
+}
+
+.stock-grp-list li:first-child{
+    border-top:0;
+}
+.form-theme label {
+    font-weight: 400;
+}
+.form-theme .ui-select-match .btn{
+    border-radius: 0px !important;
+}
+
+.required {
+    color: #d35f29;
+}
+
+.form-theme {
+    background: #f5f5f5;
+    padding: 25px;
+    border: 1px solid #e5e5e5;
+}
+.wrap_content {
+    margin-left: 325px;
+ }
+
+.stock-bar {
+    overflow: hidden;
+}
+.form-theme .form-control {
+    background: #fff !important;
+}
+.btn-default-focus {
+    box-shadow: none !important;
+}
+
+.form_title {
+    padding: 12px 26px;
+    background: #525252;
+    color: #fff;
+}
+a.btn.btn-xs.btn-link.pull-right {
+    padding: 0;
+}

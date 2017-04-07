@@ -41,10 +41,10 @@ angular.module('inventoryController', [])
 		e.stopPropagation();
 	}
 
-	stock.sideBarOff = function(){
-		stock.showSidebar = false
-		return false
-	}
+	// stock.sideBarOff = function(){
+	// 	stock.showSidebar = false
+	// 	return false
+	// }
 
 	// get flattten stock groups
 	stock.stockGroup = {}
@@ -98,7 +98,7 @@ angular.module('inventoryController', [])
 
 	//toggle views from report to manage
 	stock.toggleViews = function(){
-		stock.showStockReport = !stock.showStockReport;
+		// stock.showStockReport = !stock.showStockReport;
 		stock.getHeirarchicalStockGroups();
 	}
 
