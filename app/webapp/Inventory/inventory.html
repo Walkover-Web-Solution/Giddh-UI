@@ -6,7 +6,7 @@
 		<div ng-if="stock.showStockReport">
 			<div class="input-group col-xs-12 search_box">
 				<input type="search" name="stocksearch" ng-focus="stock.sideBarOn($event)" ng-click="$event.stopPropagation()" ng-model="stockFlattenSearch" ng-model-options="{debounce:500}" ng-change="stock.getStockGroupsFlatten(stockFlattenSearch, 1, 'search')" class="form-control" placeholder="Search Stocks">
-				<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
+				<i class="glyphicon glyphicon-search pos-abs"></i>
 			</div>
 		</div>
 		<div class="h100" ng-include="'/public/webapp/Inventory/partials/stocklist.html'"></div>
