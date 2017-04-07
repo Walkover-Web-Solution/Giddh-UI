@@ -1091,6 +1091,6 @@ footer small a{
     display: none !important;
 }
 
-.checkbox-inline input[type=checkbox] {
+.checkbox-inline input[type=checkbox], .checkbox input[type=checkbox] {
     left: 0;
 }
