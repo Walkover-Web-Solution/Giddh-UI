@@ -29,86 +29,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.hasTaxTransactions = false
   $rootScope.flyAccounts = true
   $scope.stepIndex = 0
-  $scope.onboardingSteps = [
-    {
-      title: "Welcome!",
-      position: "centered",
-      description: "This is the ledger page. Here, you can view, add, modify or delete all your ledger entries from an account. Click on next to proceed.",
-      width: 300
-    },
-    {
-      title: "Select Account",
-      position: "right",
-      description: "Type 'purchases' in this box to select the purchase account from the list and then click next.",
-      attachTo:'#addDebitEntry'
-      width: 300
-      yOffset: -100
-      overlay:false
-    },
-    {
-      title: "Enter Transaction Amount",
-      position: "right",
-      description: "Enter amount for this transaction and click next.",
-      attachTo:'#addDebitAmount'
-      width: 300
-      yOffset: -100
-      overlay:false
-    },
-    {
-      title: "Save Entry",
-      position: "right",
-      description: "Click the Save Button to save this entry.",
-      attachTo:'#saveUpdate'
-      width: 300
-      yOffset: -100
-      overlay:false
-    },
-    {
-      title: "Change date",
-      position: "left",
-      description: "You can also create entries in back dates, change the date here and click on next.",
-      attachTo:'#addCreditDate'
-      width: 300
-      yOffset: -100
-      overlay:false
-    },
-    {
-      title: "Select Account",
-      position: "left",
-      description: "Type 'sales' in this box to select the sales account from the list.",
-      attachTo:'#addCreditEntry'
-      width: 300
-      yOffset: -100
-      overlay:false
-    },
-    {
-      title: "Enter Transaction Amount",
-      position: "left",
-      description: "Enter amount for this transaction and click next.",
-      attachTo:'#addCreditAmount'
-      width: 300
-      yOffset: -100
-      overlay:false
-    },
-    {
-      title: "Save Entry",
-      position: "bottom",
-      description: "Click the Save Button to save this entry.",
-      attachTo:'#saveUpdate'
-      width: 300
-      xOffset: -120
-      yOffset: -60 
-      overlay:false
-    },
-    {
-      title: "Success!",
-      position: "centered",
-      description: "Now Wasn't that Easy! You just created ledger entries for these transactions. Click on close to continue creating entries.",
-      width: 300
-    }
-  ]
-
-  $scope.onboardingEnabled = false
   
 
   $scope.creditTotal = 0
@@ -396,7 +316,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.readLedgers($rootScope.selectedAccount.uniqueName, 1, 'next')
     lc.isLedgerSeeded = false
     lc.showLoader = false
-    $scope.onboardingEnabled = true
 
 
   ###read ledgers ###
