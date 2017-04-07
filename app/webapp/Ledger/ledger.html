@@ -594,7 +594,8 @@
                                       ng-model="value.entryDate"
                                       ng-focus="lc.slctxn(value, txn, $event)" 
                                       select-on-click
-                                      mask='39-19-9999'>
+                                      model-view-value="true"
+                                      ui-mask="99-99-9999">
                                     </td>
                                     <td class="col-xs-6">
                                       <input class="form-control" type="text" ng-model="txn.particular"
