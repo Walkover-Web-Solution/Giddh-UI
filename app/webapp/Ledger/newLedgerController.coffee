@@ -47,7 +47,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         visibleOnNoTarget: true
       }
       placementPriority: ['bottom', 'right', 'top','left']
-      onClose: () -> 
+      onClose: () ->
+        tour.config.showNext = true 
         alert('You can always restart the tour from the user menu dropdown on the right top corner of your screen.')
       onComplete: () ->
         console.log 'completed'
@@ -56,6 +57,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       {
         target: ''
         content: 'Welcome To the Giddh Ledger. This is the page where you can add, modify or delete all your ledger Entries. Let us help you with getting started, please click next.'
+        before: (direction, step) ->
+          lc.lastTourStep = step
+          d = $q.defer();
+          d.resolve()
+          return d.promise
       },
       {
         target: '.left-col'
@@ -146,6 +152,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         content: 'Congratulations, You just created your first debit entry! Now lets go ahead and create a credit entry, click next to continue.'
         before: (direction, step) ->
           lc.lastTourStep = step
+          tour.config.showNext = true
           d = $q.defer();
           d.resolve()
           return d.promise
@@ -184,6 +191,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         target: ''
         content: "Now wasn't that easy! This is how you can use ledger to create and update entries. Please click on finish to exit the tour."
         before: (direction, step) ->
+          tour.config.showNext = true
           lc.lastTourStep = step
           d = $q.defer();
           d.resolve()
@@ -481,7 +489,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       nzTour.next()
 
   lc.onLedgerReadComplete = () ->
-    if $rootScope.basicInfo.isNewUser && lc.runTour && Object.keys(lc.dLedgerContainer.ledgerData).length == 0
+    if $rootScope.basicInfo.isNewUser && lc.runTour
       nzTour.start(tour).then(
         () ->
           lc.runTour = false
@@ -2739,10 +2747,16 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $rootScope.$on 'run-tour', () ->
     if lc.lastTourStep > 0
-      nzTour.start(tour)
+      nzTour.start(tour).then(
+        () ->
+          lc.runTour = false
+      )
       nzTour.gotoStep(lc.lastTourStep+1)
     else
-      nzTour.start(tour)
+      nzTour.start(tour).then(
+        () ->
+          lc.runTour = false
+      )
 
   $scope.$watch 'popover.draggable', (newVal, oldVal) ->
     if newVal != oldVal
