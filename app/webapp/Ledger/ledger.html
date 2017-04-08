@@ -25,7 +25,7 @@
 </section>
 
 
-<div id="ledger" class="oyAuto" ng-show="!lc.showLoader" cover-page ui-tour ui-tour-on-start="onTourStart()">
+<div id="ledger" class="oyAuto" ng-show="!lc.showLoader" cover-page>
   <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height  additional-height="85" on-scroll="onledgerScroll(scrollTop, scrollHeight, event)" id="mainLedgerContent" > -->
 
     <section class="container-fluid" ng-if="lc.accountUnq.length > 0">
@@ -265,7 +265,7 @@
                               <table class="width100">
                                 <tbody class="ledger-main">
                                   <tr
-                                    class="ledger-row"
+                                    class="ledger-row debit-blank-row"
                                     ng-class="{compoundEntry: lc.blankLedger.isCompoundEntry || lc.blankLedger.failed}"
                                     ng-repeat="txn in lc.blankLedger.transactions"
                                     ng-if="txn.type == 'DEBIT'"
@@ -273,27 +273,29 @@
                                     popover-trigger="outsideClick" 
                                     popover-placement="{{lc.popover.position}}" 
                                     popover-append-to-body='true' 
-                                    popover-enable="!lc.popover.draggable" 
                                     popover-is-open="txn.isOpen"
                                     popover-popup-delay="200"
                                     set-popover-position
                                     ng-click="$event.stopPropagation()"
                                     >
                                     <td class="col-xs-2">
-                                      <input class="form-control" type="text" 
+                                      <input class="form-control"
+                                      id="addDebitDate"
+                                      type="text" 
                                       ng-model="lc.blankLedger.entryDate"
-                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)" 
+                                      ng-click="lc.slctxn(lc.blankLedger, txn, $event)" 
                                       select-on-click
-                                      model-view-value="true"
                                       ui-mask="99-99-9999"
+                                      model-view-value="true"
                                       placeholder='dd-mm-yyyy'>
                                     </td>
                                     <td class="col-xs-6">
-                                      <input accesskey="l" class="form-control" placeholder="{{lc.accountUnq}} receiving via?" type="text" ng-model="txn.particular"
+                                      <input id="addDebitEntry" accesskey="l" class="form-control" placeholder="{{lc.accountUnq}} receiving via?" type="text" ng-model="txn.particular"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
-                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                      typeahead-on-select = "lc.onBlankAccountSelect($item, $model, $label, $event)"
+                                      ng-click="lc.slctxn(lc.blankLedger, txn, $event)"
                                       is-open="txn.isOpen"
                                       trigger-focus
                                       txn="txn">
@@ -305,7 +307,7 @@
                                         class="form-control background-transparent pull-left bdrR bdrR0"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null}"
                                         ng-model="txn.inventory.quantity"
-                                        ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                        ng-click="lc.slctxn(lc.blankLedger, txn, $event)"
                                         ng-change="lc.onValueChange('qty' , txn)" ignore-mouse-wheel>
                                       <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
                                         x{{txn.rate || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
@@ -314,11 +316,12 @@
                                         </span>
                                       </span>
                                       <input type="number"
+                                        id="addDebitAmount"
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount"
                                         ng-keyup="lc.triggerPanelFocus($event)"
-                                        ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                        ng-click="lc.slctxn(lc.blankLedger, txn, $event)"
                                         ng-change="lc.onValueChange('amount', txn)" ignore-mouse-wheel>                                     
                                     </td>
                                   </tr>
@@ -336,7 +339,7 @@
                       data-ledger-container="lc.dLedgerContainer"
                       data-sort-order="lc.sortOrder.debit" >
                       <table class="width100">
-                        <tbody>
+                        <tbody class="parent_body">
 
                           <!--ledgers-->
                           <tr 
@@ -362,12 +365,12 @@
                                     set-popover-position
                                     ng-click="$event.stopPropagation()">
                                     <td class="col-xs-2">
-                                      <input class="form-control" type="text" 
+                                      <input class="form-control type="text" 
                                       ng-model="value.entryDate"
-                                      model-view-value="true"
-                                      ng-focus="lc.slctxn(value, txn, $event)" 
+                                      ng-click="lc.slctxn(value, txn, $event)" 
                                       select-on-click
                                       ui-mask="99-99-9999"
+                                      model-view-value="true"
                                       placeholder='dd-mm-yyyy'>
                                     </td>
                                     <td class="col-xs-6">
@@ -375,7 +378,7 @@
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
-                                      ng-focus="lc.slctxn(value, txn, $event)"
+                                      ng-click="lc.slctxn(value, txn, $event)"
                                       is-open="txn.isOpen"
                                       trigger-focus
                                       txn="txn">
@@ -387,7 +390,7 @@
                                         class="form-control background-transparent pull-left bdrR bdrR0"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null}"
                                         ng-model="txn.inventory.quantity"
-                                        ng-focus="lc.slctxn(value, txn, $event)"
+                                        ng-click="lc.slctxn(value, txn, $event)"
                                         ng-change="lc.onValueChange('qty' , txn)" ignore-mouse-wheel>
                                       <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0 || txn.inventory != null">
                                         x{{txn.rate || txn.amount/txn.inventory.quantity || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
@@ -399,7 +402,7 @@
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated}" 
                                         ng-model="txn.amount"
-                                        ng-focus="lc.slctxn(value, txn, $event)"
+                                        ng-click="lc.slctxn(value, txn, $event)"
                                         ng-keyup="lc.triggerPanelFocus($event)"
                                         ng-change="lc.onValueChange('amount', txn)" ignore-mouse-wheel>
                                         <span 
@@ -507,21 +510,24 @@
                                     ng-click="$event.stopPropagation()"
                                     >
                                     <td class="col-xs-2">
-                                      <input class="form-control" type="text" 
+                                      <input class="form-control" 
+                                      id="addCreditDate"
+                                      type="text" 
                                       ng-model="lc.blankLedger.entryDate"
-                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                      ng-click="lc.slctxn(lc.blankLedger, txn, $event)"
                                       select-on-click
-                                      model-view-value="true"
                                       ui-mask="99-99-9999"
+                                      model-view-value="true"
                                       placeholder='dd-mm-yyyy'>
                                     </td>
                                     <td class="col-xs-6">
-                                      <input accesskey="r" type="text" class="form-control" ng-model="txn.particular"
+                                      <input id="addCreditEntry" accesskey="r" type="text" class="form-control" ng-model="txn.particular"
                                       placeholder="{{lc.accountUnq}} giving via?"
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
-                                      ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                      typeahead-on-select = "lc.onBlankAccountSelect($item, $model, $label, $event)"
+                                      ng-click="lc.slctxn(lc.blankLedger, txn, $event)"
                                       is-open="txn.isOpen"
                                       trigger-focus
                                       txn="txn">
@@ -533,7 +539,7 @@
                                         class="form-control background-transparent pull-left bdrR bdrR0"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null}"
                                         ng-model="txn.inventory.quantity"
-                                        ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                        ng-click="lc.slctxn(lc.blankLedger, txn, $event)"
                                         ng-change="lc.onValueChange('qty' , txn)" ignore-mouse-wheel>
                                       <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0">
                                         x{{txn.rate || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
@@ -542,11 +548,12 @@
                                         </span>
                                       </span>
                                       <input type="number"
+                                        id="addCreditAmount"
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null}" 
                                         ng-model="txn.amount"
                                         ng-keyup="lc.triggerPanelFocus($event)"
-                                        ng-focus="lc.slctxn(lc.blankLedger, txn, $event)"
+                                        ng-click="lc.slctxn(lc.blankLedger, txn, $event)"
                                         ng-change="lc.onValueChange('amount', txn)" ignore-mouse-wheel>                                     
                                     </td>
                                   </tr>
@@ -564,11 +571,12 @@
                       data-ledger-container="lc.cLedgerContainer"
                       data-sort-order="lc.sortOrder.credit" >
                       <table class="width100">
-                        <tbody>
+                        <tbody class="parent_body">
                           
                           <!--ledgers-->
                           <tr 
                             id="{{value.uniqueName}}"
+                            class="dEntry-row"
                             ng-repeat="(key, value) in lc.cLedgerContainer.ledgerData | orderObjectBy : 'index' : lc.sortOrder.credit == lc.sortDirection.desc"
                             ng-dblclick="lc.getMatchingTxn(value, 'DR')"
                             ng-class="{compoundEntry: value.isCompoundEntry || value.failed, uncfr:value.unconfirmedEntry}">
@@ -602,7 +610,7 @@
                                       typeahead-append-to-body="true" 
                                       uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
                                       typeahead-template-url="accountPopUp.html"
-                                      ng-focus="lc.slctxn(value, txn, $event)"
+                                      ng-click="lc.slctxn(value, txn, $event)"
                                       is-open="txn.isOpen"
                                       trigger-focus
                                       txn="txn">
@@ -614,7 +622,7 @@
                                         class="form-control background-transparent pull-left bdrR bdrR0"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null}"
                                         ng-model="txn.inventory.quantity"
-                                        ng-focus="lc.slctxn(value, txn, $event)"
+                                        ng-click="lc.slctxn(value, txn, $event)"
                                         ng-change="lc.onValueChange('qty' , txn)" ignore-mouse-wheel>
                                       <span class="pa rate" ng-if="lc.accountToShow.stock != null || txn.particular.stock != null && txn.rate > 0 || txn.particular.stock.rate > 0 || txn.inventory != null">
                                         x{{txn.rate || txn.amount/txn.inventory.quantity || txn.particular.stock.rate || lc.accountToShow.stock.rate | number:4 }}
@@ -626,7 +634,7 @@
                                         class="form-control text-right pdR3"
                                         ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated}" 
                                         ng-model="txn.amount"
-                                        ng-focus="lc.slctxn(value, txn, $event)"
+                                        ng-click="lc.slctxn(value, txn, $event)"
                                         ng-keyup="lc.triggerPanelFocus($event)"
                                         ng-change="lc.onValueChange('amount', txn)" ignore-mouse-wheel>
                                         <span 
@@ -683,7 +691,6 @@
       </div>
     </section>
 </div> 
-
 <script type="text/ng-template" id="panel">
     <div class="ledger-panel" ng-click="$event.stopPropagation()" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': lc.showPanel, 'top0':hideHeader}">
       <div class="wrapper">

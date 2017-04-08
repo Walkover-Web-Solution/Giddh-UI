@@ -39,6 +39,9 @@ router.get '/affiliate', (req,res) ->
 router.get '/global', (req,res) ->
   res.sendFile 'global.html', options
 
+router.get '/gst', (req,res) ->
+  res.sendFile 'gst.html', options
+
 router.get '/about', (req, res) ->
   res.sendFile 'about.html', options
 
