@@ -811,7 +811,7 @@ input[type="checkbox"]:after {
 }
 .checkbox input[type=checkbox], .checkbox-inline input[type=checkbox], .radio input[type=radio], .radio-inline input[type=radio] {
     position: relative;
-    margin-right: 22px;
+    margin-right: 10px;
     margin-left: 0;
 }
 .checkbox label, .radio label {
@@ -1112,4 +1112,8 @@ footer small a{
 
 .daterangepicker .daterangepicker_input{
     display: none !important;
+}
+
+.checkbox-inline input[type=checkbox], .checkbox input[type=checkbox] {
+    left: 0;
 }
