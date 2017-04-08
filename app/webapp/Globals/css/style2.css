@@ -1117,3 +1117,27 @@ footer small a{
 .checkbox-inline input[type=checkbox], .checkbox input[type=checkbox] {
     left: 0;
 }
+.today.weekend.off.active.end-date.in-range.available {
+    background: #fff !important;
+    color: #999;
+}
+
+.dlt_btn {
+    border: 0;
+    background: #ddd;
+    font-size: 12px;
+    padding: 4px 6px;
+    position: absolute;
+    top: 0px;
+    right: 8px;
+}
+.upload_img {
+text-overflow: ellipsis;
+white-space: nowrap;
+overflow: hidden;
+position: relative;
+}
+ 
+ .fileName {
+    color: #337ab7;
+}
