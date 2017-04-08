@@ -489,7 +489,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       nzTour.next()
 
   lc.onLedgerReadComplete = () ->
-    if $rootScope.basicInfo.isNewUser && lc.runTour
+    if $rootScope.basicInfo.isNewUser && lc.runTour && $rootScope.ledgerState
       nzTour.start(tour).then(
         () ->
           lc.runTour = false
