@@ -1,42 +1,51 @@
 
 <!-- add/modify stock group-->
-<section ng-hide="stock.selectedStockItem == null">
+<section class="col-xs-12 col-md-9 col-lg-6 mrT1" ng-hide="stock.selectedStockItem == null" ng-show="stock.addNewGroup == true">
+
+<div class="row">
+				<aside class="form_title">
+		<label>Add Group</label>
+	</aside>
+</div>
+		<aside>
+			<div class="row">
+			<form name="addStockGroup" ng-model="stock.addStockGroup" class="form-theme" novalidate>
 		
-		<aside class="row greyBg bdrB pd1 mrB1">
-			<label>Add/Modify Stock Group</label>
-		</aside>
-
-
-
-		<aside class="col-xs-6">
-			
-			<form name="addStockGroup" ng-model="stock.addStockGroup" novalidate>
-				<label>Add New Group</label>
-				<hr>
-				<div class="form-group">
+				<div class="form-group col-xs-6 pdL0 pdR">
 					<label>Name<span class="required">*</span></label>
 					<input type="text" name="stockName" class="form-control" ng-model="stock.addStockGroup.stockName" required>
 				</div>
 
-				<div class="form-group">
+				<div class="form-group col-xs-6 pdR0 pdL">
 					<label>Unique Name<span class="required">*</span></label>
 					<input type="text" name="stockUnqName" class="form-control" ng-model="stock.addStockGroup.stockUnqName" required>
 				</div>
 
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<label>Parent Stock Group</label>
 					<input type="text" name="parentStockGroupUniqueName" class="form-control" ng-model="stock.addStockGroup.parentStockGroupUniqueName" disabled>
+				</div> -->
+				<div class="form-group">
+				<label class="col-xs-2 pdL0 pdR">Adding to</label>
+					<select>
+						<option>Sub Group1</option>
+						<option>Sub Group2</option>
+						<option>Sub Group3</option>
+					</select>
+				</div>
+				<div class="checkbox">
+				<input type="checkbox" name="parentStockGroup" /><label>Assign as a Parent Group</label>
 				</div>
 
 				<button type="submit" class="btn btn-md btn-default" ng-click="stock.addGroup(stock.addStockGroup)" ng-disabled="stock.addStockGroup.stockName.length < 2 || stock.addStockGroup.stockUnqName.length < 2">Add</button>
 				<button type="submit" class="btn btn-md btn-default mrL1" ng-click="stock.addStockGroup.parentStockGroupUniqueName = '';stock.addStockGroup.stockName = '';stock.addStockGroup.stockUnqName=''">Clear</button>
 			</form>
-
+		</div>
 		</aside>
 
 		<aside class="col-xs-6 bdrL" ng-if="stock.selectedStockGrp.uniqueName">
 			
-			<form name="updateStockGroup" ng-model="stock.updateStockGroup" novalidate>
+			<form name="updateStockGroup" class="form-theme" ng-model="stock.updateStockGroup" novalidate>
 				<label>Modify Group</label>
 				<hr>
 				<div class="form-group">
@@ -72,7 +81,7 @@
 
 <!-- add/modify stock item-->
 
-<section class="col-xs-12 col-md-9 col-lg-6" ng-if="stock.selectedStockGrp.uniqueName || stock.selectedStockItem.uniqueName || stock.selectedStockItem == null" ng-class="{mrT1 : stock.selectedStockItem == null}">
+<section class="col-xs-12 col-md-9 col-lg-6" ng-if="stock.selectedStockGrp.uniqueName || stock.selectedStockItem.uniqueName || stock.selectedStockItem == null || stock.addNewStock == true" ng-hide="stock.addNewGroup == true" ng-class="{mrT1 : stock.selectedStockItem == null}">
 <div class="row">
 				<aside class="form_title">
 		<label>
@@ -170,7 +179,11 @@
 				<div class="form-group col-xs-5 pdR1 pdL">
 					<label>Rate</label>
 					<input type="number" name="stockPurchaseRate" class="form-control" />
-				</div>				
+				</div>	
+				<div class="form-group col-xs-2 pdR1 pdL">
+				<button><i class="glyphicon glyphicon-plus"></i></button>
+				<button><i class="glyphicon glyphicon-remove"></i></button>
+				</div>
 			</div>
 			<div class="row mr0 col-xs-6 pdL pdR0">
 				<div class="form-group col-xs-12 pdL0 pdR">

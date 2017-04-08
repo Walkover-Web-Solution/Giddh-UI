@@ -19,9 +19,9 @@
 	<div class="row"> 
 	<div class="top_row">
 		<div class="pull-right">
-		<span ng-if="stock.selectedStockItem == null">Add</span>
 			<button type="button" class="btn btn-primary mrL1">Custom Stock Unit</button>
-			<button type="button" class="btn btn-primary mrL1">Add Group</button>
+			<button type="button" class="btn btn-primary mrL1" ng-click="stock.Groupadd()">Add Group</button>
+			<button type="button" class="btn btn-primary mrL1" ng-click="stock.AddNewStock()">Add Stock</button>
 			<button class="btn btn-md btn-primary" ng-click="stock.toggleViews()">
 				<span>Go To </span>
 				<span ng-if="stock.showStockReport">Manage Stock</span>
@@ -54,6 +54,11 @@
 
 		<!--operations-->
 		<aside ng-if="stock.selectedStockItem == null" class="stock-operations col-xs-12 pdB2" cover-page ng-include="'/public/webapp/Inventory/partials/stock-operations.html'"></aside>
+		<!--operations-->
+
+
+		<!--operations-->
+		<aside class="stock-operations col-xs-12 pdB2" cover-page ng-include="'/public/webapp/Inventory/partials/Custom-stock-unit.html'"></aside>
 		<!--operations-->
 
 	</section>

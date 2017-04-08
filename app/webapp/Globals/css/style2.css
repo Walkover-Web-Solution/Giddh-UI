@@ -1178,3 +1178,10 @@ footer small a{
 a.btn.btn-xs.btn-link.pull-right {
     padding: 0;
 }
+.form-theme .checkbox input[type=checkbox] {
+    margin-right: 10px;
+    left: 0;
+}
+.form-theme .input[type=checkbox]:after {
+    top: -4px;
+}

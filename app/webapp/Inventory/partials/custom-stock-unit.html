@@ -1,0 +1,73 @@
+<section>
+	
+	<div class="row mrT1">
+				<aside class="form_title">
+		<label>Add Custom Stock Unit</label>
+	</aside>
+</div>
+		<aside>
+			<div class="row">
+			<form name="CustomUnit" ng-model="stock.CustomUnit" class="form-theme" novalidate>
+		
+				<div class="form-group col-xs-3 pdL0 pdR">
+					<label>Name<span class="required">*</span></label>
+					<input type="text" name="unitName" class="form-control" ng-model="" required>
+				</div>
+
+				<div class="form-group col-xs-3 pdR0 pdL">
+					<label>Unit Code<span class="required">*</span></label>
+					<input type="text" name="unitCode" class="form-control" ng-model="" required>
+				</div>
+
+				<div class="form-group col-xs-3 pdR0 pdL">
+					<label>Quantity per Unit<span class="required">*</span></label>
+					<input type="text" name="qtyUnit" class="form-control" ng-model="" required>
+				</div>
+
+				<div class="form-group col-xs-3 pdR0 pdL">
+					<label>Parent Stock<span class="required">*</span></label>
+					<input type="text" name="parentUnit" class="form-control" ng-model="" required>
+				</div>
+
+				<!-- <div class="form-group">
+					<label>Parent Stock Group</label>
+					<input type="text" name="parentStockGroupUniqueName" class="form-control" ng-model="stock.addStockGroup.parentStockGroupUniqueName" disabled>
+				</div> -->
+
+
+				<button type="submit" class="btn btn-md btn-success" ng-click="" ng-disabled="">Save</button>
+				<button type="submit" class="btn btn-md btn-primary mrL1" ng-click="">Clear</button>
+			</form>
+		</div>
+		</aside>
+
+	
+		<div class="clearfix"></div>
+
+</section>
+
+<section>
+	<div class="mrT3">
+		<table>
+			<thead>
+			<tr>
+				<th>Name</th>
+				<th>Unit Code</th>
+				<th>Quantity per Unit</th>
+				<th>Parent Unit</th>
+				<th>Action</th>
+			</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Half kilo</td>
+					<td>Half_kg</td>
+					<td>0.5</td>
+					<td>Kg</td>
+					<td><a href="javasript:void(0);" class="">Edit</a> <a href="javasript:void(0);" class="">Delete</a></td>
+				</tr>
+			</tbody>
+
+		</table>
+	</div>
+</section>

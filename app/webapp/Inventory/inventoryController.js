@@ -7,6 +7,8 @@ angular.module('inventoryController', [])
     	$rootScope.selectedCompany = localStorageService.get('_selectedCompany')
 	}
 
+	stock.addNewGroup = false
+	stock.addStockForm = false
 	stock.showSidebar = true
 	stock.showStockReport = true
 	stock.today = new Date()
@@ -45,6 +47,17 @@ angular.module('inventoryController', [])
 	// 	stock.showSidebar = false
 	// 	return false
 	// }
+	
+	stock.Groupadd = function() {
+		stock.addNewGroup = true;
+		e.stopPropagation();
+	}
+
+	stock.AddNewStock = function() {
+		stock.addNewGroup = false;
+		stock.addNewStock = true;
+		e.stopPropagation();
+	}
 
 	// get flattten stock groups
 	stock.stockGroup = {}
