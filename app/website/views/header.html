@@ -1,0 +1,98 @@
+<!-- data-spy="affix" data-offset-top="100" target="page-top" -->
+<nav role="navigation" class="navbar navbar-custom navbar-fixed-top" ng-class="{'transparent':!magicLinkPage, 'fixedHeader' : fixedHeader}">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button data-target=".navbar-main-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+          <!-- <i class="glyphicon glyphicon-th-list"></i> -->
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+      </button>
+
+      <a href="/" class="navbar-brand" ng-if="!showBlack">
+        <img class="showWhite" src="/public/website/images/new/giddh-logo-white.png" alt="Giddh - online accounting software" ng-if="!magicLinkPage">
+        <img src="/public/website/images/new/giddh-logo.png" alt="Giddh - online accounting software" ng-class="{'showWhite':magicLinkPage, 'showBlack':!magicLinkPage}">
+      </a>
+      <a href="/" class="navbar-brand" ng-if="showBlack">
+        <img src="/public/website/images/new/giddh-logo.png" alt="Giddh - online accounting software">
+      </a>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-right navbar-main-collapse">
+      <ul class="nav navbar-nav">
+        <!-- Hidden li included to remove active class from about link when scrolled up past about section -->
+        <li class="hidden active">
+          <a href="#page-top"></a>
+        </li>
+        <li>
+          <a href="tel:07939593939" ng-class="{white:whiteLinks && !loginPage}">079 39 59 3939</a>
+          <!-- <a href="tel:18003131911" ng-class="{white:whiteLinks && !loginPage}">Toll free # (1800-3131-911)</a> -->
+        </li>
+        <!-- <li class="">
+          <a href="#feature" class="page-scroll">
+            <img src="/public/website/images/new/security-icon.png" alt="Security">
+          </a>
+        </li> -->
+        <li class="">
+            <a href="#contact" class="page-scroll" ng-class="{white:whiteLinks && !loginPage}">Contact Us</a>
+        </li>
+        <li class="">
+          <a href="#feature" class="page-scroll" ng-class="{white:whiteLinks && !loginPage}">Features</a>
+        </li>
+        <li class="">
+          <a href="/pricing" ng-class="{white:whiteLinks && !loginPage}" ng-click="goTo('/pricing')">Pricing</a>
+        </li>
+        <li ng-hide="signupPage">
+          <button class="btn btn-primary navbar-btn mrL2" ng-click="goTo('/signup')">Sign Up</button>
+        </li>
+        <li ng-hide="loginPage" class="login-btn" ng-click="toggleLoginBox($event)">
+          <button id="loginButton" type="button" class="btn btn-secondary navbar-btn" style="margin-left:20px">
+            Login
+          </button>
+            <div id="boxDropdown" class="text-uppercase" ng-if="showLoginBox" ng-controller="loginController" ng-click="$event.stopPropagation()">
+              <button type="login" class="btn sharp btn-block btn-lg btn-login google" ng-click="authenticate('google')" ng-if="!phoneLoginPopup">
+                <img src="/public/website/images/google-plus-icon.png">
+                Login with Google
+              </button>
+              <button type="login" class="btn sharp btn-block btn-lg btn-login twitter" ng-click="authenticate('twitter')" ng-if="!phoneLoginPopup">
+                <img src="/public/website/images/twitter-icon.png">
+                Login with Twitter
+              </button>
+              <button type="login" class="btn sharp btn-block btn-lg btn-login linkedin" ng-click="authenticate('linkedin')" ng-if="!phoneLoginPopup">
+                <img src="/public/website/images/linkedin-icon.png">
+                Login with LinkedIn
+              </button>
+              <button type="login" class="btn sharp btn-block btn-lg btn-login mobile" ng-click="loginWithMobile($event)" ng-if="!phoneLoginPopup">
+                <i class="glyphicon glyphicon-phone"></i>
+                Login with Mobile
+              </button>
+              <button type="login" class="btn sharp btn-block btn-lg btn-default" ng-click="signUpWithEmailModal($event)" ng-if="!phoneLoginPopup">
+                  <i class="glyphicon glyphicon-envelope"></i>
+                  Login with Email
+              </button>
+              <div class="giddh-spinner" style="margin-top:85px" ng-if="phoneLoginPopup && loggingIn"></div>
+              <div class="phone-login" ng-if="phoneLoginPopup && !loggingIn">
+                <input type="text"
+                  name="phone"
+                  class="form-control"
+                  required
+                  ng-model="contact.mobileNumber"
+                  country="contact.countryCode"
+                  default-country="in"
+                  preferred-countries="in"
+                  international-phone-number>
+                <br>
+                <button class="btn btn-secondary mrT10" ng-click="getOtp()" ng-bind="loginBtnTxt"></button>
+                <hr class="mrtb10">
+                <input class="form-control" placeholder="Enter OTP" style="border-radius:0" ng-model="otp" ng-show="showOtp">
+                <button type="login" class="btn btn-secondary mrT10" ng-click="verifyOtp(otp)" ng-show="showOtp">Login</button>
+              </div>
+            </div>
+
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
