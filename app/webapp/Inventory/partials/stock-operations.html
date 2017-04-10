@@ -26,8 +26,8 @@
 					<input type="text" name="parentStockGroupUniqueName" class="form-control" ng-model="stock.addStockGroup.parentStockGroupUniqueName" disabled>
 				</div> -->
 				<div class="form-group">
-				<label class="col-xs-2 pdL0 pdR">Adding to</label>
-					<select>
+				<label">Adding to</label>
+					<select class="form-control">
 						<option>Sub Group1</option>
 						<option>Sub Group2</option>
 						<option>Sub Group3</option>
@@ -282,16 +282,22 @@
 
 </section>
 
-<section class="col-xs-12 col-md-9 col-lg-12">
+
+
+
+
+
+<!-- linked stock -->
+<section class="col-xs-12 col-md-12 col-lg-12 wrap_section mrT1" ng-hide="stock.selectedStockItem == null">
 <div class="row">
 				<aside class="form_title">
 		<label>Stock Name (Made with)</label>
 	</aside>
 	<div class="col-md-8 col-lg-8 col-xs-12">
 		<div class="row">
-			<form name="linkedStock" ng-model="stock.linkedStock" class="form-theme" novalidate>
+			<form name="linkedStock" id="linkedStock" ng-model="stock.linkedStock" class="form-theme" novalidate>
 		
-				<div class="form-group col-xs-3 pdL0 pdR">
+				<div class="form-group col-xs-3 pdL0 pdR mrB">
 					<label>Select Stock<span class="required">*</span></label>
 					<select class="form-control" required>
 						<option>Gram flour</option>
@@ -300,7 +306,7 @@
 					</select>
 				</div>
 
-				<div class="form-group col-xs-3 pdR0 pdL">
+				<div class="form-group col-xs-3 pdR0 pdL mrB">
 					<label>Stock Unit<span class="required">*</span></label>
 					<select class="form-control" required>
 						<option>Kilogram</option>
@@ -310,67 +316,55 @@
 					</select>
 				</div>
 
-				<div class="form-group col-xs-3 pdR0 pdL">
+				<div class="form-group col-xs-3 pdR0 pdL mrB">
 					<label>Quantity per Unit<span class="required">*</span></label>
 					<input type="text" name="qtyUnit" class="form-control" required>
 				</div>
+				<div class="form-group col-xs-3 pdR0 pdL mrB">
+					<label class="col-xs-12">&nbsp;</label>
+					<button type="submit" class="btn btn-sm btn-primary" ng-click="" ng-disabled="">Add</button>
+				</div>
 
-				<button type="submit" class="btn btn-sm btn-primary" ng-click="" ng-disabled="">Add</button>
-			</form>
 
 			<div class="wrapper">
 						<table class="col-xs-12 table_theme">
-			<thead>
-			<tr class="t-h-bg1">
-				<th>Name</th>
-				<th>Unit Code</th>
-				<th>Quantity per Unit</th>
-				<th>Parent Unit</th>
-				<th>Action</th>
-			</tr>
-			</thead>
 			<tbody>
 				<tr>
-					<td>Half kilo</td>
-					<td>Half_kg</td>
-					<td>0.5</td>
-					<td>Kg</td>
+					<td>Gram flour</td>
+					<td>Stock unit</td>
+					<td>Stock quantity</td>
 					<td class="action"><a href="javasript:void(0);" class="edit_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
  Edit</a> <a href="javasript:void(0);" class=""><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></td>
 				</tr>
 
 				<tr>
-					<td>Half kilo</td>
-					<td>Half_kg</td>
-					<td>0.5</td>
-					<td>Kg</td>
+					<td>Gram flour</td>
+					<td>Stock unit</td>
+					<td>Stock quantity</td>
 					<td class="action"><a href="javasript:void(0);" class="edit_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
  Edit</a> <a href="javasript:void(0);" class=""><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></td>
 				</tr>
 
 				<tr>
-					<td>Half kilo</td>
-					<td>Half_kg</td>
-					<td>0.5</td>
-					<td>Kg</td>
+					<td>Gram flour</td>
+					<td>Stock unit</td>
+					<td>Stock quantity</td>
 					<td class="action"><a href="javasript:void(0);" class="edit_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
  Edit</a> <a href="javasript:void(0);" class=""><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></td>
 				</tr>
 
 				<tr>
-					<td>Half kilo</td>
-					<td>Half_kg</td>
-					<td>0.5</td>
-					<td>Kg</td>
+					<td>Gram flour</td>
+					<td>Stock unit</td>
+					<td>Stock quantity</td>
 					<td class="action"><a href="javasript:void(0);" class="edit_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
  Edit</a> <a href="javasript:void(0);" class=""><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></td>
 				</tr>
 
 				<tr>
-					<td>Half kilo</td>
-					<td>Half_kg</td>
-					<td>0.5</td>
-					<td>Kg</td>
+					<td>Gram flour</td>
+					<td>Stock unit</td>
+					<td>Stock quantity</td>
 					<td class="action"><a href="javasript:void(0);" class="edit_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
  Edit</a> <a href="javasript:void(0);" class=""><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></td>
 				</tr>
@@ -378,13 +372,18 @@
 
 		</table>
 			</div>
+			</form>
+
+
 		</div>
 	</div>
 
 	<div class="col-md-4 col-lg-4 col-xs-12">
+		<div class="row">
 		<div class="Stock_info">
-			<h2>Stock Name</h2>
-			<form name="StockOutput" ng-model="stock.StockOutput" class="form-theme" novalidate>
+			<form name="StockOutput" ng-model="stock.StockOutput" class="" novalidate>
+			<div class="col-md-12">
+						<h1 class="mrB2">Stock Name</h1>
 				<div class="form-group col-md-6 col-lg-6 col-xs-6">
 					<label>Quantity</label>
 					<input type="text" class="form-control" name="" placeholder="Quantity" />
@@ -398,8 +397,15 @@
 						<option>Number</option>
 					</select>
 				</div>
+				<div class="form-group col-xs-12">
+					<button type="submit" class="btn btn-sm btn-success" ng-click="" ng-disabled="">Save</button>
+				</div>
+
+			</div>
 			</form>
+		</div>			
 		</div>
+
 	</div>
 </div>
 
