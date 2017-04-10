@@ -6,7 +6,6 @@ uploads/
 .idea/
 giddh-node.iml
 bower_components
-
 bin
 public
 node_modules
