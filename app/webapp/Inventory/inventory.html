@@ -16,7 +16,6 @@
 
 <!-- top row-->
 <div class="stock-bar">
-	<div class="row"> 
 	<div class="top_row">
 		<div class="pull-right">
 			<button type="button" class="btn btn-primary mrL1">Custom Stock Unit</button>
@@ -29,8 +28,6 @@
 			</button>
 		</div>
 	</div>
-	</div>
-
 </div>
 
 <!-- /top row-->
@@ -39,6 +36,9 @@
 	
 	<section class="wrap_content">
 		
+		<!--custom stock unit-->
+		<!-- <aside class="stock-operations col-lg-12 col-md-12 col-xs-12 pdB2" cover-page ng-include="'/public/webapp/Inventory/partials/Custom-stock-unit.html'"></aside> -->
+		<!--custom stock unit-->
 
 		<!--stock report section-->
 		<section class="h100" ng-hide="stock.selectedStockItem == null" ng-if="stock.showStockReport" ng-class="{mrL320: stock.showSidebar && stock.showStockReport}" cover-page>
@@ -57,9 +57,7 @@
 		<!--operations-->
 
 
-		<!--operations-->
-		<aside class="stock-operations col-xs-12 pdB2" cover-page ng-include="'/public/webapp/Inventory/partials/Custom-stock-unit.html'"></aside>
-		<!--operations-->
+
 
 	</section>
 

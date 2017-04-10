@@ -1,32 +1,36 @@
 <section>
-	
-	<div class="row mrT1">
+	<div class="mrT1">
 				<aside class="form_title">
 		<label>Add Custom Stock Unit</label>
 	</aside>
 </div>
 		<aside>
-			<div class="row">
+			<div class="">
 			<form name="CustomUnit" ng-model="stock.CustomUnit" class="form-theme" novalidate>
 		
 				<div class="form-group col-xs-3 pdL0 pdR">
 					<label>Name<span class="required">*</span></label>
-					<input type="text" name="unitName" class="form-control" ng-model="" required>
+					<input type="text" name="unitName" class="form-control" required>
 				</div>
 
 				<div class="form-group col-xs-3 pdR0 pdL">
 					<label>Unit Code<span class="required">*</span></label>
-					<input type="text" name="unitCode" class="form-control" ng-model="" required>
+					<input type="text" name="unitCode" class="form-control" required>
 				</div>
 
 				<div class="form-group col-xs-3 pdR0 pdL">
 					<label>Quantity per Unit<span class="required">*</span></label>
-					<input type="text" name="qtyUnit" class="form-control" ng-model="" required>
+					<input type="text" name="qtyUnit" class="form-control" required>
 				</div>
 
 				<div class="form-group col-xs-3 pdR0 pdL">
 					<label>Parent Stock<span class="required">*</span></label>
-					<input type="text" name="parentUnit" class="form-control" ng-model="" required>
+					<select class="form-control" required>
+						<option>Kilogram</option>
+						<option>Litre</option>
+						<option>Hour</option>
+						<option>Number</option>
+					</select>
 				</div>
 
 				<!-- <div class="form-group">
@@ -35,8 +39,8 @@
 				</div> -->
 
 
-				<button type="submit" class="btn btn-md btn-success" ng-click="" ng-disabled="">Save</button>
-				<button type="submit" class="btn btn-md btn-primary mrL1" ng-click="">Clear</button>
+				<button type="submit" class="btn btn-sm btn-success" ng-click="" ng-disabled="">Save</button>
+				<button type="submit" class="btn btn-sm btn-primary" ng-click="">Clear</button>
 			</form>
 		</div>
 		</aside>
@@ -47,10 +51,10 @@
 </section>
 
 <section>
-	<div class="mrT3">
-		<table>
+	<div class="mrT2">
+		<table class="col-xs-12 table_theme">
 			<thead>
-			<tr>
+			<tr class="t-h-bg1">
 				<th>Name</th>
 				<th>Unit Code</th>
 				<th>Quantity per Unit</th>
@@ -64,7 +68,44 @@
 					<td>Half_kg</td>
 					<td>0.5</td>
 					<td>Kg</td>
-					<td><a href="javasript:void(0);" class="">Edit</a> <a href="javasript:void(0);" class="">Delete</a></td>
+					<td class="action"><a href="javasript:void(0);" class="edit_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
+ Edit</a> <a href="javasript:void(0);" class=""><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></td>
+				</tr>
+
+				<tr>
+					<td>Half kilo</td>
+					<td>Half_kg</td>
+					<td>0.5</td>
+					<td>Kg</td>
+					<td class="action"><a href="javasript:void(0);" class="edit_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
+ Edit</a> <a href="javasript:void(0);" class=""><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></td>
+				</tr>
+
+				<tr>
+					<td>Half kilo</td>
+					<td>Half_kg</td>
+					<td>0.5</td>
+					<td>Kg</td>
+					<td class="action"><a href="javasript:void(0);" class="edit_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
+ Edit</a> <a href="javasript:void(0);" class=""><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></td>
+				</tr>
+
+				<tr>
+					<td>Half kilo</td>
+					<td>Half_kg</td>
+					<td>0.5</td>
+					<td>Kg</td>
+					<td class="action"><a href="javasript:void(0);" class="edit_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
+ Edit</a> <a href="javasript:void(0);" class=""><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></td>
+				</tr>
+
+				<tr>
+					<td>Half kilo</td>
+					<td>Half_kg</td>
+					<td>0.5</td>
+					<td>Kg</td>
+					<td class="action"><a href="javasript:void(0);" class="edit_btn"><i class="fa fa-pencil" aria-hidden="true"></i>
+ Edit</a> <a href="javasript:void(0);" class=""><i class="fa fa-trash-o" aria-hidden="true"></i> Delete</a></td>
 				</tr>
 			</tbody>
 
