@@ -14,4 +14,3 @@ target
 *.sublime-workspace
 npm-debug.log
 nbproject
-app/website
