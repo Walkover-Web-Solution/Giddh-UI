@@ -1132,16 +1132,13 @@ footer small a{
     right: 8px;
 }
 .upload_img {
-<<<<<<< HEAD
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
     position: relative;
     padding-right:25px;
     margin-top:36px;
-=======
-    position: relative;
->>>>>>> 7ffb9b42607821bfacfd0d2eeb2fe6c25c7d8268
+
 }
 .fileName {
     color: #337ab7;
