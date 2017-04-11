@@ -811,7 +811,7 @@ input[type="checkbox"]:after {
 }
 .checkbox input[type=checkbox], .checkbox-inline input[type=checkbox], .radio input[type=radio], .radio-inline input[type=radio] {
     position: relative;
-    margin-right: 22px;
+    margin-right: 10px;
     margin-left: 0;
 }
 .checkbox label, .radio label {
@@ -1047,18 +1047,18 @@ input[type=number] {
     border: 1px solid #f7de8a;
     padding: 6px;
     border-radius: 2px;
+    float:right;
+    margin-top:20px;
 }
 .upload_div input[type="file"] {
     display: none;
 }
 .upload_div {
-/*    width: 100%;
-    margin: 10px 0;*/
-    float: left;
+    float: right;
+    color: #337ab7;
+    text-decoration: underline;
 }
-/*.upload_div i {
-    margin-right: 3px;
-}*/
+
 
 .fix_date {
     font-size: 14px;
@@ -1112,4 +1112,41 @@ footer small a{
 
 .daterangepicker .daterangepicker_input{
     display: none !important;
+}
+
+.checkbox-inline input[type=checkbox], .checkbox input[type=checkbox] {
+    left: 0;
+}
+.today.weekend.off.active.end-date.in-range.available {
+    background: #fff !important;
+    color: #999;
+}
+
+.dlt_btn {
+    border: 0;
+    background: #ddd;
+    font-size: 12px;
+    padding: 4px 6px;
+    position: absolute;
+    top: 0px;
+    right: 8px;
+}
+.upload_img {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    padding-right:25px;
+    margin-top:36px;
+
+}
+.fileName {
+    color: #337ab7;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    float: left;
+    width: 100%;
 }

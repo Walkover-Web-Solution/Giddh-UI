@@ -400,7 +400,7 @@
                                       </span>
                                       <input type="number"
                                         class="form-control text-right pdR3"
-                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated}" 
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated || value.attachedFile.length > 0}" 
                                         ng-model="txn.amount"
                                         ng-click="lc.slctxn(value, txn, $event)"
                                         ng-keyup="lc.triggerPanelFocus($event)"
@@ -422,7 +422,7 @@
                                         uib-tooltip="Download file : {{value.attachedFileName}}" 
                                         tooltip-placement="top"> 
                                         <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
-                                      </span>    -->                                  
+                                      </span>  -->                                    
                                     </td>
                                   </tr>
                                 </tbody>
@@ -632,7 +632,7 @@
                                       </span>
                                       <input type="number"
                                         class="form-control text-right pdR3"
-                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated}" 
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated || value.attachedFile.length > 0}" 
                                         ng-model="txn.amount"
                                         ng-click="lc.slctxn(value, txn, $event)"
                                         ng-keyup="lc.triggerPanelFocus($event)"
@@ -654,7 +654,7 @@
                                         uib-tooltip="Download file : {{value.attachedFileName}}" 
                                         tooltip-placement="top"> 
                                         <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
-                                      </span>    -->                                   
+                                      </span>   -->                                    
                                     </td>
                                   </tr>
                                 </tbody>
@@ -750,6 +750,33 @@
             </div>
             <hr  class="width100">
           </div>
+<!--           <div class="row">
+            <div class="col-xs-7 form-group">
+            <div class="form-group col-xs-5 pdL0 pdR">
+            <label>Cheque Number</label>
+              <input type="number" placeholder="Cheque Number" name="chequeNumber" class="form-control" />
+            </div>
+            <div class="form-group col-xs-5 pdL">
+            <label>Cheque Date</label>
+              <input type="text" name="chequeDate" placeholder="Cheque Date" class="form-control" />
+            </div>
+            </div>
+            <div class="col-xs-5 pull-right" ng-if="!lc.selectedLedger.invoiceGenerated">
+                            
+              <div class="upload_div" ng-if="lc.selectedLedger.attachedFileName.length == 0">
+                <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
+                <label for="invoiceFile">Upload Image</label>
+              </div>
+              
+              <div class="upload_img"  ng-if="lc.selectedLedger.attachedFileName.length > 0">
+                <span class="fileName">{{lc.selectedLedger.attachedFileName}}</span>
+                <button class="dlt_btn" ng-if="lc.selectedLedger.attachedFile.length > 0" ng-click="lc.deleteAttachedFile()">
+                  <span class="glyphicon glyphicon-remove"></span>
+                </button>
+              </div>
+              
+            </div>
+          </div> -->
           <div class="row">
             <div ng-class="{'col-xs-4': !popover.draggable, 'col-xs-2': popover.draggable}">
               <div class="form-group">
@@ -797,32 +824,9 @@
               </button>
               
               <!--file upload-->
-<!--               <div class="upload_div" ng-if="lc.selectedLedger.attachedFileName.length == 0">
-                <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
-                <label for="invoiceFile" class="upload-btn"><i class="glyphicon glyphicon-upload" ></i>Upload Image</label>
-              </div> -->
-             <!--  <button class="btn btn-md btn-default" ng-click="lc.getInvoiceFile()">Upload</button> -->
-<!--               <button class="btn btn-md btn-danger" ng-if="lc.selectedLedger.attachedFile.length > 0" ng-click="lc.deleteAttachedFile()">Delete</button> -->
+
               <!--file upload-->
-
-<!--               <button ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') && ((lc.selectedLedger.transactions[0].particular.uniqueName != '' && lc.selectedLedger.transactions[0].particular.uniqueName != undefined) || (lc.selectedLedger.transactions[1].particular.uniqueName != '' && lc.selectedLedger.transactions[1].particular.uniqueName != undefined)) && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default mrL1" ng-click="lc.resetLedger()">Reset</button>
-              <i ng-if="(lc.selectedLedger.uniqueName != undefined && lc.selectedLedger.uniqueName != '') && lc.selectedLedger.invoiceGenerated == false && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right glyphicon glyphicon-trash mrR1 pos-abs" uib-tooltip="Delete" tooltip-placement="left" style="top:9px;right:1px;color:#d35f29;" ng-click="lc.deleteEntryConfirm(lc.selectedLedger);lc.deleteMultipleTransactions()" uib-tooltip=""></i>
-              <button class="btn btn-sm close-panel pull-right pos-rel" ng-click="lc.closePanel()" ng-if="popover.draggable">Close</button>
-              <a class="pull-right anShrt" href="javascript:void(0)" ng-click="lc.addNewAccount()">New Account</a>
-            </div> -->
-
-
-<!--             <div class="row" style="margin:0">
-              <label ng-if="lc.selectedLedger.attachedFileName.length > 0">
-                  File: {{lc.selectedLedger.attachedFileName}}  
-              </label> 
-              
-            </div>
- -->
             
-            <!--file upload-->
-            <!-- <input type="file" ng-model="lc.invoiceFile" name="invoiceFile" id="invoiceFile" ng-change="lc.getInvoiceFile()"> -->
-            <!--file upload-->
 
             <button ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') && ((lc.selectedLedger.transactions[0].particular.uniqueName != '' && lc.selectedLedger.transactions[0].particular.uniqueName != undefined) || (lc.selectedLedger.transactions[1].particular.uniqueName != '' && lc.selectedLedger.transactions[1].particular.uniqueName != undefined)) && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default mrL1" ng-click="lc.resetLedger()">Reset</button>
             <i ng-if="(lc.selectedLedger.uniqueName != undefined && lc.selectedLedger.uniqueName != '') && lc.selectedLedger.invoiceGenerated == false && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right glyphicon glyphicon-trash mrR1 pos-abs" uib-tooltip="Delete" tooltip-placement="left" style="top:9px;right:1px;color:#d35f29;" ng-click="lc.deleteEntryConfirm(lc.selectedLedger);lc.deleteMultipleTransactions()" uib-tooltip=""></i>

@@ -158,18 +158,18 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
     }
   )
-  .state('company.content.manage',
-    url: '/manage'
-    views:{
-      # 'accountsList':{
-      #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
-      #   #template: "<div>manage page</div>"
-      # }
-      'rightPanel':{
-        templateUrl: appendThis+'/public/webapp/ManageCompany/manageCompany.html'
-      }
-    }
-  )
+  # .state('company.content.manage',
+  #   url: '/manage'
+  #   views:{
+  #     # 'accountsList':{
+  #     #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
+  #     #   #template: "<div>manage page</div>"
+  #     # }
+  #     'rightPanel':{
+  #       templateUrl: appendThis+'/public/webapp/ManageCompany/manageCompany.html'
+  #     }
+  #   }
+  # )
   .state('company.content.user',
     url: '/user'
     # templateUrl: '/public/webapp/views/userDetails.html'
