@@ -404,6 +404,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   #Get company list success
   $scope.getCompanyListSuccess = (res) ->    
     $scope.companyList = _.sortBy(res.body, 'shared')
+    $scope.companyList = $scope.companyList.reverse()
     $rootScope.CompanyList = $scope.companyList
     if _.isEmpty($scope.companyList)
       #When no company is there
