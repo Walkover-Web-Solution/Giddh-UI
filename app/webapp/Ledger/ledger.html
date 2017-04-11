@@ -400,7 +400,7 @@
                                       </span>
                                       <input type="number"
                                         class="form-control text-right pdR3"
-                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated}" 
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated || value.attachedFile.length > 0}" 
                                         ng-model="txn.amount"
                                         ng-click="lc.slctxn(value, txn, $event)"
                                         ng-keyup="lc.triggerPanelFocus($event)"
@@ -414,7 +414,7 @@
                                         tooltip-placement="top"> 
                                         <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
                                       </span>
-<!--                                       <span 
+                                      <span 
                                         class="download-invoice-ledger" 
                                         ng-if="value.attachedFile.length > 0" 
                                         ng-click="lc.downloadAttachedFile(value.attachedFile, $event)" 
@@ -422,7 +422,7 @@
                                         uib-tooltip="Download file : {{value.attachedFileName}}" 
                                         tooltip-placement="top"> 
                                         <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
-                                      </span>    -->                                  
+                                      </span>                                     
                                     </td>
                                   </tr>
                                 </tbody>
@@ -632,7 +632,7 @@
                                       </span>
                                       <input type="number"
                                         class="form-control text-right pdR3"
-                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated}" 
+                                        ng-class="{'width50':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pull-left':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'pdl1imp':lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null, 'Inpt_dwn':value.invoiceGenerated || value.attachedFile.length > 0}" 
                                         ng-model="txn.amount"
                                         ng-click="lc.slctxn(value, txn, $event)"
                                         ng-keyup="lc.triggerPanelFocus($event)"
@@ -646,7 +646,7 @@
                                         tooltip-placement="top"> 
                                         <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
                                       </span>
-<!--                                       <span 
+                                      <span 
                                         class="download-invoice-ledger" 
                                         ng-if="value.attachedFile.length > 0" 
                                         ng-click="lc.downloadAttachedFile(value.attachedFile, $event)" 
@@ -654,7 +654,7 @@
                                         uib-tooltip="Download file : {{value.attachedFileName}}" 
                                         tooltip-placement="top"> 
                                         <i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
-                                      </span>    -->                                   
+                                      </span>                                      
                                     </td>
                                   </tr>
                                 </tbody>
@@ -751,7 +751,7 @@
             <hr  class="width100">
           </div>
           <div class="row">
-            <div class="col-xs-8 form-group">
+            <div class="col-xs-7 form-group">
             <div class="form-group col-xs-5 pdL0 pdR">
             <label>Cheque Number</label>
               <input type="number" placeholder="Cheque Number" name="chequeNumber" class="form-control" />
@@ -761,15 +761,18 @@
               <input type="text" name="chequeDate" placeholder="Cheque Date" class="form-control" />
             </div>
             </div>
-            <div class="col-xs-4 pull-right">
+            <div class="col-xs-5 pull-right" ng-if="!lc.selectedLedger.invoiceGenerated">
                             <!--file upload-->
               <div class="upload_div" ng-if="lc.selectedLedger.attachedFileName.length == 0">
                 <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
                 <label for="invoiceFile" class="upload-btn"><i class="glyphicon glyphicon-upload" ></i>Upload Image</label>
               </div>
-              <!-- <button class="btn btn-md btn-default" ng-click="lc.getInvoiceFile()">Upload</button> -->
-              <div class="upload_img"><span class="fileName">{{lc.selectedLedger.attachedFileName}}</span>
-              <button class="dlt_btn" ng-if="lc.selectedLedger.attachedFile.length > 0" ng-click="lc.deleteAttachedFile()"><span class="glyphicon glyphicon-remove"></span></button>
+              
+              <div class="upload_img"  ng-if="lc.selectedLedger.attachedFileName.length > 0">
+                <span class="fileName">{{lc.selectedLedger.attachedFileName}}</span>
+                <button class="dlt_btn" ng-if="lc.selectedLedger.attachedFile.length > 0" ng-click="lc.deleteAttachedFile()">
+                  <span class="glyphicon glyphicon-remove"></span>
+                </button>
               </div>
               <!--file upload-->
             </div>

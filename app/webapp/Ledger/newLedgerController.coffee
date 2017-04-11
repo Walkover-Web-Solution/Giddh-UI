@@ -489,7 +489,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       nzTour.next()
 
   lc.onLedgerReadComplete = () ->
-    if $rootScope.basicInfo.isNewUser && lc.runTour
+    if $rootScope.basicInfo.isNewUser && lc.runTour && $rootScope.ledgerState
       nzTour.start(tour).then(
         () ->
           lc.runTour = false
@@ -1942,6 +1942,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
     @success = (res) ->
       lc.selectedLedger.attachedFile = res.data.body.uniqueName
+      lc.selectedLedger.attachedFileName = res.data.body.name
       toastr.success('file uploaded successfully')
 
     @failure = (res) ->

@@ -1047,6 +1047,8 @@ input[type=number] {
     border: 1px solid #f7de8a;
     padding: 6px;
     border-radius: 2px;
+    float:right;
+    margin-top:20px;
 }
 .upload_div input[type="file"] {
     display: none;
@@ -1132,10 +1134,12 @@ footer small a{
     right: 8px;
 }
 .upload_img {
-text-overflow: ellipsis;
-white-space: nowrap;
-overflow: hidden;
-position: relative;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    padding-right:25px;
+    margin-top:36px;
 }
  
  .fileName {
