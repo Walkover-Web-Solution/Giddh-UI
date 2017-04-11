@@ -1008,6 +1008,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         shortCode:"sal"
       }
       tax: []
+      taxList : []
       voucherNo:''
     }
 
@@ -1688,6 +1689,25 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 #       lc.countTotalTransactions(ledgers)
 # #      lc.showLoader = true
 #     ), 1000
+
+  lc.onAccountSelect = (account) ->
+    if account.applicableTaxes.length > 0
+      _.each lc.taxList, (tax) ->
+        taxInAccount = _.findWhere(account.applicableTaxes, {uniqueName: tax.uniqueName})
+        if taxInAccount
+          lc.selectedLedger.taxList.push(tax)
+
+  lc.showAllTaxes = () ->
+    _.each lc.taxlist, (tax) ->
+      taxInAccount = _.findWhere(lc.selectedLedger.taxList, {uniqueName: tax.uniqueName})
+      if !taxInAccount
+        lc.selectedLedger.taxList.push(tax)
+
+  lc.showOnlyApplicableTaxes = (txn) ->
+    _.each lc.taxlist, (tax, i) ->
+      taxInAccount = _.findWhere(txn.particular.applicableTaxes, {uniqueName: tax.uniqueName})
+      if !taxInAccount
+        lc.selectedLedger.taxList.splice(i, 1)
 
   lc.countTotalTransactions = (ledgers) ->
     # lc.cNonemptyTxn = 0

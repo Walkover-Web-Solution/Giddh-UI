@@ -381,7 +381,8 @@
                                       ng-click="lc.slctxn(value, txn, $event)"
                                       is-open="txn.isOpen"
                                       trigger-focus
-                                      txn="txn">
+                                      txn="txn"
+                                      typeahead-on-select ="lc.onAccountSelect($item, $model, $label, $event)">
                                     </td>
                                     <td class="col-xs-6 pos-rel">
                                       <input type="number"
@@ -739,15 +740,42 @@
                   style="max-width:64px;" ignore-mouse-wheel>
               </label>
             </div>
-            <div class="mrT1 clearfix" style="clear:both" ng-if="lc.taxList.length > 0">
+            
+            <!--tax list-->
+<!--             <div class="mrT1 clearfix" style="clear:both" ng-if="lc.taxList.length > 0">
               <hr class="width100">
 
               <ul class="list-inline pull-left tax-list">
                 <li class="tax" ng-repeat="tax in lc.taxList">
-                  <div class="checkbox"><label><input type="checkbox" ng-model="tax.isChecked">{{tax.name}}<span></span></label></div>
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" ng-model="tax.isChecked">
+                      {{tax.name}}
+                    </label>
+                  </div>
+                </li>
+              </ul>
+            </div> -->
+            <div class="mrT1 clearfix" style="clear:both" ng-if="lc.selectedLedger.taxList.length > 0">
+              <hr class="width100">
+
+              <ul class="list-inline pull-left tax-list">
+                <li class="tax" ng-repeat="tax in lc.selectedLedger.taxList">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" ng-model="tax.isChecked">
+                      {{tax.name}}
+                    </label>
+                  </div>
+                </li>
+                <li>
+                  <a href="javascript:void(0)" ng-click="lc.showAllTaxes()" ng-if="lc.selectedLedger.taxList.length < lc.taxList.length">Show All Taxes</a>
+                  <a href="javascript:void(0)" ng-click="lc.showOnlyApplicableTaxes(lc.selectedTxn)" ng-if="lc.selectedLedger.taxList.length > lc.taxList.length">Show Only Applicable Taxes</a>
                 </li>
               </ul>
             </div>
+            <!--/tax-list-->
+
             <hr  class="width100">
           </div>
           <div class="row">
