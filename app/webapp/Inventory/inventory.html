@@ -37,11 +37,11 @@
 	<section class="wrap_content">
 		
 		<!--custom stock unit-->
-		<aside class="stock-operations col-lg-12 col-md-12 col-xs-12 pdB2" cover-page ng-include="'/public/webapp/Inventory/partials/Custom-stock-unit.html'"></aside>
+		<aside ng-hide="stock.selectedStockItem == null" class="stock-operations col-lg-12 col-md-12 col-xs-12 pdB2" cover-page ng-include="'/public/webapp/Inventory/partials/Custom-stock-unit.html'"></aside>
 		<!--custom stock unit-->
 
 		<!--stock report section-->
-		<!-- ng-hide="stock.selectedStockItem == null" -->
+		<!-- ng-hide="stock.selectedStockItem == null"  -->
 		<section class="h100" ng-if="stock.showStockReport" cover-page>
 			<div class="h100" ng-include="'/public/webapp/Inventory/partials/stock-report.html'"></div>
 		</section>

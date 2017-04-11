@@ -1,7 +1,7 @@
 
 <ul class="list-unstyled stock-grp-list mrT1">
-	<li class="pdL" ng-repeat="grp in stock.stockGroup.list">
-		<a href="javascript:void(0)" ng-click="grp.showStocks = !grp.showStocks" class="isParent">{{grp.name}}</a>
+	<li class="pdL isParent" ng-repeat="grp in stock.stockGroup.list">
+		<a href="javascript:void(0)" ng-click="grp.showStocks = !grp.showStocks" class="">{{grp.name}}</a>
 		<ul class="list-unstyled" ng-if="grp.stocks.length > 0 && grp.showStocks">
 			<li class="pdL" ng-repeat="stk in grp.stocks">
 				<a href="javascript:void(0)" ng-click="stock.getStockReport(stk, grp)">{{stk.name}}</a>
