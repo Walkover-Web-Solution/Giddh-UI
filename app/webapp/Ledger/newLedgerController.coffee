@@ -1972,7 +1972,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.deleteAttachedFile = () ->
     lc.selectedLedger.attachedFile = ''
-  #   lc.selectedLedger.attachedFileName = ''
+    lc.selectedLedger.attachedFileName = ''
 
   lc.doingEntry = false
   lc.lastSelectedLedger = {}
