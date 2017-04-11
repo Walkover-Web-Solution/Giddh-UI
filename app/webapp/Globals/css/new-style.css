@@ -3314,11 +3314,9 @@ ul.pills li {
 }
 
 .reconnectButton {
-    position: relative;
+position: absolute;
     top: 40%;
-    left: 36%;
-    width: 85px;
-    margin-top: 5px;
+    left: 28%;
 }
 
 /* company list dropdown styles */
