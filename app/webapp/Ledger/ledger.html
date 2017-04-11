@@ -765,7 +765,7 @@
                             <!--file upload-->
               <div class="upload_div" ng-if="lc.selectedLedger.attachedFileName.length == 0">
                 <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
-                <label for="invoiceFile" class="upload-btn"><i class="glyphicon glyphicon-upload" ></i>Upload Image</label>
+                <label for="invoiceFile">Upload Image</label>
               </div>
               
               <div class="upload_img"  ng-if="lc.selectedLedger.attachedFileName.length > 0">
