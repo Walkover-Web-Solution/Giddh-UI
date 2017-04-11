@@ -59,6 +59,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         content: 'Welcome To the Giddh Ledger. This is the page where you can add, modify or delete all your ledger Entries. Let us help you with getting started, please click next.'
         before: (direction, step) ->
           lc.lastTourStep = step
+          tour.config.showNext = true
           d = $q.defer();
           d.resolve()
           return d.promise
@@ -68,6 +69,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         content: 'This is the DEBIT side of ledger, All the transactions where you RECIEVE something go here.'
         before: (direction, step) ->
           lc.lastTourStep = step
+          tour.config.showNext = true
           d = $q.defer();
           d.resolve()
           return d.promise
@@ -77,6 +79,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         content: 'This is the CREDIT side of ledger, All the transactions where you GIVE something go here.'
         before: (direction, step) ->
           lc.lastTourStep = step
+          tour.config.showNext = true
           d = $q.defer();
           d.resolve()
           return d.promise
@@ -86,6 +89,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         content: 'This is where you can start creating entries, there will always be a blank row on both sides of the ledger for you to add new entries.'
         before: (direction, step) ->
           lc.lastTourStep = step
+          tour.config.showNext = true
           d = $q.defer();
           d.resolve()
           return d.promise
@@ -95,6 +99,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         content: "This is the input box for the account from which you are recieving something. "
         before: (direction, step) ->
           lc.lastTourStep = step
+          tour.config.showNext = true
           d = $q.defer();
           d.resolve()
           return d.promise
@@ -104,6 +109,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         content: "This is the date for which you want to create the entry, it will always show the current date, however, you can change it to a previous date if you want to create a back-date entry."
         before: (direction, step) ->
           lc.lastTourStep = step
+          tour.config.showNext = true
           d = $q.defer();
           d.resolve()
           return d.promise
@@ -113,6 +119,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         content: "This is the input box for the Amount for your entry."
         before: (direction, step) ->
           lc.lastTourStep = step
+          tour.config.showNext = true
           d = $q.defer();
           d.resolve()
           return d.promise
@@ -123,7 +130,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         before: (direction, step) ->
           lc.lastTourStep = step
           tour.config.showNext = false
+          if !_.isEmpty(lc.selectedLedger.transactions[0].particular) && lc.selectedLedger.transactions[0].particular.uniqueName == 'sales'
+            tour.config.showNext = true
+          else
+            tour.config.showNext = false
           lc.pausedBeforeAccountSelection = true
+          # lc.disableInputsWhileTour = false
           d = $q.defer();
           d.resolve()
           return d.promise
@@ -133,6 +145,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         content: "Great! Now enter the transaction amount for your entry."
         before: (direction, step) ->
           lc.lastTourStep = step
+          tour.config.showNext = true
           d = $q.defer();
           d.resolve()
           return d.promise
@@ -162,7 +175,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         content: "Let us create an entry for purchase account. In the input box for account, select the 'purchases' account."
         before: (direction, step) ->
           lc.lastTourStep = step
-          tour.config.showNext = false
+          if !_.isEmpty(lc.selectedLedger.transactions[1].particular) && lc.selectedLedger.transactions[1].particular.uniqueName == 'purchases'
+            tour.config.showNext = false
           lc.pausedBeforeAccountSelection = true
           d = $q.defer();
           d.resolve()
@@ -490,9 +504,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   lc.onLedgerReadComplete = () ->
     if $rootScope.basicInfo.isNewUser && lc.runTour && $rootScope.ledgerState
+      # lc.disableInputsWhileTour = true
       nzTour.start(tour).then(
         () ->
           lc.runTour = false
+          # lc.disableInputsWhileTour = false
+          console.log 'finished'
       )
     return
 
@@ -2747,16 +2764,21 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   #     lc.showLoader = true
 
   $rootScope.$on 'run-tour', () ->
+    # lc.disableInputsWhileTour = true
     if lc.lastTourStep > 0
       nzTour.start(tour).then(
         () ->
           lc.runTour = false
+          # lc.disableInputsWhileTour = false
+          console.log 'finished'
       )
       nzTour.gotoStep(lc.lastTourStep+1)
     else
       nzTour.start(tour).then(
         () ->
           lc.runTour = false
+          # lc.disableInputsWhileTour = false
+          # console.log 'finished'
       )
 
   $scope.$watch 'popover.draggable', (newVal, oldVal) ->
