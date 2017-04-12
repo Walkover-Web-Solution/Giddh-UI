@@ -131,6 +131,7 @@ var websiteRoutes = require('./public/routes/website/main');
 
 app.use('/auth', login);
 app.use('/contact', contact);
+app.use('/api', websiteRoutes);
 app.use('/', websiteRoutes);
 
 global.mStorage = multer.diskStorage({
