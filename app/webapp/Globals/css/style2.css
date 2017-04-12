@@ -1026,7 +1026,7 @@ input[type=number] {
 }
 .fixedDate {
     float: left;
-    margin: 10px;
+    padding: 16px 27px;
 }
 .fixedDate input {
     min-width: 186px;
@@ -1061,9 +1061,6 @@ input[type=number] {
 
 
 .fix_date {
-    font-size: 14px;
-    position: relative;
-    top: 16px;
     cursor: pointer;
 }
 
@@ -1158,4 +1155,7 @@ footer small a{
     position: relative;
     float: left;
     width: 100%;
+}
+.fixedDate .form-control {
+    height: 22px;
 }
