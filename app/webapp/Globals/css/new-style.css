@@ -2611,10 +2611,16 @@ body.unresponsive {
     border-right: 0
 }
 
-@media only screen and (max-width: 960px) {
+@media only screen and (max-width: 1068px) {
     body.unresponsive {
-        width: 960px;
+        width: 1068px;
         overflow: auto;
+    }
+    .sidebar {
+        width: 280px;
+    }
+    .wrap_content {
+        margin-left: 280px;
     }
 
     nav > .navbar-nav > li {

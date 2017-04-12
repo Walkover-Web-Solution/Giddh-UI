@@ -1234,6 +1234,8 @@ padding: 0;
 #linkedStock {
     width: 100%;
     float: left;
+    border: 0;
+    border-right: 1px solid #e5e5e5;
 }
 #linkedStock .table_theme {
     margin-top: 25px;
@@ -1288,3 +1290,71 @@ padding: 0;
 .stock-grp-list >li:hover a {
     color: #fff;
 }*/
+.linkstock {
+    height: 200px;
+    overflow-y: scroll;
+    width: 100%;
+}
+
+.fb__1-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.stock_info {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+}
+.stock_wrap {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 0;
+    left: 0;
+}
+
+.total-ico {
+    bottom: 0;
+    position: absolute;
+    font-size: 5em;
+    left: -45px;
+    top: -14px;
+}
+
+@media only screen and (max-width: 1130px) {
+/*    .stock_info {
+        position: relative;
+        top: 0;
+        transform: none;
+        right: 0;
+        left: 0;
+    }
+    .stock_wrap {
+        position: relative;
+        top: 0;
+        transform: none;
+        right: 0;
+        left: 0;
+    }*/
+    #accountSearch {
+        width: 150px !important;
+    }
+    .accounts-side-bar {
+        width: 272px;
+    }
+    #user-dropdown {
+        width: 46px;
+    }
+}
+@media only screen and (max-width: 1030px) {
+    .header-container {
+        position: relative;
+    }
+    body.unresponsive {
+        padding-top: 0;
+    }
+}
+
