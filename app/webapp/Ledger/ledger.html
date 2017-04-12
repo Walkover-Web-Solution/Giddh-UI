@@ -763,14 +763,14 @@
                 <li class="tax" ng-repeat="tax in lc.selectedLedger.taxList">
                   <div class="checkbox">
                     <label>
-                      <input type="checkbox" ng-model="tax.isChecked">
+                      <input type="checkbox" ng-model="tax.isChecked" ng-change="lc.checkTaxForApplicableTaxes()">
                       {{tax.name}}
                     </label>
                   </div>
                 </li>
                 <li>
                   <a href="javascript:void(0)" ng-click="lc.showAllTaxes()" ng-if="lc.selectedLedger.taxList.length < lc.taxList.length">Show All Taxes</a>
-                  <a href="javascript:void(0)" ng-click="lc.showOnlyApplicableTaxes(lc.selectedTxn)" ng-if="lc.selectedLedger.taxList.length > lc.taxList.length">Show Only Applicable Taxes</a>
+                  <a href="javascript:void(0)" ng-click="lc.showOnlyApplicableTaxes(lc.selectedTxn)" ng-if="lc.selectedLedger.taxList.length >= lc.taxList.length && lc.selectedLedger.isBlankLedger">Show Only Applicable Taxes</a>
                 </li>
               </ul>
             </div>
