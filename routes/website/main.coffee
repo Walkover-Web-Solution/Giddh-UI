@@ -277,7 +277,7 @@ router.post '/global-user', (req, res) ->
   hitViaSocket(data)
   res.status(200).send('success')
 
-router.get '/user-location', (req, res) ->
+router.get '/api/user-location', (req, res) ->
   ip = requestIp.getClientIp(req)
   geo = settings.geoIp.lookup(ip)
   if geo != null
