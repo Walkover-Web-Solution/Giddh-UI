@@ -783,7 +783,7 @@
 
             <hr  class="width100">
           </div>
-          <div class="row">
+          <div class="row mrB1">
 <!--             <div class="col-xs-7 form-group">
               <div class="form-group col-xs-5 pdL0 pdR">
                 <label>Cheque Number</label>
@@ -796,17 +796,18 @@
             </div> -->
             <div class="col-xs-12 pull-right" ng-if="!lc.selectedLedger.invoiceGenerated">
                             <!--file upload-->
-            <div class="upload_div" style="padding:5px;" ng-if="lc.selectedLedger.attachedFileName.length == 0">
+            <div class="upload_div blue" style="padding:5px;" ng-if="lc.selectedLedger.attachedFileName.length == 0">
                 <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
                 <label for="invoiceFile">Upload Image</label>
               </div>
               
               <div class="upload_img" style="padding:5px;margin-top:0;"  ng-if="lc.selectedLedger.attachedFileName.length > 0">
-                <span class="fileName" style="text-align:right;padding-right:35px;">{{lc.selectedLedger.attachedFileName}}</span>
+                <span class="fileName" style="text-align:right;padding-right:0px;">{{lc.selectedLedger.attachedFileName}}</span>
                 <button class="dlt_btn" ng-if="lc.selectedLedger.attachedFile.length > 0" ng-click="lc.deleteAttachedFile()">
                   <span class="glyphicon glyphicon-remove"></span>
                 </button>
               </div>
+              <hr class="width100">
             </div>
           </div>  
           <div class="row">
