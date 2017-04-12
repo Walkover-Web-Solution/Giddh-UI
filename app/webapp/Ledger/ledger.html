@@ -742,7 +742,7 @@
             </div>
             
             <!--tax list-->
-            <div class="mrT1 clearfix" style="clear:both" ng-if="lc.taxList.length > 0 && lc.selectedLedger.taxes.length == 0">
+            <div class="mrT1 clearfix" style="clear:both" ng-if="lc.taxList.length > 0 && (lc.selectedLedger.taxes.length == 0 && lc.selectedLedger.taxList.length == 0) || (lc.selectedLedger.taxes.length == 0 && lc.selectedLedger.taxList == undefined)">
               <hr class="width100">
 
               <ul class="list-inline pull-left tax-list">
