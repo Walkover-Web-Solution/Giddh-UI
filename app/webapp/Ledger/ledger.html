@@ -742,11 +742,11 @@
             </div>
             
             <!--tax list-->
-<!--             <div class="mrT1 clearfix" style="clear:both" ng-if="lc.taxList.length > 0 && lc.selectedLedger.taxList.length == 0">
+            <div class="mrT1 clearfix" style="clear:both" ng-if="lc.taxList.length > 0 && lc.selectedLedger.taxes.length == 0">
               <hr class="width100">
 
               <ul class="list-inline pull-left tax-list">
-                <li class="tax" ng-repeat="tax in lc.taxList" ng-if="lc.showTaxList">
+                <li class="tax" ng-repeat="tax in lc.taxList" ng-if="!lc.showTaxList">
                   <div class="checkbox">
                     <label>
                       <input type="checkbox" ng-model="tax.isChecked">
@@ -756,10 +756,11 @@
                 </li>
                 <li>
                   <a href="javascript:void(0)"  ng-if="lc.showTaxList" ng-click="lc.showTaxList = !lc.showTaxList">Show All Taxes</a>
-                  <a href="javascript:void(0)"  ng-if="!lc.showTaxList" ng-click="lc.showTaxList = !lc.showTaxList">Show Only Applicable Taxes</a>
+                  <a href="javascript:void(0)"  ng-if="!lc.showTaxList" ng-click="lc.showTaxList = !lc.showTaxList">Hide All Taxes</a>
                 </li>
               </ul>
-            </div> -->
+            </div>
+
             <div class="mrT1 clearfix" style="clear:both" ng-if="lc.selectedLedger.taxList.length > 0">
               <hr class="width100">
 

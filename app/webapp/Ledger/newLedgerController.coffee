@@ -1011,6 +1011,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       }
       tax: []
       taxList : []
+      taxes: []
       voucherNo:''
     }
 
