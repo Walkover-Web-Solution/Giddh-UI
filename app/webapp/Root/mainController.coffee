@@ -24,6 +24,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     purchase: "purchases"
     sales:"sales"
   }
+
+
   $rootScope.flyAccounts = false
   $rootScope.$stateParams = {}
 #  $rootScope.prefixThis = ""
@@ -63,6 +65,60 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.hasOwnCompany = false
   $rootScope.sharedEntity = ""
   $rootScope.croppedAcntList = []
+
+  ##Date range picker###
+  # $scope.fixedDate = {
+  #   startDate: moment().subtract(30, 'days')._d,
+  #   endDate: moment()._d
+  # };
+
+
+  # $scope.singleDate = moment()
+  # $scope.fixedDateOptions = {
+  #     locale:
+  #       applyClass: 'btn-green'
+  #       applyLabel: 'Apply'
+  #       fromLabel: 'From'
+  #       format: 'D-MMM-YY'
+  #       toLabel: 'To'
+  #       cancelLabel: 'Cancel'
+  #       customRangeLabel: 'Custom range'
+  #     ranges:
+  #       'Last 1 Day': [
+  #         moment().subtract(1, 'days')
+  #         moment()
+  #       ]
+  #       'Last 7 Days': [
+  #         moment().subtract(6, 'days')
+  #         moment()
+  #       ]
+  #       'Last 30 Days': [
+  #         moment().subtract(29, 'days')
+  #         moment()
+  #       ]
+  #       'Last 6 Months': [
+  #         moment().subtract(6, 'months')
+  #         moment()
+  #       ]
+  #       'Last 1 Year': [
+  #         moment().subtract(12, 'months')
+  #         moment()
+  #       ]
+  #     eventHandlers : {
+  #       'apply.daterangepicker' : (e, picker) ->
+  #         $scope.fixedDate.startDate = e.model.startDate._d
+  #         $scope.fixedDate.endDate = e.model.endDate._d
+  #     }
+  # }
+  # $scope.setStartDate = ->
+  #   $scope.fixedDate.startDate = moment().subtract(4, 'days').toDate()
+
+  # $scope.setRange = ->
+  #   $scope.fixedDate =
+  #       startDate: moment().subtract(5, 'days')
+  #       endDate: moment()
+  ###date range picker end###
+
 
   $scope.addScript = () ->
     _.each($rootScope.scriptArrayHead, (script) ->
@@ -348,6 +404,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   #Get company list success
   $scope.getCompanyListSuccess = (res) ->    
     $scope.companyList = _.sortBy(res.body, 'shared')
+    $scope.companyList = $scope.companyList.reverse()
     $rootScope.CompanyList = $scope.companyList
     if _.isEmpty($scope.companyList)
       #When no company is there
@@ -378,7 +435,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
         $rootScope.setCompany(cdt)
         $rootScope.companyIndex = cdt.index
     else
-      $scope.changeCompany($scope.companyList[0],0,'SELECT')
+      $scope.changeCompany($scope.companyList[0],0,'CHANGE')
       $rootScope.setCompany($scope.companyList[0])
       $rootScope.companyIndex = 0
 
@@ -716,11 +773,20 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     _.each $scope.flatAccntWGroupsList, (grp) ->
       grp.open = condition
 
+  $scope.runTour = () ->
+    $rootScope.$emit('run-tour')
 
   $(document).on('click', (e)->
     if e.target.id != 'accountSearch'
       $rootScope.flyAccounts = false
     return false
+  )
+
+  $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+    if toState.name == "company.content.ledgerContent" && toParams.unqName == 'cash'
+      $rootScope.ledgerState = true
+    else
+      $rootScope.ledgerState = false
   )
 
 giddh.webApp.controller 'mainController', mainController

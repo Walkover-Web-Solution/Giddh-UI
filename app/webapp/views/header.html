@@ -141,7 +141,7 @@
                           </div>
                         </a>
                     </li>
-                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi trialB" ui-sref="company.content.manage">
+<!--                     <li ng-if="canUpdate && sharedEntity == null" class="dmLi trialB" ui-sref="company.content.manage">
                       <a href="">
                         <div class="media">
                           <div class="media-body">
@@ -150,7 +150,7 @@
                           </div>
                         </div>
                       </a>
-                    </li>
+                    </li> -->
 <!--                 <li class="dmLi" ui-sref="company.content.ledger">
                     <a href="" >
                       <div class="media">
@@ -214,6 +214,16 @@
 
       <ul class="nav navbar-nav navbar-right">
 
+
+<!--       <li class="header-btn fixedDate">
+        <span class="dateblock">
+          <input ng-show="!showUnivdate" ng-click="showUnivdate = true" ng-init="showUnivdate = true" date-range-picker class="form-control date-picker date-range-picker" type="text" ng-model="cDate" options="opts" required/>
+        <span ng-show="showUnivdate" class="fix_date" tooltip-placement="bottom" uib-tooltip="Change fix date" ng-click="showUnivdate = false"><b>Fixed date:</b> Last 1 month</span>  
+        </span>
+        
+      </li>
+ -->
+
       <!-- company dropdown -->
         <li ng-if="cmpViewShow" class="company-name" uib-dropdown>
           <a id="cmpWrp" class="clearfix" style="cursor:pointer;position: relative;" uib-dropdown-toggle>
@@ -257,7 +267,8 @@
           <ul class="dropdown-menu" aria-labelledby="user-dropdown">
             <li><a href="javascript:void(0)" ng-click="createNewCompany()">Create Company</a></li>
             <li><a ui-sref="company.content.user">User Detail</a></li>
-            <li><a target="_Blank" href="https://docs.giddh.com/">Documentation</a></li>
+            <li ng-if="ledgerState"><a href="javascript:void(0)" ng-click="runTour()">Run Tour</a></li>
+            <li><a target="_Blank" href="https://docs.giddh.com/" ng-click="$event.stopPropagation()">Documentation</a></li>
             <li ng-if="selectedCompany.canUserSwitch"><a class="pull-left" href="javascript:void(0)" ng-click="switchUser()"><span class="pull-left">Switch User</span><span class="on-btn pull-left" ng-if="ucActive"></span></a></li>
             <li role="separator" class="divider" style="width:100%"></li>
             <li><a ng-click="logout()" href="javascript:void(0)">Logout</a></li>

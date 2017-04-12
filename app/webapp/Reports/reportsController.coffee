@@ -471,7 +471,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.getPLgraphDataSuccess = (res) ->
     $scope.plGraphData = res.body
     $scope.formatPLgraphData($scope.plGraphData)
-
+    $scope.chartDataAvailable = true
+    
   $scope.getPLgraphDataFailure = (res) ->
     $scope.chartDataAvailable = true
     toastr.error(res.data.message)

@@ -369,8 +369,10 @@ module.exports = function (grunt) {
           'tinymce',
           'tinymce-mention',
           'angular-ui-tinymce',
-          'bootstrap-daterangepicker',
-          'ngMask'
+          'file-saver.js',
+          'angular-upload',
+          'angular-ui-mask',
+          'nz-tour'
         ],
         dependencies: {
           'jquery': 'modernizr',

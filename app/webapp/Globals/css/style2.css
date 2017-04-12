@@ -589,8 +589,9 @@ input[type="checkbox"]:after {
     background: #57C17A;
 }
 .btn-danger {
-    background: #EF5350;
+    background: #EF5350 !important;
     border-radius: 2px;
+    color: #fff !important;
 }
 .btn-danger:hover {
     background: #F44336;
@@ -810,7 +811,7 @@ input[type="checkbox"]:after {
 }
 .checkbox input[type=checkbox], .checkbox-inline input[type=checkbox], .radio input[type=radio], .radio-inline input[type=radio] {
     position: relative;
-    margin-right: 22px;
+    margin-right: 10px;
     margin-left: 0;
 }
 .checkbox label, .radio label {
@@ -1015,11 +1016,137 @@ input[type=number] {
     border-color: #d35f29 !important;
 }
 .uncfr .form-control {
-   background: #e6e6e6 !important;
+   background: #f7edcd !important;
 }
+
+.active.end-date.in-range.available {
+    background: #d35f29;
+    color: #fff;
+    border-radius: 0 4px 4px 0;
+}
+.fixedDate {
+    float: left;
+    margin: 10px;
+}
+.fixedDate input {
+    min-width: 186px;
+}
+.dateblock {
+    float: left;
+}
+
 .ledger-header thead th:last-child, .ledger-container table tr.bg3 th:last-child {
     border-right: 0;
 }
 .create-company:hover {
     background: none !important;
+}
+
+.upload-btn {
+    background: #f3f0e6;
+    border: 1px solid #f7de8a;
+    padding: 6px;
+    border-radius: 2px;
+    float:right;
+    margin-top:20px;
+}
+.upload_div input[type="file"] {
+    display: none;
+}
+.upload_div {
+    float: right;
+    color: #337ab7;
+    text-decoration: underline;
+}
+
+
+.fix_date {
+    font-size: 14px;
+    position: relative;
+    top: 16px;
+    cursor: pointer;
+}
+
+.inconsolata, body, input, textarea, button, select{
+    font-family: 'Inconsolata', Arial, serif;
+    font-weight: 400;
+}
+.inconsolata-b{
+    font-family: 'Inconsolata', Arial, serif;
+    font-weight: 700;
+}
+
+footer{
+    background-color: #26263A;
+    padding: 20px;
+    text-align: center;
+    color: #C5C5B8;
+    font-size: 17px;
+    margin-top:20px;
+}
+footer>div{
+    margin-bottom: 10px;
+}
+footer>div>a{
+    margin:0 22px;
+    letter-spacing: 1px;
+    color: #C5C5B8;
+    padding: 10px 0;
+}
+footer>div>a:hover{
+    text-decoration: none;
+    color: #fff;
+}
+footer>div>a:first-child{
+    margin-left: 0
+}
+footer>div>a:last-child{
+    margin-right: 0
+}
+footer small{
+    color: #565B5B
+}
+footer small a{
+    color: #565B5B; 
+}
+
+.daterangepicker .daterangepicker_input{
+    display: none !important;
+}
+
+.checkbox-inline input[type=checkbox], .checkbox input[type=checkbox] {
+    left: 0;
+}
+.today.weekend.off.active.end-date.in-range.available {
+    background: #fff !important;
+    color: #999;
+}
+
+.dlt_btn {
+    border: 0;
+    background: #ddd;
+    font-size: 12px;
+    padding: 4px 6px;
+    position: absolute;
+    top: 0px;
+    right: 8px;
+}
+.upload_img {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    padding-right:25px;
+    margin-top:36px;
+
+}
+.fileName {
+    color: #337ab7;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+    float: left;
+    width: 100%;
 }

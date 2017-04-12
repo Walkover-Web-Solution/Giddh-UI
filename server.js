@@ -71,6 +71,7 @@ app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(settings.express.static(settings.path.join(__dirname, 'public')));
+app.use('/app/bower_components', settings.express.static(__dirname + '/bower_components'));
 app.use('/bower_components', settings.express.static(__dirname + '/bower_components'));
 app.use('/node_modules', settings.express.static(__dirname + '/node_modules'));
 app.use('/public', settings.express.static(__dirname + '/public'));
@@ -148,7 +149,7 @@ global.mStorage = multer.diskStorage({
         cb(null, Date.now() + '.xlsx')
         break;
       default:
-        cb(null, Date.now() + '.xml');
+        cb(null, file.originalname)
     }
     // if (file.mimetype === "application/vnd.ms-excel"){
     //   cb(null, Date.now() + '.xls')
@@ -201,6 +202,7 @@ var placeholders = require('./public/routes/webapp/placeholders')
 var inventory = require('./public/routes/webapp/inventory')
 var adminPanel = require('./public/routes/adminPanel/adminPanel')
 var recEntry = require('./public/routes/webapp/recurringEntry')
+var invoiceUpload = require('./public/routes/webapp/invoiceUpload')
 
 app.use('/time-test', timetest);
 app.use('/currency', currency);
@@ -216,6 +218,7 @@ app.use('/company/:companyUniqueName/accounts', accounts);
 app.use('/company/:companyUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
 app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/company/:companyUniqueName/balance-sheet', balanceSheet);
+app.use('/app/upload-invoice',parseUploads, invoiceUpload);
 app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/stock-group', inventory)

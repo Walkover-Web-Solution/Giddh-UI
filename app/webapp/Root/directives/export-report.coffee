@@ -294,7 +294,10 @@ angular.module('trialBalance', []).directive('exportReport', [
         ), 200
     )
 
-   
+    # $(elem).on('click', (e)->
+    #   if scope.isOpen
+        
+    # )
     
 ]
 
@@ -302,10 +305,11 @@ angular.module('trialBalance', []).directive('exportReport', [
 .directive 'inputFocus', ['$window', '$timeout', ($window, $timeout) ->
   scope: 
     isOpen: '=isOpen'
+    txn: '=txn'
   link: (scope, elem, attr) ->
 
     scope.$watch('isOpen', (newVal, oldVal) ->
-      if newVal
+      if newVal && scope.txn.isBlank
         $timeout ( ->
           $(elem).trigger('focus')
         ), 200
@@ -405,28 +409,30 @@ angular.module('trialBalance', []).directive('exportReport', [
 ]
 
 
-.directive 'ledgerScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
-  restrict: "EA"
-  link: (scope, elem, attrs) ->
-    invoker = $parse(attrs.scrolled)
+# .directive 'ledgerScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+#   restrict: "EA"
+#   link: (scope, elem, attrs) ->
+#     invoker = $parse(attrs.scrolled)
 
-    $(elem).on('scroll', (e) ->
-      if $(elem).scrollTop()+$(elem).innerHeight() >= elem[0].scrollHeight
-        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'next'})
-      else if $(elem).scrollTop() == 0
-        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
-    )
+#     $(elem).on('scroll', (e) ->
+#       if $(elem).scrollTop()+$(elem).innerHeight() >= elem[0].scrollHeight
+#         invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'next'})
+#       else if $(elem).scrollTop() == 0
+#         invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
+#     )
 
-]
+# ]
 
 
 .directive 'columnScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
   restrict: "EA"
   scope : {
-    scrollto : '=scrollto'
+    scrollto : '=scrollto',
+    ledgerContainer : '=ledgerContainer',
+    scrolled : '&',
+    sortOrder : '=sortOrder'
   }
   link: (scope, elem, attrs) ->
-
     scope.$watch('scrollto', (newVal, oldVal)->
       if newVal && newVal.to && newVal != oldVal && newVal.to.transactions.length && newVal.to.uniqueName
         a = $("#" + newVal.first.uniqueName).offset().top
@@ -434,16 +440,55 @@ angular.module('trialBalance', []).directive('exportReport', [
         scrollVal = x-a
         # console.log x-a, a, x
         $(elem).animate({
-            scrollTop: scrollVal
+          scrollTop: scrollVal
         }, 200)
-      # if newVal && newVal != oldVal && newVal.transactions.length && newVal.uniqueName
-      #   x = $("#" + newVal.uniqueName).offset().top
-      #   $(elem).animate({
-      #       scrollTop: x
-      #   }, 200)
-        
     )
+    scope.lastScrollTop = 0
+    $(elem).on('scroll', (e) ->
+      if $(elem).scrollTop() > scope.lastScrollTop
+        mouseScrollDirection = 1 #down
+      else
+        mouseScrollDirection = 0 #up
+      scrollableArea = elem[0].scrollHeight - $(elem).innerHeight()
+      margin = 300  #Math.floor(scrollableArea / 10) #replace with function for dynamic
+      if scope.ledgerContainer
+        if !scope.ledgerContainer.scrollDisable
+          if (
+            ( # == sign represents Xnor
+              (scope.sortOrder == 1 && scope.ledgerContainer.upperBoundReached) ==
+              (scope.sortOrder == 0 && scope.ledgerContainer.lowerBoundReached)
+            ) && mouseScrollDirection == 0 &&
+            $(elem).scrollTop() < margin
+          ) #top sortorder 0 = asc 1 =desc
 
+            $(elem).animate({
+              scrollTop: margin
+            }, 200)
+            scope.ledgerContainer.scrollDisable = true
+            scope.scrolled({top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
+          else if (
+            (
+              (scope.sortOrder == 1 && scope.ledgerContainer.lowerBoundReached) ==
+              (scope.sortOrder == 0 && scope.ledgerContainer.upperBoundReached)
+            ) && mouseScrollDirection == 1 &&
+            $(elem).scrollTop() > scrollableArea - margin
+          ) #bottom
+
+            scope.ledgerContainer.scrollDisable = true
+            # $(elem).animate({
+            #   scrollTop: scrollableArea - margin
+            # }, 200)
+            scope.scrolled({top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'next'})
+
+      else #this else condition to be removed completely as there must always be declaration for ledgerContainer
+        if $(elem).scrollTop()+$(elem).innerHeight() >= elem[0].scrollHeight
+          scope.scrolled({top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'next'})
+        else if $(elem).scrollTop() == 0
+          scope.scrolled({top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
+
+      scope.lastScrollTop = $(elem).scrollTop()
+    )
+    return
 ]
 
 
@@ -538,4 +583,22 @@ angular.module('trialBalance', []).directive('exportReport', [
         'scrollTop' : top + 100
       })
     )
+]
+
+.directive 'fileModel', [
+  '$parse'
+  ($parse) ->
+    {
+      restrict: 'A'
+      link: (scope, element, attrs) ->
+        model = $parse(attrs.fileModel)
+        modelSetter = model.assign
+        element.bind 'change', ->
+          scope.$apply ->
+            modelSetter scope, element[0].files[0]
+            return
+          return
+        return
+
+    }
 ]

@@ -1,3 +1,7 @@
+
+@import url('../css/fjala.css');
+/*font-family: 'Fjalla One', sans-serif;*/
+
 body {
   -webkit-overflow-scrolling: touch;
 }
@@ -318,7 +322,7 @@ body {
 }
 
 .pr {
-    position: relative
+    position: relative !important
 }
 .pr h1, .pr label {
     display: inline;
@@ -1818,3 +1822,134 @@ button.toast-close-button {
     text-shadow: 1px 1px 1px #076bd2;
     margin: 20px 20px 0;
     }
+.download-invoice-ledger {
+    position: absolute;
+    float: right;
+    width: 29px;
+    right: 0;
+    padding: 2px 7px;
+    cursor: pointer;
+}
+.sub_footer {
+  background: #E34A26;
+  color: #fff;
+}
+.green {
+  color: #00796b;
+}
+.ledgHead .form-group{
+  float: left;
+}
+.ledgHead .label {
+    margin-left: 7px;
+    overflow: hidden;
+    vertical-align: middle;
+    position: relative;
+    top: -4px;
+}
+.magic_header .navbar-header{
+  text-align: center;
+  float: none;
+}
+.magicHead {
+  padding: 15px;
+    text-align: center;
+    display: inline-block;
+    margin: 0 auto;
+    float: none;
+}
+.accountName {
+  vertical-align: text-top;
+  font-family: 'Fjalla One', sans-serif;
+    font-size: 2.4em;
+    text-transform: uppercase;
+  display: inline-block;
+  color: #000;
+}
+.magic_header .navbar-brand {
+  float: right;
+  padding: 3px 15px;
+  height: auto;
+}
+.magic_header .navbar-brand>img {
+    display: block;
+    width: 130px;
+}
+.w7 {
+  padding: 7px;
+      position: relative;
+    top: 22px;
+}
+.magic_header.affix .navbar-brand img {
+    height: auto;
+}
+.magic_header.navbar.affix {
+  height: 80px;
+}
+
+.magic_header.affix{
+  position: relative !important;
+}
+
+
+/*gst*/
+
+/*css for icons*/
+[class^="ic-"]{display:inline-block; background-image:url('/public/website/images/new/3252-grid.png'); background-repeat:no-repeat}
+.ic-32{width:32px; height:32px;}
+.ic-32.view{background-position: -32px 0}
+.ic-32.tick{background-position: -64px 0}
+.ic-32.eq{background-position: -96px 0}
+.ic-32.card{background-position: -128px 0}
+.ic-32.gidd{background-position: -160px 0}
+
+.ic-52 {width:52px; height:52px; margin-bottom:10px}
+.ic-52.circ{background-position: 0 -32px}
+.ic-52.tick{background-position: -52px -32px}
+.ic-52.ldm{background-position: -104px -32px}
+.ic-52.lock{background-position: -156px -32px}
+
+#gst p{font-size:19px;}
+#gst h3{font-size:32px;}
+#gstBanner{background:#FFF6E6 url('/public/website/images/new/banner-grid-design.png'); padding-bottom:40px;padding-top:100px;}
+
+#tryG{background:#28283C; color:#fff; padding:40px 0}
+.trBox{border:2px solid #fff; margin:80px 0 10px; padding:5px; display:inline-block;}
+.trBox img{width:120px;}
+.trBox a {color: #fff;}
+#filling{background:#E34A26; color:#fff; padding:40px 0}
+#filling .col-sm-6{padding:30px 40px}
+#filling h3{border-bottom:2px solid #fff; display:inline-block; padding:10px; margin-bottom:17px}
+#filling .ic-32{float:left; margin:0 20px 30px 0}
+#filling p{text-align:left;}
+#filling .others{background:rgba(256,256,256,.2)}
+#filling .giddh{background:rgba(0,0,0,.2)}
+#filling .giddh img{margin-bottom:8px}
+
+#ques{padding:40px 0}
+#ques a{background:#40B35D; color:#fff; padding:5px 20px; margin-left:10px}
+
+#adv{padding:60px 0; color:#fff; background:#28283C}
+#adv .col-md-3{font-size:20px;}
+#adv h3{margin-bottom:80px}
+
+/*media queries*/
+@media only screen and (max-width: 767px) {
+  #gst h3{font-size:24px}
+  #gstBanner, #adv{padding:20px 0;padding-top:100px;}
+  #filling .ic-32, #adv .col-md-3{margin-bottom:20px}
+  #adv h3{margin-bottom:30px}
+  #ques a {margin-top:30px; display:block}
+}
+
+#filling .giddh img, #filling .others img{
+    margin-left: 2%;
+    display: none;
+}
+#filling .giddh >div, #filling .others >div {
+    margin-top: 50PX;
+}
+
+#filling .giddh img, #filling .others img{
+display: none;
+}

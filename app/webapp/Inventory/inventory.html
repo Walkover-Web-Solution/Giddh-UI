@@ -21,20 +21,20 @@
 <!-- /top row-->
 
 <!--sidebar-->
-	<section class="sidebar greyBg pull-left" ng-show="stock.showSidebar && stock.showStockReport" ng-click="$event.stopPropagation();">
+	<section class="sidebar greyBg pull-left" ng-show="stock.showSidebar && stock.showStockReport" ng-click="$event.stopPropagation();" cover-page>
 		<div class="h100" ng-include="'/public/webapp/Inventory/partials/stocklist.html'"></div>
 	</section>
 <!--/sidebar-->
 
 <!--main section-->
 	<!--stock report section-->
-	<section class="h100" ng-if="stock.showStockReport" ng-class="{mrL320: stock.showSidebar && stock.showStockReport}">
+	<section class="h100" ng-if="stock.showStockReport" ng-class="{mrL320: stock.showSidebar && stock.showStockReport}" cover-page>
 		<div class="h100" ng-include="'/public/webapp/Inventory/partials/stock-report.html'"></div>
 	</section>
 	<!--/stock report section-->
 
 	<!--manage stock section-->
-	<section class="h100" ng-if="!stock.showStockReport">
+	<section class="h100" ng-if="!stock.showStockReport" cover-page>
 		<div class="h100" ng-include="'/public/webapp/Inventory/partials/manage-stocks.html'"></div>
 	</section>
 	<!--/manage stock section-->
