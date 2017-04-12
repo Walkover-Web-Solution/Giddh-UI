@@ -100,7 +100,7 @@
             <div class="input-group input-group-md">
               <span class="input-group-addon" id="sizing-addon3"><i class="glyphicon glyphicon-search"></i></span>
               <input type="search" class="form-control" placeholder="Search" aria-describedby="sizing-addon3"
-                     ng-model="keyWord" trial-accordion='search' ng-keyup="logInputLength(keyWord)" >
+                     ng-model="keyWord.query" trial-accordion='search' ng-keyup="logInputLength(keyWord.query)" >
               <i class="glyphicon glyphicon-remove close-icon" ng-show="showClearSearch"></i>
             </div>
           </div>
@@ -131,6 +131,18 @@
                   Report</a></li>
                 <li><a href="" ng-click="hideOptions($event)" export-pdfaccountwise>Account Wise
                   Report</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="form-group xls-export">  
+            <a href="" ng-click="showTbXlsOptions($event)" ng-show="enableDownload"><img src="/public/webapp/Globals/images/xls-icon.png"/></a>
+            <div class="export-options" ng-show="showTbXls">
+              <span class="arrow"></span>
+              <ul class="list-unstyled">
+                <li><a href="" ng-click="downloadTbXls('main-group')">Main Group Report</a></li>
+                <li><a href="" ng-click="downloadTbXls('group')">All Group Report</a></li>
+                <li><a href="" ng-click="downloadTbXls('account')">All Account Report</a></li>
+                <li><a href="" ng-click="downloadTbXls('all')">Complete Report</a></li>
               </ul>
             </div>
           </div>
@@ -171,11 +183,11 @@
         </table>
 
         <!--Start Grid-->
-        <section class="row row-1" ng-repeat="grp in data.groupDetails | tbsearch:keyWord | filter:filterTBSearch:grp | orderBy: grp.category" ng-class="grp.category"  ng-if="grp.isVisible">
+        <section class="row row-1" ng-repeat="grp in data.groupDetails | tbsearch:keyWord.query | filter:filterTBSearch:grp | orderBy: grp.category" ng-class="grp.category"  ng-if="grp.isVisible">
           <!-- filter:filterTBSearch:index:data  -->
            <!-- |  tbsearch:keyWord | filter:filterTBSearch:tbsearch -->
           <div class="row"  trial-accordion>  
-            <div class="col-xs-4 group" ng-bind-html=" grp.groupName | uppercase | highlight: keyWord "></div>
+            <div class="col-xs-4 group" ng-bind-html=" grp.groupName | uppercase | highlight: keyWord.query "></div>
             <div class="col-xs-2 group text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type | recType:grp.forwardedBalance.amount }}</div>
             <div class="col-xs-2 group text-right">{{ grp.debitTotal | number:2 }}</div> 
             <div class="col-xs-2 group text-right">{{ grp.creditTotal | number:2 }}</div>
@@ -184,7 +196,7 @@
 
           <section class="row row-2 account isHidden" ng-repeat="account in grp.accounts" ng-if="account.isVisible">
             <div class="row">
-              <div class="col-xs-4 account" ng-style="{'padding-left':padLeft}" ng-bind-html=" account.name | lowercase | highlight: keyWord">
+              <div class="col-xs-4 account" ng-style="{'padding-left':padLeft}" ng-bind-html=" account.name | lowercase | highlight: keyWord.query">
               </div>
               <div class="col-xs-2 account text-right">{{ account.openingBalance.amount | number:2 }} {{account.openingBalance.type | recType:account.openingBalance.amount}}</div>
               <div class="col-xs-2 account text-right">{{ account.debitTotal | number:2 }}</div>
@@ -232,7 +244,7 @@
       <script type="text/ng-template" id="trialBalSubGroup">
         <section class="row row-2" ng-repeat="grp in grp.childGroups"  ng-if="grp.isVisible">
           <div class="row" trial-accordion>
-            <div class="col-xs-4 group" ng-style="{'padding-left':padLeft + 10}" ng-bind-html="grp.groupName | uppercase : (grp.childGroups.length && grp.accounts.length) | highlight: keyWord"></div>
+            <div class="col-xs-4 group" ng-style="{'padding-left':padLeft + 10}" ng-bind-html="grp.groupName | uppercase : (grp.childGroups.length && grp.accounts.length) | highlight: keyWord.query"></div>
             <div class="col-xs-2 group text-right">{{ grp.forwardedBalance.amount | number:2 }} {{ grp.forwardedBalance.type | recType: grp.forwardedBalance.amount}}</div>
             <div class="col-xs-2 group text-right">{{ grp.debitTotal | number:2 }}</div>
             <div class="col-xs-2 group text-right">{{ grp.creditTotal | number:2 }}</div>
@@ -240,7 +252,7 @@
           </div>  
           <section class="row account isHidden" ng-if="grp.accounts.length && account.isVisible" ng-repeat="account in grp.accounts | orderBy: 'name'">
             <div class="row">
-              <div class="col-xs-4" ng-style="{'padding-left':padLeft + 20}" ng-bind-html=" account.name | lowercase | highlight: keyWord">
+              <div class="col-xs-4" ng-style="{'padding-left':padLeft + 20}" ng-bind-html=" account.name | lowercase | highlight: keyWord.query">
               </div>
               <div class="col-xs-2 account text-right">{{ account.openingBalance.amount | number:2 }} {{account.openingBalance.type | recType:account.openingBalance.amount }}</div>
               <div class="col-xs-2 account text-right">{{ account.debitTotal | number:2 }}</div>

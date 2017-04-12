@@ -17,11 +17,15 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.sendRequest = true
   $scope.showChildren = false
   $scope.showpdf = false
+  $scope.showTbXls = false
   $scope.showNLevel = false
   $rootScope.cmpViewShow = true
   $scope.showClearSearch = false
   $scope.noData = false
   $scope.enableDownload = true
+  $scope.keyWord = {
+    query: ''
+  }
   $scope.dateOptions = {
     'year-format': "'yy'",
     'starting-day': 1,
@@ -831,12 +835,39 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       $scope.showpdf = false
     ), 100
     e.stopPropagation()
+
+  $scope.showTbXlsOptions = (e) ->
+    $scope.showTbXls = true
+    e.stopPropagation()
+
+  $scope.downloadTbXls = (exportType) ->
+    $timeout ( ->
+      $scope.showOptions = false
+      $scope.showTbXls = false
+    ), 100
+    reqParam = {
+      'companyUniqueName': $rootScope.selectedCompany.uniqueName
+      'fromDate': $filter('date')($scope.fromDate.date,'dd-MM-yyyy')
+      'toDate': $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
+      'exportType': exportType
+      'query':$scope.keyWord.query
+    }
+    trialBalService.downloadTBExcel(reqParam).then $scope.downloadTBExcelSuccess, $scope.downloadTBExcelFailure
+
+  $scope.downloadTBExcelSuccess = (res) ->
+    data = tb.b64toBlob(res.body, "application/xml", 512)
+    FileSaver.saveAs(data, "trialbalance.xlsx")
+
+  $scope.downloadTBExcelFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+    
     
   $(document).on 'click', (e) ->
     $timeout (->
       $scope.showOptions = false
       $scope.plShowOptions = false
       $scope.showpdf = false
+      $scope.showTbXls = false
     ), 100
 
   $scope.addData = ->

@@ -20,6 +20,10 @@ giddh.serviceModule.service 'trialBalService', ($resource, $q) ->
         method: 'GET',
         url: '/company/:companyUniqueName/trial-balance/profit-loss'
       }
+      downloadTBExcel: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/trial-balance/excel-export'
+      }
     })
 
   balanceSheet = $resource('/company/:companyUniqueName/balance-sheet', {},
@@ -63,5 +67,8 @@ giddh.serviceModule.service 'trialBalService', ($resource, $q) ->
 
     downloadPLExcel: (reqParam, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> profitLoss.downloadPLExcel({companyUniqueName: reqParam.companyUniqueName, fy: reqParam.fy}, onSuccess, onFailure))
+
+    downloadTBExcel: (reqParam, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> trialBal.downloadTBExcel({companyUniqueName: reqParam.companyUniqueName, fromDate: reqParam.fromDate, toDate: reqParam.toDate, exportType: reqParam.exportType, q: reqParam.query}, onSuccess, onFailure))
 
   trialBalService
