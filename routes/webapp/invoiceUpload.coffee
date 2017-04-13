@@ -14,8 +14,16 @@ router.post '/', (req, res) ->
     data:
       'file': rest.file(req.file.path, req.file.path, req.file.size, null, req.file.mimetype)
   ).on 'complete', (data) ->
-#    console.log 'after upload data is', data
-    res.send data
+    console.log 'after upload data is', data
+    if data.status == 'success'
+      res.send data
+    else if data.status == 'error'
+      res.status(400).send(data)
+    else
+      error = {
+        message:"Upload failed, please check that size of the file is less than 1mb"
+      }
+      res.status(400).send(error);
 
 
 module.exports = router

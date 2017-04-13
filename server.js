@@ -129,8 +129,9 @@ var login = require('./public/routes/website/login');
 var contact = require('./public/routes/website/contact');
 var websiteRoutes = require('./public/routes/website/main');
 
-app.use('/auth', login);
+app.use('/app/auth', login);
 app.use('/contact', contact);
+app.use('/app/api', websiteRoutes);
 app.use('/', websiteRoutes);
 
 global.mStorage = multer.diskStorage({
