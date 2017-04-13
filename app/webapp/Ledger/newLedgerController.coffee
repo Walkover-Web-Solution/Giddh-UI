@@ -1795,13 +1795,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         tax.account = {}
         tax.account.uniqueName = 0
       lc.taxList.push(tax)
-    lc.matchTaxAccounts(lc.taxList)
+    #lc.matchTaxAccounts(lc.taxList)
 
   lc.getTaxListFailure = (res) ->
     toastr.error(res.data.message, res.status)
 
-  lc.matchTaxAccounts = (taxlist) ->
-    _.each taxlist, (tax) ->
+  # lc.matchTaxAccounts = (taxlist) ->
+  #   _.each taxlist, (tax) ->
       
 
   # lc.addTaxEntry = (tax, item) ->
@@ -2805,6 +2805,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $rootScope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE' 
       lc.loadDefaultAccount()
+      lc.getTaxList()
     # else if changeData.type == 'SELECT'
     #   console.log 'load same account'
     #$state.reload()
