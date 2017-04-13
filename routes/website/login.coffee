@@ -36,7 +36,6 @@ hitViaSocket = (data) ->
 ####
 
 router.post '/google', (req, res, next) ->
-  res.send('from google')
   googleAccessTokenUrl = 'https://accounts.google.com/o/oauth2/token'
   params =
     code: req.body.code

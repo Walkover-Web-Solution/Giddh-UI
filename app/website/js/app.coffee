@@ -303,12 +303,15 @@ app.controller 'homeCtrl', [
 app.config [
   '$authProvider'
   ($authProvider) ->
-    $authProvider.loginUrl = '/app/auth'
     $authProvider.google 
       clientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com'
-      url : '/app/auth'
-    $authProvider.twitter clientId: 'w64afk3ZflEsdFxd6jyB9wt5j'
-    $authProvider.linkedin clientId: '75urm0g3386r26'
+      url : '/app/auth/google'
+    $authProvider.twitter 
+      clientId: 'w64afk3ZflEsdFxd6jyB9wt5j'
+      url: '/app/auth/twitter'
+    $authProvider.linkedin 
+      clientId: '75urm0g3386r26'
+      url: '/app/auth/linkedin'
     
     # LinkedIn
     $authProvider.linkedin({
