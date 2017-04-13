@@ -26,7 +26,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.cLedgerLimit = 10
   lc.entrySettings = {}
   lc.firstLoad = true
-  lc.showTaxList = true
   lc.hasTaxTransactions = false
   $rootScope.flyAccounts = true
   $scope.creditTotal = 0
@@ -36,7 +35,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.lastTourStep = 0
 
   lc.onBlankAccountSelect = ($item, $model, $label, $event) ->
-    lc.onAccountSelect($item)
     if ($item.uniqueName == 'purchases' || $item.uniqueName == 'sales') && lc.pausedBeforeAccountSelection
       tour.config.showNext = true
       nzTour.next()
@@ -1011,7 +1009,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       }
       tax: []
       taxList : []
-      taxes: []
       voucherNo:''
     }
 
@@ -1694,43 +1691,23 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 #     ), 1000
 
   lc.onAccountSelect = (account) ->
-    if account.applicableTaxes.length > 0
-      _.each lc.taxList, (tax) ->
-        #taxInAccount = _.findWhere(account.applicableTaxes, tax.uniqueName)
-        if account.applicableTaxes.indexOf(tax.uniqueName) != -1
-          tax.isChecked = true
-          lc.selectedLedger.taxList.push(tax)
-      lc.selectedLedger.applyApplicableTaxes = true
-    else
-      lc.selectedLedger.taxList = []
-      lc.selectedLedger.applyApplicableTaxes = false
+    # if account.applicableTaxes.length > 0
+    #   _.each lc.taxList, (tax) ->
+    #     taxInAccount = _.findWhere(account.applicableTaxes, {uniqueName: tax.uniqueName})
+    #     if taxInAccount
+    #       lc.selectedLedger.taxList.push(tax)
 
-  lc.showAllTaxes = () ->
-    _.each lc.taxList, (tax) ->
-      taxInAccount = _.findWhere(lc.selectedLedger.taxList, {uniqueName: tax.uniqueName})
-      if !taxInAccount
-        lc.selectedLedger.taxList.push(tax)
+  # lc.showAllTaxes = () ->
+  #   _.each lc.taxlist, (tax) ->
+  #     taxInAccount = _.findWhere(lc.selectedLedger.taxList, {uniqueName: tax.uniqueName})
+  #     if !taxInAccount
+  #       lc.selectedLedger.taxList.push(tax)
 
-  lc.showOnlyApplicableTaxes = (txn) ->
-    _.each lc.taxList, (tax, i) ->
-      #taxInAccount = _.findWhere(txn.particular.applicableTaxes, {uniqueName: tax.uniqueName})
-      if txn.particular.applicableTaxes.indexOf(tax.uniqueName) == -1
-        lc.selectedLedger.taxList.splice(i, 1)
-
-  lc.checkTaxForApplicableTaxes = () ->
-    applicableCheckedCount = 0
-    if lc.selectedTxn.particular.applicableTaxes
-      _.each lc.selectedTxn.particular.applicableTaxes, (unq) ->
-        tax = _.findWhere(lc.selectedLedger.taxList, {uniqueName: unq})
-        if tax.isChecked
-          applicableCheckedCount += 1
-    if lc.selectedTxn.particular.applicableTaxes && applicableCheckedCount == lc.selectedTxn.particular.applicableTaxes.length
-      lc.selectedLedger.applyApplicableTaxes = true
-      _.each lc.selectedLedger.taxList, (tax) ->
-        if typeof(lc.selectedTxn.particular) == 'object' && lc.selectedTxn.particular.applicableTaxes.indexOf(tax.uniqueName) == -1 && tax.isChecked
-          lc.selectedLedger.applyApplicableTaxes = false
-    else
-      lc.selectedLedger.applyApplicableTaxes = false
+  # lc.showOnlyApplicableTaxes = (txn) ->
+  #   _.each lc.taxlist, (tax, i) ->
+  #     taxInAccount = _.findWhere(txn.particular.applicableTaxes, {uniqueName: tax.uniqueName})
+  #     if !taxInAccount
+  #       lc.selectedLedger.taxList.splice(i, 1)
 
   lc.countTotalTransactions = (ledgers) ->
     # lc.cNonemptyTxn = 0
@@ -2225,29 +2202,22 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     txnList
 
   lc.isTransactionContainsTax = (ledger) ->
-    if ledger.taxes and ledger.taxes.length > 0
-      ledger.taxList = []
-      _.each lc.taxList, (tax) ->
-        if ledger.taxes.indexOf(tax.uniqueName) != -1 
-          tax.isChecked = true
-          ledger.taxList.push(tax)
-
-    # if ledger.taxes != undefined && ledger.taxes.length > 0
-    #   _.each(lc.taxList, (tax) ->
-    #     tax.isChecked = false
-    #     _.each(ledger.taxes, (taxe) ->
-    #       if taxe == tax.uniqueName
-    #         tax.isChecked = true
-    #     )
-    #   )
-    # else
-    #   _.each(lc.taxList, (tax) ->
-    #     #tax.isChecked = false
-    #     _.each(ledger.transactions, (txn) ->
-    #       if txn.particular.uniqueName == tax.account.uniqueName
-    #         tax.isChecked = true
-    #     )
-    #   )
+    if ledger.taxes != undefined && ledger.taxes.length > 0
+      _.each(lc.taxList, (tax) ->
+        tax.isChecked = false
+        _.each(ledger.taxes, (taxe) ->
+          if taxe == tax.uniqueName
+            tax.isChecked = true
+        )
+      )
+    else
+      _.each(lc.taxList, (tax) ->
+        #tax.isChecked = false
+        _.each(ledger.transactions, (txn) ->
+          if txn.particular.uniqueName == tax.account.uniqueName
+            tax.isChecked = true
+        )
+      )
 
   lc.UpdateEntry = (ledger, unqNamesObj,removeTax) ->
     if removeTax == true
@@ -2312,7 +2282,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         shortCode:"sal"
       }
       tax:[]
-      taxList: []
       voucherNo:null
     }
 

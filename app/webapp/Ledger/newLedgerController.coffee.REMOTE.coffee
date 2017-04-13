@@ -26,7 +26,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.cLedgerLimit = 10
   lc.entrySettings = {}
   lc.firstLoad = true
-  lc.showTaxList = true
   lc.hasTaxTransactions = false
   $rootScope.flyAccounts = true
   $scope.creditTotal = 0
@@ -1011,7 +1010,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       }
       tax: []
       taxList : []
-      taxes: []
       voucherNo:''
     }
 
@@ -1700,10 +1698,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         if account.applicableTaxes.indexOf(tax.uniqueName) != -1
           tax.isChecked = true
           lc.selectedLedger.taxList.push(tax)
-      lc.selectedLedger.applyApplicableTaxes = true
-    else
-      lc.selectedLedger.taxList = []
-      lc.selectedLedger.applyApplicableTaxes = false
+      lc.selectedLedger.applyApplicableTaxes = true 
 
   lc.showAllTaxes = () ->
     _.each lc.taxList, (tax) ->
