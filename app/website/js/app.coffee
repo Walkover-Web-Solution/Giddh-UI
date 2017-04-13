@@ -295,7 +295,7 @@ app.controller 'homeCtrl', [
         console.log res
         #toastr.error(res.data)
 
-      $http.get('/user-location').then(@success, @failure)
+      $http.get('/app/api/user-location').then(@success, @failure)
 
     getLocation()
 ]
