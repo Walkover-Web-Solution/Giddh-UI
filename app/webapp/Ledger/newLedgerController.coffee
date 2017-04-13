@@ -2006,7 +2006,10 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       toastr.success('file uploaded successfully')
 
     @failure = (res) ->
-      toastr.error(res.data.message)
+      if typeof res == 'object'
+        toastr.error(res.data.message)
+      else
+        toastr.error('Upload failed, please check that file size is less than 1 mb')
 
     url = 'upload-invoice'
     $http.post(url, formData, {
