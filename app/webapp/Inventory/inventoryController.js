@@ -207,7 +207,7 @@ angular.module('inventoryController', [])
 		    "uniqueName":stockItem.stockUnqName,
 		    "openingQuantity":stockItem.stockQty,
 		    "openingAmount":stockItem.stockAmount,
-		    "openingStockUnitName":stockItem.stockType.name,
+		    "stockUnitCode":stockItem.stockType.shortCode,
 		    "purchaseAccountUniqueName":stockItem.stockPurchaseAccount.uniqueName,
 		    "purchaseRate":stockItem.stockPurchaseRate,
 		    "salesRate":stockItem.stockSalesRate,
@@ -239,7 +239,7 @@ angular.module('inventoryController', [])
 			"uniqueName":stockItem.stockUnqName,
 		    "openingQuantity":stockItem.stockQty,
 		    "openingAmount":stockItem.stockAmount,
-		    "openingStockUnitName":stockItem.stockType.name,
+		    "stockUnitCode":stockItem.stockType.shortCode,
 		    "purchaseAccountUniqueName":stockItem.stockPurchaseAccount.uniqueName,
 		    "purchaseRate":stockItem.stockPurchaseRate,
 		    "salesRate":stockItem.stockSalesRate,
@@ -397,7 +397,7 @@ angular.module('inventoryController', [])
 			stock.selectedStockItem = res.body
 			stock.addStockItem.stockName = stock.selectedStockItem.name
 			stock.addStockItem.stockUnqName = stock.selectedStockItem.uniqueName
-			stock.addStockItem.stockType = stock.selectedStockItem.openingStockUnit
+			stock.addStockItem.stockType = stock.selectedStockItem.stockUnit
 			stock.addStockItem.stockQty = stock.selectedStockItem.openingQuantity
 			stock.addStockItem.stockClosingQty = stock.selectedStockItem.closingQuantity
 			stock.addStockItem.stockAmount = stock.selectedStockItem.openingAmount

@@ -92,12 +92,14 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.getFYs = (companyUniqueName) ->
     @fySuccess = (res) ->
       $scope.financialYears = res.body.financialYears
-      $scope.activeFYIndex = tb.getActiveFinancialYearIndex($scope.activeFinancialYear, $scope.financialYears)
+      $scope.activeBSFYIndex = tb.getActiveFinancialYearIndex($scope.activeFinancialYear, $scope.financialYears)
+      $scope.activePLFYIndex = tb.getActiveFinancialYearIndex($scope.activeFinancialYear, $scope.financialYears)
     @fyFailure = (res) ->
       toastr.error(res.data.message)
     companyServices.getFY(companyUniqueName).then @fySuccess, @fyFailure    
 
-  $scope.activeFYIndex = 0
+  $scope.activeBSFYIndex = 0
+  $scope.activePLFYIndex = 0
   $scope.financialYears = []
   $scope.getFYs($rootScope.selectedCompany.uniqueName)
 
@@ -948,7 +950,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     reqParam = {
       'companyUniqueName': $rootScope.selectedCompany.uniqueName
       'refresh': $scope.bsHardRefresh
-      'fy': $scope.activeFYIndex
+      'fy': $scope.activeBSFYIndex
     }
     trialBalService.getBalSheet(reqParam).then $scope.getBalanceSheetDataSuccess, $scope.getBalanceSheetDataFailure
 
@@ -957,7 +959,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     reqParam = {
       'companyUniqueName': $rootScope.selectedCompany.uniqueName
       'refresh': $scope.plHardRefresh
-      'fy': $scope.activeFYIndex
+      'fy': $scope.activePLFYIndex
     }
     trialBalService.getPL(reqParam).then $scope.getPLSuccess, $scope.getPLFailure
 
@@ -989,25 +991,33 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     $scope.getProfitLossData()
   ), 1000
   
-  $scope.changeFYIdx = (item) ->
+  $scope.changeBSFYIdx = (item) ->
     _.each $scope.financialYears, (fy, index) ->
       if(fy.uniqueName == item.uniqueName)
         if index == 0
-          $scope.activeFYIndex = index
+          $scope.activeBSFYIndex = index
         else
-          $scope.activeFYIndex = index * -1
+          $scope.activeBSFYIndex = index * -1
+
+  $scope.changePLFYIdx = (item) ->
+    _.each $scope.financialYears, (fy, index) ->
+      if(fy.uniqueName == item.uniqueName)
+        if index == 0
+          $scope.activePLFYIndex = index
+        else
+          $scope.activePLFYIndex = index * -1
 
   $scope.downloadBSExcel = () ->
     reqParam = {
       'companyUniqueName': $rootScope.selectedCompany.uniqueName
-      'fy': $scope.activeFYIndex
+      'fy': $scope.activeBSFYIndex
     }
     trialBalService.downloadBSExcel(reqParam).then $scope.downloadBSExcelSuccess, $scope.downloadBSExcelFailure
 
   $scope.downloadPLExcel = () ->
     reqParam = {
       'companyUniqueName': $rootScope.selectedCompany.uniqueName
-      'fy': $scope.activeFYIndex
+      'fy': $scope.activePLFYIndex
     }
     trialBalService.downloadPLExcel(reqParam).then $scope.downloadPLExcelSuccess, $scope.downloadPLExcelFailure
 

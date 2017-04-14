@@ -280,7 +280,7 @@
           <label>Financial Year</label>
           <div class="form-group mrR1">
 
-            <ui-select ng-model="activeFinancialYear" theme="bootstrap" on-select="changeFYIdx($item)">
+            <ui-select ng-model="activeFinancialYear" theme="bootstrap" on-select="changePLFYIdx($item)">
                 <ui-select-match placeholder="Select Period">
                     <span>{{$select.selected.uniqueName}}</span>
                 </ui-select-match >
@@ -516,7 +516,7 @@
           <label>Financial Year</label>
           <div class="form-group mrR1">
 
-            <ui-select ng-model="activeFinancialYear" theme="bootstrap" on-select="changeFYIdx($item)">
+            <ui-select ng-model="activeFinancialYear" theme="bootstrap" on-select="changeBSFYIdx($item)">
                 <ui-select-match placeholder="Select Period">
                     <span>{{$select.selected.uniqueName}}</span>
                 </ui-select-match >
