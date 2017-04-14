@@ -48,7 +48,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         clickThrough: false
         visibleOnNoTarget: true
       }
-      placementPriority: ['bottom', 'right', 'top','left']
+      placementPriority: ['top', 'right','left', 'bottom']
       onClose: () ->
         tour.config.showNext = true 
         alert('You can always restart the tour from the user menu dropdown on the right top corner of your screen.')
@@ -98,10 +98,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       },
       {
         target: '#addDebitEntry'
-        content: "This is the input box for the account from which you are recieving something. "
+        content: "This is the input box for the account from which you are recieving something. Type sales and select the account from the dropdown list."
         before: (direction, step) ->
           lc.lastTourStep = step
-          tour.config.showNext = true
+          tour.config.showNext = false
+          lc.pausedBeforeAccountSelection = true
           d = $q.defer();
           d.resolve()
           return d.promise
@@ -118,7 +119,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       },
       {
         target: '#addDebitAmount'
-        content: "This is the input box for the Amount for your entry."
+        content: "This is the input box for the Amount for your entry.Enter an amount for which you want to make the entry."
         before: (direction, step) ->
           lc.lastTourStep = step
           tour.config.showNext = true
@@ -126,38 +127,39 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           d.resolve()
           return d.promise
       },
-      {
-        target: '.left-col'
-        content: "Let us create an entry for SALES account. In the input box for account, select the 'sales' account."
-        before: (direction, step) ->
-          lc.lastTourStep = step
-          tour.config.showNext = false
-          if !_.isEmpty(lc.selectedLedger.transactions[0].particular) && lc.selectedLedger.transactions[0].particular.uniqueName == 'sales'
-            tour.config.showNext = true
-          else
-            tour.config.showNext = false
-          lc.pausedBeforeAccountSelection = true
-          # lc.disableInputsWhileTour = false
-          d = $q.defer();
-          d.resolve()
-          return d.promise
-      },
-      {
-        target: '#addDebitAmount'
-        content: "Great! Now enter the transaction amount for your entry."
-        before: (direction, step) ->
-          lc.lastTourStep = step
-          tour.config.showNext = true
-          d = $q.defer();
-          d.resolve()
-          return d.promise
-      },
+      # {
+      #   target: '.left-col'
+      #   content: "Let us create an entry for SALES account. In the input box for account, select the 'sales' account."
+      #   before: (direction, step) ->
+      #     lc.lastTourStep = step
+      #     tour.config.showNext = false
+      #     if !_.isEmpty(lc.selectedLedger.transactions[0].particular) && lc.selectedLedger.transactions[0].particular.uniqueName == 'sales'
+      #       tour.config.showNext = true
+      #     else
+      #       tour.config.showNext = false
+      #     lc.pausedBeforeAccountSelection = true
+      #     # lc.disableInputsWhileTour = false
+      #     d = $q.defer();
+      #     d.resolve()
+      #     return d.promise
+      # },
+      # {
+      #   target: '#addDebitAmount'
+      #   content: "Great! Now enter the transaction amount for your entry."
+      #   before: (direction, step) ->
+      #     lc.lastTourStep = step
+      #     tour.config.showNext = true
+      #     d = $q.defer();
+      #     d.resolve()
+      #     return d.promise
+      # },
       {
         target: '#saveUpdate'
         content: "Now that we have the date, account and transaction amount for the debit entry, click on this button to save it!"
         before: (direction, step) ->
           lc.lastTourStep = step
           tour.config.showNext = false
+          lc.pausedBeforeAccountSelection = true
           d = $q.defer();
           d.resolve()
           return d.promise
@@ -173,12 +175,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           return d.promise
       },
       {
-        target: '.right-col'
+        target: '#addCreditEntry'
         content: "Let us create an entry for purchase account. In the input box for account, select the 'purchases' account."
         before: (direction, step) ->
           lc.lastTourStep = step
-          if !_.isEmpty(lc.selectedLedger.transactions[1].particular) && lc.selectedLedger.transactions[1].particular.uniqueName == 'purchases'
-            tour.config.showNext = false
+          tour.config.showNext = false
           lc.pausedBeforeAccountSelection = true
           d = $q.defer();
           d.resolve()
@@ -1795,13 +1796,13 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         tax.account = {}
         tax.account.uniqueName = 0
       lc.taxList.push(tax)
-    lc.matchTaxAccounts(lc.taxList)
+    #lc.matchTaxAccounts(lc.taxList)
 
   lc.getTaxListFailure = (res) ->
     toastr.error(res.data.message, res.status)
 
-  lc.matchTaxAccounts = (taxlist) ->
-    _.each taxlist, (tax) ->
+  # lc.matchTaxAccounts = (taxlist) ->
+  #   _.each taxlist, (tax) ->
       
 
   # lc.addTaxEntry = (tax, item) ->
@@ -2805,6 +2806,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   $rootScope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE' 
       lc.loadDefaultAccount()
+      lc.getTaxList()
     # else if changeData.type == 'SELECT'
     #   console.log 'load same account'
     #$state.reload()

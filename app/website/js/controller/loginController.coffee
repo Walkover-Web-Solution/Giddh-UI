@@ -65,7 +65,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
       # ),3000
 
     $scope.twoWayUserData.oneTimePassword = code
-    url = '/verify-number'
+    url = '/app/api/verify-number'
     $http.post(url,  $scope.twoWayUserData).then(@success, @failure)
 
   loginWithTwoWayAuthentication = (res) ->
@@ -136,7 +136,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
   $scope.getOtp = () ->
     $scope.contact.countryCode = $scope.countryCode
     if $scope.contact.mobileNumber != undefined
-      $http.post('/get-login-otp', $scope.contact).then(
+      $http.post('/app/api/get-login-otp', $scope.contact).then(
         getOtpSuccess,
         getOtpFailure
       )
@@ -160,7 +160,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
       mobileNumber : $scope.contact.mobileNumber
       token : token
     }
-    $http.post('/login-with-number', data).then(
+    $http.post('/app/api/login-with-number', data).then(
       loginUserSuccess,
       loginUserFailure
     )
@@ -176,7 +176,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
   $scope.verifyOtp = (otp) ->
     contact = $scope.contact
     contact.oneTimePassword = otp
-    $http.post('/verify-login-otp', contact).then(
+    $http.post('/app/api/verify-login-otp', contact).then(
       verifyOtpSuccess,
       verifyOtpFailure
     )
@@ -186,7 +186,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
     dataToSend = {
       email: emailId
     }
-    $http.post('/signup-with-email', dataToSend).then(
+    $http.post('/app/api/signup-with-email', dataToSend).then(
       (res) ->
         $scope.verifyMail = true
         $scope.emailToVerify = emailId
@@ -202,7 +202,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
       email: $scope.emailToVerify
       verificationCode: code
     }
-    $http.post('/verify-email-now', dataToSend).then(
+    $http.post('/app/api/verify-email-now', dataToSend).then(
       verifyEmailSuccess,
       verifyEmailFailure
     )
