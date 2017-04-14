@@ -81,7 +81,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   #       fromLabel: 'From'
   #       format: 'D-MMM-YY'
   #       toLabel: 'To'
-  #       opens: 'center'
   #       cancelLabel: 'Cancel'
   #       customRangeLabel: 'Custom range'
   #     ranges:

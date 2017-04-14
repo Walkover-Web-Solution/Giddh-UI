@@ -295,7 +295,7 @@ app.controller 'homeCtrl', [
         console.log res
         #toastr.error(res.data)
 
-      $http.get('/app/api/user-location').then(@success, @failure)
+      $http.get('/user-location').then(@success, @failure)
 
     getLocation()
 ]
@@ -303,19 +303,13 @@ app.controller 'homeCtrl', [
 app.config [
   '$authProvider'
   ($authProvider) ->
-    $authProvider.google 
-      clientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com'
-      url : '/app/auth/google'
-    $authProvider.twitter 
-      clientId: 'w64afk3ZflEsdFxd6jyB9wt5j'
-      url: '/app/auth/twitter'
-    $authProvider.linkedin 
-      clientId: '75urm0g3386r26'
-      url: '/app/auth/linkedin'
-    
+    $authProvider.google clientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com'
+    $authProvider.twitter clientId: 'w64afk3ZflEsdFxd6jyB9wt5j'
+    $authProvider.linkedin clientId: '75urm0g3386r26'
+
     # LinkedIn
     $authProvider.linkedin({
-      url: '/app/auth/linkedin'
+      url: '/auth/linkedin'
       authorizationEndpoint: 'https://www.linkedin.com/uas/oauth2/authorization'
       # redirectUri: "http://localhost:8000/login/"
       redirectUri: window.location.origin+"/login/"

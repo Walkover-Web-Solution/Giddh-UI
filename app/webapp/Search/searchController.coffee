@@ -68,7 +68,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     toastr.error(res.data.message, res.data.status)
 
   # get selected group closing balance
-  $scope.getClosingBalance = (data, refresh) ->
+  $scope.getClosingBalance = (data) ->
     $scope.resetQuery()
     $scope.searchDtCntLdr = true
     obj = {
@@ -76,7 +76,6 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
       selGrpUname: data.group.uniqueName
       fromDate: $filter('date')(data.fromDate, "dd-MM-yyyy")
       toDate: $filter('date')(data.toDate, "dd-MM-yyyy")
-      refresh: refresh
     }
     groupService.getClosingBal(obj)
       .then(
