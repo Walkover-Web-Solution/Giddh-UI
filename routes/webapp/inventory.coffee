@@ -2,11 +2,11 @@ settings = require('../util/settings')
 router = settings.express.Router({mergeParams: true})
 
 router.get '/unit-types', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-unit'
+  hUrl = settings.envUrl + '/stock-units'
   args =
     headers:
       'Auth-Key': req.session.authKey
-      # 'Content-Type': 'application/json'
+      'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined

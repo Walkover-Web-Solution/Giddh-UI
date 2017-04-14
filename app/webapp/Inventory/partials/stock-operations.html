@@ -164,12 +164,10 @@
 					<input type="number" name="stockSalesRate" class="form-control" ng-model="stock.addStockItem.stockSalesRate" required>
 				</div>				
 			</div>
-<!-- 			<button type="submit" class="btn btn-md btn-default pad0"  ng-disabled="addStockGroup.stockName.$invalid">
-				<span style="padding:6px 12px;display:block" >Add</span>
-				<span style="padding:6px 12px;display:block"  >Modify</span>
-			</button> -->
-			<button style="padding:6px 12px;display:block" type="submit" class="btn btn-md btn-default pad0"  ng-disabled="addStockGroup.stockName.$invalid" ng-if="stock.selectedStockItem == null" ng-click="stock.addStock(stock.addStockItem)">Add</button>
-			<button style="padding:6px 12px;display:block" type="submit" class="btn btn-md btn-default pad0"  ng-disabled="addStockGroup.stockName.$invalid" ng-if="stock.selectedStockItem != null" ng-click="stock.updateStock(stock.addStockItem)">Modify</button>
+			<button type="submit" class="btn btn-md btn-default pad0"  ng-disabled="addStockGroup.stockName.$invalid">
+				<span style="padding:6px 12px;display:block" ng-if="stock.selectedStockItem == null" ng-click="stock.addStock(stock.addStockItem)">Add</span>
+				<span style="padding:6px 12px;display:block"  ng-if="stock.selectedStockItem != null" ng-click="stock.updateStock(stock.addStockItem)">Modify</span>
+			</button>
 		</form>
 
 	</aside>
