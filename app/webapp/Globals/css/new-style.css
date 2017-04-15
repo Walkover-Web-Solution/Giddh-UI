@@ -2082,7 +2082,7 @@ table.borderless td, table.borderless th {
     font-weight: 600;
 }
 
-.pdf-export {
+.pdf-export, .xls-export {
     position: relative;
     margin-right: 10px;
 }
