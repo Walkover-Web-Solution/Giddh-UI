@@ -226,6 +226,9 @@ angular.module('inventoryController', [])
 			})
 			$rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
 			stock.getAllStocks()
+
+			
+			stock.selectedStockItem.uniqueName = res.body.uniqueName
 			toastr.success('Stock Updated successfully')
 		}
 
@@ -250,6 +253,7 @@ angular.module('inventoryController', [])
 			stockGroupUniqueName: stock.selectedStockItem.stockGroup.uniqueName,
 			stockUniqueName: stock.selectedStockItem.uniqueName
 		}
+		// console.log(stockItem.stockUnqName)
 		stockService.updateStockItem(reqParam, data).then(this.success, this.failure)
 
 	}
