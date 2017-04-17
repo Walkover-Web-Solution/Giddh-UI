@@ -219,7 +219,7 @@ textarea:disabled, input:disabled{
 
                     <div class="upload_div">
                       <input type="file" name="invoiceLogo" id="invoiceLogo" file-model="logoFile" ng-click="$event.stopPropagation()">
-                      <label for="invoiceLogo" class="upload-btn"><i class="glyphicon glyphicon-upload"></i> Upload Image</label>
+                      <label for="invoiceLogo" class="upload-btn" ng-click="$event.stopPropagation()" style="margin-top:0;margin-left:10px "><i class="glyphicon glyphicon-upload" ></i> Select Image</label>
                       <button class="btn btn-md btn-default" ng-click="uploadLogo('logo')">Upload</button>
                     </div>
                       <!-- <input type="file" name="invoiceLogo" id="invoiceLogo" file-model="logoFile" ng-click="$event.stopPropagation()">
@@ -517,7 +517,7 @@ textarea:disabled, input:disabled{
 
                     <div class="upload_div">
                       <input type="file" name="invoiceSign" id="invoiceSign" file-model="logoFile" ng-click="$event.stopPropagation()">
-                      <label for="invoiceSign" class="upload-btn"><i class="glyphicon glyphicon-upload"></i> Upload Image</label>
+                      <label for="invoiceSign" class="upload-btn" ng-click="$event.stopPropagation()" style="margin-top:0;margin-left:10px "><i class="glyphicon glyphicon-upload" ></i> Select Image</label>
                       <button class="btn btn-md btn-default" ng-click="uploadLogo('signature')">Upload</button>
                     </div>
 

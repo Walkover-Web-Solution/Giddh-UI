@@ -2999,6 +2999,7 @@ ul.pills li {
     float: left;
     height:100%;
     position: relative;
+    padding-bottom:50px;
 }
 
 .left-col {

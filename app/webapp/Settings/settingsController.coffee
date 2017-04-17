@@ -691,7 +691,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
 
   $scope.deleteAddedBankAccountConfirmedFailure = (res) ->
-    toastr.error(res.body)
+    toastr.error(res.data.message)
 
   $scope.refreshAccounts = () ->
     companyUniqueName =  {
