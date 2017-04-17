@@ -363,7 +363,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.dbConfig = 
     name: 'giddh_db'
     storeName: 'ledgers'
-    version: 20
+    version: 21
     success: (e) ->
     failure: (e) ->
     upgrade: (e) ->
@@ -2572,7 +2572,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     limit: 5
   }
 
-  lc.getFlattenGrpWithAccList = (compUname) ->
+  lc.getFlattenGrpWithAccList = (compUname, showEmpty) ->
 #    console.log("working  : ",lc.working)
     reqParam = {
       companyUniqueName: compUname
@@ -2580,6 +2580,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       page: lc.gwaList.page
       count: lc.gwaList.count
     }
+    if(showEmpty) 
+      reqParam.showEmptyGroups = true
     groupService.getFlattenGroupAccList(reqParam).then(lc.getFlattenGrpWithAccListSuccess, lc.getFlattenGrpWithAccListFailure)
 
   lc.getGroupsWithDetail = () ->
@@ -2623,7 +2625,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.newAccountModel.account = ''
     lc.newAccountModel.accUnqName = ''
     lc.selectedTxn.isOpen = false
-    lc.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
+    lc.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName, true)
     lc.AccmodalInstance = $uibModal.open(
       templateUrl: $rootScope.prefixThis+'/public/webapp/Ledger/createAccountQuick.html'
       size: "sm"

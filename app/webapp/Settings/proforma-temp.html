@@ -134,9 +134,9 @@
 													<i class="glyphicon glyphicon-folder-open"></i>
 													&nbsp; Upload Logo</button><br/>
 												<small>* Image size should be max 200KB</small> -->
-												<div class="upload_div">
+												<div class="upload_div" style="margin-top:35px;">
 												  <input type="file" name="proformaLogo" id="proformaLogo" file-model="item.uploadFile" ng-click="$event.stopPropagation()">
-												  <label for="proformaLogo" class="upload-btn"><i class="glyphicon glyphicon-upload"></i> Upload Image</label>
+												  <label for="proformaLogo" class="upload-btn" ng-click="$event.stopPropagation()" style="margin-top:0;margin-left:10px;"><i class="glyphicon glyphicon-upload"></i> Select Image</label>
 												  <button class="btn btn-md btn-default" ng-click="ctrl.uploadImages('logo', item, false)">Upload</button>
 												</div>
 												<!-- <input type="file" name="proformaLogo" id="proformaLogo" file-model="item.uploadFile" ng-click="$event.stopPropagation()">
