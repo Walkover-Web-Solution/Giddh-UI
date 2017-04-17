@@ -364,7 +364,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.dbConfig = 
     name: 'giddh_db'
     storeName: 'ledgers'
-    version: 20
+    version: 21
     success: (e) ->
     failure: (e) ->
     upgrade: (e) ->
