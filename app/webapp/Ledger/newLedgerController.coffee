@@ -51,7 +51,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       placementPriority: ['top', 'right','left', 'bottom']
       onClose: () ->
         tour.config.showNext = true 
-        alert('You can always restart the tour from the user menu dropdown on the right top corner of your screen.')
       onComplete: () ->
         console.log 'completed'
     }
@@ -98,7 +97,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       },
       {
         target: '#addDebitEntry'
-        content: "This is the input box for the account from which you are recieving something. Type sales and select the account from the dropdown list."
+        content: "This is the input box for the account from which you are recieving something. Type <span class='ui-select-highlight'>sales</span> and select the account from the dropdown list by pressing <span class='ui-select-highlight'>enter key</span>."
         before: (direction, step) ->
           lc.lastTourStep = step
           tour.config.showNext = false
@@ -176,7 +175,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       },
       {
         target: '#addCreditEntry'
-        content: "Let us create an entry for purchase account. In the input box for account, select the 'purchases' account."
+        content: "Let us create an entry for purchase account. In the input box for account, select the <span class='ui-select-highlight'>purchases</span> account and press the <span class='ui-select-highlight'>enter key</span>"
         before: (direction, step) ->
           lc.lastTourStep = step
           tour.config.showNext = false
@@ -1438,6 +1437,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.getBankTransactionsSuccess = (res) ->
     lc.eLedgerData = lc.formatBankLedgers(res.body)
     lc.calculateELedger()
+    lc.getReconciledEntries()
     #lc.removeUpdatedBankLedger()
 
   lc.calculateELedger = () ->
@@ -2847,11 +2847,79 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.prevTxn.isOpen = false
     return 0
 
+  lc.getReconciledEntries = (cheque, toMap, matchingEntries) ->
+    @success = (res) ->
+      lc.reconciledEntries = res.body
+      if toMap
+        _.each lc.reconciledEntries, (entry) ->
+          _.each entry.transactions, (txn) ->
+            if txn.amount == lc.selectedLedger.transactions[0].amount
+              matchingEntries.push(entry)
+        if matchingEntries.length == 1
+          lc.confirmBankTransactionMap(matchingEntries[0], lc.selectedLedger)
+        else if matchingEntries.length >1
+          lc.showBankEntriesToMap(matchingEntries)
+        else
+          toastr.error('no entry with matching amount found, please create a new entry with same amount as this transaction.')
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      accountUniqueName: $rootScope.selectedAccount.uniqueName
+      from: $filter('date')($scope.cDate.startDate, 'dd-MM-yyyy')
+      to: $filter('date')($scope.cDate.endDate, 'dd-MM-yyyy')
+      chequeNumber: cheque
+
+    }
+
+    ledgerService.getReconcileEntries(reqParam).then(@success, @failure)
+  
   # $rootScope.$on('account-selected', ()->
   #   lc.getAccountDetail(lc.accountUnq)
   #   #lc.isSelectedAccount()
   #   #$rootScope.$emit('catchBreadcumbs', lc.accountToShow.name)
   # )
+
+  lc.matchBankTransaction = () ->
+    matchingEntries = []
+    lc.getReconciledEntries('', true, matchingEntries)
+
+
+  lc.confirmBankTransactionMap = (mappedEntry, bankEntry) ->
+    modalService.openConfirmModal(
+        title: 'Map Bank Entry'
+        body: 'Selected bank transaction will be mapped with cheque number ' +mappedEntry.chequeNumber+ '. Click yes to accept.',
+        ok: 'Yes',
+        cancel: 'No'
+      ).then(
+          (res) -> lc.mapBankTransaction(mappedEntry.uniqueName, bankEntry.transactionId),
+          (res) -> 
+      )
+  lc.mapBankTransaction = (entryUnq, transactionId) ->
+    lc.selectedTxn.isOpen = false
+    @success = (res) ->
+      toastr.success(res.body)
+      lc.getLedgerData()
+      lc.getBankTransactions($rootScope.selectedAccount.uniqueName)
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      accountUniqueName: $rootScope.selectedAccount.uniqueName
+      transactionId: transactionId
+    }
+    data = {
+      uniqueName: entryUnq
+    }
+    ledgerService.mapBankEntry(reqParam, data).then(@success, @failure)
+
+  lc.showBankEntriesToMap = (matchingEntries) ->
+    lc.showMatchingEntries = true
+    lc.matchingEntries = matchingEntries
 
   lc.commonOnUpgrade = (db) ->
     if db.objectStoreNames.contains('ledgers')

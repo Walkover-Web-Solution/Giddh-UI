@@ -8,6 +8,7 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
       'date1': @date1
       'date2': @date2
       'entryUniqueName': @entryUniqueName
+      'chequeNumber':@chequeNumber
     },
     {
       get: {
@@ -38,6 +39,11 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
         method: 'GET',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/invoice-file'
       }
+      getReconcileEntries: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/reconcile'
+      }
+      
     }
   )
 
@@ -60,6 +66,10 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
       trashTransaction: {
         method: 'DELETE',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/eledgers/:transactionId'
+      }
+      mapEntry: {
+        method: 'PUT',
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/eledgers/map/:transactionId'
       }
     }
   )
@@ -129,5 +139,21 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
         accountsUniqueName: unqNamesObj.accountsUniqueName,
         fileName:unqNamesObj.file
       }, onSuccess, onFailure))
+
+    getReconcileEntries: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> Ledger.getReconcileEntries({
+        companyUniqueName: unqNamesObj.companyUniqueName,
+        accountsUniqueName: unqNamesObj.accountUniqueName,
+        chequeNumber:unqNamesObj.chequeNumber,
+        from:unqNamesObj.from
+        to:unqNamesObj.to
+      }, onSuccess, onFailure))
+
+    mapBankEntry: (unqNamesObj, data) ->
+      @handlePromise((onSuccess, onFailure) -> otherLedger.mapEntry({
+        companyUniqueName: unqNamesObj.companyUniqueName,
+        accountsUniqueName: unqNamesObj.accountUniqueName
+        transactionId: unqNamesObj.transactionId
+      },data, onSuccess, onFailure))
 
   ledgerService
