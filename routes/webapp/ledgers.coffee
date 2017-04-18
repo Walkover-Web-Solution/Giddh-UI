@@ -10,8 +10,9 @@ router.get '/', (req, res) ->
     parameters:
       to: req.query.toDate
       from: req.query.fromDate
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/ledgers'
+      count:Number(req.query.count) || 0
+      page:Number(req.query.page) || 1
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/ledgers'
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

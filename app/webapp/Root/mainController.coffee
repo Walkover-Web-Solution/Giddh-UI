@@ -611,8 +611,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.$broadcast('company-changed', changeData)
     $rootScope.$emit('company-changed', changeData)
     url = $location.url()
-    if url.indexOf('ledger') == -1
-      $state.go('company.content.ledgerContent')
+    # if url.indexOf('ledger') == -1
+    #   $state.go('company.content.ledgerContent')
     $scope.gwaList = {
       page: 1
       count: 10

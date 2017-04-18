@@ -600,51 +600,7 @@ th {
 </nav>
 
 	<!-- ledger table end -->
-	<table>
-		
-	</table>
-	<table>
-		
-		<thead>
-			
-		</thead>
-		<tbody>
-			<tr ng-repeat="ledger in lc.paginatedLedgers">
-				<td>
-					<table>
-						<tbody>
-							<tr ng-repeat="txn in ledger" ng-if="txn.type=='DEBIT'">
-								<td ng-bind="ledger.entryDate"></td>
-								<td ng-bind="txn.particular"></td>
-								<td ng-bind="txn.amount"></td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<table>
-		
-		<thead>
-			
-		</thead>
-		<tbody>
-			<tr ng-repeat="ledger in lc.paginatedLedgers">
-				<td>
-					<table>
-						<tbody>
-							<tr ng-repeat="txn in ledger" ng-if="txn.type=='CREDIT'">
-								<td ng-bind="ledger.entryDate"></td>
-								<td ng-bind="txn.particular"></td>
-								<td ng-bind="txn.amount"></td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-		</tbody>
-	</table>
+
 </section>
 <section class="ledger-stat">
 	<div class="container">
@@ -665,4 +621,5 @@ th {
 			<h3>{{lc.ledgerData.reckoningCreditTotal | number:2}}</h3>
 		</div>
 	</div>
+
 </section>

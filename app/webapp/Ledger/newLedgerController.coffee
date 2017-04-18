@@ -101,6 +101,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         before: (direction, step) ->
           lc.lastTourStep = step
           tour.config.showNext = false
+          if !_.isEmpty(lc.selectedLedger.transactions[0].particular) && lc.selectedLedger.transactions[0].particular.uniqueName == 'sales'
+            tour.config.showNext = true
           lc.pausedBeforeAccountSelection = true
           d = $q.defer();
           d.resolve()
@@ -179,6 +181,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         before: (direction, step) ->
           lc.lastTourStep = step
           tour.config.showNext = false
+          if !_.isEmpty(lc.selectedLedger.transactions[0].particular) && lc.selectedLedger.transactions[0].particular.uniqueName == 'purchases'
+            tour.config.showNext = true
           lc.pausedBeforeAccountSelection = true
           d = $q.defer();
           d.resolve()
@@ -2408,7 +2412,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     
   lc.updateEntryFailure = (res, ledger) ->
     lc.doingEntry = false
-    ledger.failed = true
+    ledger = lc.ledgerBeforeEdit
     toastr.error(res.data.message, res.data.status)
     # $timeout ( ->
     #   lc.pageLoader = false
@@ -3205,30 +3209,42 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.taxTransactionsVisibility = "Show all Tax Transactions"
 
   ####################### functions for ledger design with pagination ###################################
-  lc.ledgerPerPageCount = 50
-  lc.getPaginatedLedger = (page) ->
-    @success = (res) ->
-      console.log res
-      lc.paginatedLedgers = res.body.ledgers
+  # lc.ledgerPerPageCount = 2
+  # lc.pages = []
+  # lc.getPaginatedLedger = (page) ->
+  #   @success = (res) ->
+  #     console.log res
+  #     lc.pages = []
+  #     lc.paginatedLedgers = res.body.ledgers
+  #     lc.totalLedgerPages = res.body.totalPages
+  #     lc.currentPage = res.body.page
+  #     lc.addLedgerPages()
 
-    @failure = (res) ->
-      console.log res
+  #   @failure = (res) ->
+  #     console.log res
 
-    if _.isUndefined($rootScope.selectedCompany.uniqueName)
-      $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
-    unqNamesObj = {
-      compUname: $rootScope.selectedCompany.uniqueName
-      acntUname: lc.accountUnq
-      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
-      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
-      count: lc.ledgerPerPageCount
-      page: page || 1
-    }
-    if not _.isEmpty(lc.accountUnq)
-      ledgerService.getLedger(unqNamesObj).then(@success, @failure)
+  #   if _.isUndefined($rootScope.selectedCompany.uniqueName)
+  #     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+  #   unqNamesObj = {
+  #     compUname: $rootScope.selectedCompany.uniqueName
+  #     acntUname: lc.accountUnq
+  #     fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
+  #     toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
+  #     count: lc.ledgerPerPageCount
+  #     page: page || 1
+  #   }
+  #   if not _.isEmpty(lc.accountUnq)
+  #     ledgerService.getLedger(unqNamesObj).then(@success, @failure)
 
+  # lc.getPaginatedLedger(1)
 
-  lc.getPaginatedLedger(1)
+  # lc.addLedgerPages = () ->
+  #   i = 0
+  #   while i <= lc.totalLedgerPages
+  #     if i > 0
+  #       lc.pages.push(i)
+  #     i++
+
 
   return lc
 
