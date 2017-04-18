@@ -3,7 +3,6 @@ router = settings.express.Router({mergeParams: true})
 
 #Get all ledgers for an account, query params are - fromDate/toDate {dd-mm-yyyy}
 router.get '/', (req, res) ->
-  console.log req.query, req.params
   args =
     headers:
       'Auth-Key': req.session.authKey
