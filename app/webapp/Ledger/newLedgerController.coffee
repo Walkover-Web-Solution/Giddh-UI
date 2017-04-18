@@ -3206,10 +3206,14 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   ####################### functions for ledger design with pagination ###################################
   lc.ledgerPerPageCount = 50
+  lc.pages = []
   lc.getPaginatedLedger = (page) ->
     @success = (res) ->
       console.log res
       lc.paginatedLedgers = res.body.ledgers
+      lc.totalLedgerPages = res.body.totalPages
+      lc.currentPage = res.body.page
+      lc.addLedgerPages()
 
     @failure = (res) ->
       console.log res
@@ -3227,8 +3231,15 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     if not _.isEmpty(lc.accountUnq)
       ledgerService.getLedger(unqNamesObj).then(@success, @failure)
 
-
   lc.getPaginatedLedger(1)
+
+  lc.addLedgerPages = () ->
+    i = 0
+    while i <= lc.totalLedgerPages
+      if i > 0
+        lc.pages.push(i)
+      i++
+
 
   return lc
 

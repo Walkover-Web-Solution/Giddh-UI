@@ -49,4 +49,16 @@
 	</table>
 
 
+	<ul class="list-inline">
+		<li>
+			<a href="javascript:void(0)" ng-click="lc.getPaginatedLedger(1)">First</a>
+		</li>
+		<li ng-repeat="page in lc.pages">
+			<a href="javascript:void(0)" ng-click="lc.getPaginatedLedger(page)">{{page}}</a>
+		</li>
+		<li>
+			<a href="javascript:void(0)" ng-click="lc.getPaginatedLedger(lc.totalLedgerPages)">Last</a>
+		</li>
+	</ul>
+
 </section>
