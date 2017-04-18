@@ -211,19 +211,19 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
     }
   )
-  # .state('company.content.ledgerContent1',
-  #   url: '/ledger-paginated/:unqName'
-  #   views:{
-  #     # 'accountsList':{
-  #     #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
-  #     # }
-  #     'rightPanel':{
-  #       templateUrl: appendThis+'/public/webapp/Ledger/ledgerPaginated.html'
-  #       controller: 'newLedgerController'
-  #       controllerAs: 'lc'
-  #     }
-  #   }
-  # )
+  .state('company.content.ledgerContent1',
+    url: '/ledger-paginated/:unqName'
+    views:{
+      # 'accountsList':{
+      #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
+      # }
+      'rightPanel':{
+        templateUrl: appendThis+'/public/webapp/Ledger/ledgerPaginated.html'
+        controller: 'newLedgerController'
+        controllerAs: 'lc'
+      }
+    }
+  )
   .state('dashboard',
     url: '/dashboard'
     templateUrl: appendThis+'/public/webapp/Dashboard/dashboard.html'
