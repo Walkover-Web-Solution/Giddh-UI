@@ -101,6 +101,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         before: (direction, step) ->
           lc.lastTourStep = step
           tour.config.showNext = false
+          if !_.isEmpty(lc.selectedLedger.transactions[0].particular) && lc.selectedLedger.transactions[0].particular.uniqueName == 'sales'
+            tour.config.showNext = true
           lc.pausedBeforeAccountSelection = true
           d = $q.defer();
           d.resolve()
@@ -179,6 +181,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         before: (direction, step) ->
           lc.lastTourStep = step
           tour.config.showNext = false
+          if !_.isEmpty(lc.selectedLedger.transactions[0].particular) && lc.selectedLedger.transactions[0].particular.uniqueName == 'purchases'
+            tour.config.showNext = true
           lc.pausedBeforeAccountSelection = true
           d = $q.defer();
           d.resolve()
@@ -2408,7 +2412,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     
   lc.updateEntryFailure = (res, ledger) ->
     lc.doingEntry = false
-    ledger.failed = true
+    ledger = lc.ledgerBeforeEdit
     toastr.error(res.data.message, res.data.status)
     # $timeout ( ->
     #   lc.pageLoader = false
@@ -3205,11 +3209,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.taxTransactionsVisibility = "Show all Tax Transactions"
 
   ####################### functions for ledger design with pagination ###################################
-  # lc.ledgerPerPageCount = 50
+  # lc.ledgerPerPageCount = 2
   # lc.pages = []
   # lc.getPaginatedLedger = (page) ->
   #   @success = (res) ->
   #     console.log res
+  #     lc.pages = []
   #     lc.paginatedLedgers = res.body.ledgers
   #     lc.totalLedgerPages = res.body.totalPages
   #     lc.currentPage = res.body.page

@@ -154,7 +154,7 @@ router.put '/:accountUniqueName/unshare', (req, res) ->
 
 #map bank transaction
 router.put '/:accountUniqueName/eledgers/map/:transactionId', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/eledgers/' + req.params.transactionId
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/accounts/' + req.params.accountUniqueName + '/eledgers/' + req.params.transactionId
   args =
     headers:
       'Auth-Key': req.session.authKey
