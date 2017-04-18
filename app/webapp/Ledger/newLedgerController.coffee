@@ -3204,5 +3204,34 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     else
       lc.taxTransactionsVisibility = "Show all Tax Transactions"
 
+  ####################### functions for ledger design with pagination ###################################
+  lc.ledgerPerPageCount = 50
+  lc.getPaginatedLedger = (page) ->
+    @success = (res) ->
+      console.log res
+      lc.paginatedLedgers = res.body.ledgers
+
+    @failure = (res) ->
+      console.log res
+
+    if _.isUndefined($rootScope.selectedCompany.uniqueName)
+      $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: lc.accountUnq
+      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
+      count: lc.ledgerPerPageCount
+      page: page || 1
+    }
+    if not _.isEmpty(lc.accountUnq)
+      ledgerService.getLedger(unqNamesObj).then(@success, @failure)
+
+
+  lc.getPaginatedLedger(1)
+
   return lc
+
+
+
 giddh.webApp.controller 'newLedgerController', newLedgerController
