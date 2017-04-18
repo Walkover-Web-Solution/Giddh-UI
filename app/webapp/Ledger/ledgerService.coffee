@@ -5,15 +5,17 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
     {
       'companyUniqueName': @companyUniqueName,
       'accountsUniqueName': @accountsUniqueName
-      'date1': @date1
-      'date2': @date2
+      'fromDate': @fromDate
+      'toDate': @toDate
       'entryUniqueName': @entryUniqueName
       'chequeNumber':@chequeNumber
+      'count':@count
+      'page':@page
     },
     {
       get: {
         method: 'GET',
-        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers?fromDate=:date1&toDate=:date2'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers'
       }
       create: {
         method: 'POST'
@@ -86,8 +88,10 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Ledger.get({
         companyUniqueName: unqNamesObj.compUname,
         accountsUniqueName: unqNamesObj.acntUname
-        date1: unqNamesObj.fromDate
-        date2: unqNamesObj.toDate
+        fromDate: unqNamesObj.fromDate
+        toDate: unqNamesObj.toDate
+        page:unqNamesObj.page
+        count:unqNamesObj.count
       }, onSuccess, onFailure))
 
     createEntry: (unqNamesObj, data) ->

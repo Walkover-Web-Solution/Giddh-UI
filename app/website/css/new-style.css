@@ -1953,3 +1953,17 @@ button.toast-close-button {
 #filling .giddh img, #filling .others img{
 display: none;
 }
+
+
+/****************** magic page *********************/
+.form-middle {
+  margin: 0 10px;
+  top: 6px;
+  position: relative;
+}
+.datePickr .dropdown-menu {
+  padding-top: 0 !important;
+}
+.datePickr table:focus {
+  outline: 0;
+}
