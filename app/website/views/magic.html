@@ -39,7 +39,7 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <ng-include src="'/public/website/views/magic_header.html'"></ng-include>
 
-    <section class="container-fluid" style="margin-top:100px">
+    <section class="container-fluid">
       <div style="min-height:600px" ng-hide="magicReady">
         <div class="loader">
           <span></span>
@@ -64,9 +64,9 @@
 
           <div class="form-inline pdB1 ledgHead">
             <form name="fromToDateForm" novalidate class="form-group mrR1">
-              <div class="form-group">
+              <div class="form-group datePickr">
                 <label>From</label>
-                <p class="input-group maxW150">
+                <div class="input-group maxW150">
                   <input type="text" class="form-control"
                         uib-datepicker-popup="{{format}}" required
                         datepicker-options="dateOptions"
@@ -80,12 +80,13 @@
                 <button type="button" class="btn btn-default" ng-click="fromDatePickerOpen()"><i
                     class="glyphicon glyphicon-calendar"></i></button>
               </span>
-                </p>
+                </div>
+              </div>
+              <div class="form-group datePickr">
+                <label class="form-middle">To</label>
               </div>
               <div class="form-group">
-                <label>To</label>
-
-                <p class="input-group maxW150">
+                <div class="input-group maxW150">
                   <input type="text" class="form-control"
                         uib-datepicker-popup="{{format}}" required
                         datepicker-options="dateOptions"
@@ -100,7 +101,7 @@
                 <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i
                     class="glyphicon glyphicon-calendar"></i></button>
               </span>
-                </p>
+                </div>
               </div>
               <div class="form-group">
                 <button type="button" class="btn btn-primary mrL1" ng-disabled="fromToDateForm.$invalid" ng-click="getDataByDate(false)">
