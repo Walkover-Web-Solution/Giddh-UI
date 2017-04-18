@@ -2412,7 +2412,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     
   lc.updateEntryFailure = (res, ledger) ->
     lc.doingEntry = false
-    ledger = lc.ledgerBeforeEdit
+    ledger = angular.copy(lc.ledgerBeforeEdit, ledger)
     toastr.error(res.data.message, res.data.status)
     # $timeout ( ->
     #   lc.pageLoader = false
