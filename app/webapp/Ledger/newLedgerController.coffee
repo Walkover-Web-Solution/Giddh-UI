@@ -265,6 +265,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           $scope.cDate.startDate = e.model.startDate._d
           $scope.cDate.endDate = e.model.endDate._d
           lc.getLedgerData(false, true)
+        'show.daterangepicker': (e, picker) ->
       }
   }
   $scope.setStartDate = ->
@@ -272,7 +273,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
 
   $scope.setRange = ->
     $scope.cDate =
-        startDate: moment().subtract(5, 'days')
+        startDate: moment().subtract(29, 'days')
         endDate: moment()
   ###date range picker end###
 
@@ -1560,6 +1561,12 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.showLoader = showLoaderCondition || true
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+    if $scope.cDate.startDate == undefined
+      $scope.cDate.startDate = moment().subtract(29, 'days')
+      $scope.cDate.startDate = $scope.cDate.startDate._d
+    if $scope.cDate.endDate == undefined
+      $scope.cDate.endDate = moment()
+      $scope.cDate.endDate = $scope.cDate.endDate._d
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: lc.accountUnq
