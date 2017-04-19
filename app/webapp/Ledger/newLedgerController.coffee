@@ -265,6 +265,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
           $scope.cDate.startDate = e.model.startDate._d
           $scope.cDate.endDate = e.model.endDate._d
           lc.getLedgerData(false, true)
+          lc.getPaginatedLedger(1)
       }
   }
   $scope.setStartDate = ->
@@ -3213,7 +3214,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.taxTransactionsVisibility = "Show all Tax Transactions"
 
   ####################### functions for ledger design with pagination ###################################
-  lc.ledgerPerPageCount = 2
+  lc.ledgerPerPageCount = 10
   lc.pages = []
   lc.getPaginatedLedger = (page) ->
     @success = (res) ->
@@ -3222,6 +3223,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.paginatedLedgers = res.body.ledgers
       lc.totalLedgerPages = res.body.totalPages
       lc.currentPage = res.body.page
+      lc.totalCreditTxn = res.body.totalCreditTransactions
+      lc.totalDebitTxn = res.body.totalDebitTransactions
       lc.addLedgerPages()
 
     @failure = (res) ->
