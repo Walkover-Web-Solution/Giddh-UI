@@ -120,7 +120,7 @@ router.post '/verify-email', (req, res) ->
   settings.client.get hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
-    res.send data
+    res.sendFile('/public/webapp/views/index.html')
 
 router.post '/proforma/pay', (req, res) ->
   data = req.body
