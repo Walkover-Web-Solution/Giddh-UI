@@ -1800,7 +1800,11 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       if tax.account == null
         tax.account = {}
         tax.account.uniqueName = 0
+      #check if selected account is a tax account
+      if tax.account.uniqueName == lc.accountToShow.uniqueName
+        lc.accountToShow.isTax = true
       lc.taxList.push(tax)
+
     #lc.matchTaxAccounts(lc.taxList)
 
   lc.getTaxListFailure = (res) ->
@@ -2783,7 +2787,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         lc.dLedgerContainer.remove(lc.prevLedger)
         lc.log "RemovedDR: ", lc.prevLedger.uniqueName
       lc.prevLedger = ledger
-
+    console.log txn.hide, txn.isTax
     if e
       e.stopPropagation()
 
