@@ -354,7 +354,7 @@
                                     class="ledger-row"
                                     ng-repeat="txn in value.transactions"
                                     ng-if="txn.type == 'DEBIT'"
-                                    ng-show="(txn.hide || !txn.isTax) || lc.showAllTaxTransactions"
+                                    ng-show="lc.accountToShow.isTax || ((txn.hide || !txn.isTax) || lc.showAllTaxTransactions)"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
                                     popover-placement="{{lc.popover.position}}" 
@@ -562,7 +562,6 @@
                               </table>
                             </td>
                           </tr>
-                          
                       </tbody>
                     </table>
                     <!-- <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="10" auto-height on-scroll="onScrollCredit(scrollTop, scrollHeight, event)" id="mainLedgerContent"  additional-height="84" min-height="600"> -->
@@ -589,7 +588,7 @@
                                     class="ledger-row"
                                     ng-repeat="txn in value.transactions"
                                     ng-if="txn.type == 'CREDIT'"
-                                    ng-show="(txn.hide || !txn.isTax) || lc.showAllTaxTransactions"
+                                    ng-show="!selectedAccount.isTax && (txn.hide || !txn.isTax) || lc.showAllTaxTransactions"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
                                     popover-placement="{{lc.popover.position}}" 
@@ -812,7 +811,7 @@
                 <input type="text" name="chequeDate" placeholder="dd-mm-yyyy" class="form-control" ng-model="lc.selectedLedger.chequeClearanceDate" ui-mask="99-99-9999" model-view-value="true"/>
               </div>
             </div> -->
-            <div class="col-xs-12 pull-right" ng-if="!lc.selectedLedger.invoiceGenerated">
+            <div class="col-xs-5 pull-right" ng-if="!lc.selectedLedger.invoiceGenerated">
                             <!--file upload-->
               <div class="upload_div blue" style="padding:5px;" ng-if="lc.selectedLedger.attachedFileName.length == 0">
                   <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">

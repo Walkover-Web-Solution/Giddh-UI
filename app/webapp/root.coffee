@@ -287,8 +287,24 @@ giddh.webApp.run [
   'localStorageService'
   'DAServices'
   'groupService'
-  ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService) ->
+  '$http'
+  ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService, $http) ->
     
+    # $rootScope.setState = (lastState, url, param) ->
+    #   data = {
+    #       "lastState": lastState,
+    #       "companyUniqueName": $rootScope.selectedCompany.uniqueName
+    #   }
+    #   if url.indexOf('ledger') != -1
+    #     data.lastState = data.lastState + '@' + param
+    #   $http.post('/state-details', data).then(
+    #       (res) ->
+            
+    #       (res) ->
+            
+    #   )
+
+
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
       $rootScope.showLedgerBox = false
       if _.isEmpty(toParams)
@@ -304,6 +320,7 @@ giddh.webApp.run [
         },
         userId: user.uniqueName
       });
+      #$rootScope.setState(toState.name, toState.url, toParams.unqName)
     )
       #    # check IE browser version
       #    $rootScope.GetIEVersion = () ->

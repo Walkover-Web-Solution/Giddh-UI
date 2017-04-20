@@ -600,64 +600,6 @@ th {
 </nav>
 
 	<!-- ledger table end -->
-	<table>
-		
-	</table>
-	<table>
-		
-		<thead>
-			
-		</thead>
-		<tbody>
-			<tr ng-repeat="ledger in lc.paginatedLedgers">
-				<td>
-					<table>
-						<tbody>
-							<tr ng-repeat="txn in ledger" ng-if="txn.type=='DEBIT'">
-								<td ng-bind="ledger.entryDate"></td>
-								<td ng-bind="txn.particular"></td>
-								<td ng-bind="txn.amount"></td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-	<table>
-		
-		<thead>
-			
-		</thead>
-		<tbody>
-			<tr ng-repeat="ledger in lc.paginatedLedgers">
-				<td>
-					<table>
-						<tbody>
-							<tr ng-repeat="txn in ledger" ng-if="txn.type=='CREDIT'">
-								<td ng-bind="ledger.entryDate"></td>
-								<td ng-bind="txn.particular"></td>
-								<td ng-bind="txn.amount"></td>
-							</tr>
-						</tbody>
-					</table>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-
-
-	<ul class="list-inline">
-		<li>
-			<a href="javascript:void(0)" ng-click="lc.getPaginatedLedger(1)">First</a>
-		</li>
-		<li ng-repeat="page in lc.pages">
-			<a href="javascript:void(0)" ng-click="lc.getPaginatedLedger(page)">{{page}}</a>
-		</li>
-		<li>
-			<a href="javascript:void(0)" ng-click="lc.getPaginatedLedger(lc.totalLedgerPages)">Last</a>
-		</li>
-	</ul>
 
 </section>
 <section class="ledger-stat">
@@ -679,4 +621,5 @@ th {
 			<h3>{{lc.ledgerData.reckoningCreditTotal | number:2}}</h3>
 		</div>
 	</div>
+
 </section>

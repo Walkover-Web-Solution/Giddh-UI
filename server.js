@@ -209,6 +209,7 @@ var inventory = require('./public/routes/webapp/inventory')
 var adminPanel = require('./public/routes/adminPanel/adminPanel')
 var recEntry = require('./public/routes/webapp/recurringEntry')
 var invoiceUpload = require('./public/routes/webapp/invoiceUpload')
+var stateDetails = require('./public/routes/webapp/stateDetails')
 
 app.use('/time-test', timetest);
 app.use('/currency', currency);
@@ -236,6 +237,7 @@ app.use('/coupon', coupon);
 app.use('/yodlee', yodlee);
 app.use('/ebanks', ebanks);
 app.use('/admin', adminPanel);
+app.use('/state-details', stateDetails);
 
 //app.use('/magic', magicLink);
 /*
