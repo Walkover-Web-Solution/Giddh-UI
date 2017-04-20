@@ -790,4 +790,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $rootScope.ledgerState = false
   )
 
+  $rootScope.$on('different-company', (event, lastState)->
+    company = _.findWhere($scope.companyList, {uniqueName:lastState.companyUniqueName})
+    $scope.changeCompany(company, 0, 'CHANGE')
+  )
+
 giddh.webApp.controller 'mainController', mainController
