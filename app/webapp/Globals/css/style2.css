@@ -106,7 +106,7 @@ header, header .navbar {
 
 .t-h-bg1 th {
     background: #f3f0e6;
-    color: #616161;
+    color: #4d4d4d;
     border: 1px solid #c4c6c7;
     padding: 11px !important;
     font-weight: 400;
@@ -1164,4 +1164,28 @@ footer small a{
 }
 .blue {
     color: #337ab7;
+}
+.pop-panel {
+    max-width: 700px;
+}
+.pop-panel .form-control {
+    background: #f9f7f2;
+    border-color: #949494;
+}
+.pop-panel label {
+    color: #cccccc;
+}
+.inWords {
+    color: #4d4d4d;
+    text-align: right;
+}
+.bdrT {
+    border-color: #949494;
+}
+.popover.bottom>.arrow {
+    right: 13%;
+    left: auto;
+}
+.default_clr {
+    color: #4d4d4d !important;
 }
