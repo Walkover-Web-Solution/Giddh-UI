@@ -162,6 +162,42 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.pages.push(i)
       i++
 
+  # generate magic link
+  ledgerCtrl.getMagicLink = () ->
+    accUname = ledgerCtrl.accountUnq
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      accountUniqueName: accUname
+      from: $filter('date')($scope.cDate.startDate, 'dd-MM-yyyy')
+      to: $filter('date')($scope.cDate.endDate, 'dd-MM-yyyy')
+    }
+    companyServices.getMagicLink(reqParam).then(ledgerCtrl.getMagicLinkSuccess, ledgerCtrl.getMagicLinkFailure)
+
+  ledgerCtrl.getMagicLinkSuccess = (res) ->
+    ledgerCtrl.magicLink = res.body.magicLink
+    modalInstance = $uibModal.open(
+      template: '<div>
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
+        aria-hidden="true">&times;</span></button>
+          <h3 class="modal-title">Magic Link</h3>
+          </div>
+          <div class="modal-body">
+            <input id="magicLink" class="form-control" type="text" ng-model="ledgerCtrl.magicLink">
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" ngclipboard data-clipboard-target="#magicLink">Copy</button>
+          </div>
+      </div>'
+      size: "md"
+      backdrop: 'static'
+      scope: $scope
+    )
+
+  ledgerCtrl.getMagicLinkFailure = (res) ->
+    toastr.error(res.data.message)
+
+
   # ledgerCtrl.prevTxn = null
   # ledgerCtrl.selectTxn = (ledger, txn, index ,e) ->
   #   #setPopoverPlacement(e.clientY)
@@ -201,7 +237,51 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   #   #ledgerCtrl.blankCheckCompEntry(ledger)
   #   ledgerCtrl.isTransactionContainsTax(ledger)
   #   e.stopPropagation()
+  ledgerCtrl.showExportOption = false
+  ledgerCtrl.exportOptions = () ->
+    ledgerCtrl.showExportOption = !ledgerCtrl.showExportOption
 
+  ledgerCtrl.exportLedger = (type)->
+    ledgerCtrl.showExportOption = false
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: ledgerCtrl.accountUnq
+      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
+      lType:type
+    }
+    accountService.exportLedger(unqNamesObj).then(ledgerCtrl.exportLedgerSuccess, ledgerCtrl.exportLedgerFailure)
 
+  ledgerCtrl.exportLedgerSuccess = (res)->
+    # blob = new Blob([res.body.filePath], {type:'file'})
+    # fileName = res.body.filePath.split('/')
+    # fileName = fileName[fileName.length-1]
+    # FileSaver.saveAs(blob, fileName)
+    ledgerCtrl.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
+    if $rootScope.msieBrowser()
+      $rootScope.openWindow(res.body.filePath)
+    else if ledgerCtrl.isSafari       
+      modalInstance = $uibModal.open(
+        template: '<div>
+            <div class="modal-header">
+              <h3 class="modal-title">Download File</h3>
+            </div>
+            <div class="modal-body">
+              <p class="mrB">To download your file Click on button</p>
+              <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+            </div>
+        </div>'
+        size: "sm"
+        backdrop: 'static'
+        scope: $scope
+      )
+    else
+      window.open(res.body.filePath)
+
+  ledgerCtrl.exportLedgerFailure = (res)->
+    toastr.error(res.data.message, res.data.status)
   return ledgerCtrl
 giddh.webApp.controller 'ledgerController', ledgerController
