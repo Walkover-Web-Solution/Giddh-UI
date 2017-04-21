@@ -172,7 +172,18 @@ th {
 							<td colspan="100">
 								<table class="width100">
 									<tbody class="ledger-main">
-										<tr class="ledger-row debit-blank-row" ng-repeat="txn in ledger.transactions" ng-if="txn.type == 'DEBIT'">
+										<tr 
+											class="ledger-row debit-blank-row"
+											ng-repeat="txn in ledger.transactions"
+											ng-if="txn.type == 'DEBIT'"
+											uib-popover-template="ledgerCtrl.popover.templateUrl"
+											popover-trigger="outsideClick"
+											popover-placement="{{ledgerCtrl.popover.position}}"
+											popover-append-to-body='true'
+											popover-is-open="txn.isOpen"
+											popover-popup-delay="200"
+											set-popover-position
+											>
 											<td class="col-xs-2">
 												<input type="text" ng-model="ledger.entryDate" class="form-control">
 											</td>
@@ -180,7 +191,10 @@ th {
 												<input type="text" ng-model="txn.particular.name" class="form-control">
 											</td>
 											<td class="col-xs-5 pos-rel">
-												<input type="text" ng-model="txn.amount" class="form-control">
+												<input type="text" ng-model="txn.amount" class="form-control" 
+												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+												is-open="txn.isOpen"
+												>
 											</td>
 										</tr>
 									</tbody>
@@ -217,15 +231,34 @@ th {
 							<td class="100">
 								<table class="width100">
 									<tbody class="ledger-main">
-										<tr class="ledger-row" ng-repeat="txn in ledger.transactions" ng-if="txn.type == 'CREDIT'">
+										<tr
+											class="ledger-row"
+											ng-repeat="txn in ledger.transactions"
+											ng-if="txn.type == 'CREDIT'"
+											uib-popover-template="ledgerCtrl.popover.templateUrl"
+											popover-trigger="outsideClick"
+											popover-placement="{{ledgerCtrl.popover.position}}"
+											popover-append-to-body='true'
+											popover-enable="!ledgerCtrl.popover.draggable"
+											popover-is-open="txn.isOpen"
+											popover-popup-delay="200"
+											set-popover-position
+											ng-click="$event.stopPropagation()"
+											>
 											<td class="col-xs-2">
 												<input class="form-control" type="text" ng-model="ledger.entryDate">
 											</td>
 											<td class="col-xs-5">
-												<input class="form-control" type="text" ng-model="txn.particular.name">
+												<input class="form-control"
+												type="text"
+												ng-model="txn.particular.name"
+												>
 											</td>
 											<td class="col-xs-5 pos-rel">
-												<input class="form-control" type="text" ng-model="txn.amount">
+												<input class="form-control" type="text" ng-model="txn.amount"
+												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+												is-open="txn.isOpen"
+												>
 											</td>
 										</tr>
 									</tbody>
@@ -569,20 +602,40 @@ th {
 			        <input type="number" name="" class="form-control" />
         		</td>
         		<td>
+        			<label>&nbsp;</label>
+        			<label class="pdR pdL default_clr">x</label>
+        		</td>
+        		<td>
 			        <label>Price</label>
 			        <input type="number" name="" class="form-control" />
         		</td>
         		<td>
-		        	<label>Amount</label>
+        			<label>&nbsp;</label>
+        			<label class="pdR pdL default_clr">=</label>
+        		</td>
+        		<td>
+		        	<label class="primary_color">Amount</label>
 			        <input type="number" name="" class="form-control" />
+        		</td>
+        		<td>
+        			<label>&nbsp;</label>
+        			<label class="pdR pdL default_clr">-</label>
         		</td>
         		<td>
 		        	<label>Discount</label>
 			        <input type="number" name="" class="form-control" />
         		</td>
         		<td>
+        			<label>&nbsp;</label>
+        			<label class="pdR pdL default_clr">+</label>
+        		</td>
+        		<td>
 			        <label>Tax</label>
 			        <input type="number" name="" class="form-control" />
+        		</td>
+        		<td>
+        			<label>&nbsp;</label>
+        			<label class="pdR pdL default_clr"> = </label>
         		</td>
         		<td>
 			        <label>Total</label>
@@ -608,11 +661,11 @@ th {
 			  				<tbody>
 			  					<tr>
 			  						<td class="pdR">
-							  			<label>Cheque Number</label>
+							  			<label class="default_clr">Cheque Number</label>
 							  			<input type="number" name="" placeholder="XXXX2619" class="form-control" />
 			  						</td>
 			  						<td>
-							  			<label>Cheque Date</label>
+							  			<label class="default_clr">Cheque Date</label>
 							  			<input type="date" name="" class="form-control" />
 			  						</td>
 			  					</tr>
@@ -632,7 +685,7 @@ th {
   		<div class="col-xs-12 bdrT pdT2">
 	  		<div class="row">
 	  			<div class="form-group">
-	  			Voucher type 
+	  			<strong>Voucher type</strong> 
 	  			<select>
 	  				<option>Sales</option>
 	  				<option>Sales</option>
@@ -644,8 +697,12 @@ th {
 
   		<div class="col-xs-12 pdT2">
   			<div class="row">
-	  			<span>Advanced</span>
-		  		<button class="btn btn-success pull-right">Save</button>
+	  			<span>Advanced <i class="caret"></i></span>
+	  			<div class="pull-right">
+		  			<button class="btn btn-default"><i class="glyphicon glyphicon-paperclip"></i></button>
+		  			<button class="btn btn-success">Update</button>
+			  		<button class="btn btn-success">Save</button>
+		  		</div>
 		  	</div>
   		</div>
     </div>

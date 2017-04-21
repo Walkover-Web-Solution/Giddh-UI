@@ -1182,3 +1182,10 @@ footer small a{
 .bdrT {
     border-color: #949494;
 }
+.popover.bottom>.arrow {
+    right: 13%;
+    left: auto;
+}
+.default_clr {
+    color: #4d4d4d !important;
+}

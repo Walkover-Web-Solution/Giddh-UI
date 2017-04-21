@@ -1,5 +1,13 @@
 ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, groupService, $uibModal, companyServices, $state,idbService, $http, nzTour, $q ) ->
   ledgerCtrl = this
+  
+  ledgerCtrl.popover = {
+
+    templateUrl: 'panel'
+    draggable: false
+    position: "bottom"
+  }
+  
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
 
@@ -162,45 +170,45 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.pages.push(i)
       i++
 
-  # ledgerCtrl.prevTxn = null
-  # ledgerCtrl.selectTxn = (ledger, txn, index ,e) ->
-  #   #setPopoverPlacement(e.clientY)
-  #   if ledgerCtrl.accountToShow.stock != null && txn.inventory == undefined
-  #     txn.inventory = {}
-  #     txn.rate = ledgerCtrl.accountToShow.stock.rate
-  #   if txn.inventory && txn.inventory.quantity
-  #     txn.rate = txn.amount/txn.inventory.quantity
-  #   if txn.particular.stock
-  #     txn.rate = txn.particular.stock.rate
-  #   #txn.rate = $filter('number')(Number(txn.rate), 4)
-  #   ledgerCtrl.selectedTxn = txn
-  #   if ledgerCtrl.prevTxn != null
-  #     ledgerCtrl.prevTxn.isOpen = false
-  #   ledgerCtrl.selectedTxn.isOpen = true
-  #   ledgerCtrl.prevTxn = txn
-  #   ledgerCtrl.calculateEntryTotal(ledger)
-  #   ledgerCtrl.showLedgerPopover = true
-  #   ledgerCtrl.matchInventory(txn)
-  #   ledgerCtrl.ledgerBeforeEdit = {}
-  #   angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
-  #   if ledgerCtrl.popover.draggable
-  #     ledgerCtrl.showPanel = true
-  #   #else
-  #     #ledgerCtrl.openClosePopOver(txn, ledger)
-  #   if ledger.isBankTransaction != undefined
-  #     _.each(ledger.transactions,(transaction) ->
-  #       if transaction.type == 'DEBIT'
-  #         ledger.voucher.shortCode = "rcpt"
-  #       else if transaction.type == 'CREDIT'
-  #         ledger.voucher.shortCode = "pay"
-  #     )
-  #   ledgerCtrl.selectedLedger = ledger
-  #   ledgerCtrl.selectedLedger.index = index
-  #   #if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
-  #   ledgerCtrl.checkCompEntry(ledger)
-  #   #ledgerCtrl.blankCheckCompEntry(ledger)
-  #   ledgerCtrl.isTransactionContainsTax(ledger)
-  #   e.stopPropagation()
+  ledgerCtrl.prevTxn = null
+  ledgerCtrl.selectTxn = (ledger, txn, index ,e) ->
+    #setPopoverPlacement(e.clientY)
+    if ledgerCtrl.accountToShow.stock != null && txn.inventory == undefined
+      txn.inventory = {}
+      txn.rate = ledgerCtrl.accountToShow.stock.rate
+    if txn.inventory && txn.inventory.quantity
+      txn.rate = txn.amount/txn.inventory.quantity
+    if txn.particular.stock
+      txn.rate = txn.particular.stock.rate
+    #txn.rate = $filter('number')(Number(txn.rate), 4)
+    ledgerCtrl.selectedTxn = txn
+    if ledgerCtrl.prevTxn != null
+      ledgerCtrl.prevTxn.isOpen = false
+    ledgerCtrl.selectedTxn.isOpen = true
+    ledgerCtrl.prevTxn = txn
+    # mustafa ledgerCtrl.calculateEntryTotal(ledger)
+    ledgerCtrl.showLedgerPopover = true
+    # mustafa ledgerCtrl.matchInventory(txn)
+    ledgerCtrl.ledgerBeforeEdit = {}
+    angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
+    # if ledgerCtrl.popover.draggable
+    #   ledgerCtrl.showPanel = true
+    #else
+      #ledgerCtrl.openClosePopOver(txn, ledger)
+    if ledger.isBankTransaction != undefined
+      _.each(ledger.transactions,(transaction) ->
+        if transaction.type == 'DEBIT'
+          ledger.voucher.shortCode = "rcpt"
+        else if transaction.type == 'CREDIT'
+          ledger.voucher.shortCode = "pay"
+      )
+    ledgerCtrl.selectedLedger = ledger
+    ledgerCtrl.selectedLedger.index = index
+    #if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
+    # mustafa ledgerCtrl.checkCompEntry(ledger)
+    #ledgerCtrl.blankCheckCompEntry(ledger)
+    # mustafa ledgerCtrl.isTransactionContainsTax(ledger)
+    e.stopPropagation()
 
 
   return ledgerCtrl
