@@ -1165,3 +1165,17 @@ footer small a{
 .blue {
     color: #337ab7;
 }
+.pop-panel {
+    max-width: 700px;
+}
+.pop-panel .form-control {
+    background: #f9f7f2;
+    border-color: #949494;
+}
+.pop-panel label {
+    color: #cccccc;
+}
+.inWords {
+    color: #4d4d4d;
+    text-align: right;
+}
