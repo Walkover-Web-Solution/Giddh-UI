@@ -622,8 +622,31 @@ th {
         			<label class="pdR pdL default_clr">-</label>
         		</td>
         		<td>
+				    <span uib-dropdown on-toggle="toggled(open)">
+				      <a href id="simple-dropdown" uib-dropdown-toggle>
 		        	<label>Discount</label>
 			        <input type="number" name="" class="form-control" />
+				    <!-- Simple dropdown -->
+				      </a>
+				      <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+				        <li>
+				          <table>
+				          	<tr>
+				          		<td>Dsicount 1</td>
+				          		<td><input type="number" name="" class="form-control" /></td>
+				          	</tr>
+				          	<tr>
+				          		<td>Dsicount 1</td>
+				          		<td><input type="number" name="" class="form-control" /></td>
+				          	</tr>
+				          	<tr>
+				          		<td>Dsicount 1</td>
+				          		<td><input type="number" name="" class="form-control" /></td>
+				          	</tr>
+				          </table>
+				        </li>
+				      </ul>
+				    </span>
         		</td>
         		<td>
         			<label>&nbsp;</label>

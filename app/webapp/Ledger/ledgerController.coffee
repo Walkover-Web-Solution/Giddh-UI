@@ -7,6 +7,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     draggable: false
     position: "bottom"
   }
+
+  ledgerCtrl.toggleDropdown = ($event) ->
+    $event.preventDefault()
+    $event.stopPropagation()
+    $scope.status.isopen = !$scope.status.isopen
   
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
