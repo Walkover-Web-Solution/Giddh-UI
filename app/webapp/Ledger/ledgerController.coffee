@@ -8,6 +8,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     position: "bottom"
   }
 
+  ledgerCtrl.toggleDropdown = ($event) ->
+    $event.preventDefault()
+    $event.stopPropagation()
+    $scope.status.isopen = !$scope.status.isopen
+
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
 
@@ -305,6 +310,51 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         when 'rate'
           if ledgerCtrl.selectedTxn.inventory && ledgerCtrl.selectedTxn.inventory.quantity
               ledgerCtrl.selectedTxn.amount = ledgerCtrl.selectedTxn.rate * ledgerCtrl.selectedTxn.inventory.quantity
+
+  ledgerCtrl.getTaxList = () ->
+    ledgerCtrl.taxList = []
+    if $rootScope.canUpdate and $rootScope.canDelete
+      companyServices.getTax($rootScope.selectedCompany.uniqueName).then(ledgerCtrl.getTaxListSuccess, ledgerCtrl.getTaxListFailure)
+
+  ledgerCtrl.getTaxListSuccess = (res) ->
+    _.each res.body, (tax) ->
+      tax.isSelected = false
+      if tax.account == null
+        tax.account = {}
+        tax.account.uniqueName = 0
+      #check if selected account is a tax account
+      if tax.account.uniqueName == ledgerCtrl.accountToShow.uniqueName
+        ledgerCtrl.accountToShow.isTax = true
+      ledgerCtrl.taxList.push(tax)
+
+    #lc.matchTaxAccounts(lc.taxList)
+
+  ledgerCtrl.getTaxListFailure = (res) ->
+    toastr.error(res.data.message, res.status)
+
+  ledgerCtrl.getDiscountGroupDetail = () ->
+    @success = (res) ->
+      ledgerCtrl.discountAccount = _.findWhere(res.body.results, {groupUniqueName:'discount'})
+    @failure = (res) ->
+      
+
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    reqParam.q = 'discount'
+    reqParam.page = 1
+    reqParam.count = 0
+    groupService.getFlattenGroupAccList(reqParam).then(@success, @failure) 
+
+  $timeout ( ->
+    ledgerCtrl.getTaxList()
+    ledgerCtrl.getDiscountGroupDetail()
+  ), 1000
+
+  $(document).on 'click', (e) ->
+    if ledgerCtrl.prevTxn
+      ledgerCtrl.prevTxn.isOpen = false
+    return 0
+
 
   return ledgerCtrl
 giddh.webApp.controller 'ledgerController', ledgerController

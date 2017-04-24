@@ -31,7 +31,7 @@ th {
 	min-width: auto;
 }
 .primary_color {
-	color: #ff782d;
+	color: #d35f29 !important;
 }
 .ledger-stat {
 	padding: 50px 0;
@@ -89,7 +89,7 @@ th {
 	color: #4d4d4d;
 }
 .current-page{
-	background: #ff782d !important;
+	background: #d35f29 !important;
     color: #fff !important;
 }
 </style>
@@ -119,7 +119,7 @@ th {
 							<i class="icon-download"></i>
 						</a>
 						
-						<a href id="simple-dropdown" class="icomoon_ico" uib-dropdown-toggle>
+						<a href id="share" class="icomoon_ico" uib-dropdown-toggle>
 							<i uib-tooltip="Send Ledger" tooltip-placement="right" class="icon-share"></i>
 						</a>
 						
@@ -420,23 +420,56 @@ th {
         			<label class="pdR pdL default_clr">-</label>
         		</td>
         		<td>
+
+				    <span uib-dropdown auto-close="outsideClick">
+				      <a href id="discount" uib-dropdown-toggle>
 		        	<label>Discount</label>
-			        <input type="number" name="" class="form-control" />
+			        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.totalDiscount"/>
+				    
+				      </a>
+				      <ul class="dropdown-menu" uib-dropdown-menu>
+				        <li>
+				          <table>
+				          	<tr ng-repeat="discount in ledgerCtrl.discountAccount.accountDetails">
+				          		<td class="pdL w100">{{discount.name}}</td>
+				          		<td class="pdR pdT w50">
+				          			<input type="number" class="form-control" ng-model="discount.amount"/>
+				          		</td>
+				          	</tr>
+				          </table>
+				        </li>
+				      </ul>
+				    </span>
         		</td>
         		<td>
         			<label>&nbsp;</label>
         			<label class="pdR pdL default_clr">+</label>
         		</td>
         		<td>
-			        <label>Tax</label>
-			        <input type="number" name="" class="form-control" />
+        		<span uib-dropdown auto-close="outsideClick">
+				      <a href id="tax" uib-dropdown-toggle>
+		        	<label>Tax </label>
+		        	<div class="multi-select">
+		        		<input type="number" name="" class="form-control" />
+		        		<span class="caret"></span>
+		        	</div>
+				    
+				      </a>
+				      <ul class="dropdown-menu pd" uib-dropdown-menu>
+						<li class="oh width100 bdrB pdB" ng-repeat="tax in ledgerCtrl.taxList">
+						  <label class="checkbox">
+						  	<input class="pull-left" style="margin-top:5px;" type="checkbox" ng-model="tax.isChecked"/>
+						  	<span class="pull-left" style="display:block;max-width:125px">{{tax.name}}</span>
+						  </label>
+						 </li>
+				      </ul>
         		</td>
         		<td>
         			<label>&nbsp;</label>
         			<label class="pdR pdL default_clr"> = </label>
         		</td>
         		<td>
-			        <label>Total</label>
+			        <label class="primary_color">Total</label>
 			        <input type="number" name="" class="form-control" />
         		</td>
         	</tr>
@@ -495,7 +528,7 @@ th {
 
   		<div class="col-xs-12 pdT2">
   			<div class="row">
-	  			<span>Advanced <i class="caret"></i></span>
+	  			<button class="no-btn">Advanced <i class="caret"></i></button>
 	  			<div class="pull-right">
 		  			<button class="btn btn-default"><i class="glyphicon glyphicon-paperclip"></i></button>
 		  			<button class="btn btn-success">Update</button>

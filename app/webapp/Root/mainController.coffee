@@ -689,7 +689,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.getFlattenGrpWithAccListSuccess = (res) ->
     $scope.gwaList.page = res.body.page
     $scope.gwaList.totalPages = res.body.totalPages
-    $scope.flatAccntWGroupsList = res.body.results
+    $rootScope.flatAccntWGroupsList = res.body.results
     #$scope.flatAccntWGroupsList = gc.removeEmptyGroups(res.body.results)
   #   console.log($scope.flatAccntWGroupsList)
     $scope.showAccountList = true
@@ -719,7 +719,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     if res.body.results.length > 0 && res.body.totalPages >= $scope.gwaList.currentPage
       _.each res.body.results, (grp) ->
         grp.open = true
-        $scope.flatAccntWGroupsList.push(grp) 
+        $rootScope.flatAccntWGroupsList.push(grp) 
       #$scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
     else if res.body.totalPages > $scope.gwaList.currentPage
       $scope.loadMoreGrpWithAcc($rootScope.selectedCompany.uniqueName)
@@ -771,7 +771,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.toggleAcMenus = (condition) ->
     $scope.showSubMenus = condition
-    _.each $scope.flatAccntWGroupsList, (grp) ->
+    _.each $rootScope.flatAccntWGroupsList, (grp) ->
       grp.open = condition
 
   $scope.runTour = () ->
