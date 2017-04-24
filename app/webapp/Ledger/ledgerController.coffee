@@ -293,5 +293,18 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.exportLedgerFailure = (res)->
     toastr.error(res.data.message, res.data.status)
 
+  ledgerCtrl.onValueChange = (value, txn) ->
+    if txn.particular.stock != null &&  txn.particular.stock != undefined || ledgerCtrl.accountToShow.stock != null || (txn.inventory && txn.inventory.stock)
+      switch value
+        when 'qty'
+          if ledgerCtrl.selectedTxn.rate > 0 && ledgerCtrl.selectedTxn.inventory && ledgerCtrl.selectedTxn.inventory.quantity
+            ledgerCtrl.selectedTxn.amount = ledgerCtrl.selectedTxn.rate * ledgerCtrl.selectedTxn.inventory.quantity
+        when 'amount'
+          if ledgerCtrl.selectedTxn.inventory && ledgerCtrl.selectedTxn.inventory.quantity
+            ledgerCtrl.selectedTxn.rate = ledgerCtrl.selectedTxn.amount/ledgerCtrl.selectedTxn.inventory.quantity
+        when 'rate'
+          if ledgerCtrl.selectedTxn.inventory && ledgerCtrl.selectedTxn.inventory.quantity
+              ledgerCtrl.selectedTxn.amount = ledgerCtrl.selectedTxn.rate * ledgerCtrl.selectedTxn.inventory.quantity
+
   return ledgerCtrl
 giddh.webApp.controller 'ledgerController', ledgerController
