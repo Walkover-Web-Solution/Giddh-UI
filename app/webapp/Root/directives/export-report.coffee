@@ -512,7 +512,7 @@ angular.module('trialBalance', []).directive('exportReport', [
     # setPos()
 
     $(elem).on('mouseover', (e)->
-      if e.pageY > $(window).height() / 3 * 2
+      if e.pageY > $(window).height() / 3 * 2 
         attrs.$set("popoverPlacement", "top")
       else
         attrs.$set("popoverPlacement", "bottom")

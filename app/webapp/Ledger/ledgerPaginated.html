@@ -92,6 +92,9 @@ th {
 	background: #d35f29 !important;
     color: #fff !important;
 }
+.ledger-panel label{
+	font-weight: 400;
+}
 </style>
 <section class="container">
 	
@@ -144,7 +147,7 @@ th {
 		</table>
 
 		<div style="border:1px solid #ccc;overflow:hidden;position:relative;">
-			<div class="left-col">
+			<div class="left-col-new">
 				<table class="width100">
 					<thead>
 						<tr class="t-h-bg1">
@@ -219,7 +222,7 @@ th {
 			
 			</div>
 
-			<div class="right-col">
+			<div class="right-col-new">
 				<table class="width100">
 					<thead>
 						<tr class="t-h-bg1">
@@ -325,7 +328,7 @@ th {
 					</tr>
 					<tr class="total_col">
 						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important;">
-							<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">15000</span>
+							<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.ledgerData.creditTotal - ledgerCtrl.ledgerData.debitTotal}}</span>
 						</td>
 					</tr>
 				</tbody>
@@ -363,7 +366,7 @@ th {
 	<div class="container">
 		<div class="col-xs-3">
 			<h1>Total Transactions <span class="primary_color">{{ledgerCtrl.totalDebitTxn+ledgerCtrl.totalCreditTxn}}</span></h1>
-			<span class="mrT1 mrR2">Dr {{ledgerCtrl.totalDebitTxn}}</span> <span class="mrT1 mrR2">Cr {{ledgerCtrl.totalCreditTxn}}</span>
+			<span class="mrT1 mrR2">Dr: {{ledgerCtrl.totalDebitTxn}}</span> <span class="mrT1 mrR2">Cr: {{ledgerCtrl.totalCreditTxn}}</span>
 		</div>
 		<div class="col-xs-3">
 			<h1>Debit Total</h1>
@@ -391,102 +394,103 @@ th {
      <div class="ledger-panel" ng-click="$event.stopPropagation()" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': ledgerCtrl.showPanel, 'top0':hideHeader}">
       <div class="wrapper">
         <div class="basic_detail">
-        <table>
-        	<tbody>        		
-        	<tr>
-        		<td>
-		        	<label>Quantity</label>
-			        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.inventory.quantity" ng-change="ledgerCtrl.onValueChange('qty' , ledgerCtrl.selectedTxn)"/>
-        		</td>
-        		
-        		<td>
-        			<label>&nbsp;</label>
-        			<label class="pdR pdL default_clr">x</label>
-        		</td>
-        		<td>
-			        <label>Price</label>
-			        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.rate" ng-change="ledgerCtrl.selectedTxn.amount = ledgerCtrl.selectedTxn.inventory.quantity*ledgerCtrl.selectedTxn.rate"/>
-        		</td>
-        		<td>
-        			<label>&nbsp;</label>
-        			<label class="pdR pdL default_clr">=</label>
-        		</td>
-        		<td>
-		        	<label class="primary_color">Amount</label>
-			        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.amount"/>
-        		</td>
-        		<td>
-        			<label>&nbsp;</label>
-        			<label class="pdR pdL default_clr">-</label>
-        		</td>
-        		<td>
+	        <table>
+	        	<tbody>        		
+	        	<tr>
+	        		<td ng-if="ledgerCtrl.accountToShow.stock != null || ledgerCtrl.selectedTxn.particular.stock != null || ledgerCtrl.selectedTxn.inventory != null">
+			        	<label>Quantity</label>
+				        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.quantity" ng-change="ledgerCtrl.onQuantityChange(ledgerCtrl.selectedLedger) "/>
+	        		</td>
+	        		
+	        		<td ng-if="ledgerCtrl.accountToShow.stock != null || ledgerCtrl.selectedTxn.particular.stock != null || ledgerCtrl.selectedTxn.inventory != null">
+	        			<label>&nbsp;</label>
+	        			<label class="pdR pdL default_clr">x</label>
+	        		</td>
+	        		<td ng-if="ledgerCtrl.accountToShow.stock != null || ledgerCtrl.selectedTxn.particular.stock != null || ledgerCtrl.selectedTxn.inventory != null">
+				        <label>Price</label>
+				        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.price"
+				        ng-change="ledgerCtrl.onPriceChange(ledgerCtrl.selectedLedger) "/>
+	        		</td>
+	        		<td ng-if="ledgerCtrl.accountToShow.stock != null || ledgerCtrl.selectedTxn.particular.stock != null || ledgerCtrl.selectedTxn.inventory != null">
+	        			<label>&nbsp;</label>
+	        			<label class="pdR pdL default_clr">=</label>
+	        		</td>
+	        		<td>
+			        	<label class="primary_color">Amount</label>
+				        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.amount" ng-change="ledgerCtrl.onAmountChange(ledgerCtrl.selectedLedger)"/>
+	        		</td>
+	        		<td>
+	        			<label>&nbsp;</label>
+	        			<label class="pdR pdL default_clr">-</label>
+	        		</td>
+	        		<td>
 
-				    <span uib-dropdown auto-close="outsideClick">
-				      <a href id="discount" uib-dropdown-toggle>
-		        	<label>Discount</label>
-			        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.totalDiscount"/>
-				    
-				      </a>
-				      <ul class="dropdown-menu" uib-dropdown-menu>
-				        <li>
-				          <table>
-				          	<tr ng-repeat="discount in ledgerCtrl.discountAccount.accountDetails">
-				          		<td class="pdL w100">{{discount.name}}</td>
-				          		<td class="pdR pdT w50">
-				          			<input type="number" class="form-control" ng-model="discount.amount"/>
-				          		</td>
-				          	</tr>
-				          </table>
-				        </li>
-				      </ul>
-				    </span>
-        		</td>
-        		<td>
-        			<label>&nbsp;</label>
-        			<label class="pdR pdL default_clr">+</label>
-        		</td>
-        		<td>
-        		<span uib-dropdown auto-close="outsideClick">
-				      <a href id="tax" uib-dropdown-toggle>
-		        	<label>Tax </label>
-		        	<div class="multi-select">
-		        		<input type="number" name="" class="form-control" />
-		        		<span class="caret"></span>
-		        	</div>
-				    
-				      </a>
-				      <ul class="dropdown-menu pd" uib-dropdown-menu>
-						<li class="oh width100 bdrB pdB" ng-repeat="tax in ledgerCtrl.taxList">
-						  <label class="checkbox">
-						  	<input class="pull-left" style="margin-top:5px;" type="checkbox" ng-model="tax.isChecked"/>
-						  	<span class="pull-left" style="display:block;max-width:125px">{{tax.name}}</span>
-						  </label>
-						 </li>
-				      </ul>
-        		</td>
-        		<td>
-        			<label>&nbsp;</label>
-        			<label class="pdR pdL default_clr"> = </label>
-        		</td>
-        		<td>
-			        <label class="primary_color">Total</label>
-			        <input type="number" name="" class="form-control" />
-        		</td>
-        	</tr>
-        	</tbody>
-        </table>
+					    <span uib-dropdown auto-close="outsideClick">
+					      <a href id="discount" uib-dropdown-toggle>
+			        	<label>Discount</label>
+				        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.discount"/>
+					    
+					      </a>
+					      <ul class="dropdown-menu" uib-dropdown-menu>
+					        <li>
+					          <table>
+					          	<tr ng-repeat="discount in ledgerCtrl.discountAccount.accountDetails">
+					          		<td class="pdL w100">{{discount.name}}</td>
+					          		<td class="pdR pdT w50">
+					          			<input type="number" class="form-control" ng-model="discount.amount" ng-change="ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)"/>
+					          		</td>
+					          	</tr>
+					          </table>
+					        </li>
+					      </ul>
+					    </span>
+	        		</td>
+	        		<td>
+	        			<label>&nbsp;</label>
+	        			<label class="pdR pdL default_clr">+</label>
+	        		</td>
+	        		<td>
+	        		<span uib-dropdown auto-close="outsideClick">
+					      <a href id="tax" uib-dropdown-toggle>
+			        	<label>Tax %</label>
+			        	<div class="multi-select">
+			        		<input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.tax"/>
+			        		<span class="caret"></span>
+			        	</div>
+					    
+					      </a>
+					      <ul class="dropdown-menu pd" uib-dropdown-menu>
+							<li class="oh width100 bdrB pdB" ng-repeat="tax in ledgerCtrl.taxList">
+							  <label class="checkbox">
+							  	<input class="pull-left" style="margin-top:5px;" type="checkbox" ng-model="tax.isChecked" ng-change="ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)"/>
+							  	<span class="pull-left" style="display:block;max-width:125px">{{tax.name}}</span>
+							  </label>
+							 </li>
+					      </ul>
+	        		</td>
+	        		<td>
+	        			<label>&nbsp;</label>
+	        			<label class="pdR pdL default_clr"> = </label>
+	        		</td>
+	        		<td>
+				        <label class="primary_color">Total</label>
+				        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.total" />
+	        		</td>
+	        	</tr>
+	        	</tbody>
+	        </table>
   		</div>
   		<div class="col-xs-12 pd1 text-right">
-  			<span class="inWords">one thousand rupees</span>
+  			<span class="inWords">{{ledgerCtrl.selectedLedger.panel.total | numtowords | lowercase}}</span>
   		</div>
   		<div class="col-xs-12">
 	  		<div class="row">
-	  			<textarea rows="4" cols="" class="form-control" placeholder="Description"></textarea>
+	  			<textarea rows="4" cols="" class="form-control" placeholder="Description" ng-model="ledgerCtrl.selectedLedger.description"></textarea>
 	  		</div>
   		</div>
-  		<div class="col-xs-12 mrT1 mrB2">
+  		<div class="col-xs-12 mrT mrB">
   			<div class="row">
-	  			<div class="cheq col-xs-6">
+	  			<div class="cheq col-xs-6" ng-show="showAdvanced">
 	  				<div class="row">
 			  			<table>
 			  				<tbody>
@@ -505,34 +509,38 @@ th {
 	  				</div>
 		  		</div>
 	  		
-		  		<div class="file_attached col-xs-5 pull-right text-right">
+		  		<div class="file_attached col-xs-5 pull-right text-right" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length > 0">
 		  			<div class="row">
-			  			<span>filename</span><span class="remove">(remove)</span> 
+			  			<span ng-bind="ledgerCtrl.selectedLedger.attachedFileName"></span><span class="remove">(remove)</span> 
 			  		</div>	
 		  		</div>
 	  		</div>
   		</div>
 
-  		<div class="col-xs-12 bdrT pdT2">
+  		<div class="col-xs-12 bdrT pdT">
 	  		<div class="row">
-	  			<div class="form-group">
+	  			<div class="form-group" style="max-width:200px;">
 	  			<strong>Voucher type</strong> 
-	  			<select>
-	  				<option>Sales</option>
-	  				<option>Sales</option>
-	  			</select>
+	  			<ui-select ng-model="ledgerCtrl.selectedLedger.voucher" theme="bootstrap">
+                    <ui-select-match>
+                      <span>{{$select.selected.name}}</span>
+                    </ui-select-match >
+                    <ui-select-choices repeat="item in ledgerCtrl.voucherTypeList| filter: $select.search ">
+                      <span ng-bind="item.name"></span>
+                    </ui-select-choices>
+                </ui-select>
 	  			<span>#sal</span>
 	  			</div>
 	  		</div>
   		</div>
 
-  		<div class="col-xs-12 pdT2">
+  		<div class="col-xs-12 pdT">
   			<div class="row">
-	  			<button class="no-btn">Advanced <i class="caret"></i></button>
+	  			<button class="no-btn" ng-click="showAdvanced = !showAdvanced">Advanced <i class="caret" ng-class="{rotate180:showAdvanced}"></i></button>
 	  			<div class="pull-right">
 		  			<button class="btn btn-default"><i class="glyphicon glyphicon-paperclip"></i></button>
-		  			<button class="btn btn-success">Update</button>
-			  		<button class="btn btn-success">Save</button>
+		  			<button class="btn btn-success" ng-click="ledgerCtrl.saveUpdateLedger(ledgerCtrl.selectedLedger)">Update</button>
+			  		<!-- <button class="btn btn-success">Save</button> -->
 		  		</div>
 		  	</div>
   		</div>
