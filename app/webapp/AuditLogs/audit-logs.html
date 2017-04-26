@@ -55,12 +55,12 @@
           <div class="row" style="margin-left:0">
           	<p class="input-group pull-left" for="entryDate">
           		<label>Entry Date
-          			<input id="entryDate" type="radio" name="entryDate" ng-model="date.name" value="entryDate"/>
+          			<input id="entryDate" type="radio" name="entryDate" ng-model="date.name" value="entryDate" ng-click="$event.stopPropagation()"/>
           		</label>
           	</p>
           	<p class="input-group pull-left mrL2" for="logDate">
           		<label>Log Date
-          			<input id="logDate" type="radio" name="logDate" ng-model="date.name" value="logDate"/>
+          			<input id="logDate" type="radio" name="logDate" ng-model="date.name" value="logDate" ng-click="$event.stopPropagation()"/>
           		</label>
           	</p>
           	<br/>

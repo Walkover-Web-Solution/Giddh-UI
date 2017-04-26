@@ -3220,41 +3220,43 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.taxTransactionsVisibility = "Show all Tax Transactions"
 
   ####################### functions for ledger design with pagination ###################################
-  # lc.ledgerPerPageCount = 2
-  # lc.pages = []
-  # lc.getPaginatedLedger = (page) ->
-  #   @success = (res) ->
-  #     console.log res
-  #     lc.pages = []
-  #     lc.paginatedLedgers = res.body.ledgers
-  #     lc.totalLedgerPages = res.body.totalPages
-  #     lc.currentPage = res.body.page
-  #     lc.addLedgerPages()
+  lc.ledgerPerPageCount = 10
+  lc.pages = []
+  lc.getPaginatedLedger = (page) ->
+    @success = (res) ->
+      console.log res
+      lc.pages = []
+      lc.paginatedLedgers = res.body.ledgers
+      lc.totalLedgerPages = res.body.totalPages
+      lc.currentPage = res.body.page
+      lc.totalCreditTxn = res.body.totalCreditTransactions
+      lc.totalDebitTxn = res.body.totalDebitTransactions
+      lc.addLedgerPages()
 
-  #   @failure = (res) ->
-  #     console.log res
+    @failure = (res) ->
+      console.log res
 
-  #   if _.isUndefined($rootScope.selectedCompany.uniqueName)
-  #     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
-  #   unqNamesObj = {
-  #     compUname: $rootScope.selectedCompany.uniqueName
-  #     acntUname: lc.accountUnq
-  #     fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
-  #     toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
-  #     count: lc.ledgerPerPageCount
-  #     page: page || 1
-  #   }
-  #   if not _.isEmpty(lc.accountUnq)
-  #     ledgerService.getLedger(unqNamesObj).then(@success, @failure)
+    if _.isUndefined($rootScope.selectedCompany.uniqueName)
+      $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: lc.accountUnq
+      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
+      count: lc.ledgerPerPageCount
+      page: page || 1
+    }
+    if not _.isEmpty(lc.accountUnq)
+      ledgerService.getLedger(unqNamesObj).then(@success, @failure)
 
-  # lc.getPaginatedLedger(1)
+  lc.getPaginatedLedger(1)
 
-  # lc.addLedgerPages = () ->
-  #   i = 0
-  #   while i <= lc.totalLedgerPages
-  #     if i > 0
-  #       lc.pages.push(i)
-  #     i++
+  lc.addLedgerPages = () ->
+    i = 0
+    while i <= lc.totalLedgerPages
+      if i > 0
+        lc.pages.push(i)
+      i++
 
 
   return lc
