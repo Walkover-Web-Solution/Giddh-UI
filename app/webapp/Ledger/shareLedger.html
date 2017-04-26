@@ -1,0 +1,74 @@
+<div id="shareModal" class="pdB4">
+    <div class="modal-header text-right">
+        <i class="fa fa-times" aria-hidden="true"></i>
+    </div>
+    <div class="modal-body" id="modal-body">
+        <div class="modal_wrap">
+            <h3 class="pdB1">Share with</h3>
+            <div class="add_mailer">
+                <form name="addShareEmailForm" novalidate class="form-inline" autocomplete="off">  
+                    <div class="input-group">
+                      <input ng-model="shareRequest.user" name="userEmail" type="text" class="form-control emailInput" placeholder="Email id" required />
+                      <div class="input-group-btn">
+                        <select 
+                        class="form-control mrL"
+                        id="select_view" 
+                        name="userRole" 
+                        ng-model="shareRequest.role"
+                        ng-options="item.uniqueName as item.name for item in shareableRoles">
+                      </select>
+                        <button ng-disabled="addShareEmailForm.$invalid" class="btn btn-success mrL1"
+                              ng-click="shareCompanyWithUser()" class="btn-success btn">Share</button>
+                      </div><!-- /btn-group -->
+                    </div><!-- /input-group -->
+                </form>
+
+                <div class="col-xs-8 pdB1 pdT1 mrB2">
+                <div class="row">
+                <ul class="shared_list">
+                    
+                     <li ng-repeat="(key,value) in sharedUsersList | pick: exceptOwnEmail track by $index">
+                        <span class="pull-left">
+                              <!-- <div ng-bind-html="value.userName"></div> -->
+                              <small class="Useremail" ng-bind-html="value.userEmail + '-' "></small>
+                        </span>
+
+                        <div class="form-inline">
+                            <select 
+                              class="form-control"
+                              ng-change="updateUserRole(value.role.uniqueName, value.userEmail)"
+                              ng-model="value.role.uniqueName"
+                              ng-options="item.uniqueName as item.name for item in shareableRoles">
+                            </select>
+     
+                          <span class="delIcon pull-right">
+                            <i ng-click="unSharedUser(value.userUniqueName, $index)" class="fa fa-times" aria-hidden="true"></i>
+                          </span>
+                        </div>
+
+                    
+                  </li>
+                </ul>
+                </div>
+                </div>
+            </div> <!-- add mailer -->
+        </div>
+
+        <div class="clearfix"></div>
+
+        <h3 class="pdB2">Or</h3>
+
+        <div class="modal_wrap pdB4">
+            <div><button class="btn-success btn" ng-click="ledgerCtrl.getMagicLink(); ledgerCtrl.toggleShare()">Get</button> <span class="l8grey">shareable link</span></div>
+                <div class="input-group pdT1" style="max-width: 350px;">
+                  <input id="magicLink" class="form-control" type="text" ng-model="ledgerCtrl.magicLink" />
+                  <div class="input-group-btn">
+                    <button class="btn btn-success mrL1">Copy</button>
+                  </div><!-- /btn-group -->
+                </div><!-- /input-group -->
+            <h3 class="pdT1 l8grey">Anyone can see the ledger who gets this URL.</h3>
+        </div>
+
+    </div>
+
+</div>

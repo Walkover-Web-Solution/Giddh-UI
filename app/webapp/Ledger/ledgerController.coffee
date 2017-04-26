@@ -8,11 +8,25 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     position: "bottom"
   }
 
+  ledgerCtrl.toggleShare = false
+
+  ledgerCtrl.toggleShareFucntion = () ->
+    ledgerCtrl.toggleShare = !ledgerCtrl.toggleShare
+
   ledgerCtrl.toggleDropdown = ($event) ->
     $event.preventDefault()
     $event.stopPropagation()
     $scope.status.isopen = !$scope.status.isopen
   
+  ledgerCtrl.shareLedger =() ->
+    $uibModal.open(
+      templateUrl: '/public/webapp/Ledger/shareLedger.html',
+      size: "md",
+      backdrop: 'true',
+      animation: true,
+      scope: $scope
+    )
+
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
 
@@ -174,6 +188,38 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if i > 0
         ledgerCtrl.pages.push(i)
       i++
+
+  ##--shared list--##
+  ledgerCtrl.getSharedUserList = (uniqueName) ->
+    companyServices.shredList(uniqueName).then($scope.getSharedUserListSuccess, $scope.getSharedUserListFailure)
+
+  ledgerCtrl.getSharedUserListSuccess = (res) ->
+    $scope.sharedUsersList = res.body
+
+  ledgerCtrl.getSharedUserListFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  ledgerCtrl.getSharedList = () ->
+    $scope.setShareableRoles($rootScope.selectedCompany)
+    $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
+
+
+  # generate magic link
+  ledgerCtrl.getMagicLink = () ->
+    accUname = ledgerCtrl.accountUnq
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      accountUniqueName: accUname
+      from: $filter('date')($scope.cDate.startDate, 'dd-MM-yyyy')
+      to: $filter('date')($scope.cDate.endDate, 'dd-MM-yyyy')
+    }
+    companyServices.getMagicLink(reqParam).then(ledgerCtrl.getMagicLinkSuccess, ledgerCtrl.getMagicLinkFailure)
+
+  ledgerCtrl.getMagicLinkSuccess = (res) ->
+    ledgerCtrl.magicLink = res.body.magicLink
+
+  ledgerCtrl.getMagicLinkFailure = (res) ->
+    toastr.error(res.data.message)
 
   ledgerCtrl.prevTxn = null
   ledgerCtrl.selectTxn = (ledger, txn, index ,e) ->

@@ -53,7 +53,7 @@ a,button,input {
 
 /*input*/
 .form-control {
-    background: #f8f8f8 !important;
+    background: #f9f7f2 !important;
     border: 1px solid #ded3c0;
     border-radius: 0px;
     padding: 6px !important;
@@ -1063,14 +1063,14 @@ input[type=number] {
     cursor: pointer;
 }
 
-.inconsolata, body, input, textarea, button, select{
+/*.inconsolata, body, input, textarea, button, select{
     font-family: 'Inconsolata', Arial, serif;
     font-weight: 400;
 }
 .inconsolata-b{
     font-family: 'Inconsolata', Arial, serif;
     font-weight: 700;
-}
+}*/
 
 footer{
     background-color: #26263A;
@@ -1224,4 +1224,77 @@ footer small a{
     box-shadow: none;
     border: 0;
     background: none;
+}
+.modal-backdrop {
+    background-color: #808080;
+}
+.modal-backdrop.in {
+    filter: alpha(opacity=80);
+    opacity: .8;
+}
+#shareModal .modal-header {
+    border-bottom: 0;
+}
+#shareModal h3 {
+    font-size: 14px;
+    color: #666666;
+}
+.emailInput {
+    min-width: 200px;
+}
+#shareModal .btn {
+    padding: 7px 16px;
+    border-radius: 0;
+}
+#shareModal select {
+  -webkit-appearance: none;
+  -webkit-border-radius: 0px;
+}
+#select_view {
+    background: #ccc !important;
+  border-color: #ccc !important;
+  color: #4d4d4d; 
+}
+#shareModal .input-group .input-group-btn:last-child>.btn {
+    margin-left: 8px;
+    border-radius: 0;
+}
+.l8grey {
+    color: #666;
+}
+.shared_list li {
+    list-style: none;
+    color: #666;
+    font-size: 16px;
+    padding: 10px 0;
+    border-bottom: 1px solid #949494;
+}
+.shared_list select {
+    background: none !important;
+    border: 0;
+    padding: 0 !important;
+    height: auto !important;
+    color: #666 !important;
+}
+.shared_list select:focus {
+    border: 0 !important;
+}
+.Useremail {
+    padding: 0 15px;
+}
+.delIcon {
+    width: inherit;
+}
+.dashed {
+    border-style:dashed;
+    border-color: #ccc;
+}
+.input-group button {
+    margin-left: -2px;
+}
+.flowY_scroll {
+    overflow-y: scroll;
+}
+.map-txn-container table tr td {
+    width: 25%;
 }
