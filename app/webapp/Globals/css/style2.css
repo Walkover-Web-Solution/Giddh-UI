@@ -180,7 +180,7 @@ min-width: 220px;
 .btn {
     padding: 6px 16px;
     border: 0;
-    border-radius: 2px;
+    border-radius: 0;
     font-size: 14px;
 }
 #AddManage {
@@ -583,14 +583,12 @@ input[type="checkbox"]:after {
 }
 .btn-success {
     background: #3fab63;
-    border-radius: 2px;
 }
 .btn-success:hover {
     background: #57C17A;
 }
 .btn-danger {
     background: #EF5350 !important;
-    border-radius: 2px;
     color: #fff !important;
 }
 .btn-danger:hover {
@@ -1298,3 +1296,81 @@ footer small a{
 .map-txn-container table tr td {
     width: 25%;
 }
+.mrl0{
+    margin-left: 0 !important;
+}
+#exportModal .modal-header {
+    background: #d35f29;
+    position: relative;
+    color: #fff;
+}
+#exportModal .close {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    right: 15px;
+    color: #db7f53;
+    opacity: 1;
+}
+.pdB5 {
+    padding-bottom: 50px;
+}
+.size-xs {
+    font-size: 14px;
+}
+.email-type label {
+    font-weight: normal;
+    color: #808080;
+}
+.email-type input {
+    margin-right: 7px;
+}
+.email-type td {
+    padding-right: 30px;
+}
+
+.modal-title.bg {
+    color: #fff !important;
+}
+.modal-title {
+    font-size: 18px !important;
+}
+.radio {
+    position: relative;
+}
+input[type=radio]:before {
+    content: ' ';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    background: #f7f8f8;
+    left: -3px;
+    top: -2px;
+    border: 1px solid #d36029;
+    border-radius: 50%;
+}
+input[type=radio]:checked:after {
+    content: ' ';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #808080;
+    left: 3px;
+    top: 4px;
+    border-radius: 50%;
+    right: 0;
+    text-align: center;
+}
+
+/*input[type=radio]:checked:after {
+    content: ' ';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #808080;
+    left: 2px;
+    top: 8px;
+    border-radius: 50%;
+    right: 0;
+    text-align: center;
+}*/

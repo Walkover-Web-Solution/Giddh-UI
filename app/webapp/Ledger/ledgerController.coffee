@@ -7,7 +7,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     draggable: false
     position: "bottom"
   }
-
+# mustafa
   ledgerCtrl.toggleShare = false
 
   ledgerCtrl.toggleShareFucntion = () ->
@@ -26,6 +26,99 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       animation: true,
       scope: $scope
     )
+
+  ledgerCtrl.ledgerEmailData = {}
+  
+# ledger send email
+  ledgerCtrl.sendLedgEmail = (emailData, emailType) ->
+    data = emailData
+    if _.isNull(ledgerCtrl.toDate.date) || _.isNull($scope.cDate.startDate)
+      toastr.error("Date should be in proper format", "Error")
+      return false
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: ledgerCtrl.accountUnq
+      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
+      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
+      format: emailType
+    }
+    sendData = {
+      recipients: []
+    }
+    data = data.replace(RegExp(' ', 'g'), '')
+    cdata = data.split(',')
+    _.each(cdata, (str) ->
+      if $rootScope.validateEmail(str)
+        sendData.recipients.push(str)
+      else
+        toastr.warning("Enter valid Email ID", "Warning")
+        data = ''
+        sendData.recipients = []
+        return false
+    )
+    if sendData.recipients < 1
+      if $rootScope.validateEmail(data)
+        sendData.recipients.push(data)
+      else
+        toastr.warning("Enter valid Email ID", "Warning")
+        return false
+
+    accountService.emailLedger(unqNamesObj, sendData).then(ledgerCtrl.emailLedgerSuccess, ledgerCtrl.emailLedgerFailure)
+
+  ledgerCtrl.emailLedgerSuccess = (res) ->
+    toastr.success(res.body, res.status)
+    #lc.ledgerEmailData.email = ''
+    ledgerCtrl.ledgerEmailData = {}
+
+  ledgerCtrl.emailLedgerFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  #export ledger
+  ledgerCtrl.exportLedger = (type)->
+    ledgerCtrl.showExportOption = false
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: ledgerCtrl.accountUnq
+      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
+      lType:type
+    }
+    accountService.exportLedger(unqNamesObj).then(ledgerCtrl.exportLedgerSuccess, ledgerCtrl.exportLedgerFailure)
+
+  ledgerCtrl.exportLedgerSuccess = (res)->
+    # blob = new Blob([res.body.filePath], {type:'file'})
+    # fileName = res.body.filePath.split('/')
+    # fileName = fileName[fileName.length-1]
+    # FileSaver.saveAs(blob, fileName)
+    ledgerCtrl.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
+    if $rootScope.msieBrowser()
+      $rootScope.openWindow(res.body.filePath)
+    else if ledgerCtrl.isSafari       
+      modalInstance = $uibModal.open(
+        template: '<div>
+            <div class="modal-header">
+              <h3 class="modal-title">Download File</h3>
+            </div>
+            <div class="modal-body">
+              <p class="mrB">To download your file Click on button</p>
+              <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+            </div>
+        </div>'
+        size: "sm"
+        backdrop: 'static'
+        scope: $scope
+      )
+    else
+      window.open(res.body.filePath)
+
+  ledgerCtrl.exportLedgerFailure = (res)->
+    toastr.error(res.data.message, res.data.status)
+
+
+# mustafa end
 
   if _.isUndefined($rootScope.selectedCompany)
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
@@ -189,6 +282,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.pages.push(i)
       i++
 
+# mustafa
   ##--shared list--##
   ledgerCtrl.getSharedUserList = (uniqueName) ->
     companyServices.shredList(uniqueName).then($scope.getSharedUserListSuccess, $scope.getSharedUserListFailure)
@@ -220,6 +314,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.getMagicLinkFailure = (res) ->
     toastr.error(res.data.message)
+# mustafa end
 
   ledgerCtrl.prevTxn = null
   ledgerCtrl.selectTxn = (ledger, txn, index ,e) ->
