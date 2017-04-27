@@ -117,11 +117,11 @@ th {
 							<i class="icon-magic_link"></i>
 						</a> 
 						mustafa-->
-						<a class="icomoon_ico" href="javascript:void(0)" title="" uib-tooltip="Export" tooltip-placement="right" ng-click="ledgerCtrl.shareLedger()" >
+						<a class="icomoon_ico" href="javascript:void(0)" title="" uib-tooltip="Export" tooltip-placement="right" ng-click="ledgerCtrl.shareLedger(); ledgerCtrl.toggleExportFucntion()" >
 							<i class="icon-download"></i>
 						</a>
 						
-						<a href id="share" class="icomoon_ico" ng-click="ledgerCtrl.shareLedger()">
+						<a href id="share" class="icomoon_ico" ng-click="ledgerCtrl.shareLedger(); ledgerCtrl.toggleShareFucntion()">
 							<i uib-tooltip="Send Ledger" tooltip-placement="right" class="icon-share"></i>
 						</a>
 						

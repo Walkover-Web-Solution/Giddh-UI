@@ -1311,6 +1311,7 @@ footer small a{
     right: 15px;
     color: #db7f53;
     opacity: 1;
+    text-shadow: none;
 }
 .pdB5 {
     padding-bottom: 50px;

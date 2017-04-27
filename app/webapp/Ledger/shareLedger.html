@@ -1,5 +1,5 @@
 <div id="shareModal">
-<div id="share-modal" class="pdB4">
+<div id="share-modal" class="pdB4" ng-if="ledgerCtrl.toggleShare">
    <div class="modal-header text-right">
       <i class="fa fa-times" aria-hidden="true"></i>
    </div>
@@ -54,7 +54,7 @@
       <div class="clearfix"></div>
       <h3 class="pdB2">Or</h3>
       <div class="modal_wrap pdB4">
-         <div><button class="btn-success btn" ng-click="ledgerCtrl.getMagicLink(); ledgerCtrl.toggleShare()">Get</button> <span class="l8grey">shareable link</span></div>
+         <div><button class="btn-success btn" ng-click="ledgerCtrl.getMagicLink()">Get</button> <span class="l8grey">shareable link</span></div>
          <div class="input-group pdT1" style="max-width: 350px;">
             <input id="magicLink" class="form-control dashed" type="text" ng-model="ledgerCtrl.magicLink" />
             <div class="input-group-btn">
@@ -67,26 +67,27 @@
       </div>
    </div>
 </div>
-<div id="exportModal" class="">
+<div id="exportModal" class="" ng-if="ledgerCtrl.LedgerExport">
    <div class="modal-header pd2 pdL2 pdR2">
       <h3 class="modal-title bg" id="modal-title">Export</h3>
       <i class="fa fa-times text-right close" aria-hidden="true"></i>
    </div>
    <div class="modal-body pdT5 pdB5 pdL2 pdR2" id="export-body">
+   <form name="addShareEmailForm" novalidate class="" autocomplete="off">
       <div class="modal_wrap mrB2">
         <table class="list-unstyled email-type mrB2">
           <tr>  
             <td>
-              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="lc.ledgerEmailData.emailType" name="emailType" value="view-detailed" />super mini</label>
+              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" value="view-detailed" />super mini</label>
             </td>
             <td>
-              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="lc.ledgerEmailData.emailType" name="emailType" value="view-condensed" />mini</label>
+              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" value="view-condensed" />mini</label>
             </td>
             <td ng-if="canUpdate">
-              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="lc.ledgerEmailData.emailType" name="emailType" value="admin-detailed" />brief</label>
+              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" value="admin-detailed" />brief</label>
             </td>
             <td ng-if="canUpdate">
-              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="lc.ledgerEmailData.emailType" name="emailType" value="admin-condensed" />detailed</label>
+              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" value="admin-condensed" />detailed</label>
             </td>
           </tr>
         </table>
@@ -95,17 +96,17 @@
       <div class="clearfix"></div>
       <h3 class="pdB2">Or</h3>
       <div class="modal_wrap">
-         <form name="addShareEmailForm" novalidate class="" autocomplete="off">
   
-               <textarea ng-model="lc.ledgerEmailData.email" required name="ledgerEmailSendForm.email" class="form-control" placeholder="Recipents Email Id's"></textarea>
+               <textarea ng-model="ledgerCtrl.ledgerEmailData.email" required name="ledgerEmailSendForm.email" class="form-control" placeholder="Recipents Email Id's"></textarea>
                <h3 class="l8grey pdT1 size-xs">You can add multiple id's separated comma</h3>
 
                <div class="clearfix"></div>
-                  <button ng-disabled="ledgerEmailSendForm.$invalid" class="btn btn-success btn-md mrT1" ng-click="lc.sendLedgEmail(lc.ledgerEmailData.email, lc.ledgerEmailData.emailType)">Send email</button>
+                  <button ng-disabled="ledgerEmailSendForm.$invalid" class="btn btn-success btn-md mrT1" ng-click="ledgerCtrl.sendLedgEmail(ledgerCtrl.ledgerEmailData.email, ledgerCtrl.ledgerEmailData.emailType)">Send email</button>
 
-         </form>
+         
       </div>
       <!-- add mailer -->
+      </form>
    </div>
 </div>
 </div>
