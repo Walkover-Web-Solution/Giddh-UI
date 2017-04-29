@@ -1,7 +1,7 @@
 <div id="shareModal">
 <div id="share-modal" class="pdB4" ng-if="ledgerCtrl.toggleShare">
    <div class="modal-header text-right">
-      <i class="fa fa-times" aria-hidden="true"></i>
+      <i class="fa fa-times" aria-hidden="true" data-dismiss="modal"></i>
    </div>
    <div class="modal-body pdL2 pdR2" id="SharePop">
       <div class="modal_wrap">
@@ -18,6 +18,7 @@
                         ng-model="shareRequest.role"
                         ng-options="item.uniqueName as item.name for item in shareableRoles">
                      </select>
+                     <span class="select_drop"><i class="fa fa-caret-down"></i></span>
                      <button ng-disabled="addShareEmailForm.$invalid" class="btn btn-success mrL1"
                         ng-click="shareCompanyWithUser()" class="btn-success btn">Share</button>
                   </div>
@@ -40,6 +41,7 @@
                               ng-model="value.role.uniqueName"
                               ng-options="item.uniqueName as item.name for item in shareableRoles">
                            </select>
+                           <span class="select_drop"><i class="fa fa-caret-down"></i></span>
                            <span class="delIcon pull-right">
                            <i ng-click="unSharedUser(value.userUniqueName, $index)" class="fa fa-times" aria-hidden="true"></i>
                            </span>
@@ -54,10 +56,10 @@
       <div class="clearfix"></div>
       <h3 class="pdB2">Or</h3>
       <div class="modal_wrap pdB4">
-         <div><button class="btn-success btn" ng-click="ledgerCtrl.getMagicLink()">Get</button> <span class="l8grey">shareable link</span></div>
+         <div ng-if="ledgerCtrl.getLink"><button class="btn-success btn" ng-click="ledgerCtrl.getMagicLink()">Get</button> <span class="l8grey">shareable link</span></div>
          <div class="input-group pdT1" style="max-width: 350px;">
             <input id="magicLink" class="form-control dashed" type="text" ng-model="ledgerCtrl.magicLink" />
-            <div class="input-group-btn">
+            <div class="input-group-btn sticky">
                <button class="btn btn-success mrl0">Copy</button>
             </div>
             <!-- /btn-group -->
@@ -68,9 +70,9 @@
    </div>
 </div>
 <div id="exportModal" class="" ng-if="ledgerCtrl.LedgerExport">
-   <div class="modal-header pd2 pdL2 pdR2">
+   <div class="modal-header themeBg pd2 pdL2 pdR2">
       <h3 class="modal-title bg" id="modal-title">Export</h3>
-      <i class="fa fa-times text-right close" aria-hidden="true"></i>
+      <i class="fa fa-times text-right close_modal" aria-hidden="true"></i>
    </div>
    <div class="modal-body pdT5 pdB5 pdL2 pdR2" id="export-body">
    <form name="addShareEmailForm" novalidate class="" autocomplete="off">

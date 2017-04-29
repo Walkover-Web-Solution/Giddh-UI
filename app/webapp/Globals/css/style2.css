@@ -1257,6 +1257,9 @@ footer small a{
     margin-left: 8px;
     border-radius: 0;
 }
+.input-group-btn.sticky:last-child>.btn {
+    margin-left: -1 !important;
+}
 .l8grey {
     color: #666;
 }
@@ -1299,19 +1302,19 @@ footer small a{
 .mrl0{
     margin-left: 0 !important;
 }
-#exportModal .modal-header {
-    background: #d35f29;
+.modal-header {
     position: relative;
-    color: #fff;
 }
-#exportModal .close {
+.close_modal {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     right: 15px;
     color: #db7f53;
+    color: #db7f53;
     opacity: 1;
     text-shadow: none;
+    cursor: pointer;
 }
 .pdB5 {
     padding-bottom: 50px;
@@ -1375,3 +1378,16 @@ input[type=radio]:checked:after {
     right: 0;
     text-align: center;
 }*/
+.select_drop {
+    position: relative;
+    width: 6px;
+    z-index: 9;
+}
+.select_drop i {
+    position: absolute;
+    right: 4px;
+    font-size: 16px;
+    color: #4d4d4d;
+    top: 50%;
+    transform: translateY(-50%);
+}

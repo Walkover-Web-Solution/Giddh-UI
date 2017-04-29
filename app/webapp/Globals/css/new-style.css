@@ -906,23 +906,10 @@ header .navbar-nav > li.active {
     border-radius: 0;
 }
 
-.modal-title {
-    font-size: 20px;
-}
-
-.modal-header.themeBg {
+.themeBg {
     background-color: #d35f29;
-    color: white;
 }
 
-.modal-header.themeBg .close {
-    font-size: 32px;
-    color: white;
-}
-
-.modal-body.noPad {
-    padding: 0;
-}
 
 .modal-liq80 {
     width: 80%;
@@ -3689,7 +3676,7 @@ position: absolute;
     width:80%;
     margin:0 auto 20px;
     padding:20px 0;
-    height:335px;
+    height:280px;
     position: relative;
 }
 

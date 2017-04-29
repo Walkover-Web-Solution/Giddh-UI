@@ -2,6 +2,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl = this
   ledgerCtrl.LedgerExport = false
   ledgerCtrl.toggleShare = false
+  ledgerCtrl.getLink = true
 
   ledgerCtrl.today = new Date()
   d = moment(new Date()).subtract(8, 'month')
@@ -238,6 +239,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.getMagicLinkSuccess = (res) ->
     ledgerCtrl.magicLink = res.body.magicLink
+    ledgerCtrl.getLink = false
 
   ledgerCtrl.getMagicLinkFailure = (res) ->
     toastr.error(res.data.message)

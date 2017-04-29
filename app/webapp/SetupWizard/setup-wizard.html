@@ -1,18 +1,19 @@
+<div id="shareModal">
 <div id="setupWizardModal" ng-controller="setWizardController">
 
-  <div class="modal-header themeBg">
-    <button type="button" class="close" data-dismiss="modal" ng-click="promptBeforeClose()" aria-label="Close"><span
-        aria-hidden="true">&times;</span></button>
-    <h3 class="modal-title">Create New Company</h3>
+  <div class="modal-header themeBg pd2 pdL2 pdR2">
+  <i class="fa fa-times text-right close_modal" data-dismiss="modal" aria-hidden="true" ng-click="promptBeforeClose()" aria-label="Close"></i>
+    <h3 class="modal-title bg">Create New Company</h3>
   </div>
   <!-- end header -->
 
   <div class="modal-body noPad">
 
     <div class="welcome-msg">
-      <div ng-if="!showSuccessMsg">
+      <div ng-if="!showSuccessMsg" class="l8grey">
         <span>Welcome!</span></br>
         <span>Let us help you set up your company with Giddh.</span> 
+        <span>Before creating a company we need to verify your mobile no. first.</span>
       </div>
       <div ng-if="showSuccessMsg">
         <span>Congratulations!</span></br>
@@ -29,12 +30,12 @@
             <div class="wizard-step">
                 
               <div class=" clearfix">
-                <h1>Add Mobile Number</h1>
-                <div class="mrT">
+                <h1 class="l8grey">Add Mobile Number</h1>
+                <div class="mrT mrB1">
                   <input class="form-control max350 pull-left" type="text" placeholder="91-9998899988" ng-model="phoneNumber"/>
-                  <button class="btn btn-success mrL2" ng-click="addNumber(phoneNumber)" ng-disabled="mobNum.showVerificationBox">Add</button>
+                  <button class="btn btn-success mrL1" ng-click="addNumber(phoneNumber)" ng-disabled="mobNum.showVerificationBox">Add</button>
                 </div>
-                <p class="mrT"><b>Note: </b>Add Contact number along with country code, for example, If your contact number is 9998899988 and country code is 91, enter '91-9998899988'.</p>
+                <h3>Format should be like COUNTRY CODE - NUMBER. Ex- 91-9898989898</h3>
               </div>
               <div class=" clearfix" ng-if="mobNum.showVerificationBox" style="padding-top:0;">
                 <hr>
@@ -52,9 +53,9 @@
         <wz-step wz-title="Create Company">
             
             <div class="wizard-step">
-              <h1>Create Your Company</h1>  
-              <form name="createCompForm" novalidate id="createCompForm">
-                <div class="modal-body">
+              <h1 class="l8grey">Create Your Company</h1>  
+              <form name="createCompForm" novalidate id="createCompForm" class="mrT mrB1">
+
                   <div class="form-group"
                        ng-class="(createCompForm.name.$valid  && createCompForm.name.$touched) ? 'has-success' : (createCompForm.name.$touched) ? 'has-error' : '' ">
                     <input type="text" ng-model="company.name" class="form-control" placeholder="Company Name" required name="name"
@@ -72,9 +73,9 @@
                     </div>
 
                   </div>
-                </div>
+
                 <div class="modal-footer">
-                  <button class="btn btn-primary" type="button" ng-click="createCompany(company)" ng-disabled="createCompForm.$invalid">
+                  <button class="btn btn-success" type="button" ng-click="createCompany(company)" ng-disabled="createCompForm.$invalid">
                     Create
                   </button>
                 </div>
@@ -97,4 +98,5 @@
   <!-- end modal body -->
 
 
+</div>
 </div>
