@@ -14,6 +14,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.accountUnq = $stateParams.unqName
   ledgerCtrl.showExportOption = false
   ledgerCtrl.showLedgerPopover = false
+  ledgerCtrl.showExportOption = false
 
   ledgerCtrl.popover = {
 
@@ -23,6 +24,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   }
 # mustafa
   
+  ledgerCtrl.exportOptions = () ->
+    ledgerCtrl.showExportOption = !ledgerCtrl.showExportOption
 
   ledgerCtrl.toggleShareFucntion = () ->
     ledgerCtrl.LedgerExport = false
@@ -293,48 +296,48 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     toastr.error(res.data.message, res.data.status)
 
   # #export ledger
-  # ledgerCtrl.exportLedger = (type)->
-  #   ledgerCtrl.showExportOption = false
-  #   unqNamesObj = {
-  #     compUname: $rootScope.selectedCompany.uniqueName
-  #     acntUname: ledgerCtrl.accountUnq
-  #     fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
-  #     toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
-  #     lType:type
-  #   }
-  #   accountService.exportLedger(unqNamesObj).then(ledgerCtrl.exportLedgerSuccess, ledgerCtrl.exportLedgerFailure)
+  ledgerCtrl.exportLedger = (type)->
+    ledgerCtrl.showExportOption = false
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: ledgerCtrl.accountUnq
+      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
+      lType:type
+    }
+    accountService.exportLedger(unqNamesObj).then(ledgerCtrl.exportLedgerSuccess, ledgerCtrl.exportLedgerFailure)
 
-  # ledgerCtrl.exportLedgerSuccess = (res)->
-  #   # blob = new Blob([res.body.filePath], {type:'file'})
-  #   # fileName = res.body.filePath.split('/')
-  #   # fileName = fileName[fileName.length-1]
-  #   # FileSaver.saveAs(blob, fileName)
-  #   ledgerCtrl.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
-  #   if $rootScope.msieBrowser()
-  #     $rootScope.openWindow(res.body.filePath)
-  #   else if ledgerCtrl.isSafari       
-  #     modalInstance = $uibModal.open(
-  #       template: '<div>
-  #           <div class="modal-header">
-  #             <h3 class="modal-title">Download File</h3>
-  #           </div>
-  #           <div class="modal-body">
-  #             <p class="mrB">To download your file Click on button</p>
-  #             <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
-  #           </div>
-  #           <div class="modal-footer">
-  #             <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
-  #           </div>
-  #       </div>'
-  #       size: "sm"
-  #       backdrop: 'static'
-  #       scope: $scope
-  #     )
-  #   else
-  #     window.open(res.body.filePath)
+  ledgerCtrl.exportLedgerSuccess = (res)->
+    # blob = new Blob([res.body.filePath], {type:'file'})
+    # fileName = res.body.filePath.split('/')
+    # fileName = fileName[fileName.length-1]
+    # FileSaver.saveAs(blob, fileName)
+    ledgerCtrl.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
+    if $rootScope.msieBrowser()
+      $rootScope.openWindow(res.body.filePath)
+    else if ledgerCtrl.isSafari       
+      modalInstance = $uibModal.open(
+        template: '<div>
+            <div class="modal-header">
+              <h3 class="modal-title">Download File</h3>
+            </div>
+            <div class="modal-body">
+              <p class="mrB">To download your file Click on button</p>
+              <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+            </div>
+        </div>'
+        size: "sm"
+        backdrop: 'static'
+        scope: $scope
+      )
+    else
+      window.open(res.body.filePath)
 
-  # ledgerCtrl.exportLedgerFailure = (res)->
-  #   toastr.error(res.data.message, res.data.status)
+  ledgerCtrl.exportLedgerFailure = (res)->
+    toastr.error(res.data.message, res.data.status)
 
 
 # mustafa end
