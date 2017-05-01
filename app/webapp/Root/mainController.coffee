@@ -453,6 +453,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.checkPermissions($rootScope.selectedCompany)
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
+    $scope.getGroupsList()
 #    $rootScope.getCroppedAccountList(company.uniqueName, '')
 
 
@@ -765,6 +766,13 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $rootScope.accClicked = true
     $rootScope.$emit('account-selected')
     return false
+
+  $scope.getGroupsList = () ->
+    @success = (res) ->
+      $rootScope.groupWithAccountsList = res.body
+    @failure = (res) ->
+
+    groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then(@success, @failure)
 
   # $scope.goToLedgerCash = () ->
   #   $state.go('company.content.ledgerContent',{unqName:'cash'})

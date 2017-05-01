@@ -110,7 +110,7 @@ th {
 				</div>
 				<div class="col-xs-4">
 					<div class="row">
-						<h1 class="text-center account_Name">Cash A/c</h1>
+						<h1 class="text-center account_Name">{{selectedAccount.name}} A/c</h1>
 					</div>
 				</div>
 				<div class="col-xs-4 pull-right text-right">
@@ -140,8 +140,8 @@ th {
 		<table class="col-xs-12 ledger-head mrT3">
 			<thead>
 				<tr>
-					<th class="col-xs-6"  style="font-weight: 400">Is Cash coming in?</th>
-					<th class="col-xs-6"  style="font-weight: 400">Is Cash coming out?</th>
+					<th class="col-xs-6"  style="font-weight: 400">Is {{selectedAccount.name}} coming in?</th>
+					<th class="col-xs-6"  style="font-weight: 400">Is {{selectedAccount.name}} coming out?</th>
 				</tr>
 			</thead>
 		</table>
@@ -171,7 +171,8 @@ th {
 			
 				<table class="width100">
 					<tbody>
-						<tr ng-repeat="ledger in ledgerCtrl.paginatedLedgers">
+						<tr ng-repeat="ledger in ledgerCtrl.paginatedLedgers"
+							ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed, uncfr:ledger.unconfirmedEntry}">
 							<td colspan="100">
 								<table class="width100">
 									<tbody class="ledger-main">
@@ -198,7 +199,10 @@ th {
 											<td class="col-xs-5">
 												<input 
 												type="text" 
-												ng-model="txn.particular.name" 
+												ng-model="txn.particular"
+												typeahead-append-to-body="true" 
+		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+		                                      	typeahead-template-url="accountPopUp.html" 
 												class="form-control"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 												is-open="txn.isOpen">
@@ -210,6 +214,57 @@ th {
 												class="form-control" 
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 												is-open="txn.isOpen"
+												ng-change="ledgerCtrl.onTxnAmountChange(txn)"
+												>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						<tr ng-repeat="ledger in ledgerCtrl.blankLedger">
+							<td colspan="100">
+								<table class="width100">
+									<tbody class="ledger-main">
+										<tr 
+											class="ledger-row debit-blank-row"
+											ng-repeat="txn in ledger.transactions"
+											ng-if="txn.type == 'DEBIT'"
+											uib-popover-template="ledgerCtrl.popover.templateUrl"
+											popover-trigger="outsideClick"
+											popover-placement="{{ledgerCtrl.popover.position}}"
+											popover-append-to-body='true'
+											popover-is-open="txn.isOpen"
+											popover-popup-delay="200"
+											set-popover-position
+											>
+											<td class="col-xs-2">
+												<input 
+												type="text" 
+												ng-model="ledger.entryDate" 
+												class="form-control"
+												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+												is-open="txn.isOpen">
+											</td>
+											<td class="col-xs-5">
+												<input 
+												type="text" 
+												ng-model="txn.particular"
+												typeahead-append-to-body="true" 
+		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+		                                      	typeahead-template-url="accountPopUp.html" 
+												class="form-control"
+												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+												is-open="txn.isOpen">
+											</td>
+											<td class="col-xs-5 pos-rel">
+												<input 
+												type="text" 
+												ng-model="txn.amount" 
+												class="form-control" 
+												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+												is-open="txn.isOpen"
+												ng-change="ledgerCtrl.onTxnAmountChange(txn)"
 												>
 											</td>
 										</tr>
@@ -243,7 +298,8 @@ th {
 				</table>
 				<table class="width100">
 					<tbody>
-						<tr ng-repeat="ledger in ledgerCtrl.paginatedLedgers">
+						<tr ng-repeat="ledger in ledgerCtrl.paginatedLedgers"
+							ng-class="{compoundEntry: ledger.isCompoundEntry || ledger.failed, uncfr:ledger.unconfirmedEntry}">
 							<td class="100">
 								<table class="width100">
 									<tbody class="ledger-main">
@@ -273,7 +329,10 @@ th {
 												<input 
 												class="form-control"
 												type="text"
-												ng-model="txn.particular.name"
+												ng-model="txn.particular"
+												typeahead-append-to-body="true" 
+		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+		                                      	typeahead-template-url="accountPopUp.html"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												>
@@ -285,6 +344,60 @@ th {
 												ng-model="txn.amount"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 												is-open="txn.isOpen"
+												ng-change="ledgerCtrl.onTxnAmountChange(txn)"
+												>
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</td>
+						</tr>
+						<tr ng-repeat="ledger in ledgerCtrl.blankLedger">
+							<td class="100">
+								<table class="width100">
+									<tbody class="ledger-main">
+										<tr
+											class="ledger-row"
+											ng-repeat="txn in ledger.transactions"
+											ng-if="txn.type == 'CREDIT'"
+											uib-popover-template="ledgerCtrl.popover.templateUrl"
+											popover-trigger="outsideClick"
+											popover-placement="{{ledgerCtrl.popover.position}}"
+											popover-append-to-body='true'
+											popover-enable="!ledgerCtrl.popover.draggable"
+											popover-is-open="txn.isOpen"
+											popover-popup-delay="200"
+											set-popover-position
+											ng-click="$event.stopPropagation()"
+											>
+											<td class="col-xs-2">
+												<input 
+												class="form-control" 
+												type="text" 
+												ng-model="ledger.entryDate"
+												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+												is-open="txn.isOpen">
+											</td>
+											<td class="col-xs-5">
+												<input 
+												class="form-control"
+												type="text"
+												ng-model="txn.particular"
+												typeahead-append-to-body="true" 
+		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+		                                      	typeahead-template-url="accountPopUp.html"
+												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+												is-open="txn.isOpen"
+												>
+											</td>
+											<td class="col-xs-5 pos-rel">
+												<input 
+												class="form-control" 
+												type="text" 
+												ng-model="txn.amount"
+												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+												is-open="txn.isOpen"
+												ng-change="ledgerCtrl.onTxnAmountChange(txn)"
 												>
 											</td>
 										</tr>
@@ -313,7 +426,7 @@ th {
 					</tr>
 					<tr class="total_col">
 						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important;">
-							<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.ledgerData.creditTotal - ledgerCtrl.ledgerData.debitTotal}}</span>
+							<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.totalDebit | number:2}}</span>
 						</td>
 					</tr>
 				</tbody>
@@ -328,7 +441,7 @@ th {
 					</tr>
 					<tr class="total_col">
 						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important;">
-							<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.ledgerData.creditTotal - ledgerCtrl.ledgerData.debitTotal}}</span>
+							<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.totalCredit | number:2}}</span>
 						</td>
 					</tr>
 				</tbody>
@@ -474,7 +587,7 @@ th {
 	        		</td>
 	        		<td>
 				        <label class="primary_color">Total</label>
-				        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.total" />
+				        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.total" ng-change="ledgerCtrl.onTxnTotalChange(ledgerCtrl.selectedLedger)"/>
 	        		</td>
 	        	</tr>
 	        	</tbody>
