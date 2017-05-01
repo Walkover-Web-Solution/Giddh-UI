@@ -955,6 +955,18 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.onTxnTotalChange = (txn)->
     ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.selectedLedger.panel.total + ledgerCtrl.selectedLedger.panel.discount - ledgerCtrl.selectedLedger.panel.tax
+    _.each ledgerCtrl.selectedLedger.transactions, (txn) ->
+      acc = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
+      if acc
+        parent = acc.parentGroups[0].uniqueName
+        parentGroup = _.findWhere($rootScope.groupWithAccountsList, {uniqueName:parent}) 
+        if parentGroup.category == "income" || parentGroup.category == "expenses" && !txn.isTax && txn.particular.uniqueName != 'roundoff'
+          txn.amount = ledgerCtrl.selectedLedger.panel.amount
+    ledgerCtrl.selectedLedger.isInclusiveTax = true
+    # ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
+    # ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
+
+
 
   ledgerCtrl.cutToTwoDecimal = (num) ->
     num = num.toString()
