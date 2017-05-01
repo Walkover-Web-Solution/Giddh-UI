@@ -574,7 +574,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 #     }
 
 
-  ledgerCtrl.ledgerPerPageCount = 5
+  ledgerCtrl.ledgerPerPageCount = 10
   ledgerCtrl.pages = []
   ledgerCtrl.getPaginatedLedger = (page) ->
     @success = (res) ->
@@ -802,6 +802,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.prevTxn = txn
     ledgerCtrl.clearTaxSelection(txn, ledger)
     ledgerCtrl.clearDiscounts(ledger)
+    ledgerCtrl.addBlankRow(ledger, txn)
+    ledgerCtrl.removeBlankRowFromPrevLedger(ledgerCtrl.prevLedger, ledger)
     ledger.isCompoundEntry = true
     if ledgerCtrl.prevLedger && ledgerCtrl.prevLedger.uniqueName != ledger.uniqueName
       ledgerCtrl.prevLedger.isCompoundEntry = false
@@ -829,6 +831,24 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.prevLedger = ledger
     e.stopPropagation()
 
+  ledgerCtrl.addBlankRow = (ledger, txn) ->
+    dBlankRow = _.findWhere(ledger.transactions, {blankRow:'DEBIT'})
+    cBlankRow = _.findWhere(ledger.transactions, {blankRow:'CREDIT'})
+    if !dBlankRow && txn.type == 'DEBIT'
+      txn = new txnModel('DEBIT')
+      txn.blankRow = 'DEBIT'
+      ledger.transactions.push(txn)
+    if !cBlankRow && txn.type == 'CREDIT'
+      txn = new txnModel('CREDIT')
+      txn.blankRow = 'CREDIT'
+      ledger.transactions.push(txn)
+
+  ledgerCtrl.removeBlankRowFromPrevLedger = (prevLedger, ledger) ->
+    if prevLedger && prevLedger.uniqueName != ledger.uniqueName
+      _.each prevLedger.transactions, (txn, i) ->
+        if txn.blankRow && txn.particular.uniqueName == ''
+          prevLedger.transactions.splice(i, 1)
+
   ledgerCtrl.clearDiscounts = (ledger) ->
     if ledgerCtrl.prevLedger && ledger.uniqueName != ledgerCtrl.prevLedger.uniqueName
       _.each ledgerCtrl.discountAccount.accountDetails, (account) ->
@@ -850,15 +870,19 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.getPanelAmount = (ledger) ->
     amount = 0
-    if ledger.transactions.length > 1
+    if ledger.transactions.length > 1 && !ledger.isBlankLedger
       _.each ledger.transactions, (txn) ->
         acc = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
-        parent = acc.parentGroups[0].uniqueName
-        parentGroup = _.findWhere($rootScope.groupWithAccountsList, {uniqueName:parent}) 
-        if parentGroup.category == "income" || parentGroup.category == "expenses" && !txn.isTax && txn.particular.uniqueName != 'roundoff'
-          amount += Number(txn.amount)
-    else
+        if acc
+          parent = acc.parentGroups[0].uniqueName
+          parentGroup = _.findWhere($rootScope.groupWithAccountsList, {uniqueName:parent}) 
+          if parentGroup.category == "income" || parentGroup.category == "expenses" && !txn.isTax && txn.particular.uniqueName != 'roundoff'
+            amount += Number(txn.amount)
+    else if !ledger.isBlankLedger
       amount = Number(ledger.transactions[0].amount)
+    else if ledger.isBlankLedger
+      _.each ledger.transactions, (txn) ->
+        amount += Number(txn.amount)
     return amount
 
   ledgerCtrl.getTotalDiscount = (ledger) ->
@@ -1059,8 +1083,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         txn.type = ledgerCtrl.selectedTxn.type
         ledger.transactions.push(txn)
 
+  ledgerCtrl.removeBlankTransactions = (ledger) ->
+    _.each ledger.transactions, (txn, i) ->
+      if txn.blankRow && txn.particular.uniqueName == ''
+        ledger.transactions.splice(i, 1)
+
   ledgerCtrl.buildLedger = (ledger) ->
     ledgerCtrl.addDiscountTxns(ledger)
+    ledgerCtrl.removeBlankTransactions(ledger)
     ledger
 
   ledgerCtrl.lastSelectedLedger = {}

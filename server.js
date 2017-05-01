@@ -101,6 +101,7 @@ app.use(session({
     secure: false,
     maxAge: sessionTTL
   }
+  
   // store: new MongoStore({
   //   url: settings.mongoUrl,
   //   autoRemove: 'interval',
