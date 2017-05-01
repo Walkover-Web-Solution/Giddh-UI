@@ -2,13 +2,53 @@ settings = require('../util/settings')
 router = settings.express.Router({mergeParams: true})
 
 router.get '/unit-types', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-units'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-unit'
   args =
     headers:
       'Auth-Key': req.session.authKey
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/unit-types', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-unit'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data:
+      req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.put '/unit-types', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data:
+      req.body
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-unit/' + req.body.uName
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.delete '/unit-types', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-unit/' + req.body.uName
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.delete hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data

@@ -65,6 +65,18 @@ angular.module('inventoryServices', [])
 				method: 'GET',
 				url: '/company/:companyUniqueName/stock-group/unit-types'
 			},
+			createStockUnit: {
+				method: 'POST',
+				url: '/company/:companyUniqueName/stock-group/unit-types'
+			},
+			updateStockUnit: {
+				method: 'PUT',
+				url: '/company/:companyUniqueName/stock-group/unit-types'
+			},
+			deleteStockUnit: {
+				method: 'DELETE',
+				url: '/company/:companyUniqueName/stock-group/unit-types'
+			},
 			getFilteredStockGroups: {
 				method: 'GET',
 				url: '/company/:companyUniqueName/stock-group/hierarchical-stock-groups'
@@ -72,8 +84,7 @@ angular.module('inventoryServices', [])
 			getStock: {
 				method: 'GET',
 				url: '/company/:companyUniqueName/stock-group/get-stock-detail'
-			}
-			,
+			},
 			getStockReport: {
 				method: 'GET',
 				url: '/company/:companyUniqueName/stock-group/get-stock-report'
@@ -187,13 +198,6 @@ angular.module('inventoryServices', [])
 	    	})
 	    },
 
-	    getStockUnits: function(){
-	    	return this.handlePromise(function(onSuccess, onFailure){
-	    		return stock.getStockType({
-	    			companyUniqueName: reqParam.companyUniqueName,
-	    		}, onSuccess, onFailure)
-	    	})
-	    },
 
 	    getFilteredStockGroups: function(){
 	    	return this.handlePromise(function(onSuccess, onFailure){
@@ -245,7 +249,40 @@ angular.module('inventoryServices', [])
 	    			stockGroupUniqueName : reqParam.stockGroupUniqueName
 	    		}, onSuccess, onFailure)
 	    	})
+	    },
+
+	    getStockUnits: function(reqParam){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.getStockType({
+	    			companyUniqueName: reqParam.companyUniqueName
+	    		}, onSuccess, onFailure)
+	    	})
+	    },
+
+	    createStockUnit: function(reqParam, data){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.createStockUnit({
+	    			companyUniqueName: reqParam.companyUniqueName
+	    		}, data, onSuccess, onFailure)
+	    	})
+	    },
+
+	    updateStockUnit: function(reqParam, data){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.updateStockUnit({
+	    			companyUniqueName: reqParam.companyUniqueName
+	    		}, data, onSuccess, onFailure)
+	    	})
+	    },
+
+	    deleteStockUnit: function(reqParam, data){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.deleteStockUnit({
+	    			companyUniqueName: reqParam.companyUniqueName
+	    		}, data, onSuccess, onFailure)
+	    	})
 	    }
+
 		}
 		return stockService
 }])

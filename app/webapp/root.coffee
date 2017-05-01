@@ -225,6 +225,8 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     views:{
       'inventory-detail':{
         templateUrl: '/public/webapp/Inventory/partials/custom-stock-unit.html'
+        controller: 'inventoryCustomStockController'
+        controllerAs: 'vm'
       }
     }
   )

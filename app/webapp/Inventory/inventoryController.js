@@ -474,23 +474,6 @@ angular.module('inventoryController', [])
 	    )
 	}
 
-	// get stock unit types
-	vm.getStockUnits = function(){
-		this.success = function(res){
-			vm.stockUnitTypes = res.body
-		}
-
-		this.failure = function(res){
-			toastr.error(res.data.message)
-		}
-
-		var reqParam = {
-	      companyUniqueName: $rootScope.selectedCompany.uniqueName
-	    }
-	    stockService.getStockUnits(reqParam).then(this.success, this.failure)
-	}
-	vm.getStockUnits()
-
 	// check whether to move selected stock grp to another
 	vm.modificationState = "Modify"
 	vm.setModificationState = function(grp){
@@ -540,7 +523,7 @@ angular.module('inventoryController', [])
 	});
 
 	//set mode 
-	if($state.params.grpId !== ''){
+	if(!_.isEmpty($state.params) && $state.params.grpId !== ''){
 		vm.groupEditMode =  true
 		vm.getStockGroupDetail($state.params.grpId)
 	}
@@ -551,5 +534,6 @@ angular.module('inventoryController', [])
 			isSelfParent: true
 		}
 	}
+
 
 }])
