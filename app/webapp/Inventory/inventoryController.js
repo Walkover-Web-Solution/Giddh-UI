@@ -434,20 +434,21 @@ angular.module('inventoryController', [])
 
 	}
 
-
 	// delete stock group
-	vm.deleteStockGrp = function(grp){
+	vm.deleteStockGrp = function(){
 		this.success = function(res){
 			toastr.success(res.body)
 			vm.getHeirarchicalStockGroups()
+			$state.go('inventory', {});
 		}
 		this.failure = function(res){
 			toastr.error(res.data.message)
 		}
 		reqParam = {
 			companyUniqueName : $rootScope.selectedCompany.uniqueName,
-			stockGroupUniqueName: grp.uniqueName
+			stockGroupUniqueName: $state.params.grpId
 		}
+
 		stockService.deleteStockGrp(reqParam).then(this.success, this.failure)
 
 	}

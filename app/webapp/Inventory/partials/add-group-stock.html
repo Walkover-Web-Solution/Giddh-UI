@@ -61,12 +61,12 @@
 			<div class="row">
 				<form name="updateStockGroup" class="form-theme" ng-model="stock.updateStockGroup" novalidate>
 					<div class="form-group col-xs-6 pdL0 pdR">
-						<label>Name</label>
+						<label>Name<span class="required">*</span></label>
 						<input type="text" name="name" class="form-control" ng-model="stock.updateStockGroup.name" required>
 					</div>
 
 					<div class="form-group col-xs-6 pdR0 pdL">
-						<label>Unique Name</label>
+						<label>Unique Name<span class="required">*</span></label>
 						<input type="text" name="uniqueName" class="form-control" ng-model="stock.updateStockGroup.uniqueName" required>
 					</div>
 
@@ -81,7 +81,11 @@
 				    </select>
 					</div>
 
-					<button type="submit" class="btn btn-md btn-success" ng-click="stock.updateGroup()"  ng-disabled="">Update</button>
+					<button type="submit" class="btn btn-md btn-success" ng-click="stock.updateGroup()"  ng-disabled="updateStockGroup.$invalid">Update</button>
+
+					<button type="submit" class="btn btn-md btn-danger" ng-click="stock.deleteStockGrp()">Delete</button>
+
+					<a href ng-click="stock.checkDelCallback()">Clcik me</a>
 
 				</form>
 			</div>
