@@ -1163,6 +1163,12 @@ footer small a{
 .blue {
     color: #337ab7;
 }
+.flowY_scroll {
+    overflow-y: scroll;
+}
+.map-txn-container table tr td {
+    width: 25%;
+}
 .pop-panel {
     max-width: 700px;
 }
