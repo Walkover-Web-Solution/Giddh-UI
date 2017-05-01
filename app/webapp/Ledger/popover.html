@@ -1,0 +1,224 @@
+<script type="text/ng-template" id="panel">
+     <div class="ledger-panel" ng-click="$event.stopPropagation()" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': lc.showPanel, 'top0':hideHeader}">
+      <div class="wrapper">
+        <div class="">
+          <div class="form-group">
+            <div ng-if="selectedCompany.canUserSwitch" style="margin-top:3px" class="checkbox mrR1 pull-left"> -->
+            
+              <!--<label>-->
+                <!--<input type="checkbox" ng-model="lc.selectedLedger.unconfirmedEntry">Unconfirmed Entry-->
+              <!--</label>-->
+              <!-- mustafa comment -->
+              <button class="btn btn-sm" ng-click="lc.selectedLedger.unconfirmedEntry = !lc.selectedLedger.unconfirmedEntry" ng-class="{'btn-primary' : lc.selectedLedger.unconfirmedEntry == true, 'btn-default' : lc.selectedLedger.unconfirmedEntry == false}">
+                <span ng-if="lc.selectedLedger.unconfirmedEntry">Unconfirmed</span>
+                <span ng-if="!lc.selectedLedger.unconfirmedEntry">Confirmed</span>
+              </button>
+            </div>
+            <!-- mustafa comment / -->
+            <!-- mustafa comment -->
+            <div style="margin-top: 3px;" class="checkbox mrR1 pull-left" >
+            <!-- mustafa comment / -->
+              <!--<div>-->
+                <!--<switch on="Inclusive" off="Exclusive" ng-model="lc.selectedLedger.isInclusiveTax" class="wide100" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>-->
+              <!--</div>-->
+              <!--<div>-->
+                <!--<switch on="Applied Tax" off="Don't A.T." ng-model="lc.selectedLedger.applyApplicableTaxes" class="wide100" uib-tooltip="Merge/Unmerge bank transactions with ledger" tooltip-placement="bottom" ></switch>-->
+              <!--</div>-->
+             <!-- mustafa comment -->
+              <button class="btn btn-sm" ng-click="lc.selectedLedger.isInclusiveTax = !lc.selectedLedger.isInclusiveTax" ng-class="{'btn-primary' : lc.selectedLedger.isInclusiveTax == true, 'btn-default' : lc.selectedLedger.isInclusiveTax == false}"  ng-if="lc.taxList.length > 0">
+                <span>Inclusive</span>
+              </button>
+              <!-- mustafa comment / -->
+              <!--<label>                -->
+                <!--<input type="checkbox" ng-model="lc.selectedLedger.isInclusiveTax">Inclusive-->
+              <!--</label>-->
+              <!-- mustafa comment -->
+              <button class="btn btn-sm" ng-click="lc.selectedLedger.applyApplicableTaxes = !lc.selectedLedger.applyApplicableTaxes" ng-class="{'btn-primary' : lc.selectedLedger.applyApplicableTaxes == true, 'btn-default' : lc.selectedLedger.applyApplicableTaxes == false}" tabindex="0"  ng-if="lc.taxList.length > 0">
+                <span>Tax as per account</span>
+              </button>
+              <!-- mustafa comment / -->
+              <!--<label>-->
+                <!--<input type="checkbox" ng-model="lc.selectedLedger.applyApplicableTaxes">Applied taxes-->
+              <!--</label>-->
+             <!-- mustafa comment -->
+            </div>
+            <div class="mrT2 pull-right pdL" ng-if="lc.selectedLedger.total.amount > 0">
+              <label>Total: <span ng-bind="lc.selectedLedger.total.amount | numberlimit"></span>
+                <span ng-if="lc.selectedLedger.total.amount != 0 && lc.selectedLedger.total.type == 'CREDIT'">Cr</span>
+                <span ng-if="lc.selectedLedger.total.amount != 0 && lc.selectedLedger.total.type == 'DEBIT'">Dr</span></label>
+            </div>
+            <div class="mrT2 pull-right bdrR pdR" ng-show="lc.accountToShow.stock != null || txn.particular.stock != null || txn.inventory != null">
+              <label>Rate:
+                <input 
+                  type="number"
+                  ng-model="lc.selectedTxn.rate"
+                  ng-change="lc.selectedTxn.amount = lc.selectedTxn.inventory.quantity*lc.selectedTxn.rate"
+                  style="max-width:64px;" ignore-mouse-wheel>
+              </label>
+            </div>
+            <!-- mustafa comment / -->
+            <!--tax list-->
+            <!-- mustafa comment -->
+            <div class="mrT1 clearfix" style="clear:both" ng-if="lc.taxList.length > 0 && (lc.selectedLedger.taxes.length == 0 && lc.selectedLedger.taxList.length == 0) || (lc.selectedLedger.taxes.length == 0 && lc.selectedLedger.taxList == undefined)">
+              <hr class="width100">
+
+              <ul class="list-inline pull-left tax-list">
+                <li class="tax" ng-repeat="tax in lc.taxList" ng-if="!lc.showTaxList">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" ng-model="tax.isChecked">
+                      {{tax.name}}
+                    </label>
+                  </div>
+                </li>
+                <li>
+                  <a href="javascript:void(0)"  ng-if="lc.showTaxList" ng-click="lc.showTaxList = !lc.showTaxList">Show All Taxes</a>
+                  <a href="javascript:void(0)"  ng-if="!lc.showTaxList" ng-click="lc.showTaxList = !lc.showTaxList">Hide All Taxes</a>
+                </li>
+              </ul>
+            </div>
+
+            <div class="mrT1 clearfix" style="clear:both" ng-if="lc.taxList.length > 0 && lc.selectedLedger.taxList.length > 0">
+              <hr class="width100">
+
+              <ul class="list-inline pull-left tax-list">
+                <li class="tax" ng-repeat="tax in lc.selectedLedger.taxList">
+                  <div class="checkbox">
+                    <label>
+                      <input type="checkbox" ng-model="tax.isChecked" ng-change="lc.checkTaxForApplicableTaxes()">
+                      {{tax.name}}
+                    </label>
+                  </div>
+                </li>
+                <li>
+                  <a href="javascript:void(0)" ng-click="lc.showAllTaxes()" ng-if="lc.selectedLedger.taxList.length < lc.taxList.length">Show All Taxes</a>
+                  <a href="javascript:void(0)" ng-click="lc.showOnlyApplicableTaxes(lc.selectedTxn)" ng-if="lc.selectedLedger.taxList.length >= lc.taxList.length && lc.selectedLedger.isBlankLedger">Show Only Applicable Taxes</a>
+                </li>
+              </ul>
+            </div>
+            <!-- mustafa comment / -->
+            <!--/tax-list-->
+            <!-- mustafa comment -->
+            <hr  class="width100">
+          </div>
+          <div class="row mrB1">
+            <div class="col-xs-7 form-group pr" ng-if="lc.selectedLedger.isBankTransaction" >
+            <!-- mustafa comment / -->
+              <!-- <input class="form-control" placeholder="select entry" type="text"
+                ng-model="lc.selectedLedger.mappedEntry"
+                typeahead-append-to-body="true" 
+                uib-typeahead="entry as entry.uniqueName for entry in lc.reconciledEntries | filter:$viewValue | limitTo: 10"> -->
+                
+                <!-- mustafa comment -->
+                <a href="javascript:void(0)" ng-click="lc.matchBankTransaction()">Map Transaction <span ng-if="lc.showMatchingEntries">with</span></a>
+                <ul class="list-unstyled map-txn-container" ng-if="lc.showMatchingEntries">
+                  <li class="cp" ng-repeat="entry in lc.matchingEntries">
+                    <table class="table table-bordered mr0">
+                      <tbody>
+                        <tr ng-repeat="txn in entry.transactions" ng-click="lc.confirmBankTransactionMap(entry, lc.selectedLedger)">
+                          <td>{{entry.entryDate}}</td>
+                          <td>{{txn.particular.name}}</td>
+                          <td>{{txn.amount}}</td>
+                          <td>{{entry.chequeNumber}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </li>
+                </ul>
+            </div>
+            <div class="col-xs-7 form-group" ng-if="!lc.selectedLedger.isBankTransaction">
+              <div class="form-group col-xs-5 pdL0 pdR">
+                <label>Cheque Number</label>
+                <input type="text" placeholder="Cheque Number" name="chequeNumber" class="form-control" ng-model="lc.selectedLedger.chequeNumber"/>
+              </div>
+              <div class="form-group col-xs-5 pdL">
+                <label>Cheque Date</label>
+                <input type="text" name="chequeDate" placeholder="dd-mm-yyyy" class="form-control" ng-model="lc.selectedLedger.chequeClearanceDate" ui-mask="99-99-9999" model-view-value="true"/>
+              </div>
+            </div>
+            <div class="col-xs-5 pull-right" ng-if="!lc.selectedLedger.invoiceGenerated">
+            <!-- mustafa comment / -->
+
+              <!-- mustafa comment -->
+              <div class="upload_div blue" style="padding:5px;" ng-if="lc.selectedLedger.attachedFileName.length == 0">
+                  <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
+                  <label for="invoiceFile">Upload Image</label>
+                </div>
+                
+                <div class="upload_img" style="padding:5px;margin-top:0;"  ng-if="lc.selectedLedger.attachedFileName.length > 0">
+                  <span class="fileName" style="text-align:right;padding-right:18px;">{{lc.selectedLedger.attachedFileName}}</span>
+                  <button class="dlt_btn" ng-if="lc.selectedLedger.attachedFile.length > 0" ng-click="lc.deleteAttachedFile()" style="top:15px;">
+                    <span class="glyphicon glyphicon-remove"></span>
+                  </button>
+                </div>
+                
+              </div>
+              <hr class="width100">
+          </div>  
+          <div class="row">
+            <div ng-class="{'col-xs-4': !popover.draggable, 'col-xs-2': popover.draggable}">
+              <div class="form-group">
+              <!-- mustafa comment / -->
+                <!--<label>Voucher Type</label>-->
+                <!--<select
+                    class="form-control"
+                    name="voucherType"
+                    ng-options="item.shortCode as item.name for item in lc.voucherTypeList"
+                    ng-model="lc.selectedLedger.voucher.shortCode">
+                </select> -->
+
+                <!-- mustafa comment -->
+                <ui-select ng-model="lc.selectedLedger.voucher" theme="bootstrap">
+                    <ui-select-match>
+                      <span>{{$select.selected.name}}</span>
+                    </ui-select-match >
+                    <ui-select-choices repeat="item in lc.voucherTypeList| filter: $select.search ">
+                      <span ng-bind="item.name"></span>
+                    </ui-select-choices>
+                </ui-select>
+                <label style="font-size: 12px;">#{{lc.selectedLedger.voucher.shortCode}} - {{lc.selectedLedger.voucherNo}}</label>
+              </div>
+            </div>
+            <!-- mustafa comment / -->
+
+            <!--<div ng-class="{'col-xs-4': !popover.draggable, 'col-xs-2': popover.draggable}">
+              <div class="form-group">
+                <label></label>
+                <input type="text" name="tag" class="form-control" placeholder="Tag" ng-model="lc.selectedLedger.tag"/>
+              </div>
+            </div> -->
+
+            <!-- mustafa comment -->
+            <div ng-class="{'col-xs-8': !popover.draggable, 'col-xs-10': popover.draggable}" style="padding-left:0">
+            <!-- mustafa comment / -->
+
+              <!--<div class="form-group" style="margin-bottom:0">-->
+                <!--<label>Voucher no. </label>-->
+                <!--{{lc.selectedLedger.voucher.shortCode}}-{{lc.selectedLedger.voucherNo}}-->
+              <!--</div>-->
+            
+            <!-- mustafa comment -->
+              <div class="form-group">
+                <textarea class="form-control" name="description" placeholder="Description" rows="2" ng-model="lc.selectedLedger.description"></textarea>
+              </div>
+            </div>
+          </div>
+          <div class="clearfix btn-row" ng-if="canUpdate">
+            <div class="row" style="margin:0">
+              <button accesskey="x" ng-if="(lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="lc.addBlankTxn('DEBIT', lc.selectedLedger)">Add in DR</button>
+              <button accesskey="c" ng-if="(lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="btn btn-sm btn-default mrR pull-left" ng-click="lc.addBlankTxn('CREDIT', lc.selectedLedger)">Add in CR</button>
+              <button id="saveUpdate" class="pull-left mrR1 btn btn-sm btn-success" ng-click="lc.saveUpdateLedger(lc.selectedLedger)" ng-disabled="doingEntry">
+                <span ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') || lc.selectedLedger.isBankTransaction == true">Save</span>
+                <span ng-if="(lc.selectedLedger.uniqueName != undefined && lc.selectedLedger.uniqueName != '') && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)">Update</span>
+              </button>            
+
+            <button ng-if="(lc.selectedLedger.uniqueName == undefined || lc.selectedLedger.uniqueName == '') && ((lc.selectedLedger.transactions[0].particular.uniqueName != '' && lc.selectedLedger.transactions[0].particular.uniqueName != undefined) || (lc.selectedLedger.transactions[1].particular.uniqueName != '' && lc.selectedLedger.transactions[1].particular.uniqueName != undefined)) && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right btn btn-sm btn-default mrL1" ng-click="lc.resetLedger()">Reset</button>
+            <i ng-if="(lc.selectedLedger.uniqueName != undefined && lc.selectedLedger.uniqueName != '') && lc.selectedLedger.invoiceGenerated == false && (lc.selectedLedger.isBankTransaction == false || lc.selectedLedger.isBankTransaction == undefined)" class="pull-right glyphicon glyphicon-trash mrR1 pos-abs" uib-tooltip="Delete" tooltip-placement="left" style="top:9px;right:1px;color:#d35f29;" ng-click="lc.deleteEntryConfirm(lc.selectedLedger);lc.deleteMultipleTransactions()" uib-tooltip=""></i>
+            <button class="btn btn-sm close-panel pull-right pos-rel" ng-click="lc.closePanel()" ng-if="popover.draggable">Close</button>
+            <a class="pull-right anShrt" href="javascript:void(0)" ng-click="lc.addNewAccount()">New Account</a>
+          </div>
+        </div>
+      </div>
+    </div>
+</script>
+<!-- mustafa comment / -->

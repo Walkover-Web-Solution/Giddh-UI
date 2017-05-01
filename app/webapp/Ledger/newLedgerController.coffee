@@ -2358,6 +2358,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     #lc.pushNewEntryToLedger(res.body)
     if ledger.isBankTransaction
       lc.updateBankLedger(ledger)
+    lc.getPaginatedLedger(lc.currentPage)
     # $timeout ( ->
     #   lc.pageLoader = false
     #   lc.showLoader = false
@@ -2420,6 +2421,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       # lc.pageLoader = false
       # lc.showLoader = false
     ), 2000
+    lc.getPaginatedLedger(lc.currentPage)
     
   lc.updateEntryFailure = (res, ledger) ->
     lc.doingEntry = false
@@ -3224,7 +3226,6 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.pages = []
   lc.getPaginatedLedger = (page) ->
     @success = (res) ->
-      console.log res
       lc.pages = []
       lc.paginatedLedgers = res.body.ledgers
       lc.totalLedgerPages = res.body.totalPages
@@ -3234,7 +3235,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       lc.addLedgerPages()
 
     @failure = (res) ->
-      console.log res
+      toastr.error(res.data.message)
 
     if _.isUndefined($rootScope.selectedCompany.uniqueName)
       $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
