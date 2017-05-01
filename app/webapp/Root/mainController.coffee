@@ -785,6 +785,26 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.runTour = () ->
     $rootScope.$emit('run-tour')
 
+  $rootScope.checkUserCompany = () ->
+    user = localStorageService.get('_userDetails')
+    company = user.uniqueName.split('@')
+    company = company[company.length - 1]
+    company
+
+  $rootScope.checkWalkoverCompanies = () ->
+    if $rootScope.checkUserCompany().toLowerCase() == 'giddh.com' || $rootScope.checkUserCompany().toLowerCase() == 'walkover.in' || $rootScope.checkUserCompany().toLowerCase() == 'msg91.com'
+      return true
+    else
+      return false
+
+  $rootScope.ledgerMode = 'new'
+  $rootScope.switchLedgerMode = () ->
+    if $rootScope.checkWalkoverCompanies()
+      if $rootScope.ledgerMode == 'new'
+        $rootScope.ledgerMode = 'old'
+      else
+        $rootScope.ledgerMode = 'new'
+
   $(document).on('click', (e)->
     if e.target.id != 'accountSearch'
       $rootScope.flyAccounts = false

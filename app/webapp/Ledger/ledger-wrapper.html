@@ -1,0 +1,2 @@
+<div ng-include="'/public/webapp/Ledger/ledgerPaginated.html'" ng-controller="ledgerController as ledgerCtrl" ng-if="ledgerMode == 'new' && checkWalkoverCompanies()"></div>
+<div ng-include="'/public/webapp/Ledger/ledger.html'" ng-controller="newLedgerController as lc" ng-if="ledgerMode == 'old' || !checkWalkoverCompanies()"></div>

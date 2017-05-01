@@ -205,25 +205,25 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
       # }
       'rightPanel':{
-        templateUrl: appendThis+'/public/webapp/Ledger/ledger.html'
-        controller: 'newLedgerController'
-        controllerAs: 'lc'
+        templateUrl: appendThis+'/public/webapp/Ledger/ledger-wrapper.html'
+        # controller: 'newLedgerController'
+        # controllerAs: 'lc'
       }
     }
   )
-  .state('company.content.ledgerContent1',
-    url: '/ledger-paginated/:unqName'
-    views:{
-      # 'accountsList':{
-      #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
-      # }
-      'rightPanel':{
-        templateUrl: appendThis+'/public/webapp/Ledger/ledgerPaginated.html'
-        controller: 'ledgerController'
-        controllerAs: 'ledgerCtrl'
-      }
-    }
-  )
+  # .state('company.content.ledgerContent1',
+  #   url: '/ledger-paginated/:unqName'
+  #   views:{
+  #     # 'accountsList':{
+  #     #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
+  #     # }
+  #     'rightPanel':{
+  #       templateUrl: appendThis+'/public/webapp/Ledger/ledgerPaginated.html'
+  #       controller: 'ledgerController'
+  #       controllerAs: 'ledgerCtrl'
+  #     }
+  #   }
+  # )
   .state('dashboard',
     url: '/dashboard'
     templateUrl: appendThis+'/public/webapp/Dashboard/dashboard.html'
