@@ -2789,7 +2789,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
         lc.dLedgerContainer.remove(lc.prevLedger)
         lc.log "RemovedDR: ", lc.prevLedger.uniqueName
       lc.prevLedger = ledger
-    console.log txn.hide, txn.isTax
+    lc.showMatchingEntries = false
     if e
       e.stopPropagation()
 
