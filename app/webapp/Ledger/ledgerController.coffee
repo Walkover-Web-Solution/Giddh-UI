@@ -1,6 +1,6 @@
 ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, groupService, $uibModal, companyServices, $state,idbService, $http, nzTour, $q ) ->
   ledgerCtrl = this
-  
+  ledgerCtrl.showEledger = true
   ledgerCtrl.popover = {
 
     templateUrl: 'panel'
@@ -109,12 +109,206 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if res.body.uniqueName == 'cash'
       $rootScope.ledgerState = true
     ledgerCtrl.getPaginatedLedger(1)
-    # if res.body.yodleeAdded == true && $rootScope.canUpdate
-    #   #get bank transaction here
-    #   $timeout ( ->
-    #     ledgerCtrl.getBankTransactions(res.body.uniqueName)
-    #   ), 2000
+    if res.body.yodleeAdded == true && $rootScope.canUpdate
+      #get bank transaction here
+      $timeout ( ->
+        ledgerCtrl.getBankTransactions(res.body.uniqueName)
+      ), 2000
 
+  ledgerCtrl.hideEledger = () ->
+    ledgerCtrl.showEledger = !ledgerCtrl.showEledger
+
+  ledgerCtrl.getBankTransactions = (accountUniqueName) ->
+    unqObj = {
+      compUname : $rootScope.selectedCompany.uniqueName
+      acntUname : accountUniqueName
+    }
+    # get other ledger transactions
+    ledgerService.getOtherTransactions(unqObj)
+    .then(
+      (res)->
+        ledgerCtrl.getBankTransactionsSuccess(res)
+    ,(error)->
+      ledgerCtrl.getBankTransactionsFailure(error)
+    )
+
+  ledgerCtrl.getBankTransactionsFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  ledgerCtrl.getBankTransactionsSuccess = (res) ->
+    ledgerCtrl.eLedgerData = ledgerCtrl.formatBankLedgers(res.body)
+    ledgerCtrl.calculateELedger()
+    ledgerCtrl.getReconciledEntries()
+    #ledgerCtrl.removeUpdatedBankLedger()
+
+  ledgerCtrl.calculateELedger = () ->
+    ledgerCtrl.eLedgType = undefined
+    ledgerCtrl.eCrBalAmnt = 0
+    ledgerCtrl.eDrBalAmnt = 0
+    ledgerCtrl.eDrTotal = 0
+    ledgerCtrl.eCrTotal = 0
+    crt = 0
+    drt = 0
+    _.each(ledgerCtrl.eLedgerData, (ledger) ->
+      _.each(ledger.transactions, (transaction) ->
+        if transaction.type == 'DEBIT'
+          drt += Number(transaction.amount)
+        else if transaction.type == 'CREDIT'
+          crt += Number(transaction.amount)
+      )
+    )
+    crt = parseFloat(crt)
+    drt = parseFloat(drt)
+    ledgerCtrl.eCrTotal = crt
+    ledgerCtrl.eDrTotal = drt
+
+  ledgerCtrl.getReconciledEntries = (cheque, toMap, matchingEntries) ->
+    @success = (res) ->
+      ledgerCtrl.reconciledEntries = res.body
+      if toMap
+        _.each ledgerCtrl.reconciledEntries, (entry) ->
+          _.each entry.transactions, (txn) ->
+            if txn.amount == ledgerCtrl.selectedLedger.transactions[0].amount
+              matchingEntries.push(entry)
+        if matchingEntries.length == 1
+          ledgerCtrl.confirmBankTransactionMap(matchingEntries[0], ledgerCtrl.selectedLedger)
+        else if matchingEntries.length >1
+          ledgerCtrl.showBankEntriesToMap(matchingEntries)
+        else
+          toastr.error('no entry with matching amount found, please create a new entry with same amount as this transaction.')
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      accountUniqueName: $rootScope.selectedAccount.uniqueName
+      from: $filter('date')($scope.cDate.startDate, 'dd-MM-yyyy')
+      to: $filter('date')($scope.cDate.endDate, 'dd-MM-yyyy')
+      chequeNumber: cheque
+
+    }
+
+    ledgerService.getReconcileEntries(reqParam).then(@success, @failure)
+  
+  # $rootScope.$on('account-selected', ()->
+  #   ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
+  #   #ledgerCtrl.isSelectedAccount()
+  #   #$rootScope.$emit('catchBreadcumbs', ledgerCtrl.accountToShow.name)
+  # )
+
+  ledgerCtrl.matchBankTransaction = () ->
+    matchingEntries = []
+    ledgerCtrl.getReconciledEntries('', true, matchingEntries)
+
+
+  ledgerCtrl.confirmBankTransactionMap = (mappedEntry, bankEntry) ->
+    modalService.openConfirmModal(
+        title: 'Map Bank Entry'
+        body: 'Selected bank transaction will be mapped with cheque number ' +mappedEntry.chequeNumber+ '. Click yes to accept.',
+        ok: 'Yes',
+        cancel: 'No'
+      ).then(
+          (res) -> ledgerCtrl.mapBankTransaction(mappedEntry.uniqueName, bankEntry.transactionId),
+          (res) -> 
+      )
+  ledgerCtrl.mapBankTransaction = (entryUnq, transactionId) ->
+    ledgerCtrl.selectedTxn.isOpen = false
+    @success = (res) ->
+      toastr.success(res.body)
+      ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
+      ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      accountUniqueName: $rootScope.selectedAccount.uniqueName
+      transactionId: transactionId
+    }
+    data = {
+      uniqueName: entryUnq
+    }
+    ledgerService.mapBankEntry(reqParam, data).then(@success, @failure)
+
+  ledgerCtrl.showBankEntriesToMap = (matchingEntries) ->
+    ledgerCtrl.showMatchingEntries = true
+    ledgerCtrl.matchingEntries = matchingEntries
+
+  ledgerCtrl.formatBankLedgers = (bankArray) ->
+    formattedBankLedgers = []
+    if bankArray.length > 0
+      _.each bankArray, (bank) ->
+        ledger = new blankLedgerObjectModel()
+        ledger.entryDate = bank.date
+        ledger.isBankTransaction = true
+        ledger.transactionId = bank.transactionId
+        ledger.transactions = ledgerCtrl.formatBankTransactions(bank.transactions, bank, ledger)
+        ledger.description = bank.description
+        formattedBankLedgers.push(ledger)
+    formattedBankLedgers
+
+  ledgerCtrl.formatBankTransactions = (transactions, bank, ledger, type) ->
+    formattedBanktxns = []
+    if transactions.length > 0
+      _.each transactions, (txn) ->
+        bank.description = txn.remarks.description
+        newTxn = new txnModel()
+        newTxn.particular = {}
+        newTxn.particular.name = ''
+        newTxn.particular.uniqueName = ''
+        newTxn.amount = txn.amount
+        newTxn.type = txn.type
+        if txn.type == 'DEBIT'
+          ledger.voucher.name = "Receipt"
+          ledger.voucher.shortCode = "rcpt"
+        else 
+          ledger.voucher.name = "Payment"
+          ledger.voucher.shortCode = "pay"
+        formattedBanktxns.push(newTxn)
+    formattedBanktxns
+
+  ledgerCtrl.mergeBankTransactions = (toMerge) ->
+    if toMerge
+      ledgerCtrl.mergeTransaction = true
+      _.each ledgerCtrl.eLedgerData, (ld) ->
+        if ld.uniqueName.length < 1 then ld.uniqueName = ld.transactionId else ld.uniqueName
+        if ld.transactions[0].type == 'DEBIT'
+          ledgerCtrl.dLedgerContainer.addAtTop(ld)
+        else if ld.transactions[0].type == 'CREDIT'
+          ledgerCtrl.cLedgerContainer.addAtTop(ld)
+      # ledgerCtrl.ledgerData.ledgers.push(ledgerCtrl.eLedgerData)
+      # ledgerCtrl.ledgerData.ledgers = ledgerCtrl.sortTransactions(_.flatten(ledgerCtrl.ledgerData.ledgers), 'entryDate')
+      ledgerCtrl.showEledger = false
+    else
+    #   ledgerCtrl.AddBankTransactions()
+    #   ledgerCtrl.showEledger = false
+    # else
+      ledgerCtrl.mergeTransaction = false
+      ledgerCtrl.removeBankTransactions()
+    #   ledgerCtrl.showEledger = true
+
+  # ledgerCtrl.AddBankTransactions = () ->
+  #   bankTxnDuplicate = ledgerCtrl.eLedgerData
+  #   bankTxntoMerge = ledgerCtrl.fromBanktoLedgerObject(bankTxnDuplicate)
+  #   ledgerCtrl.ledgerData.ledgers.push(bankTxntoMerge)
+  #   ledgerCtrl.ledgerData.ledgers = _.flatten(ledgerCtrl.ledgerData.ledgers)
+
+  ledgerCtrl.sortTransactions = (ledger, sortType) ->
+    ledger = _.sortBy(ledger, sortType)
+    ledger = ledger.reverse()
+    ledger
+
+  ledgerCtrl.removeBankTransactions = () ->
+    withoutBankTxn = []
+    _.each ledgerCtrl.cLedgerContainer.ledgerData, (ledger) ->
+      if ledger.isBankTransaction 
+        ledgerCtrl.cLedgerContainer.remove(ledger)
+    _.each ledgerCtrl.dLedgerContainer.ledgerData, (ledger) ->
+      if ledger.isBankTransaction 
+        ledgerCtrl.dLedgerContainer.remove(ledger)
+    ledgerCtrl.showEledger = true
   if ledgerCtrl.accountUnq
     ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
   else
@@ -206,6 +400,32 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     }
   }
 
+  blankLedgerObjectModel = () ->
+    @blankLedger = {
+      isBlankLedger : true
+      attachedFileName: ''
+      attachedFile: ''
+      description:''
+      entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
+      invoiceGenerated:false
+      isCompoundEntry:false
+      applyApplicableTaxes: false
+      tag:''
+      transactions:[]
+      unconfirmedEntry:false
+      uniqueName:""
+      isInclusiveTax: false
+      voucher:{
+        name:"Sales"
+        shortCode:"sal"
+      }
+      tax: []
+      taxList : []
+      taxes: []
+      voucherNo:''
+    }
+
+
   blankLedgerModel = () ->
     @blankLedger = [{
       isBlankLedger : true
@@ -256,6 +476,16 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.blankLedger[0].transactions.push(ledgerCtrl.dBlankTxn)
   ledgerCtrl.blankLedger[0].transactions.push(ledgerCtrl.cBlankTxn)
 
+  txnModel = (str) ->
+    @ledger = {
+      date: $filter('date')(new Date(), "dd-MM-yyyy")
+      particular: {
+        name:""
+        uniqueName:""
+      }
+      amount : 0
+      type: str
+    }
 
 
 
@@ -669,12 +899,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.lastSelectedLedger = {}
   ledgerCtrl.saveUpdateLedger = (ledger) ->
-    # ledgerCtrl.pageLoader = true
-    # ledgerCtrl.showLoader = true
     ledger = ledgerCtrl.buildLedger(ledger)
     ledgerCtrl.lastSelectedLedger = ledger
-    ledgerCtrl.dLedgerLimitBeforeUpdate = ledgerCtrl.dLedgerLimit
-    ledgerCtrl.cLedgerLimitBeforeUpdate = ledgerCtrl.cLedgerLimit
     #ledgerCtrl.formatInventoryTxns(ledger)
     if ledgerCtrl.doingEntry == true
       return
@@ -694,13 +920,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         delete ledger.uniqueName
         delete ledger.voucherNo
         transactionsArray = []
-        # _.every(ledgerToSend.transactions,(led) ->
-        #   delete led.date
-        #   delete led.parentGroups
-        #   delete led.particular.parentGroups
-        #   delete led.particular.mergedAccounts
-        #   delete led.particular.applicableTaxes
-        # )
         rejectedTransactions = []
         transactionsArray = _.reject(ledger.transactions, (led) ->
          if led.particular == "" || led.particular.uniqueName == ""
@@ -1120,10 +1339,60 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       _.each ledgerCtrl.taxList, (tax) ->
         tax.isChecked = false
 
+
+  $scope.invoiceFile = {}
+  $scope.getInvoiceFile = (files) ->
+    file = files[0]
+    formData = new FormData()
+    formData.append('file', file)
+    formData.append('company', $rootScope.selectedCompany.uniqueName)
+
+    @success = (res) ->
+      ledgerCtrl.selectedLedger.attachedFile = res.data.body.uniqueName
+      ledgerCtrl.selectedLedger.attachedFileName = res.data.body.name
+      toastr.success('file uploaded successfully')
+
+    @failure = (res) ->
+      if typeof res == 'object'
+        toastr.error(res.data.message)
+      else
+        toastr.error('Upload failed, please check that file size is less than 1 mb')
+
+    url = 'upload-invoice'
+    $http.post(url, formData, {
+      transformRequest: angular.identity,
+      headers: {'Content-Type': undefined}
+    }).then(@success, @failure)
+
+  ledgerCtrl.downloadAttachedFile = (file, e) ->
+    e.stopPropagation()
+    @success = (res) ->
+      data = ledgerCtrl.b64toBlob(res.body.uploadedFile, "image/"+res.body.fileType)
+      blobUrl = URL.createObjectURL(data)
+      FileSaver.saveAs(data, res.body.name)
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      accountsUniqueName: $rootScope.selectedAccount.uniqueName
+      file:file
+    }
+    ledgerService.downloadInvoiceFile(reqParam).then(@success, @failure)
+
+  ledgerCtrl.deleteAttachedFile = () ->
+    ledgerCtrl.selectedLedger.attachedFile = ''
+    ledgerCtrl.selectedLedger.attachedFileName = ''
+
   $timeout ( ->
     ledgerCtrl.getDiscountGroupDetail()
     ledgerCtrl.getTaxList()
   ), 3000
+
+  if ledgerCtrl.accountUnq
+    ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
+  else
+    ledgerCtrl.loadDefaultAccount() 
 
   $(document).on 'click', (e) ->
     if ledgerCtrl.prevTxn

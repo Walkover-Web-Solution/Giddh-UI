@@ -137,6 +137,13 @@ th {
 			</div>
 		</div>
 		<!-- ledger header end -->
+
+		<!--bank ledgers-->
+		<section class="mrT1" ng-if="ledgerCtrl.eLedgerData.length > 0 && ledgerCtrl.showEledger">
+            <div ng-include="'/public/webapp/Ledger/eLedger-new.html'"></div>
+        </section>
+        <!--/bank ledger-->
+
 		<table class="col-xs-12 ledger-head mrT3">
 			<thead>
 				<tr>
@@ -201,7 +208,7 @@ th {
 												type="text" 
 												ng-model="txn.particular"
 												typeahead-append-to-body="true" 
-		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
 		                                      	typeahead-template-url="accountPopUp.html" 
 												class="form-control"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
@@ -251,7 +258,7 @@ th {
 												type="text" 
 												ng-model="txn.particular"
 												typeahead-append-to-body="true" 
-		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
 		                                      	typeahead-template-url="accountPopUp.html" 
 												class="form-control"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
@@ -331,7 +338,7 @@ th {
 												type="text"
 												ng-model="txn.particular"
 												typeahead-append-to-body="true" 
-		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
 		                                      	typeahead-template-url="accountPopUp.html"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 												is-open="txn.isOpen"
@@ -384,7 +391,7 @@ th {
 												type="text"
 												ng-model="txn.particular"
 												typeahead-append-to-body="true" 
-		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:lc.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
 		                                      	typeahead-template-url="accountPopUp.html"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 												is-open="txn.isOpen"
@@ -624,12 +631,34 @@ th {
 	  		
 		  		<div class="file_attached col-xs-5 pull-right text-right" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length > 0">
 		  			<div class="row">
-			  			<span ng-bind="ledgerCtrl.selectedLedger.attachedFileName"></span><span class="remove">(remove)</span> 
+			  			<span ng-bind="ledgerCtrl.selectedLedger.attachedFileName"></span><span class="remove cp" ng-click="ledgerCtrl.deleteAttachedFile()">(remove)</span> 
 			  		</div>	
 		  		</div>
 	  		</div>
   		</div>
-
+  		<!--map bank transactions-->
+  		<div class="col-xs-12 bdrT pdT pdL0">
+  			<div class="col-xs-7 form-group pr pdL0" ng-if="ledgerCtrl.selectedLedger.isBankTransaction" >
+                <a href="javascript:void(0)" ng-click="ledgerCtrl.matchBankTransaction()">Map Transaction 
+                	<span ng-if="ledgerCtrl.showMatchingEntries">with</span>
+                </a>
+                <ul class="list-unstyled map-txn-container" ng-if="ledgerCtrl.showMatchingEntries">
+                  <li class="cp" ng-repeat="entry in ledgerCtrl.matchingEntries">
+                    <table class="table table-bordered mr0">
+                      <tbody>
+                        <tr ng-repeat="txn in entry.transactions" ng-click="ledgerCtrl.confirmBankTransactionMap(entry, ledgerCtrl.selectedLedger)">
+                          <td>{{entry.entryDate}}</td>
+                          <td>{{txn.particular.name}}</td>
+                          <td>{{txn.amount}}</td>
+                          <td>{{entry.chequeNumber}}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </li>
+                </ul>
+            </div>
+  		</div>
+  		
   		<div class="col-xs-12 bdrT pdT">
 	  		<div class="row">
 	  			<div class="form-group" style="max-width:200px;">
@@ -651,7 +680,11 @@ th {
   			<div class="row">
 	  			<button class="no-btn" ng-click="showAdvanced = !showAdvanced">Advanced <i class="caret" ng-class="{rotate180:showAdvanced}"></i></button>
 	  			<div class="pull-right">
-		  			<button class="btn btn-default"><i class="glyphicon glyphicon-paperclip"></i></button>
+		  			<!-- <button class="btn btn-default"><i class="glyphicon glyphicon-paperclip"></i></button> -->
+		  			<div class="upload_div blue" style="padding:6px 8px;float:left;margin-right:10px;border:1px solid #ccc" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0">
+	                  <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
+	                  <label for="invoiceFile"><i class="glyphicon glyphicon-paperclip"></i></label>
+	                </div>
 		  			<button class="btn btn-success" ng-click="ledgerCtrl.saveUpdateLedger(ledgerCtrl.selectedLedger)">Update</button>
 			  		<!-- <button class="btn btn-success">Save</button> -->
 		  		</div>
