@@ -220,6 +220,30 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     controller: 'stockController'
     controllerAs: 'stock'
   )
+  .state('inventory.custom-stock',
+    url: '/custom-stock'
+    views:{
+      'inventory-detail':{
+        templateUrl: '/public/webapp/Inventory/partials/custom-stock-unit.html'
+      }
+    }
+  )
+  .state('inventory.add-group',
+    url: '/add-group/:grpId'
+    views:{
+      'inventory-detail':{
+        templateUrl: '/public/webapp/Inventory/partials/add-group-stock.html'
+      }
+    }
+  )
+  .state('inventory.add-stock',
+    url: '/add-stock'
+    views:{
+      'inventory-detail':{
+        templateUrl: '/public/webapp/Inventory/partials/stock-operations.html'
+      }
+    }
+  )
   .state('recurring-entry',
     url: '/recurring-entry'
     templateUrl: '/public/webapp/recurring-entry/recurring-entry.html'

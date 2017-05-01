@@ -2,14 +2,7 @@
 
 <!--sidebar-->
 	<section class="sidebar greyBg pull-left" ng-click="$event.stopPropagation();" cover-page>
-
-		<div ng-if="stock.showStockReport">
-			<div class="input-group col-xs-12 search_box">
-				<input type="search" name="stocksearch" ng-focus="stock.sideBarOn($event)" ng-click="$event.stopPropagation()" ng-model="stockFlattenSearch" ng-model-options="{debounce:500}" ng-change="stock.getStockGroupsFlatten(stockFlattenSearch, 1, 'search')" class="form-control" placeholder="Search Stocks">
-				<i class="glyphicon glyphicon-search pos-abs"></i>
-			</div>
-		</div>
-		<div class="h100" ng-include="'/public/webapp/Inventory/partials/stocklist.html'"></div>
+		<div class="h100" ng-include="'/public/webapp/Inventory/partials/stockgrp-hr-list.html'"></div>
 	</section>
 <!--/sidebar-->
 
@@ -18,9 +11,9 @@
 <div class="stock-bar">
 	<div class="top_row">
 		<div class="pull-right">
-			<button type="button" class="btn btn-primary mrL1">Custom Stock Unit</button>
-			<button type="button" class="btn btn-primary mrL1" ng-click="stock.Groupadd()">Add Group</button>
-			<button type="button" class="btn btn-primary mrL1" ng-click="stock.AddNewStock()">Add Stock</button>
+			<button ng-click="stock.loadPage('custom-stock')" type="button" class="btn btn-primary mrL1">Custom Stock Unit</button>
+			<button type="button" class="btn btn-primary mrL1" ng-click="stock.loadPage('add-group')">Add Group</button>
+			<button type="button" class="btn btn-primary mrL1" ng-click="stock.loadPage('add-stock')">Add Stock</button>
 			<button class="btn btn-md btn-primary" ng-click="stock.toggleViews()">
 				<span>Go To </span>
 				<span ng-if="stock.showStockReport">Manage Stock</span>
@@ -32,35 +25,10 @@
 
 <!-- /top row-->
 
-<!--main section-->
-	
-	<section class="wrap_content">
-		
-		<!--custom stock unit-->
-		<aside ng-hide="stock.selectedStockItem == null" class="stock-operations col-lg-12 col-md-12 col-xs-12 pdB2" cover-page ng-include="'/public/webapp/Inventory/partials/Custom-stock-unit.html'"></aside>
-		<!--custom stock unit-->
-
-		<!--stock report section-->
-		<!-- ng-hide="stock.selectedStockItem == null"  -->
-		<section class="h100" ng-if="stock.showStockReport" cover-page>
-			<div class="h100" ng-include="'/public/webapp/Inventory/partials/stock-report.html'"></div>
-		</section>
-		<!--/stock report section-->
-
-		<!--manage stock section-->
-		<section class="h100" ng-if="!stock.showStockReport" cover-page>
-			<div class="h100" ng-include="'/public/webapp/Inventory/partials/manage-stocks.html'"></div>
-		</section>
-		<!--/manage stock section-->
-
-		<!--operations-->
-		<aside ng-if="stock.selectedStockItem == null" class="stock-operations col-xs-12 pdB2" cover-page ng-include="'/public/webapp/Inventory/partials/stock-operations.html'"></aside>
-		<!--operations-->
+<section class="wrap_content" ui-view="inventory-detail">
+</section>
 
 
 
 
-	</section>
 
-
-<!--/main section-->

@@ -203,6 +203,7 @@ module.exports = function (grunt) {
       },
       src: {
         files: [
+          srcDir + '/**/inventoryController.js',
           srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '**/**/*.css', routeSrcDir + "/**/*.coffee", srcDir + '/**/*.js', srcDir + '/**/**/*.js', srcDir + '/webapp/ng2/**/*.js',  srcDir + '/**/*.coffee'
         ],
         tasks: ['env:dev','coffee', 'copy', 'clean', 'cssmin', 'concat',  'preprocess:dev']

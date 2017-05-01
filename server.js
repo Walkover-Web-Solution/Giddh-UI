@@ -11,8 +11,8 @@ var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
-var MongoStore = require('connect-mongo')(session);
-var MemcachedStore = require('connect-memcached')(session);
+// var MongoStore = require('connect-mongo')(session);
+// var MemcachedStore = require('connect-memcached')(session);
 //global.sessionTTL = 1000 * 60
 //Example POST method invocation 
 var Client = require('node-rest-client').Client; 
@@ -94,14 +94,14 @@ app.use(session({
   cookie: {
     secure: false,
     maxAge: sessionTTL
-  },
-  store: new MongoStore({
-    url: settings.mongoUrl,
-    autoRemove: 'interval',
-    autoRemoveInterval: sessionTTL,
-    ttl: sessionTTL,
-    touchAfter: sessionTTL - 300
-  })
+  }
+  // store: new MongoStore({
+  //   url: settings.mongoUrl,
+  //   autoRemove: 'interval',
+  //   autoRemoveInterval: sessionTTL,
+  //   ttl: sessionTTL,
+  //   touchAfter: sessionTTL - 300
+  // })
   // store   : new MemcachedStore({
   //   hosts: ['127.0.0.1:11211'],
   //   secret: 'keyboardcat'

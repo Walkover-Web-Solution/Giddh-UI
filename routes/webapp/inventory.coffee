@@ -2,7 +2,7 @@ settings = require('../util/settings')
 router = settings.express.Router({mergeParams: true})
 
 router.get '/unit-types', (req, res) ->
-  hUrl = settings.envUrl + '/stock-units'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-units'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -52,7 +52,7 @@ router.get '/groups-with-stocks-flatten', (req, res) ->
     res.send data
 
 router.get '/groups-with-stocks-hierarchy-min', (req, res) ->
-  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/stock-group'
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/hierarchical-stock-groups'
   args =
     headers:
       'Auth-Key': req.session.authKey

@@ -1,96 +1,106 @@
-
-
 angular.module('inventoryServices', [])
-
-.service('stockService', ['$resource', '$q', function($resource, $q){
-	
-	var stock = $resource('/company/:companyUniqueName/stock-group', {
-		'companyUniqueName': this.companyUniqueName,
-		'stockGroupUniqueName' : this.stockGroupUniqueName,
-		'stockUniqueName': this.stockUniqueName,
-		'q': this.q,
-		'page': this.page,
-		'count': this.count,
-		'from' :this.from,
-		'to': this.to
-	},
-	{
-		get: {
-			method: 'GET',
-			url: '/company/:companyUniqueName/stock-group/groups-with-stocks-flatten'
-		},
-		getHeirarchy: {
-			method: 'GET',
-			url: '/company/:companyUniqueName/stock-group/groups-with-stocks-hierarchy-min'
-		},
-		addGroup: {
-			method: 'POST',
-			url: '/company/:companyUniqueName/stock-group'
-		},
-		updateGroup: {
-			method: 'PUT',
-			url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName'
-		},
-		getStockGroups: {
-			method: 'GET',
-			url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName/stocks'
-		},
-		createStock: {
-			method: 'POST',
-			url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName/stock'
-		},
-		updateStockItem: {
-			method: 'PUT',
-			url: '/company/:companyUniqueName/stock-group/update-stock-item'
-		},
-		getAllStocks: {
-			method: 'GET',
-			url: '/company/:companyUniqueName/stock-group/stocks'
-		},
-		getStockDetail: {
-			method: 'GET',
-			url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName'
-		},
-		getStockType: {
-			method: 'GET',
-			url: '/company/:companyUniqueName/stock-group/unit-types'
-		},
-		getFilteredStockGroups: {
-			method: 'GET',
-			url: '/company/:companyUniqueName/stock-group/hierarchical-stock-groups'
-		},
-		getStock: {
-			method: 'GET',
-			url: '/company/:companyUniqueName/stock-group/get-stock-detail'
+	.service('localInventoryService', function(){
+		return {
+			_groupList: [],
+			get : function() {
+	      return this._groupList;
+	    },
+	    set : function(val) {
+	      this._groupList = val;
+	    },
+	    insert : function(items){
+	    	this._groupList.push(items);
+	    }
 		}
-		,
-		getStockReport: {
-			method: 'GET',
-			url: '/company/:companyUniqueName/stock-group/get-stock-report'
-		},
-		deleteStock: {
-			method: 'DELETE',
-			url: '/company/:companyUniqueName/stock-group/delete-stock'
-		},
-		deleteStockGrp: {
-			method: 'DELETE',
-			url: '/company/:companyUniqueName/stock-group/delete-stockgrp'
-		}
-
 	})
+	.service('stockService', ['$resource', '$q', function($resource, $q){
+		var stock = $resource('/company/:companyUniqueName/stock-group', {
+			'companyUniqueName': this.companyUniqueName,
+			'stockGroupUniqueName' : this.stockGroupUniqueName,
+			'stockUniqueName': this.stockUniqueName,
+			'q': this.q,
+			'page': this.page,
+			'count': this.count,
+			'from' :this.from,
+			'to': this.to
+		},
+		{
+			get: {
+				method: 'GET',
+				url: '/company/:companyUniqueName/stock-group/groups-with-stocks-flatten'
+			},
+			getHeirarchy: {
+				method: 'GET',
+				url: '/company/:companyUniqueName/stock-group/groups-with-stocks-hierarchy-min'
+			},
+			addGroup: {
+				method: 'POST',
+				url: '/company/:companyUniqueName/stock-group'
+			},
+			updateGroup: {
+				method: 'PUT',
+				url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName'
+			},
+			getStockGroups: {
+				method: 'GET',
+				url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName/stocks'
+			},
+			createStock: {
+				method: 'POST',
+				url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName/stock'
+			},
+			updateStockItem: {
+				method: 'PUT',
+				url: '/company/:companyUniqueName/stock-group/update-stock-item'
+			},
+			getAllStocks: {
+				method: 'GET',
+				url: '/company/:companyUniqueName/stock-group/stocks'
+			},
+			getStockDetail: {
+				method: 'GET',
+				url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName'
+			},
+			getStockType: {
+				method: 'GET',
+				url: '/company/:companyUniqueName/stock-group/unit-types'
+			},
+			getFilteredStockGroups: {
+				method: 'GET',
+				url: '/company/:companyUniqueName/stock-group/hierarchical-stock-groups'
+			},
+			getStock: {
+				method: 'GET',
+				url: '/company/:companyUniqueName/stock-group/get-stock-detail'
+			}
+			,
+			getStockReport: {
+				method: 'GET',
+				url: '/company/:companyUniqueName/stock-group/get-stock-report'
+			},
+			deleteStock: {
+				method: 'DELETE',
+				url: '/company/:companyUniqueName/stock-group/delete-stock'
+			},
+			deleteStockGrp: {
+				method: 'DELETE',
+				url: '/company/:companyUniqueName/stock-group/delete-stockgrp'
+			}
 
-	stockService = {
-		handlePromise: function(func) {
-	        var deferred, onFailure, onSuccess;
-	        deferred = $q.defer();
-	        onSuccess = function(data) {
-	          return deferred.resolve(data);
-	        };
-	        onFailure = function(data) {
-	          return deferred.reject(data);
-	        };
-	        func(onSuccess, onFailure);
-	        return deferred.promise;
+		})
+
+		stockService = {
+			handlePromise: function(func) {
+	      var deferred, onFailure, onSuccess;
+	      deferred = $q.defer();
+	      onSuccess = function(data) {
+	        return deferred.resolve(data);
+	      };
+	      onFailure = function(data) {
+	        return deferred.reject(data);
+	      };
+	      func(onSuccess, onFailure);
+	      return deferred.promise;
 	    },
 
 	    getStockGroupsFlatten: function(reqParam){
@@ -101,16 +111,14 @@ angular.module('inventoryServices', [])
 	    			q:reqParam.q,
 	    			count:reqParam.count
 	    		}, onSuccess, onFailure)
-
 	    	})
 	    },
 
-		getStockGroupsHeirarchy: function(reqParam){
+			getStockGroupsHeirarchy: function(reqParam){
 	    	return this.handlePromise(function(onSuccess, onFailure){
 	    		return stock.getHeirarchy({
 	    			companyUniqueName: reqParam.companyUniqueName
 	    		}, onSuccess, onFailure)
-
 	    	})
 	    },
 
@@ -119,7 +127,6 @@ angular.module('inventoryServices', [])
 	    		return stock.addGroup({
 	    			companyUniqueName: reqParam.companyUniqueName
 	    		}, data,  onSuccess, onFailure)
-
 	    	})
 	    },
 
@@ -129,7 +136,6 @@ angular.module('inventoryServices', [])
 	    			companyUniqueName: reqParam.companyUniqueName,
 	    			stockGroupUniqueName: reqParam.stockGroupUniqueName
 	    		}, data,  onSuccess, onFailure)
-
 	    	})
 	    },
 
@@ -139,7 +145,6 @@ angular.module('inventoryServices', [])
 	    			companyUniqueName: reqParam.companyUniqueName,
 	    			stockGroupUniqueName: reqParam.stockGroupUniqueName
 	    		}, onSuccess, onFailure)
-
 	    	})
 	    },
 
@@ -149,7 +154,6 @@ angular.module('inventoryServices', [])
 	    			companyUniqueName: reqParam.companyUniqueName,
 	    			stockGroupUniqueName: reqParam.stockGroupUniqueName
 	    		}, data,  onSuccess, onFailure)
-
 	    	})
 	    },
 
@@ -160,7 +164,6 @@ angular.module('inventoryServices', [])
 	    			stockGroupUniqueName: reqParam.stockGroupUniqueName,
 	    			stockUniqueName: reqParam.stockUniqueName
 	    		}, data,  onSuccess, onFailure)
-
 	    	})
 	    },
 
@@ -172,7 +175,6 @@ angular.module('inventoryServices', [])
 	    			page:reqParam.page,
 	    			count:reqParam.count
 	    		}, onSuccess, onFailure)
-
 	    	})
 	    },
 
@@ -182,7 +184,6 @@ angular.module('inventoryServices', [])
 	    			companyUniqueName: reqParam.companyUniqueName,
 	    			stockGroupUniqueName: reqParam.stockGroupUniqueName
 	    		}, onSuccess, onFailure)
-
 	    	})
 	    },
 
@@ -245,11 +246,8 @@ angular.module('inventoryServices', [])
 	    		}, onSuccess, onFailure)
 	    	})
 	    }
-
-	}
-
-	return stockService
-
+		}
+		return stockService
 }])
 
 

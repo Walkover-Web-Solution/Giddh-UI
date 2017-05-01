@@ -1,3 +1,9 @@
+<div ng-if="stock.showStockReport">
+	<div class="input-group col-xs-12 search_box">
+		<input type="search" name="stocksearch" ng-focus="stock.sideBarOn($event)" ng-click="$event.stopPropagation()" ng-model="stockFlattenSearch" ng-model-options="{debounce:500}" ng-change="stock.getStockGroupsFlatten(stockFlattenSearch, 1, 'search')" class="form-control" placeholder="Search Stocks">
+		<i class="glyphicon glyphicon-search pos-abs"></i>
+	</div>
+</div>
 
 <ul class="list-unstyled stock-grp-list mrT1">
 	<li class="pdL isParent" ng-repeat="grp in stock.stockGroup.list">
@@ -16,6 +22,3 @@
 	<br>
 	Go to <a href="javascript:void(0)" ng-click="stock.showStockReport = false">Manage Stocks</a> to create new stocks.
 </p>
-
-
-
