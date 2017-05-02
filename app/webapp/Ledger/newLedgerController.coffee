@@ -974,6 +974,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.blankLedger = {
       isBlankLedger : true
       description:null
+      attachedFileName: ''
+      attachedFile: ''
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
 #      hasCredit:false
 #      hasDebit:false
@@ -2314,6 +2316,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       isBlankLedger : true
       description:null
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
+      attachedFileName: ''
+      attachedFile: ''
 #      hasCredit:false
 #      hasDebit:false
       invoiceGenerated:false
