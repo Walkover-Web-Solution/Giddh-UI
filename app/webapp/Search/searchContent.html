@@ -186,20 +186,27 @@
                   </div>
                 </th>
                 <th class="col-xs-2">
+                  <div ng-click="sortType = 'uniqueName'; sortReverse = !sortReverse">
+                    UniqueName
+                    <span ng-show="sortType == 'uniqueName' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'uniqueName' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </div>
+                </th>
+                <th class="col-xs-2">
                   <div ng-click="sortType = 'openingBalance'; sortReverse = !sortReverse">
                   Opening Bal.
                     <span ng-show="sortType=='openingBalance' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
                     <span ng-show="sortType=='openingBalance' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                   </div>
                 </th>
-                <th class="col-xs-2">
+                <th class="col-xs-1">
                   <div ng-click="sortType = 'debitTotal'; sortReverse = !sortReverse">
                     DR Total
                     <span ng-show="sortType == 'debitTotal' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
                     <span ng-show="sortType == 'debitTotal' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                   </div>
                 </th>
-                <th class="col-xs-2">
+                <th class="col-xs-1">
                   <div ng-click="sortType = 'creditTotal'; sortReverse = !sortReverse">
                     CR Total
                     <span ng-show="sortType == 'creditTotal' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
@@ -225,23 +232,24 @@
             <tbody>
               <tr ng-repeat="item in searchResData | orderBy:sortType:sortReverse">
                 <td>{{item.name}}</td>
+                <td>{{item.uniqueName}}</td>
                 <td class="alR">
                   <span ng-if="item.openingBalance > 0">
                     <span class="text-success pull-left" ng-if="item.openBalType === 'DEBIT'">DR</span>
                     <span class="text-danger pull-left" ng-if="item.openBalType === 'CREDIT'">CR</span>
                     &nbsp;
                   </span>
-                  {{item.openingBalance}}
+                  {{item.openingBalance | number:2}}
                 </td>
-                <td class="alR">{{item.debitTotal}}</td>
-                <td class="alR">{{item.creditTotal}}</td>
+                <td class="alR">{{item.debitTotal | number:2}}</td>
+                <td class="alR">{{item.creditTotal | number:2}}</td>
                 <td class="alR">
                   <span ng-if="item.closingBalance > 0">
                     <span class="text-success pull-left" ng-if="item.closeBalType === 'DEBIT'">DR</span>
                     <span class="text-danger pull-left" ng-if="item.closeBalType === 'CREDIT'">CR</span>
                     &nbsp;
                   </span>
-                  {{item.closingBalance}}
+                  {{item.closingBalance | number:2}}
                 </td>
                 <td>{{item.parent}}</td>
               </tr>
