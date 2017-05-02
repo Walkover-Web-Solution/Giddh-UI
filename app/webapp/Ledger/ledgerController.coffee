@@ -878,8 +878,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           parentGroup = _.findWhere($rootScope.groupWithAccountsList, {uniqueName:parent}) 
           if parentGroup.category == "income" || parentGroup.category == "expenses" && !txn.isTax && txn.particular.uniqueName != 'roundoff'
             amount += Number(txn.amount)
+            ledger.panel.show = true
     else if !ledger.isBlankLedger
       amount = Number(ledger.transactions[0].amount)
+      ledger.panel.show = true
     else if ledger.isBlankLedger
       _.each ledger.transactions, (txn) ->
         amount += Number(txn.amount)

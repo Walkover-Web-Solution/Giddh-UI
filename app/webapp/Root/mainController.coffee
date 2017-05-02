@@ -805,6 +805,24 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       else
         $rootScope.ledgerMode = 'new'
 
+  $rootScope.setState = (lastState, url, param) ->
+    data = {
+        "lastState": lastState,
+        "companyUniqueName": $rootScope.selectedCompany.uniqueName
+    }
+    if url.indexOf('ledger') != -1
+      data.lastState = data.lastState + '@' + param
+    $http.post('/state-details', data).then(
+        (res) ->
+          
+        (res) ->
+          
+    )
+
+  $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+    $rootScope.setState(toState.name, toState.url, toParams.unqName)
+  )
+
   $(document).on('click', (e)->
     if e.target.id != 'accountSearch'
       $rootScope.flyAccounts = false
