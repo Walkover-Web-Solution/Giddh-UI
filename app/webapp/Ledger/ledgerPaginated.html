@@ -612,7 +612,7 @@ th {
   		</div>
   		<div class="col-xs-12 mrT mrB">
   			<div class="row">
-	  			<div class="cheq col-xs-6" ng-show="showAdvanced">
+	  			<div class="cheq col-xs-6 pdT" ng-show="showAdvanced">
 	  				<div class="row">
 			  			<table>
 			  				<tbody>
@@ -633,7 +633,7 @@ th {
 	  		
 		  		<div class="file_attached col-xs-5 pull-right text-right" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length > 0">
 		  			<div class="row">
-			  			<span ng-bind="ledgerCtrl.selectedLedger.attachedFileName"></span><span class="remove cp" ng-click="ledgerCtrl.deleteAttachedFile()">(remove)</span> 
+			  			<span ng-bind="ledgerCtrl.selectedLedger.attachedFileName"></span><label class="remove cp mrL1" ng-click="ledgerCtrl.deleteAttachedFile()">(remove)</label> 
 			  		</div>	
 		  		</div>
 	  		</div>
@@ -661,8 +661,8 @@ th {
             </div>
   		</div>
   		
-  		<div class="col-xs-12 pdT pdB1" ng-show="showAdvanced">
-	  		<div class="row">
+  		<div class="col-xs-12 pdT" ng-show="showAdvanced">
+	  		<div class="row bdrB pdB1">
 	  			<table>
 	  				<tr>
 	  					<td class="pdR1"><label class="default_clr pull-left">Voucher type</label> </td>
@@ -683,13 +683,15 @@ th {
 	  			</table>
 	  		</div>
   		</div>
-
-  		<div class="col-xs-12 pdT1 bdrT">
+  		<div class="col-xs-12 pd0 text-right mrT">
+  			<span class="primary_color">Compound Total: {{ledger.total.amount}}</span>
+  		</div>
+  		<div class="col-xs-12 pdT1">
   			<div class="row">
 	  			<button class="no-btn" ng-click="showAdvanced = !showAdvanced">Advance <i class="glyphicon glyphicon-triangle-bottom" ng-class="{rotate180:showAdvanced}"></i></button>
 	  			<div class="pull-right">
 		  			<!-- <button class="btn btn-default"><i class="glyphicon glyphicon-paperclip"></i></button> -->
-		  			<div class="upload_div blue" style="padding:6px 8px;float:left;margin-right:10px;border:1px solid #ccc" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0">
+		  			<div class="upload_div" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0">
 	                  <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
 	                  <label for="invoiceFile"><i class="glyphicon glyphicon-paperclip"></i></label>
 	                </div>
