@@ -227,7 +227,7 @@ min-width: 220px;
 .ledger-panel {
     box-shadow: 0px 3px 28px 0 rgba(0, 0, 0, 0.14);
     color: #616161;
-    padding: 30px 13px;
+    padding: 30px 16px;
     border-radius: 6px;
 }
 .ledger-panel .form-control {
@@ -1190,6 +1190,7 @@ footer small a{
 .popover.bottom>.arrow {
     right: 13%;
     left: auto;
+    border-bottom-color: #fff;
 }
 .default_clr {
     color: #4d4d4d !important;
@@ -1200,19 +1201,20 @@ footer small a{
 .w100 {
     width: 100px;
 }
-.multi-select .form-control {
-    border: 0;
+
+.multi-select {
+    position: relative;
 }
 .multi-select .caret {
-    position: absolute;
-    top: 25px;
+position: absolute;
+    top: 50%;
     right: 0;
-    width: 80px;
+    width: 100%;
     height: 100%;
     left: 0;
     text-align: right;
-    transform: translateY(-50%);
     border: 0;
+    transform: translateY(-50%);
 }
 .multi-select .caret:before {
     display: inline-block;
@@ -1221,9 +1223,13 @@ footer small a{
     content: ' ';
     margin-left: 2px;
     vertical-align: middle;
-    border-top: 5px dashed #949494;
+    border-top: 5px dashed #4d4d4d;
     border-right: 5px solid transparent;
     border-left: 5px solid transparent;
+    top: 50%;
+    bottom: 0;
+    position: absolute;
+    right: 10px;
 }
 .no-btn {
     box-shadow: none;
@@ -1397,4 +1403,13 @@ input[type=radio]:checked:after {
     color: #4d4d4d;
     top: 50%;
     transform: translateY(-50%);
+}
+.pop-panel .bdrB {
+    border-bottom: 1px solid #bababa;   
+}
+.pop-panel .ui-select-toggle{
+    min-width: 100px !important;
+}
+.no-btn i {
+    top: 3px;
 }

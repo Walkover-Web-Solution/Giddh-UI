@@ -661,26 +661,32 @@ th {
             </div>
   		</div>
   		
-  		<div class="col-xs-12 bdrT pdT">
+  		<div class="col-xs-12 pdT pdB1" ng-show="showAdvanced">
 	  		<div class="row">
-	  			<div class="form-group" style="max-width:200px;">
-	  			<strong>Voucher type</strong> 
-	  			<ui-select ng-model="ledgerCtrl.selectedLedger.voucher" theme="bootstrap">
-                    <ui-select-match>
-                      <span>{{$select.selected.name}}</span>
-                    </ui-select-match >
-                    <ui-select-choices repeat="item in ledgerCtrl.voucherTypeList| filter: $select.search ">
-                      <span ng-bind="item.name"></span>
-                    </ui-select-choices>
-                </ui-select>
-	  			<span>{{ledgerCtrl.selectedLedger.voucherNo}}</span>
-	  			</div>
+	  			<table>
+	  				<tr>
+	  					<td class="pdR1"><label class="default_clr pull-left">Voucher type</label> </td>
+	  					<td colspan="4">
+				  			<ui-select ng-model="ledgerCtrl.selectedLedger.voucher" theme="bootstrap">
+			                    <ui-select-match>
+			                      <span>{{$select.selected.name}}</span>
+			                    </ui-select-match >
+			                    <ui-select-choices repeat="item in ledgerCtrl.voucherTypeList| filter: $select.search ">
+			                      <span ng-bind="item.name"></span>
+			                    </ui-select-choices>
+			                </ui-select>
+	  					</td>
+	  					<td class="pdL1">
+	  						<span>{{ledgerCtrl.selectedLedger.voucherNo}}</span>
+	  					</td>
+	  				</tr>
+	  			</table>
 	  		</div>
   		</div>
 
-  		<div class="col-xs-12 pdT">
+  		<div class="col-xs-12 pdT1 bdrT">
   			<div class="row">
-	  			<button class="no-btn" ng-click="showAdvanced = !showAdvanced">Advanced <i class="caret" ng-class="{rotate180:showAdvanced}"></i></button>
+	  			<button class="no-btn" ng-click="showAdvanced = !showAdvanced">Advance <i class="glyphicon glyphicon-triangle-bottom" ng-class="{rotate180:showAdvanced}"></i></button>
 	  			<div class="pull-right">
 		  			<!-- <button class="btn btn-default"><i class="glyphicon glyphicon-paperclip"></i></button> -->
 		  			<div class="upload_div blue" style="padding:6px 8px;float:left;margin-right:10px;border:1px solid #ccc" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0">
