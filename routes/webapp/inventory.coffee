@@ -42,7 +42,7 @@ router.put '/unit-types', (req, res) ->
     res.send data
 
 router.delete '/unit-types', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-unit/' + req.body.uName
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-unit/' + req.query.uName
   args =
     headers:
       'Auth-Key': req.session.authKey

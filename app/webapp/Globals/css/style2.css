@@ -1117,13 +1117,20 @@ footer small a{
 
 
 /*stock page*/
+.sidebar {
+    background: #f3f0e6 !important;
+}
+.rightBar{
+    float: left;
+    width: calc(100% - 320px);
+}
+.wrap_content {
+    overflow: auto;
+    height: calc(100% - 220px);
+}
 .top_row {
     padding: 9px 10px;
     border-bottom: 1px solid #d6d6d6;
-    overflow: hidden;
-}
-.sidebar {
-    background: #f3f0e6 !important;
 }
 .search_box {
     position: relative;
@@ -1157,13 +1164,7 @@ footer small a{
     border: 1px solid #e5e5e5;
     overflow: hidden;
 }
-.wrap_content {
-    margin-left: 320px;
- }
 
-.stock-bar {
-    overflow: hidden;
-}
 .form-theme .form-control {
     background: #fff !important;
 }

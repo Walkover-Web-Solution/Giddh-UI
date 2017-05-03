@@ -26,10 +26,13 @@
 
 			<div class="form-group col-xs-3 pdR0 pdL">
 				<label>Parent Stock</label>
-				<select class="form-control" ng-model="vm.customUnitObj.parentStockUnitCode" ng-options="item.shortCode as item.name for item in vm.unitTypes">
+				<select class="form-control" 
+					ng-model="vm.customUnitObj.parentStockUnit" 
+					ng-options="item.name for item in vm.customUnits track by item.code">
 					<option value="">Select</option>
 				</select>
 			</div>
+
 		</div>
 
 		<div class="row" ng-if="!vm.editMode">
@@ -62,13 +65,13 @@
 					<td>{{item.name}}</td>
 					<!-- <td>{{item.hierarchicalQuantity}}</td> -->
 					<td>{{item.quantityPerUnit}}</td>
-					<td>{{item.shortCode}}</td>
+					<td>{{item.code}}</td>
 					<td class="action">
 						<a href class="edit_btn" ng-click="vm.editUnit(item)">
 							<i class="fa fa-pencil" aria-hidden="true"></i>
 							Edit
 						</a>
- 						<a href class="" ng-click="vm.deleteUnit(item)">
+ 						<a href class="" ng-click="vm.deleteCustomUnitStock(item)">
  							<i class="fa fa-trash-o" aria-hidden="true"></i> Delete
  						</a>
  					</td>

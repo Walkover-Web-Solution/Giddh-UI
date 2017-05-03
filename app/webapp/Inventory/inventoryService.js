@@ -22,7 +22,8 @@ angular.module('inventoryServices', [])
 			'page': this.page,
 			'count': this.count,
 			'from' :this.from,
-			'to': this.to
+			'to': this.to,
+			'uName': this.uName
 		},
 		{
 			get: {
@@ -278,8 +279,9 @@ angular.module('inventoryServices', [])
 	    deleteStockUnit: function(reqParam, data){
 	    	return this.handlePromise(function(onSuccess, onFailure){
 	    		return stock.deleteStockUnit({
-	    			companyUniqueName: reqParam.companyUniqueName
-	    		}, data, onSuccess, onFailure)
+	    			companyUniqueName: reqParam.companyUniqueName,
+	    			uName: reqParam.uName
+	    		}, onSuccess, onFailure)
 	    	})
 	    }
 
