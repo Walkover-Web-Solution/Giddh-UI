@@ -274,7 +274,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: appendThis + '/public/webapp/invoice2/invoice2.html'
     controller: 'invoice2Controller'
   )
-  $locationProvider.html5Mode(false)
+  $locationProvider.html5Mode(true)
   return
 
 giddh.webApp.run [

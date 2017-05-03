@@ -1,6 +1,17 @@
 "use strict"
 
 mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location, DAServices) ->
+  
+  #get user details
+  getUserSuccess = (res) ->
+    localStorageService.set('_userDetails', res.data.body)
+    $rootScope.basicInfo = res.data.body
+  getUserFailure = (res) ->
+    toastr.error('unable to fetch user')
+  getUserDetail = () ->
+    $http.get('/fetch-user').then(getUserSuccess, getUserFailure)
+  getUserDetail()
+
   $rootScope.scriptArrayHead = [
     "/public/webapp/newRelic.js"
     "/public/webapp/core_bower.min.js"
@@ -188,7 +199,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       # _userDetails, _currencyList
       localStorageService.clearAll()
       window.sessionStorage.clear()
-      window.location = "/thanks"
+      window.location = "https://www.giddh.com"
     ), (res) ->
 
   # for ledger
@@ -797,6 +808,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     else
       return false
 
+
+
   $rootScope.ledgerMode = 'new'
   $rootScope.switchLedgerMode = () ->
     if $rootScope.checkWalkoverCompanies()
@@ -820,7 +833,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     )
 
   $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
-    $rootScope.setState(toState.name, toState.url, toParams.unqName)
+    #$rootScope.setState(toState.name, toState.url, toParams.unqName)
   )
 
   $(document).on('click', (e)->

@@ -28,40 +28,10 @@ var rest = require('restler');
 var app = settings.express();
 
 app.disable('x-powered-by');
-//// Require and setup mashape analytics
-//var analytics = require('mashape-analytics')
-//var agent = analytics('5628ae08593b00f7098a3b3d', 'giddh-ui', {
-//  queue: {
-//    batch: 1, // turn batching on
-//    entries: 1 // number of entries per batch
-//  }
-//})
-//
-//app.use(agent)
-
-//SENTRY.IO START: Must configure Raven before doing anything else with it
-// try {
-//   Raven.config('https://9f2f538e36c9425f8f9b4edc27a572e6:d59791f669014198a6da61f2c14a3f46@sentry.io/136011').install();  
-// } catch(e) {
-//   console.log(Raven.captureException(e));
-// }
-
-// The request handler must be the first middleware on the app
-// app.use(Raven.requestHandler());
-// The error handler must be before any other error middleware
-// app.use(Raven.errorHandler());
-// Optional fallthrough error handler
-app.use(function onError(err, req, res, next) {
-    // The error id is attached to `res.sentry` to be returned
-    // and optionally displayed to the user for support.
-    res.statusCode = 500;
-    res.end(res.sentry + '\n');
-});
-//SENTRY.IO END
 
 var port = process.env.PORT || 8000;
 //enabling cors
-app.use(cors())
+//app.use(cors())
 
 
 //set engine
@@ -98,8 +68,11 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
   cookie: {
+    path:'/',
     secure: false,
-    maxAge: sessionTTL
+    maxAge: sessionTTL,
+    domain:'giddh.com',
+    httpOnly: false
   }
   
   // store: new MongoStore({
@@ -130,6 +103,16 @@ app.use(function (req, res, next) {
   next();
 })
 
+//to allow cookie sharing across subdomains
+app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+    next();
+
+});
+
 // do not remove code from this position
 var login = require('./public/routes/website/login');
 var contact = require('./public/routes/website/contact');
@@ -138,7 +121,6 @@ var websiteRoutes = require('./public/routes/website/main');
 app.use('/app/auth', login);
 app.use('/contact', contact);
 app.use('/app/api', websiteRoutes);
-app.use('/', websiteRoutes);
 
 global.mStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -239,6 +221,46 @@ app.use('/yodlee', yodlee);
 app.use('/ebanks', ebanks);
 app.use('/admin', adminPanel);
 app.use('/state-details', stateDetails);
+
+
+// delete user session on logout
+app.use('/logout', function(req, res){
+  if(req.session.name){
+    delete req.session
+    res.status(200).send({message:'user logged out'})
+  }else{
+    res.status(403).send({message:'user not found'})
+  }
+})
+
+//return user-details
+app.use('/fetch-user', function(req, res){
+  var authHead, hUrl;
+  authHead = {
+    headers: {
+      'Auth-Key': req.session.authKey,
+      'Content-Type': 'application/json',
+      'X-Forwarded-For': res.locales.remoteIp
+    }
+  };
+  hUrl = settings.envUrl + 'users/' + req.session.name;
+  return settings.client.get(hUrl, authHead, function(data, response) {
+    if (data.status === 'error' || data.status === void 0) {
+      res.status(response.statusCode);
+    }
+    return res.send(data);
+  });
+})
+
+//serve index.html, this has to come after *ALL* routes are defined
+app.use('/', function(req, res){
+  if(req.session.name){
+    res.sendFile(__dirname+ '/public/webapp/views/index.html')
+  }else{
+    res.status(404)
+    res.redirect('https://www.giddh.com')
+  }
+});
 
 //app.use('/magic', magicLink);
 /*
