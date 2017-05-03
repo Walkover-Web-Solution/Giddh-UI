@@ -41,7 +41,7 @@
                         </div>
                       </a>
                     </li>
-           <!--          <li class="dmLi" ui-sref="company.content.ledgerContent1">
+<!--                     <li class="dmLi" ui-sref="company.content.ledgerContent">
                         <a href="" >
                           <div class="media">
                             <div class="media-body">
@@ -245,7 +245,7 @@
           </a>
           <ul id="companyList" class="company-list dropdown-menu" aria-labelledby="cmpWrp" >
             <li class="create-company">
-              <button id="refreshCompanyBtn" class="btn btn-success btn-sm" ng-click="refreshcompanyList($event)">Refresh</button>
+              <button id="refreshCompanyBtn" class="btn btn-success btn-sm" ng-click="refreshcompanyList($event)"><i class="glyphicon glyphicon-refresh"></i></button>
               <button id="createCompanyBtn" class="btn btn-primary btn-sm" ng-click="createNewCompany()">Create Company</button>
             </li>
             <li style="padding:0px;">
@@ -278,6 +278,7 @@
             <li ng-if="ledgerState"><a href="javascript:void(0)" ng-click="runTour()">Run Tour</a></li>
             <li><a target="_Blank" href="https://docs.giddh.com/" ng-click="$event.stopPropagation()">Documentation</a></li>
             <li ng-if="selectedCompany.canUserSwitch"><a class="pull-left" href="javascript:void(0)" ng-click="switchUser()"><span class="pull-left">Switch User</span><span class="on-btn pull-left" ng-if="ucActive"></span></a></li>
+            <li ng-if="checkWalkoverCompanies()"><a class="cp" ng-click="switchLedgerMode()">Switch Ledger - {{ledgerMode}}</a></li>
             <li role="separator" class="divider" style="width:100%"></li>
             <li><a ng-click="logout()" href="javascript:void(0)">Logout</a></li>
           </ul>

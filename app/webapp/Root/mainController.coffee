@@ -453,6 +453,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.checkPermissions($rootScope.selectedCompany)
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
+    $scope.getGroupsList()
 #    $rootScope.getCroppedAccountList(company.uniqueName, '')
 
 
@@ -689,7 +690,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.getFlattenGrpWithAccListSuccess = (res) ->
     $scope.gwaList.page = res.body.page
     $scope.gwaList.totalPages = res.body.totalPages
-    $scope.flatAccntWGroupsList = res.body.results
+    $rootScope.flatAccntWGroupsList = res.body.results
     #$scope.flatAccntWGroupsList = gc.removeEmptyGroups(res.body.results)
   #   console.log($scope.flatAccntWGroupsList)
     $scope.showAccountList = true
@@ -719,7 +720,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     if res.body.results.length > 0 && res.body.totalPages >= $scope.gwaList.currentPage
       _.each res.body.results, (grp) ->
         grp.open = true
-        $scope.flatAccntWGroupsList.push(grp) 
+        $rootScope.flatAccntWGroupsList.push(grp) 
       #$scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
     else if res.body.totalPages > $scope.gwaList.currentPage
       $scope.loadMoreGrpWithAcc($rootScope.selectedCompany.uniqueName)
@@ -766,16 +767,61 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $rootScope.$emit('account-selected')
     return false
 
+  $scope.getGroupsList = () ->
+    @success = (res) ->
+      $rootScope.groupWithAccountsList = res.body
+    @failure = (res) ->
+
+    groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then(@success, @failure)
+
   # $scope.goToLedgerCash = () ->
   #   $state.go('company.content.ledgerContent',{unqName:'cash'})
 
   $rootScope.toggleAcMenus = (condition) ->
     $scope.showSubMenus = condition
-    _.each $scope.flatAccntWGroupsList, (grp) ->
+    _.each $rootScope.flatAccntWGroupsList, (grp) ->
       grp.open = condition
 
   $scope.runTour = () ->
     $rootScope.$emit('run-tour')
+
+  $rootScope.checkUserCompany = () ->
+    user = localStorageService.get('_userDetails')
+    company = user.uniqueName.split('@')
+    company = company[company.length - 1]
+    company
+
+  $rootScope.checkWalkoverCompanies = () ->
+    if $rootScope.checkUserCompany().toLowerCase() == 'giddh.com' || $rootScope.checkUserCompany().toLowerCase() == 'walkover.in' || $rootScope.checkUserCompany().toLowerCase() == 'msg91.com'
+      return true
+    else
+      return false
+
+  $rootScope.ledgerMode = 'new'
+  $rootScope.switchLedgerMode = () ->
+    if $rootScope.checkWalkoverCompanies()
+      if $rootScope.ledgerMode == 'new'
+        $rootScope.ledgerMode = 'old'
+      else
+        $rootScope.ledgerMode = 'new'
+
+  $rootScope.setState = (lastState, url, param) ->
+    data = {
+        "lastState": lastState,
+        "companyUniqueName": $rootScope.selectedCompany.uniqueName
+    }
+    if url.indexOf('ledger') != -1
+      data.lastState = data.lastState + '@' + param
+    $http.post('/state-details', data).then(
+        (res) ->
+          
+        (res) ->
+          
+    )
+
+  $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+    $rootScope.setState(toState.name, toState.url, toParams.unqName)
+  )
 
   $(document).on('click', (e)->
     if e.target.id != 'accountSearch'

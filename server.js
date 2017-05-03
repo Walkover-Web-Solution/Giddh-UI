@@ -1,4 +1,4 @@
-require('newrelic');
+//require('newrelic');
 // comment it while developement
 var settings = require('./public/routes/util/settings');
 var favicon = require('serve-favicon');
@@ -101,6 +101,7 @@ app.use(session({
     secure: false,
     maxAge: sessionTTL
   }
+  
   // store: new MongoStore({
   //   url: settings.mongoUrl,
   //   autoRemove: 'interval',

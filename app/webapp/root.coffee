@@ -205,9 +205,9 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
       # }
       'rightPanel':{
-        templateUrl: appendThis+'/public/webapp/Ledger/ledger.html'
-        controller: 'newLedgerController'
-        controllerAs: 'lc'
+        templateUrl: appendThis+'/public/webapp/Ledger/ledger-wrapper.html'
+        # controller: 'newLedgerController'
+        # controllerAs: 'lc'
       }
     }
   )
@@ -219,8 +219,8 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   #     # }
   #     'rightPanel':{
   #       templateUrl: appendThis+'/public/webapp/Ledger/ledgerPaginated.html'
-  #       controller: 'newLedgerController'
-  #       controllerAs: 'lc'
+  #       controller: 'ledgerController'
+  #       controllerAs: 'ledgerCtrl'
   #     }
   #   }
   # )

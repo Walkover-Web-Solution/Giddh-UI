@@ -1,6 +1,6 @@
 
 <div class="row">
-  <div class="add-transition col-xs-12" auto-height>
+  <div class="add-transition col-xs-12">
     <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
 
 
@@ -116,7 +116,7 @@
           </div>
         </div>
 
-          <div class="container-fluid y-scroll" ng-if="invoices.results.length > 0" ng-class="{'pdT2':flyDiv}" cover-page>
+          <div class="container-fluid " ng-if="invoices.results.length > 0" ng-class="{'pdT2':flyDiv}">
 
           <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
           <table class="table basic table-bordered">
@@ -307,7 +307,7 @@
         <div class="" ng-if="ledgers.results.length > 0">
 
 
-          <div class="container-fluid y-scroll" cover-page ng-class="{'pdT2' : flyDiv}">
+          <div class="container-fluid" ng-class="{'pdT2' : flyDiv}">
 
 
 
@@ -412,7 +412,7 @@
         </div>
       </uib-tab>
       <uib-tab heading="Template" select="setTab(2)">
-        <div class="y-scroll" ng-include="'/public/webapp/Invoice/invoiceContent.html'" cover-page ng-controller="invoiceController">
+        <div class="y-scroll" ng-include="'/public/webapp/Invoice/invoiceContent.html'" ng-controller="invoiceController">
 
         </div>
         <!--<div class="y-scroll" ng-include="'/public/webapp/Settings/invoice-temp.html'" cover-page>-->
