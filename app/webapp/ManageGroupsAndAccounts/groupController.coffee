@@ -142,6 +142,28 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     $scope.showEditTaxSection = false
     groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then(gc.getGroupListSuccess, gc.getGroupListFailure)
 
+# #########################################################################################################################
+# new add & manage modal
+
+  $scope.NewgoToManageGroups =() ->
+#    $scope.fltAccntListPaginated = []
+#    $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+    if !$rootScope.canManageComp
+      return
+    $scope.getFlatAccountListCount5($rootScope.selectedCompany.uniqueName)
+    if _.isEmpty($rootScope.selectedCompany)
+      toastr.error("Select company first.", "Error")
+    else
+      modalInstance = $uibModal.open(
+        templateUrl: $rootScope.prefixThis+'/public/webapp/ManageGroupsAndAccounts/newManageGroupModal.html'
+        size: "liq90"
+        backdrop: 'static'
+        scope: $scope
+      )
+      modalInstance.result.then(gc.goToManageGroupsOpen, gc.goToManageGroupsClose)
+
+
+
   $scope.setLedgerData = (data, acData) ->
     $scope.selectedAccountUniqueName = acData.uniqueName
     $rootScope.selectedAccount = acData

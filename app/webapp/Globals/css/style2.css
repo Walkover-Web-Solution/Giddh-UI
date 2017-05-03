@@ -1172,6 +1172,7 @@ footer small a{
 }
 .pop-panel label {
     color: #cccccc;
+    font-weight: 400;
 }
 .inWords {
     color: #4d4d4d;
@@ -1390,4 +1391,86 @@ input[type=radio]:checked:after {
     color: #4d4d4d;
     top: 50%;
     transform: translateY(-50%);
+}
+.grp_list {
+    padding: 10px 0px;
+    min-height: 100%;
+}
+.grp_list li {
+    list-style: none;
+}
+.grp_list li a {
+    padding: 6px 15px !important;
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: #808080;
+}
+.noPad {
+    padding: 0;
+}
+.grp_col {
+    /*max-width: 400px;*/
+    max-width: 47%;
+    overflow-x: scroll;
+    float: left;
+    min-height: 100%;
+    height: 100%;
+}
+
+.col_wrapper {
+    min-width: 220px;
+    float: left;
+    border-right: 1px solid #ccc;
+    min-height: 100%;
+    height: 100%;
+}
+
+.assets_list {
+    max-width: 258px;
+    min-width: 258px;
+    float: left;
+    background: #f4f5f5;
+    min-height: 100%;
+    height: 100%;
+}
+
+.modal-body {
+    min-height: 100%;
+    height: 100%;
+}
+.grp_wrapper {
+    min-height: 100%;
+    height: 100%;
+    width: 1920px;
+}
+.isAcc {
+    color: #1a1a1a;
+}
+.isgrp {
+    background: #e1ebf0;
+}
+.isParent {
+    background: #e5e5e5;
+}
+.isActive {
+    color: #fff !important;
+    background: #d25f29;
+}
+.primary_clr {
+    color: #d25f29;
+}
+.view_forms {
+    float: left;
+    width: 38%;
+    height: 100%;
+    border-left: 1px solid #ccc;
+    min-height: 100%;
+}
+.breadcrumbs {
+    font-size: 13px;
+    overflow: hidden;
+}
+.form_bg {
+    background: #f4f5f5;
 }
