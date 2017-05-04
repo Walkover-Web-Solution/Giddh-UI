@@ -328,39 +328,6 @@ angular.module('inventoryController', [])
 	}
 
 
-	
-
-	//select stock
-	vm.selectedStockItem = null
-	vm.selectStock = function(stk, parent){
-		this.success = function(res){
-			res.body.mappedPurchaseAccount = res.body.mappedPurchaseAccount || {}
-			res.body.mappedSalesAccount = res.body.mappedSalesAccount || {}
-			vm.selectedStockItem = res.body
-			vm.addStockItem.stockName = vm.selectedStockItem.name
-			vm.addStockItem.stockUnqName = vm.selectedStockItem.uniqueName
-			vm.addStockItem.stockType = vm.selectedStockItem.openingStockUnit
-			vm.addStockItem.stockQty = vm.selectedStockItem.openingQuantity
-			vm.addStockItem.stockClosingQty = vm.selectedStockItem.closingQuantity
-			vm.addStockItem.stockAmount = vm.selectedStockItem.openingAmount
-			vm.addStockItem.stockPurchaseAccount = vm.selectedStockItem.mappedPurchaseAccount
-			vm.addStockItem.stockPurchaseRate = vm.selectedStockItem.mappedPurchaseAccount.rate
-			vm.addStockItem.stockSalesAccount = vm.selectedStockItem.mappedSalesAccount
-			vm.addStockItem.stockSalesRate = vm.selectedStockItem.mappedSalesAccount.rate
-		}
-		this.failure = function(res){
-			toastr.error(res.data.message)
-		}
-		var uniqueName;
-		parent != undefined ? uniqueName = parent.uniqueName : uniqueName = stk.stockGroup.uniqueName
-		reqParam = {
-			companyUniqueName : $rootScope.selectedCompany.uniqueName,
-			stockGroupUniqueName: uniqueName,
-			stockUniqueName: stk.uniqueName
-		}
-		stockService.getStock(reqParam).then(this.success, this.failure)
-	}
-
 	//delete stock
 	vm.deleteStock = function(stk){
 		this.success= function(res){

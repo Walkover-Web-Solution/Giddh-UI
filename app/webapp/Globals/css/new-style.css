@@ -4469,6 +4469,17 @@ table.proforma-particulars{
         width:220px;
     }
 }*/
+.stock-grp-list>li>a{
+    text-transform: uppercase;
+    font-weight: 600
+}
+.sub-grp>li>a{
+    text-transform: capitalize;
+    font-weight: 400
+}
+.stock-items>li>a{
+    text-transform: lowercase;
+}
 
 .stock-grp.list{
     height: calc(100% - 200px);
@@ -4476,7 +4487,6 @@ table.proforma-particulars{
 }
 
 .stock-grp-list li > a{
-    text-decoration: none;
     color:#444;
 }
 .stock-grp-list li>i{
@@ -4493,20 +4503,11 @@ table.proforma-particulars{
 
 .stock-grp-list li:last-child{
     border-bottom:0;
-}
-
-.stock-grp-list li > a{
-    color:#444;
-}
-
-.stock-grp-list li:last-child{
     padding-bottom:0;
 }
-
 .stock-twin-list{
     height:100%;
 }
-
 .stock-twin-list ul li{
     padding:5px;
     border-top:1px solid #e0e0e0;
