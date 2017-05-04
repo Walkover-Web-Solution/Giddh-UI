@@ -419,6 +419,7 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$t
   ($q, $location, $log, toastr, $timeout, $rootScope) ->
     request: (request) ->
       $rootScope.superLoader = true
+      console.log request
       return request
     response: (response) ->
       $rootScope.superLoader = false

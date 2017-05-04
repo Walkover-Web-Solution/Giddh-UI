@@ -64,7 +64,7 @@ sessionTTL = 1000*60*30
 
 app.use(session({
   secret: "keyboardcat",
-  name: "userVerified",
+  name: "userAuth",
   resave: true,
   saveUninitialized: true,
   cookie: {
@@ -252,8 +252,21 @@ app.use('/fetch-user', function(req, res){
   });
 })
 
+// get session id and match with existing session
+var getSession = function(req, res, next){
+  var sessionId = req.query.sId;
+  req.sessionStore.get(sessionId, function(err, session) {
+      if (session) {
+          // createSession() re-assigns req.session
+          req.sessionStore.createSession(req, session)
+      }
+      next()
+  })
+
+}
+
 //serve index.html, this has to come after *ALL* routes are defined
-app.use('/', function(req, res){
+app.use('/', getSession, function(req, res){
   if(req.session.name){
     res.sendFile(__dirname+ '/public/webapp/views/index.html')
   }else{
