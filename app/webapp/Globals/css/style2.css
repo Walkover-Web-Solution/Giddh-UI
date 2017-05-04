@@ -1162,7 +1162,6 @@ footer small a{
     background: #f5f5f5;
     padding: 25px;
     border: 1px solid #e5e5e5;
-    overflow: hidden;
 }
 
 .form-theme .form-control {
@@ -1188,13 +1187,14 @@ a.btn.btn-xs.btn-link.pull-right {
     top: -4px;
 }
 .mutliple_unit button {
-padding: 0;
+    padding: 0;
     border: 0;
     background: 0 0;
     position: absolute;
     top: 50%;
     right: -14px;
     transform: translateY(-50%);
+    cursor: pointer;
 }
 .mutliple_unit {
     position: relative;

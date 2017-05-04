@@ -126,9 +126,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
       'rightPanel':{
         abstract:true
-#        templateUrl: '/public/webapp/Invoice/invoiceContent.html'
         template: '<div ui-view></div>'
-        #template: '<div ui-view></div>'
       }
     }
   )
@@ -145,11 +143,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('company.content',
     url: ''
     views:{
-      # 'accounts':{
-      #   #templateUrl: '/public/webapp/views/accounts.html'
-      #   template: "<div ui-view='accountsList'></div>"
-      #   abstract: true
-      # }
       'rightPanel':{
         abstract:true
         template: '<div ui-view="rightPanel"></div>'
@@ -160,10 +153,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('company.content.manage',
     url: '/manage'
     views:{
-      # 'accountsList':{
-      #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
-      #   #template: "<div>manage page</div>"
-      # }
       'rightPanel':{
         templateUrl: appendThis+'/public/webapp/ManageCompany/manageCompany.html'
       }
@@ -171,13 +160,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   )
   .state('company.content.user',
     url: '/user'
-    # templateUrl: '/public/webapp/views/userDetails.html'
-    # controller: 'userController'
     views:{
-      # 'accountsList':{
-      #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
-      #   #template: "<div>user page</div>"
-      # }
       'rightPanel':{
         templateUrl: appendThis+'/public/webapp/UserDetails/userDetails.html'
         controller: 'userController'
@@ -187,9 +170,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('company.content.tbpl',
     url: '/trial-balance-and-profit-loss',
     views:{
-      # 'accountsList':{
-      #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
-      # }
       'rightPanel':{
         templateUrl: appendThis+'/public/webapp/Tbpl/tbpl.html'
         controller: 'tbplController'
@@ -199,9 +179,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('company.content.ledgerContent',
     url: '/ledger/:unqName'
     views:{
-      # 'accountsList':{
-      #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
-      # }
       'rightPanel':{
         templateUrl: appendThis+'/public/webapp/Ledger/ledger.html'
         controller: 'newLedgerController'
@@ -238,11 +215,13 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
     }
   )
-  .state('inventory.add-stock',
-    url: '/add-stock'
+  .state('inventory.add-group.add-stock',
+    url: '/add-group/:grpId/add-stock/:stockId'
     views:{
-      'inventory-detail':{
-        templateUrl: '/public/webapp/Inventory/partials/stock-operations.html'
+      'inventory-detail@inventory':{
+        templateUrl: '/public/webapp/Inventory/partials/stock-operations.html',
+        controller: 'inventoryAddStockController'
+        controllerAs: 'vm'
       }
     }
   )

@@ -15,12 +15,12 @@
 			<div class="pull-right">
 				<button ng-click="stock.loadPage('custom-stock')" type="button" class="btn btn-primary mrL1">Custom Stock Unit</button>
 				<button type="button" class="btn btn-primary mrL1" ng-click="stock.loadPage('add-group')">Add Group</button>
-				<button type="button" class="btn btn-primary mrL1" ng-click="stock.loadPage('add-stock')">Add Stock</button>
-				<button class="btn btn-md btn-primary" ng-click="stock.toggleViews()">
+				<button ng-if="stock.groupEditMode" type="button" class="btn btn-primary mrL1" ng-click="stock.loadPage('add-stock')">Add Stock</button>
+				<!-- <button class="btn btn-md btn-primary" ng-click="stock.toggleViews()">
 					<span>Go To </span>
 					<span ng-if="stock.showStockReport">Manage Stock</span>
 					<span ng-if="!stock.showStockReport">Stock Report</span>
-				</button>
+				</button> -->
 			</div>
 		</div>
 	</div>

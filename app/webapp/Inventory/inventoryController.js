@@ -2,6 +2,7 @@ angular.module('inventoryController', [])
 .controller('stockController', ['$scope','$rootScope','stockService','localStorageService','groupService' ,'toastr','$filter', '$state', 'localInventoryService', function($scope, $rootScope, stockService, localStorageService, groupService, toastr, $filter, $state, localInventoryService){
 	
 	var vm = this;
+	vm.$state = $state
 
 	if(_.isUndefined($rootScope.selectedCompany)){
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
@@ -103,6 +104,7 @@ angular.module('inventoryController', [])
 	}
 
 	vm.getHeirarchicalStockGroups()
+
 
 	//close other stock groups on click 
 	vm.closeOtherStockGroups = function(stockGroup, parent){
@@ -255,42 +257,7 @@ angular.module('inventoryController', [])
 	}
 
 	//update stock
-	vm.updateStock = function(stockItem){
-		this.success = function(res){
-			_.each(vm.selectedStockGrp.stocks, function(stk, idx){
-				if(stk.uniqueName == res.body.uniqueName){
-					vm.selectedStockGrp.stocks[idx] = res.body
-				}
-			})
-			$rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
-			vm.getAllStocks()
-			toastr.success('Stock Updated successfully')
-		}
-
-		this.failure = function(res){
-			toastr.error(res.data.message)
-		}
-		stockItem.stockPurchaseAccount = stockItem.stockPurchaseAccount || {}
-		stockItem.stockSalesAccount = stockItem.stockSalesAccount || {}
-		var data = {
-			"name":stockItem.stockName,
-			"uniqueName":stockItem.stockUnqName,
-		    "openingQuantity":stockItem.stockQty,
-		    "openingAmount":stockItem.stockAmount,
-		    "openingStockUnitName":stockItem.stockType.name,
-		    "purchaseAccountUniqueName":stockItem.stockPurchaseAccount.uniqueName,
-		    "purchaseRate":stockItem.stockPurchaseRate,
-		    "salesRate":stockItem.stockSalesRate,
-		    "salesAccountUniqueName":stockItem.stockSalesAccount.uniqueName
-		}
-		var reqParam = {
-			companyUniqueName: $rootScope.selectedCompany.uniqueName,
-			stockGroupUniqueName: vm.selectedStockItem.stockGroup.uniqueName,
-			stockUniqueName: vm.selectedStockItem.uniqueName
-		}
-		stockService.updateStockItem(reqParam, data).then(this.success, this.failure)
-
-	}
+	
 
 	
 
@@ -361,26 +328,7 @@ angular.module('inventoryController', [])
 	}
 
 
-	//get purchase accounts
-	vm.getPurchaseAccounts = function(query) {
-	    var reqParam = {
-	      companyUniqueName: $rootScope.selectedCompany.uniqueName,
-	      q: query,
-	      page: 1,
-	      count: 0
-	    }
-	    var data = {
-	      groupUniqueNames: [$rootScope.groupName.purchase]
-	    }
-	    return groupService.postFlatAccList(reqParam,data).then(
-	      function(res){
-	      	vm.purchaseAccounts = res.body.results 
-	      },
-	      function(res){
-	      	return []
-	      }  
-	    )
-	}
+	
 
 	//select stock
 	vm.selectedStockItem = null
@@ -453,26 +401,7 @@ angular.module('inventoryController', [])
 
 	}
 
-	//get sales accounts
-	vm.getSalesAccounts = function(query) {
-	    var reqParam = {
-	      companyUniqueName: $rootScope.selectedCompany.uniqueName,
-	      q: query,
-	      page: 1,
-	      count: 0
-	    }
-	    var data = {
-	      groupUniqueNames: [$rootScope.groupName.sales]
-	    }
-	    return groupService.postFlatAccList(reqParam,data).then(
-	      function(res){
-	      	vm.salesAccounts = res.body.results 
-	      },
-	      function(res){
-	      	return []
-	      }  
-	    )
-	}
+	
 
 	// check whether to move selected stock grp to another
 	vm.modificationState = "Modify"
@@ -486,18 +415,22 @@ angular.module('inventoryController', [])
 	//func by dude
 	//vm.Groupadd()
 	vm.loadPage = function(page){
-		console.log("bingo", page)
 		var state = 'inventory.'+page
 		if(page === 'add-group'){
 			vm.groupEditMode =  false
 			$state.go('inventory.add-group', { grpId: null });
+		}
+		else if(page === 'add-stock'){
+			$state.go('inventory.add-group.add-stock', { stockId: null });
 		}
 		else{
 			$state.go(state);
 		}
 	}
 
-	
+	vm.loadGroupStockItemDetails=function(item){
+		console.log(item);
+	}
 
 	//toggle views from report to manage
 	vm.toggleViews = function(){
@@ -523,7 +456,7 @@ angular.module('inventoryController', [])
 	});
 
 	//set mode 
-	if(!_.isEmpty($state.params) && $state.params.grpId !== ''){
+	if(!_.isEmpty($state.params) && angular.isDefined($state.params.grpId) && $state.params.grpId !== ''){
 		vm.groupEditMode =  true
 		vm.getStockGroupDetail($state.params.grpId)
 	}
