@@ -82,7 +82,7 @@ angular.module('inventoryServices', [])
 				method: 'GET',
 				url: '/company/:companyUniqueName/stock-group/hierarchical-stock-groups'
 			},
-			getStock: {
+			getStockItemDetails: {
 				method: 'GET',
 				url: '/company/:companyUniqueName/stock-group/get-stock-detail'
 			},
@@ -211,9 +211,9 @@ angular.module('inventoryServices', [])
 	    	})
 	    },
 
-	    getStock: function(){
+	    getStockItemDetails: function(reqParam){
 	    	return this.handlePromise(function(onSuccess, onFailure){
-	    		return stock.getStock({
+	    		return stock.getStockItemDetails({
 	    			companyUniqueName: reqParam.companyUniqueName,
 	    			stockGroupUniqueName : reqParam.stockGroupUniqueName,
 	    			stockUniqueName: reqParam.stockUniqueName

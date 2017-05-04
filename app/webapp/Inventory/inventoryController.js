@@ -429,7 +429,7 @@ angular.module('inventoryController', [])
 	}
 
 	vm.loadGroupStockItemDetails=function(item){
-		console.log(item);
+		$state.go('inventory.add-group.add-stock', { stockId: item.uniqueName });
 	}
 
 	//toggle views from report to manage

@@ -128,9 +128,30 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
     console.log vm.addStockObj
 
 
+  # get stock Item details
+  vm.getStockItemDetails=(uName)->
+    reqParam=
+      companyUniqueName: $rootScope.selectedCompany.uniqueName,
+      stockGroupUniqueName: $state.params.grpId
+      stockUniqueName: uName
+    stockService.getStockItemDetails(reqParam).then(vm.getStockItemDetailsSuccess, vm.onFailure)
+
+
+  vm.getStockItemDetailsSuccess=(res)->
+    console.log(res.body, "getStockItemDetailsSuccess")
+    vm.addStockObj = res.body
+
+
   # init func on dom ready
   $timeout(->
-    vm.initStockObj()
+    if(!_.isEmpty($state.params) && angular.isDefined($state.params.stockId) && $state.params.stockId isnt '')
+      vm.stockEditMode =  true
+      vm.getStockItemDetails($state.params.stockId)
+    else
+      vm.stockEditMode =  false
+      vm.initStockObj()
+    
+
     vm.getStockUnits()
   ,100)
   
