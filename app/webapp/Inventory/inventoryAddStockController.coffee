@@ -7,6 +7,7 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
   vm.purchaseAccounts = []
   vm.salesAccounts = []
   vm.customUnits = []
+  vm.mfsCmbItem = {}
   $rootScope.selectedCompany = {}
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
 
@@ -25,6 +26,9 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
       },
       salesAccountDetails:{
         unitRates: []
+      }
+      manufacturingDetails:{
+        linkedStocks: []
       }
     }
     vm.addStockObj.purchaseAccountDetails.unitRates.push(vm.initAcDetailsObj())
@@ -140,6 +144,44 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
     console.log(res.body, "getStockItemDetailsSuccess")
     vm.addStockObj = res.body
 
+  # addMfsCmbItem itesm
+  vm.addMfsCmbItem=()->
+    if (!vm.mfsCmbItem.quantity || !vm.mfsCmbItem.stockUniqueName || !vm.mfsCmbItem.stockUnitCode)
+      vm.mfsCmbItemErrMsg = "All fields are required to add Item"
+      return false
+    else
+      vm.mfsCmbItemErrMsg = undefined
+      o = _.clone(vm.mfsCmbItem)
+      try
+        vm.addStockObj.manufacturingDetails.linkedStocks.push(o)
+      catch e
+        vm.addStockObj.manufacturingDetails ={
+          linkedStocks: []
+        }
+        vm.addStockObj.manufacturingDetails.linkedStocks.push(o)
+
+      vm.mfsCmbItem = angular.copy({})
+
+  vm.editMfsCmbItem=(item, idx)->
+    item.idx = idx
+    item.hasIdx = true
+    vm.mfsCmbItem = angular.copy(item)
+    console.log("after:", vm.mfsCmbItem)
+
+  vm.deleteMfsCmbItem=(item)->
+    vm.addStockObj.manufacturingDetails.linkedStocks = _.reject(vm.addStockObj.manufacturingDetails.linkedStocks, (o)->
+      return _.isEqual(o, item)
+    )
+
+  vm.updateMfsCmbItem=()->
+    if (!vm.mfsCmbItem.quantity || !vm.mfsCmbItem.stockUniqueName || !vm.mfsCmbItem.stockUnitCode)
+      vm.mfsCmbItemErrMsg = "All fields are required to add Item"
+      return false
+    else
+      vm.mfsCmbItemErrMsg = undefined
+      o = _.clone(vm.mfsCmbItem)
+      vm.addStockObj.manufacturingDetails.linkedStocks.splice(o.idx, 1, o)
+      vm.mfsCmbItem = angular.copy({})
 
   # init func on dom ready
   $timeout(->
