@@ -108,11 +108,10 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
     
     @success = (res) ->
       toastr.success 'Stock Item added successfully'
-      console.log(res.body, "success")
       _.extend(vm.addStockObj, res.body)
-      console.log(vm.addStockObj, "after")
       # getting list from parent controller
       $scope.$parent.stock.getHeirarchicalStockGroups()
+      $scope.$parent.stock.getStockGroupDetail($state.params.grpId)
       
 
     @failure = (res) ->
