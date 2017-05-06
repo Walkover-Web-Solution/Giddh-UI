@@ -1348,7 +1348,8 @@ footer small a{
 .radio {
     position: relative;
 }
-input[type=radio]:before {
+/*====================== mustafa =====================*/
+/*input[type=radio]:before {
     content: ' ';
     position: absolute;
     width: 18px;
@@ -1371,19 +1372,8 @@ input[type=radio]:checked:after {
     right: 0;
     text-align: center;
 }
-
-/*input[type=radio]:checked:after {
-    content: ' ';
-    position: absolute;
-    width: 6px;
-    height: 6px;
-    background: #808080;
-    left: 2px;
-    top: 8px;
-    border-radius: 50%;
-    right: 0;
-    text-align: center;
-}*/
+*/
+/*====================== mustafa =====================*/
 .select_drop {
     position: relative;
     width: 6px;
