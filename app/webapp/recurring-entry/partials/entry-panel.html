@@ -5,7 +5,7 @@
 		<label>Taxes</label>
 		<ul class="list-unstyled">
 			<li ng-repeat="tax in ledger.taxes">
-				<label class="checkbox-inline">
+				<label class="checkbox-inline"  ng-click="$event.stopPropagation()">
 		      		<input type="checkbox" ng-model="tax.isSelected">
 		      		{{tax.name}}
 		    	</label>
@@ -23,27 +23,27 @@
   <textarea class="form-control" rows="2" id="description" ng-model="ledger.description" ng-dblclick="$event.stopPropagation()"></textarea>
 
   <label class="mrT1" for="comment">Tags</label>
-  <input type="text" class="form-control" id="tag" ng-model="ledger.tag">
+  <input type="text" class="form-control" id="tag" ng-model="ledger.tag" ng-click="$event.stopPropagation()">
 </div>
 <!-- /description-->
 
 <div class="checkbox pull-left">
 	<!-- unconfirmed entry-->
 	<div class="checkbox" ng-if="selectedCompany.canUserSwitch">>
-	  <label><input type="checkbox" ng-model="ledger.unconfirmedEntry" >Unconfirmed Entry</label>
+	  <label ng-click="$event.stopPropagation()"><input type="checkbox" ng-model="ledger.unconfirmedEntry">Unconfirmed Entry</label>
 	</div>
 	<!-- /unconfirmed entry-->
 
 
 	<!-- Inclusive tax-->
 	<div class="checkbox">
-	  <label><input type="checkbox" ng-model="ledger.isInclusiveTax">Inclusive Tax</label>
+	  <label ng-click="$event.stopPropagation()"><input type="checkbox" ng-model="ledger.isInclusiveTax">Inclusive Tax</label>
 	</div>
 	<!-- /Inclusive tax-->
 
 	<!-- Applicable Taxes-->
 	<div class="checkbox">
-	  <label><input type="checkbox" ng-model="ledger.applyApplicableTaxes">As Per Applicable Taxes</label>
+	  <label ng-click="$event.stopPropagation()"><input type="checkbox" ng-model="ledger.applyApplicableTaxes">As Per Applicable Taxes</label>
 	</div>
 	<!-- /Applicable Taxes-->	
 </div>
