@@ -197,7 +197,7 @@ ul.dropdown-menu {
 }
 
 header {
-    background-color: #d35f29;
+    background-color: #d25f29;
 }
 
 header .navbar {
@@ -205,7 +205,7 @@ header .navbar {
     border: 0;
     margin: 0;
     padding: 0;
-    background-color: #d35f29;
+    background-color: #d25f29;
 }
 
 header .navbar-btn.btn-sm {
@@ -907,7 +907,7 @@ header .navbar-nav > li.active {
 }
 
 .themeBg {
-    background-color: #d35f29;
+    background-color: #d25f29;
 }
 
 
@@ -1809,7 +1809,7 @@ v-pane-header.show-pseudo {
     left: 8px;
     width: 10px;
     height: 2px;
-    background-color: #d35f29;
+    background-color: #d25f29;
     -webkit-transform-origin: 50% 50%;
     -ms-transform-origin: 50% 50%;
     transform-origin: 50% 50%;
@@ -2432,13 +2432,13 @@ i.cls-alert {
 }
 
 .linked-accounts:nth-child(odd) .account-card > h1 {
-    border-bottom: 1px solid #d35f29;
+    border-bottom: 1px solid #d25f29;
 }
 
 .linked-accounts > .title {
     margin-bottom: 5px;
     padding-bottom: 1px;
-    border-bottom: 2px solid #d35f29;
+    border-bottom: 2px solid #d25f29;
     font-size: 18px;
 }
 
@@ -3812,12 +3812,12 @@ tr.db-bnk-account > td.reconnectDiv{
 }
 
 .background-color-giddh{
-    background: #d35f29;
+    background: #d25f29;
     height: 50px;
 }
 
 .color-giddh{
-    color: #d35f29;
+    color: #d25f29;
 }
 
 
@@ -4275,7 +4275,7 @@ tr.db-bnk-account > td.reconnectDiv{
 }
 
 .glyphicon-filter.open{
-    color:#d35f29;
+    color:#d25f29;
 }
 
 .create-proforma{

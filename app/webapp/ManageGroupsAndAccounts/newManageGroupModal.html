@@ -3,23 +3,65 @@
 
   <div class="modal-header themeBg pd2 pdL2 pdR2">
   <i class="fa fa-times text-right close_modal" class="close" data-dismiss="modal" ng-click="$dismiss(); search.flataccount = ''" aria-label="Close" aria-hidden="true"></i>
-    <h3 class="modal-title bg">Manage Groups &amp; Accounts</h3>
+    <span class="col-xs-6">
+      <h3 class="modal-title bg pdT">Manage Groups &amp; Accounts</h3>
+    </span>
+    <div class="pull-right">
+      <div class="form-inline">
+        <div class="form-group">
+
+          <div class="input-group searchBar">
+
+            <div class="input-group-addon">
+              <i class="glyphicon glyphicon-search"></i>
+            </div>
+
+            <input type="text" name="grpSrch" class="form-control" ng-model="keyWord" placeholder="Search accounts" ng-keyup="setScrollToTop(grpSrch, 'addMngGrpScrBar')" trial-accordion="search" ng-model-options="{debounce:1000}">
+            
+
+          </div>
+        </div>
+      </div><!-- form-inline -->
+    </div>
   </div>
   <!-- end header -->
 
   <div class="modal-body noPad">
     <!-- assets list -->
-      <div class="assets_list">
-        <ul class="grp_list">
-          <li><a href="javascript:void(0);">Show All</a></li>
-          <li ng-repeat="grp in groupList" ng-click="selectItem(grp)"><a href="" ng-bind-html="grp.name | uppercase"></a></li>
-        </ul>
+      <div class="col-xs-2 assets_list">
+        <div class="row">
+          <ul class="grp_list">
+             <li><a href="javascript:void(0);">Show All</a></li>
+             <!-- ngRepeat: grp in groupList -->
+             <li ><a href="">CAPITAL</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="" class="isSelectedgrp">CURRENT ASSETS</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">CURRENT LIABILITIES</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">FIXED ASSETS</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">INDIRECT EXPENSES</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">INVESTMENTS</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">LOAN</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">OPERATING COST</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">OTHER INCOME</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li><a href=""> REVENUE FROM OPERATIONS</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+          </ul>
+        </div>
       </div>
     <!-- assets list end -->
 
 
     <!-- list of groups -->
-    <div class="grp_col">
+    <div class="col-xs-5 grp_col bdrL bdrR">
+      <div class="row grp_col">
       
       <div class="grp_wrapper">
         <!-- level 1 -->
@@ -32,7 +74,7 @@
           <li><a href="#">Purchases</a></li>
           <li><a href="#">Discount</a></li>
           <li><a href="#">Reserves & surplus</a></li>
-          <li><a href="#" class="primary_clr">Create new</a></li>
+          <li><a href="#" class="btn-add">Create new</a></li>
         </ul>
       </div>
     <!-- level 1 -->
@@ -44,10 +86,10 @@
         <ul class="grp_list">
           <li><a href="javascript:void(0);">Bank accounts</a></li>
           <li><a href="#" class="isAcc">Sub group</a></li>
-          <li><a href="#">Other indirect expenses</a></li>
+          <li><a href="#" class="isParent">Other indirect expenses</a></li>
           <li><a href="#" class="isAcc">Discount</a></li>
           <li><a href="#">Purchases</a></li>
-          <li><a href="#" class="primary_clr">Create new</a></li>
+          <li><a href="#" class="btn-add">Create new</a></li>
         </ul>
       </div>
     <!-- level 1 -->
@@ -82,7 +124,7 @@
           <li><a href="#">Purchases</a></li>
           <li><a href="#">Discount</a></li>
           <li><a href="#">Reserves &amp; surplus</a></li>
-          <li><a href="#" class="primary_clr">Create new</a></li>
+          <li><a href="#" class="btn-add">Create new</a></li>
         </ul>
       </div>
 
@@ -95,88 +137,209 @@
           <li><a href="#">Purchases</a></li>
           <li><a href="#">Discount</a></li>
           <li><a href="#">Reserves &amp; surplus</a></li>
-          <li><a href="#" class="primary_clr">Create new</a></li>
+          <li><a href="#" class="btn-add">Create new</a></li>
         </ul>
       </div>
 
     </div>
     </div>
+    </div>
     <!-- list of groups end -->
     
     <!-- form view -->
-    <div class="view_forms">
-      <div class="breadcrumbs pdL2 pdT1 pdR2 pdB1">
-        <div class="pull-left pdT1"><span>CURRENT ASSETS > Expence group 2</span> > <span class="primary_clr">Expence group 1</span></div>
-        <div class="pull-right"> <button class="btn isActive">Share</button> </div>
-      </div>
-      <form>
-        <div class="form_bg pd2">
-
-        <div class="form-group">
-          <label>A/c Name</label>
-          <input type="text"  class="form-control" />
-        </div>
-
-        <div class="form-group">
-        <div class="row">
-          <div class="form-group col-xs-6">
-            <label>Unique Name</label>
-            <input type="text"  class="form-control" />
+    <div class="col-xs-5">
+      <div class="row">
+        <div class="view_forms">
+          <div class="breadcrumbs pdL2 pdT1 pdR2 pdB1">
+            <div class="pull-left pdT1"><span>CURRENT ASSETS > Expence group 2</span> > <span class="primary_clr">Expence group 1</span></div>
+            <div class="pull-right"> <button class="btn isActive">Share</button> <span class="primary_clr">Shared with 2 people</span> </div>
           </div>
-          <div class="form-group col-xs-4">
-            <label>Opening balance</label>
-              <div class="input-group">
-                <div class="input-group-btn">
-                  <button type="button" class="btn form-control dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Action <span class="caret"></span></button>
-                  <ul class="dropdown-menu">
-                    <li><a href="#">Action</a></li>
-                    <li><a href="#">Another action</a></li>
-                  </ul>
-                </div><!-- /btn-group -->
-                <input type="text" class="form-control" aria-label="...">
-              </div><!-- /input-group -->
-          </div>        
-        </div>
+          <form class="horizontal-form">
+            <div class="form_bg pd2">
 
-        </div>
+              <div class="form-group clearfix">
+                  <div class="col-xs-6">
+                    <div class="row">
+                      <label>A/c Name</label>
+                      <input type="text"  class="form-control" />
+                    </div>
+                  </div>
+              </div>
 
-        <div class="form-group">
 
-        </div>
+              <div class="form-group clearfix mrB">
 
-        <div class="form-group">
-          <label>Description</label>
-          <textarea class="form-control" rows="5" cols="12" no-resize></textarea>
-        </div>
+                <div class="col-xs-5">
+                  <div class="row">
+                    <label>Unique Name</label>
+                    <input type="text"  class="form-control" />
+                  </div>
+                </div>
 
+                <div class="col-xs-6">
+                      <label class="col-xs-12 row">Opening Balance</label>
+                  <div class="col-xs-4">
+                    <div class="row">
+                      <div class="form-inline">
+                        <select class="form-control col-md-3">
+                          <option>Debit</option>
+                          <option>Credit</option>
+                        </select>
+                        <span class="select_drop"><i class="fa fa-caret-down"></i></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-xs-8">
+                    <div class="row">
+                      <input type="text" class="form-control" />
+                    </div>
+                  </div>
+                </div>        
+              </div>
+
+              </div>
+            
+            <div class="pd2 detailed">
+              
+              <div class="form-group col-xs-3">
+                  <div class="row">
+                  <label>Mobile Number</label>
+                  <input type="text" class="form-control">
+                  </div>
+              </div>
+
+              <div class="form-group col-xs-5">
+                  <label>Email</label>
+                  <input type="text" class="form-control">
+              </div>
+
+              <div class="clearfix"></div>
+              
+              <div class="form-group col-xs-5">
+                  <div class="row">
+                  <label>Company</label>
+                  <input type="text" class="form-control">
+                  </div>
+              </div>
+
+              <div class="form-group col-xs-7">
+                  <label>Attention to (will be used in invoice)</label>
+                  <input type="text" class="form-control">
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="form-group mrB">
+                  <label>Address</label>
+                  <input type="text" class="form-control">
+              </div>
+            </div>
+
+            <div class="form_bg pd2">
+
+              <div class="form-group col-xs-12">
+                <div class="row">
+                  <div class="col-xs-12">
+                    <div class="row">
+                      <label>Description</label>
+                    </div>
+                  </div>
+
+                  <div class="col-xs-12">
+                    <div class="row">
+                      <textarea class="form-control" cols="10" rows="5"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="clearfix"></div>
+            </div>
+
+              
+
+            <div class="pd2 detailed">
+            <hr />
+              <div class="form-group mrT col-xs-4 mrT1">
+                  <div class="row">
+                  <label>Group</label>
+                  <input type="text" class="form-control">
+                  </div>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="form-group col-xs-10 mrB">
+                  <div class="row">
+              
+                        <label class="col-xs-12 row">Merge this A/c with</label>
+              
+                    <div class="col-xs-4">
+                      <div class="row">
+                        <div class="form-inline">
+                          <select class="form-control col-md-3">
+                            <option>Select Account</option>
+                            <option>Account 1</option>
+                            <option>Account 2</option>
+                          </select>
+                          <span class="select_drop"><i class="fa fa-caret-down"></i></span>
+                        </div>
+                      </div>
+                    </div>
+              
+                    <div class="col-xs-4 row">
+                      <button class="btn isActive">Merge</button>
+                    </div>
+                  </div>
+              
+              </div>
+
+              <div class="clearfix"></div>
+
+              <small>This option is riskey and can not be undone</small>
+              <div class="col-xs-12 mrT1" style="min-height: 120px;">
+                <div class="row">
+                  <button class="btn isActive">DELETE Account 2</button>
+                  <button class="btn btn-success pull-right">Add</button>
+                  <button class="btn btn-success pull-right">Update</button>
+                </div>
+              </div>
+
+            </div> <!-- pd2 -->
+          </form>
         </div>
-        <div class="pd2">
-        <button class="btn isActive">DELETE Expence group 1</button>
-        <button class="btn btn-success pull-right">Add</button>
-        </div>
-      </form>
+      </div>
     </div>
 
 
     <div class="view_forms ng-hide">
       <div class="breadcrumbs pdL2 pdT1 pdR2 pdB1">
         <div class="pull-left pdT1"><span>CURRENT ASSETS > Expence group 2</span> > <span class="primary_clr">Expence group 1</span></div>
-        <div class="pull-right"> <button class="btn isActive">Share</button> </div>
+        <div class="pull-right"> <button class="btn isActive">Share</button> <label class="primary_clr">Shared with 2 people</label> </div>
       </div>
-      <form>
+      <form class="horizontal-form">
         <div class="form_bg pd2">
 
-        <div class="form-group">
-          <label>Group Name</label>
-          <input type="text"  class="form-control" />
+        <div class="form-group clearfix">
+          <div class="col-xs-7">
+            <div class="row">
+              <label>Group Name</label>
+              <input type="text" placeholder="Expence group 1"  class="form-control" />
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label>Unique Name</label>
-          <input type="text"  class="form-control" />
+        <div class="form-group clearfix">
+          <div class="col-xs-5">
+            <div class="row">
+              <label>Unique Name</label>
+              <input type="text"  class="form-control" />
+            </div>
+          </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group clearfix">
           <label>Description</label>
           <textarea class="form-control" rows="5" cols="12" no-resize></textarea>
         </div>
@@ -187,158 +350,6 @@
         <button class="btn btn-success pull-right">Add</button>
         </div>
       </form>
-    </div>
-
-    <div class="clearfix">
-
-      <div class="col-xs-3 greyBg">
-        <div>
-
-          <div class="mrT1 mrB1 form-inline">
-            <div class="form-group">
-
-              <div class="input-group">
-
-                <div class="input-group-addon">
-                  <i class="glyphicon glyphicon-search"></i>
-                </div>
-
-                <input type="text" name="grpSrch" class="form-control" ng-model="keyWord" placeholder="Search groups" ng-keyup="setScrollToTop(grpSrch, 'addMngGrpScrBar')" trial-accordion="search" ng-model-options="{debounce:1000}">
-                
-
-              </div>
-            </div>
-          </div>
-          <!-- searchbar end -->
-          <div class="search-loading" ng-hide="showListGroupsNow">
-            <span class="spinner small"></span> Loading…
-          </div>
-
-          <perfect-scrollbar id="addMngGrpScrBar" class="scrClass" wheel-propagation="true" wheel-speed="1"
-                             min-scrollbar-length="20"
-                             suppressScrollX="false" useBothWheelAxes="false" suppressScrollY="true">
-            <div ng-if="showListGroupsNow">
-             
-
-              <div class="clearfix add-manage-grouplist">
-
-                <section class="row row-1" ng-repeat="grp in groupList | orderBy: 'category' | grpsrch:keyWord" ng-class="grp.category">
-                  <div class="" trial-accordion>  
-                    <div class="col-xs-12 group" ng-if="grp.isVisible"><span id="grp_{{grp.name}}" ng-bind-html="grp.name | uppercase" ng-click="selectItem(grp)" uib-tooltip="{{grp.synonyms}}" tooltip-placement="right"></span></div>
-                  </div>
-                  <section class="subGroups isHidden" ng-if="grp.groups.length">
-                    <div ng-include="'childGroupList'"></div>
-                  </section>
-                </section>
-              </div>
-            </div>
-          </perfect-scrollbar>
-        </div>
-      </div>
-      <script type="text/ng-template" id="childGroupList">
-        <section class="row row-2" ng-repeat="grp in grp.groups">
-          <div class="row" trial-accordion>
-            <div class="col-xs-12 group" ng-style="{'padding-left':padLeft + 10}" ng-if="grp.isVisible"><span id="subGrp_{{grp.name}}" ng-bind-html="grp.name | capitalize" ng-click="selectItem(grp)" uib-tooltip="{{grp.synonyms}}" tooltip-placement="right"></span></div>
-          </div>  
-          <section class="subGroups isHidden" ng-if="grp.groups.length" ng-style="{'padding-left':padLeft + 10}">
-            <div ng-include="'childGroupList'"></div>
-          </section>
-        </section>
-      </script>
-
-      <!-- middle body -->
-      <div class="col-xs-7  pos-rel">
-        <div class="bdrR bdrL row " id="middleBody">
-
-          <div ng-if="showGroupDetails" ng-include="'/public/webapp/ManageGroupsAndAccounts/groupOperations.html'"></div>
-
-          <div ng-include="'/public/webapp/ManageGroupsAndAccounts/accountOperations.html'" ng-if="showAccountDetails"></div>
-
-        </div>
-
-        <div class="scroll-btn text-center" scroll-btn  ng-if="showAccountDetails || showGroupDetails">
-          <i class="glyphicon glyphicon-chevron-down" style="vertical-align: sub;color: #fff;"></i>
-        </div>
-      </div>
-
-      <!-- right side -->
-      <div class="col-xs-2" id="right">
-        <div class="row pr">
-
-          <div class="form-group pdL1 pdT1 pdR1">
-            <div class="input-group">
-              <div class="input-group-addon">
-                <i class="glyphicon glyphicon-search"></i>
-              </div>
-              <input type="text" name="accountsSearch" ng-model="search.flataccount" class="form-control" placeholder="Search accounts" ng-change="searchAccountsC5(search.flataccount)" ng-model-options="{debounce:1000}">
-            </div>
-          </div>
-
-        <section class="pr" style="height: 378px">
-            <div class="search-loading" ng-hide="showAccountListDetails || showListGroupsNow || fltAccntListcount5.length > 0">
-              <span class="spinner small"></span> Loading…
-            </div>
-            <div ng-if="showAccountListDetails" ng-hide="search.flataccount.length > 2">
-
-              <div class="pdL1 pdR1 mrB1" ng-if="groupAccntList.length == 0">
-                <h4 class="list-group-item-heading small">Oops, there are no accounts in <strong>{{selectedGroup.name}}</strong>
-                </h4>
-
-                <div class="mrB1 mrT1" ng-show="canAdd && !selectedGroup.fixed || canAdd && selectedGroup.fixed && !selectedGroup.isTopLevel">
-                  <button class="btn btn-success btn-block" ng-click="addNewAccountShow(selectedGroup)"
-                          href="javascript:void(0)">+ Add New
-                  </button>
-                </div>
-              </div>
-
-              <div ng-hide="groupAccntList.length == 0">
-
-                <h3 class="mrB1 mrL1 small">Accounts from <strong>{{selectedGroup.name}}</strong></h3>
-
-                <div class="mrB1 mrT1 pdL1 pdR1" ng-show="canAdd && !selectedGroup.fixed || canAdd && selectedGroup.fixed && !selectedGroup.isTopLevel">
-                  <button class="btn btn-success btn-block" ng-click="addNewAccountShow(selectedGroup)"
-                          href="javascript:void(0)">+ Add New
-                  </button>
-                </div>
-
-                <perfect-scrollbar id="selAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
-                ng-class="{'minimizeBoth': accountsSearch.length > 0}">
-                  <div class="list-group">
-                    <a ng-repeat="(key,value) in groupAccntList | filter:accountsSearch track by $index"
-                       href="javascript:void(0)" ng-click="showAccountDtl(value)"
-                       class="list-group-item" ng-class="{'active': selectedAccntMenu === value}">
-                      <h4 tooltip-placement="bottom" uib-tooltip="{{value.uniqueName}}" class="list-group-item-heading" ng-bind-html="value.name | highlight: accountsSearch"></h4>
-                    </a>
-                  </div>
-                </perfect-scrollbar>
-              </div>
-            </div>
-
-            <div ng-if="search.flataccount.length > 0 || isEmptyObject(selectedGroup)">
-              <h3 class="mrB1 mrL1 small">Accounts from <strong>all group</strong></h3>
-              <perfect-scrollbar id="allAcntWrap" class="scrClass acntListDiv" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20"
-              ng-class="{'minimizeBoth': accountsSearch.length > 0}">
-                <div class="list-group">
-                  <a ng-repeat="value in gc.accountsListShort | filter:accountsSearch | limitTo: flatAccListC5.limit  | orderBy:value.uniqueName"
-                     href="javascript:void(0)" ng-click="showAccountDtl(value)"
-                     class="list-group-item"
-                     ng-class="{'active': selectedAccntMenu === value}">
-                    <h4 
-                      uib-tooltip="{{value.uniqueName}}"tooltip-placement="bottom"
-                      class="list-group-item-heading ellp max200" 
-                      ng-bind-html="value.name | highlight: accountsSearch"></h4>
-                  </a>
-                </div>
-
-                <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreAcc(selectedCompany.uniqueName, search.flataccount)" ng-if="flatAccListC5.currentPage < flatAccListC5.totalPages">Load More</a>
-              <!-- </perfect-scrollbar> -->
-            </div>
-        <!-- uib-tooltip="{{value.parentGroups[0].name}}"tooltip-placement="bottom" ng-if="value.parentGroups[0].name!=selectedGroup.name" -->
-        </section>
-
-        </div>
-      </div>
-      <!-- right side end -->
     </div>
 
   </div>

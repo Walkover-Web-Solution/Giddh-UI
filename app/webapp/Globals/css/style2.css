@@ -54,7 +54,7 @@ a,button,input {
 /*input*/
 .form-control {
     background: #f9f7f2 !important;
-    border: 1px solid #ded3c0;
+    border: 1px solid #949494;
     border-radius: 0px;
     padding: 6px !important;
     outline: 0;
@@ -175,7 +175,7 @@ min-width: 220px;
     background: #525252;
 }
 .btn-primary:hover, .btn-primary:focus {
-    background-color: #d35f29;
+    background-color: #d25f29;
 }
 .btn {
     padding: 6px 16px;
@@ -258,7 +258,7 @@ margin-top: 0;
 #accountSearch  {
     min-height: 54px;
     border: 0;
-    background: #d35f29 !important;
+    background: #d25f29 !important;
     color: #fff;
     padding: 7px 10px !important;
     width: 232px;
@@ -272,7 +272,7 @@ outline: 0;
     color: #fff;
 }
 .ledger_search .input-group-addon {
-    background: #d35f29;
+    background: #d25f29;
     color: #fff;
     border: 1px solid #f5834e;
     border-top: 0;
@@ -306,7 +306,7 @@ outline: 0;
     font-weight: 500;
 }
 .subAccBox li a.active, .subAccBox li a:hover {
-    color: #d35f29;
+    color: #d25f29;
     background: none;
 }
 .subAccBox li a span {
@@ -317,7 +317,7 @@ outline: 0;
     padding: 8px 10px;
     display: block;
     background: #f5f5f5;
-    color: #d35f29 !important;
+    color: #d25f29 !important;
     margin: 20px 0px;
     font-weight: 500;
 }
@@ -354,7 +354,7 @@ outline: 0;
     margin: 0 auto;
 }
 .icon-options {
-    color: #d35f29;
+    color: #d25f29;
 /*    background: #f3f0e6;*/
     padding:0 4px;
 /*    border: 1px solid #ccc;
@@ -404,11 +404,11 @@ header {
 }
 
 .childTab >.nav-tabs>li.active>a, .childTab >.nav-tabs>li.active>a:focus, .childTab >.nav-tabs>li.active>a:hover {
-    color: #d35f29;
+    color: #d25f29;
     border: 0;
     cursor: pointer;
      background: none; 
-    border-bottom: 2px solid #d35f29;
+    border-bottom: 2px solid #d25f29;
 }
 
 /*.childTab >.nav.nav-tabs {
@@ -440,7 +440,7 @@ header {
 .childTab .nav-tabs>li.active>a, .childTab .nav-tabs>li.active>a:focus, .childTab .nav-tabs>li.active>a:hover {
     padding: 13px 18px;
     background: white;
-    color: #d35f29;
+    color: #d25f29;
     border: 1px solid #ddd;
     border-bottom-color: transparent;
 }*/
@@ -449,7 +449,7 @@ header {
     width: 100%;
 }
 .danger-btn {
-    background-color: #d35f29;
+    background-color: #d25f29;
     color: #fff;
     text-shadow: none;
     background-image: none;
@@ -505,7 +505,7 @@ header {
     padding: 4px 8px;
 }
 .basic>tbody>tr>td a {
-    color: #d35f29; 
+    color: #d25f29; 
 }
 
 .delt {
@@ -605,7 +605,7 @@ input[type="checkbox"]:after {
 .thumbnail.active {
     background: #ffffff;
     box-shadow: 0 5px 34px 0 rgba(211, 95, 41, 0.18);
-    border-color: #d35f29 !important;
+    border-color: #d25f29 !important;
 }
 .thumbnail {
     width: 100%;
@@ -820,7 +820,7 @@ input[type="checkbox"]:after {
     height: 49px;
     border: 0;
     width: 200px;
-    color: #d35f29;
+    color: #d25f29;
     background: #dddddd;
     left: 0;
     padding-left: 16px;
@@ -857,7 +857,7 @@ input[type="checkbox"]:after {
     font-weight: 400;
 }
 .daterangepicker td.active, .daterangepicker td.active:hover {
-    background-color: #d35f29;
+    background-color: #d25f29;
     border-color: transparent;
     color: #fff;
 }
@@ -879,7 +879,7 @@ input[type="checkbox"]:after {
 }
 #user-dropdown {
     color: #fff;
-    background: #d35f29;
+    background: #d25f29;
     width: 60px;
     text-align: center;
     padding: 15px 0;
@@ -1011,14 +1011,14 @@ input[type=number] {
 }
 
 .ledger-main .form-control:focus {
-    border-color: #d35f29 !important;
+    border-color: #d25f29 !important;
 }
 .uncfr .form-control {
    background: #f7edcd !important;
 }
 
 .active.end-date.in-range.available {
-    background: #d35f29;
+    background: #d25f29;
     color: #fff;
     border-radius: 0 4px 4px 0;
 }
@@ -1402,7 +1402,7 @@ input[type=radio]:checked:after {
 .grp_list li a {
     padding: 6px 15px !important;
     display: block;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     color: #808080;
 }
@@ -1411,7 +1411,7 @@ input[type=radio]:checked:after {
 }
 .grp_col {
     /*max-width: 400px;*/
-    max-width: 47%;
+    /*max-width: 690px;*/
     overflow-x: scroll;
     float: left;
     min-height: 100%;
@@ -1419,7 +1419,7 @@ input[type=radio]:checked:after {
 }
 
 .col_wrapper {
-    min-width: 220px;
+    width: 220px;
     float: left;
     border-right: 1px solid #ccc;
     min-height: 100%;
@@ -1427,9 +1427,6 @@ input[type=radio]:checked:after {
 }
 
 .assets_list {
-    max-width: 258px;
-    min-width: 258px;
-    float: left;
     background: #f4f5f5;
     min-height: 100%;
     height: 100%;
@@ -1445,9 +1442,9 @@ input[type=radio]:checked:after {
     width: 1920px;
 }
 .isAcc {
-    color: #1a1a1a;
+    color: #1a1a1a !important;
 }
-.isgrp {
+.isSelectedgrp {
     background: #e1ebf0;
 }
 .isParent {
@@ -1458,13 +1455,13 @@ input[type=radio]:checked:after {
     background: #d25f29;
 }
 .primary_clr {
-    color: #d25f29;
+    color: #d25f29 !important;
 }
 .view_forms {
     float: left;
-    width: 38%;
+    width: 100%;
+    overflow-y: scroll; 
     height: 100%;
-    border-left: 1px solid #ccc;
     min-height: 100%;
 }
 .breadcrumbs {
@@ -1473,4 +1470,58 @@ input[type=radio]:checked:after {
 }
 .form_bg {
     background: #f4f5f5;
+}
+.searchBar {
+    background: #f8f7f2;
+    border:1px solid #949494;
+}
+.searchBar .input-group-addon, .searchBar .form-control {
+    background: none;
+    border: 0;
+}
+.searchBar .form-control {
+    min-width: 260px;
+}
+.form-inline select.form-control {
+    width: calc(100% - 15px);
+}
+form label {
+    color: #1a1a1a;
+    font-weight: normal;
+}
+
+.form-control::-webkit-input-placeholder {
+    color: #cccccc;
+}
+.form-control::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+  color: #cccccc;
+}
+.form-control::-moz-placeholder { /* Firefox 19+ */
+  color: #cccccc;
+}
+.form-control:-ms-input-placeholder { /* IE 10+ */
+  color: #cccccc;
+}
+.form-control:-moz-placeholder { /* Firefox 18- */
+  color: #cccccc;
+}
+label {
+    font-weight: normal;
+}
+.horizontal-form label {
+    margin-bottom: 4px;
+}
+#getGroupModal .bdrL, #getGroupModal .bdrR {
+    border-color: #ccc;
+}
+#getGroupModal .detailed label {
+    font-size: 13px;
+    color: #808080;
+}
+.btn-add { 
+    display: inline-block !important;
+}
+.btn-add:hover, .btn-add:focus {
+    background: #d25f29;
+    color: #fff !important;
 }
