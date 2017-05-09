@@ -221,6 +221,7 @@ app.use('/yodlee', yodlee);
 app.use('/ebanks', ebanks);
 app.use('/admin', adminPanel);
 app.use('/state-details', stateDetails);
+app.use('/magic-link', magicLink);
 
 
 // delete user session on logout
@@ -252,6 +253,11 @@ app.use('/fetch-user', function(req, res){
   });
 })
 
+//serve magic-link page
+app.use('/magic', function(req, res){
+  res.sendFile(__dirname + '/public/website/views/magic.html')
+});
+
 // get session id and match with existing session
 var getSession = function(req, res, next){
   var sessionId = req.query.sId;
@@ -275,7 +281,7 @@ app.use('/', getSession, function(req, res){
   }
 });
 
-//app.use('/magic', magicLink);
+
 /*
  # set all route above this snippet
  # redirecting to 404 if page/route not found
