@@ -1186,20 +1186,20 @@ a.btn.btn-xs.btn-link.pull-right {
 .form-theme .input[type=checkbox]:after {
     top: -4px;
 }
+.mutliple_unit{
+    position: relative;
+}
 .mutliple_unit button {
     padding: 0;
     border: 0;
     background: 0 0;
     position: absolute;
-    top: 50%;
-    right: -14px;
-    transform: translateY(-50%);
+    top: 6px;
+    left: 6px
     cursor: pointer;
 }
-.mutliple_unit {
-    position: relative;
-    float: left;
-    width: 100%;
+.mutliple_unit button+button{
+    margin-left: 22px;
 }
 .add_row {
     color: #36af47;

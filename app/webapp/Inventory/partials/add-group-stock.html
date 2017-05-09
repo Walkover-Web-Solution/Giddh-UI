@@ -37,7 +37,7 @@
 					</div>
 
 					<div class="checkbox">
-						<label for="isSelfParent" ng-click="$event.stopPropagation()">
+						<label for="isSelfParent" ng-click="$event.stopPropagation(); stock.resetParentSelectBox()">
 							<input type="checkbox" ng-model="stock.groupStockObj.isSelfParent" id="isSelfParent" name="parentStockGroup" />Assign as a Parent Group</label>
 					</div>
 
@@ -76,7 +76,7 @@
 				      class="form-control"
 				      name="parentStockGroupUniqueName"
 				      ng-model="stock.updateStockGroup.parentStockGroupUniqueName" 
-				      ng-options="item.uniqueName as item.name for item in stock.stockGroup.list">
+				      ng-options="item.uniqueName as item.name disable when item.uniqueName === 'sms' for item in stock.stockGroup.list">
 				    	<option value="">Select</option>
 				    </select>
 					</div>

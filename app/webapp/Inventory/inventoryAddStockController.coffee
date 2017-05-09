@@ -102,6 +102,9 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
 
 
   vm.removeUnitItem=(item, arrayType)->
+    if !(item.rate || item.stockUnitCode)
+      return false
+
     if arrayType is 'pArr'
       vm.addStockObj.purchaseAccountDetails.unitRates = _.reject(vm.addStockObj.purchaseAccountDetails.unitRates, (o)-> 
         return o is item
@@ -111,15 +114,13 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
         return o is item
       )
 
-  vm.addStock = () ->
-    
+  vm.addStock=()->
     @success = (res) ->
       toastr.success 'Stock Item added successfully'
       _.extend(vm.addStockObj, res.body)
       # getting list from parent controller
       $scope.$parent.stock.getHeirarchicalStockGroups()
       $scope.$parent.stock.getStockGroupDetail($state.params.grpId)
-      
 
     @failure = (res) ->
       toastr.error res.data.message or 'Something went Wrong, please check all input values'
@@ -148,25 +149,35 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
   vm.updateStock = () ->
     @success = (res) ->
       toastr.success 'Stock updated successfully'
-      vm.getStockItemDetailsSuccess(res)
+      $state.go('inventory.add-group.add-stock', { stockId: res.body.uniqueName }, {notify: true, reload:true})
 
     reqParam = 
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       stockGroupUniqueName: $state.params.grpId
-      stockUniqueName: vm.addStockObj.uniqueName
+      stockUniqueName: $state.params.stockId
 
     vm.addStockObj = _.omit(vm.addStockObj, 'stockUnit')
     vm.removeEmptyParamsFrom()
+
+    if vm.addStockObj.isFsStock && _.isEmpty(vm.addStockObj.manufacturingDetails)
+      vm.addStockObj.manufacturingDetails = null
+
     stockService.updateStockItem(reqParam, vm.addStockObj).then(@success, vm.onFailure)
 
   vm.removeEmptyParamsFrom=()->
     if vm.addStockObj.salesAccountDetails && vm.addStockObj.salesAccountDetails.unitRates.length
-      vm.addStockObj.salesAccountDetails.unitRates = _.reject(vm.addStockObj.salesAccountDetails.unitRates, (item)-> 
-        return (!item.rate || !item.stockUnitCode)
+      vm.addStockObj.salesAccountDetails.unitRates = _.reject(vm.addStockObj.salesAccountDetails.unitRates, (item)->
+        if _.isEmpty(item)
+          return !item
+        else
+          return !(item.rate || item.stockUnitCode)
       )
     if vm.addStockObj.purchaseAccountDetails && vm.addStockObj.purchaseAccountDetails.unitRates.length
       vm.addStockObj.purchaseAccountDetails.unitRates = _.reject(vm.addStockObj.purchaseAccountDetails.unitRates, (item)-> 
-        return (!item.rate || !item.stockUnitCode)
+        if _.isEmpty(item)
+          return !item
+        else
+          return !(item.rate || item.stockUnitCode)
       )
 
   # get stock Item details
