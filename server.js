@@ -258,6 +258,16 @@ app.use('/magic', function(req, res){
   res.sendFile(__dirname + '/public/website/views/magic.html')
 });
 
+//get user auth key
+app.get('/userak', function(req, res){
+  if(req.session.name){
+    res.send(req.session.authKey)
+  }else{
+    res.status(403)
+    res.send('Invalid User')
+  }
+})
+
 // get session id and match with existing session
 var getSession = function(req, res, next){
   var sessionId = req.query.sId;
