@@ -59,7 +59,8 @@ app.use(function onError(err, req, res, next) {
 });
 //SENTRY.IO END
 
-var port = process.env.PORT || 8000;
+var port = process.env.PORT || 3000;
+// old port 8000
 //enabling cors
 app.use(cors())
 
