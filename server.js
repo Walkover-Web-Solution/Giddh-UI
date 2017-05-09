@@ -29,7 +29,7 @@ var app = settings.express();
 
 app.disable('x-powered-by');
 
-var port = process.env.PORT || 8000;
+var port = process.env.PORT || 3000;
 //enabling cors
 //app.use(cors())
 
