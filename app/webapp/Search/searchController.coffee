@@ -264,7 +264,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     $scope.msgBody.btn.set = $scope.msgBody.btn.email
     $scope.msgBody.header.set = $scope.msgBody.header.email
     modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/views/bulkMail.html'
+        templateUrl: '/public/webapp/views/bulkMail.html'
         size: "md"
         backdrop: 'static'
         scope: $scope
@@ -276,7 +276,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     $scope.msgBody.btn.set = $scope.msgBody.btn.sms
     $scope.msgBody.header.set = $scope.msgBody.header.sms
     modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/views/bulkMail.html'
+        templateUrl: '/public/webapp/views/bulkMail.html'
         size: "md"
         backdrop: 'static'
         scope: $scope

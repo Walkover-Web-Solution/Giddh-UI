@@ -1232,6 +1232,15 @@ position: absolute;
     position: absolute;
     right: 10px;
 }
+.multi-select.adjust .caret{
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    right: 0;
+    top: 10px;
+    left:initial;
+}
+
 .no-btn {
     box-shadow: none;
     border: 0;

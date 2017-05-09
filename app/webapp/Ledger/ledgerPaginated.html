@@ -225,6 +225,15 @@ th {
 												is-open="txn.isOpen"
 												ng-change="ledgerCtrl.onTxnAmountChange(txn)"
 												>
+												<span 
+			                                        class="download-invoice-ledger" 
+			                                        ng-if="ledger.attachedFile.length > 0" 
+			                                        ng-click="ledgerCtrl.downloadAttachedFile(ledger.attachedFile, $event)" 
+			                                        tooltip-append-to-body="true" 
+			                                        uib-tooltip="Download file : {{ledger.attachedFileName}}" 
+			                                        tooltip-placement="top"> 
+			                                    	<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
+			                                    </span> 
 											</td>
 										</tr>
 									</tbody>
@@ -355,6 +364,15 @@ th {
 												is-open="txn.isOpen"
 												ng-change="ledgerCtrl.onTxnAmountChange(txn)"
 												>
+												<span 
+			                                        class="download-invoice-ledger" 
+			                                        ng-if="ledger.attachedFile.length > 0" 
+			                                        ng-click="ledgerCtrl.downloadAttachedFile(ledger.attachedFile, $event)" 
+			                                        tooltip-append-to-body="true" 
+			                                        uib-tooltip="Download file : {{ledger.attachedFileName}}" 
+			                                        tooltip-placement="top"> 
+			                                    	<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
+			                                    </span> 
 											</td>
 										</tr>
 									</tbody>
@@ -575,7 +593,7 @@ th {
 	        		<span uib-dropdown auto-close="outsideClick">
 					      <a href id="tax" uib-dropdown-toggle>
 			        	<label>Tax %</label>
-			        	<div class="multi-select">
+			        	<div class="multi-select adjust">
 			        		<input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.tax"/>
 			        		<span class="caret"></span>
 			        	</div>

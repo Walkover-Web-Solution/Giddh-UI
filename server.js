@@ -29,7 +29,7 @@ var app = settings.express();
 
 app.disable('x-powered-by');
 
-var port = process.env.PORT || 3000;
+var port = process.env.PORT || 8000;
 //enabling cors
 //app.use(cors())
 
@@ -208,7 +208,7 @@ app.use('/company/:companyUniqueName/accounts', accounts);
 app.use('/company/:companyUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
 app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/company/:companyUniqueName/balance-sheet', balanceSheet);
-app.use('/app/upload-invoice',parseUploads, invoiceUpload);
+app.use('/upload-invoice',parseUploads, invoiceUpload);
 app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/stock-group', inventory)

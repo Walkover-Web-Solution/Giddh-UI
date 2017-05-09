@@ -817,9 +817,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.selectedLedger = ledger
     ledgerCtrl.selectedLedger.index = index
     ledgerCtrl.selectedLedger.panel = ledgerCtrl.selectedLedger.panel || {}
-    if ledgerCtrl.accountToShow.stock != null
+    if ledgerCtrl.accountToShow.stocks != null
       #ledgerCtrl.selectedLedger.panel.quantity = ledgerCtrl.accountToShow.stock.stockUnit.quantityPerUnit
-      ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.accountToShow.stock.rate
+      ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.accountToShow.stocks[0].rate
     ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.getPanelAmount(ledgerCtrl.selectedLedger)
     ledgerCtrl.selectedLedger.panel.total = ledgerCtrl.selectedLedger.panel.amount
     ledgerCtrl.selectedLedger.panel.discount = ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
@@ -1032,7 +1032,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     toastr.error(res.data.message, res.data.status)
 
   ledgerCtrl.onValueChange = (value, txn) ->
-    if txn.particular.stock != null &&  txn.particular.stock != undefined || ledgerCtrl.accountToShow.stock != null || (txn.inventory && txn.inventory.stock)
+    if txn.particular.stock != null &&  txn.particular.stock != undefined || ledgerCtrl.accountToShow.stocks != null || (txn.inventory && txn.inventory.stock)
       switch value
         when 'qty'
           if ledgerCtrl.selectedTxn.rate > 0 && ledgerCtrl.selectedTxn.inventory && ledgerCtrl.selectedTxn.inventory.quantity
@@ -1549,6 +1549,25 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       _.each ledgerCtrl.taxList, (tax) ->
         tax.isChecked = false
 
+  ledgerCtrl.b64toBlob = (b64Data, contentType, sliceSize) ->
+    contentType = contentType or ''
+    sliceSize = sliceSize or 512
+    byteCharacters = atob(b64Data)
+    byteArrays = []
+    offset = 0
+    while offset < byteCharacters.length
+      slice = byteCharacters.slice(offset, offset + sliceSize)
+      byteNumbers = new Array(slice.length)
+      i = 0
+      while i < slice.length
+        byteNumbers[i] = slice.charCodeAt(i)
+        i++
+      byteArray = new Uint8Array(byteNumbers)
+      byteArrays.push byteArray
+      offset += sliceSize
+    blob = new Blob(byteArrays, type: contentType)
+    blob
+
 
   $scope.invoiceFile = {}
   $scope.getInvoiceFile = (files) ->
@@ -1568,7 +1587,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       else
         toastr.error('Upload failed, please check that file size is less than 1 mb')
 
-    url = 'upload-invoice'
+    url = '/upload-invoice'
     $http.post(url, formData, {
       transformRequest: angular.identity,
       headers: {'Content-Type': undefined}

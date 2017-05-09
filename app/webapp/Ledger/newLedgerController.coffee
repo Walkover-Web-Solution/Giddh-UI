@@ -2644,7 +2644,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.selectedTxn.isOpen = false
     lc.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName, true)
     lc.AccmodalInstance = $uibModal.open(
-      templateUrl: $rootScope.prefixThis+'/public/webapp/Ledger/createAccountQuick.html'
+      templateUrl:'/public/webapp/Ledger/createAccountQuick.html'
       size: "sm"
       backdrop: 'static'
       scope: $scope

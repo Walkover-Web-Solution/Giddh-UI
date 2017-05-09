@@ -428,6 +428,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $scope.checkUserCompanyStatus(res.body)
       $rootScope.mngCompDataFound = true
       $scope.findCompanyInList()
+      $rootScope.checkWalkoverCompanies()
 
   $scope.checkUserCompanyStatus = (compList) ->
     _.each compList, (cmp) ->
@@ -796,6 +797,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.runTour = () ->
     $rootScope.$emit('run-tour')
 
+  $scope.showSwitchUserOption = false
   $rootScope.checkUserCompany = () ->
     user = localStorageService.get('_userDetails')
     company = user.uniqueName.split('@')
@@ -804,11 +806,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.checkWalkoverCompanies = () ->
     if $rootScope.checkUserCompany().toLowerCase() == 'giddh.com' || $rootScope.checkUserCompany().toLowerCase() == 'walkover.in' || $rootScope.checkUserCompany().toLowerCase() == 'msg91.com'
-      return true
+      $scope.showSwitchUserOption = true
     else
-      return false
-
-
+      $scope.showSwitchUserOption = false
 
   $rootScope.ledgerMode = 'new'
   $rootScope.switchLedgerMode = () ->
@@ -833,7 +833,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     )
 
   $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
-    #$rootScope.setState(toState.name, toState.url, toParams.unqName)
+    $rootScope.setState(toState.name, toState.url, toParams.unqName)
   )
 
   $(document).on('click', (e)->
@@ -849,9 +849,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $rootScope.ledgerState = false
   )
 
-  $rootScope.$on('different-company', (event, lastState)->
-    company = _.findWhere($scope.companyList, {uniqueName:lastState.companyUniqueName})
+  $rootScope.$on('different-company', (event, lastStateData)->
+    company = _.findWhere($scope.companyList, {uniqueName:lastStateData.companyUniqueName})
     $scope.changeCompany(company, 0, 'CHANGE')
+    $state.go(lastStateData.lastState)
   )
 
 giddh.webApp.controller 'mainController', mainController
