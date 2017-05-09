@@ -819,6 +819,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
         $rootScope.ledgerMode = 'new'
 
   $rootScope.setState = (lastState, url, param) ->
+    $rootScope.selectedCompany = $rootScope.selectedCompany || localStorageService.get('_selectedCompany')
     data = {
         "lastState": lastState,
         "companyUniqueName": $rootScope.selectedCompany.uniqueName
