@@ -18,6 +18,10 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
       stockUnitCode: undefined
     }
 
+  vm.appendEmptyRow=()->
+    vm.addStockObj.purchaseAccountDetails.unitRates.push(vm.initAcDetailsObj())
+    vm.addStockObj.salesAccountDetails.unitRates.push(vm.initAcDetailsObj())
+
   # init stock obj
   vm.initStockObj =()->
     vm.addStockObj = {
@@ -31,8 +35,7 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
         linkedStocks: []
       }
     }
-    vm.addStockObj.purchaseAccountDetails.unitRates.push(vm.initAcDetailsObj())
-    vm.addStockObj.salesAccountDetails.unitRates.push(vm.initAcDetailsObj())
+    vm.appendEmptyRow()
 
   # clear stock form
   vm.clearAddEditStockForm =()->
@@ -124,12 +127,47 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
     reqParam = 
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       stockGroupUniqueName: $state.params.grpId
+
+    if !vm.addStockObj.isFsStock
+      vm.addStockObj.manufacturingDetails = null
     
     stockService.createStock(reqParam, vm.addStockObj).then @success, @failure
 
-  vm.updateStock = () ->
-    console.log vm.addStockObj
+  vm.deleteStockItem=()->
+    @success = (res) ->
+      toastr.success res.body
+      item = $state.params.grpId
+      $state.go('inventory.add-group', { grpId: item }, {reload: true, notify: true});
 
+    reqParam = 
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      stockGroupUniqueName: $state.params.grpId
+      stockUniqueName: vm.addStockObj.uniqueName
+    stockService.deleteStock(reqParam).then(@success, vm.onFailure)
+
+  vm.updateStock = () ->
+    @success = (res) ->
+      toastr.success 'Stock updated successfully'
+      vm.getStockItemDetailsSuccess(res)
+
+    reqParam = 
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      stockGroupUniqueName: $state.params.grpId
+      stockUniqueName: vm.addStockObj.uniqueName
+
+    vm.addStockObj = _.omit(vm.addStockObj, 'stockUnit')
+    vm.removeEmptyParamsFrom()
+    stockService.updateStockItem(reqParam, vm.addStockObj).then(@success, vm.onFailure)
+
+  vm.removeEmptyParamsFrom=()->
+    if vm.addStockObj.salesAccountDetails && vm.addStockObj.salesAccountDetails.unitRates.length
+      vm.addStockObj.salesAccountDetails.unitRates = _.reject(vm.addStockObj.salesAccountDetails.unitRates, (item)-> 
+        return (!item.rate || !item.stockUnitCode)
+      )
+    if vm.addStockObj.purchaseAccountDetails && vm.addStockObj.purchaseAccountDetails.unitRates.length
+      vm.addStockObj.purchaseAccountDetails.unitRates = _.reject(vm.addStockObj.purchaseAccountDetails.unitRates, (item)-> 
+        return (!item.rate || !item.stockUnitCode)
+      )
 
   # get stock Item details
   vm.getStockItemDetails=(uName)->
@@ -141,8 +179,19 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
 
 
   vm.getStockItemDetailsSuccess=(res)->
-    console.log(res.body, "getStockItemDetailsSuccess")
-    vm.addStockObj = res.body
+    vm.addStockObj = angular.copy(res.body)
+    vm.addStockObj.stockUnitCode = angular.copy(res.body.stockUnit.code)
+    if (vm.addStockObj.purchaseAccountDetails)
+      vm.appendEmptyRow()
+    else
+      vm.addStockObj.purchaseAccountDetails={unitRates:[]}
+      vm.addStockObj.salesAccountDetails={unitRates:[]}
+      vm.appendEmptyRow()
+    if vm.addStockObj.manufacturingDetails
+      vm.addStockObj.isFsStock = true
+    else
+      vm.addStockObj.isFsStock = false
+    
 
   # addMfsCmbItem itesm
   vm.addMfsCmbItem=()->

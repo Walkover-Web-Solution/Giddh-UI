@@ -166,7 +166,7 @@
 					<div class="col-xs-7">
 						<div class="clearfix">
 							<div class="form-group col-xs-3 pdL0 pdR mrB">
-								<label>Select Stock<span class="required">*</span></label>
+								<label>Select Stock</label>
 								<ui-select ng-model="vm.mfsCmbItem.stockUniqueName" theme="bootstrap">
 			            <ui-select-match>
 		                <span>{{$select.selected.uniqueName}}</span>
@@ -179,7 +179,7 @@
 							</div>
 
 							<div class="form-group col-xs-3 pdR0 pdL mrB">
-								<label>Stock Unit<span class="required">*</span></label>
+								<label>Stock Unit</label>
 								<ui-select ng-model="vm.mfsCmbItem.stockUnitCode" theme="bootstrap">
 			            <ui-select-match>
 		                <span>{{$select.selected.code}}</span>
@@ -192,8 +192,8 @@
 							</div>
 
 							<div class="form-group col-xs-3 pdR0 pdL mrB">
-								<label>Quantity per Unit<span class="required">*</span></label>
-								<input type="text" name="quantity" class="form-control" ng-model="vm.mfsCmbItem.quantity" required>
+								<label>Quantity per Unit</label>
+								<input type="text" name="quantity" class="form-control" ng-model="vm.mfsCmbItem.quantity">
 							</div>
 							<div class="form-group col-xs-3 pdR0 pdL mrB">
 								<label class="col-xs-12">&nbsp;</label>
@@ -240,7 +240,7 @@
 							</div>
 							<div class="form-group col-md-6 col-lg-6 col-xs-12">
 								<label>Select Unit</label>
-								<ui-select ng-model="vm.addStockObj.manufacturingDetails.maufacturingUnitCode" theme="bootstrap">
+								<ui-select ng-model="vm.addStockObj.manufacturingDetails.manufacturingUnitCode" theme="bootstrap">
 			            <ui-select-match>
 		                <span>{{$select.selected.code}}</span>
 		              </ui-select-match>
@@ -266,6 +266,8 @@
 					<button ng-click="vm.clearAddEditStockForm()" type="reset" class="btn btn-sm btn-primary">
 						Cancel
 					</button>
+
+					<a  ng-if="vm.addStockObj.uniqueName" class="text-danger mrL1" href ng-click="vm.deleteStockItem()">Delete</a>
 					
 				</div>
 

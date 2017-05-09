@@ -59,6 +59,8 @@ angular.module('inventoryController', [])
 
 	vm.getStockGroupsFlatten = function(query,page, call){
 		this.success = function(res){
+			/*
+			@dude: don't know why this condition that's why commented
 			if(vm.stockGroup.list.length < 1){
 				vm.stockGroup.list = res.body.results;
 			}
@@ -67,9 +69,12 @@ angular.module('inventoryController', [])
 					vm.stockGroup.list.push(result)
 				})
 			}
-			else if(call == 'search'){
+			if(call == 'search'){
 				vm.stockGroup.list = res.body.results;
 			}
+			*/
+			
+			vm.stockGroup.list = res.body.results;
 			vm.stockGroup.page = res.body.page
 			vm.stockGroup.totalPages = res.body.totalPages
 		},
@@ -88,7 +93,7 @@ angular.module('inventoryController', [])
 	
 	// get heirarchical stock groups
 	vm.getHeirarchicalStockGroups = function(){
-		
+
 		function onSuccess(res){
 			vm.groupListHr = res.body.results
 		}
@@ -172,8 +177,9 @@ angular.module('inventoryController', [])
 	vm.addGroup = function(){
 		
 		this.success = function(res){
-			toastr.success('Group addedd successfully')
-			vm.getHeirarchicalStockGroups()
+			toastr.success('Group addedd successfully');
+			vm.getHeirarchicalStockGroups();
+			vm.getStockGroupsFlatten('', 1,'get');
 			vm.resetGroupStockForm();
 		}
 		this.failure = function(res){
@@ -197,6 +203,7 @@ angular.module('inventoryController', [])
 		this.success = function(res){
 			toastr.success('Updated successfully')
 			vm.getHeirarchicalStockGroups()
+			vm.getStockGroupsFlatten('', 1,'get')
 			vm.loadStockGroup(res.body)
 		}
 
@@ -327,33 +334,12 @@ angular.module('inventoryController', [])
 		stockService.getStockDetail(reqParam).then(this.success, this.failure)
 	}
 
-
-	//delete stock
-	vm.deleteStock = function(stk){
-		this.success= function(res){
-			toastr.success(res.body)
-			vm.getStockGroupDetail(vm.selectedStockGrp.uniqueName)
-			vm.getAllStocks()
-		}
-		this.failure = function(res){
-			toastr.error(res.data.message)
-		}
-		var stockGroupUniqueName;
-		stk.stockGroup != undefined ? stockGroupUniqueName = stk.stockGroup.uniqueName : stockGroupUniqueName = vm.selectedStockGrp.uniqueName
-		reqParam = {
-			companyUniqueName : $rootScope.selectedCompany.uniqueName,
-			stockGroupUniqueName: stockGroupUniqueName,
-			stockUniqueName: stk.uniqueName
-		}
-		stockService.deleteStock(reqParam).then(this.success, this.failure)
-
-	}
-
 	// delete stock group
 	vm.deleteStockGrp = function(){
 		this.success = function(res){
 			toastr.success(res.body)
 			vm.getHeirarchicalStockGroups()
+			vm.getStockGroupsFlatten('', 1,'get')
 			$state.go('inventory', {});
 		}
 		this.failure = function(res){
