@@ -76,7 +76,7 @@ angular.module('inventoryServices', [])
 			},
 			deleteStockUnit: {
 				method: 'DELETE',
-				url: '/company/:companyUniqueName/stock-group/unit-types'
+				url: '/company/:companyUniqueName/stock-group/delete-stock'
 			},
 			getFilteredStockGroups: {
 				method: 'GET',
@@ -89,10 +89,6 @@ angular.module('inventoryServices', [])
 			getStockReport: {
 				method: 'GET',
 				url: '/company/:companyUniqueName/stock-group/get-stock-report'
-			},
-			deleteStock: {
-				method: 'DELETE',
-				url: '/company/:companyUniqueName/stock-group/delete-stock'
 			},
 			deleteStockGrp: {
 				method: 'DELETE',
@@ -276,12 +272,9 @@ angular.module('inventoryServices', [])
 	    	})
 	    },
 
-	    deleteStockUnit: function(reqParam, data){
+	    deleteStockUnit: function(reqParam){
 	    	return this.handlePromise(function(onSuccess, onFailure){
-	    		return stock.deleteStockUnit({
-	    			companyUniqueName: reqParam.companyUniqueName,
-	    			uName: reqParam.uName
-	    		}, onSuccess, onFailure)
+	    		return stock.deleteStockUnit(reqParam, onSuccess, onFailure)
 	    	})
 	    }
 

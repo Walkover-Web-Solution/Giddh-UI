@@ -143,7 +143,7 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       stockGroupUniqueName: $state.params.grpId
       stockUniqueName: vm.addStockObj.uniqueName
-    stockService.deleteStock(reqParam).then(@success, vm.onFailure)
+    stockService.deleteStockUnit(reqParam).then(@success, vm.onFailure)
 
   vm.updateStock = () ->
     @success = (res) ->
