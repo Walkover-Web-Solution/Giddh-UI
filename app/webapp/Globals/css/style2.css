@@ -226,15 +226,17 @@ min-width: 220px;
 }
 .ledger-panel {
     box-shadow: 0px 3px 28px 0 rgba(0, 0, 0, 0.14);
-    border: 1px solid #ccc;
     color: #616161;
+    padding: 30px 16px;
+    border-radius: 6px;
 }
 .ledger-panel .form-control {
-    border: 1px solid #ccc;
+    border: 1px solid #949494;
+    cursor: text;
 }
 .ledger-panel .btn {
     background: #eee;
-    border: 1px solid #ccc;
+    border: 1px solid #949494;
 }
 .ledger-panel .btn:hover, .ledger-panel .btn-primary {
     background: #f3f0e6;
@@ -1163,6 +1165,12 @@ footer small a{
 .blue {
     color: #337ab7;
 }
+.flowY_scroll {
+    overflow-y: scroll;
+}
+.map-txn-container table tr td {
+    width: 25%;
+}
 .pop-panel {
     max-width: 700px;
 }
@@ -1184,6 +1192,7 @@ footer small a{
 .popover.bottom>.arrow {
     right: 13%;
     left: auto;
+    border-bottom-color: #fff;
 }
 .default_clr {
     color: #4d4d4d !important;
@@ -1194,19 +1203,20 @@ footer small a{
 .w100 {
     width: 100px;
 }
-.multi-select .form-control {
-    border: 0;
+
+.multi-select {
+    position: relative;
 }
 .multi-select .caret {
-    position: absolute;
-    top: 25px;
+position: absolute;
+    top: 50%;
     right: 0;
-    width: 80px;
+    width: 100%;
     height: 100%;
     left: 0;
     text-align: right;
-    transform: translateY(-50%);
     border: 0;
+    transform: translateY(-50%);
 }
 .multi-select .caret:before {
     display: inline-block;
@@ -1215,14 +1225,19 @@ footer small a{
     content: ' ';
     margin-left: 2px;
     vertical-align: middle;
-    border-top: 5px dashed #949494;
+    border-top: 5px dashed #4d4d4d;
     border-right: 5px solid transparent;
     border-left: 5px solid transparent;
+    top: 50%;
+    bottom: 0;
+    position: absolute;
+    right: 10px;
 }
 .no-btn {
     box-shadow: none;
     border: 0;
     background: none;
+    cursor: pointer;
 }
 .modal-backdrop {
     background-color: #808080;
@@ -1392,6 +1407,7 @@ input[type=radio]:checked:after {
     top: 50%;
     transform: translateY(-50%);
 }
+<<<<<<< HEAD
 .grp_list {
     padding: 10px 0px;
     min-height: 100%;
@@ -1524,4 +1540,31 @@ label {
 .btn-add:hover, .btn-add:focus {
     background: #d25f29;
     color: #fff !important;
+}
+.ledger-panel .bdrB {
+    border-bottom: 1px solid #bababa;   
+}
+.pop-panel .ui-select-toggle{
+    min-width: 100px !important;
+}
+.no-btn i {
+    top: 3px;
+}
+.no-btn .rotate180 {
+    top: 0;
+}
+.ledger-panel .upload_div {
+    padding: 6px 8px;
+    float: left;
+    margin-right: 10px;
+    color: #4d4d4d;
+    border: 1px solid #949494;
+    cursor: pointer;
+    background: #f9f7f2;
+}
+.ledger-panel .upload_div i {
+    cursor: pointer;
+}
+.ledger-panel .upload_div label {
+    color: #4d4d4d;
 }

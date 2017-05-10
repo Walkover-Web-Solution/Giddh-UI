@@ -354,7 +354,7 @@
                                     class="ledger-row"
                                     ng-repeat="txn in value.transactions"
                                     ng-if="txn.type == 'DEBIT'"
-                                    ng-show="lc.accountToShow.isTax || ((txn.hide || !txn.isTax) || lc.showAllTaxTransactions)"
+                                    ng-show="value.transactions.length == 1 || (lc.accountToShow.isTax || ((txn.hide || !txn.isTax) || lc.showAllTaxTransactions))"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
                                     popover-placement="{{lc.popover.position}}" 
@@ -588,7 +588,7 @@
                                     class="ledger-row"
                                     ng-repeat="txn in value.transactions"
                                     ng-if="txn.type == 'CREDIT'"
-                                    ng-show="!selectedAccount.isTax && (txn.hide || !txn.isTax) || lc.showAllTaxTransactions"
+                                    ng-show="value.transactions.length == 1 || (lc.accountToShow.isTax || (txn.hide || !txn.isTax) || lc.showAllTaxTransactions)"
                                     uib-popover-template="lc.popover.templateUrl" 
                                     popover-trigger="outsideClick" 
                                     popover-placement="{{lc.popover.position}}" 
@@ -785,10 +785,6 @@
           </div>
           <div class="row mrB1">
             <div class="col-xs-7 form-group pr" ng-if="lc.selectedLedger.isBankTransaction" >
-              <!-- <input class="form-control" placeholder="select entry" type="text"
-                ng-model="lc.selectedLedger.mappedEntry"
-                typeahead-append-to-body="true" 
-                uib-typeahead="entry as entry.uniqueName for entry in lc.reconciledEntries | filter:$viewValue | limitTo: 10"> -->
                 <a href="javascript:void(0)" ng-click="lc.matchBankTransaction()">Map Transaction <span ng-if="lc.showMatchingEntries">with</span></a>
                 <ul class="list-unstyled map-txn-container" ng-if="lc.showMatchingEntries">
                   <li class="cp" ng-repeat="entry in lc.matchingEntries">

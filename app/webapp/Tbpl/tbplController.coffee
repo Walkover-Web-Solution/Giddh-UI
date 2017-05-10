@@ -155,10 +155,10 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     $scope.filterBSData(data.groupDetails)
     $scope.balSheet.assetTotal = $scope.calCulateTotalAssets($scope.balSheet.assets)
     $scope.balSheet.liabTotal = $scope.calCulateTotalLiab($scope.balSheet.liabilities)
-    if $scope.inProfit == false
-      $scope.balSheet.assetTotal += $scope.plData.closingBalance
-    else if $scope.inProfit == true
-      $scope.balSheet.liabTotal += $scope.plData.closingBalance
+    # if $scope.inProfit == false
+    #   $scope.balSheet.assetTotal += $scope.plData.closingBalance
+    # else if $scope.inProfit == true
+    #   $scope.balSheet.liabTotal += $scope.plData.closingBalance
 
   $scope.filterPlData = (data) ->
     filterPlData = {}
