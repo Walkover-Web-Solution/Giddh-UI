@@ -6,7 +6,7 @@ router.get '/unit-types', (req, res) ->
   args =
     headers:
       'Auth-Key': req.session.authKey
-      'Content-Type': 'application/json'
+      # 'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined

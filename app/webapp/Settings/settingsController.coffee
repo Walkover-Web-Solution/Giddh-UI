@@ -12,7 +12,10 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     {title:'Email/SMS settings', active: false}
     {title: 'Linked Accounts', active:false}
     {title: 'Razorpay', active:false}
-    {title: 'Templates', active:false}
+    {title:'Basic information', active: true}
+    {title:'Permission', active: false}
+    {title:'Payment details', active: false}
+    {title:'Financial Year', active: false}
   ]
   $scope.addRazorAccount = false
   $scope.linkRazor = false
@@ -286,7 +289,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
         newTax : newTax
       }
       $scope.updateTax.modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/update-tax.html'
+        templateUrl:  '/public/webapp/Globals/modals/update-tax.html'
         size: "md"
         backdrop: 'static'
         scope: $scope
@@ -523,7 +526,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
           $scope.banks.mfaForm = res.body.yodleeMfaResponse.fieldInfo.questionAns
           $scope.banks.showToken = false
       $scope.banks.modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/yodleeMfaModal.html'
+        templateUrl:  '/public/webapp/Globals/modals/yodleeMfaModal.html'
         size: "sm"
         backdrop: 'static'
         scope: $scope
@@ -688,7 +691,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     userServices.getAccounts(companyUniqueName).then($scope.getAccountsSuccess, $scope.getAccountsFailure)
 
   $scope.deleteAddedBankAccountConfirmedFailure = (res) ->
-    toastr.error(res.body)
+    toastr.error(res.data.message)
 
   $scope.refreshAccounts = () ->
     companyUniqueName =  {
@@ -751,7 +754,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     $scope.connectUrl = encodeURI(url)
     console.log($scope.connectUrl)
     modalInstance = $uibModal.open(
-      templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/connectBankModal.html',
+      templateUrl:  '/public/webapp/Globals/modals/connectBankModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope,
@@ -772,7 +775,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     url = res.body.connectUrl
     $scope.connectUrl = url
     modalInstance = $uibModal.open(
-      templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/refreshBankAccountsModal.html',
+      templateUrl:  '/public/webapp/Globals/modals/refreshBankAccountsModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope
@@ -800,7 +803,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     url = res.body.connectUrl
     $scope.connectUrl = url
     $uibModal.open(
-      templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/refreshBankAccountsModal.html',
+      templateUrl:  '/public/webapp/Globals/modals/refreshBankAccountsModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope
@@ -907,5 +910,465 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
       )
 
   $scope.checkForCompany()
+  ##--payment details functions--###
+   # payment details related func
+  $scope.primPayeeChange = (a, b) ->
+    $scope.compSetBtn = false
+
+  $scope.$watch('selectedCompany.companySubscription.autoDeduct', (newVal,oldVal) ->
+    if !_.isUndefined(oldVal)
+      if newVal isnt oldVal
+        $scope.compSetBtn = false
+  )
+  $scope.pageChangedComp = (data) ->
+    if data.startPage > data.totalPages
+      $scope.nothingToLoadComp = true
+      toastr.info("Nothing to load, all transactions are loaded", "Info")
+      return
+    if data.startPage is 1
+      data.startPage = 2
+    obj = {
+      name: $rootScope.selectedCompany.uniqueName
+      num: data.startPage
+    }
+    companyServices.getCompTrans(obj).then($scope.pageChangedCompSuccess, $scope.pageChangedCompFailure)
+
+  $scope.pageChangedCompSuccess =(res)->
+    $scope.compTransData.paymentDetail = $scope.compTransData.paymentDetail.concat(res.body.paymentDetail)
+    $scope.compTransData.startPage += 1 
+
+  $scope.pageChangedCompFailure =(res)->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.getCompanyTransactions = ()->
+    obj = {
+      name: $rootScope.selectedCompany.uniqueName
+      num: 1
+    }
+    companyServices.getCompTrans(obj).then($scope.getCompanyTransactionsSuccess, $scope.getCompanyTransactionsFailure)
+
+  $scope.getCompanyTransactionsSuccess = (res) ->
+    angular.copy(res.body, $scope.compTransData)
+    $scope.compTransData.startPage = 1
+    $scope.nothingToLoadComp = false
+    if res.body.paymentDetail.length > 0
+      $scope.compDataFound = true
+    else
+      $scope.compDataFound = false
+      toastr.info("Don\'t have any transactions yet.", "Info")
+
+  $scope.getCompanyTransactionsFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.updateCompSubs = (resObj) ->
+    data = {
+      uniqueName: $rootScope.selectedCompany.uniqueName
+      autoDeduct: resObj.autoDeduct
+      primaryBiller: resObj.primaryBiller
+    }
+    companyServices.updtCompSubs(data).then($scope.updateCompSubsSuccess, $scope.updateCompSubsFailure)
+
+  $scope.updateCompSubsSuccess = (res) ->
+    $scope.selectedCompany.companySubscription = res.body
+    toastr.success("Updates successfully", res.status)
+
+  $scope.updateCompSubsFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.getWltBal=()->
+    userServices.getWltBal($rootScope.basicInfo.uniqueName).then($scope.getWltBalSuccess, $scope.getWltBalFailure)
+
+  $scope.getWltBalSuccess = (res) ->
+    $scope.disableRazorPay = false
+    avlB = Number(res.body.availableCredit)
+    invB = Number($rootScope.selectedCompany.companySubscription.billAmount)
+    if avlB >= invB
+      $scope.showPayOptns = false
+      $scope.deductSubsViaWallet(invB)
+    else if avlB > 0 and avlB < invB
+      $scope.wlt.Amnt = Math.abs(invB - avlB)
+      $scope.showPayOptns = true
+    else
+      $scope.showPayOptns = true
+      $scope.wlt.Amnt = invB
+
+  $scope.getWltBalFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.deductSubsViaWallet = (num) ->
+    obj = {
+      uniqueName: $rootScope.selectedCompany.uniqueName
+      billAmount: num
+    }
+    companyServices.payBillViaWallet(obj).then($scope.subsViaWltSuccess, $scope.subsWltFailure)
+
+  $scope.subsViaWltSuccess = (res) ->
+    $rootScope.basicInfo.availableCredit -= res.body.amountPayed
+    $rootScope.selectedCompany.companySubscription.paymentDue = false
+    $rootScope.selectedCompany.companySubscription.billAmount = 0
+    $scope.showPayOptns = false
+    toastr.success("Payment completed", "Success")
+    $scope.resetSteps()
+
+  $scope.subsWltFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.addBalViaDirectCoupon = () ->
+    obj = {
+      uUname: $rootScope.basicInfo.uniqueName
+      paymentId: null
+      amount: Number($scope.wlt.Amnt)
+      discount: Number($scope.discount)
+      couponCode: $scope.coupRes.couponCode
+    }
+    userServices.addBalInWallet(obj).then($scope.addBalRzrSuccess, $scope.addBalRzrFailure)
+
+  $scope.addBalViaRazor = (razorObj) ->
+    obj = {
+      uUname: $rootScope.basicInfo.uniqueName
+      paymentId: razorObj.razorpay_payment_id
+      amount: Number($scope.wlt.Amnt)
+      discount: Number($scope.discount)
+    }
+    if _.isEmpty($scope.coupRes)
+      obj.couponCode = null
+    else
+      if $scope.coupRes.type is 'balance_add'
+        obj.couponCode = null
+        obj.amount= Number($scope.amount)
+        $scope.coupRes.extra = true
+      else  
+        obj.couponCode = $scope.coupRes.couponCode
+
+    userServices.addBalInWallet(obj).then($scope.addBalRzrSuccess, $scope.addBalRzrFailure)
+
+  $scope.addBalRzrSuccess = (res) ->
+    if $scope.isHaveCoupon and !_.isEmpty($scope.coupRes)
+      if $scope.coupRes.type is 'balance_add' and $scope.coupRes.extra
+        $rootScope.basicInfo.availableCredit += Number($scope.amount)
+      else if $scope.coupRes.type is 'balance_add'
+        $rootScope.basicInfo.availableCredit += Number($scope.coupRes.maxAmount)
+      else
+        $rootScope.basicInfo.availableCredit += Number($scope.amount)
+    else
+      $rootScope.basicInfo.availableCredit += Number($scope.wlt.Amnt)
+    # end
+    if $scope.wlt.status
+      $scope.directPay = false
+      $scope.disableRazorPay = false
+      $scope.showPayOptns = false
+      $scope.resetSteps()
+      toastr.success(res.body, res.status)
+    else
+      if $rootScope.basicInfo.availableCredit >= $rootScope.selectedCompany.companySubscription.billAmount
+        $scope.deductSubsViaWallet(Number($rootScope.selectedCompany.companySubscription.billAmount))
+      else
+        $scope.amount -= Number($scope.coupRes.maxAmount)
+        $scope.directPay = false
+        $scope.disableRazorPay = false
+        $scope.payAlert.push({msg: "Coupon is redeemed. But for complete subscription, you have to add Rs. "+$scope.amount+ " more in your wallet."})
+    
+  $scope.addBalRzrFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+    $scope.directPay = true
+    $scope.showPayOptns = false
+    $scope.resetSteps()
+
+  # child functions here for userController
+  # add money in wallet
+  $scope.addMoneyInWallet = () ->
+    if Number($scope.wlt.Amnt) < 100
+      $scope.wlt = angular.copy({})
+      toastr.warning("You cannot make payment", "Warning")
+    else
+      $scope.payStep2 = true
+      $scope.wlt.status = true
+
+  # redeem coupon
+  $scope.redeemCoupon = (code) ->
+    couponServices.couponDetail(code).then($scope.redeemCouponSuccess, $scope.redeemCouponFailure)
+
+  $scope.removeDotFromString = (str) ->
+    return Math.floor(Number(str))
+# test cases done insomuch
+  $scope.redeemCouponSuccess = (res) ->
+    $scope.payAlert = []
+    $scope.discount = 0
+    $scope.coupRes = res.body
+    toastr.success("Hurray your coupon code is redeemed", res.status)
+    $scope.payAlert.push({type: 'success', msg: "Coupon code is redeemed. You can get a max discount of Rs. "+$scope.coupRes.maxAmount})
+    $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
+    switch res.body.type
+      when 'balance_add'
+        $scope.directPay = true
+        $scope.disableRazorPay = true
+        $scope.addBalViaDirectCoupon()
+      when 'cashback'
+        $scope.checkDiffAndAlert('cashback')
+      when 'cashback_discount'
+        $scope.discount = 0
+        $scope.cbDiscount = $scope.calCulateDiscount()
+        $scope.checkDiffAndAlert('cashback_discount')
+      when 'discount'
+        $scope.discount = $scope.calCulateDiscount()
+        $scope.checkDiffAndAlert('discount')
+      when 'discount_amount'
+        $scope.discount =  $scope.coupRes.maxAmount
+        $scope.checkDiffAndAlert('discount_amount')
+      else
+        toastr.warning("Something went wrong", "Warning")
+    
+  
+  $scope.calCulateDiscount = () ->
+    val = Math.floor($scope.coupRes.value * $scope.amount/100)
+    if val > $scope.coupRes.maxAmount
+      return Number(Math.floor($scope.coupRes.maxAmount))
+    else
+      return Number(val)
+
+      
+  $scope.checkDiffAndAlert = (type)->
+    $scope.directPay = false
+    switch type
+      when 'cashback_discount'
+        $scope.disableRazorPay = false
+        $scope.payAlert.push({msg: "Your cashback amount will be credited in your account withing 48 hours after payment has been done. Your will get a refund of Rs. "+$scope.cbDiscount})
+      when 'cashback'
+        if $scope.amount < $scope.coupRes.value
+          $scope.disableRazorPay = true
+          $scope.payAlert.push({msg: "Your coupon is redeemed but to avail coupon, You need to make a payment of Rs. "+$scope.coupRes.value})
+        else
+          $scope.disableRazorPay = false
+          $scope.payAlert.push({type: 'success', msg: "Your cashback amount will be credited in your account withing 48 hours after payment has been done. Your will get a refund of Rs. "+$scope.coupRes.value})
+      
+      when 'discount'
+        diff = $scope.amount-$scope.discount
+        if diff < 100
+          $scope.disableRazorPay = true
+          $scope.payAlert.push({msg: "After discount amount cannot be less than 100 Rs. To avail coupon you have to add more money. Currently payable amount is Rs. "+diff})
+        else
+          $scope.disableRazorPay = false
+          $scope.payAlert.push({type: 'success', msg: "Hurray you have availed a discount of Rs. "+$scope.discount+ ". Now payable amount is Rs. "+diff})
+      when 'discount_amount'
+        diff = $scope.amount-$scope.discount
+        if diff < 100
+          $scope.disableRazorPay = true
+          $scope.payAlert.push({msg: "After discount amount cannot be less than 100 Rs. To avail coupon you have to add more money. Currently payable amount is Rs. "+diff})
+        else if $scope.amount < $scope.coupRes.value
+          $scope.disableRazorPay = true
+          $scope.payAlert.push({msg: "Your coupon is redeemed but to avail coupon, You need to make a payment of Rs. "+$scope.coupRes.value})
+        else
+          $scope.disableRazorPay = false
+          $scope.payAlert.push({type: 'success', msg: "Hurray you have availed a discount of Rs. "+$scope.discount+ ". Now payable amount is Rs. "+diff})
+      
+      
+
+  $scope.redeemCouponFailure = (res) ->
+    $scope.disableRazorPay = false
+    $scope.payAlert = []
+    $scope.discount = 0
+    $scope.amount = $scope.removeDotFromString($scope.wlt.Amnt)
+    $scope.coupRes = {}
+    toastr.error(res.data.message, res.data.status)
+    $scope.payAlert.push({msg: res.data.message})
+
+  # remove alert
+  $scope.closeAlert = (index) ->
+    $scope.payAlert.splice(index, 1)
+
+  # reset steps
+  $scope.resetSteps = () ->
+    $scope.showPayOptns = false
+    $scope.isHaveCoupon = false
+    $scope.payAlert = []
+    $scope.wlt = angular.copy({})
+    $scope.coupon = angular.copy({})
+    $scope.wlt.status = false
+    $scope.coupRes = {}
+    $scope.payStep2 = false
+    $scope.payStep3 = false
+    $scope.disableRazorPay = false
+
+  $scope.resetDiscount = (status) ->
+    $scope.isHaveCoupon = status
+    if !$scope.isHaveCoupon
+      $scope.payAlert = []
+      $scope.coupon = angular.copy({})
+      $scope.disableRazorPay = false
+  ##--shared list--##
+  $scope.getSharedUserList = (uniqueName) ->
+    companyServices.shredList(uniqueName).then($scope.getSharedUserListSuccess, $scope.getSharedUserListFailure)
+
+  $scope.getSharedUserListSuccess = (res) ->
+    $scope.sharedUsersList = res.body
+
+  $scope.getSharedUserListFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.getSharedList = () ->
+    $scope.setShareableRoles($rootScope.selectedCompany)
+    $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
+
+  #Mayank
+  $scope.setShareableRoles = (selectedCompany) ->
+    $scope.shareableRoles = permissionService.shareableRoles(selectedCompany)
+
+  # # ---------------- Financial Year----------------#
+  $scope.fy = {
+    company: ''
+    companyUniqueName: ''
+    years: []
+    selectedYear: ''
+    periods: ['Jan-Dec', 'Apr-Mar']
+    selectedPeriod: ''
+    newFY: ''
+    addedFYears: []
+    currentFY: {}
+  }
+  $scope.months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
+  $scope.fyYears = []
+  $scope.sFY = {}
+
+  $scope.addfyYears = () ->
+    $scope.fyYears = []
+    startYear = moment().get('year') - 1
+    endYear = moment().get('year') - 8
+    while startYear > endYear
+      $scope.fyYears.push(startYear)
+      startYear -= 1
+    $scope.fyYears = _.difference($scope.fyYears, $scope.fy.addedFYears)
+
+  $scope.setFYname = (years) ->
+    _.each years, (yr) ->
+      name = yr.uniqueName.split("-")
+      yr.name = name[1] + '-' + name[2]
+
+  $scope.getFY = () ->
+    companyServices.getFY($rootScope.selectedCompany.uniqueName).then($scope.getFYSuccess, $scope.getFYFailure)
+
+  $scope.getFYSuccess = (res) ->
+    $scope.fy.company = res.body.companyName
+    $scope.fy.companyUniqueName = res.body.companyUniqueName
+    $scope.fy.years = res.body.financialYears
+    _.each $scope.fy.years, (yr) ->
+      addedYear = yr.financialYearStarts
+      addedYearSplit = addedYear.split('-')
+      cYear = addedYearSplit[2]
+      $scope.fy.addedFYears.push(Number(cYear))
+    $scope.setFYname($scope.fy.years)
+    $scope.addfyYears()
+
+  $scope.getFYFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.changeFyPeriod = (period) ->
+    reqParam = {
+      companyUniqueName:  $rootScope.selectedCompany.uniqueName
+    }
+    data = {
+      "financialYearPeriod": period.toString()
+    }
+    companyServices.updateFY(reqParam, data).then($scope.changeFyPeriodSuccess, $scope.changeFyPeriodFailure)
+
+  $scope.changeFyPeriodSuccess = (res) ->
+    toastr.success('Period Updated Successfully')
+    $scope.fy.years = res.body.financialYears
+    $scope.setFYname($scope.fy.years)
+    $scope.getcurrentFYfromResponse($rootScope.currentFinancialYear, $scope.fy.years)
+
+  $scope.changeFyPeriodFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.getCurrentPeriod = () ->
+    cmp = localStorageService.get('_selectedCompany')
+    if !_.isNull(cmp)
+      fromMonth = moment(cmp.activeFinancialYear.financialYearStarts,"DD/MM/YYYY").month()
+      toMonth = moment(cmp.activeFinancialYear.financialYearEnds,"DD/MM/YYYY").month()
+      selectedPeriod = $scope.months[fromMonth] + '-' + $scope.months[toMonth]
+      if selectedPeriod == 'Apr-Mar'
+        $scope.fy.selectedPeriod = $scope.fy.periods[1]
+      else if selectedPeriod == 'Jan-Dec'
+        $scope.fy.selectedPeriod = $scope.fy.periods[0]
+
+  $scope.switchFY = (year) ->
+    data = {
+      "uniqueName":year.uniqueName
+    }
+    reqParam = {
+      companyUniqueName:  $rootScope.selectedCompany.uniqueName
+    }
+    companyServices.switchFY(reqParam, data).then($scope.switchFYSuccess, $scope.switchFYFailure)
+
+  $scope.switchFYSuccess = (res) ->
+    toastr.success(res.status, 'Financial Year switched successfully.')
+    $rootScope.setActiveFinancialYear(res.body)
+    localStorageService.set('activeFY', res.body)
+
+  $scope.switchFYFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.lockFY = (year) ->
+    $scope.sFY = year
+    data = {
+      "uniqueName":year.uniqueName
+      "lockAll":"true"
+    }
+    reqParam = {
+      companyUniqueName:  $rootScope.selectedCompany.uniqueName
+    }
+    if year.isLocked
+      companyServices.lockFY(reqParam, data).then($scope.lockFYSuccess, $scope.lockFYFailure)
+    else
+      companyServices.unlockFY(reqParam, data).then($scope.unlockFYSuccess, $scope.unlockFYFailure)
+
+  $scope.lockFYSuccess = (res) ->
+    toastr.success('Financial Year Locked Successfully.')
+    $scope.fy.years = res.body.financialYears
+    $scope.setFYname($scope.fy.years)
+
+  $scope.lockFYFailure = (res) ->
+    $scope.sFY.isLocked = false
+    toastr.error(res.data.message)
+
+  $scope.unlockFYSuccess = (res) ->
+    toastr.success('Financial Year Unlocked Successfully.')
+    $scope.fy.years = res.body.financialYears
+    $scope.setFYname($scope.fy.years)
+
+  $scope.unlockFYFailure = (res) ->
+    $scope.sFY.isLocked = true
+    toastr.error(res.data.message)
+
+  $scope.addFY = (newFy) ->
+    data = {
+      "fromYear": newFy
+    }
+    reqParam = {
+      companyUniqueName:  $rootScope.selectedCompany.uniqueName
+    }
+    companyServices.addFY(reqParam, data).then($scope.addFYSuccess, $scope.addFYFailure)
+
+  $scope.addFYSuccess = (res) ->
+    toastr.success('Financial Year created successfully.')
+    $scope.getFY()
+    $scope.fy.newFY = ''
+
+  $scope.addFYFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.getcurrentFYfromResponse = (currentFinancialYear, response) ->
+    cYear = {}
+    cFY = ''
+    if currentFinancialYear.length > 4
+      f = currentFinancialYear.split('-')
+      cFY = f[0]
+    else
+      cFY = currentFinancialYear
+      
+    _.each response,(yr) ->
+      if yr.financialYearStarts.indexOf(cFY) != -1
+        cYear = yr
+    $rootScope.setActiveFinancialYear(cYear)
+    localStorageService.set('activeFY', cYear)
 
 giddh.webApp.controller 'settingsController', settingsController

@@ -122,7 +122,7 @@
         
         <!-- <i class="glyphicon glyphicon-filter" ng-class="{open:showFilters}" ng-click="showFilters = !showFilters"></i> -->
         <div class="col-xs-12">
-        <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+        <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20">
           <div ng-if="proformaList.results.length < 1">No Proforma Found.</div>
           <table class="table table-bordered" ng-if="proformaList.results.length > 0">
             <thead>
@@ -198,7 +198,7 @@
     <uib-tab heading="Create" class="background-transparent" select="getTemplates(); setTab(1)">
       
 
-        <div class="create-proforma y-scroll" cover-page>
+        <div class="create-proforma">
 
             <div style="width:21cm;margin:0 auto;" >
 
@@ -437,7 +437,7 @@
 
 
     <uib-tab heading="Template" class="background-transparent" select="setTab(2)">
-        <div class="y-scroll" ng-include="'/public/webapp/Settings/proforma-temp.html'" style="padding-bottom:50px;" cover-page></div>
+        <div class="" ng-include="'/public/webapp/Settings/proforma-temp.html'" style="padding-bottom:50px;"></div>
     </uib-tab>
     
 

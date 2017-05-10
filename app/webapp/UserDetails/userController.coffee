@@ -1,6 +1,6 @@
 "use strict"
 
-userController = ($scope, $rootScope, toastr, userServices, localStorageService, $timeout, $uibModal, modalService, $filter, groupService, $window) ->
+userController = ($scope, $rootScope, toastr, userServices, localStorageService, $timeout, $uibModal, modalService, $filter, groupService, $window, $http) ->
   
   $scope.userAuthKey = undefined
   $scope.noData = false
@@ -18,7 +18,13 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   selectedUser = localStorageService.get('_userDetails')
   #$scope.twoWayAuth = selectedUser.authenticateTwoWay
   $scope.getUserAuthKey = () ->
-    $scope.userAuthKey = $window.sessionStorage.getItem('_ak')
+    @success = (res) ->
+      $scope.userAuthKey = res.data
+    @failure = (res) ->
+      toastr.error(res.data)
+
+    $http.get('/userak').then(@success, @failure)
+
 
   # $scope.getUserAuthKeySuccess = (res) ->
   #   $scope.userAuthKey = res.body

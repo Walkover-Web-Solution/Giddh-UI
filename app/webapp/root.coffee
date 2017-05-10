@@ -39,6 +39,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "inventory"
     "recurringEntry"
     "ui.mask"
+    "nzTour"
   ]
 )
 
@@ -48,6 +49,7 @@ giddh.webApp.config (localStorageServiceProvider) ->
 
 giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   $urlRouterProvider.otherwise('/home')
+  $locationProvider.hashPrefix('')
   # $rootScope.prefixThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
   appendThis = ""
   $stateProvider.state('/home',
@@ -180,12 +182,25 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/ledger/:unqName'
     views:{
       'rightPanel':{
-        templateUrl: appendThis+'/public/webapp/Ledger/ledger.html'
-        controller: 'newLedgerController'
-        controllerAs: 'lc'
+        templateUrl: appendThis+'/public/webapp/Ledger/ledger-wrapper.html'
+        # controller: 'newLedgerController'
+        # controllerAs: 'lc'
       }
     }
   )
+  # .state('company.content.ledgerContent1',
+  #   url: '/ledger-paginated/:unqName'
+  #   views:{
+  #     # 'accountsList':{
+  #     #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
+  #     # }
+  #     'rightPanel':{
+  #       templateUrl: appendThis+'/public/webapp/Ledger/ledgerPaginated.html'
+  #       controller: 'ledgerController'
+  #       controllerAs: 'ledgerCtrl'
+  #     }
+  #   }
+  # )
   .state('dashboard',
     url: '/dashboard'
     templateUrl: appendThis+'/public/webapp/Dashboard/dashboard.html'
@@ -264,7 +279,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: appendThis + '/public/webapp/invoice2/invoice2.html'
     controller: 'invoice2Controller'
   )
-  $locationProvider.html5Mode(false)
+  $locationProvider.html5Mode(true)
   return
 
 giddh.webApp.run [
@@ -277,8 +292,24 @@ giddh.webApp.run [
   'localStorageService'
   'DAServices'
   'groupService'
-  ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService) ->
+  '$http'
+  ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService, $http) ->
     
+    # $rootScope.setState = (lastState, url, param) ->
+    #   data = {
+    #       "lastState": lastState,
+    #       "companyUniqueName": $rootScope.selectedCompany.uniqueName
+    #   }
+    #   if url.indexOf('ledger') != -1
+    #     data.lastState = data.lastState + '@' + param
+    #   $http.post('/state-details', data).then(
+    #       (res) ->
+            
+    #       (res) ->
+            
+    #   )
+
+
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
       $rootScope.showLedgerBox = false
       if _.isEmpty(toParams)
@@ -294,6 +325,7 @@ giddh.webApp.run [
         },
         userId: user.uniqueName
       });
+      #$rootScope.setState(toState.name, toState.url, toParams.unqName)
     )
       #    # check IE browser version
       #    $rootScope.GetIEVersion = () ->

@@ -39,6 +39,9 @@ router.get '/affiliate', (req,res) ->
 router.get '/global', (req,res) ->
   res.sendFile 'global.html', options
 
+router.get '/gst', (req,res) ->
+  res.sendFile 'gst.html', options
+
 router.get '/about', (req, res) ->
   res.sendFile 'about.html', options
 
@@ -117,7 +120,7 @@ router.post '/verify-email', (req, res) ->
   settings.client.get hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
-    res.send data
+    res.sendFile '/public/webapp/views/index.html',options
 
 router.post '/proforma/pay', (req, res) ->
   data = req.body

@@ -1,6 +1,17 @@
 "use strict"
 
 mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location, DAServices) ->
+  
+  #get user details
+  getUserSuccess = (res) ->
+    localStorageService.set('_userDetails', res.data.body)
+    $rootScope.basicInfo = res.data.body
+  getUserFailure = (res) ->
+    toastr.error('unable to fetch user')
+  getUserDetail = () ->
+    $http.get('/fetch-user').then(getUserSuccess, getUserFailure)
+  getUserDetail()
+
   $rootScope.scriptArrayHead = [
     "/public/webapp/newRelic.js"
     "/public/webapp/core_bower.min.js"
@@ -24,6 +35,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     purchase: "purchases"
     sales:"sales"
   }
+
+
   $rootScope.flyAccounts = false
   $rootScope.$stateParams = {}
 #  $rootScope.prefixThis = ""
@@ -65,56 +78,57 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.croppedAcntList = []
 
   ##Date range picker###
-  $scope.fixedDate = {
-    startDate: moment().subtract(30, 'days')._d,
-    endDate: moment()._d
-  };
+  # $scope.fixedDate = {
+  #   startDate: moment().subtract(30, 'days')._d,
+  #   endDate: moment()._d
+  # };
 
 
-  $scope.singleDate = moment()
-  $scope.fixedDateOptions = {
-      locale:
-        applyClass: 'btn-green'
-        applyLabel: 'Apply'
-        fromLabel: 'From'
-        format: 'D-MMM-YY'
-        toLabel: 'To'
-        cancelLabel: 'Cancel'
-        customRangeLabel: 'Custom range'
-      ranges:
-        'Last 1 Day': [
-          moment().subtract(1, 'days')
-          moment()
-        ]
-        'Last 7 Days': [
-          moment().subtract(6, 'days')
-          moment()
-        ]
-        'Last 30 Days': [
-          moment().subtract(29, 'days')
-          moment()
-        ]
-        'Last 6 Months': [
-          moment().subtract(6, 'months')
-          moment()
-        ]
-        'Last 1 Year': [
-          moment().subtract(12, 'months')
-          moment()
-        ]
-      eventHandlers : {
-        'apply.daterangepicker' : (e, picker) ->
-          $scope.fixedDate.startDate = e.model.startDate._d
-          $scope.fixedDate.endDate = e.model.endDate._d
-      }
-  }
-  $scope.setStartDate = ->
-    $scope.fixedDate.startDate = moment().subtract(4, 'days').toDate()
+  # $scope.singleDate = moment()
+  # $scope.fixedDateOptions = {
+  #     locale:
+  #       applyClass: 'btn-green'
+  #       applyLabel: 'Apply'
+  #       fromLabel: 'From'
+  #       format: 'D-MMM-YY'
+  #       toLabel: 'To'
+  #       opens: 'center'
+  #       cancelLabel: 'Cancel'
+  #       customRangeLabel: 'Custom range'
+  #     ranges:
+  #       'Last 1 Day': [
+  #         moment().subtract(1, 'days')
+  #         moment()
+  #       ]
+  #       'Last 7 Days': [
+  #         moment().subtract(6, 'days')
+  #         moment()
+  #       ]
+  #       'Last 30 Days': [
+  #         moment().subtract(29, 'days')
+  #         moment()
+  #       ]
+  #       'Last 6 Months': [
+  #         moment().subtract(6, 'months')
+  #         moment()
+  #       ]
+  #       'Last 1 Year': [
+  #         moment().subtract(12, 'months')
+  #         moment()
+  #       ]
+  #     eventHandlers : {
+  #       'apply.daterangepicker' : (e, picker) ->
+  #         $scope.fixedDate.startDate = e.model.startDate._d
+  #         $scope.fixedDate.endDate = e.model.endDate._d
+  #     }
+  # }
+  # $scope.setStartDate = ->
+  #   $scope.fixedDate.startDate = moment().subtract(4, 'days').toDate()
 
-  $scope.setRange = ->
-    $scope.fixedDate =
-        startDate: moment().subtract(5, 'days')
-        endDate: moment()
+  # $scope.setRange = ->
+  #   $scope.fixedDate =
+  #       startDate: moment().subtract(5, 'days')
+  #       endDate: moment()
   ###date range picker end###
 
 
@@ -185,7 +199,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       # _userDetails, _currencyList
       localStorageService.clearAll()
       window.sessionStorage.clear()
-      window.location = "/thanks"
+      window.location = "https://www.giddh.com"
     ), (res) ->
 
   # for ledger
@@ -402,6 +416,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   #Get company list success
   $scope.getCompanyListSuccess = (res) ->    
     $scope.companyList = _.sortBy(res.body, 'shared')
+    $scope.companyList = $scope.companyList.reverse()
     $rootScope.CompanyList = $scope.companyList
     if _.isEmpty($scope.companyList)
       #When no company is there
@@ -413,6 +428,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $scope.checkUserCompanyStatus(res.body)
       $rootScope.mngCompDataFound = true
       $scope.findCompanyInList()
+      $rootScope.checkWalkoverCompanies()
 
   $scope.checkUserCompanyStatus = (compList) ->
     _.each compList, (cmp) ->
@@ -449,6 +465,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.checkPermissions($rootScope.selectedCompany)
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
+    $scope.getGroupsList()
 #    $rootScope.getCroppedAccountList(company.uniqueName, '')
 
 
@@ -685,7 +702,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.getFlattenGrpWithAccListSuccess = (res) ->
     $scope.gwaList.page = res.body.page
     $scope.gwaList.totalPages = res.body.totalPages
-    $scope.flatAccntWGroupsList = res.body.results
+    $rootScope.flatAccntWGroupsList = res.body.results
     #$scope.flatAccntWGroupsList = gc.removeEmptyGroups(res.body.results)
   #   console.log($scope.flatAccntWGroupsList)
     $scope.showAccountList = true
@@ -715,7 +732,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     if res.body.results.length > 0 && res.body.totalPages >= $scope.gwaList.currentPage
       _.each res.body.results, (grp) ->
         grp.open = true
-        $scope.flatAccntWGroupsList.push(grp) 
+        $rootScope.flatAccntWGroupsList.push(grp) 
       #$scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
     else if res.body.totalPages > $scope.gwaList.currentPage
       $scope.loadMoreGrpWithAcc($rootScope.selectedCompany.uniqueName)
@@ -762,19 +779,81 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $rootScope.$emit('account-selected')
     return false
 
+  $scope.getGroupsList = () ->
+    @success = (res) ->
+      $rootScope.groupWithAccountsList = res.body
+    @failure = (res) ->
+
+    groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then(@success, @failure)
+
   # $scope.goToLedgerCash = () ->
   #   $state.go('company.content.ledgerContent',{unqName:'cash'})
 
   $rootScope.toggleAcMenus = (condition) ->
     $scope.showSubMenus = condition
-    _.each $scope.flatAccntWGroupsList, (grp) ->
+    _.each $rootScope.flatAccntWGroupsList, (grp) ->
       grp.open = condition
 
+  $scope.runTour = () ->
+    $rootScope.$emit('run-tour')
+
+  $scope.showSwitchUserOption = false
+  $rootScope.checkUserCompany = () ->
+    user = localStorageService.get('_userDetails')
+    company = user.uniqueName.split('@')
+    company = company[company.length - 1]
+    company
+
+  $rootScope.checkWalkoverCompanies = () ->
+    if $rootScope.checkUserCompany().toLowerCase() == 'giddh.com' || $rootScope.checkUserCompany().toLowerCase() == 'walkover.in' || $rootScope.checkUserCompany().toLowerCase() == 'msg91.com'
+      $scope.showSwitchUserOption = true
+    else
+      $scope.showSwitchUserOption = false
+
+  $rootScope.ledgerMode = 'new'
+  $rootScope.switchLedgerMode = () ->
+    if $rootScope.checkWalkoverCompanies()
+      if $rootScope.ledgerMode == 'new'
+        $rootScope.ledgerMode = 'old'
+      else
+        $rootScope.ledgerMode = 'new'
+
+  $rootScope.setState = (lastState, url, param) ->
+    $rootScope.selectedCompany = $rootScope.selectedCompany || localStorageService.get('_selectedCompany')
+    data = {
+        "lastState": lastState,
+        "companyUniqueName": $rootScope.selectedCompany.uniqueName
+    }
+    if url.indexOf('ledger') != -1
+      data.lastState = data.lastState + '@' + param
+    $http.post('/state-details', data).then(
+        (res) ->
+          
+        (res) ->
+          
+    )
+
+  $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+    $rootScope.setState(toState.name, toState.url, toParams.unqName)
+  )
 
   $(document).on('click', (e)->
     if e.target.id != 'accountSearch'
       $rootScope.flyAccounts = false
     return false
+  )
+
+  $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+    if toState.name == "company.content.ledgerContent" && toParams.unqName == 'cash'
+      $rootScope.ledgerState = true
+    else
+      $rootScope.ledgerState = false
+  )
+
+  $rootScope.$on('different-company', (event, lastStateData)->
+    company = _.findWhere($scope.companyList, {uniqueName:lastStateData.companyUniqueName})
+    $scope.changeCompany(company, 0, 'CHANGE')
+    $state.go(lastStateData.lastState)
   )
 
 giddh.webApp.controller 'mainController', mainController

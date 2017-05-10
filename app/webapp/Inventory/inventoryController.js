@@ -258,19 +258,14 @@ angular.module('inventoryController', [])
 		    "uniqueName":stockItem.stockUnqName,
 		    "openingQuantity":stockItem.stockQty,
 		    "openingAmount":stockItem.stockAmount,
-		    "openingStockUnitName":stockItem.stockType.name,
+		    "stockUnitCode":stockItem.stockType.shortCode,
 		    "purchaseAccountUniqueName":stockItem.stockPurchaseAccount.uniqueName,
 		    "purchaseRate":stockItem.stockPurchaseRate,
 		    "salesRate":stockItem.stockSalesRate,
 		    "salesAccountUniqueName":stockItem.stockSalesAccount.uniqueName,
 		}
 		stockService.createStock(reqParam, data).then(this.success, this.failure)
-	}
-
-	//update stock
-	
-
-	
+	}	
 
 	//load stock group
 	vm.loadStockGroup = function(grp){

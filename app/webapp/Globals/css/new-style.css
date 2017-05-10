@@ -906,23 +906,10 @@ header .navbar-nav > li.active {
     border-radius: 0;
 }
 
-.modal-title {
-    font-size: 20px;
-}
-
-.modal-header.themeBg {
+.themeBg {
     background-color: #d35f29;
-    color: white;
 }
 
-.modal-header.themeBg .close {
-    font-size: 32px;
-    color: white;
-}
-
-.modal-body.noPad {
-    padding: 0;
-}
 
 .modal-liq80 {
     width: 80%;
@@ -2082,7 +2069,7 @@ table.borderless td, table.borderless th {
     font-weight: 600;
 }
 
-.pdf-export {
+.pdf-export, .xls-export {
     position: relative;
     margin-right: 10px;
 }
@@ -3005,6 +2992,7 @@ ul.pills li {
     float: left;
     height:100%;
     position: relative;
+    padding-bottom:50px;
 }
 
 .left-col {
@@ -3320,11 +3308,9 @@ ul.pills li {
 }
 
 .reconnectButton {
-    position: relative;
+position: absolute;
     top: 40%;
-    left: 36%;
-    width: 85px;
-    margin-top: 5px;
+    left: 28%;
 }
 
 /* company list dropdown styles */
@@ -3696,7 +3682,7 @@ ul.pills li {
     width:80%;
     margin:0 auto 20px;
     padding:20px 0;
-    height:335px;
+    height:280px;
     position: relative;
 }
 
@@ -4680,6 +4666,11 @@ table.proforma-particulars{
     box-shadow: 0px 2px 5px rgba(0,0,0,0.6);
     margin:0; 
 }
+
+
+.tour-backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+}
 .parent_body {
     padding-bottom: 52px;
     position: relative;
@@ -4696,3 +4687,36 @@ table.proforma-particulars{
 .pd2{
     padding: 20px;
 }
+.map-txn-container{
+    position: absolute;
+    z-index: 99;
+    background: #fff;
+    left: 155px;
+    top: -6px;
+    max-height: 100px;
+    overflow-y: auto;
+    box-shadow: 0px 1px 1px 1px rgba(0,0,0,0.5);
+    min-width:380px;
+}
+
+
+.rotate180{
+    transform: rotate(180deg);
+}
+
+.left-col-new, .right-col-new {
+    width: 50%;
+    float: left;
+    height:100%;
+    position: relative;
+    padding-bottom:100px;
+}
+
+.left-col-new {
+    border-right: 1px solid #ccc;
+}
+
+.right-col-new {
+    border: none;
+}
+

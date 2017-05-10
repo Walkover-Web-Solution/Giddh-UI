@@ -10,8 +10,10 @@ router.get '/', (req, res) ->
     parameters:
       to: req.query.toDate
       from: req.query.fromDate
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/ledgers'
+      count:Number(req.query.count) || 0
+      page:Number(req.query.page) || 1
+      sort:req.query.sort
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/ledgers'
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
@@ -45,6 +47,22 @@ router.get '/invoice-file', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+#get reconciled entries
+router.get '/reconcile', (req, res) ->
+  authHead =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      to: req.query.to
+      from: req.query.from
+      chequeNumber:req.query.chequeNumber || ''
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/accounts/' + req.params.accountUniqueName + '/ledgers/reconcile'
+  settings.client.get hUrl, authHead, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
 
 #Get ledgers
 router.get '/:ledgerUniqueName', (req, res) ->
@@ -115,7 +133,6 @@ router.post '/paymentTransactions', (req, res) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
-
 
 
     

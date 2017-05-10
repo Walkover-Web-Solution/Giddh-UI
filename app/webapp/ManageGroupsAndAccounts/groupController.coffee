@@ -120,7 +120,7 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       toastr.error("Select company first.", "Error")
     else
       modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/ManageGroupsAndAccounts/addManageGroupModal.html'
+        templateUrl: '/public/webapp/ManageGroupsAndAccounts/addManageGroupModal.html'
         size: "liq90"
         backdrop: 'static'
         scope: $scope

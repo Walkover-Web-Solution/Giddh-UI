@@ -68,7 +68,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     toastr.error(res.data.message, res.data.status)
 
   # get selected group closing balance
-  $scope.getClosingBalance = (data) ->
+  $scope.getClosingBalance = (data, refresh) ->
     $scope.resetQuery()
     $scope.searchDtCntLdr = true
     obj = {
@@ -76,6 +76,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
       selGrpUname: data.group.uniqueName
       fromDate: $filter('date')(data.fromDate, "dd-MM-yyyy")
       toDate: $filter('date')(data.toDate, "dd-MM-yyyy")
+      refresh: refresh
     }
     groupService.getClosingBal(obj)
       .then(
@@ -157,6 +158,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   # download CSV
   $scope.getCSVHeader=()->
+    console.log($scope.searchResData)
     return  [
       "Name"
       "Opening Bal."
@@ -262,7 +264,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     $scope.msgBody.btn.set = $scope.msgBody.btn.email
     $scope.msgBody.header.set = $scope.msgBody.header.email
     modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/views/bulkMail.html'
+        templateUrl: '/public/webapp/views/bulkMail.html'
         size: "md"
         backdrop: 'static'
         scope: $scope
@@ -274,7 +276,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     $scope.msgBody.btn.set = $scope.msgBody.btn.sms
     $scope.msgBody.header.set = $scope.msgBody.header.sms
     modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/views/bulkMail.html'
+        templateUrl: '/public/webapp/views/bulkMail.html'
         size: "md"
         backdrop: 'static'
         scope: $scope

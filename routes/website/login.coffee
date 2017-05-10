@@ -36,7 +36,6 @@ hitViaSocket = (data) ->
 ####
 
 router.post '/google', (req, res, next) ->
-  console.log req.body
   googleAccessTokenUrl = 'https://accounts.google.com/o/oauth2/token'
   params =
     code: req.body.code
@@ -64,6 +63,7 @@ router.post '/google', (req, res, next) ->
           userDetailObj = data.body.user
           req.session.name = data.body.user.uniqueName
           req.session.authKey = data.body.authKey
+          data.body.sId = req.sessionID
           hitViaSocket(data.body)
       res.send
         token: token
@@ -122,6 +122,7 @@ router.post '/twitter', (req, res) ->
             userDetailObj = data.body.user
             req.session.name = data.body.user.uniqueName
             req.session.authKey = data.body.authKey
+            data.body.sId = req.sessionID
         res.send
           token: accessToken.oauth_token
           userDetails: userDetailObj
@@ -168,6 +169,7 @@ router.post '/linkedin', (req, res) ->
           userDetailObj = data.body.user
           req.session.name = data.body.user.uniqueName
           req.session.authKey = data.body.authKey
+          data.body.sId = req.sessionID
       res.send
         token: body.access_token
         userDetails: userDetailObj
