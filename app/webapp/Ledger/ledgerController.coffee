@@ -600,6 +600,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
       count: ledgerCtrl.ledgerPerPageCount
       page: page || 1
+      sort: 'desc'
     }
     if not _.isEmpty(ledgerCtrl.accountUnq)
       ledgerService.getLedger(unqNamesObj).then(@success, @failure)
