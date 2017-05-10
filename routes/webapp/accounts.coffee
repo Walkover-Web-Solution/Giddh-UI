@@ -169,10 +169,10 @@ router.put '/:accountUniqueName/eledgers/map/:transactionId', (req, res) ->
 router.get '/:accountUniqueName/export-ledger', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/export-ledger'
-  if req.query.ltype == 'condensed'
-    hUrl = hUrl + '-condensed'
-  else
-    hUrl = hUrl + '-detailed'
+  # if req.query.ltype == 'condensed'
+  #   hUrl = hUrl + '-condensed'
+  # else
+  #   hUrl = hUrl + '-detailed'
   args =
     headers:
       'Auth-Key': req.session.authKey
@@ -181,6 +181,7 @@ router.get '/:accountUniqueName/export-ledger', (req, res) ->
     parameters:
       to: req.query.toDate
       from: req.query.fromDate
+      format : req.query.ltype
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

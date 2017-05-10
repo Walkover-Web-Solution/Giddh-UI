@@ -725,66 +725,66 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     toastr.error(res.data.message, res.data.status)
 
   # #export ledger
-  ledgerCtrl.exportLedger = (type)->
-    ledgerCtrl.showExportOption = false
-    unqNamesObj = {
-      compUname: $rootScope.selectedCompany.uniqueName
-      acntUname: ledgerCtrl.accountUnq
-      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
-      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
-      lType:type
-    }
-    accountService.exportLedger(unqNamesObj).then(ledgerCtrl.exportLedgerSuccess, ledgerCtrl.exportLedgerFailure)
+  # ledgerCtrl.exportLedger = (type)->
+  #   ledgerCtrl.showExportOption = false
+  #   unqNamesObj = {
+  #     compUname: $rootScope.selectedCompany.uniqueName
+  #     acntUname: ledgerCtrl.accountUnq
+  #     fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
+  #     toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
+  #     lType:type
+  #   }
+  #   accountService.exportLedger(unqNamesObj).then(ledgerCtrl.exportLedgerSuccess, ledgerCtrl.exportLedgerFailure)
 
-  ledgerCtrl.exportLedgerSuccess = (res)->
-    # blob = new Blob([res.body.filePath], {type:'file'})
-    # fileName = res.body.filePath.split('/')
-    # fileName = fileName[fileName.length-1]
-    # FileSaver.saveAs(blob, fileName)
-    ledgerCtrl.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
-    if $rootScope.msieBrowser()
-      $rootScope.openWindow(res.body.filePath)
-    else if ledgerCtrl.isSafari       
-      modalInstance = $uibModal.open(
-        template: '<div>
-            <div class="modal-header">
-              <h3 class="modal-title">Download File</h3>
-            </div>
-            <div class="modal-body">
-              <p class="mrB">To download your file Click on button</p>
-              <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
-            </div>
-        </div>'
-        size: "sm"
-        backdrop: 'static'
-        scope: $scope
-      )
-    else
-      window.open(res.body.filePath)
+  # ledgerCtrl.exportLedgerSuccess = (res)->
+  #   # blob = new Blob([res.body.filePath], {type:'file'})
+  #   # fileName = res.body.filePath.split('/')
+  #   # fileName = fileName[fileName.length-1]
+  #   # FileSaver.saveAs(blob, fileName)
+  #   ledgerCtrl.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
+  #   if $rootScope.msieBrowser()
+  #     $rootScope.openWindow(res.body.filePath)
+  #   else if ledgerCtrl.isSafari       
+  #     modalInstance = $uibModal.open(
+  #       template: '<div>
+  #           <div class="modal-header">
+  #             <h3 class="modal-title">Download File</h3>
+  #           </div>
+  #           <div class="modal-body">
+  #             <p class="mrB">To download your file Click on button</p>
+  #             <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
+  #           </div>
+  #           <div class="modal-footer">
+  #             <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+  #           </div>
+  #       </div>'
+  #       size: "sm"
+  #       backdrop: 'static'
+  #       scope: $scope
+  #     )
+  #   else
+  #     window.open(res.body.filePath)
 
-  ledgerCtrl.exportLedgerFailure = (res)->
-    toastr.error(res.data.message, res.data.status)
-    modalInstance = $uibModal.open(
-      template: '<div>
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
-        aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title">Magic Link</h3>
-          </div>
-          <div class="modal-body">
-            <input id="magicLink" class="form-control" type="text" ng-model="ledgerCtrl.magicLink">
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-default" ngclipboard data-clipboard-target="#magicLink">Copy</button>
-          </div>
-      </div>'
-      size: "md"
-      backdrop: 'static'
-      scope: $scope
-    )
+  # ledgerCtrl.exportLedgerFailure = (res)->
+  #   toastr.error(res.data.message, res.data.status)
+  #   modalInstance = $uibModal.open(
+  #     template: '<div>
+  #         <div class="modal-header">
+  #           <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
+  #       aria-hidden="true">&times;</span></button>
+  #         <h3 class="modal-title">Magic Link</h3>
+  #         </div>
+  #         <div class="modal-body">
+  #           <input id="magicLink" class="form-control" type="text" ng-model="ledgerCtrl.magicLink">
+  #         </div>
+  #         <div class="modal-footer">
+  #           <button class="btn btn-default" ngclipboard data-clipboard-target="#magicLink">Copy</button>
+  #         </div>
+  #     </div>'
+  #     size: "md"
+  #     backdrop: 'static'
+  #     scope: $scope
+  #   )
 
   ledgerCtrl.getMagicLinkFailure = (res) ->
     toastr.error(res.data.message)
@@ -956,7 +956,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
 
   ledgerCtrl.onTxnTotalChange = (txn)->
-    ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.selectedLedger.panel.total + ledgerCtrl.selectedLedger.panel.discount - ledgerCtrl.selectedLedger.panel.tax
+    ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.calculateAmountAfterInclusiveTax()
     _.each ledgerCtrl.selectedLedger.transactions, (txn) ->
       acc = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
       if acc
@@ -968,7 +968,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     # ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
     # ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
 
-
+  ledgerCtrl.calculateAmountAfterInclusiveTax = (tax) ->
+    if !ledgerCtrl.selectedLedger.panel.discount 
+      amount = (100*ledgerCtrl.selectedLedger.panel.total)/(100+ledgerCtrl.selectedLedger.panel.tax)
+    else
+      amount = (100*ledgerCtrl.selectedLedger.panel.total)/(100+ledgerCtrl.selectedLedger.panel.tax) + ledgerCtrl.selectedLedger.panel.discount
+    amount = Number(amount.toFixed(2))
+    amount    
 
   ledgerCtrl.cutToTwoDecimal = (num) ->
     num = num.toString()
@@ -1099,7 +1105,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.removeBlankTransactions = (ledger) ->
     _.each ledger.transactions, (txn, i) ->
-      if txn.blankRow && txn.particular.uniqueName == ''
+      console.log txn
+      if txn && txn.blankRow && txn.particular.uniqueName == ''
         ledger.transactions.splice(i, 1)
 
   ledgerCtrl.buildLedger = (ledger) ->

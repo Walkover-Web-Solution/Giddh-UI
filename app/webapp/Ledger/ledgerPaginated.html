@@ -150,7 +150,7 @@ th {
 			<thead>
 				<tr>
 					<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} coming in?</th>
-					<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} coming out?</th>
+					<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} going out?</th>
 				</tr>
 			</thead>
 		</table>
@@ -456,7 +456,7 @@ th {
 					
 					<tr class="total_col">
 						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-							<span ng-if="ledgerCtrl.ledgerData.balance.type == 'CREDIT'">C/F: {{ledgerCtrl.ledgerData.balance.amount | number:2}}</span>
+							<span ng-if="ledgerCtrl.totalDebit < ledgerCtrl.totalCredit">C/F: CR {{ledgerCtrl.totalDebit - ledgerCtrl.totalCredit| abs | number:2 }}</span>
 						</td>
 					</tr>
 					<tr class="total_col">
@@ -471,7 +471,7 @@ th {
 					
 					<tr class="total_col">
 						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-							<span  ng-if="ledgerCtrl.ledgerData.balance.type == 'DEBIT'">C/F: Dr <span class="primary_color">{{ledgerCtrl.ledgerData.balance.amount | number:2}}</span></span>
+							<span  ng-if="ledgerCtrl.totalDebit > ledgerCtrl.totalCredit">C/F: Dr <span class="primary_color">{{ledgerCtrl.totalDebit - ledgerCtrl.totalCredit | number:2}}</span></span>
 						</td>
 					</tr>
 					<tr class="total_col">
