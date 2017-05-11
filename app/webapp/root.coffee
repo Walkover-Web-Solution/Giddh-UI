@@ -84,13 +84,13 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
               localStorageService.set("_selectedCompany", cst)
               return a
           else
+            localStorageService.set("_selectedCompany", companyList[0])
             if companyList.length < 1
               a = checkRole(user)
               return a
             else      
               a = checkRole(companyList[0])
               return a
-            localStorageService.set("_selectedCompany", companyList[0])
         onFailure = (res) ->
           toastr.error('Failed to retrieve company list' + res.data.message)
         companyServices.getAll().then(onSuccess, onFailure)
