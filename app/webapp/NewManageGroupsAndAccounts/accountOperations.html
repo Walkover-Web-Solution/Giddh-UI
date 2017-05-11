@@ -1,0 +1,507 @@
+<div class="view_forms">
+          <div class="breadcrumbs pdL2 pdT1 pdR2 pdB1">
+            <div class="pull-left pdT1"><span>CURRENT ASSETS > Expence group 2</span> > <span class="primary_clr">Expence group 1</span></div>
+            <div class="pull-right"> <button class="btn isActive" ng-click="mc.shareLedger()">Share</button> <span class="primary_clr">Shared with 2 people</span> </div>
+          </div>
+          <form class="horizontal-form">
+            <div class="form_bg pd2">
+
+              <div class="form-group clearfix">
+                  <div class="col-xs-6">
+                    <div class="row">
+                      <label>A/c Name</label>
+                      <input type="text"  class="form-control" ng-model="mc.selectedAcc.name" />
+                    </div>
+                  </div>
+              </div>
+
+
+              <div class="form-group clearfix mrB">
+
+                <div class="col-xs-5">
+                  <div class="row">
+                    <label>Unique Name</label>
+                    <input type="text"  class="form-control" ng-model="mc.selectedAcc.uniqueName" />
+                  </div>
+                </div>
+
+                <div class="col-xs-6">
+                      <label class="col-xs-12 row">Opening Balance</label>
+
+                  <div class="col-xs-8">
+                    <div class="row">
+                      <input type="text" class="form-control" ng-model="mc.selectedAcc.openingBalanceDate" />
+                    </div>
+                  </div>
+
+                  <div class="col-xs-4">
+                    <div class="row">
+                      <div class="form-inline">
+                        <select class="form-control col-md-3" ng-model="mc.selectedAcc.openingBalanceType">
+                          <option value="DEBIT">Debit</option>
+                          <option value="CREDIT">Credit</option>
+                        </select>
+                        <span class="select_drop"><i class="fa fa-caret-down"></i></span>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>        
+              </div>
+
+              </div>
+            
+            <div class="pd2 detailed">
+              
+              <div class="form-group col-xs-3">
+                  <div class="row">
+                  <label>Mobile Number</label>
+                  <input type="text" class="form-control" ng-model="mc.selectedAcc.mobileNo" />
+                  </div>
+              </div>
+
+              <div class="form-group col-xs-5">
+                  <label>Email</label>
+                  <input type="text" class="form-control" ng-model="mc.selectedAcc.email">
+              </div>
+
+              <div class="clearfix"></div>
+              
+              <div class="form-group col-xs-5">
+                  <div class="row">
+                  <label>Company</label>
+                  <input type="text" class="form-control" ng-model="mc.selectedAcc.companyName" />
+                  </div>
+              </div>
+
+              <div class="form-group col-xs-7">
+                  <label>Attention to (will be used in invoice)</label>
+                  <input type="text" class="form-control" ng-model="mc.selectedAcc.attentionTo">
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="form-group mrB">
+                  <label>Address</label>
+                  <input type="text" class="form-control" ng-model="mc.selectedAcc.address" />
+              </div>
+            </div>
+
+            <div class="form_bg pd2">
+
+              <div class="form-group col-xs-12">
+                <div class="row">
+                  <div class="col-xs-12">
+                    <div class="row">
+                      <label>Description</label>
+                    </div>
+                  </div>
+
+                  <div class="col-xs-12">
+                    <div class="row">
+                      <textarea class="form-control" cols="10" rows="5" ng-model="mc.selectedAcc.description"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="clearfix"></div>
+            </div>
+
+              
+
+            <div class="pd2 detailed">
+            <hr />
+              <div class="form-group mrT col-xs-4 mrT1">
+                  <div class="row">
+                  <label>Group</label>
+                  <input type="text" class="form-control" ng-model="mc.selectedAcc.description" >
+                  </div>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="form-group col-xs-10 mrB">
+                  <div class="row">
+              
+                        <label class="col-xs-12 row">Merge this A/c with</label>
+              
+                    <div class="col-xs-4">
+                      <div class="row">
+                        <div class="form-inline">
+
+                          <select class="form-control col-md-3">
+                            <option>Select Account</option>
+                            <option>Account 1</option>
+                            <option>Account 2</option>
+                          </select>
+                          <span class="select_drop"><i class="fa fa-caret-down"></i></span>
+                        </div>
+                      </div>
+                    </div>
+              
+                    <div class="col-xs-4 row">
+                      <button class="btn isActive">Merge</button>
+                    </div>
+                  </div>
+              
+              </div>
+
+              <div class="clearfix"></div>
+
+              <small>This option is riskey and can not be undone</small>
+              <div class="col-xs-12 mrT1" style="min-height: 120px;">
+                <div class="row">
+                  <button class="btn isActive">DELETE Account 2</button>
+                  <button class="btn btn-success pull-right">Add</button>
+                  <button class="btn btn-success pull-right">Update</button>
+                </div>
+              </div>
+
+            </div> <!-- pd2 -->
+          </form>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<fieldset ng-disabled="!canUpdate || cantUpdate">
+  <ol class="breadcrumb mrB2" ng-if="showBreadCrumb">
+    <li ng-repeat="(key,value) in breadCrumbList"
+        ng-class="{active:$last}">
+      <a href="javascript:void(0)" ng-click="jumpToGroup(value.uniqueName, groupList)">{{value.name}}
+      </a>
+    </li>
+  </ol>
+
+  <div class="clearfix">
+    <div class="col-xs-12">
+      <uib-alert type="warning" ng-show="cantUpdate">For security reasons, you can't update current account</uib-alert>
+    </div>
+  </div>
+<!--   <div class="clearfix">
+    <div class="col-xs-12">
+      <uib-alert type="warning" ng-if="isFixedAcc">A fixed account can not be deleted, moved or updated.</uib-alert>
+    </div>
+  </div> -->
+  <div class="clearfix bdrB">
+    <div class="dGryHead">{{acntCase}} Account</div>
+    <form class="col-xs-12" name="addAccountForm" novalidate>
+
+      <div class="row pdT2 pdL pdR">
+
+        <div class="col-xs-6">
+          <section class="greyBox" style="min-height:300px;">
+            <p class="form-group">Basic Info (required)*</p>
+
+            <div class="form-group">
+              <input type="text" placeholder="Enter Account name" class="form-control" name="name" maxlength="100"
+                     ng-model="selectedAccount.name" required ng-disabled="isFixedAcc" autocomplete="off" ng-change="autoFillUnq(selectedAccount.name)" ng-model-options="{debounce:1000}"
+                    />
+            </div>
+            <div class="form-group">
+              <input type="text" placeholder="Unique Names" class="form-control" name="uniqueName" valid-unique
+              ng-model="selectedAccount.uniqueName" ng-disabled="isFixedAcc || fetchingUnq" autocomplete="off" required/>
+            </div>
+
+<!--             <div class="form-group"> -->
+              <!-- selectedAccount.openingBalanceDate -->
+              <!-- <p class="input-group"> -->
+<!--                <input type="text" class="form-control"
+                       uib-datepicker-popup="{{format}}"
+                       datepicker-options="dateOptions"
+                       is-open="valuationDatePickerIsOpen"
+                       ng-click="valuationDatePickerOpen()"
+                       ng-model="datePicker.accountOpeningBalanceDate" max-date="today"/> -->
+                       <!--ng-disabled="isFixedAcc"-->
+            <!--  <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="valuationDatePickerOpen()"><i
+                    class="glyphicon glyphicon-calendar"></i></button>
+              </span> -->
+<!--               </p>
+
+            </div> -->
+
+            <div class="row">
+              <p class="mrB small col-xs-12">Opening balance types</p>
+            </div>
+            <div class="row">
+              <div class="col-xs-6">
+                <select 
+                  class="form-control"
+                  name="openingBalanceType" 
+                  ng-model="selectedAccount.openingBalanceType" 
+                  ng-options="item.val as item.name for item in openingBalType">
+                  <option value="">--Please select--</option>
+                </select>
+              </div>
+              <div class="col-xs-6">
+                <input type="text" class="form-control" name="openingBalance" ng-model="selectedAccount.openingBalance" valid-number/>
+              </div>
+            </div>
+
+          </section>
+        </div>
+        <div class="col-xs-6">
+
+          <script type="text/ng-template" id="countryList.html">
+            <a>
+              <span ng-bind-html="match.label"></span>
+              <span ng-bind-html="match.model.countryName"></span>
+            </a>
+          </script>
+
+          <div class="form-group row">
+            <div class="col-xs-12">
+
+              <input type="text" ng-model="selectedAccount.mobileNo" class="form-control" valid-number ng-disabled="isFixedAcc"  placeholder="9198XXXXXXXX">
+
+              <input type="hidden" ng-model="acntExt.Ccode"
+                     uib-typeahead="country as country.value for country in countryCodesList | filter:$viewValue | limitTo:8"
+                     class="form-control" typeahead-template-url="countryList.html" placeholder="91" ng-disabled="isFixedAcc"/>
+
+            </div>
+            <div class="col-xs-3">
+              <input type="hidden" placeholder="98XXXXXXXX" class="form-control" name="onlyMobileNo"
+                     ng-model="acntExt.onlyMobileNo" valid-number ng-disabled="isFixedAcc"/>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <input type="email" placeholder="Email" class="form-control" name="email" ng-model="selectedAccount.email" ng-disabled="isFixedAcc"/>
+          </div>
+
+          <div class="form-group">
+            <input type="text" placeholder="Company Name" class="form-control" name="companyName"
+                   ng-model="selectedAccount.companyName" ng-disabled="isFixedAcc"/>
+          </div>
+          <div class="form-group">
+            <input type="text" placeholder="Attention To (Name will be used in invoice)" class="form-control" name="attnTo"
+                   ng-model="selectedAccount.attentionTo" ng-disabled="isFixedAcc"/>
+          </div>
+
+          <div class="form-group">
+            <input type="text" placeholder="Description" class="form-control" name="description"
+                   ng-model="selectedAccount.description" ng-disabled="isFixedAcc"/>
+          </div>
+
+          <div class="form-group">
+            <textarea placeholder="Address" class="form-control" name="address"
+                      ng-model="selectedAccount.address" ng-disabled="isFixedAcc"></textarea>
+          </div>
+        </div>
+
+      </div>
+      <!-- end of clearfix -->
+      <div class="row pdL pdR">
+        <div class="form-group col-xs-12 text-center" ng-hide="!canUpdate || cantUpdate">
+          <button ng-if="acntCase == 'Update'" class="btn btn-success" ng-click="updateAccount()"
+                  ng-disabled="addAccountForm.$invalid" style="width:250px;">{{acntCase}}
+          </button>
+
+          <button ng-if="acntCase == 'Add'" class="btn btn-success" ng-click="addAccount()"
+                  ng-disabled="addAccountForm.$invalid" style="width:250px;">{{acntCase}}
+          </button>
+
+        </div>
+      </div>
+    </form>
+  </div>
+</fieldset>
+<!-- end row first -->
+<div class="clearfix" ng-if="AccountCategory == 'income' || AccountCategory == 'expenses'">
+  <div class="bdrB">
+      <div class="dGryHead">
+        Taxes
+      </div>
+      <div class="pd2 clearfix">
+        <div class="tax-list-wrap">
+          <div class="tax-label"><label>All Applied Taxes</label></div>
+          <span class="tax-bullet" ng-repeat="tax in selectedAccount.applicableTaxes" ng-if="selectedAccount.applicableTaxes.length > 0">{{tax.name}}</span>
+          <p ng-if="selectedAccount.applicableTaxes.length < 1">No taxes Applied</p>
+          <button id="editTax" ng-if="canUpdate" class="btn btn-sm btn-default edit-tax-btn" ng-click="getTaxHierarchy('account')" ng-hide="showEditTaxSection"><i class="glyphicon glyphicon-edit"></i></button>
+        </div>
+        <div class="edit-tax-section" ng-if="showEditTaxSection">
+          <div class="tax-list-wrap">
+            <div class="tax-label"><label>All Inherited Taxes</label></div>
+              <span class="tax-bullet" ng-repeat="inTax in allInheritedTaxes" popover-trigger="mouseenter" popover-placement="right" uib-popover-template="'taxHierarchy.html'" ng-if="allInheritedTaxes.length > 0">{{inTax.name}}</span>
+              <p ng-if="allInheritedTaxes.length < 1">No Inherited Taxes</p>
+          </div>
+          <div class="tax-list-wrap">
+            <div class="tax-label"><label>All Applicable Taxes</label></div>
+            <div class="clearfix max350 mrT1">
+              <ui-select multiple ng-model="taxHierarchy.applicableTaxes" theme="bootstrap">
+                  <ui-select-match placeholder="Select Taxes">
+                    <span>{{$item.name}}</span>
+                  </ui-select-match >
+                  <ui-select-choices repeat="tax in taxList| filter: $select.search | omit: alreadyAppliedTaxes">
+                    <span ng-bind="tax.name"></span>
+                  </ui-select-choices>
+              </ui-select>
+            </div>
+            <button class="btn btn-success mrT1" ng-click="applyTax('account')" ng-if="showEditTaxSection"> Save</button>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+<!--end of tax section-->
+<section ng-if="acntCase == 'Update'">
+  <div class="clearfix bdrB">
+    <div class="col-xs-6" ng-show="canUpdate" ng-if="!isFixedAcc">
+      <fieldset ng-disabled="cantUpdate">
+        <div class="row">
+          <form name="moveAccntForm" novalidate class="pd2 form-inline">
+            <div>
+              <label class="mrR">Move to group</label>
+            </div>
+            <div class="form-group">
+              <input ng-model="moveacto" type="text" placeholder="Group name" class="form-control" required
+                uib-typeahead="groups as groups.name for groups in flattenGroupList | omit: isCurrentGroup | filter:({name:$viewValue} || {uniqueName:$viewValue} || {synonyms:$viewValue}) | limitTo: 4"/>
+
+              <!--<ui-select ng-model="moveacto" theme="bootstrap">-->
+                <!--<ui-select-choices-->
+                    <!--repeat="groups in getParticularGroup($select.search) | limitTo : 5 | filter: $select.search">-->
+                  <!--<span>{{groups.name}}</span>-->
+                <!--</ui-select-choices>-->
+              <!--</ui-select>-->
+            </div>
+            <div class="form-group">
+              <button class="btn btn-info mrL" ng-click="moveAccnt(moveacto)" ng-disabled="moveAccntForm.$invalid">Move</button>
+            </div>
+          </form>
+        </div>
+      </fieldset>
+    </div>
+
+    <div class="col-xs-6 bdrL" ng-show="canShare">
+      <fieldset ng-disabled="!canUpdate">
+        <div class="row">
+          <form name="shareAccountForm" novalidate class="form-inline pd2">
+            <div>
+              <label class="mrR">Share Account</label>
+            </div>
+            <div class="form-group">
+              <input required name="userEmail" type="email" ng-model="shareAccountObj.user" placeholder="Enter Email ID" class="form-control"/>
+            </div>
+            <div class="form-group">
+              <button ng-disabled="shareAccountForm.$invalid" class="btn btn-info mrL" ng-click="shareAccount()">Share</button>
+            </div>
+          </form>
+        </div>
+      </fieldset>
+       <!--end of row -->
+      <div class="row" ng-if="accountSharedUserList.length">
+        <div class="pd2">
+          <ul class="list-group ln">
+            <li ng-repeat="(key,value) in accountSharedUserList track by $index" class="list-group-item">
+
+              <div class="form-inline clearfix">
+                <div class="form-group">
+                  <i class="glyphicon glyphicon-user"></i>
+                  {{value.userEmail}}
+                </div>
+                <div class="form-group">
+                  {{option.role}}
+                </div>
+                <span class="delIcon">
+                  <i class="glyphicon glyphicon-trash" ng-click="unShareAccount(value.userUniqueName)"></i>
+                </span>
+              </div>
+
+            </li>
+          </ul>
+        </div>
+      </div>
+      <!-- end of row -->
+    </div>
+  </div>
+  <!-- end row second -->
+
+  <!--merge/unmerge section-->
+  <div class="clearfix bdrB" ng-if="!isFixedAcc">
+    <div class="dGryHead">Account Merge/Unmerge Settings <!-- <i class="glyphicon glyphicon-question-sign merge-q" ng-click=" showMergeDescription = !showMergeDescription"></i> --></div>
+    <div ng-show="showMergeDescription">
+      <div class="col-xs-6">
+        <div class="select-accounts">
+          <label>Merge Accounts</label>
+              <ui-select multiple='true' ng-model="toMerge.mergedAcc" theme="bootstrap">
+                  <ui-select-match placeholder="Select Accounts" ui-lock-choice="$item.noRemove == true" reset-search-input="true">
+                    <span ng-click="unmerge($item)" >{{$item.uniqueName}}</span>
+                  </ui-select-match >
+                  <ui-select-choices
+                    ui-disable-choice="acc.uniqueName === selAcntUname"
+                    repeat="acc in mergeAccList | filter: $select.search" refresh="refreshFlatAccount($select.search)" minimum-input-length="1">
+                    <span>{{acc.name}} ({{acc.uniqueName}})</span>
+                  </ui-select-choices>
+              </ui-select>
+              <button class="btn btn-success mrT2" ng-click="mergeAccounts()" ng-disabled="enableMergeButton()">Merge</button>
+        </div>
+      </div>
+      <div class="col-xs-6 pad0 bdrL" ng-show="showDeleteMove">
+        <div class="delete-account">
+          <!-- <div class="alert alert-warning">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac      
+          </div> -->
+          <button class="btn btn-danger btn-block" ng-click="deleteMergedAccount()">Delete Account</button>
+        </div>
+        <div class="move-account bdrT">
+          <label>Move to Other Account</label>
+              <ui-select ng-model="toMerge.moveToAcc" theme="bootstrap">
+                  <ui-select-match placeholder="Select Accounts">
+                    <span>{{$select.selected.name}}</span>
+                  </ui-select-match >
+                  <ui-select-choices 
+                    ui-disable-choice="acc.uniqueName === selAcntUname" 
+                    repeat="acc in  mergeAccList | filter: $select.search" refresh="refreshFlatAccount($select.search)">
+                    <span>{{acc.name}} ({{acc.uniqueName}})</span>
+                  </ui-select-choices>
+              </ui-select>
+              <button class="btn btn-info mrT2  btn-block" ng-click="moveToAccount()" ng-disabled="toMerge.moveToAcc.length < 1">Move Account</button>
+        </div>
+      </div>
+    </div>
+    <!--merge/unmerge description-->
+    <div class="col-xs-12 mrT2" ng-hide="showMergeDescription">
+      <div class="alert alert-warning pdT5">
+        <i class="glyphicon glyphicon-remove-circle cls-alert" ng-click="showMergeDescription = !showMergeDescription"></i>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla quam velit, vulputate eu pharetra nec, mattis ac neque. Duis vulputate commodo lectus, ac blandit elit tincidunt id. Sed rhoncus, tortor sed eleifend tristique, tortor mauris molestie elit, et lacinia ipsum quam nec dui. Quisque nec mauris sit amet elit iaculis pretium sit amet quis magna. Aenean velit odio, elementum in tempus ut, vehicula eu diam. Pellentesque rhoncus aliquam mattis. Ut vulputate eros sed felis sodales nec vulputate justo hendrerit. Vivamus varius pretium ligula, a aliquam odio euismod sit amet. Quisque laoreet sem sit amet orci ullamcorper at ultricies metus viverra. Pellentesque arcu mauris, malesuada quis ornare accumsan, blandit sed diam.
+      </div>
+    </div>
+  </div>
+  <!--merge/unmerge section end-->
+  
+  <div class="pd2" ng-if="!isFixedAcc">
+    <fieldset ng-disabled="!canUpdate || cantUpdate">
+      <button class="btn btn-danger" ng-click="deleteAccount()">Delete {{selectedAccount.name}} account</button>
+    </fieldset>
+  </div>
+</section>
+
+<script type="text/ng-template" id="taxHierarchy.html">
+  <div class="popover-content">
+    <label>Tax being inherited from:</label>
+    <ul>
+      <li ng-repeat="grp in inTax.groups">{{grp.name}}</li>
+    </ul>
+  </div> 
+</script>

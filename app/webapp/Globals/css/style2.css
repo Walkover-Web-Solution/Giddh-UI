@@ -1407,7 +1407,7 @@ input[type=radio]:checked:after {
     top: 50%;
     transform: translateY(-50%);
 }
-<<<<<<< HEAD
+
 .grp_list {
     padding: 10px 0px;
     min-height: 100%;
@@ -1421,6 +1421,9 @@ input[type=radio]:checked:after {
     font-size: 14px;
     font-weight: 500;
     color: #808080;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .noPad {
     padding: 0;
@@ -1428,10 +1431,10 @@ input[type=radio]:checked:after {
 .grp_col {
     /*max-width: 400px;*/
     /*max-width: 690px;*/
-    overflow-x: scroll;
     float: left;
     min-height: 100%;
     height: 100%;
+    overflow-x: hidden;
 }
 
 .col_wrapper {
@@ -1439,23 +1442,35 @@ input[type=radio]:checked:after {
     float: left;
     border-right: 1px solid #ccc;
     min-height: 100%;
+    overflow-y: auto;
+    height: 100%;
 }
 
 .assets_list {
     background: #f4f5f5;
     min-height: 100%;
     height: 100%;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
-.modal-body {
-    min-height: 100%;
-    height: 100%;
+#getGroupModal .modal-body {
+    min-height: calc(100% - 76px);
+    height: calc(100% - 76px);
 }
 .grp_wrapper {
     min-height: 100%;
     height: 100%;
-    width: 1920px;
+    /* overflow x css*/
+     overflow: hidden;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+    -webkit-column-gap: 0px; /* Chrome, Safari, Opera */
+    -moz-column-gap: 0px; /* Firefox */
+    column-gap: 0px;
+
 }
 .isAcc {
     color: #1a1a1a !important;
@@ -1536,6 +1551,7 @@ label {
 }
 .btn-add { 
     display: inline-block !important;
+    color: #d25f29 !important;
 }
 .btn-add:hover, .btn-add:focus {
     background: #d25f29;
@@ -1567,4 +1583,13 @@ label {
 }
 .ledger-panel .upload_div label {
     color: #4d4d4d;
+}
+.col3 {
+    -webkit-column-count: 3;
+    -moz-column-count: 3;
+    column-count: 3;
+}
+.form_box {
+    overflow-y: auto;
+    height: 100%;
 }

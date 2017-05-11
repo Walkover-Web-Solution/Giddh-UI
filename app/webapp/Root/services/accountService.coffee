@@ -137,6 +137,7 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
       }, data, onSuccess, onFailure))
 
     get: (unqNamesObj) ->
+      console.log unqNamesObj
       @handlePromise((onSuccess, onFailure) -> Account.get({
         companyUniqueName: unqNamesObj.compUname,
         accountsUniqueName: unqNamesObj.acntUname

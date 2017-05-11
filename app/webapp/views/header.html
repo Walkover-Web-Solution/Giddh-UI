@@ -212,6 +212,14 @@
 
         <li>
             <div ng-hide="canViewSpecificItems">
+                <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
+                    <span class="icon-plus" aria-hidden="true"></span> Add & Manage
+                </button>
+            </div>
+        </li>
+
+        <li>
+            <div ng-hide="canViewSpecificItems">
                 <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="NewgoToManageGroups()" ng-show="canManageComp">
                     <span class="icon-plus" aria-hidden="true"></span> Add & Manage
                 </button>
