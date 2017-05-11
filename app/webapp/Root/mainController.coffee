@@ -127,6 +127,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $rootScope.basicInfo = res.data.body
     $scope.userName = $rootScope.basicInfo.name.split(" ")
     $scope.userName = $scope.userName[0][0]+$scope.userName[1][0]
+    $rootScope.getCompanyList()
     if !_.isEmpty($rootScope.selectedCompany)
       $rootScope.cmpViewShow = true
       
@@ -590,7 +591,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   # change selected company
 
-  $rootScope.getCompanyList()
+  
 
   $scope.changeCompany = (company, index, method) ->
 #    console.log("method we get here is : ", method)
@@ -832,7 +833,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     )
 
   $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
-    $rootScope.setState(toState.name, toState.url, toParams.unqName)
+    if $rootScope.selectedCompany != undefined && $rootScope.selectedCompany != null
+      $rootScope.setState(toState.name, toState.url, toParams.unqName)
   )
 
   $(document).on('click', (e)->

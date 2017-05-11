@@ -77,12 +77,12 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
             cst = _.findWhere(companyList, {uniqueName: cdt.uniqueName})
             if _.isUndefined(cst)
               a = checkRole(companyList[0])
-              return a
               localStorageService.set("_selectedCompany", companyList[0])
+              return a
             else
               a = checkRole(cst)
-              return a
               localStorageService.set("_selectedCompany", cst)
+              return a
           else
             if companyList.length < 1
               a = checkRole(user)
