@@ -75,7 +75,6 @@ angular.module('inventoryController', [])
 				vm.stockGroup.list = res.body.results;
 			}
 			*/
-			
 			vm.stockGroup.list = res.body.results;
 			vm.stockGroup.page = res.body.page
 			vm.stockGroup.totalPages = res.body.totalPages
@@ -153,7 +152,6 @@ angular.module('inventoryController', [])
 		vm.selectedReportGrp = grp
 		this.success = function(res){
 			vm.report = res.body
-			//vm.report.page = 
 		}
 		this.failure = function(res){
 			toastr.error(res.data.message)
@@ -221,14 +219,14 @@ angular.module('inventoryController', [])
 			companyUniqueName: $rootScope.selectedCompany.uniqueName,
 			stockGroupUniqueName: $state.params.grpId
 		}
-		var a = vm.updateStockGroup
+		var a = angular.copy(vm.updateStockGroup)
 		var obj = {
 			name: a.name,
 			uniqueName: a.uniqueName,
-			parentStockGroupUniqueName: a.parentStockGroupUniqueName
+			parentStockGroupUniqueName: a.parent
 		}
 
-		if(_.isNull(a.parentStockGroupUniqueName)){
+		if(!a.parent){
 			obj.parentStockGroupUniqueName = ''
 		}
 
@@ -319,9 +317,16 @@ angular.module('inventoryController', [])
 	vm.getStockGroupDetail = function(uName){
 		this.success = function(res){
 			vm.groupEditMode = true
-			vm.updateStockGroup = angular.copy(res.body)
-			if(!_.isNull(res.body.parentStockGroup)){
-				vm.updateStockGroup.parentStockGroupUniqueName = res.body.parentStockGroup.uniqueName
+			var o = angular.copy(res.body)
+			vm.updateStockGroup = {
+				name: o.name,
+				uniqueName: o.uniqueName
+			}
+			if(res.body.parentStockGroup){
+				vm.updateStockGroup.parent = res.body.parentStockGroup.uniqueName
+			}
+			else{
+				vm.updateStockGroup.parent = null
 			}
 		}
 		this.failure = function(res){
@@ -378,6 +383,7 @@ angular.module('inventoryController', [])
 			$state.go('inventory.add-group.add-stock', { stockId: null });
 		}
 		else{
+			vm.groupEditMode =  false
 			$state.go(state);
 		}
 	}
@@ -410,6 +416,7 @@ angular.module('inventoryController', [])
 	});
 
 	//set mode 
+	vm.groupEditMode = false
 	if(!_.isEmpty($state.params) && angular.isDefined($state.params.grpId) && $state.params.grpId !== ''){
 		vm.groupEditMode =  true
 		vm.getStockGroupDetail($state.params.grpId)

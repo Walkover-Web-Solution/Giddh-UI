@@ -31,7 +31,7 @@
 				      class="form-control"
 				      name="parentStockGroupUniqueName"
 				      ng-model="stock.groupStockObj.parentStockGroupUniqueName"
-				      ng-options="item.uniqueName as item.name for item in stock.stockGroup.list">
+				      ng-options="item.uniqueName as item.name for item in stock.stockGroup.list track by $index">
 				    	<option value="">Select</option>
 				    </select>
 					</div>
@@ -74,9 +74,9 @@
 						<label>Parent Group</label>
 						<select
 				      class="form-control"
-				      name="parentStockGroupUniqueName"
-				      ng-model="stock.updateStockGroup.parentStockGroupUniqueName" 
-				      ng-options="item.uniqueName as item.name disable when item.uniqueName === 'sms' for item in stock.stockGroup.list">
+				      name="parent"
+				      ng-model="stock.updateStockGroup.parent" 
+				      ng-options="item.uniqueName as item.name disable when item.uniqueName === stock.$state.params.grpId for item in stock.stockGroup.list track by item.uniqueName">
 				    	<option value="">Select</option>
 				    </select>
 					</div>
