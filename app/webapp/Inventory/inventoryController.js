@@ -19,12 +19,12 @@ angular.module('inventoryController', [])
 	vm.toDatePickerIsOpen = false
 	vm.format = "dd-MM-yyyy"
 	vm.dateOptions = {
-	    'year-format': "'yy'",
-	    'starting-day': 1,
-	    'showWeeks': false,
-	    'show-button-bar': false,
-	    'year-range': 1,
-	    'todayBtn': false
+    'year-format': "'yy'",
+    'starting-day': 1,
+    'showWeeks': false,
+    'show-button-bar': false,
+    'year-range': 1,
+    'todayBtn': false
 	}
 
 	vm.fromDatePickerOpen = function(e){
@@ -33,21 +33,23 @@ angular.module('inventoryController', [])
 		e.stopPropagation()
 	}
     	
-  	vm.toDatePickerOpen = function(e){
-  		vm.fromDatePickerIsOpen = false
-  		vm.toDatePickerIsOpen = true
-  		e.stopPropagation()
-  	}
+	vm.toDatePickerOpen = function(e){
+		vm.fromDatePickerIsOpen = false
+		vm.toDatePickerIsOpen = true
+		e.stopPropagation()
+	}
     	
 	vm.sideBarOn = function(e){
 		e.stopPropagation();
 		vm.showSidebar = true;
 	}
 
-	// vm.sideBarOff = function(){
-	// 	vm.showSidebar = false
-	// 	return false
-	// }
+	//reload when company changed
+	$scope.$on('company-changed' , function(e, data){
+		if (!_.isUndefined(data.index)){
+    	$state.go('inventory', {}, {reload: true, notify: true});
+		}
+  });
 	
 	// get flattten stock groups
 	vm.stockGroup = {}

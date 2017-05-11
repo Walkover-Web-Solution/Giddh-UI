@@ -158,27 +158,28 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   # download CSV
   $scope.getCSVHeader=()->
-    console.log($scope.searchResData)
     return  [
       "Name"
+      "UniqueName"
       "Opening Bal."
       "O/B Type"
       "DR Total"
       "CR Total"
       "Closing Bal."
       "C/B Type"
-      "UniqueName"
+      "Parent"
     ]
 
   $scope.order = [
     "name"
+    "uniqueName"
     "openingBalance"
     "openBalType"
     "debitTotal"
     "creditTotal"
     "closingBalance"
     "closeBalType"
-    "uniqueName"
+    "parentName"
   ]
 
   $scope.createCSV = () ->
@@ -186,13 +187,15 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     title = ''
     _.each header, (head) ->
       title += head + ','
+    title = title.replace(/.$/,'')
+    console.log(title)  
     title += '\r\n'
 
     row = ''
     _.each $scope.searchResData, (data) ->
       if data.name.indexOf(',')
         data.name.replace(',', '')
-      row += data.name + ',' + data.openingBalance + ',' + data.openBalType + ',' + data.debitTotal + ',' + data.creditTotal + ',' + data.closingBalance + ',' + data.closeBalType + ',' + data.uniqueName
+      row += data.name + ',' + data.uniqueName + ',' + $filter('number')(data.openingBalance, 2) + ',' + data.openBalType + ',' + $filter('number')(data.debitTotal, 2) + ',' + $filter('number')(data.creditTotal, 2) + ',' + $filter('number')(data.closingBalance, 2) + ',' + data.closeBalType + ',' + data.parent 
       row += '\r\n'
 
     csv = title + row
