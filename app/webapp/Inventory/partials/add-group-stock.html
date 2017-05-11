@@ -1,0 +1,92 @@
+<section class="col-xs-12 col-md-9 col-lg-6">
+
+	<div class="pd2">
+
+		
+
+		<aside ng-if="!stock.groupEditMode">
+			<div class="row">
+				<aside class="form_title">
+					<label>Add Group</label>
+				</aside>
+			</div>
+
+			<div class="row">
+				<form name="groupStockForm" class="form-theme" novalidate>
+			
+					<div class="form-group col-xs-6 pdL0 pdR">
+						<label>Name<span class="required">*</span></label>
+						<input type="text" name="name" class="form-control" ng-model="stock.groupStockObj.name" required>
+					</div>
+
+					<div class="form-group col-xs-6 pdR0 pdL">
+						<label>Unique Name<span class="required">*</span></label>
+						<input type="text" name="uniqueName" class="form-control" ng-model="stock.groupStockObj.uniqueName" required>
+					</div>
+
+					<div class="form-group">
+						<label">Adding to</label>
+						<select
+							ng-disabled="stock.groupStockObj.isSelfParent"
+				      class="form-control"
+				      name="parentStockGroupUniqueName"
+				      ng-model="stock.groupStockObj.parentStockGroupUniqueName"
+				      ng-options="item.uniqueName as item.name for item in stock.stockGroup.list">
+				    	<option value="">Select</option>
+				    </select>
+					</div>
+
+					<div class="checkbox">
+						<label for="isSelfParent" ng-click="$event.stopPropagation(); stock.resetParentSelectBox()">
+							<input type="checkbox" ng-model="stock.groupStockObj.isSelfParent" id="isSelfParent" name="parentStockGroup" />Assign as a Parent Group</label>
+					</div>
+
+					<button type="submit" class="btn btn-md btn-success" ng-click="stock.addGroup()" 
+					ng-disabled="groupStockForm.$invalid">Save</button>
+
+					<button type="submit" class="btn btn-md btn-default mrL1" ng-click="stock.resetGroupStockForm()">Clear</button>
+
+				</form>
+			</div>
+		</aside>
+
+		
+		<aside ng-if="stock.groupEditMode">
+			<div class="row">
+				<aside class="form_title">
+					<label>Modify Group</label>
+				</aside>
+			</div>
+
+			<div class="row">
+				<form name="updateStockGroup" class="form-theme" novalidate>
+					<div class="form-group col-xs-6 pdL0 pdR">
+						<label>Name<span class="required">*</span></label>
+						<input type="text" name="name" class="form-control" ng-model="stock.updateStockGroup.name" required>
+					</div>
+
+					<div class="form-group col-xs-6 pdR0 pdL">
+						<label>Unique Name<span class="required">*</span></label>
+						<input type="text" name="uniqueName" class="form-control" ng-model="stock.updateStockGroup.uniqueName" required>
+					</div>
+
+					<div class="form-group">
+						<label>Parent Group</label>
+						<select
+				      class="form-control"
+				      name="parentStockGroupUniqueName"
+				      ng-model="stock.updateStockGroup.parentStockGroupUniqueName" 
+				      ng-options="item.uniqueName as item.name disable when item.uniqueName === 'sms' for item in stock.stockGroup.list">
+				    	<option value="">Select</option>
+				    </select>
+					</div>
+
+					<button type="submit" class="btn btn-md btn-success" ng-click="stock.updateGroup()"  ng-disabled="updateStockGroup.$invalid">Update</button>
+
+					<button type="submit" class="btn btn-md btn-danger" ng-click="stock.deleteStockGrp()">Delete</button>
+
+				</form>
+			</div>
+		</aside>
+	</div>
+</section>

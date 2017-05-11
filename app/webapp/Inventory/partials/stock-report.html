@@ -1,12 +1,15 @@
-<section class="pd1" ng-if="stock.report.name == undefined" >
+<section class="col-xs-12" ng-if="stock.report.name == undefined" >
 	<p>Select a Stock to Load Report</p>
 </section>
-<section class="pd1"  ng-if="stock.report.name">
-	
-	<div>	
-		<div class="form-group mrR1 pull-left">
-	        <label>From date</label>
-	        <p class="input-group max150">
+<section class="col-xs-12 mrT1" ng-if="stock.report.name">
+<div class="clearfix mrB2 pull-right">
+<button class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i> Manage Stock</button>
+<button class="btn btn-primary mrL"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete Stock</button>
+</div>
+	<div class="filterForm pos-rel clearfix">	
+		<div class="form-group mrB pull-left">
+	        <label>From</label>
+	        <p class="input-group">
 	          <input type="text" class="form-control"
 	                 uib-datepicker-popup="{{stock.format}}" required
 	                 datepicker-options="stock.dateOptions" 
@@ -18,9 +21,9 @@
 	              />
 	        </p>
 	    </div>
-	    <div class="form-group mrR1 pull-left">
-	        <label>To date</label>
-	        <p class="input-group max150">
+	    <div class="form-group mrB pull-left">
+	        <label>To</label>
+	        <p class="input-group">
 	          <input type="text" class="form-control"
 	                 uib-datepicker-popup="{{stock.format}}" required
 	                 datepicker-options="stock.dateOptions"
@@ -33,33 +36,36 @@
 	              />
 	        </p>
 	    </div>
-	    <button class="btn btn-default pull-left mrT2" ng-click="stock.getStockReport(stock.selectedReportStock, stock.selectedReportGrp)">Go</button>
+	    <div class="form-group">
+	        <label>&nbsp;</label>
+		    <button class="btn btn-primary" ng-click="stock.getStockReport(stock.selectedReportStock, stock.selectedReportGrp)">Go</button>
+        </div>
 	</div>
 	<br>
-	<ul class="list-inline" style="margin-top:50px">
+	<ul class="list-inline">
 		<li  class="mrR2">
-			<label>Stock Name:</label> {{stock.report.name}}
+			<label>Stock Name:</label> <span class="ReportInfo">{{stock.report.name}}</span>
 		</li>
 		<li  class="mrR2">
-			<label>Stock UniqueName:</label> {{stock.report.uniqueName}}
+			<label>Stock UniqueName:</label> <span class="ReportInfo">{{stock.report.uniqueName}}</span>
 		</li>
 		<li class="mrR2">
-			<label>Opening Amt:</label> {{stock.report.openingAmount}}
+			<label>Opening Amt:</label> <span class="ReportInfo">{{stock.report.openingAmount}}</span>
 		</li>
 		<li class="mrR2">
-			<label>Opening Qty:</label> {{stock.report.openingQuantity}}</label>
+			<label>Opening Qty:</label> <span class="ReportInfo">{{stock.report.openingQuantity}}</span></label>
 		</li>
 		<li class="mrR2">
-			<label>Closing Qty:</label> {{stock.report.closingQuantity}}</label>
+			<label>Closing Qty:</label><span class="ReportInfo">{{stock.report.closingQuantity}}</span></label>
 		</li>
 	</ul>
 	
 
 	<p class="mrT1" ng-if="stock.report.transactionResource.length == 0">No Transactions for this Stock</p>
 	<div class="h100 overflow-y">
-		<table class="table table-bordered mrT2" ng-if="stock.report.transactionResource.length > 0">
+		<table class="col-xs-12 mrT2 table_theme" ng-if="stock.report.transactionResource.length > 0">
 			<thead>
-				<tr>
+				<tr class="t-h-bg1">
 					<th>Account</th>
 					<th>Entry Date</th>
 					<th>Qty</th>

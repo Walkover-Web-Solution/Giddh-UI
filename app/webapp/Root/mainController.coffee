@@ -1,6 +1,17 @@
 "use strict"
 
 mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location, DAServices) ->
+  
+  #get user details
+  getUserSuccess = (res) ->
+    localStorageService.set('_userDetails', res.data.body)
+    $rootScope.basicInfo = res.data.body
+  getUserFailure = (res) ->
+    toastr.error('unable to fetch user')
+  getUserDetail = () ->
+    $http.get('/fetch-user').then(getUserSuccess, getUserFailure)
+  getUserDetail()
+
   $rootScope.scriptArrayHead = [
     "/public/webapp/newRelic.js"
     "/public/webapp/core_bower.min.js"
@@ -188,7 +199,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       # _userDetails, _currencyList
       localStorageService.clearAll()
       window.sessionStorage.clear()
-      window.location = "/thanks"
+      window.location = "https://www.giddh.com"
     ), (res) ->
 
   # for ledger
@@ -417,6 +428,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $scope.checkUserCompanyStatus(res.body)
       $rootScope.mngCompDataFound = true
       $scope.findCompanyInList()
+      $rootScope.checkWalkoverCompanies()
 
   $scope.checkUserCompanyStatus = (compList) ->
     _.each compList, (cmp) ->
@@ -785,6 +797,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.runTour = () ->
     $rootScope.$emit('run-tour')
 
+  $scope.showSwitchUserOption = false
   $rootScope.checkUserCompany = () ->
     user = localStorageService.get('_userDetails')
     company = user.uniqueName.split('@')
@@ -793,9 +806,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.checkWalkoverCompanies = () ->
     if $rootScope.checkUserCompany().toLowerCase() == 'giddh.com' || $rootScope.checkUserCompany().toLowerCase() == 'walkover.in' || $rootScope.checkUserCompany().toLowerCase() == 'msg91.com'
-      return true
+      $scope.showSwitchUserOption = true
     else
-      return false
+      $scope.showSwitchUserOption = false
 
   $rootScope.ledgerMode = 'new'
   $rootScope.switchLedgerMode = () ->
@@ -804,6 +817,25 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
         $rootScope.ledgerMode = 'old'
       else
         $rootScope.ledgerMode = 'new'
+
+  $rootScope.setState = (lastState, url, param) ->
+    $rootScope.selectedCompany = $rootScope.selectedCompany || localStorageService.get('_selectedCompany')
+    data = {
+        "lastState": lastState,
+        "companyUniqueName": $rootScope.selectedCompany.uniqueName
+    }
+    if url.indexOf('ledger') != -1
+      data.lastState = data.lastState + '@' + param
+    $http.post('/state-details', data).then(
+        (res) ->
+          
+        (res) ->
+          
+    )
+
+  $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+    $rootScope.setState(toState.name, toState.url, toParams.unqName)
+  )
 
   $(document).on('click', (e)->
     if e.target.id != 'accountSearch'
@@ -818,9 +850,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $rootScope.ledgerState = false
   )
 
-  $rootScope.$on('different-company', (event, lastState)->
-    company = _.findWhere($scope.companyList, {uniqueName:lastState.companyUniqueName})
+  $rootScope.$on('different-company', (event, lastStateData)->
+    company = _.findWhere($scope.companyList, {uniqueName:lastStateData.companyUniqueName})
     $scope.changeCompany(company, 0, 'CHANGE')
+    $state.go(lastStateData.lastState)
   )
 
 giddh.webApp.controller 'mainController', mainController

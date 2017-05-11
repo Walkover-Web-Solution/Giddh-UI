@@ -150,7 +150,7 @@ th {
 			<thead>
 				<tr>
 					<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} coming in?</th>
-					<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} coming out?</th>
+					<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} going out?</th>
 				</tr>
 			</thead>
 		</table>
@@ -203,7 +203,9 @@ th {
 												ng-model="ledger.entryDate" 
 												class="form-control"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
-												is-open="txn.isOpen">
+												is-open="txn.isOpen"
+												ui-mask="99-99-9999"
+                                      			model-view-value="true">
 											</td>
 											<td class="col-xs-7">
 												<input 
@@ -225,6 +227,15 @@ th {
 												is-open="txn.isOpen"
 												ng-change="ledgerCtrl.onTxnAmountChange(txn)"
 												>
+												<span 
+			                                        class="download-invoice-ledger" 
+			                                        ng-if="ledger.attachedFile.length > 0" 
+			                                        ng-click="ledgerCtrl.downloadAttachedFile(ledger.attachedFile, $event)" 
+			                                        tooltip-append-to-body="true" 
+			                                        uib-tooltip="Download file : {{ledger.attachedFileName}}" 
+			                                        tooltip-placement="top"> 
+			                                    	<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
+			                                    </span> 
 											</td>
 										</tr>
 									</tbody>
@@ -253,7 +264,9 @@ th {
 												ng-model="ledger.entryDate" 
 												class="form-control"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
-												is-open="txn.isOpen">
+												is-open="txn.isOpen"
+												ui-mask="99-99-9999"
+                                      			model-view-value="true">
 											</td>
 											<td class="col-xs-7">
 												<input 
@@ -332,7 +345,9 @@ th {
 												type="text" 
 												ng-model="ledger.entryDate"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
-												is-open="txn.isOpen">
+												is-open="txn.isOpen"
+												ui-mask="99-99-9999"
+                                      			model-view-value="true">
 											</td>
 											<td class="col-xs-7">
 												<input 
@@ -355,6 +370,15 @@ th {
 												is-open="txn.isOpen"
 												ng-change="ledgerCtrl.onTxnAmountChange(txn)"
 												>
+												<span 
+			                                        class="download-invoice-ledger" 
+			                                        ng-if="ledger.attachedFile.length > 0" 
+			                                        ng-click="ledgerCtrl.downloadAttachedFile(ledger.attachedFile, $event)" 
+			                                        tooltip-append-to-body="true" 
+			                                        uib-tooltip="Download file : {{ledger.attachedFileName}}" 
+			                                        tooltip-placement="top"> 
+			                                    	<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
+			                                    </span> 
 											</td>
 										</tr>
 									</tbody>
@@ -385,7 +409,9 @@ th {
 												type="text" 
 												ng-model="ledger.entryDate"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
-												is-open="txn.isOpen">
+												is-open="txn.isOpen"
+												ui-mask="99-99-9999"
+                                      			model-view-value="true">
 											</td>
 											<td class="col-xs-7">
 												<input 
@@ -430,7 +456,7 @@ th {
 					
 					<tr class="total_col">
 						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-							<span ng-if="ledgerCtrl.ledgerData.balance.type == 'CREDIT'">C/F: {{ledgerCtrl.ledgerData.balance.amount | number:2}}</span>
+							<span ng-if="ledgerCtrl.totalDebit < ledgerCtrl.totalCredit">C/F: CR {{ledgerCtrl.totalDebit - ledgerCtrl.totalCredit| abs | number:2 }}</span>
 						</td>
 					</tr>
 					<tr class="total_col">
@@ -445,7 +471,7 @@ th {
 					
 					<tr class="total_col">
 						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-							<span  ng-if="ledgerCtrl.ledgerData.balance.type == 'DEBIT'">C/F: Dr <span class="primary_color">{{ledgerCtrl.ledgerData.balance.amount | number:2}}</span></span>
+							<span  ng-if="ledgerCtrl.totalDebit > ledgerCtrl.totalCredit">C/F: Dr <span class="primary_color">{{ledgerCtrl.totalDebit - ledgerCtrl.totalCredit | number:2}}</span></span>
 						</td>
 					</tr>
 					<tr class="total_col">
@@ -515,7 +541,7 @@ th {
 <script type="text/ng-template" id="panel">
      <div class="ledger-panel" ng-click="$event.stopPropagation()" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': ledgerCtrl.showPanel, 'top0':hideHeader}">
       <div class="wrapper">
-        <div class="basic_detail">
+        <div class="basic_detail" ng-if="ledgerCtrl.selectedLedger.panel.show || ledgerCtrl.selectedLedger.isBlankLedger">
 	        <table>
 	        	<tbody>        		
 	        	<tr>
@@ -575,7 +601,7 @@ th {
 	        		<span uib-dropdown auto-close="outsideClick">
 					      <a href id="tax" uib-dropdown-toggle>
 			        	<label>Tax %</label>
-			        	<div class="multi-select">
+			        	<div class="multi-select adjust">
 			        		<input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.tax"/>
 			        		<span class="caret"></span>
 			        	</div>
@@ -612,7 +638,7 @@ th {
   		</div>
   		<div class="col-xs-12 mrT mrB">
   			<div class="row">
-	  			<div class="cheq col-xs-6" ng-show="showAdvanced">
+	  			<div class="cheq col-xs-6 pdT" ng-show="showAdvanced">
 	  				<div class="row">
 			  			<table>
 			  				<tbody>
@@ -633,7 +659,7 @@ th {
 	  		
 		  		<div class="file_attached col-xs-5 pull-right text-right" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length > 0">
 		  			<div class="row">
-			  			<span ng-bind="ledgerCtrl.selectedLedger.attachedFileName"></span><span class="remove cp" ng-click="ledgerCtrl.deleteAttachedFile()">(remove)</span> 
+			  			<span ng-bind="ledgerCtrl.selectedLedger.attachedFileName"></span><label class="remove cp mrL1" ng-click="ledgerCtrl.deleteAttachedFile()">(remove)</label> 
 			  		</div>	
 		  		</div>
 	  		</div>
@@ -661,29 +687,37 @@ th {
             </div>
   		</div>
   		
-  		<div class="col-xs-12 bdrT pdT">
-	  		<div class="row">
-	  			<div class="form-group" style="max-width:200px;">
-	  			<strong>Voucher type</strong> 
-	  			<ui-select ng-model="ledgerCtrl.selectedLedger.voucher" theme="bootstrap">
-                    <ui-select-match>
-                      <span>{{$select.selected.name}}</span>
-                    </ui-select-match >
-                    <ui-select-choices repeat="item in ledgerCtrl.voucherTypeList| filter: $select.search ">
-                      <span ng-bind="item.name"></span>
-                    </ui-select-choices>
-                </ui-select>
-	  			<span>{{ledgerCtrl.selectedLedger.voucherNo}}</span>
-	  			</div>
+  		<div class="col-xs-12 pdT" ng-show="showAdvanced">
+	  		<div class="row bdrB pdB1">
+	  			<table>
+	  				<tr>
+	  					<td class="pdR1"><label class="default_clr pull-left">Voucher type</label> </td>
+	  					<td colspan="4">
+				  			<ui-select ng-model="ledgerCtrl.selectedLedger.voucher" theme="bootstrap">
+			                    <ui-select-match>
+			                      <span>{{$select.selected.name}}</span>
+			                    </ui-select-match >
+			                    <ui-select-choices repeat="item in ledgerCtrl.voucherTypeList| filter: $select.search ">
+			                      <span ng-bind="item.name"></span>
+			                    </ui-select-choices>
+			                </ui-select>
+	  					</td>
+	  					<td class="pdL1">
+	  						<span>{{ledgerCtrl.selectedLedger.voucherNo}}</span>
+	  					</td>
+	  				</tr>
+	  			</table>
 	  		</div>
   		</div>
-
-  		<div class="col-xs-12 pdT">
+  		<div class="col-xs-12 pd0 text-right mrT">
+  			<span class="primary_color">Compound Total: {{ledger.total.amount}}</span>
+  		</div>
+  		<div class="col-xs-12 pdT1">
   			<div class="row">
-	  			<button class="no-btn" ng-click="showAdvanced = !showAdvanced">Advanced <i class="caret" ng-class="{rotate180:showAdvanced}"></i></button>
+	  			<button class="no-btn" ng-click="showAdvanced = !showAdvanced">Advance <i class="glyphicon glyphicon-triangle-bottom" ng-class="{rotate180:showAdvanced}"></i></button>
 	  			<div class="pull-right">
 		  			<!-- <button class="btn btn-default"><i class="glyphicon glyphicon-paperclip"></i></button> -->
-		  			<div class="upload_div blue" style="padding:6px 8px;float:left;margin-right:10px;border:1px solid #ccc" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0">
+		  			<div class="upload_div" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0">
 	                  <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
 	                  <label for="invoiceFile"><i class="glyphicon glyphicon-paperclip"></i></label>
 	                </div>

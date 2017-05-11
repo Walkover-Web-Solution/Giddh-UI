@@ -91,6 +91,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
       else
         #user is registered and redirect it to app
         if response.data.result.body.authKey
+          localStorageService.set('_newUser', response.data.result.body.isNewUser)
           localStorageService.set("_userDetails", response.data.userDetails)
           $window.sessionStorage.setItem("_ak", response.data.result.body.authKey)
           window.location = "/app/#/home/"

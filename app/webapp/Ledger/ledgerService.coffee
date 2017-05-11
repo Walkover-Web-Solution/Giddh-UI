@@ -11,6 +11,7 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
       'chequeNumber':@chequeNumber
       'count':@count
       'page':@page
+      'sort':@sort
     },
     {
       get: {
@@ -92,6 +93,7 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
         toDate: unqNamesObj.toDate
         page:unqNamesObj.page
         count:unqNamesObj.count
+        sort:unqNamesObj.sort
       }, onSuccess, onFailure))
 
     createEntry: (unqNamesObj, data) ->

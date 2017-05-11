@@ -602,3 +602,8 @@ angular.module('trialBalance', []).directive('exportReport', [
 
     }
 ]
+
+.filter 'abs', ->
+  (num) ->
+    num = Math.abs(num)
+    return num

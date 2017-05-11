@@ -128,9 +128,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
       'rightPanel':{
         abstract:true
-#        templateUrl: '/public/webapp/Invoice/invoiceContent.html'
         template: '<div ui-view></div>'
-        #template: '<div ui-view></div>'
       }
     }
   )
@@ -147,11 +145,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('company.content',
     url: ''
     views:{
-      # 'accounts':{
-      #   #templateUrl: '/public/webapp/views/accounts.html'
-      #   template: "<div ui-view='accountsList'></div>"
-      #   abstract: true
-      # }
       'rightPanel':{
         abstract:true
         template: '<div ui-view="rightPanel"></div>'
@@ -159,27 +152,17 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
     }
   )
-  # .state('company.content.manage',
-  #   url: '/manage'
-  #   views:{
-  #     # 'accountsList':{
-  #     #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
-  #     #   #template: "<div>manage page</div>"
-  #     # }
-  #     'rightPanel':{
-  #       templateUrl: appendThis+'/public/webapp/ManageCompany/manageCompany.html'
-  #     }
-  #   }
-  # )
+  .state('company.content.manage',
+    url: '/manage'
+    views:{
+      'rightPanel':{
+        templateUrl: appendThis+'/public/webapp/ManageCompany/manageCompany.html'
+      }
+    }
+  )
   .state('company.content.user',
     url: '/user'
-    # templateUrl: '/public/webapp/views/userDetails.html'
-    # controller: 'userController'
     views:{
-      # 'accountsList':{
-      #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
-      #   #template: "<div>user page</div>"
-      # }
       'rightPanel':{
         templateUrl: appendThis+'/public/webapp/UserDetails/userDetails.html'
         controller: 'userController'
@@ -189,9 +172,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('company.content.tbpl',
     url: '/trial-balance-and-profit-loss',
     views:{
-      # 'accountsList':{
-      #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
-      # }
       'rightPanel':{
         templateUrl: appendThis+'/public/webapp/Tbpl/tbpl.html'
         controller: 'tbplController'
@@ -201,9 +181,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('company.content.ledgerContent',
     url: '/ledger/:unqName'
     views:{
-      # 'accountsList':{
-      #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
-      # }
       'rightPanel':{
         templateUrl: appendThis+'/public/webapp/Ledger/ledger-wrapper.html'
         # controller: 'newLedgerController'
@@ -234,6 +211,34 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: '/public/webapp/Inventory/inventory.html'
     controller: 'stockController'
     controllerAs: 'stock'
+  )
+  .state('inventory.custom-stock',
+    url: '/custom-stock'
+    views:{
+      'inventory-detail':{
+        templateUrl: '/public/webapp/Inventory/partials/custom-stock-unit.html'
+        controller: 'inventoryCustomStockController'
+        controllerAs: 'vm'
+      }
+    }
+  )
+  .state('inventory.add-group',
+    url: '/add-group/:grpId'
+    views:{
+      'inventory-detail':{
+        templateUrl: '/public/webapp/Inventory/partials/add-group-stock.html'
+      }
+    }
+  )
+  .state('inventory.add-group.add-stock',
+    url: '/add-group/:grpId/add-stock/:stockId'
+    views:{
+      'inventory-detail@inventory':{
+        templateUrl: '/public/webapp/Inventory/partials/stock-operations.html',
+        controller: 'inventoryAddStockController'
+        controllerAs: 'vm'
+      }
+    }
   )
   .state('recurring-entry',
     url: '/recurring-entry'
@@ -274,7 +279,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: appendThis + '/public/webapp/invoice2/invoice2.html'
     controller: 'invoice2Controller'
   )
-  $locationProvider.html5Mode(false)
+  $locationProvider.html5Mode(true)
   return
 
 giddh.webApp.run [
@@ -290,19 +295,19 @@ giddh.webApp.run [
   '$http'
   ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService, $http) ->
     
-    $rootScope.setState = (lastState, url, param) ->
-      data = {
-          "lastState": lastState,
-          "companyUniqueName": $rootScope.selectedCompany.uniqueName
-      }
-      if url.indexOf('ledger') != -1
-        data.lastState = data.lastState + '@' + param
-      $http.post('/state-details', data).then(
-          (res) ->
+    # $rootScope.setState = (lastState, url, param) ->
+    #   data = {
+    #       "lastState": lastState,
+    #       "companyUniqueName": $rootScope.selectedCompany.uniqueName
+    #   }
+    #   if url.indexOf('ledger') != -1
+    #     data.lastState = data.lastState + '@' + param
+    #   $http.post('/state-details', data).then(
+    #       (res) ->
             
-          (res) ->
+    #       (res) ->
             
-      )
+    #   )
 
 
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
@@ -320,7 +325,7 @@ giddh.webApp.run [
         },
         userId: user.uniqueName
       });
-      $rootScope.setState(toState.name, toState.url, toParams.unqName)
+      #$rootScope.setState(toState.name, toState.url, toParams.unqName)
     )
       #    # check IE browser version
       #    $rootScope.GetIEVersion = () ->

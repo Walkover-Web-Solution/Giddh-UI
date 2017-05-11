@@ -2598,10 +2598,16 @@ body.unresponsive {
     border-right: 0
 }
 
-@media only screen and (max-width: 960px) {
+@media only screen and (max-width: 1068px) {
     body.unresponsive {
-        width: 960px;
+        width: 1068px;
         overflow: auto;
+    }
+    .sidebar {
+        width: 280px;
+    }
+    .wrap_content {
+        margin-left: 280px;
     }
 
     nav > .navbar-nav > li {
@@ -4398,18 +4404,20 @@ table.proforma-particulars{
 }
 
 /*** stock inventory**/
-.stock-bar{
+/*.stock-bar{
     padding:10px;
     margin:0;
     border-bottom: 1px solid #e0e0e0;
-}
+}*/
 
 .stock-bar ul{
-    height:24px;
+    float: right;
+    height:auto;
 }
 
 .stock-bar ul li{
     max-width:250px;
+    text-align: right;
 }
 
 .stock-bar ul li input, .stock-bar ul li input:focus,.stock-bar ul li input:active,
@@ -4447,42 +4455,44 @@ table.proforma-particulars{
         width:220px;
     }
 }*/
-
+.stock-grp-list>li>a, .sub-grp>li>a{
+    text-transform: uppercase;
+    font-weight: 600
+}
+.stock-items>li>a{
+    text-transform: capitalize;
+    font-weight: 400
+}
+.stock-items>li>a.active{
+    color: #d35f29!important
+}
 .stock-grp.list{
     height: calc(100% - 200px);
     overflow-y: auto;
 }
 
 .stock-grp-list li > a{
-    text-decoration: none;
     color:#444;
+}
+.stock-grp-list li>i{
+    position: absolute;
+    right: 20px;
+    top: 10px;
 }
 
 .stock-grp-list li{
     padding:5px;
     border-bottom:1px solid #e0e0e0;
+    position: relative;
 }
 
 .stock-grp-list li:last-child{
     border-bottom:0;
-}
-
-.stock-grp-list li:first-child{
-    border-top:1px solid #e0e0e0;
-}
-
-.stock-grp-list li > a{
-    color:#444;
-}
-
-.stock-grp-list li:last-child{
     padding-bottom:0;
 }
-
 .stock-twin-list{
     height:100%;
 }
-
 .stock-twin-list ul li{
     padding:5px;
     border-top:1px solid #e0e0e0;
@@ -4674,6 +4684,9 @@ table.proforma-particulars{
     display: inline-table;
 }
 
+.pd2{
+    padding: 20px;
+}
 .map-txn-container{
     position: absolute;
     z-index: 99;
@@ -4706,3 +4719,4 @@ table.proforma-particulars{
 .right-col-new {
     border: none;
 }
+
