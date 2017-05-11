@@ -890,14 +890,15 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.getTotalDiscount = (ledger) ->
     discount = 0
-    _.each ledgerCtrl.discountAccount.accountDetails, (account) ->
-      _.each ledger.transactions, (txn) ->
-        if txn.particular.uniqueName == account.uniqueName
-          account.amount = txn.amount
-      if account.amount
-        discount += account.amount
-    ledger.panel.total = ledgerCtrl.cutToTwoDecimal(ledger.panel.amount - discount + (ledger.panel.tax*ledger.panel.amount/100))
-    ledger.panel.discount = ledgerCtrl.cutToTwoDecimal(discount)
+    if ledgerCtrl.discountAccount != undefined
+      _.each ledgerCtrl.discountAccount.accountDetails, (account) ->
+        _.each ledger.transactions, (txn) ->
+          if txn.particular.uniqueName == account.uniqueName
+            account.amount = txn.amount
+        if account.amount
+          discount += account.amount
+      ledger.panel.total = ledgerCtrl.cutToTwoDecimal(ledger.panel.amount - discount + (ledger.panel.tax*ledger.panel.amount/100))
+      ledger.panel.discount = ledgerCtrl.cutToTwoDecimal(discount)
     discount
 
   ledgerCtrl.getTotalTax = (ledger) ->
@@ -1076,8 +1077,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     @success = (res) ->
       ledgerCtrl.discountAccount = _.findWhere(res.body.results, {groupUniqueName:'discount'})
     @failure = (res) ->
-      
-
+    
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     reqParam.q = 'discount'
