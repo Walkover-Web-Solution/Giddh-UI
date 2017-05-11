@@ -1,16 +1,6 @@
 "use strict"
 
 mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location, DAServices) ->
-  
-  #get user details
-  getUserSuccess = (res) ->
-    localStorageService.set('_userDetails', res.data.body)
-    $rootScope.basicInfo = res.data.body
-  getUserFailure = (res) ->
-    toastr.error('unable to fetch user')
-  getUserDetail = () ->
-    $http.get('/fetch-user').then(getUserSuccess, getUserFailure)
-  getUserDetail()
 
   $rootScope.scriptArrayHead = [
     "/public/webapp/newRelic.js"
@@ -130,6 +120,21 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   #       startDate: moment().subtract(5, 'days')
   #       endDate: moment()
   ###date range picker end###
+
+  #get user details
+  getUserSuccess = (res) ->
+    localStorageService.set('_userDetails', res.data.body)
+    $rootScope.basicInfo = res.data.body
+    $scope.userName = $rootScope.basicInfo.name.split(" ")
+    $scope.userName = $scope.userName[0][0]+$scope.userName[1][0]
+    if !_.isEmpty($rootScope.selectedCompany)
+      $rootScope.cmpViewShow = true
+      
+  getUserFailure = (res) ->
+    toastr.error('unable to fetch user')
+  getUserDetail = () ->
+    $http.get('/fetch-user').then(getUserSuccess, getUserFailure)
+  getUserDetail()
 
 
   $scope.addScript = () ->
@@ -271,13 +276,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   
   $scope.getRoles()
   $scope.getCdnUrl()
-  $timeout(->
-    $rootScope.basicInfo = localStorageService.get("_userDetails")
-    $scope.userName = $rootScope.basicInfo.name.split(" ")
-    $scope.userName = $scope.userName[0][0]+$scope.userName[1][0]
-    if !_.isEmpty($rootScope.selectedCompany)
-      $rootScope.cmpViewShow = true
-  ,1000)
 
   $timeout (->
     cdt = localStorageService.get("_selectedCompany")
