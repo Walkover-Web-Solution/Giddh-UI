@@ -91,7 +91,7 @@
                         </div>
                       </a>
                     </li>
-                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="inventory">
+                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="inventory" ui-sref-opts="{reload: true, notify: true}">
                       <a href="" >
                         <div class="media">
                           <div class="media-body">

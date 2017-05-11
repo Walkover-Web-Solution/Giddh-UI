@@ -231,7 +231,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     }
   )
   .state('inventory.add-group.add-stock',
-    url: '/add-group/:grpId/add-stock/:stockId'
+    url: '/add-stock/:stockId'
     views:{
       'inventory-detail@inventory':{
         templateUrl: '/public/webapp/Inventory/partials/stock-operations.html',
@@ -316,17 +316,17 @@ giddh.webApp.run [
         $rootScope.selAcntUname = undefined
     )
 
-    $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
-      user = localStorageService.get('_userDetails')
-      window.dataLayer.push({
-        event: 'giddh.pageView',
-        attributes: {
-          route: $location.path()
-        },
-        userId: user.uniqueName
-      });
-      #$rootScope.setState(toState.name, toState.url, toParams.unqName)
-    )
+    # $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+    #   user = localStorageService.get('_userDetails')
+    #   window.dataLayer.push({
+    #     event: 'giddh.pageView',
+    #     attributes: {
+    #       route: $location.path()
+    #     },
+    #     userId: user.uniqueName
+    #   });
+    #   #$rootScope.setState(toState.name, toState.url, toParams.unqName)
+    # )
       #    # check IE browser version
       #    $rootScope.GetIEVersion = () ->
       #      ua = window.navigator.userAgent

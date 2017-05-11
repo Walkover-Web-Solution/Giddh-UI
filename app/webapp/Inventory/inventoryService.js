@@ -76,7 +76,7 @@ angular.module('inventoryServices', [])
 			},
 			deleteStockUnit: {
 				method: 'DELETE',
-				url: '/company/:companyUniqueName/stock-group/delete-stock'
+				url: '/company/:companyUniqueName/stock-group/unit-types'
 			},
 			getFilteredStockGroups: {
 				method: 'GET',
