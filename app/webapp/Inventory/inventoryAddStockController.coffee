@@ -19,8 +19,14 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
     }
 
   vm.appendEmptyRow=()->
-    vm.addStockObj.purchaseAccountDetails.unitRates.push(vm.initAcDetailsObj())
-    vm.addStockObj.salesAccountDetails.unitRates.push(vm.initAcDetailsObj())
+    try
+      vm.addStockObj.purchaseAccountDetails.unitRates.push(vm.initAcDetailsObj())
+      vm.addStockObj.salesAccountDetails.unitRates.push(vm.initAcDetailsObj())
+    catch e
+      vm.addStockObj.purchaseAccountDetails={unitRates:[]}
+      vm.addStockObj.salesAccountDetails={unitRates:[]}
+      vm.addStockObj.purchaseAccountDetails.unitRates.push(vm.initAcDetailsObj())
+      vm.addStockObj.salesAccountDetails.unitRates.push(vm.initAcDetailsObj())
 
   # init stock obj
   vm.initStockObj =()->
