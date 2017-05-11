@@ -182,6 +182,12 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     "parentName"
   ]
 
+
+  roundNum = (data, places) ->
+    data = Number(data)
+    data = data.toFixed(places)
+    return data
+
   $scope.createCSV = () ->
     header = $scope.getCSVHeader()
     title = ''
@@ -195,7 +201,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     _.each $scope.searchResData, (data) ->
       if data.name.indexOf(',')
         data.name.replace(',', '')
-      row += data.name + ',' + data.uniqueName + ',' + $filter('number')(data.openingBalance, 2) + ',' + data.openBalType + ',' + $filter('number')(data.debitTotal, 2) + ',' + $filter('number')(data.creditTotal, 2) + ',' + $filter('number')(data.closingBalance, 2) + ',' + data.closeBalType + ',' + data.parent 
+      row += data.name + ',' + data.uniqueName + ',' + roundNum(data.openingBalance, 2) + ',' + data.openBalType + ',' + roundNum(data.debitTotal, 2) + ',' + roundNum(data.creditTotal, 2) + ',' + roundNum(data.closingBalance, 2) + ',' + data.closeBalType + ',' + data.parent 
       row += '\r\n'
 
     csv = title + row
