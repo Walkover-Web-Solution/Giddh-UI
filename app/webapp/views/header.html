@@ -203,40 +203,22 @@
         </li>
 
         <li>
-            <div ng-hide="canViewSpecificItems">
-                <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
-                    <span class="icon-plus" aria-hidden="true"></span> Add & Manage
-                </button>
-            </div>
+          <div ng-hide="canViewSpecificItems">
+              <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
+                  <span class="icon-plus" aria-hidden="true"></span> Add & Manage
+              </button>
+          </div>
         </li>
-      
-<!--       <li class="header-btn fixedDate">
-        <span class="dateblock">
-          <input ng-if="showUnivdate" date-range-picker class="form-control date-picker date-range-picker" type="text" ng-model="cDate" options="fixedDateOptions" required/>
-        <span ng-if="!showUnivdate" ng-click="showUnivdate = true" class="fix_date" tooltip-placement="bottom" uib-tooltip="Set fix date" ng-click="showUnivdate = false"><i class="fa fa-calendar" aria-hidden="true"></i> 1-04-17 - 31-03-18</span>  
-        </span>
-      </li> -->
 
 
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-
-
-<!--       <li class="header-btn fixedDate">
-        <span class="dateblock">
-          <input ng-show="!showUnivdate" ng-click="showUnivdate = true" ng-init="showUnivdate = true" date-range-picker class="form-control date-picker date-range-picker" type="text" ng-model="cDate" options="opts" required/>
-        <span ng-show="showUnivdate" class="fix_date" tooltip-placement="bottom" uib-tooltip="Change fix date" ng-click="showUnivdate = false"><b>Fixed date:</b> Last 1 month</span>  
-        </span>
-        
-      </li>
- -->
-
       <!-- company dropdown -->
         <li ng-if="cmpViewShow" class="company-name" uib-dropdown>
-          <a id="cmpWrp" class="clearfix" style="cursor:pointer;position: relative;" uib-dropdown-toggle>
-          <span class="icon-dropdown"></span>
-            <i class="icon-building"></i>
+          <a id="cmpWrp" class="clearfix" uib-dropdown-toggle>
+            <span class="icon-dropdown"></span>
+            <!-- <i class="icon-building"></i> -->
             <div class="cText">
               <span class="cName">{{selectedCompany.name}}</span>
               <span ng-bind="currentFinancialYear" class="fyear"></span>

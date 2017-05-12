@@ -1,9 +1,5 @@
-<section class="col-xs-12 col-md-9 col-lg-6">
-
+<section class="col-xs-12 col-md-8 col-lg-6">
 	<div class="pd2">
-
-		
-
 		<aside ng-if="!stock.groupEditMode">
 			<div class="row">
 				<aside class="form_title">
@@ -31,7 +27,7 @@
 				      class="form-control"
 				      name="parentStockGroupUniqueName"
 				      ng-model="stock.groupStockObj.parentStockGroupUniqueName"
-				      ng-options="item.uniqueName as item.name for item in stock.stockGroup.list track by $index">
+				      ng-options="item.uniqueName as item.name for item in stock.stockGroup.list track by item.uniqueName">
 				    	<option value="">Select</option>
 				    </select>
 					</div>

@@ -83,11 +83,12 @@ angular.module('inventoryController', [])
 			toastr.error(res.data.message)
 		}
 
-		var reqParam = {}
-		reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-		reqParam.page = page
-		reqParam.q = query || ''
-		reqParam.count = vm.stockGroup.count
+		var reqParam = {
+			companyUniqueName: $rootScope.selectedCompany.uniqueName,
+			page: page,
+			q: query || '',
+			count: ''
+		}
 		stockService.getStockGroupsFlatten(reqParam).then(this.success, this.failure)
 	}
 	vm.getStockGroupsFlatten('', 1,'get');
@@ -317,11 +318,7 @@ angular.module('inventoryController', [])
 	vm.getStockGroupDetail = function(uName){
 		this.success = function(res){
 			vm.groupEditMode = true
-			var o = angular.copy(res.body)
-			vm.updateStockGroup = {
-				name: o.name,
-				uniqueName: o.uniqueName
-			}
+			vm.updateStockGroup = res.body
 			if(res.body.parentStockGroup){
 				vm.updateStockGroup.parent = res.body.parentStockGroup.uniqueName
 			}

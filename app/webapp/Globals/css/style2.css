@@ -1,9 +1,4 @@
 @charset "utf-8";
-
-body {
-    font-family: 'Roboto', sans-serif
-}
-
 /*icomoon fonts*/
 .icon-options:before {
   content: "\e908";
@@ -44,13 +39,9 @@ body {
 .icon-minus:before {
   content: "\e909";
 }
-
-
-
 a,button,input {
-     transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
-
 /*input*/
 .form-control {
     background: #f9f7f2 !important;
@@ -83,15 +74,17 @@ a,button,input {
 .subAccBox li a span {
     font-size: 12px;
 }
-.company-name span {
+.company-name span{
+    color: #adadad!important;
+}
+.company-name span.cName {
     color: #616161 !important;
 }
 .acntAccordion .title.active {
     background-image: none;
 }
 header, header .navbar {
-    background-color: #fff/*f0f0f0*/;
-/*    border-bottom: 1px solid #eee;*/
+    background-color: #fff;
 }
 .hamburger_menu {
     background: #525252;
@@ -184,7 +177,7 @@ min-width: 220px;
     font-size: 14px;
 }
 #AddManage {
-    margin: 6px;
+    margin: 6px 0 0 20px;
     padding: 10px 5px;
 }
 .btn-default {
@@ -461,12 +454,14 @@ header {
     box-shadow: none;
     border: 1px solid #ca541e;
 }
+#cmpWrp{
+    cursor:pointer;
+    position: relative;
+    padding-left: 20px;
+}
 
 #cmpWrp .cText {
     margin: 5px 0 5px 10px;
-}
-#cmpWrp {
-    background: #f3f0e6;
 }
 #companyList {
     background: #fff;
@@ -492,7 +487,7 @@ header {
     top: 60%;
     bottom: 0;
     transform: translateY(-50%);
-    right: 14px;
+    left: 5px;
 }
 .basic>tbody>tr>td, .basic>tbody>tr>th, .basic>tfoot>tr>td, .basic>tfoot>tr>th, .basic>thead>tr>td, .basic>thead>tr>th {
     vertical-align: middle !important;
@@ -1113,9 +1108,6 @@ footer small a{
 
 
 /*stock page*/
-.sidebar {
-    background: #f3f0e6 !important;
-}
 .rightBar{
     float: left;
     width: calc(100% - 320px);
@@ -1677,3 +1669,24 @@ input[type=radio]:checked:after {
 .ledger-panel .upload_div label {
     color: #4d4d4d;
 }
+#inventory-sidebar, #inventory-sidebar input{
+    font-size: 14px;
+    font-weight: 300;
+}
+#inventory-sidebar{
+    background-color: #fff;
+    padding:10px 0;
+}
+#inventory-sidebar .search-input input{
+    height: 36px;
+    background-color: #f8f8f8;
+    color: #616161;
+    border-color: #c3c3c3;
+    width: 100%;
+    padding-left: 10px;
+}
+#inventory-sidebar .input-group{
+    padding:0 15px;
+}
+
+

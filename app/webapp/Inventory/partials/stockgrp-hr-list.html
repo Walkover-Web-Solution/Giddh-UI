@@ -1,13 +1,11 @@
-<label>Stock Groups</label>
-<hr class="mrT mrB">
-<div class="input-group width100 mrT search-input">
+<div class="input-group width100 search-input">
 	<input 
-		class="width100" type="search" 
+		type="search"
+		placeholder="Search Stock" 
 		ng-focus="stock.sideBarOn($event)" 
 		ng-model="grpStockSrch" 
 		ng-model-options="{debounce:500}" 
-		ng-change="stock.getStockGroupsByQuery(grpStockSrch)">
-	<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
+		ng-change="stock.getStockGroupsByQuery(grpStockSrch)"/>
 </div>
 
 <ul class="list-unstyled stock-grp-list mrT1">
@@ -23,8 +21,9 @@
 	<ul class="list-unstyled sub-grp" ng-show="grp.showStocks || grp.uniqueName === stock.$state.params.grpId">
 		<li ng-click="$event.stopPropagation(); grp.showStocks = !grp.showStocks" class="pdL" ng-repeat="grp in grp.childStockGroups">
 			<a href ng-click="$event.stopPropagation();stock.loadStockGroup(grp)">{{grp.name}}</a>
-			<i ng-if="grp.childStockGroups.length > 0" ng-if="grp.childStockGroups.length > 0" class="glyphicon" ng-class="grp.showStocks ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></i>
+			<i ng-if="grp.childStockGroups.length > 0" class="glyphicon" ng-class="grp.showStocks ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></i>
 			<div ng-if="grp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
+			<div ng-if="stock.updateStockGroup.stocks.length > 0 && grp.uniqueName === stock.$state.params.grpId" ng-include="'stockList.html'"></div>
 		</li>
 	</ul>
 </script>
