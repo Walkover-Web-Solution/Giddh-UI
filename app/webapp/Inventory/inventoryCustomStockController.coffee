@@ -36,10 +36,8 @@ inventoryCustomStockController = ($scope, $rootScope, $timeout, toastr, localSto
     vm.makeUnits()
 
   vm.updateCustomUnitStock = ()->
-    console.log(vm.customUnitObj, "updateCustomUnitStock")
-    reqParam = {
+    reqParam=
       companyUniqueName: $rootScope.selectedCompany.uniqueName
-    }
     stockService.updateStockUnit(reqParam, vm.customUnitObj).then(vm.updateStockUnitSuccess,vm.getStockUnitsFailure)
 
   vm.updateStockUnitSuccess = (res) ->
@@ -48,6 +46,7 @@ inventoryCustomStockController = ($scope, $rootScope, $timeout, toastr, localSto
     )
     vm.unitTypes.push(res.body)
     vm.makeUnits()
+    vm.cancelEditMode()
 
   vm.deleteCustomUnitStock = (item)->
     vm.tempDelItem = item
