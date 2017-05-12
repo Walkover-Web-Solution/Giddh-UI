@@ -173,6 +173,10 @@ angular.module('inventoryController', [])
 		if (vm.groupStockObj.isSelfParent)
 			vm.groupStockObj.parentStockGroupUniqueName = null
 	}
+	vm.resetParentSelectBoxUpdt = function(){
+		if (vm.updateStockGroup.isSelfParent)
+			vm.updateStockGroup.parent = null
+	}
 
 	vm.resetGroupStockForm = function(){
 		vm.groupStockObj = angular.copy({})

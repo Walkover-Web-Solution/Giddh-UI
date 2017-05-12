@@ -1164,6 +1164,9 @@ footer small a{
     background: #525252;
     color: #fff;
 }
+.form_title label{
+    font-weight: 400
+}
 a.btn.btn-xs.btn-link.pull-right {
     padding: 0;
 }
@@ -1688,5 +1691,15 @@ input[type=radio]:checked:after {
 #inventory-sidebar .input-group{
     padding:0 15px;
 }
-
-
+.form-group.mrB{
+    margin-bottom: 5px
+}
+.groupStockFormRow label{
+    margin-bottom: 6px;
+}
+.btn.btn-md{
+    padding: 10px 15px;
+}
+select.form-control{
+    border-radius: 0;
+}
