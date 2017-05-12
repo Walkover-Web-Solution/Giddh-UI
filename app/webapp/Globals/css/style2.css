@@ -96,14 +96,6 @@ header, header .navbar {
 .fyear {
     font-size: 14px;
 }
-
-.t-h-bg1 th {
-    background: #f3f0e6;
-    color: #4d4d4d;
-    border: 1px solid #c4c6c7;
-    padding: 11px !important;
-    font-weight: 400;
-}
 table {
       /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
@@ -1148,7 +1140,7 @@ footer small a{
 
 .form-theme {
     background: #f5f5f5;
-    padding: 25px;
+    padding: 20px;
     border: 1px solid #e5e5e5;
 }
 
@@ -1198,27 +1190,30 @@ a.btn.btn-xs.btn-link.pull-right {
 .dlet {
     color: #f15757;
 }
-.table_theme tbody {
-    border: 1px solid #c4c6c7;
+.table_theme {
+    border: 1px solid #dfe2e5;
 }
-.table_theme tbody tr td {
-    padding: 12px 8px;
-    border-right: 1px solid #c4c6c7;
+.table_theme thead tr, .table_theme tbody tr{
+    border-bottom: 1px solid #dfe2e5;
 }
-.table_theme tbody tr {
-    border-bottom: 1px solid #c4c6c7;    
+.table_theme thead tr th {
+    background: #f3f0e6;
+    font-weight: 400;
 }
-.table_theme tbody tr:nth-child(even) {
-    background: rgb(245, 245, 245);
+.table_theme tbody tr td, .table_theme thead tr th {
+    padding: 12px 20px;
+    color: #525252
 }
-.action a {
-    padding-right: 10px;
-    color: #333;
+.action a+a{
+    margin-left: 5px;
 }
 .action a:hover {
     color: #d35f29;
 }
-
+.action .btn{
+    border-color: transparent;
+    padding: 4px 14px;
+}
 .checkbox_pos input[type=checkbox] {
     left: 0;
     margin-left: 10px;
@@ -1691,7 +1686,7 @@ input[type=radio]:checked:after {
 #inventory-sidebar .input-group{
     padding:0 15px;
 }
-.form-group.mrB{
+.form-group.mrB, .mrBChldLbl .form-group label{
     margin-bottom: 5px
 }
 .groupStockFormRow label{
