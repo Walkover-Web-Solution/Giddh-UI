@@ -1,12 +1,12 @@
-<section class="col-xs-12">
+<section class="col-xs-12 col-md-9 col-lg-7">
 	<div class="pd2">
 		<div class="row form_title">
-			<label ng-if="!vm.addStockObj.uniqueName">Add Stock</label>
-			<label ng-if="vm.addStockObj.uniqueName">Modify Stock</label>
+			<label ng-if="!vm.addStockObj.stockGroup">Add Stock</label>
+			<label ng-if="vm.addStockObj.stockGroup">Modify Stock</label>
 		</div>
 	
 		<div class="row">
-			<form name="addEditStockForm" class="form-theme clearfix" novalidate>
+			<form name="addEditStockForm" class="form-theme clearfix mrBChldLbl" novalidate>
 				
 				<div class="row mr0">
 					<div class="form-group col-xs-6 pdL0 pdR">
@@ -14,8 +14,8 @@
 						<input type="text" name="name" class="form-control" ng-model="vm.addStockObj.name" required minlength="2">
 					</div>
 					<!-- show only when update -->
-					<div ng-if="vm.addStockObj.uniqueName" class="form-group col-xs-6 pdR0 pdL">
-						<label>Unique Name<span class="required">*</span></label>
+					<div class="form-group col-xs-6 pdR0 pdL">
+						<label>Unique Name</label>
 						<input type="text" name="uniqueName" class="form-control" ng-model="vm.addStockObj.uniqueName" required>
 					</div>			
 				</div>
@@ -40,21 +40,21 @@
 					</div>
 
 					<div class="form-group col-xs-3 pdL">
-						<label>Amount</label>
-						<input type="number" name="openingAmount" class="form-control" ng-model="vm.addStockObj.openingAmount">
+						<label>Rate/stock unit</label>
+						<input readonly="true" type="text" class="form-control" placeholder="calculate later" value="{{vm.addStockObj.openingAmount/vm.addStockObj.openingQuantity | number}}" />
 					</div>
 
 					<!--amount/quantity formula manuallly calculate -->
 					<div class="form-group col-xs-3 pdL pdR0 ">
-						<label>Rate per stock unit</label>
-						<input readonly="true" type="text" class="form-control" placeholder="calculate later" value="{{vm.addStockObj.openingAmount/vm.addStockObj.openingQuantity | number}}" />
+						<label>Amount</label>
+						<input type="number" name="openingAmount" class="form-control" ng-model="vm.addStockObj.openingAmount">
 					</div>
 
 				</div>
 
 				<div class="row mr0 col-xs-6 pdL0 pdR">
 					<div class="form-group col-xs-12 pdL0 pdR">
-						<label>Purchase Acc</label>
+						<label class="boldHead">Purchase Acc</label>
 	        	<ui-select ng-model="vm.addStockObj.purchaseAccountDetails.accountUniqueName" theme="bootstrap">
               <ui-select-match allow-clear="true" placeholder="select purchase account">
                 <span>{{$select.selected.name}}</span>
@@ -67,7 +67,7 @@
 
 					<div class="row mrB">
 						<div class="col-xs-5">
-							<label>Unit<span class="required">*</span></label>
+							<label>Unit</label>
 						</div>
 						<div class="col-xs-5">
 							<label>Rate</label>
@@ -101,7 +101,7 @@
 
 				<div class="row mr0 col-xs-6 pdL pdR0">
 					<div class="form-group col-xs-12 pdL0 pdR">
-						<label>Sales Acc</label>
+						<label class="boldHead">Sales Acc</label>
 						<ui-select ng-model="vm.addStockObj.salesAccountDetails.accountUniqueName" theme="bootstrap">
               <ui-select-match  allow-clear="true" placeholder="select sales account">
               	<span>{{$select.selected.name}}</span>
@@ -116,7 +116,7 @@
 
 					<div class="row mrB">
 						<div class="col-xs-5">
-							<label>Unit<span class="required">*</span></label>
+							<label>Unit</label>
 						</div>
 						<div class="col-xs-5">
 							<label>Rate</label>
@@ -151,24 +151,58 @@
 					<div class="col-xs-12">
 					<!-- vm.addStockObj. -->
 						<div class="checkbox">
-							<label for="isFsStock" ng-click="$event.stopPropagation()">
-								<input type="checkbox" ng-model="vm.addStockObj.isFsStock" id="isFsStock" name="isFsStock" />Is it a finished stock? (Manufacturing/Combo)</label>
+							<label class="isFsStock" for="isFsStock" ng-click="$event.stopPropagation()">
+								<input type="checkbox" ng-model="vm.addStockObj.isFsStock" id="isFsStock" name="isFsStock" />Is it a finished stock? <small>(Manufacturing/Combo)</small></label>
 						</div>
 					</div>
 				</div>
+			
+			
+				<div class="row col-xs-12 mrT2">
+					
+					<button ng-if="!vm.addStockObj.stockGroup" type="submit" class="btn btn-md btn-success mrR1" ng-disabled="addEditStockForm.$invalid"  ng-click="vm.addStock()">Save</button>
 
-				<!-- combo code -->
-				<div class="row mrT1" ng-if="vm.addStockObj.isFsStock">
-					<div class="form_title mrB2">
-						<label>{{vm.addStockObj.name}} (Made with)</label>
-					</div>
+					<button ng-if="vm.addStockObj.stockGroup" type="submit" class="btn btn-md btn-success mrR1" ng-disabled="addEditStockForm.$invalid"  ng-click="vm.updateStock()">Update</button>
 
-					<div class="col-xs-7">
-						<div class="clearfix">
-							<div class="form-group col-xs-3 pdL0 pdR mrB">
-								<label>Select Stock</label>
+					<button ng-click="vm.clearAddEditStockForm()" type="reset" class="btn btn-md btn-primary">
+						Cancel
+					</button>
+					
+				</div>
+
+			</form>
+
+			<div class="clearfix pdT2">
+				<button ng-if="vm.addStockObj.stockGroup" class="btn btn-md btn-danger pull-right" ng-click="vm.deleteStockItem()">
+					<span class="glyphicon glyphicon-trash"></span>
+					Delete Stock
+				</button>
+			</div>
+
+		</div>
+	</div>
+</section>
+
+<!-- combo code -->
+<section class="col-xs-12">
+	<div class="pdL2 pdR2">
+	<div class="row">
+	<!-- ng-if="vm.addStockObj.isFsStock" -->
+		<table class="width100 table_theme mrT1 noPdTd addStockTbl">
+			<thead>
+				<tr>
+					<th colspan="2">
+						{{vm.addStockObj.name}} (Made with)
+					</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td class="col-xs-8">
+						<div class="clearfix pdTBth15">
+							<div class="form-group col-xs-4">
 								<ui-select ng-model="vm.mfsCmbItem.stockUniqueName" theme="bootstrap">
-			            <ui-select-match>
+			            <ui-select-match placeholder="Select Stock">
 		                <span>{{$select.selected.uniqueName}}</span>
 		              </ui-select-match>
 		              <ui-select-choices repeat="unit.uniqueName as unit in stock.allStocks track by $index">
@@ -178,10 +212,9 @@
 			          </ui-select>
 							</div>
 
-							<div class="form-group col-xs-3 pdR0 pdL mrB">
-								<label>Stock Unit</label>
+							<div class="form-group col-xs-3">
 								<ui-select ng-model="vm.mfsCmbItem.stockUnitCode" theme="bootstrap">
-			            <ui-select-match>
+			            <ui-select-match placeholder="Stock Unit">
 		                <span>{{$select.selected.code}}</span>
 		              </ui-select-match>
 		              <ui-select-choices repeat="unit.code as unit in vm.customUnits track by $index">
@@ -191,57 +224,63 @@
 			          </ui-select>
 							</div>
 
-							<div class="form-group col-xs-3 pdR0 pdL mrB">
-								<label>Quantity per Unit</label>
-								<input type="text" name="quantity" class="form-control" ng-model="vm.mfsCmbItem.quantity">
+							<div class="form-group col-xs-3">
+								<input type="text" name="quantity" placeholder="Stock Quantity" class="form-control" ng-model="vm.mfsCmbItem.quantity">
 							</div>
-							<div class="form-group col-xs-3 pdR0 pdL mrB">
-								<label class="col-xs-12">&nbsp;</label>
-								<a ng-if="!vm.mfsCmbItem.hasIdx" class="btn btn-sm btn-primary" ng-click="vm.addMfsCmbItem()">Add</a>
-								<a ng-if="vm.mfsCmbItem.hasIdx" class="btn btn-sm btn-primary" ng-click="vm.updateMfsCmbItem()">Update</a>
+							<div class="form-group col-xs-2">
+								<a ng-if="!vm.mfsCmbItem.hasIdx" class="btn btn-sm btn-primary pull-right" ng-click="vm.addMfsCmbItem()">Add</a>
+								<a ng-if="vm.mfsCmbItem.hasIdx" class="btn btn-sm btn-primary pull-right" ng-click="vm.updateMfsCmbItem()">Update</a>
 							</div>
 						</div>
 
-						<div class="row mrT1 mrB1" ng-if="vm.mfsCmbItemErrMsg">
+						<div class="clearfix mrT1 mrB1" ng-if="vm.mfsCmbItemErrMsg">
 							<div class="col-xs-12">
 								<p class="text-warning">{{vm.mfsCmbItemErrMsg}}</p>
 							</div>
 						</div>
 
-						<section class="linkstock" style="height: 200px;overflow-y: scroll;">
-							<table class="col-xs-12 table_theme mrT">
+						<section class="linkstock">
+							<table class="col-xs-12 linkStockTbl">
 								<tbody>
 									<tr ng-repeat="list in vm.addStockObj.manufacturingDetails.linkedStocks track by $index">
-										<td>{{list.stockUniqueName}}</td>
-										<td>{{list.stockUnitCode}}</td>
-										<td>{{list.quantity}}</td>
-										<td class="action">
-											<a href class="edit_btn" ng-click="vm.editMfsCmbItem(list, $index)">
-												<i class="fa fa-pencil" aria-hidden="true"></i>Edit
-											</a>
-											<a href class="" ng-click="vm.deleteMfsCmbItem(list)">
-												<i class="fa fa-trash-o" aria-hidden="true"></i> Delete
-											</a>
+										<td class="col-xs-4 faltuLine">
+										<span></span>
+										<p>{{list.stockUniqueName}}</p>
+										</td>
+										<td class="col-xs-2">{{list.stockUnitCode}}</td>
+										<td class="col-xs-2">{{list.quantity}}</td>
+										<td class="col-xs-4 action">
+											<a href class="btn btn-default" ng-click="vm.editMfsCmbItem(list, $index)">Edit</a>
+											<a href class="btn btn-default" ng-click="vm.deleteMfsCmbItem(list)">Delete</a>
 										</td>
 									</tr>
 								</tbody>
-
 							</table>
 						</section>
-					</div>
-					<!-- end of col-xs-8 -->
-					<div class="col-xs-3 pull-right">
-						<h1 class="mrB2">Stock Name</h1>
-						<section class="clearfix">
-							<div class="form-group col-md-6 col-lg-6 col-xs-12">
+					</td>
+					<td class="col-xs-4">
+						<section class="clearfix pr">
+							<div class="col-md-2 col-lg-2 col-xs-12">
+							&nbsp;
+							</div>
+							<p class="lead col-md-10 col-lg-10 col-xs-12">
+								<small>
+								{{vm.addStockObj.manufacturingDetails.manufacturingQuantity}}
+								{{vm.addStockObj.manufacturingDetails.manufacturingUnitCode}}
+								</small>
+								{{vm.addStockObj.name}}
+							</p>
+						</section>
+						<section class="clearfix pr">
+							<div class="form-group col-md-2 col-lg-2 col-xs-12">
 								<span class="total-ico">=</span>
-								<label>Quantity</label>
+							</div>
+							<div class="form-group col-md-5 col-lg-5 col-xs-12">
 								<input type="text" class="form-control" ng-model="vm.addStockObj.manufacturingDetails.manufacturingQuantity" name="manufacturingQuantity" placeholder="Quantity" />
 							</div>
-							<div class="form-group col-md-6 col-lg-6 col-xs-12">
-								<label>Select Unit</label>
+							<div class="form-group col-md-5 col-lg-5 col-xs-12">
 								<ui-select ng-model="vm.addStockObj.manufacturingDetails.manufacturingUnitCode" theme="bootstrap">
-			            <ui-select-match>
+			            <ui-select-match placeholder="Unit">
 		                <span>{{$select.selected.code}}</span>
 		              </ui-select-match>
 		              <ui-select-choices repeat="unit.code as unit in vm.customUnits track by $index">
@@ -251,27 +290,11 @@
 			          </ui-select>
 							</div>
 						</section>
-					</div>
-					<!-- end of col-xs-4 -->
-				</div>
-				<!-- combo code end-->
-			
-			
-				<div class="row col-xs-12 mrT2">
-					
-					<button ng-if="!vm.addStockObj.uniqueName" type="submit" class="btn btn-sm btn-success mrR1" ng-disabled="addEditStockForm.$invalid"  ng-click="vm.addStock()">Save</button>
-
-					<button ng-if="vm.addStockObj.uniqueName" type="submit" class="btn btn-sm btn-success mrR1" ng-disabled="addEditStockForm.$invalid"  ng-click="vm.updateStock()">Update</button>
-
-					<button ng-click="vm.clearAddEditStockForm()" type="reset" class="btn btn-sm btn-primary">
-						Cancel
-					</button>
-
-					<a ng-if="vm.addStockObj.uniqueName" class="text-danger mrL1" href ng-click="vm.deleteStockItem()">Delete</a>
-					
-				</div>
-
-			</form>
-		</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 	</div>
 </section>
+<!-- combo code end-->

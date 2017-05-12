@@ -1193,16 +1193,25 @@ a.btn.btn-xs.btn-link.pull-right {
 .table_theme {
     border: 1px solid #dfe2e5;
 }
-.table_theme thead tr, .table_theme tbody tr{
+.table_theme>thead>tr, .table_theme>tbody>tr{
     border-bottom: 1px solid #dfe2e5;
 }
-.table_theme thead tr th {
+.table_theme>thead>tr>th {
     background: #f3f0e6;
     font-weight: 400;
 }
-.table_theme tbody tr td, .table_theme thead tr th {
+.table_theme>tbody>tr>td, .table_theme>thead>tr>th {
     padding: 12px 20px;
     color: #525252
+}
+.noPdTd.table_theme>tbody>tr>td{
+    padding: 0;
+}
+.addStockTbl.table_theme>tbody>tr>td{
+    border-right: 1px solid #dfe2e5;
+}
+.addStockTbl.table_theme>tbody>tr>td:last-child{
+    border-right: 0
 }
 .action a+a{
     margin-left: 5px;
@@ -1304,11 +1313,12 @@ a.btn.btn-xs.btn-link.pull-right {
 }
 
 .total-ico {
-    bottom: 0;
-    position: absolute;
-    font-size: 5em;
-    left: -45px;
-    top: -14px;
+    font-size: 3em;
+    font-weight: 300;
+    line-height: .5em;
+    /*position: absolute;
+    left: 0;
+    top: 50%;*/
 }
 
 @media only screen and (max-width: 1130px) {
@@ -1698,3 +1708,56 @@ input[type=radio]:checked:after {
 select.form-control{
     border-radius: 0;
 }
+label.boldHead{
+    font-weight: 600;
+}
+.isFsStock{
+    color: #929292
+}
+.pdBth1015{
+    padding: 10px 15px
+}
+.pdTBth15{
+    padding: 15px 0;
+}
+.addStockTbl .form-control{
+    background-color: #fff !important;
+}
+.linkstock{
+    height: 200px;
+    overflow-y: scroll;
+    padding-left: 30px;
+}
+.linkStockTbl{
+    border-top: 1px solid #dfe2e5;
+    border-left: 1px solid #dfe2e5;
+}
+.linkStockTbl>tbody>tr>td{
+    padding: 10px 15px;
+}
+.linkStockTbl>tbody>tr>td:first-child{
+    padding-left: 0;
+    position: relative;
+}
+.faltuLine span{
+    width: 10px;
+    height: 2px;
+    display: inline-block;
+    background-color: #dfe2e5;
+    position: absolute;
+    top: 50%;
+    left: 0;
+}
+.faltuLine p{
+    position: relative;
+    margin-left: 20px;
+    margin-bottom: 0;
+}
+
+
+
+
+
+
+
+
