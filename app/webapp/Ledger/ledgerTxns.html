@@ -204,8 +204,8 @@ th {
 							class="ledger-row" 
 							ng-repeat="txn in ledgerCtrl.txnData.debitTransactions" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)"  
-							ng-click="ledgerCtrl.selectCompoundEntry(null, txn)"
-							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.clickedTxn.entryUniqueName}">
+							ng-click="ledgerCtrl.selectCompoundEntry(txn)"
+							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.currentTxn.entryUniqueName}">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
 							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
 							<td class="col-xs-3" ng-bind="txn.amount"></td>
@@ -241,8 +241,8 @@ th {
 							class="ledger-row" 
 							ng-repeat="txn in ledgerCtrl.txnData.creditTransactions" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)" 
-							ng-click="ledgerCtrl.selectCompoundEntry(null, txn)"
-							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.clickedTxn.entryUniqueName}">
+							ng-click="ledgerCtrl.selectCompoundEntry(txn)"
+							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.currentTxn.entryUniqueName}">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
 							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
 							<td class="col-xs-3" ng-bind="txn.amount"></td>

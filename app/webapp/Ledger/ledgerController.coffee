@@ -805,7 +805,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     # ledgerCtrl.clearTaxSelection(txn, ledger)
     # ledgerCtrl.clearDiscounts(ledger)
     ledgerCtrl.addBlankRow(ledger, txn)
-    ledgerCtrl.removeBlankRowFromPrevLedger(ledgerCtrl.prevLedger, ledger)
+    # ledgerCtrl.removeBlankRowFromPrevLedger(ledgerCtrl.prevLedger, ledger)
     # ledger.isCompoundEntry = true
     # if ledgerCtrl.prevLedger && ledgerCtrl.prevLedger.uniqueName != ledger.uniqueName
     #   ledgerCtrl.prevLedger.isCompoundEntry = false
@@ -813,9 +813,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     # # ledgerCtrl.calculateEntryTotal(ledger)
     # ledgerCtrl.showLedgerPopover = true
     # ledgerCtrl.matchInventory(txn)
-    ledgerCtrl.ledgerBeforeEdit = {}
-    angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
-    ledgerCtrl.isTransactionContainsTax(ledger)
+    # ledgerCtrl.ledgerBeforeEdit = {}
+    # angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
+    # ledgerCtrl.isTransactionContainsTax(ledger)
     ledgerCtrl.selectedLedger = ledger
     ledgerCtrl.selectedLedger.index = index
     ledgerCtrl.selectedLedger.panel = ledgerCtrl.selectedLedger.panel || {}
@@ -830,14 +830,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     #if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
     # ledgerCtrl.checkCompEntry(txn)
     #ledgerCtrl.blankCheckCompEntry(ledger)
-    ledgerCtrl.prevLedger = ledger
+    # ledgerCtrl.prevLedger = ledger
     e.stopPropagation()
-
-  # ledgerCtrl.checkCompEntry = (txn) ->
-  #   _.each ledgerCtrl.txnData.debitTransactions, (tran) ->
-  #     if txn.entryUniqueName == tran.entryUniqueName
-  #       tran.isCompoundEntry = true
-
 
   ledgerCtrl.addBlankRow = (ledger, txn) ->
     dBlankRow = _.findWhere(ledger.transactions, {blankRow:'DEBIT'})
@@ -846,10 +840,22 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       txn = new txnModel('DEBIT')
       txn.blankRow = 'DEBIT'
       ledger.transactions.push(txn)
+    else if dBlankRow && dBlankRow.particular != "" && dBlankRow.particular.uniqueName.length
+      txn = new txnModel('DEBIT')
+      txn.blankRow = 'DEBIT'
+      ledger.transactions.push(txn)
+      delete dBlankRow.blankRow
+
     if !cBlankRow && txn.type == 'CREDIT'
       txn = new txnModel('CREDIT')
       txn.blankRow = 'CREDIT'
       ledger.transactions.push(txn)
+    else if cBlankRow && cBlankRow.particular != "" && cBlankRow.particular.uniqueName.length
+      txn = new txnModel('CREDIT')
+      txn.blankRow = 'CREDIT'
+      ledger.transactions.push(txn)
+      delete cBlankRow.blankRow
+
 
   ledgerCtrl.removeBlankRowFromPrevLedger = (prevLedger, ledger) ->
     if prevLedger && prevLedger.uniqueName != ledger.uniqueName
@@ -1063,6 +1069,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.taxList = []
     if $rootScope.canUpdate and $rootScope.canDelete
       companyServices.getTax($rootScope.selectedCompany.uniqueName).then(ledgerCtrl.getTaxListSuccess, ledgerCtrl.getTaxListFailure)
+
+  ledgerCtrl.getTaxList()
 
   ledgerCtrl.getTaxListSuccess = (res) ->
     _.each res.body, (tax) ->
@@ -1687,6 +1695,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     @success = (res) ->
       ledgerCtrl.paginatedLedgers = [res.body]
       ledgerCtrl.selectedLedger = res.body
+      ledgerCtrl.ledgerBeforeEdit = {}
+      angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
+      ledgerCtrl.isTransactionContainsTax(res.body)
       _.each res.body.transactions, (txn) ->
         if txn.particular.uniqueName == ledgerCtrl.clickedTxn.particular.uniqueName
           ledgerCtrl.selectedTxn = txn
