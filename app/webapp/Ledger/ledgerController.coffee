@@ -792,6 +792,48 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     toastr.error(res.data.message)
 
   ledgerCtrl.prevTxn = null
+  ledgerCtrl.selectBlankTxn = (ledger, txn, index ,e) ->
+    if txn.inventory && txn.inventory.quantity
+      txn.rate = txn.amount/txn.inventory.quantity
+    if txn.particular.stock
+      txn.rate = txn.particular.stock.rate
+    ledgerCtrl.selectedTxn = txn
+    if ledgerCtrl.prevTxn != null
+      ledgerCtrl.prevTxn.isOpen = false
+    ledgerCtrl.selectedTxn.isOpen = true
+    ledgerCtrl.prevTxn = txn
+    ledgerCtrl.clearTaxSelection(txn, ledger)
+    ledgerCtrl.clearDiscounts(ledger)
+    # ledgerCtrl.addBlankRow(ledger, txn)
+    # ledgerCtrl.removeBlankRowFromPrevLedger(ledgerCtrl.prevLedger, ledger)
+    ledger.isCompoundEntry = true
+    if ledgerCtrl.prevLedger && ledgerCtrl.prevLedger.uniqueName != ledger.uniqueName
+      ledgerCtrl.prevLedger.isCompoundEntry = false
+    ledgerCtrl.prevLedger = ledger
+    # ledgerCtrl.calculateEntryTotal(ledger)
+    ledgerCtrl.showLedgerPopover = true
+    ledgerCtrl.matchInventory(txn)
+    ledgerCtrl.ledgerBeforeEdit = {}
+    angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
+    ledgerCtrl.isTransactionContainsTax(ledger)
+    ledgerCtrl.selectedLedger = ledger
+    ledgerCtrl.selectedLedger.index = index
+    ledgerCtrl.selectedLedger.panel = ledgerCtrl.selectedLedger.panel || {}
+    if ledgerCtrl.accountToShow.stocks != null
+      #ledgerCtrl.selectedLedger.panel.quantity = ledgerCtrl.accountToShow.stock.stockUnit.quantityPerUnit
+      ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.accountToShow.stocks[0].rate
+    ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.getPanelAmount(ledgerCtrl.selectedLedger)
+    ledgerCtrl.selectedLedger.panel.total = ledgerCtrl.selectedLedger.panel.amount
+    ledgerCtrl.selectedLedger.panel.discount = ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
+    ledgerCtrl.selectedLedger.panel.tax = ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
+    # ledgerCtrl.selectedLedger.panel.total = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
+    # if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
+    # ledgerCtrl.checkCompEntry(txn)
+    # ledgerCtrl.blankCheckCompEntry(ledger)
+    ledgerCtrl.prevLedger = ledger
+    e.stopPropagation()
+
+
   ledgerCtrl.selectTxn = (ledger, txn, index ,e) ->
     # if txn.inventory && txn.inventory.quantity
     #   txn.rate = txn.amount/txn.inventory.quantity
@@ -1121,7 +1163,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.removeBlankTransactions = (ledger) ->
     _.each ledger.transactions, (txn, i) ->
-      console.log txn
       if txn && txn.blankRow && txn.particular.uniqueName == ''
         ledger.transactions.splice(i, 1)
 
