@@ -26,6 +26,10 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
         method: 'PUT'
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/:entryUniqueName'
       }
+      getEntry: {
+        method: 'GET'
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/:entryUniqueName'
+      }
       delete: {
         method: 'DELETE',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/:entryUniqueName'
@@ -45,6 +49,10 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
       getReconcileEntries: {
         method: 'GET',
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/reconcile'
+      }
+      getAllTransactions: {
+        method: 'GET',
+        url: '/company/:companyUniqueName/accounts/:accountsUniqueName/ledgers/transactions'
       }
       
     }
@@ -96,6 +104,17 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
         sort:unqNamesObj.sort
       }, onSuccess, onFailure))
 
+    getAllTransactions: (unqNamesObj) ->
+      @handlePromise((onSuccess, onFailure) -> Ledger.getAllTransactions({
+        companyUniqueName: unqNamesObj.compUname,
+        accountsUniqueName: unqNamesObj.acntUname
+        fromDate: unqNamesObj.fromDate
+        toDate: unqNamesObj.toDate
+        page:unqNamesObj.page
+        count:unqNamesObj.count
+        sort:unqNamesObj.sort
+      }, onSuccess, onFailure))
+
     createEntry: (unqNamesObj, data) ->
       @handlePromise((onSuccess, onFailure) -> Ledger.create({
         companyUniqueName: unqNamesObj.compUname,
@@ -108,6 +127,13 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
         accountsUniqueName: unqNamesObj.acntUname
         entryUniqueName: unqNamesObj.entUname
       }, data, onSuccess, onFailure))
+
+    getEntry: (unqNamesObj, data) ->
+      @handlePromise((onSuccess, onFailure) -> Ledger.getEntry({
+        companyUniqueName: unqNamesObj.compUname,
+        accountsUniqueName: unqNamesObj.acntUname
+        entryUniqueName: unqNamesObj.entUname
+      }, onSuccess, onFailure))
 
     deleteEntry: (unqNamesObj) ->
       @handlePromise((onSuccess, onFailure) -> Ledger.delete({

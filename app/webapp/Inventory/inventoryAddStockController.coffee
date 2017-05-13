@@ -135,6 +135,7 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       stockGroupUniqueName: $state.params.grpId
 
+    vm.removeEmptyParamsFrom()
     if !vm.addStockObj.isFsStock
       vm.addStockObj.manufacturingDetails = null
     
@@ -251,6 +252,9 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
 
   # init func on dom ready
   $timeout(->
+    if _.isEmpty($state.params.stockId)
+      $state.go('inventory', {}, {reload: true, notify: true})
+
     if(!_.isEmpty($state.params) && angular.isDefined($state.params.stockId) && $state.params.stockId isnt '')
       vm.stockEditMode =  true
       vm.getStockItemDetails($state.params.stockId)

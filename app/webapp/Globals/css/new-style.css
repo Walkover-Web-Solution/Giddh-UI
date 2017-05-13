@@ -18,8 +18,7 @@ ______\////////////________
 
 
 /*roboto*/
-@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700');
-/*font-family: 'Roboto', sans-serif;*/
+@import url('https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,600,700');
 
 @font-face {
   font-family: 'icomoon';
@@ -61,7 +60,7 @@ ______\////////////________
 
 
 html, body{
-      -webkit-font-smoothing: antialiased;
+    -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
     height:100%;
     overflow-y: auto;
@@ -272,6 +271,7 @@ header .navbar-nav > li.active {
     line-height: 20px;
     min-width: 130px;
     text-transform: uppercase;
+    font-weight: 600;
 }
 
 .cDate {
@@ -4445,25 +4445,27 @@ table.proforma-particulars{
 }
 
 .stock-operations{
-/*    margin-left: 320px;
-    margin-right: 320px;*/
     min-width: 480px;
 }
-
-/*@media (max-width:1168px) {
-    .sidebar{
-        width:220px;
-    }
-}*/
-.stock-grp-list>li>a, .sub-grp>li>a{
+.stock-grp-list>li>a{
     text-transform: uppercase;
-    font-weight: 600
+    font-weight: 600;
+    color: #616161
+}
+.sub-grp>li>a{
+    text-transform: uppercase;
+    color: #616161;
+    font-weight: 400;
 }
 .stock-items>li>a{
     text-transform: capitalize;
-    font-weight: 400
+    font-weight: 300;
+    color: #909090
 }
-.stock-items>li>a.active{
+.stock-items>li>a:hover, .sub-grp>li>a:hover{
+    color: #616161
+}
+.stock-items>li>a.active,.sub-grp>li>a.active,.stock-grp-list>li>a.active{
     color: #d35f29!important
 }
 .stock-grp.list{
@@ -4471,22 +4473,26 @@ table.proforma-particulars{
     overflow-y: auto;
 }
 
-.stock-grp-list li > a{
-    color:#444;
-}
 .stock-grp-list li>i{
     position: absolute;
-    right: 20px;
+    right: 15px;
     top: 10px;
+    color: #616161
 }
-
-.stock-grp-list li{
-    padding:5px;
-    border-bottom:1px solid #e0e0e0;
+.stock-grp-list  li{
     position: relative;
 }
-
-.stock-grp-list li:last-child{
+.stock-grp-list > li{
+    padding:7px 15px;
+    border-bottom:1px solid #a8aab6;
+}
+.stock-items > li, .sub-grp > li{
+    padding:7px 0 7px 10px;
+}
+.stock-items>li>i, .sub-grp>li>i{
+    right: 0;
+}
+.stock-grp-list > li:last-child{
     border-bottom:0;
     padding-bottom:0;
 }
@@ -4720,3 +4726,17 @@ table.proforma-particulars{
     border: none;
 }
 
+#entryModal{
+    overflow:hidden;
+}
+
+#entryModal .modal-body{
+    padding: 0 100px 100px;
+    overflow: hidden;
+}
+
+.entrypanel label{
+    font-weight: 400;
+    font-size: 14px;
+    color:#ccc;
+}

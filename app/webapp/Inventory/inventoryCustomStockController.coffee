@@ -41,10 +41,12 @@ inventoryCustomStockController = ($scope, $rootScope, $timeout, toastr, localSto
     stockService.updateStockUnit(reqParam, vm.customUnitObj).then(vm.updateStockUnitSuccess,vm.getStockUnitsFailure)
 
   vm.updateStockUnitSuccess = (res) ->
-    vm.unitTypes = _.reject(vm.unitTypes, (o)->
-      return o.code is res.body.code
-    )
-    vm.unitTypes.push(res.body)
+    console.log(vm.customUnitObj, res.body)
+    vm.unitTypes.splice(vm.customUnitObj.idx, 1, res.body)
+    # vm.unitTypes = _.reject(vm.unitTypes, (o)->
+    #   return o.code is res.body.code
+    # )
+    # vm.unitTypes.push(res.body)
     vm.makeUnits()
     vm.cancelEditMode()
 
@@ -68,10 +70,11 @@ inventoryCustomStockController = ($scope, $rootScope, $timeout, toastr, localSto
     vm.editMode = false
     vm.customUnitObj = angular.copy({})
 
-  vm.editUnit=(item)->
+  vm.editUnit=(item, idx)->
     vm.editMode = true
     vm.customUnitObj = angular.copy(item)
     vm.customUnitObj.uName = _.clone(item.code)
+    vm.customUnitObj.idx = idx
 
   vm.makeUnits = () ->
     vm.customUnits = []
@@ -83,10 +86,8 @@ inventoryCustomStockController = ($scope, $rootScope, $timeout, toastr, localSto
 
   # init func on dom ready
   $timeout(->
-
     #get stocks
     vm.getStockUnits()
-
   ,10)
   
   return vm

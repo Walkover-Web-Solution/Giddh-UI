@@ -1,0 +1,346 @@
+<style type="text/css">
+.form-control, input {
+	color: #4d4d4d;
+}
+.ledgHead table td[class*=col-] {
+	padding: 5px !important;
+	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	font-size: 13px;
+	color: #4d4d4d;
+	max-width:0;
+	text-overflow: ellipsis;
+	overflow:hidden;
+	white-space: nowrap;
+}
+.ledgHead.entry-popup table td[class*=col-] {
+	padding: 0px !important;
+	border-bottom: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	font-size: 13px;
+	color: #4d4d4d;
+	max-width:0;
+	text-overflow: ellipsis;
+	overflow:hidden;
+	white-space: nowrap;
+}
+table td[class*=col-]:last-child {
+	border-right: 0;
+}
+table th[class*=col-]:last-child {
+	border-right: 0;
+}
+th {
+	font-weight: 700; 
+}
+
+.total_col td {
+	border: 0 !important;
+}
+.ledger-main .form-control {
+	border: 0;
+}
+.ledger-main tr td:last-child {
+	border-right: 0;
+}
+.t-h-bg1 th {
+	border-left: 0;
+}
+.ledgHead input[type=search] {
+	min-width: auto;
+}
+.primary_color {
+	color: #d35f29 !important;
+}
+.ledger-stat {
+	padding: 50px 0;
+	background: #f7f7f7;
+	color: #808080;
+	font-size: 18px;
+	margin:100px 0;
+}
+.ledger-stat h3 {
+	font-size: 24px;
+	margin-top: 10px;
+}
+.icomoon_ico {
+	margin-left: 8px;
+}
+.account_Name {
+	font-size: 21px;
+	color: #858585;
+}
+.ledger-footer-1 {
+	position: absolute;
+	bottom: 0;
+}
+.ledger-head th {
+	color: #cccccc;
+}
+.total_col td {
+	border: 0;
+}
+.ledger-stat span {
+	display: inline-block;
+}
+.pageCount {
+	overflow: hidden;
+	width: 100%;
+	float: left;
+}
+#pagination {
+	margin: 0 auto;
+    overflow: hidden;
+    width: 100%;
+    text-align: center;
+}
+.pagination>li>a, .pagination>li>span {
+	border: 0;
+    color: #999999;
+    background: none;
+	padding: 4px 8px;
+}
+.pagination>li>a.active {
+	color: #4d4d4d;
+	border: 1px solid #ddd;
+}
+.grey {
+	color: #4d4d4d;
+}
+.current-page{
+	background: #d35f29 !important;
+    color: #fff !important;
+}
+.ledger-panel label{
+	font-weight: 400;
+}
+
+</style>
+<section class="container">
+	
+	<!--ledger table-->
+	<div class="ledgHead  mrT3">
+		<!-- ledger header -->
+		<div class="col-md-12">
+			<div class="row">
+				<div class="col-xs-4">
+					<div class="row">
+						<input date-range-picker id="daterange3" name="daterange3" class="form-control date-picker date-range-picker" type="text" ng-model="cDate" options="opts" required/>
+					</div>
+				</div>
+				<div class="col-xs-4">
+					<div class="row">
+						<h1 class="text-center account_Name">{{ledgerCtrl.accountToShow.name}} A/c</h1>
+					</div>
+				</div>
+				<div class="col-xs-4 pull-right text-right">
+					<div class="row">
+						  
+						<a class="icomoon_ico mrL1" href="javascript:void(0)" title="" uib-tooltip="Generate Magic Link" tooltip-placement="left" ng-click="ledgerCtrl.getMagicLink()">
+							<i class="icon-magic_link"></i>
+						</a> 
+						
+						<a class="icomoon_ico" href="javascript:void(0)" title="" uib-tooltip="Export" tooltip-placement="right" ng-click="ledgerCtrl.shareLedger(); ledgerCtrl.toggleExportFucntion()" >
+							<i class="icon-download"></i>
+						</a>
+						
+						<a href id="share" class="icomoon_ico" ng-click="ledgerCtrl.shareLedger(); ledgerCtrl.toggleShareFucntion()">
+							<i uib-tooltip="Send Ledger" tooltip-placement="right" class="icon-share"></i>
+						</a>
+						
+						<div class="mrL2 col-xs-6 pos-rel pull-right">
+							<div class="row">
+								<input type="search" class="form-control" placeholder="Search ledger" ng-model="ledgerCtrl.query" ng-model-options="{debounce: 1000}">
+								<i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- ledger header end -->
+
+		<!--bank ledgers-->
+		<section class="mrT1" ng-if="ledgerCtrl.etxnData.length > 0 && ledgerCtrl.showEledger">
+            <div ng-include="'/public/webapp/Ledger/eledger-new.html'"></div>
+        </section>
+        <!--/bank ledger-->
+
+		<table class="col-xs-12 ledger-head mrT3">
+			<thead>
+				<tr>
+					<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} coming in?</th>
+					<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} going out?</th>
+				</tr>
+			</thead>
+		</table>
+
+		<div style="border:1px solid #ccc;overflow:hidden;position:relative;">
+			<div class="left-col-new">
+				<table class="width100">
+					<thead>
+						<tr class="t-h-bg1">
+							<th class="col-xs-2" style="border-top:none">
+								<span ng-click="ledgerCtrl.sortOrder.debit = ledgerCtrl.sortDirectionInvert(ledgerCtrl.sortOrder.debit); ledgerCtrl.sortOrderChange('dr')" class="cursor-pointer">
+									<!-- <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="ledgerCtrl.sortOrder.debit == ledgerCtrl.sortDirection.desc"></i>
+									<i class="glyphicon glyphicon-sort-by-order" ng-if="ledgerCtrl.sortOrder.debit == ledgerCtrl.sortDirection.asc"></i> -->
+									Date
+								</span>
+								<!-- <i class="glyphicon glyphicon-sort pull-left mrL"></i> -->
+							</th>
+							<th class="col-xs-7" style="border-top:none">Paticular</th>
+							<th class="col-xs-3" style="border-top:none">
+								<!-- <span class="col-xs-6 pad0" ng-if="ledgerCtrl.accountToShow.stock != null">Qty</span> -->
+								<!-- <span class="pad0" ng-class="{'col-xs-6':ledgerCtrl.accountToShow.stock != null, 'col-xs-12':ledgerCtrl.accountToShow.stock == null}">Amount</span> -->
+								Amount
+							</th>
+						</tr>
+					</thead>
+				</table>
+			
+				<table class="width100">
+					<tbody>
+						<tr 
+							class="ledger-row" 
+							ng-repeat="txn in ledgerCtrl.txnData.debitTransactions" 
+							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)"  
+							ng-click="ledgerCtrl.selectCompoundEntry(txn)"
+							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.currentTxn.entryUniqueName}">
+							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
+							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
+							<td class="col-xs-3" ng-bind="txn.amount"></td>
+						</tr>
+
+					</tbody>
+				</table>
+			
+			</div>
+
+			<div class="right-col-new">
+				<table class="width100">
+					<thead>
+						<tr class="t-h-bg1">
+							<!--  <th class="col-xs-1"></th> -->
+							<th class="col-xs-2" style="border-top:none">
+								<span ng-click="ledgerCtrl.sortOrder.credit = ledgerCtrl.sortDirectionInvert(ledgerCtrl.sortOrder.credit); ledgerCtrl.sortOrderChange('cr')" class="cursor-pointer">
+									<!-- <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="ledgerCtrl.sortOrder.credit == ledgerCtrl.sortDirection.desc"></i>
+									<i class="glyphicon glyphicon-sort-by-order" ng-if="ledgerCtrl.sortOrder.credit == ledgerCtrl.sortDirection.asc"></i> -->
+									Date
+								</span>
+								
+								<!-- <i class="glyphicon glyphicon-sort pull-left"></i> -->
+							</th>
+							<th class="col-xs-7" style="border-top:none">Paticular</th>
+							<th class="col-xs-3" style="border-top:none">Amount</th>
+						</tr>
+					</thead>
+				</table>
+				<table class="width100">
+					<tbody>
+						<tr 
+							class="ledger-row" 
+							ng-repeat="txn in ledgerCtrl.txnData.creditTransactions" 
+							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)" 
+							ng-click="ledgerCtrl.selectCompoundEntry(txn)"
+							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.currentTxn.entryUniqueName}">
+							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
+							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
+							<td class="col-xs-3" ng-bind="txn.amount"></td>
+						</tr>
+					</tbody>
+				</table>
+			
+
+			</div>
+
+
+
+
+
+
+			<table class=" ledger-footer-1 " style="width:50%;left:0;bottom:0;">
+				<tbody>
+					
+					<tr class="total_col">
+						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
+							<span ng-if="ledgerCtrl.totalDebit < ledgerCtrl.totalCredit">C/F: CR {{ledgerCtrl.totalDebit - ledgerCtrl.totalCredit| abs | number:2 }}</span>
+						</td>
+					</tr>
+					<tr class="total_col">
+						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important;">
+							<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.totalDebit | number:2}}</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<table class=" ledger-footer-1 " style="width:50%;right:0;bottom:0;">
+				<tbody>
+					
+					<tr class="total_col">
+						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
+							<span  ng-if="ledgerCtrl.totalDebit > ledgerCtrl.totalCredit">C/F: Dr <span class="primary_color">{{ledgerCtrl.totalDebit - ledgerCtrl.totalCredit | number:2}}</span></span>
+						</td>
+					</tr>
+					<tr class="total_col">
+						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important;">
+							<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.totalCredit | number:2}}</span>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+<div class="text-center mrT2 pageCount">
+		<span class="grey">{{ledgerCtrl.totalCreditTxn + ledgerCtrl.totalDebitTxn}} transactions,</span> <span class="black">{{ledgerCtrl.totalLedgerPages}} pages</span>
+</div>
+
+
+<nav id="pagination" aria-label="Page navigation">
+  <ul class="pagination">
+    <li>
+      <a href="javascript:void(0)" aria-label="Previous" ng-click="ledgerCtrl.getPaginatedLedger(1)">
+        <span aria-hidden="true" class="primary_color">First</span>
+      </a>
+    </li>
+    <li ng-repeat="page in ledgerCtrl.pages">
+    	<a href="javascript:void(0)" class="active" ng-click="ledgerCtrl.getTransactions(page)" ng-class="{'current-page':ledgerCtrl.currentPage == page}">{{page}}</a>
+    </li>
+    <li>
+      <a href="javascript:void(0)" aria-label="Next" ng-click="ledgerCtrl.getPaginatedLedger(ledgerCtrl.totalLedgerPages)">
+        <span aria-hidden="true" class="primary_color">Last</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+	<!-- ledger table end -->
+
+</section>
+<section class="ledger-stat mrT3">
+	<div class="container">
+		<div class="col-xs-3">
+			<h1>Total Transactions <span class="primary_color">{{ledgerCtrl.totalDebitTxn+ledgerCtrl.totalCreditTxn}}</span></h1>
+			<span class="mrT1 mrR2">Dr: {{ledgerCtrl.totalDebitTxn}}</span> <span class="mrT1 mrR2">Cr: {{ledgerCtrl.totalCreditTxn}}</span>
+		</div>
+		<div class="col-xs-3">
+			<h1>Debit Total</h1>
+			<h3>{{ledgerCtrl.txnData.debitTotal | number:2}}</h3>
+		</div>
+		<div class="col-xs-3">
+			<h1>Credit Total</h1>
+			<h3>{{ledgerCtrl.txnData.creditTotal | number:2}}</h3>
+		</div>
+		<div class="col-xs-3 primary_color">
+			<h1>Net Total 
+				<span ng-if="ledgerCtrl.txnData.creditTotal > ledgerCtrl.txnData.debitTotal">Credit</span>
+				<span ng-if="ledgerCtrl.txnData.creditTotal < ledgerCtrl.txnData.debitTotal">Debit</span>
+			</h1>
+			<h3 ng-if="ledgerCtrl.txnData.creditTotal > ledgerCtrl.txnData.debitTotal">{{ledgerCtrl.txnData.creditTotal - ledgerCtrl.txnData.debitTotal | number:2}}</h3>
+			<h3 ng-if="ledgerCtrl.txnData.creditTotal < ledgerCtrl.txnData.debitTotal">{{ledgerCtrl.txnData.debitTotal - ledgerCtrl.txnData.creditTotal | number:2}}</h3>
+		</div>
+	</div>
+
+</section>
+
+

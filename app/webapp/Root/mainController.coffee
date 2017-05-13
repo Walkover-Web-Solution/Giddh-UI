@@ -203,7 +203,11 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $http.post('/logout').then ((res) ->
       # don't need to clear below
       # _userDetails, _currencyList
-      localStorageService.clearAll()
+      localStorageService.remove('_userDetails')
+      localStorageService.remove('_roles')
+      localStorageService.remove('_currencyList')
+      localStorageService.remove('_selectedAccount')
+      localStorageService.remove('_ledgerData')
       window.sessionStorage.clear()
       window.location = "https://www.giddh.com"
     ), (res) ->

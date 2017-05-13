@@ -602,10 +602,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       page: page || 1
       sort: 'desc'
     }
-    if not _.isEmpty(ledgerCtrl.accountUnq)
-      ledgerService.getLedger(unqNamesObj).then(@success, @failure)
+    # if not _.isEmpty(ledgerCtrl.accountUnq)
+    #   ledgerService.getLedger(unqNamesObj).then(@success, @failure)
 
-  ledgerCtrl.getPaginatedLedger(1)
+  #ledgerCtrl.getPaginatedLedger(1)
 
   ledgerCtrl.calculateClosingBal = (ledgers) ->
     totalDebit = 0
@@ -621,6 +621,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
 
   ledgerCtrl.addLedgerPages = () ->
+    ledgerCtrl.pages = []
     i = 0
     while i <= ledgerCtrl.totalLedgerPages
       if i > 0
@@ -792,29 +793,29 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.prevTxn = null
   ledgerCtrl.selectTxn = (ledger, txn, index ,e) ->
-    if txn.inventory && txn.inventory.quantity
-      txn.rate = txn.amount/txn.inventory.quantity
-    if txn.particular.stock
-      txn.rate = txn.particular.stock.rate
+    # if txn.inventory && txn.inventory.quantity
+    #   txn.rate = txn.amount/txn.inventory.quantity
+    # if txn.particular.stock
+    #   txn.rate = txn.particular.stock.rate
     ledgerCtrl.selectedTxn = txn
-    if ledgerCtrl.prevTxn != null
-      ledgerCtrl.prevTxn.isOpen = false
-    ledgerCtrl.selectedTxn.isOpen = true
-    ledgerCtrl.prevTxn = txn
-    ledgerCtrl.clearTaxSelection(txn, ledger)
-    ledgerCtrl.clearDiscounts(ledger)
+    # if ledgerCtrl.prevTxn != null
+    #   ledgerCtrl.prevTxn.isOpen = false
+    # ledgerCtrl.selectedTxn.isOpen = true
+    # ledgerCtrl.prevTxn = txn
+    # ledgerCtrl.clearTaxSelection(txn, ledger)
+    # ledgerCtrl.clearDiscounts(ledger)
     ledgerCtrl.addBlankRow(ledger, txn)
-    ledgerCtrl.removeBlankRowFromPrevLedger(ledgerCtrl.prevLedger, ledger)
-    ledger.isCompoundEntry = true
-    if ledgerCtrl.prevLedger && ledgerCtrl.prevLedger.uniqueName != ledger.uniqueName
-      ledgerCtrl.prevLedger.isCompoundEntry = false
-    ledgerCtrl.prevLedger = ledger
-    # ledgerCtrl.calculateEntryTotal(ledger)
-    ledgerCtrl.showLedgerPopover = true
-    ledgerCtrl.matchInventory(txn)
-    ledgerCtrl.ledgerBeforeEdit = {}
-    angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
-    ledgerCtrl.isTransactionContainsTax(ledger)
+    # ledgerCtrl.removeBlankRowFromPrevLedger(ledgerCtrl.prevLedger, ledger)
+    # ledger.isCompoundEntry = true
+    # if ledgerCtrl.prevLedger && ledgerCtrl.prevLedger.uniqueName != ledger.uniqueName
+    #   ledgerCtrl.prevLedger.isCompoundEntry = false
+    # ledgerCtrl.prevLedger = ledger
+    # # ledgerCtrl.calculateEntryTotal(ledger)
+    # ledgerCtrl.showLedgerPopover = true
+    # ledgerCtrl.matchInventory(txn)
+    # ledgerCtrl.ledgerBeforeEdit = {}
+    # angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
+    # ledgerCtrl.isTransactionContainsTax(ledger)
     ledgerCtrl.selectedLedger = ledger
     ledgerCtrl.selectedLedger.index = index
     ledgerCtrl.selectedLedger.panel = ledgerCtrl.selectedLedger.panel || {}
@@ -827,9 +828,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.selectedLedger.panel.tax = ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
     #ledgerCtrl.selectedLedger.panel.total = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
     #if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
-    #ledgerCtrl.checkCompEntry(ledger)
+    # ledgerCtrl.checkCompEntry(txn)
     #ledgerCtrl.blankCheckCompEntry(ledger)
-    ledgerCtrl.prevLedger = ledger
+    # ledgerCtrl.prevLedger = ledger
     e.stopPropagation()
 
   ledgerCtrl.addBlankRow = (ledger, txn) ->
@@ -839,10 +840,22 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       txn = new txnModel('DEBIT')
       txn.blankRow = 'DEBIT'
       ledger.transactions.push(txn)
+    else if dBlankRow && dBlankRow.particular != "" && dBlankRow.particular.uniqueName.length
+      txn = new txnModel('DEBIT')
+      txn.blankRow = 'DEBIT'
+      ledger.transactions.push(txn)
+      delete dBlankRow.blankRow
+
     if !cBlankRow && txn.type == 'CREDIT'
       txn = new txnModel('CREDIT')
       txn.blankRow = 'CREDIT'
       ledger.transactions.push(txn)
+    else if cBlankRow && cBlankRow.particular != "" && cBlankRow.particular.uniqueName.length
+      txn = new txnModel('CREDIT')
+      txn.blankRow = 'CREDIT'
+      ledger.transactions.push(txn)
+      delete cBlankRow.blankRow
+
 
   ledgerCtrl.removeBlankRowFromPrevLedger = (prevLedger, ledger) ->
     if prevLedger && prevLedger.uniqueName != ledger.uniqueName
@@ -1056,6 +1069,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.taxList = []
     if $rootScope.canUpdate and $rootScope.canDelete
       companyServices.getTax($rootScope.selectedCompany.uniqueName).then(ledgerCtrl.getTaxListSuccess, ledgerCtrl.getTaxListFailure)
+
+  ledgerCtrl.getTaxList()
 
   ledgerCtrl.getTaxListSuccess = (res) ->
     _.each res.body, (tax) ->
@@ -1631,11 +1646,89 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   else
     ledgerCtrl.loadDefaultAccount() 
 
+  $rootScope.$on 'company-changed', (event,changeData) ->
+    if changeData.type == 'CHANGE' 
+      ledgerCtrl.loadDefaultAccount()
+      ledgerCtrl.getTaxList()
+
   $(document).on 'click', (e) ->
     if ledgerCtrl.prevTxn
       ledgerCtrl.prevTxn.isOpen = false
     return 0
 
+#########################################################
+  ledgerCtrl.getTransactions = (page) ->
+    @success = (res) ->
+      ledgerCtrl.txnData = res.body
+      ledgerCtrl.totalLedgerPages = res.body.totalPages
+      ledgerCtrl.currentPage = res.body.page
+      ledgerCtrl.totalCreditTxn = res.body.creditTransactionsCount
+      ledgerCtrl.totalDebitTxn = res.body.debitTransactionsCount
+      ledgerCtrl.totalCredit = ledgerCtrl.getTotalBalance(ledgerCtrl.txnData.creditTransactions)
+      ledgerCtrl.totalDebit = ledgerCtrl.getTotalBalance(ledgerCtrl.txnData.debitTransactions)
+      ledgerCtrl.addLedgerPages()
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    if _.isUndefined($rootScope.selectedCompany.uniqueName)
+      $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: ledgerCtrl.accountUnq
+      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
+      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
+      count: ledgerCtrl.ledgerPerPageCount
+      page: page || 1
+      sort: 'desc'
+    }
+    if not _.isEmpty(ledgerCtrl.accountUnq)
+      ledgerService.getAllTransactions(unqNamesObj).then(@success, @failure)
+
+  ledgerCtrl.getTransactions(1)
+
+  ledgerCtrl.selectCompoundEntry = (txn) ->
+    ledgerCtrl.currentTxn = txn
+
+  ledgerCtrl.fetchEntryDetails = (entry) ->
+    ledgerCtrl.clickedTxn = entry
+    @success = (res) ->
+      ledgerCtrl.paginatedLedgers = [res.body]
+      ledgerCtrl.selectedLedger = res.body
+      ledgerCtrl.ledgerBeforeEdit = {}
+      angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
+      ledgerCtrl.isTransactionContainsTax(res.body)
+      _.each res.body.transactions, (txn) ->
+        if txn.particular.uniqueName == ledgerCtrl.clickedTxn.particular.uniqueName
+          ledgerCtrl.selectedTxn = txn
+      ledgerCtrl.displayEntryModal()
+
+    @failure = (res) ->
+      console.log res
+
+    reqParam = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: $rootScope.selectedAccount.uniqueName
+      entUname: entry.entryUniqueName
+    }
+
+    ledgerService.getEntry(reqParam).then(@success,@failure)
+
+  ledgerCtrl.displayEntryModal = () ->
+    $scope.ledgerCtrl = ledgerCtrl
+    ledgerCtrl.entryModalInstance = $uibModal.open(
+      templateUrl: '/public/webapp/Ledger/entryPopup.html'
+      size: "liq90"
+      animation: true
+      backdrop: 'static'
+      scope: $scope
+    )
+
+  ledgerCtrl.getTotalBalance = (transactions) ->
+    total = 0
+    _.each transactions, (txn) ->
+      total += ledgerCtrl.cutToTwoDecimal(txn.amount)
+    return total
 
   return ledgerCtrl
 giddh.webApp.controller 'ledgerController', ledgerController

@@ -1,9 +1,4 @@
 @charset "utf-8";
-
-body {
-    font-family: 'Roboto', sans-serif
-}
-
 /*icomoon fonts*/
 .icon-options:before {
   content: "\e908";
@@ -44,13 +39,9 @@ body {
 .icon-minus:before {
   content: "\e909";
 }
-
-
-
 a,button,input {
-     transition: all 0.3s ease;
+    transition: all 0.3s ease;
 }
-
 /*input*/
 .form-control {
     background: #f9f7f2 !important;
@@ -83,15 +74,17 @@ a,button,input {
 .subAccBox li a span {
     font-size: 12px;
 }
-.company-name span {
+.company-name span{
+    color: #adadad!important;
+}
+.company-name span.cName {
     color: #616161 !important;
 }
 .acntAccordion .title.active {
     background-image: none;
 }
 header, header .navbar {
-    background-color: #fff/*f0f0f0*/;
-/*    border-bottom: 1px solid #eee;*/
+    background-color: #fff;
 }
 .hamburger_menu {
     background: #525252;
@@ -102,14 +95,6 @@ header, header .navbar {
 }
 .fyear {
     font-size: 14px;
-}
-
-.t-h-bg1 th {
-    background: #f3f0e6;
-    color: #4d4d4d;
-    border: 1px solid #c4c6c7;
-    padding: 11px !important;
-    font-weight: 400;
 }
 table {
       /* Better Font Rendering =========== */
@@ -184,7 +169,7 @@ min-width: 220px;
     font-size: 14px;
 }
 #AddManage {
-    margin: 6px;
+    margin: 6px 0 0 20px;
     padding: 10px 5px;
 }
 .btn-default {
@@ -461,12 +446,14 @@ header {
     box-shadow: none;
     border: 1px solid #ca541e;
 }
+#cmpWrp{
+    cursor:pointer;
+    position: relative;
+    padding-left: 20px;
+}
 
 #cmpWrp .cText {
     margin: 5px 0 5px 10px;
-}
-#cmpWrp {
-    background: #f3f0e6;
 }
 #companyList {
     background: #fff;
@@ -492,7 +479,7 @@ header {
     top: 60%;
     bottom: 0;
     transform: translateY(-50%);
-    right: 14px;
+    left: 5px;
 }
 .basic>tbody>tr>td, .basic>tbody>tr>th, .basic>tfoot>tr>td, .basic>tfoot>tr>th, .basic>thead>tr>td, .basic>thead>tr>th {
     vertical-align: middle !important;
@@ -1113,9 +1100,6 @@ footer small a{
 
 
 /*stock page*/
-.sidebar {
-    background: #f3f0e6 !important;
-}
 .rightBar{
     float: left;
     width: calc(100% - 320px);
@@ -1156,7 +1140,7 @@ footer small a{
 
 .form-theme {
     background: #f5f5f5;
-    padding: 25px;
+    padding: 20px;
     border: 1px solid #e5e5e5;
 }
 
@@ -1171,6 +1155,9 @@ footer small a{
     padding: 12px 26px;
     background: #525252;
     color: #fff;
+}
+.form_title label{
+    font-weight: 400
 }
 a.btn.btn-xs.btn-link.pull-right {
     padding: 0;
@@ -1203,27 +1190,39 @@ a.btn.btn-xs.btn-link.pull-right {
 .dlet {
     color: #f15757;
 }
-.table_theme tbody {
-    border: 1px solid #c4c6c7;
+.table_theme {
+    border: 1px solid #dfe2e5;
 }
-.table_theme tbody tr td {
-    padding: 12px 8px;
-    border-right: 1px solid #c4c6c7;
+.table_theme>thead>tr, .table_theme>tbody>tr{
+    border-bottom: 1px solid #dfe2e5;
 }
-.table_theme tbody tr {
-    border-bottom: 1px solid #c4c6c7;    
+.table_theme>thead>tr>th {
+    background: #f3f0e6;
+    font-weight: 400;
 }
-.table_theme tbody tr:nth-child(even) {
-    background: rgb(245, 245, 245);
+.table_theme>tbody>tr>td, .table_theme>thead>tr>th {
+    padding: 12px 20px;
+    color: #525252
 }
-.action a {
-    padding-right: 10px;
-    color: #333;
+.noPdTd.table_theme>tbody>tr>td{
+    padding: 0;
+}
+.addStockTbl.table_theme>tbody>tr>td{
+    border-right: 1px solid #dfe2e5;
+}
+.addStockTbl.table_theme>tbody>tr>td:last-child{
+    border-right: 0
+}
+.action a+a{
+    margin-left: 5px;
 }
 .action a:hover {
     color: #d35f29;
 }
-
+.action .btn{
+    border-color: transparent;
+    padding: 4px 14px;
+}
 .checkbox_pos input[type=checkbox] {
     left: 0;
     margin-left: 10px;
@@ -1314,11 +1313,12 @@ a.btn.btn-xs.btn-link.pull-right {
 }
 
 .total-ico {
-    bottom: 0;
-    position: absolute;
-    font-size: 5em;
-    left: -45px;
-    top: -14px;
+    font-size: 3em;
+    font-weight: 300;
+    line-height: .5em;
+    /*position: absolute;
+    left: 0;
+    top: 50%;*/
 }
 
 @media only screen and (max-width: 1130px) {
@@ -1662,7 +1662,7 @@ input[type=radio]:checked:after {
 .no-btn .rotate180 {
     top: 0;
 }
-.ledger-panel .upload_div {
+.entrypanel .upload_div {
     padding: 6px 8px;
     float: left;
     margin-right: 10px;
@@ -1670,10 +1670,99 @@ input[type=radio]:checked:after {
     border: 1px solid #949494;
     cursor: pointer;
     background: #f9f7f2;
+    height:32px;
 }
-.ledger-panel .upload_div i {
+.entrypanel .upload_div i {
     cursor: pointer;
 }
-.ledger-panel .upload_div label {
+.entrypanel .upload_div label {
     color: #4d4d4d;
 }
+#inventory-sidebar, #inventory-sidebar input{
+    font-size: 14px;
+    font-weight: 300;
+}
+#inventory-sidebar{
+    background-color: #fff;
+    padding:10px 0;
+}
+#inventory-sidebar .search-input input{
+    height: 36px;
+    background-color: #f8f8f8;
+    color: #616161;
+    border-color: #c3c3c3;
+    width: 100%;
+    padding-left: 10px;
+}
+#inventory-sidebar .input-group{
+    padding:0 15px;
+}
+.form-group.mrB, .mrBChldLbl .form-group label{
+    margin-bottom: 5px
+}
+.groupStockFormRow label{
+    margin-bottom: 6px;
+}
+.btn.btn-md{
+    padding: 10px 15px;
+}
+select.form-control{
+    border-radius: 0;
+}
+label.boldHead{
+    font-weight: 600;
+}
+.isFsStock{
+    color: #929292
+}
+.pdBth1015{
+    padding: 10px 15px
+}
+.pdTBth15{
+    padding: 15px 0;
+}
+.addStockTbl .form-control{
+    background-color: #fff !important;
+}
+.linkstock{
+    height: 200px;
+    overflow-y: scroll;
+    padding-left: 30px;
+}
+.linkStockTbl{
+    border-top: 1px solid #dfe2e5;
+    border-left: 1px solid #dfe2e5;
+}
+.linkStockTbl>tbody>tr>td{
+    padding: 10px 15px;
+}
+.linkStockTbl>tbody>tr>td:first-child{
+    padding-left: 0;
+    position: relative;
+}
+.faltuLine span{
+    width: 10px;
+    height: 2px;
+    display: inline-block;
+    background-color: #dfe2e5;
+    position: absolute;
+    top: 50%;
+    left: 0;
+}
+.faltuLine p{
+    position: relative;
+    margin-left: 20px;
+    margin-bottom: 0;
+}
+
+.noMarg{
+    margin: 0!important;
+}
+.fw400{
+    font-weight: 400!important;
+}
+
+
+
+
+
