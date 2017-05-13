@@ -10,7 +10,7 @@
 
 <ul class="list-unstyled stock-grp-list mrT1">
 	<li ng-click="grp.showStocks = !grp.showStocks" class="pdL isParent" ng-repeat="grp in stock.groupListHr track by $index">
-		<a href ng-click="$event.stopPropagation(); stock.loadStockGroup(grp)">{{grp.name}}</a>
+		<a href ng-class="{'active': stock.$state.params.grpId === grp.uniqueName }" ng-click="$event.stopPropagation(); stock.loadStockGroup(grp)">{{grp.name}}</a>
 		<i ng-if="grp.childStockGroups.length > 0 || stock.updateStockGroup.stocks.length > 0 && grp.uniqueName === stock.$state.params.grpId" class="glyphicon" ng-class="grp.showStocks ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></i>	
 		<div ng-if="grp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
 		<div ng-if="stock.updateStockGroup.stocks.length > 0 && grp.uniqueName === stock.$state.params.grpId" ng-include="'stockList.html'"></div>
@@ -20,7 +20,7 @@
 <script type="text/ng-template" id="stockgrplist.html">
 	<ul class="list-unstyled sub-grp" ng-show="grp.showStocks || grp.uniqueName === stock.$state.params.grpId">
 		<li ng-click="$event.stopPropagation(); grp.showStocks = !grp.showStocks" class="pdL" ng-repeat="grp in grp.childStockGroups">
-			<a href ng-click="$event.stopPropagation();stock.loadStockGroup(grp)">{{grp.name}}</a>
+			<a href ng-class="{'active': stock.$state.params.grpId === grp.uniqueName }" ng-click="$event.stopPropagation();stock.loadStockGroup(grp)">{{grp.name}}</a>
 			<i ng-if="grp.childStockGroups.length > 0" class="glyphicon" ng-class="grp.showStocks ? 'glyphicon-chevron-up' : 'glyphicon-chevron-down'"></i>
 			<div ng-if="grp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
 			<div ng-if="stock.updateStockGroup.stocks.length > 0 && grp.uniqueName === stock.$state.params.grpId" ng-include="'stockList.html'"></div>

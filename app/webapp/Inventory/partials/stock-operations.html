@@ -187,8 +187,7 @@
 <section class="col-xs-12">
 	<div class="pdL2 pdR2">
 	<div class="row">
-	<!-- ng-if="vm.addStockObj.isFsStock" -->
-		<table class="width100 table_theme mrT1 noPdTd addStockTbl">
+		<table ng-if="vm.addStockObj.isFsStock" class="width100 table_theme mrT1 noPdTd addStockTbl">
 			<thead>
 				<tr>
 					<th colspan="2">
@@ -263,7 +262,7 @@
 							<div class="col-md-2 col-lg-2 col-xs-12">
 							&nbsp;
 							</div>
-							<p class="lead col-md-10 col-lg-10 col-xs-12">
+							<p class="lead col-md-10 col-lg-10 col-xs-12 mrB fw400">
 								<small>
 								{{vm.addStockObj.manufacturingDetails.manufacturingQuantity}}
 								{{vm.addStockObj.manufacturingDetails.manufacturingUnitCode}}

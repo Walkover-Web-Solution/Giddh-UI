@@ -345,9 +345,9 @@ angular.module('inventoryController', [])
 	vm.deleteStockGrp = function(){
 		this.success = function(res){
 			toastr.success(res.body)
-			vm.getHeirarchicalStockGroups()
-			vm.getStockGroupsFlatten('', 1,'get')
-			$state.go('inventory', {});
+			// vm.getHeirarchicalStockGroups()
+			// vm.getStockGroupsFlatten('', 1,'get')
+			$state.go('inventory', {}, {reload: true, notify: true});
 		}
 		this.failure = function(res){
 			toastr.error(res.data.message)

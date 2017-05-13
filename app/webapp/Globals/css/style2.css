@@ -1754,8 +1754,12 @@ label.boldHead{
     margin-bottom: 0;
 }
 
-
-
+.noMarg{
+    margin: 0!important;
+}
+.fw400{
+    font-weight: 400!important;
+}
 
 
 
