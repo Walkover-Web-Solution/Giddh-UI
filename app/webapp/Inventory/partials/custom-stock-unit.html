@@ -1,4 +1,7 @@
 <section class="pd2">
+<section class="row">
+<div class="col-xs-12 col-md-9 col-lg-7">
+		
 	
 	<div class="form_title">
 		<label ng-if="!vm.editMode">Add Custom Stock Unit</label>
@@ -8,42 +11,43 @@
 	
 	<form name="customUnitForm" class="form-theme" novalidate>
 		
-		<div class="row">
-			<div class="form-group col-xs-3 pdL0 pdR">
+		<div class="row mrBChldLbl">
+			<div class="form-group col-xs-3">
 				<label>Name<span class="required">*</span></label>
-				<input ng-model="vm.customUnitObj.name" type="text" name="name" class="form-control" required>
+				<input placeholder="Unit name" ng-model="vm.customUnitObj.name" type="text" name="name" class="form-control" required>
 			</div>
 
-			<div class="form-group col-xs-3 pdR0 pdL">
+			<div class="form-group col-xs-3">
 				<label>Unit Code<span class="required">*</span></label>
-				<input type="text" name="code" ng-model="vm.customUnitObj.code" class="form-control" required>
+				<input placeholder="Unique name" type="text" name="code" ng-model="vm.customUnitObj.code" class="form-control" required>
 			</div>
 
-			<div class="form-group col-xs-3 pdR0 pdL">
+			<div class="form-group col-xs-3">
 				<label>Quantity per Unit<span class="required">*</span></label>
-				<input type="text" ng-model="vm.customUnitObj.quantityPerUnit" name="quantityPerUnit" class="form-control" required>
+				<input placeholder="Quantity" type="text" ng-model="vm.customUnitObj.quantityPerUnit" name="quantityPerUnit" class="form-control" required>
 			</div>
 
-			<div class="form-group col-xs-3 pdR0 pdL">
+			<div class="form-group col-xs-3">
 				<label>Parent Stock</label>
 				<select class="form-control" 
 					ng-model="vm.customUnitObj.parentStockUnit" 
 					ng-options="item.name for item in vm.customUnits track by item.code">
-					<option value="">Select</option>
+					<option value="">Parent Stock</option>
 				</select>
 			</div>
 
 		</div>
 
-		<div class="row" ng-if="!vm.editMode">
-			<button type="submit" class="btn btn-sm btn-success" ng-click="vm.addCustomUnitStock()" ng-disabled="customUnitForm.$invalid">Save</button>
+		<div class="row">
+			<div class="col-xs-12" ng-if="!vm.editMode">
+				<button type="submit" class="btn btn-sm btn-success" ng-click="vm.addCustomUnitStock()" ng-disabled="customUnitForm.$invalid">Save</button>
+				<button type="submit" class="btn btn-sm btn-primary" ng-click="vm.clearCustomUnitStock()">Clear</button>
+			</div>
 
-			<button type="submit" class="btn btn-sm btn-primary" ng-click="vm.clearCustomUnitStock()">Clear</button>
-		</div>
-
-		<div class="row" ng-if="vm.editMode">
-			<button type="submit" class="btn btn-sm btn-success" ng-click="vm.updateCustomUnitStock()" ng-disabled="customUnitForm.$invalid">Update</button>
-			<button type="submit" class="btn btn-sm btn-primary" ng-click="vm.cancelEditMode()">Cancel</button>
+			<div class="col-xs-12" ng-if="vm.editMode">
+				<button type="submit" class="btn btn-sm btn-success" ng-click="vm.updateCustomUnitStock()" ng-disabled="customUnitForm.$invalid">Update</button>
+				<button type="submit" class="btn btn-sm btn-primary" ng-click="vm.cancelEditMode()">Cancel</button>
+			</div>
 		</div>
 
 	</form>
@@ -52,7 +56,7 @@
 	<div class="mrT2 clearfix">
 		<table class="col-xs-12 table_theme">
 			<thead>
-			<tr class="t-h-bg1">
+			<tr>
 				<th>Name</th>
 				<!-- <th>Unit Code</th> -->
 				<th>Quantity per Unit</th>
@@ -67,13 +71,8 @@
 					<td>{{item.quantityPerUnit}}</td>
 					<td>{{item.code}}</td>
 					<td class="action">
-						<a href class="edit_btn" ng-click="vm.editUnit(item)">
-							<i class="fa fa-pencil" aria-hidden="true"></i>
-							Edit
-						</a>
- 						<a href class="" ng-click="vm.deleteCustomUnitStock(item)">
- 							<i class="fa fa-trash-o" aria-hidden="true"></i> Delete
- 						</a>
+						<a href class="btn btn-default" ng-click="vm.editUnit(item, $index)">Edit</a>
+ 						<a href class="btn btn-default" ng-click="vm.deleteCustomUnitStock(item)">Delete</a>
  					</td>
 				</tr>
 
@@ -82,4 +81,6 @@
 
 		</table>
 	</div>
+</div>
+</section>
 </section>

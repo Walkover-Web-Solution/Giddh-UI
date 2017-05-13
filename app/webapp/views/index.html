@@ -55,10 +55,11 @@
   <base href="/">
 </head>
 <body class="unresponsive" ng-controller="mainController" >
+  <!-- @if NODE_ENV='PRODUCTION' -->
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
     height="0" width="0" style="display:none;visibility:hidden"></iframe>
   </noscript>
-  
+  <!-- @endif -->
 
 
   <div class="header-container" ng-include="'/public/webapp/views/header.html'"></div>
