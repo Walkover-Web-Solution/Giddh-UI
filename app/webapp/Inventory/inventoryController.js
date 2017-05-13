@@ -320,6 +320,7 @@ angular.module('inventoryController', [])
 	//get stock detail
 	vm.parentGroupsList = []
 	vm.getStockGroupDetail = function(uName){
+		vm.updateStockGroup = angular.copy({})
 		this.success = function(res){
 			vm.groupEditMode = true
 			vm.updateStockGroup = res.body
