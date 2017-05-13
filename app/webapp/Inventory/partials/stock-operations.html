@@ -1,13 +1,13 @@
+<form name="addEditStockForm"  novalidate>
 <section class="col-xs-12 col-md-9 col-lg-7">
-	<div class="pd2">
+	<div class="pd2 pdB0">
 		<div class="row form_title">
 			<label ng-if="!vm.addStockObj.stockGroup">Add Stock</label>
 			<label ng-if="vm.addStockObj.stockGroup">Modify Stock</label>
 		</div>
 	
 		<div class="row">
-			<form name="addEditStockForm" class="form-theme clearfix mrBChldLbl" novalidate>
-				
+			<section class="form-theme clearfix mrBChldLbl">
 				<div class="row mr0">
 					<div class="form-group col-xs-6 pdL0 pdR">
 						<label>Name<span class="required">*</span></label>
@@ -151,43 +151,22 @@
 
 				<div class="row mrT1">
 					<div class="col-xs-12">
-					<!-- vm.addStockObj. -->
 						<div class="checkbox">
 							<label class="isFsStock" for="isFsStock" ng-click="$event.stopPropagation()">
 								<input type="checkbox" ng-model="vm.addStockObj.isFsStock" id="isFsStock" name="isFsStock" />Is it a finished stock? <small>(Manufacturing/Combo)</small></label>
 						</div>
 					</div>
 				</div>
-			
-			
-				<div class="row col-xs-12 mrT2">
-					
-					<button ng-if="!vm.addStockObj.stockGroup" type="submit" class="btn btn-md btn-success mrR1" ng-disabled="addEditStockForm.$invalid"  ng-click="vm.addStock()">Save</button>
-
-					<button ng-if="vm.addStockObj.stockGroup" type="submit" class="btn btn-md btn-success mrR1" ng-disabled="addEditStockForm.$invalid"  ng-click="vm.updateStock()">Update</button>
-
-					<button ng-click="vm.clearAddEditStockForm()" type="reset" class="btn btn-md btn-primary">
-						Cancel
-					</button>
-					
-				</div>
-
-			</form>
-
-			<div class="clearfix pdT2">
-				<button ng-if="vm.addStockObj.stockGroup" class="btn btn-md btn-danger pull-right" ng-click="vm.deleteStockItem()">
-					<span class="glyphicon glyphicon-trash"></span>
-					Delete Stock
-				</button>
-			</div>
-
+			</section>
+			<!-- end box -->
 		</div>
 	</div>
 </section>
 
+<div class="clearfix"></div>
 <!-- combo code -->
 <section class="col-xs-12">
-	<div class="pdL2 pdR2">
+	<div class="pdL2 pdR2 mrB2">
 	<div class="row">
 		<table ng-if="vm.addStockObj.isFsStock" class="width100 table_theme mrT1 noPdTd addStockTbl">
 			<thead>
@@ -299,3 +278,25 @@
 	</div>
 </section>
 <!-- combo code end-->
+<div class="clearfix"></div>
+
+<div class="col-xs-12">
+	<div class="pd pdT0">
+						
+		<button ng-if="!vm.addStockObj.stockGroup" type="submit" class="btn btn-md btn-success mrR1" ng-disabled="addEditStockForm.$invalid"  ng-click="vm.addStock()">Save</button>
+
+		<button ng-if="vm.addStockObj.stockGroup" type="submit" class="btn btn-md btn-success mrR1" ng-disabled="addEditStockForm.$invalid"  ng-click="vm.updateStock()">Update</button>
+
+		<button ng-click="vm.clearAddEditStockForm()" type="reset" class="btn btn-md btn-primary">
+			Cancel
+		</button>
+
+		<button ng-if="vm.addStockObj.stockGroup" class="btn btn-md btn-danger pull-right" ng-click="vm.deleteStockItem()">
+			<span class="glyphicon glyphicon-trash"></span>
+			Delete Stock
+		</button>
+		
+	</div>
+</div>
+
+</form>

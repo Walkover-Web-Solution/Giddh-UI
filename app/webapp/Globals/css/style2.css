@@ -690,6 +690,9 @@ input[type="checkbox"]:after {
     width: 100%;
     border-radius: 0 !important;
 }
+.filterForm .form-control{
+    background-color: #fff!important
+}
 .filterForm .form-group.col-xs-2 {
     padding: 0 7px;
 
@@ -697,6 +700,7 @@ input[type="checkbox"]:after {
 .filterForm label {
     width: 100%;
     font-size: 13px;
+    font-weight: 400;
 }
 
 .filterForm .form-group:nth-child(1) {
@@ -724,7 +728,12 @@ input[type="checkbox"]:after {
 .pdB1 {
     padding-bottom: 10px;
 }
-
+.pdB0{
+    padding-bottom: 0;
+}
+.pdT0{
+    padding-top: 0;
+}
 .templateInfo {
     position: relative;
     width: 100%;
@@ -1200,7 +1209,7 @@ a.btn.btn-xs.btn-link.pull-right {
     background: #f3f0e6;
     font-weight: 400;
 }
-.table_theme>tbody>tr>td, .table_theme>thead>tr>th {
+.table_theme>tbody>tr>td, .table_theme>thead>tr>th,.stkRprtTbl.table_theme>tfoot>tr>td {
     padding: 12px 20px;
     color: #525252
 }
@@ -1212,6 +1221,9 @@ a.btn.btn-xs.btn-link.pull-right {
 }
 .addStockTbl.table_theme>tbody>tr>td:last-child{
     border-right: 0
+}
+.stkRprtTbl.table_theme>tbody>tr>td:last-child, .stkRprtTbl.table_theme>thead>tr>th:last-child{
+    border-right: 1px solid #dfe2e5;
 }
 .action a+a{
     margin-left: 5px;

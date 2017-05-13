@@ -1,111 +1,92 @@
-<section class="col-xs-12" ng-if="stock.report.name == undefined" >
-	<p>Select a Stock to Load Report</p>
+<section class="pd2" ng-if="!vm.report.name" >
+	<p>Select a Stock to Load Report </p>
+	<a href ng-click="vm.getStockReport()">Refresh</a>
 </section>
-<section class="col-xs-12 mrT1" ng-if="stock.report.name">
-<div class="clearfix mrB2 pull-right">
-<button class="btn btn-primary"><i class="fa fa-pencil" aria-hidden="true"></i> Manage Stock</button>
-<button class="btn btn-primary mrL"><i class="fa fa-trash-o" aria-hidden="true"></i> Delete Stock</button>
-</div>
-	<div class="filterForm pos-rel clearfix">	
-		<div class="form-group mrB pull-left">
-	        <label>From</label>
-	        <p class="input-group">
-	          <input type="text" class="form-control"
-	                 uib-datepicker-popup="{{stock.format}}" required
-	                 datepicker-options="stock.dateOptions" 
-	                 is-open="stock.fromDatePickerIsOpen"
-	                 ng-click="stock.fromDatePickerOpen($event)"
-	                 ng-model="stock.fromDate.date"
-	                 max-date="stock.today"
-	                 placeholder="from date"
-	              />
-	        </p>
-	    </div>
-	    <div class="form-group mrB pull-left">
-	        <label>To</label>
-	        <p class="input-group">
-	          <input type="text" class="form-control"
-	                 uib-datepicker-popup="{{stock.format}}" required
-	                 datepicker-options="stock.dateOptions"
-	                 is-open="stock.toDatePickerIsOpen"
-	                 ng-click="stock.toDatePickerOpen($event)"
-	                 ng-model="stock.toDate.date" 
-	                 min-date="stock.fromDate.date" 
-	                 max-date="stock.today" 
-	                 placeholder="to date"
-	              />
-	        </p>
-	    </div>
-	    <div class="form-group">
-	        <label>&nbsp;</label>
-		    <button class="btn btn-primary" ng-click="stock.getStockReport(stock.selectedReportStock, stock.selectedReportGrp)">Go</button>
-        </div>
-	</div>
-	<br>
-	<ul class="list-inline">
-		<li  class="mrR2">
-			<label>Stock Name:</label> <span class="ReportInfo">{{stock.report.name}}</span>
-		</li>
-		<li  class="mrR2">
-			<label>Stock UniqueName:</label> <span class="ReportInfo">{{stock.report.uniqueName}}</span>
-		</li>
-		<li class="mrR2">
-			<label>Opening Amt:</label> <span class="ReportInfo">{{stock.report.openingAmount}}</span>
-		</li>
-		<li class="mrR2">
-			<label>Opening Qty:</label> <span class="ReportInfo">{{stock.report.openingQuantity}}</span></label>
-		</li>
-		<li class="mrR2">
-			<label>Closing Qty:</label><span class="ReportInfo">{{stock.report.closingQuantity}}</span></label>
-		</li>
-	</ul>
+
+<section class="pd2 h100" ng-if="vm.report.name" auto-height>
 	
-
-	<p class="mrT1" ng-if="stock.report.transactionResource.length == 0">No Transactions for this Stock</p>
-	<div class="h100 overflow-y">
-		<table class="col-xs-12 mrT2 table_theme" ng-if="stock.report.transactionResource.length > 0">
-			<thead>
-				<tr class="t-h-bg1">
-					<th>Account</th>
-					<th>Entry Date</th>
-					<th>Qty</th>
-					<th>Rate</th>
-					<th>Amount(CR)</th>
-					<th>Amount(DR)</th>
-					<th>Closing Qty</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="txn in stock.report.transactionResource">
-					<td ng-bind="txn.account.name"></td>
-					<td ng-bind="txn.entryDate"></td>
-					<td ng-bind="txn.quantity"></td>
-					<td ng-bind="txn.rate"></td>
-					<td><span ng-bind="txn.amount" ng-if="txn.stockBalType == 'cr'"></span></td>
-					<td><span ng-bind="txn.amount" ng-if="txn.stockBalType == 'dr'"></span></td>
-					<td ng-bind="txn.closingQuantity"></td>
-				</tr>
-			</tbody>
-		    <tfoot>
-	          
-	          <tr>
-	            <td colspan="14">
-	            <div class="pagination pull-right">
-	                <ul class="list-inline">
-	                  <li>
-	                    <button class="btn btn-default" ng-click="stock.report.page = stock.report.page-1;stock.getStockReport(stock.selectedReportStock, stock.selectedReportGrp)" ng-disabled="stock.report.page == 1">Prev</button>
-	                  </li>
-	                  <li>{{stock.report.page}}/{{stock.report.totalPages}}</li>
-	                  <li>
-	                    <button class="btn btn-default" ng-click="stock.report.page = stock.report.page+1; stock.getStockReport(stock.selectedReportStock, stock.selectedReportGrp)" ng-disabled="stock.report.page == stock.report.totalPages">Next</button>
-	                  </li>
-	                </ul>
-	              </div>
-	            </td>
-	          </tr>
-
-	        </tfoot>
-		</table>
+	<div class="clearfix mrB2">
+		<button ng-click="vm.goToManageStock()" class="btn btn-primary btn-md"><i class="fa fa-pencil" aria-hidden="true"></i> Manage Stock</button>
 	</div>
 
+	<div class="filterForm clearfix pr">	
+		<div class="form-group mrB pull-left">
+      <label>From Date</label>
+      <p class="input-group">
+      	<input type="text" class="form-control"
+					uib-datepicker-popup="{{vm.format}}" required
+					datepicker-options="vm.dateOptions" 
+					is-open="vm.fromDatePickerIsOpen"
+					ng-click="vm.fromDatePickerOpen($event)"
+					ng-model="vm.fromDate.date"
+					max-date="vm.today"
+					placeholder="from date"
+          />
+      </p>
+	  </div>
+	  <div class="form-group mrB pull-left">
+      <label>To Date</label>
+      <p class="input-group">
+        <input type="text" 
+        	class="form-control"
+					uib-datepicker-popup="{{vm.format}}" required
+					datepicker-options="vm.dateOptions"
+					is-open="vm.toDatePickerIsOpen"
+					ng-click="vm.toDatePickerOpen($event)"
+					ng-model="vm.toDate.date" 
+					min-date="vm.fromDate.date" 
+					max-date="vm.today" 
+					placeholder="to date"
+        />
+      </p>
+    </div>
+    <div class="form-group">
+      <label>&nbsp;</label>
+	    <button class="btn btn-primary" ng-click="vm.getStockReport()">Go</button>
+    </div>
+	</div>
+
+	<p class="mrT1" ng-if="vm.report.transactionResource.length == 0">No Transactions for this Stock</p>
+
+	<table ng-if="vm.report.transactionResource.length > 0" class="mrT1 stkRprtTbl table_theme width100">
+		<thead>
+			<tr>
+				<th>Account</th>
+				<th>Date</th>
+				<th>Qty</th>
+				<th>Rate</th>
+				<th>Amount(CR)</th>
+				<th>Amount(DR)</th>
+				<th>Closing Qty</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="txn in vm.report.transactionResource">
+				<td ng-bind="txn.account.name"></td>
+				<td ng-bind="txn.entryDate"></td>
+				<td ng-bind="txn.quantity"></td>
+				<td ng-bind="txn.rate"></td>
+				<td><span ng-bind="txn.amount" ng-if="txn.stockBalType == 'cr'"></span></td>
+				<td><span ng-bind="txn.amount" ng-if="txn.stockBalType == 'dr'"></span></td>
+				<td ng-bind="txn.closingQuantity"></td>
+			</tr>
+		</tbody>
+	  <tfoot>
+      <tr>
+        <td colspan="14">
+        	<div class="pagination pull-right">
+            <ul class="list-inline">
+              <li>
+                <button class="btn btn-default" ng-click="vm.report.page = vm.report.page-1; vm.getStockReport()" ng-disabled="vm.report.page == 1">Prev</button>
+              </li>
+              <li>{{vm.report.page}}/{{vm.report.totalPages}}</li>
+              <li>
+                <button class="btn btn-default" ng-click="vm.report.page = vm.report.page+1; vm.getStockReport()" ng-disabled="vm.report.page == vm.report.totalPages">Next</button>
+              </li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    </tfoot>
+	</table>
 </section>
