@@ -23,11 +23,13 @@
 				<div class="row mr0">
 					<div class="form-group col-xs-3 pdL0 pdR">
 						<label>Stock Unit<span class="required">*</span></label>
-						<ui-select ng-model="vm.addStockObj.stockUnitCode" theme="bootstrap" required>
+						<ui-select ng-model="vm.addStockObj.stockUnitCode" theme="bootstrap" required  title="Choose Unit">
               <ui-select-match>
-                <span>{{$select.selected.code}}</span>
+                <span>
+                	{{$select.selected.name || $select.selected}}
+                </span>
               </ui-select-match>
-              <ui-select-choices repeat="unit.code as unit in vm.customUnits track by $index">
+              <ui-select-choices repeat="unit.code as unit in vm.customUnits">
               	<span ng-bind="unit.name"></span>&nbsp;
               	(<span ng-bind="unit.code"></span>)
               </ui-select-choices>
@@ -76,9 +78,9 @@
 
 					<div class="row mrB1" ng-repeat="item in vm.addStockObj.purchaseAccountDetails.unitRates track by $index">
 						<div class="col-xs-5">
-							<ui-select ng-model="item.stockUnitCode" theme="bootstrap">
+							<ui-select ng-model="item.stockUnitCode" theme="bootstrap" title="Choose Unit">
 		            <ui-select-match>
-	                <span>{{$select.selected.code}}</span>
+	                <span>{{$select.selected.name || $select.selected}}</span>
 	              </ui-select-match>
 	              <ui-select-choices repeat="unit.code as unit in vm.customUnits track by $index">
 	              	<span ng-bind="unit.name"></span>&nbsp;
@@ -125,9 +127,9 @@
 
 					<div class="row mrB1" ng-repeat="item in vm.addStockObj.salesAccountDetails.unitRates track by $index">
 						<div class="col-xs-5">
-							<ui-select ng-model="item.stockUnitCode" theme="bootstrap">
+							<ui-select ng-model="item.stockUnitCode" theme="bootstrap" title="Choose Unit">
 		            <ui-select-match>
-	                <span>{{$select.selected.code}}</span>
+	                <span>{{$select.selected.name || $select.selected}}</span>
 	              </ui-select-match>
 	              <ui-select-choices repeat="unit.code as unit in vm.customUnits track by $index">
 	              	<span ng-bind="unit.name"></span>&nbsp;
