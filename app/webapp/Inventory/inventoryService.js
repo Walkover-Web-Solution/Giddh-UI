@@ -50,6 +50,10 @@ angular.module('inventoryServices', [])
 				method: 'POST',
 				url: '/company/:companyUniqueName/stock-group/:stockGroupUniqueName/stock'
 			},
+			deleteStock: {
+				method: 'DELETE',
+				url: '/company/:companyUniqueName/stock-group/delete-stock'
+			},
 			updateStockItem: {
 				method: 'PUT',
 				url: '/company/:companyUniqueName/stock-group/update-stock-item'
@@ -165,6 +169,12 @@ angular.module('inventoryServices', [])
 	    	})
 	    },
 
+	    deleteStock: function(reqParam){
+	    	return this.handlePromise(function(onSuccess, onFailure){
+	    		return stock.deleteStock(reqParam, onSuccess, onFailure)
+	    	})
+	    },
+
 	    updateStockItem: function(reqParam, data){
 	    	return this.handlePromise(function(onSuccess, onFailure){
 	    		return stock.updateStockItem({
@@ -222,17 +232,6 @@ angular.module('inventoryServices', [])
 	    		return stock.getStockReport(reqParam, onSuccess, onFailure)
 	    	})
 	    },
-
-	    deleteStock: function(reqParam){
-	    	return this.handlePromise(function(onSuccess, onFailure){
-	    		return stock.deleteStock({
-	    			companyUniqueName: reqParam.companyUniqueName,
-	    			stockGroupUniqueName : reqParam.stockGroupUniqueName,
-	    			stockUniqueName: reqParam.stockUniqueName
-	    		}, onSuccess, onFailure)
-	    	})
-	    },
-
 	    deleteStockGrp: function(reqParam){
 	    	return this.handlePromise(function(onSuccess, onFailure){
 	    		return stock.deleteStockGrp({
