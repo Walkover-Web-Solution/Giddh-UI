@@ -252,8 +252,8 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
 
   # init func on dom ready
   $timeout(->
-    if _.isEmpty($state.params.stockId)
-      $state.go('inventory', {}, {reload: true, notify: true})
+    # if _.isEmpty($state.params.stockId)
+    #   $state.go('inventory', {}, {reload: true, notify: true})
 
     if(!_.isEmpty($state.params) && angular.isDefined($state.params.stockId) && $state.params.stockId isnt '')
       vm.stockEditMode =  true
