@@ -1662,7 +1662,7 @@ input[type=radio]:checked:after {
 .no-btn .rotate180 {
     top: 0;
 }
-.ledger-panel .upload_div {
+.entrypanel .upload_div {
     padding: 6px 8px;
     float: left;
     margin-right: 10px;
@@ -1670,10 +1670,11 @@ input[type=radio]:checked:after {
     border: 1px solid #949494;
     cursor: pointer;
     background: #f9f7f2;
+    height:32px;
 }
-.ledger-panel .upload_div i {
+.entrypanel .upload_div i {
     cursor: pointer;
 }
-.ledger-panel .upload_div label {
+.entrypanel .upload_div label {
     color: #4d4d4d;
 }

@@ -4720,3 +4720,17 @@ table.proforma-particulars{
     border: none;
 }
 
+#entryModal{
+    overflow:hidden;
+}
+
+#entryModal .modal-body{
+    padding: 0 100px 100px;
+    overflow: hidden;
+}
+
+.entrypanel label{
+    font-weight: 400;
+    font-size: 14px;
+    color:#ccc;
+}

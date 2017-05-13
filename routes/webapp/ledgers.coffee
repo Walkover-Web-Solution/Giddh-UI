@@ -19,6 +19,23 @@ router.get '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.get '/transactions', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      to: req.query.toDate
+      from: req.query.fromDate
+      count:Number(req.query.count) || 0
+      page:Number(req.query.page) || 1
+      sort:req.query.sort
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/ledgers/transactions'
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
 #Delete all ledgers of an account
 router.delete '/', (req, res) ->
   authHead =
