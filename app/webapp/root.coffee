@@ -230,6 +230,16 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
     }
   )
+  .state('inventory.add-group.stock-report',
+    url: '/stock-report/:stockId'
+    views:{
+      'inventory-detail@inventory':{
+        templateUrl: '/public/webapp/Inventory/partials/stock-report.html',
+        controller: 'inventoryStockReportController'
+        controllerAs: 'vm'
+      }
+    }
+  )
   .state('inventory.add-group.add-stock',
     url: '/add-stock/:stockId'
     views:{

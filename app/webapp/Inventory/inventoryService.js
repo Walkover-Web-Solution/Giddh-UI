@@ -196,7 +196,7 @@ angular.module('inventoryServices', [])
 	    },
 
 
-	    getFilteredStockGroups: function(){
+	    getFilteredStockGroups: function(reqParam){
 	    	return this.handlePromise(function(onSuccess, onFailure){
 	    		return stock.getFilteredStockGroups({
 	    			companyUniqueName: reqParam.companyUniqueName,
@@ -217,19 +217,13 @@ angular.module('inventoryServices', [])
 	    	})
 	    },
 
-	    getStockReport: function(){
+	    getStockReport: function(reqParam){
 	    	return this.handlePromise(function(onSuccess, onFailure){
-	    		return stock.getStockReport({
-	    			companyUniqueName: reqParam.companyUniqueName,
-	    			stockGroupUniqueName : reqParam.stockGroupUniqueName,
-	    			stockUniqueName: reqParam.stockUniqueName,
-	    			from: reqParam.from,
-	    			to: reqParam.to
-	    		}, onSuccess, onFailure)
+	    		return stock.getStockReport(reqParam, onSuccess, onFailure)
 	    	})
 	    },
 
-	    deleteStock: function(){
+	    deleteStock: function(reqParam){
 	    	return this.handlePromise(function(onSuccess, onFailure){
 	    		return stock.deleteStock({
 	    			companyUniqueName: reqParam.companyUniqueName,
@@ -239,7 +233,7 @@ angular.module('inventoryServices', [])
 	    	})
 	    },
 
-	    deleteStockGrp: function(){
+	    deleteStockGrp: function(reqParam){
 	    	return this.handlePromise(function(onSuccess, onFailure){
 	    		return stock.deleteStockGrp({
 	    			companyUniqueName: reqParam.companyUniqueName,

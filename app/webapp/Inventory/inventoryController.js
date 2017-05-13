@@ -11,33 +11,6 @@ angular.module('inventoryController', [])
 	vm.addNewGroup = false
 	vm.addStockForm = false
 	vm.showSidebar = true
-	vm.showStockReport = true
-	vm.today = new Date()
-	vm.fromDate = {date: new Date(moment().subtract(1, 'month').utc())}
-	vm.toDate = {date: new Date()}
-	vm.fromDatePickerIsOpen = false
-	vm.toDatePickerIsOpen = false
-	vm.format = "dd-MM-yyyy"
-	vm.dateOptions = {
-    'year-format': "'yy'",
-    'starting-day': 1,
-    'showWeeks': false,
-    'show-button-bar': false,
-    'year-range': 1,
-    'todayBtn': false
-	}
-
-	vm.fromDatePickerOpen = function(e){
-		vm.fromDatePickerIsOpen = true
-		vm.toDatePickerIsOpen = false
-		e.stopPropagation()
-	}
-    	
-	vm.toDatePickerOpen = function(e){
-		vm.fromDatePickerIsOpen = false
-		vm.toDatePickerIsOpen = true
-		e.stopPropagation()
-	}
     	
 	vm.sideBarOn = function(e){
 		e.stopPropagation();
@@ -144,31 +117,6 @@ angular.module('inventoryController', [])
 		}
 	}
 
-	//get stock report
-	vm.report = {
-		page: 1
-	}
-	vm.getStockReport = function(stk, grp){
-		vm.selectedReportStock = stk
-		vm.selectedReportGrp = grp
-		this.success = function(res){
-			vm.report = res.body
-		}
-		this.failure = function(res){
-			toastr.error(res.data.message)
-		}
-		reqParam = {
-			companyUniqueName: $rootScope.selectedCompany.uniqueName,
-			stockGroupUniqueName: grp.uniqueName,
-			stockUniqueName: stk.uniqueName,
-			to:$filter('date')(vm.toDate.date, 'dd-MM-yyyy'),
-			from:$filter('date')(vm.fromDate.date, 'dd-MM-yyyy'),
-			page:vm.report.page
-		}
-		stockService.getStockReport(reqParam).then(this.success, this.failure)
-
-	}
-
 	vm.resetParentSelectBox = function(){
 		if (vm.groupStockObj.isSelfParent)
 			vm.groupStockObj.parentStockGroupUniqueName = null
@@ -184,7 +132,6 @@ angular.module('inventoryController', [])
 	}
 
 	vm.addGroup = function(){
-		
 		this.success = function(res){
 			toastr.success('Group addedd successfully');
 			vm.getHeirarchicalStockGroups();
@@ -238,63 +185,10 @@ angular.module('inventoryController', [])
 		stockService.updateStockGroup(reqParam, obj).then(this.success, this.failure)
 	}
 
-	//Add new stock
-	vm.addStockItem = {}
-	vm.addStockItem.newStock = true
-	vm.addStock = function(stockItem){
-		this.success = function(res){
-			toastr.success('Stock Item added successfully')
-			vm.selectedStockGrp.stocks.push(res.body)
-			vm.getAllStocks()
-			vm.addStockItem = {}
-			$rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
-		}
-		this.failure = function(res){
-			toastr.error(res.data.message || 'Something went Wrong, please check all input values')
-		}
-		var reqParam = {
-			companyUniqueName: $rootScope.selectedCompany.uniqueName,
-			stockGroupUniqueName: vm.selectedStockGrp.uniqueName
-		}
-		stockItem.stockPurchaseAccount = stockItem.stockPurchaseAccount || {}
-		stockItem.stockSalesAccount = stockItem.stockSalesAccount || {}
-		var data = {
-		    "name":stockItem.stockName,
-		    "uniqueName":stockItem.stockUnqName,
-		    "openingQuantity":stockItem.stockQty,
-		    "openingAmount":stockItem.stockAmount,
-		    "stockUnitCode":stockItem.stockType.shortCode,
-		    "purchaseAccountUniqueName":stockItem.stockPurchaseAccount.uniqueName,
-		    "purchaseRate":stockItem.stockPurchaseRate,
-		    "salesRate":stockItem.stockSalesRate,
-		    "salesAccountUniqueName":stockItem.stockSalesAccount.uniqueName,
-		}
-		stockService.createStock(reqParam, data).then(this.success, this.failure)
-	}	
-
 	//load stock group
 	vm.loadStockGroup = function(grp){
 		$state.go('inventory.add-group', { grpId: grp.uniqueName })
 		vm.getStockGroupDetail(grp.uniqueName)
-		//vm.getStockGroups(grp)
-	}
-
-	// get stocks of selected group
-	vm.selectedStockGrp = {}
-	vm.getStockGroups = function(grp){
-		vm.selectedStockGrp = grp
-		this.success = function(res){
-			vm.selectedStockGrp.childStockGroups = res.body
-		}
-		this.failure = function(res){
-			toastr.error(res.data.message)
-		}
-		reqParam = {
-			companyUniqueName: $rootScope.selectedCompany.uniqueName,
-			stockGroupUniqueName: grp.uniqueName
-		}
-
-		stockService.getStockGroups(reqParam).then(this.success, this.failure)
 	}
 
 	// get all stocks
@@ -394,23 +288,15 @@ angular.module('inventoryController', [])
 		$state.go('inventory.add-group.add-stock', { stockId: item.uniqueName });
 	}
 
+	vm.loadStockReportView=function(item){
+		$state.go('inventory.add-group.stock-report', { stockId: item.uniqueName });
+	}
+
 	//toggle views from report to manage
 	vm.toggleViews = function(){
-		// vm.showStockReport = !vm.showStockReport;
 		vm.getHeirarchicalStockGroups();
 	}
 
-	// vm.toggleViews()
-	// vm.Groupadd = function() {
-	// 	vm.addNewGroup = true;
-	// 	e.stopPropagation();
-	// }
-
-	// vm.AddNewStock = function() {
-	// 	vm.addNewGroup = false;
-	// 	vm.addNewStock = true;
-	// 	e.stopPropagation();
-	// }
 
 	// to hide sidebar
 	$(document).on('click', function(e){
