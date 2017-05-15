@@ -96,6 +96,14 @@ header, header .navbar {
 .fyear {
     font-size: 14px;
 }
+.t-h-bg1 th {
+    background: #f3f0e6;
+    color: #4d4d4d;
+    border: 1px solid #c4c6c7;
+    padding: 11px !important;
+    font-weight: 400;
+}
+
 table {
       /* Better Font Rendering =========== */
   -webkit-font-smoothing: antialiased;
