@@ -4481,6 +4481,7 @@ table.proforma-particulars{
 }
 .stock-grp-list  li{
     position: relative;
+    cursor: pointer;
 }
 .stock-grp-list > li{
     padding:7px 15px;
