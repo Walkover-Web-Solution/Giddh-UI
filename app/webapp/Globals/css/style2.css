@@ -1752,7 +1752,7 @@ label.boldHead{
     padding-left: 0;
     position: relative;
 }
-.faltuLine span{
+.list-row span{
     width: 10px;
     height: 2px;
     display: inline-block;
@@ -1761,7 +1761,7 @@ label.boldHead{
     top: 50%;
     left: 0;
 }
-.faltuLine p{
+.list-row p{
     position: relative;
     margin-left: 20px;
     margin-bottom: 0;

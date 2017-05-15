@@ -2,8 +2,8 @@
 .form-control, input {
 	color: #4d4d4d;
 }
-.ledgHead table tr.ledger-row td[class*=col-] {
-	padding: 5px !important;
+.ledgHead table td[class*=col-] {
+	padding: 8px !important;
 	border-bottom: 1px solid #ccc;
 	border-right: 1px solid #ccc;
 	font-size: 13px;
@@ -13,10 +13,6 @@
 	overflow:hidden;
 	white-space: nowrap;
 }
-tr.debit-blank-row td,tr.credit-blank-row td{
-	padding: 0 !important;
-}
-
 .ledgHead.entry-popup table td[class*=col-] {
 	padding: 0px !important;
 	border-bottom: 1px solid #ccc;
@@ -27,6 +23,9 @@ tr.debit-blank-row td,tr.credit-blank-row td{
 	text-overflow: ellipsis;
 	overflow:hidden;
 	white-space: nowrap;
+}
+.ledgHead .ledger-main td[class*=col-] {
+	padding: 0px !important;
 }
 table td[class*=col-]:last-child {
 	border-right: 0;
@@ -165,7 +164,7 @@ th {
 		<!-- ledger header end -->
 
 		<!--bank ledgers-->
-		<section class="mrT1" ng-if="ledgerCtrl.etxnData.length > 0 && ledgerCtrl.showEledger">
+		<section class="mrT5" ng-if="ledgerCtrl.eLedgerData.length > 0 && ledgerCtrl.showEledger">
             <div ng-include="'/public/webapp/Ledger/eledger-new.html'"></div>
         </section>
         <!--/bank ledger-->
@@ -214,49 +213,56 @@ th {
 							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
 							<td class="col-xs-3" ng-bind="txn.amount"></td>
 						</tr>
+					</tbody>
+				</table>
+				<table class="width100">
+					<tbody>
 						<tr ng-repeat="ledger in ledgerCtrl.blankLedger">
-							<td colspan="100">
+							<td class="width100">
 								<table class="width100">
 									<tbody class="ledger-main">
-										<tr 
-											class="ledger-row debit-blank-row"
+										<tr
+											class="ledger-row"
 											ng-repeat="txn in ledger.transactions"
 											ng-if="txn.type == 'DEBIT'"
 											uib-popover-template="ledgerCtrl.popover.templateUrl"
 											popover-trigger="outsideClick"
 											popover-placement="{{ledgerCtrl.popover.position}}"
 											popover-append-to-body='true'
+											popover-enable="!ledgerCtrl.popover.draggable"
 											popover-is-open="txn.isOpen"
 											popover-popup-delay="200"
 											set-popover-position
+											ng-click="$event.stopPropagation()"
 											>
 											<td class="col-xs-2">
 												<input 
+												class="form-control" 
 												type="text" 
-												ng-model="ledger.entryDate" 
-												class="form-control"
-												ng-click="ledgerCtrl.selectBlankTxn(ledger, txn, $index, $event)"
+												ng-model="ledger.entryDate"
+												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												ui-mask="99-99-9999"
                                       			model-view-value="true">
 											</td>
 											<td class="col-xs-7">
 												<input 
-												type="text" 
+												class="form-control"
+												type="text"
 												ng-model="txn.particular"
 												typeahead-append-to-body="true" 
 		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
-		                                      	typeahead-template-url="accountPopUp.html" 
-												class="form-control"
-												ng-click="ledgerCtrl.selectBlankTxn(ledger, txn, $index, $event)"
-												is-open="txn.isOpen">
+		                                      	typeahead-template-url="accountPopUp.html"
+												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+												is-open="txn.isOpen"
+												>
 											</td>
 											<td class="col-xs-3 pos-rel">
 												<input 
-												type="text" 
-												ng-model="txn.amount" 
 												class="form-control" 
-												ng-click="ledgerCtrl.selectBlankTxn(ledger, txn, $index, $event)"
+												type="text" 
+												ng-model="txn.amount"
+												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												ng-change="ledgerCtrl.onTxnAmountChange(txn)"
 												>
@@ -302,8 +308,12 @@ th {
 							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
 							<td class="col-xs-3" ng-bind="txn.amount"></td>
 						</tr>
+					</tbody>
+				</table>
+				<table class="width100">
+					<tbody>
 						<tr ng-repeat="ledger in ledgerCtrl.blankLedger">
-							<td class="100">
+							<td class="width100">
 								<table class="width100">
 									<tbody class="ledger-main">
 										<tr
@@ -359,7 +369,6 @@ th {
 						</tr>
 					</tbody>
 				</table>
-			
 
 			</div>
 
@@ -406,7 +415,7 @@ th {
 </div>
 
 
-<nav id="pagination" aria-label="Page navigation">
+<nav id="pagination" aria-label="Page navigation" ng-if="ledgerCtrl.totalLedgerPages > 1">
   <ul class="pagination">
     <li>
       <a href="javascript:void(0)" aria-label="Previous" ng-click="ledgerCtrl.getPaginatedLedger(1)">
@@ -430,8 +439,9 @@ th {
 <section class="ledger-stat mrT3">
 	<div class="container">
 		<div class="col-xs-3">
+			<span class="primary_color mrB1" style="font-size: 12px">{{cDate.startDate | date:'shortDate'}} - {{cDate.endDate | date:'shortDate'}}</span>
 			<h1>Total Transactions <span class="primary_color">{{ledgerCtrl.totalDebitTxn+ledgerCtrl.totalCreditTxn}}</span></h1>
-			<span class="mrT1 mrR2">Dr: {{ledgerCtrl.totalDebitTxn}}</span> <span class="mrT1 mrR2">Cr: {{ledgerCtrl.totalCreditTxn}}</span>
+			<span class="mrT1 mrR2">Dr {{ledgerCtrl.totalDebitTxn}}</span> <span class="mrT1 mrR2">Cr {{ledgerCtrl.totalCreditTxn}}</span>
 		</div>
 		<div class="col-xs-3">
 			<h1>Debit Total</h1>
@@ -441,18 +451,20 @@ th {
 			<h1>Credit Total</h1>
 			<h3>{{ledgerCtrl.txnData.creditTotal | number:2}}</h3>
 		</div>
-		<div class="col-xs-3 primary_color">
-			<h1>Net Total 
+		<div class="col-xs-3">
+			<h1 class=" primary_color">Net Total 
 				<span ng-if="ledgerCtrl.txnData.creditTotal > ledgerCtrl.txnData.debitTotal">Credit</span>
 				<span ng-if="ledgerCtrl.txnData.creditTotal < ledgerCtrl.txnData.debitTotal">Debit</span>
 			</h1>
-			<h3 ng-if="ledgerCtrl.txnData.creditTotal > ledgerCtrl.txnData.debitTotal">{{ledgerCtrl.txnData.creditTotal - ledgerCtrl.txnData.debitTotal | number:2}}</h3>
-			<h3 ng-if="ledgerCtrl.txnData.creditTotal < ledgerCtrl.txnData.debitTotal">{{ledgerCtrl.txnData.debitTotal - ledgerCtrl.txnData.creditTotal | number:2}}</h3>
+			<h3 class=" primary_color" ng-if="ledgerCtrl.txnData.creditTotal > ledgerCtrl.txnData.debitTotal">{{ledgerCtrl.txnData.creditTotal - ledgerCtrl.txnData.debitTotal | number:2}}</h3>
+			<h3 class=" primary_color" ng-if="ledgerCtrl.txnData.creditTotal < ledgerCtrl.txnData.debitTotal">{{ledgerCtrl.txnData.debitTotal - ledgerCtrl.txnData.creditTotal | number:2}}</h3>
+			<span style="font-size: 12px">Dr Total {{ledgerCtrl.totalDebit}}</span>
+			<br>
+			<span style="font-size: 12px">Cr Total {{ledgerCtrl.totalCredit}}</span>
 		</div>
 	</div>
 
 </section>
-
 
 
 <script type="text/ng-template" id="panel">
@@ -644,14 +656,4 @@ th {
 		  	</div>
   		</div>
     </div>
-</script>
-<!-- mustafa comment / -->
-
-
-
-<script type="text/ng-template" id="accountPopUp.html">
-  <a href="javascript:void(0)" class="account-list-item" set-drop-overflow style="border-bottom:1px solid #e0e0e0;">
-    <span class="account-list-item" ng-bind-html="match.label | uibTypeaheadHighlight:query" style="display: block;font-size:12px"></span>
-    <span class="account-list-item" ng-bind-html="match.model.uniqueName | uibTypeaheadHighlight:query" style="display: block;font-size:10px"></span>
-  </a>
 </script>

@@ -840,10 +840,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     # if txn.particular.stock
     #   txn.rate = txn.particular.stock.rate
     ledgerCtrl.selectedTxn = txn
-    # if ledgerCtrl.prevTxn != null
-    #   ledgerCtrl.prevTxn.isOpen = false
-    # ledgerCtrl.selectedTxn.isOpen = true
-    # ledgerCtrl.prevTxn = txn
+    if ledgerCtrl.prevTxn != null
+      ledgerCtrl.prevTxn.isOpen = false
+    ledgerCtrl.selectedTxn.isOpen = true
+    ledgerCtrl.prevTxn = txn
     # ledgerCtrl.clearTaxSelection(txn, ledger)
     # ledgerCtrl.clearDiscounts(ledger)
     ledgerCtrl.addBlankRow(ledger, txn)
@@ -855,8 +855,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     # # ledgerCtrl.calculateEntryTotal(ledger)
     # ledgerCtrl.showLedgerPopover = true
     # ledgerCtrl.matchInventory(txn)
-    # ledgerCtrl.ledgerBeforeEdit = {}
-    # angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
+    ledgerCtrl.ledgerBeforeEdit = {}
+    angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
     # ledgerCtrl.isTransactionContainsTax(ledger)
     ledgerCtrl.selectedLedger = ledger
     ledgerCtrl.selectedLedger.index = index
