@@ -62,7 +62,7 @@
             <a href="javascript:void(0);" class="isAcc" id="acc_{{acc.name}}" ng-bind-html="acc.name | capitalize" ng-click="mc.getAccDetail(acc); mc.getSelectedType('acc')" uib-tooltip="{{acc.synonyms}}" tooltip-placement="right" ng-class="{isParent: mc.selectedAcc.uniqueName == acc.uniqueName}"></a>
           </li>
 
-          <li><a href="#" class="btn-add">Create new</a></li>
+          <li><a href="javascript:void(0)" class="btn-add" ng-click="mc.createNewGrpAccount($index)">Create new</a></li>
         </ul>
       </div>
     <!-- level 1 -->
@@ -77,8 +77,18 @@
     <div class="col-xs-5 form_box">
       <div class="row">
 
-        <div ng-include="'/public/webapp/NewManageGroupsAndAccounts/accountOperations.html'" ng-if="mc.selectedType == 'acc'"></div>
-        <div ng-include="'/public/webapp/NewManageGroupsAndAccounts/groupOperations.html'" ng-if="mc.selectedType == 'grp'"></div>
+      <!--  switch button -->
+        <div class="inline-table" ng-if="mc.createNew">
+          <div class="vcenter">
+            <button class="btn isActive" ng-click="mc.getSelectedType('grp')">Create Group</button>
+            <span><hr> Or </span>
+            <button class="btn isActive" ng-click="mc.getSelectedType('acc')">Create Account</button>
+          </div>
+        </div>
+      <!--  -->
+
+        <div ng-include="'/public/webapp/NewManageGroupsAndAccounts/accountOperations.html'" ng-if="mc.selectedType == 'acc' && !mc.createNew"></div>
+        <div ng-include="'/public/webapp/NewManageGroupsAndAccounts/groupOperations.html'" ng-if="mc.selectedType == 'grp' && !mc.createNew"></div>
 
       </div> <!-- row -->
     </div>  <!-- col-xs-5 -->

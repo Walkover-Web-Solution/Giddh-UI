@@ -1593,3 +1593,11 @@ label {
     overflow-y: auto;
     height: 100%;
 }
+.inline-table {
+    display: table;
+    min-height: 500px;
+}
+.vcenter {
+    display: table-cell;
+    vertical-align: middle;
+}
