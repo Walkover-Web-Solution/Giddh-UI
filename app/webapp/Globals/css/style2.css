@@ -1,34 +1,58 @@
 @charset "utf-8";
-/*icomoon fonts*/
-.icon-options:before {
+
+.icon-add:before {
+  content: "\e900";
+}
+.icon-cross:before {
+  content: "\e904";
+}
+.icon-caret-down:before {
+  content: "\e906";
+}
+.icon-edit:before {
+  content: "\e907";
+}
+.icon-arrow-down:before {
   content: "\e908";
 }
 .icon-child:before {
-  content: "\e900";
+  content: "\e909";
 }
 .icon-download:before {
-  content: "\e901";
+  content: "\e90a";
 }
 .icon-share:before {
-  content: "\e902";
+  content: "\e90b";
 }
 .icon-magic_link:before {
-  content: "\e903";
+  content: "\e90c";
 }
 .icon-dropdown:before {
-  content: "\e904";
+  content: "\e90d";
 }
 .icon-plus:before {
-  content: "\e905";
+  content: "\e90e";
 }
 .icon-search:before {
-  content: "\e906";
+  content: "\e90f";
 }
 .icon-building:before {
-  content: "\e907";
+  content: "\e910";
 }
-.icon-folder:before {
-  content: "\f2334";
+.icon-options:before {
+  content: "\e911";
+}
+.icon-minus:before {
+  content: "\e912";
+}
+.icon-trash:before {
+  content: "\e913";
+}
+.icon-checkbox-icon:before {
+  content: "\e914";
+}
+.icon-checkboxfill-icon:before {
+  content: "\e915";
 }
 .icon-folderminus:before {
   content: "\f2332";
@@ -36,9 +60,10 @@
 .icon-folderplus:before {
   content: "\f2333";
 }
-.icon-minus:before {
-  content: "\e909";
+.icon-folder:before {
+  content: "\f2334";
 }
+
 a,button,input {
     transition: all 0.3s ease;
 }
@@ -510,7 +535,7 @@ header {
 }
 input[type="checkbox"]{
     position: relative;
-    top: 0;
+    top: -2px;
     text-align: center;
     margin: 0 1rem 0 0;
     cursor: pointer;
@@ -535,11 +560,11 @@ input[type="checkbox"]:before {
     content: "";
     position: absolute;
     left: 3px;
-    top: -2px;
+    top: 1px;
     z-index: 1;
-    width: 17px;
+    width: 12px;
     height: 8px;
-    border: 2px solid #f5834e;
+    border: 2px solid #fff;
     border-top-style: none;
     border-right-style: none;
 }
@@ -548,11 +573,14 @@ input[type="checkbox"]:after {
     position: absolute;
     top: -0.125rem;
     left: 0;
-    width: 1rem;
-    height: 1rem;
+    border: 2px solid #555;
+    width: 18px;
+    height: 18px;
     background: #fff;
-    border: 2px solid #c9c9c9;
     cursor: pointer;
+}
+input[type="checkbox"]:checked:after{
+    background: #555;
 }
 .tab-pane .list-inline>li {
     padding-left: 0;
@@ -1782,7 +1810,19 @@ label.boldHead{
     font-weight: 400!important;
 }
 
-
-
+.gico-wrap .icon-trash, .gico-wrap .icon-edit{
+    font-size: 20px;
+    line-height: 19px;
+    float: left;
+    margin-right: 6px;
+}
+.icon-arrow-down{
+    font-size: 14px;
+}
+.icon-arrow-down.open{
+    -ms-transform: rotate(180deg); /* IE 9 */
+    -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+    transform: rotate(180deg);
+}
 
 
