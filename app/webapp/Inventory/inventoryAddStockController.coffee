@@ -123,7 +123,8 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
   vm.addStock=()->
     @success = (res) ->
       toastr.success 'Stock Item added successfully'
-      _.extend(vm.addStockObj, res.body)
+      vm.clearAddEditStockForm()
+      # _.extend(vm.addStockObj, res.body)
       # getting list from parent controller
       $scope.$parent.stock.getHeirarchicalStockGroups()
       $scope.$parent.stock.getStockGroupDetail($state.params.grpId)
@@ -134,6 +135,9 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
     reqParam = 
       companyUniqueName: $rootScope.selectedCompany.uniqueName
       stockGroupUniqueName: $state.params.grpId
+
+    if !($state.params.grpId)
+      toastr.warning 'Please select a group first'
 
     vm.removeEmptyParamsFrom()
     if !vm.addStockObj.isFsStock

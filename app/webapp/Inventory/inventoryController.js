@@ -276,7 +276,7 @@ angular.module('inventoryController', [])
 			$state.go('inventory.add-group', { grpId: null });
 		}
 		else if(page === 'add-stock'){
-			$state.go('inventory.add-group.add-stock', { stockId: null });
+			$state.go('inventory.add-group.add-stock', { stockId: null }, {notify: true, reload:true});
 		}
 		else{
 			vm.groupEditMode =  false
