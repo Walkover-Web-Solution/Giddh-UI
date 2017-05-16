@@ -170,7 +170,10 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
     vm.addStockObj = _.omit(vm.addStockObj, 'stockUnit')
     vm.removeEmptyParamsFrom()
 
-    if vm.addStockObj.isFsStock && _.isEmpty(vm.addStockObj.manufacturingDetails)
+    if vm.addStockObj.isFsStock
+      if _.isEmpty(vm.addStockObj.manufacturingDetails)
+        vm.addStockObj.manufacturingDetails = null
+    else
       vm.addStockObj.manufacturingDetails = null
 
     stockService.updateStockItem(reqParam, vm.addStockObj).then(@success, vm.onFailure)
