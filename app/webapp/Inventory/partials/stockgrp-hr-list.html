@@ -12,8 +12,8 @@
 	<li ng-click="grp.visibleChilds = !grp.visibleChilds; stock.loadStockGroup(grp)" class="pdL isParent" ng-repeat="grp in stock.groupListHr track by $index">
 		<a href ng-class="{'active': stock.$state.params.grpId === grp.uniqueName }">{{grp.name}}</a>
 		<i ng-if="grp.childStockGroups.length > 0 || stock.updateStockGroup.stocks.length > 0 && grp.uniqueName === stock.$state.params.grpId" class="icon-arrow-down" ng-class="grp.visibleChilds ? 'open' : ''"></i>	
-		<div ng-if="grp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
 		<div ng-if="stock.updateStockGroup.stocks.length > 0 && grp.uniqueName === stock.$state.params.grpId" ng-include="'stockList.html'"></div>
+		<div ng-if="grp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
 	</li>
 </ul>
 
@@ -22,8 +22,8 @@
 		<li ng-click="$event.stopPropagation(); grp.visibleChilds = !grp.visibleChilds; stock.loadStockGroup(grp)" class="pdL" ng-repeat="grp in grp.childStockGroups">
 			<a href ng-class="{'active': stock.$state.params.grpId === grp.uniqueName }">{{grp.name}}</a>
 			<i ng-if="grp.childStockGroups.length > 0" class="icon-arrow-down" ng-class="grp.visibleChilds ? 'open' : ''"></i>
-			<div ng-if="grp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
 			<div ng-if="stock.updateStockGroup.stocks.length > 0 && grp.uniqueName === stock.$state.params.grpId" ng-include="'stockList.html'"></div>
+			<div ng-if="grp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
 		</li>
 	</ul>
 </script>

@@ -32,11 +32,11 @@ ______\////////////________
 
 @font-face {
   font-family: 'icomoon';
-  src:  url('../fonts/icomoon.eot?ji5w6e');
-  src:  url('../fonts/icomoon.eot?ji5w6e#iefix') format('embedded-opentype'),
-    url('../fonts/icomoon.ttf?ji5w6e') format('truetype'),
-    url('../fonts/icomoon.woff?ji5w6e') format('woff'),
-    url('../fonts/icomoon.svg?ji5w6e#icomoon') format('svg');
+  src:  url('/public/webapp/Globals/icomoon.eot?ji5w6e');
+  src:  url('/public/webapp/Globals/icomoon.eot?ji5w6e#iefix') format('embedded-opentype'),
+    url('/public/webapp/Globals/icomoon.ttf?ji5w6e') format('truetype'),
+    url('/public/webapp/Globals/icomoon.woff?ji5w6e') format('woff'),
+    url('/public/webapp/Globals/icomoon.svg?ji5w6e#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -55,19 +55,6 @@ ______\////////////________
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-
-@font-face {
-    font-family: 'pt_serifregular';
-    src: url('../fonts/ptf55f.woff2') format('woff2'),
-    url('../fonts/ptf55f.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-
-}
-
-
-
 
 html, body{
     -webkit-font-smoothing: antialiased;
