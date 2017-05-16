@@ -245,7 +245,7 @@ module.exports = function (grunt) {
           'public/webapp/ng2.js': ['public/webapp/ng2/**/*.services.js','public/webapp/ng2/**/*.component.js','public/webapp/ng2/*.js'],
           'public/webapp/newRelic.js': ['app/webapp/Globals/modified_lib/newRelic.js'],
           'public/webapp/_extras.js': ['app/webapp/Globals/modified_lib/angular-charts.js', 'app/webapp/Globals/modified_lib/jspdf.debug.js'],
-          'public/webapp/Globals/css/giddh.min.css': ['public/webapp/Globals/css/all_bower.css', 'public/webapp/Globals/css/modiefied-bootstrap.css', 'public/webapp/Globals/css/new-style.css', 'public/webapp/Globals/css/style2.css']
+          'public/webapp/Globals/css/giddh.min.css': ['public/webapp/Globals/css/*.css', '!public/webapp/Globals/css/*.min.css']
         }
       }
     },
