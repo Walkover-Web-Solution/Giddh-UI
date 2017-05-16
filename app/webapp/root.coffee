@@ -5,6 +5,7 @@ giddh.serviceModule = angular.module("serviceModule", ["LocalStorageModule", "ng
 
 giddh.webApp = angular.module("giddhWebApp",
   [
+    "custom_snippet_giddh"
     "satellizer"
     "LocalStorageModule"
     "perfect_scrollbar"

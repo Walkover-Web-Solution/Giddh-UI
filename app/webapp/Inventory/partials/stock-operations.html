@@ -23,14 +23,14 @@
 				<div class="row mr0">
 					<div class="form-group col-xs-3 pdL0 pdR">
 						<label>Stock Unit<span class="required">*</span></label>
-						<ui-select ng-model="vm.addStockObj.stockUnitCode" theme="bootstrap" required  title="Choose Unit">
+						<ui-select ng-model="vm.addStockObj.stockUnitCode" theme="bootstrap" search-enabled="true" required  title="Choose Unit">
               <ui-select-match>
                 <span>
                 	{{$select.selected.name || $select.selected}}
                 </span>
               </ui-select-match>
-              <ui-select-choices repeat="unit.code as unit in vm.customUnits">
-              	<span ng-bind="unit.name"></span>&nbsp;
+              <ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
+              	<span ng-bind-html="unit.name | hilite: $select.search"></span>&nbsp;
               	(<span ng-bind="unit.code"></span>)
               </ui-select-choices>
             </ui-select>
@@ -78,13 +78,13 @@
 
 					<div class="row mrB1" ng-repeat="item in vm.addStockObj.purchaseAccountDetails.unitRates track by $index">
 						<div class="col-xs-5">
-							<ui-select ng-model="item.stockUnitCode" theme="bootstrap" title="Choose Unit">
+							<ui-select search-enabled="true" ng-model="item.stockUnitCode" theme="bootstrap" title="Choose Unit">
 		            <ui-select-match>
 	                <span>{{$select.selected.name || $select.selected}}</span>
 	              </ui-select-match>
-	              <ui-select-choices repeat="unit.code as unit in vm.customUnits track by $index">
+	              <ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search}">
 	              	<span ng-bind="unit.name"></span>&nbsp;
-	              	(<span ng-bind="unit.code"></span>)
+	              	({{unit.code}})
 	              </ui-select-choices>
 		          </ui-select>
 						</div>
@@ -127,13 +127,13 @@
 
 					<div class="row mrB1" ng-repeat="item in vm.addStockObj.salesAccountDetails.unitRates track by $index">
 						<div class="col-xs-5">
-							<ui-select ng-model="item.stockUnitCode" theme="bootstrap" title="Choose Unit">
+							<ui-select search-enabled="true" ng-model="item.stockUnitCode" theme="bootstrap" title="Choose Unit">
 		            <ui-select-match>
 	                <span>{{$select.selected.name || $select.selected}}</span>
 	              </ui-select-match>
-	              <ui-select-choices repeat="unit.code as unit in vm.customUnits track by $index">
+	              <ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search}">
 	              	<span ng-bind="unit.name"></span>&nbsp;
-	              	(<span ng-bind="unit.code"></span>)
+	              	({{unit.code}})
 	              </ui-select-choices>
 		          </ui-select>
 						</div>
@@ -181,27 +181,23 @@
 					<td class="col-xs-8">
 						<div class="clearfix pdTBth15">
 							<div class="form-group col-xs-4">
-								<ui-select ng-model="vm.mfsCmbItem.stockUniqueName" theme="bootstrap">
-			            <ui-select-match placeholder="Select Stock">
-		                <span>{{$select.selected.uniqueName}}</span>
-		              </ui-select-match>
-		              <ui-select-choices repeat="unit.uniqueName as unit in stock.allStocks track by $index">
-		              	<span ng-bind="unit.name"></span>&nbsp;
-		              	(<span ng-bind="unit.uniqueName"></span>)
-		              </ui-select-choices>
-			          </ui-select>
+								<ui-select ng-model="vm.mfsCmbItem.stockUniqueName" theme="bootstrap" search-enabled="true" title="Choose uniqueName">
+							    <ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
+							    <ui-select-choices repeat="item.uniqueName as item in stock.allStocks | propsFilter: {name: $select.search}">
+							      <span ng-bind-html="item.name | hilite: $select.search"></span>
+							      ({{item.uniqueName}})
+							    </ui-select-choices>
+							  </ui-select>
 							</div>
 
 							<div class="form-group col-xs-3">
-								<ui-select ng-model="vm.mfsCmbItem.stockUnitCode" theme="bootstrap">
-			            <ui-select-match placeholder="Stock Unit">
-		                <span>{{$select.selected.code}}</span>
-		              </ui-select-match>
-		              <ui-select-choices repeat="unit.code as unit in vm.customUnits track by $index">
-		              	<span ng-bind="unit.name"></span>&nbsp;
-		              	(<span ng-bind="unit.code"></span>)
-		              </ui-select-choices>
-			          </ui-select>
+			          <ui-select ng-model="vm.mfsCmbItem.stockUnitCode" theme="bootstrap" search-enabled="true" title="Choose Unit">
+							    <ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
+							    <ui-select-choices repeat="item.code as item in vm.customUnits | propsFilter: {name: $select.search}">
+							      <span ng-bind-html="item.name | hilite: $select.search"></span>
+							      ({{item.code}})
+							    </ui-select-choices>
+							  </ui-select>
 							</div>
 
 							<div class="form-group col-xs-3">
@@ -259,15 +255,15 @@
 								<input type="text" class="form-control" ng-model="vm.addStockObj.manufacturingDetails.manufacturingQuantity" name="manufacturingQuantity" placeholder="Quantity" />
 							</div>
 							<div class="form-group col-md-5 col-lg-5 col-xs-12">
-								<ui-select ng-model="vm.addStockObj.manufacturingDetails.manufacturingUnitCode" theme="bootstrap">
-			            <ui-select-match placeholder="Unit">
-		                <span>{{$select.selected.code}}</span>
-		              </ui-select-match>
-		              <ui-select-choices repeat="unit.code as unit in vm.customUnits track by $index">
-		              	<span ng-bind="unit.name"></span>&nbsp;
-		              	(<span ng-bind="unit.code"></span>)
-		              </ui-select-choices>
-			          </ui-select>
+								
+			          <ui-select ng-model="vm.addStockObj.manufacturingDetails.manufacturingUnitCode" theme="bootstrap" search-enabled="true" title="Choose Unit">
+							    <ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
+							    <ui-select-choices repeat="item.code as item in vm.customUnits | propsFilter: {name: $select.search}">
+							      <span ng-bind-html="item.name | hilite: $select.search"></span>
+							      ({{item.code}})
+							    </ui-select-choices>
+							  </ui-select>
+
 							</div>
 						</section>
 					</td>
