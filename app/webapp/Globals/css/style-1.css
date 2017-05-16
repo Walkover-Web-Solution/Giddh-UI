@@ -114,6 +114,11 @@ html,body, textarea, input, button, select {
 .tcount {
   font-family: Roboto-Thin;
 }
+.ui-select-hilite {
+  font-family: Roboto-Medium;
+  background-color: #F9F08B;
+  color: #000;
+}
 /*end typo*/
 
 /*start super loader*/
@@ -1489,7 +1494,6 @@ li:last-child .angular-ui-tree-handle {
   background-color: #F9F08B;
   display: inline-block;
 }
-
 .ledgerBodyContent .highlightRow input.nobdr {
   background-color: #ffffcc;
 }

@@ -28,14 +28,14 @@
 							<label>Adding to</label>
 						</div>
 						<div class="form-group mrB" style="width: 200px">
-							<select
-								ng-disabled="stock.groupStockObj.isSelfParent"
-					      class="form-control"
-					      name="parentStockGroupUniqueName"
-					      ng-model="stock.groupStockObj.parentStockGroupUniqueName"
-					      ng-options="item.uniqueName as item.name for item in stock.stockGroup.list track by item.uniqueName">
-					    	<option value="">Select</option>
-					    </select>
+					    <ui-select
+					    	ng-disabled="stock.groupStockObj.isSelfParent"
+					    	ng-model="stock.groupStockObj.parentStockGroupUniqueName" theme="bootstrap" search-enabled="true" title="Select">
+						    <ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
+						    <ui-select-choices repeat="item.uniqueName as item in stock.stockGroup.list | propsFilter: {name: $select.search, uniqueName: $select.search}">
+						      <div ng-bind-html="item.name | hilite: $select.search"></div>
+						    </ui-select-choices>
+						  </ui-select>
 						</div>
 					</div>
 					<div class="col-xs-12">
@@ -88,14 +88,16 @@
 							<label>Parent Group</label>
 						</div>
 						<div class="form-group mrB" style="width: 200px">
-							<select
-					      class="form-control"
-					      name="parent"
-					      ng-disabled="stock.updateStockGroup.isSelfParent"
-					      ng-model="stock.updateStockGroup.parent" 
-					      ng-options="item.uniqueName as item.name disable when item.uniqueName === stock.$state.params.grpId for item in stock.stockGroup.list">
-					    	<option value="">Select</option>
-					    </select>
+					    <ui-select
+					    	ng-disabled="stock.updateStockGroup.isSelfParent"
+					    	ng-model="stock.updateStockGroup.parent" theme="bootstrap" search-enabled="true" title="Select">
+						    <ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
+						    <ui-select-choices 
+						    	ui-disable-choice="item.uniqueName === stock.$state.params.grpId"
+						    	repeat="item.uniqueName as item in stock.stockGroup.list | propsFilter: {name: $select.search, uniqueName: $select.search}">
+						      <div ng-bind-html="item.name | hilite: $select.search"></div>
+						    </ui-select-choices>
+						  </ui-select>
 						</div>
 					</div>
 					<div class="col-xs-12">
