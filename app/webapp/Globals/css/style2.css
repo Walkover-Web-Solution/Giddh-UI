@@ -1095,15 +1095,6 @@ input[type=number] {
     cursor: pointer;
 }
 
-/*.inconsolata, body, input, textarea, button, select{
-    font-family: 'Inconsolata', Arial, serif;
-    font-weight: 400;
-}
-.inconsolata-b{
-    font-family: 'Inconsolata', Arial, serif;
-    font-weight: 700;
-}*/
-
 footer{
     background-color: #26263A;
     padding: 20px;
