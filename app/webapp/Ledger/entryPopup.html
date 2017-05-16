@@ -5,9 +5,12 @@
     <h3 class="modal-title">Edit Entry {{hi}}</h3>
   </div>
 
-	<div class="modal-body noPad">
-		<div class="ledgHead entry-popup mrT3">
-			<table class="col-xs-12 ledger-head mrT3">
+	<div class="modal-body noPad mrT2">
+		<div class="row">
+			<h1 class="text-center account_Name">{{ledgerCtrl.accountToShow.name}} A/c</h1>
+		</div>
+		<div class="ledgHead entry-popup mrT1">
+			<table class="col-xs-12 ledger-head">
 				<thead>
 					<tr>
 						<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} coming in?</th>
@@ -383,6 +386,7 @@
 		  			<span class="primary_color">Compound Total: {{ledgerCtrl.selectedLedger.total.amount}}</span>
 		  		</div>
 		  		<div class="col-xs-12 pdT1">
+		  			<button class="btn btn-danger" ng-click="ledgerCtrl.deleteEntryConfirm()">Delete</button>
 		  			<div class="pull-right">
 		  				<div class="mrR1 pull-left">
 		  					<label class="checkbox oh">

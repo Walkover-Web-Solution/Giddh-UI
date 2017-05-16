@@ -15,7 +15,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.showExportOption = false
   ledgerCtrl.showLedgerPopover = false
   ledgerCtrl.showExportOption = false
-
+  ledgerCtrl.showLedgers = false
   ledgerCtrl.showEledger = true
   ledgerCtrl.popover = {
 
@@ -395,7 +395,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         'apply.daterangepicker' : (e, picker) ->
           $scope.cDate.startDate = e.model.startDate._d
           $scope.cDate.endDate = e.model.endDate._d
-          ledgerCtrl.getPaginatedLedger(1)
+          ledgerCtrl.getTransactions(1)
       }
   }
   $scope.setStartDate = ->
@@ -515,7 +515,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.blankLedger[0].transactions.push(ledgerCtrl.dBlankTxn)
   ledgerCtrl.blankLedger[0].transactions.push(ledgerCtrl.cBlankTxn)
 
-  txnModel = (str) ->
+  txnModel = (type) ->
     @ledger = {
       date: $filter('date')(new Date(), "dd-MM-yyyy")
       particular: {
@@ -523,7 +523,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         uniqueName:""
       }
       amount : 0
-      type: str
+      type: type
     }
 
 
@@ -602,8 +602,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       page: page || 1
       sort: 'desc'
     }
-    # if not _.isEmpty(ledgerCtrl.accountUnq)
-    #   ledgerService.getLedger(unqNamesObj).then(@success, @failure)
+    if not _.isEmpty(ledgerCtrl.accountUnq)
+      ledgerService.getLedger(unqNamesObj).then(@success, @failure)
 
   #ledgerCtrl.getPaginatedLedger(1)
 
@@ -655,32 +655,38 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.getMagicLinkSuccess = (res) ->
     ledgerCtrl.magicLink = res.body.magicLink
-    modalInstance = $uibModal.open(
-      template: '<div>
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
-        aria-hidden="true">&times;</span></button>
-          <h3 class="modal-title">Magic Link</h3>
-          </div>
-          <div class="modal-body">
-            <input id="magicLink" class="form-control" type="text" ng-model="ledgerCtrl.magicLink">
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-default" ngclipboard data-clipboard-target="#magicLink">Copy</button>
-          </div>
-      </div>'
-      size: "md"
-      backdrop: 'static'
-      scope: $scope
-    )
-    ledgerCtrl.getLink = false
+    # modalInstance = $uibModal.open(
+    #   template: '<div>
+    #       <div class="modal-header">
+    #         <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
+    #     aria-hidden="true">&times;</span></button>
+    #       <h3 class="modal-title">Magic Link</h3>
+    #       </div>
+    #       <div class="modal-body">
+    #         <input id="magicLink" class="form-control" type="text" ng-model="ledgerCtrl.magicLink">
+    #       </div>
+    #       <div class="modal-footer">
+    #         <button class="btn btn-default" ngclipboard data-clipboard-target="#magicLink">Copy</button>
+    #       </div>
+    #   </div>'
+    #   size: "md"
+    #   backdrop: 'static'
+    #   scope: $scope
+    # )
+    # ledgerCtrl.getLink = false
 
   ledgerCtrl.getMagicLinkFailure = (res) ->
     toastr.error(res.data.message)
 # mustafa end
 
 
-  ledgerCtrl.ledgerEmailData = {}
+  ledgerCtrl.ledgerEmailData = {
+    viewDetailed: "view-detailed"
+    viewCondensed:"view-condensed"
+    adminDetailed:"admin-detailed"
+    adminCondensed:"admin-condensed"
+  }
+  ledgerCtrl.ledgerEmailData.emailType = ledgerCtrl.ledgerEmailData.viewDetailed
   
 # ledger send email
   ledgerCtrl.sendLedgEmail = (emailData, emailType) ->
@@ -804,7 +810,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.prevTxn = txn
     # ledgerCtrl.clearTaxSelection(txn, ledger)
     # ledgerCtrl.clearDiscounts(ledger)
-    ledgerCtrl.addBlankRow(ledger, txn)
+    if !ledger.isBlankLedger
+      ledgerCtrl.addBlankRow(ledger, txn)
     # ledgerCtrl.removeBlankRowFromPrevLedger(ledgerCtrl.prevLedger, ledger)
     # ledger.isCompoundEntry = true
     # if ledgerCtrl.prevLedger && ledgerCtrl.prevLedger.uniqueName != ledger.uniqueName
@@ -818,20 +825,23 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     # ledgerCtrl.isTransactionContainsTax(ledger)
     ledgerCtrl.selectedLedger = ledger
     ledgerCtrl.selectedLedger.index = index
-    ledgerCtrl.selectedLedger.panel = ledgerCtrl.selectedLedger.panel || {}
-    if ledgerCtrl.accountToShow.stocks != null
-      #ledgerCtrl.selectedLedger.panel.quantity = ledgerCtrl.accountToShow.stock.stockUnit.quantityPerUnit
-      ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.accountToShow.stocks[0].rate
-    ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.getPanelAmount(ledgerCtrl.selectedLedger)
-    ledgerCtrl.selectedLedger.panel.total = ledgerCtrl.selectedLedger.panel.amount
-    ledgerCtrl.selectedLedger.panel.discount = ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
-    ledgerCtrl.selectedLedger.panel.tax = ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
+    ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
+
     #ledgerCtrl.selectedLedger.panel.total = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
     #if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
     # ledgerCtrl.checkCompEntry(txn)
     #ledgerCtrl.blankCheckCompEntry(ledger)
     # ledgerCtrl.prevLedger = ledger
     e.stopPropagation()
+
+  ledgerCtrl.createPanel = (ledger) ->
+    ledgerCtrl.selectedLedger.panel = ledgerCtrl.selectedLedger.panel || {}
+    if ledgerCtrl.accountToShow.stocks != null
+      ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.accountToShow.stocks[0].rate
+    ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.getPanelAmount(ledgerCtrl.selectedLedger)
+    ledgerCtrl.selectedLedger.panel.total = ledgerCtrl.selectedLedger.panel.amount
+    ledgerCtrl.selectedLedger.panel.discount = ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
+    ledgerCtrl.selectedLedger.panel.tax = ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
 
   ledgerCtrl.addBlankRow = (ledger, txn) ->
     dBlankRow = _.findWhere(ledger.transactions, {blankRow:'DEBIT'})
@@ -862,6 +872,27 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       _.each prevLedger.transactions, (txn, i) ->
         if txn.blankRow && txn.particular.uniqueName == ''
           prevLedger.transactions.splice(i, 1)
+
+  ledgerCtrl.addBlankTxn = (type, ledger) ->
+    txn = new txnModel(type)
+    hasBlank = ledgerCtrl.checkForExistingblankTransaction(ledger, type)
+    if !hasBlank
+      ledger.transactions.push(txn)
+    ledgerCtrl.setFocusToBlankTxn(ledger, txn, type)
+
+  ledgerCtrl.checkForExistingblankTransaction = (ledger, type) ->
+    hasBlank = false
+    _.each ledger.transactions, (txn) ->
+      if txn.particular.uniqueName == "" && type == txn.type
+        hasBlank = true
+    return hasBlank
+
+  ledgerCtrl.setFocusToBlankTxn = (ledger, txn, type) ->
+    ledgerCtrl.prevTxn.isOpen = false
+    _.each ledger.transactions, (txn) ->
+      if txn.particular.uniqueName == "" && txn.type == type
+        txn.isOpen = true
+        ledgerCtrl.prevTxn = txn
 
   ledgerCtrl.clearDiscounts = (ledger) ->
     if ledgerCtrl.prevLedger && ledger.uniqueName != ledgerCtrl.prevLedger.uniqueName
@@ -985,9 +1016,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.calculateAmountAfterInclusiveTax = (tax) ->
     if !ledgerCtrl.selectedLedger.panel.discount 
-      amount = (100*ledgerCtrl.selectedLedger.panel.total)/(100+ledgerCtrl.selectedLedger.panel.tax)
+      amount = (100*ledgerCtrl.selectedLedger.panel.total)/(100+(ledgerCtrl.selectedLedger.panel.tax||0))
     else
-      amount = (100*ledgerCtrl.selectedLedger.panel.total)/(100+ledgerCtrl.selectedLedger.panel.tax) + ledgerCtrl.selectedLedger.panel.discount
+      amount = (100*ledgerCtrl.selectedLedger.panel.total)/(100+(ledgerCtrl.selectedLedger.panel.tax||0)) + ledgerCtrl.selectedLedger.panel.discount
     amount = Number(amount.toFixed(2))
     amount    
 
@@ -1021,33 +1052,32 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     accountService.exportLedger(unqNamesObj).then(ledgerCtrl.exportLedgerSuccess, ledgerCtrl.exportLedgerFailure)
 
   ledgerCtrl.exportLedgerSuccess = (res)->
-    # blob = new Blob([res.body.filePath], {type:'file'})
-    # fileName = res.body.filePath.split('/')
-    # fileName = fileName[fileName.length-1]
-    # FileSaver.saveAs(blob, fileName)
-    ledgerCtrl.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
-    if $rootScope.msieBrowser()
-      $rootScope.openWindow(res.body.filePath)
-    else if ledgerCtrl.isSafari       
-      modalInstance = $uibModal.open(
-        template: '<div>
-            <div class="modal-header">
-              <h3 class="modal-title">Download File</h3>
-            </div>
-            <div class="modal-body">
-              <p class="mrB">To download your file Click on button</p>
-              <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
-            </div>
-            <div class="modal-footer">
-              <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
-            </div>
-        </div>'
-        size: "sm"
-        backdrop: 'static'
-        scope: $scope
-      )
-    else
-      window.open(res.body.filePath)
+    console.log res
+    data = lc.b64toBlob(res.body, "application/vnd.ms-excel", 512)
+    FileSaver.saveAs(blob, ledgerCtrl.selectedAccount.name + '.xls')
+    # ledgerCtrl.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
+    # if $rootScope.msieBrowser()
+    #   $rootScope.openWindow(res.body.filePath)
+    # else if ledgerCtrl.isSafari       
+    #   modalInstance = $uibModal.open(
+    #     template: '<div>
+    #         <div class="modal-header">
+    #           <h3 class="modal-title">Download File</h3>
+    #         </div>
+    #         <div class="modal-body">
+    #           <p class="mrB">To download your file Click on button</p>
+    #           <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
+    #         </div>
+    #         <div class="modal-footer">
+    #           <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+    #         </div>
+    #     </div>'
+    #     size: "sm"
+    #     backdrop: 'static'
+    #     scope: $scope
+    #   )
+    # else
+    #   window.open(res.body.filePath)
 
   ledgerCtrl.exportLedgerFailure = (res)->
     toastr.error(res.data.message, res.data.status)
@@ -1422,7 +1452,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     #ledgerCtrl.pushNewEntryToLedger(res.body)
     if ledger.isBankTransaction
       ledgerCtrl.updateBankLedger(ledger)
-    ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
+    #ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
+    ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
     # $timeout ( ->
     #   ledgerCtrl.pageLoader = false
     #   ledgerCtrl.showLoader = false
@@ -1487,7 +1518,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       # ledgerCtrl.pageLoader = false
       # ledgerCtrl.showLoader = false
     ), 2000
-    ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
+    # ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
+    ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
     
   ledgerCtrl.updateEntryFailure = (res, ledger) ->
     ledgerCtrl.doingEntry = false
@@ -1666,6 +1698,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.totalCredit = ledgerCtrl.getTotalBalance(ledgerCtrl.txnData.creditTransactions)
       ledgerCtrl.totalDebit = ledgerCtrl.getTotalBalance(ledgerCtrl.txnData.debitTransactions)
       ledgerCtrl.addLedgerPages()
+      ledgerCtrl.showLedgers = true
 
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -1694,6 +1727,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     @success = (res) ->
       ledgerCtrl.paginatedLedgers = [res.body]
       ledgerCtrl.selectedLedger = res.body
+      ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
       ledgerCtrl.ledgerBeforeEdit = {}
       angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
       ledgerCtrl.isTransactionContainsTax(res.body)
@@ -1728,6 +1762,46 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     _.each transactions, (txn) ->
       total += ledgerCtrl.cutToTwoDecimal(txn.amount)
     return total
+
+
+  ledgerCtrl.deleteEntryConfirm = () ->
+    modalService.openConfirmModal(
+      title: 'Delete'
+      body: 'Are you sure you want to delete this entry?',
+      ok: 'Yes',
+      cancel: 'No'
+    ).then(
+      (res) -> 
+        ledgerCtrl.deleteEntry()
+      (res) -> 
+        $dismiss()
+    )
+
+  ledgerCtrl.deleteEntry = () ->
+    @success = (res) ->
+      toastr.success("Entry deleted successfully","Success")
+      ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
+      ledgerCtrl.entryModalInstance.close()
+    @failure = (res) ->
+      toastr.error(res.data.message)
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: ledgerCtrl.accountUnq
+      entUname: ledgerCtrl.selectedLedger.uniqueName
+    }
+    if unqNamesObj.acntUname != '' || unqNamesObj.acntUname != undefined
+      ledgerService.deleteEntry(unqNamesObj).then(@success, @failure)
+
+  ledgerCtrl.onEnterPress = (e, index, ledger) ->
+    if e.keyCode == 13
+      $('#saveLedger').focus()
+      e.stopPropagation()
+    if e.keyCode == 9
+      e.preventDefault()
+      pItems = $('.pItem')
+      $(pItems[0]).find('input').focus()
+    return false
+
 
   return ledgerCtrl
 giddh.webApp.controller 'ledgerController', ledgerController
