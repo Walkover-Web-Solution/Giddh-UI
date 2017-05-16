@@ -3252,8 +3252,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       count: lc.ledgerPerPageCount
       page: page || 1
     }
-    if not _.isEmpty(lc.accountUnq)
-      ledgerService.getLedger(unqNamesObj).then(@success, @failure)
+    # if not _.isEmpty(lc.accountUnq)
+      # ledgerService.getLedger(unqNamesObj).then(@success, @failure)
 
   lc.getPaginatedLedger(1)
 

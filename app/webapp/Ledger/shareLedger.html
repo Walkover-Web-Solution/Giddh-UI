@@ -56,11 +56,14 @@
       <div class="clearfix"></div>
       <h3 class="pdB2">Or</h3>
       <div class="modal_wrap pdB4">
-         <div ng-if="ledgerCtrl.getLink"><button class="btn-success btn" ng-click="ledgerCtrl.getMagicLink()">Get</button> <span class="l8grey">shareable link</span></div>
+         <div>
+            <button class="btn-success btn" ng-click="ledgerCtrl.getMagicLink()">Get</button> 
+            <span class="l8grey">shareable link</span>
+         </div>
          <div class="input-group pdT1" style="max-width: 350px;">
             <input id="magicLink" class="form-control dashed" type="text" ng-model="ledgerCtrl.magicLink" />
             <div class="input-group-btn sticky">
-               <button class="btn btn-success mrl0">Copy</button>
+               <button class="btn btn-success mrl0" ngclipboard data-clipboard-target="#magicLink">Copy</button>
             </div>
             <!-- /btn-group -->
          </div>
@@ -80,16 +83,24 @@
         <table class="list-unstyled email-type mrB2">
           <tr>  
             <td>
-              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" value="view-detailed" />super mini</label>
+              <label class="radio" ng-click="$event.stopPropagation()">
+                  <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" ng-value="ledgerCtrl.ledgerEmailData.viewDetailed"/>super mini
+               </label>
             </td>
             <td>
-              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" value="view-condensed" />mini</label>
+              <label class="radio" ng-click="$event.stopPropagation()">
+                  <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" ng-value="ledgerCtrl.ledgerEmailData.viewCondensed"/>mini
+               </label>
             </td>
             <td ng-if="canUpdate">
-              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" value="admin-detailed" />brief</label>
+              <label class="radio" ng-click="$event.stopPropagation()">
+                  <input type="radio" ng-model=" ledgerCtrl.ledgerEmailData.emailType" name="emailType"  ng-value="ledgerCtrl.ledgerEmailData.adminDetailed"/>brief
+              </label>
             </td>
             <td ng-if="canUpdate">
-              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" value="admin-condensed" />detailed</label>
+              <label class="radio" ng-click="$event.stopPropagation()">
+                  <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType"  ng-value="ledgerCtrl.ledgerEmailData.adminCondensed"/>detailed
+              </label>
             </td>
           </tr>
         </table>

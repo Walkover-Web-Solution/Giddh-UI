@@ -168,7 +168,7 @@ router.put '/:accountUniqueName/eledgers/map/:transactionId', (req, res) ->
 
 router.get '/:accountUniqueName/export-ledger', (req, res) ->
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
-      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/export-ledger'
+      '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/v2/export-ledger'
   # if req.query.ltype == 'condensed'
   #   hUrl = hUrl + '-condensed'
   # else
