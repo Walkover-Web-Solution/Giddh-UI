@@ -1096,9 +1096,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     accountService.exportLedger(unqNamesObj).then(ledgerCtrl.exportLedgerSuccess, ledgerCtrl.exportLedgerFailure)
 
   ledgerCtrl.exportLedgerSuccess = (res)->
-    console.log res
-    data = lc.b64toBlob(res.body, "application/vnd.ms-excel", 512)
-    FileSaver.saveAs(blob, ledgerCtrl.selectedAccount.name + '.xls')
+    data = ledgerCtrl.b64toBlob(res.body, "application/vnd.ms-excel", 512)
+    FileSaver.saveAs(data, $rootScope.selectedAccount.name + '.xls')
     # ledgerCtrl.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
     # if $rootScope.msieBrowser()
     #   $rootScope.openWindow(res.body.filePath)
