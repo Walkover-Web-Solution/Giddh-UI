@@ -31,7 +31,7 @@
 				<label>Parent Stock</label>
 				<select class="form-control" 
 					ng-model="vm.customUnitObj.parentStockUnit" 
-					ng-options="item.name for item in vm.customUnits track by item.code">
+					ng-options="item.name disable when item.code === vm.customUnitObj.code for item in vm.customUnits">
 					<option value="">Parent Stock</option>
 				</select>
 			</div>
