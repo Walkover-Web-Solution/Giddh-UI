@@ -144,10 +144,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     $rootScope.selectedAccount = res.body
     ledgerCtrl.accountToShow = $rootScope.selectedAccount
     ledgerCtrl.accountUnq = res.body.uniqueName
+    ledgerCtrl.getTransactions(1)
     $state.go($state.current, {unqName: res.body.uniqueName}, {notify: false})
     if res.body.uniqueName == 'cash'
       $rootScope.ledgerState = true
-    ledgerCtrl.getPaginatedLedger(1)
+    # ledgerCtrl.getPaginatedLedger(1)
     if res.body.yodleeAdded == true && $rootScope.canUpdate
       #get bank transaction here
       $timeout ( ->
@@ -255,8 +256,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.selectedTxn.isOpen = false
     @success = (res) ->
       toastr.success(res.body)
-      ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
+      # ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
       ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
+      ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
 
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -574,36 +576,36 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 #     }
 
 
-  ledgerCtrl.ledgerPerPageCount = 10
-  ledgerCtrl.pages = []
-  ledgerCtrl.getPaginatedLedger = (page) ->
-    @success = (res) ->
-      ledgerCtrl.ledgerData = res.body
-      ledgerCtrl.pages = []
-      ledgerCtrl.paginatedLedgers = res.body.ledgers
-      ledgerCtrl.totalLedgerPages = res.body.totalPages
-      ledgerCtrl.currentPage = res.body.page
-      ledgerCtrl.totalCreditTxn = res.body.totalCreditTransactions
-      ledgerCtrl.totalDebitTxn = res.body.totalDebitTransactions
-      ledgerCtrl.addLedgerPages()
-      ledgerCtrl.calculateClosingBal(res.body.ledgers)
+  # ledgerCtrl.ledgerPerPageCount = 10
+  # ledgerCtrl.pages = []
+  # ledgerCtrl.getPaginatedLedger = (page) ->
+  #   @success = (res) ->
+  #     ledgerCtrl.ledgerData = res.body
+  #     ledgerCtrl.pages = []
+  #     ledgerCtrl.paginatedLedgers = res.body.ledgers
+  #     ledgerCtrl.totalLedgerPages = res.body.totalPages
+  #     ledgerCtrl.currentPage = res.body.page
+  #     ledgerCtrl.totalCreditTxn = res.body.totalCreditTransactions
+  #     ledgerCtrl.totalDebitTxn = res.body.totalDebitTransactions
+  #     ledgerCtrl.addLedgerPages()
+  #     ledgerCtrl.calculateClosingBal(res.body.ledgers)
 
-    @failure = (res) ->
-      toastr.error(res.data.message)
+  #   @failure = (res) ->
+  #     toastr.error(res.data.message)
 
-    if _.isUndefined($rootScope.selectedCompany.uniqueName)
-      $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
-    unqNamesObj = {
-      compUname: $rootScope.selectedCompany.uniqueName
-      acntUname: ledgerCtrl.accountUnq
-      fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
-      toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
-      count: ledgerCtrl.ledgerPerPageCount
-      page: page || 1
-      sort: 'desc'
-    }
-    if not _.isEmpty(ledgerCtrl.accountUnq)
-      ledgerService.getLedger(unqNamesObj).then(@success, @failure)
+  #   if _.isUndefined($rootScope.selectedCompany.uniqueName)
+  #     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+  #   unqNamesObj = {
+  #     compUname: $rootScope.selectedCompany.uniqueName
+  #     acntUname: ledgerCtrl.accountUnq
+  #     fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
+  #     toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
+  #     count: ledgerCtrl.ledgerPerPageCount
+  #     page: page || 1
+  #     sort: 'desc'
+  #   }
+    # if not _.isEmpty(ledgerCtrl.accountUnq)
+    #   ledgerService.getLedger(unqNamesObj).then(@success, @failure)
 
   #ledgerCtrl.getPaginatedLedger(1)
 
@@ -1436,7 +1438,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     #_.extend(addThisLedger,ledgerCtrl.selectedLedger)
     #ledgerCtrl.ledgerData.ledgers.push(res.body)
     #ledgerCtrl.getLedgerData(false)
-    ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
+    # ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
     ledgerCtrl.resetBlankLedger()
     ledgerCtrl.selectedLedger = ledgerCtrl.blankLedger
     _.each(ledgerCtrl.taxList, (tax) ->
@@ -1477,7 +1479,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if ledger.transactionId == eledger.transactionId
         ledgerCtrl.eLedgerData.splice(idx, 1)
     #ledgerCtrl.getLedgerData()
-    ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
+    # ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
+    ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
 
   # ledgerCtrl.pushNewEntryToLedger = (newLedgers) ->
   #   console.log newLedgers
@@ -1501,7 +1504,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     #_.extend(addThisLedger,ledgerCtrl.blankLedger)
 #    ledgerCtrl.ledgerData.ledgers.push(addThisLedger)
     #ledgerCtrl.getLedgerData(false)
-    ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
+    # ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
     #_.extend(ledger, res.body)
     #ledgerCtrl.updateEntryOnUI(res.body)
     ledgerCtrl.resetBlankLedger()
@@ -1580,7 +1583,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.resetBlankLedger()
     ledgerCtrl.selectedLedger = ledgerCtrl.blankLedger
     #ledgerCtrl.getLedgerData(false)
-    ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
+    # ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
+    ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
     if ledgerCtrl.mergeTransaction
       $timeout ( ->
         ledgerCtrl.mergeBankTransactions(ledgerCtrl.mergeTransaction)
@@ -1688,6 +1692,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     return 0
 
 #########################################################
+  ledgerCtrl.ledgerPerPageCount = 15
   ledgerCtrl.getTransactions = (page) ->
     @success = (res) ->
       ledgerCtrl.txnData = res.body
@@ -1717,7 +1722,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if not _.isEmpty(ledgerCtrl.accountUnq)
       ledgerService.getAllTransactions(unqNamesObj).then(@success, @failure)
 
-  ledgerCtrl.getTransactions(1)
 
   ledgerCtrl.selectCompoundEntry = (txn) ->
     ledgerCtrl.currentTxn = txn
