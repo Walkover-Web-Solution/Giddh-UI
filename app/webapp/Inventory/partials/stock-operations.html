@@ -30,8 +30,8 @@
                 </span>
               </ui-select-match>
               <ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
-              	<span ng-bind-html="unit.name | hilite: $select.search"></span>&nbsp;
-              	(<span ng-bind="unit.code"></span>)
+              	<span ng-bind-html="unit.name | hilite: $select.search"></span>
+              	<small>(<span ng-bind-html="''+unit.code | hilite: $select.search"></span>)</small>
               </ui-select-choices>
             </ui-select>
 					</div>
@@ -82,9 +82,9 @@
 		            <ui-select-match>
 	                <span>{{$select.selected.name || $select.selected}}</span>
 	              </ui-select-match>
-	              <ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search}">
+	              <ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
 	              	<span ng-bind="unit.name"></span>&nbsp;
-	              	({{unit.code}})
+	              	<small>(<span ng-bind-html="''+unit.code | hilite: $select.search"></span>)</small>
 	              </ui-select-choices>
 		          </ui-select>
 						</div>
@@ -131,9 +131,9 @@
 		            <ui-select-match>
 	                <span>{{$select.selected.name || $select.selected}}</span>
 	              </ui-select-match>
-	              <ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search}">
+	              <ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
 	              	<span ng-bind="unit.name"></span>&nbsp;
-	              	({{unit.code}})
+	              	<small>(<span ng-bind-html="''+unit.code | hilite: $select.search"></span>)</small>
 	              </ui-select-choices>
 		          </ui-select>
 						</div>
@@ -183,9 +183,9 @@
 							<div class="form-group col-xs-4">
 								<ui-select ng-model="vm.mfsCmbItem.stockUniqueName" theme="bootstrap" search-enabled="true" title="Choose uniqueName">
 							    <ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
-							    <ui-select-choices repeat="item.uniqueName as item in stock.allStocks | propsFilter: {name: $select.search}">
+							    <ui-select-choices repeat="item.uniqueName as item in stock.allStocks | propsFilter: {name: $select.search, uniqueName: $select.search}">
 							      <span ng-bind-html="item.name | hilite: $select.search"></span>
-							      ({{item.uniqueName}})
+							      <small>(<span ng-bind-html="''+item.uniqueName | hilite: $select.search"></span>)</small>
 							    </ui-select-choices>
 							  </ui-select>
 							</div>
@@ -193,9 +193,9 @@
 							<div class="form-group col-xs-3">
 			          <ui-select ng-model="vm.mfsCmbItem.stockUnitCode" theme="bootstrap" search-enabled="true" title="Choose Unit">
 							    <ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
-							    <ui-select-choices repeat="item.code as item in vm.customUnits | propsFilter: {name: $select.search}">
+							    <ui-select-choices repeat="item.code as item in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
 							      <span ng-bind-html="item.name | hilite: $select.search"></span>
-							      ({{item.code}})
+							      <small>(<span ng-bind-html="''+item.code | hilite: $select.search"></span>)</small>
 							    </ui-select-choices>
 							  </ui-select>
 							</div>
@@ -258,9 +258,9 @@
 								
 			          <ui-select ng-model="vm.addStockObj.manufacturingDetails.manufacturingUnitCode" theme="bootstrap" search-enabled="true" title="Choose Unit">
 							    <ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
-							    <ui-select-choices repeat="item.code as item in vm.customUnits | propsFilter: {name: $select.search}">
+							    <ui-select-choices repeat="item.code as item in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
 							      <span ng-bind-html="item.name | hilite: $select.search"></span>
-							      ({{item.code}})
+							      <small>(<span ng-bind-html="''+item.code | hilite: $select.search"></span>)</small>
 							    </ui-select-choices>
 							  </ui-select>
 
