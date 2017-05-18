@@ -6,7 +6,9 @@ router.get '/get-coupon', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
-  hUrl = settings.envUrl + 'coupon/' + req.query.code
+    parameters:
+      code: req.query.code
+  hUrl = settings.envUrl + 'coupon/get-coupon'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
