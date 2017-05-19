@@ -15,6 +15,7 @@
 }
 .ledgHead.entry-popup table td[class*=col-] {
 	padding: 0px !important;
+	padding-bottom: 1px !important;
 	border-bottom: 1px solid #ccc;
 	border-right: 1px solid #ccc;
 	font-size: 13px;
@@ -117,7 +118,15 @@ th {
 .ledger-panel label{
 	font-weight: 400;
 }
-
+.upload_div{
+	float: left;
+    text-decoration: underline;
+    margin: 0px 5px;
+    border: 1px solid #ccc;
+}
+.upload_div label{
+	padding:6px;
+}
 </style>
 
 <div class="loader mrT4" ng-if="!ledgerCtrl.showLedgers">
@@ -266,6 +275,8 @@ th {
 		                                      	typeahead-template-url="accountPopUp.html"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 												is-open="txn.isOpen"
+												txn="txn"
+												trigger-focus
 												>
 											</td>
 											<td class="col-xs-3 pos-rel">
@@ -362,6 +373,8 @@ th {
 		                                      	typeahead-template-url="accountPopUp.html"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 												is-open="txn.isOpen"
+												txn="txn"
+												trigger-focus
 												>
 											</td>
 											<td class="col-xs-3 pos-rel">
@@ -395,12 +408,12 @@ th {
 					
 					<tr class="total_col">
 						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-							<span ng-if="ledgerCtrl.totalDebit < ledgerCtrl.totalCredit">C/F: CR {{ledgerCtrl.totalDebit - ledgerCtrl.totalCredit| abs | number:2 }}</span>
+							<span ng-if="ledgerCtrl.txnData.closingBalance.type == 'CREDIT'">C/F: CR {{ledgerCtrl.txnData.closingBalance.amount | number:2 }}</span>
 						</td>
 					</tr>
 					<tr class="total_col">
 						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important;">
-							<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.totalDebit | number:2}}</span>
+							<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.txnData.reckoningDebitTotal | number:2}}</span>
 						</td>
 					</tr>
 				</tbody>
@@ -410,12 +423,12 @@ th {
 					
 					<tr class="total_col">
 						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-							<span  ng-if="ledgerCtrl.totalDebit > ledgerCtrl.totalCredit">C/F: Dr <span class="primary_color">{{ledgerCtrl.totalDebit - ledgerCtrl.totalCredit | number:2}}</span></span>
+							<span ng-if="ledgerCtrl.txnData.closingBalance.type == 'DEBIT'">C/F: Dr <span class="primary_color">{{ledgerCtrl.txnData.closingBalance.amount | number:2 }}</span></span>
 						</td>
 					</tr>
 					<tr class="total_col">
 						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important;">
-							<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.totalCredit | number:2}}</span>
+							<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.txnData.reckoningCreditTotal | number:2}}</span>
 						</td>
 					</tr>
 				</tbody>

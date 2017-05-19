@@ -30,6 +30,7 @@ router.get '/transactions', (req, res) ->
       count:Number(req.query.count) || 0
       page:Number(req.query.page) || 1
       sort:req.query.sort
+      reversePage: req.query.reversePage
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/ledgers/transactions'
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
