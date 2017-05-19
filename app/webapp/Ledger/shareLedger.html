@@ -1,7 +1,7 @@
 <div id="shareModal">
 <div id="share-modal" class="pdB4" ng-if="ledgerCtrl.toggleShare">
    <div class="modal-header text-right">
-      <i class="fa fa-times" aria-hidden="true" data-dismiss="modal"></i>
+      <i class="fa fa-times" aria-hidden="true" data-dismiss="modal" ng-click="$dismiss()"></i>
    </div>
    <div class="modal-body pdL2 pdR2" id="SharePop">
       <div class="modal_wrap">
@@ -75,7 +75,7 @@
 <div id="exportModal" class="" ng-if="ledgerCtrl.LedgerExport">
    <div class="modal-header themeBg pd2 pdL2 pdR2">
       <h3 class="modal-title bg" id="modal-title">Export</h3>
-      <i class="fa fa-times text-right close_modal" aria-hidden="true"></i>
+      <i class="fa fa-times text-right close_modal" aria-hidden="true" ng-click="$dismiss()"></i>
    </div>
    <div class="modal-body pdT5 pdB5 pdL2 pdR2" id="export-body">
    <form name="addShareEmailForm" novalidate class="" autocomplete="off">

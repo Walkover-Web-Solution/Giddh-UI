@@ -199,12 +199,12 @@
 						
 						<tr class="total_col">
 							<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-								<span ng-if="ledgerCtrl.totalDebit < ledgerCtrl.totalCredit">C/F: CR {{ledgerCtrl.totalDebit - ledgerCtrl.totalCredit| abs | number:2 }}</span>
+								<span ng-if="ledgerCtrl.entryTotal.drTotal < ledgerCtrl.entryTotal.crTotal">C/F: CR {{ledgerCtrl.entryTotal.drTotal - ledgerCtrl.entryTotal.crTotal| abs | number:2 }}</span>
 							</td>
 						</tr>
 						<tr class="total_col">
 							<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important;">
-								<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.totalDebit | number:2}}</span>
+								<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.entryTotal.drTotal | number:2}}</span>
 							</td>
 						</tr>
 					</tbody>
@@ -214,12 +214,12 @@
 						
 						<tr class="total_col">
 							<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-								<span  ng-if="ledgerCtrl.totalDebit > ledgerCtrl.totalCredit">C/F: Dr <span class="primary_color">{{ledgerCtrl.totalDebit - ledgerCtrl.totalCredit | number:2}}</span></span>
+								<span  ng-if="ledgerCtrl.entryTotal.drTotal > ledgerCtrl.entryTotal.crTotal">C/F: Dr <span class="primary_color">{{ledgerCtrl.entryTotal.drTotal - ledgerCtrl.entryTotal.crTotal | number:2}}</span></span>
 							</td>
 						</tr>
 						<tr class="total_col">
 							<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important;">
-								<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.totalCredit | number:2}}</span>
+								<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.entryTotal.crTotal | number:2}}</span>
 							</td>
 						</tr>
 					</tbody>
@@ -299,8 +299,8 @@
 								      </a>
 								      <ul class="dropdown-menu pd" uib-dropdown-menu>
 										<li class="oh width100 bdrB pdB" ng-repeat="tax in ledgerCtrl.taxList">
-										  <label class="checkbox">
-										  	<input class="pull-left" style="margin-top:5px;" type="checkbox" ng-model="tax.isChecked" ng-change="ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)"/>
+										  <label class="checkbox" ng-click="$event.stopPropagation()">
+										  	<input class="pull-left" style="margin-top:5px;" type="checkbox" ng-model="tax.isChecked" ng-change="ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)"  ng-click="$event.stopPropagation()"/>
 										  	<span class="pull-left" style="display:block;max-width:125px">{{tax.name}}</span>
 										  </label>
 										 </li>
@@ -390,26 +390,19 @@
 		  			<div class="pull-right">
 		  				<div class="mrR1 pull-left">
 		  					<label class="checkbox oh">
-		  						<input class="pull-left" style="margin-top:2px;" type="checkbox" name="generateInvoice" ng-model="ledgerCtrl.selectedLedger.generateInvoice" ng-click="$event.stopPropagation()">
+		  						<input class="pull-left" style="margin-top:4px;" type="checkbox" name="generateInvoice" ng-model="ledgerCtrl.selectedLedger.generateInvoice" ng-click="$event.stopPropagation()">
 		  						<span class="pull-left">Generate Invoice</span>
 		  					</label>
 		  				</div>
-			  			<div class="upload_div" ng-click="$event.stopPropagation()">
+			  			<div class="upload_div" ng-click="$event.stopPropagation()" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0">
 		                  <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().$parent.getInvoiceFile(this.files)">
-		                  <label for="invoiceFile" ng-click="$event.stopPropagation()"><i class="glyphicon glyphicon-paperclip"></i></label>
+		                  <label for="invoiceFile" ng-click="$event.stopPropagation()" style="padding:0"><i class="glyphicon glyphicon-paperclip"></i></label>
 		                </div>
 			  			<button class="btn btn-success" ng-click="ledgerCtrl.saveUpdateLedger(ledgerCtrl.selectedLedger)">Update</button>
 			  		</div>
 		  		</div>
-
-
-
 			</div>
 		</div>
-
-
-
-
 	</div>
 </div>
 
