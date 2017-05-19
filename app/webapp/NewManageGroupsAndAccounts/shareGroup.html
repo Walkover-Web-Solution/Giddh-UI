@@ -1,0 +1,43 @@
+<div id="shareModal">
+<div id="share-modal" class="pdB4 shareGrp">
+   <div class="modal-header text-right">
+      <i class="fa fa-times" aria-hidden="true" data-dismiss="modal"></i>
+   </div>
+   <div class="modal-body pdL2 pdR2" id="SharePop">
+      <div class="modal_wrap">
+         <h3 class="pdB1">Share with</h3>
+         <div class="add_mailer">
+            <form name="shareGroupForm" novalidate class="form-inline" autocomplete="off">
+               <div class="input-group col-xs-8">
+                  <input required name="userEmail" type="email" ng-model="mc.shareGroupObj.user" placeholder="Email ID" class="form-control" />
+                  <div class="input-group-btn">
+                     <button ng-disabled="shareGroupForm.$invalid" class="btn btn-success mrL1" ng-click="mc.shareGroup()">Share</button>
+                  </div>
+                  <!-- /btn-group -->
+               </div> <!-- /input-group -->
+            </form>
+            <div class="col-xs-8 pdB1 pdT1 mrB2" ng-if="mc.groupSharedUserList.length">
+               <div class="row">
+                  <ul class="shared_list">
+                     <li ng-repeat="(key,value) in mc.groupSharedUserList track by $index">
+                        <span class="pull-left">
+                           <!-- <div ng-bind-html="value.userName"></div> -->
+                           <small class="Useremail">{{value.userEmail}}-</small>
+                        </span>
+                        <span class="form-inline">
+                           <small class="">{{value.role.name}}</small>
+                           <span class="delIcon pull-right">
+                           <i ng-click="mc.unShareGroup(value.userUniqueName)" class="fa fa-times" aria-hidden="true"></i>
+                           </span>
+                        </span>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+         <!-- add mailer -->
+      </div>
+   </div>
+</div>
+
+</div>

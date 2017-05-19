@@ -77,9 +77,15 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 #    currentPage : 1
 #    limit: 5
 #  }
+  mc.selectedTax = {}
+  mc.selectedTax.taxes = ''
 
   mc.selectedGrp = {}
   mc.selectedType = undefined
+  mc.breadcrumbs = []
+  mc.showOnUpdate = false
+  mc.prePopulate = []
+  mc.getMergeAcc = []
 
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
@@ -119,8 +125,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 # get selected group or account
   mc.selectItem = (item) ->
     mc.selectedGrp = item
+    mc.grpCategory = item.category
+    mc.showEditTaxSection = false
     mc.selectedGrp.oldUName = item.uniqueName
-    mc.createNew = false
+    mc.getGroupSharedList(item)
+    # mc.createNew = false
+    mc.showOnUpdate = true
     console.log item
     existingGrp = _.findWhere(mc.columns, {uniqueName:item.uniqueName})
     groupService.get($rootScope.selectedCompany.uniqueName, item.uniqueName).then(mc.getGrpDtlSuccess, mc.getGrpDtlFailure)
@@ -149,17 +159,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.getGrpDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
-# end
-
-# Open share modal
-  mc.shareLedger =() ->
-    $uibModal.open(
-      templateUrl: '/public/webapp/NewManageGroupsAndAccounts/shareLedger.html',
-      size: "md",
-      backdrop: 'true',
-      animation: true,
-      scope: $scope
-    )
 # end
 
 
@@ -240,10 +239,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.createNewGrpAccount = (index) ->
     mc.addToIndex = index
     mc.toggleView(true)
+    mc.showOnUpdate = false
 
 
 # get account details under groups and sub groups
   mc.getAccDetail = (item) ->
+    mc.showOnUpdate = true
     console.log item
     reqParam = {
       compUname: $rootScope.selectedCompany.uniqueName,
@@ -251,9 +252,26 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     }
     accountService.get(reqParam).then(mc.getAccDtlSuccess, mc.getAccDtlFailure)
 
-  mc.getAccDtlSuccess = (res) ->
+  mc.getAccDtlSuccess = (res, data) ->
+    data = res.body
     mc.selectedAcc = res.body
+    mc.getMergeAcc.push(mc.selectedAcc.mergedAccounts)
+    console.log mc.getMergeAcc
+    # mc.AccountCategory = mc.getAccountCategory(data.parentGroups)
+    mc.getMergedAccounts(data)
+    mc.showGroupDetails = false
+    mc.showAccountDetails = true
+    mc.showOnUpdate = true
     console.log mc.selectedAcc
+    if data.uniqueName is $rootScope.selAcntUname
+      mc.cantUpdate = true
+    _.extend(mc.selAcntPrevObj, data)
+    _.extend(mc.selectedAcc, data)
+    $rootScope.selectedAccount = mc.selectedAcc
+    # mc.breakMobNo(data)
+    mc.setOpeningBalanceDate()
+    # mc.getAccountSharedList()
+    mc.isFixedAcc = res.body.isFixed
 
   mc.getAccDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -265,6 +283,436 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.selectedItem = {}
     mc.selectedAcc = {}
 # end
+
+# get tax list
+  mc.getTaxList = () ->
+    companyServices.getTax($rootScope.selectedCompany.uniqueName).then(mc.getTaxSuccess, mc.getTaxFailure)
+
+  mc.getTaxSuccess = (res) ->
+    mc.taxList = res.body
+
+  mc.getTaxFailure = (res) ->
+    toastr.error(res.data.message)
+# end
+
+# getTaxHierarchy on edit button
+  mc.getTaxHierarchy = (type) ->
+    mc.getTaxList()
+    if type == 'group'
+      groupService.getTaxHierarchy($rootScope.selectedCompany.uniqueName,mc.selectedGrp.uniqueName).then(mc.getTaxHierarchyOnSuccess,mc.getTaxHierarchyOnFailure)
+    else if type == 'account'
+      accountService.getTaxHierarchy($rootScope.selectedCompany.uniqueName, mc.selectedAcc.uniqueName).then(mc.getTaxHierarchyOnSuccess,mc.getTaxHierarchyOnFailure)
+
+  mc.getTaxHierarchyOnSuccess = (res) ->
+    mc.taxHierarchy = res.body
+    mc.selectedTax.taxes = mc.taxHierarchy.applicableTaxes
+    mc.showEditTaxSection = true
+    mc.allInheritedTaxes = []
+    mc.createInheritedTaxList(mc.taxHierarchy.inheritedTaxes)
+
+  mc.getTaxHierarchyOnFailure = (res) ->
+    toastr.error(res.data.message)
+
+# end
+
+
+  mc.createInheritedTaxList = (inTaxList) ->
+#get all taxes by uniqueName
+    inTaxUnq = []
+    _.each inTaxList, (tax) ->
+      _.each tax.applicableTaxes, (inTax) ->
+        inTaxUnq.push(inTax.uniqueName)
+    inTaxUnq = _.uniq(inTaxUnq)
+
+    # match groups with tax uniqueNames
+    _.each inTaxUnq, (unq) ->
+      tax = {}
+      tax.uniqueName = unq
+      tax.groups = []
+      _.each inTaxList, (inTax) ->
+        _.each inTax.applicableTaxes, (inAppTax) ->
+          if tax.uniqueName == inAppTax.uniqueName
+            grp = {}
+            grp.name = inTax.name
+            grp.uniqueName = inTax.uniqueName
+            tax.name = inAppTax.name
+            tax.groups.push(grp)
+      mc.allInheritedTaxes.push(tax)
+
+
+  mc.isAccount = false
+  mc.assignTax = (dataToSend) ->
+    companyServices.assignTax($rootScope.selectedCompany.uniqueName,dataToSend).then(mc.assignTaxOnSuccess,mc.assignTaxOnFailure)
+
+  mc.assignTaxOnSuccess = (res) ->
+    console.log mc.getSendTax
+    console.log mc.taxHierarchy.applicableTaxes
+    mc.showEditTaxSection = false
+    toastr.success(res.body)
+    if not mc.isAccount
+      groupService.get($rootScope.selectedCompany.uniqueName, mc.selectedGrp.uniqueName).then(mc.getGrpDtlSuccess,
+          mc.getGrpDtlFailure)
+    else
+      reqParams = {
+        compUname: $rootScope.selectedCompany.uniqueName
+        acntUname: mc.selectedAcc.uniqueName
+      }
+      accountService.get(reqParams).then(mc.getAccDtlSuccess, mc.getAccDtlFailure)
+
+
+
+  mc.assignTaxOnFailure = (res) ->
+    mc.showEditTaxSection = false
+    toastr.error(res.data.message)
+
+  mc.applyTax = (type) ->
+    if _.isEmpty(type)
+      toastr.warning("Please do not mess with html.")
+    else
+      # We have to send all the taxes
+      mergeTaxes = []
+      mergeTaxes.push(mc.taxHierarchy.applicableTaxes)
+      mergeTaxes.push(_.pluck(mc.taxHierarchy.inheritedTaxes, 'applicableTaxes'))
+      sendThisList = _.pluck(_.flatten(mergeTaxes),'uniqueName')
+      mc.getSendTax = sendThisList
+      data = {}
+      if type == 'group'
+        data = [{"uniqueName":mc.selectedGrp.uniqueName, "taxes":sendThisList,"isAccount":false}]
+        $scope.isAccount = false
+      else if type == 'account'
+        data = [{"uniqueName":mc.selectedAcc.uniqueName, "taxes":sendThisList,"isAccount":true}]
+        mc.isAccount = true
+      mc.assignTax(data)
+
+  # fetch taxes
+  mc.alreadyAppliedTaxes = (tax) ->
+    inheritTax = _.pluck(mc.taxHierarchy.inheritedTaxes,'applicableTaxes')
+    applicableTaxes = _.flatten(mc.taxHierarchy)
+    applicableTaxes.push(inheritTax)
+    checkInThis = _.pluck(_.flatten(applicableTaxes),'uniqueName')
+    condition = _.contains(checkInThis, tax.uniqueName)
+    console.log condition
+    condition
+#end
+
+# move group
+  mc.moveGroup = (group) ->
+    if _.isUndefined(group.uniqueName)
+      toastr.error("Select group only from list", "Error")
+      return
+
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: mc.selectedItem.uniqueName
+    }
+    body = {
+      "parentGroupUniqueName": group.uniqueName
+    }
+    groupService.move(unqNamesObj, body).then(mc.onMoveGroupSuccess, mc.onMoveGroupFailure)
+
+  mc.onMoveGroupSuccess = (res) ->
+    mc.moveto = undefined
+    toastr.success("Group moved successfully.", "Success")
+    mc.getGroups()
+
+  mc.onMoveGroupFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+
+
+# share group
+  mc.shareGrpModal = () ->
+    $uibModal.open(
+      templateUrl: '/public/webapp/NewManageGroupsAndAccounts/shareGroup.html',
+      size: "md",
+      backdrop: 'true',
+      animation: true,
+      scope: $scope
+    )
+
+  mc.shareGroup = () ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: mc.selectedGrp.uniqueName
+    }
+    groupService.share(unqNamesObj, mc.shareGroupObj).then(mc.onShareGroupSuccess, mc.onShareGroupFailure)
+
+  mc.onShareGroupSuccess = (res) ->
+    $scope.shareGroupObj = {
+      role: "view_only"
+      user: ""
+    }
+    toastr.success(res.body, res.status)
+    mc.getGroupSharedList(mc.selectedGrp)
+
+  mc.onShareGroupFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+
+# get Shared Group List
+  mc.getGroupSharedList = () ->
+    # if $scope.canShare
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: mc.selectedGrp.uniqueName
+    }
+    groupService.sharedList(unqNamesObj).then(mc.onsharedListSuccess, mc.onsharedListFailure)
+
+  mc.onsharedListSuccess = (res) ->
+    mc.groupSharedUserList = res.body
+
+  mc.onsharedListFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+
+  #unShare group with user
+  mc.unShareGroup = (user) ->
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: mc.selectedGrp.uniqueName
+    }
+    data = {
+      user: user
+    }
+    groupService.unshare(unqNamesObj, data).then(mc.unShareGroupSuccess, mc.unShareGroupFailure)
+
+  mc.unShareGroupSuccess = (res)->
+    toastr.success(res.body, res.status)
+    mc.getGroupSharedList(mc.selectedGrp)
+    mc.shareGroupObj.user = ""
+
+  mc.unShareGroupFailure = (res)->
+    toastr.error(res.data.message, res.data.status)
+
+
+
+# add Account
+
+  # prepare date object
+  mc.setOpeningBalanceDate = () ->
+    if mc.selectedAcc.openingBalanceDate
+      newDateObj = mc.selectedAcc.openingBalanceDate.split("-")
+      mc.datePicker.accountOpeningBalanceDate = new Date(newDateObj[2], newDateObj[1] - 1, newDateObj[0])
+    else
+      mc.datePicker.accountOpeningBalanceDate = new Date()
+
+
+
+  mc.setAdditionalAccountDetails = ()->
+    mc.selectedAcc.openingBalanceDate = $filter('date')(mc.datePicker.accountOpeningBalanceDate,"dd-MM-yyyy")
+    if(_.isUndefined(mc.selectedAcc.mobileNo) || _.isEmpty(mc.selectedAcc.mobileNo))
+      mc.selectedAcc.mobileNo = ""
+    if(_.isUndefined(mc.selectedAcc.email) || _.isEmpty(mc.selectedAcc.email))
+      mc.selectedAcc.email = ""
+    #$scope.selectedAccount.mobileNo = $scope.mergeNum($scope.acntExt)
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: mc.selectedGrp.uniqueName
+      acntUname: mc.selectedAcc.uniqueName
+    }
+
+
+
+
+  mc.addAccount = () ->
+    unqNamesObj = mc.setAdditionalAccountDetails()
+    accountService.createAc(unqNamesObj, mc.selectedAcc).then(mc.addAccountSuccess, mc.addAccountFailure)
+
+  mc.addAccountSuccess = (res) ->
+    toastr.success("Account created successfully", res.status)
+    mc.getGroups()
+    mc.selectedAcc = {}
+    abc = _.pick(res.body, 'name', 'uniqueName', 'mergedAccounts','applicableTaxes','parentGroups')
+    mc.groupAccntList.push(abc)
+    mc.columns[mc.addToIndex].accounts.push(res.body)
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+
+  mc.addAccountFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+
+  mc.updateAccount = () ->
+    unqNamesObj = mc.setAdditionalAccountDetails()
+    if angular.equals(mc.selectedAcc, mc.selAcntPrevObj)
+      toastr.info("Nothing to update", "Info")
+      return false
+
+    if mc.selectedAcc.openingBalanceType == null
+      mc.selectedAcc.openingBalanceType = 'credit'
+
+    if mc.selectedAcc.uniqueName isnt mc.selAcntPrevObj.uniqueName
+      unqNamesObj.acntUname = mc.selAcntPrevObj.uniqueName
+
+    if _.isEmpty(mc.selectedGrp)
+      lastVal = _.last(mc.selectedAcc.parentGroups)
+      unqNamesObj.selGrpUname = lastVal.uniqueName
+
+    if mc.selectedAcc.applicableTaxes.length > 0
+      mc.selectedAcc.applicableTaxes = _.pluck(mc.selectedAcc.applicableTaxes,'uniqueName')
+
+    accountService.updateAc(unqNamesObj, mc.selectedAcc).then(mc.updateAccountSuccess,
+        mc.updateAccountFailure)
+
+
+  mc.updateAccountSuccess = (res) ->
+    toastr.success("Account updated successfully", res.status)
+    angular.merge(mc.selectedAcc, res.body)
+    mc.getGroups()
+    abc = _.pick(mc.selectedAcc, 'name', 'uniqueName', 'mergedAccounts')
+    if !_.isEmpty(mc.selectedGrp)
+      _.find(mc.groupAccntList, (item, index) ->
+        if item.uniqueName == mc.selAcntPrevObj.uniqueName
+          angular.merge(mc.groupAccntList[index], abc)
+      )
+    # end if
+    angular.merge(mc.selAcntPrevObj, res.body)
+
+
+  mc.updateAccountFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+
+  mc.deleteAccount = ->
+    if $scope.canDelete
+      modalService.openConfirmModal(
+        title: 'Delete Account?',
+        body: 'Are you sure you want to delete this Account?',
+        ok: 'Yes',
+        cancel: 'No').then(mc.deleteAccountConfirm)
+
+  mc.deleteAccountConfirm = ->
+    unqNamesObj = mc.setAdditionalAccountDetails()
+    if mc.selectedAcc.uniqueName isnt mc.selAcntPrevObj.uniqueName
+      unqNamesObj.acntUname = mc.selAcntPrevObj.uniqueName
+    if _.isEmpty(mc.selectedGrp)
+      unqNamesObj.selGrpUname = mc.selectedAcc.parentGroups[0].uniqueName
+
+    accountService.deleteAc(unqNamesObj, mc.selectedAcc).then(mc.moveAccntSuccess, mc.onDeleteAccountFailure)
+
+  mc.onDeleteAccountFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  mc.isCurrentGroup =(group) ->
+    group.uniqueName is mc.selectedAcc.parentGroups[0].uniqueName || group.uniqueName is mc.selectedAcc.parentGroups[mc.selectedAcc.parentGroups.length-1].uniqueName
+
+  mc.isCurrentAccount =(acnt) ->
+    acnt.uniqueName is mc.selectedAcc.uniqueName
+
+
+  mc.moveAccnt = (group) ->
+    if _.isUndefined(group.uniqueName)
+      toastr.error("Select group only from list", "Error")
+      return
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      selGrpUname: mc.selectedGrp.uniqueName
+      acntUname: mc.selectedAcc.uniqueName
+    }
+    if _.isUndefined(mc.selectedGrp.uniqueName)
+      lastVal = _.last(mc.selectedAcc.parentGroups)
+      unqNamesObj.selGrpUname = lastVal.uniqueName
+
+    body = {
+      "uniqueName": group.uniqueName
+    }
+    accountService.move(unqNamesObj, body).then(mc.moveAccntSuccess, mc.moveAccntFailure)
+
+
+  mc.moveAccntSuccess = (res) ->
+    toastr.success(res.body, res.status)
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+    mc.showAccountDetails = false
+    if !_.isEmpty(mc.selectedGrp)
+      mc.groupAccntList = _.reject(mc.groupAccntList, (item) ->
+        return item.uniqueName == mc.selectedAcc.uniqueName
+      )
+    # end if
+    mc.selectedAcc = {}
+    mc.selAcntPrevObj = {}
+    mc.columns[mc.addToIndex].accounts.pop(res.body)
+
+  mc.moveAccntFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+
+
+ ############################ for merge/unmerge accounts ############################
+
+
+  #----------for merge account refresh----------#
+  mc.mergeAccList = []
+  mc.refreshFlatAccount = (str) ->
+    @success = (res) ->
+      mc.mergeAccList = res.body.results
+    @failure = (res) ->
+      toastr.error(res.data.message)
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      q: str
+      page: 1
+      count: 0
+    }
+    if str.length > 1
+      groupService.getFlatAccList(reqParam).then(@success, @failure)
+
+  mc.toMerge = {
+    mergeTo:''
+    mergedAcc: []
+    toUnMerge : {
+      name: ''
+      uniqueNames: []
+      moveTo: ''
+    }
+    moveToAcc: ''
+  }
+
+  mc.getMergedAccounts = (accData) ->
+    mc.AccountsList = $rootScope.fltAccntListPaginated
+    console.log mc.AccountsList
+    accToRemove = {
+      uniqueName: accData.uniqueName
+    }
+    mc.AccountsList = _.without(mc.AccountsList, _.findWhere(mc.AccountsList, accToRemove))
+    mc.toMerge.mergeTo = accData.uniqueName
+
+
+ #merge account
+  mc.mergeAccounts = () ->
+    mc.accToMerge = []
+    withoutMerged = []
+    console.log mc.toMerge.mergedAcc
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: mc.toMerge.mergeTo
+    }
+    mc.accToMerge = mc.toMerge.mergedAcc
+    if mc.accToMerge.length > 0
+      accountService.merge(unqNamesObj, mc.accToMerge).then( mc.mergeSuccess, mc.mergeFailure)
+      _.each mc.accToMerge, (acc) ->
+        mc.removeMerged = {
+          uniqueName: acc.uniqueName
+        }
+        mc.AccountsList = _.without(mc.AccountsList, _.findWhere(mc.AccountsList, mc.removeMerged))
+    else
+      toastr.error("Please select at least one account.")
+
+
+  mc.mergeSuccess = (res) ->
+    mc.toMerge.mergedAcc = []
+    toastr.success(res.body)
+    _.each mc.toMerge.mergedAcc, (acc) ->
+      $rootScope.removeAccountFromPaginatedList(acc)
+      acc.noRemove = true
+    mc.getGroups()
+    mc.prePopulate = mc.toMerge.mergedAcc
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+
+  mc.mergeFailure = (res) ->
+    toastr.error(res.data.message)
+
+
+
+
 
 
   return mc

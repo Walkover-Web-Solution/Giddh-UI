@@ -1513,7 +1513,7 @@ input[type=radio]:checked:after {
 .searchBar .form-control {
     min-width: 260px;
 }
-.form-inline select.form-control {
+#Addaccount .form-inline select.form-control {
     width: calc(100% - 15px);
 }
 form label {
@@ -1600,4 +1600,57 @@ label {
 .vcenter {
     display: table-cell;
     vertical-align: middle;
+}
+#App_taxes .btn-default, #App_taxes .btn-default:hover {
+    border: 0;
+}
+#App_taxes .btn {
+    padding: 4px;
+    background: #e0e0e0;
+    color: #6b6a6a;
+    margin: 0 4px 5px 0;
+}
+#App_taxes .btn:hover {
+    background: #e0e0e0;
+    color: #6b6a6a;
+    box-shadow: none;
+}
+#App_taxes .form-control {
+    background: #f4f5f5!important;
+    border: 1px solid #cccccc;
+}
+.tax-bullet {
+    display: inline-block;
+    margin: 4px 2px 5px 0;
+    color: #6b6a6a;
+    border-radius: 3px;
+    background: #e0e0e0;
+    padding: 2px 7px;
+}
+.tax_group small {
+    color: #afa9a9;
+    font-size: 14px;
+}
+.tax_tag:focus {
+    outline: 0;
+}
+.tax_group {
+    position: relative;
+}
+#editTax {
+    padding: 6px 10px !important;
+    position: absolute;
+    bottom: -12px;
+}
+.shareGrp {
+    overflow: hidden;
+}
+.inline-table.new_form {
+    width: 100%;
+    text-align: center;
+}
+.new_form .btn{
+    padding: 16px !important;
+    font-size: 18px;
+    min-width: 170px;
 }

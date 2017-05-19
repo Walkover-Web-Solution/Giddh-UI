@@ -1,203 +1,100 @@
-    <div class="view_forms form_box" ng-if="mc.selectedType == 'grp'">
-      <div class="breadcrumbs pdL2 pdT1 pdR2 pdB1">
-        <div class="pull-left pdT1"><span>CURRENT ASSETS > Expence group 2</span> > <span class="primary_clr">Expence group 1</span></div>
-        <div class="pull-right"> <button class="btn isActive" ng-click="mc.shareLedger()">Share</button> <label class="primary_clr">Shared with 2 people</label> </div>
+<div class="view_forms form_box" ng-if="mc.selectedType == 'grp'">
+  <div class="breadcrumbs pdL2 pdT1 pdR2 pdB1">
+    <div class="pull-left pdT1 col-xs-8 pdL0"><span>CURRENT ASSETS > Expence group 2</span> > <span class="primary_clr">Expence group 1</span></div>
+    <div class="pull-right col-xs-4 pdR0"> <button class="btn isActive pull-right" ng-click="mc.shareGrpModal()">Share</button> <div class="primary_clr text-right pull-right mrT1" ng-if="mc.groupSharedUserList.length">Shared with {{mc.groupSharedUserList.length}} people</div> </div>
+  </div>
+  <form class="horizontal-form" id="groupDetailForm" name="groupDetailForm" novalidate ng-disabled="!canUpdate">
+    <div class="form_bg pd2">
+      <div class="form-group clearfix">
+        <div class="col-xs-7">
+          <div class="row">
+            <label>Group Name</label>
+            <input type="text" placeholder="Expence group 1" name="grpName"  class="form-control" ng-model="mc.selectedItem.name" required />
+          </div>
+        </div>
       </div>
-      <form class="horizontal-form" id="groupDetailForm" name="groupDetailForm" novalidate>
-        <div class="form_bg pd2">
-
-        <div class="form-group clearfix">
-          <div class="col-xs-7">
-            <div class="row">
-              <label>Group Name</label>
-              <input type="text" placeholder="Expence group 1" name="grpName"  class="form-control" ng-model="mc.selectedItem.name" required />
-            </div>
+      <div class="form-group clearfix">
+        <div class="col-xs-5">
+          <div class="row">
+            <label>Unique Name</label>
+            <input type="text"  class="form-control" name="grpUnq" ng-model="mc.selectedItem.uniqueName" required />
           </div>
         </div>
+      </div>
+      <div class="form-group clearfix">
+        <label>Description</label>
+        <textarea class="form-control" rows="5" cols="12" name="grpDescription" ng-model="mc.selectedItem.description" no-resize></textarea>
+      </div>
+    </div>
 
-        <div class="form-group clearfix">
-          <div class="col-xs-5">
-            <div class="row">
-              <label>Unique Name</label>
-              <input type="text"  class="form-control" name="grpUnq" ng-model="mc.selectedItem.uniqueName" required />
-            </div>
-          </div>
+    <div class="pd2 pdB clearfix">
+      <button class="btn isActive" ng-if="mc.showOnUpdate && !mc.selectedItem.fixed && canDelete" ng-click="mc.deleteGroup()">DELETE {{mc.selectedGrp.name}}</button>
+      <!--   -->
+      <button class="btn btn-success pull-right" ng-if="!mc.showOnUpdate" ng-click="mc.addNewSubGroup()" ng-disabled="groupDetailForm.$invalid">Add</button>
+      <button class="btn btn-success pull-right" ng-if="mc.showOnUpdate && canUpdate" ng-click="mc.updateGroup(groupDetailForm)" ng-disabled="groupDetailForm.$invalid">Update</button>
+    </div>
+  </form>
+
+    <div class="pd2 clearfix" ng-if="mc.showOnUpdate && !mc.selectedItem.fixed">      
+      <div>
+        <label class="mrR">Move to group</label>
+      </div>
+      <div class="form-group col-xs-5 pdL0 mr0">
+        <input name="moveGrp" ng-model="mc.moveto" type="text" placeholder="Group name" class="form-control" required
+        uib-typeahead="groups as groups.name for groups in flattenGroupList | omit: mc.isChildGroup | filter:{name: $viewValue} | limitTo:8" />
+      </div>
+      <div class="form-group mr0">
+        <button class="btn isActive" ng-click="mc.moveGroup(mc.moveto)" ng-disabled="moveGrp.$invalid">Move</button>
+      </div>
+    </div>
+      <hr ng-if="mc.grpCategory == 'income' || mc.grpCategory == 'expenses'">
+
+    <!-- taxes -->
+    <div class="pd2" ng-if="mc.grpCategory == 'income' || mc.grpCategory == 'expenses'">
+      <div class="tax_group">
+        <h2 style="font-size: 18px;">Taxes</h2>
+        <button id="editTax" ng-if="canUpdate" class="btn btn-sm btn-default edit-tax-btn" ng-click="mc.getTaxHierarchy('group')" ng-hide="mc.showEditTaxSection"><i class="glyphicon glyphicon-edit"></i></button>
+      </div>
+      
+      <div class="form-group clearfix mrT2 mrB">
+        <label>All Applied Taxes</label>
+        <div class="tags">
+          <span class="tax-bullet" ng-repeat="tax in mc.selectedItem.applicableTaxes" ng-if="mc.selectedItem.applicableTaxes.length > 0">{{tax.name}}</span>
+          <small ng-if="mc.selectedItem.applicableTaxes.length < 1" class="grey">No taxes Applied</small>
         </div>
-
-        <div class="form-group clearfix">
-          <label>Description</label>
-          <textarea class="form-control" rows="5" cols="12" name="grpDescription" ng-model="mc.selectedItem.description" no-resize></textarea>
-        </div>
-
-        </div>
-        <div class="pd2">
-        <button class="btn isActive" ng-click="mc.deleteGroup()">DELETE {{mc.selectedGrp.name}}</button>
-        <button class="btn btn-success pull-right" ng-click="mc.addNewSubGroup()" ng-disabled="groupDetailForm.$invalid">Add</button>
-        <button class="btn btn-success pull-right" ng-click="mc.updateGroup(groupDetailForm)" ng-disabled="groupDetailForm.$invalid">Update</button>
-        </div>
-      </form>
-
-
-      <!-- taxes -->
-      <div class="form_bg pd2" ng-if="grpCategory == 'income' || grpCategory == 'expenses'">
-
-        <div class="form-group clearfix">
-          <label>Taxes</label>
-          <div class="form-group">
-            <label>All Applied Taxes</label>
-            <div class="tags">
-              <span class="tax-bullet" ng-repeat="tax in selectedGrp.applicableTaxes" ng-if="selectedGroup.applicableTaxes.length > 0">{{tax.name}}</span>
-              <p ng-if="selectedGroup.applicableTaxes.length < 1">No taxes Applied</p>
-            </div>
-            <button id="editTax" ng-if="canUpdate" class="btn btn-sm btn-default edit-tax-btn" ng-click="getTaxHierarchy('group')" ng-hide="showEditTaxSection"><i class="glyphicon glyphicon-edit"></i></button>
-          </div>
-        </div>
-
-        <div class="form-group clearfix">
+      </div>
+      <hr>
+      <div class="" ng-if="mc.showEditTaxSection">
+        <div class="form-group clearfix mrT2 mrB">
           <label>Inherited Taxes</label>
           <div class="tags">
-            <span class="tax-bullet" ng-repeat="inTax in allInheritedTaxes" popover-trigger="mouseenter" popover-placement="right" uib-popover-template="'taxHierarchy.html'" ng-if="allInheritedTaxes.length > 0">{{inTax.name}}</span>
-            <p ng-if="allInheritedTaxes.length < 1">No Inherited Taxes</p>
+            <span class="tax-bullet" ng-repeat="inTax in mc.allInheritedTaxes" popover-trigger="mouseenter" popover-placement="bottom" uib-popover-template="'taxHierarchy.html'" ng-if="mc.allInheritedTaxes.length > 0">{{inTax.name}}</span>
+            <small ng-if="mc.allInheritedTaxes.length < 1" class="grey">No Inherited Taxes</small>
           </div>
         </div>
-
-        <div class="form-group clearfix">
+        <hr>
+        <div class="form-group clearfix mrT2 mrB" id="App_taxes">
           <label>Applicable Taxes</label>
-          <ui-select multiple ng-model="taxHierarchy.applicableTaxes" theme="bootstrap">
-              <ui-select-match placeholder="Select Taxes">
-                <span>{{$item.name}}</span>
-              </ui-select-match >
-              <ui-select-choices repeat="tax in taxList| filter: $select.search | omit: alreadyAppliedTaxes">
-                <span ng-bind="tax.name"></span>
-              </ui-select-choices>
+          <ui-select multiple ng-model="mc.taxHierarchy.applicableTaxes" theme="bootstrap">
+          <ui-select-match placeholder="Select Taxes">
+          <span>{{$item.name}}</span>
+          </ui-select-match >
+          <ui-select-choices repeat="tax in mc.taxList| filter: $select.search | omit: mc.alreadyAppliedTaxes">
+          <span class="tax_tag" ng-bind="tax.name"></span>
+          </ui-select-choices>
           </ui-select>
-          <button class="btn btn-success mrT1" ng-click="applyTax('group')"  ng-if="showEditTaxSection"> Save</button>
         </div>
-
+        <button class="btn btn-success mrT1" ng-click="mc.applyTax('group')" ng-if="mc.showEditTaxSection"> Save</button>
       </div>
-
-    </div>
-
-
-
-<!-- ng-if="grpCategory == 'income' || grpCategory == 'expenses'" -->
-<div class="clearfix">
-  <div class="bdrB">
-      <div class="dGryHead">
-        
-      </div>
-      <div class="pd2 clearfix">
-        <div class="tax-list-wrap">
-          <div class="tax-label"><label>All Applied Taxes</label></div>
-          <span class="tax-bullet" ng-repeat="tax in selectedGroup.applicableTaxes" ng-if="selectedGroup.applicableTaxes.length > 0">{{tax.name}}</span>
-          <p ng-if="selectedGroup.applicableTaxes.length < 1">No taxes Applied</p>
-          <button id="editTax" ng-if="canUpdate" class="btn btn-sm btn-default edit-tax-btn" ng-click="getTaxHierarchy('group')" ng-hide="showEditTaxSection"><i class="glyphicon glyphicon-edit"></i></button>
-        </div>
-
-        <!-- ng-if="showEditTaxSection" -->
-        <div class="edit-tax-section" >
-          <div class="tax-list-wrap">
-            <div class="tax-label"><label>Inherited Taxes</label></div>
-              <span class="tax-bullet" ng-repeat="inTax in allInheritedTaxes" popover-trigger="mouseenter" popover-placement="right" uib-popover-template="'taxHierarchy.html'" ng-if="allInheritedTaxes.length > 0">{{inTax.name}}</span>
-              <p ng-if="allInheritedTaxes.length < 1">No Inherited Taxes</p>
-          </div>
-          <div class="tax-list-wrap">
-            <div class="tax-label"><label>Applicable Taxes</label></div>
-            <div class="clearfix max350 mrT1">
-              <ui-select multiple ng-model="taxHierarchy.applicableTaxes" theme="bootstrap">
-                  <ui-select-match placeholder="Select Taxes">
-                    <span>{{$item.name}}</span>
-                  </ui-select-match >
-                  <ui-select-choices repeat="tax in taxList| filter: $select.search | omit: alreadyAppliedTaxes">
-                    <span ng-bind="tax.name"></span>
-                  </ui-select-choices>
-              </ui-select>
-            </div>
-            <button class="btn btn-success mrT1" ng-click="applyTax('group')"  ng-if="showEditTaxSection"> Save</button>
-          </div>
-        </div>
+      </div> <!-- end taxes -->
   </div>
+  <!-- end tax section-->
 </div>
-</div>
-
-<!-- end tax section-->
-<div class="clearfix bdrB">
-
-<!-- ng-hide="selectedGroup.fixed || !canUpdate" -->
-  <div class="col-xs-6">
-    <div class="row">
-      <form name="moveGroupForm" novalidate class="pd2 form-inline">
-        <div>
-          <label class="mrR">Move to group</label>
-        </div>
-
-        <div class="form-group">
-          <input ng-model="moveto" type="text" placeholder="Group name" class="form-control" required
-            uib-typeahead="groups as groups.name for groups in flattenGroupList | omit: isChildGroup | filter:{name: $viewValue} | limitTo:8"/>
-        </div>
-        <div class="form-group">
-          <button class="btn btn-info mrL" ng-click="moveGroup(moveto)" ng-disabled="moveGroupForm.$invalid">Move</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-<!--  ng-show="canShare" -->
-  <div class="col-xs-6 bdrL">
-    <div class="row">
-      <form name="shareGroupForm" novalidate class="form-inline pd2">
-        <div>
-          <label class="mrR">Share group</label>
-        </div>
-        <div class="form-group">
-          <input required name="userEmail" type="email" ng-model="shareGroupObj.user" placeholder="Enter Email ID" class="form-control"/>
-        </div>
-        <div class="form-group">
-          <button ng-disabled="shareGroupForm.$invalid" class="btn btn-info mrL" ng-click="shareGroup()">Share</button>
-        </div>
-      </form>
-    </div>
-    <!-- end of row -->
-
-<!-- ng-if="groupSharedUserList.length" -->
-    <div class="row">
-      <div class="pd2">
-        <ul class="list-group ln">
-          <li ng-repeat="(key,value) in groupSharedUserList track by $index" class="list-group-item">
-
-            <div class="form-inline clearfix">
-              <div class="form-group">
-                <i class="glyphicon glyphicon-user"></i>
-                {{value.userEmail}}
-              </div>
-              <div class="form-group">
-                {{option.role}}
-              </div>
-              <span class="delIcon">
-                <i class="glyphicon glyphicon-trash" ng-click="unShareGroup(value.userUniqueName)"></i>
-              </span>
-            </div>
-
-          </li>
-        </ul>
-
-      </div>
-    </div>
-    <!-- end of row -->
-  </div>
-</div>
-  
-
-<!-- ng-hide="selectedGroup.fixed || !canDelete"  -->
-<div class="pd2">
-  <button class="btn btn-danger" ng-click="deleteGroup()">Delete {{selectedGroup.name}} group</button>
-</div>
-
 <script type="text/ng-template" id="taxHierarchy.html">
-  <div class="popover-content">
-    <label>Tax being inherited from:</label>
-    <ul>
-      <li ng-repeat="grp in inTax.groups">{{grp.name}} Group Name</li>
-    </ul>
-  </div> 
+<div class="popover-content">
+  <label>Tax being inherited from:</label>
+  <ul>
+    <li ng-repeat="grp in mc.inTax.groups">{{grp.name}} Group Name</li>
+  </ul>
+</div>
 </script>
