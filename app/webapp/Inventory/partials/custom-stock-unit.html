@@ -28,7 +28,7 @@
 			</div>
 
 			<div class="form-group col-xs-3">
-				<label>Parent Stock</label>
+				<label>Parent Unit</label>
 				<ui-select ng-model="vm.customUnitObj.parentStockUnit" theme="bootstrap" search-enabled="true" title="Select">
 			    <ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
 			    <ui-select-choices ui-disable-choice="item.code === vm.customUnitObj.code" repeat="item as item in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
