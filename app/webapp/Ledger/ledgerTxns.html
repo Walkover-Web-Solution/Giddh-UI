@@ -224,6 +224,16 @@ th {
 				<table class="width100">
 					<tbody>
 						<tr 
+							class="ledger-row"
+							>
+							<td class="col-xs-2"></td>
+							<td class="col-xs-7">B/F Balance</td>
+							<td class="col-xs-3">
+								<span ng-if="ledgerCtrl.txnData.forwardedBalance.type == 'DEBIT'">{{ledgerCtrl.txnData.forwardedBalance.amount}}</span>
+								<span ng-if="ledgerCtrl.txnData.forwardedBalance.type == 'CREDIT'">0</span>
+							</td>
+						</tr>
+						<tr 
 							class="ledger-row" 
 							ng-repeat="txn in ledgerCtrl.txnData.debitTransactions | filter:ledgerCtrl.query" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)"  
@@ -271,8 +281,9 @@ th {
 												type="text"
 												ng-model="txn.particular"
 												typeahead-append-to-body="true" 
-		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
-		                                      	typeahead-template-url="accountPopUp.html"
+                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+                      	typeahead-template-url="accountPopUp.html"
+                      	typeahead-on-select = "ledgerCtrl.matchInventory(ledger)"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												txn="txn"
@@ -322,6 +333,18 @@ th {
 				<table class="width100">
 					<tbody>
 						<tr 
+							class="ledger-row">
+							<td class="col-xs-2"></td>
+							<td class="col-xs-7">B/F Balance</td>
+							<td class="col-xs-3">
+								<span ng-if="ledgerCtrl.txnData.forwardedBalance.type == 'CREDIT'">	{{ledgerCtrl.txnData.forwardedBalance.amount}}
+								</span>
+								<span ng-if="ledgerCtrl.txnData.forwardedBalance.type == 'DEBIT'">
+									0
+								</span>
+							</td>
+						</tr>
+						<tr 
 							class="ledger-row" 
 							ng-repeat="txn in ledgerCtrl.txnData.creditTransactions | filter:ledgerCtrl.query" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)" 
@@ -369,8 +392,9 @@ th {
 												type="text"
 												ng-model="txn.particular"
 												typeahead-append-to-body="true" 
-		                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
-		                                      	typeahead-template-url="accountPopUp.html"
+                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+                      	typeahead-template-url="accountPopUp.html"
+                      	typeahead-on-select = "ledgerCtrl.matchInventory(ledger)"
 												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												txn="txn"
@@ -465,7 +489,7 @@ th {
 <section class="ledger-stat mrT3" ng-if="ledgerCtrl.txnData.debitTransactions.length > 0 || ledgerCtrl.txnData.creditTransactions.length > 0">
 	<div class="container">
 		<div class="col-xs-3">
-			<span class="primary_color mrB1" style="font-size: 12px">{{cDate.startDate | date:'shortDate'}} - {{cDate.endDate | date:'shortDate'}}</span>
+			<span class="primary_color mrB1" style="font-size: 12px">{{cDate.startDate | date:'mediumDate'}} - {{cDate.endDate | date:'mediumDate'}}</span>
 			<h1>Total Transactions <span class="primary_color">{{ledgerCtrl.totalDebitTxn+ledgerCtrl.totalCreditTxn}}</span></h1>
 			<span class="mrT1 mrR2">Dr {{ledgerCtrl.totalDebitTxn}}</span> <span class="mrT1 mrR2">Cr {{ledgerCtrl.totalCreditTxn}}</span>
 		</div>
@@ -497,21 +521,22 @@ th {
 	        <table>
 	        	<tbody>        		
 	        	<tr>
-	        		<td class="pItem" ng-if="ledgerCtrl.accountToShow.stock != null || ledgerCtrl.selectedTxn.particular.stock != null || ledgerCtrl.selectedTxn.inventory != null">
+	        		<td class="pItem" ng-if="ledgerCtrl.accountToShow.stocks != null || ledgerCtrl.selectedTxn.particular.stocks != null"
+	        		>
 			        	<label>Quantity</label>
 				        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.quantity" ng-change="ledgerCtrl.onQuantityChange(ledgerCtrl.selectedLedger) "/>
 	        		</td>
 	        		
-	        		<td class="pItem" ng-if="ledgerCtrl.accountToShow.stock != null || ledgerCtrl.selectedTxn.particular.stock != null || ledgerCtrl.selectedTxn.inventory != null">
+	        		<td class="pItem" ng-if="ledgerCtrl.accountToShow.stocks != null || ledgerCtrl.selectedTxn.particular.stocks != null">
 	        			<label>&nbsp;</label>
 	        			<label class="pdR pdL default_clr">x</label>
 	        		</td>
-	        		<td class="pItem" ng-if="ledgerCtrl.accountToShow.stock != null || ledgerCtrl.selectedTxn.particular.stock != null || ledgerCtrl.selectedTxn.inventory != null">
+	        		<td class="pItem" ng-if="ledgerCtrl.accountToShow.stocks != null || ledgerCtrl.selectedTxn.particular.stocks != null">
 				        <label>Price</label>
 				        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.price"
 				        ng-change="ledgerCtrl.onPriceChange(ledgerCtrl.selectedLedger) "/>
 	        		</td>
-	        		<td  class="pItem" ng-if="ledgerCtrl.accountToShow.stock != null || ledgerCtrl.selectedTxn.particular.stock != null || ledgerCtrl.selectedTxn.inventory != null">
+	        		<td  class="pItem" ng-if="ledgerCtrl.accountToShow.stocks != null || ledgerCtrl.selectedTxn.particular.stocks != null">
 	        			<label>&nbsp;</label>
 	        			<label class="pdR pdL default_clr">=</label>
 	        		</td>
@@ -580,7 +605,7 @@ th {
 	        	</tbody>
 	        </table>
   		</div>
-  		<div class="col-xs-12 pd1 text-right">
+  		<div class="col-xs-12 pd1 text-right" ng-if="(ledgerCtrl.selectedLedger.panel.show || ledgerCtrl.selectedLedger.isBlankLedger)">
   			<span class="inWords">{{ledgerCtrl.selectedLedger.panel.total | numtowords | lowercase}}</span>
   		</div>
   		<div class="col-xs-12">
@@ -669,6 +694,12 @@ th {
 	  			<button class="no-btn" ng-click="showAdvanced = !showAdvanced">Advance <i class="glyphicon glyphicon-triangle-bottom" ng-class="{rotate180:showAdvanced}"></i></button>
 	  			<div class="pull-right">
 		  			<!-- <button class="btn btn-default"><i class="glyphicon glyphicon-paperclip"></i></button> -->
+		  			<div class="mrR1 pull-left">
+	  					<label class="checkbox oh">
+	  						<input class="pull-left" style="margin-top:4px;" type="checkbox" name="generateInvoice" ng-model="ledgerCtrl.selectedLedger.generateInvoice" ng-click="$event.stopPropagation()">
+	  						<span class="pull-left">Generate Invoice</span>
+	  					</label>
+	  				</div>
 		  			<div class="upload_div" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0">
 	                  <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
 	                  <label for="invoiceFile"><i class="glyphicon glyphicon-paperclip"></i></label>

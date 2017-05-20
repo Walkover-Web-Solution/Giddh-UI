@@ -481,7 +481,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       transactions:[]
       unconfirmedEntry:false
       uniqueName:""
-      isInclusiveTax: false
+      isInclusiveTax: true
       voucher:{
         name:"Sales"
         shortCode:"sal"
@@ -820,7 +820,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.prevLedger = ledger
     # ledgerCtrl.calculateEntryTotal(ledger)
     ledgerCtrl.showLedgerPopover = true
-    ledgerCtrl.matchInventory(txn)
+    ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
     ledgerCtrl.ledgerBeforeEdit = {}
     angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
     ledgerCtrl.isTransactionContainsTax(ledger)
@@ -862,7 +862,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     #   ledgerCtrl.prevLedger.isCompoundEntry = false
     # # ledgerCtrl.calculateEntryTotal(ledger)
     # ledgerCtrl.showLedgerPopover = true
-    # ledgerCtrl.matchInventory(txn)
+    ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
     ledgerCtrl.ledgerBeforeEdit = {}
     angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
     # ledgerCtrl.isTransactionContainsTax(ledger)
@@ -878,7 +878,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     e.stopPropagation()
 
   ledgerCtrl.createPanel = (ledger) ->
-    ledgerCtrl.selectedLedger.panel = {}
+    ledgerCtrl.selectedLedger.panel = {
+      tax : 0
+      total: 0
+      discount: 0
+      amount: 0
+      price: 0
+    }
     if ledgerCtrl.accountToShow.stocks != null
       ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.accountToShow.stocks[0].rate
     ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.getPanelAmount(ledgerCtrl.selectedLedger)
@@ -938,13 +944,18 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.prevTxn = txn
 
   ledgerCtrl.clearDiscounts = (ledger) ->
-    _.each ledgerCtrl.discountAccount.accountDetails, (account) ->
-      account.amount = 0
+    if ledgerCtrl.discountAccount
+      _.each ledgerCtrl.discountAccount.accountDetails, (account) ->
+        account.amount = 0
 
-  ledgerCtrl.matchInventory = (txn) ->
-    match = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
-    if match && match.stock != null && txn.inventory == null
-      txn.inventory = angular.copy(match.stock, txn.inventory)
+  ledgerCtrl.matchInventory = (ledger) ->
+    if ledger.transactions[0].inventory
+      ledger.panel.quantity = ledger.transactions[0].inventory.quantity
+      ledger.showStock = true
+    ledger.panel.price = ledger.panel.amount / ledger.panel.quantity
+    # match = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
+    # if match && match.stocks != null
+    #   txn.inventory = angular.copy(match.stock, txn.inventory)
 
 
   ledgerCtrl.isTransactionContainsTax = (ledger) ->
@@ -962,8 +973,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         acc = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
         if acc
           parent = acc.parentGroups[0].uniqueName
+          discount = _.findWhere(acc.parentGroups, {uniqueName:"discount"})
           parentGroup = _.findWhere($rootScope.groupWithAccountsList, {uniqueName:parent}) 
-          if parentGroup.category == "income" || parentGroup.category == "expenses" && !txn.isTax && txn.particular.uniqueName != 'roundoff'
+          if parentGroup.category == "income" || parentGroup.category == "expenses" && !txn.isTax && txn.particular.uniqueName != 'roundoff' && !discount
             amount += Number(txn.amount)
             ledger.panel.show = true
     else if !ledger.isBlankLedger
@@ -976,14 +988,17 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.getTotalDiscount = (ledger) ->
     discount = 0
+    amounts = []
     if ledgerCtrl.discountAccount != undefined
       _.each ledgerCtrl.discountAccount.accountDetails, (account) ->
         _.each ledger.transactions, (txn) ->
           if txn.particular.uniqueName == account.uniqueName
-            account.amount = txn.amount
+            amounts.push(txn.amount)
         if account.amount
-          discount += account.amount
-      ledger.panel.total = ledgerCtrl.cutToTwoDecimal(ledger.panel.amount - discount + (ledger.panel.tax*ledger.panel.amount/100))
+          discount += Number(account.amount)
+      _.each amounts, (amount) ->
+        discount += amount
+      ledger.panel.total = ledgerCtrl.cutToTwoDecimal(ledger.panel.amount - discount + (ledger.panel.tax*(ledger.panel.amount-discount)/100))
       ledger.panel.discount = ledgerCtrl.cutToTwoDecimal(discount)
     discount
 
@@ -994,10 +1009,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         if ledgerCtrl.isTaxApplicable(tax) && tax.isChecked
           taxAmount = ledger.panel.amount * ledgerCtrl.getApplicableTaxRate(tax) /100
           totalTax += taxAmount
-    ledger.panel.total = ledgerCtrl.cutToTwoDecimal(ledger.panel.amount + totalTax - ledger.panel.discount)
     taxPercentage = ledgerCtrl.cutToTwoDecimal((totalTax/ledger.panel.amount)*100)
+    ledger.panel.total = ledgerCtrl.cutToTwoDecimal(ledger.panel.amount - ledger.panel.discount + (taxPercentage*(ledger.panel.amount-ledger.panel.discount)/100))
     ledger.panel.tax = ledgerCtrl.cutToTwoDecimal(taxPercentage)
-    taxPercentage
+    taxPercentage || 0
 
   ledgerCtrl.isTaxApplicable = (tax) ->
     today = new Date()
@@ -1052,7 +1067,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         parentGroup = _.findWhere($rootScope.groupWithAccountsList, {uniqueName:parent}) 
         if parentGroup.category == "income" || parentGroup.category == "expenses" && !txn.isTax && txn.particular.uniqueName != 'roundoff'
           txn.amount = ledgerCtrl.selectedLedger.panel.amount
-    ledgerCtrl.selectedLedger.isInclusiveTax = true
+    # ledgerCtrl.selectedLedger.isInclusiveTax = true
     # ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
     # ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
 
@@ -1065,15 +1080,18 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     amount    
 
   ledgerCtrl.cutToTwoDecimal = (num) ->
-    num = num.toString()
-    if(num.indexOf('.') != -1)
-      num = num.split('.')
-      if num[1].length > 1
-        num = num[0] + '.' + num[1][0] + num[1][1]
-      else
-        num = num[0] + '.' + num[1][0]
-    num = Number(num)
+    num = Number(num.toFixed(2))
     return num
+    # num = num%1
+    # if(num)
+    #   num = num.toString()
+    #   num = num.split('.')
+    #   if num[1].length > 1
+    #     num = num[0] + '.' + num[1][0] + num[1][1] + num[1][2]
+    #   else
+    #     num = num[0] + '.' + num[1][0]
+    # num = Number(num)
+    # return Math.ceil(num)
 
 
   ledgerCtrl.createEntry = () ->
@@ -1182,7 +1200,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.checkTransactionByUniqueName = (transactions, uniqueName) ->
     hasTransaction = false
     _.each transactions, (txn) ->
-      if txn.uniqueName == uniqueName
+      if txn.particular.uniqueName == uniqueName
         hasTransaction = true
     return hasTransaction
 
@@ -1205,9 +1223,19 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if txn && txn.blankRow && txn.particular.uniqueName == ''
         ledger.transactions.splice(i, 1)
 
+  ledgerCtrl.addStockDetails = (ledger) ->
+    if !ledger.transactions[0].inventory
+      ledger.transactions[0].inventory = {}
+      ledger.transactions[0].inventory.stock = ledger.transactions[0].particular.stocks[0]
+      ledger.transactions[0].inventory.quantity = ledger.panel.quantity
+      ledger.transactions[0].inventory.unit = ledger.transactions[0].particular.stocks[0].stockUnit
+    else
+      ledger.transactions[0].inventory.quantity = ledger.panel.quantity
+
   ledgerCtrl.buildLedger = (ledger) ->
     ledgerCtrl.addDiscountTxns(ledger)
     ledgerCtrl.removeBlankTransactions(ledger)
+    ledgerCtrl.addStockDetails(ledger)
     ledger
 
   ledgerCtrl.lastSelectedLedger = {}
@@ -1557,7 +1585,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     #_.extend(ledger, res.body)
     #ledgerCtrl.updateEntryOnUI(res.body)
     ledgerCtrl.resetBlankLedger()
-    ledgerCtrl.selectedLedger = ledgerCtrl.blankLedger
+    # ledgerCtrl.selectedLedger = ledgerCtrl.blankLedger
+    ledgerCtrl.selectedLedger = res.body
     ledgerCtrl.selectedTxn.isOpen = false
     if ledgerCtrl.mergeTransaction
       ledgerCtrl.mergeBankTransactions(ledgerCtrl.mergeTransaction)
@@ -1764,26 +1793,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.totalDebit = ledgerCtrl.getTotalBalance(ledgerCtrl.txnData.debitTransactions)
       ledgerCtrl.addLedgerPages()
       ledgerCtrl.showLedgers = true
-      if ledgerCtrl.txnData.forwardedBalance.amount == 0
-        recTotal = 0
-        if ledgerCtrl.txnData.creditTotal > ledgerCtrl.txnData.debitTotal then  recTotal = ledgerCtrl.txnData.creditTotal else recTotal = ledgerCtrl.txnData.debitTotal
-        ledgerCtrl.txnData.reckoningCreditTotal = recTotal
-        ledgerCtrl.txnData.reckoningDebitTotal = recTotal
-      else
-        if ledgerCtrl.txnData.forwardedBalance.type == 'DEBIT'
-          if ledgerCtrl.txnData.forwardedBalance.amount + ledgerCtrl.txnData.debitTotal <= ledgerCtrl.txnData.creditTotal
-            ledgerCtrl.txnData.reckoningCreditTotal = ledgerCtrl.txnData.creditTotal
-            ledgerCtrl.txnData.reckoningDebitTotal = ledgerCtrl.txnData.creditTotal
-          else
-            ledgerCtrl.txnData.reckoningCreditTotal = ledgerCtrl.txnData.forwardedBalance.amount + ledgerCtrl.txnData.debitTotal
-            ledgerCtrl.txnData.reckoningDebitTotal = ledgerCtrl.txnData.forwardedBalance.amount + ledgerCtrl.txnData.debitTotal
-        else
-          if ledgerCtrl.txnData.forwardedBalance.amount + ledgerCtrl.txnData.creditTotal <= ledgerCtrl.txnData.debitTotal
-            ledgerCtrl.txnData.reckoningCreditTotal = ledgerCtrl.txnData.debitTotal
-            ledgerCtrl.txnData.reckoningDebitTotal = ledgerCtrl.txnData.debitTotal
-          else
-            ledgerCtrl.txnData.reckoningCreditTotal = ledgerCtrl.txnData.forwardedBalance.amount + ledgerCtrl.txnData.creditTotal
-            ledgerCtrl.txnData.reckoningDebitTotal = ledgerCtrl.txnData.forwardedBalance.amount + ledgerCtrl.txnData.creditTotal
+      ledgerCtrl.calculateReckonging(ledgerCtrl.txnData)
 
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -1803,6 +1813,28 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if not _.isEmpty(ledgerCtrl.accountUnq)
       ledgerService.getAllTransactions(unqNamesObj).then(@success, @failure)
 
+  ledgerCtrl.calculateReckonging = () ->
+    if ledgerCtrl.txnData.forwardedBalance.amount == 0
+        recTotal = 0
+        if ledgerCtrl.txnData.creditTotal > ledgerCtrl.txnData.debitTotal then  recTotal = ledgerCtrl.txnData.creditTotal else recTotal = ledgerCtrl.txnData.debitTotal
+        ledgerCtrl.txnData.reckoningCreditTotal = recTotal
+        ledgerCtrl.txnData.reckoningDebitTotal = recTotal
+    else
+      if ledgerCtrl.txnData.forwardedBalance.type == 'DEBIT'
+        if ledgerCtrl.txnData.forwardedBalance.amount + ledgerCtrl.txnData.debitTotal <= ledgerCtrl.txnData.creditTotal
+          ledgerCtrl.txnData.reckoningCreditTotal = ledgerCtrl.txnData.creditTotal
+          ledgerCtrl.txnData.reckoningDebitTotal = ledgerCtrl.txnData.creditTotal
+        else
+          ledgerCtrl.txnData.reckoningCreditTotal = ledgerCtrl.txnData.forwardedBalance.amount + ledgerCtrl.txnData.debitTotal
+          ledgerCtrl.txnData.reckoningDebitTotal = ledgerCtrl.txnData.forwardedBalance.amount + ledgerCtrl.txnData.debitTotal
+      else
+        if ledgerCtrl.txnData.forwardedBalance.amount + ledgerCtrl.txnData.creditTotal <= ledgerCtrl.txnData.debitTotal
+          ledgerCtrl.txnData.reckoningCreditTotal = ledgerCtrl.txnData.debitTotal
+          ledgerCtrl.txnData.reckoningDebitTotal = ledgerCtrl.txnData.debitTotal
+        else
+          ledgerCtrl.txnData.reckoningCreditTotal = ledgerCtrl.txnData.forwardedBalance.amount + ledgerCtrl.txnData.creditTotal
+          ledgerCtrl.txnData.reckoningDebitTotal = ledgerCtrl.txnData.forwardedBalance.amount + ledgerCtrl.txnData.creditTotal
+
   ledgerCtrl.getEntryTotal = (ledger) ->
     entryTotal = {}
     entryTotal.crTotal = 0
@@ -1812,6 +1844,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         entryTotal.drTotal += Number(txn.amount)
       else
         entryTotal.crTotal += Number(txn.amount)
+    if entryTotal.drTotal > entryTotal.crTotal then entryTotal.reckoning = entryTotal.drTotal else entryTotal.reckoning = entryTotal.crTotal
     entryTotal
 
   ledgerCtrl.selectCompoundEntry = (txn) ->
@@ -1827,6 +1860,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.isTransactionContainsTax(ledgerCtrl.selectedLedger)
       ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
       ledgerCtrl.entryTotal = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
+      ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
       ledgerCtrl.ledgerBeforeEdit = {}
       angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
       _.each res.body.transactions, (txn) ->
