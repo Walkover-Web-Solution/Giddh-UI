@@ -79,7 +79,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     $scope.status.isopen = !$scope.status.isopen
 
   ledgerCtrl.shareLedger =() ->
-    $uibModal.open(
+    ledgerCtrl.shareModalInstance = $uibModal.open(
       templateUrl: '/public/webapp/Ledger/shareLedger.html',
       size: "md",
       backdrop: 'true',
@@ -395,8 +395,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ]
       eventHandlers : {
         'apply.daterangepicker' : (e, picker) ->
-          $scope.cDate.startDate = e.model.startDate._d
-          $scope.cDate.endDate = e.model.endDate._d
+          $scope.cDate.startDate = e.model.startDate._d || e.model.startDate
+          $scope.cDate.endDate = e.model.endDate._d || e.model.endDate
           ledgerCtrl.getTransactions(0)
       }
   }
@@ -643,7 +643,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.getSharedList = () ->
     $scope.setShareableRoles($rootScope.selectedCompany)
     $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
-
+  ledgerCtrl.getSharedList()
   # generate magic link
   ledgerCtrl.getMagicLink = () ->
     accUname = ledgerCtrl.accountUnq
@@ -1934,6 +1934,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       $(pItems[0]).find('input').focus()
     return false
 
+  ledgerCtrl.closeShareModal = () ->
+    ledgerCtrl.magicLink = ''
+    ledgerCtrl.shareModalInstance.close()
 
   return ledgerCtrl
 giddh.webApp.controller 'ledgerController', ledgerController

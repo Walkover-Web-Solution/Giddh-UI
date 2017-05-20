@@ -800,7 +800,9 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
     if $scope.selectedAccount.applicableTaxes.length > 0
       $scope.selectedAccount.applicableTaxes = _.pluck($scope.selectedAccount.applicableTaxes,'uniqueName')
 
-    accountService.updateAc(unqNamesObj, $scope.selectedAccount).then(gc.updateAccountSuccess,
+    accountPayload = angular.copy($scope.selectedAccount, {})
+    delete accountPayload.stocks  
+    accountService.updateAc(unqNamesObj, accountPayload).then(gc.updateAccountSuccess,
         gc.updateAccountFailure)
 
 
