@@ -489,7 +489,7 @@ th {
 <section class="ledger-stat mrT3" ng-if="ledgerCtrl.txnData.debitTransactions.length > 0 || ledgerCtrl.txnData.creditTransactions.length > 0">
 	<div class="container">
 		<div class="col-xs-3">
-			<span class="primary_color mrB1" style="font-size: 12px">{{cDate.startDate | date:'mediumDate'}} - {{cDate.endDate | date:'mediumDate'}}</span>
+			<span class="primary_color mrB1" style="font-size: 12px">{{cDate.startDate | date:'dd-MMM-yyyy'}} - {{cDate.endDate | date:'dd-MMM-yyyy'}}</span>
 			<h1>Total Transactions <span class="primary_color">{{ledgerCtrl.totalDebitTxn+ledgerCtrl.totalCreditTxn}}</span></h1>
 			<span class="mrT1 mrR2">Dr {{ledgerCtrl.totalDebitTxn}}</span> <span class="mrT1 mrR2">Cr {{ledgerCtrl.totalCreditTxn}}</span>
 		</div>
