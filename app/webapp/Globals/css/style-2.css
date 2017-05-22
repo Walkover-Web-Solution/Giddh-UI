@@ -2100,3 +2100,7 @@ select.form-control {
 .modal-header h3{
   color:#fff;
 }
+
+.width55{
+  width:55%;
+}

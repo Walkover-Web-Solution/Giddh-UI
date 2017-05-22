@@ -247,13 +247,13 @@ th {
 				</table>
 				<table class="width100">
 					<tbody>
-						<tr ng-repeat="ledger in ledgerCtrl.blankLedger | filter:ledgerCtrl.query">
+						<tr>
 							<td class="width100">
 								<table class="width100">
 									<tbody class="ledger-main">
 										<tr
 											class="ledger-row"
-											ng-repeat="txn in ledger.transactions"
+											ng-repeat="txn in ledgerCtrl.blankLedger.transactions"
 											ng-if="txn.type == 'DEBIT'"
 											uib-popover-template="ledgerCtrl.popover.templateUrl"
 											popover-trigger="outsideClick"
@@ -269,11 +269,11 @@ th {
 												<input 
 												class="form-control" 
 												type="text" 
-												ng-model="ledger.entryDate"
-												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+												ng-model="ledgerCtrl.blankLedger.entryDate"
+												ng-click="ledgerCtrl.selectTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												ui-mask="99-99-9999"
-                                      			model-view-value="true">
+                        model-view-value="true">
 											</td>
 											<td class="col-xs-7">
 												<input 
@@ -281,10 +281,10 @@ th {
 												type="text"
 												ng-model="txn.particular"
 												typeahead-append-to-body="true" 
-                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | addStockinAccountList | searchAccountInPaginated:$viewValue | limitTo: 25"
                       	typeahead-template-url="accountPopUp.html"
-                      	typeahead-on-select = "ledgerCtrl.matchInventory(ledger)"
-												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+                      	typeahead-on-select = "ledgerCtrl.matchInventory(ledgerCtrl.blankLedger)"
+												ng-click="ledgerCtrl.selectTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												txn="txn"
 												trigger-focus
@@ -295,10 +295,10 @@ th {
 												class="form-control" 
 												type="text" 
 												ng-model="txn.amount"
-												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+												ng-click="ledgerCtrl.selectTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												ng-change="ledgerCtrl.onTxnAmountChange(txn)"
-												ng-keydown="ledgerCtrl.onEnterPress($event, $index, ledger)"
+												ng-keydown="ledgerCtrl.onEnterPress($event, $index, ledgerCtrl.blankLedger)"
 												>
 											</td>
 										</tr>
@@ -358,13 +358,13 @@ th {
 				</table>
 				<table class="width100">
 					<tbody>
-						<tr ng-repeat="ledger in ledgerCtrl.blankLedger | filter:ledgerCtrl.query">
+						<tr>
 							<td class="width100">
 								<table class="width100">
 									<tbody class="ledger-main">
 										<tr
 											class="ledger-row"
-											ng-repeat="txn in ledger.transactions"
+											ng-repeat="txn in ledgerCtrl.blankLedger.transactions"
 											ng-if="txn.type == 'CREDIT'"
 											uib-popover-template="ledgerCtrl.popover.templateUrl"
 											popover-trigger="outsideClick"
@@ -380,11 +380,11 @@ th {
 												<input 
 												class="form-control" 
 												type="text" 
-												ng-model="ledger.entryDate"
-												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+												ng-model="ledgerCtrl.blankLedger.entryDate"
+												ng-click="ledgerCtrl.selectTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												ui-mask="99-99-9999"
-                                      			model-view-value="true">
+												model-view-value="true">
 											</td>
 											<td class="col-xs-7">
 												<input 
@@ -392,10 +392,10 @@ th {
 												type="text"
 												ng-model="txn.particular"
 												typeahead-append-to-body="true" 
-                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | addStockinAccountList | searchAccountInPaginated:$viewValue | limitTo: 25"
                       	typeahead-template-url="accountPopUp.html"
-                      	typeahead-on-select = "ledgerCtrl.matchInventory(ledger)"
-												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+                      	typeahead-on-select = "ledgerCtrl.matchInventory(ledgerCtrl.blankLedger)"
+												ng-click="ledgerCtrl.selectTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												txn="txn"
 												trigger-focus
@@ -406,10 +406,10 @@ th {
 												class="form-control" 
 												type="text" 
 												ng-model="txn.amount"
-												ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
+												ng-click="ledgerCtrl.selectTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												ng-change="ledgerCtrl.onTxnAmountChange(txn)"
-												ng-keydown="ledgerCtrl.onEnterPress($event)"
+												ng-keydown="ledgerCtrl.onEnterPress($event, $index, ledgerCtrl.blankLedger)"
 												>
 											</td>
 										</tr>
@@ -523,15 +523,28 @@ th {
 	        	<tr>
 	        		<td class="pItem" ng-if="ledgerCtrl.accountToShow.stocks != null || ledgerCtrl.selectedTxn.particular.stocks != null"
 	        		>
-			        	<label>Quantity</label>
-				        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.quantity" ng-change="ledgerCtrl.onQuantityChange(ledgerCtrl.selectedLedger) "/>
+				        <table>
+				        	<tbody>
+				        		<tr>
+				        			<td ng-class="{width55: ledgerCtrl.selectedLedger.panel.unit != undefined}">
+				        				<label>Quantity</label>
+				       		 			<input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.quantity" ng-change="ledgerCtrl.onQuantityChange(ledgerCtrl.selectedLedger) "/>
+				        			</td>
+				        			<td ng-if="ledgerCtrl.selectedLedger.panel.unit">
+				        				<label>Unit</label>
+				       		 			<select class="form-control" ng-options="unit as unit.stockUnitCode for unit in ledgerCtrl.selectedLedger.panel.units" ng-model="ledgerCtrl.selectedLedger.panel.unit" ng-change="ledgerCtrl.onStockUnitChange()">
+				       		 			</select>
+				        			</td>
+				        		</tr>
+				        	</tbody>
+				        </table>
 	        		</td>
 	        		
 	        		<td class="pItem" ng-if="ledgerCtrl.accountToShow.stocks != null || ledgerCtrl.selectedTxn.particular.stocks != null">
 	        			<label>&nbsp;</label>
 	        			<label class="pdR pdL default_clr">x</label>
 	        		</td>
-	        		<td class="pItem" ng-if="ledgerCtrl.accountToShow.stocks != null || ledgerCtrl.selectedTxn.particular.stocks != null">
+	        		<td style="max-width:150px" class="pItem" ng-if="ledgerCtrl.accountToShow.stocks != null || ledgerCtrl.selectedTxn.particular.stocks != null">
 				        <label>Price</label>
 				        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.price"
 				        ng-change="ledgerCtrl.onPriceChange(ledgerCtrl.selectedLedger) "/>
@@ -548,33 +561,32 @@ th {
 	        			<label>&nbsp;</label>
 	        			<label class="pdR pdL default_clr">-</label>
 	        		</td>
-	        		<td class="pItem" ng-if="ledgerCtrl.discountAccount != undefined">
-
-					    <span uib-dropdown auto-close="outsideClick">
-					      <a href id="discount" uib-dropdown-toggle>
-			        	<label>Discount</label>
-				        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.discount"/>
-					    
-					      </a>
-					      <ul class="dropdown-menu" uib-dropdown-menu>
-					        <li>
-					          <table>
-					          	<tr ng-repeat="discount in ledgerCtrl.discountAccount.accountDetails">
-					          		<td class="pdL w100">{{discount.name}}</td>
-					          		<td class="pdR pdT w50">
-					          			<input type="number" class="form-control" ng-model="discount.amount" ng-change="ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)"/>
-					          		</td>
-					          	</tr>
-					          </table>
-					        </li>
-					      </ul>
-					    </span>
+	        		<td  style="max-width:150px" class="pItem" ng-if="ledgerCtrl.discountAccount != undefined">
+						    <span uib-dropdown auto-close="outsideClick">
+						      <a href id="discount" uib-dropdown-toggle>
+				        	<label>Discount</label>
+					        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.discount"/>
+						    
+						      </a>
+						      <ul class="dropdown-menu" uib-dropdown-menu>
+						        <li>
+						          <table>
+						          	<tr ng-repeat="discount in ledgerCtrl.discountAccount.accountDetails">
+						          		<td class="pdL w100">{{discount.name}}</td>
+						          		<td class="pdR pdT w50">
+						          			<input type="number" class="form-control" ng-model="discount.amount" ng-change="ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)"/>
+						          		</td>
+						          	</tr>
+						          </table>
+						        </li>
+						      </ul>
+						    </span>
 	        		</td>
 	        		<td class="pItem">
 	        			<label>&nbsp;</label>
 	        			<label class="pdR pdL default_clr">+</label>
 	        		</td>
-	        		<td>
+	        		<td style="max-width:150px">
 	        		<span uib-dropdown auto-close="outsideClick">
 					      <a href id="tax" uib-dropdown-toggle>
 			        	<label>Tax %</label>
@@ -720,5 +732,8 @@ th {
   <a href="javascript:void(0)" class="account-list-item" set-drop-overflow style="border-bottom:1px solid #e0e0e0;">
     <span class="account-list-item" ng-bind-html="match.label | uibTypeaheadHighlight:query" style="display: block;font-size:12px"></span>
     <span class="account-list-item" ng-bind-html="match.model.uniqueName | uibTypeaheadHighlight:query" style="display: block;font-size:10px"></span>
+    <span class="account-list-item" ng-if="match.model.stock" style="display: block;font-size:10px">
+    	Stock: {{match.model.stock.name}}
+    </span>
   </a>
 </script>
