@@ -326,9 +326,9 @@ angular.module('trialBalance', []).directive('exportReport', [
   link: (scope, elem, attr) ->
 
     $(elem).parent().parent().css({
-      'max-height':150
-      'max-width':300
-      'overflow':'scroll'
+      'max-height':250
+      'max-width':400
+      'overflow':'auto'
     })
     
 ]

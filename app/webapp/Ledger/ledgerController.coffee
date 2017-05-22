@@ -468,7 +468,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
 
   blankLedgerModel = () ->
-    @blankLedger = [{
+    @blankLedger = {
       isBlankLedger : true
       attachedFileName: ''
       attachedFile: ''
@@ -490,7 +490,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       taxList : []
       taxes: []
       voucherNo:''
-    }]
+    }
 
   ledgerCtrl.dBlankTxn = {
     date: $filter('date')(new Date(), "dd-MM-yyyy")
@@ -514,8 +514,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
 
   ledgerCtrl.blankLedger = new blankLedgerModel()
-  ledgerCtrl.blankLedger[0].transactions.push(ledgerCtrl.dBlankTxn)
-  ledgerCtrl.blankLedger[0].transactions.push(ledgerCtrl.cBlankTxn)
+  ledgerCtrl.blankLedger.transactions.push(ledgerCtrl.dBlankTxn)
+  ledgerCtrl.blankLedger.transactions.push(ledgerCtrl.cBlankTxn)
 
   txnModel = (type) ->
     @ledger = {
@@ -530,25 +530,25 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
 
 
-  ledgerCtrl.resetBlankLedger = () ->
-    ledgerCtrl.newDebitTxn = {
-      date: $filter('date')(new Date(), "dd-MM-yyyy")
-      particular: {
-        name:''
-        uniqueName:''
-      }
-      amount : 0
-      type: 'DEBIT'
-    }
-    ledgerCtrl.newCreditTxn = {
-      date: $filter('date')(new Date(), "dd-MM-yyyy")
-      particular: {
-        name:''
-        uniqueName:''
-      }
-      amount : 0
-      type: 'CREDIT'
-    }
+  # ledgerCtrl.resetBlankLedger = () ->
+  #   ledgerCtrl.newDebitTxn = {
+  #     date: $filter('date')(new Date(), "dd-MM-yyyy")
+  #     particular: {
+  #       name:''
+  #       uniqueName:''
+  #     }
+  #     amount : 0
+  #     type: 'DEBIT'
+  #   }
+  #   ledgerCtrl.newCreditTxn = {
+  #     date: $filter('date')(new Date(), "dd-MM-yyyy")
+  #     particular: {
+  #       name:''
+  #       uniqueName:''
+  #     }
+  #     amount : 0
+  #     type: 'CREDIT'
+  #   }
 #     ledgerCtrl.blankLedger = {
 #       isBlankLedger : true
 #       description:null
@@ -951,8 +951,19 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.matchInventory = (ledger) ->
     if ledger.transactions[0].inventory
       ledger.panel.quantity = ledger.transactions[0].inventory.quantity
+      ledger.panel.price = ledger.panel.amount / ledger.panel.quantity
+      # add stock name to transaction.particular to show on view
+      ledger.transactions[0].particular.name += ' (' + ledger.transactions[0].inventory.stock.name + ')'
       ledger.showStock = true
-    ledger.panel.price = ledger.panel.amount / ledger.panel.quantity
+    if ledger.transactions[0].particular.stock
+      ledger.panel.units = ledger.transactions[0].particular.stock.accountStockDetails.unitRates
+      ledger.panel.unit =  ledger.panel.units[0]
+      if ledger.panel.unit
+        ledger.panel.price = ledger.panel.unit.rate
+      else
+        ledger.panel.price = 0
+      ledger.showStock = true
+    
     # match = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
     # if match && match.stocks != null
     #   txn.inventory = angular.copy(match.stock, txn.inventory)
@@ -1060,6 +1071,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.onTxnTotalChange = (txn)->
     ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.calculateAmountAfterInclusiveTax()
+    if ledgerCtrl.selectedLedger.panel.quantity > 0
+      ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.cutToTwoDecimal(ledgerCtrl.selectedLedger.panel.amount / ledgerCtrl.selectedLedger.panel.quantity)
     _.each ledgerCtrl.selectedLedger.transactions, (txn) ->
       acc = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
       if acc
@@ -1067,9 +1080,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         parentGroup = _.findWhere($rootScope.groupWithAccountsList, {uniqueName:parent}) 
         if parentGroup.category == "income" || parentGroup.category == "expenses" && !txn.isTax && txn.particular.uniqueName != 'roundoff'
           txn.amount = ledgerCtrl.selectedLedger.panel.amount
+
     # ledgerCtrl.selectedLedger.isInclusiveTax = true
     # ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
     # ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
+
+  ledgerCtrl.onStockUnitChange = () ->
+    ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.selectedLedger.panel.unit.rate
 
   ledgerCtrl.calculateAmountAfterInclusiveTax = (tax) ->
     if !ledgerCtrl.selectedLedger.panel.discount 
@@ -1229,8 +1246,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledger.transactions[0].inventory.stock = ledger.transactions[0].particular.stocks[0]
       ledger.transactions[0].inventory.quantity = ledger.panel.quantity
       ledger.transactions[0].inventory.unit = ledger.transactions[0].particular.stocks[0].stockUnit
+      ledger.transactions[0].amount = ledger.panel.total
     else
       ledger.transactions[0].inventory.quantity = ledger.panel.quantity
+      ledger.transactions[0].inventory.unit = ledger.panel.unit
+      if ledger.transactions[0].amount != ledger.panel.total
+        ledger.transactions[0].amount = ledger.panel.total
 
   ledgerCtrl.buildLedger = (ledger) ->
     ledgerCtrl.addDiscountTxns(ledger)
@@ -1481,7 +1502,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       amount : 0
       type: 'CREDIT'
     }
-    ledgerCtrl.blankLedger = [{
+    ledgerCtrl.blankLedger = {
       isBlankLedger : true
       description:null
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
@@ -1505,7 +1526,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       tax:[]
       taxList: []
       voucherNo:null
-    }]
+    }
 
   ledgerCtrl.addEntrySuccess = (res, ledger) ->
     ledgerCtrl.doingEntry = false
@@ -1937,6 +1958,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.closeShareModal = () ->
     ledgerCtrl.magicLink = ''
     ledgerCtrl.shareModalInstance.close()
+
 
   return ledgerCtrl
 giddh.webApp.controller 'ledgerController', ledgerController
