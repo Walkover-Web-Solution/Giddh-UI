@@ -1597,6 +1597,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.updateEntrySuccess = (res, ledger) ->
     ledgerCtrl.doingEntry = false
     ledger.failed = false
+    ledgerCtrl.paginatedLedgers = [res.body]
+    ledgerCtrl.selectedLedger = res.body
+    ledgerCtrl.clearTaxSelection(ledgerCtrl.selectedLedger)
+    ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
+    ledgerCtrl.isTransactionContainsTax(ledgerCtrl.selectedLedger)
+    ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
+    ledgerCtrl.entryTotal = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
+    ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
     toastr.success("Entry updated successfully.", "Success")
     #addThisLedger = {}
     #_.extend(addThisLedger,ledgerCtrl.blankLedger)
@@ -1614,12 +1622,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     #ledgerCtrl.dLedgerLimit = ledgerCtrl.dLedgerLimitBeforeUpdate
     #ledgerCtrl.openClosePopOver(res.body.transactions[0], res.body)
     #ledgerCtrl.updateLedgerData('update',res.body)
-    $timeout ( ->
-      ledger.total = ledgerCtrl.updatedLedgerTotal
-      #ledgerCtrl.countTotalTransactions()
-      # ledgerCtrl.pageLoader = false
-      # ledgerCtrl.showLoader = false
-    ), 2000
+    # $timeout ( ->
+    #   ledger.total = ledgerCtrl.updatedLedgerTotal
+    #   #ledgerCtrl.countTotalTransactions()
+    #   # ledgerCtrl.pageLoader = false
+    #   # ledgerCtrl.showLoader = false
+    # ), 2000
     # ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
     ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
     
