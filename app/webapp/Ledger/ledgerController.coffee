@@ -1223,35 +1223,47 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
 
   ledgerCtrl.addDiscountTxns = (ledger) ->
-    _.each ledgerCtrl.discountAccount.accountDetails, (account) ->
-      if account.amount > 0
-        txn = {}
-        txn.amount = account.amount
-        txn.particular = {}
-        txn.particular.uniqueName = account.uniqueName
-        txn.particular.name = account.name
-        txn.type = ledgerCtrl.selectedTxn.type
-        hasDiscount = ledgerCtrl.checkTransactionByUniqueName(ledger.transactions,account.uniqueName)
-        if !hasDiscount
-          ledger.transactions.push(txn)
+    if ledgerCtrl.discountAccount != undefined
+      _.each ledgerCtrl.discountAccount.accountDetails, (account) ->
+        if account.amount > 0
+          txn = {}
+          txn.amount = account.amount
+          txn.particular = {}
+          txn.particular.uniqueName = account.uniqueName
+          txn.particular.name = account.name
+          txn.type = ledgerCtrl.selectedTxn.type
+          hasDiscount = ledgerCtrl.checkTransactionByUniqueName(ledger.transactions,account.uniqueName)
+          if !hasDiscount
+            ledger.transactions.push(txn)
 
   ledgerCtrl.removeBlankTransactions = (ledger) ->
     _.each ledger.transactions, (txn, i) ->
       if txn && txn.blankRow && txn.particular.uniqueName == ''
         ledger.transactions.splice(i, 1)
 
+  ledgerCtrl.getStockTxn = (ledger) ->
+    stockTxn = {}
+    _.each ledger.transactions, (txn) ->
+      if txn.particular.stocks 
+        stockTxn = txn
+    return stockTxn
+
   ledgerCtrl.addStockDetails = (ledger) ->
-    if !ledger.transactions[0].inventory
-      ledger.transactions[0].inventory = {}
-      ledger.transactions[0].inventory.stock = ledger.transactions[0].particular.stocks[0]
-      ledger.transactions[0].inventory.quantity = ledger.panel.quantity
-      ledger.transactions[0].inventory.unit = ledger.transactions[0].particular.stocks[0].stockUnit
-      ledger.transactions[0].amount = ledger.panel.total
+    if ledger.transactions[0].particular.stocks
+      stockTxn = ledger.transactions[0]
     else
-      ledger.transactions[0].inventory.quantity = ledger.panel.quantity
-      ledger.transactions[0].inventory.unit = ledger.panel.unit
-      if ledger.transactions[0].amount != ledger.panel.total
-        ledger.transactions[0].amount = ledger.panel.total
+      stockTxn = ledgerCtrl.getStockTxn(ledger)
+    if !stockTxn.inventory
+      stockTxn.inventory = {}
+      stockTxn.inventory.stock = stockTxn.particular.stocks[0]
+      stockTxn.inventory.quantity = ledger.panel.quantity
+      stockTxn.inventory.unit = stockTxn.particular.stocks[0].stockUnit
+      stockTxn.amount = ledger.panel.total
+    else
+      stockTxn.inventory.quantity = ledger.panel.quantity
+      stockTxn.inventory.unit = ledger.panel.unit
+      if stockTxn.amount != ledger.panel.total
+        stockTxn.amount = ledger.panel.total
 
   ledgerCtrl.buildLedger = (ledger) ->
     ledgerCtrl.addDiscountTxns(ledger)
@@ -1804,9 +1816,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.loadDefaultAccount()
       ledgerCtrl.getTaxList()
 
-  $(document).on 'click', (e) ->
-    if ledgerCtrl.prevTxn
-      ledgerCtrl.prevTxn.isOpen = false
+  # $(document).on 'click', (e) ->
+  #   if ledgerCtrl.prevTxn
+  #     ledgerCtrl.prevTxn.isOpen = false
+  #   return 0
+  $('.account-list-item').on 'click', (e) ->
+    ledgerCtrl.selectedTxn.isOpen = true
     return 0
 
 #########################################################
