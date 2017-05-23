@@ -1045,7 +1045,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.parseLedgerDate = (date) ->
     date = date.split('-')
-    date = new Date(date[2], date[1], date[0]).getTime()
+    date = date[2] + '-' + date[1] + '-' + date[0]
+    date = new Date(date).getTime()
     date
 
   ledgerCtrl.onAmountChange = (ledger) ->
@@ -1808,12 +1809,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.loadDefaultAccount()
       ledgerCtrl.getTaxList()
 
-  # $(document).on 'click', (e) ->
-  #   if ledgerCtrl.prevTxn
-  #     ledgerCtrl.prevTxn.isOpen = false
-  #   return 0
-  $('.account-list-item').on 'click', (e) ->
-    ledgerCtrl.selectedTxn.isOpen = true
+  $(document).on 'click', (e) ->
+    if (!$(e.target).is('.account-list-item') && !$(e.target).is('.account-list-item strong')) && ledgerCtrl.prevTxn
+      ledgerCtrl.prevTxn.isOpen = false
     return 0
 
 #########################################################
@@ -1897,6 +1895,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
       ledgerCtrl.entryTotal = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
       ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
+      ledgerCtrl.addBlankTransactionIfOneSideEmpty(ledgerCtrl.selectedLedger)
       ledgerCtrl.ledgerBeforeEdit = {}
       angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
       _.each res.body.transactions, (txn) ->
@@ -1914,6 +1913,18 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     }
 
     ledgerService.getEntry(reqParam).then(@success,@failure)
+
+  ledgerCtrl.addBlankTransactionIfOneSideEmpty = (ledger) ->
+    cTxn = _.findWhere(ledger.transactions, {type:'CREDIT'})
+    dTxn = _.findWhere(ledger.transactions, {type:'DEBIT'})
+    if !cTxn
+      txn = new txnModel('CREDIT')
+      txn.blankRow = 'CREDIT'
+      ledger.transactions.push(txn)
+    if !dTxn
+      txn = new txnModel('DEBIT')
+      txn.blankRow = 'DEBIT'
+      ledger.transactions.push(txn)
 
   ledgerCtrl.displayEntryModal = () ->
     $scope.ledgerCtrl = ledgerCtrl
