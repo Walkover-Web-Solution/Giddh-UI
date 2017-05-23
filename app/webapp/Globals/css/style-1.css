@@ -4746,14 +4746,6 @@ table.proforma-particulars {
   padding-bottom: 100px;
 }
 
-.left-col-new {
-  border-right: 1px solid #ccc;
-}
-
-.right-col-new {
-  border: none;
-}
-
 #entryModal {
   overflow: hidden;
 }

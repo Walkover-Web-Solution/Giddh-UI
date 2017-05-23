@@ -199,7 +199,7 @@ th {
 		</table>
 
 		<div style="border:1px solid #ccc;overflow:hidden;position:relative;">
-			<div class="left-col-new">
+			<div class="left-col-new" ng-class="{bdrR: ledgerCtrl.txnData.debitTransactions.length > ledgerCtrl.txnData.creditTransactions.length}">
 				<table class="width100">
 					<thead>
 						<tr class="t-h-bg1">
@@ -311,7 +311,7 @@ th {
 			
 			</div>
 
-			<div class="right-col-new">
+			<div class="right-col-new" ng-class="{bdrL: ledgerCtrl.txnData.debitTransactions.length < ledgerCtrl.txnData.creditTransactions.length}">
 				<table class="width100">
 					<thead>
 						<tr class="t-h-bg1">

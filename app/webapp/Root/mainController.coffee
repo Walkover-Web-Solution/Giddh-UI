@@ -856,6 +856,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.$on('different-company', (event, lastStateData)->
     company = _.findWhere($scope.companyList, {uniqueName:lastStateData.companyUniqueName})
+    localStorageService.set('_selectedCompany', company)
+    $rootScope.selectedCompany = company
     $scope.changeCompany(company, 0, 'CHANGE')
     $state.go(lastStateData.lastState)
   )
