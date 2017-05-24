@@ -909,6 +909,9 @@ angular.module('ledger', [])
           withStock.stock = stock
           withStock.stocks.push(stock)
           result.push(withStock)
+        withoutStock = _.extend({},q)
+        delete withoutStock.stocks
+        result.push(withoutStock)
       else
         result.push(q)
     result

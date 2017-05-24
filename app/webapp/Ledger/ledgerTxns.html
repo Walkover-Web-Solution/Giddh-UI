@@ -13,6 +13,9 @@
 	overflow:hidden;
 	white-space: nowrap;
 }
+.ledgHead table td.pdR25imp{
+  padding-right: 25px !important;
+}
 .ledgHead.entry-popup table td[class*=col-] {
 	padding: 0px !important;
 	padding-bottom: 1px !important;
@@ -24,6 +27,9 @@
 	text-overflow: ellipsis;
 	overflow:hidden;
 	white-space: nowrap;
+}
+.ledgHead.entry-popup table td.pdR25imp{
+  padding-right: 25px !important;
 }
 .ledgHead .ledger-main td[class*=col-] {
 	padding: 0px !important;
@@ -126,6 +132,10 @@ th {
 }
 .upload_div label{
 	padding:6px;
+}
+
+.pdR25imp{
+  padding-right: 25px !important;
 }
 </style>
 
@@ -241,7 +251,27 @@ th {
 							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.currentTxn.entryUniqueName}">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
 							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
-							<td class="col-xs-3" ng-bind="txn.amount"></td>
+							<td class="col-xs-3 pos-rel text-right" ng-class="{pdR25imp:txn.attachedFileUniqueName.length > 0 || txn.isInvoiceGenerated}">
+								{{txn.amount}}
+								<span 
+	                  class="download-invoice-ledger" 
+	                  ng-if="txn.attachedFileUniqueName.length > 0" 
+	                  ng-click="ledgerCtrl.downloadAttachedFile(txn.attachedFileUniqueName , $event)" 
+	                  tooltip-append-to-body="true" 
+	                  uib-tooltip="Download file : {{txn.attachedFileName}}" 
+	                  tooltip-placement="top"> 
+	              	<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
+	              </span>
+	              <span 
+	                  class="download-invoice-ledger" 
+	                  ng-if="txn.isInvoiceGenerated" 
+	                  ng-click="ledgerCtrl.downloadInvoice(txn.invoiceNumber , $event)" 
+	                  tooltip-append-to-body="true" 
+	                  uib-tooltip="Download Invoice : {{txn.invoiceNumber}}" 
+	                  tooltip-placement="top"> 
+	              	<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
+	              </span>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -270,7 +300,7 @@ th {
 												class="form-control" 
 												type="text" 
 												ng-model="ledgerCtrl.blankLedger.entryDate"
-												ng-click="ledgerCtrl.selectTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
+												ng-click="ledgerCtrl.selectBlankTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												ui-mask="99-99-9999"
                         model-view-value="true">
@@ -284,18 +314,22 @@ th {
                       	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | addStockinAccountList | searchAccountInPaginated:$viewValue | limitTo: 25"
                       	typeahead-template-url="accountPopUp.html"
                       	typeahead-on-select = "ledgerCtrl.matchInventory(ledgerCtrl.blankLedger)"
-												ng-click="ledgerCtrl.selectTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
+                      	typeahead-no-results="noResults"
+												ng-click="ledgerCtrl.selectBlankTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												txn="txn"
 												trigger-focus
 												>
+												<ul class="no-result-template" ng-show="txn.particular.length && noResults">
+													<li ng-click="ledgerCtrl.addNewAccount()">Create New Account</li>
+												</ul>
 											</td>
 											<td class="col-xs-3 pos-rel">
 												<input 
 												class="form-control" 
 												type="text" 
 												ng-model="txn.amount"
-												ng-click="ledgerCtrl.selectTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
+												ng-click="ledgerCtrl.selectBlankTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												ng-change="ledgerCtrl.onTxnAmountChange(txn)"
 												ng-keydown="ledgerCtrl.onEnterPress($event, $index, ledgerCtrl.blankLedger)"
@@ -352,7 +386,27 @@ th {
 							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.currentTxn.entryUniqueName}">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
 							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
-							<td class="col-xs-3" ng-bind="txn.amount"></td>
+							<td class="col-xs-3 pos-rel text-right" ng-class="{pdR25imp:txn.attachedFileUniqueName.length > 0 || txn.isInvoiceGenerated}">
+								{{txn.amount}}
+								<span 
+	                  class="download-invoice-ledger" 
+	                  ng-if="txn.attachedFileUniqueName.length > 0" 
+	                  ng-click="ledgerCtrl.downloadAttachedFile(txn.attachedFileUniqueName , $event)" 
+	                  tooltip-append-to-body="true" 
+	                  uib-tooltip="Download file : {{txn.attachedFileName}}" 
+	                  tooltip-placement="top"> 
+	              	<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
+	              </span>
+	              <span 
+	                  class="download-invoice-ledger" 
+	                  ng-if="txn.isInvoiceGenerated" 
+	                  ng-click="ledgerCtrl.downloadInvoice(txn.invoiceNumber , $event)" 
+	                  tooltip-append-to-body="true" 
+	                  uib-tooltip="Download Invoice : {{txn.invoiceNumber}}" 
+	                  tooltip-placement="top"> 
+	              	<i class="glyphicon glyphicon-download pull-left" style="font-size:15px;" ></i>
+	              </span>
+							</td>
 						</tr>
 					</tbody>
 				</table>
@@ -381,7 +435,7 @@ th {
 												class="form-control" 
 												type="text" 
 												ng-model="ledgerCtrl.blankLedger.entryDate"
-												ng-click="ledgerCtrl.selectTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
+												ng-click="ledgerCtrl.selectBlankTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												ui-mask="99-99-9999"
 												model-view-value="true">
@@ -395,18 +449,21 @@ th {
                       	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | addStockinAccountList | searchAccountInPaginated:$viewValue | limitTo: 25"
                       	typeahead-template-url="accountPopUp.html"
                       	typeahead-on-select = "ledgerCtrl.matchInventory(ledgerCtrl.blankLedger)"
-												ng-click="ledgerCtrl.selectTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
+												ng-click="ledgerCtrl.selectBlankTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												txn="txn"
 												trigger-focus
 												>
+												<ul class="no-result-template" ng-show="txn.particular.length && noResults">
+													<li ng-click="ledgerCtrl.addNewAccount()">Create New Account</li>
+												</ul>
 											</td>
 											<td class="col-xs-3 pos-rel">
 												<input 
 												class="form-control" 
 												type="text" 
 												ng-model="txn.amount"
-												ng-click="ledgerCtrl.selectTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
+												ng-click="ledgerCtrl.selectBlankTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												ng-change="ledgerCtrl.onTxnAmountChange(txn)"
 												ng-keydown="ledgerCtrl.onEnterPress($event, $index, ledgerCtrl.blankLedger)"
