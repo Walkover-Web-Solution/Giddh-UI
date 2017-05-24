@@ -805,14 +805,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if ledgerCtrl.prevTxn != null
       ledgerCtrl.prevTxn.isOpen = false
     ledgerCtrl.selectedTxn.isOpen = true
+    ledgerCtrl.selectedLedger = ledger
     # ledgerCtrl.clearTaxSelection(txn, ledger)
     ledgerCtrl.clearDiscounts(ledger)
     ledgerCtrl.ledgerBeforeEdit = {}
     angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
-    ledgerCtrl.isTransactionContainsTax(ledger)
+    ledgerCtrl.isTransactionContainsTax(ledgerCtrl.selectedLedger)
     ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
     ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
-    ledgerCtrl.selectedLedger = ledger
     ledgerCtrl.prevTxn = txn
     e.stopPropagation()
 
@@ -1036,6 +1036,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.cutToTwoDecimal(ledgerCtrl.selectedLedger.panel.quantity * ledgerCtrl.selectedLedger.panel.price)
     ledgerCtrl.getTotalTax(ledger)
     ledgerCtrl.getTotalDiscount(ledger)
+    ledgerCtrl.updateTxnAmount
 
   ledgerCtrl.onTxnAmountChange = (txn)->
     ledgerCtrl.selectedLedger.panel.amount = Number(txn.amount)
@@ -1237,7 +1238,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       stockTxn.inventory.stock = stockTxn.particular.stocks[0]
       stockTxn.inventory.quantity = ledger.panel.quantity
       stockTxn.inventory.unit = stockTxn.particular.stocks[0].stockUnit
-      stockTxn.amount = ledger.panel.total
+      stockTxn.amount = ledger.panel.amount
     else if !_.isEmpty(stockTxn)
       stockTxn.inventory.quantity = ledger.panel.quantity
       stockTxn.inventory.unit = ledger.panel.unit
@@ -1245,9 +1246,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         stockTxn.amount = ledger.panel.total
 
   ledgerCtrl.buildLedger = (ledger) ->
-    ledgerCtrl.addDiscountTxns(ledger)
     ledger.transactions = ledgerCtrl.removeBlankTransactions(ledger)
     ledgerCtrl.addStockDetails(ledger)
+    ledgerCtrl.addDiscountTxns(ledger)
     delete ledger.panel
     ledger
 

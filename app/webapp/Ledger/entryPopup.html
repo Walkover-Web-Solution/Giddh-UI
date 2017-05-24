@@ -264,7 +264,7 @@
 				        		</td>
 				        		<td>
 
-								    <span uib-dropdown auto-close="outsideClick">
+								    <span uib-dropdown auto-close="outsideClick" >
 								      <a href id="discount" uib-dropdown-toggle>
 						        	<label>Discount</label>
 							        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.discount"/>
@@ -289,7 +289,7 @@
 				        			<label class="pdR pdL default_clr">+</label>
 				        		</td>
 				        		<td>
-				        		<span uib-dropdown auto-close="outsideClick">
+				        		<span uib-dropdown auto-close="outsideClick" dropdown-append-to-body>
 								      <a href id="tax" uib-dropdown-toggle>
 						        	<label>Tax %</label>
 						        	<div class="multi-select adjust">
@@ -367,14 +367,16 @@
 			  				<tr>
 			  					<td class="pdR1"><label class="default_clr pull-left">Voucher type</label> </td>
 			  					<td colspan="4">
-						  			<ui-select ng-model="ledgerCtrl.selectedLedger.voucher" theme="bootstrap">
+<!-- 						  			<ui-select ng-model="ledgerCtrl.selectedLedger.voucher" theme="bootstrap">
 					                    <ui-select-match>
 					                      <span>{{$select.selected.name}}</span>
 					                    </ui-select-match >
 					                    <ui-select-choices repeat="item in ledgerCtrl.voucherTypeList| filter: $select.search ">
 					                      <span ng-bind="item.name"></span>
 					                    </ui-select-choices>
-					                </ui-select>
+					                </ui-select> -->
+					                <select ng-options="item as item.name for item in ledgerCtrl.voucherTypeList" ng-model="ledgerCtrl.selectedLedger.voucher">
+					                </select>
 			  					</td>
 			  					<td class="pdL1">
 			  						<span>{{ledgerCtrl.selectedLedger.voucherNo}}</span>
