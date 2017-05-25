@@ -1613,7 +1613,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     toastr.success("Entry updated successfully.", "Success")
     ledgerCtrl.paginatedLedgers = [res.body]
     ledgerCtrl.selectedLedger = res.body
-    ledgerCtrl.setVoucherCode()
     ledgerCtrl.clearTaxSelection(ledgerCtrl.selectedLedger)
     ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
     ledgerCtrl.isTransactionContainsTax(ledgerCtrl.selectedLedger)
@@ -1622,12 +1621,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
     ledgerCtrl.addBlankTransactionIfOneSideEmpty(ledgerCtrl.selectedLedger)
     ledgerCtrl.ledgerBeforeEdit = {}
-    angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
+    ledgerCtrl.ledgerBeforeEdit = angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
     _.each res.body.transactions, (txn) ->
       if txn.particular.uniqueName == ledgerCtrl.clickedTxn.particular.uniqueName
         ledgerCtrl.selectedTxn = txn
     if ledgerCtrl.mergeTransaction
       ledgerCtrl.mergeBankTransactions(ledgerCtrl.mergeTransaction)
+    ledgerCtrl.setVoucherCode(ledgerCtrl.selectedLedger)
     ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
     
   ledgerCtrl.updateEntryFailure = (res, ledger) ->
@@ -1898,11 +1898,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.addBlankTransactionIfOneSideEmpty(ledgerCtrl.selectedLedger)
       ledgerCtrl.ledgerBeforeEdit = {}
       
-      angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
+      ledgerCtrl.ledgerBeforeEdit = angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
       _.each res.body.transactions, (txn) ->
         if txn.particular.uniqueName == ledgerCtrl.clickedTxn.particular.uniqueName
           ledgerCtrl.selectedTxn = txn
-      ledgerCtrl.setVoucherCode(res.body)
+      ledgerCtrl.setVoucherCode(ledgerCtrl.selectedLedger)
       ledgerCtrl.displayEntryModal()
 
     @failure = (res) ->
@@ -1914,7 +1914,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       entUname: entry.entryUniqueName
     }
 
-    if entry.isBaseAccount then reqParam.acntUname = entry.particular.uniqueName
+    if entry.isCompoundEntry && entry.isBaseAccount then reqParam.acntUname = entry.particular.uniqueName
     ledgerService.getEntry(reqParam).then(@success, @failure)
     return 
 
