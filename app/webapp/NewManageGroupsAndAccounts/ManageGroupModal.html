@@ -6,7 +6,7 @@
     <span class="col-xs-6 row">
       <h3 class="modal-title bg pdT">Manage Groups & Accounts</h3>
     </span>
-    <div class="pull-right">
+    <div class="pull-right mrR2">
       <div class="form-inline">
         <div class="form-group">
 
@@ -45,20 +45,24 @@
 
     <!-- list of groups -->
     <div class="col-xs-7 grp_col bdrL bdrR">
-      <div class="row grp_col col3">
+      <div class="search-loading" ng-hide="mc.showListGroupsNow">
+        <span class="spinner small"></span> Loading…
+      </div>
+      <div class="row grp_col">
       
       <div class="grp_wrapper">
 
         <!-- level 1 -->
       <div class="col_wrapper" ng-repeat="col in mc.columns">
+
         <ul class="grp_list">
           <li ng-if="$first"><a href="javascript:void(0);">Show All</a></li>
           <li ng-repeat="grp in col.groups">
-            <a href="javascript:void(0);" class="" id="subGrp_{{grp.name}}" ng-bind-html="grp.name | capitalize" ng-click="mc.selectItem(grp); mc.getSelectedType('grp');mc.selectActiveItems(col, 'grp', $index)" uib-tooltip="{{grp.synonyms}}" tooltip-placement="right" ng-class="{isParent:col.active.type == 'grp' && col.active.index == $index}"></a>
+            <a href="javascript:void(0);" class="" id="subGrp_{{grp.name}}" ng-bind-html="grp.name | capitalize" ng-click="mc.selectItem(grp); mc.getSelectedType('grp');mc.selectActiveItems(col, 'grp', $index)" uib-tooltip="{{grp.synonyms}}" tooltip-placement="right" ng-class="{isParent:col.active.type == 'grp' && col.active.index == $index, isActive:col.active.type == 'grp' && col.active.index == $index && mc.breadCrumbList[mc.breadCrumbList.length-1].uniqueName == grp.uniqueName}"></a>
           </li>
 
           <li ng-repeat="acc in col.accounts">
-            <a href="javascript:void(0);" class="isAcc" id="acc_{{acc.name}}" ng-bind-html="acc.name | capitalize" ng-click="mc.getAccDetail(acc); mc.getSelectedType('acc');mc.selectActiveItems(col, 'acc', $index)" uib-tooltip="{{acc.synonyms}}" tooltip-placement="right" ng-class="{isParent:col.active.type == 'acc' && col.active.index == $index}"></a>
+            <a href="javascript:void(0);" class="isAcc" id="acc_{{acc.name}}" ng-bind-html="acc.name | capitalize" ng-click="mc.getAccDetail(acc); mc.getSelectedType('acc');mc.selectActiveItems(col, 'acc', $index)" uib-tooltip="{{acc.synonyms}}" tooltip-placement="right" ng-class="{isParent:col.active.type == 'acc' && col.active.index == $index, isActive:col.active.type == 'acc' && col.active.index == $index && mc.breadCrumbList[mc.breadCrumbList.length-1].uniqueName == acc.uniqueName}"></a>
           </li>
 
           <li><a href="javascript:void(0)" class="btn-add" ng-click="mc.createNewGrpAccount($index)">Create new</a></li>

@@ -122,6 +122,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 # end
 
   mc.getGroupListSuccess = (res) ->
+    mc.showListGroupsNow = true
     col = {}
     col.groups = mc.addHLevel(res.body, 0)
     col.accounts = []
@@ -166,6 +167,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
 # get selected group or account
   mc.selectItem = (item) ->
+    mc.columns
     mc.addToBreadCrumbs(item)
     mc.selectedGrp = item
     mc.grpCategory = item.category
@@ -182,7 +184,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.columns = mc.columns.splice(0,item.hLevel+1)
       mc.columns.push(item)
     else
-      existingGrp = item
+      # existingGrp = item
+      mc.columns = mc.columns.splice(0,item.hLevel+2)
 
   mc.getGrpDtlSuccess = (res) ->
     mc.selectedItem = res.body
@@ -215,6 +218,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.onCreateGroupSuccess = (res) ->
     mc.columns[mc.addToIndex].groups.push(res.body)
     toastr.success("Sub group added successfully", "Success")
+    mc.selectedItem = {}
+    mc.getGroups()
 
   mc.onCreateGroupFailure = (res) ->
     console.log (res)
@@ -264,10 +269,11 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.onDeleteGroupSuccess = () ->
     toastr.success("Group deleted successfully.", "Success")
-    mc.selectedGrp = {}
+    mc.columns[mc.addToIndex].groups.pop(res.body)
+    mc.selectedItem = {}
+    mc.getGroups()
     mc.showGroupDetails = false
     mc.showAccountListDetails = false
-    mc.getGroups()
 
   mc.onDeleteGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -293,7 +299,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.addToBreadCrumbs(item, 'account')
 
   mc.getAccDtlSuccess = (res, data) ->
-    console.log mc.addToBreadCrumbs
     data = res.body
     mc.selectedAcc = res.body
     mc.getMergeAcc = mc.selectedAcc.mergedAccounts.split(",")

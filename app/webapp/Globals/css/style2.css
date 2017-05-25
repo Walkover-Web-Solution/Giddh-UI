@@ -1416,7 +1416,7 @@ input[type=radio]:checked:after {
     list-style: none;
 }
 .grp_list li a {
-    padding: 6px 15px !important;
+    padding: 4px 15px !important;
     display: block;
     font-size: 14px;
     font-weight: 500;
@@ -1444,17 +1444,29 @@ input[type=radio]:checked:after {
     min-height: 100%;
     overflow-y: auto;
     height: 100%;
+    position: relative;
 }
+/*.col_wrapper:nth-child(2) {
+    margin-left: 250px;
+}*/
 .col_wrapper:nth-child(1) {
     background: #f4f5f5;
+    /*position: absolute;*/
+}
+.col_wrapper:nth-child(1) li a{
+    text-transform: uppercase;
+    padding: 8px 15px !important;
 }
 .col_wrapper:nth-child(1) li:last-child{
     display: none;
     text-indent: -99999px;
 }
+.col_wrapper:nth-child(1) li:first-child a {
+    color: #1a1a1a;
+}
 .col_wrapper:nth-child(1) .isParent {
     background: #e1ebf0;
-    color: #d25f29;
+    color: #d25f29 !important;
 }
 
 #getGroupModal .modal-body {
@@ -1714,4 +1726,7 @@ label {
 }
 .breadcrumb a {
     color: #808080;
+}
+.load-bar-wrap {
+    z-index: 1080 !important;
 }
