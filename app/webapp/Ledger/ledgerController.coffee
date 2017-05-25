@@ -1062,6 +1062,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.cutToTwoDecimal(ledgerCtrl.selectedLedger.panel.amount / ledgerCtrl.selectedLedger.panel.quantity)
     ledgerCtrl.updateTxnAmount()
 
+  ledgerCtrl.onStockUnitChange = () ->
+    ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.selectedLedger.panel.unit.rate
+    ledgerCtrl.onPriceChange(ledgerCtrl.selectedLedger)
+
   ledgerCtrl.updateTxnAmount = () ->
     _.each ledgerCtrl.selectedLedger.transactions, (txn) ->
       acc = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
@@ -1075,8 +1079,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     # ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
     # ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
 
-  ledgerCtrl.onStockUnitChange = () ->
-    ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.selectedLedger.panel.unit.rate
 
   ledgerCtrl.calculateAmountAfterInclusiveTax = (tax) ->
     if !ledgerCtrl.selectedLedger.panel.discount 
@@ -1796,7 +1798,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   $timeout ( ->
     ledgerCtrl.getDiscountGroupDetail()
     ledgerCtrl.getTaxList()
-  ), 3000
+  ), 2000
 
   if ledgerCtrl.accountUnq
     ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
