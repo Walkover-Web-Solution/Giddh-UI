@@ -1044,7 +1044,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.cutToTwoDecimal(ledgerCtrl.selectedLedger.panel.quantity * ledgerCtrl.selectedLedger.panel.price)
     ledgerCtrl.getTotalTax(ledger)
     ledgerCtrl.getTotalDiscount(ledger)
-    ledgerCtrl.updateTxnAmount
+    ledgerCtrl.updateTxnAmount()
 
   ledgerCtrl.onTxnAmountChange = (txn)->
     if !ledgerCtrl.isDiscountTxn(txn) 
@@ -1870,17 +1870,17 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.selectCompoundEntry = (txn) ->
     ledgerCtrl.currentTxn = txn
 
-  ledgerCtrl.setVoucherCode = () ->
+  ledgerCtrl.setVoucherCode = (ledger) ->
     _.each ledgerCtrl.voucherTypeList, (vc, i) ->
-      if vc.code == ledgerCtrl.selectedLedger.voucher.code
+      if vc.shortCode == ledger.voucher.shortCode
         ledgerCtrl.paginatedLedgers[0].voucher = ledgerCtrl.voucherTypeList[i]
 
   ledgerCtrl.fetchEntryDetails = (entry) ->
     ledgerCtrl.clickedTxn = entry
+
     @success = (res) ->
       ledgerCtrl.paginatedLedgers = [res.body]
       ledgerCtrl.selectedLedger = res.body
-      ledgerCtrl.setVoucherCode()
       ledgerCtrl.clearTaxSelection(ledgerCtrl.selectedLedger)
       ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
       ledgerCtrl.isTransactionContainsTax(ledgerCtrl.selectedLedger)
@@ -1889,14 +1889,16 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
       ledgerCtrl.addBlankTransactionIfOneSideEmpty(ledgerCtrl.selectedLedger)
       ledgerCtrl.ledgerBeforeEdit = {}
+      
       angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
       _.each res.body.transactions, (txn) ->
         if txn.particular.uniqueName == ledgerCtrl.clickedTxn.particular.uniqueName
           ledgerCtrl.selectedTxn = txn
+      ledgerCtrl.setVoucherCode(res.body)
       ledgerCtrl.displayEntryModal()
 
     @failure = (res) ->
-      console.log res
+      toastr.error(res.data.message)
 
     reqParam = {
       compUname: $rootScope.selectedCompany.uniqueName
@@ -1904,7 +1906,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       entUname: entry.entryUniqueName
     }
 
-    ledgerService.getEntry(reqParam).then(@success,@failure)
+    if entry.isBaseAccount then reqParam.acntUname = entry.particular.uniqueName
+    ledgerService.getEntry(reqParam).then(@success, @failure)
+    return 
 
   ledgerCtrl.addBlankTransactionIfOneSideEmpty = (ledger) ->
     cTxn = _.findWhere(ledger.transactions, {type:'CREDIT'})
