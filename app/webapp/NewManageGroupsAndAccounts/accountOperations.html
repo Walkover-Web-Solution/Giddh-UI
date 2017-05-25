@@ -1,8 +1,5 @@
 <div class="view_forms" id="Addaccount">
-  <div class="breadcrumbs pdL2 pdT1 pdR2 pdB1">
-    <div class="pull-left pdT1 col-xs-8 pdL0"><span>CURRENT ASSETS > Expence group 2</span> > <span class="primary_clr">Expence group 1</span></div>
-    <div class="pull-right col-xs-4 pdR0"> <button class="btn isActive pull-right" ng-click="mc.shareGrpModal()">Share</button> <div class="primary_clr text-right pull-right mrT1" ng-if="mc.groupSharedUserList.length">Shared with {{mc.groupSharedUserList.length}} people</div> </div>
-  </div>
+
   <form class="horizontal-form" name="addAccountForm" novalidate autocomplete="off">
     <div class="form_bg pd2">
       <div class="form-group clearfix">
@@ -66,17 +63,17 @@
       <div class="form-group col-xs-5">
         <div class="row">
           <label>Company</label>
-          <input type="text" class="form-control" name="companyName" ng-model="mc.selectedAcc.companyName" ng-disabled="mc.isFixedAcc" />
+          <input type="text" class="form-control" name="companyName" placeholder="Apple INC" ng-model="mc.selectedAcc.companyName" ng-disabled="mc.isFixedAcc" />
         </div>
       </div>
       <div class="form-group col-xs-7">
         <label>Attention to (will be used in invoice)</label>
-        <input type="text" class="form-control" name="attentionTo" ng-model="mc.selectedAcc.attentionTo" ng-disabled="mc.isFixedAcc" />
+        <input type="text" class="form-control" name="attentionTo" placeholder="Barney stinson" ng-model="mc.selectedAcc.attentionTo" ng-disabled="mc.isFixedAcc" />
       </div>
       <div class="clearfix"></div>
       <div class="form-group mrB">
         <label>Address</label>
-        <input type="text" class="form-control" name="address" ng-model="mc.selectedAcc.address" ng-disabled="mc.isFixedAcc" />
+        <input type="text" class="form-control" name="address" ng-model="mc.selectedAcc.address" placeholder="405, Indore, India" ng-disabled="mc.isFixedAcc" />
       </div>
     </div>
     <div class="form_bg pd2">
@@ -97,16 +94,15 @@
       <div class="clearfix"></div>
     </div>
 
-    <div class="pd2">
+    <div class="pd2 clearfix pdB1">
         <button class="btn isActive" ng-if="mc.showOnUpdate && !mc.selectedItem.fixed" ng-click="mc.deleteAccount()">DELETE {{mc.selectedAcc.name}} </button>
         <button class="btn btn-success pull-right" ng-if="!mc.showOnUpdate" ng-click="mc.addAccount()" ng-disabled="addAccountForm.$invalid">Add</button>
         <button class="btn btn-success pull-right" ng-if="mc.showOnUpdate && canUpdate" ng-click="mc.updateAccount()" ng-disabled="addAccountForm.$invalid">Update</button>
     </div>
 
-      <hr ng-if="mc.AccountCategory == 'income' || mc.AccountCategory == 'expenses'">
-
     <!-- taxes -->
     <div class="pd2" ng-if="mc.AccountCategory == 'income' || mc.AccountCategory == 'expenses'">
+      <hr />
       <div class="tax_group">
         <h2 style="font-size: 18px;">Taxes</h2>
         <button id="editTax" ng-if="canUpdate" class="btn btn-sm btn-default edit-tax-btn" ng-click="mc.getTaxHierarchy('account')" ng-hide="mc.showEditTaxSection"><i class="glyphicon glyphicon-edit"></i></button>
@@ -145,13 +141,14 @@
       </div> <!-- end taxes -->
     </form>
 
-    <div class="pd2 detailed clearfix" ng-if="mc.showOnUpdate && !mc.selectedItem.fixed">
-      <hr />
+
+    <div class="pd2 detailed clearfix pdT pdB1" ng-if="mc.showOnUpdate && !mc.selectedItem.fixed">
+        <hr class="mrB1" />
         <div>
           <label>Move to group</label>
         </div>
         <div class="form-group col-xs-5 pdL0 mr0">
-          <input ng-model="mc.moveacto" name="moveacto" type="text" placeholder="" class="form-control" required
+          <input ng-model="mc.moveacto" name="moveacto" type="text" placeholder="Select Group" class="form-control" required
           uib-typeahead="groups as groups.name for groups in flattenGroupList | omit: mc.isCurrentGroup | filter:({name:$viewValue} || {uniqueName:$viewValue} || {synonyms:$viewValue}) | limitTo: 4"/>
         </div>
         <div class="form-group mr0">
@@ -161,17 +158,20 @@
 
       <div class="clearfix"></div>
 
-    <div class="pd2 detailed clearfix" ng-if="!mc.selectedItem.fixed">
-      <div class="form-group col-xs-10 mrB">
+    <!-- ng-if="!mc.selectedItem.fixed" -->
+    <div class="pd2 detailed clearfix pdT pdB1" ng-if="mc.showOnUpdate && !mc.selectedItem.fixed">
+      <hr class="mrB1">
+      <div class="form-group col-xs-10 mrB pdT1">
         <div class="row">
           
           <label class="col-xs-12 row">Merge this A/c with</label>
-          <div class="clearfix">
-            <a ng-repeat="merged in mc.selectedAcc" href="javascript:void(0);" ng-click="">{{merged.mergedAccounts}} <i class="fa fa-times"></i></a>
-          </div>
+          <ul class="accmerge mrB1">
+            <li ng-repeat="merged in mc.getMergeAcc">
+              <a href="javascript:void(0);" ng-click="mc.unmerge(merged)">{{merged}}</a><i class="fa fa-times" ng-click="mc.deleteMergedAccount(merged)"></i>
+            </li>
+          </ul>
           
-          <div class="col-xs-8">
-            <div class="row">
+          <div class="col-xs-8 pdL0 merge_input">
               <div class="form-inline">
                 <ui-select multiple='true' ng-model="mc.toMerge.mergedAcc" theme="bootstrap">
                     <ui-select-match placeholder="Select Accounts" ui-lock-choice="$item.noRemove == true" reset-search-input="true">
@@ -184,7 +184,6 @@
                     </ui-select-choices>
                 </ui-select>
               </div>
-            </div>
           </div>
           
           <div class="col-xs-4 row">
@@ -195,8 +194,33 @@
       </div>
       <div class="clearfix"></div>
       <small>This option is riskey and can not be undone</small>
-
+      <hr class="mrT1">
       </div> <!-- pd2 -->
+
+      <!--  -->
+    <div class="pd2 detailed clearfix pdT pdB mrB2" ng-if="mc.showDeleteMove">
+      
+        <div>
+          <label>Move to other A/c</label>
+        </div>
+        <div class="form-group col-xs-5 pdL0 mr0">
+          <ui-select ng-model="mc.toMerge.moveToAcc" theme="bootstrap">
+              <ui-select-match placeholder="Select Accounts">
+                <span>{{$select.selected.name}}</span>
+              </ui-select-match >
+              <ui-select-choices 
+                ui-disable-choice="acc.uniqueName === selAcntUname" 
+                repeat="acc in fltAccntListPaginated | filter: $select.search" refresh="refreshFlatAccount($select.search)">
+                <span>{{acc.name}} ({{acc.uniqueName}})</span>
+              </ui-select-choices>
+          </ui-select>
+        </div>
+        <div class="form-group mr0">
+
+        <!-- ng-disabled="toMerge.moveToAcc.length < 1" -->
+          <button class="btn isActive" ng-click="mc.moveToAccount()">Move</button>
+        </div>
+    </div>
 
   </div>
  
