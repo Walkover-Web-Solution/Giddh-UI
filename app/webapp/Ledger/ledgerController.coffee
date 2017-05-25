@@ -145,6 +145,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.accountToShow = $rootScope.selectedAccount
     ledgerCtrl.accountUnq = res.body.uniqueName
     ledgerCtrl.getTransactions(0)
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
     $state.go($state.current, {unqName: res.body.uniqueName}, {notify: false})
     if res.body.uniqueName == 'cash'
       $rootScope.ledgerState = true
@@ -425,7 +426,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       type:""
     }]
     unconfirmedEntry:false
-    isInclusiveTax: false
+    isInclusiveTax: true
     uniqueName:""
     voucher:{
       name:"Sales"
@@ -455,7 +456,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       transactions:[]
       unconfirmedEntry:false
       uniqueName:""
-      isInclusiveTax: false
+      isInclusiveTax: true
       voucher:{
         name:"Sales"
         shortCode:"sal"
@@ -1055,6 +1056,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.onTxnTotalChange = (txn)->
     ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.calculateAmountAfterInclusiveTax()
+    stockTxn = ledgerCtrl.getStockTxn(ledgerCtrl.selectedLedger)
+    stockTxn.amount = ledgerCtrl.selectedLedger.panel.amount
     if ledgerCtrl.selectedLedger.panel.quantity > 0
       ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.cutToTwoDecimal(ledgerCtrl.selectedLedger.panel.amount / ledgerCtrl.selectedLedger.panel.quantity)
     ledgerCtrl.updateTxnAmount()
@@ -1065,7 +1068,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if acc
         parent = acc.parentGroups[0].uniqueName
         parentGroup = _.findWhere($rootScope.groupWithAccountsList, {uniqueName:parent}) 
-        if parentGroup.category == "income" || parentGroup.category == "expenses" && !txn.isTax && txn.particular.uniqueName != 'roundoff' && txn.particular.uniqueName != 'discount'
+        if parentGroup.category == "income" || parentGroup.category == "expenses" && !txn.isTax && txn.particular.uniqueName != 'roundoff' && !ledgerCtrl.isDiscountTxn(txn)
           txn.amount = ledgerCtrl.selectedLedger.panel.amount
 
     # ledgerCtrl.selectedLedger.isInclusiveTax = true
@@ -1250,12 +1253,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       stockTxn.inventory.stock = stockTxn.particular.stocks[0]
       stockTxn.inventory.quantity = ledger.panel.quantity
       stockTxn.inventory.unit = stockTxn.particular.stocks[0].stockUnit
-      stockTxn.amount = ledger.panel.amount
+      stockTxn.amount = ledger.panel.total
     else if !_.isEmpty(stockTxn)
       stockTxn.inventory.quantity = ledger.panel.quantity
       stockTxn.inventory.unit = ledger.panel.unit
-      if stockTxn.amount != ledger.panel.total
-        stockTxn.amount = ledger.panel.total
+      if stockTxn.amount != ledger.panel.amount
+        ledgerCtrl.updateTxnAmount()
+      # if stockTxn.amount != ledger.panel.total
+      #   stockTxn.amount = ledger.panel.total
 
   ledgerCtrl.buildLedger = (ledger) ->
     ledger.transactions = ledgerCtrl.removeBlankTransactions(ledger)
@@ -1522,7 +1527,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.newCreditTxn
       ]
       unconfirmedEntry:false
-      isInclusiveTax: false
+      isInclusiveTax: true
       uniqueName:""
       voucher:{
         name:"Sales"
@@ -1835,7 +1840,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
       count: ledgerCtrl.ledgerPerPageCount
       page: page
-      sort: 'asc'
+      sort: 'desc'
       reversePage: false
     }
     if not _.isEmpty(ledgerCtrl.accountUnq)
@@ -1914,7 +1919,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       entUname: entry.entryUniqueName
     }
 
-    if entry.isCompoundEntry && entry.isBaseAccount then reqParam.acntUname = entry.particular.uniqueName
+    if entry.isCompoundEntry && entry.isBaseAccount 
+      reqParam.acntUname = entry.particular.uniqueName
+      ledgerCtrl.editModeBaseAccount = entry.particular.name
+    else
+      ledgerCtrl.editModeBaseAccount = ledgerCtrl.accountToShow.name
+
     ledgerService.getEntry(reqParam).then(@success, @failure)
     return 
 

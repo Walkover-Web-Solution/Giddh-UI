@@ -7,14 +7,14 @@
 
 	<div class="modal-body noPad mrT2">
 		<div class="row">
-			<h1 class="text-center account_Name">{{ledgerCtrl.accountToShow.name}} A/c</h1>
+			<h1 class="text-center account_Name">{{ledgerCtrl.editModeBaseAccount}} A/c</h1>
 		</div>
 		<div class="ledgHead entry-popup mrT1">
 			<table class="col-xs-12 ledger-head">
 				<thead>
 					<tr>
-						<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} coming in?</th>
-						<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} going out?</th>
+						<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.editModeBaseAccount}} coming in?</th>
+						<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.editModeBaseAccount}} going out?</th>
 					</tr>
 				</thead>
 			</table>
@@ -69,7 +69,7 @@
 													type="text" 
 													ng-model="txn.particular"
 													typeahead-append-to-body="true" 
-			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | addStockinAccountList:ledgerCtrl.accountToShow | searchAccountInPaginated:$viewValue | limitTo: 25"
 			                                      	typeahead-template-url="accountPopUp.html" 
 													class="form-control"
 													ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
@@ -152,7 +152,7 @@
 													type="text"
 													ng-model="txn.particular"
 													typeahead-append-to-body="true" 
-			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount |addStockinAccountList:ledgerCtrl.accountToShow | searchAccountInPaginated:$viewValue | limitTo: 25"
 			                                      	typeahead-template-url="accountPopUp.html"
 													ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 													is-open="txn.isOpen"

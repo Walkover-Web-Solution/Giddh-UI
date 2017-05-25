@@ -449,6 +449,7 @@ th {
                       	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | addStockinAccountList:ledgerCtrl.accountToShow | searchAccountInPaginated:$viewValue | limitTo: 25"
                       	typeahead-template-url="accountPopUp.html"
                       	typeahead-on-select = "ledgerCtrl.matchInventory(ledgerCtrl.blankLedger)"
+                      	typeahead-no-results="noResults"
 												ng-click="ledgerCtrl.selectBlankTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
 												txn="txn"
