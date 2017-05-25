@@ -895,13 +895,13 @@ angular.module('ledger', [])
     result
 
 .filter 'addStockinAccountList', ->
-  (input, g) ->
+  (input,baseAccount) ->
     result = []
     _.each input, (q) ->
-      p = RegExp(g, 'i')
-      # # check if query matches with name and uniqueName
-      # if q.name.match(p) or q.uniqueName.match(p) or q.mergedAccounts.length > 0 && q.mergedAccounts.match(p) && !q.stocks
-      #   result.push q
+      if baseAccount.stocks
+        _.each baseAccount.stocks, (stock) ->
+          q.stocks = baseAccount.stocks
+
       if q.stocks && q.stocks.length > 0
         _.each q.stocks, (stock) ->
           withStock = _.extend({}, q)
