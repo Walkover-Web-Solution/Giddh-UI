@@ -235,24 +235,10 @@
 				        <table>
 				        	<tbody>        		
 				        	<tr>
-				        		<td class="pItem">
-							        <table>
-							        	<tbody>
-							        		<tr>
-							        			<td ng-class="{width55: ledgerCtrl.selectedLedger.panel.unit != undefined}">
-							        				<label>Quantity</label>
-							       		 			<input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.quantity" ng-change="ledgerCtrl.onQuantityChange(ledgerCtrl.selectedLedger) "/>
-							        			</td>
-							        			<td ng-if="ledgerCtrl.selectedLedger.panel.unit">
-							        				<label>Unit</label>
-							       		 			<select class="form-control" ng-options="unit as unit.stockUnitCode for unit in ledgerCtrl.selectedLedger.panel.units" ng-model="ledgerCtrl.selectedLedger.panel.unit" ng-change="ledgerCtrl.onStockUnitChange()">
-							       		 			</select>
-							        			</td>
-							        		</tr>
-							        	</tbody>
-							        </table>
+				        		<td ng-if="ledgerCtrl.selectedLedger.showStock">
+						        	<label>Quantity</label>
+							        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.quantity" ng-change="ledgerCtrl.onQuantityChange(ledgerCtrl.selectedLedger) "/>
 				        		</td>
-				        		
 				        		<td ng-if="ledgerCtrl.selectedLedger.showStock">
 				        			<label>&nbsp;</label>
 				        			<label class="pdR pdL default_clr">x</label>

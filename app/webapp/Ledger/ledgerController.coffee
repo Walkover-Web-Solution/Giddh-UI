@@ -1842,7 +1842,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
       count: ledgerCtrl.ledgerPerPageCount
       page: page
-      sort: 'desc'
+      sort: 'asc'
       reversePage: false
     }
     if not _.isEmpty(ledgerCtrl.accountUnq)
