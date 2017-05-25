@@ -1,30 +1,41 @@
-<label>Stock Groups</label>
-<hr class="mrT mrB">
-<div class="input-group width100 mrT search-input">
-	<input class="width100" type="search" ng-model="grpStockSrch" ng-model-options="{debounce:1000}" ng-change="stock.getStockGroupsByQuery(grpStockSrch)">
-	<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
+<div class="input-group width100 search-input">
+	<input 
+		type="search"
+		placeholder="Search Stock" 
+		ng-focus="stock.sideBarOn($event)" 
+		ng-model="grpStockSrch" 
+		ng-model-options="{debounce:500}" 
+		ng-change="stock.getStockGroupsByQuery(grpStockSrch)"/>
 </div>
 
-<ul class="list-unstyled stock-grp-list">
-	<li class="pdL1 pr pdR0" ng-repeat="grp in stock.groupListHr">
-		<a href="javascript:void(0)" ng-click="stock.loadStockGroup(grp)">{{grp.name}}</a>
+<ul class="list-unstyled stock-grp-list mrT1">
+	<li ng-click="grp.visibleChilds = !grp.visibleChilds; stock.loadStockGroup(grp)" class="pdL isParent" ng-repeat="grp in stock.groupListHr track by $index">
+		<a href ng-class="{'active': stock.$state.params.grpId === grp.uniqueName }">{{grp.name}}</a>
+		<i ng-if="grp.childStockGroups.length > 0 || stock.updateStockGroup.stocks.length > 0 && grp.uniqueName === stock.$state.params.grpId" class="icon-arrow-down" ng-class="grp.visibleChilds ? 'open' : ''"></i>	
+		<div ng-if="stock.updateStockGroup.stocks.length > 0 && grp.uniqueName === stock.$state.params.grpId" ng-include="'stockList.html'"></div>
 		<div ng-if="grp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
-		<i class="glyphicon glyphicon-trash pa cp" style="right:20px;top:10px;" ng-click="stock.deleteStockGrp(grp)"></i>
 	</li>
 </ul>
 
 <script type="text/ng-template" id="stockgrplist.html">
-	<ul class="list-unstyled">
-		<li class="pdL1 bdrL pr pdR0" ng-repeat="grp in grp.childStockGroups">
-			<a href="javascript:void(0)"  ng-click="stock.loadStockGroup(grp)">-{{grp.name}}</a>
-			<i class="glyphicon glyphicon-trash pa cp" style="right:20px;top:10px;" ng-click="stock.deleteStockGrp(grp)"></i>
-			<ul class="list-unstyled">
-				<li class="pdL1 bdrL pr pdR0" ng-repeat="grp in grp.childStockGroups">
-					<a href="javascript:void(0)"  ng-click="stock.loadStockGroup(grp)">-{{grp.name}}</a>
-					<div ng-if="grp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
-					<i class="glyphicon glyphicon-trash pa cp" style="right:20px;top:10px;" ng-click="stock.deleteStockGrp(grp)"></i>
-				</li>
-			</ul>
+	<ul class="list-unstyled sub-grp" ng-show="grp.visibleChilds">
+		<li ng-click="$event.stopPropagation(); grp.visibleChilds = !grp.visibleChilds; stock.loadStockGroup(grp)" class="pdL" ng-repeat="grp in grp.childStockGroups">
+			<a href ng-class="{'active': stock.$state.params.grpId === grp.uniqueName }">{{grp.name}}</a>
+			<i ng-if="grp.childStockGroups.length > 0" class="icon-arrow-down" ng-class="grp.visibleChilds ? 'open' : ''"></i>
+			<div ng-if="stock.updateStockGroup.stocks.length > 0 && grp.uniqueName === stock.$state.params.grpId" ng-include="'stockList.html'"></div>
+			<div ng-if="grp.childStockGroups.length > 0" ng-include="'stockgrplist.html'"></div>
 		</li>
 	</ul>
 </script>
+
+<script type="text/ng-template" id="stockList.html">
+	{{list=stock.updateStockGroup.stocks;""}}
+	<ul class="list-unstyled stock-items" ng-show="grp.visibleChilds">
+		<li ng-click="$event.stopPropagation(); stock.loadStockReportView(l)" ng-repeat="l in list track by $index">
+			<a href ng-class="{'active': stock.$state.params.stockId === l.uniqueName }">{{l.name}}</a>
+		</li>
+	</ul>
+</script>
+
+
+

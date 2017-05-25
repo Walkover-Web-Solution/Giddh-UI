@@ -13,6 +13,46 @@ router.get '/unit-types', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
+router.post '/unit-types', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-unit'
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data:
+      req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.put '/unit-types', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data:
+      req.body
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-unit/' + req.body.uName
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.delete '/unit-types', (req, res) ->
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-unit/' + req.query.uName
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+  settings.client.delete hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
 router.post '/', (req, res) ->
   args =
     headers:
@@ -52,7 +92,7 @@ router.get '/groups-with-stocks-flatten', (req, res) ->
     res.send data
 
 router.get '/groups-with-stocks-hierarchy-min', (req, res) ->
-  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/stock-group'
+  hUrl = settings.envUrl + 'company/'+req.params.companyUniqueName + '/hierarchical-stock-groups'
   args =
     headers:
       'Auth-Key': req.session.authKey

@@ -203,6 +203,7 @@ module.exports = function (grunt) {
       },
       src: {
         files: [
+          srcDir + '/**/inventoryController.js',
           srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '**/**/*.css', routeSrcDir + "/**/*.coffee", srcDir + '/**/*.js', srcDir + '/**/**/*.js', srcDir + '/webapp/ng2/**/*.js',  srcDir + '/**/*.coffee'
         ],
         tasks: ['env:dev','coffee', 'copy', 'clean', 'cssmin', 'concat',  'preprocess:dev']
@@ -244,7 +245,7 @@ module.exports = function (grunt) {
           'public/webapp/ng2.js': ['public/webapp/ng2/**/*.services.js','public/webapp/ng2/**/*.component.js','public/webapp/ng2/*.js'],
           'public/webapp/newRelic.js': ['app/webapp/Globals/modified_lib/newRelic.js'],
           'public/webapp/_extras.js': ['app/webapp/Globals/modified_lib/angular-charts.js', 'app/webapp/Globals/modified_lib/jspdf.debug.js'],
-          'public/webapp/Globals/css/giddh.min.css': ['public/webapp/Globals/css/all_bower.css', 'public/webapp/Globals/css/modiefied-bootstrap.css', 'public/webapp/Globals/css/new-style.css', 'public/webapp/Globals/css/style2.css']
+          'public/webapp/Globals/css/giddh.min.css': ['public/webapp/Globals/css/*.css', '!public/webapp/Globals/css/*.min.css']
         }
       }
     },
@@ -393,7 +394,6 @@ module.exports = function (grunt) {
           'angular-toastr': 'dist/angular-toastr.tpls.min.js'
         },
         callback: function(mainFiles, component) {
-          console.log(mainFiles)
           return _.map(mainFiles, function(filepath) {
             var min = filepath.replace(/\.js$/, '.min.js');
             return grunt.file.exists(min) ? min : filepath;
@@ -445,7 +445,6 @@ module.exports = function (grunt) {
           'angular-toastr': 'dist/angular-toastr.tpls.min.js'
         },
         callback: function(mainFiles, component) {
-          console.log(mainFiles)
           return _.map(mainFiles, function(filepath) {
             var min = filepath.replace(/\.js$/, '.min.js');
             return grunt.file.exists(min) ? min : filepath;

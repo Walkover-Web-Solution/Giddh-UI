@@ -1,16 +1,6 @@
 "use strict"
 
 mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location, DAServices) ->
-  
-  #get user details
-  getUserSuccess = (res) ->
-    localStorageService.set('_userDetails', res.data.body)
-    $rootScope.basicInfo = res.data.body
-  getUserFailure = (res) ->
-    toastr.error('unable to fetch user')
-  getUserDetail = () ->
-    $http.get('/fetch-user').then(getUserSuccess, getUserFailure)
-  getUserDetail()
 
   $rootScope.scriptArrayHead = [
     "/public/webapp/newRelic.js"
@@ -131,6 +121,22 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   #       endDate: moment()
   ###date range picker end###
 
+  #get user details
+  getUserSuccess = (res) ->
+    localStorageService.set('_userDetails', res.data.body)
+    $rootScope.basicInfo = res.data.body
+    $scope.userName = $rootScope.basicInfo.name.split(" ")
+    $scope.userName = $scope.userName[0][0]+$scope.userName[1][0]
+    $rootScope.getCompanyList()
+    if !_.isEmpty($rootScope.selectedCompany)
+      $rootScope.cmpViewShow = true
+      
+  getUserFailure = (res) ->
+    toastr.error('unable to fetch user')
+  getUserDetail = () ->
+    $http.get('/fetch-user').then(getUserSuccess, getUserFailure)
+  getUserDetail()
+
 
   $scope.addScript = () ->
     _.each($rootScope.scriptArrayHead, (script) ->
@@ -197,7 +203,11 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $http.post('/logout').then ((res) ->
       # don't need to clear below
       # _userDetails, _currencyList
-      localStorageService.clearAll()
+      localStorageService.remove('_userDetails')
+      localStorageService.remove('_roles')
+      localStorageService.remove('_currencyList')
+      localStorageService.remove('_selectedAccount')
+      localStorageService.remove('_ledgerData')
       window.sessionStorage.clear()
       window.location = "https://www.giddh.com"
     ), (res) ->
@@ -271,13 +281,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   
   $scope.getRoles()
   $scope.getCdnUrl()
-  $timeout(->
-    $rootScope.basicInfo = localStorageService.get("_userDetails")
-    $scope.userName = $rootScope.basicInfo.name.split(" ")
-    $scope.userName = $scope.userName[0][0]+$scope.userName[1][0]
-    if !_.isEmpty($rootScope.selectedCompany)
-      $rootScope.cmpViewShow = true
-  ,1000)
 
   $timeout (->
     cdt = localStorageService.get("_selectedCompany")
@@ -428,6 +431,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $scope.checkUserCompanyStatus(res.body)
       $rootScope.mngCompDataFound = true
       $scope.findCompanyInList()
+      $rootScope.checkWalkoverCompanies()
 
   $scope.checkUserCompanyStatus = (compList) ->
     _.each compList, (cmp) ->
@@ -591,7 +595,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   # change selected company
 
-  $rootScope.getCompanyList()
+  
 
   $scope.changeCompany = (company, index, method) ->
 #    console.log("method we get here is : ", method)
@@ -796,6 +800,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.runTour = () ->
     $rootScope.$emit('run-tour')
 
+  $scope.showSwitchUserOption = false
   $rootScope.checkUserCompany = () ->
     user = localStorageService.get('_userDetails')
     company = user.uniqueName.split('@')
@@ -804,11 +809,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.checkWalkoverCompanies = () ->
     if $rootScope.checkUserCompany().toLowerCase() == 'giddh.com' || $rootScope.checkUserCompany().toLowerCase() == 'walkover.in' || $rootScope.checkUserCompany().toLowerCase() == 'msg91.com'
-      return true
+      $scope.showSwitchUserOption = true
     else
-      return false
-
-
+      $scope.showSwitchUserOption = false
 
   $rootScope.ledgerMode = 'new'
   $rootScope.switchLedgerMode = () ->
@@ -819,6 +822,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
         $rootScope.ledgerMode = 'new'
 
   $rootScope.setState = (lastState, url, param) ->
+    $rootScope.selectedCompany = $rootScope.selectedCompany || localStorageService.get('_selectedCompany')
     data = {
         "lastState": lastState,
         "companyUniqueName": $rootScope.selectedCompany.uniqueName
@@ -833,7 +837,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     )
 
   $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
-    #$rootScope.setState(toState.name, toState.url, toParams.unqName)
+    if $rootScope.selectedCompany != undefined && $rootScope.selectedCompany != null
+      $rootScope.setState(toState.name, toState.url, toParams.unqName)
   )
 
   $(document).on('click', (e)->
@@ -849,9 +854,12 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $rootScope.ledgerState = false
   )
 
-  $rootScope.$on('different-company', (event, lastState)->
-    company = _.findWhere($scope.companyList, {uniqueName:lastState.companyUniqueName})
+  $rootScope.$on('different-company', (event, lastStateData)->
+    company = _.findWhere($scope.companyList, {uniqueName:lastStateData.companyUniqueName})
+    localStorageService.set('_selectedCompany', company)
+    $rootScope.selectedCompany = company
     $scope.changeCompany(company, 0, 'CHANGE')
+    $state.go(lastStateData.lastState)
   )
 
 giddh.webApp.controller 'mainController', mainController

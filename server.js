@@ -10,8 +10,8 @@ var session = require('express-session');
 var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
-// var mongoose = require('mongoose');
-// var MongoStore = require('connect-mongo')(session);
+var mongoose = require('mongoose');
+var MongoStore = require('connect-mongo')(session);
 // var MemcachedStore = require('connect-memcached')(session);
 //global.sessionTTL = 1000 * 60
 //Example POST method invocation 
@@ -30,8 +30,6 @@ var app = settings.express();
 app.disable('x-powered-by');
 
 var port = process.env.PORT || 8000;
-// old port 8000
-
 //enabling cors
 //app.use(cors())
 
@@ -75,15 +73,14 @@ app.use(session({
     maxAge: sessionTTL,
     domain:'giddh.com',
     httpOnly: false
-  }
-  
-  // store: new MongoStore({
-  //   url: settings.mongoUrl,
-  //   autoRemove: 'interval',
-  //   autoRemoveInterval: sessionTTL,
-  //   ttl: sessionTTL,
-  //   touchAfter: sessionTTL - 300
-  // })
+  },
+  store: new MongoStore({
+    url: settings.mongoUrl,
+    autoRemove: 'interval',
+    autoRemoveInterval: sessionTTL,
+    ttl: sessionTTL,
+    touchAfter: sessionTTL - 300
+  })
   // store   : new MemcachedStore({
   //   hosts: ['127.0.0.1:11211'],
   //   secret: 'keyboardcat'
@@ -210,7 +207,7 @@ app.use('/company/:companyUniqueName/accounts', accounts);
 app.use('/company/:companyUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
 app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/company/:companyUniqueName/balance-sheet', balanceSheet);
-app.use('/app/upload-invoice',parseUploads, invoiceUpload);
+app.use('/upload-invoice',parseUploads, invoiceUpload);
 app.use('/upload', parseUploads, upload);
 app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/stock-group', inventory)
@@ -230,7 +227,8 @@ app.use('/magic-link', magicLink);
 app.use('/logout', function(req, res){
   if(req.session.name){
     delete req.session
-    res.status(200).send({message:'user logged out'})
+    res.redirect('https://giddh.com')
+    //res.status(200).send({message:'user logged out'})
   }else{
     res.status(403).send({message:'user not found'})
   }
@@ -259,6 +257,16 @@ app.use('/fetch-user', function(req, res){
 app.use('/magic', function(req, res){
   res.sendFile(__dirname + '/public/website/views/magic.html')
 });
+
+//get user auth key
+app.get('/userak', function(req, res){
+  if(req.session.name){
+    res.send(req.session.authKey)
+  }else{
+    res.status(403)
+    res.send('Invalid User')
+  }
+})
 
 // get session id and match with existing session
 var getSession = function(req, res, next){

@@ -289,7 +289,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
         newTax : newTax
       }
       $scope.updateTax.modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/update-tax.html'
+        templateUrl:  '/public/webapp/Globals/modals/update-tax.html'
         size: "md"
         backdrop: 'static'
         scope: $scope
@@ -526,7 +526,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
           $scope.banks.mfaForm = res.body.yodleeMfaResponse.fieldInfo.questionAns
           $scope.banks.showToken = false
       $scope.banks.modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/yodleeMfaModal.html'
+        templateUrl:  '/public/webapp/Globals/modals/yodleeMfaModal.html'
         size: "sm"
         backdrop: 'static'
         scope: $scope
@@ -754,7 +754,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     $scope.connectUrl = encodeURI(url)
     console.log($scope.connectUrl)
     modalInstance = $uibModal.open(
-      templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/connectBankModal.html',
+      templateUrl:  '/public/webapp/Globals/modals/connectBankModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope,
@@ -775,7 +775,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     url = res.body.connectUrl
     $scope.connectUrl = url
     modalInstance = $uibModal.open(
-      templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/refreshBankAccountsModal.html',
+      templateUrl:  '/public/webapp/Globals/modals/refreshBankAccountsModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope
@@ -803,7 +803,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     url = res.body.connectUrl
     $scope.connectUrl = url
     $uibModal.open(
-      templateUrl: $rootScope.prefixThis+'/public/webapp/Globals/modals/refreshBankAccountsModal.html',
+      templateUrl:  '/public/webapp/Globals/modals/refreshBankAccountsModal.html',
       size: "md",
       backdrop: 'static',
       scope: $scope

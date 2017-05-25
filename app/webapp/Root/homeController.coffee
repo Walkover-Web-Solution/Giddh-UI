@@ -1,6 +1,5 @@
 "use strict"
 homeController = ($scope, $rootScope, getLedgerState, $state, $location, localStorageService, $http) ->
-  console.log 'home'
   $scope.goToLedgerState = () ->
     $rootScope.firstLogin = getLedgerState.data.firstLogin
     # if getLedgerState.data.shared && getLedgerState.data.firstLogin == false
@@ -10,13 +9,18 @@ homeController = ($scope, $rootScope, getLedgerState, $state, $location, localSt
     # else
     $http.get('/state-details').then(
         (res) ->
-            if res.data.body.lastState.indexOf('ledger') != -1
-                state = res.data.body.lastState.split('@')
-                $state.go(state[0], {unqName:state[1]})
-            else if res.data.body.lastState != '/home'
-                $state.go(res.data.body.lastState)
+            $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+            if $rootScope.selectedCompany.uniqueName = res.data.body.companyUniqueName
+                if res.data.body.lastState.indexOf('ledger') != -1
+                    state = res.data.body.lastState.split('@')
+                    $state.go(state[0], {unqName:state[1]})
+                else if res.data.body.lastState != '/home'
+                    $state.go(res.data.body.lastState)
+                else
+                    $state.go('company.content.ledgerContent')
             else
-                $state.go('company.content.ledgerContent')
+                lastStateData =  res.data.body
+                $rootScope.$emit('different-company', lastStateData)
         (res) ->
             $state.go('company.content.ledgerContent')
     )

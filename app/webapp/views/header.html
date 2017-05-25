@@ -91,7 +91,7 @@
                         </div>
                       </a>
                     </li>
-                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="inventory">
+                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="inventory" ui-sref-opts="{reload: true, notify: true}">
                       <a href="" >
                         <div class="media">
                           <div class="media-body">
@@ -211,11 +211,11 @@
         </li> -->
 
         <li>
-            <div ng-hide="canViewSpecificItems">
-                <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
-                    <span class="icon-plus" aria-hidden="true"></span> Add & Manage
-                </button>
-            </div>
+          <div ng-hide="canViewSpecificItems">
+              <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
+                  <span class="icon-plus" aria-hidden="true"></span> Add & Manage
+              </button>
+          </div>
         </li>
 
         <li>
@@ -234,25 +234,15 @@
       </li> -->
 
 
+
       </ul>
 
       <ul class="nav navbar-nav navbar-right">
-
-
-<!--       <li class="header-btn fixedDate">
-        <span class="dateblock">
-          <input ng-show="!showUnivdate" ng-click="showUnivdate = true" ng-init="showUnivdate = true" date-range-picker class="form-control date-picker date-range-picker" type="text" ng-model="cDate" options="opts" required/>
-        <span ng-show="showUnivdate" class="fix_date" tooltip-placement="bottom" uib-tooltip="Change fix date" ng-click="showUnivdate = false"><b>Fixed date:</b> Last 1 month</span>  
-        </span>
-        
-      </li>
- -->
-
       <!-- company dropdown -->
         <li ng-if="cmpViewShow" class="company-name" uib-dropdown>
-          <a id="cmpWrp" class="clearfix" style="cursor:pointer;position: relative;" uib-dropdown-toggle>
-          <span class="icon-dropdown"></span>
-            <i class="icon-building"></i>
+          <a id="cmpWrp" class="clearfix" uib-dropdown-toggle>
+            <span class="icon-dropdown"></span>
+            <!-- <i class="icon-building"></i> -->
             <div class="cText">
               <span class="cName">{{selectedCompany.name}}</span>
               <span ng-bind="currentFinancialYear" class="fyear"></span>
@@ -294,7 +284,10 @@
             <li ng-if="ledgerState"><a href="javascript:void(0)" ng-click="runTour()">Run Tour</a></li>
             <li><a target="_Blank" href="https://docs.giddh.com/" ng-click="$event.stopPropagation()">Documentation</a></li>
             <li ng-if="selectedCompany.canUserSwitch"><a class="pull-left" href="javascript:void(0)" ng-click="switchUser()"><span class="pull-left">Switch User</span><span class="on-btn pull-left" ng-if="ucActive"></span></a></li>
-            <li ng-if="checkWalkoverCompanies()"><a class="cp" ng-click="switchLedgerMode()">Switch Ledger - {{ledgerMode}}</a></li>
+            <li ng-if="showSwitchUserOption"><a class="cp" ng-click="switchLedgerMode()">Switch Ledger - 
+                <span ng-if="ledgerMode == 'new'">Old</span><span ng-if="ledgerMode == 'old'">New</span>
+              </a>
+            </li>
             <li role="separator" class="divider" style="width:100%"></li>
             <li><a ng-click="logout()" href="javascript:void(0)">Logout</a></li>
           </ul>

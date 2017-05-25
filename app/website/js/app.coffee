@@ -55,8 +55,8 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
   link: (scope, element, attrs) ->
     scope.proceedToPay = (e, amount) ->
       options = {
-        key: scope.wlt.razorPayKey
-#        key: "rzp_live_xGAsAZIdwkmLJW"
+        # key: scope.wlt.razorPayKey
+        key: "rzp_live_rM2Ub3IHfDnvBq"
         amount: amount
         name: scope.wlt.company.name
         description: "Pay for " + scope.wlt.contentType + " #" + scope.wlt.contentNumber

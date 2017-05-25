@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" ng-app='giddhWebsite'>
+	<head>
+		<meta name="description" content=""/>
+		<meta name="keywords" content=""/>
+		<title>Giddh ~ Accounting at its Rough! Bookkeeping and Accounting Software</title>
+	</head>
+	<style type="text/css">
+		body, html{
+			height: 100%;
+			min-height: 100%;
+			background: #28283C;
+		}
+		.center-block {
+			float: none;
+		}
+		#global {
+			height: 100%;
+			min-height: 100%;
+			position: relative;
+		}
+		.world-map {
+			opacity: 0.8;
+		}
+		.homeContent {
+		    padding: 120px 0 60px 0;
+		    display: table;
+		    width: 100%;
+		    text-align: center;
+		    height: 100%;
+		    color: white;
+		}
+		.content {
+			display: table-cell;
+			vertical-align: middle;
+		}
+		.anchr {
+			background: #0370ea;
+		    background: -moz-linear-gradient(top,#008dfd 0,#0370ea 100%);
+		    background: -webkit-gradient(linear,left top,left bottom,color-stop(0,#008dfd),color-stop(100%,#0370ea));
+		    background: -webkit-linear-gradient(top,#008dfd 0,#0370ea 100%);
+		    background: -o-linear-gradient(top,#008dfd 0,#0370ea 100%);
+		    background: -ms-linear-gradient(top,#008dfd 0,#0370ea 100%);
+		    background: linear-gradient(top,#008dfd 0,#0370ea 100%);
+		    border: 1px solid #076bd2;
+		    -moz-border-radius: 3px;
+		    border-radius: 3px;
+		    color: #fff !important;
+		    display: inline-block;
+		    font-size: 16px;
+		    line-height: 1.3;
+		    padding: 8px 25px;
+		    text-align: center;
+		    text-decoration: none !important;
+		    text-shadow: 1px 1px 1px #076bd2;
+		}
+		h3 {
+			opacity: 0.5;
+		}
+	</style>
+	<body>
+		<div class="blueBg homeContent" ng-if="!browserIE" id="global_cnt">
+			<div class="content">
+				<h1 class="text-center">We are sorry, We do not support IE yet</h1>
+				<br>
+				<br>
+				<h3>Giddh works best in Chrome</h3>
+
+				<div class="btn">
+					<a href="https://www.google.com/chrome/browser/desktop/index.html" class="anchr" target="_blank">Download Chrome</a>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

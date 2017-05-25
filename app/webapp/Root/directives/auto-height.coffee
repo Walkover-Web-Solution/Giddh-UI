@@ -255,7 +255,7 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
       scope.proceedToPay = (e, amount) ->
         options = {
           # key: "rzp_test_6SDWNz3uMF944l"
-          key: "rzp_live_xGAsAZIdwkmLJW"
+          key: "rzp_live_rM2Ub3IHfDnvBq"
           amount: amount
           name: "Giddh"
           description: $rootScope.selectedCompany.name+ " Subscription for Giddh"
@@ -894,12 +894,35 @@ angular.module('ledger', [])
       return
     result
 
+.filter 'addStockinAccountList', ->
+  (input, g) ->
+    result = []
+    _.each input, (q) ->
+      p = RegExp(g, 'i')
+      # # check if query matches with name and uniqueName
+      # if q.name.match(p) or q.uniqueName.match(p) or q.mergedAccounts.length > 0 && q.mergedAccounts.match(p) && !q.stocks
+      #   result.push q
+      if q.stocks && q.stocks.length > 0
+        _.each q.stocks, (stock) ->
+          withStock = _.extend({}, q)
+          withStock.stocks = [] 
+          withStock.stock = stock
+          withStock.stocks.push(stock)
+          result.push(withStock)
+        withoutStock = _.extend({},q)
+        delete withoutStock.stocks
+        result.push(withoutStock)
+      else
+        result.push(q)
+    result
+
 .filter 'searchAccountInPaginated', ->
   (input, g) ->
     result = []
     _.each input, (q) ->
       p = RegExp(g, 'i')
-      if q.name.match(p) or q.uniqueName.match(p) or q.mergedAccounts.length > 0 && q.mergedAccounts.match(p)
+      # # check if query matches with name and uniqueName
+      if q.name.match(p) or q.uniqueName.match(p) or q.mergedAccounts.length > 0 && q.mergedAccounts.match(p) or (q.stock and (q.stock.name.match(p) or q.stock.uniqueName.match(p)))
         result.push q
     result
 

@@ -197,7 +197,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
       #$scope.calcSubtotal()
       $timeout ( ->
         $scope.modalInstance = $uibModal.open(
-          templateUrl: $rootScope.prefixThis+'/public/webapp/invoice2/proforma/prevProforma.html'
+          templateUrl:'/public/webapp/invoice2/proforma/prevProforma.html'
           size: "a4"
           backdrop: 'static'
           scope: $scope
@@ -338,7 +338,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     $scope.newAccountModel.accUnqName = ''
     pc.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
     pc.AccmodalInstance = $uibModal.open(
-      templateUrl: $rootScope.prefixThis+'/public/webapp/Ledger/createAccountQuick.html'
+      templateUrl: '/public/webapp/Ledger/createAccountQuick.html'
       size: "sm"
       backdrop: 'static'
       scope: $scope
@@ -789,7 +789,7 @@ proformaController = ($scope, $rootScope, localStorageService,invoiceService,set
     $scope.newAccountModel.accUnqName = ''
     pc.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
     pc.AccModalInstance = $uibModal.open(
-      templateUrl: $rootScope.prefixThis+'/public/webapp/invoice2/addNewAccount.html'
+      templateUrl:'/public/webapp/invoice2/addNewAccount.html'
       size: "sm"
       backdrop: 'static'
       scope: $scope

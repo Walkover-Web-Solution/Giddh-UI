@@ -510,7 +510,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       nzTour.next()
 
   lc.onLedgerReadComplete = () ->
-    if $rootScope.basicInfo.isNewUser && lc.runTour && $rootScope.ledgerState
+    newUser = localStorageService.get('_newUser')
+    if newUser && lc.runTour && $rootScope.ledgerState
       # lc.disableInputsWhileTour = true
       nzTour.start(tour).then(
         () ->
@@ -973,6 +974,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
   lc.blankLedger = {
       isBlankLedger : true
       description:null
+      attachedFileName: ''
+      attachedFile: ''
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
 #      hasCredit:false
 #      hasDebit:false
@@ -2313,6 +2316,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       isBlankLedger : true
       description:null
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
+      attachedFileName: ''
+      attachedFile: ''
 #      hasCredit:false
 #      hasDebit:false
       invoiceGenerated:false
@@ -2644,7 +2649,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.selectedTxn.isOpen = false
     lc.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName, true)
     lc.AccmodalInstance = $uibModal.open(
-      templateUrl: $rootScope.prefixThis+'/public/webapp/Ledger/createAccountQuick.html'
+      templateUrl:'/public/webapp/Ledger/createAccountQuick.html'
       size: "sm"
       backdrop: 'static'
       scope: $scope
@@ -3247,8 +3252,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       count: lc.ledgerPerPageCount
       page: page || 1
     }
-    if not _.isEmpty(lc.accountUnq)
-      ledgerService.getLedger(unqNamesObj).then(@success, @failure)
+    # if not _.isEmpty(lc.accountUnq)
+      # ledgerService.getLedger(unqNamesObj).then(@success, @failure)
 
   lc.getPaginatedLedger(1)
 
