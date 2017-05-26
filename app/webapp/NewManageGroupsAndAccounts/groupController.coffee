@@ -167,7 +167,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
 # get selected group or account
   mc.selectItem = (item) ->
-    mc.columns
+    # mc.columns
     mc.addToBreadCrumbs(item)
     mc.selectedGrp = item
     mc.grpCategory = item.category
@@ -184,7 +184,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.columns = mc.columns.splice(0,item.hLevel+1)
       mc.columns.push(item)
     else
-      # existingGrp = item
+      existingGrp = item
       mc.columns = mc.columns.splice(0,item.hLevel+2)
 
   mc.getGrpDtlSuccess = (res) ->
@@ -219,7 +219,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.columns[mc.addToIndex].groups.push(res.body)
     toastr.success("Sub group added successfully", "Success")
     mc.selectedItem = {}
-    mc.getGroups()
+    # mc.getGroups()
 
   mc.onCreateGroupFailure = (res) ->
     console.log (res)
@@ -288,8 +288,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
 
 # get account details under groups and sub groups
-  mc.getAccDetail = (item) ->
+  mc.getAccDetail = (item, parentIndex) ->
     mc.showOnUpdate = true
+    mc.getCurrentAccIndex = parentIndex
     console.log item
     reqParam = {
       compUname: $rootScope.selectedCompany.uniqueName,
@@ -299,6 +300,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.addToBreadCrumbs(item, 'account')
 
   mc.getAccDtlSuccess = (res, data) ->
+    console.log mc.getCurrentAccIndex 
     data = res.body
     mc.selectedAcc = res.body
     mc.getMergeAcc = mc.selectedAcc.mergedAccounts.split(",")
@@ -319,6 +321,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getAccountSharedList()
     mc.isFixedAcc = res.body.isFixed
     mc.showBreadCrumbs(data.parentGroups)
+    mc.columns = mc.columns.splice(0,mc.getCurrentAccIndex+1)
+    # mc.breadCrumbList = mc.breadCrumbList.splice(0,mc.getCurrentAccIndex+1)
+    console.log mc.columns
+    console.log mc.breadCrumbList
 
   mc.getAccDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -573,13 +579,14 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.addAccountSuccess = (res) ->
     toastr.success("Account created successfully", res.status)
-    mc.getGroups()
     mc.selectedAcc = {}
     abc = _.pick(res.body, 'name', 'uniqueName', 'mergedAccounts','applicableTaxes','parentGroups')
     mc.groupAccntList.push(abc)
     mc.columns[mc.addToIndex].accounts.push(res.body)
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
-
+    # mc.columns = []
+    # mc.getGroups()
+    
   mc.addAccountFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
@@ -610,7 +617,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.updateAccountSuccess = (res) ->
     toastr.success("Account updated successfully", res.status)
     angular.merge(mc.selectedAcc, res.body)
-    mc.getGroups()
+    # mc.getGroups()
     abc = _.pick(mc.selectedAcc, 'name', 'uniqueName', 'mergedAccounts')
     if !_.isEmpty(mc.selectedGrp)
       _.find(mc.groupAccntList, (item, index) ->

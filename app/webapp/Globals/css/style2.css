@@ -1465,9 +1465,13 @@ input[type=radio]:checked:after {
     color: #1a1a1a;
 }
 .col_wrapper:nth-child(1) .isParent {
-    background: #e1ebf0;
+    background: #e1ebf0 !important;
     color: #d25f29 !important;
 }
+.col_wrapper:last-child ul li a.isParent {
+    background: none;
+}
+
 
 #getGroupModal .modal-body {
     min-height: calc(100% - 76px);
@@ -1500,6 +1504,10 @@ input[type=radio]:checked:after {
 .isActive {
     color: #fff !important;
     background: #d25f29;
+}
+.isParent.isActive {
+    color: #fff !important;
+    background: #d25f29 !important;
 }
 .primary_clr {
     color: #d25f29 !important;
