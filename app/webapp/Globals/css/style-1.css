@@ -128,7 +128,7 @@ html,body, textarea, input, button, select {
   left: 0;
   right: 0;
   width: 100%;
-  z-index: 99;
+/*  z-index: 99;*/
   height: 6px;
 }
 

@@ -165,7 +165,7 @@
         <div class="row">
           
           <label class="col-xs-12 row">Merge this A/c with</label>
-          <ul class="accmerge mrB1">
+          <ul class="accmerge mrB1" ng-if="mc.getMergeAcc">
             <li ng-repeat="merged in mc.getMergeAcc">
               <a href="javascript:void(0);" ng-click="mc.unmerge(merged)">{{merged}}</a><i class="fa fa-times" ng-click="mc.deleteMergedAccount(merged)"></i>
             </li>
@@ -174,12 +174,12 @@
           <div class="col-xs-8 pdL0 merge_input">
               <div class="form-inline">
                 <ui-select multiple='true' ng-model="mc.toMerge.mergedAcc" theme="bootstrap">
-                    <ui-select-match placeholder="Select Accounts" ui-lock-choice="$item.noRemove == true" reset-search-input="true">
-                      <span ng-click="unmerge($item)" >{{$item.uniqueName}}</span>
+                    <ui-select-match allow-clear="true" placeholder="Select Accounts" ui-lock-choice="$item.noRemove == true" reset-search-input="true">
+                      {{$item.uniqueName}}
                     </ui-select-match >
                     <ui-select-choices
                       ui-disable-choice="acc.uniqueName === selAcntUname"
-                      repeat="acc in mc.mergeAccList | filter: $select.search" refresh="mc.refreshFlatAccount($select.search)" minimum-input-length="1">
+                      repeat="acc in mc.mergeAccList | filter: $select.search" refresh="mc.refreshFlatAccount($select.search)" minimum-input-length="1" ng-model-options="{debounce:1000}">
                       <span>{{acc.name}} ({{acc.uniqueName}})</span>
                     </ui-select-choices>
                 </ui-select>

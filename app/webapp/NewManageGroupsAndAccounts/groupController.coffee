@@ -101,10 +101,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.showBreadCrumb = true
 
 
-
-
-
-
   mc.goToManageGroupsOpen = (res) ->
     console.log "manage opened", res
 
@@ -122,16 +118,49 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 # end
 
   mc.getGroupListSuccess = (res) ->
+    mc.columns = []
     mc.showListGroupsNow = true
     col = {}
     col.groups = mc.addHLevel(res.body, 0)
     col.accounts = []
     mc.columns.push(col)
+    mc.updateAll(res.body)
 
   mc.getGroups =() ->
     groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then(mc.getGroupListSuccess, mc.getGroupListFailure)
 
   mc.getGroups()
+
+  mc.selectItemAfterUpdate = (item, fromApi) ->
+
+
+  mc.updateAll = (groupList) ->
+    # console.log res
+    _.each mc.breadCrumbList, (item, i) ->
+      currentItem = _.findWhere(groupList, {uniqueName:item.uniqueName})
+      if currentItem
+        mc.selectItem(currentItem, false)
+        ###set selcted item class####
+        _.each mc.columns[i], (grp, index) ->
+          if grp.uniqueName == currentItem.uniqueName
+            mc.selectActiveItems(mc.columns[i], 'grp', index)
+      else if !currentItem
+        if item.groups
+          currentItem = _.findWhere(mc.selectedItem.groups, {uniqueName:item.uniqueName})
+          mc.selectItem(currentItem, false)
+          ###set selcted item class####
+          _.each mc.columns[i].groups, (grp, index) ->
+            if grp.uniqueName == currentItem.uniqueName
+              mc.selectActiveItems(mc.columns[i], 'grp', index)
+        else
+          currentItem = _.findWhere(mc.selectedItem.accounts, {uniqueName:item.uniqueName})
+          mc.getAccDetail(currentItem, i)
+          ###set selcted item class####
+          _.each mc.columns[i].accounts, (grp, index) ->
+            if grp.uniqueName == currentItem.uniqueName
+              mc.selectActiveItems(mc.columns[i], 'acc', index)
+
+
 
   mc.getItemIndex = (list, item, key) ->
     idx = null
@@ -166,9 +195,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
 
 # get selected group or account
-  mc.selectItem = (item) ->
+  mc.selectItem = (item, updateBreadCrumbs) ->
     # mc.columns
-    mc.addToBreadCrumbs(item)
+    if updateBreadCrumbs
+      mc.addToBreadCrumbs(item)
     mc.selectedGrp = item
     mc.grpCategory = item.category
     mc.showEditTaxSection = false
@@ -176,8 +206,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getGroupSharedList(item)
     # mc.createNew = false
     mc.showOnUpdate = true
-    console.log item
+    # console.log item
     existingGrp = _.findWhere(mc.columns, {uniqueName:item.uniqueName})
+    mc.selectedItem = mc.selectedGrp
     groupService.get($rootScope.selectedCompany.uniqueName, item.uniqueName).then(mc.getGrpDtlSuccess, mc.getGrpDtlFailure)
     if !existingGrp
       # if (item.hLevel-1) < mc.columns.length
@@ -189,6 +220,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.getGrpDtlSuccess = (res) ->
     mc.selectedItem = res.body
+    console.log mc.selectedItem
 
   mc.getGrpDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -248,6 +280,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     if not _.isEmpty(mc.selectedGrp)
       mc.selectedItem = mc.selectedGrp
     toastr.success("Group has been updated successfully.", "Success")
+    # mc.selectItem(mc.selectedGrp)
+    # mc.getGroups()
+    mc.columns = []
     mc.getGroups()
 
   mc.onUpdateGroupFailure = (res) ->
@@ -291,6 +326,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.getAccDetail = (item, parentIndex) ->
     mc.showOnUpdate = true
     mc.getCurrentAccIndex = parentIndex
+    mc.selectedAcc = item
     console.log item
     reqParam = {
       compUname: $rootScope.selectedCompany.uniqueName,
@@ -779,6 +815,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getGroups()
     mc.prePopulate = mc.toMerge.mergedAcc
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+    mc.getAccDetail(mc.selectedAcc)
 
   mc.mergeFailure = (res) ->
     toastr.error(res.data.message)
