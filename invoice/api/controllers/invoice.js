@@ -11,12 +11,11 @@ const phantom = require("phantom-html-to-pdf")
 
 var invoice = {};
 
-
 invoice.downloadInvoice = function(req, res) {
   var invoiceObj = req.body.invoice[0];
   //if(invoiceObj.template.uniqueName == "template_b") {
   // const bodyCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/test.pug') 
-  s// const footerCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/test_foot_b.pug') 
+  // const footerCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/test_foot_b.pug') 
   //}
   //else
   //{

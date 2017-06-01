@@ -1,14 +1,20 @@
 const fs = require('fs');
-//cont webshot = require('webshot');
+const webshot = require('webshot');
+
+var options = {
+    siteType: "html",
+    streamType: "jpeg"
+};
+
+
+
 
 getTemplates = {}
 var html_template_path = './invoice/api/models/invoice/html_templates/'
 
-function templateObject (){
-	this.template = {}
-	this.template.name = ""
-	this.template.htmlString = ""
-	this.template.id = ""
+function template (){
+	this.image_src=""
+	this.id=""
 }
 
 function returnFileAsHtmlString (fileName, callback){
@@ -31,21 +37,29 @@ function getById(req,res,next){
 }
 
 
-
-
 function returnAllWithoutAuth(req,res,next){
-
+var filesToReturn = [];
+var fileObj;
 fs.readdir(html_template_path,function(err, files){
    if (err) {
       return console.error(err);
     }
     files.forEach(function (file){
-    
-
+    fileObj = new template();
+    fileObj.id = file
+    fileObj.image_src = file+".jpeg"
+    returnFileAsHtmlString(file,function(data){
+    	webshot(data, file+".jpeg", options, function(err, data){
+    		if(err){
+    			console.log(err)
+    		}
+		});
+    });
+    filesToReturn.push(fileObj)	
+  });
+res.status(200).send(filesToReturn)   
 });
 
-});
-    
 }
 
 
@@ -91,8 +105,10 @@ function returnAll (req, res, next){
 
 
 // return all templates
-getTemplates.returnAll = returnAll;
+getTemplates.webshot = webshot;
 getTemplates.getById = getById;
 getTemplates.returnAllWithoutAuth = returnAllWithoutAuth;
+
+
 
 module.exports = getTemplates;

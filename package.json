@@ -22,6 +22,7 @@
     "es6-shim": "^0.35.0",
     "express": "~4.13.1",
     "express-session": "",
+    "find-remove": "^1.0.1",
     "geoip-lite": "^1.1.9",
     "git-rev": "*",
     "grunt": "^0.4.5",
@@ -40,6 +41,7 @@
     "grunt-karma": "~0.6.2",
     "grunt-preprocess": "^5.0.1",
     "grunt-processhtml": "^0.4.1",
+    "html-pdf": "^2.1.0",
     "jwt-simple": "~0.3.1",
     "karma": "^0.10.10",
     "karma-chrome-launcher": "^0.1.12",
@@ -61,7 +63,11 @@
     "ng2-select": "^0.44.0",
     "node-rest-client": "~1.4.3",
     "npid": "*",
+    "phantom-html-to-pdf": "^0.5.4",
+    "phantomjs": "^2.1.7",
+    "phantomjs-prebuilt": "^2.1.14",
     "prerender-node": "^2.4.0",
+    "pug": "^2.0.0-rc.1",
     "qs": "^6.1.0",
     "raven": "^1.1.1",
     "reflect-metadata": "0.1.2",
@@ -73,15 +79,8 @@
     "sendgrid": "^2.0.0",
     "serve-favicon": "~2.3.0",
     "underscore": "1.8.3",
-    "zone.js": "0.6.12",
-
-    
-    "find-remove": "^1.0.1",
-    "html-pdf": "^2.1.0",
-    "phantom-html-to-pdf": "^0.5.4",
-    "phantomjs": "^2.1.7",
-    "phantomjs-prebuilt": "^2.1.14",
-    "pug": "^2.0.0-rc.1"
+    "webshot": "^0.18.0",
+    "zone.js": "0.6.12"
   },
   "devDependencies": {
     "coffee-script": "*",
