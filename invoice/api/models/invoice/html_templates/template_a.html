@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet"><!-- font-family: 'Roboto', sans-serif;-->
+    <style type="text/css">
+      @font-face {
+        font-family: calibri;
+        src: url(calibri.ttf);
+      }
+      html {
+        min-height: 100%;
+        height: 100%;
+        position: relative;
+        /*margin-bottom: 200px;*/
+      }
+      body {
+        /*font-family: 'Roboto', sans-serif;*/
+        font-family: calibri;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 12px;
+      }
+      .mid {
+        font-weight: 300;
+      }
+      .p30 {
+        position: relative;
+      }
+      .green {
+        color: #22733a;
+      }
+      h1 {
+        margin: 0;
+      }
+      .invoice_info {
+        background: #f2f2f2;
+        padding: 30px;
+      }
+      table {
+        width: 100%;
+        font-weight: 400;
+        max-width: 100%;
+      }
+      thead {
+        display: none;
+      }
+      .summary tbody tr td:last-child, 
+      .summary tfoot tr td:last-child  {
+        float: right;
+      }
+      .summary tfoot tr td, .summary tbody tr td {
+        text-align: right;
+        border: none;
+        vertical-align: middle;
+        /*padding: 8px;*/
+        padding: 0;
+      }
+      .summary tbody tr td {
+        text-align: left;
+      }
+      .tfooter {
+        color: #939393;
+        margin-top: 55px;
+      }
+      .total {
+        color: #000;
+        margin-top: 10px;
+      }
+      .total td:last-child {
+        border-bottom-style: double;
+        border-bottom-color: #939292;
+        border-top: 1px solid #939292;
+      }
+      .cfooter {
+        color: #a6a6a6;
+        margin-top: 30px;
+      }
+      .cfooter p {
+        margin: 0;
+        margin-top: 5px;
+      }
+      .footer p {
+        font-size: 12px;
+      }
+      ul {
+        padding-left: 15px;
+        color: #000;
+        font-size: 12px;
+      }
+      .date {
+        vertical-align: middle;
+        color: #b2b1b1;
+      }
+      h1 {
+        font-weight: 600;
+        font-size: 26px;
+      }
+      .footer {
+        color: #9f9e9e;
+      }
+      /*===============*/
+      .text-right {
+        text-align: right;
+      }
+      .pb0 {
+        padding-bottom: 0px;
+      }
+      hr {
+        margin: 0;
+      }
+      td p {
+        margin: 0;
+      }
+      .footer {
+	    float: footnote;
+      }
+      @page {
+        size: A4 portrait;
+      }
+      @media print {
+        .footer {
+          position: fixed;
+          bottom: 0;
+          float: footnote;
+        }
+        .cfooter {
+	        padding-bottom: 100px;
+        }
+        .cfooter{
+	      page-break-inside: avoid;
+        }
+        td, p {
+          page-break-inside: auto;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="invoice_template" id="templateA">
+      <table>
+        <tr>
+          <td class="p30"><img style="max-width: 160px;" src="http://image3.mouthshut.com/images/imagesp/925869367s.png" alt=""></td>
+          <td class="p30 text-right"><span class="date">March 03, 2017</span></td>
+        </tr>
+      </table>
+      <hr>
+      <table class="p30">
+        <tbody>
+          <tr>
+            <td>
+              <h1 class="mid">Hello <span class="PropName">Timothy</span>,</h1>
+            </td>
+          </tr>
+          <tr>
+            <td style="padding: 10px 0;">This is a system generated <span class="green">INVOICE #201770323-64</span> for Insta car Technologies Private Limited and  the total amount is <span class="green">INR 8350.</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>  
+        <div class="invoice_info p30">
+          <table class="summary">    
+            <thead>
+              <th>S.no</th><th>Partiular</th>
+              <th>Amount</th>
+            </thead>
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>Transactional Route</td>
+                <td>7260.87</td>
+              </tr>
+            </tbody>
+          </table>
+          <table class="tfooter summary">
+            <tfoot>
+              <tr>
+                <td> </td>
+                <td>Sub Total</td>
+                <td>7260.87</td>
+              </tr>
+              <tr>
+                <td> </td>
+                <td>Output Service Tax (14.0%)</td>
+                <td>1016.52</td>\
+              </tr>
+              <tr>
+                <td> </td>
+                <td>Swachh Bharat Cess (0.5%)</td>
+                <td>36.30</td>
+              </tr>
+              <tr>
+                <td> </td>
+                <td>Krishi Kalyan Cess (0.5%)</td>
+                <td>36.30</td>
+              </tr>
+              <tr>
+                <td> </td>
+                <td>Round Off</td><td>0.01</td>
+              </tr>
+              <tr class="total">
+                <td> </td>
+                <td>Total</td>
+                <td>8350.00</td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+        <div class="p30">
+          <table>
+            <tr>
+              <td>Thank You for your business.</td>
+            </tr>
+          </table>
+          <table class="cfooter" cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="color: #000;font-weight: 500;">Walkover Web Solutions Private Limited</td>
+            </tr>
+            <tr>
+              <td>405-406 Capt. C. S. Naydu Arcade</td>
+            </tr>
+            <tr>
+              <td>10/2 Old Palasia, near Greater Kailash Hospital</td>
+            </tr>
+            <tr>
+              <td>Indore - 452001</td>
+            </tr>
+            <tr>
+              <td>(M.P.)</td>
+            </tr>
+          </table>
+        </div>
+        <div class="p30">
+        </div>
+        <table class="footer p30" cellpadding="0" cellspacing="0" style="padding-bottom: 0;">
+          <tr>
+            <td>
+              <p>For wire transfer</p>
+              <p>ICICI Bank LTD.</p>
+              <p>A/C No: 004105012514</p>
+              <p>IFSC: ICIC0000041</p>
+            </td>
+            <td>
+              <p>CIN: U72400MP2010PTC023806</p>
+              <p>STC: AAACW9768LSD001</p>
+              <p>PAN: AAACW9768L</p>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="9">
+              <ul style="padding-left: 15px;">
+                <li>Above mention amount is in Indian National Rupees (INR)</li>
+                <li>We declare that this invoice shows the actual price of the services rendered and that all particulars are true and correct.</li>
+              </ul>
+            </td>
+          </tr>
+        </table>
+      </table>
+    </div>
+  </body>
+</html>

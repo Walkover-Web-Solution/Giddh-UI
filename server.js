@@ -193,6 +193,8 @@ var adminPanel = require('./public/routes/adminPanel/adminPanel')
 var recEntry = require('./public/routes/webapp/recurringEntry')
 var invoiceUpload = require('./public/routes/webapp/invoiceUpload')
 var stateDetails = require('./public/routes/webapp/stateDetails')
+var invoice = require('./invoice/invoiceModule')
+
 
 app.use('/time-test', timetest);
 app.use('/currency', currency);
@@ -222,6 +224,7 @@ app.use('/ebanks', ebanks);
 app.use('/admin', adminPanel);
 app.use('/state-details', stateDetails);
 app.use('/magic-link', magicLink);
+app.use('/invoice',invoice);
 
 
 // delete user session on logout
