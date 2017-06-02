@@ -1,8 +1,0 @@
-for(var i=0; i<=companyIdentitiesData.length; i++)
-      tr
-        td
-          if(i<=3)
-            p companyIdentitiesData[i]
-          if(i>3)
-            td
-              p companyIdentitiesData[i]
