@@ -28,7 +28,7 @@ router.get '/transactions', (req, res) ->
       to: req.query.toDate
       from: req.query.fromDate
       count:Number(req.query.count) || 0
-      page:Number(req.query.page) || 1
+      page:Number(req.query.page)
       sort:req.query.sort
       reversePage: req.query.reversePage
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/ledgers/transactions'
