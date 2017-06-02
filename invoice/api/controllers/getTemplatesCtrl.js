@@ -1,81 +1,63 @@
 const fs = require('fs');
 const webshot = require('webshot');
 
-var options = {
-    siteType: "html",
-    streamType: "jpeg"
-};
-
-
-
-
 getTemplates = {}
 var html_template_path = './invoice/api/models/invoice/html_templates/'
-
+var html_template_image_path = './invoice/api/models/invoice/html_templates/template_images/'
 function template (){
 	this.image_src=""
 	this.id=""
 }
 
+function templateData(){
+	this.id = ""
+	this.name = ""
+	this.html = ""
+}
+
+
 function returnFileAsHtmlString (fileName, callback){
-var d;
+console.log(html_template_path+fileName);
 fs.readFile(html_template_path+fileName,"utf-8", function(err, data){
     if (err) {
-      return console.error("Invalid template id");
+      return console.log("Invalid template id")
     }
      callback(data)
     })
 }
 
 function getById(req,res,next){
-	template_id= req.body.invoice_id;
-	template_name = "template_"+template_id+".html";
-	console.log(template_name);
-	var a = returnFileAsHtmlString(template_name,function(data){
-      res.status(200).send(data);
+	var template = new templateData();
+    template.id = req.params.id; 
+	template.name = template.id +'.html';
+	returnFileAsHtmlString(template.name,function(data){
+	template.html = data
+	res.status(200).send(template);
 	});
+    
 }
 
 
 function returnAllWithoutAuth(req,res,next){
 var filesToReturn = [];
 var fileObj;
-fs.readdir(html_template_path,function(err, files){
+fs.readdir(html_template_image_path,function(err, files){
    if (err) {
       return console.error(err);
     }
     files.forEach(function (file){
     fileObj = new template();
-    fileObj.id = file
-    fileObj.image_src = file+".jpeg"
-    returnFileAsHtmlString(file,function(data){
-    	webshot(data, file+".jpeg", options, function(err, data){
-    		if(err){
-    			console.log(err)
-    		}
-		});
-    });
-    filesToReturn.push(fileObj)	
+    fileObj.image_src = html_template_image_path+file
+	fileObj.id = file.substring(file.length - 4, -file.length);
+	filesToReturn.push(fileObj)	
   });
 res.status(200).send(filesToReturn)   
 });
-
 }
 
 
-
-
-
-
-
-
-
-
-
-
 function returnAll (req, res, next){
-	console.log("HEYEEYEYE")
- filesToReturn = [];
+ filesToReturn = [];	
  fs.readdir("./invoice/api/models/invoice/html_templates/",function(err, files){
    if (err) {
       return console.error(err);
@@ -96,8 +78,6 @@ function returnAll (req, res, next){
 	}else{
 		console.log("else")
 	}
-
-
 });
     
 }

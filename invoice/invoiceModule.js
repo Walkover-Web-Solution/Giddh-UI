@@ -7,8 +7,8 @@ var invoice = require('../invoice/api/controllers/invoice')
 
 
 //router.post('/make-invoice',);
-router.get('/get-templates', getTemplates.returnAllWithoutAuth)
-router.post('/get-template',getTemplates.getById)
+router.get('/template/getAll', getTemplates.returnAllWithoutAuth)
+router.get('/template/:id',getTemplates.getById)
 router.post('/download',invoice.downloadInvoice)
 
 module.exports = router
