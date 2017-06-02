@@ -1,5 +1,5 @@
 files:
-  "/opt/elasticbeanstalk/hooks/appdeploy/post/01_set_tmp_permissions.sh":
+  "/opt/elasticbeanstalk/hooks/appdeploy/post/01_set_deployment_permissions.sh":
     mode: "000755"
     owner: root
     group: root
