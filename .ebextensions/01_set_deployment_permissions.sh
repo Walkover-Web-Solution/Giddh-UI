@@ -5,4 +5,4 @@ files:
     group: root
     content: |
       #!/usr/bin/env bash
-      chown -R nodejs:nodejs /tmp/deployment/application/node_modules/
+      chown -R nodejs:nodejs /tmp/deployment/
