@@ -24,9 +24,9 @@
     "express-session": "",
     "geoip-lite": "^1.1.9",
     "git-rev": "*",
-    "grunt": "~0.4.2",
+    "grunt": "^0.4.5",
     "grunt-bower-concat": "^0.6.0",
-    "grunt-cli": "1.2.0",
+    "grunt-cli": "^1.2.0",
     "grunt-coffeelint": "0.0.16",
     "grunt-contrib-clean": "^0.7.0",
     "grunt-contrib-coffee": "^0.13.0",
@@ -49,9 +49,9 @@
     "karma-html2js-preprocessor": "~0.1.0",
     "karma-jasmine": "~0.1.0",
     "karma-junit-reporter": "~0.1.0",
-    "karma-phantomjs-launcher": "~0.1.0",
     "karma-requirejs": "0.2.0",
     "karma-script-launcher": "~0.1.0",
+    "karma-phantomjs-launcher" : "~0.1.0",
     "medium-editor": "^5.22.1",
     "medium-editor-tc-mention": "^2.2.4",
     "morgan": "*",
@@ -62,6 +62,7 @@
     "node-rest-client": "~1.4.3",
     "npid": "*",
     "prerender-node": "^2.4.0",
+    "pug": "^2.0.0-rc.1",
     "qs": "^6.1.0",
     "raven": "^1.1.1",
     "reflect-metadata": "0.1.2",
@@ -76,6 +77,7 @@
     "zone.js": "0.6.12"
   },
   "devDependencies": {
+
     "coffee-script": "*",
     "connect-mongo": "^0.8.2",
     "git-rev": "*",

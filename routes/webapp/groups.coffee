@@ -89,7 +89,7 @@ router.get '/detailed-groups-with-accounts', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/detailed-groups-with-accounts'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups-with-accounts'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

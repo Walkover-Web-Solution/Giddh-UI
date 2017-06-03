@@ -1,0 +1,357 @@
+	<!DOCTYPE html>
+	<html>
+	<head>
+		<title></title>
+		<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+		<!-- font-family: 'Roboto', sans-serif; -->
+	<style type="text/css">
+	@font-face {
+	    font-family: calibri;
+	    src: url(calibri.ttf);
+	}
+	body {
+		font-family: calibri;
+	 	-webkit-font-smoothing: antialiased;
+	 	font-size: 16px;
+		-moz-osx-font-smoothing: grayscale;
+	}
+	.mid {
+		font-weight: 300;
+	}
+	.pull-left {
+		float: left;
+	}
+	.pull-right {
+		float: right;
+	}
+	.header {
+		background: #fff;
+	}
+	.header h1, .header h3 {
+		margin: 4px 0;
+		font-weight: 400;
+	}
+	.header p {
+		margin: 4px 0;
+	}
+	.flow_hidden {
+		overflow: hidden;
+	}
+	.p30 {
+		padding: 30px;
+		position: relative;
+	}
+	.invoice_template {
+		overflow: hidden;
+		width: 8.5in;
+	    margin: 0 auto;
+	}
+
+	h1 {
+		margin: 0;
+		font-weight: 400;
+	}
+	.mrT2 {
+		margin-top: 20px;
+	}
+	.Invoice_info {
+	    background: #f2f2f2;
+	    padding: 30px;
+	}
+	table {
+		width: 100%;
+		font-weight: 400;
+	    max-width: 100%;
+	    border-spacing: 0;
+	}
+
+	.summary tbody tr td:last-child, .summary tfoot tr td:last-child  {
+	    float: right;
+	}
+	.summary tfoot tr td, .summary tbody tr td, th {
+	    text-align: right;
+	    border: none;
+	    padding-top: 3px;
+	    padding-bottom: 0 !important;
+	    vertical-align: middle;
+		/*padding: 8px;*/
+		padding:8px;
+	    line-height: 1.42857143;	
+	}
+	tfoot tr td {
+		padding:4px 8px;
+	}
+	.summary tbody tr td {
+		text-align: left;
+	}
+	.tfooter {
+		color: #000;
+		margin-top: 55px;
+	}
+	.total {
+		color: #000;
+		margin-top: 10px;
+		position: relative;
+	}
+	.total td{
+		margin: 15px 0px;
+	}
+	.cfooter {
+		color: #a6a6a6;
+		padding-top: 10px;
+	}
+	.cfooter p {
+		margin: 0;
+		margin-top: 5px;
+	}
+	.footer p {
+		margin: 0;
+		font-size: 16px;
+	}
+	.footer p:first-child{
+		margin-top: 0;
+	}
+	ul {
+		padding-left: 15px;
+		color: #000;
+		font-size: 15px;
+	}
+
+	h1 {
+		font-size: 36px;
+	}
+	.footer {
+	    color: #9f9e9e;
+	    overflow: hidden;
+	}
+	.text-left {
+		text-align: left;
+	}
+	.text-right {
+		text-align: right !important;
+	}
+
+	.clogo {
+		max-width: 160px;
+	}
+	thead th {
+		border-bottom: 1px solid #000;
+		font-weight: 400;
+	}
+	.total:after {
+	    content: ' ';
+	    position: absolute;
+	    width: 93%;
+	    left: 0;
+	    right: 0;
+	    height: 1px;
+	    margin: 0 auto;
+	    background: #000;
+	}
+	.three_col {
+	    color: #010101;
+	    position: relative;
+		vertical-align: middle;
+	}
+	.footer h1, .footer h3 {
+		color: #4b4c4f;
+	}
+	ul li {
+		width: 100%;
+		color: #4b4c4f;
+	}
+	.terms {
+		width: 100%;
+		float: left;
+		display: block;
+	}
+	.three_col:nth-child(2):before, .three_col:nth-child(2):after {
+	    border-left: 1px solid #000;
+	    position: absolute;
+	    content: ' ';
+	     top: 50%;
+	    height: 80px;
+	    transform: translateY(-50%);
+	}
+	.three_col:nth-child(2):before {
+	    left: -30px;
+	}
+	.three_col:nth-child(2):after {
+		right: 30px;
+	}
+	.three_col:nth-child(1):before {
+		content: none
+	}
+	.amt {
+		padding: 25px;
+		background: url('amt.png');
+		background-repeat: no-repeat;
+		display: inline-block;
+		background-position: center right;
+	    background-size: contain;
+	    width: 100px;
+	    color: #231f20;
+	}
+	.text-center {
+		text-align: center;
+	}
+	.arrow-down {
+	    width: 0;
+	    position: absolute;
+	    height: 0;
+	    border-left: 15px solid transparent;
+	    border-right: 15px solid transparent;
+	    border-top: 15px solid #fff;
+	    top: 0;
+	    margin-left: 20px;
+	}
+
+	@page {
+	  size: A4;
+	  margin: 11mm 17mm 17mm 17mm;
+	}
+
+	@media print {
+	  .footer {
+	    position: fixed;
+	    bottom: 0;
+	  }
+
+	  td, p {
+	    page-break-inside: avoid;
+	  }
+
+	  html, body {
+	    width: 210mm;
+	    height: 297mm;
+	  }
+	}
+	</style>
+	</head>
+	<body>
+
+	<div class="invoice_template" id="templateA">
+
+		<table class="p30 header">
+			<tbody>
+				<tr>
+					<td>
+						<h1>INVOICE</h1>
+						<h3>Number: 201770323-64</h3>
+						<span class="date">23-03-2017</span>
+					</td>
+					<td class="text-right">
+						<img style="max-width: 160px;" class="clogo" src="http://image3.mouthshut.com/images/imagesp/925869367s.png" alt="" />
+					</td>
+				</tr>			
+			</tbody>
+		</table>
+
+		<table class="p30 header" style="padding-top: 0px;">
+			<tbody>
+				<tr>
+					<td>
+						<p>To,</p>
+						<p>Insta car Technologies Private Limited</p>
+						<p>Indore</p>
+						<p>Att: Ishan Vyas</p>
+						<p>ishan@aspricot.com, 91-97525 87946</p>
+					</td>
+					<td class="text-right">
+						<h2 class="amt text-center">8350/-</h2>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+
+
+		<div class="Invoice_info p30">
+		<div class="arrow-down"></div>
+			<table class="summary">
+				<thead>
+					<th class="text-left">S.no</th>
+					<th class="text-left">Description</th>
+					<th class="text-right">Qty.</th>
+					<th class="text-right">Amount</th>
+				</thead>
+				<tbody>
+						<tr>
+							<td>1</td>
+							<td>Transactional Route</td>
+							<td class="text-right">1</td>
+							<td>7260.87</td>
+						</tr>
+						<tr>
+							<td>2</td>
+							<td>Transactional Route</td>
+							<td class="text-right">1</td>
+							<td>7260.87</td>
+						</tr>
+				</tbody>
+				<tfoot>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>Sub Total</td>
+						<td>7260.87</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>Output Service Tax (14.0%)</td>
+						<td>1016.52</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>Swachh Bharat Cess (0.5%)</td>
+						<td>36.30</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>Krishi Kalyan Cess (0.5%)</td>
+						<td>36.30</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>Round Off</td>
+						<td>0.01</td>
+					</tr>
+					<tr class="total">
+						<td>&nbsp;</td>
+						<td>&nbsp;</td>
+						<td>Total</td>
+						<td>8350.00</td>
+					</tr>
+				</tfoot>
+			</table>
+			<table class="tfooter summary">
+
+			</table>
+			<table>
+				<tbody>
+					<tr>
+						<td style="padding: 0 8px;" class="text-right"><h3 style="font-weight: 400;margin: 0;">Eight Thousand Three Hundred Fifty only</h3></td>
+					</tr>
+				</tbody>
+			</table>
+
+		</div>
+		<table class="p30">
+			<tbody>
+				<tr class="cfooter">
+					<td><p style="color: #000;font-weight: 500;font-size: 16px;">Walkover Web Solutions Private Limited</p></td>
+				</tr>
+				<tr class="cfooter">
+					<td><p style="margin-top: 10px;font-size: 18px;">Digitally Generated No Signature required</p></td>
+				</tr>
+			</tbody>
+		</table>
+
+	</div>
+
+
+	</body>
+	</html>

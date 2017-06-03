@@ -7,14 +7,14 @@
 
 	<div class="modal-body noPad mrT2">
 		<div class="row">
-			<h1 class="text-center account_Name">{{ledgerCtrl.accountToShow.name}} A/c</h1>
+			<h1 class="text-center account_Name">{{ledgerCtrl.editModeBaseAccount}} A/c</h1>
 		</div>
 		<div class="ledgHead entry-popup mrT1">
 			<table class="col-xs-12 ledger-head">
 				<thead>
 					<tr>
-						<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} coming in?</th>
-						<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} going out?</th>
+						<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.editModeBaseAccount}} coming in?</th>
+						<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.editModeBaseAccount}} going out?</th>
 					</tr>
 				</thead>
 			</table>
@@ -69,7 +69,7 @@
 													type="text" 
 													ng-model="txn.particular"
 													typeahead-append-to-body="true" 
-			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | addStockinAccountList:ledgerCtrl.baseAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
 			                                      	typeahead-template-url="accountPopUp.html" 
 													class="form-control"
 													ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
@@ -152,7 +152,7 @@
 													type="text"
 													ng-model="txn.particular"
 													typeahead-append-to-body="true" 
-			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
+			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated  |addStockinAccountList:ledgerCtrl.baseAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
 			                                      	typeahead-template-url="accountPopUp.html"
 													ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 													is-open="txn.isOpen"
@@ -236,10 +236,24 @@
 				        	<tbody>        		
 				        	<tr>
 				        		<td ng-if="ledgerCtrl.selectedLedger.showStock">
-						        	<label>Quantity</label>
-							        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.quantity" ng-change="ledgerCtrl.onQuantityChange(ledgerCtrl.selectedLedger) "/>
+						        	<!-- <label>Quantity</label>
+							        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.quantity" ng-change="ledgerCtrl.onQuantityChange(ledgerCtrl.selectedLedger) "/> -->
+									<table>
+							        	<tbody>
+							        		<tr>
+							        			<td ng-class="{width55: ledgerCtrl.selectedLedger.panel.unit != undefined}">
+							        				<label>Quantity</label>
+							       		 			<input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.quantity" ng-change="ledgerCtrl.onQuantityChange(ledgerCtrl.selectedLedger)"/>
+							        			</td>
+							        			<td ng-if="ledgerCtrl.selectedLedger.panel.unit">
+							        				<label>Unit</label>
+							       		 			<select class="form-control" ng-options="unit as unit.stockUnitCode for unit in ledgerCtrl.selectedLedger.panel.units" ng-model="ledgerCtrl.selectedLedger.panel.unit" ng-change="ledgerCtrl.onstockUnitChange(ledgerCtrl.selectedLedger)">
+							       		 			</select>
+							        			</td>
+							        		</tr>
+							        	</tbody>
+							        </table>
 				        		</td>
-				        		
 				        		<td ng-if="ledgerCtrl.selectedLedger.showStock">
 				        			<label>&nbsp;</label>
 				        			<label class="pdR pdL default_clr">x</label>
@@ -407,8 +421,6 @@
 		</div>
 	</div>
 </div>
-
-
 
 <script type="text/ng-template" id="accountPopUp.html">
   <a href="javascript:void(0)" class="account-list-item" set-drop-overflow style="border-bottom:1px solid #e0e0e0;">

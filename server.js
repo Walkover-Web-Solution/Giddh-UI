@@ -10,8 +10,8 @@ var session = require('express-session');
 var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
-var mongoose = require('mongoose');
-var MongoStore = require('connect-mongo')(session);
+// var mongoose = require('mongoose');
+// var MongoStore = require('connect-mongo')(session);
 // var MemcachedStore = require('connect-memcached')(session);
 //global.sessionTTL = 1000 * 60
 //Example POST method invocation 
@@ -73,14 +73,14 @@ app.use(session({
     maxAge: sessionTTL,
     domain:'giddh.com',
     httpOnly: false
-  },
-  store: new MongoStore({
-    url: settings.mongoUrl,
-    autoRemove: 'interval',
-    autoRemoveInterval: sessionTTL,
-    ttl: sessionTTL,
-    touchAfter: sessionTTL - 300
-  })
+  }
+  // ,store: new MongoStore({
+  //   url: settings.mongoUrl,
+  //   autoRemove: 'interval',
+  //   autoRemoveInterval: sessionTTL,
+  //   ttl: sessionTTL,
+  //   touchAfter: sessionTTL - 300
+  // })
   // store   : new MemcachedStore({
   //   hosts: ['127.0.0.1:11211'],
   //   secret: 'keyboardcat'
@@ -192,6 +192,9 @@ var adminPanel = require('./public/routes/adminPanel/adminPanel')
 var recEntry = require('./public/routes/webapp/recurringEntry')
 var invoiceUpload = require('./public/routes/webapp/invoiceUpload')
 var stateDetails = require('./public/routes/webapp/stateDetails')
+var invoice = require('./invoice/invoiceModule')
+
+
 
 app.use('/time-test', timetest);
 app.use('/currency', currency);
@@ -209,7 +212,7 @@ app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/company/:companyUniqueName/balance-sheet', balanceSheet);
 app.use('/upload-invoice',parseUploads, invoiceUpload);
 app.use('/upload', parseUploads, upload);
-app.use('/', appRoutes);
+// app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/stock-group', inventory)
 app.use('/company/:companyUniqueName/profit-loss', profitLoss);
 app.use('/company/:companyUniqueName/templates', templates);
@@ -221,12 +224,13 @@ app.use('/ebanks', ebanks);
 app.use('/admin', adminPanel);
 app.use('/state-details', stateDetails);
 app.use('/magic-link', magicLink);
+app.use('/invoice',invoice);
 
 
 // delete user session on logout
 app.use('/logout', function(req, res){
   if(req.session.name){
-    delete req.session
+    req.session.destroy()
     res.redirect('https://giddh.com')
     //res.status(200).send({message:'user logged out'})
   }else{
