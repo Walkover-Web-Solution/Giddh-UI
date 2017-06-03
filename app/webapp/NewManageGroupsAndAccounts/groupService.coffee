@@ -130,6 +130,11 @@ giddh.serviceModule.service 'groupService', ($resource, $q) ->
       @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccounts({companyUniqueName: companyUniqueName},
         onSuccess, onFailure))
 
+#   search groups with accounts
+    searchGroupsWithAccountsCropped:(reqParam, onSuccess, onFailure) ->
+      @handlePromise((onSuccess, onFailure) -> Group.getAllWithAccounts({companyUniqueName: reqParam.companyUniqueName, q:reqParam.query},
+        onSuccess, onFailure))
+
 #   Get flatten groups with accounts list
     getFlattenGroupAccList: (reqParam, onSuccess, onFailure) ->
       @handlePromise((onSuccess, onFailure) -> Group.getFlattenGrpWithAcc({companyUniqueName: reqParam.companyUniqueName, q:reqParam.q, page:reqParam.page, count:reqParam.count, showEmptyGroups:reqParam.showEmptyGroups},

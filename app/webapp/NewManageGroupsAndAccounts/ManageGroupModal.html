@@ -16,7 +16,7 @@
               <i class="glyphicon glyphicon-search"></i>
             </div>
 
-            <input type="text" name="grpSrch" class="form-control" ng-model="keyWord" placeholder="Search accounts" ng-keyup="setScrollToTop(grpSrch, 'addMngGrpScrBar')" trial-accordion="search" ng-model-options="{debounce:1000}">
+            <input type="text" name="grpSrch" class="form-control" ng-model="mc.keyWord" placeholder="Search accounts" ng-change="mc.searchQuery(mc.keyWord)" trial-accordion="search" ng-model-options="{debounce:700}">
             
 
           </div>
@@ -27,25 +27,10 @@
   <!-- end header -->
 
   <div class="modal-body noPad">
-    <!-- assets list -->
-<!--       <div class="col-xs-2 assets_list">
-        <div class="row">
-          <ul class="grp_list">
-             
-
-             <li ng-repeat="grp in mc.groupList | orderBy: 'category'">
-              <a href="javascript:void(0)" id="grp_{{grp.name}}" ng-bind-html="grp.name | uppercase" ng-click="mc.selectItem(grp); mc.getSelectedType('grp');mc.selectActiveItems(grp, 'grp', $index)" uib-tooltip="{{grp.synonyms}}" tooltip-placement="right" ng-class="{isSelectedgrp: col.active.type == 'grp' && col.active.index == $index}"></a>
-            </li>
-            
-          </ul>
-        </div>
-      </div> -->
-    <!-- assets list end -->
-
 
     <!-- list of groups -->
     <div class="col-xs-7 grp_col bdrL bdrR">
-      <div class="search-loading" ng-hide="mc.showListGroupsNow">
+      <div class="search-loading" ng-hide="mc.showListGroupsNow" ng-show="mc.searchLoad">
         <span class="spinner small"></span> Loading…
       </div>
       <div class="row grp_col">
@@ -60,17 +45,16 @@
         <!-- level 1 -->
       <div class="col_wrapper" ng-repeat="col in mc.columns">
 
-        <ul class="grp_list">
-          <li ng-if="$first"><a href="javascript:void(0);">Show All</a></li>
+        <ul class="grp_list" overflowfix>
           <li ng-repeat="grp in col.groups">
-            <a href="javascript:void(0);" class="" id="subGrp_{{grp.name}}" ng-bind-html="grp.name | capitalize" ng-click="mc.selectItem(grp, true); mc.getSelectedType('grp');mc.selectActiveItems(col, 'grp', $index)" uib-tooltip="{{grp.synonyms}}" tooltip-placement="right" ng-class="{isParent:col.active.type == 'grp' && col.active.index == $index, isActive:col.active.type == 'grp' && col.active.index == $index && mc.breadCrumbList[mc.breadCrumbList.length-1].uniqueName == grp.uniqueName}"></a>
+            <a href="javascript:void(0);" class="" id="subGrp_{{grp.name}}" ng-bind-html="grp.name | capitalize" ng-click="mc.selectItem(grp, true); mc.getSelectedType('grp');mc.selectActiveItems(col, 'grp', $index)" uib-tooltip="{{grp.synonyms}}" tooltip-placement="bottom" ng-class="{isParent:col.active.type == 'grp' && col.active.index == $index, isActive:col.active.type == 'grp' && col.active.index == $index && mc.breadCrumbList[mc.breadCrumbList.length-1].uniqueName == grp.uniqueName && mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'grp'}"></a>
           </li>
 
           <li ng-repeat="acc in col.accounts">
-            <a href="javascript:void(0);" class="isAcc" id="acc_{{acc.name}}" ng-bind-html="acc.name | capitalize" ng-click="mc.getAccDetail(acc, $parent.$index); mc.getSelectedType('acc');mc.selectActiveItems(col, 'acc', $index)" uib-tooltip="{{acc.synonyms}}" tooltip-placement="right" ng-class="{isParent:col.active.type == 'acc' && col.active.index == $index, isActive:col.active.type == 'acc' && col.active.index == $index && mc.breadCrumbList[mc.breadCrumbList.length-1].uniqueName == acc.uniqueName}"></a>
+            <a href="javascript:void(0);" class="isAcc" id="acc_{{acc.name}}" ng-bind-html="acc.name | capitalize" ng-click="mc.getAccDetail(acc, $parent.$index); mc.getSelectedType('acc');mc.selectActiveItems(col, 'acc', $index)" uib-tooltip="{{acc.synonyms}}" tooltip-placement="bottom" ng-class="{isParent:col.active.type == 'acc' && col.active.index == $index, isActive:col.active.type == 'acc' && col.active.index == $index && mc.breadCrumbList[mc.breadCrumbList.length-1].uniqueName == acc.uniqueName && mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'account'}"></a>
           </li>
 
-          <li><a href="javascript:void(0)" class="btn-add" ng-click="mc.createNewGrpAccount($index)">Create new</a></li>
+          <li class="new_btn"><a href="javascript:void(0)" class="btn-add" ng-click="mc.createNewGrpAccount($index)">Create new</a></li>
         </ul>
       </div>
     <!-- level 1 -->
@@ -80,7 +64,8 @@
     </div>
     </div>
     <!-- list of groups end -->
-    
+
+
     <!-- form view -->
     <div class="col-xs-5 form_box">
       <div class="row">
@@ -120,6 +105,10 @@
 
 
   </div>
+
+  <!-- search view -->
+
+
   <!-- end modal body -->
 
 

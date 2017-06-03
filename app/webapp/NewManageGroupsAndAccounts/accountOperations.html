@@ -95,37 +95,38 @@
     </div>
 
     <div class="pd2 clearfix pdB1">
-        <button class="btn isActive" ng-if="mc.showOnUpdate && !mc.selectedItem.fixed" ng-click="mc.deleteAccount()">DELETE {{mc.selectedAcc.name}} </button>
+        <button class="btn isActive" ng-if="mc.showOnUpdate && !mc.selectedAcc.fixed" ng-click="mc.deleteAccount()">DELETE {{mc.selectedAcc.name}} </button>
         <button class="btn btn-success pull-right" ng-if="!mc.showOnUpdate" ng-click="mc.addAccount()" ng-disabled="addAccountForm.$invalid">Add</button>
         <button class="btn btn-success pull-right" ng-if="mc.showOnUpdate && canUpdate" ng-click="mc.updateAccount()" ng-disabled="addAccountForm.$invalid">Update</button>
     </div>
 
+    <hr ng-if="mc.AccountCategory == 'income' || mc.AccountCategory == 'expenses'" />
     <!-- taxes -->
-    <div class="pd2" ng-if="mc.AccountCategory == 'income' || mc.AccountCategory == 'expenses'">
-      <hr />
+    <div class="pd2 detailed" ng-if="mc.AccountCategory == 'income' || mc.AccountCategory == 'expenses'">
       <div class="tax_group">
         <h2 style="font-size: 18px;">Taxes</h2>
         <button id="editTax" ng-if="canUpdate" class="btn btn-sm btn-default edit-tax-btn" ng-click="mc.getTaxHierarchy('account')" ng-hide="mc.showEditTaxSection"><i class="glyphicon glyphicon-edit"></i></button>
       </div>
       
-      <div class="form-group clearfix mrT2 mrB">
+      <div class="form-group clearfix mrT1 mrB">
         <label>All Applied Taxes</label>
-        <div class="tags">
+        <div class="tags clearfix">
           <span class="tax-bullet" ng-repeat="tax in mc.selectedAcc.applicableTaxes" ng-if="mc.selectedAcc.applicableTaxes.length > 0">{{tax.name}}</span>
           <small ng-if="mc.selectedAcc.applicableTaxes.length < 1" class="grey">No taxes Applied</small>
         </div>
+        <hr>
       </div>
-      <hr>
+
       <div class="" ng-if="mc.showEditTaxSection">
-        <div class="form-group clearfix mrT2 mrB">
+        <div class="form-group clearfix mrT1 mrB">
           <label>All Inherited Taxes</label>
-          <div class="tags">
+          <div class="tags clearfix">
             <span class="tax-bullet" ng-repeat="inTax in mc.allInheritedTaxes" popover-trigger="mouseenter" popover-placement="bottom" uib-popover-template="'taxHierarchy.html'" ng-if="mc.allInheritedTaxes.length > 0">{{inTax.name}}</span>
             <small ng-if="mc.allInheritedTaxes.length < 1" class="grey">No Inherited Taxes</small>
           </div>
         </div>
         <hr>
-        <div class="form-group clearfix mrT2 mrB" id="App_taxes">
+        <div class="form-group clearfix mrT1 mrB" id="App_taxes">
           <label>All Applicable Taxes</label>
           <ui-select multiple ng-model="mc.taxHierarchy.applicableTaxes" theme="bootstrap">
           <ui-select-match placeholder="Select Taxes">
@@ -141,9 +142,9 @@
       </div> <!-- end taxes -->
     </form>
 
+<hr ng-if="mc.showOnUpdate && !mc.selectedAcc.fixed" />
 
-    <div class="pd2 detailed clearfix pdT pdB1" ng-if="mc.showOnUpdate && !mc.selectedItem.fixed">
-        <hr class="mrB1" />
+    <div class="pdR2 pdL2 detailed clearfix pdT1 pdB1" ng-if="mc.showOnUpdate && !mc.selectedAcc.fixed">
         <div>
           <label>Move to group</label>
         </div>
@@ -158,16 +159,15 @@
 
       <div class="clearfix"></div>
 
-    <!-- ng-if="!mc.selectedItem.fixed" -->
-    <div class="pd2 detailed clearfix pdT pdB1" ng-if="mc.showOnUpdate && !mc.selectedItem.fixed">
-      <hr class="mrB1">
-      <div class="form-group col-xs-10 mrB pdT1">
+    <div class="pd2 detailed clearfix pdT pdB1" ng-if="mc.showOnUpdate && !mc.selectedAcc.fixed">
+      
+      <div class="form-group col-xs-10 mrB">
         <div class="row">
           
           <label class="col-xs-12 row">Merge this A/c with</label>
-          <ul class="accmerge mrB1" ng-if="mc.getMergeAcc">
+          <ul class="accmerge mrB1" ng-if="mc.getMergeAcc.length>0">
             <li ng-repeat="merged in mc.getMergeAcc">
-              <a href="javascript:void(0);" ng-click="mc.unmerge(merged)">{{merged}}</a><i class="fa fa-times" ng-click="mc.deleteMergedAccount(merged)"></i>
+              <a href="javascript:void(0);" ng-click="mc.unmerge(merged)" ng-bind="merged"></a><i class="fa fa-times" ng-click="mc.deleteMergedAccount(merged)"></i>
             </li>
           </ul>
           
@@ -220,6 +220,8 @@
         <!-- ng-disabled="toMerge.moveToAcc.length < 1" -->
           <button class="btn isActive" ng-click="mc.moveToAccount()">Move</button>
         </div>
+        <div class="clearfix"></div>
+        <hr class="mrT1">
     </div>
 
   </div>

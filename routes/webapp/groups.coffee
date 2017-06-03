@@ -65,6 +65,8 @@ router.get '/with-accounts', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      'q':req.query.q || ''
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups-with-accounts'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined

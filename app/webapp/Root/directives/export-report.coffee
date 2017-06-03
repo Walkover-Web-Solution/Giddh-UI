@@ -408,6 +408,20 @@ angular.module('trialBalance', []).directive('exportReport', [
     setHeight()
 ]
 
+# check ul overflow
+.directive 'overflowfix', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: "A"
+  link: (scope, elem) ->
+    elem1 = elem[0]
+    scroll = $(elem).scrollTop();
+    $(elem).on('scroll', (e) ->
+      if $(elem1).hasClass("fix")
+        return 0
+      if scroll <= 20
+        $(elem1).addClass("fix")
+    )
+]
+
 
 # .directive 'ledgerScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
 #   restrict: "EA"
