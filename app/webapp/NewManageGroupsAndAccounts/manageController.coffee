@@ -64,17 +64,40 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 # end
 
 
+  $rootScope.$on('Open-Manage-Modal', ()->
+      mc.NewgoToManageGroups() 
+    )
+
   #show breadcrumbs
   mc.showBreadCrumbs = (data) ->
     mc.showBreadCrumb = true
+
+  # mc.NewgoToManageGroups =() ->
+  #   if !$rootScope.canManageComp
+  #     return
+  #   if _.isEmpty($rootScope.selectedCompany)
+  #     toastr.error("Select company first.", "Error")
+  #   else
+  #     modalInstance = $uibModal.open(
+  #       templateUrl: $rootScope.prefixThis+'/public/webapp/NewManageGroupsAndAccounts/ManageGroupModal.html'
+  #       size: "liq90"
+  #       backdrop: 'static'
+  #       scope: $scope
+  #     )
+  #     modalInstance.result.then(mc.goToManageGroupsOpen, mc.goToManageGroupsClose)
 
 
   mc.goToManageGroupsOpen = (res) ->
     console.log "manage opened", res
 
   mc.goToManageGroupsClose = () ->
-    $scope.selectedGroup = {}
-    groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then(mc.getGroupListSuccess, mc.getGroupListFailure)
+    mc.selectedItem = undefined
+    mc.showGroupDetails = false
+    mc.showAccountDetails = false
+    mc.showAccountListDetails = false
+    mc.cantUpdate = false
+    mc.selectedTax.taxes = {}
+    mc.showEditTaxSection = false
 
 # add hierarchy level to track open column and asset
   mc.addHLevel = (groups, level) ->
@@ -94,6 +117,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     col.accounts = []
     mc.columns.push(col)
     mc.updateAll(res.body)
+
+  mc.getGroupListFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   mc.getGroups =() ->
     mc.searchLoad = true

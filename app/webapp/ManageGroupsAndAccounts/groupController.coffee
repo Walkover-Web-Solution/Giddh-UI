@@ -145,22 +145,20 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 # #########################################################################################################################
 # new add & manage modal
 
-  $scope.NewgoToManageGroups =() ->
-#    $scope.fltAccntListPaginated = []
-#    $scope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
-    if !$rootScope.canManageComp
-      return
-    $scope.getFlatAccountListCount5($rootScope.selectedCompany.uniqueName)
-    if _.isEmpty($rootScope.selectedCompany)
-      toastr.error("Select company first.", "Error")
-    else
-      modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/NewManageGroupsAndAccounts/ManageGroupModal.html'
-        size: "liq90"
-        backdrop: 'static'
-        scope: $scope
-      )
-      modalInstance.result.then(mc.goToManageGroupsOpen, mc.goToManageGroupsClose)
+  # $scope.NewgoToManageGroups =() ->
+  #   if !$rootScope.canManageComp
+  #     return
+  #   $scope.getFlatAccountListCount5($rootScope.selectedCompany.uniqueName)
+  #   if _.isEmpty($rootScope.selectedCompany)
+  #     toastr.error("Select company first.", "Error")
+  #   else
+  #     modalInstance = $uibModal.open(
+  #       templateUrl: $rootScope.prefixThis+'/public/webapp/NewManageGroupsAndAccounts/ManageGroupModal.html'
+  #       size: "liq90"
+  #       backdrop: 'static'
+  #       scope: $scope
+  #     )
+  #     modalInstance.result.then(mc.goToManageGroupsOpen, mc.goToManageGroupsClose)
 
 
 
