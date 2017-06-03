@@ -22,7 +22,6 @@
     "es6-shim": "^0.35.0",
     "express": "~4.13.1",
     "express-session": "",
-    "find-remove": "^1.0.1",
     "geoip-lite": "^1.1.9",
     "git-rev": "*",
     "grunt": "^0.4.5",
