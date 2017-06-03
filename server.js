@@ -213,7 +213,7 @@ app.use('/company/:companyUniqueName/trial-balance', trialBalance);
 app.use('/company/:companyUniqueName/balance-sheet', balanceSheet);
 app.use('/upload-invoice',parseUploads, invoiceUpload);
 app.use('/upload', parseUploads, upload);
-app.use('/', appRoutes);
+// app.use('/', appRoutes);
 app.use('/company/:companyUniqueName/stock-group', inventory)
 app.use('/company/:companyUniqueName/profit-loss', profitLoss);
 app.use('/company/:companyUniqueName/templates', templates);
@@ -231,7 +231,7 @@ app.use('/invoice',invoice);
 // delete user session on logout
 app.use('/logout', function(req, res){
   if(req.session.name){
-    delete req.session
+    req.session.destroy()
     res.redirect('https://giddh.com')
     //res.status(200).send({message:'user logged out'})
   }else{

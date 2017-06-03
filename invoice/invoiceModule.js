@@ -2,8 +2,8 @@
 var settings = require('../public/routes/util/settings');
 var router = settings.express.Router({mergeParams: true})
 	
-var getTemplates = require('../invoice/api/controllers/getTemplatesCtrl')
-var invoice = require('../invoice/api/controllers/invoice')
+var getTemplates = require('./api/controllers/getTemplatesCtrl')
+var invoice = require('./api/controllers/invoice')
 
 
 //router.post('/make-invoice',);

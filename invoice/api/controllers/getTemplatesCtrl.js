@@ -39,20 +39,22 @@ function getById(req,res,next){
 
 
 function returnAllWithoutAuth(req,res,next){
-var filesToReturn = [];
-var fileObj;
-fs.readdir(html_template_image_path,function(err, files){
-   if (err) {
-      return console.error(err);
-    }
-    files.forEach(function (file){
-    fileObj = new template();
-    fileObj.image_src = html_template_image_path+file
-	fileObj.id = file.substring(file.length - 4, -file.length);
-	filesToReturn.push(fileObj)	
-  });
-res.status(200).send(filesToReturn)   
-});
+	var filesToReturn = [];
+	var fileObj;
+	fs.readdir(html_template_image_path,
+		function(err, files){
+		    if (err) {
+		      return console.error(err);
+		    }
+		    files.forEach(function (file){
+			    fileObj = new template();
+			    fileObj.image_src = html_template_image_path+file
+				fileObj.id = file.substring(file.length - 4, -file.length);
+				filesToReturn.push(fileObj)	
+	  		});
+			res.status(200).send(filesToReturn)   
+		}
+	);
 }
 
 

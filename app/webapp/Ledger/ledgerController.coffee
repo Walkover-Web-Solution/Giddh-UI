@@ -1040,12 +1040,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.addBlankTxn = (type, ledger) ->
     txn = new txnModel(type)
-    txn.isnew = true
     hasBlank = ledgerCtrl.checkForExistingblankTransaction(ledger, type)
     if !hasBlank
-      ledgerCtrl.selectedTxn = txn
-      ledgerCtrl.createNewPanel(ledgerCtrl.selectedTxn, ledger)
-      ledger.transactions.push(ledgerCtrl.selectedTxn)
+      ledgerCtrl.createNewPanel(txn, ledger)
+      ledger.transactions.push(txn)
     ledgerCtrl.setFocusToBlankTxn(ledger, txn, type)
 
   ledgerCtrl.checkForExistingblankTransaction = (ledger, type) ->
@@ -1059,6 +1057,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.prevTxn.isOpen = false
     _.each ledger.transactions, (trn) ->
       if trn.particular.uniqueName == "" && trn.type == type
+        ledgerCtrl.createNewPanel(trn, ledger)
         trn.isOpen = true
         ledgerCtrl.prevTxn = trn
 
@@ -1400,8 +1399,16 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       stockTxn.inventory.unit = stockTxn.particular.stocks[0].stockUnit
       stockTxn.amount = ledger.panel.total
     else if !_.isEmpty(stockTxn)
-      stockTxn.inventory.quantity = ledger.panel.quantity
-      stockTxn.inventory.unit = ledger.panel.unit
+      if !stockTxn.particular.stock
+        stockTxn.inventory.quantity = ledger.panel.quantity
+        stockTxn.inventory.unit = ledger.panel.unit
+        stockTxn.inventory.unit.code = ledger.panel.unit.stockUnitCode
+      else
+        stockTxn.inventory.stock = stockTxn.particular.stock
+        stockTxn.inventory.quantity = ledger.panel.quantity
+        stockTxn.inventory.unit = ledger.panel.unit
+        stockTxn.inventory.unit.code = ledger.panel.unit.stockUnitCode
+
       if stockTxn.amount != ledger.panel.amount
         ledgerCtrl.updateTxnAmount()
       # if stockTxn.amount != ledger.panel.total
@@ -1428,6 +1435,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.addDiscountTxns(ledger)
     delete ledger.panel
     ledger
+
+  ledgerCtrl.removeTaxTransactions = (ledger) ->
+    transactions = []
+    _.each ledger.transactions, (txn) ->
+      if !txn.isTax
+        transactions.push(txn)
+    transactions
 
   ledgerCtrl.lastSelectedLedger = {}
   ledgerCtrl.saveUpdateLedger = (ledger) ->
@@ -1481,6 +1495,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       else
         #update entry
         #ledgerCtrl.removeEmptyTransactions(ledger.transactions)
+        ledger.transactions = ledgerCtrl.removeTaxTransactions(ledger)
         _.each ledger.transactions, (txn) ->
           if !_.isEmpty(txn.particular.uniqueName)
             particular = {}
@@ -1495,6 +1510,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           acntUname: ledgerCtrl.accountUnq
           entUname: ledger.uniqueName
         }
+        if ledgerCtrl.currentTxn.isBaseAccount
+          unqNamesObj.acntUname = ledgerCtrl.currentTxn.particular.uniqueName
+
         # transactionsArray = []
         # _.every(ledgerCtrl.blankLedger.transactions,(led) ->
         #   delete led.date
@@ -2080,9 +2098,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       entUname: entry.entryUniqueName
     }
 
+    ledgerCtrl.baseAccount = ledgerCtrl.accountToShow
+
     if entry.isCompoundEntry && entry.isBaseAccount 
       reqParam.acntUname = entry.particular.uniqueName
       ledgerCtrl.editModeBaseAccount = entry.particular.name
+      ledgerCtrl.baseAccount = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:entry.particular.uniqueName})
     else
       ledgerCtrl.editModeBaseAccount = ledgerCtrl.accountToShow.name
 
