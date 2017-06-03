@@ -224,10 +224,7 @@ app.use('/ebanks', ebanks);
 app.use('/admin', adminPanel);
 app.use('/state-details', stateDetails);
 app.use('/magic-link', magicLink);
-app.use('/invoice',function(req,res,next){
-  console.log('request received')
-  next();
-},invoice);
+app.use('/invoice',invoice);
 
 
 // delete user session on logout
