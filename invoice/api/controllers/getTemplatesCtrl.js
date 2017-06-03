@@ -1,5 +1,4 @@
 const fs = require('fs');
-const webshot = require('webshot');
 
 getTemplates = {}
 var html_template_path = './invoice/api/models/invoice/html_templates/'
@@ -87,7 +86,6 @@ function returnAll (req, res, next){
 
 
 // return all templates
-getTemplates.webshot = webshot;
 getTemplates.getById = getById;
 getTemplates.returnAllWithoutAuth = returnAllWithoutAuth;
 
