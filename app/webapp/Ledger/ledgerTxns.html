@@ -575,7 +575,7 @@ th {
 <script type="text/ng-template" id="panel">
      <div class="ledger-panel" ng-click="$event.stopPropagation()" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': ledgerCtrl.showPanel, 'top0':hideHeader}">
       <div class="wrapper">
-        <div class="basic_detail" ng-if="ledgerCtrl.selectedLedger.isBlankLedger">
+        <div class="basic_detail" ng-if="ledgerCtrl.selectedLedger.isBlankLedger && !ledgerCtrl.selectedLedger.isBankTransaction">
 	        <table>
 	        	<tbody>        		
 	        	<tr>
@@ -672,7 +672,7 @@ th {
 	        	</tr>
 	        	</tbody>
 	        </table>
-  		</div>
+  			</div>
   		<div class="col-xs-12 pd1 text-right" ng-if="ledgerCtrl.selectedLedger.isBlankLedger">
   			<span class="inWords">{{ledgerCtrl.selectedLedger.panel.total | numtowords | lowercase}}</span>
   		</div>

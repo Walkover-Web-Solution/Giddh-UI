@@ -70,7 +70,8 @@
 													ng-model="txn.particular"
 													typeahead-append-to-body="true" 
 			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | addStockinAccountList:ledgerCtrl.baseAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
-			                                      	typeahead-template-url="accountPopUp.html" 
+			                                      	typeahead-template-url="accountPopUp.html"
+			                                      	typeahead-on-select = "ledgerCtrl.createPanel(txn, ledger);ledgerCtrl.matchInventory(ledger)" 
 													class="form-control"
 													ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 													is-open="txn.isOpen">
@@ -154,6 +155,7 @@
 													typeahead-append-to-body="true" 
 			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated  |addStockinAccountList:ledgerCtrl.baseAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
 			                                      	typeahead-template-url="accountPopUp.html"
+			                                      	typeahead-on-select = "ledgerCtrl.createPanel(txn, ledger);ledgerCtrl.matchInventory(ledger)"
 													ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 													is-open="txn.isOpen"
 													>

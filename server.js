@@ -10,8 +10,8 @@ var session = require('express-session');
 var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
-// var mongoose = require('mongoose');
-// var MongoStore = require('connect-mongo')(session);
+var mongoose = require('mongoose');
+var MongoStore = require('connect-mongo')(session);
 // var MemcachedStore = require('connect-memcached')(session);
 //global.sessionTTL = 1000 * 60
 //Example POST method invocation 
@@ -75,13 +75,13 @@ app.use(session({
     httpOnly: false
   }
 
-  // ,store: new MongoStore({
-  //   url: settings.mongoUrl,
-  //   autoRemove: 'interval',
-  //   autoRemoveInterval: sessionTTL,
-  //   ttl: sessionTTL,
-  //   touchAfter: sessionTTL - 300
-  // })
+  ,store: new MongoStore({
+    url: settings.mongoUrl,
+    autoRemove: 'interval',
+    autoRemoveInterval: sessionTTL,
+    ttl: sessionTTL,
+    touchAfter: sessionTTL - 300
+  })
   // store   : new MemcachedStore({
   //   hosts: ['127.0.0.1:11211'],
   //   secret: 'keyboardcat'
@@ -193,7 +193,7 @@ var adminPanel = require('./public/routes/adminPanel/adminPanel')
 var recEntry = require('./public/routes/webapp/recurringEntry')
 var invoiceUpload = require('./public/routes/webapp/invoiceUpload')
 var stateDetails = require('./public/routes/webapp/stateDetails')
-var invoice = require('./invoice/invoiceModule')
+var invoiceModule = require('./invoice/invoiceModule')
 
 
 
@@ -225,7 +225,7 @@ app.use('/ebanks', ebanks);
 app.use('/admin', adminPanel);
 app.use('/state-details', stateDetails);
 app.use('/magic-link', magicLink);
-app.use('/invoice',invoice);
+app.use('/invoice',invoiceModule);
 
 
 // delete user session on logout
