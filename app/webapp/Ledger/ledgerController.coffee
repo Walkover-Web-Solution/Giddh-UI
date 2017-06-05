@@ -840,7 +840,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.cutToTwoDecimal(taxPercentage) || 0
 
   ledgerCtrl.createNewPanel = (txn, ledger) ->
-    if txn.particular.uniqueName.length < 1 && txn.amount == 0
+    if typeof(txn.particular) == 'object' && txn.particular.uniqueName.length < 1 && _.isEmpty(txn.amount)
       txn.panel = {
         tax : 0
         total: 0
@@ -1204,12 +1204,21 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   #   ledgerCtrl.getTotalDiscount(ledger)
   #   ledgerCtrl.updateTxnAmount()
 
+  ledgerCtrl.getTxnCategory = (txn) ->
+    category = ''
+    account = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
+    if account
+      parent = account.parentGroups[0].uniqueName
+      parentGroup = _.findWhere($rootScope.groupWithAccountsList, {uniqueName:parent})
+      category = parentGroup.category
+    return category
+
   ledgerCtrl.onTxnAmountChange = (txn)->
-    if !ledgerCtrl.isDiscountTxn(txn) 
+    if !ledgerCtrl.isDiscountTxn(txn) && (ledgerCtrl.getTxnCategory(txn) == 'income' || ledgerCtrl.getTxnCategory(txn) == 'expenses')
       ledgerCtrl.selectedLedger.panel.amount = Number(txn.amount)
       ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
       ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
-      ledgerCtrl.updateTxnAmount()
+      # ledgerCtrl.updateTxnAmount()
 
   ledgerCtrl.onTxnTotalChange = (txn)->
     ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.calculateAmountAfterInclusiveTax()
@@ -1226,12 +1235,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.updateTxnAmount = () ->
     _.each ledgerCtrl.selectedLedger.transactions, (txn) ->
-      acc = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
-      if acc
-        parent = acc.parentGroups[0].uniqueName
-        parentGroup = _.findWhere($rootScope.groupWithAccountsList, {uniqueName:parent}) 
-        if parentGroup.category == "income" || parentGroup.category == "expenses" && !txn.isTax && txn.particular.uniqueName != 'roundoff' && !ledgerCtrl.isDiscountTxn(txn)
-          txn.amount = ledgerCtrl.selectedLedger.panel.amount
+      if ledgerCtrl.getTxnCategory(txn) == 'income' || ledgerCtrl.getTxnCategory(txn) == 'expenses' && !txn.isTax && txn.particular.uniqueName != 'roundoff' && !ledgerCtrl.isDiscountTxn(txn)
+        txn.amount = ledgerCtrl.selectedLedger.panel.amount
 
     # ledgerCtrl.selectedLedger.isInclusiveTax = true
     # ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
@@ -1528,7 +1533,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           acntUname: ledgerCtrl.accountUnq
           entUname: ledger.uniqueName
         }
-        if ledgerCtrl.currentTxn.isBaseAccount
+        if ledgerCtrl.currentTxn.isCompoundEntry && ledgerCtrl.currentTxn.isBaseAccount
           unqNamesObj.acntUname = ledgerCtrl.currentTxn.particular.uniqueName
 
         # transactionsArray = []
@@ -2333,6 +2338,68 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       invoiceNumber: [invoiceNumber]
       template: ''
     accountService.downloadInvoice(obj, data).then(@success, @failure)
+
+
+
+  ledgerCtrl.shareAccount = () ->
+    @success = (res) ->
+      ledgerCtrl.getSharedWithList()
+      toastr.success(res.body)
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {}
+    reqParam.compUname = $rootScope.selectedCompany.uniqueName
+    reqParam.acntUname = ledgerCtrl.accountToShow.uniqueName
+    permission = {}
+    permission.user = ledgerCtrl.shareRequest.user
+    permission.role = ledgerCtrl.shareRequest.role
+    accountService.share(reqParam, permission).then(@success,@failure)
+
+  ledgerCtrl.getSharedWithList = () ->
+    @success = (res) ->
+      ledgerCtrl.sharedUsersList = res.body
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {}
+    reqParam.compUname = $rootScope.selectedCompany.uniqueName
+    reqParam.acntUname = ledgerCtrl.accountToShow.uniqueName
+    accountService.sharedWith(reqParam).then(@success,@failure)
+
+  ledgerCtrl.unshare = (user, index) ->
+    @success = (res) ->
+      ledgerCtrl.sharedUsersList.splice(index,1)
+      toastr.success(res.body)
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {}
+    reqParam.compUname = $rootScope.selectedCompany.uniqueName
+    reqParam.acntUname = ledgerCtrl.accountToShow.uniqueName
+
+    userObj = {}
+    userObj.user = user
+    accountService.unshare(reqParam, userObj).then(@success,@failure)
+
+  ledgerCtrl.updateSharePermission = (user, role) ->
+
+    @success = (res) ->
+      ledgerCtrl.getSharedWithList()
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {}
+    reqParam.compUname = $rootScope.selectedCompany.uniqueName
+    reqParam.acntUname = ledgerCtrl.accountToShow.uniqueName
+    permission = {}
+    permission.user = user
+    permission.role = role
+    accountService.share(reqParam, permission).then(@success,@failure)
+
 
   return ledgerCtrl
 giddh.webApp.controller 'ledgerController', ledgerController
