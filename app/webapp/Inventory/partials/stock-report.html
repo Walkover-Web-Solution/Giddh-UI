@@ -1,9 +1,9 @@
-<section class="pd2" ng-if="!vm.report.name" >
+<section class="pd2" ng-if="!vm.stockId" >
 	<p>Select a Stock to Load Report </p>
 	<a href ng-click="vm.getStockReport()">Refresh</a>
 </section>
 
-<section class="pd2 h100" ng-if="vm.report.name" auto-height>
+<section class="pd2 h100" ng-if="vm.stockId" auto-height>
 	
 	<div class="clearfix mrB2">
 		<button ng-click="vm.goToManageStock()" class="btn btn-primary btn-md gico-wrap"><i class="icon-edit" aria-hidden="true"></i> Manage Stock</button>
@@ -46,9 +46,9 @@
     </div>
 	</div>
 
-	<p class="mrT1" ng-if="vm.report.transactionResource.length == 0">No Transactions for this Stock</p>
+	<p class="mrT1" ng-if="vm.report.transactions.length == 0">No Transactions for this Stock</p>
 
-	<table ng-if="vm.report.transactionResource.length > 0" class="mrT1 stkRprtTbl table_theme width100">
+	<table ng-if="vm.report.transactions.length > 0" class="mrT1 stkRprtTbl table_theme width100">
 		<thead>
 			<tr>
 				<th>Account</th>
@@ -57,18 +57,18 @@
 				<th>Rate</th>
 				<th>Amount(CR)</th>
 				<th>Amount(DR)</th>
-				<th>Closing Qty</th>
+				<th>Stock Unit</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="txn in vm.report.transactionResource">
+			<tr ng-repeat="txn in vm.report.transactions">
 				<td ng-bind="txn.account.name"></td>
 				<td ng-bind="txn.entryDate"></td>
 				<td ng-bind="txn.quantity"></td>
 				<td ng-bind="txn.rate"></td>
-				<td><span ng-bind="txn.amount" ng-if="txn.stockBalType == 'cr'"></span></td>
-				<td><span ng-bind="txn.amount" ng-if="txn.stockBalType == 'dr'"></span></td>
-				<td ng-bind="txn.closingQuantity"></td>
+				<td><span ng-bind="txn.amount" ng-if="txn.type == 'cr'"></span></td>
+				<td><span ng-bind="txn.amount" ng-if="txn.type == 'dr'"></span></td>
+				<td ng-bind="txn.stockUnit"></td>
 			</tr>
 		</tbody>
 	  <tfoot>
