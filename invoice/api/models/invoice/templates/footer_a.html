@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title></title>
+    <style type="text/css">
+      @font-face {
+        font-family: calibri;
+        src: url(calibri.ttf);
+      }
+      html {
+        min-height: 100%;
+        height: 100%;
+        position: relative;
+        /*margin-bottom: 200px;*/
+      }
+      body {
+        /*font-family: 'Roboto', sans-serif;*/
+        font-family: calibri;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        font-size: 12px;
+      }
+      .mid {
+        font-weight: 300;
+      }
+      .p30 {
+        position: relative;
+      }
+      .green {
+        color: #22733a;
+      }
+      h1 {
+        margin: 0;
+      }
+      .invoice_info {
+        background: #f2f2f2;
+        padding: 30px;
+      }
+      table {
+        width: 100%;
+        font-weight: 400;
+        max-width: 100%;
+      }
+      thead {
+        display: none;
+      }
+      .summary tbody tr td:last-child, 
+      .summary tfoot tr td:last-child  {
+        float: right;
+      }
+      .summary tfoot tr td, .summary tbody tr td {
+        text-align: right;
+        border: none;
+        vertical-align: middle;
+        /*padding: 8px;*/
+        padding: 0;
+      }
+      .summary tbody tr td {
+        text-align: left;
+      }
+      .tfooter {
+        color: #939393;
+        margin-top: 55px;
+      }
+      .total {
+        color: #000;
+        margin-top: 10px;
+      }
+      .total td:last-child {
+        border-bottom-style: double;
+        border-bottom-color: #939292;
+        border-top: 1px solid #939292;
+      }
+      .cfooter {
+        color: #a6a6a6;
+        margin-top: 30px;
+      }
+      .cfooter p {
+        margin: 0;
+        margin-top: 5px;
+      }
+      .footer p {
+        font-size: 12px;
+      }
+      ul {
+        padding-left: 15px;
+        color: #000;
+        font-size: 14px;
+      }
+      .date {
+        vertical-align: middle;
+        color: #b2b1b1;
+      }
+      h1 {
+        font-weight: 600;
+        font-size: 26px;
+      }
+      .footer {
+        color: #9f9e9e;
+      }
+      /*===============*/
+      .text-right {
+        text-align: right;
+      }
+      .pb0 {
+        padding-bottom: 0px;
+      }
+      hr {
+        margin: 0;
+      }
+      td p {
+        margin: 0;
+      }
+      .footer {
+      float: footnote;
+      }
+      @page {
+        size: A4 portrait;
+      }
+      @media print {
+        .footer {
+          position: relative;
+          bottom: 0;
+          float: footnote;
+        }
+/*        .cfooter {
+          padding-bottom: 100px;
+        }*/
+/*        .cfooter{
+          page-break-inside: avoid;
+        }*/
+        td, p {
+          page-break-inside: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <table class="footer p30" cellpadding="0" cellspacing="0" style="padding-bottom: 0;">
+      <tr>
+        <td>
+          <p>For wire transfer</p>
+          <p>ICICI Bank LTD.</p>
+          <p>A/C No: 004105012514</p>
+          <p>IFSC: ICIC0000041</p>
+        </td>
+        <td>
+          <p>CIN: U72400MP2010PTC023806</p>
+          <p>STC: AAACW9768LSD001</p>
+          <p>PAN: AAACW9768L</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="9">
+          <ul style="padding-left: 15px;">
+            <li>Above mention amount is in Indian National Rupees (INR)</li>
+            <li>We declare that this invoice shows the actual price of the services rendered and that all particulars are true and correct.</li>
+          </ul>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

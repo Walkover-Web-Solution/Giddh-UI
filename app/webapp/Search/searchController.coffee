@@ -158,41 +158,50 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
 
   # download CSV
   $scope.getCSVHeader=()->
-    console.log($scope.searchResData)
     return  [
       "Name"
+      "UniqueName"
       "Opening Bal."
       "O/B Type"
       "DR Total"
       "CR Total"
       "Closing Bal."
       "C/B Type"
-      "UniqueName"
+      "Parent"
     ]
 
   $scope.order = [
     "name"
+    "uniqueName"
     "openingBalance"
     "openBalType"
     "debitTotal"
     "creditTotal"
     "closingBalance"
     "closeBalType"
-    "uniqueName"
+    "parentName"
   ]
+
+
+  roundNum = (data, places) ->
+    data = Number(data)
+    data = data.toFixed(places)
+    return data
 
   $scope.createCSV = () ->
     header = $scope.getCSVHeader()
     title = ''
     _.each header, (head) ->
       title += head + ','
+    title = title.replace(/.$/,'')
+    console.log(title)  
     title += '\r\n'
 
     row = ''
     _.each $scope.searchResData, (data) ->
       if data.name.indexOf(',')
         data.name.replace(',', '')
-      row += data.name + ',' + data.openingBalance + ',' + data.openBalType + ',' + data.debitTotal + ',' + data.creditTotal + ',' + data.closingBalance + ',' + data.closeBalType + ',' + data.uniqueName
+      row += data.name + ',' + data.uniqueName + ',' + roundNum(data.openingBalance, 2) + ',' + data.openBalType + ',' + roundNum(data.debitTotal, 2) + ',' + roundNum(data.creditTotal, 2) + ',' + roundNum(data.closingBalance, 2) + ',' + data.closeBalType + ',' + data.parent 
       row += '\r\n'
 
     csv = title + row
@@ -264,7 +273,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     $scope.msgBody.btn.set = $scope.msgBody.btn.email
     $scope.msgBody.header.set = $scope.msgBody.header.email
     modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/views/bulkMail.html'
+        templateUrl: '/public/webapp/views/bulkMail.html'
         size: "md"
         backdrop: 'static'
         scope: $scope
@@ -276,7 +285,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
     $scope.msgBody.btn.set = $scope.msgBody.btn.sms
     $scope.msgBody.header.set = $scope.msgBody.header.sms
     modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/views/bulkMail.html'
+        templateUrl: '/public/webapp/views/bulkMail.html'
         size: "md"
         backdrop: 'static'
         scope: $scope

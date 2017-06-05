@@ -2649,7 +2649,7 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
     lc.selectedTxn.isOpen = false
     lc.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName, true)
     lc.AccmodalInstance = $uibModal.open(
-      templateUrl: $rootScope.prefixThis+'/public/webapp/Ledger/createAccountQuick.html'
+      templateUrl:'/public/webapp/Ledger/createAccountQuick.html'
       size: "sm"
       backdrop: 'static'
       scope: $scope
@@ -3252,8 +3252,8 @@ newLedgerController = ($scope, $rootScope, $window,localStorageService, toastr, 
       count: lc.ledgerPerPageCount
       page: page || 1
     }
-    if not _.isEmpty(lc.accountUnq)
-      ledgerService.getLedger(unqNamesObj).then(@success, @failure)
+    # if not _.isEmpty(lc.accountUnq)
+      # ledgerService.getLedger(unqNamesObj).then(@success, @failure)
 
   lc.getPaginatedLedger(1)
 

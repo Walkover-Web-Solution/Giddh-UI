@@ -1,43 +1,38 @@
-<!-- top row-->
-<div class="row stock-bar">
-	<ul class="list-inline">
-		<li  ng-if="stock.showStockReport">
-			<div class="input-group">
-				<input type="search" name="stocksearch" ng-focus="stock.sideBarOn($event)" ng-click="$event.stopPropagation()" ng-model="stockFlattenSearch" ng-model-options="{debounce:500}" ng-change="stock.getStockGroupsFlatten(stockFlattenSearch, 1, 'search')" placeholder="search stocks">
-				<i class="glyphicon glyphicon-search pos-abs" style="right:8px;top:5px;"></i>
-			</div>
-		</li>
-		<li style="width:180px;float:right;position: relative;">
-			<button class="btn btn-md btn-primary" style="left:0;top:-5px;position: absolute;" ng-click="stock.toggleViews()">
-				<span>Go To </span>
-				<span ng-if="stock.showStockReport">Manage Stock</span>
-				<span ng-if="!stock.showStockReport">Stock Report</span>
-			</button>
-		</li>
-	</ul>
 
-</div>
-
-<!-- /top row-->
 
 <!--sidebar-->
-	<section class="sidebar greyBg pull-left" ng-show="stock.showSidebar && stock.showStockReport" ng-click="$event.stopPropagation();" cover-page>
-		<div class="h100" ng-include="'/public/webapp/Inventory/partials/stocklist.html'"></div>
+	<section id="inventory-sidebar" class="sidebar pull-left" ng-click="$event.stopPropagation();" cover-page>
+		<div class="h100" ng-include="'/public/webapp/Inventory/partials/stockgrp-hr-list.html'"></div>
 	</section>
 <!--/sidebar-->
 
-<!--main section-->
-	<!--stock report section-->
-	<section class="h100" ng-if="stock.showStockReport" ng-class="{mrL320: stock.showSidebar && stock.showStockReport}" cover-page>
-		<div class="h100" ng-include="'/public/webapp/Inventory/partials/stock-report.html'"></div>
+
+<section class="rightBar">
+
+	<!-- top row-->
+	<div class="stock-bar" style="border-bottom:none;">
+		<div class="top_row clearfix">
+			<div class="pull-right">
+				<button ng-click="stock.loadPage('custom-stock')" type="button" class="btn btn-primary mrL1">Custom Stock Unit</button>
+				<button type="button" class="btn btn-primary mrL1" ng-click="stock.loadPage('add-group')">Add Group</button>
+				<button ng-if="stock.groupEditMode" type="button" class="btn btn-primary mrL1" ng-click="stock.loadPage('add-stock')">Add Stock</button>
+				<!-- <button class="btn btn-md btn-primary" ng-click="stock.toggleViews()">
+					<span>Go To </span>
+					<span ng-if="stock.showStockReport">Manage Stock</span>
+					<span ng-if="!stock.showStockReport">Stock Report</span>
+				</button> -->
+			</div>
+		</div>
+	</div>
+
+	<!-- /top row-->
+
+	<section class="wrap_content" ui-view="inventory-detail">
+
 	</section>
-	<!--/stock report section-->
 
-	<!--manage stock section-->
-	<section class="h100" ng-if="!stock.showStockReport" cover-page>
-		<div class="h100" ng-include="'/public/webapp/Inventory/partials/manage-stocks.html'"></div>
-	</section>
-	<!--/manage stock section-->
+</section>
 
 
-<!--/main section-->
+
+

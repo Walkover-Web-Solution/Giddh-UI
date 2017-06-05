@@ -1,0 +1,238 @@
+doctype html
+html
+  head
+    title
+    style(type='text/css').
+      @font-face {
+      font-family: calibri;
+      src: url(calibri.ttf);
+      }
+      body {
+      font-family: calibri;
+      -webkit-font-smoothing: antialiased;
+      font-size: 16px;
+      -moz-osx-font-smoothing: grayscale;
+      }
+      .mid {
+      font-weight: 300;
+      }
+      .pull-left {
+      float: left;
+      }
+      .pull-right {
+      float: right;
+      }
+      .header {
+      background: #fff;
+      }
+      .header h1, .header h3 {
+      margin: 4px 0;
+      font-weight: 400;
+      }
+      .header p {
+      margin: 4px 0;
+      }
+      .flow_hidden {
+      overflow: hidden;
+      }
+      .p30 {
+      padding: 30px;
+      position: relative;
+      }
+      .invoice_template {
+      overflow: hidden;
+      width: 8.5in;
+      margin: 0 auto;
+      }
+      h1 {
+      margin: 0;
+      font-weight: 400;
+      }
+      .mrT2 {
+      margin-top: 20px;
+      }
+      .Invoice_info {
+      background: #f2f2f2;
+      padding: 30px;
+      }
+      table {
+      width: 100%;
+      font-weight: 400;
+      max-width: 100%;
+      border-spacing: 0;
+      }
+      .summary tbody tr td:last-child, .summary tfoot tr td:last-child  {
+      float: right;
+      }
+      .summary tfoot tr td, .summary tbody tr td, th {
+      text-align: right;
+      border: none;
+      padding-top: 3px;
+      padding-bottom: 0 !important;
+      vertical-align: middle;
+      /*padding: 8px;*/
+      padding:8px;
+      line-height: 1.42857143;
+      }
+      tfoot tr td {
+      padding:4px 8px;
+      }
+      .summary tbody tr td {
+      text-align: left;
+      }
+      .tfooter {
+      color: #000;
+      }
+      .total {
+      color: #000;
+      margin-top: 10px;
+      position: relative;
+      }
+      .total td{
+      margin: 15px 0px;
+      }
+      .cfooter {
+      color: #000;
+      }
+      .cfooter td {
+      margin: 0;
+      font-size:12px;
+      }
+      .footer p {
+      margin: 0;
+      padding: 0;
+      font-size: 11px;
+      }
+      .footer p:first-child{
+      margin-top: 0;
+      }
+      ul {
+      padding-left: 15px;
+      color: #000;
+      font-size: 12px;
+      }
+      h1 {
+      font-size: 16px;
+      }
+      .footer {
+      color: #9f9e9e;
+      overflow: hidden;
+      }
+      .text-left {
+      text-align: left;
+      }
+      .text-right {
+      text-align: right !important;
+      }
+      .clogo {
+      max-width: 160px;
+      }
+      thead th {
+      border-bottom: 1px solid #000;
+      font-weight: 400;
+      }
+      .total:after {
+      content: ' ';
+      position: absolute;
+      width: 93%;
+      left: 0;
+      right: 0;
+      height: 1px;
+      margin: 0 auto;
+      background: #000;
+      }
+      .three_col {
+      color: #010101;
+      position: relative;
+      vertical-align: middle;
+      }
+      .footer h1, .footer h3 {
+      color: #4b4c4f;
+      }
+      ul li {
+      width: 100%;
+      font-size: 10px;
+      color: #4b4c4f;
+      }
+      .terms {
+      width: 100%;
+      float: left;
+      display: block;
+      }
+      .three_col:nth-child(2):before, .three_col:nth-child(2):after {
+      border-left: 1px solid #000;
+      position: absolute;
+      content: ' ';
+      top: 50%;
+      height: 80px;
+      transform: translateY(-50%);
+      }
+      .three_col:nth-child(2):before {
+      left: -30px;
+      }
+      .three_col:nth-child(2):after {
+      right: 30px;
+      }
+      .three_col:nth-child(1):before {
+      content: none
+      }
+      .amt {
+      padding: 25px;
+      background: url('amt.png');
+      background-repeat: no-repeat;
+      display: inline-block;
+      background-position: center right;
+      background-size: contain;
+      width: 100px;
+      color: #231f20;
+      }
+      .text-center {
+      text-align: center;
+      }
+      .arrow-down {
+      width: 0;
+      position: absolute;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-top: 15px solid #fff;
+      top: 0;
+      margin-left: 20px;
+      }
+      @page {
+      size: A4;
+      }
+      @media print {
+      .footer {
+      position: relative;
+      bottom: 0;
+      float: footnote;
+      }
+      td, p {
+      page-break-inside: avoid;
+      }
+      }
+  body
+    table.footer.p30
+      tbody
+        tr
+          td.three_col
+            h1(style='font-size: 18px;') THANK YOU
+            h3(style='margin: 0;') FOR YOUR BUSINESS.
+          if(companyIdentitiesData != '')
+            td.three_col
+              each companyIdentitiy in companyIdentitiesData   
+                p hi hello this is me
+    ul.terms
+      each term in terms
+        li #{term}
+    hr
+    table.cfooter.text-center(cellpadding = '0')
+      tbody
+        tr
+          td
+            p #{companyName}
+        tr
+          td
+            each data in companyData
+                |#{data} 

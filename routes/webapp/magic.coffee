@@ -1,13 +1,12 @@
 settings = require('../util/settings')
 router = settings.express.Router()
 
-router.get '/magic', (req, res) ->
-  console.log req
-  args =
-    headers:
-      'X-Forwarded-For': res.locales.remoteIp
-  hUrl = settings.envUrl + 'giddh-api/magic-link/'
-  settings.client.get hUrl, args, (data, response) ->
+router.post '/', (req, res) ->
+  if req.body.data.from != undefined && req.body.data.to != undefined
+    hUrl = settings.envUrl + '/magic-link/' + req.body.data.id + '?from=' + req.body.data.from + '&to=' + req.body.data.to
+  else
+    hUrl = settings.envUrl + '/magic-link/' + req.body.data.id
+  settings.client.get hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data

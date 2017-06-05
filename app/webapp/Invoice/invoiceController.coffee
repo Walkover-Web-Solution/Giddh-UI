@@ -151,7 +151,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       # with accounts, group data
       $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
 #      $scope.getSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,'sundry_debtors')
-      $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,[$rootScope.groupName.sundryDebtors,$rootScope.groupName.revenueFromOperations])
+      $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,[$rootScope.groupName.sundryDebtors,$rootScope.groupName.revenueFromOperations,$rootScope.groupName.otherIncome])
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
 
   $scope.makeAccountsList = (res) ->
@@ -404,7 +404,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     # open dialog
     if(showPopUp)
       $scope.modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/Invoice/prevInvoiceTemp.html'
+        templateUrl: '/public/webapp/Invoice/prevInvoiceTemp.html'
         size: "a4"
         backdrop: 'static'
         scope: $scope

@@ -1,7 +1,7 @@
 <div id="shareModal">
 <div id="share-modal" class="pdB4" ng-if="ledgerCtrl.toggleShare">
    <div class="modal-header text-right">
-      <i class="fa fa-times" aria-hidden="true" data-dismiss="modal"></i>
+      <i class="fa fa-times" aria-hidden="true" data-dismiss="modal" ng-click="ledgerCtrl.closeShareModal()"></i>
    </div>
    <div class="modal-body pdL2 pdR2" id="SharePop">
       <div class="modal_wrap">
@@ -9,18 +9,18 @@
          <div class="add_mailer">
             <form name="addShareEmailForm" novalidate class="form-inline" autocomplete="off">
                <div class="input-group">
-                  <input ng-model="shareRequest.user" name="userEmail" type="text" class="form-control emailInput" placeholder="Email id" required />
+                  <input ng-model="ledgerCtrl.shareRequest.user" name="userEmail" type="text" class="form-control emailInput" placeholder="Email id" required />
                   <div class="input-group-btn">
                      <select 
                         class="form-control mrL"
                         id="select_view" 
                         name="userRole" 
-                        ng-model="shareRequest.role"
+                        ng-model="ledgerCtrl.shareRequest.role"
                         ng-options="item.uniqueName as item.name for item in shareableRoles">
                      </select>
                      <span class="select_drop"><i class="fa fa-caret-down"></i></span>
                      <button ng-disabled="addShareEmailForm.$invalid" class="btn btn-success mrL1"
-                        ng-click="shareCompanyWithUser()" class="btn-success btn">Share</button>
+                        ng-click="ledgerCtrl.shareAccount()" class="btn-success btn">Share</button>
                   </div>
                   <!-- /btn-group -->
                </div>
@@ -29,7 +29,7 @@
             <div class="col-xs-8 pdB1 pdT1 mrB2">
                <div class="row">
                   <ul class="shared_list">
-                     <li ng-repeat="(key,value) in sharedUsersList | pick: exceptOwnEmail track by $index">
+                     <li ng-repeat="(key,value) in ledgerCtrl.sharedUsersList">
                         <span class="pull-left">
                            <!-- <div ng-bind-html="value.userName"></div> -->
                            <small class="Useremail" ng-bind-html="value.userEmail + '-' "></small>
@@ -37,13 +37,13 @@
                         <div class="form-inline">
                            <select 
                               class="form-control"
-                              ng-change="updateUserRole(value.role.uniqueName, value.userEmail)"
+                              ng-change="ledgerCtrl.updateSharePermission(value.userUniqueName, value.role.uniqueName)"
                               ng-model="value.role.uniqueName"
                               ng-options="item.uniqueName as item.name for item in shareableRoles">
                            </select>
                            <span class="select_drop"><i class="fa fa-caret-down"></i></span>
                            <span class="delIcon pull-right">
-                           <i ng-click="unSharedUser(value.userUniqueName, $index)" class="fa fa-times" aria-hidden="true"></i>
+                           <i ng-click="ledgerCtrl.unshare(value.userUniqueName, $index)" class="fa fa-times" aria-hidden="true"></i>
                            </span>
                         </div>
                      </li>
@@ -56,11 +56,14 @@
       <div class="clearfix"></div>
       <h3 class="pdB2">Or</h3>
       <div class="modal_wrap pdB4">
-         <div ng-if="ledgerCtrl.getLink"><button class="btn-success btn" ng-click="ledgerCtrl.getMagicLink()">Get</button> <span class="l8grey">shareable link</span></div>
+         <div>
+            <button class="btn-success btn" ng-click="ledgerCtrl.getMagicLink()">Get</button> 
+            <span class="l8grey">shareable link</span>
+         </div>
          <div class="input-group pdT1" style="max-width: 350px;">
             <input id="magicLink" class="form-control dashed" type="text" ng-model="ledgerCtrl.magicLink" />
             <div class="input-group-btn sticky">
-               <button class="btn btn-success mrl0">Copy</button>
+               <button class="btn btn-success mrl0" ngclipboard data-clipboard-target="#magicLink">Copy</button>
             </div>
             <!-- /btn-group -->
          </div>
@@ -72,7 +75,7 @@
 <div id="exportModal" class="" ng-if="ledgerCtrl.LedgerExport">
    <div class="modal-header themeBg pd2 pdL2 pdR2">
       <h3 class="modal-title bg" id="modal-title">Export</h3>
-      <i class="fa fa-times text-right close_modal" aria-hidden="true"></i>
+      <i class="fa fa-times text-right close_modal" aria-hidden="true" ng-click="$dismiss()"></i>
    </div>
    <div class="modal-body pdT5 pdB5 pdL2 pdR2" id="export-body">
    <form name="addShareEmailForm" novalidate class="" autocomplete="off">
@@ -80,16 +83,24 @@
         <table class="list-unstyled email-type mrB2">
           <tr>  
             <td>
-              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" value="view-detailed" />super mini</label>
+              <label class="radio" ng-click="$event.stopPropagation()">
+                  <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" ng-value="ledgerCtrl.ledgerEmailData.viewDetailed"/>super mini
+               </label>
             </td>
             <td>
-              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" value="view-condensed" />mini</label>
+              <label class="radio" ng-click="$event.stopPropagation()">
+                  <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" ng-value="ledgerCtrl.ledgerEmailData.viewCondensed"/>mini
+               </label>
             </td>
             <td ng-if="canUpdate">
-              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" value="admin-detailed" />brief</label>
+              <label class="radio" ng-click="$event.stopPropagation()">
+                  <input type="radio" ng-model=" ledgerCtrl.ledgerEmailData.emailType" name="emailType"  ng-value="ledgerCtrl.ledgerEmailData.adminDetailed"/>brief
+              </label>
             </td>
             <td ng-if="canUpdate">
-              <label class="radio" ng-click="$event.stopPropagation()"><input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" value="admin-condensed" />detailed</label>
+              <label class="radio" ng-click="$event.stopPropagation()">
+                  <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType"  ng-value="ledgerCtrl.ledgerEmailData.adminCondensed"/>detailed
+              </label>
             </td>
           </tr>
         </table>

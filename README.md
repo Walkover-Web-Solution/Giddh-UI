@@ -11,7 +11,6 @@ Prerequisites
 * bower 1.4.1
 * grunt 0.4.5
 * grunt-cli 0.1.13
-* Mongo DB
 
 Following environment variable(s) need to be set:
 
