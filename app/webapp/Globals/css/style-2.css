@@ -1321,8 +1321,10 @@ footer small a {
 }
 
 .wrap_content {
-  overflow: auto;
+  /*overflow: auto;*/
+  min-height: 400px;
   height: calc(100% - 220px);
+  height: -webkit-calc(100% - 220px);
 }
 
 .top_row {
