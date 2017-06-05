@@ -1371,6 +1371,10 @@ footer small a {
   background: #fff !important;
 }
 
+.form-theme .form-control[disabled], .form-theme .form-control[readonly], .form-theme fieldset[disabled] .form-control{
+  background-color: #eee !important;
+}
+
 .btn-default-focus {
   box-shadow: none !important;
 }
