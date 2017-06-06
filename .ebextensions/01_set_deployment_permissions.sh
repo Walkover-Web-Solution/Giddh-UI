@@ -5,7 +5,7 @@ files:
     group: root
     content: |
       #! /bin/bash
-      chown -R nodejs:nodejs /tmp/
+      chmod -R 755 nodejs:nodejs /tmp/
 
 container_commands:
   00_appdeploy_rewrite_hook:
