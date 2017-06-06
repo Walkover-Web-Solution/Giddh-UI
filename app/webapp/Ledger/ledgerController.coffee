@@ -862,13 +862,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         units = panel.getUnits()
         if txn.panel.unit
           return txn.panel.unit.rate
-        else
+        else if units.length > 0
           return units[0].rate
       else
         return 0
 
     panel.getUnits = () ->
-      if txn.particular.stock
+      if txn.particular.stock && txn.particular.stock.accountStockDetails.unitRates.length > 0
         return txn.particular.stock.accountStockDetails.unitRates
       else
         return txn.panel.units
@@ -1409,8 +1409,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     else if !_.isEmpty(stockTxn)
       if !stockTxn.particular.stock
         stockTxn.inventory.quantity = ledger.panel.quantity
-        stockTxn.inventory.unit = ledger.panel.unit
-        stockTxn.inventory.unit.code = ledger.panel.unit.stockUnitCode
+        if ledger.panel.unit
+          stockTxn.inventory.unit = ledger.panel.unit
+          stockTxn.inventory.unit.code = ledger.panel.unit.stockUnitCode
       else
         stockTxn.inventory.stock = stockTxn.particular.stock
         stockTxn.inventory.quantity = ledger.panel.quantity
@@ -2009,6 +2010,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if changeData.type == 'CHANGE' 
       ledgerCtrl.loadDefaultAccount()
       ledgerCtrl.getTaxList()
+      ledgerCtrl.getDiscountGroupDetail()
       #ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
 
   $(document).on 'click', (e) ->
