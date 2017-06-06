@@ -2,6 +2,8 @@
 inventoryStockReportController = ($scope, $rootScope, $timeout, toastr, stockService, $state, $filter) ->
   
   vm = this
+
+  vm.stockId = $state.params.stockId;
   if (_.isUndefined($rootScope.selectedCompany))
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
   
