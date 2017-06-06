@@ -3,7 +3,7 @@ var settings = require('../public/routes/util/settings');
 var router = settings.express.Router({mergeParams: true})
 	
 var getTemplates = require('./api/controllers/getTemplatesCtrl')
-var invoice = require('./api/controllers/invoiceV2')
+var invoice = require('./api/controllers/invoice')
 
 
 //router.post('/make-invoice',);

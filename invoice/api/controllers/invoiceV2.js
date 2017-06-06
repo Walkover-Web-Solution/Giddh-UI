@@ -1,7 +1,12 @@
 'use strict';
 
 const pug = require('pug');
-const htmlpdf = require('html-pdf');
+// const phantom = require("phantom-html-to-pdf")
+// ({
+//   phantomPath: require("phantomjs-prebuilt").path,
+//   tmpDir: './invoice/download/',
+//   numberOfWorkers: 2,
+// });
 var invoice = {};
 function downloadInvoice(req, res) {
   var invoiceObj = req.body.invoice[0];
