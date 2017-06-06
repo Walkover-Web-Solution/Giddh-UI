@@ -1,17 +1,14 @@
 'use strict';
 
 const pug = require('pug');
-//const fs = require('fs');
-const phantom = require("phantom-html-to-pdf")
+// const phantom = require("phantom-html-to-pdf")
 // ({
 //   phantomPath: require("phantomjs-prebuilt").path,
 //   tmpDir: './invoice/download/',
 //   numberOfWorkers: 2,
 // });
-
 var invoice = {};
-
-invoice.downloadInvoice = function(req, res) {
+function downloadInvoice(req, res) {
   var invoiceObj = req.body.invoice[0];
   //if(invoiceObj.template.uniqueName == "template_b") {
   // const bodyCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/test.pug') 
@@ -60,8 +57,11 @@ invoice.downloadInvoice = function(req, res) {
     accountMobileNumber: invoiceObj.account.mobileNumber 
   }));
   // var footerRes = fs.readFileSync('./api/models/invoice/templates/footer.html', 'utf8');
-  // var response = {};
+  var response = {};
+  response.status = 'success'
+  response.body = 'hello'
   // var fileName = '';
+  res.send(response)
   // phantom(
   //   { 
   //     html: htmlRes, 
@@ -85,6 +85,10 @@ invoice.downloadInvoice = function(req, res) {
   //     phantom.kill();
   //   }
   // );
-};
+
+
+}
+
+invoice.downloadInvoice = downloadInvoice;
 
 module.exports = invoice;
