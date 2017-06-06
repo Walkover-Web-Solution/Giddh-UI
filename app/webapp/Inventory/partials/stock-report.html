@@ -9,7 +9,7 @@
 		<button ng-click="vm.goToManageStock()" class="btn btn-primary btn-md gico-wrap"><i class="icon-edit" aria-hidden="true"></i> Manage Stock</button>
 	</div>
 
-	<div class="filterForm clearfix pr">	
+	<div class="filterForm clearfix pr">
 		<div class="form-group mrB pull-left">
       <label>From Date</label>
       <p class="input-group">
@@ -48,45 +48,83 @@
 
 	<p class="mrT1" ng-if="vm.report.transactions.length == 0">No Transactions for this Stock</p>
 
-	<table ng-if="vm.report.transactions.length > 0" class="mrT1 stkRprtTbl table_theme width100">
-		<thead>
-			<tr>
-				<th>Account</th>
-				<th>Date</th>
-				<th>Qty</th>
-				<th>Rate</th>
-				<th>Amount(CR)</th>
-				<th>Amount(DR)</th>
-				<th>Stock Unit</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr ng-repeat="txn in vm.report.transactions">
-				<td ng-bind="txn.account.name"></td>
-				<td ng-bind="txn.entryDate"></td>
-				<td ng-bind="txn.quantity"></td>
-				<td ng-bind="txn.rate"></td>
-				<td><span ng-bind="txn.amount" ng-if="txn.type == 'cr'"></span></td>
-				<td><span ng-bind="txn.amount" ng-if="txn.type == 'dr'"></span></td>
-				<td ng-bind="txn.stockUnit"></td>
-			</tr>
-		</tbody>
-	  <tfoot>
-      <tr>
-        <td colspan="14">
-        	<div class="pagination pull-right">
-            <ul class="list-inline">
-              <li>
-                <button class="btn btn-default" ng-click="vm.report.page = vm.report.page-1; vm.getStockReport()" ng-disabled="vm.report.page == 1">Prev</button>
-              </li>
-              <li>{{vm.report.page}}/{{vm.report.totalPages}}</li>
-              <li>
-                <button class="btn btn-default" ng-click="vm.report.page = vm.report.page+1; vm.getStockReport()" ng-disabled="vm.report.page == vm.report.totalPages">Next</button>
-              </li>
-            </ul>
-          </div>
-        </td>
-      </tr>
-    </tfoot>
-	</table>
+	<section ng-if="vm.report.transactions.length > 0">
+
+		<div class="row">
+			<div class="col-xs-12 text-right">
+				
+				<span class="mrR2">
+					Opening Stock 
+					<label>Quantity: 
+						{{vm.report.openingBalance.quantity}}
+						{{vm.report.openingBalance.stockUnit}} &amp;
+					</label>
+					<label tooltip-placement="top" uib-tooltip="Rate {{vm.report.openingBalance.amount/vm.report.openingBalance.quantity | number}}">{{vm.report.openingBalance.amount}} amount</label>
+				</span>
+
+				<span>
+					Closing Stock 
+					<label>Quantity: 
+						{{vm.report.closingBalance.quantity}} 
+						{{vm.report.closingBalance.stockUnit}} &amp;
+					</label>
+					<label tooltip-placement="top" uib-tooltip="Rate {{vm.report.closingBalance.amount/vm.report.closingBalance.quantity | number}}">{{vm.report.closingBalance.amount}} amount</label>
+				</span>
+
+			</div>
+		</div>
+
+		<table class="mrT1 stkRprtTbl table_theme width100">
+			<thead>
+				<tr>
+					<th rowspan="2">Date</th>
+					<th rowspan="2">Voucher Type</th>
+					<th rowspan="2" class="bdrR">Account name</th>
+					<th colspan="4" class="alC">Transactions</th>
+				</tr>
+				<tr>
+					<th>Inwards</th>
+					<th>Outwards</th>
+					<th>Rate</th>
+					<th>Value</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="txn in vm.report.transactions">
+					<td ng-bind="txn.entryDate"></td>
+					<td ng-bind="txn.voucherType"></td>
+					<td ng-bind="txn.account.name"></td>
+					<td>
+						<span ng-bind="txn.amount" ng-if="txn.type == 'cr'"></span>
+						<span ng-if="txn.type == 'dr'">-</span>
+					</td>
+					<td>
+						<span ng-bind="txn.amount" ng-if="txn.type == 'dr'"></span>
+						<span ng-if="txn.type == 'cr'">-</span>
+					</td>
+					<td ng-bind="txn.rate" ng-class="txn.type === 'cr'? 'cr' : 'dr' "></td>
+					<td ng-class="txn.type === 'cr'? 'cr' : 'dr' ">
+						{{txn.amount}}
+					</td>
+				</tr>
+			</tbody>
+		  <tfoot>
+	      <tr>
+	        <td colspan="14">
+	        	<div class="pagination pull-right">
+	            <ul class="list-inline">
+	              <li>
+	                <button class="btn btn-default" ng-click="vm.report.page = vm.report.page-1; vm.getStockReport()" ng-disabled="vm.report.page == 1">Prev</button>
+	              </li>
+	              <li>{{vm.report.page}}/{{vm.report.totalPages}}</li>
+	              <li>
+	                <button class="btn btn-default" ng-click="vm.report.page = vm.report.page+1; vm.getStockReport()" ng-disabled="vm.report.page == vm.report.totalPages">Next</button>
+	              </li>
+	            </ul>
+	          </div>
+	        </td>
+	      </tr>
+	    </tfoot>
+		</table>
+	</section>
 </section>

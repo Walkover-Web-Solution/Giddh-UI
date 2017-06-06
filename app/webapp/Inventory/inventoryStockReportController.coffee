@@ -52,7 +52,8 @@ inventoryStockReportController = ($scope, $rootScope, $timeout, toastr, stockSer
       stockUniqueName: $state.params.stockId,
       to:$filter('date')(vm.toDate.date, 'dd-MM-yyyy'),
       from:$filter('date')(vm.fromDate.date, 'dd-MM-yyyy'),
-      page:vm.report.page
+      page:vm.report.page,
+      count: 10
 
     stockService.getStockReport(reqParam).then(vm.getStockReportSuccess, vm.onFailure)
 
