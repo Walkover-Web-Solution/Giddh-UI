@@ -2086,7 +2086,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     entryTotal
 
   ledgerCtrl.selectCompoundEntry = (txn) ->
-    ledgerCtrl.currentTxn = txn
+    ledgerCtrl.currentTxn = txn  
 
   ledgerCtrl.setVoucherCode = (ledger) ->
     _.each ledgerCtrl.voucherTypeList, (vc, i) ->

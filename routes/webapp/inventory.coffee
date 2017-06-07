@@ -68,7 +68,7 @@ router.post '/', (req, res) ->
     res.send data
 
 router.get '/get-stock-report', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-group/' + req.query.stockGroupUniqueName + '/stock/' + req.query.stockUniqueName + '/report-v2?from=' + req.query.from + '&to=' + req.query.to
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/stock-group/' + req.query.stockGroupUniqueName + '/stock/' + req.query.stockUniqueName + '/report-v2?from=' + req.query.from + '&to=' + req.query.to + '&count='+ req.query.count+ '&page='+ req.query.page
   args =
     headers:
       'Auth-Key': req.session.authKey
