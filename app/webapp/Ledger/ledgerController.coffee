@@ -798,11 +798,18 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   #     scope: $scope
   #   )
 
+  ledgerCtrl.hideSideMenu=()->
+    $rootScope.flyAccounts=false
+
   ledgerCtrl.getMagicLinkFailure = (res) ->
     toastr.error(res.data.message)
 
   ledgerCtrl.prevTxn = null
   ledgerCtrl.selectBlankTxn = (ledger, txn, index ,e) ->
+    
+    # hide side menu
+    ledgerCtrl.hideSideMenu()
+
     ledgerCtrl.selectedTxn = txn
     if ledgerCtrl.prevTxn != null
       ledgerCtrl.prevTxn.isOpen = false

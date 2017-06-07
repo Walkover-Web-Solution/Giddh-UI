@@ -675,8 +675,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.showAccounts = (e) ->
     $rootScope.flyAccounts = true
-    #e.stopPropagation()
-  # $scope.addScript()
 
   # for accounts list
   $scope.gwaList = {
