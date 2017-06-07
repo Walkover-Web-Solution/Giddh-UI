@@ -81,8 +81,26 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
     ),1000
 ]
 
+# sarfaraz
+# to remove class dynamic 
+# init with outside-click="YOUR_CLASS_NAME"
 
+.directive("outsideClick", ['$document','$parse', ($document, $parse)->
+  return {
+    link:($scope, $element, $attributes) ->
+      cls = $attributes.outsideClick
+      onDocumentClick =(event)->
+        isChild = $element[0].contains(event.target)
+        if(!isChild)
+          $element.removeClass(cls)
+      
+      $document.on("click", onDocumentClick);
 
+      $element.on('$destroy', ()->
+        $document.off("click", onDocumentClick)
+      )
+  }
+])
 
 
 

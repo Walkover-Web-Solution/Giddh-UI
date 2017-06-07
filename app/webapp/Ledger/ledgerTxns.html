@@ -244,6 +244,7 @@ th {
 							</td>
 						</tr>
 						<tr 
+							outside-click="compoundEntry"
 							class="ledger-row" 
 							ng-repeat="txn in ledgerCtrl.txnData.debitTransactions | filter:ledgerCtrl.query" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)"  
@@ -379,6 +380,7 @@ th {
 							</td>
 						</tr>
 						<tr 
+							outside-click="compoundEntry"
 							class="ledger-row" 
 							ng-repeat="txn in ledgerCtrl.txnData.creditTransactions | filter:ledgerCtrl.query" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)" 
