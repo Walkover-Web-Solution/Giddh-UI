@@ -97,16 +97,16 @@
 					<td ng-bind="txn.voucherType"></td>
 					<td ng-bind="txn.account.name"></td>
 					<td>
-						<span ng-if="txn.type == 'cr'">
-							{{txn.quantity}}&nbsp;{{txn.stockUnit}}
-						</span>
-						<span ng-if="txn.type == 'dr'">-</span>
-					</td>
-					<td>
 						<span ng-if="txn.type == 'dr'">
 							{{txn.quantity}}&nbsp;{{txn.stockUnit}}
 						</span>
 						<span ng-if="txn.type == 'cr'">-</span>
+					</td>
+					<td>
+						<span ng-if="txn.type == 'cr'">
+							{{txn.quantity}}&nbsp;{{txn.stockUnit}}
+						</span>
+						<span ng-if="txn.type == 'dr'">-</span>
 					</td>
 					<td ng-bind="txn.rate" ng-class="txn.type === 'cr'? 'cr' : 'dr' "></td>
 					<td ng-class="txn.type === 'cr'? 'cr' : 'dr' ">
