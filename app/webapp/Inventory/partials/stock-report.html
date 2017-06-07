@@ -81,12 +81,14 @@
 					<th rowspan="2">Voucher Type</th>
 					<th rowspan="2" class="bdrR">Account name</th>
 					<th colspan="4" class="alC">Transactions</th>
+					<th class="bdrL" class="alC">Closing Stock</th>
 				</tr>
 				<tr>
 					<th>Inwards</th>
 					<th>Outwards</th>
 					<th>Rate</th>
 					<th>Value</th>
+					<th class="bdrL">Quantity</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -95,16 +97,23 @@
 					<td ng-bind="txn.voucherType"></td>
 					<td ng-bind="txn.account.name"></td>
 					<td>
-						<span ng-bind="txn.amount" ng-if="txn.type == 'cr'"></span>
+						<span ng-if="txn.type == 'cr'">
+							{{txn.quantity}}&nbsp;{{txn.stockUnit}}
+						</span>
 						<span ng-if="txn.type == 'dr'">-</span>
 					</td>
 					<td>
-						<span ng-bind="txn.amount" ng-if="txn.type == 'dr'"></span>
+						<span ng-if="txn.type == 'dr'">
+							{{txn.quantity}}&nbsp;{{txn.stockUnit}}
+						</span>
 						<span ng-if="txn.type == 'cr'">-</span>
 					</td>
 					<td ng-bind="txn.rate" ng-class="txn.type === 'cr'? 'cr' : 'dr' "></td>
 					<td ng-class="txn.type === 'cr'? 'cr' : 'dr' ">
 						{{txn.amount}}
+					</td>
+					<td>
+						{{txn.closingQuantity}}&nbsp;{{vm.report.stockUnit}}
 					</td>
 				</tr>
 			</tbody>
