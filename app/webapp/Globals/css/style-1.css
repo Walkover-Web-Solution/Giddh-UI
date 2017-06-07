@@ -76,7 +76,6 @@ ______\////////////________
 
 html, body {
   height: 100%;
-  overflow-y: auto;
 }
 
 table,html, body {
@@ -2603,21 +2602,23 @@ i.cls-alert {
 
 /*make un-responsive*/
 body.unresponsive {
-  overflow-x: hidden;
-  overflow-y: auto;
   padding-top: 54px;
 }
 
 .navbar-right.navbar-nav > li > a {
   border-right: 0;
 }
-
-@media only screen and (max-width: 1068px) {
+@media only screen and (max-width: 1300px) {
   body.unresponsive {
-    width: 1068px;
+    width: 1366px;
     overflow: auto;
   }
+  .container{
+    width: 1000px;
+  }
+}
 
+@media only screen and (max-width: 1068px) {
   .sidebar {
     width: 280px;
   }
