@@ -62,6 +62,7 @@
     "node-rest-client": "~1.4.3",
     "npid": "*",
     "prerender-node": "^2.4.0",
+    "phantom-html-to-pdf": "^0.5.4",
     "pug": "^2.0.0-rc.1",
     "qs": "^6.1.0",
     "raven": "^1.1.1",
