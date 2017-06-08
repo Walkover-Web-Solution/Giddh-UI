@@ -48,9 +48,9 @@
 
 	<p class="mrT1" ng-if="vm.report.transactions.length == 0">No Transactions for this Stock</p>
 
-	<section ng-if="vm.report.transactions.length > 0">
+	<section>
 
-		<div class="row">
+		<div class="row"  ng-if="vm.report.openingBalance">
 			<div class="col-xs-12 text-right">
 				
 				<span class="mrR2">
@@ -74,7 +74,7 @@
 			</div>
 		</div>
 
-		<table class="mrT1 stkRprtTbl table_theme width100">
+		<table class="mrT1 stkRprtTbl table_theme width100" ng-if="vm.report.transactions.length > 0">
 			<thead>
 				<tr>
 					<th rowspan="2">Date</th>
