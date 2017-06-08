@@ -137,7 +137,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $http.get('/fetch-user').then(getUserSuccess, getUserFailure)
   getUserDetail()
 
-
   $scope.addScript = () ->
     _.each($rootScope.scriptArrayHead, (script) ->
       sc = document.createElement("script")

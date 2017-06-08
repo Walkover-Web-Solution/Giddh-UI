@@ -2,6 +2,7 @@
 .form-control, input {
 	color: #4d4d4d;
 }
+
 .ledgHead table td[class*=col-] {
 	padding: 8px !important;
 	border-bottom: 1px solid #ccc;
@@ -95,8 +96,12 @@ th {
 }
 .pageCount {
 	overflow: hidden;
-	width: 100%;
-	float: left;
+	width: 50%;
+	left:25%;
+	bottom:100px;
+	background: #fff;
+	padding:5px;
+	font-size: 12px;
 }
 #pagination {
 	margin: 0 auto;
@@ -152,7 +157,7 @@ th {
 <section class="container nopad" ng-show="ledgerCtrl.showLedgers">
 	
 	<!--ledger table-->
-	<div class="ledgHead  mrT3">
+	<div class="ledgHead  mrT3 pos-rel">
 		<!-- ledger header -->
 		<div class="col-md-12">
 			<div class="row">
@@ -248,8 +253,9 @@ th {
 							class="ledger-row" 
 							ng-repeat="txn in ledgerCtrl.txnData.debitTransactions | filter:ledgerCtrl.query" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)"  
-							ng-click="ledgerCtrl.selectCompoundEntry(txn)"
-							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.currentTxn.entryUniqueName}">
+							ng-click="ledgerCtrl.selectCompoundEntry(txn, $event)"
+							ng-show="(!txn.isTax || txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName) || ledgerCtrl.showAllTaxes"
+							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
 							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
 							<td class="col-xs-3 pos-rel text-right" ng-class="{pdR25imp:txn.attachedFileUniqueName.length > 0 || txn.isInvoiceGenerated}">
@@ -314,7 +320,7 @@ th {
 												typeahead-append-to-body="true" 
                       	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | addStockinAccountList:ledgerCtrl.accountToShow | searchAccountInPaginated:$viewValue | limitTo: 25"
                       	typeahead-template-url="accountPopUp.html"
-                      	typeahead-on-select = "ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)"
+                      	typeahead-on-select = "ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger);ledgerCtrl.addApplicableTaxes($item, $model, $label, $event)"
                       	typeahead-no-results="noResults"
 												ng-click="ledgerCtrl.selectBlankTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
@@ -384,8 +390,9 @@ th {
 							class="ledger-row" 
 							ng-repeat="txn in ledgerCtrl.txnData.creditTransactions | filter:ledgerCtrl.query" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)" 
-							ng-click="ledgerCtrl.selectCompoundEntry(txn)"
-							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.currentTxn.entryUniqueName}">
+							ng-click="ledgerCtrl.selectCompoundEntry(txn, $event)"
+							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}"
+							ng-show="(!txn.isTax || txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName) || ledgerCtrl.showAllTaxes">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
 							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
 							<td class="col-xs-3 pos-rel text-right" ng-class="{pdR25imp:txn.attachedFileUniqueName.length > 0 || txn.isInvoiceGenerated}">
@@ -450,7 +457,7 @@ th {
 												typeahead-append-to-body="true" 
                       	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:ledgerCtrl.isCurrentAccount | addStockinAccountList:ledgerCtrl.accountToShow | searchAccountInPaginated:$viewValue | limitTo: 25"
                       	typeahead-template-url="accountPopUp.html"
-                      	typeahead-on-select = "ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)"
+                      	typeahead-on-select = "ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger);ledgerCtrl.addApplicableTaxes($item, $model, $label, $event)"
                       	typeahead-no-results="noResults"
 												ng-click="ledgerCtrl.selectBlankTxn(ledgerCtrl.blankLedger, txn, $index, $event)"
 												is-open="txn.isOpen"
@@ -517,32 +524,34 @@ th {
 					</tr>
 				</tbody>
 			</table>
+		
+	
+
+			<div class="text-center mrT2 pageCount pa">
+					<span class="grey">{{ledgerCtrl.totalCreditTxn + ledgerCtrl.totalDebitTxn}} transactions,</span> <span class="black">{{ledgerCtrl.totalLedgerPages}} pages</span>
+			
+
+
+				<nav id="pagination" aria-label="Page navigation" ng-if="ledgerCtrl.totalLedgerPages > 1">
+				  <ul class="pagination">
+				    <li>
+				      <a href="javascript:void(0)" aria-label="Previous" ng-click="ledgerCtrl.getTransactions(1)">
+				        <span aria-hidden="true" class="primary_color">First</span>
+				      </a>
+				    </li>
+				    <li ng-repeat="page in ledgerCtrl.pages">
+				    	<a href="javascript:void(0)" class="active" ng-click="ledgerCtrl.getTransactions(page)" ng-class="{'current-page':ledgerCtrl.currentPage == page}">{{page}}</a>
+				    </li>
+				    <li>
+				      <a href="javascript:void(0)" aria-label="Next" ng-click="ledgerCtrl.getTransactions(0)">
+				        <span aria-hidden="true" class="primary_color">Last</span>
+				      </a>
+				    </li>
+				  </ul>
+				</nav>
+			</div>
 		</div>
 	</div>
-
-	<div class="text-center mrT2 pageCount">
-			<span class="grey">{{ledgerCtrl.totalCreditTxn + ledgerCtrl.totalDebitTxn}} transactions,</span> <span class="black">{{ledgerCtrl.totalLedgerPages}} pages</span>
-	</div>
-
-
-	<nav id="pagination" aria-label="Page navigation" ng-if="ledgerCtrl.totalLedgerPages > 1">
-	  <ul class="pagination">
-	    <li>
-	      <a href="javascript:void(0)" aria-label="Previous" ng-click="ledgerCtrl.getTransactions(1)">
-	        <span aria-hidden="true" class="primary_color">First</span>
-	      </a>
-	    </li>
-	    <li ng-repeat="page in ledgerCtrl.pages">
-	    	<a href="javascript:void(0)" class="active" ng-click="ledgerCtrl.getTransactions(page)" ng-class="{'current-page':ledgerCtrl.currentPage == page}">{{page}}</a>
-	    </li>
-	    <li>
-	      <a href="javascript:void(0)" aria-label="Next" ng-click="ledgerCtrl.getTransactions(0)">
-	        <span aria-hidden="true" class="primary_color">Last</span>
-	      </a>
-	    </li>
-	  </ul>
-	</nav>
-
 		<!-- ledger table end -->
 
 </section>
