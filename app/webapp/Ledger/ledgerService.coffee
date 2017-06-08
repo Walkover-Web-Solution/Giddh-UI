@@ -114,6 +114,7 @@ giddh.serviceModule.service 'ledgerService', ($resource, $q) ->
         count:unqNamesObj.count
         sort:unqNamesObj.sort
         reversePage: unqNamesObj.reversePage
+        q:unqNamesObj.q
       }, onSuccess, onFailure))
 
     createEntry: (unqNamesObj, data) ->
