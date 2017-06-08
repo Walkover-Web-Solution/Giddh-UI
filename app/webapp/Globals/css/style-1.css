@@ -814,6 +814,11 @@ header .navbar-nav > li.active {
   position: relative;
 }
 
+.scrItem {
+  overflow: auto;
+  position: relative;
+}
+
 .oyHid {
   overflow-y: hidden;
 }
@@ -981,6 +986,10 @@ header .navbar-nav > li.active {
   color: #333;
   font-size: 15px;
   padding: 9px 20px;
+}
+
+.fs13 {
+  font-size: 13px;
 }
 
 .fs16 {
@@ -4763,4 +4772,12 @@ table.proforma-particulars {
   font-weight: 400;
   font-size: 14px;
   color: #ccc;
+}
+.cstuWrp{
+  position: relative;
+}
+.cstuWrp .sign{
+  position: absolute;
+  bottom: 5px;
+  left: -6px;
 }

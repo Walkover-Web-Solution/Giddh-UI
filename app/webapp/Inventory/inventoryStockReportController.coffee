@@ -3,6 +3,8 @@ inventoryStockReportController = ($scope, $rootScope, $timeout, toastr, stockSer
   
   vm = this
 
+  vm.selectedStock = {}
+
   vm.stockId = $state.params.stockId;
   if (_.isUndefined($rootScope.selectedCompany))
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
@@ -28,6 +30,20 @@ inventoryStockReportController = ($scope, $rootScope, $timeout, toastr, stockSer
   vm.toDate =
     date: new Date()
 
+  vm.findAndSet=()->
+    vm.selectedStock = _.find(vm.stockArr, (item)->
+      return item.uniqueName is vm.stockId
+    )
+
+  vm.setStockArr=()->
+    vm.stockArr = $scope.$parent.stock.updateStockGroup.stocks
+    if angular.isUndefined(vm.stockArr)
+      $timeout(()->
+        vm.stockArr = $scope.$parent.stock.updateStockGroup.stocks
+        vm.findAndSet()
+      ,1500)
+    else
+      vm.findAndSet()
 
   vm.fromDatePickerOpen = (e)->
     vm.fromDatePickerIsOpen = true
@@ -66,6 +82,7 @@ inventoryStockReportController = ($scope, $rootScope, $timeout, toastr, stockSer
       $state.go('inventory', {}, {reload: true, notify: true})
     else
       vm.getStockReport()
+      vm.setStockArr()
   ,100)
   
   return vm

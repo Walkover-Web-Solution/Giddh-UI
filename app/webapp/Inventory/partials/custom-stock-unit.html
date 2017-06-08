@@ -12,7 +12,26 @@
 	<form name="customUnitForm" class="form-theme" novalidate>
 		
 		<div class="row mrBChldLbl">
+
 			<div class="form-group col-xs-3">
+				<label>Parent Stock Unit</label>
+				<ui-select ng-model="vm.customUnitObj.parentStockUnit" theme="bootstrap" search-enabled="true" title="Select">
+			    <ui-select-match placeholder="Select" allow-clear="true">{{$select.selected.name}}</ui-select-match>
+			    <ui-select-choices ui-disable-choice="item.code === vm.customUnitObj.code" repeat="item as item in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
+			      <span ng-bind-html="item.name | hilite: $select.search"></span>
+			      <small>(<span ng-bind-html="''+item.code | hilite: $select.search"></span>)</small>
+			    </ui-select-choices>
+			  </ui-select>
+			</div>
+
+			<div class="form-group col-xs-3 cstuWrp">
+				<span class="sign">X</span>
+				<label>Quantity per Unit<span class="required">*</span></label>
+				<input placeholder="Quantity" type="text" ng-model="vm.customUnitObj.quantityPerUnit" name="quantityPerUnit" class="form-control" required>
+			</div>
+
+			<div class="form-group col-xs-3 cstuWrp">
+				<span class="sign fs20">=</span>
 				<label>Name<span class="required">*</span></label>
 				<input placeholder="Unit name" ng-model="vm.customUnitObj.name" type="text" name="name" class="form-control" required>
 			</div>
@@ -22,21 +41,6 @@
 				<input placeholder="Unique name" type="text" name="code" ng-model="vm.customUnitObj.code" class="form-control" required>
 			</div>
 
-			<div class="form-group col-xs-3">
-				<label>Quantity per Unit<span class="required">*</span></label>
-				<input placeholder="Quantity" type="text" ng-model="vm.customUnitObj.quantityPerUnit" name="quantityPerUnit" class="form-control" required>
-			</div>
-
-			<div class="form-group col-xs-3">
-				<label>Parent Unit</label>
-				<ui-select ng-model="vm.customUnitObj.parentStockUnit" theme="bootstrap" search-enabled="true" title="Select">
-			    <ui-select-match placeholder="Select" allow-clear="true">{{$select.selected.name}}</ui-select-match>
-			    <ui-select-choices ui-disable-choice="item.code === vm.customUnitObj.code" repeat="item as item in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
-			      <span ng-bind-html="item.name | hilite: $select.search"></span>
-			      <small>(<span ng-bind-html="''+item.code | hilite: $select.search"></span>)</small>
-			    </ui-select-choices>
-			  </ui-select>
-			</div>
 		</div>
 
 		<div class="row">
