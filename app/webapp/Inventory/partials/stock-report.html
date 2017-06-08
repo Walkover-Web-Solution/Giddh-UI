@@ -3,10 +3,10 @@
 	<a href ng-click="vm.getStockReport()">Refresh</a>
 </section>
 
-<section class="pd2 h100" ng-if="vm.stockId" auto-height>
+<section class="pd2 h100" ng-if="vm.stockId">
 	
 	<div class="clearfix mrB2">
-		<button ng-click="vm.goToManageStock()" class="btn btn-primary btn-md gico-wrap"><i class="icon-edit" aria-hidden="true"></i> Manage Stock</button>
+		<button ng-click="vm.goToManageStock()" class="btn btn-primary btn-md gico-wrap"><i class="icon-edit" aria-hidden="true"></i> Manage {{vm.selectedStock.name}} Stock</button>
 	</div>
 
 	<div class="filterForm clearfix pr">
@@ -48,27 +48,25 @@
 
 	<p class="mrT1" ng-if="vm.report.transactions.length == 0">No Transactions for this Stock</p>
 
-	<section>
+	<section style="margin-bottom: 40px">
 
-		<div class="row"  ng-if="vm.report.openingBalance">
+		<div class="row fs13"  ng-if="vm.report.openingBalance">
 			<div class="col-xs-12 text-right">
 				
 				<span class="mrR2">
-					Opening Stock 
-					<label>Quantity: 
+					<label>O/B Qty: 
 						{{vm.report.openingBalance.quantity}}
 						{{vm.report.openingBalance.stockUnit}} &amp;
 					</label>
-					<label tooltip-placement="top" uib-tooltip="Rate {{vm.report.openingBalance.amount/vm.report.openingBalance.quantity | number}}">{{vm.report.openingBalance.amount}} amount</label>
+					<label tooltip-placement="top" uib-tooltip="Rate {{vm.report.openingBalance.amount/vm.report.openingBalance.quantity | number:4}}">&#8377;&nbsp;{{vm.report.openingBalance.amount}}</label>
 				</span>
 
 				<span>
-					Closing Stock 
-					<label>Quantity: 
+					<label>C/B Qty: 
 						{{vm.report.closingBalance.quantity}} 
 						{{vm.report.closingBalance.stockUnit}} &amp;
 					</label>
-					<label tooltip-placement="top" uib-tooltip="Rate {{vm.report.closingBalance.amount/vm.report.closingBalance.quantity | number}}">{{vm.report.closingBalance.amount}} amount</label>
+					<label tooltip-placement="top" uib-tooltip="Rate {{vm.report.closingBalance.amount/vm.report.closingBalance.quantity | number:4}}">&#8377;&nbsp;{{vm.report.closingBalance.amount}}</label>
 				</span>
 
 			</div>

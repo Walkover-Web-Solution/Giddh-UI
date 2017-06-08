@@ -1,6 +1,6 @@
 'use strict'
 
-giddh.serviceModule.service 'DAServices', ($resource, $q) ->
+giddh.serviceModule.service 'DAServices', () ->
   ledgerData = {}
   ledgerAccount = {}
 
