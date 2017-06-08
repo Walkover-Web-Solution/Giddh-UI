@@ -15,7 +15,7 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
     adjustHeight = () ->
       additionalHeight = $attrs.additionalHeight || 0
       minHeight = $attrs.minHeight || 600
-      parentHeight = $window.innerHeight - $element.parent()[0].getBoundingClientRect().top
+      parentHeight = $window.innerHeight-$element[0].parentElement.getBoundingClientRect().top
       $element.css('min-height',minHeight + 'px')
       $element.css('height', (parentHeight - combineHeights(siblings($element)) - additionalHeight) + "px")
 
