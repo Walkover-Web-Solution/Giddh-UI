@@ -8,7 +8,6 @@ const phantom = require("phantom-html-to-pdf")
   tmpDir: './invoice/download/',
   numberOfWorkers: 2,
 });
-console.log("build nahi hota.")
 var invoice = {};
 
 invoice.downloadInvoice = function(req, res) {
