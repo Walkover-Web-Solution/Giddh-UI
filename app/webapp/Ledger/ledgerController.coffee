@@ -145,7 +145,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.accountToShow = $rootScope.selectedAccount
     ledgerCtrl.accountUnq = res.body.uniqueName
     ledgerCtrl.getTransactions(0)
-    ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
     $state.go($state.current, {unqName: res.body.uniqueName}, {notify: false})
     if res.body.uniqueName == 'cash'
@@ -154,7 +153,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if res.body.yodleeAdded == true && $rootScope.canUpdate
       #get bank transaction here
       $timeout ( ->
-        ledgerCtrl.getBankTransactions(res.body.uniqueName)
+        ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
       ), 2000
 
   ledgerCtrl.hideEledger = () ->
@@ -642,7 +641,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.getSharedList = () ->
     $scope.setShareableRoles($rootScope.selectedCompany)
     $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
-  ledgerCtrl.getSharedList()
+  if $rootScope.canUpdate
+    ledgerCtrl.getSharedList()
   # generate magic link
   ledgerCtrl.getMagicLink = () ->
     accUname = ledgerCtrl.accountUnq
@@ -2067,7 +2067,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
 #########################################################
   ledgerCtrl.ledgerPerPageCount = 15
-  ledgerCtrl.getTransactions = (page) ->
+  ledgerCtrl.getTransactions = (page, query) ->
     @success = (res) ->
       ledgerCtrl.txnData = res.body
       ledgerCtrl.totalLedgerPages = res.body.totalPages
@@ -2095,9 +2095,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       page: page
       sort: 'asc'
       reversePage: false
+      q: query || ''
     }
     if not _.isEmpty(ledgerCtrl.accountUnq)
       ledgerService.getAllTransactions(unqNamesObj).then(@success, @failure)
+
+  ledgerCtrl.searchLedger = (query) ->
+    ledgerCtrl.getTransactions(0, query)
 
   ledgerCtrl.calculateReckonging = () ->
     if ledgerCtrl.txnData.forwardedBalance.amount == 0
@@ -2369,7 +2373,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         (failure) ->
           toastr.error('Failed to get Detailed Groups List')
       )
-  ledgerCtrl.getGroupsWithDetail()
+  
+  if $rootScope.canUpdate
+    ledgerCtrl.getGroupsWithDetail()
 
   ledgerCtrl.downloadInvoice = (invoiceNumber, e) ->
     e.stopPropagation()

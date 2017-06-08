@@ -143,7 +143,7 @@ th {
   padding-right: 25px !important;
 }
 </style>
-
+<div ng-controller="ledgerController as ledgerCtrl">
 <div class="loader mrT4" ng-if="!ledgerCtrl.showLedgers">
   <span></span>
   <span></span>
@@ -188,7 +188,7 @@ th {
 						
 						<div class="mrL2 col-xs-6 pos-rel pull-right">
 							<div class="row">
-								<input type="search" class="form-control" placeholder="Search ledger" ng-model="ledgerCtrl.query" ng-model-options="{debounce: 1000}">
+								<input type="search" class="form-control" placeholder="Search ledger" ng-model="ledgerCtrl.query" ng-model-options="{debounce: 1000}" ng-change="ledgerCtrl.searchLedger(ledgerCtrl.query)">
 								<i class="icon-search pos-abs"  style="right:5px;top:10px;"></i>
 							</div>
 						</div>
@@ -251,7 +251,7 @@ th {
 						<tr 
 							outside-click="compoundEntry"
 							class="ledger-row" 
-							ng-repeat="txn in ledgerCtrl.txnData.debitTransactions | filter:ledgerCtrl.query" 
+							ng-repeat="txn in ledgerCtrl.txnData.debitTransactions" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)"  
 							ng-click="ledgerCtrl.selectCompoundEntry(txn, $event)"
 							ng-show="(!txn.isTax || txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName) || ledgerCtrl.showAllTaxes"
@@ -388,7 +388,7 @@ th {
 						<tr 
 							outside-click="compoundEntry"
 							class="ledger-row" 
-							ng-repeat="txn in ledgerCtrl.txnData.creditTransactions | filter:ledgerCtrl.query" 
+							ng-repeat="txn in ledgerCtrl.txnData.creditTransactions" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)" 
 							ng-click="ledgerCtrl.selectCompoundEntry(txn, $event)"
 							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}"
@@ -804,3 +804,5 @@ th {
     </span>
   </a>
 </script>
+
+</div>
