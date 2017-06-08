@@ -22,7 +22,7 @@ inventoryStockReportController = ($scope, $rootScope, $timeout, toastr, stockSer
     'todayBtn': false
 
   vm.report=
-    page: 1
+    page: 0
 
   vm.fromDate=
     date:new Date(moment().subtract(1, 'month').utc())
