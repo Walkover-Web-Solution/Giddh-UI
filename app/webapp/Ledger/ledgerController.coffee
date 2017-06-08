@@ -352,10 +352,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if ledger.isBankTransaction 
         ledgerCtrl.dLedgerContainer.remove(ledger)
     ledgerCtrl.showEledger = true
-  if ledgerCtrl.accountUnq
-    ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
-  else
-    ledgerCtrl.loadDefaultAccount() 
+  
 
   ###date range picker ###
   $scope.cDate = {

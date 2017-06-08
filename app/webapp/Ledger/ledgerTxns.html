@@ -528,7 +528,7 @@ th {
 	<nav id="pagination" aria-label="Page navigation" ng-if="ledgerCtrl.totalLedgerPages > 1">
 	  <ul class="pagination">
 	    <li>
-	      <a href="javascript:void(0)" aria-label="Previous" ng-click="ledgerCtrl.getPaginatedLedger(1)">
+	      <a href="javascript:void(0)" aria-label="Previous" ng-click="ledgerCtrl.getTransactions(1)">
 	        <span aria-hidden="true" class="primary_color">First</span>
 	      </a>
 	    </li>
@@ -536,7 +536,7 @@ th {
 	    	<a href="javascript:void(0)" class="active" ng-click="ledgerCtrl.getTransactions(page)" ng-class="{'current-page':ledgerCtrl.currentPage == page}">{{page}}</a>
 	    </li>
 	    <li>
-	      <a href="javascript:void(0)" aria-label="Next" ng-click="ledgerCtrl.getPaginatedLedger(ledgerCtrl.totalLedgerPages)">
+	      <a href="javascript:void(0)" aria-label="Next" ng-click="ledgerCtrl.getTransactions(0)">
 	        <span aria-hidden="true" class="primary_color">Last</span>
 	      </a>
 	    </li>

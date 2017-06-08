@@ -2616,6 +2616,9 @@ body.unresponsive {
   .container{
     width: 1000px;
   }
+  .header-container{
+    width: 1366px;
+  }
 }
 
 @media only screen and (max-width: 1068px) {
