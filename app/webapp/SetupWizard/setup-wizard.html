@@ -26,16 +26,14 @@
     <div class="wizard-container">
       <wizard on-finish="setupComplete()"> 
         <wz-step wz-title="Add Mobile Number" wz-disabled="{{!isNotVerified}}">
-            
             <div class="wizard-step">
-                
               <div class=" clearfix">
                 <h1 class="l8grey">Add Mobile Number</h1>
-                <div class="mrT mrB1">
-                  <input class="form-control max350 pull-left" type="text" placeholder="91-9998899988" ng-model="phoneNumber"/>
-                  <button class="btn btn-success mrL1" ng-click="addNumber(phoneNumber)" ng-disabled="mobNum.showVerificationBox">Add</button>
-                </div>
-                <h3>Format should be like COUNTRY CODE - NUMBER. Ex- 91-9898989898</h3>
+                <form class="mrT mrB1" name="mobileForm" novalidate>
+                  <input ng-minlength="10" ng-pattern="/^[0-9]{1,10}$/" class="form-control max350 pull-left" type="text" ng-required="true" placeholder="9998899988" name="mobileForm.phoneNumber" ng-model="phoneNumber"/>
+                  <button class="btn btn-success mrL1" ng-click="addNumber(phoneNumber)" ng-disabled="mobileForm.$invalid">Add</button>
+                </form>
+                <h3 class="mrB1">Format should be like 9898989898</h3>
               </div>
               <div class=" clearfix" ng-if="mobNum.showVerificationBox" style="padding-top:0;">
                 <hr>
@@ -45,7 +43,6 @@
                   <button class="btn btn-success mrL2" ng-click="verifyNumber(mobNum.verificationCode)">Verify</button>
                 </div>
               </div>
-              <!-- <input class=" btn btn-primary center-block" style="width:80px;margin-top:45px" type="submit" wz-next value="Next" /> -->
             </div>
 
 
