@@ -1500,7 +1500,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         inventory = {}
         inventory.stock = txn.particular.stock
         inventory.quantity = txn.panel.quantity
-        inventory.unit = txn.particular.stock.stockUnit
+        inventory.unit = txn.panel.unit
+        inventory.unit.code = txn.panel.unit.stockUnitCode
         txn.inventory = inventory
         txn.amount = txn.panel.total
 

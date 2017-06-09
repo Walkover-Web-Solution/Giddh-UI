@@ -430,7 +430,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $scope.checkUserCompanyStatus(res.body)
       $rootScope.mngCompDataFound = true
       $scope.findCompanyInList()
-      $rootScope.checkWalkoverCompanies()
+      # $rootScope.checkWalkoverCompanies()
 
   $scope.checkUserCompanyStatus = (compList) ->
     _.each compList, (cmp) ->
@@ -812,26 +812,26 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.runTour = () ->
     $rootScope.$emit('run-tour')
 
-  $scope.showSwitchUserOption = false
-  $rootScope.checkUserCompany = () ->
-    user = localStorageService.get('_userDetails')
-    company = user.uniqueName.split('@')
-    company = company[company.length - 1]
-    company
+  # $scope.showSwitchUserOption = false
+  # $rootScope.checkUserCompany = () ->
+  #   user = localStorageService.get('_userDetails')
+  #   company = user.uniqueName.split('@')
+  #   company = company[company.length - 1]
+  #   company
 
-  $rootScope.checkWalkoverCompanies = () ->
-    if $rootScope.checkUserCompany().toLowerCase() == 'giddh.com' || $rootScope.checkUserCompany().toLowerCase() == 'walkover.in' || $rootScope.checkUserCompany().toLowerCase() == 'msg91.com'
-      $scope.showSwitchUserOption = true
-    else
-      $scope.showSwitchUserOption = false
+  # $rootScope.checkWalkoverCompanies = () ->
+  #   if $rootScope.checkUserCompany().toLowerCase() == 'giddh.com' || $rootScope.checkUserCompany().toLowerCase() == 'walkover.in' || $rootScope.checkUserCompany().toLowerCase() == 'msg91.com'
+  #     $scope.showSwitchUserOption = true
+  #   else
+  #     $scope.showSwitchUserOption = false
 
-  $rootScope.ledgerMode = 'new'
-  $rootScope.switchLedgerMode = () ->
-    if $rootScope.checkWalkoverCompanies()
-      if $rootScope.ledgerMode == 'new'
-        $rootScope.ledgerMode = 'old'
-      else
-        $rootScope.ledgerMode = 'new'
+  # $rootScope.ledgerMode = 'new'
+  # $rootScope.switchLedgerMode = () ->
+  #   if $rootScope.checkWalkoverCompanies()
+  #     if $rootScope.ledgerMode == 'new'
+  #       $rootScope.ledgerMode = 'old'
+  #     else
+  #       $rootScope.ledgerMode = 'new'
 
   $rootScope.setState = (lastState, url, param) ->
     $rootScope.selectedCompany = $rootScope.selectedCompany || localStorageService.get('_selectedCompany')
