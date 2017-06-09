@@ -183,9 +183,9 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/ledger/:unqName'
     views:{
       'rightPanel':{
-        templateUrl: appendThis+'/public/webapp/Ledger/ledger-wrapper.html'
-        # controller: 'newLedgerController'
-        # controllerAs: 'lc'
+        templateUrl: appendThis+'/public/webapp/Ledger/ledgerTxns.html'
+        controller: 'ledgerController'
+        controllerAs: 'ledgerCtrl'
       }
     }
   )

@@ -39,11 +39,17 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.LedgerExport = !ledgerCtrl.LedgerExport
 
 
-  ledgerCtrl.createUnderstandingText = (account, data) ->
-    ledgerCtrl.understanding = _.findWhere(data, {accountType:account.accountType})
-    if ledgerCtrl.understanding
-      ledgerCtrl.understanding.text.cr = ledgerCtrl.understanding.text.cr.replace("<accountName>", account.name)
-      ledgerCtrl.understanding.text.dr = ledgerCtrl.understanding.text.dr.replace("<accountName>", account.name)
+  ledgerCtrl.createUnderstandingText = (account, data, mode) ->
+    if mode != 'edit'
+      ledgerCtrl.understanding = _.findWhere(data, {accountType:account.accountType})
+      if ledgerCtrl.understanding
+        ledgerCtrl.understanding.text.cr = ledgerCtrl.understanding.text.cr.replace("<accountName>", account.name)
+        ledgerCtrl.understanding.text.dr = ledgerCtrl.understanding.text.dr.replace("<accountName>", account.name)
+    else
+      ledgerCtrl.understandingEditMode = _.findWhere(data, {accountType:account.accountType})
+      if ledgerCtrl.understandingEditMode
+        ledgerCtrl.understandingEditMode.text.cr = ledgerCtrl.understandingEditMode.text.cr.replace("<accountName>", account.name)
+        ledgerCtrl.understandingEditMode.text.dr = ledgerCtrl.understandingEditMode.text.dr.replace("<accountName>", account.name)
 
 
   ledgerCtrl.getUnderstanding = (account) ->
@@ -2199,6 +2205,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     @failure = (res) ->
       toastr.error(res.data.message)
 
+    @getBaseAccountDetailsuccess = (res) ->
+      ledgerCtrl.createUnderstandingText(res.body, ledgerCtrl.understandingJson, 'edit')
+    @getBaseAccountDetailFailure = (res) ->
+
+
     reqParam = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $rootScope.selectedAccount.uniqueName
@@ -2211,9 +2222,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       reqParam.acntUname = entry.particular.uniqueName
       ledgerCtrl.editModeBaseAccount = entry.particular.name
       ledgerCtrl.baseAccount = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:entry.particular.uniqueName})
+      unqObj = {
+        compUname : $rootScope.selectedCompany.uniqueName
+        acntUname : ledgerCtrl.baseAccount.uniqueName
+      }
+      accountService.get(unqObj).then(@getBaseAccountDetailsuccess, @getBaseAccountDetailFailure)
     else
       ledgerCtrl.editModeBaseAccount = ledgerCtrl.accountToShow.name
-    ledgerCtrl.createUnderstandingText(ledgerCtrl.baseAccount, ledgerCtrl.understandingJson)
+      ledgerCtrl.createUnderstandingText(ledgerCtrl.baseAccount, ledgerCtrl.understandingJson, 'edit')
 
     ledgerService.getEntry(reqParam).then(@success, @failure)
     return 

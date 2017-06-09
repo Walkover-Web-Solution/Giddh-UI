@@ -143,7 +143,6 @@ th {
   padding-right: 25px !important;
 }
 </style>
-<div ng-controller="ledgerController as ledgerCtrl">
 <div class="loader mrT4" ng-if="!ledgerCtrl.showLedgers">
   <span></span>
   <span></span>
@@ -183,7 +182,7 @@ th {
 						</a>
 						
 						<a href id="share" class="icomoon_ico" ng-click="ledgerCtrl.shareLedger();ledgerCtrl.getSharedWithList(); ledgerCtrl.toggleShareFucntion()">
-							<i uib-tooltip="Send Ledger" tooltip-placement="right" class="icon-share"></i>
+							<i uib-tooltip="Share Ledger" tooltip-placement="right" class="icon-share"></i>
 						</a>
 						
 						<div class="mrL2 col-xs-6 pos-rel pull-right">
@@ -806,5 +805,3 @@ th {
     </span>
   </a>
 </script>
-
-</div>
