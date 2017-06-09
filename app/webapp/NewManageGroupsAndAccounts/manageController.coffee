@@ -45,8 +45,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 #    currentPage : 1
 #    limit: 5
 #  }
-  # mc.selectedTax = {}
-  # mc.selectedTax.taxes = ''
+  mc.selectedTax = {}
+  mc.selectedTax.taxes = ''
 
   mc.selectedGrp = {}
   mc.selectedType = undefined
@@ -55,7 +55,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.prePopulate = []
   mc.getMergeAcc = []
   mc.breadCrumbList = []
-
+  mc.updateBreadCrumbs = true
+  mc.updateSearchItem = false
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
     console.log (type)
@@ -66,7 +67,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   $rootScope.$on('Open-Manage-Modal', ()->
       mc.NewgoToManageGroups() 
-    )
+  )
 
   #show breadcrumbs
   mc.showBreadCrumbs = (data) ->
@@ -109,6 +110,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 # end
 
   mc.getGroupListSuccess = (res) ->
+    res.body = mc.orderGroups(res.body)
     mc.searchLoad = false
     mc.columns = []
     mc.showListGroupsNow = true
@@ -117,6 +119,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     col.accounts = []
     mc.columns.push(col)
     mc.updateAll(res.body)
+    mc.flattenGroupList = groupService.makeGroupListFlatwithLessDtl($rootScope.flatGroupsList)
 
   mc.getGroupListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -127,8 +130,42 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.getGroups()
 
-  mc.selectItemAfterUpdate = (item, fromApi) ->
+  mc.orderGroups = (data) ->
+    orderedGroups = []
+    assets = []
+    liabilities = []
+    income = []
+    expenses = []
+    _.each data, (grp) ->
+      switch grp.category
+        when 'assets'
+          assets.push(grp)
+          # $scope.balSheet.assets.push(grp)
+        when 'liabilities'
+          liabilities.push(grp)
+          # $scope.balSheet.liabilities.push(grp)
+        when 'income'
+          income.push(grp)
+        when 'expenses'
+          expenses.push(grp)
+        else
+          assets.push(grp)
+    _.each liabilities, (liability) ->
+      orderedGroups.push(liability)
+    _.each assets, (asset) ->
+      orderedGroups.push(asset) 
+    _.each income, (inc) ->
+      orderedGroups.push(inc)
+    _.each expenses, (exp) ->
+      orderedGroups.push(exp)
+    orderedGroups
 
+
+  # mc.selectItemAfterUpdate = (item, fromApi) ->
+
+  mc.populateAccountList = (item) ->
+    result = groupService.matchAndReturnGroupObj(item, $rootScope.flatGroupsList)
+    mc.groupAccntList = result.accounts
 
   mc.updateAll = (groupList) ->
     # console.log res
@@ -194,9 +231,18 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         mc.breadCrumbList.length = idx+1
 
 # get selected group or account
-  mc.selectItem = (item, updateBreadCrumbs) ->
-    # mc.columns
-    if updateBreadCrumbs
+  mc.selectItem = (item, updateBreadCrumbs, parentIndex, currentIndex) ->
+    mc.updateBreadCrumbs = true
+    mc.parentIndex = parentIndex
+    mc.currentIndex = currentIndex
+    console.log item.hLevel
+    # if mc.keyWord != undefined
+    #   mc.updateSearchItem = true
+    #   mc.updateSearchhierarchy(item)
+    if mc.breadCrumbList.length > 0
+      if item.uniqueName == mc.breadCrumbList[mc.breadCrumbList.length-1].uniqueName && mc.parentIndex == item.hLevel
+        mc.updateBreadCrumbs = false
+    if updateBreadCrumbs && mc.updateBreadCrumbs
       mc.addToBreadCrumbs(item, 'grp')
     mc.selectedGrp = item
     mc.grpCategory = item.category
@@ -210,17 +256,17 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.selectedItem = mc.selectedGrp
     groupService.get($rootScope.selectedCompany.uniqueName, item.uniqueName).then(mc.getGrpDtlSuccess, mc.getGrpDtlFailure)
     if !existingGrp
-      # if (item.hLevel-1) < mc.columns.length
-      mc.columns = mc.columns.splice(0,item.hLevel+1)
-      mc.columns.push(item)
+      if (item.hLevel-1) < mc.columns.length
+        mc.columns = mc.columns.splice(0,item.hLevel+1)
+        mc.columns.push(item)
     else
       existingGrp = item
-      mc.columns = mc.columns.splice(0,item.hLevel+2)
 
   mc.getGrpDtlSuccess = (res) ->
     mc.selectedItem = res.body
-    console.log mc.selectedItem
-    console.log mc.columns
+    mc.populateAccountList(res.body)
+    if mc.parentIndex != undefined
+      mc.columns.length = mc.parentIndex + 2
 
   mc.getGrpDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -231,6 +277,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     col.active = {}
     col.active.type = type
     col.active.index = index
+    mc.col = col
 
   mc.resetActive = () ->
     _.each mc.columns, (col) ->
@@ -251,7 +298,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.columns[mc.addToIndex].groups.push(res.body)
     toastr.success("Sub group added successfully", "Success")
     # mc.selectedItem = {}
-    mc.getGroups()
+    # mc.getGroups()
+    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
 
   mc.onCreateGroupFailure = (res) ->
     console.log (res)
@@ -274,7 +322,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       groupService.update($rootScope.selectedCompany.uniqueName, grp).then(mc.onUpdateGroupSuccess,
           mc.onUpdateGroupFailure)
 
-  mc.onUpdateGroupSuccess = (res) ->
+  mc.onUpdateGroupSuccess = (res, i) ->
     updateAtIndex = null
     mc.selectedGrp.oldUName = mc.selectedGrp.uniqueName
     mc.selectedGrp.applicableTaxes = res.body.applicableTaxes
@@ -286,8 +334,13 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     if updateAtIndex
       mc.breadCrumbList[updateAtIndex] = res.body
     toastr.success("Group has been updated successfully.", "Success")
-        
-    mc.getGroups()
+    mc.breadCrumbList.pop()
+    angular.merge(mc.selectedGrp, res.body)
+    mc.selectedItem = mc.breadCrumbList[mc.breadCrumbList.length-1]
+    mc.selectItem(mc.selectedGrp, true, mc.parentIndex, mc.currentIndex)
+    # mc.getGroups()
+    # mc.selectActiveItems(mc.col.groups[i], 'grp', updateAtIndex)
+    # mc.selectActiveItems(mc.selectedItem, false)
 
   mc.onUpdateGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -312,7 +365,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.showGroupDetails = false
     mc.showAccountListDetails = false
     mc.breadCrumbList.pop()
-    mc.getGroups()
+    # mc.getGroups()
+    mc.columns[mc.parentIndex].groups.pop()
+    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
 
   mc.onDeleteGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -324,23 +379,28 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.addToIndex = index
     mc.toggleView(true)
     mc.showOnUpdate = false
-
+    console.log mc.breadCrumbList
+    if mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'account'
+      mc.breadCrumbList.pop()
 
 # get account details under groups and sub groups
-  mc.getAccDetail = (item, parentIndex) ->
-    mc.showOnUpdate = true
-    mc.getCurrentAccIndex = parentIndex
+  mc.getAccDetail = (item, parentIndex, currentIndex) ->
     mc.selectedAcc = item
-    item.hLevel = parentIndex
+    mc.showOnUpdate = true
+    mc.showDeleteMove = false
+    mc.getCurrentColIndex = parentIndex
+    mc.currentAccIndex = currentIndex
+    item.hLevel = mc.getCurrentColIndex
     reqParam = {
       compUname: $rootScope.selectedCompany.uniqueName,
       acntUname: item.uniqueName
     }
     accountService.get(reqParam).then(mc.getAccDtlSuccess, mc.getAccDtlFailure)
-    mc.addToBreadCrumbs(item, 'account', parentIndex)
+    if mc.updateBreadCrumbs
+      mc.addToBreadCrumbs(item, 'account', parentIndex)
 
   mc.getAccDtlSuccess = (res, data) ->
-    console.log mc.getCurrentAccIndex 
+    console.log mc.getCurrentColIndex 
     data = res.body
     mc.selectedAcc = res.body
     mc.getMergeAcc = mc.selectedAcc.mergedAccounts.replace(RegExp(' ', 'g'), '')
@@ -350,9 +410,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.getMergeAcc = [mc.selectedAcc.mergedAccounts]
     mc.AccountCategory = mc.getAccountCategory(data.parentGroups)
     mc.getMergedAccounts(data)
-    mc.showGroupDetails = false
-    mc.showAccountDetails = true
-    console.log mc.selectedAcc
     if data.uniqueName is $rootScope.selAcntUname
       mc.cantUpdate = true
     _.extend(mc.selAcntPrevObj, data)
@@ -362,9 +419,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getAccountSharedList()
     mc.isFixedAcc = res.body.isFixed
     mc.showBreadCrumbs(data.parentGroups)
-    mc.columns = mc.columns.splice(0,mc.getCurrentAccIndex+1)
-    # mc.breadCrumbList = mc.breadCrumbList.splice(0,mc.getCurrentAccIndex+1)
-    console.log mc.columns
+    mc.selectedAcc = res.body
+    mc.columns.length = mc.getCurrentColIndex+1
 
   mc.getAccDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -397,8 +453,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       accountService.getTaxHierarchy($rootScope.selectedCompany.uniqueName, mc.selectedAcc.uniqueName).then(mc.getTaxHierarchyOnSuccess,mc.getTaxHierarchyOnFailure)
 
   mc.getTaxHierarchyOnSuccess = (res) ->
-    # mc.taxHierarchy = res.body
-    # mc.selectedTax.taxes = mc.taxHierarchy.applicableTaxes
+    mc.taxHierarchy = res.body
+    mc.selectedTax.taxes = mc.taxHierarchy.applicableTaxes
     mc.showEditTaxSection = true
     mc.allInheritedTaxes = []
     mc.createInheritedTaxList(mc.taxHierarchy.inheritedTaxes)
@@ -411,19 +467,19 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.createInheritedTaxList = (inTaxList) ->
 #get all taxes by uniqueName
-    inTaxUnq = []
+    mc.inTaxUnq = []
     _.each inTaxList, (tax) ->
       _.each tax.applicableTaxes, (inTax) ->
-        inTaxUnq.push(inTax.uniqueName)
-    inTaxUnq = _.uniq(inTaxUnq)
+        mc.inTaxUnq.push(inTax.uniqueName)
+    mc.inTaxUnq = _.uniq(mc.inTaxUnq)
 
     # match groups with tax uniqueNames
-    _.each inTaxUnq, (unq) ->
+    _.each mc.inTaxUnq, (unq) ->
       tax = {}
       tax.uniqueName = unq
       tax.groups = []
       _.each inTaxList, (inTax) ->
-        _.each inTax.applicableTaxes, (inAppTax) ->
+        _.each mc.inTax.applicableTaxes, (inAppTax) ->
           if tax.uniqueName == inAppTax.uniqueName
             grp = {}
             grp.name = inTax.name
@@ -463,26 +519,26 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       toastr.warning("Please do not mess with html.")
     else
       # We have to send all the taxes
-      mergeTaxes = []
-      mergeTaxes.push(mc.taxHierarchy.applicableTaxes)
-      mergeTaxes.push(_.pluck(mc.taxHierarchy.inheritedTaxes, 'applicableTaxes'))
-      sendThisList = _.pluck(_.flatten(mergeTaxes),'uniqueName')
-      mc.getSendTax = sendThisList
+      mc.mergeTaxes = []
+      mc.mergeTaxes.push(mc.taxHierarchy.applicableTaxes)
+      mc.mergeTaxes.push(_.pluck(mc.taxHierarchy.inheritedTaxes, 'applicableTaxes'))
+      mc.sendThisList = _.pluck(_.flatten(mc.mergeTaxes),'uniqueName')
+      mc.getSendTax = mc.sendThisList
       data = {}
       if type == 'group'
-        data = [{"uniqueName":mc.selectedGrp.uniqueName, "taxes":sendThisList,"isAccount":false}]
-        $scope.isAccount = false
+        data = [{"uniqueName":mc.selectedGrp.uniqueName, "taxes":mc.sendThisList,"isAccount":false}]
+        mc.isAccount = false
       else if type == 'account'
-        data = [{"uniqueName":mc.selectedAcc.uniqueName, "taxes":sendThisList,"isAccount":true}]
+        data = [{"uniqueName":mc.selectedAcc.uniqueName, "taxes":mc.sendThisList,"isAccount":true}]
         mc.isAccount = true
       mc.assignTax(data)
 
   # fetch taxes
   mc.alreadyAppliedTaxes = (tax) ->
-    inheritTax = _.pluck(mc.taxHierarchy.inheritedTaxes,'applicableTaxes')
-    applicableTaxes = _.flatten(mc.taxHierarchy)
-    applicableTaxes.push(inheritTax)
-    checkInThis = _.pluck(_.flatten(applicableTaxes),'uniqueName')
+    mc.inheritTax = _.pluck(mc.taxHierarchy.inheritedTaxes,'applicableTaxes')
+    mc.applicableTaxes = _.flatten(mc.taxHierarchy)
+    mc.applicableTaxes.push(mc.inheritTax)
+    checkInThis = _.pluck(_.flatten(mc.applicableTaxes),'uniqueName')
     condition = _.contains(checkInThis, tax.uniqueName)
 #end
 
@@ -506,7 +562,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     toastr.success("Group moved successfully.", "Success")
     mc.breadCrumbList.pop()
     mc.getGroups()
-    mc.selectedItem = {}
+    mc.columns[mc.parentIndex].groups.pop()
+    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
+    mc.selectedItem = mc.breadCrumbList[mc.breadCrumbList.length-1]
 
   mc.onMoveGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -657,6 +715,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
 
   mc.updateAccountSuccess = (res) ->
+    updateAtIndex = null
     toastr.success("Account updated successfully", res.status)
     angular.merge(mc.selectedAcc, res.body)
     abc = _.pick(mc.selectedAcc, 'name', 'uniqueName', 'mergedAccounts')
@@ -665,11 +724,16 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         if item.uniqueName == mc.selAcntPrevObj.uniqueName
           angular.merge(mc.groupAccntList[index], abc)
       )
+    _.each mc.breadCrumbList, (item,i) ->
+      if item.uniqueName == mc.selectedAcc.uniqueName
+        updateAtIndex = i
+    if updateAtIndex
+      mc.breadCrumbList[updateAtIndex] = res.body
     # end if
+    mc.breadCrumbList.pop()
     angular.merge(mc.selAcntPrevObj, res.body)
-    mc.getGroups()
-    # mc.getAccDetail(mc.selectedAcc, mc.getCurrentAccIndex)
-
+    mc.columns[mc.columns.length-1].accounts.splice(mc.currentAccIndex, 1, res.body)
+    mc.getAccDetail(mc.selectedAcc, mc.getCurrentColIndex, mc.currentAccIndex)
 
   mc.updateAccountFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -732,9 +796,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.selAcntPrevObj = {}
     mc.moveacto = ''
     mc.getSelectedType('grp')
-    mc.getGroups()
     mc.breadCrumbList.pop()
-    mc.selectedItem = mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], false)
+    mc.getGroups()
+    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
 
 
   mc.moveAccntFailure = (res) ->
@@ -750,6 +814,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.refreshFlatAccount = (str) ->
     @success = (res) ->
       mc.mergeAccList = res.body.results
+      mc.mergeAccList = mc.mergeAccList.filter(obj) ->
+        obj.isFixed != money
     @failure = (res) ->
       toastr.error(res.data.message)
     reqParam = {
@@ -826,7 +892,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # mc.getGroups()
     mc.prePopulate = mc.toMerge.mergedAcc
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
-    mc.getAccDetail(mc.selectedAcc, mc.getCurrentAccIndex)
+    mc.getAccDetail(mc.selectedAcc, mc.getCurrentColIndex)
 
   mc.mergeFailure = (res) ->
     toastr.error(res.data.message)
@@ -879,7 +945,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.toMerge.mergedAcc = updatedMergedAccList
     mc.toMerge.toUnMerge.uniqueNames = ''
     mc.toMerge.moveToAcc = ''
-    mc.getAccDetail(mc.selectedAcc, mc.getCurrentAccIndex)
+    mc.getAccDetail(mc.selectedAcc, mc.getCurrentColIndex)
 
 
 
@@ -932,7 +998,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.toMerge.mergedAcc = mc.updatedMergedAccList
     mc.toMerge.toUnMerge.uniqueNames = ''
     mc.toMerge.moveToAcc = ''
-    mc.getAccDetail(mc.selectedAcc, mc.getCurrentAccIndex)
+    mc.getAccDetail(mc.selectedAcc, mc.getCurrentColIndex)
 
   mc.moveToAccountConfirmFailure = (res) ->
     toastr.error(res.data.message)
@@ -1010,6 +1076,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     reqParam.query = str
     if str.length < 3
       mc.columns = []
+      mc.updateBreadCrumbs = true
       mc.getGroups()
     else if str.length > 2
       mc.searchLoad = true
@@ -1018,6 +1085,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.getSearchResultSuccess = (res) ->
     mc.searchLoad = false
+    # mc.updateBreadCrumbs = false
     # toastr.success(res.status)
     mc.pushSearchResultLevel1(res.body)
 
@@ -1041,14 +1109,28 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     childCol.groups = []
     childCol.accounts = []
     _.each groups, (grp) ->
-      childCol.groups.push(grp)
       if grp.accounts.length > 0
         _.each grp.accounts, (acc) ->
           childCol.accounts.push(acc)
       if grp.groups.length > 0
-        mc.pushSearchResultChildLevel(grp.groups)
-    mc.columns.unshift(childCol)
-        
+        _.each grp.groups, (grp) ->
+          childCol.groups.push(grp)
+          if grp.accounts.length > 0
+            _.each grp.accounts, (acc) ->
+              childCol.accounts.push(acc)
+    mc.columns.push(childCol)
+
+  mc.resetSearch = () ->
+    mc.searchQuery('')
+    mc.keyWord = ''
+     
+  mc.updateSearchhierarchy = (data) ->
+    currentItem = _.findWhere($rootScope.flatGroupsList, {uniqueName:data.uniqueName})
+    mc.breadCrumbList = currentItem.parentGroups
+    mc.updateBreadCrumbs = false
+    mc.columns = mc.columns.splice(0,mc.parentIndex+1)
+    console.log mc.parentIndex
+
 # end
 
   return mc
