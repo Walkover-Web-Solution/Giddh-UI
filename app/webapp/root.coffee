@@ -327,6 +327,11 @@ giddh.webApp.run [
         $rootScope.selAcntUname = undefined
     )
 
+    $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+      $('html,body').animate({scrollTop: $('html').offset().top},'slow')
+      return false
+    )
+
     # $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
     #   user = localStorageService.get('_userDetails')
     #   window.dataLayer.push({

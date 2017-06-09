@@ -1,0 +1,360 @@
+<div id="shareModal">
+<div id="getGroupModal" ng-controller="groupController as gc">
+
+  <div class="modal-header themeBg pd2 pdL2 pdR2">
+  <i class="fa fa-times text-right close_modal" class="close" data-dismiss="modal" ng-click="$dismiss(); search.flataccount = ''" aria-label="Close" aria-hidden="true"></i>
+    <span class="col-xs-6">
+      <h3 class="modal-title bg pdT">Manage Groups &amp; Accounts</h3>
+    </span>
+    <div class="pull-right">
+      <div class="form-inline">
+        <div class="form-group">
+
+          <div class="input-group searchBar">
+
+            <div class="input-group-addon">
+              <i class="glyphicon glyphicon-search"></i>
+            </div>
+
+            <input type="text" name="grpSrch" class="form-control" ng-model="keyWord" placeholder="Search accounts" ng-keyup="setScrollToTop(grpSrch, 'addMngGrpScrBar')" trial-accordion="search" ng-model-options="{debounce:1000}">
+            
+
+          </div>
+        </div>
+      </div><!-- form-inline -->
+    </div>
+  </div>
+  <!-- end header -->
+
+  <div class="modal-body noPad">
+    <!-- assets list -->
+      <div class="col-xs-2 assets_list">
+        <div class="row">
+          <ul class="grp_list">
+             <li><a href="javascript:void(0);">Show All</a></li>
+             <!-- ngRepeat: grp in groupList -->
+             <li ><a href="">CAPITAL</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="" class="isSelectedgrp">CURRENT ASSETS</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">CURRENT LIABILITIES</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">FIXED ASSETS</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">INDIRECT EXPENSES</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">INVESTMENTS</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">LOAN</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">OPERATING COST</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li ><a href="">OTHER INCOME</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+             <li><a href=""> REVENUE FROM OPERATIONS</a></li>
+             <!-- end ngRepeat: grp in groupList -->
+          </ul>
+        </div>
+      </div>
+    <!-- assets list end -->
+
+
+    <!-- list of groups -->
+    <div class="col-xs-5 grp_col bdrL bdrR">
+      <div class="row grp_col">
+      
+      <div class="grp_wrapper">
+        <!-- level 1 -->
+      <div class="col_wrapper">
+        <ul class="grp_list">
+          <li><a href="javascript:void(0);">Show All</a></li>
+          <li><a href="#" class="isParent">Bank accounts</a></li>
+          <li><a href="#">Sub group</a></li>
+          <li><a href="#">Other indirect expenses</a></li>
+          <li><a href="#">Purchases</a></li>
+          <li><a href="#">Discount</a></li>
+          <li><a href="#">Reserves & surplus</a></li>
+          <li><a href="#" class="btn-add">Create new</a></li>
+        </ul>
+      </div>
+    <!-- level 1 -->
+
+
+
+        <!-- level 2 -->
+      <div class="col_wrapper">
+        <ul class="grp_list">
+          <li><a href="javascript:void(0);">Bank accounts</a></li>
+          <li><a href="#" class="isAcc">Sub group</a></li>
+          <li><a href="#" class="isParent">Other indirect expenses</a></li>
+          <li><a href="#" class="isAcc">Discount</a></li>
+          <li><a href="#">Purchases</a></li>
+          <li><a href="#" class="btn-add">Create new</a></li>
+        </ul>
+      </div>
+    <!-- level 1 -->
+
+
+      <div class="col_wrapper">
+        <ul class="grp_list">
+          <li><a href="javascript:void(0);">Bank accounts</a></li>
+          <li><a href="#">Sub group</a></li>
+          <li><a href="#" class="isActive">Other indirect expenses</a></li>
+          <li><a href="#" class="isAcc">Discount</a></li>
+          <li><a href="#">Purchases</a></li>
+        </ul>
+      </div>
+
+      <div class="col_wrapper">
+        <ul class="grp_list">
+          <li><a href="javascript:void(0);">Bank accounts</a></li>
+          <li><a href="#">Sub group</a></li>
+          <li><a href="#">Other indirect expenses</a></li>
+          <li><a href="#">Discount</a></li>
+          <li><a href="#">Purchases</a></li>
+        </ul>
+      </div>
+
+      <div class="col_wrapper">
+        <ul class="grp_list">
+          <li><a href="javascript:void(0);">Show All</a></li>
+          <li><a href="">Bank accounts</a></li>
+          <li><a href="#">Sub group</a></li>
+          <li><a href="#">Other indirect expenses</a></li>
+          <li><a href="#">Purchases</a></li>
+          <li><a href="#">Discount</a></li>
+          <li><a href="#">Reserves &amp; surplus</a></li>
+          <li><a href="#" class="btn-add">Create new</a></li>
+        </ul>
+      </div>
+
+      <div class="col_wrapper">
+        <ul class="grp_list">
+          <li><a href="javascript:void(0);">Show All</a></li>
+          <li><a href="">Bank accounts</a></li>
+          <li><a href="#">Sub group</a></li>
+          <li><a href="#">Other indirect expenses</a></li>
+          <li><a href="#">Purchases</a></li>
+          <li><a href="#">Discount</a></li>
+          <li><a href="#">Reserves &amp; surplus</a></li>
+          <li><a href="#" class="btn-add">Create new</a></li>
+        </ul>
+      </div>
+
+    </div>
+    </div>
+    </div>
+    <!-- list of groups end -->
+    
+    <!-- form view -->
+    <div class="col-xs-5">
+      <div class="row">
+        <div class="view_forms">
+          <div class="breadcrumbs pdL2 pdT1 pdR2 pdB1">
+            <div class="pull-left pdT1"><span>CURRENT ASSETS > Expence group 2</span> > <span class="primary_clr">Expence group 1</span></div>
+            <div class="pull-right"> <button class="btn isActive">Share</button> <span class="primary_clr">Shared with 2 people</span> </div>
+          </div>
+          <form class="horizontal-form">
+            <div class="form_bg pd2">
+
+              <div class="form-group clearfix">
+                  <div class="col-xs-6">
+                    <div class="row">
+                      <label>A/c Name</label>
+                      <input type="text"  class="form-control" />
+                    </div>
+                  </div>
+              </div>
+
+
+              <div class="form-group clearfix mrB">
+
+                <div class="col-xs-5">
+                  <div class="row">
+                    <label>Unique Name</label>
+                    <input type="text"  class="form-control" />
+                  </div>
+                </div>
+
+                <div class="col-xs-6">
+                      <label class="col-xs-12 row">Opening Balance</label>
+                  <div class="col-xs-4">
+                    <div class="row">
+                      <div class="form-inline">
+                        <select class="form-control col-md-3">
+                          <option>Debit</option>
+                          <option>Credit</option>
+                        </select>
+                        <span class="select_drop"><i class="fa fa-caret-down"></i></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-xs-8">
+                    <div class="row">
+                      <input type="text" class="form-control" />
+                    </div>
+                  </div>
+                </div>        
+              </div>
+
+              </div>
+            
+            <div class="pd2 detailed">
+              
+              <div class="form-group col-xs-3">
+                  <div class="row">
+                  <label>Mobile Number</label>
+                  <input type="text" class="form-control">
+                  </div>
+              </div>
+
+              <div class="form-group col-xs-5">
+                  <label>Email</label>
+                  <input type="text" class="form-control">
+              </div>
+
+              <div class="clearfix"></div>
+              
+              <div class="form-group col-xs-5">
+                  <div class="row">
+                  <label>Company</label>
+                  <input type="text" class="form-control">
+                  </div>
+              </div>
+
+              <div class="form-group col-xs-7">
+                  <label>Attention to (will be used in invoice)</label>
+                  <input type="text" class="form-control">
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="form-group mrB">
+                  <label>Address</label>
+                  <input type="text" class="form-control">
+              </div>
+            </div>
+
+            <div class="form_bg pd2">
+
+              <div class="form-group col-xs-12">
+                <div class="row">
+                  <div class="col-xs-12">
+                    <div class="row">
+                      <label>Description</label>
+                    </div>
+                  </div>
+
+                  <div class="col-xs-12">
+                    <div class="row">
+                      <textarea class="form-control" cols="10" rows="5"></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="clearfix"></div>
+            </div>
+
+              
+
+            <div class="pd2 detailed">
+            <hr />
+              <div class="form-group mrT col-xs-4 mrT1">
+                  <div class="row">
+                  <label>Group</label>
+                  <input type="text" class="form-control">
+                  </div>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="form-group col-xs-10 mrB">
+                  <div class="row">
+              
+                        <label class="col-xs-12 row">Merge this A/c with</label>
+              
+                    <div class="col-xs-4">
+                      <div class="row">
+                        <div class="form-inline">
+                          <select class="form-control col-md-3">
+                            <option>Select Account</option>
+                            <option>Account 1</option>
+                            <option>Account 2</option>
+                          </select>
+                          <span class="select_drop"><i class="fa fa-caret-down"></i></span>
+                        </div>
+                      </div>
+                    </div>
+              
+                    <div class="col-xs-4 row">
+                      <button class="btn isActive">Merge</button>
+                    </div>
+                  </div>
+              
+              </div>
+
+              <div class="clearfix"></div>
+
+              <small>This option is riskey and can not be undone</small>
+              <div class="col-xs-12 mrT1" style="min-height: 120px;">
+                <div class="row">
+                  <button class="btn isActive">DELETE Account 2</button>
+                  <button class="btn btn-success pull-right">Add</button>
+                  <button class="btn btn-success pull-right">Update</button>
+                </div>
+              </div>
+
+            </div> <!-- pd2 -->
+          </form>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="view_forms ng-hide">
+      <div class="breadcrumbs pdL2 pdT1 pdR2 pdB1">
+        <div class="pull-left pdT1"><span>CURRENT ASSETS > Expence group 2</span> > <span class="primary_clr">Expence group 1</span></div>
+        <div class="pull-right"> <button class="btn isActive">Share</button> <label class="primary_clr">Shared with 2 people</label> </div>
+      </div>
+      <form class="horizontal-form">
+        <div class="form_bg pd2">
+
+        <div class="form-group clearfix">
+          <div class="col-xs-7">
+            <div class="row">
+              <label>Group Name</label>
+              <input type="text" placeholder="Expence group 1"  class="form-control" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group clearfix">
+          <div class="col-xs-5">
+            <div class="row">
+              <label>Unique Name</label>
+              <input type="text"  class="form-control" />
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group clearfix">
+          <label>Description</label>
+          <textarea class="form-control" rows="5" cols="12" no-resize></textarea>
+        </div>
+
+        </div>
+        <div class="pd2">
+        <button class="btn isActive">DELETE Expence group 1</button>
+        <button class="btn btn-success pull-right">Add</button>
+        </div>
+      </form>
+    </div>
+
+  </div>
+  <!-- end modal body -->
+
+
+</div>
+</div>

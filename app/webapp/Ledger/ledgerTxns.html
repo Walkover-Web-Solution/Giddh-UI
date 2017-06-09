@@ -635,7 +635,7 @@ th {
 						    <span uib-dropdown auto-close="outsideClick">
 						      <a href id="discount" uib-dropdown-toggle>
 					        	<label>Discount</label>
-						        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.panel.discount"/>
+						        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.panel.discount" readonly />
 						      </a>
 						      <ul class="dropdown-menu" uib-dropdown-menu>
 						        <li>
@@ -660,7 +660,7 @@ th {
 					      <a href id="tax" uib-dropdown-toggle>
 			        	<label>Tax %</label>
 			        	<div class="multi-select adjust">
-			        		<input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.panel.tax"/>
+			        		<input type="number" readonly name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.panel.tax"/>
 			        		<span class="caret"></span>
 			        	</div>
 					    
