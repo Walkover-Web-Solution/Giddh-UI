@@ -82,6 +82,7 @@ app.use(session({
   //   ttl: sessionTTL,
   //   touchAfter: sessionTTL - 300
   // })
+
   // store   : new MemcachedStore({
   //   hosts: ['127.0.0.1:11211'],
   //   secret: 'keyboardcat'
@@ -237,6 +238,11 @@ app.use('/logout', function(req, res){
   }else{
     res.status(403).send({message:'user not found'})
   }
+})
+
+//get understanding json
+app.get('/understanding', function(req, res){
+  res.status(200).send(settings.understanding)
 })
 
 //return user-details

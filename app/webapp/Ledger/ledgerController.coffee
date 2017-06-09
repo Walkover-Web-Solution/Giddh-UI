@@ -38,6 +38,22 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.LedgerExport = false
     ledgerCtrl.LedgerExport = !ledgerCtrl.LedgerExport
 
+
+  ledgerCtrl.createUnderstandingText = (account, data) ->
+    ledgerCtrl.understanding = _.findWhere(data, {accountType:account.accountType})
+    if ledgerCtrl.understanding
+      ledgerCtrl.understanding.text.cr = ledgerCtrl.understanding.text.cr.replace("<accountName>", account.name)
+      ledgerCtrl.understanding.text.dr = ledgerCtrl.understanding.text.dr.replace("<accountName>", account.name)
+
+
+  ledgerCtrl.getUnderstanding = (account) ->
+    @success = (res) ->
+      ledgerCtrl.understandingJson = res.data
+      ledgerCtrl.createUnderstandingText(account, ledgerCtrl.understandingJson)
+
+    $http.get('/understanding').then(@success, @failure)
+
+
   ledgerCtrl.voucherTypeList = [
     {
       name: "Sales"
@@ -77,6 +93,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     $event.preventDefault()
     $event.stopPropagation()
     $scope.status.isopen = !$scope.status.isopen
+
+  # ledgerCtrl.checkTarget = ($event) ->
+  #   $event = false
 
   ledgerCtrl.shareLedger =() ->
     ledgerCtrl.shareModalInstance = $uibModal.open(
@@ -150,6 +169,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if res.body.uniqueName == 'cash'
       $rootScope.ledgerState = true
     # ledgerCtrl.getPaginatedLedger(1)
+    ledgerCtrl.getUnderstanding(res.body)
     if res.body.yodleeAdded == true && $rootScope.canUpdate
       #get bank transaction here
       $timeout ( ->
@@ -354,6 +374,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   
 
   ###date range picker ###
+  ledgerCtrl.resetDates = () ->
+    $scope.cDate = {
+      startDate: moment().subtract(30, 'days')._d,
+      endDate: moment()._d
+    }
+
   $scope.cDate = {
     startDate: moment().subtract(30, 'days')._d,
     endDate: moment()._d
@@ -2054,7 +2080,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.loadDefaultAccount() 
 
   $rootScope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE' 
+    if changeData.type == 'CHANGE'
+      ledgerCtrl.resetDates() 
       ledgerCtrl.loadDefaultAccount()
       ledgerCtrl.getTaxList()
       ledgerCtrl.getDiscountGroupDetail()
@@ -2186,6 +2213,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.baseAccount = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:entry.particular.uniqueName})
     else
       ledgerCtrl.editModeBaseAccount = ledgerCtrl.accountToShow.name
+    ledgerCtrl.createUnderstandingText(ledgerCtrl.baseAccount, ledgerCtrl.understandingJson)
 
     ledgerService.getEntry(reqParam).then(@success, @failure)
     return 

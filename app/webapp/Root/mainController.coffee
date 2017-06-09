@@ -561,7 +561,22 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     )
     filteredList
 
+  $rootScope.OpenManegeModal = () ->
+    $rootScope.$emit('Open-Manage-Modal')
 
+  $rootScope.NewgoToManageGroups =() ->
+    if !$rootScope.canManageComp
+      return
+    if _.isEmpty($rootScope.selectedCompany)
+      toastr.error("Select company first.", "Error")
+    else
+      modalInstance = $uibModal.open(
+        templateUrl: $rootScope.prefixThis+'/public/webapp/NewManageGroupsAndAccounts/ManageGroupModal.html'
+        size: "liq90"
+        backdrop: 'static'
+        scope: $scope
+      )
+      # modalInstance.result.then(mc.goToManageGroupsOpen, mc.goToManageGroupsClose)
 
 
   # search flat accounts list

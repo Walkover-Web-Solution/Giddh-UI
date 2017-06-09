@@ -207,8 +207,8 @@ th {
 		<table class="col-xs-12 ledger-head mrT3">
 			<thead>
 				<tr>
-					<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} coming in?</th>
-					<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.accountToShow.name}} going out?</th>
+					<th class="col-xs-6"  style="font-weight: 400">{{ledgerCtrl.understanding.text.dr}}</th>
+					<th class="col-xs-6"  style="font-weight: 400">{{ledgerCtrl.understanding.text.cr}}</th>
 				</tr>
 			</thead>
 		</table>
@@ -254,7 +254,6 @@ th {
 							ng-repeat="txn in ledgerCtrl.txnData.debitTransactions" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)"  
 							ng-click="ledgerCtrl.selectCompoundEntry(txn, $event)"
-							ng-show="(!txn.isTax || txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName) || ledgerCtrl.showAllTaxes"
 							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
 							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
@@ -391,8 +390,7 @@ th {
 							ng-repeat="txn in ledgerCtrl.txnData.creditTransactions" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)" 
 							ng-click="ledgerCtrl.selectCompoundEntry(txn, $event)"
-							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}"
-							ng-show="(!txn.isTax || txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName) || ledgerCtrl.showAllTaxes">
+							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
 							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
 							<td class="col-xs-3 pos-rel text-right" ng-class="{pdR25imp:txn.attachedFileUniqueName.length > 0 || txn.isInvoiceGenerated}">
@@ -498,11 +496,13 @@ th {
 				<tbody>
 					
 					<tr class="total_col">
-						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-							<span ng-if="ledgerCtrl.txnData.closingBalance.type == 'CREDIT'">C/F: CR {{ledgerCtrl.txnData.closingBalance.amount | number:2 }}</span>
-						</td>
-					</tr>
-					<tr class="total_col">
+						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important" >
+							<span ng-if="ledgerCtrl.txnData.closingBalance.type == 'CREDIT'" uib-tooltip="{{ledgerCtrl.understanding.balanceText.cr}}" tooltip-placement="top">
+								C/F: CR {{ledgerCtrl.txnData.closingBalance.amount | number:2 }}
+							</span>	
+						</td>	
+					</tr>	
+					<tr class="total_col">	
 						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important;">
 							<span class="bdrT" style="width: 150px;display: block;float: right;padding: 10px 0;">{{ledgerCtrl.txnData.reckoningDebitTotal | number:2}}</span>
 						</td>
@@ -513,8 +513,10 @@ th {
 				<tbody>
 					
 					<tr class="total_col">
-						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-							<span ng-if="ledgerCtrl.txnData.closingBalance.type == 'DEBIT'">C/F: Dr <span class="primary_color">{{ledgerCtrl.txnData.closingBalance.amount | number:2 }}</span></span>
+						<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important" >
+							<span ng-if="ledgerCtrl.txnData.closingBalance.type == 'DEBIT'" uib-tooltip="{{ledgerCtrl.understanding.balanceText.dr}}" tooltip-placement="top">
+								C/F: Dr <span class="primary_color">{{ledgerCtrl.txnData.closingBalance.amount | number:2 }}
+							</span></span>
 						</td>
 					</tr>
 					<tr class="total_col">
@@ -633,7 +635,7 @@ th {
 						    <span uib-dropdown auto-close="outsideClick">
 						      <a href id="discount" uib-dropdown-toggle>
 					        	<label>Discount</label>
-						        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.panel.discount"/>
+						        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.panel.discount" readonly />
 						      </a>
 						      <ul class="dropdown-menu" uib-dropdown-menu>
 						        <li>
@@ -658,7 +660,7 @@ th {
 					      <a href id="tax" uib-dropdown-toggle>
 			        	<label>Tax %</label>
 			        	<div class="multi-select adjust">
-			        		<input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.panel.tax"/>
+			        		<input type="number" readonly name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.panel.tax"/>
 			        		<span class="caret"></span>
 			        	</div>
 					    
