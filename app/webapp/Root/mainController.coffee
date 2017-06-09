@@ -137,7 +137,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $http.get('/fetch-user').then(getUserSuccess, getUserFailure)
   getUserDetail()
 
-
   $scope.addScript = () ->
     _.each($rootScope.scriptArrayHead, (script) ->
       sc = document.createElement("script")
@@ -639,7 +638,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     changeData.data = company
     changeData.index = index
     changeData.type = method
-    $scope.$broadcast('company-changed', changeData)
+    # $scope.$broadcast('company-changed', changeData)
     $rootScope.$emit('company-changed', changeData)
     url = $location.url()
     # if url.indexOf('ledger') == -1
@@ -690,8 +689,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.showAccounts = (e) ->
     $rootScope.flyAccounts = true
-    #e.stopPropagation()
-  # $scope.addScript()
 
   # for accounts list
   $scope.gwaList = {

@@ -1,18 +1,4 @@
 angular.module('inventoryServices', [])
-	.service('localInventoryService', function(){
-		return {
-			_groupList: [],
-			get : function() {
-	      return this._groupList;
-	    },
-	    set : function(val) {
-	      this._groupList = val;
-	    },
-	    insert : function(items){
-	    	this._groupList.push(items);
-	    }
-		}
-	})
 	.service('stockService', ['$resource', '$q', function($resource, $q){
 		var stock = $resource('/company/:companyUniqueName/stock-group', {
 			'companyUniqueName': this.companyUniqueName,

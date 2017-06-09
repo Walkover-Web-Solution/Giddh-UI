@@ -10,7 +10,7 @@ homeController = ($scope, $rootScope, getLedgerState, $state, $location, localSt
     $http.get('/state-details').then(
         (res) ->
             $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
-            if $rootScope.selectedCompany.uniqueName = res.data.body.companyUniqueName
+            if $rootScope.selectedCompany.uniqueName == res.data.body.companyUniqueName
                 if res.data.body.lastState.indexOf('ledger') != -1
                     state = res.data.body.lastState.split('@')
                     $state.go(state[0], {unqName:state[1]})

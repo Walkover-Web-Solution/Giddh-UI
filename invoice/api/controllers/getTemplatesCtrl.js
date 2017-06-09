@@ -1,8 +1,9 @@
 const fs = require('fs');
+const settings = require('../../../public/routes/util/settings');
 
 getTemplates = {}
-var html_template_path = './invoice/api/models/invoice/html_templates/'
-var html_template_image_path = './invoice/api/models/invoice/html_templates/template_images/'
+var html_template_path = 	'./invoice/api/models/invoice/html_templates/'
+var html_template_image_path ='./invoice/api/models/invoice/html_templates/template_images/'
 function template (){
 	this.image_src=""
 	this.id=""
@@ -47,7 +48,7 @@ function returnAllWithoutAuth(req,res,next){
 		    }
 		    files.forEach(function (file){
 			    fileObj = new template();
-			    fileObj.image_src = html_template_image_path+file
+			    fileObj.image_src = settings.domainURL+html_template_image_path.substring(1,html_template_image_path.length)+file
 				fileObj.id = file.substring(file.length - 4, -file.length);
 				filesToReturn.push(fileObj)	
 	  		});

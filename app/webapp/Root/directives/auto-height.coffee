@@ -15,9 +15,10 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
     adjustHeight = () ->
       additionalHeight = $attrs.additionalHeight || 0
       minHeight = $attrs.minHeight || 600
-      parentHeight = $window.innerHeight - $element.parent()[0].getBoundingClientRect().top
-      $element.css('min-height',minHeight + 'px')
-      $element.css('height', (parentHeight - combineHeights(siblings($element)) - additionalHeight) + "px")
+      if ! $element[0].parentElement
+        parentHeight = $window.innerHeight-$element[0].parentElement.getBoundingClientRect().top
+        $element.css('min-height',minHeight + 'px')
+        $element.css('height', (parentHeight - combineHeights(siblings($element)) - additionalHeight) + "px")
 
     angular.element($window).on 'resize', ->
       adjustHeight()
@@ -81,8 +82,26 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
     ),1000
 ]
 
+# sarfaraz
+# to remove class dynamic 
+# init with outside-click="YOUR_CLASS_NAME"
 
+.directive("outsideClick", ['$document','$parse', ($document, $parse)->
+  return {
+    link:($scope, $element, $attributes) ->
+      cls = $attributes.outsideClick
+      onDocumentClick =(event)->
+        isChild = $element[0].contains(event.target)
+        if(!isChild)
+          $element.removeClass(cls)
+      
+      $document.on("click", onDocumentClick);
 
+      $element.on('$destroy', ()->
+        $document.off("click", onDocumentClick)
+      )
+  }
+])
 
 
 

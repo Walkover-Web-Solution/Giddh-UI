@@ -1,6 +1,6 @@
 <div id="entryModal">
   <div class="modal-header themeBg">
-    <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); search.flataccount = ''" aria-label="Close"><span
+    <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); search.flataccount = '';ledgerCtrl.resetTaxes()" aria-label="Close"><span
         aria-hidden="true">&times;</span></button>
     <h3 class="modal-title" style="color:#fff">Edit Entry</h3>
   </div>
@@ -71,7 +71,7 @@
 													typeahead-append-to-body="true" 
 			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | addStockinAccountList:ledgerCtrl.baseAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
 			                                      	typeahead-template-url="accountPopUp.html"
-			                                      	typeahead-on-select = "ledgerCtrl.createPanel(txn, ledger);ledgerCtrl.matchInventory(ledger)" 
+			                                      	typeahead-on-select = "ledgerCtrl.createPanel(ledger);ledgerCtrl.matchInventory(ledger)" 
 													class="form-control"
 													ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 													is-open="txn.isOpen">
@@ -155,7 +155,7 @@
 													typeahead-append-to-body="true" 
 			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated  |addStockinAccountList:ledgerCtrl.baseAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
 			                                      	typeahead-template-url="accountPopUp.html"
-			                                      	typeahead-on-select = "ledgerCtrl.createPanel(txn, ledger);ledgerCtrl.matchInventory(ledger)"
+			                                      	typeahead-on-select = "ledgerCtrl.createPanel(ledger);ledgerCtrl.matchInventory(ledger)"
 													ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 													is-open="txn.isOpen"
 													>

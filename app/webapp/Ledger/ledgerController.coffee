@@ -145,7 +145,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.accountToShow = $rootScope.selectedAccount
     ledgerCtrl.accountUnq = res.body.uniqueName
     ledgerCtrl.getTransactions(0)
-    ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
     $state.go($state.current, {unqName: res.body.uniqueName}, {notify: false})
     if res.body.uniqueName == 'cash'
@@ -154,7 +153,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if res.body.yodleeAdded == true && $rootScope.canUpdate
       #get bank transaction here
       $timeout ( ->
-        ledgerCtrl.getBankTransactions(res.body.uniqueName)
+        ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
       ), 2000
 
   ledgerCtrl.hideEledger = () ->
@@ -352,10 +351,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if ledger.isBankTransaction 
         ledgerCtrl.dLedgerContainer.remove(ledger)
     ledgerCtrl.showEledger = true
-  if ledgerCtrl.accountUnq
-    ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
-  else
-    ledgerCtrl.loadDefaultAccount() 
+  
 
   ###date range picker ###
   $scope.cDate = {
@@ -645,7 +641,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.getSharedList = () ->
     $scope.setShareableRoles($rootScope.selectedCompany)
     $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
-  ledgerCtrl.getSharedList()
+  if $rootScope.canUpdate
+    ledgerCtrl.getSharedList()
   # generate magic link
   ledgerCtrl.getMagicLink = () ->
     accUname = ledgerCtrl.accountUnq
@@ -798,11 +795,18 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   #     scope: $scope
   #   )
 
+  ledgerCtrl.hideSideMenu=()->
+    $rootScope.flyAccounts=false
+
   ledgerCtrl.getMagicLinkFailure = (res) ->
     toastr.error(res.data.message)
 
   ledgerCtrl.prevTxn = null
   ledgerCtrl.selectBlankTxn = (ledger, txn, index ,e) ->
+    
+    # hide side menu
+    ledgerCtrl.hideSideMenu()
+
     ledgerCtrl.selectedTxn = txn
     if ledgerCtrl.prevTxn != null
       ledgerCtrl.prevTxn.isOpen = false
@@ -840,7 +844,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.cutToTwoDecimal(taxPercentage) || 0
 
   ledgerCtrl.createNewPanel = (txn, ledger) ->
-    if txn.particular.uniqueName.length < 1 && txn.amount == 0
+    panel = {}
+    if typeof(txn.particular) == 'object' && txn.particular.uniqueName.length < 1 && _.isEmpty(txn.amount)
       txn.panel = {
         tax : 0
         total: 0
@@ -851,8 +856,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         quantity: 0
         units: []
       }
-
-    panel = @
+    
     panel.getQuantity = () ->
       if txn.panel.quantity != undefined
         return ledgerCtrl.cutToTwoDecimal(panel.getAmount()/panel.getPrice())
@@ -862,14 +866,18 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         units = panel.getUnits()
         if txn.panel.unit
           return txn.panel.unit.rate
-        else
+        else if units.length > 0
           return units[0].rate
       else
         return 0
 
     panel.getUnits = () ->
-      if txn.particular.stock
+      if txn.particular.stock && txn.particular.stock.accountStockDetails.unitRates.length > 0
         return txn.particular.stock.accountStockDetails.unitRates
+      else if txn.particular.uniqueName.length > 0 && txn.particular.stock
+        txn.particular.stock.stockUnit.rate = 0
+        txn.particular.stock.stockUnit.stockUnitCode = txn.particular.stock.stockUnit.code
+        return [txn.particular.stock.stockUnit]
       else
         return txn.panel.units
 
@@ -890,7 +898,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       amount = txn.panel.amount - txn.panel.discount
       txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount + (amount*txn.panel.tax/100))
 
-
     txn.panel.quantity = panel.getQuantity()
     txn.panel.price = panel.getPrice()
     txn.panel.units = panel.getUnits()
@@ -909,16 +916,17 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       change.getTotal(txn, ledger)
 
     change.unit = (txn, ledger) ->
-      txn.panel.price = ledgerCtrl.cutToTwoDecimal(txn.panel.unit.rate)
+      txn.panel.price = ledgerCtrl.cutToFourDecimal(txn.panel.unit.rate)
       txn.panel.quantity = ledgerCtrl.cutToTwoDecimal(txn.panel.amount / txn.panel.price)
       #change.price(txn, ledger)
 
     change.price = (txn, ledger) ->
       txn.panel.amount = ledgerCtrl.cutToTwoDecimal(txn.panel.quantity * txn.panel.price)
       change.getTotal(txn, ledger)
+      change.tax(txn, ledger)
 
     change.amount = (txn, ledger) ->
-      txn.panel.price = ledgerCtrl.cutToTwoDecimal(txn.panel.amount / txn.panel.quantity)
+      txn.panel.price = ledgerCtrl.cutToFourDecimal(txn.panel.amount / txn.panel.quantity)
       txn.amount = txn.panel.amount
       change.getTotal(txn, ledger)
 
@@ -948,6 +956,20 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         amount = (100*txn.panel.total)/(100+(txn.panel.tax||0)) + txn.panel.discount
       txn.panel.amount = Number(amount.toFixed(2))
     return change
+
+
+  ledgerCtrl.addApplicableTaxes = (account) ->
+    if account.applicableTaxes.length > 0
+      _.each ledgerCtrl.taxList, (tax) ->
+        #taxInAccount = _.findWhere(account.applicableTaxes, tax.uniqueName)
+        if account.applicableTaxes.indexOf(tax.uniqueName) != -1
+          tax.isChecked = true
+          ledgerCtrl.selectedLedger.taxList.push(tax)
+      ledgerCtrl.selectedLedger.applyApplicableTaxes = true
+    else
+      ledgerCtrl.selectedLedger.taxList = []
+      ledgerCtrl.selectedLedger.applyApplicableTaxes = false
+    ledgerCtrl.onNewPanelChange().tax(ledgerCtrl.selectedTxn, ledgerCtrl.blankLedger)
 
 
   ledgerCtrl.selectTxn = (ledger, txn, index ,e) ->
@@ -998,12 +1020,15 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.selectedLedger.panel.discount = ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
     ledgerCtrl.selectedLedger.panel.tax = ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
     stockTxn = ledgerCtrl.getStockTxn(ledger)
-    if !_.isEmpty(stockTxn)
+    if !_.isEmpty(stockTxn) && !stockTxn.particular.stock
       stockAccount = ledgerCtrl.getStockAccountfromFlattenAccountList(stockTxn)
       if stockAccount
         linkedStock = _.findWhere(stockAccount.stocks, {uniqueName:stockTxn.inventory.stock.uniqueName})
-        ledgerCtrl.selectedLedger.panel.units = linkedStock.accountStockDetails.unitRates
-        ledgerCtrl.selectedLedger.panel.unit = _.findWhere(ledgerCtrl.selectedLedger.panel.units, {stockUnitCode:stockTxn.inventory.unit.code})
+        if linkedStock
+          ledgerCtrl.selectedLedger.panel.units = linkedStock.accountStockDetails.unitRates
+          ledgerCtrl.selectedLedger.panel.unit = _.findWhere(ledgerCtrl.selectedLedger.panel.units, {stockUnitCode:stockTxn.inventory.unit.code})
+    # else
+    #   console.log stockTxn
 
   ledgerCtrl.getStockAccountfromFlattenAccountList = (txn) ->
     account = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
@@ -1072,17 +1097,26 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     stockTxn = ledgerCtrl.getStockTxn(ledger)
     if stockTxn && stockTxn.inventory
       ledger.panel.quantity = stockTxn.inventory.quantity
-      ledger.panel.price = ledger.panel.amount / ledger.panel.quantity
-      # add stock name to transaction.particular to show on view
-      stockTxn.particular.name += ' (' + stockTxn.inventory.stock.name + ')'
+      ledger.panel.price = ledgerCtrl.cutToFourDecimal(ledger.panel.amount / ledger.panel.quantity)
+      # add stock name to transaction.particular to show on view when particular is not changed
+      if Object.keys(stockTxn.particular).length == 2 && !stockTxn.particular.stock
+        stockTxn.particular.name += ' (' + stockTxn.inventory.stock.name + ')'
       ledger.showStock = true
     if stockTxn.particular && stockTxn.particular.stock
-      ledger.panel.units = stockTxn.particular.stock.accountStockDetails.unitRates
-      ledger.panel.unit =  ledger.panel.units[0]
+      if stockTxn.particular.stock.accountStockDetails.unitRates.length > 0
+        ledger.panel.units = stockTxn.particular.stock.accountStockDetails.unitRates
+        ledger.panel.unit =  ledger.panel.units[0]
+      else
+        stockTxn.particular.stock.stockUnit.rate = ledgerCtrl.cutToFourDecimal(ledger.panel.amount / ledger.panel.quantity)
+        stockTxn.particular.stock.stockUnit.stockUnitCode = stockTxn.particular.stock.stockUnit.code
+        ledger.panel.units = [stockTxn.particular.stock.stockUnit]
+        ledger.panel.unit =  ledger.panel.units[0]
       if ledger.panel.unit
         ledger.panel.price = ledger.panel.unit.rate
       else
         ledger.panel.price = 0
+      # add stock name to transaction.particular to show on view when particular is changed
+      stockTxn.particular.name += ' (' + stockTxn.particular.stock.name + ')'
       ledger.showStock = true
     
     # match = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
@@ -1181,7 +1215,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.getTotalTax(ledger)
     ledgerCtrl.getTotalDiscount(ledger)
     if ledgerCtrl.selectedLedger.panel.quantity > 0
-      ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.cutToTwoDecimal(ledgerCtrl.selectedLedger.panel.amount / ledgerCtrl.selectedLedger.panel.quantity)
+      ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.cutToFourDecimal(ledgerCtrl.selectedLedger.panel.amount / ledgerCtrl.selectedLedger.panel.quantity)
 
     
   ledgerCtrl.onQuantityChange = (ledger) ->
@@ -1204,19 +1238,28 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   #   ledgerCtrl.getTotalDiscount(ledger)
   #   ledgerCtrl.updateTxnAmount()
 
+  ledgerCtrl.getTxnCategory = (txn) ->
+    category = ''
+    account = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
+    if account
+      parent = account.parentGroups[0].uniqueName
+      parentGroup = _.findWhere($rootScope.groupWithAccountsList, {uniqueName:parent})
+      category = parentGroup.category
+    return category
+
   ledgerCtrl.onTxnAmountChange = (txn)->
-    if !ledgerCtrl.isDiscountTxn(txn) 
+    if !ledgerCtrl.isDiscountTxn(txn) && (ledgerCtrl.getTxnCategory(txn) == 'income' || ledgerCtrl.getTxnCategory(txn) == 'expenses')
       ledgerCtrl.selectedLedger.panel.amount = Number(txn.amount)
       ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
       ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
-      ledgerCtrl.updateTxnAmount()
+      # ledgerCtrl.updateTxnAmount()
 
   ledgerCtrl.onTxnTotalChange = (txn)->
     ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.calculateAmountAfterInclusiveTax()
     stockTxn = ledgerCtrl.getStockTxn(ledgerCtrl.selectedLedger)
     stockTxn.amount = ledgerCtrl.selectedLedger.panel.amount
     if ledgerCtrl.selectedLedger.panel.quantity > 0
-      ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.cutToTwoDecimal(ledgerCtrl.selectedLedger.panel.amount / ledgerCtrl.selectedLedger.panel.quantity)
+      ledgerCtrl.selectedLedger.panel.price = ledgerCtrl.cutToFourDecimal(ledgerCtrl.selectedLedger.panel.amount / ledgerCtrl.selectedLedger.panel.quantity)
     ledgerCtrl.updateTxnAmount()
 
   ledgerCtrl.onstockUnitChange = (ledger) ->
@@ -1226,12 +1269,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.updateTxnAmount = () ->
     _.each ledgerCtrl.selectedLedger.transactions, (txn) ->
-      acc = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
-      if acc
-        parent = acc.parentGroups[0].uniqueName
-        parentGroup = _.findWhere($rootScope.groupWithAccountsList, {uniqueName:parent}) 
-        if parentGroup.category == "income" || parentGroup.category == "expenses" && !txn.isTax && txn.particular.uniqueName != 'roundoff' && !ledgerCtrl.isDiscountTxn(txn)
-          txn.amount = ledgerCtrl.selectedLedger.panel.amount
+      if ledgerCtrl.getTxnCategory(txn) == 'income' || ledgerCtrl.getTxnCategory(txn) == 'expenses' && !txn.isTax && txn.particular.uniqueName != 'roundoff' && !ledgerCtrl.isDiscountTxn(txn)
+        txn.amount = ledgerCtrl.selectedLedger.panel.amount
 
     # ledgerCtrl.selectedLedger.isInclusiveTax = true
     # ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
@@ -1260,6 +1299,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     #     num = num[0] + '.' + num[1][0]
     # num = Number(num)
     # return Math.ceil(num)
+
+  ledgerCtrl.cutToFourDecimal = (num) ->
+    num = Number(num)
+    num = Number(num.toFixed(4))
+    return num
 
 
   ledgerCtrl.createEntry = () ->
@@ -1404,8 +1448,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     else if !_.isEmpty(stockTxn)
       if !stockTxn.particular.stock
         stockTxn.inventory.quantity = ledger.panel.quantity
-        stockTxn.inventory.unit = ledger.panel.unit
-        stockTxn.inventory.unit.code = ledger.panel.unit.stockUnitCode
+        if ledger.panel.unit
+          stockTxn.inventory.unit = ledger.panel.unit
+          stockTxn.inventory.unit.code = ledger.panel.unit.stockUnitCode
       else
         stockTxn.inventory.stock = stockTxn.particular.stock
         stockTxn.inventory.quantity = ledger.panel.quantity
@@ -1528,7 +1573,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           acntUname: ledgerCtrl.accountUnq
           entUname: ledger.uniqueName
         }
-        if ledgerCtrl.currentTxn.isBaseAccount
+        if ledgerCtrl.currentTxn.isCompoundEntry && ledgerCtrl.currentTxn.isBaseAccount
           unqNamesObj.acntUname = ledgerCtrl.currentTxn.particular.uniqueName
 
         # transactionsArray = []
@@ -1625,6 +1670,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     _.each(ledgerCtrl.taxList, (tax) ->
       if tax.isChecked == true
         ledger.taxes.push(tax.uniqueName)
+    )
+
+  ledgerCtrl.resetTaxes = () ->
+    _.each(ledgerCtrl.taxList, (tax) ->
+      tax.isChecked = false
     )
 
   ledgerCtrl.updateEntryTaxes = (txnList) ->
@@ -1759,7 +1809,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if ledger.isBankTransaction
       ledgerCtrl.updateBankLedger(ledger)
     #ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
-    ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
+    if ledgerCtrl.currentPage == ledgerCtrl.totalLedgerPages
+      ledgerCtrl.getTransactions(0)
+    else
+      ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
     # $timeout ( ->
     #   ledgerCtrl.pageLoader = false
     #   ledgerCtrl.showLoader = false
@@ -2004,6 +2057,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if changeData.type == 'CHANGE' 
       ledgerCtrl.loadDefaultAccount()
       ledgerCtrl.getTaxList()
+      ledgerCtrl.getDiscountGroupDetail()
       #ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
 
   $(document).on 'click', (e) ->
@@ -2013,7 +2067,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
 #########################################################
   ledgerCtrl.ledgerPerPageCount = 15
-  ledgerCtrl.getTransactions = (page) ->
+  ledgerCtrl.getTransactions = (page, query) ->
     @success = (res) ->
       ledgerCtrl.txnData = res.body
       ledgerCtrl.totalLedgerPages = res.body.totalPages
@@ -2025,6 +2079,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.addLedgerPages()
       ledgerCtrl.showLedgers = true
       ledgerCtrl.calculateReckonging(ledgerCtrl.txnData)
+      ledgerCtrl.resetTaxes()
 
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -2040,9 +2095,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       page: page
       sort: 'asc'
       reversePage: false
+      q: query || ''
     }
     if not _.isEmpty(ledgerCtrl.accountUnq)
       ledgerService.getAllTransactions(unqNamesObj).then(@success, @failure)
+
+  ledgerCtrl.searchLedger = (query) ->
+    ledgerCtrl.getTransactions(0, query)
 
   ledgerCtrl.calculateReckonging = () ->
     if ledgerCtrl.txnData.forwardedBalance.amount == 0
@@ -2078,8 +2137,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if entryTotal.drTotal > entryTotal.crTotal then entryTotal.reckoning = entryTotal.drTotal else entryTotal.reckoning = entryTotal.crTotal
     entryTotal
 
-  ledgerCtrl.selectCompoundEntry = (txn) ->
+  ledgerCtrl.selectCompoundEntry = (txn, e) ->
     ledgerCtrl.currentTxn = txn
+    ledgerCtrl.selectedTxnUniqueName = txn.entryUniqueName
+    e.stopPropagation()  
 
   ledgerCtrl.setVoucherCode = (ledger) ->
     _.each ledgerCtrl.voucherTypeList, (vc, i) ->
@@ -2312,7 +2373,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         (failure) ->
           toastr.error('Failed to get Detailed Groups List')
       )
-  ledgerCtrl.getGroupsWithDetail()
+  
+  if $rootScope.canUpdate
+    ledgerCtrl.getGroupsWithDetail()
 
   ledgerCtrl.downloadInvoice = (invoiceNumber, e) ->
     e.stopPropagation()
@@ -2333,6 +2396,68 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       invoiceNumber: [invoiceNumber]
       template: ''
     accountService.downloadInvoice(obj, data).then(@success, @failure)
+
+
+
+  ledgerCtrl.shareAccount = () ->
+    @success = (res) ->
+      ledgerCtrl.getSharedWithList()
+      toastr.success(res.body)
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {}
+    reqParam.compUname = $rootScope.selectedCompany.uniqueName
+    reqParam.acntUname = ledgerCtrl.accountToShow.uniqueName
+    permission = {}
+    permission.user = ledgerCtrl.shareRequest.user
+    permission.role = ledgerCtrl.shareRequest.role
+    accountService.share(reqParam, permission).then(@success,@failure)
+
+  ledgerCtrl.getSharedWithList = () ->
+    @success = (res) ->
+      ledgerCtrl.sharedUsersList = res.body
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {}
+    reqParam.compUname = $rootScope.selectedCompany.uniqueName
+    reqParam.acntUname = ledgerCtrl.accountToShow.uniqueName
+    accountService.sharedWith(reqParam).then(@success,@failure)
+
+  ledgerCtrl.unshare = (user, index) ->
+    @success = (res) ->
+      ledgerCtrl.sharedUsersList.splice(index,1)
+      toastr.success(res.body)
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {}
+    reqParam.compUname = $rootScope.selectedCompany.uniqueName
+    reqParam.acntUname = ledgerCtrl.accountToShow.uniqueName
+
+    userObj = {}
+    userObj.user = user
+    accountService.unshare(reqParam, userObj).then(@success,@failure)
+
+  ledgerCtrl.updateSharePermission = (user, role) ->
+
+    @success = (res) ->
+      ledgerCtrl.getSharedWithList()
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {}
+    reqParam.compUname = $rootScope.selectedCompany.uniqueName
+    reqParam.acntUname = ledgerCtrl.accountToShow.uniqueName
+    permission = {}
+    permission.user = user
+    permission.role = role
+    accountService.share(reqParam, permission).then(@success,@failure)
+
 
   return ledgerCtrl
 giddh.webApp.controller 'ledgerController', ledgerController

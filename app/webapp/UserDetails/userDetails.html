@@ -336,18 +336,16 @@
         <!-- end of yodlee tabs -->
         <!--mobile number verification-->
         <uib-tab heading="{{tabs[2].title}}" active="tabs[2].active" select="getUserDetails()">
-          <!--<div class="pd2 clearfix" style="padding-bottom:0">
-            <h1 class="mrB">Verified Mobile Number: {{userNumber}}</h1>
-            <hr>
-          </div> -->
-          <div class="pd2 clearfix">
+          
+          <form class="pd2 clearfix" name="mobileForm" novalidate>
             <h1>Add/Edit Mobile Number</h1>
             <div class="max350 mrT">
-              <input class="form-control" type="text" placeholder="91-9998899988" ng-model="phoneNumber"/>
+              <input ng-minlength="10" ng-pattern="/^[0-9]{1,10}$/" class="form-control" type="text" ng-required="true" placeholder="9998899988" name="mobileForm.phoneNumber" ng-model="phoneNumber"/>
             </div>
-            <p class="mrT"><b>Note: </b>Add Contact number along with country code, for example, If your contact number is 9998899988 and country code is 91, enter '91-9998899988'.</p>
-            <button class="btn btn-success mrT" ng-click="addNumber(phoneNumber)" ng-disabled="mobNum.showVerificationBox">Add</button>
-          </div>
+            <p class="mrT"><b>Note: </b>Format should be like 9898989898</p>
+            <button class="btn btn-success mrT" ng-click="addNumber(phoneNumber)" ng-disabled="mobileForm.$invalid">Add</button>
+          </form>
+
           <div class="pd2 clearfix" ng-if="mobNum.showVerificationBox" style="padding-top:0;">
             <hr>
             <h1 class="mrT2">Enter Verfication Code</h1>
