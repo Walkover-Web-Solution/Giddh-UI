@@ -13,8 +13,8 @@
 			<table class="col-xs-12 ledger-head">
 				<thead>
 					<tr>
-						<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.editModeBaseAccount}} coming in?</th>
-						<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.editModeBaseAccount}} going out?</th>
+						<th class="col-xs-6"  style="font-weight: 400">{{ledgerCtrl.understanding.text.dr}}</th>
+						<th class="col-xs-6"  style="font-weight: 400">{{ledgerCtrl.understanding.text.cr}}</th>
 					</tr>
 				</thead>
 			</table>
@@ -200,7 +200,7 @@
 						
 						<tr class="total_col">
 							<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-								<span ng-if="ledgerCtrl.entryTotal.drTotal < ledgerCtrl.entryTotal.crTotal">C/F: CR {{ledgerCtrl.entryTotal.drTotal - ledgerCtrl.entryTotal.crTotal| abs | number:2 }}</span>
+								<span ng-if="ledgerCtrl.entryTotal.drTotal < ledgerCtrl.entryTotal.crTotal"  uib-tooltip="{{ledgerCtrl.understanding.balanceText.cr}}" tooltip-placement="top">C/F: CR {{ledgerCtrl.entryTotal.drTotal - ledgerCtrl.entryTotal.crTotal| abs | number:2 }}</span>
 							</td>
 						</tr>
 						<tr class="total_col">
@@ -216,7 +216,7 @@
 						
 						<tr class="total_col">
 							<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-								<span  ng-if="ledgerCtrl.entryTotal.drTotal > ledgerCtrl.entryTotal.crTotal">C/F: Dr <span class="primary_color">{{ledgerCtrl.entryTotal.drTotal - ledgerCtrl.entryTotal.crTotal | number:2}}</span></span>
+								<span  ng-if="ledgerCtrl.entryTotal.drTotal > ledgerCtrl.entryTotal.crTotal">C/F: Dr <span class="primary_color"  uib-tooltip="{{ledgerCtrl.understanding.balanceText.dr}}" tooltip-placement="top">{{ledgerCtrl.entryTotal.drTotal - ledgerCtrl.entryTotal.crTotal | number:2}}</span></span>
 							</td>
 						</tr>
 						<tr class="total_col">
