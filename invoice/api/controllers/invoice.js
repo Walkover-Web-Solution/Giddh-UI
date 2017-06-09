@@ -1,7 +1,7 @@
 'use strict';
 
 const pug = require('pug');
-//const fs = require('fs');
+const fs = require('fs');
 const phantom = require("phantom-html-to-pdf")
 ({
   phantomPath: require("phantomjs-prebuilt").path,
@@ -20,10 +20,9 @@ invoice.downloadInvoice = function(req, res) {
   //{
   const bodyCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/template_a.pug');
   const footerCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/footer_a.pug');
+  
   //  //}
-  
   var companyIdentitiesDataArray = invoiceObj.companyIdentities.data.split(",");
-  
   var footerResource = (footerCompiledFunction({
   companyIdentitiesData: companyIdentitiesDataArray,
   terms: invoiceObj.terms,
@@ -31,12 +30,11 @@ invoice.downloadInvoice = function(req, res) {
   companyName: invoiceObj.company.name
   }));
   
-  
  //  var footerResource = (footerCompiledFunction({
  //  companyIdentitiesData: invoiceObj.companyIdentities.data,
  //  terms: invoiceObj.terms
  //  })); 
-  
+ 
   var htmlRes = (bodyCompiledFunction({
     name: invoiceObj.account.name,
     invoiceNumber: invoiceObj.invoiceDetails.invoiceNumber,
@@ -58,7 +56,8 @@ invoice.downloadInvoice = function(req, res) {
     accountEmailForInvoice: invoiceObj.account.email,
     accountMobileNumber: invoiceObj.account.mobileNumber 
   }));
-  var footerRes = fs.readFileSync('./api/models/invoice/templates/footer.html', 'utf8');
+ // var footerRes = fs.readFileSync('./api/models/invoice/templates/footer.html', 'utf8');
+  
   var response = {};
   var fileName = '';
   phantom(
@@ -71,13 +70,12 @@ invoice.downloadInvoice = function(req, res) {
     }, 
     function(err, pdf) {
       if(err) {
-        // console.log(err);
-        // response.status = 'error';
-        // response.body = JSON.stringify(err);
+        console.log(err);
+        response.status = 'error';
+        response.body = JSON.stringify(err);
         res.send(err);
       }
-       var pdfPath = pdf.stream.path;
-      console.log(pdfPath);
+      var pdfPath = pdf.stream.path;
       response.status = 'success';
       response.body = pdfPath.substring(0, pdfPath.lastIndexOf('.'));
       res.send(response);
