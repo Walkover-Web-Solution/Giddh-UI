@@ -78,6 +78,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     $event.stopPropagation()
     $scope.status.isopen = !$scope.status.isopen
 
+  # ledgerCtrl.checkTarget = ($event) ->
+  #   $event = false
+
   ledgerCtrl.shareLedger =() ->
     ledgerCtrl.shareModalInstance = $uibModal.open(
       templateUrl: '/public/webapp/Ledger/shareLedger.html',
