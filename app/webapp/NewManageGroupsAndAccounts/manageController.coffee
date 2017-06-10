@@ -59,7 +59,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.updateSearchItem = false
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
-    console.log (type)
     mc.selectedType = type
     mc.createNew = false
 # end
@@ -172,7 +171,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.groupAccntList = result.accounts
 
   mc.updateAll = (groupList) ->
-    # console.log res
     _.each mc.breadCrumbList, (item, i) ->
       currentItem = _.findWhere(groupList, {uniqueName:item.uniqueName})
       if currentItem
@@ -239,7 +237,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.updateBreadCrumbs = true
     mc.parentIndex = parentIndex
     mc.currentIndex = currentIndex
-    # console.log item.hLevel
     if mc.keyWord != undefined
       if mc.keyWord.length > 3
         mc.updateSearchItem = true
@@ -256,7 +253,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getGroupSharedList(item)
     # mc.createNew = false
     mc.showOnUpdate = true
-    # console.log item
     existingGrp = _.findWhere(mc.columns, {uniqueName:item.uniqueName})
     mc.selectedItem = mc.selectedGrp
     groupService.get($rootScope.selectedCompany.uniqueName, item.uniqueName).then(mc.getGrpDtlSuccess, mc.getGrpDtlFailure)
@@ -307,7 +303,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
 
   mc.onCreateGroupFailure = (res) ->
-    console.log (res)
     toastr.error(res.data.message, res.data.status)
 # end
 
@@ -315,7 +310,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
 # update subgroup
   mc.updateGroup = (form) ->
-    console.log form
     grp = {}
     grp = _.extend(grp, mc.selectedGrp)
     grp.name = form.grpName.$viewValue
@@ -384,7 +378,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.addToIndex = index
     mc.toggleView(true)
     mc.showOnUpdate = false
-    console.log mc.breadCrumbList
     if mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'account'
       mc.breadCrumbList.pop()
 
@@ -405,7 +398,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.addToBreadCrumbs(item, 'account', parentIndex)
 
   mc.getAccDtlSuccess = (res, data) ->
-    console.log mc.getCurrentColIndex 
     data = res.body
     mc.selectedAcc = res.body
     mc.getMergeAcc = mc.selectedAcc.mergedAccounts.replace(RegExp(' ', 'g'), '')
@@ -499,8 +491,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     companyServices.assignTax($rootScope.selectedCompany.uniqueName,dataToSend).then(mc.assignTaxOnSuccess,mc.assignTaxOnFailure)
 
   mc.assignTaxOnSuccess = (res) ->
-    console.log mc.getSendTax
-    console.log mc.taxHierarchy.applicableTaxes
     mc.showEditTaxSection = false
     toastr.success(res.body)
     if not mc.isAccount
@@ -872,7 +862,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.mergeAccounts = () ->
     mc.accToMerge = []
     withoutMerged = []
-    console.log mc.toMerge.mergedAcc
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: mc.toMerge.mergeTo
