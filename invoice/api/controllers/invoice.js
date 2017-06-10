@@ -18,6 +18,7 @@ invoice.downloadInvoice = function(req, res) {
   //}
   //else
   //{
+  console.log(req);
   const bodyCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/template_a.pug');
   const footerCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/footer_a.pug');
   

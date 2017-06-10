@@ -195,7 +195,7 @@ var recEntry = require('./public/routes/webapp/recurringEntry')
 var invoiceUpload = require('./public/routes/webapp/invoiceUpload')
 var stateDetails = require('./public/routes/webapp/stateDetails')
 var invoiceModule = require('./invoice/invoiceModule')
-
+var voucherModule = require('./voucher/voucherModule')
 
 
 app.use('/time-test', timetest);
@@ -227,6 +227,8 @@ app.use('/admin', adminPanel);
 app.use('/state-details', stateDetails);
 app.use('/magic-link', magicLink);
 app.use('/invoice',invoiceModule);
+app.use('/voucher',voucherModule);
+
 
 
 // delete user session on logout
