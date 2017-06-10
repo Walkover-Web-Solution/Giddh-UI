@@ -672,9 +672,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.getSharedList = () ->
     $scope.setShareableRoles($rootScope.selectedCompany)
-    $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
-  if $rootScope.canUpdate
-    ledgerCtrl.getSharedList()
+    if $rootScope.canUpdate
+      $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
+  
+  ledgerCtrl.getSharedList()
   # generate magic link
   ledgerCtrl.getMagicLink = () ->
     accUname = ledgerCtrl.accountUnq
@@ -1520,14 +1521,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         txn.amount = txn.panel.total
 
   ledgerCtrl.buildLedger = (ledger) ->
+    ledgerCtrl.ledgerBeforeEdit = angular.copy(ledger,{})
     ledger.transactions = ledgerCtrl.removeBlankTransactions(ledger)
     if !ledger.isBlankLedger
       ledgerCtrl.addStockDetails(ledger)
     else
       ledgerCtrl.addStockDetailsForNewEntry(ledger)
       ledgerCtrl.setAmount(ledger)
-      ledgerCtrl.ledgerBeforeEdit = {}
-      angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
     ledgerCtrl.addDiscountTxns(ledger)
     delete ledger.panel
     ledger
@@ -1857,7 +1857,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.doingEntry = false
     ledger.failed = true
     toastr.error(res.data.message, res.data.status)
-    ledgerCtrl.selectedLedger = ledgerCtrl.ledgerBeforeEdit
+    ledgerCtrl.selectedLedger = angular.copy(ledgerCtrl.ledgerBeforeEdit, {})
+    return false
     # if rejectedTransactions.length > 0
     #   _.each(rejectedTransactions, (rTransaction) ->
     #     ledgerCtrl.selectedLedger.transactions.push(rTransaction)
