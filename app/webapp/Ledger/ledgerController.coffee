@@ -23,6 +23,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     draggable: false
     position: "bottom"
   }
+  ledgerCtrl.toggleShow = false
 # mustafa
   
   ledgerCtrl.exportOptions = () ->
@@ -100,8 +101,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     $event.stopPropagation()
     $scope.status.isopen = !$scope.status.isopen
 
-  # ledgerCtrl.checkTarget = ($event) ->
-  #   $event = false
+  ledgerCtrl.ToggleClassTax = () ->
+    ledgerCtrl.toggleShowTax = !ledgerCtrl.toggleShowTax
+
+  ledgerCtrl.ToggleClassDiscount = () ->
+    ledgerCtrl.toggleShowDiscount = !ledgerCtrl.toggleShowDiscount
 
   ledgerCtrl.shareLedger =() ->
     ledgerCtrl.shareModalInstance = $uibModal.open(
@@ -170,6 +174,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.accountToShow = $rootScope.selectedAccount
     ledgerCtrl.accountUnq = res.body.uniqueName
     ledgerCtrl.getTransactions(0)
+    ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
     $state.go($state.current, {unqName: res.body.uniqueName}, {notify: false})
     if res.body.uniqueName == 'cash'

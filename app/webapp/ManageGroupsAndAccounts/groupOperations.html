@@ -86,7 +86,7 @@
                   <ui-select-match placeholder="Select Taxes">
                     <span>{{$item.name}}</span>
                   </ui-select-match >
-                  <ui-select-choices repeat="tax in taxList| filter: $select.search | omit: alreadyAppliedTaxes">
+                  <ui-select-choices repeat="tax in mc.taxList| filter: $select.search | omit: alreadyAppliedTaxes">
                     <span ng-bind="tax.name"></span>
                   </ui-select-choices>
               </ui-select>
