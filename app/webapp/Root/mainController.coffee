@@ -296,7 +296,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.beforeDeleteCompany.company = company
     $scope.beforeDeleteCompany.index = index
     modalService.openConfirmModal(
-      title: 'Are you sure you want to delete? ' + name,
+      title: 'Delete Company'
+      body: 'Are you sure you want to delete ' + name + ' ?',
       ok: 'Yes',
       cancel: 'No'
     ).then ->

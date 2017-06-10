@@ -156,7 +156,7 @@ th {
 <section class="container nopad" ng-show="ledgerCtrl.showLedgers">
 	
 	<!--ledger table-->
-	<div class="ledgHead  mrT3 pos-rel">
+	<div class="ledgHead transactions-page mrT3 pos-rel">
 		<!-- ledger header -->
 		<div class="col-md-12">
 			<div class="row">
@@ -248,10 +248,9 @@ th {
 							</td>
 						</tr>
 						<tr 
-							outside-click="compoundEntry"
 							class="ledger-row" 
 							ng-repeat="txn in ledgerCtrl.txnData.debitTransactions" 
-							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)"  
+							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn, true)"  
 							ng-click="ledgerCtrl.selectCompoundEntry(txn, $event)"
 							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
@@ -291,7 +290,7 @@ th {
 											ng-repeat="txn in ledgerCtrl.blankLedger.transactions"
 											ng-if="txn.type == 'DEBIT'"
 											uib-popover-template="ledgerCtrl.popover.templateUrl"
-											popover-trigger="outsideClick"
+											popover-trigger="none"
 											popover-placement="{{ledgerCtrl.popover.position}}"
 											popover-append-to-body='true'
 											popover-enable="!ledgerCtrl.popover.draggable"
@@ -384,10 +383,9 @@ th {
 							</td>
 						</tr>
 						<tr 
-							outside-click="compoundEntry"
 							class="ledger-row" 
 							ng-repeat="txn in ledgerCtrl.txnData.creditTransactions" 
-							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn)" 
+							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn, true)" 
 							ng-click="ledgerCtrl.selectCompoundEntry(txn, $event)"
 							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
@@ -427,7 +425,7 @@ th {
 											ng-repeat="txn in ledgerCtrl.blankLedger.transactions"
 											ng-if="txn.type == 'CREDIT'"
 											uib-popover-template="ledgerCtrl.popover.templateUrl"
-											popover-trigger="outsideClick"
+											popover-trigger="none"
 											popover-placement="{{ledgerCtrl.popover.position}}"
 											popover-append-to-body='true'
 											popover-enable="!ledgerCtrl.popover.draggable"
@@ -585,7 +583,7 @@ th {
 
 
 <script type="text/ng-template" id="panel">
-     <div class="ledger-panel" ng-click="$event.stopPropagation()" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': ledgerCtrl.showPanel, 'top0':hideHeader}">
+     <div class="ledger-panel" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': ledgerCtrl.showPanel, 'top0':hideHeader}">
       <div class="wrapper">
         <div class="basic_detail" ng-if="ledgerCtrl.selectedLedger.isBlankLedger && !ledgerCtrl.selectedLedger.isBankTransaction">
 	        <table>
@@ -630,7 +628,7 @@ th {
 	        			<label>&nbsp;</label>
 	        			<label class="pdR pdL default_clr">-</label>
 	        		</td>
-	        		<td  style="max-width:150px" class="pItem" ng-if="ledgerCtrl.discountAccount != undefined">
+	        		<td  style="max-width:150px" class="pItem" ng-if="ledgerCtrl.discountAccount != undefined && ledgerCtrl.discountAccount.accountDetails.length > 0">
 						    <span uib-dropdown auto-close="outsideClick">
 						      <a href id="discount" uib-dropdown-toggle>
 					        	<label>Discount</label>
@@ -650,11 +648,11 @@ th {
 						      </ul>
 						    </span>
 	        		</td>
-	        		<td class="pItem">
+	        		<td class="pItem" ng-if="ledgerCtrl.discountAccount != undefined && ledgerCtrl.discountAccount.accountDetails.length > 0">
 	        			<label>&nbsp;</label>
 	        			<label class="pdR pdL default_clr">+</label>
 	        		</td>
-	        		<td style="max-width:150px">
+	        		<td style="max-width:150px" ng-if="ledgerCtrl.taxList.length > 0">
 	        		<span uib-dropdown auto-close="outsideClick">
 					      <a href id="tax" uib-dropdown-toggle>
 			        	<label>Tax %</label>
@@ -666,8 +664,8 @@ th {
 					      </a>
 					      <ul class="dropdown-menu pd" uib-dropdown-menu>
 							<li class="oh width100 bdrB pdB" ng-repeat="tax in ledgerCtrl.taxList">
-							  <label class="checkbox">
-							  	<input class="pull-left" style="margin-top:5px;" type="checkbox" ng-model="tax.isChecked" ng-change="ledgerCtrl.onNewPanelChange().tax(ledgerCtrl.selectedTxn, ledgerCtrl.blankLedger)"/>
+							  <label class="checkbox"  ng-click="$event.stopPropagation()">
+							  	<input class="pull-left" style="margin-top:5px;" type="checkbox" ng-model="tax.isChecked" ng-change="ledgerCtrl.onNewPanelChange().tax(ledgerCtrl.selectedTxn, ledgerCtrl.blankLedger)" ng-click="$event.stopPropagation()"/>
 							  	<span class="pull-left" style="display:block;max-width:125px">{{tax.name}}</span>
 							  </label>
 							 </li>

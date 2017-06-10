@@ -1,4 +1,4 @@
-ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, groupService, $uibModal, companyServices, $state,idbService, $http, nzTour, $q ) ->
+ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, groupService, $uibModal, companyServices, $state,idbService, $http, nzTour, $q, invoiceService ) ->
   ledgerCtrl = this
   ledgerCtrl.LedgerExport = false
   ledgerCtrl.toggleShare = false
@@ -1591,6 +1591,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       else
         #update entry
         #ledgerCtrl.removeEmptyTransactions(ledger.transactions)
+        ledgerCtrl.generateInvoice = ledger.generateInvoice
         ledger.transactions = ledgerCtrl.removeTaxTransactions(ledger)
         _.each ledger.transactions, (txn) ->
           if !_.isEmpty(txn.particular.uniqueName)
@@ -1887,6 +1888,27 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       tx.isChecked = false
     )
 
+  ledgerCtrl.autoGenerateInvoice = (ledger) ->
+
+    @success = (res) ->
+      ledgerCtrl.fetchEntryDetails(ledgerCtrl.currentTxn, false)
+
+    @failure = (res) ->
+      toastr.error(res.data.message)
+
+    reqParam = {
+      companyUniqueName: $rootScope.selectedCompany.uniqueName
+      combined:false
+    }
+    data = [
+      {
+        accountUniqueName: ledgerCtrl.baseAccount.uniqueName
+        entries: [ledger.uniqueName]
+      }
+    ]
+    invoiceService.generateBulkInvoice(reqParam, data).then(@success, @failure)
+
+
   ledgerCtrl.updateEntrySuccess = (res, ledger) ->
     ledgerCtrl.doingEntry = false
     ledger.failed = false
@@ -1898,6 +1920,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
     ledgerCtrl.entryTotal = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
     ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
+    if ledgerCtrl.generateInvoice
+      ledgerCtrl.autoGenerateInvoice(res.body)
     toastr.success("Entry updated successfully.", "Success")
     # ledgerCtrl.paginatedLedgers = [res.body]
     # ledgerCtrl.selectedLedger = res.body
@@ -2094,9 +2118,18 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.getDiscountGroupDetail()
       #ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
 
+  ledgerCtrl.hasParent = (target, parent) ->
+    target = $(target)
+    hasParent = false
+    if target.parents(parent).length
+      hasParent = true
+    return hasParent
+
   $(document).on 'click', (e) ->
-    if (!$(e.target).is('.account-list-item') && !$(e.target).is('.account-list-item strong')) && ledgerCtrl.prevTxn
+    if (!$(e.target).is('.account-list-item') && !$(e.target).is('.account-list-item strong') && !ledgerCtrl.hasParent(e.target, '.ledger-panel') && !$(e.target).is('.ledger-panel')) && ledgerCtrl.prevTxn
       ledgerCtrl.prevTxn.isOpen = false
+    if (!$(e.target).is('.ledger-row'))
+      ledgerCtrl.selectedTxnUniqueName = null
     return 0
 
 #########################################################
@@ -2181,7 +2214,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if vc.shortCode == ledger.voucher.shortCode
         ledgerCtrl.paginatedLedgers[0].voucher = ledgerCtrl.voucherTypeList[i]
 
-  ledgerCtrl.fetchEntryDetails = (entry) ->
+  ledgerCtrl.fetchEntryDetails = (entry, openModal) ->
     ledgerCtrl.clickedTxn = entry
 
     @success = (res) ->
@@ -2195,13 +2228,15 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
       ledgerCtrl.addBlankTransactionIfOneSideEmpty(ledgerCtrl.selectedLedger)
       ledgerCtrl.ledgerBeforeEdit = {}
-      
       ledgerCtrl.ledgerBeforeEdit = angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
       _.each res.body.transactions, (txn) ->
         if txn.particular.uniqueName == ledgerCtrl.clickedTxn.particular.uniqueName
           ledgerCtrl.selectedTxn = txn
       ledgerCtrl.setVoucherCode(ledgerCtrl.selectedLedger)
-      ledgerCtrl.displayEntryModal()
+      if !ledgerCtrl.selectedLedger.invoiceGenerated
+        ledgerCtrl.generateInvoice = false
+      if openModal
+        ledgerCtrl.displayEntryModal()
 
     @failure = (res) ->
       toastr.error(res.data.message)

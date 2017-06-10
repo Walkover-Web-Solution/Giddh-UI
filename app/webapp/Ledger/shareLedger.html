@@ -82,24 +82,24 @@
       <div class="modal_wrap mrB2">
         <table class="list-unstyled email-type mrB2">
           <tr>  
-            <td>
+<!--             <td>
               <label class="radio" ng-click="$event.stopPropagation()">
                   <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" ng-value="ledgerCtrl.ledgerEmailData.viewDetailed"/>super mini
                </label>
-            </td>
+            </td> -->
             <td>
               <label class="radio" ng-click="$event.stopPropagation()">
-                  <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" ng-value="ledgerCtrl.ledgerEmailData.viewCondensed"/>mini
+                  <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" ng-value="ledgerCtrl.ledgerEmailData.adminCondensed"/>mini
                </label>
             </td>
-            <td ng-if="canUpdate">
+<!--             <td ng-if="canUpdate">
               <label class="radio" ng-click="$event.stopPropagation()">
                   <input type="radio" ng-model=" ledgerCtrl.ledgerEmailData.emailType" name="emailType"  ng-value="ledgerCtrl.ledgerEmailData.adminDetailed"/>brief
               </label>
-            </td>
+            </td> -->
             <td ng-if="canUpdate">
               <label class="radio" ng-click="$event.stopPropagation()">
-                  <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType"  ng-value="ledgerCtrl.ledgerEmailData.adminCondensed"/>detailed
+                  <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType"  ng-value="ledgerCtrl.ledgerEmailData.adminDetailed"/>detailed
               </label>
             </td>
           </tr>

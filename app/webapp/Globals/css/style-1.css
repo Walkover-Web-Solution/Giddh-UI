@@ -4756,6 +4756,10 @@ table.proforma-particulars {
   float: left;
   height: 100%;
   position: relative;
+  padding-bottom: 100px;
+}
+
+.transactions-page .left-col-new,.transactions-page .right-col-new {
   padding-bottom: 300px;
 }
 
