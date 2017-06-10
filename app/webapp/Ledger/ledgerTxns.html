@@ -291,7 +291,7 @@ th {
 											ng-repeat="txn in ledgerCtrl.blankLedger.transactions"
 											ng-if="txn.type == 'DEBIT'"
 											uib-popover-template="ledgerCtrl.popover.templateUrl"
-											popover-trigger="outsideClick"
+											popover-trigger="none"
 											popover-placement="{{ledgerCtrl.popover.position}}"
 											popover-append-to-body='true'
 											popover-enable="!ledgerCtrl.popover.draggable"
@@ -427,7 +427,7 @@ th {
 											ng-repeat="txn in ledgerCtrl.blankLedger.transactions"
 											ng-if="txn.type == 'CREDIT'"
 											uib-popover-template="ledgerCtrl.popover.templateUrl"
-											popover-trigger="outsideClick"
+											popover-trigger="none"
 											popover-placement="{{ledgerCtrl.popover.position}}"
 											popover-append-to-body='true'
 											popover-enable="!ledgerCtrl.popover.draggable"
@@ -585,7 +585,7 @@ th {
 
 
 <script type="text/ng-template" id="panel">
-     <div class="ledger-panel" ng-click="$event.stopPropagation()" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': ledgerCtrl.showPanel, 'top0':hideHeader}">
+     <div class="ledger-panel" ng-class="{'pop-panel':!popover.draggable, 'fixed-panel': ledgerCtrl.showPanel, 'top0':hideHeader}">
       <div class="wrapper">
         <div class="basic_detail" ng-if="ledgerCtrl.selectedLedger.isBlankLedger && !ledgerCtrl.selectedLedger.isBankTransaction">
 	        <table>
@@ -634,7 +634,7 @@ th {
 						    <span uib-dropdown auto-close="outsideClick">
 						      <a href id="discount" uib-dropdown-toggle>
 					        	<label>Discount</label>
-						        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.panel.discount" readonly />
+						        <input type="number" name="" class="form-control cursor-pointer" ng-model="ledgerCtrl.selectedTxn.panel.discount" readonly disabled />
 						      </a>
 						      <ul class="dropdown-menu" uib-dropdown-menu>
 						        <li>
@@ -659,7 +659,7 @@ th {
 					      <a href id="tax" uib-dropdown-toggle>
 			        	<label>Tax %</label>
 			        	<div class="multi-select adjust">
-			        		<input type="number" readonly name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.panel.tax"/>
+			        		<input type="number" readonly name="" class="form-control cursor-pointer" ng-model="ledgerCtrl.selectedTxn.panel.tax" disabled />
 			        		<span class="caret"></span>
 			        	</div>
 					    

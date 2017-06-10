@@ -23,6 +23,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     draggable: false
     position: "bottom"
   }
+  ledgerCtrl.toggleShow = false
 # mustafa
   
   ledgerCtrl.exportOptions = () ->
@@ -100,8 +101,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     $event.stopPropagation()
     $scope.status.isopen = !$scope.status.isopen
 
-  # ledgerCtrl.checkTarget = ($event) ->
-  #   $event = false
+  ledgerCtrl.ToggleClassTax = () ->
+    ledgerCtrl.toggleShowTax = !ledgerCtrl.toggleShowTax
+
+  ledgerCtrl.ToggleClassDiscount = () ->
+    ledgerCtrl.toggleShowDiscount = !ledgerCtrl.toggleShowDiscount
 
   ledgerCtrl.shareLedger =() ->
     ledgerCtrl.shareModalInstance = $uibModal.open(
@@ -2094,8 +2098,18 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.getDiscountGroupDetail()
       #ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
 
+  ledgerCtrl.childTarget = (target, parentClass) ->
+    hasParent = false
+    parents = $(target).parents()
+    _.each parents, (item, i) ->
+      if item.classList.length
+        _.each item.classList, (items) ->
+          if items == parentClass
+            hasParent = true
+    return hasParent
+
   $(document).on 'click', (e) ->
-    if (!$(e.target).is('.account-list-item') && !$(e.target).is('.account-list-item strong')) && ledgerCtrl.prevTxn
+    if (!$(e.target).is('.account-list-item') && !$(e.target).is('.account-list-item strong') && !ledgerCtrl.childTarget(e.target, 'ledger-panel')) && ledgerCtrl.prevTxn
       ledgerCtrl.prevTxn.isOpen = false
     return 0
 

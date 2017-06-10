@@ -2346,6 +2346,7 @@ label {
 }
 .ledger-panel .upload_div label {
     color: #4d4d4d;
+    padding: 0;
 }
 .col3 {
     -webkit-column-count: 3;
@@ -2491,4 +2492,13 @@ label {
 }
 .fix ul li:nth-last-child(2) {
     margin-bottom: 30px;
+}
+.dropdown + input {
+  cursor: pointer;
+}
+.cursor-pointer {
+  cursor: pointer !important;
+}
+.dropdown-open {
+  display: block;
 }
