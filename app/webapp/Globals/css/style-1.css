@@ -76,7 +76,6 @@ ______\////////////________
 
 html, body {
   height: 100%;
-  overflow-y: auto;
 }
 
 table,html, body {
@@ -815,6 +814,11 @@ header .navbar-nav > li.active {
   position: relative;
 }
 
+.scrItem {
+  overflow: auto;
+  position: relative;
+}
+
 .oyHid {
   overflow-y: hidden;
 }
@@ -982,6 +986,10 @@ header .navbar-nav > li.active {
   color: #333;
   font-size: 15px;
   padding: 9px 20px;
+}
+
+.fs13 {
+  font-size: 13px;
 }
 
 .fs16 {
@@ -2603,21 +2611,26 @@ i.cls-alert {
 
 /*make un-responsive*/
 body.unresponsive {
-  overflow-x: hidden;
-  overflow-y: auto;
   padding-top: 54px;
 }
 
 .navbar-right.navbar-nav > li > a {
   border-right: 0;
 }
-
-@media only screen and (max-width: 1068px) {
+@media only screen and (max-width: 1300px) {
   body.unresponsive {
-    width: 1068px;
+    width: 1366px;
     overflow: auto;
   }
+  .container{
+    width: 1000px;
+  }
+  .header-container{
+    width: 1366px;
+  }
+}
 
+@media only screen and (max-width: 1068px) {
   .sidebar {
     width: 280px;
   }
@@ -4743,7 +4756,7 @@ table.proforma-particulars {
   float: left;
   height: 100%;
   position: relative;
-  padding-bottom: 100px;
+  padding-bottom: 300px;
 }
 
 #entryModal {
@@ -4751,7 +4764,7 @@ table.proforma-particulars {
 }
 
 #entryModal .modal-body {
-  padding: 0 100px 100px;
+  padding: 0 20px 100px;
   overflow: hidden;
 }
 
@@ -4759,4 +4772,12 @@ table.proforma-particulars {
   font-weight: 400;
   font-size: 14px;
   color: #ccc;
+}
+.cstuWrp{
+  position: relative;
+}
+.cstuWrp .sign{
+  position: absolute;
+  bottom: 5px;
+  left: -6px;
 }

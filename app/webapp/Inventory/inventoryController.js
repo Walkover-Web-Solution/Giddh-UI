@@ -1,5 +1,5 @@
 angular.module('inventoryController', [])
-.controller('stockController', ['$scope','$rootScope','stockService','localStorageService','groupService' ,'toastr','$filter', '$state', 'localInventoryService', function($scope, $rootScope, stockService, localStorageService, groupService, toastr, $filter, $state, localInventoryService){
+.controller('stockController', ['$scope','$rootScope','stockService','localStorageService','groupService' ,'toastr','$filter', '$state',  function($scope, $rootScope, stockService, localStorageService, groupService, toastr, $filter, $state ){
 	
 	var vm = this;
 	vm.$state = $state

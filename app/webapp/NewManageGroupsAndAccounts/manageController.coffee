@@ -67,7 +67,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   $rootScope.$on('Open-Manage-Modal', ()->
       mc.NewgoToManageGroups() 
-  )
+    )
 
   #show breadcrumbs
   mc.showBreadCrumbs = (data) ->
@@ -121,6 +121,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     if mc.breadCrumbList.length
       mc.updateAll(res.body)
     mc.flattenGroupList = groupService.makeGroupListFlatwithLessDtl($rootScope.flatGroupsList)
+
+  mc.getGroupListFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
   mc.getGroupListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)

@@ -137,7 +137,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $http.get('/fetch-user').then(getUserSuccess, getUserFailure)
   getUserDetail()
 
-
   $scope.addScript = () ->
     _.each($rootScope.scriptArrayHead, (script) ->
       sc = document.createElement("script")
@@ -431,7 +430,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $scope.checkUserCompanyStatus(res.body)
       $rootScope.mngCompDataFound = true
       $scope.findCompanyInList()
-      $rootScope.checkWalkoverCompanies()
+      # $rootScope.checkWalkoverCompanies()
 
   $scope.checkUserCompanyStatus = (compList) ->
     _.each compList, (cmp) ->
@@ -572,7 +571,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       toastr.error("Select company first.", "Error")
     else
       modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/NewManageGroupsAndAccounts/ManageGroupModal.html'
+        templateUrl:'/public/webapp/NewManageGroupsAndAccounts/ManageGroupModal.html'
         size: "liq90"
         backdrop: 'static'
         scope: $scope
@@ -639,7 +638,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     changeData.data = company
     changeData.index = index
     changeData.type = method
-    $scope.$broadcast('company-changed', changeData)
+    # $scope.$broadcast('company-changed', changeData)
     $rootScope.$emit('company-changed', changeData)
     url = $location.url()
     # if url.indexOf('ledger') == -1
@@ -690,8 +689,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.showAccounts = (e) ->
     $rootScope.flyAccounts = true
-    #e.stopPropagation()
-  # $scope.addScript()
 
   # for accounts list
   $scope.gwaList = {
@@ -815,26 +812,26 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.runTour = () ->
     $rootScope.$emit('run-tour')
 
-  $scope.showSwitchUserOption = false
-  $rootScope.checkUserCompany = () ->
-    user = localStorageService.get('_userDetails')
-    company = user.uniqueName.split('@')
-    company = company[company.length - 1]
-    company
+  # $scope.showSwitchUserOption = false
+  # $rootScope.checkUserCompany = () ->
+  #   user = localStorageService.get('_userDetails')
+  #   company = user.uniqueName.split('@')
+  #   company = company[company.length - 1]
+  #   company
 
-  $rootScope.checkWalkoverCompanies = () ->
-    if $rootScope.checkUserCompany().toLowerCase() == 'giddh.com' || $rootScope.checkUserCompany().toLowerCase() == 'walkover.in' || $rootScope.checkUserCompany().toLowerCase() == 'msg91.com'
-      $scope.showSwitchUserOption = true
-    else
-      $scope.showSwitchUserOption = false
+  # $rootScope.checkWalkoverCompanies = () ->
+  #   if $rootScope.checkUserCompany().toLowerCase() == 'giddh.com' || $rootScope.checkUserCompany().toLowerCase() == 'walkover.in' || $rootScope.checkUserCompany().toLowerCase() == 'msg91.com'
+  #     $scope.showSwitchUserOption = true
+  #   else
+  #     $scope.showSwitchUserOption = false
 
-  $rootScope.ledgerMode = 'new'
-  $rootScope.switchLedgerMode = () ->
-    if $rootScope.checkWalkoverCompanies()
-      if $rootScope.ledgerMode == 'new'
-        $rootScope.ledgerMode = 'old'
-      else
-        $rootScope.ledgerMode = 'new'
+  # $rootScope.ledgerMode = 'new'
+  # $rootScope.switchLedgerMode = () ->
+  #   if $rootScope.checkWalkoverCompanies()
+  #     if $rootScope.ledgerMode == 'new'
+  #       $rootScope.ledgerMode = 'old'
+  #     else
+  #       $rootScope.ledgerMode = 'new'
 
   $rootScope.setState = (lastState, url, param) ->
     $rootScope.selectedCompany = $rootScope.selectedCompany || localStorageService.get('_selectedCompany')

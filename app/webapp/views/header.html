@@ -284,10 +284,10 @@
             <li ng-if="ledgerState"><a href="javascript:void(0)" ng-click="runTour()">Run Tour</a></li>
             <li><a target="_Blank" href="https://docs.giddh.com/" ng-click="$event.stopPropagation()">Documentation</a></li>
             <li ng-if="selectedCompany.canUserSwitch"><a class="pull-left" href="javascript:void(0)" ng-click="switchUser()"><span class="pull-left">Switch User</span><span class="on-btn pull-left" ng-if="ucActive"></span></a></li>
-            <li ng-if="showSwitchUserOption"><a class="cp" ng-click="switchLedgerMode()">Switch Ledger - 
+            <!-- <li ng-if="showSwitchUserOption"><a class="cp" ng-click="switchLedgerMode()">Switch Ledger - 
                 <span ng-if="ledgerMode == 'new'">Old</span><span ng-if="ledgerMode == 'old'">New</span>
               </a>
-            </li>
+            </li> -->
             <li role="separator" class="divider" style="width:100%"></li>
             <li><a ng-click="logout()" href="javascript:void(0)">Logout</a></li>
           </ul>

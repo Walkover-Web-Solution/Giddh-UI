@@ -2,6 +2,10 @@
 inventoryStockReportController = ($scope, $rootScope, $timeout, toastr, stockService, $state, $filter) ->
   
   vm = this
+
+  vm.selectedStock = {}
+
+  vm.stockId = $state.params.stockId;
   if (_.isUndefined($rootScope.selectedCompany))
     $rootScope.selectedCompany = localStorageService.get('_selectedCompany')
   
@@ -18,7 +22,7 @@ inventoryStockReportController = ($scope, $rootScope, $timeout, toastr, stockSer
     'todayBtn': false
 
   vm.report=
-    page: 1
+    page: 0
 
   vm.fromDate=
     date:new Date(moment().subtract(1, 'month').utc())
@@ -26,6 +30,20 @@ inventoryStockReportController = ($scope, $rootScope, $timeout, toastr, stockSer
   vm.toDate =
     date: new Date()
 
+  vm.findAndSet=()->
+    vm.selectedStock = _.find(vm.stockArr, (item)->
+      return item.uniqueName is vm.stockId
+    )
+
+  vm.setStockArr=()->
+    vm.stockArr = $scope.$parent.stock.updateStockGroup.stocks
+    if angular.isUndefined(vm.stockArr)
+      $timeout(()->
+        vm.stockArr = $scope.$parent.stock.updateStockGroup.stocks
+        vm.findAndSet()
+      ,1500)
+    else
+      vm.findAndSet()
 
   vm.fromDatePickerOpen = (e)->
     vm.fromDatePickerIsOpen = true
@@ -50,7 +68,8 @@ inventoryStockReportController = ($scope, $rootScope, $timeout, toastr, stockSer
       stockUniqueName: $state.params.stockId,
       to:$filter('date')(vm.toDate.date, 'dd-MM-yyyy'),
       from:$filter('date')(vm.fromDate.date, 'dd-MM-yyyy'),
-      page:vm.report.page
+      page:vm.report.page,
+      count: 10
 
     stockService.getStockReport(reqParam).then(vm.getStockReportSuccess, vm.onFailure)
 
@@ -63,6 +82,7 @@ inventoryStockReportController = ($scope, $rootScope, $timeout, toastr, stockSer
       $state.go('inventory', {}, {reload: true, notify: true})
     else
       vm.getStockReport()
+      vm.setStockArr()
   ,100)
   
   return vm

@@ -554,24 +554,23 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.phoneNumber = ''
   $scope.userNumber = ''
   $scope.mobNum = {
-    countryCode: ''
+    countryCode: 91
     number: ''
     showVerificationBox : false
     verificationCode: ''
   }
 
   $scope.addNumber = (number) ->
-    if number.indexOf('-') != -1
-      numArr = number.split('-')
-      $scope.mobNum.countryCode = numArr[0]
-      $scope.mobNum.number = numArr[1]
+    mobileRegex = /^[0-9]{1,10}$/
+    if mobileRegex.test(number) and number.length is 10
+      $scope.mobNum.number = number
       data = {
         "countryCode":$scope.mobNum.countryCode
         "mobileNumber":$scope.mobNum.number
       }
       userServices.addNumber(data).then($scope.addNumberSuccess, $scope.addNumberFailure)
     else
-      toastr.error("Please enter number in format: 91-9998899988")
+      toastr.error("Please enter number in format: 9998899988")
 
   $scope.addNumberSuccess = (res) ->
     toastr.success("You will receive a verification code on your mobile shortly.")

@@ -1,6 +1,6 @@
 <div id="entryModal">
   <div class="modal-header themeBg">
-    <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); search.flataccount = ''" aria-label="Close"><span
+    <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); search.flataccount = '';ledgerCtrl.resetTaxes()" aria-label="Close"><span
         aria-hidden="true">&times;</span></button>
     <h3 class="modal-title" style="color:#fff">Edit Entry</h3>
   </div>
@@ -13,8 +13,8 @@
 			<table class="col-xs-12 ledger-head">
 				<thead>
 					<tr>
-						<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.editModeBaseAccount}} coming in?</th>
-						<th class="col-xs-6"  style="font-weight: 400">Is {{ledgerCtrl.editModeBaseAccount}} going out?</th>
+						<th class="col-xs-6"  style="font-weight: 400">{{ledgerCtrl.understandingEditMode.text.dr}}</th>
+						<th class="col-xs-6"  style="font-weight: 400">{{ledgerCtrl.understandingEditMode.text.cr}}</th>
 					</tr>
 				</thead>
 			</table>
@@ -71,7 +71,7 @@
 													typeahead-append-to-body="true" 
 			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | addStockinAccountList:ledgerCtrl.baseAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
 			                                      	typeahead-template-url="accountPopUp.html"
-			                                      	typeahead-on-select = "ledgerCtrl.createPanel(txn, ledger);ledgerCtrl.matchInventory(ledger)" 
+			                                      	typeahead-on-select = "ledgerCtrl.createPanel(ledger);ledgerCtrl.matchInventory(ledger)"
 													class="form-control"
 													ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 													is-open="txn.isOpen">
@@ -155,7 +155,7 @@
 													typeahead-append-to-body="true" 
 			                                      	uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated  |addStockinAccountList:ledgerCtrl.baseAccount | searchAccountInPaginated:$viewValue | limitTo: 25"
 			                                      	typeahead-template-url="accountPopUp.html"
-			                                      	typeahead-on-select = "ledgerCtrl.createPanel(txn, ledger);ledgerCtrl.matchInventory(ledger)"
+			                                      	typeahead-on-select = "ledgerCtrl.createPanel(ledger);ledgerCtrl.matchInventory(ledger)"
 													ng-click="ledgerCtrl.selectTxn(ledger, txn, $index, $event)"
 													is-open="txn.isOpen"
 													>
@@ -200,7 +200,7 @@
 						
 						<tr class="total_col">
 							<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-								<span ng-if="ledgerCtrl.entryTotal.drTotal < ledgerCtrl.entryTotal.crTotal">C/F: CR {{ledgerCtrl.entryTotal.drTotal - ledgerCtrl.entryTotal.crTotal| abs | number:2 }}</span>
+								<span ng-if="ledgerCtrl.entryTotal.drTotal < ledgerCtrl.entryTotal.crTotal"  uib-tooltip="{{ledgerCtrl.understanding.balanceText.cr}}" tooltip-placement="top">C/F: CR {{ledgerCtrl.entryTotal.drTotal - ledgerCtrl.entryTotal.crTotal| abs | number:2 }}</span>
 							</td>
 						</tr>
 						<tr class="total_col">
@@ -216,7 +216,7 @@
 						
 						<tr class="total_col">
 							<td colspan="12" class="col-xs-12 text-right white h32" style="padding-right:10px !important">
-								<span  ng-if="ledgerCtrl.entryTotal.drTotal > ledgerCtrl.entryTotal.crTotal">C/F: Dr <span class="primary_color">{{ledgerCtrl.entryTotal.drTotal - ledgerCtrl.entryTotal.crTotal | number:2}}</span></span>
+								<span  ng-if="ledgerCtrl.entryTotal.drTotal > ledgerCtrl.entryTotal.crTotal">C/F: Dr <span class="primary_color"  uib-tooltip="{{ledgerCtrl.understanding.balanceText.dr}}" tooltip-placement="top">{{ledgerCtrl.entryTotal.drTotal - ledgerCtrl.entryTotal.crTotal | number:2}}</span></span>
 							</td>
 						</tr>
 						<tr class="total_col">
@@ -406,12 +406,12 @@
 		  		<div class="col-xs-12 pdT1">
 		  			<button class="btn btn-danger" ng-click="ledgerCtrl.deleteEntryConfirm()">Delete</button>
 		  			<div class="pull-right">
-		  				<div class="mrR1 pull-left">
+		  				<!-- <div class="mrR1 pull-left">
 		  					<label class="checkbox oh">
 		  						<input class="pull-left" style="margin-top:4px;" type="checkbox" name="generateInvoice" ng-model="ledgerCtrl.selectedLedger.generateInvoice" ng-click="$event.stopPropagation()">
 		  						<span class="pull-left">Generate Invoice</span>
 		  					</label>
-		  				</div>
+		  				</div> -->
 			  			<div class="upload_div" ng-click="$event.stopPropagation()" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0">
 		                  <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().$parent.getInvoiceFile(this.files)">
 		                  <label for="invoiceFile" ng-click="$event.stopPropagation()" style="padding:0"><i class="glyphicon glyphicon-paperclip"></i></label>

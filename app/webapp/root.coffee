@@ -183,9 +183,9 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/ledger/:unqName'
     views:{
       'rightPanel':{
-        templateUrl: appendThis+'/public/webapp/Ledger/ledger-wrapper.html'
-        # controller: 'newLedgerController'
-        # controllerAs: 'lc'
+        templateUrl: appendThis+'/public/webapp/Ledger/ledgerTxns.html'
+        controller: 'ledgerController'
+        controllerAs: 'ledgerCtrl'
       }
     }
   )
@@ -325,6 +325,11 @@ giddh.webApp.run [
       $rootScope.showLedgerBox = false
       if _.isEmpty(toParams)
         $rootScope.selAcntUname = undefined
+    )
+
+    $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+      $('html,body').animate({scrollTop: $('html').offset().top},'slow')
+      return false
     )
 
     # $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
