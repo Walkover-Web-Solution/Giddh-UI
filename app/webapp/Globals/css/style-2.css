@@ -2496,3 +2496,12 @@ label {
   top: 8px;
   color: #8e9292;
 }
+#getGroupModal .search-loading {
+    position: absolute;
+    height: 100%;
+    z-index: 99;
+    background: #fff;
+    width: 100%;
+    left: 0;
+    display: table;
+}

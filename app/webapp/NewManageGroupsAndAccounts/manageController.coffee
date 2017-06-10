@@ -118,7 +118,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     col.groups = mc.addHLevel(res.body, 0)
     col.accounts = []
     mc.columns.push(col)
-    mc.updateAll(res.body)
+    if mc.breadCrumbList.length
+      mc.updateAll(res.body)
     mc.flattenGroupList = groupService.makeGroupListFlatwithLessDtl($rootScope.flatGroupsList)
 
   mc.getGroupListFailure = (res) ->
@@ -235,10 +236,11 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.updateBreadCrumbs = true
     mc.parentIndex = parentIndex
     mc.currentIndex = currentIndex
-    console.log item.hLevel
-    # if mc.keyWord != undefined
-    #   mc.updateSearchItem = true
-    #   mc.updateSearchhierarchy(item)
+    # console.log item.hLevel
+    if mc.keyWord != undefined
+      if mc.keyWord.length > 3
+        mc.updateSearchItem = true
+        mc.updateSearchhierarchy(item)
     if mc.breadCrumbList.length > 0
       if item.uniqueName == mc.breadCrumbList[mc.breadCrumbList.length-1].uniqueName && mc.parentIndex == item.hLevel
         mc.updateBreadCrumbs = false
@@ -814,8 +816,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.refreshFlatAccount = (str) ->
     @success = (res) ->
       mc.mergeAccList = res.body.results
-      mc.mergeAccList = mc.mergeAccList.filter(obj) ->
-        obj.isFixed != money
+      mc.mergeAccList = _.reject(mc.mergeAccList, (item) ->
+        return item.isFixed == true
+      )
     @failure = (res) ->
       toastr.error(res.data.message)
     reqParam = {
@@ -1075,8 +1078,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     reqParam.query = str
     if str.length < 3
-      mc.columns = []
-      mc.updateBreadCrumbs = true
+      mc.breadCrumbList = []
       mc.getGroups()
     else if str.length > 2
       mc.searchLoad = true
@@ -1123,13 +1125,14 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.resetSearch = () ->
     mc.searchQuery('')
     mc.keyWord = ''
-     
+    mc.breadCrumbList = []
+    mc.getGroups()
+
   mc.updateSearchhierarchy = (data) ->
     currentItem = _.findWhere($rootScope.flatGroupsList, {uniqueName:data.uniqueName})
     mc.breadCrumbList = currentItem.parentGroups
     mc.updateBreadCrumbs = false
     mc.columns = mc.columns.splice(0,mc.parentIndex+1)
-    console.log mc.parentIndex
 
 # end
 
