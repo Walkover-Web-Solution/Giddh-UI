@@ -63,9 +63,12 @@ var htmlRes =(recieptPug({
         response.body = JSON.stringify(err);
         res.send(err);
       }
+      console.log(pdf);
       var pdfPath = pdf.stream.path;
       response.status = 'success';
       var base64data = new Buffer(fs.readFileSync(pdfPath, 'utf8'), 'binary').toString('base64');
+      fs.unlinkSync(pdfPath.substring(0, pdfPath.lastIndexOf('.'))+'html.html')
+      fs.unlinkSync(pdfPath.substring(0, pdfPath.lastIndexOf('.'))+'.pdf')
       response.body = base64data
       res.send(response);
       phantom.kill();
