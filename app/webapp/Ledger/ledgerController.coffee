@@ -1897,8 +1897,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.autoGenerateInvoice = (ledger) ->
 
+    # by sarfaraz to handle error while generate invoice
     @success = (res) ->
-      ledgerCtrl.fetchEntryDetails(ledgerCtrl.currentTxn, false)
+      if (angular.isArray(res.body) and res.body[0].failedEntries)
+        toastr.error("Invoice generation failed due to: "+res.body[0].reason)
+      else
+        ledgerCtrl.fetchEntryDetails(ledgerCtrl.currentTxn, false)
 
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -1926,9 +1930,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
     ledgerCtrl.entryTotal = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
     ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
+    toastr.success("Entry updated successfully.", "Success")
     if ledgerCtrl.generateInvoice
       ledgerCtrl.autoGenerateInvoice(res.body)
-    toastr.success("Entry updated successfully.", "Success")
     # ledgerCtrl.paginatedLedgers = [res.body]
     # ledgerCtrl.selectedLedger = res.body
     # ledgerCtrl.clearTaxSelection(ledgerCtrl.selectedLedger)
