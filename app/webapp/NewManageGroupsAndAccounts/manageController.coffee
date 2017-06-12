@@ -265,7 +265,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.getGrpDtlSuccess = (res) ->
     mc.selectedItem = res.body
-    mc.populateAccountList(res.body)
+    # mc.populateAccountList(res.body)
     if mc.parentIndex != undefined
       mc.columns.length = mc.parentIndex + 2
 
