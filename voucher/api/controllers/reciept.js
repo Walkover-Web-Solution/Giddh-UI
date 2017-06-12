@@ -6,7 +6,7 @@ const phantom = require("phantom-html-to-pdf")
 ({
   phantomPath: require("phantomjs-prebuilt").path,
   tmpDir: './voucher/download/',
-  numberOfWorkers: 2,
+  numberOfWorkers: 1,
 });
 
 
@@ -66,7 +66,9 @@ var htmlRes =(recieptPug({
       console.log(pdf);
       var pdfPath = pdf.stream.path;
       response.status = 'success';
+
       var base64data = new Buffer(fs.readFileSync(pdfPath, 'utf8'), 'binary').toString('base64');
+      console.log(pdfPath.substring(0, pdfPath.lastIndexOf('.')));
       fs.unlinkSync(pdfPath.substring(0, pdfPath.lastIndexOf('.'))+'html.html')
       fs.unlinkSync(pdfPath.substring(0, pdfPath.lastIndexOf('.'))+'.pdf')
       response.body = base64data
