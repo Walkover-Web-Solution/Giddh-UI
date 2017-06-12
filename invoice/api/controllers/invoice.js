@@ -5,7 +5,7 @@ const fs = require('fs');
 const phantom = require("phantom-html-to-pdf")
 ({
   phantomPath: require("phantomjs-prebuilt").path,
-  tmpDir: './invoice/download/',
+  tmpDir: '/tmp/',
   numberOfWorkers: 2,
 });
 var invoice = {};

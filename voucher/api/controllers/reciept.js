@@ -5,7 +5,7 @@ const fs = require('fs');
 const phantom = require("phantom-html-to-pdf")
 ({
   phantomPath: require("phantomjs-prebuilt").path,
-  tmpDir: './voucher/download/',
+  tmpDir: '/tmp/',
   numberOfWorkers: 1,
 });
 
@@ -57,7 +57,7 @@ var htmlRes =(recieptPug({
      // }, 
     }, 
     function(err, pdf) {
-      if(err) {
+      if(err) { 
         console.log(err);
         response.status = 'error';
         response.body = JSON.stringify(err);
