@@ -257,13 +257,13 @@
 				        	<tr>
 				        		<td ng-if="ledgerCtrl.selectedLedger.showStock">
 						        	<!-- <label>Quantity</label>
-							        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.quantity" ng-change="ledgerCtrl.onQuantityChange(ledgerCtrl.selectedLedger) "/> -->
+							        <input type="text" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.quantity" ng-change="ledgerCtrl.onQuantityChange(ledgerCtrl.selectedLedger) "/> -->
 									<table>
 							        	<tbody>
 							        		<tr>
 							        			<td ng-class="{width55: ledgerCtrl.selectedLedger.panel.unit != undefined}">
 							        				<label>Quantity</label>
-							       		 			<input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.quantity" ng-change="ledgerCtrl.onQuantityChange(ledgerCtrl.selectedLedger)"/>
+							       		 			<input type="text" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.quantity" ng-change="ledgerCtrl.onQuantityChange(ledgerCtrl.selectedLedger)"/>
 							        			</td>
 							        			<td ng-if="ledgerCtrl.selectedLedger.panel.unit">
 							        				<label>Unit</label>
@@ -280,7 +280,7 @@
 				        		</td>
 				        		<td ng-if="ledgerCtrl.selectedLedger.showStock">
 							        <label>Price</label>
-							        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.price"
+							        <input type="text" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.price"
 							        ng-change="ledgerCtrl.onPriceChange(ledgerCtrl.selectedLedger) "/>
 				        		</td>
 				        		<td ng-if="ledgerCtrl.selectedLedger.showStock">
@@ -289,7 +289,7 @@
 				        		</td>
 				        		<td>
 						        	<label class="primary_color">Amount</label>
-							        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.amount" ng-change="ledgerCtrl.onAmountChange(ledgerCtrl.selectedLedger)"/>
+							        <input type="text" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.amount" ng-change="ledgerCtrl.onAmountChange(ledgerCtrl.selectedLedger)"/>
 				        		</td>
 				        		<td ng-if="ledgerCtrl.discountAccount && ledgerCtrl.discountAccount.accountDetails.length > 0">
 				        			<label>&nbsp;</label>
@@ -300,8 +300,7 @@
 								    <span uib-dropdown auto-close="outsideClick" >
 								      <a href id="discount" uib-dropdown-toggle>
 						        	<label>Discount</label>
-							        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.discount"/>
-								    
+							        <input readonly="true" type="text" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.discount"/>
 								      </a>
 								      <ul class="dropdown-menu" uib-dropdown-menu>
 								        <li>
@@ -309,7 +308,7 @@
 								          	<tr ng-repeat="discount in ledgerCtrl.discountAccount.accountDetails">
 								          		<td class="pdL w100">{{discount.name}}</td>
 								          		<td class="pdR pdT w50">
-								          			<input type="number" class="form-control" ng-model="discount.amount" ng-change="ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)"/>
+								          			<input type="text" class="form-control" ng-model="discount.amount" ng-change="ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)"/>
 								          		</td>
 								          	</tr>
 								          </table>
@@ -326,7 +325,7 @@
 								      <a href id="tax" uib-dropdown-toggle>
 						        	<label>Tax %</label>
 						        	<div class="multi-select adjust">
-						        		<input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.tax"/>
+						        		<input type="text" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.tax"/>
 						        		<span class="caret"></span>
 						        	</div>
 								    
@@ -346,7 +345,7 @@
 				        		</td>
 				        		<td>
 							        <label class="primary_color">Total</label>
-							        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.total" ng-change="ledgerCtrl.onTxnTotalChange(ledgerCtrl.selectedLedger)"/>
+							        <input type="text" name="" class="form-control" ng-model="ledgerCtrl.selectedLedger.panel.total" ng-change="ledgerCtrl.onTxnTotalChange(ledgerCtrl.selectedLedger)"/>
 				        		</td>
 				        	</tr>
 				        	</tbody>

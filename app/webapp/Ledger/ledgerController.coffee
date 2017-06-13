@@ -1195,6 +1195,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         amount += Number(txn.amount)
     return amount
 
+
+
   ledgerCtrl.getTotalDiscount = (ledger) ->
     discount = 0
     amounts = []
@@ -1292,6 +1294,25 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
       ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
       # ledgerCtrl.updateTxnAmount()
+    else if ledgerCtrl.isDiscountTxn(txn)
+      ledgerCtrl.selectedLedger.panel.discount = Number(txn.amount)
+      ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
+      ledgerCtrl.getTotalDiscountByNewWay(ledgerCtrl.selectedLedger)
+
+  ledgerCtrl.getTotalDiscountByNewWay = (ledger) ->
+    discount = 0
+    amounts = []
+    if ledgerCtrl.discountAccount != undefined
+      _.each ledgerCtrl.discountAccount.accountDetails, (account) ->
+        _.each ledger.transactions, (txn) ->
+          if txn.particular.uniqueName == account.uniqueName
+            account.amount = txn.amount
+        if account.amount
+          discount += Number(account.amount)
+      ledger.panel.total = ledgerCtrl.cutToTwoDecimal(ledger.panel.amount - discount + (ledger.panel.tax*(ledger.panel.amount-discount)/100))
+      ledger.panel.discount = ledgerCtrl.cutToTwoDecimal(discount)
+    discount
+
 
   ledgerCtrl.onTxnTotalChange = (txn)->
     ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.calculateAmountAfterInclusiveTax()
