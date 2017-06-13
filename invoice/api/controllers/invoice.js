@@ -5,7 +5,7 @@ const fs = require('fs');
 const phantom = require("phantom-html-to-pdf")
 ({
   phantomPath: require("phantomjs-prebuilt").path,
-  tmpDir: '/home/app-downloads/',
+  tmpDir: '/tmp/',
   numberOfWorkers: 2,
 });
 var invoice = {};
@@ -18,7 +18,6 @@ invoice.downloadInvoice = function(req, res) {
   //}
   //else
   //{
-  console.log(req);
   const bodyCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/template_a.pug');
   const footerCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/footer_a.pug');
   
@@ -76,6 +75,7 @@ invoice.downloadInvoice = function(req, res) {
         response.body = JSON.stringify(err);
         res.send(err);
       }
+      console.log(pdf)
       var pdfPath = pdf.stream.path;
       response.status = 'success';
       response.body = pdfPath.substring(0, pdfPath.lastIndexOf('.'));
