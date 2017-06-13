@@ -285,20 +285,21 @@ app.get('/userak', function(req, res){
 var getSession = function(req, res, next){
   var sessionId = req.query.sId;
   req.sessionStore.get(sessionId, function(err, session) {
-      if (session) {
-          // createSession() re-assigns req.session
-          req.sessionStore.createSession(req, session)
-      }
-      next()
+  if (session) {
+      // createSession() re-assigns req.session
+      req.sessionStore.createSession(req, session)
+    }
+    next()
   })
-
 }
 
 //serve index.html, this has to come after *ALL* routes are defined
 app.use('/', getSession, function(req, res){
-  if(req.session.name){
+  if(req.url.startsWith("/tmp/") && req.url.endsWith(".pdf")) {
+    res.sendFile(req.url)
+  } else if(req.session.name){
     res.sendFile(__dirname+ '/public/webapp/views/index.html')
-  }else{
+  } else{
     res.status(404)
     res.redirect('https://www.giddh.com')
   }
