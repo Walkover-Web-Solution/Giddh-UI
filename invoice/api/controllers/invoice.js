@@ -78,7 +78,10 @@ invoice.downloadInvoice = function(req, res) {
       console.log(pdf)
       var pdfPath = pdf.stream.path;
       response.status = 'success';
-      response.body = pdfPath.substring(0, pdfPath.lastIndexOf('.'));
+      //new loc
+      var base64data = new Buffer(fs.readFileSync(pdfPath, 'utf8'), 'binary').toString('base64');
+      response.body = base64data;
+      //response.body = pdfPath.substring(0, pdfPath.lastIndexOf('.'));
       res.send(response);
       phantom.kill();
     }
