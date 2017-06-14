@@ -225,7 +225,7 @@ th {
 								</span>
 								<!-- <i class="glyphicon glyphicon-sort pull-left mrL"></i> -->
 							</th>
-							<th class="col-xs-7" style="border-top:none">Paticular</th>
+							<th class="col-xs-7" style="border-top:none">Particular</th>
 							<th class="col-xs-3" style="border-top:none">
 								<!-- <span class="col-xs-6 pad0" ng-if="ledgerCtrl.accountToShow.stock != null">Qty</span> -->
 								<!-- <span class="pad0" ng-class="{'col-xs-6':ledgerCtrl.accountToShow.stock != null, 'col-xs-12':ledgerCtrl.accountToShow.stock == null}">Amount</span> -->
@@ -363,7 +363,7 @@ th {
 								
 								<!-- <i class="glyphicon glyphicon-sort pull-left"></i> -->
 							</th>
-							<th class="col-xs-7" style="border-top:none">Paticular</th>
+							<th class="col-xs-7" style="border-top:none">Particular</th>
 							<th class="col-xs-3" style="border-top:none">Amount</th>
 						</tr>
 					</thead>
@@ -748,7 +748,7 @@ th {
 	  				<tr>
 	  					<td class="pdR1"><label class="default_clr pull-left">Voucher type</label> </td>
 	  					<td colspan="4">
-				  			<ui-select ng-model="ledgerCtrl.selectedLedger.voucher" theme="bootstrap">
+				  			<ui-select ng-model="ledgerCtrl.selectedLedger.voucher" theme="bootstrap" ng-click="$event.stopPropagation()">
 			                    <ui-select-match>
 			                      <span>{{$select.selected.name}}</span>
 			                    </ui-select-match >

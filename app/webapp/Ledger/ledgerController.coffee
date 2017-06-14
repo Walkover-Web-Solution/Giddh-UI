@@ -1374,6 +1374,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.exportLedger = (type)->
     ledgerCtrl.showExportOption = false
+    
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: ledgerCtrl.accountUnq

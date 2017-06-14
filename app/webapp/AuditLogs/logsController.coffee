@@ -184,6 +184,7 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
     toastr.error(res.data.message)
 
   $scope.checkPermissions = (entity) ->
+    console.log entity
     $rootScope.canUpdate = permissionService.hasPermissionOn(entity, "UPDT")
     $rootScope.canDelete = permissionService.hasPermissionOn(entity, "DLT")
     $rootScope.canAdd = permissionService.hasPermissionOn(entity, "ADD")
