@@ -33,7 +33,7 @@
       <div class="search-loading" ng-hide="mc.showListGroupsNow" ng-show="mc.searchLoad">
         <div class="vcenter"><span class="spinner small"></span> Loading…</div>
       </div>
-      <div class="row grp_col">
+      <div class="row grp_col" style="width: 100%">
       <ul>
         <li ng-repeat="ass in mc.mainGrp">
         <a href=""  ng-bind-html="ass.name"></a>
@@ -93,7 +93,7 @@
           <div class="vcenter">
             <button class="btn isActive mrB2" ng-click="mc.getSelectedType('grp')">Create Group</button>
             <span class="clearfix"></span>
-            <button class="btn isActive" ng-click="mc.getSelectedType('acc')">Create A/c</button>
+            <button class="btn isActive" ng-click="mc.getSelectedType('acc')" ng-hide="mc.addToIndex == 1">Create A/c</button>
           </div>
         </div>
       <!--  -->

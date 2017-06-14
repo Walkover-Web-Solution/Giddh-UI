@@ -687,6 +687,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.groupAccntList.push(abc)
     mc.columns[mc.addToIndex].accounts.push(res.body)
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+    mc.getSelectedType('grp')
+    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], false, mc.parentIndex, mc.currentIndex)
     # mc.columns = []
     # mc.getGroups()
     
@@ -1111,6 +1113,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     childCol.groups = []
     childCol.accounts = []
     _.each groups, (grp) ->
+      childCol.groups.push(grp)
       if grp.accounts.length > 0
         _.each grp.accounts, (acc) ->
           childCol.accounts.push(acc)

@@ -2173,7 +2173,7 @@ select.form-control {
 }
 
 .col_wrapper {
-    width: 250px;
+    width: 100%;
     float: left;
     border-right: 1px solid #ccc;
     min-height: 100%;
@@ -2181,38 +2181,6 @@ select.form-control {
     position: relative;
     overflow-y: auto;
 }
-/*.col_wrapper:nth-child(2) {
-    margin-left: 250px;
-}*/
-.col_wrapper:nth-child(1) {
-    background: #f4f5f5;
-    z-index: 9;
-    position: relative;
-    /*position: absolute;*/
-}
-.col_wrapper:nth-child(1) ul {
-    position: fixed;
-    background: #f4f5f5;
-    height: 474px;
-    min-height: 0;
-}
-.col_wrapper:nth-child(1) li a{
-    text-transform: uppercase;
-    padding: 8px 18px !important;
-}
-.col_wrapper:nth-child(1) li:last-child{
-    display: none;
-    text-indent: -99999px;
-}
-.col_wrapper:nth-child(1) .isParent {
-    background: #e1ebf0 !important;
-    color: #d25f29 !important;
-}
-.col_wrapper:last-child ul li a.isParent {
-    background: none;
-}
-
-
 #getGroupModal .modal-body {
     min-height: calc(100% - 76px);
     height: calc(100% - 76px);
@@ -2232,37 +2200,7 @@ select.form-control {
     column-gap: 0px;
 
 }
-.isAcc {
-    color: #1a1a1a !important;
-}
-.isSelectedgrp {
-    background: #e1ebf0;
-}
-.isParent {
-    background: #e5e5e5;
-}
-.isActive {
-    color: #fff !important;
-    background: #d25f29;
-}
-.isParent.isActive {
-    color: #fff !important;
-    background: #d25f29 !important;
-}
-.primary_clr {
-    color: #d25f29 !important;
-}
-.view_forms {
-    float: left;
-    width: 100%;
-    overflow-y: scroll; 
-    height: 100%;
-    min-height: 550px;
-}
-.breadcrumbs {
-    font-size: 13px;
-    overflow: hidden;
-}
+
 .form_bg {
     background: #f4f5f5;
 }
@@ -2360,7 +2298,7 @@ label {
 }
 .inline-table {
     display: table;
-    min-height: 500px;
+    min-height: 400px;
 }
 .vcenter {
     display: table-cell;
@@ -2397,49 +2335,7 @@ label {
     font-size: 14px;
 }
 
-.grp_list {
-    padding: 10px 0px;
-    min-height: 100%;
-    overflow-y: auto;
-    height: 100%;
-}
-.grp_list li {
-    list-style: none;
-}
-.grp_list li a {
-    padding: 4px 15px !important;
-    display: block;
-    font-size: 14px;
-    font-weight: 500;
-    color: #808080;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-.noPad {
-    padding: 0;
-}
-.grp_col {
-    /*max-width: 400px;*/
-    /*max-width: 690px;*/
-    float: left;
-    min-height: 100%;
-    height: 100%;
-    overflow-x: hidden;
-}
 
-.col_wrapper {
-    width: 250px;
-    float: left;
-    border-right: 1px solid #ccc;
-    min-height: 100%;
-    height: 100%;
-    position: relative;
-    overflow-y: auto;
-}
-/*.col_wrapper:nth-child(2) {
-    margin-left: 250px;
-}*/
 .col_wrapper:nth-child(1) {
     background: #f4f5f5;
     z-index: 9;
@@ -2448,8 +2344,7 @@ label {
 }
 .col_wrapper:nth-child(1) ul {
     position: fixed;
-    background: #f4f5f5;
-    height: 474px;
+    height: calc(100% - 17%);
     min-height: 0;
 }
 .col_wrapper:nth-child(1) li a{
@@ -2468,11 +2363,6 @@ label {
     background: none;
 }
 
-
-#getGroupModal .modal-body {
-    min-height: calc(100% - 76px);
-    height: calc(100% - 76px);
-}
 .grp_wrapper {
     min-height: 100%;
     height: 100%;
@@ -2612,10 +2502,6 @@ label {
 .form_box {
     overflow-y: auto;
     height: 100%;
-}
-.inline-table {
-    display: table;
-    min-height: 500px;
 }
 .vcenter {
     display: table-cell;
@@ -2782,4 +2668,31 @@ label {
 }
 .cursor-pointer {
   cursor: pointer !important;
+}
+
+.input-group-addon.cp {
+    border-radius: 0;
+}
+
+@media only screen and (min-width: 1336px) and (max-width: 1440px) {
+  .grp_wrapper {
+     -webkit-column-count: 3;
+     -moz-column-count: 3;
+     column-count: 3;
+  }
+
+}
+
+@media only screen and (min-width: 1441px) and (max-width: 1800px) {
+  .grp_wrapper {
+     -webkit-column-count: 3;
+     -moz-column-count: 3;
+     column-count: 3;
+  }
+}
+@media only screen and (min-width: 1920px) {
+  .col_wrapper:nth-child(1) li a{
+      text-transform: uppercase;
+      padding: 8px 7px !important;
+  }
 }
