@@ -24,7 +24,7 @@
     </div>
 
     <div class="pd2 pdB clearfix">
-      <button class="btn isActive" ng-if="mc.showOnUpdate && !mc.selectedItem.fixed && canDelete" ng-click="mc.deleteGroup()">DELETE {{mc.selectedGrp.name}}</button>
+      <a href="javascript:void(0);" class="btn isActive" ng-if="mc.showOnUpdate && !mc.selectedItem.fixed && canDelete" ng-click="mc.deleteGroup()">DELETE {{mc.selectedGrp.name}}</a>
       <!--   -->
       <button class="btn btn-success pull-right" ng-if="!mc.showOnUpdate" ng-click="mc.addNewSubGroup()" ng-disabled="groupDetailForm.$invalid">Add</button>
       <button class="btn btn-success pull-right" ng-if="mc.showOnUpdate && canUpdate" ng-click="mc.updateGroup(groupDetailForm)" ng-disabled="groupDetailForm.$invalid">Update</button>

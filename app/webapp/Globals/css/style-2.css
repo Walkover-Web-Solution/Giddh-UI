@@ -1942,7 +1942,8 @@ input[type=radio]:checked:after {
 /*====================== mustafa =====================*/
 .select_drop {
   position: relative;
-  width: 6px;
+  top: 16px;
+  right: 2px;
   z-index: 9;
 }
 

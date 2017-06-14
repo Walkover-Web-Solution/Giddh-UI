@@ -55,7 +55,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.prePopulate = []
   mc.getMergeAcc = []
   mc.breadCrumbList = []
-  mc.updateBreadCrumbs = true
+  # mc.updateBreadCrumbs = true
   mc.updateSearchItem = false
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
@@ -262,6 +262,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         mc.columns.push(item)
     else
       existingGrp = item
+      mc.columns = mc.columns.splice(0,item.hLevel+1)
+      mc.columns.push(item)
 
   mc.getGrpDtlSuccess = (res) ->
     mc.selectedItem = res.body
@@ -299,8 +301,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.columns[mc.addToIndex].groups.push(res.body)
     toastr.success("Sub group added successfully", "Success")
     # mc.selectedItem = {}
-    # mc.getGroups()
-    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
+    mc.getGroups()
+    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], false, mc.parentIndex, mc.currentIndex)
 
   mc.onCreateGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -380,6 +382,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.showOnUpdate = false
     if mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'account'
       mc.breadCrumbList.pop()
+    if mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'grp'
+      if mc.addToIndex == mc.parentIndex
+        mc.breadCrumbList.pop()
+        mc.selectedGrp = mc.breadCrumbList[mc.breadCrumbList.length-1]
+        mc.updateBreadCrumbs = false
+        mc.columns = mc.columns.splice(0,mc.addToIndex+1)
 
 # get account details under groups and sub groups
   mc.getAccDetail = (item, parentIndex, currentIndex) ->

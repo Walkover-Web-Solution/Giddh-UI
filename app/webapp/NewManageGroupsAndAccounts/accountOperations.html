@@ -95,7 +95,7 @@
     </div>
 
     <div class="pd2 clearfix pdB1">
-        <button class="btn isActive" ng-if="mc.showOnUpdate && !mc.selectedAcc.fixed" ng-click="mc.deleteAccount()">DELETE {{mc.selectedAcc.name}} </button>
+        <a href="javascript:void(0);" class="btn isActive" ng-if="mc.showOnUpdate && !mc.selectedAcc.fixed" ng-click="mc.deleteAccount()">DELETE {{mc.selectedAcc.name}} </a>
         <button class="btn btn-success pull-right" ng-if="!mc.showOnUpdate" ng-click="mc.addAccount()" ng-disabled="addAccountForm.$invalid">Add</button>
         <button class="btn btn-success pull-right" ng-if="mc.showOnUpdate && canUpdate" ng-click="mc.updateAccount()" ng-disabled="addAccountForm.$invalid">Update</button>
     </div>
