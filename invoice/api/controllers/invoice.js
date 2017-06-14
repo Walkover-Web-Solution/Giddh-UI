@@ -21,7 +21,7 @@ invoice.downloadInvoice = function(req, res) {
   const bodyCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/template_a.pug');
   const footerCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/footer_a.pug');
   
-  //  //}
+  // //}
   var companyIdentitiesDataArray = invoiceObj.companyIdentities.data.split(",");
   var footerResource = (footerCompiledFunction({
   companyIdentitiesData: companyIdentitiesDataArray,
@@ -34,7 +34,7 @@ invoice.downloadInvoice = function(req, res) {
  //  companyIdentitiesData: invoiceObj.companyIdentities.data,
  //  terms: invoiceObj.terms
  //  })); 
- 
+  
   var htmlRes = (bodyCompiledFunction({
     name: invoiceObj.account.name,
     invoiceNumber: invoiceObj.invoiceDetails.invoiceNumber,

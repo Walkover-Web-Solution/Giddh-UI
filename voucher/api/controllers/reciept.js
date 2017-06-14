@@ -16,12 +16,12 @@ reciept.downloadReciept = function(req,res){
 
 //response.status = 'success';
 //response.body = pdfPath.substring(0, pdfPath.lastIndexOf('.'));
-var recieptObj = req.body.reciept[0];
+var recieptObj = req.body;
 
 const recieptPug = pug.compileFile('./voucher/api/models/reciept/templates/reciept_a.pug');
-
-//console.log(recieptObj.voucherNumber)
-
+var addressArray = [recieptObj.company.address,recieptObj.company.city,recieptObj.company.pincode,recieptObj.company.state, recieptObj.company.country];
+var accountArray = [recieptObj.account.name,recieptObj.account.attentionTo,recieptObj.account.email,recieptObj.account.mobileNumber]
+//#{companyCity} #{companyPincode} (#{companyState})   
 var htmlRes =(recieptPug({
   voucherNumber: recieptObj.voucherNumber,
   voucherDate: recieptObj.voucherDate,
@@ -34,14 +34,18 @@ var htmlRes =(recieptPug({
   companyContactNumber: recieptObj.company.contactNo,
   companyEmail: recieptObj.company.email,
   logo: recieptObj.logo.path,
-  
+  chequeNumber : recieptObj.chequeNumber, 
   accountName: recieptObj.account.name,
   attentionTo: recieptObj.account.attentionTo,
   accountEmail: recieptObj.account.email,
   accountMobileNumber: recieptObj.account.mobileNumber,
-   
+  accountClosingBalance : recieptObj.accountClosingBalance.amount,
   grandTotal: recieptObj.grandTotal,
-  taxTotal: recieptObj.taxTotal
+  taxTotal: recieptObj.taxTotal,
+  subTotal : recieptObj.subTotal,
+  addressDetailsArray :  addressArray,
+  accountDetailsArray : accountArray,
+  companyIdentitiesData : recieptObj.companyIdentity.data
 }));
 
 
