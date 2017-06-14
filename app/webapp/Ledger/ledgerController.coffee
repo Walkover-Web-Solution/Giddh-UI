@@ -1195,8 +1195,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         amount += Number(txn.amount)
     return amount
 
-
-
   ledgerCtrl.getTotalDiscount = (ledger) ->
     discount = 0
     amounts = []
@@ -1293,7 +1291,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.selectedLedger.panel.amount = Number(txn.amount)
       ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
       ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
-      # ledgerCtrl.updateTxnAmount()
     else if ledgerCtrl.isDiscountTxn(txn)
       ledgerCtrl.selectedLedger.panel.discount = Number(txn.amount)
       ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
@@ -1312,7 +1309,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledger.panel.total = ledgerCtrl.cutToTwoDecimal(ledger.panel.amount - discount + (ledger.panel.tax*(ledger.panel.amount-discount)/100))
       ledger.panel.discount = ledgerCtrl.cutToTwoDecimal(discount)
     discount
-
 
   ledgerCtrl.onTxnTotalChange = (txn)->
     ledgerCtrl.selectedLedger.panel.amount = ledgerCtrl.calculateAmountAfterInclusiveTax()
@@ -1374,7 +1370,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.exportLedger = (type)->
     ledgerCtrl.showExportOption = false
-    
+    if $rootScope.selectedCompany.role.uniqueName == "view_only" || $rootScope.selectedCompany.role.uniqueName == "edit"
+      detailStr = "detailed"
+      condensedStr = "condensed"
+      if type.indexOf(detailStr)
+        type = ledgerCtrl.ledgerEmailData.viewDetailed
+      else if type.indexOf(condensedStr)
+        type = ledgerCtrl.ledgerEmailData.viewCondensed
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: ledgerCtrl.accountUnq
@@ -1918,14 +1920,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     )
 
   ledgerCtrl.autoGenerateInvoice = (ledger) ->
-
     # by sarfaraz to handle error while generate invoice
     @success = (res) ->
       if (angular.isArray(res.body) and res.body[0].failedEntries)
         toastr.error("Invoice generation failed due to: "+res.body[0].reason)
       else
         ledgerCtrl.fetchEntryDetails(ledgerCtrl.currentTxn, false)
-
     @failure = (res) ->
       toastr.error(res.data.message)
 
