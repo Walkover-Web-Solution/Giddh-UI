@@ -5,7 +5,7 @@ const fs = require('fs');
 const phantom = require("phantom-html-to-pdf")
 ({
   phantomPath: require("phantomjs-prebuilt").path,
-  tmpDir: '/tmp/',
+  tmpDir: '.',
   numberOfWorkers: 1,
 });
 
@@ -19,12 +19,16 @@ reciept.downloadReciept = function(req,res){
 var recieptObj = req.body;
 
 const recieptPug = pug.compileFile('./voucher/api/models/reciept/templates/reciept_a.pug');
+//const recieptFoot = pug.compileFile('./voucher/api/models/reciept/templates/reciept_a_footer.pug')
+
 var addressArray = [recieptObj.company.address,recieptObj.company.city,recieptObj.company.pincode,recieptObj.company.state, recieptObj.company.country];
-var accountArray = [recieptObj.account.name,recieptObj.account.attentionTo,recieptObj.account.email,recieptObj.account.mobileNumber]
+var accountArray = [recieptObj.account.email,recieptObj.account.mobileNumber]
 //#{companyCity} #{companyPincode} (#{companyState})   
 var htmlRes =(recieptPug({
   voucherNumber: recieptObj.voucherNumber,
   voucherDate: recieptObj.voucherDate,
+  voucherType: recieptObj.voucherType,
+
   companyName: recieptObj.company.name,
   companyCity: recieptObj.company.city,
   companyAddress: recieptObj.company.address,
@@ -48,6 +52,11 @@ var htmlRes =(recieptPug({
   companyIdentitiesData : recieptObj.companyIdentity.data
 }));
 
+// footerResource = (recieptFoot({
+//   addressDetailsArray :  addressArray,
+//   companyIdentitiesData : recieptObj.companyIdentity.data,
+//   companyName: recieptObj.company.name
+// }))
 
 
   var response = {};
