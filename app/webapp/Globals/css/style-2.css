@@ -2184,6 +2184,7 @@ select.form-control {
 #getGroupModal .modal-body {
     min-height: calc(100% - 76px);
     height: calc(100% - 76px);
+    font-size: 14px;
 }
 .grp_wrapper {
     min-height: 100%;
