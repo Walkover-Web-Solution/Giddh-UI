@@ -388,6 +388,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         mc.selectedGrp = mc.breadCrumbList[mc.breadCrumbList.length-1]
         mc.updateBreadCrumbs = false
         mc.columns = mc.columns.splice(0,mc.addToIndex+1)
+    if mc.keyWord != undefined
+      mc.breadCrumbList = []
+      mc.keyWord = undefined
 
 # get account details under groups and sub groups
   mc.getAccDetail = (item, parentIndex, currentIndex) ->
@@ -397,6 +400,11 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getCurrentColIndex = parentIndex
     mc.currentAccIndex = currentIndex
     item.hLevel = mc.getCurrentColIndex
+    mc.getSelectedType('acc')
+    if mc.keyWord != undefined
+      if mc.keyWord.length > 3
+        mc.updateSearchItem = true
+        mc.updateSearchhierarchy(item)
     reqParam = {
       compUname: $rootScope.selectedCompany.uniqueName,
       acntUname: item.uniqueName
@@ -686,9 +694,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     abc = _.pick(res.body, 'name', 'uniqueName', 'mergedAccounts','applicableTaxes','parentGroups')
     mc.groupAccntList.push(abc)
     mc.columns[mc.addToIndex].accounts.push(res.body)
-    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+    # $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
     mc.getSelectedType('grp')
-    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], false, mc.parentIndex, mc.currentIndex)
+    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
+    mc.updateBreadCrumbs = true
     # mc.columns = []
     # mc.getGroups()
     
@@ -1114,6 +1123,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     childCol.accounts = []
     _.each groups, (grp) ->
       childCol.groups.push(grp)
+      mc.columns.unshift(childCol)
       if grp.accounts.length > 0
         _.each grp.accounts, (acc) ->
           childCol.accounts.push(acc)
@@ -1132,7 +1142,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getGroups()
 
   mc.updateSearchhierarchy = (data) ->
-    currentItem = _.findWhere($rootScope.flatGroupsList, {uniqueName:data.uniqueName})
+    if mc.selectedType = 'grp'
+      currentItem = _.findWhere($rootScope.flatGroupsList, {uniqueName:data.uniqueName})
+    else
+      currentItem = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:data.uniqueName})
     mc.breadCrumbList = currentItem.parentGroups
     mc.updateBreadCrumbs = false
     mc.columns = mc.columns.splice(0,mc.parentIndex+1)

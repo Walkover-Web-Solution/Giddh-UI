@@ -29,11 +29,11 @@
   <div class="modal-body noPad">
 
     <!-- list of groups -->
-    <div class="col-xs-7 grp_col bdrL bdrR">
+    <div class="col-xs-7 grp_col bdrL bdrR pd0">
       <div class="search-loading" ng-hide="mc.showListGroupsNow" ng-show="mc.searchLoad">
         <div class="vcenter"><span class="spinner small"></span> Loading…</div>
       </div>
-      <div class="row grp_col" style="width: 100%">
+      <div class="grp_col" style="width: 100%">
       <ul>
         <li ng-repeat="ass in mc.mainGrp">
         <a href=""  ng-bind-html="ass.name"></a>
