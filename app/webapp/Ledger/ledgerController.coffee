@@ -1846,6 +1846,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       tax:[]
       taxList: []
       voucherNo:null
+      discount:{amount:0}
     }
 
   ledgerCtrl.addEntrySuccess = (res, ledger) ->
@@ -1861,6 +1862,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.selectedLedger = ledgerCtrl.blankLedger
     _.each(ledgerCtrl.taxList, (tax) ->
       tax.isChecked = false
+    )
+    _.each(ledgerCtrl.discountAccount.accountDetails, (dis) ->
+      dis.amount = 0
     )
     ledgerCtrl.selectedTxn.isOpen = false
     if ledgerCtrl.mergeTransaction
