@@ -764,7 +764,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
       ledgerCtrl.addApplicableTaxes(item)
     else
-      ledgerCtrl.showTaxationDiscountBox = false
+      ledgerCtrl.findCurrentAccountCategory(txn)
 
   ledgerCtrl.getCompoundTotal=()->
     total = 0
