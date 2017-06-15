@@ -757,6 +757,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.showTaxationDiscountBox = false
   
   ledgerCtrl.checkCurrentTxnElgibility=(txn, item)->
+    ledgerCtrl.showTaxationDiscountBox = false
     category = ledgerCtrl.getAccCategoryByUniquename(item.uniqueName)
     if category is "income" || category == "expenses"
       ledgerCtrl.showTaxationDiscountBox = true
@@ -857,10 +858,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         return txn.panel.units
 
     panel.getAmount = () ->
-      if txn.panel.quantity > 0
-        return txn.panel.quantity * txn.panel.price
+      if txn.particular.stock && txn.particular.stock.accountStockDetails.unitRates.length > 0
+        if txn.panel.quantity > 0
+          return txn.panel.quantity * txn.panel.price
+        else
+          return Number(txn.amount)
       else
-        return Number(txn.amount) 
+        return Number(txn.amount)
 
     panel.getDiscount = () ->
       discount = ledgerCtrl.getNewPanelDiscount(ledger)
@@ -923,6 +927,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       amount = txn.panel.amount - txn.panel.discount
       txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount + (amount*txn.panel.tax/100))
       txn.amount = ledgerCtrl.cutToTwoDecimal(txn.panel.amount)
+      ledgerCtrl.getCompoundTotal()
 
     change.total = (txn, ledger) ->
       if !txn.panel.discount 
@@ -932,9 +937,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       txn.panel.amount = Number(amount.toFixed(2))
       txn.panel.price = ledgerCtrl.cutToFourDecimal(txn.panel.amount / txn.panel.quantity)
       txn.amount = txn.panel.amount
-    
-    # call func
-    ledgerCtrl.getCompoundTotal()
+      ledgerCtrl.getCompoundTotal()
 
     return change
 
