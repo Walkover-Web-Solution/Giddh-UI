@@ -1373,9 +1373,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if $rootScope.selectedCompany.role.uniqueName == "view_only" || $rootScope.selectedCompany.role.uniqueName == "edit"
       detailStr = "detailed"
       condensedStr = "condensed"
-      if type.indexOf(detailStr)
+      if type.indexOf(detailStr) != -1
         type = ledgerCtrl.ledgerEmailData.viewDetailed
-      else if type.indexOf(condensedStr)
+      else if type.indexOf(condensedStr) != -1
         type = ledgerCtrl.ledgerEmailData.viewCondensed
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName

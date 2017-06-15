@@ -167,6 +167,7 @@ router.put '/:accountUniqueName/eledgers/map/:transactionId', (req, res) ->
     res.send data
 
 router.get '/:accountUniqueName/export-ledger', (req, res) ->
+  console.log 'we are here'
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/accounts/' + encodeURIComponent(req.params.accountUniqueName) + '/v2/export-ledger'
   # if req.query.ltype == 'condensed'
@@ -181,7 +182,7 @@ router.get '/:accountUniqueName/export-ledger', (req, res) ->
     parameters:
       to: req.query.toDate
       from: req.query.fromDate
-      format : req.query.ltype
+      type : req.query.ltype
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

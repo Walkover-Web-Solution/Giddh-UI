@@ -464,7 +464,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     #angular.extend($rootScope.selectedCompany, company)
     $rootScope.selectedCompany = company
     $rootScope.fltAccntListPaginated = []
-    console.log $rootScope.selectedCompany
     #$rootScope.selectedCompany = company
     $scope.checkPermissions($rootScope.selectedCompany)
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
