@@ -704,7 +704,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     e.stopPropagation()
     # hide side menu
     ledgerCtrl.hideSideMenu()
-    ledgerCtrl.selectedLedger = ledgerCtrl.blankLedger
 
     if ledgerCtrl.prevTxn isnt null
       ledgerCtrl.prevTxn.isOpen = false
@@ -715,6 +714,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.selectedLedger.compoundTotal = 0
 
 
+    ledgerCtrl.selectedLedger = ledgerCtrl.blankLedger
     ledgerCtrl.selectedTxn = txn
     ledgerCtrl.selectedTxn.isOpen = true
     ledgerCtrl.clearTaxSelection(txn, ledgerCtrl.selectedLedger)
@@ -1050,7 +1050,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     hasBlank = ledgerCtrl.checkForExistingblankTransaction(ledgerCtrl.selectedLedger, type)
     if !hasBlank
       ledgerCtrl.selectedLedger.transactions.push(txn)
-      ledgerCtrl.selectedLedger.isCompoundEntry = true
+    
+    ledgerCtrl.selectedLedger.isCompoundEntry = true
     ledgerCtrl.setFocusToBlankTxn(ledgerCtrl.selectedLedger, txn, type)
 
   ledgerCtrl.checkForExistingblankTransaction = (ledger, type) ->
