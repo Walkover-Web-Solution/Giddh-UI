@@ -563,87 +563,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       type: type
     }
 
-
-
-  # ledgerCtrl.resetBlankLedger = () ->
-  #   ledgerCtrl.newDebitTxn = {
-  #     date: $filter('date')(new Date(), "dd-MM-yyyy")
-  #     particular: {
-  #       name:''
-  #       uniqueName:''
-  #     }
-  #     amount : 0
-  #     type: 'DEBIT'
-  #   }
-  #   ledgerCtrl.newCreditTxn = {
-  #     date: $filter('date')(new Date(), "dd-MM-yyyy")
-  #     particular: {
-  #       name:''
-  #       uniqueName:''
-  #     }
-  #     amount : 0
-  #     type: 'CREDIT'
-  #   }
-#     ledgerCtrl.blankLedger = {
-#       isBlankLedger : true
-#       description:null
-#       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
-# #      hasCredit:false
-# #      hasDebit:false
-#       invoiceGenerated:false
-#       isCompoundEntry:false
-#       applyApplicableTaxes:false
-#       tag:null
-#       transactions:[
-#         ledgerCtrl.newDebitTxn
-#         ledgerCtrl.newCreditTxn
-#       ]
-#       unconfirmedEntry:false
-#       isInclusiveTax: false
-#       uniqueName:""
-#       voucher:{
-#         name:"Sales"
-#         shortCode:"sal"
-#       }
-#       tax:[]
-#       taxList: []
-#       voucherNo:null
-#     }
-
-
-  # ledgerCtrl.ledgerPerPageCount = 10
-  # ledgerCtrl.pages = []
-  # ledgerCtrl.getPaginatedLedger = (page) ->
-  #   @success = (res) ->
-  #     ledgerCtrl.ledgerData = res.body
-  #     ledgerCtrl.pages = []
-  #     ledgerCtrl.paginatedLedgers = res.body.ledgers
-  #     ledgerCtrl.totalLedgerPages = res.body.totalPages
-  #     ledgerCtrl.currentPage = res.body.page
-  #     ledgerCtrl.totalCreditTxn = res.body.totalCreditTransactions
-  #     ledgerCtrl.totalDebitTxn = res.body.totalDebitTransactions
-  #     ledgerCtrl.addLedgerPages()
-  #     ledgerCtrl.calculateClosingBal(res.body.ledgers)
-
-  #   @failure = (res) ->
-  #     toastr.error(res.data.message)
-
-  #   if _.isUndefined($rootScope.selectedCompany.uniqueName)
-  #     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
-  #   unqNamesObj = {
-  #     compUname: $rootScope.selectedCompany.uniqueName
-  #     acntUname: ledgerCtrl.accountUnq
-  #     fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
-  #     toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
-  #     count: ledgerCtrl.ledgerPerPageCount
-  #     page: page || 1
-  #     sort: 'desc'
-  #   }
-    # if not _.isEmpty(ledgerCtrl.accountUnq)
-    #   ledgerService.getLedger(unqNamesObj).then(@success, @failure)
-
-  #ledgerCtrl.getPaginatedLedger(1)
-
   ledgerCtrl.calculateClosingBal = (ledgers) ->
     totalDebit = 0
     totalCredit = 0
@@ -786,22 +705,56 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     # hide side menu
     ledgerCtrl.hideSideMenu()
     ledgerCtrl.selectedLedger = ledgerCtrl.blankLedger
-    ledgerCtrl.selectedTxn = txn
 
     if ledgerCtrl.prevTxn isnt null
       ledgerCtrl.prevTxn.isOpen = false
 
+      # reset blank ledger transaction in case not compound entry
+      if ledgerCtrl.prevTxn.$$hashKey isnt txn.$$hashKey and !ledgerCtrl.selectedLedger.isCompoundEntry
+        ledgerCtrl.resetTemporaryblankLedger(txn)
+        ledgerCtrl.selectedLedger.compoundTotal = 0
+
+
+    ledgerCtrl.selectedTxn = txn
     ledgerCtrl.selectedTxn.isOpen = true
     ledgerCtrl.clearTaxSelection(txn, ledgerCtrl.selectedLedger)
     ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
+
+    #reset prev txn
     ledgerCtrl.prevTxn = txn
 
     if typeof(txn.particular) is "object" && txn.particular.uniqueName.length
       ledgerCtrl.checkCurrentTxnElgibility(txn, txn.particular)
     else
-      ledgerCtrl.showTaxationDiscountBox = false
+      ledgerCtrl.findCurrentAccountCategory(txn)
 
     ledgerCtrl.getCompoundTotal()
+
+  ledgerCtrl.resetTemporaryblankLedger=(txn)->
+    dummyObj = {
+      date: $filter('date')(new Date(), "dd-MM-yyyy")
+      particular: {
+        name:''
+        uniqueName:''
+      }
+      amount : 0
+      type: if txn.type is "DEBIT" then 'CREDIT' else 'DEBIT'
+    }
+    ledgerCtrl.blankLedger.transactions = _.map(ledgerCtrl.blankLedger.transactions, (item) ->
+      if item.type isnt txn.type
+        return dummyObj
+      else
+        return item
+    )
+
+
+  ledgerCtrl.findCurrentAccountCategory=(txn)->
+    category = ledgerCtrl.getAccCategoryByUniquename(ledgerCtrl.accountToShow.uniqueName)
+    if category is "income" || category == "expenses"
+      ledgerCtrl.showTaxationDiscountBox = true
+      ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
+    else
+      ledgerCtrl.showTaxationDiscountBox = false
   
   ledgerCtrl.checkCurrentTxnElgibility=(txn, item)->
     category = ledgerCtrl.getAccCategoryByUniquename(item.uniqueName)
@@ -809,6 +762,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.showTaxationDiscountBox = true
       ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
       ledgerCtrl.addApplicableTaxes(item)
+    else
+      ledgerCtrl.showTaxationDiscountBox = false
 
   ledgerCtrl.getCompoundTotal=()->
     total = 0
@@ -851,7 +806,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.createNewPanel = (txn, ledger) ->
     panel = {}
-    if typeof(txn.particular) is "object" && txn.particular.uniqueName.length 
+
+    if typeof(txn.particular) is "object" and _.isUndefined(txn.panel)
       txn.panel = {
         tax : 0
         total: 0
@@ -873,7 +829,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           return ledgerCtrl.cutToTwoDecimal(panel.getAmount()/panel.getPrice())
 
     panel.getPrice = () ->
-      if txn.particular.stock
+      if txn.panel.price
+        return txn.panel.price
+      else if txn.particular.stock
         units = panel.getUnits()
         if txn.panel.unit
           return txn.panel.unit.rate
@@ -883,7 +841,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         return 0
 
     panel.getSelectedUnit=()->
-      return txn.panel.units[0]
+      if _.isNull(txn.panel.unit) || _.isUndefined(txn.panel.unit)
+        return txn.panel.units[0]
+      else
+        return txn.panel.unit
 
     panel.getUnits = () ->
       if txn.particular.stock && txn.particular.stock.accountStockDetails.unitRates.length > 0
@@ -920,6 +881,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     txn.panel.disocunt = panel.getDiscount()
     txn.panel.tax = panel.getTax()
     txn.panel.total = panel.getTotal()
+    # call func
+    ledgerCtrl.getCompoundTotal()
 
 
   ledgerCtrl.onNewPanelChange = () ->
@@ -958,8 +921,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
     change.getTotal = (txn, ledger) ->
       amount = txn.panel.amount - txn.panel.discount
-      txn.panel.total = amount + (amount*txn.panel.tax/100)
-      txn.amount = txn.panel.amount
+      txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount + (amount*txn.panel.tax/100))
+      txn.amount = ledgerCtrl.cutToTwoDecimal(txn.panel.amount)
 
     change.total = (txn, ledger) ->
       if !txn.panel.discount 
@@ -1776,8 +1739,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       isBlankLedger : true
       description:null
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
-#      hasCredit:false
-#      hasDebit:false
       invoiceGenerated:false
       isCompoundEntry:false
       applyApplicableTaxes:false
