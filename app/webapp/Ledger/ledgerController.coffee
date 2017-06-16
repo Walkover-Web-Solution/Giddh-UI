@@ -968,35 +968,15 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
 
   ledgerCtrl.selectTxn = (ledger, txn, index ,e) ->
-    ledgerCtrl.selectedTxn = txn
-    if ledgerCtrl.prevTxn != null
+    e.stopPropagation()
+    if !_.isNull(ledgerCtrl.prevTxn)
       ledgerCtrl.prevTxn.isOpen = false
+    ledgerCtrl.selectedTxn = txn
     ledgerCtrl.selectedTxn.isOpen = true
     ledgerCtrl.prevTxn = txn
-    # ledgerCtrl.clearTaxSelection(ledger)
-    # ledgerCtrl.clearDiscounts(ledger)
-    if !ledger.isBlankLedger
-      ledgerCtrl.addBlankRow(ledger, txn)
-    # ledgerCtrl.removeBlankRowFromPrevLedger(ledgerCtrl.prevLedger, ledger)
-    # ledger.isCompoundEntry = true
-    # if ledgerCtrl.prevLedger && ledgerCtrl.prevLedger.uniqueName != ledger.uniqueName
-    #   ledgerCtrl.prevLedger.isCompoundEntry = false
-    # # ledgerCtrl.calculateEntryTotal(ledger)
-    # ledgerCtrl.showLedgerPopover = true
-    # ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.ledgerBeforeEdit = {}
-    # angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
-    # # ledgerCtrl.isTransactionContainsTax(ledger)
+    ledgerCtrl.addBlankRow(ledger, txn)
     ledgerCtrl.selectedLedger = ledger
-    # ledgerCtrl.selectedLedger.index = index
-    #ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
-
-    #ledgerCtrl.selectedLedger.panel.total = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
-    #if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
-    # ledgerCtrl.checkCompEntry(txn)
-    #ledgerCtrl.blankCheckCompEntry(ledger)
-    # ledgerCtrl.prevLedger = ledger
-    e.stopPropagation()
+    
 
   ledgerCtrl.createPanel = (ledger) ->
     ledgerCtrl.selectedLedger.panel = {
@@ -1022,8 +1002,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         if linkedStock
           ledgerCtrl.selectedLedger.panel.units = linkedStock.accountStockDetails.unitRates
           ledgerCtrl.selectedLedger.panel.unit = _.findWhere(ledgerCtrl.selectedLedger.panel.units, {stockUnitCode:stockTxn.inventory.unit.code})
-    # else
-    #   console.log stockTxn
+    
 
   ledgerCtrl.getStockAccountfromFlattenAccountList = (txn) ->
     account = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
@@ -2264,6 +2243,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       backdrop: 'static'
       scope: $scope
     )
+
+    ledgerCtrl.entryModalInstance.result.then (->
+      console.log 'Modal opened at: ' + new Date
+    ), ->
+      console.log 'Modal dismissed at: ' + new Date
+      ledgerCtrl.selectedLedger = {}
 
   ledgerCtrl.getTotalBalance = (transactions) ->
     total = 0
