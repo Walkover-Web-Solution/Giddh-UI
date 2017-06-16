@@ -2541,7 +2541,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     reqParam.acntUname = ledgerCtrl.accountToShow.uniqueName
     permission = {}
     permission.user = ledgerCtrl.shareRequest.user
-    permission.role = ledgerCtrl.shareRequest.role
+    permission.role = 'view_only'
     accountService.share(reqParam, permission).then(@success,@failure)
 
   ledgerCtrl.getSharedWithList = () ->

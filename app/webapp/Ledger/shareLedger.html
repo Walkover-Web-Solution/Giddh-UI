@@ -11,14 +11,14 @@
                <div class="input-group">
                   <input ng-model="ledgerCtrl.shareRequest.user" name="userEmail" type="text" class="form-control emailInput" placeholder="Email id" required />
                   <div class="input-group-btn">
-                     <select 
+                     <!-- <select 
                         class="form-control mrL"
                         id="select_view" 
                         name="userRole" 
                         ng-model="ledgerCtrl.shareRequest.role"
                         ng-options="item.uniqueName as item.name for item in shareableRoles">
                      </select>
-                     <span class="select_drop"><i class="fa fa-caret-down"></i></span>
+                     <span class="select_drop"><i class="fa fa-caret-down"></i></span> -->
                      <button ng-disabled="addShareEmailForm.$invalid" class="btn btn-success mrL1"
                         ng-click="ledgerCtrl.shareAccount()" class="btn-success btn">Share</button>
                   </div>
@@ -35,13 +35,14 @@
                            <small class="Useremail" ng-bind-html="value.userEmail + '-' "></small>
                         </span>
                         <div class="form-inline">
-                           <select 
+                        <small ng-bind-html="value.role.uniqueName"></small>
+                           <!-- <select 
                               class="form-control"
                               ng-change="ledgerCtrl.updateSharePermission(value.userUniqueName, value.role.uniqueName)"
                               ng-model="value.role.uniqueName"
                               ng-options="item.uniqueName as item.name for item in shareableRoles">
                            </select>
-                           <span class="select_drop"><i class="fa fa-caret-down"></i></span>
+                           <span class="select_drop"><i class="fa fa-caret-down"></i></span> -->
                            <span class="delIcon pull-right">
                            <i ng-click="ledgerCtrl.unshare(value.userUniqueName, $index)" class="fa fa-times" aria-hidden="true"></i>
                            </span>
