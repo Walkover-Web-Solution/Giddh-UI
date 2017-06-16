@@ -125,7 +125,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     acnt.uniqueName is ledgerCtrl.accountUnq
 
   ledgerCtrl.loadDefaultAccount = (acc) ->
-    
     @success = (res) ->
       ledgerCtrl.accountUnq = 'cash'
       ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
@@ -138,6 +137,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       compUname : $rootScope.selectedCompany.uniqueName
       acntUname : 'cash'
     }
+    if $rootScope.selectedCompany.role.uniqueName == 'shared'
+      unqObj.acntUname = $rootScope.fltAccntListPaginated[0].uniqueName
     accountService.get(unqObj).then(@success, @failure)
 
   ledgerCtrl.sortFlatAccListAlphabetically = (list, property) ->
@@ -162,7 +163,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       )
 
   ledgerCtrl.getAccountDetailFailure = (res) ->
-    if ledgerCtrl.accountUnq != 'sales'
+    if ledgerCtrl.accountUnq != 'sales' && $rootScope.selectedCompany.role.uniqueName != 'shared'
       toastr.error(res.data.message, res.data.status)
     else
       sortedAccList = ledgerCtrl.sortFlatAccListAlphabetically($rootScope.fltAccntListPaginated, 'uniqueName')
@@ -195,14 +196,15 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       compUname : $rootScope.selectedCompany.uniqueName
       acntUname : accountUniqueName
     }
-    # get other ledger transactions
-    ledgerService.getOtherTransactions(unqObj)
-    .then(
-      (res)->
-        ledgerCtrl.getBankTransactionsSuccess(res)
-    ,(error)->
-      ledgerCtrl.getBankTransactionsFailure(error)
-    )
+    if $rootScope.selectedCompany.role.uniqueName.indexOf('admin') != -1
+      # get other ledger transactions
+      ledgerService.getOtherTransactions(unqObj)
+      .then(
+        (res)->
+          ledgerCtrl.getBankTransactionsSuccess(res)
+      ,(error)->
+        ledgerCtrl.getBankTransactionsFailure(error)
+      )
 
   ledgerCtrl.getBankTransactionsFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -1863,9 +1865,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     _.each(ledgerCtrl.taxList, (tax) ->
       tax.isChecked = false
     )
-    _.each(ledgerCtrl.discountAccount.accountDetails, (dis) ->
-      dis.amount = 0
-    )
+    if !_.isUndefined(ledgerCtrl.discountAccount)
+      _.each(ledgerCtrl.discountAccount.accountDetails, (dis) ->
+        dis.amount = 0
+      )
     ledgerCtrl.selectedTxn.isOpen = false
     if ledgerCtrl.mergeTransaction
       $timeout ( ->
@@ -2138,14 +2141,16 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
 
   $timeout ( ->
+    
+    if ledgerCtrl.accountUnq
+      ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
+    else
+      ledgerCtrl.loadDefaultAccount()
     ledgerCtrl.getDiscountGroupDetail()
     ledgerCtrl.getTaxList()
   ), 2000
 
-  if ledgerCtrl.accountUnq
-    ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
-  else
-    ledgerCtrl.loadDefaultAccount() 
+   
 
   $rootScope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE'
