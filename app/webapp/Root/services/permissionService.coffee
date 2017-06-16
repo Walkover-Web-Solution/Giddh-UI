@@ -18,6 +18,9 @@ giddh.serviceModule.service 'permissionService', (localStorageService) ->
       roles = localStorageService.get("_roles")
       roleOnCompany = _.find roles, (role) ->
         role.uniqueName is selectedCompany.role.uniqueName
+      if _.isUndefined(roleOnCompany)
+        return
+
       allowableRoles = _.filter roles, (role) ->
         _.every role.permissions, (permission) ->
           _.contains (_.pluck roleOnCompany.permissions, 'code'), permission.code
