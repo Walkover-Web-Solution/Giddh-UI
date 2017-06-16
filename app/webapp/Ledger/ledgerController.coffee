@@ -915,6 +915,18 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       change.getTotal(txn, ledger)
 
     change.tax = (txn, ledger) ->
+      #ID:1:START Check if all selected taxes are same as applicableTaxes then ledger.applyApplicableTaxes is true
+      checkedTaxes = _.filter ledgerCtrl.taxList, (tax) ->
+        return tax.isChecked == true
+      checkedTaxesMatchingApplicable = _.filter checkedTaxes, (tax) ->
+        return _.contains txn.particular.applicableTaxes, tax.uniqueName
+
+      if checkedTaxes.length == checkedTaxesMatchingApplicable.length and checkedTaxes.length == txn.particular.applicableTaxes.length 
+        ledger.applyApplicableTaxes = true
+      else 
+        ledger.applyApplicableTaxes = false
+      #ID:1:END
+
       txn.panel.tax = ledgerCtrl.getNewPanelTax(txn, ledger)
       change.getTotal(txn, ledger)
 
