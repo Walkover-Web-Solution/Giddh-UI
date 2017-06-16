@@ -72,6 +72,7 @@ router.post '/submitDetails', (req, res) ->
 
 
 
+
   # hubspot commented
   # formData =
   #   'properties': [

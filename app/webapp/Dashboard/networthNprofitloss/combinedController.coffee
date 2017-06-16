@@ -74,6 +74,8 @@ combinedController = ($scope, $rootScope, localStorageService, toastr, groupServ
     },
     "options": $scope.chartOptions
   }
+  
+  $scope.hardRefresh = false
 
 
   $scope.getCombinedData = () ->
@@ -97,6 +99,7 @@ combinedController = ($scope, $rootScope, localStorageService, toastr, groupServ
       'fromDate': fromDate
       'toDate': toDate
       'interval': "monthly"
+      'refresh': $scope.hardRefresh
     }
     $scope.getCombinedGraphData(reqParam)
 
@@ -104,6 +107,7 @@ combinedController = ($scope, $rootScope, localStorageService, toastr, groupServ
     reportService.networthNprofitloss(reqParam).then $scope.getCGraphDataSuccess, $scope.getCGraphDataFailure
 
   $scope.getCGraphDataSuccess = (res) ->
+    $scope.hardRefresh = false
     $scope.errorMessage = ""
     nwGraphData = res.body
     $scope.formatNetworthData (nwGraphData.networth)
@@ -124,6 +128,7 @@ combinedController = ($scope, $rootScope, localStorageService, toastr, groupServ
       $scope.chartData = []
       #    toastr.error(res.data.message)
       $scope.errorMessage = res.data.message
+    $scope.hardRefresh = false
 
   $scope.formatNetworthData = (data) ->
     $scope.networthData.data.rows = []
@@ -188,6 +193,12 @@ combinedController = ($scope, $rootScope, localStorageService, toastr, groupServ
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.setDateByFinancialYear()
       $scope.getComData($scope.fromDate,$scope.toDate)
+
+
+  $scope.$on 'reloadAll', (event) ->
+    $scope.hardRefresh = true
+    $scope.setDateByFinancialYear()
+    $scope.getComData($scope.fromDate,$scope.toDate)
 
 combined.controller('combinedController',combinedController)
 

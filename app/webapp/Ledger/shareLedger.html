@@ -1,0 +1,125 @@
+<div id="shareModal">
+<div id="share-modal" class="pdB4" ng-if="ledgerCtrl.toggleShare">
+   <div class="modal-header text-right">
+      <i class="fa fa-times" aria-hidden="true" data-dismiss="modal" ng-click="ledgerCtrl.closeShareModal()"></i>
+   </div>
+   <div class="modal-body pdL2 pdR2" id="SharePop">
+      <div class="modal_wrap">
+         <h3 class="pdB1">Share with</h3>
+         <div class="add_mailer">
+            <form name="addShareEmailForm" novalidate class="form-inline" autocomplete="off">
+               <div class="input-group">
+                  <input ng-model="ledgerCtrl.shareRequest.user" name="userEmail" type="text" class="form-control emailInput" placeholder="Email id" required />
+                  <div class="input-group-btn">
+                     <select 
+                        class="form-control mrL"
+                        id="select_view" 
+                        name="userRole" 
+                        ng-model="ledgerCtrl.shareRequest.role"
+                        ng-options="item.uniqueName as item.name for item in shareableRoles">
+                     </select>
+                     <span class="select_drop"><i class="fa fa-caret-down"></i></span>
+                     <button ng-disabled="addShareEmailForm.$invalid" class="btn btn-success mrL1"
+                        ng-click="ledgerCtrl.shareAccount()" class="btn-success btn">Share</button>
+                  </div>
+                  <!-- /btn-group -->
+               </div>
+               <!-- /input-group -->
+            </form>
+            <div class="col-xs-8 pdB1 pdT1 mrB2">
+               <div class="row">
+                  <ul class="shared_list">
+                     <li ng-repeat="(key,value) in ledgerCtrl.sharedUsersList">
+                        <span class="pull-left">
+                           <!-- <div ng-bind-html="value.userName"></div> -->
+                           <small class="Useremail" ng-bind-html="value.userEmail + '-' "></small>
+                        </span>
+                        <div class="form-inline">
+                           <select 
+                              class="form-control"
+                              ng-change="ledgerCtrl.updateSharePermission(value.userUniqueName, value.role.uniqueName)"
+                              ng-model="value.role.uniqueName"
+                              ng-options="item.uniqueName as item.name for item in shareableRoles">
+                           </select>
+                           <span class="select_drop"><i class="fa fa-caret-down"></i></span>
+                           <span class="delIcon pull-right">
+                           <i ng-click="ledgerCtrl.unshare(value.userUniqueName, $index)" class="fa fa-times" aria-hidden="true"></i>
+                           </span>
+                        </div>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+         </div>
+         <!-- add mailer -->
+      </div>
+      <div class="clearfix"></div>
+      <h3 class="pdB2">Or</h3>
+      <div class="modal_wrap pdB4">
+         <div>
+            <button class="btn-success btn" ng-click="ledgerCtrl.getMagicLink()">Get</button> 
+            <span class="l8grey">shareable link</span>
+         </div>
+         <div class="input-group pdT1" style="max-width: 350px;">
+            <input id="magicLink" class="form-control dashed" type="text" ng-model="ledgerCtrl.magicLink" />
+            <div class="input-group-btn sticky">
+               <button class="btn btn-success mrl0" ngclipboard data-clipboard-target="#magicLink">Copy</button>
+            </div>
+            <!-- /btn-group -->
+         </div>
+         <!-- /input-group -->
+         <h3 class="pdT1 l8grey">Anyone can see the ledger who gets this URL.</h3>
+      </div>
+   </div>
+</div>
+<div id="exportModal" class="" ng-if="ledgerCtrl.LedgerExport">
+   <div class="modal-header themeBg pd2 pdL2 pdR2">
+      <h3 class="modal-title bg" id="modal-title">Export</h3>
+      <i class="fa fa-times text-right close_modal" aria-hidden="true" ng-click="$dismiss()"></i>
+   </div>
+   <div class="modal-body pdT5 pdB5 pdL2 pdR2" id="export-body">
+   <form name="addShareEmailForm" novalidate class="" autocomplete="off">
+      <div class="modal_wrap mrB2">
+        <table class="list-unstyled email-type mrB2">
+          <tr>  
+<!--             <td>
+              <label class="radio" ng-click="$event.stopPropagation()">
+                  <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" ng-value="ledgerCtrl.ledgerEmailData.viewDetailed"/>super mini
+               </label>
+            </td> -->
+            <td>
+              <label class="radio" ng-click="$event.stopPropagation()">
+                  <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType" ng-value="ledgerCtrl.ledgerEmailData.adminCondensed"/>mini
+               </label>
+            </td>
+<!--             <td ng-if="canUpdate">
+              <label class="radio" ng-click="$event.stopPropagation()">
+                  <input type="radio" ng-model=" ledgerCtrl.ledgerEmailData.emailType" name="emailType"  ng-value="ledgerCtrl.ledgerEmailData.adminDetailed"/>brief
+              </label>
+            </td> -->
+            <td ng-if="canUpdate">
+              <label class="radio" ng-click="$event.stopPropagation()">
+                  <input type="radio" ng-model="ledgerCtrl.ledgerEmailData.emailType" name="emailType"  ng-value="ledgerCtrl.ledgerEmailData.adminDetailed"/>detailed
+              </label>
+            </td>
+          </tr>
+        </table>
+         <button class="btn-success btn" ng-click="ledgerCtrl.exportLedger(ledgerCtrl.ledgerEmailData.emailType)">Download <i class="icon-download"></i></button>
+      </div>
+      <div class="clearfix"></div>
+      <h3 class="pdB2">Or</h3>
+      <div class="modal_wrap">
+  
+               <textarea ng-model="ledgerCtrl.ledgerEmailData.email" required name="ledgerEmailSendForm.email" class="form-control" placeholder="Recipents Email Id's"></textarea>
+               <h3 class="l8grey pdT1 size-xs">You can add multiple id's separated comma</h3>
+
+               <div class="clearfix"></div>
+                  <button ng-disabled="ledgerEmailSendForm.$invalid" class="btn btn-success btn-md mrT1" ng-click="ledgerCtrl.sendLedgEmail(ledgerCtrl.ledgerEmailData.email, ledgerCtrl.ledgerEmailData.emailType)">Send email</button>
+
+         
+      </div>
+      <!-- add mailer -->
+      </form>
+   </div>
+</div>
+</div>

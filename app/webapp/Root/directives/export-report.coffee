@@ -278,15 +278,26 @@ angular.module('trialBalance', []).directive('exportReport', [
 
 
 .directive 'triggerFocus', ['$window', '$timeout', ($window, $timeout) ->
-
+  scope:
+    txn: '=txn'
+    isOpen: '=isOpen'
   link: (scope, elem, attr) ->
 
     idx = parseInt(attr.index)
     tL = attr.txnlength - 1
-    txn = JSON.parse(attr.txn)
 
-    if idx == tL && txn.particular.name == "" && txn.particular.uniqueName == "" && txn.amount == 0
-      $(elem).trigger('click')
+    scope.$watch('isOpen', (newVal, oldVal) ->
+      if newVal
+        $timeout ( ->
+          if scope.txn.particular.name == "" && scope.txn.particular.uniqueName == ""
+            $(elem).trigger('focus')
+        ), 200
+    )
+
+    # $(elem).on('click', (e)->
+    #   if scope.isOpen
+        
+    # )
     
 ]
 
@@ -294,14 +305,20 @@ angular.module('trialBalance', []).directive('exportReport', [
 .directive 'inputFocus', ['$window', '$timeout', ($window, $timeout) ->
   scope: 
     isOpen: '=isOpen'
+    txn: '=txn'
   link: (scope, elem, attr) ->
 
     scope.$watch('isOpen', (newVal, oldVal) ->
-      if newVal
+      if newVal && scope.txn.isBlank
         $timeout ( ->
           $(elem).trigger('focus')
         ), 200
     )
+
+    # $(elem).on('click', (e)->
+    #   if scope.isOpen
+    #     $(elem).trigger('focus')
+    # )
     
 ]
 
@@ -309,9 +326,9 @@ angular.module('trialBalance', []).directive('exportReport', [
   link: (scope, elem, attr) ->
 
     $(elem).parent().parent().css({
-      'max-height':150
-      'max-width':300
-      'overflow':'scroll'
+      'max-height':250
+      'max-width':400
+      'overflow':'auto'
     })
     
 ]
@@ -323,9 +340,9 @@ angular.module('trialBalance', []).directive('exportReport', [
 
     setHeight = () ->
       top = $(elem).offset().top || 108
-      exclude = $(window).innerHeight() - top
-      height = $(window).innerHeight() - top
-      $(elem).css("height", height)
+      exclude = $(window).innerHeight() - 54
+      height = $(window).outerHeight(true) - 54
+      $(elem).css({"height": height,"min-height":height})
 
     angular.element($window).on 'resize', ->
       setHeight()
@@ -346,20 +363,20 @@ angular.module('trialBalance', []).directive('exportReport', [
     "<span ng-transclude></span>"+
     "<i ng-class='selectedCls(order)'></i>"+
     "</a>"
-link: (scope, elem, attr) ->
-  scope.sort_by = (newSortingOrder) ->
-    sort = scope.sort;
+  link: (scope, elem, attr) ->
+    scope.sort_by = (newSortingOrder) ->
+      sort = scope.sort;
 
-    if sort.sortingOrder == newSortingOrder
-      sort.reverse = !sort.reverse
+      if sort.sortingOrder == newSortingOrder
+        sort.reverse = !sort.reverse
 
-    sort.sortingOrder = newSortingOrder
+      sort.sortingOrder = newSortingOrder
 
-  scope.selectedCls = (column) ->
-    if column == scope.sort.sortingOrder
-      ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'))
-    else
-      'icon-sort'
+    scope.selectedCls = (column) ->
+      if column == scope.sort.sortingOrder
+        ('icon-chevron-' + ((scope.sort.reverse) ? 'down' : 'up'))
+      else
+        'icon-sort'
 
 ]
 
@@ -367,7 +384,7 @@ link: (scope, elem, attr) ->
   restrict: "EA"
   link: (scope, elem, attr) ->
     setHeight = () ->
-      height = $(window).innerHeight()
+      height = $(window).innerHeight() - 54 - 54
       $(elem).css({"height": height, "overflow-y":"auto"})
     
     $(window).on('resize', (e) ->
@@ -377,18 +394,118 @@ link: (scope, elem, attr) ->
     setHeight()
 ]
 
-
-.directive 'ledgerScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+.directive 'tableHeight', ['$window', '$timeout', ($window, $timeout) ->
   restrict: "EA"
-  link: (scope, elem, attrs) ->
-    invoker = $parse(attrs.scrolled)
-
-    $(elem).on('scroll', (e) ->
-      if $(elem).scrollTop()+$(elem).innerHeight() == elem[0].scrollHeight
-        invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight})
+  link: (scope, elem, attr) ->
+    setHeight = () ->
+      height = $(window).innerHeight() - 112
+      $(elem).css({"height": height})
+    
+    $(window).on('resize', (e) ->
+      setHeight()
     )
 
+    setHeight()
 ]
+
+# check ul overflow
+.directive 'overflowfix', ['$window', '$timeout', ($window, $timeout) ->
+  restrict: "A"
+  link: (scope, elem) ->
+    elem1 = elem[0]
+    scroll = $(elem).scrollTop();
+    $(elem).on('scroll', (e) ->
+      if $(elem1).hasClass("fix")
+        return 0
+      if scroll <= 20
+        $(elem1).addClass("fix")
+    )
+]
+
+
+# .directive 'ledgerScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+#   restrict: "EA"
+#   link: (scope, elem, attrs) ->
+#     invoker = $parse(attrs.scrolled)
+
+#     $(elem).on('scroll', (e) ->
+#       if $(elem).scrollTop()+$(elem).innerHeight() >= elem[0].scrollHeight
+#         invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'next'})
+#       else if $(elem).scrollTop() == 0
+#         invoker(scope, {top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
+#     )
+
+# ]
+
+
+.directive 'columnScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+  restrict: "EA"
+  scope : {
+    scrollto : '=scrollto',
+    ledgerContainer : '=ledgerContainer',
+    scrolled : '&',
+    sortOrder : '=sortOrder'
+  }
+  link: (scope, elem, attrs) ->
+    scope.$watch('scrollto', (newVal, oldVal)->
+      if newVal && newVal.to && newVal != oldVal && newVal.to.transactions.length && newVal.to.uniqueName
+        a = $("#" + newVal.first.uniqueName).offset().top
+        x = $("#" + newVal.to.uniqueName).offset().top
+        scrollVal = x-a
+        # console.log x-a, a, x
+        $(elem).animate({
+          scrollTop: scrollVal
+        }, 200)
+    )
+    scope.lastScrollTop = 0
+    $(elem).on('scroll', (e) ->
+      if $(elem).scrollTop() > scope.lastScrollTop
+        mouseScrollDirection = 1 #down
+      else
+        mouseScrollDirection = 0 #up
+      scrollableArea = elem[0].scrollHeight - $(elem).innerHeight()
+      margin = 300  #Math.floor(scrollableArea / 10) #replace with function for dynamic
+      if scope.ledgerContainer
+        if !scope.ledgerContainer.scrollDisable
+          if (
+            ( # == sign represents Xnor
+              (scope.sortOrder == 1 && scope.ledgerContainer.upperBoundReached) ==
+              (scope.sortOrder == 0 && scope.ledgerContainer.lowerBoundReached)
+            ) && mouseScrollDirection == 0 &&
+            $(elem).scrollTop() < margin
+          ) #top sortorder 0 = asc 1 =desc
+
+            $(elem).animate({
+              scrollTop: margin
+            }, 200)
+            scope.ledgerContainer.scrollDisable = true
+            scope.scrolled({top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
+          else if (
+            (
+              (scope.sortOrder == 1 && scope.ledgerContainer.lowerBoundReached) ==
+              (scope.sortOrder == 0 && scope.ledgerContainer.upperBoundReached)
+            ) && mouseScrollDirection == 1 &&
+            $(elem).scrollTop() > scrollableArea - margin
+          ) #bottom
+
+            scope.ledgerContainer.scrollDisable = true
+            # $(elem).animate({
+            #   scrollTop: scrollableArea - margin
+            # }, 200)
+            scope.scrolled({top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'next'})
+
+      else #this else condition to be removed completely as there must always be declaration for ledgerContainer
+        if $(elem).scrollTop()+$(elem).innerHeight() >= elem[0].scrollHeight
+          scope.scrolled({top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'next'})
+        else if $(elem).scrollTop() == 0
+          scope.scrolled({top : $(elem).scrollTop(), height:elem[0].scrollHeight, position:'prev'})
+
+      scope.lastScrollTop = $(elem).scrollTop()
+    )
+    return
+]
+
+
 
 .directive 'setPopoverPosition', ['$window', '$timeout', ($window, $timeout) ->
   restrict: "EA"
@@ -409,7 +526,7 @@ link: (scope, elem, attr) ->
     # setPos()
 
     $(elem).on('mouseover', (e)->
-      if e.pageY > $(window).height() / 3 * 2
+      if e.pageY > $(window).height() / 3 * 2 
         attrs.$set("popoverPlacement", "top")
       else
         attrs.$set("popoverPlacement", "bottom")
@@ -423,3 +540,84 @@ link: (scope, elem, attr) ->
     # )
 
 ]
+
+.directive 'triggerResize', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+  restrict: "EA"
+  link: (scope, elem, attrs) ->
+    
+    $(elem).on('click',(e)->
+      $timeout ( ->
+        $(window).trigger('resize')
+      ), 500
+    )
+
+]
+
+
+# .directive 'triggerClick', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+#   restrict: "EA"
+#   link: (scope, elem, attrs) ->
+    
+#     $(elem).on('click',(e)->
+#       $(elem).find('input').trigger('click')
+#     )
+
+# ]
+
+.filter 'numberlimit', ->
+  (floatNum) ->
+    if floatNum != undefined
+      decimal = floatNum.toString().split('.')
+      if decimal[1] && decimal[1].length > 2
+        decimal[1] = decimal[1][0] + decimal[1][1]
+        floatNum = decimal[0] + '.' + decimal[1]
+    else
+      floatNum = 0
+    floatNum      
+
+.filter 'orderObjectBy', ->
+  (items, field, reverse) ->
+    filtered = []
+    angular.forEach items, (item) ->
+      filtered.push item
+      return
+    filtered.sort (a, b) ->
+      if a[field] > b[field] then 1 else -1
+    if reverse
+      filtered.reverse()
+    filtered
+
+.directive 'scrollBtn', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
+  restrict: "EA"
+  link: (scope, elem, attrs) ->
+    
+    $(elem).on('click',(e)->
+      top = $('#middleBody').scrollTop()
+      $('#middleBody').animate({
+        'scrollTop' : top + 100
+      })
+    )
+]
+
+.directive 'fileModel', [
+  '$parse'
+  ($parse) ->
+    {
+      restrict: 'A'
+      link: (scope, element, attrs) ->
+        model = $parse(attrs.fileModel)
+        modelSetter = model.assign
+        element.bind 'change', ->
+          scope.$apply ->
+            modelSetter scope, element[0].files[0]
+            return
+          return
+        return
+
+    }
+]
+
+.filter 'abs', ->
+  (num) ->
+    num = Math.abs(num)
+    return num

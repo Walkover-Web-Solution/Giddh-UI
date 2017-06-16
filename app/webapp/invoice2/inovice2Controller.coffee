@@ -1,6 +1,6 @@
 'use strict'
 
-invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService, $uibModal, companyServices, $timeout, DAServices, modalService) ->
+invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService, $uibModal, companyServices, $timeout, DAServices, modalService, $filter, FileSaver) ->
   ic = this
   $rootScope.cmpViewShow = true
   $scope.checked = false;
@@ -15,12 +15,23 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.filtersLedger = {
     count: 12
   }
+
+  $scope.currentPage = ->
+    currentPage = @value
+    console.log currentPage
+
+  $scope.counts = {
+    12
+    25
+    50
+    100
+  }
   $scope.flyDiv = false
   $scope.invoiceCurrentPage = 1
   $scope.ledgerCurrentPage = 1
   $scope.sortVar = 'entryDate'
   $scope.reverse = false
-  $scope.sortVarInv = 'invoiceDate'
+  $scope.sortVarInv = ''
   $scope.reverseInv = false
   $scope.hideFilters = false
   $scope.checkall = false
@@ -62,6 +73,20 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       i++
     ret
 
+  $scope.sortInvoices = (varName, reverseCond) ->
+    $scope.invoices.results = _.sortBy($scope.invoices.results, varName)
+    if varName == "invoiceNumberM"
+      letsC = _.groupBy($scope.invoices.results, varName)
+      createA = []
+      _.each(letsC, (item) ->
+        pushThis = _.sortBy(item, "invoiceNumberP")
+        createA.push(pushThis)
+      )
+      $scope.invoices.results = _.flatten(createA)
+    if reverseCond
+      $scope.invoices.results = $scope.invoices.results.reverse()
+
+
   $scope.prevPageInv = () ->
     $scope.invoiceCurrentPage = $scope.invoiceCurrentPage - 1
 
@@ -85,6 +110,37 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     this.toDatePickerIsOpen = true
   # end of date picker
 
+
+  $scope.performAction = (invoice) ->
+    @success = (res) ->
+      $scope.getAllInvoices()
+    @failure = (res) ->
+      toastr.error(res.data.message)
+    if invoice.account.name == undefined || invoice.account.name == null
+      return
+    else
+      if invoice.condition == "paid"
+        $scope.modalInstance = $uibModal.open(
+          templateUrl: '/public/webapp/invoice2/action/actionTransactions.html',
+          size: "md",
+          backdrop: 'static',
+          scope: $scope,
+          controller: 'actionTransactionController',
+          resolve:{
+            invoicePassed: invoice
+          }
+        )
+      else if invoice.condition != ""
+        infoToSend = {
+          companyUniqueName: $rootScope.selectedCompany.uniqueName
+          invoiceUniqueName: invoice.uniqueName
+        }
+        dataToSend = {
+          action: invoice.condition
+        }
+        invoiceService.performAction(infoToSend, dataToSend).then(@success, @failure)
+
+
   $scope.selectAll = (checkOrNot) ->
 
 
@@ -93,7 +149,9 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
   $scope.setTab = (value) ->
     $scope.selectedTab = value
-    $scope.commonGoButtonClick()
+    $timeout ( ->
+      $scope.commonGoButtonClick()
+    ),2000
     if value == 2
       $scope.hideFilters = true
     else
@@ -147,7 +205,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 #    $scope.resetAllCheckBoxes()
 
   $scope.getAllInvoices = () ->
-    $scope.invoices = {}
     infoToSend = {
       "companyUniqueName": $rootScope.selectedCompany.uniqueName
       "fromDate": moment($scope.dateData.fromDate).format('DD-MM-YYYY')
@@ -177,11 +234,25 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     invoiceService.getInvoices(infoToSend, obj).then($scope.getInvoicesSuccess, $scope.getInvoicesFailure)
 
   $scope.getInvoicesSuccess = (res) ->
+    $scope.invoices = {}
+    _.each(res.body.results, (invoice) ->
+      dateDivi = invoice.invoiceDate.split('-')
+#      console.log(invoice.invoiceDate, moment(new Date(dateDivi[2], dateDivi[1], dateDivi[0])).format('DD-MM-YYYY'))
+      invoice.invoiceDateObj = new Date(dateDivi[2], dateDivi[1], dateDivi[0])
+      temp = invoice.invoiceNumber.split("-")
+      if temp[0] != "x"
+        invoice.invoiceNumberM = Number(temp[0])
+        invoice.invoiceNumberP = Number(temp[1])
+      else
+        invoice.invoiceNumberM = Number(temp[1])
+        invoice.invoiceNumberP = Number(temp[2])
+    )
     $scope.invoices = res.body
     if $scope.invoices.length == 0
       toastr.error("No invoices found.")
 
   $scope.getInvoicesFailure = (res) ->
+    $scope.invoices = {}
     toastr.error(res.data.message)
 
   $scope.getAllTransaction = () ->
@@ -221,13 +292,14 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.ledgers = res.body
 
   $scope.getAllTransactionFailure = (res) ->
-    if res.data.code == 'NOT_FOUND'
+    if res.data.code == 'NO_ENTRIES_FOUND'
       $scope.ledgers = {
         results: []
         totalPages: 1
       }
       $scope.buttonStatus()
-    toastr.error(res.data.message)
+    else
+      toastr.error(res.data.message)
 
   $scope.addThis = (ledger, value) ->
     if value == true
@@ -278,8 +350,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
   $scope.generateBulkInvoiceSuccess = (res) ->
     $scope.checkall = false
-    checkboxA = document.getElementsByName('checkall')
-    checkboxA[0].checked = false
+    # checkboxA = document.getElementsByName('checkall')
+    # checkboxA[0].checked = false
     if angular.isArray(res.body)
       $scope.inCaseOfFailedInvoice = res.body
       
@@ -380,17 +452,17 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.editMode = if mode is 'edit' then true else false
     $scope.tempSet = template.sections
 
-    _.extend($scope.defTempData , data)
-
+    #_.extend($scope.defTempData , data)
+    angular.copy(data, $scope.defTempData)
     $scope.defTempData.signatureType = $scope.tempSet.signatureType
-
-    showPopUp = $scope.convertIntoOur()
     angular.copy($scope.defTempData, $scope.selectedInvoiceDetails)
-
+    #console.log $scope.selectedInvoice
+    showPopUp = $scope.convertIntoOur()
+    
     # open dialog
     if(showPopUp)
       $scope.modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/Invoice/prevInvoiceTemp.html'
+        templateUrl: '/public/webapp/Invoice/prevInvoiceTemp.html'
         size: "a4"
         backdrop: 'static'
         scope: $scope
@@ -416,21 +488,39 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.selectedInvoice = {}
     $scope.getAllInvoices()
 
-  $scope.downInv=()->
+  $scope.downloadInv=()->
     obj =
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: $scope.selectedInvoice.account.uniqueName
     data=
       invoiceNumber: [$scope.selectedInvoice.invoiceNumber]
       template: $scope.tempType.uniqueName
-    accountService.downloadInvoice(obj, data).then($scope.downInvSuccess, $scope.multiActionWithInvFailure)
+    accountService.downloadInvoice(obj, data).then($scope.downloadInvSuccess, $scope.multiActionWithInvFailure)
 
-  $scope.downInvSuccess=(res)->
-    dataUri = 'data:application/pdf;base64,' + res.body
-    a = document.createElement('a')
-    a.download = $scope.selectedInvoice.invoiceNumber+".pdf"
-    a.href = dataUri
-    a.click()
+  $scope.b64toBlob = (b64Data, contentType, sliceSize) ->
+    contentType = contentType or ''
+    sliceSize = sliceSize or 512
+    byteCharacters = atob(b64Data)
+    byteArrays = []
+    offset = 0
+    while offset < byteCharacters.length
+      slice = byteCharacters.slice(offset, offset + sliceSize)
+      byteNumbers = new Array(slice.length)
+      i = 0
+      while i < slice.length
+        byteNumbers[i] = slice.charCodeAt(i)
+        i++
+      byteArray = new Uint8Array(byteNumbers)
+      byteArrays.push byteArray
+      offset += sliceSize
+    blob = new Blob(byteArrays, type: contentType)
+    blob
+
+  $scope.downloadInvSuccess=(res)->
+    data = $scope.b64toBlob(res.body, "application/pdf", 512)
+    blobUrl = URL.createObjectURL(data)
+    ic.dlinv = blobUrl
+    FileSaver.saveAs(data, $scope.selectedInvoice.invoiceNumber+".pdf")
 
 
   # mail Invoice
@@ -466,12 +556,19 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     if $scope.editGenInvoice
       data_ = {}
       angular.copy($scope.defTempData, data_)
+
       matchThis = {}
-      data_.account.data = data_.account.data.split('\n')
+
+      if not(_.isEmpty(data_.account.data))
+        data_.account.data = data_.account.data.split('\n')
+      else
+        data_.account.data = []
+
       angular.copy(data_, matchThis)
-#      if not(_.isEmpty($scope.selectedInvoiceDetails.account.data))
-#        $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.split('/n')
+
       data = {}
+      if data_.termsStr == undefined
+        data_.termsStr = ""
       if not angular.isArray(data_.termsStr)
         data.terms = data_.termsStr.split('\n')
       else
@@ -479,8 +576,12 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       data.account = data_.account
       data.entries = data_.entries
       data.invoiceDetails = data_.invoiceDetails
-      if data.invoiceDetails.dueDate != ""
+      if data.invoiceDetails.dueDate != "" && data.invoiceDetails.dueDate != undefined
         data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
+        if moment(data.invoiceDetails.dueDate, "DD-MM-YYYY", true).isValid()
+          data.invoiceDetails.dueDate = data.invoiceDetails.dueDate
+        else
+          data.invoiceDetails.dueDate = null
       else
         data.invoiceDetails.dueDate = null
       obj = {
@@ -490,10 +591,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
         invoice: data
         updateAccountDetails: false
       }
-      matchThis.account.data = matchThis.account.data.join("\n")
-#      $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.join("\n")
 
-      if $scope.selectedInvoiceDetails.account.name != matchThis.account.name || $scope.selectedInvoiceDetails.account.attentionTo != matchThis.account.attentionTo || $scope.selectedInvoiceDetails.account.data != matchThis.account.data || $scope.selectedInvoiceDetails.account.mobileNumber != matchThis.account.mobileNumber || $scope.selectedInvoiceDetails.account.email != matchThis.account.email
+      if $scope.selectedInvoiceDetails.account.name != matchThis.account.name || $scope.selectedInvoiceDetails.account.attentionTo != matchThis.account.attentionTo || $scope.selectedInvoiceDetails.account.data[0] != matchThis.account.data[0] || $scope.selectedInvoiceDetails.account.mobileNumber != matchThis.account.mobileNumber || $scope.selectedInvoiceDetails.account.email != matchThis.account.email
         modalService.openConfirmModal(
           title: 'Update'
           body: 'Would you also like to update account information in main account?',
@@ -535,7 +634,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       data.account.data = data.account.data.split('\n')
 
     angular.copy(data, matchThis)
-    matchThis.account.data = matchThis.account.data.join("\n")
+    if matchThis.account.data == "" || matchThis.account.data == undefined
+      matchThis.account.data = [""]
 #    $scope.selectedInvoiceDetails.account.data = $scope.selectedInvoiceDetails.account.data.join("\n")
 
     # companyIdentities setting
@@ -549,7 +649,8 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     else
       data.terms = []
 
-    if data.invoiceDetails.dueDate != ""
+    if data.invoiceDetails.dueDate != "" && data.invoiceDetails.dueDate != undefined
+      data.invoiceDetails.dueDate = moment(data.invoiceDetails.dueDate).format('DD-MM-YYYY')
       if moment(data.invoiceDetails.dueDate, "DD-MM-YYYY", true).isValid()
         data.invoiceDetails.dueDate = data.invoiceDetails.dueDate
       else
@@ -578,7 +679,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 #          $scope.defTempData.account.data = []
         if dData.invoice.account.data.length == 0
           dData.invoice.account.data = []
-        if $scope.selectedInvoiceDetails.account.name != matchThis.account.name || $scope.selectedInvoiceDetails.account.attentionTo != matchThis.account.attentionTo || $scope.selectedInvoiceDetails.account.data != matchThis.account.data || $scope.selectedInvoiceDetails.account.mobileNumber != matchThis.account.mobileNumber || $scope.selectedInvoiceDetails.account.email != matchThis.account.email
+        if not _.isEqual($scope.selectedInvoiceDetails, matchThis)
           modalService.openConfirmModal(
             title: 'Update'
             body: 'Would you also like to update account information in main account?',
@@ -731,13 +832,21 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   # Helper methods ends here
 
   $scope.selectAllLedger = (condition) ->
+    $scope.checkall = Boolean(condition)
     _.each $scope.ledgers.results, (ledger) ->
       ledger.checked = condition
       $scope.addThis(ledger, condition)
 
+  $scope.unCheckSelectedEntries = (srchString) ->
+    if srchString.length > 1
+      $scope.selectAllLedger(false)
+
   $timeout ( ->
     $scope.getTemplates()
   ),2000
+
+  $scope.broadcastToProforma = () ->
+    $scope.$broadcast("proformaSelect","")
 
 
 giddh.webApp.controller 'invoice2Controller', invoice2controller

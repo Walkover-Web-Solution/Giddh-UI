@@ -141,14 +141,15 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
     "options": $scope.chartOptionsWODiff
   }
   $scope.groupArray = {
-    sales: ["revenue_from_operations"]
-    expense: ["indirect_expenses","operating_cost"]
+    sales: [$rootScope.groupName.revenueFromOperations]
+    expense: [$rootScope.groupName.indirectExpenses,$rootScope.groupName.operatingCost]
   }
 
   $scope.salesData = []
   $scope.expenseData = []
   $scope.unformatData = []
   $scope.selectedChart = "sales"
+  $scope.hardRefresh = false
 
   $scope.getData = (type) ->
     $scope.selectedChart = type
@@ -174,6 +175,7 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
       'fromDate': fromDate
       'toDate': toDate
       'interval': "monthly"
+      'refresh': $scope.hardRefresh
     }
     graphParam = {
       'groups' : $scope.groupArray[type]
@@ -184,11 +186,13 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
     reportService.newHistoricData(reqParam, graphParam).then $scope.getYearlyDataSuccess, $scope.getYearlyDataFailure
 
   $scope.getYearlyDataSuccess = (res) ->
+    $scope.hardRefresh = false
     $scope.graphData = res.body
 #    console.log($scope.selectedChart + " we get : ",res.body)
     $scope.combineCategoryWise($scope.graphData.groups)
 
   $scope.getYearlyDataFailure = (res) ->
+    $scope.hardRefresh = false
     if res.data.code == "INVALID_DATE"
       setDate = ""
       if moment().get('months') > 4
@@ -353,6 +357,7 @@ comparisiongraphController = ($scope, $rootScope, localStorageService, toastr, g
       $scope.getData($scope.selectedChart)
 
   $scope.$on 'reloadAll', (event) ->
+    $scope.hardRefresh = true
     $scope.getData($scope.selectedChart)
 
 compare.controller('comparisiongraphController',comparisiongraphController)

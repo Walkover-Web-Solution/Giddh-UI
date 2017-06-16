@@ -1,6 +1,11 @@
 <!DOCTYPE HTML>
 <html lang="en" ng-app='giddhApp'>
 <head>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-K2L9QG');</script>
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,7 +23,10 @@
   <link href="<<PREFIX_THIS>>/public/website/css/new-style.css" rel="stylesheet">
   <!-- LIBRARIES -->
   <script src="<<PREFIX_THIS>>/public/webapp/newRelic.js"></script>
+  <script src="<<PREFIX_THIS>>/bower_components/file-saver.js/FileSaver.js"></script>
+
   <script  type="text/javascript" src='<<PREFIX_THIS>>/public/webapp/core_bower.min.js'></script>
+  <script src="<<PREFIX_THIS>>/bower_components/angular-file-saver/dist/angular-file-saver.js"></script>
   <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/app.js"></script>
   <!-- recaptcha -->
   <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
@@ -27,7 +35,8 @@
   <script src="<<PREFIX_THIS>>/public/website/js/controller/loginController.js"></script>
 </head>
 <body ng-controller="loginController" class="lightTrans">
-  
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <ng-include src="'public/website/views/header.html'"></ng-include>
 
   <section id="videoBg" class="intro login">
@@ -47,6 +56,7 @@
               <button type="login" class="btn sharp btn-block btn-lg btn-login google" ng-click="authenticate('google')">connect with Google</button>
               <button type="login" class="btn sharp btn-block btn-lg btn-login twitter" ng-click="authenticate('twitter')">connect with Twitter</button>
               <button type="login" class="btn sharp btn-block btn-lg btn-login linkedin" ng-click="authenticate('linkedin')">connect with LinkedIn</button>
+              <button type="login" class="btn sharp btn-block btn-lg btn-login mobile" ng-click="signUpWithEmailModal($event)">connect with Email</button>
 
             </div>
 

@@ -1,8 +1,10 @@
 "use strict"
 
-tbplController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window, companyServices, $state) ->
+tbplController = ($scope, $rootScope, trialBalService, localStorageService, $filter, toastr, $timeout, $window, companyServices, $state, FileSaver) ->
   tb = this
   $scope.showTbplLoader = true
+  $scope.showBSLoader = true
+  $scope.showPLLoader = true
   $scope.inProfit = true
   $scope.expanded = false
   $scope.today = new Date()
@@ -15,11 +17,15 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.sendRequest = true
   $scope.showChildren = false
   $scope.showpdf = false
+  $scope.showTbXls = false
   $scope.showNLevel = false
   $rootScope.cmpViewShow = true
   $scope.showClearSearch = false
   $scope.noData = false
   $scope.enableDownload = true
+  $scope.keyWord = {
+    query: ''
+  }
   $scope.dateOptions = {
     'year-format': "'yy'",
     'starting-day': 1,
@@ -59,6 +65,8 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   }
 
   $scope.hardRefresh = false
+  $scope.bsHardRefresh = false
+  $scope.plHardRefresh = false
 
   $scope.fyChecked = false
 
@@ -70,6 +78,30 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
 
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
   $scope.activeFinancialYear = localStorageService.get("activeFY")
+
+  tb.getActiveFinancialYearIndex = (activeFY, financialYears) ->
+    $scope.tempFYIndex = 0
+    _.each financialYears, (fy, index) ->
+      if fy.uniqueName == activeFY.uniqueName
+        if(index == 0)
+          $scope.tempFYIndex = index
+        else
+          $scope.tempFYIndex = index * -1
+    return $scope.tempFYIndex 
+
+  $scope.getFYs = (companyUniqueName) ->
+    @fySuccess = (res) ->
+      $scope.financialYears = res.body.financialYears
+      $scope.activeBSFYIndex = tb.getActiveFinancialYearIndex($scope.activeFinancialYear, $scope.financialYears)
+      $scope.activePLFYIndex = tb.getActiveFinancialYearIndex($scope.activeFinancialYear, $scope.financialYears)
+    @fyFailure = (res) ->
+      toastr.error(res.data.message)
+    companyServices.getFY(companyUniqueName).then @fySuccess, @fyFailure    
+
+  $scope.activeBSFYIndex = 0
+  $scope.activePLFYIndex = 0
+  $scope.financialYears = []
+  $scope.getFYs($rootScope.selectedCompany.uniqueName)
 
   # financial year functions
   $rootScope.setActiveFinancialYear($scope.activeFinancialYear)
@@ -108,6 +140,25 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     )
     return Number((eTtl).toFixed(2))
 
+
+  $scope.filterBSData = (data) ->
+    $scope.balSheet.assets = []
+    $scope.balSheet.liabilities = []
+    _.each data, (grp) ->
+      switch grp.category
+        when 'assets'
+          $scope.balSheet.assets.push(grp)
+        when 'liabilities'
+          $scope.balSheet.liabilities.push(grp)
+
+  $scope.makeDataForBS = (data) ->
+    $scope.filterBSData(data.groupDetails)
+    $scope.balSheet.assetTotal = $scope.calCulateTotalAssets($scope.balSheet.assets)
+    $scope.balSheet.liabTotal = $scope.calCulateTotalLiab($scope.balSheet.liabilities)
+    # if $scope.inProfit == false
+    #   $scope.balSheet.assetTotal += $scope.plData.closingBalance
+    # else if $scope.inProfit == true
+    #   $scope.balSheet.liabTotal += $scope.plData.closingBalance
 
   $scope.filterPlData = (data) ->
     filterPlData = {}
@@ -283,6 +334,12 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.setRefresh = () ->
     $scope.hardRefresh = true
 
+  $scope.setRefreshForBalanceSheet = () ->
+    $scope.bsHardRefresh = true
+
+  $scope.setRefreshForProfitLoss = () ->
+    $scope.plHardRefresh = true
+
   $scope.getTrialBal = (data) ->
     $scope.showTbplLoader = true
     if _.isNull(data.fromDate) || _.isNull(data.toDate)
@@ -294,7 +351,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       'fromDate': data.fromDate
       'toDate': data.toDate
     }
-    console.log($scope.hardRefresh)
+#    console.log($scope.hardRefresh)
     if $scope.hardRefresh == true
       reqParam = {
         'companyUniqueName': $rootScope.selectedCompany.uniqueName
@@ -308,7 +365,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
   $scope.count = 0
   $scope.detailedGroups = []
   $scope.getTrialBalSuccess = (res) ->
-    $scope.makeDataForPl(res.body)
+    # $scope.makeDataForPl(res.body)
     $scope.exportData = []
     $scope.addUIKey(res.body.groupDetails)
     $scope.count = 0
@@ -318,14 +375,16 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     $scope.removeSd($scope.detailedGroups)
     $scope.data = res.body
     $scope.data.groupDetails = $scope.orderGroups($scope.detailedGroups)
-    $scope.balSheet.assetTotal = $scope.calCulateTotalAssets($scope.balSheet.assets)
-    $scope.balSheet.liabTotal = $scope.calCulateTotalLiab($scope.balSheet.liabilities)
-    if $scope.inProfit == false
-      $scope.balSheet.assetTotal += $scope.plData.closingBalance
-    else if $scope.inProfit == true
-      $scope.balSheet.liabTotal += $scope.plData.closingBalance
+    # $scope.balSheet.assetTotal = $scope.calCulateTotalAssets($scope.balSheet.assets)
+    # $scope.balSheet.liabTotal = $scope.calCulateTotalLiab($scope.balSheet.liabilities)
+    # if $scope.inProfit == false
+    #   $scope.balSheet.assetTotal += $scope.plData.closingBalance
+    # else if $scope.inProfit == true
+    #   $scope.balSheet.liabTotal += $scope.plData.closingBalance
     if $scope.data.closingBalance.amount is 0 and $scope.data.creditTotal is 0 and $scope.data.debitTotal is 0 and $scope.data.forwardedBalance.amount is 0
       $scope.noData = true
+    else
+      $scope.noData = false
     $scope.showTbplLoader = false
     $scope.hardRefresh = false
 
@@ -362,7 +421,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       if grp.childGroups.length > 0
         _.each grp.childGroups, (ch) ->
           count = $scope.countAccounts(ch)
-          if ch.uniqueName == 'sundry_debtors'
+          if ch.uniqueName == $rootScope.groupName.sundryDebtors
             if count > 50
               ch.accounts = []
               if ch.childGroups.length > 0
@@ -778,12 +837,39 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       $scope.showpdf = false
     ), 100
     e.stopPropagation()
+
+  $scope.showTbXlsOptions = (e) ->
+    $scope.showTbXls = true
+    e.stopPropagation()
+
+  $scope.downloadTbXls = (exportType) ->
+    $timeout ( ->
+      $scope.showOptions = false
+      $scope.showTbXls = false
+    ), 100
+    reqParam = {
+      'companyUniqueName': $rootScope.selectedCompany.uniqueName
+      'fromDate': $filter('date')($scope.fromDate.date,'dd-MM-yyyy')
+      'toDate': $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
+      'exportType': exportType
+      'query':$scope.keyWord.query
+    }
+    trialBalService.downloadTBExcel(reqParam).then $scope.downloadTBExcelSuccess, $scope.downloadTBExcelFailure
+
+  $scope.downloadTBExcelSuccess = (res) ->
+    data = tb.b64toBlob(res.body, "application/xml", 512)
+    FileSaver.saveAs(data, "trialbalance.xlsx")
+
+  $scope.downloadTBExcelFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+    
     
   $(document).on 'click', (e) ->
     $timeout (->
       $scope.showOptions = false
       $scope.plShowOptions = false
       $scope.showpdf = false
+      $scope.showTbXls = false
     ), 100
 
   $scope.addData = ->
@@ -805,16 +891,14 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     liabilities = []
     income = []
     expenses = []
-    $scope.balSheet.assets = []
-    $scope.balSheet.liabilities = []
     _.each data, (grp) ->
       switch grp.category
         when 'assets'
           assets.push(grp)
-          $scope.balSheet.assets.push(grp)
+          # $scope.balSheet.assets.push(grp)
         when 'liabilities'
           liabilities.push(grp)
-          $scope.balSheet.liabilities.push(grp)
+          # $scope.balSheet.liabilities.push(grp)
         when 'income'
           income.push(grp)
         when 'expenses'
@@ -860,6 +944,115 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
       else
         total += obj.closingBalance.amount
     total
+
+  $scope.getBalanceSheetData = () ->
+    $scope.showBSLoader = true
+    reqParam = {
+      'companyUniqueName': $rootScope.selectedCompany.uniqueName
+      'refresh': $scope.bsHardRefresh
+      'fy': $scope.activeBSFYIndex
+    }
+    trialBalService.getBalSheet(reqParam).then $scope.getBalanceSheetDataSuccess, $scope.getBalanceSheetDataFailure
+
+  $scope.getProfitLossData = () ->
+    $scope.showPLLoader = true
+    reqParam = {
+      'companyUniqueName': $rootScope.selectedCompany.uniqueName
+      'refresh': $scope.plHardRefresh
+      'fy': $scope.activePLFYIndex
+    }
+    trialBalService.getPL(reqParam).then $scope.getPLSuccess, $scope.getPLFailure
+
+  $scope.getBalanceSheetDataSuccess = (res) ->
+    $scope.makeDataForBS(res.body)
+    $scope.bsHardRefresh = false
+    $scope.showBSLoader = false
+
+  $scope.getPLSuccess = (res) ->
+    $scope.makeDataForPl(res.body)
+    $scope.plHardRefresh = false
+    $scope.showPLLoader = false
+
+  $scope.getBalanceSheetDataFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+    $scope.bsHardRefresh = false
+    $scope.showBSLoader = false
+
+  $scope.getPLFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+    $scope.plHardRefresh = false
+    $scope.showPLLoader = false
+
+  $timeout (->
+    $scope.getBalanceSheetData()
+  ), 1000
+
+  $timeout (->
+    $scope.getProfitLossData()
+  ), 1000
+  
+  $scope.changeBSFYIdx = (item) ->
+    _.each $scope.financialYears, (fy, index) ->
+      if(fy.uniqueName == item.uniqueName)
+        if index == 0
+          $scope.activeBSFYIndex = index
+        else
+          $scope.activeBSFYIndex = index * -1
+
+  $scope.changePLFYIdx = (item) ->
+    _.each $scope.financialYears, (fy, index) ->
+      if(fy.uniqueName == item.uniqueName)
+        if index == 0
+          $scope.activePLFYIndex = index
+        else
+          $scope.activePLFYIndex = index * -1
+
+  $scope.downloadBSExcel = () ->
+    reqParam = {
+      'companyUniqueName': $rootScope.selectedCompany.uniqueName
+      'fy': $scope.activeBSFYIndex
+    }
+    trialBalService.downloadBSExcel(reqParam).then $scope.downloadBSExcelSuccess, $scope.downloadBSExcelFailure
+
+  $scope.downloadPLExcel = () ->
+    reqParam = {
+      'companyUniqueName': $rootScope.selectedCompany.uniqueName
+      'fy': $scope.activePLFYIndex
+    }
+    trialBalService.downloadPLExcel(reqParam).then $scope.downloadPLExcelSuccess, $scope.downloadPLExcelFailure
+
+  $scope.downloadBSExcelSuccess = (res) ->
+    data = tb.b64toBlob(res.body, "application/xml", 512)
+    FileSaver.saveAs(data, "balancesheet.xlsx")
+
+  $scope.downloadPLExcelSuccess = (res) ->
+    data = tb.b64toBlob(res.body, "application/xml", 512)
+    FileSaver.saveAs(data, "profitloss.xlsx")
+
+  $scope.downloadBSExcelFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  $scope.downloadPLExcelFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
+
+  tb.b64toBlob = (b64Data, contentType, sliceSize) ->
+    contentType = contentType or ''
+    sliceSize = sliceSize or 512
+    byteCharacters = atob(b64Data)
+    byteArrays = []
+    offset = 0
+    while offset < byteCharacters.length
+      slice = byteCharacters.slice(offset, offset + sliceSize)
+      byteNumbers = new Array(slice.length)
+      i = 0
+      while i < slice.length
+        byteNumbers[i] = slice.charCodeAt(i)
+        i++
+      byteArray = new Uint8Array(byteNumbers)
+      byteArrays.push byteArray
+      offset += sliceSize
+    blob = new Blob(byteArrays, type: contentType)
+    blob  
 
   $scope.$on 'company-changed' , (event, data) ->
     if data.type == 'CHANGE'

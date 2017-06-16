@@ -1,23 +1,30 @@
 "use strict"
 
-userController = ($scope, $rootScope, toastr, userServices, localStorageService, $timeout, $uibModal, modalService, $filter, groupService, $window) ->
+userController = ($scope, $rootScope, toastr, userServices, localStorageService, $timeout, $uibModal, modalService, $filter, groupService, $window, $http) ->
   
   $scope.userAuthKey = undefined
   $scope.noData = false
   $scope.subListData = []
   $scope.uTransData = {}
   $scope.cSubsData = false
+  $scope.twoWayAuth = false
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
   $scope.tabs = [
     {title:'Auth Key', active: true}
     {title:'Wallet', active: false}
-    {title:'Subscription List', active: false}
     {title:'Mobile Number', active: false}
   ]
   $scope.expandLongCode = false
-
+  selectedUser = localStorageService.get('_userDetails')
+  #$scope.twoWayAuth = selectedUser.authenticateTwoWay
   $scope.getUserAuthKey = () ->
-    $scope.userAuthKey = $window.sessionStorage.getItem('_ak')
+    @success = (res) ->
+      $scope.userAuthKey = res.data
+    @failure = (res) ->
+      toastr.error(res.data)
+
+    $http.get('/userak').then(@success, @failure)
+
 
   # $scope.getUserAuthKeySuccess = (res) ->
   #   $scope.userAuthKey = res.body
@@ -547,24 +554,23 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
   $scope.phoneNumber = ''
   $scope.userNumber = ''
   $scope.mobNum = {
-    countryCode: ''
+    countryCode: 91
     number: ''
     showVerificationBox : false
     verificationCode: ''
   }
 
   $scope.addNumber = (number) ->
-    if number.indexOf('-') != -1
-      numArr = number.split('-')
-      $scope.mobNum.countryCode = numArr[0]
-      $scope.mobNum.number = numArr[1]
+    mobileRegex = /^[0-9]{1,10}$/
+    if mobileRegex.test(number) and number.length is 10
+      $scope.mobNum.number = number
       data = {
         "countryCode":$scope.mobNum.countryCode
         "mobileNumber":$scope.mobNum.number
       }
       userServices.addNumber(data).then($scope.addNumberSuccess, $scope.addNumberFailure)
     else
-      toastr.error("Please enter number in format: 91-9998899988")
+      toastr.error("Please enter number in format: 9998899988")
 
   $scope.addNumberSuccess = (res) ->
     toastr.success("You will receive a verification code on your mobile shortly.")
@@ -600,6 +606,7 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
     $rootScope.basicInfo = res.body
     $scope.userNumber = res.body.contactNo
     $scope.phoneNumber = res.body.contactNo
+    $scope.twoWayAuth = res.body.authenticateTwoWay
 
   #Get user details failure
   $scope.getUserDetailFailure = (res)->
@@ -682,6 +689,18 @@ userController = ($scope, $rootScope, toastr, userServices, localStorageService,
 #  $scope.refreshTokenFailure = (res) ->
 #    toastr.error(res.data.message, "Error")
   
+  ##########Two way Authentication############
+  $scope.changeTwoWayAuth = (condition) ->
+    @success = (res) ->
+      toastr.success(res.body)
+    @failure = (res) ->
+      toastr.error(res.data.message)
+      condition = false
+    data = {}
+    data.authenticateTwoWay = condition
+    reqParam = {}
+    reqParam.uniqueName = selectedUser.uniqueName
+    userServices.changeTwoWayAuth(reqParam, data).then(@success, @failure)
 
   $scope.$on 'company-changed', (event,changeData) ->
     # when company is changed, redirect to manage company page

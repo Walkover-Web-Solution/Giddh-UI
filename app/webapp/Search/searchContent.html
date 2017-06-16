@@ -15,7 +15,7 @@
             <span></span>
           </div>
 
-          <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height suppress-  scroll-x="true">
+          <perfect-scrollbar class="scrClass flow_visible" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height suppress-  scroll-x="true">
             
             <form name="searchFormClb" novalidate class="col-xs-12" ng-if="searchLoader">
               <p class="lead mrT2">Search</p>
@@ -71,7 +71,9 @@
               </div>
 
               <div class="mrB4">
-                <button ng-disabled="searchFormClb.$invalid || searchDtCntLdr" class="btn btn-primary btn-block" ng-click=" getClosingBalance(searchFormData)">Go</button>
+                <button ng-disabled="searchFormClb.$invalid || searchDtCntLdr" class="btn btn-primary btn-block" ng-click=" getClosingBalance(searchFormData, false)">Go</button>
+
+                <button ng-disabled="searchFormClb.$invalid || searchDtCntLdr" class="btn btn-primary btn-block mrT1" ng-click=" getClosingBalance(searchFormData, true)">Refresh</button>
               </div>
 
             </form>      
@@ -160,7 +162,8 @@
                 <button ng-show="srchDataSet.length > 1" class="btn btn-default mrR1" ng-click="removeSearchRow()">Delete Row</button>
                 <button ng-if="inSrchmode" ng-click="resetQuery()" class="btn btn-info mrR1">Reset Query</button>
                 
-                <button type="button" class="btn btn-success" ng-csv="searchResData" csv-header="getCSVHeader()"  filename="{{ searchFormData.group.name }}.csv" field-separator="," decimal-separator="." csv-column-order="order">Download CSV</button>
+                <!-- <button type="button" class="btn btn-success" ng-csv="searchResData" csv-header="getCSVHeader()"  filename="{{ searchFormData.group.name }}.csv" field-separator="," decimal-separator="." csv-column-order="order" ng-click="$event.stopPropagation()">Download CSV</button> -->
+                <button type="button" class="btn btn-success" ng-click="createCSV()">Download CSV</button>
                 <button type="button" class="btn btn-success mrL1" ng-click="openEmailDialog()">Send as Email</button>
                 <button type="button" class="btn btn-success mrL1" ng-click="openSmsDialog()">Send as Sms</button>
               </div>
@@ -183,20 +186,27 @@
                   </div>
                 </th>
                 <th class="col-xs-2">
+                  <div ng-click="sortType = 'uniqueName'; sortReverse = !sortReverse">
+                    UniqueName
+                    <span ng-show="sortType == 'uniqueName' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
+                    <span ng-show="sortType == 'uniqueName' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
+                  </div>
+                </th>
+                <th class="col-xs-2">
                   <div ng-click="sortType = 'openingBalance'; sortReverse = !sortReverse">
                   Opening Bal.
                     <span ng-show="sortType=='openingBalance' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
                     <span ng-show="sortType=='openingBalance' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                   </div>
                 </th>
-                <th class="col-xs-2">
+                <th class="col-xs-1">
                   <div ng-click="sortType = 'debitTotal'; sortReverse = !sortReverse">
                     DR Total
                     <span ng-show="sortType == 'debitTotal' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
                     <span ng-show="sortType == 'debitTotal' && sortReverse" class="glyphicon glyphicon-chevron-up"></span>
                   </div>
                 </th>
-                <th class="col-xs-2">
+                <th class="col-xs-1">
                   <div ng-click="sortType = 'creditTotal'; sortReverse = !sortReverse">
                     CR Total
                     <span ng-show="sortType == 'creditTotal' && !sortReverse" class="glyphicon glyphicon-chevron-down"></span>
@@ -222,23 +232,24 @@
             <tbody>
               <tr ng-repeat="item in searchResData | orderBy:sortType:sortReverse">
                 <td>{{item.name}}</td>
+                <td>{{item.uniqueName}}</td>
                 <td class="alR">
                   <span ng-if="item.openingBalance > 0">
                     <span class="text-success pull-left" ng-if="item.openBalType === 'DEBIT'">DR</span>
                     <span class="text-danger pull-left" ng-if="item.openBalType === 'CREDIT'">CR</span>
                     &nbsp;
                   </span>
-                  {{item.openingBalance}}
+                  {{item.openingBalance | number:2}}
                 </td>
-                <td class="alR">{{item.debitTotal}}</td>
-                <td class="alR">{{item.creditTotal}}</td>
+                <td class="alR">{{item.debitTotal | number:2}}</td>
+                <td class="alR">{{item.creditTotal | number:2}}</td>
                 <td class="alR">
                   <span ng-if="item.closingBalance > 0">
                     <span class="text-success pull-left" ng-if="item.closeBalType === 'DEBIT'">DR</span>
                     <span class="text-danger pull-left" ng-if="item.closeBalType === 'CREDIT'">CR</span>
                     &nbsp;
                   </span>
-                  {{item.closingBalance}}
+                  {{item.closingBalance | number:2}}
                 </td>
                 <td>{{item.parent}}</td>
               </tr>

@@ -1,0 +1,66 @@
+<i class="glyphicon glyphicon-remove pa cp" style="top:10px;right:5px;" ng-click="recEntry.removeTxn(ledger, $index)" ng-if="entry.newTxn"></i>
+
+<!--tax list-->
+	<div class="oh pull-left oyAuto" ng-if="ledger.taxes.length > 0" style="max-height:90%;">
+		<label>Taxes</label>
+		<ul class="list-unstyled">
+			<li ng-repeat="tax in ledger.taxes">
+				<label class="checkbox-inline"  ng-click="$event.stopPropagation()">
+		      		<input type="checkbox" ng-model="tax.isSelected">
+		      		{{tax.name}}
+		    	</label>
+			</li>
+		</ul>
+	</div>
+
+
+<!--/tax list-->
+
+
+<!-- description-->
+<div class="form-group max200 pull-left mrL1 mrR1">
+  <label for="comment">Description:</label>
+  <textarea class="form-control" rows="2" id="description" ng-model="ledger.description" ng-dblclick="$event.stopPropagation()"></textarea>
+
+  <label class="mrT1" for="comment">Tags</label>
+  <input type="text" class="form-control" id="tag" ng-model="ledger.tag" ng-click="$event.stopPropagation()">
+</div>
+<!-- /description-->
+
+<div class="checkbox pull-left">
+	<!-- unconfirmed entry-->
+	<div class="checkbox" ng-if="selectedCompany.canUserSwitch">>
+	  <label ng-click="$event.stopPropagation()"><input type="checkbox" ng-model="ledger.unconfirmedEntry">Unconfirmed Entry</label>
+	</div>
+	<!-- /unconfirmed entry-->
+
+
+	<!-- Inclusive tax-->
+	<div class="checkbox">
+	  <label ng-click="$event.stopPropagation()"><input type="checkbox" ng-model="ledger.isInclusiveTax">Inclusive Tax</label>
+	</div>
+	<!-- /Inclusive tax-->
+
+	<!-- Applicable Taxes-->
+	<div class="checkbox">
+	  <label ng-click="$event.stopPropagation()"><input type="checkbox" ng-model="ledger.applyApplicableTaxes">As Per Applicable Taxes</label>
+	</div>
+	<!-- /Applicable Taxes-->	
+</div>
+
+
+<!-- prorated date-->
+<div class="form-group max200 pull-left mrL1 pr" ng-if="ledger.newEntry">
+  <label>Pro Rated Date</label>
+  <input class="width100" type="text" ng-model="ledger.proratedDate" ng-init="ledger.proratedDate = recEntry.today" ng-dblclick="$event.stopPropagation()">
+  <i class="glyphicon glyphicon-remove pa" style="top:27px;right:10px" ng-click="ledger.proratedDate = ''"></i>
+</div>
+<!-- /prorated date-->
+
+<!--save button-->
+<div class="pa oh" style="right:10px;bottom:10px">
+	<button class="btn btn-md btn-warning pull-left" ng-click="recEntry.deleteEntry(ledger)">Delete Entry</button>
+	<button class="btn btn-md btn-default pull-left mrL1" ng-click="recEntry.addNewTxn(ledger)">Add Transaction</button>
+	<button class="btn btn-md btn-success pull-left mrL1" ng-click="recEntry.createEntry(ledger)" ng-if="ledger.newEntry">Save</button>
+	<button class="btn btn-md btn-success pull-left mrL1" ng-click="recEntry.updateEntry(ledger)" ng-if="!ledger.newEntry">Update</button>
+</div>

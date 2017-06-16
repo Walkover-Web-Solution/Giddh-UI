@@ -5,6 +5,7 @@ giddh.serviceModule = angular.module("serviceModule", ["LocalStorageModule", "ng
 
 giddh.webApp = angular.module("giddhWebApp",
   [
+    "custom_snippet_giddh"
     "satellizer"
     "LocalStorageModule"
     "perfect_scrollbar"
@@ -20,7 +21,7 @@ giddh.webApp = angular.module("giddhWebApp",
     "unique-name"
     "ui.router"
     "trialBalance"
-    'ngFileUpload'
+    "ngFileUpload"
     "exportDirectives"
     "serviceModule"
     "chart.js"
@@ -33,14 +34,27 @@ giddh.webApp = angular.module("giddhWebApp",
     "mgo-angular-wizard"
     "googlechart"
     "ngFileSaver"
+    "gridster"
+    "ui.tinymce"
+    "daterangepicker"
+    "inventory"
+    "recurringEntry"
+    "ui.mask"
+    "nzTour"
   ]
 )
 
 giddh.webApp.config (localStorageServiceProvider) ->
   localStorageServiceProvider.setPrefix 'giddh'
 
+
 giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   $urlRouterProvider.otherwise('/home')
+<<<<<<< HEAD
+=======
+  $locationProvider.hashPrefix('')
+  # $rootScope.prefixThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
+>>>>>>> test
   appendThis = ""
   $stateProvider.state('/home',
     url: '/home'
@@ -67,20 +81,20 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
             cst = _.findWhere(companyList, {uniqueName: cdt.uniqueName})
             if _.isUndefined(cst)
               a = checkRole(companyList[0])
-              return a
               localStorageService.set("_selectedCompany", companyList[0])
+              return a
             else
               a = checkRole(cst)
-              return a
               localStorageService.set("_selectedCompany", cst)
+              return a
           else
+            localStorageService.set("_selectedCompany", companyList[0])
             if companyList.length < 1
               a = checkRole(user)
               return a
             else      
               a = checkRole(companyList[0])
               return a
-            localStorageService.set("_selectedCompany", companyList[0])
         onFailure = (res) ->
           toastr.error('Failed to retrieve company list' + res.data.message)
         companyServices.getAll().then(onSuccess, onFailure)
@@ -118,9 +132,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
       'rightPanel':{
         abstract:true
-#        templateUrl: '/public/webapp/Invoice/invoiceContent.html'
         template: '<div ui-view></div>'
-        #template: '<div ui-view></div>'
       }
     }
   )
@@ -137,11 +149,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('company.content',
     url: ''
     views:{
-      'accounts':{
-        #templateUrl: '/public/webapp/views/accounts.html'
-        template: "<div ui-view='accountsList'></div>"
-        abstract: true
-      }
       'rightPanel':{
         abstract:true
         template: '<div ui-view="rightPanel"></div>'
@@ -152,10 +159,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('company.content.manage',
     url: '/manage'
     views:{
-      'accountsList':{
-        templateUrl: appendThis+'/public/webapp/views/accounts.html'
-        #template: "<div>manage page</div>"
-      }
       'rightPanel':{
         templateUrl: appendThis+'/public/webapp/ManageCompany/manageCompany.html'
       }
@@ -163,13 +166,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   )
   .state('company.content.user',
     url: '/user'
-    # templateUrl: '/public/webapp/views/userDetails.html'
-    # controller: 'userController'
     views:{
-      'accountsList':{
-        templateUrl: appendThis+'/public/webapp/views/accounts.html'
-        #template: "<div>user page</div>"
-      }
       'rightPanel':{
         templateUrl: appendThis+'/public/webapp/UserDetails/userDetails.html'
         controller: 'userController'
@@ -179,9 +176,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('company.content.tbpl',
     url: '/trial-balance-and-profit-loss',
     views:{
-      'accountsList':{
-        templateUrl: appendThis+'/public/webapp/views/accounts.html'
-      }
       'rightPanel':{
         templateUrl: appendThis+'/public/webapp/Tbpl/tbpl.html'
         controller: 'tbplController'
@@ -191,19 +185,80 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   .state('company.content.ledgerContent',
     url: '/ledger/:unqName'
     views:{
-      'accountsList':{
-        templateUrl: appendThis+'/public/webapp/views/accounts.html'
-      }
       'rightPanel':{
-        templateUrl: appendThis+'/public/webapp/Ledger/ledger.html'
-        controller: 'newLedgerController'
+        templateUrl: appendThis+'/public/webapp/Ledger/ledgerTxns.html'
+        controller: 'ledgerController'
+        controllerAs: 'ledgerCtrl'
       }
     }
   )
+  # .state('company.content.ledgerContent1',
+  #   url: '/ledger-paginated/:unqName'
+  #   views:{
+  #     # 'accountsList':{
+  #     #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
+  #     # }
+  #     'rightPanel':{
+  #       templateUrl: appendThis+'/public/webapp/Ledger/ledgerPaginated.html'
+  #       controller: 'ledgerController'
+  #       controllerAs: 'ledgerCtrl'
+  #     }
+  #   }
+  # )
   .state('dashboard',
     url: '/dashboard'
     templateUrl: appendThis+'/public/webapp/Dashboard/dashboard.html'
     controller: "dashboardController"
+  )
+  .state('inventory',
+    url: '/inventory'
+    templateUrl: '/public/webapp/Inventory/inventory.html'
+    controller: 'stockController'
+    controllerAs: 'stock'
+  )
+  .state('inventory.custom-stock',
+    url: '/custom-stock'
+    views:{
+      'inventory-detail':{
+        templateUrl: '/public/webapp/Inventory/partials/custom-stock-unit.html'
+        controller: 'inventoryCustomStockController'
+        controllerAs: 'vm'
+      }
+    }
+  )
+  .state('inventory.add-group',
+    url: '/add-group/:grpId'
+    views:{
+      'inventory-detail':{
+        templateUrl: '/public/webapp/Inventory/partials/add-group-stock.html'
+      }
+    }
+  )
+  .state('inventory.add-group.stock-report',
+    url: '/stock-report/:stockId'
+    views:{
+      'inventory-detail@inventory':{
+        templateUrl: '/public/webapp/Inventory/partials/stock-report.html',
+        controller: 'inventoryStockReportController'
+        controllerAs: 'vm'
+      }
+    }
+  )
+  .state('inventory.add-group.add-stock',
+    url: '/add-stock/:stockId'
+    views:{
+      'inventory-detail@inventory':{
+        templateUrl: '/public/webapp/Inventory/partials/stock-operations.html',
+        controller: 'inventoryAddStockController'
+        controllerAs: 'vm'
+      }
+    }
+  )
+  .state('recurring-entry',
+    url: '/recurring-entry'
+    templateUrl: '/public/webapp/recurring-entry/recurring-entry.html'
+    controller: 'recurringEntryController'
+    controllerAs: 'recEntry'
   )
   .state('/thankyou',
     url: '/thankyou'
@@ -238,7 +293,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: appendThis + '/public/webapp/invoice2/invoice2.html'
     controller: 'invoice2Controller'
   )
-  $locationProvider.html5Mode(false)
+  $locationProvider.html5Mode(true)
   return
 
 giddh.webApp.run [
@@ -251,38 +306,71 @@ giddh.webApp.run [
   'localStorageService'
   'DAServices'
   'groupService'
-  ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService) ->
+  '$http'
+  ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService, $http) ->
+    
+    # $rootScope.setState = (lastState, url, param) ->
+    #   data = {
+    #       "lastState": lastState,
+    #       "companyUniqueName": $rootScope.selectedCompany.uniqueName
+    #   }
+    #   if url.indexOf('ledger') != -1
+    #     data.lastState = data.lastState + '@' + param
+    #   $http.post('/state-details', data).then(
+    #       (res) ->
+            
+    #       (res) ->
+            
+    #   )
+
+
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
       $rootScope.showLedgerBox = false
       if _.isEmpty(toParams)
         $rootScope.selAcntUname = undefined
     )
 
-#    # check IE browser version
-#    $rootScope.GetIEVersion = () ->
-#      ua = window.navigator.userAgent
-#      msie = ua.indexOf('MSIE ')
-#      trident = ua.indexOf('Trident/')
-#      edge = ua.indexOf('Edge/')
-#      if (msie > 0)
-#        toastr.error('For Best User Expreince, upgrade to IE 11+')
-#    $rootScope.GetIEVersion()
-#    # check browser
-#    $rootScope.msieBrowser = ()->
-#      ua = window.navigator.userAgent
-#      msie = ua.indexOf('MSIE')
-#      if msie > 0 or !!navigator.userAgent.match(/Trident.*rv\:11\./)
-#        return true
-#      else
-#        console.info window.navigator.userAgent, 'otherbrowser', msie
-#        return false
+    $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+      $('html,body').animate({scrollTop: $('html').offset().top},'slow')
+      return false
+    )
+
+    # $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+    #   user = localStorageService.get('_userDetails')
+    #   window.dataLayer.push({
+    #     event: 'giddh.pageView',
+    #     attributes: {
+    #       route: $location.path()
+    #     },
+    #     userId: user.uniqueName
+    #   });
+    #   #$rootScope.setState(toState.name, toState.url, toParams.unqName)
+    # )
+      #    # check IE browser version
+      #    $rootScope.GetIEVersion = () ->
+      #      ua = window.navigator.userAgent
+      #      msie = ua.indexOf('MSIE ')
+      #      trident = ua.indexOf('Trident/')
+      #      edge = ua.indexOf('Edge/')
+      #      if (msie > 0)
+      #        toastr.error('For Best User Expreince, upgrade to IE 11+')
+      #    $rootScope.GetIEVersion()
+      #    # check browser
+    $rootScope.msieBrowser = ()->
+      ua = window.navigator.userAgent
+      msie = ua.indexOf('MSIE')
+      if msie > 0 or !!navigator.userAgent.match(/Trident.*rv\:11\./)
+        return true
+      else
+        console.info window.navigator.userAgent, 'otherbrowser', msie
+        return false
 #    # open window for IE
-#    $rootScope.openWindow = (url) ->
-#      win = window.open()
-#      win.document.write('sep=,\r\n', url)
-#      win.document.close()
-#      win.document.execCommand('SaveAs', true, 'abc' + ".xls")
-#      win.close()
+    $rootScope.openWindow = (url) ->
+      win = window.open()
+      win.document.write('sep=,\r\n', url)
+      win.document.close()
+      win.document.execCommand('SaveAs', true, 'abc' + ".xls")
+      win.close()
 #
 #   $rootScope.firstLogin = true
   
@@ -291,10 +379,10 @@ giddh.webApp.run [
       localStorageService.remove("_ledgerData")
       localStorageService.remove("_selectedAccount")
     )
-    $rootScope.$on('company-changed', (event, changeData)->
-      if changeData.type == "CHANGE"
-        $state.go('company.content.manage')
-    )
+    # $rootScope.$on('company-changed', (event, changeData)->
+    #   if changeData.type == "CHANGE"
+    #     $state.go('company.content.manage')
+    # )
     $rootScope.canChangeCompany = false
 #    $rootScope.flatAccList = {
 #      page: 1
@@ -369,7 +457,7 @@ giddh.webApp.factory 'appInterceptor', ['$q', '$location', '$log', 'toastr', '$t
           isError = responseError.data.indexOf("`value` required in setHeader")
           isAuthKeyError = responseError.data.indexOf("Auth-Key")
           #if Auth-Key Error found, redirect to login
-          if isError != -1 and isAuthKeyError != -1
+          if isAuthKeyError != -1
             toastr.error('Your Session has Expired, Please Login Again.')
             $timeout ( ->
               window.location.assign('/login')

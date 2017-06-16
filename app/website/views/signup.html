@@ -1,0 +1,89 @@
+<!DOCTYPE HTML>
+<html lang="en" ng-app='giddhApp'>
+<head>
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+            new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+            j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+            'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-K2L9QG');</script>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+          content="Do you feel accounting is tough to manage? Giddh will solve all your accounting related needs. Get a free invitation now."/>
+    <meta name="keywords" content="Accounting softwares, online accounting software, Web Based Accounting Software"/>
+    <title>Login - Giddh ~ Accounting at its Rough!</title>
+    <!-- STYLE / THEME -->
+    <link href="<<PREFIX_THIS>>/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<<PREFIX_THIS>>/bower_components/angular-toastr/dist/angular-toastr.min.css" rel="stylesheet">
+
+    <link href='https://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+    <link href="<<PREFIX_THIS>>/public/website/css/new-style.css" rel="stylesheet">
+    <!-- LIBRARIES -->
+    <script src="<<PREFIX_THIS>>/public/webapp/newRelic.js"></script>
+    <script src="<<PREFIX_THIS>>/bower_components/file-saver.js/FileSaver.js"></script>
+
+    <script  type="text/javascript" src='<<PREFIX_THIS>>/public/webapp/core_bower.min.js'></script>
+        <script src="<<PREFIX_THIS>>/bower_components/angular-file-saver/dist/angular-file-saver.js"></script>
+    <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/app.js"></script>
+    <!-- recaptcha -->
+    <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
+    <script type="text/javascript" src="<<PREFIX_THIS>>/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
+
+    <script src="<<PREFIX_THIS>>/public/website/js/controller/loginController.js"></script>
+</head>
+<body ng-controller="loginController" class="lightTrans">
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
+                  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<ng-include src="'public/website/views/header.html'"></ng-include>
+
+<section id="videoBg" class="intro login">
+    <!-- banner content -->
+    <div class="intro-body">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1 class="brand-heading arvo">Enter your accounting space</h1>
+
+                    <div id="box" class="text-uppercase">
+                        <div class="clearfix mrB1">
+                            <p class="lead ">Sign In or register</p>
+                            <!-- <div ng-class="loginIsProcessing ? 'giddh-spinner': 'giddh-logo'" ></div> -->
+                        </div>
+
+                        <button type="login" class="btn sharp btn-block btn-lg btn-login google" ng-click="authenticate('google')">connect with Google</button>
+                        <button type="login" class="btn sharp btn-block btn-lg btn-login twitter" ng-click="authenticate('twitter')">connect with Twitter</button>
+                        <button type="login" class="btn sharp btn-block btn-lg btn-login linkedin" ng-click="authenticate('linkedin')">connect with LinkedIn</button>
+                        <button type="login" class="btn sharp btn-block btn-lg btn-login mobile" ng-click="signUpWithEmailModal($event)">connect with Email</button>
+
+                    </div>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section> <!-- end of intro -->
+
+<!-- include footer -->
+<ng-include src="'/public/website/views/footer.html'"></ng-include>
+
+<script type="text/javascript">
+    /*-------------------------------------------------------------------*/
+    /*  FULL SCREEN FIRST SECTION
+     /*-------------------------------------------------------------------*/
+    jQuery(document).ready(function($){
+        'use strict';
+        $(window).resize(function(){
+            $('#videoBg').css({ 'height' : $(window).height() });
+        });
+        $(window).trigger('resize');
+    });
+
+
+</script>
+
+</body>
+</html>

@@ -1,6 +1,11 @@
 <!DOCTYPE HTML>
 <html lang="en" ng-app='giddhApp'>
 <head>
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-K2L9QG');</script>
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -19,7 +24,9 @@
   <link href="<<PREFIX_THIS>>/bower_components/intl-tel-input/build/css/intlTelInput.css" rel="stylesheet">
   <!-- LIBRARIES -->
   <script src="<<PREFIX_THIS>>/public/webapp/newRelic.js"></script>
+  <script src="<<PREFIX_THIS>>/bower_components/file-saver.js/FileSaver.js"></script>
   <script  type="text/javascript" src='<<PREFIX_THIS>>/public/webapp/core_bower.min.js'></script>
+    <script src="<<PREFIX_THIS>>/bower_components/angular-file-saver/dist/angular-file-saver.js"></script>
   <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/app.js"></script>
   <script src="<<PREFIX_THIS>>/public/website/js/controller/loginController.js"></script>
   <!-- recaptcha -->
@@ -28,10 +35,11 @@
   
 </head>
 <body ng-controller="magicCtrl" id="page-top">
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <ng-include src="'/public/website/views/magic_header.html'"></ng-include>
 
-  <ng-include src="'/public/website/views/header.html'"></ng-include>
-
-    <section class="container-fluid" style="margin-top:100px">
+    <section class="container-fluid">
       <div style="min-height:600px" ng-hide="magicReady">
         <div class="loader">
           <span></span>
@@ -56,9 +64,9 @@
 
           <div class="form-inline pdB1 ledgHead">
             <form name="fromToDateForm" novalidate class="form-group mrR1">
-              <div class="form-group">
-              <!--   <label>From</label> -->
-                <p class="input-group maxW150">
+              <div class="form-group datePickr">
+                <label>From</label>
+                <div class="input-group maxW150">
                   <input type="text" class="form-control"
                         uib-datepicker-popup="{{format}}" required
                         datepicker-options="dateOptions"
@@ -72,12 +80,13 @@
                 <button type="button" class="btn btn-default" ng-click="fromDatePickerOpen()"><i
                     class="glyphicon glyphicon-calendar"></i></button>
               </span>
-                </p>
+                </div>
+              </div>
+              <div class="form-group datePickr">
+                <label class="form-middle">To</label>
               </div>
               <div class="form-group">
-                <label>To</label>
-
-                <p class="input-group maxW150">
+                <div class="input-group maxW150">
                   <input type="text" class="form-control"
                         uib-datepicker-popup="{{format}}" required
                         datepicker-options="dateOptions"
@@ -92,10 +101,10 @@
                 <button type="button" class="btn btn-default" ng-click="toDatePickerOpen()"><i
                     class="glyphicon glyphicon-calendar"></i></button>
               </span>
-                </p>
+                </div>
               </div>
               <div class="form-group">
-                <button type="button" class="btn btn-primary mrL1" ng-disabled="fromToDateForm.$invalid" ng-click="getDataByDate()">
+                <button type="button" class="btn btn-primary mrL1" ng-disabled="fromToDateForm.$invalid" ng-click="getDataByDate(false)">
                   GO
                 </button>
               </div>
@@ -150,7 +159,7 @@
 
                 <h3 class="ledgerHead">
                   <span tooltip-placement="top" uib-tooltip="{{accountName}}" class="ellp">{{accountName}}</span>
-                  <span>&nbsp;is <strong>receiving</strong></span>
+                  <span> is <strong>receiving</strong></span>
                 </h3>
               </div>
             </th>
@@ -160,8 +169,8 @@
                   <span class="icon48 icon-out"></span>
 
                   <h3 class="ledgerHead">
-                    <span>&nbsp;is <strong>giving</strong></span>
                     <span tooltip-placement="top" uib-tooltip="{{accountName}}" class="ellp">{{accountName}}</span>
+                    <span> is <strong>giving</strong></span>
                   </h3>
                 </div>
               </div>
@@ -203,7 +212,18 @@
                             <tr class="text-left bdrB" ng-repeat="txn in ledger.transactions | filter:particularSearch" ng-if="txn.type == 'DEBIT'">
                               <td class="col-xs-3" style="padding:10px;">{{ledger.entryDate}}</td>
                               <td class="col-xs-6 bdrL" style="padding:10px;">{{txn.particular.name}}</td>
-                              <td class="col-xs-3 bdrL" style="padding:10px;">{{txn.amount}}</td>
+                              <td class="col-xs-3 bdrL pr" align="right" style="padding:10px;padding-right:30px;">{{txn.amount}}
+                                <span
+                                  class="download-invoice-ledger pa" 
+                                  ng-if="ledger.invoiceGenerated" 
+                                  tooltip-append-to-body="true"
+                                  ng-mouseover="$event.stopPropagation()"
+                                  ng-click="downloadInvoice(ledger.invoiceNumber)"
+                                  uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" 
+                                  tooltip-placement="bottom" style="top:11px;right:2px;"> 
+                                  <i class="glyphicon glyphicon-download" style="font-size:15px" ></i>
+                                </span>
+                              </td>
                             </tr>
                           </tbody>
                         </table>
@@ -261,7 +281,18 @@
                             <tr class="text-left bdrB" ng-repeat="txn in ledger.transactions | filter:particularSearch" ng-if="txn.type == 'CREDIT'">
                               <td class="col-xs-3" style="padding:10px;">{{ledger.entryDate}}</td>
                               <td class="col-xs-6 bdrL" style="padding:10px;">{{txn.particular.name}}</td>
-                              <td class="col-xs-3 bdrL" style="padding:10px;">{{txn.amount}}</td>
+                              <td class="col-xs-3 bdrL pr" align="right" style="padding:10px;padding-right:30px;">{{txn.amount}}
+                                <span 
+                                  class="download-invoice-ledger pa" 
+                                  ng-if="ledger.invoiceGenerated" 
+                                  tooltip-append-to-body="true"
+                                  ng-mouseover="$event.stopPropagation()" 
+                                  ng-click="downloadInvoice(ledger.invoiceNumber)"
+                                  uib-tooltip="Download invoice : {{ledger.invoiceNumber}}" 
+                                  tooltip-placement="bottom" style="top:11px;right:2px;"> 
+                                  <i class="glyphicon glyphicon-download" style="font-size:15px;" ></i>
+                                </span>
+                              </td>
                             </tr>
                           </tbody>
                         </table>
@@ -319,14 +350,14 @@
                 <span class="pull-right">Reckoning</span>
               </td>
               <td style="width:14%" class="bdrR alR">
-                <span>{{ledgerData.debitTotal | number:2}}</span>
+                <span>{{reckoningDebitTotal | number:2}}</span>
               </td>
               <td colspan="2" style="width:36%" class="bdrL">
                 <span class="pull-left">Credit Total:{{creditTotal | number:2 }}</span>
                 <span class="pull-right">Reckoning</span>
               </td>
               <td style="width:14%" class="bdrR alR">
-                <span>{{ledgerData.creditTotal | number:2}}</span>
+                <span>{{reckoningCreditTotal | number:2}}</span>
               </td>
             </tr>
 
@@ -338,5 +369,33 @@
       </div>
     </section>
     
+    <section class="cmnPd80 ylwBg homeBtmhalf">
+      
+      <div class="container">
+          <div class="row text-center">
+              <div class="col-sm-12">
+                          <h3 class="arvo">Giddh <strong>automates the accounting</strong> on behalf of <span class="companyName"><strong>{{companyName}}</strong></span>.</h3>
+                          <h4 class="arvo">We would love to extend our support via <a href="https://muneem.co" target="_blank" class="green" style="text-decoration: underline;">Muneem</a> for any query related to your ledger with <span class="companyName">{{companyName}}</span>.</h4>
+              </div>
+          </div>
+      </div>
+    
+    </section>
+
+    <section class="cmnPd80 sub_footer">
+      
+      <div class="container">
+          <div class="row text-center">
+              <div class="col-sm-12">
+                          <h3 class="arvo">Giddh is the future of online accounting software (but-obvious GST ready).</h3>
+                          <h3 class="arvo">Do you have any question with Giddh?</h3>
+              </div>
+          </div>
+      </div>
+    
+    </section>
+
     <ng-include src="'/public/website/views/footer.html'"></ng-include>
-</body></html>
+
+</body>
+</html>

@@ -1,4 +1,5 @@
 settings = require('../util/settings')
+requestIp = require('request-ip')
 router = settings.express.Router()
 
 dirName = settings.path.resolve(__dirname, '..', '..')
@@ -10,11 +11,36 @@ options = {
     'x-sent': true
 }
 
+
+panelOption = {
+  root: dirName + '/adminPanel',
+  dotFiles: 'deny',
+  headers:
+    'x-timestamp': Date.now(),
+    'x-sent': true
+}
+
+router.get '/sindhu', (req,res) ->
+  res.sendFile 'admin-panel.html', panelOption
+
+# router.get '/sindhu/panel', (req, res) ->
+#   res.sendFile 'sindhu.html', panelOption
+
 router.get '/', (req, res) ->
   res.sendFile 'index.html', options
 
+
 router.get '/index', (req, res) ->
   res.sendFile 'index.html', options
+
+router.get '/affiliate', (req,res) ->
+  res.sendFile 'joinus.html', options
+
+router.get '/global', (req,res) ->
+  res.sendFile 'global.html', options
+
+router.get '/gst', (req,res) ->
+  res.sendFile 'gst.html', options
 
 router.get '/about', (req, res) ->
   res.sendFile 'about.html', options
@@ -58,11 +84,24 @@ router.get '/company/verify-email', (req, res) ->
 router.get '/refresh-completed', (req, res) ->
   res.sendFile 'refresh-completed.html', options
 
+router.get '/signup', (req, res) ->
+  res.sendFile 'signup.html', options
+
+router.get '/IE', (req, res) ->
+  res.sendFile 'incompatible-browser.html', options
+
 router.post '/magic-link', (req, res) ->
   if req.body.data.from != undefined && req.body.data.to != undefined
     hUrl = settings.envUrl + '/magic-link/' + req.body.data.id + '?from=' + req.body.data.from + '&to=' + req.body.data.to
   else
     hUrl = settings.envUrl + '/magic-link/' + req.body.data.id
+  settings.client.get hUrl, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/magic-link/download-invoice', (req, res) ->
+  hUrl = settings.envUrl + '/magic-link/' + req.body.data.id + '/download-invoice/' + req.body.data.invoiceNum
   settings.client.get hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
@@ -81,7 +120,7 @@ router.post '/verify-email', (req, res) ->
   settings.client.get hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
-    res.send data
+    res.sendFile '/public/webapp/views/index.html',options
 
 router.post '/proforma/pay', (req, res) ->
   data = req.body
@@ -158,5 +197,96 @@ router.post '/login-with-number', (req, res) ->
       req.session.name = data.body.user.uniqueName
       req.session.authKey = data.body.authKey
     res.send data
+
+router.post '/signup-with-email', (req, res) ->
+  hUrl = settings.envUrl + 'signup-with-email'
+  args =
+    headers:
+      "Content-Type": "application/json"
+      'X-Forwarded-For': res.locales.remoteIp
+    data:req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+router.post '/verify-email-now', (req, res) ->
+  hUrl = settings.envUrl + 'verify-email'
+  args =
+    headers:
+      "Content-Type": "application/json"
+      'X-Forwarded-For': res.locales.remoteIp
+    data:req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    else
+      req.session.name = data.body.user.uniqueName
+      req.session.authKey = data.body.authKey
+    res.send data
+
+router.post '/verify-number', (req, res) ->
+  hUrl = settings.envUrl + '/verify-number'
+  args =
+    headers:
+      "Content-Type": "application/json"
+      'X-Forwarded-For': res.locales.remoteIp
+    data:req.body
+  settings.client.post hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    else
+      req.session.name = data.body.user.uniqueName
+      req.session.authKey = data.body.authKey
+    res.send data
+
+
+router.get '/contact/submitDetails', (req, res) ->
+  ip = requestIp.getClientIp(req)
+  geo = settings.geoIp.lookup(ip)
+  if geo != null && geo.country != 'IN'
+    res.redirect(301, 'https://giddh.com')
+  else
+    res.redirect(301, 'https://giddh.com')
+
+
+
+hitViaSocket = (data) ->
+  data = JSON.stringify(data)
+  data.environment = app.get('env')
+  if data.isNewUser
+    settings.request {
+      url: 'https://viasocket.com/t/fDR1TMJLvMQgwyjBUMVs/giddh-giddh-login?authkey=MbK1oT6x1RCoVf2AqL3y'
+      qs:
+        from: 'Giddh'
+        time: +new Date
+      method: 'POST'
+      headers:
+        'Content-Type': 'application/json'
+        'Auth-Key': 'MbK1oT6x1RCoVf2AqL3y'
+      body: data.user
+    }, (error, response, body) ->
+      if error
+        console.log error
+      else
+        console.log response.statusCode, body, 'from viasocket'
+      return
+
+router.post '/global-user', (req, res) ->
+  data = req.body
+  hitViaSocket(data)
+  res.status(200).send('success')
+
+router.get '/user-location', (req, res) ->
+  ip = requestIp.getClientIp(req)
+  geo = settings.geoIp.lookup(ip)
+  if geo != null
+    res.send geo
+  else
+    res.status(404)
+    res.send('unable to retrieve location')
+
+router.get '/global', (req, res) ->
+  res.sendFile('global.html', options)
 
 module.exports = router

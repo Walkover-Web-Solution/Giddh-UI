@@ -11,6 +11,7 @@ app = angular.module("giddhApp", [
   "valid-number"
   "razor-pay"
   "internationalPhoneNumber"
+  "ngFileSaver"
   ]
 )
 app.config (ipnConfig) ->
@@ -54,11 +55,11 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
   link: (scope, element, attrs) ->
     scope.proceedToPay = (e, amount) ->
       options = {
-        key: scope.wlt.razorPayKey
-#        key: "rzp_live_xGAsAZIdwkmLJW"
+        # key: scope.wlt.razorPayKey
+        key: "rzp_live_rM2Ub3IHfDnvBq"
         amount: amount
         name: scope.wlt.company.name
-        description: "Payment for " + scope.wlt.contentType + " " + scope.wlt.contentNumber
+        description: "Pay for " + scope.wlt.contentType + " #" + scope.wlt.contentNumber
         handler: (response)->
 # hit api after success
 #          console.log response, "response after success"
@@ -74,6 +75,9 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
           email: scope.wlt.consumer.email
           contact: scope.wlt.consumer.contactNo
         order_id: scope.wlt.orderId
+        notes: {
+          order_id: scope.wlt.orderId
+        }
       }
       rzp1 = new Razorpay(options)
       rzp1.open()
@@ -276,18 +280,42 @@ app.controller 'homeCtrl', [
     )
     $scope.goTo = (state) ->
       window.location = state
+      
+    $scope.goToNewTab = (state) ->
+      window.open(state,"_blank")
+
+
+    $scope.geo = {}
+    $scope.geo.country = 'IN'
+    getLocation = () ->
+      @success = (res) ->
+        $scope.geo = res.data
+
+      @failure = (res) ->
+        console.log res
+        #toastr.error(res.data)
+
+      $http.get('/app/api/user-location').then(@success, @failure)
+
+    getLocation()
 ]
 
 app.config [
   '$authProvider'
   ($authProvider) ->
-    $authProvider.google clientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com'
-    $authProvider.twitter clientId: 'w64afk3ZflEsdFxd6jyB9wt5j'
-    $authProvider.linkedin clientId: '75urm0g3386r26'
-
+    $authProvider.google 
+      clientId: '641015054140-3cl9c3kh18vctdjlrt9c8v0vs85dorv2.apps.googleusercontent.com'
+      url : '/app/auth/google'
+    $authProvider.twitter 
+      clientId: 'w64afk3ZflEsdFxd6jyB9wt5j'
+      url: '/app/auth/twitter'
+    $authProvider.linkedin 
+      clientId: '75urm0g3386r26'
+      url: '/app/auth/linkedin'
+    
     # LinkedIn
     $authProvider.linkedin({
-      url: '/auth/linkedin'
+      url: '/app/auth/linkedin'
       authorizationEndpoint: 'https://www.linkedin.com/uas/oauth2/authorization'
       # redirectUri: "http://localhost:8000/login/"
       redirectUri: window.location.origin+"/login/"
@@ -328,6 +356,7 @@ app.run [
     $rootScope.magicLinkPage = false
     $rootScope.whiteLinks = false
     $rootScope.loginPage = false
+    $rootScope.signupPage = false
     $rootScope.fixedHeader = false
     $rootScope.showBlack = false
     loc = window.location.pathname
@@ -345,7 +374,24 @@ app.run [
       $rootScope.fixedHeader = true
     if loc == "/payment"
       $rootScope.showBlack = true
+    if loc == "/signup"
+      $rootScope.whiteLinks = true
+      $rootScope.signupPage = true
+  
+    ##detect if browser is IE##
+    isIE = ->
+      ua = navigator.userAgent
 
+      ### MSIE used to detect old browsers and Trident used to newer ones###
+
+      is_ie = ua.indexOf('MSIE ') > -1 or ua.indexOf('Trident/') > -1
+      is_ie
+
+    $rootScope.browserIE = false
+
+    if isIE()
+      $rootScope.browserIE = true
+      window.location.pathname = '/IE' 
 ]
   
 
@@ -376,14 +422,16 @@ do ->
   ]
 
 app.controller 'magicCtrl', [
-  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter',
-  ($scope, toastr, $http, $location, $rootScope, $filter) ->
+  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter', 'FileSaver',
+  ($scope, toastr, $http, $location, $rootScope, $filter, FileSaver) ->
+    ml = this
     $rootScope.magicLinkPage = true
     $scope.magicReady = false
     $scope.magicLinkId = window.location.search.split('=')
     $scope.magicLinkId = $scope.magicLinkId[1]
     $scope.ledgerData = []
     $scope.magicUrl = '/magic-link'
+    $scope.downloadInvoiceUrl = $scope.magicUrl + '/download-invoice'
     $scope.today = new Date()
     $scope.fromDate = {date: new Date()}
     $scope.toDate = {date: new Date()}
@@ -432,30 +480,66 @@ app.controller 'magicCtrl', [
       $scope.fromDate.date = from
       $scope.toDate.date = to
 
-    $scope.getData = (data) ->
+    $scope.getData = (data, updateDates) ->
       $scope.magicReady = false
       _data = data
       $http.post($scope.magicUrl, data:_data).then(
         (success)->
+          $scope.companyName = success.data.body.companyName.split(" ")
+          $scope.companyName = $scope.companyName[0]
           $scope.accountName = success.data.body.account.name
           $scope.ledgerData = success.data.body.ledgerTransactions
           $scope.filterLedgers($scope.ledgerData.ledgers)
           $scope.countTotalTransactions()
+          $scope.calReckoningTotal()
           $scope.magicReady = true
           $scope.showError = false
-          $scope.assignDates($scope.ledgerData.ledgers[0].entryDate, $scope.ledgerData.ledgers[$scope.ledgerData.ledgers.length-1].entryDate)
+          if updateDates
+            $scope.assignDates($scope.ledgerData.ledgers[0].entryDate, $scope.ledgerData.ledgers[$scope.ledgerData.ledgers.length-1].entryDate)
         (error)->
           toastr.error(error.data.message)
           $scope.magicReady = true
           $scope.showError = true
       )
 
-    $scope.getData($scope.data)
+    $scope.downloadInvoice = (invoiceNumber) ->
+      @success = (res) ->
+        blobData = ml.b64toBlob(res.data.body, "application/pdf", 512)
+        FileSaver.saveAs(blobData, invoiceNumber + ".pdf")
+      @failure = (res) ->
+        toastr.error(res.message)
+      _data = {
+        id: $scope.data.id
+        invoiceNum: invoiceNumber
+      }
+      $http.post($scope.downloadInvoiceUrl, data:_data).then @success, @failure  
 
-    $scope.getDataByDate = () ->
+    $scope.getData($scope.data, true)
+
+    ml.b64toBlob = (b64Data, contentType, sliceSize) ->
+      contentType = contentType or ''
+      sliceSize = sliceSize or 512
+      # b64Data = b64Data.replace(/\s/g, '')
+      byteCharacters = atob(b64Data)
+      byteArrays = []
+      offset = 0
+      while offset < byteCharacters.length
+        slice = byteCharacters.slice(offset, offset + sliceSize)
+        byteNumbers = new Array(slice.length)
+        i = 0
+        while i < slice.length
+          byteNumbers[i] = slice.charCodeAt(i)
+          i++
+        byteArray = new Uint8Array(byteNumbers)
+        byteArrays.push byteArray
+        offset += sliceSize
+      blob = new Blob(byteArrays, type: contentType)
+      blob
+
+    $scope.getDataByDate = (updateDates) ->
       $scope.data.from = $filter('date')($scope.fromDate.date, 'dd-MM-yyyy')
       $scope.data.to = $filter('date')($scope.toDate.date, 'dd-MM-yyyy')
-      $scope.getData($scope.data)
+      $scope.getData($scope.data, updateDates)
 
     #for contact form
         # check string has whitespace
@@ -512,6 +596,8 @@ app.controller 'magicCtrl', [
 
     $scope.creditTotal = 0
     $scope.debitTotal = 0
+    $scope.reckoningDebitTotal = 0
+    $scope.reckoningCreditTotal = 0
     $scope.countTotalTransactions = () ->
       $scope.creditTotal = 0
       $scope.debitTotal = 0
@@ -529,7 +615,15 @@ app.controller 'magicCtrl', [
                 $scope.cTxnCount += 1
                 $scope.creditTotal += Number(txn.amount)
 
-
+    $scope.calReckoningTotal = () ->
+      $scope.reckoningDebitTotal = $scope.ledgerData.debitTotal
+      $scope.reckoningCreditTotal = $scope.ledgerData.creditTotal
+      if $scope.ledgerData.balance.type == 'CREDIT'
+        $scope.reckoningDebitTotal += $scope.ledgerData.balance.amount
+        $scope.reckoningCreditTotal += $scope.ledgerData.forwardedBalance.amount
+      else if $scope.ledgerData.balance.type == 'DEBIT'
+        $scope.reckoningCreditTotal += $scope.ledgerData.balance.amount
+        $scope.reckoningDebitTotal += $scope.ledgerData.forwardedBalance.amount
 ]
 
 

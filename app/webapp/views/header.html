@@ -1,5 +1,5 @@
 <!-- super loader -->
-<div class="load-bar-wrap" ng-if="superLoader" style="z-index: 99999;">
+<div class="load-bar-wrap" ng-if="superLoader">
   <div class="load-bar">
     <div class="bar"></div>
     <div class="bar"></div>
@@ -9,10 +9,10 @@
 <!-- end of super loader -->
 
 <header class="clearfix">
-  <div class="container-fluid">
+  <div class="container-fluid pdL0">
     <nav class="navbar navbar-inverse">
-      <ul class="nav navbar-nav">
-        <li uib-dropdown style="margin-left:-15px;" ng-show="canManageComp || canViewSpecificItems">
+      <ul class="nav navbar-nav" ng-controller="groupController">
+        <li class="hamburger_menu" uib-dropdown ng-show="canManageComp || canViewSpecificItems">
           <a href id="page-dropdown" uib-dropdown-toggle>
             <i class="glyphicon glyphicon-menu-hamburger"></i>
           </a>
@@ -41,7 +41,7 @@
                         </div>
                       </a>
                     </li>
-                    <li class="dmLi" ui-sref="company.content.ledgerContent">
+<!--                     <li class="dmLi" ui-sref="company.content.ledgerContent">
                         <a href="" >
                           <div class="media">
                             <div class="media-body">
@@ -50,7 +50,7 @@
                             </div>
                           </div>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="dmLi" ui-sref="company.content.tbpl">
                       <a href="" >
                         <div class="media">
@@ -91,6 +91,26 @@
                         </div>
                       </a>
                     </li>
+                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="inventory" ui-sref-opts="{reload: true, notify: true}">
+                      <a href="" >
+                        <div class="media">
+                          <div class="media-body">
+                            <div class="title">Inventory</div>
+                            <div class="subTitle">Manage Inventory</div>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="recurring-entry">
+                      <a href="" >
+                        <div class="media">
+                          <div class="media-body">
+                            <div class="title">Recurring Entry</div>
+                            <div class="subTitle">Add and Edit Recurring Entries</div>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
                     <li class="dmLi" ui-sref="Reports">
                         <a href="" >
                           <div class="media">
@@ -106,7 +126,7 @@
                           <div class="media">
                             <div class="media-body">
                               <div class="title">Audit Logs</div>
-                              <div class="subTitle">View and edit all your <b>done</b> entries.</div>
+                              <div class="subTitle">View all Logs</div>
                             </div>
                           </div>
                         </a>
@@ -121,7 +141,7 @@
                           </div>
                         </a>
                     </li>
-                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi trialB" ui-sref="company.content.manage">
+<!--                     <li ng-if="canUpdate && sharedEntity == null" class="dmLi trialB" ui-sref="company.content.manage">
                       <a href="">
                         <div class="media">
                           <div class="media-body">
@@ -130,7 +150,7 @@
                           </div>
                         </div>
                       </a>
-                    </li>
+                    </li> -->
 <!--                 <li class="dmLi" ui-sref="company.content.ledger">
                     <a href="" >
                       <div class="media">
@@ -148,33 +168,104 @@
           </ul>
         </li>
 
-        <li ng-if="cmpViewShow" class="company-name" uib-dropdown style="border-left:2px solid #fff;">
-          <a id="cmpWrp" class="clearfix" style="cursor:pointer;position: relative;" uib-dropdown-toggle>
-            <i class="gic-24 icon-building-w"></i>
+        <!-- books search -->
+        <li>
+        <div class="ledger_search form-inline col-xs-12">
+
+          <div class="row">
+
+
+            <div class="form-group">
+                <div class="input-group">
+
+                      <!-- by mustafa -->
+<!--                     <div class="input-group-addon">
+                        <i class="glyphicon" ng-class="{'glyphicon-plus' : canManageComp, 'glyphicon-search' : !canManageComp}" ng-click="goToManageGroups();"></i>
+                    </div>
+ -->
+                    <!-- <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList');" ng-change="checkLength(acntSrch)" ng-model-options="{debounce: 200}"> -->
+
+                    <input id="accountSearch" type="text" name="searchGroup" class="form-control" ng-model="search.acnt" placeholder="Search accounts" ng-change="searchGrpWithAccounts(search.acnt)" ng-click="showAccounts($event)" ng-model-options="{debounce:1000}">
+                      
+                    
+                    <div ng-hide="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(true); $event.stopPropagation()" tooltip-placement="right" uib-tooltip="Expand all" >
+                        <span class="icon-plus" aria-hidden="true"></span>
+                    </div>
+
+                    <div ng-show="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(false); $event.stopPropagation()" tooltip-placement="right" uib-tooltip="Collapse all">
+                        <span class="icon-minus"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </li>
+
+<!--         <li>
+            <div ng-hide="canViewSpecificItems">
+                <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
+                    <span class="icon-plus" aria-hidden="true"></span> Add & Manage
+                </button>
+            </div>
+        </li> -->
+
+        <li>
+          <div ng-hide="canViewSpecificItems">
+              <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
+                  <span class="icon-plus" aria-hidden="true"></span> Add & Manage
+              </button>
+          </div>
+        </li>
+
+        <!-- <li>
+            <div ng-hide="canViewSpecificItems">
+                <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="NewgoToManageGroups()" ng-show="canManageComp">
+                    <span class="icon-plus" aria-hidden="true"></span> Add & Manage
+                </button>
+            </div>
+        </li> -->
+      
+<!--       <li class="header-btn fixedDate">
+        <span class="dateblock">
+          <input ng-if="showUnivdate" date-range-picker class="form-control date-picker date-range-picker" type="text" ng-model="cDate" options="fixedDateOptions" required/>
+        <span ng-if="!showUnivdate" ng-click="showUnivdate = true" class="fix_date" tooltip-placement="bottom" uib-tooltip="Set fix date" ng-click="showUnivdate = false"><i class="fa fa-calendar" aria-hidden="true"></i> 1-04-17 - 31-03-18</span>  
+        </span>
+      </li> -->
+
+
+
+      </ul>
+
+      <ul class="nav navbar-nav navbar-right">
+      <!-- company dropdown -->
+        <li ng-if="cmpViewShow" class="company-name" uib-dropdown>
+          <a id="cmpWrp" class="clearfix" uib-dropdown-toggle>
+            <span class="icon-dropdown"></span>
+            <!-- <i class="icon-building"></i> -->
             <div class="cText">
               <span class="cName">{{selectedCompany.name}}</span>
-              <span ng-bind="currentFinancialYear" style="font-size:12px;"></span>
+              <span ng-bind="currentFinancialYear" class="fyear"></span>
             </div>
             <!-- <i class="glyphicon glyphicon-chevron-down pull-right" style="right: -10px"></i> -->
           </a>
           <ul id="companyList" class="company-list dropdown-menu" aria-labelledby="cmpWrp" >
             <li class="create-company">
-              <button id="refreshCompanyBtn" class="btn btn-success btn-sm" ng-click="refreshcompanyList($event)">Refresh</button>
+              <button id="refreshCompanyBtn" class="btn btn-success btn-sm" ng-click="refreshcompanyList($event)"><i class="glyphicon glyphicon-refresh"></i></button>
               <button id="createCompanyBtn" class="btn btn-primary btn-sm" ng-click="createNewCompany()">Create Company</button>
             </li>
             <li style="padding:0px;">
-              <ul style="max-height: 260px;overflow-y: scroll;background:rgba(0,0,0,0.9);overflow:auto;">
+              <ul style="max-height: 260px;overflow-y: scroll;overflow:auto;">
                 <li ng-repeat="company in companyList" ng-click="changeCompany(company, $index,'CHANGE')" id="cmp" ng-class="{'selected-company':selectedCompany.uniqueName == company.uniqueName}">
-                  <span tooltip-placement="top" uib-tooltip="{{company.alias}}">{{company.name}}</span>
+                  <span tooltip-placement="right" uib-tooltip="{{company.alias}}">{{company.name}}</span>
                   <i id="deleteCmp" class="glyphicon glyphicon-trash" ng-if="company.shared" ng-click="deleteCompany(company,$index,company.name,$event)"></i>
                 </li>
               </ul>
             </li>
           </ul>
         </li>
-      </ul>
+      <!-- company dropdown end -->
 
-      <ul class="nav navbar-nav navbar-right">
+
         <li uib-dropdown
           tooltip-placement="left" 
           uib-tooltip="{{basicInfo.email}}"
@@ -184,21 +275,27 @@
             id="user-dropdown" 
             uib-dropdown-toggle
           >
-            <i class="glyphicon glyphicon-user"></i>
-            {{basicInfo.name}}
-            <span class="caret"></span>
+            {{userName}}
           </a>
           <ul class="dropdown-menu" aria-labelledby="user-dropdown">
             <li><a href="javascript:void(0)" ng-click="createNewCompany()">Create Company</a></li>
             <li><a ui-sref="company.content.user">User Detail</a></li>
-            <li><a target="_Blank" href="https://docs.giddh.com/">Documentation</a></li>
+            <li ng-if="ledgerState"><a href="javascript:void(0)" ng-click="runTour()">Run Tour</a></li>
+            <li><a target="_Blank" href="https://docs.giddh.com/" ng-click="$event.stopPropagation()">Documentation</a></li>
             <li ng-if="selectedCompany.canUserSwitch"><a class="pull-left" href="javascript:void(0)" ng-click="switchUser()"><span class="pull-left">Switch User</span><span class="on-btn pull-left" ng-if="ucActive"></span></a></li>
+            <!-- <li ng-if="showSwitchUserOption"><a class="cp" ng-click="switchLedgerMode()">Switch Ledger - 
+                <span ng-if="ledgerMode == 'new'">Old</span><span ng-if="ledgerMode == 'old'">New</span>
+              </a>
+            </li> -->
             <li role="separator" class="divider" style="width:100%"></li>
             <li><a ng-click="logout()" href="javascript:void(0)">Logout</a></li>
           </ul>
         </li>
       </ul>
     </nav>
+  </div>
+  <div class="accounts-side-bar greyBg" ng-show="flyAccounts">
+    <div ng-include="'/public/webapp/views/accounts.html'"></div>
   </div>
 </header>
 

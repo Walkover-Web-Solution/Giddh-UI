@@ -1,6 +1,7 @@
 "use strict"
 
-mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location) ->
+mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localStorageService, toastr, locationService, modalService, roleServices, permissionService, companyServices, $window,groupService, $location, DAServices) ->
+
   $rootScope.scriptArrayHead = [
     "/public/webapp/newRelic.js"
     "/public/webapp/core_bower.min.js"
@@ -15,6 +16,18 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     "/node_modules/angular2/bundles/angular2-all.umd.min.js"
     "/public/webapp/ng2.js"
   ]
+  $rootScope.groupName = {
+    sundryDebtors : "sundrydebtors"
+    revenueFromOperations : "revenuefromoperations"
+    indirectExpenses : "indirectexpenses"
+    operatingCost: "operatingcost"
+    otherIncome: "otherincome"
+    purchase: "purchases"
+    sales:"sales"
+  }
+
+
+  $rootScope.flyAccounts = false
   $rootScope.$stateParams = {}
   $rootScope.prefixThis = ""
   $rootScope.cmpViewShow = true
@@ -35,6 +48,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.hideHeader = false
   $rootScope.phoneVerified = false
   $rootScope.stateParams = null
+  $rootScope.search = {}
+  $rootScope.search.acnt = ''
   $rootScope.flatAccList = {
     page: 1
     count: 20000
@@ -51,6 +66,76 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.hasOwnCompany = false
   $rootScope.sharedEntity = ""
   $rootScope.croppedAcntList = []
+
+  ##Date range picker###
+  # $scope.fixedDate = {
+  #   startDate: moment().subtract(30, 'days')._d,
+  #   endDate: moment()._d
+  # };
+
+
+  # $scope.singleDate = moment()
+  # $scope.fixedDateOptions = {
+  #     locale:
+  #       applyClass: 'btn-green'
+  #       applyLabel: 'Apply'
+  #       fromLabel: 'From'
+  #       format: 'D-MMM-YY'
+  #       toLabel: 'To'
+  #       opens: 'center'
+  #       cancelLabel: 'Cancel'
+  #       customRangeLabel: 'Custom range'
+  #     ranges:
+  #       'Last 1 Day': [
+  #         moment().subtract(1, 'days')
+  #         moment()
+  #       ]
+  #       'Last 7 Days': [
+  #         moment().subtract(6, 'days')
+  #         moment()
+  #       ]
+  #       'Last 30 Days': [
+  #         moment().subtract(29, 'days')
+  #         moment()
+  #       ]
+  #       'Last 6 Months': [
+  #         moment().subtract(6, 'months')
+  #         moment()
+  #       ]
+  #       'Last 1 Year': [
+  #         moment().subtract(12, 'months')
+  #         moment()
+  #       ]
+  #     eventHandlers : {
+  #       'apply.daterangepicker' : (e, picker) ->
+  #         $scope.fixedDate.startDate = e.model.startDate._d
+  #         $scope.fixedDate.endDate = e.model.endDate._d
+  #     }
+  # }
+  # $scope.setStartDate = ->
+  #   $scope.fixedDate.startDate = moment().subtract(4, 'days').toDate()
+
+  # $scope.setRange = ->
+  #   $scope.fixedDate =
+  #       startDate: moment().subtract(5, 'days')
+  #       endDate: moment()
+  ###date range picker end###
+
+  #get user details
+  getUserSuccess = (res) ->
+    localStorageService.set('_userDetails', res.data.body)
+    $rootScope.basicInfo = res.data.body
+    $scope.userName = $rootScope.basicInfo.name.split(" ")
+    $scope.userName = $scope.userName[0][0]+$scope.userName[1][0]
+    $rootScope.getCompanyList()
+    if !_.isEmpty($rootScope.selectedCompany)
+      $rootScope.cmpViewShow = true
+      
+  getUserFailure = (res) ->
+    toastr.error('unable to fetch user')
+  getUserDetail = () ->
+    $http.get('/fetch-user').then(getUserSuccess, getUserFailure)
+  getUserDetail()
 
   $scope.addScript = () ->
     _.each($rootScope.scriptArrayHead, (script) ->
@@ -117,9 +202,13 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $http.post('/logout').then ((res) ->
       # don't need to clear below
       # _userDetails, _currencyList
-      localStorageService.clearAll()
+      localStorageService.remove('_userDetails')
+      localStorageService.remove('_roles')
+      localStorageService.remove('_currencyList')
+      localStorageService.remove('_selectedAccount')
+      localStorageService.remove('_ledgerData')
       window.sessionStorage.clear()
-      window.location = "/thanks"
+      window.location = "https://www.giddh.com"
     ), (res) ->
 
   # for ledger
@@ -181,11 +270,15 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     return pattern.test(emailStr)
   
   $scope.getRoles()
+<<<<<<< HEAD
   $timeout(->
     $rootScope.basicInfo = localStorageService.get("_userDetails")
     if !_.isEmpty($rootScope.selectedCompany)
       $rootScope.cmpViewShow = true
   ,1000)
+=======
+  $scope.getCdnUrl()
+>>>>>>> test
 
   $timeout (->
     cdt = localStorageService.get("_selectedCompany")
@@ -202,7 +295,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.beforeDeleteCompany.company = company
     $scope.beforeDeleteCompany.index = index
     modalService.openConfirmModal(
-      title: 'Are you sure you want to delete? ' + name,
+      title: 'Delete Company'
+      body: 'Are you sure you want to delete ' + name + ' ?',
       ok: 'Yes',
       cancel: 'No'
     ).then ->
@@ -324,6 +418,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   #Get company list success
   $scope.getCompanyListSuccess = (res) ->    
     $scope.companyList = _.sortBy(res.body, 'shared')
+    $scope.companyList = $scope.companyList.reverse()
     $rootScope.CompanyList = $scope.companyList
     if _.isEmpty($scope.companyList)
       #When no company is there
@@ -335,6 +430,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $scope.checkUserCompanyStatus(res.body)
       $rootScope.mngCompDataFound = true
       $scope.findCompanyInList()
+      # $rootScope.checkWalkoverCompanies()
 
   $scope.checkUserCompanyStatus = (compList) ->
     _.each compList, (cmp) ->
@@ -354,7 +450,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
         $rootScope.setCompany(cdt)
         $rootScope.companyIndex = cdt.index
     else
-      $scope.changeCompany($scope.companyList[0],0,'SELECT')
+      $scope.changeCompany($scope.companyList[0],0,'CHANGE')
       $rootScope.setCompany($scope.companyList[0])
       $rootScope.companyIndex = 0
 
@@ -371,6 +467,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.checkPermissions($rootScope.selectedCompany)
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
+    $scope.getGroupsList()
 #    $rootScope.getCroppedAccountList(company.uniqueName, '')
 
 
@@ -431,7 +528,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.flatAccntQueryFailure = (res) ->
     toastr.error(res.data.message)
 
-
   $scope.workInProgress = false
   $rootScope.getFlatAccountList = (compUname) ->
 #    console.log("work in progress", $scope.workInProgress)
@@ -448,8 +544,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.getFlatAccountListListSuccess = (res) ->
     $scope.workInProgress = false
     $rootScope.fltAccntListPaginated = res.body.results
+    $rootScope.$emit('account-list-updated')
 #    $rootScope.fltAccountLIstFixed = $rootScope.fltAccntListPaginated
     $rootScope.flatAccList.limit = 5
+    $scope.$broadcast('account-list-updated')
     
   $scope.getFlatAccountListFailure = (res) ->
     $scope.workInProgress = false
@@ -463,7 +561,22 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     )
     filteredList
 
+  $rootScope.OpenManegeModal = () ->
+    $rootScope.$emit('Open-Manage-Modal')
 
+  $rootScope.NewgoToManageGroups =() ->
+    if !$rootScope.canManageComp
+      return
+    if _.isEmpty($rootScope.selectedCompany)
+      toastr.error("Select company first.", "Error")
+    else
+      modalInstance = $uibModal.open(
+        templateUrl:'/public/webapp/NewManageGroupsAndAccounts/ManageGroupModal.html'
+        size: "liq90"
+        backdrop: 'static'
+        scope: $scope
+      )
+      # modalInstance.result.then(mc.goToManageGroupsOpen, mc.goToManageGroupsClose)
 
 
   # search flat accounts list
@@ -496,11 +609,12 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   # change selected company
 
-  $rootScope.getCompanyList()
+  
 
   $scope.changeCompany = (company, index, method) ->
 #    console.log("method we get here is : ", method)
     # select and set active financial year
+    $scope.getFlattenGrpWithAccList(company.uniqueName)
     $scope.setFYonCompanychange(company)
     #check permissions on selected company
     $rootScope.doWeHavePermission(company)
@@ -513,7 +627,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       localStorageService.set("_selectedCompany", company)
       $rootScope.selectedCompany = company
       $state.go('company.content.ledgerContent')
-      $rootScope.$emit('companyChanged')
+      $rootScope.$emit('company-changed')
     else
       $rootScope.canManageComp = true
       #$scope.goToCompany(company, index, "CHANGED")
@@ -524,8 +638,19 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     changeData.data = company
     changeData.index = index
     changeData.type = method
-    $scope.$broadcast('company-changed', changeData)
+    # $scope.$broadcast('company-changed', changeData)
     $rootScope.$emit('company-changed', changeData)
+    url = $location.url()
+    # if url.indexOf('ledger') == -1
+    #   $state.go('company.content.ledgerContent')
+    $scope.gwaList = {
+      page: 1
+      count: 10
+      totalPages: 0
+      currentPage : 1
+      limit: 10
+    }
+    #return false
     #$scope.tabs[0].active = true
 
   $rootScope.allowed = true
@@ -559,7 +684,194 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.$on('openAddManage', () ->
     $(document).find('#AddManage').trigger('click')
+    return false
   )
-#  $scope.addScript()
+
+  $scope.showAccounts = (e) ->
+    $rootScope.flyAccounts = true
+
+  # for accounts list
+  $scope.gwaList = {
+    page: 1
+    count: 5
+    totalPages: 0
+    currentPage : 1
+    limit: 5
+  }
+  $scope.working = false
+  $scope.getFlattenGrpWithAccList = (compUname) ->
+  #   console.log("working  : ",$scope.working)
+    $rootScope.companyLoaded = false
+    $scope.showAccountList = false
+    reqParam = {
+      companyUniqueName: compUname
+      q: ''
+      page: $scope.gwaList.page
+      count: $scope.gwaList.count
+    }
+    if $scope.working == false
+      $scope.working = true
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+
+
+  $scope.getFlattenGrpWithAccListSuccess = (res) ->
+    $scope.gwaList.page = res.body.page
+    $scope.gwaList.totalPages = res.body.totalPages
+    $rootScope.flatAccntWGroupsList = res.body.results
+    #$scope.flatAccntWGroupsList = gc.removeEmptyGroups(res.body.results)
+  #   console.log($scope.flatAccntWGroupsList)
+    $scope.showAccountList = true
+    $scope.gwaList.limit = 10
+    $rootScope.companyLoaded = true
+    $scope.working = false
+    $rootScope.toggleAcMenus(true)
+
+  $scope.getFlattenGrpWithAccListFailure = (res) ->
+    toastr.error(res.data.message)
+    $scope.working = false
+
+  $scope.loadMoreGrpWithAcc = (compUname, str) ->
+    $scope.gwaList.page += 1
+    reqParam = {
+      companyUniqueName: compUname
+      q: str || $rootScope.search.acnt
+      page: $scope.gwaList.page
+      count: $scope.gwaList.count
+    }
+    groupService.getFlattenGroupAccList(reqParam).then($scope.loadMoreGrpWithAccSuccess, $scope.loadMoreGrpWithAccFailure)
+    $scope.gwaList.limit += 10
+
+  $scope.loadMoreGrpWithAccSuccess = (res) ->
+    $scope.gwaList.currentPage += 1
+    #list = gc.removeEmptyGroups(res.body.results)
+    if res.body.results.length > 0 && res.body.totalPages >= $scope.gwaList.currentPage
+      _.each res.body.results, (grp) ->
+        grp.open = true
+        $rootScope.flatAccntWGroupsList.push(grp) 
+      #$scope.flatAccntWGroupsList = _.union($scope.flatAccntWGroupsList, list)
+    else if res.body.totalPages > $scope.gwaList.currentPage
+      $scope.loadMoreGrpWithAcc($rootScope.selectedCompany.uniqueName)
+    else
+      $scope.hideLoadMore = true
+
+  $scope.loadMoreGrpWithAccFailure = (res) ->
+    toastr.error(res.data.message)
+
+  $scope.searchGrpWithAccounts = (str) ->
+    $rootScope.search.acnt = str
+    $scope.gwaList.page = 1
+    $scope.gwaList.currentPage = 1
+    reqParam = {}
+    reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
+    if str.length > 2
+      #$scope.hideLoadMore = true
+      reqParam.q = str
+      reqParam.page = $scope.gwaList.page
+      reqParam.count = $scope.gwaList.count
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+    else
+      #$scope.hideLoadMore = false
+      reqParam.q = ''
+      groupService.getFlattenGroupAccList(reqParam).then($scope.getFlattenGrpWithAccListSuccess, $scope.getFlattenGrpWithAccListFailure)
+    # if str.length < 1
+    #   $scope.flatAccListC5.limit = 5
+      #$scope.hideLoadMore = false
+
+  $scope.removeEmptyGroups = (grpList) ->
+    newList = []
+    _.each grpList, (grp) ->
+      if grp.accountDetails.length > 0
+        newList.push(grp)
+    newList
+
+  $scope.setLedgerData = (data, acData) ->
+    $scope.selectedAccountUniqueName = acData.uniqueName
+    $rootScope.selectedAccount = acData
+    DAServices.LedgerSet(data, acData)
+    localStorageService.set("_ledgerData", data)
+    localStorageService.set("_selectedAccount", acData)
+    $rootScope.accClicked = true
+    $rootScope.$emit('account-selected')
+    return false
+
+  $scope.getGroupsList = () ->
+    @success = (res) ->
+      $rootScope.groupWithAccountsList = res.body
+    @failure = (res) ->
+
+    groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then(@success, @failure)
+
+  # $scope.goToLedgerCash = () ->
+  #   $state.go('company.content.ledgerContent',{unqName:'cash'})
+
+  $rootScope.toggleAcMenus = (condition) ->
+    $scope.showSubMenus = condition
+    _.each $rootScope.flatAccntWGroupsList, (grp) ->
+      grp.open = condition
+
+  $scope.runTour = () ->
+    $rootScope.$emit('run-tour')
+
+  # $scope.showSwitchUserOption = false
+  # $rootScope.checkUserCompany = () ->
+  #   user = localStorageService.get('_userDetails')
+  #   company = user.uniqueName.split('@')
+  #   company = company[company.length - 1]
+  #   company
+
+  # $rootScope.checkWalkoverCompanies = () ->
+  #   if $rootScope.checkUserCompany().toLowerCase() == 'giddh.com' || $rootScope.checkUserCompany().toLowerCase() == 'walkover.in' || $rootScope.checkUserCompany().toLowerCase() == 'msg91.com'
+  #     $scope.showSwitchUserOption = true
+  #   else
+  #     $scope.showSwitchUserOption = false
+
+  # $rootScope.ledgerMode = 'new'
+  # $rootScope.switchLedgerMode = () ->
+  #   if $rootScope.checkWalkoverCompanies()
+  #     if $rootScope.ledgerMode == 'new'
+  #       $rootScope.ledgerMode = 'old'
+  #     else
+  #       $rootScope.ledgerMode = 'new'
+
+  $rootScope.setState = (lastState, url, param) ->
+    $rootScope.selectedCompany = $rootScope.selectedCompany || localStorageService.get('_selectedCompany')
+    data = {
+        "lastState": lastState,
+        "companyUniqueName": $rootScope.selectedCompany.uniqueName
+    }
+    if url.indexOf('ledger') != -1
+      data.lastState = data.lastState + '@' + param
+    $http.post('/state-details', data).then(
+        (res) ->
+          
+        (res) ->
+          
+    )
+
+  $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+    if $rootScope.selectedCompany != undefined && $rootScope.selectedCompany != null
+      $rootScope.setState(toState.name, toState.url, toParams.unqName)
+  )
+
+  $(document).on('click', (e)->
+    if e.target.id != 'accountSearch'
+      $rootScope.flyAccounts = false
+    return false
+  )
+
+  $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
+    if toState.name == "company.content.ledgerContent" && toParams.unqName == 'cash'
+      $rootScope.ledgerState = true
+    else
+      $rootScope.ledgerState = false
+  )
+
+  $rootScope.$on('different-company', (event, lastStateData)->
+    company = _.findWhere($scope.companyList, {uniqueName:lastStateData.companyUniqueName})
+    localStorageService.set('_selectedCompany', company)
+    $rootScope.selectedCompany = company
+    $scope.changeCompany(company, 0, 'CHANGE')
+    $state.go(lastStateData.lastState)
+  )
 
 giddh.webApp.controller 'mainController', mainController

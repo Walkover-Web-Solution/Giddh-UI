@@ -17,15 +17,7 @@
               <th>Proforma</th>
               </thead>
               <tbody>
-              <!-- <tr>
-                <td>Create Entry + Invoice when paid</td>
-                <td>
-                  <input type="checkbox" ng-model="settings.invoiceSettings.autoEntryAndInvoice">
-                </td>
-                <td>
-                  <input type="checkbox" ng-model="settings.proformaSettings.autoEntryAndInvoice">
-                </td>
-              </tr> -->
+
               <tr>
                 <td>Send alert</td>
                 <td colspan="2">
@@ -75,45 +67,17 @@
               <tr>
                 <td>Auto mail when generated</td>
                 <td>
-                  <input type="checkbox" ng-model="settings.invoiceSettings.autoMail">
+                  <!-- <input type="checkbox" ng-model="settings.invoiceSettings.autoMail"> -->
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!settings.invoiceSettings.autoMail" ng-click="settings.invoiceSettings.autoMail = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="settings.invoiceSettings.autoMail" ng-click="settings.invoiceSettings.autoMail = false">
                 </td>
                 <td>
-                  <input type="checkbox" ng-model="settings.proformaSettings.autoMail">
+                  <!-- <input type="checkbox" ng-model="settings.proformaSettings.autoMail"> -->
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!settings.proformaSettings.autoMail" ng-click="settings.proformaSettings.autoMail = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="settings.proformaSettings.autoMail" ng-click="settings.proformaSettings.autoMail = false">
                 </td>
               </tr>
-<!--               <tr>
-                <td>Auto paid</td>
-                <td>
-                  <select class="form-control" ng-model="settings.invoiceSettings.autoPaid">
-                    <option>never</option>
-                    <option>runtime</option>
-                    <option>midnight</option>
-                  </select> -->
-                  <!--<ui-select ng-model="settings.proformaSettings.autoPaid" theme="bootstrap">-->
-                    <!--<ui-select-match>-->
-                      <!--<span>{{$select.selected}}</span>-->
-                    <!--</ui-select-match >-->
-                    <!--<ui-select-choices repeat="item in autoPayOption | filter: $select.search ">-->
-                      <!--<span ng-bind="item"></span>-->
-                    <!--</ui-select-choices>-->
-                  <!--</ui-select>-->
-<!--                 </td>
-                <td>
-                  <select class="form-control" ng-model="settings.proformaSettings.autoPaid">
-                    <option>never</option>
-                    <option>runtime</option>
-                    <option>midnight</option>
-                  </select> -->
-                  <!--<ui-select ng-model="settings.invoiceSettings.autoPaid" theme="bootstrap">-->
-                    <!--<ui-select-match>-->
-                      <!--<span>{{$select.selected}}</span>-->
-                    <!--</ui-select-match >-->
-                    <!--<ui-select-choices repeat="item in autoPayOption | filter: $select.search ">-->
-                      <!--<span ng-bind="item"></span>-->
-                    <!--</ui-select-choices>-->
-                  <!--</ui-select>-->
-<!--                 </td>
-              </tr> -->
+
               <tr>
                 <td>Default due date</td>
                 <td>
@@ -129,32 +93,31 @@
                   Days
                 </td>
               </tr>
-              <!--<tr>-->
-                <!--<td>Seal paid/unpaid</td>-->
-                <!--<td>-->
-                  <!--<input type="checkbox" ng-model="settings.invoiceSettings.showSeal">-->
-                <!--</td>-->
-                <!--<td>-->
-                  <!--<input type="checkbox" ng-model="settings.proformaSettings.showSeal">-->
-                <!--</td>-->
-              <!--</tr>-->
-              <!--<tr>-->
-                <!--<td>Do entry when paid using stripe/razorpay</td>-->
-                <!--<td>-->
-                  <!--<input type="checkbox">-->
-                <!--</td>-->
-                <!--<td>-->
-                  <!--<input type="checkbox">-->
-                <!--</td>-->
-              <!--</tr>-->
 
               <tr>
                 <td>Create entry after payment using any payment gateway</td>
                 <td>
-                  <input type="checkbox" ng-model="settings.invoiceSettings.createPaymentEntry">
+                  <!-- <input type="checkbox" ng-model="settings.invoiceSettings.createPaymentEntry"> -->
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!settings.invoiceSettings.createPaymentEntry" ng-click="settings.invoiceSettings.createPaymentEntry = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="settings.invoiceSettings.createPaymentEntry" ng-click="settings.invoiceSettings.createPaymentEntry = false">
                 </td>
                 <td>
-                  <input type="checkbox" ng-model="settings.proformaSettings.createPaymentEntry">
+                  <!-- <input type="checkbox" ng-model="settings.proformaSettings.createPaymentEntry"> -->
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!settings.proformaSettings.createPaymentEntry" ng-click="settings.proformaSettings.createPaymentEntry = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="settings.proformaSettings.createPaymentEntry" ng-click="settings.proformaSettings.createPaymentEntry = false">
+                </td>
+              </tr>
+              <tr>
+                <td>Show Seal according to status of payment</td>
+                <td>
+                  <!-- <input type="checkbox" ng-model="settings.invoiceSettings.createPaymentEntry"> -->
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!settings.invoiceSettings.showSeal" ng-click="settings.invoiceSettings.showSeal = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="settings.invoiceSettings.showSeal" ng-click="settings.invoiceSettings.showSeal = false">
+                </td>
+                <td>
+                  <!-- <input type="checkbox" ng-model="settings.proformaSettings.createPaymentEntry"> -->
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!settings.proformaSettings.showSeal" ng-click="settings.proformaSettings.showSeal = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="settings.proformaSettings.showSeal" ng-click="settings.proformaSettings.showSeal = false">
                 </td>
               </tr>
               </tbody>
@@ -393,7 +356,7 @@
 
             <div style="overflow:hidden">
               <h3 class="fs16 mrB1 mrT2">MSG91</h3>
-              <form name="msg91_keys" ng-submit="msg91_keys.$valid && saveMsg91()">
+              <form name="msg91_keys">
                 <div class="form-group">
                   <label>Auth Key</label>
                   <input type="text" placeholder="enter auth-key" class="form-control max350" ng-model="msg91.authKey"/>
@@ -402,7 +365,7 @@
                   <label>Sender ID</label>
                   <input type="text" placeholder="enter sender Id" class="form-control max350" ng-model="msg91.senderId"/>
                 </div>
-                <button type="submit" class="btn btn-success pull-left" ng-disabled="msg91_keys.$invalid">Save</button>
+                <button type="submit" class="btn btn-success pull-left" ng-disabled="msg91_keys.$invalid" ng-click="saveMsg91()">Save</button>
               </form>
             </div>
 
@@ -410,7 +373,7 @@
 
             <div style="overflow:hidden">
               <h3 class="fs16 mrB1 mrT1">SendGrid</h3>
-              <form name="sGrid_keys" ng-submit="sGrid_keys.$valid && saveSendGrid()">
+              <form name="sGrid_keys">
                 <div class="form-group">
                   <label>Auth Key</label>
                   <input type="text" placeholder="enter auth-key" class="form-control max350" ng-model="sGrid.authKey"/>
@@ -419,7 +382,7 @@
                   <label>Email Subject</label>
                   <input type="text" placeholder="enter email subject" class="form-control max350" ng-model="sGrid.subject"/>
                 </div>
-                <button type="submit" class="btn btn-success pull-left" ng-disabled="sGrid_keys.$invalid">Save</button>
+                <button type="submit" class="btn btn-success pull-left" ng-disabled="sGrid_keys.$invalid" ng-click="saveSendGrid()">Save</button>
               </form>
             </div>
 
@@ -432,60 +395,6 @@
           <div class="pd2 clearfix">
             <h1 class="mrB1">Add Bank Account </h1>
             <button ng-click="connectBank()" class="btn btn-primary">Connect Bank</button>
-
-            <!--             <div class="max350 mrT1">
-                          <ui-select ng-model="banks.list" theme="bootstrap" on-select="selectBank($select.selected)">
-                            <ui-select-match placeholder="Select Accounts">
-                              <span>{{$select.selected.defaultDisplayName}}</span>
-                            </ui-select-match >
-                            <ui-select-choices
-                              repeat="bank in banks.banksList | filter: $select.search" refresh="fetchSiteList($select.search)" refresh-delay="500">
-                              <span ng-bind-html="bank.defaultDisplayName"></span>
-                            </ui-select-choices>
-                          </ui-select>
-                        </div> -->
-            <!--             <form class="clearfix" name="addAccountForm" novalidate ng-if="banks.list != undefined" ng-submit="addAccountForm.$valid && submitForm(bankDetails)">
-                          <div class="row pdT2 pdR">
-                            <div class="col-xs-4">
-                             <section class="greyBox">
-
-                                <p class="form-group">Submit Form to Add Bank</p>
-
-                                <div class="form-group" ng-repeat="field in banks.components">
-
-                                  <ng-form name="innerform" ng-if="field.fieldType.typeName != 'OPTIONS'"
-                                  ng-class="(innerform.input.$valid  && innerform.input.$touched) ? 'has-success' : (innerform.input.$touched) ? 'has-error' : '' "
-                                  >
-                                    <input autocomplete="off" id="{{field.name}}" type="{{field.name}}" ng-model="bankDetails[field.displayName]" placeholder="{{field.displayName}}" class="form-control" name="input" maxlength="{{field.maxlength}}" ng-required="!field.isOptional"/>
-                                    <div class="error-msg" ng-show="innerform.input.$error.required && innerform.input.$touched">Required</div>
-                                  </ng-form>
-
-                                  <ng-form name="innerform" ng-if="field.fieldType.typeName == 'OPTIONS'">
-                                    <ui-select ng-model="bankDetails[field.displayName]" theme="bootstrap">
-                                      <ui-select-match placeholder="Select Options">
-                                        <span>{{$select.selected.name}}</span>
-                                      </ui-select-match >
-                                      <ui-select-choices
-                                        repeat="val.value as val in field.fieldOptions | filter: $select.search">
-                                        <span ng-bind-html="val.name"></span>
-                                      </ui-select-choices>
-                                    </ui-select>
-                                    <div class="error-msg" ng-show="innerform.input.$error.required">Required</div>
-                                  </ng-form>
-
-                                </div>
-                                <button type="submit" class="btn btn-success" ng-disabled="banks.requestSent || addAccountForm.$invalid">Submit</button>
-                                <div class="absolute-loader" ng-if="banks.requestSent">
-                                  <div class="loading-bar"></div>
-                                  <div class="mrT5">
-                                    Connecting with Bank.</br>
-                                    Please Wait, this may take a while.
-                                  </div>
-                                </div>
-                              </section>
-                            </div>
-                          </div>
-                        </form> -->
             <div class="mrT1">NOTE: In case you do not see your bank listed in Added Accounts even after getting a success message, please check again after some time.</div>
             <hr class="mrT2 col-xs-11">
             <div class="mrT2 col-xs-12 pd0">
@@ -498,6 +407,7 @@
                     <aside class="account-card" ng-repeat="card in account.accounts">
                       <div class="reconnectDiv" ng-if="card.reconnect">
                         <button class="btn btn-sm btn-info reconnectButton" ng-click="reconnectAccount(card)">Reconnect</button>
+                        <button class="btn btn-sm btn-danger reconnectButton" style="top:60%;left:28%; width:109px;" ng-click="deleteAddedBank(card)">Delete</button>
                       </div>
                       <a><i class="pull-left glyphicon glyphicon-refresh refresh-icon" ng-disabled="card.reconnect" ng-click="refreshToken(card)"></i></a>
                       <h1 ng-bind="card.name"  uib-tooltip="{{card.name}}"></h1>
@@ -585,7 +495,8 @@
               </div>
             </div>
             <div class="row pd1">
-              <input type="checkbox" ng-model="razorPayDetail.autoCapturePayment"> Automatic capture on payment
+               <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!razorPayDetail.autoCapturePayment" ng-click="razorPayDetail.autoCapturePayment = true">
+                  <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="razorPayDetail.autoCapturePayment" ng-click="razorPayDetail.autoCapturePayment = false"> Automatic capture on payment
             </div>
             <div class="row">
               <div class="col-xs-3 pdL1">
@@ -598,6 +509,424 @@
             </div>
           </div>
         </uib-tab>
+
+        <!--basic info-->
+        <uib-tab heading="{{tabs[5].title}}" active="tabs[5].active" id="basic">
+          <div class="pd2" ng-controller="companyController">
+            <fieldset ng-disabled="!canManageCompany">
+            <form id="cmpnyBascFrm" name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
+              <p ng-hide="cmpnyBascFrm.$submitted || !ecmpnyBascFrm.cCountry.$invalid" class="bg-warning pd1 mrB1">
+                For better experience fill all details of form
+              </p>
+              <input type="hidden" ng-model="selectedCompany.uniqueName" name="cUniqName"/>
+
+              <div class="row">
+                <div class="col-xs-6">
+                  <div class="form-group"
+                       ng-class="(cmpnyBascFrm.cName.$valid  && cmpnyBascFrm.cName.$touched) ? 'has-success' : (cmpnyBascFrm.cName.$touched) ? 'has-error' : '' ">
+                    <label>Name</label>
+                    <input type="text" ng-model="selectedCompany.name" class="form-control" required name="cName"
+                           tabindex="1">
+                  </div>
+                  <div class="form-group">
+                    <label>Uniquename</label>
+                    <input ng-readonly="true" type="text" ng-model="selectedCompany.uniqueName" class="form-control"  name="cUname">
+                  </div>
+                  <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" ng-model="selectedCompany.email" class="form-control" name="cEmail"
+                           tabindex="2">
+                  </div>
+                  <div class="form-group"
+                      ng-class="(cmpnyBascFrm.cContact.$valid  && cmpnyBascFrm.cContact.$touched) ? 'has-success' : (cmpnyBascFrm.cContact.$touched) ? 'has-error' : '' ">
+                    <label>Contact</label>
+                    <script type="text/ng-template" id="cityTemplate.html">
+                      <a>
+                        <span ng-bind-html="match.label"></span>
+                        <span ng-bind-html="match.model.countryName"></span>
+                      </a>
+                    </script>
+                    <div class="row">
+
+                      <div class="col-xs-3">
+
+                        <input type="hidden" ng-model="selectedCompany.contactNo">
+
+                        <input type="text" ng-model="selectedCompany.cCode" required
+                               uib-typeahead="country as country.value for country in countryCodesList | filter:$viewValue | limitTo:8"
+                               class="form-control" typeahead-template-url="cityTemplate.html" placeholder="91" tabindex="3"/>
+
+                      </div>
+                      <div class="col-xs-9"> 
+                        <input type="text" placeholder="98XXXXXXXX" class="form-control" name="onlyMobileNo" required
+                               ng-model="selectedCompany.mobileNo" valid-number tabindex="4"/>
+                      </div>
+                    </div>
+
+                  </div>
+                  <div class="form-group"
+                       ng-class="(cmpnyBascFrm.cAddress.$valid  && cmpnyBascFrm.cAddress.$touched) ? 'has-success' : (cmpnyBascFrm.cAddress.$touched) ? 'has-error' : '' ">
+                    <label>Address</label>
+                    <textarea ng-model="selectedCompany.address" class="form-control" name="cAddress" required
+                              tabindex="5"/>
+                  </div>
+                </div>
+                <div class="col-xs-6">
+                  <div class="form-group"
+                       ng-class="(cmpnyBascFrm.cCountry.$valid  && cmpnyBascFrm.cCountry.$touched) ? 'has-success' : (cmpnyBascFrm.cCountry.$touched) ? 'has-error' : '' ">
+                    <label>Country</label>
+                    <input type="text" ng-model="selectedCompany.country"
+                           uib-typeahead="address for address in getCountry($viewValue)" typeahead-loading="loadingLocationsC"
+                           typeahead-no-results="noResultsC" class="form-control" name="cCountry" autocomplete="off"
+                           tabindex="6" required>
+                    <i ng-show="loadingLocationsC" class="glyphicon glyphicon-refresh"></i>
+
+                    <div ng-show="noResultsC">
+                      <i class="glyphicon glyphicon-remove"></i> No Results Found
+                    </div>
+
+                  </div>
+                  <div class="form-group"
+                       ng-class="(cmpnyBascFrm.cState.$valid  && cmpnyBascFrm.cState.$touched) ? 'has-success' : (cmpnyBascFrm.cState.$touched) ? 'has-error' : '' ">
+                    <label>State</label>
+                    <input type="text" ng-model="selectedCompany.state"
+                           uib-typeahead="address for address in getState($viewValue)" typeahead-loading="loadingLocationsS"
+                           typeahead-no-results="noResultsS" class="form-control" name="cState" autocomplete="off"
+                           tabindex="7" ng-disabled="cmpnyBascFrm.cCountry.$invalid" required>
+                    <i ng-show="loadingLocationsS" class="glyphicon glyphicon-refresh"></i>
+
+                    <div ng-show="noResultsS">
+                      <i class="glyphicon glyphicon-remove"></i> No Results Found
+                    </div>
+
+                  </div>
+                  <div class="form-group"
+                       ng-class="(cmpnyBascFrm.cCity.$valid  && cmpnyBascFrm.cCity.$touched) ? 'has-success' : (cmpnyBascFrm.cCity.$touched) ? 'has-error' : '' ">
+                    <label>City</label>
+                    <input type="text" ng-model="selectedCompany.city"
+                           uib-typeahead="address for address in getCity($viewValue)" typeahead-loading="loadingLocationsCt"
+                           typeahead-no-results="noResultsCt" class="form-control" name="cCity" autocomplete="off"
+                           tabindex="8" ng-disabled="cmpnyBascFrm.cState.$invalid" required>
+                    <i ng-show="loadingLocationsCt" class="glyphicon glyphicon-refresh"></i>
+
+                    <div ng-show="noResultsCt">
+                      <i class="glyphicon glyphicon-remove"></i> No Results Found
+                    </div>
+
+                  </div>
+                  <div class="row">
+                    <div class="col-xs-4">
+                      <div class="form-group"
+                           ng-class="(cmpnyBascFrm.cCurrency.$valid  && cmpnyBascFrm.cCurrency.$touched) ? 'has-success' : (cmpnyBascFrm.cCurrency.$touched) ? 'has-error' : '' ">
+                        <label>Currency</label>
+                        <input type="text" ng-model="selectedCompany.baseCurrency" class="form-control"
+                         ng-model="currencySelected"
+                         uib-typeahead="currency for currency in currencyList | filter:$viewValue | limitTo:4" required
+                         name="cCurrency" autocomplete="off" tabindex="9">
+
+                      </div>
+                    </div>
+                    <div class="col-xs-8">
+                      <div class="form-group"
+                           ng-class="(cmpnyBascFrm.cPincode.$valid  && cmpnyBascFrm.cPincode.$touched) ? 'has-success' : (cmpnyBascFrm.cPincode.$touched) ? 'has-error' : '' ">
+                        <label>Pincode</label>
+                        <input type="text" ng-model="selectedCompany.pincode" class="form-control" required
+                               pattern="^[0-9]*$" name="cPincode" tabindex="10" valid-number>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- end of row -->
+              <div class="clearfix">
+                <button ng-hide="!canManageCompany" tabindex="11" ng-click="updateCompanyInfo(selectedCompany)" class="btn btn-primary" ng-disabled="cmpnyBascFrm.$invalid">Update
+                </button>
+              </div>
+            </form>
+            </fieldset>
+            <!-- end of change basic info -->
+          </div>
+        </uib-tab>
+
+        <!--shared list-->
+        <uib-tab ng-if="canManageCompany" heading="{{tabs[6].title}}" active="tabs[6].active" id="permission" select="getSharedList()">
+          <div class="pd2" ng-controller="companyController">
+            <div class="greyBox mrB2">
+              <form name="addShareEmailForm" novalidate class="form-inline">
+                <div class="form-group">
+                  <label class="mrR1">Give permission to:</label>
+                  <input ng-model="shareRequest.user" name="userEmail" type="text" class="form-control" placeholder="Uniquename/Email ID" required/>
+                </div>
+                <div class="form-group">
+                  <select 
+                    class="form-control"
+                    name="userRole" 
+                    ng-model="shareRequest.role"
+                    ng-options="item.uniqueName as item.name for item in shareableRoles">
+                  </select>
+                </div>
+                <div class="form-group">
+                  <button ng-disabled="addShareEmailForm.$invalid" class="btn btn-primary mrL1"
+                          ng-click="shareCompanyWithUser()">
+                    Add
+                  </button>
+                </div>
+              </form>
+            </div>
+            <ul class="list-group ln">
+
+              <li ng-repeat="(key,value) in sharedUsersList | pick: exceptOwnEmail track by $index" class="list-group-item">
+
+                <div class="row">
+                  <div class="col-xs-6">
+                    <span class="pull-left mrR1">
+                      <i ng-if="value.role.uniqueName != 'super_admin_off_the_record'" class="glyphicon glyphicon-user"></i>
+                      <i ng-if="value.role.uniqueName == 'super_admin_off_the_record'" class="glyphicon glyphicon-star"></i>
+                    </span>
+                    <span class="pull-left">
+                      <div ng-bind-html="value.userName">
+                      </div>
+                      <small ng-bind-html="value.userEmail"></small>
+                    </span>
+                  </div>
+
+                  <div class="col-xs-6">
+
+                    <div class="form-inline">
+                      <div class="form-group">
+                        <select 
+                          class="form-control"
+                          ng-change="updateUserRole(value.role.uniqueName, value.userEmail)"
+                          ng-model="value.role.uniqueName"
+                          ng-options="item.uniqueName as item.name for item in shareableRoles">
+                        </select>
+                      </div>
+                      <span class="delIcon">
+                        <i class="glyphicon glyphicon-trash" ng-click="unSharedUser(value.userUniqueName, $index)"></i>
+                      </span>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </li>
+
+            </ul>
+
+          </div>
+        </uib-tab>
+
+        <!-- start transaction tab -->
+        <uib-tab ng-if="canManageCompany" heading="{{tabs[7].title}}" active="tabs[7].active" id="payment">
+          <div class="pd2" ng-controller="companyController">
+            <div class="clearfix mrB1 form-inline">
+              <div class="form-group mrR1">
+                <h3 class="fs16">Invoice amount {{selectedCompany.companySubscription.billAmount}} &#x20B9;</h3>
+              </div>
+              <div class="form-group">
+                <button ng-disabled="!selectedCompany.companySubscription.paymentDue" ng-click="getWltBal()" class="btn btn-success">Pay Now</button>
+                <!--  -->
+              </div>
+            </div>
+
+            <!-- <div ng-if="chkWltBal">
+              <div class="search-loading">
+                <span class="spinner small"></span> Please wait we are recharging your wallet
+              </div>
+            </div> -->
+
+            <!-- show payment options start-->
+            <div ng-if="showPayOptns">
+              <p class="lead mrB1">
+                You don't have sufficient balance in your wallet. You have to make a payment of {{wlt.Amnt}}  &#x20B9;
+              </p>
+              <div class="checkbox">
+                <label>
+                  <input ng-change="resetDiscount(isHaveCoupon)" ng-model="isHaveCoupon" type="checkbox">Have a coupon code
+                </label>
+              </div>
+              <form class="form-inline mrB2" name="couponForm" novalidate ng-show="isHaveCoupon">
+                <div class="form-group mrR1" ng-class="(couponForm.couponcode.$valid  && couponForm.couponcode.$touched) ? 'has-success' : (couponForm.couponcode.$touched) ? 'has-error' : '' ">
+                  <input type="text" name="couponcode" class="form-control max200" ng-model="coupon.code" placeholder="Coupon code" required autocomplete="off">
+                </div>
+                <button ng-disabled="couponForm.$invalid" class="btn btn-primary" ng-click="redeemCoupon(coupon.code)">Redeem</button>
+              </form>
+              <uib-alert ng-repeat="alert in payAlert" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
+              <div ng-if="directPay">
+                <div class="search-loading">
+                  <span class="spinner small"></span> Please wait we are recharging your wallet
+                </div>
+              </div>
+              <div class="">
+                <button ng-disabled="disableRazorPay" razor-pay class="btn btn-primary">Pay with Razorpay</button>
+              </div>
+            </div>
+            <!-- show payment option end -->
+
+
+            <table class="mrT2 table table-bordered table-striped">
+              <thead>
+                <th>Subs. date</th>
+                <th>Plan</th>
+                <th>Auto pay</th>
+                <th>Prim. payee</th>
+                <th>Sec. payee</th>
+                <th>Action</th>
+              </thead>
+              <tbody>
+                <tr>
+                  <td ng-bind-html="selectedCompany.companySubscription.subscriptionDate | moment: 'format': 'MMM DD, YYYY' "></td>
+                  <td>
+                    {{selectedCompany.companySubscription.servicePlan.planName}}
+                  </td>
+                  <td>
+                    <switch name="autopay" on="On" off="Off" ng-model="selectedCompany.companySubscription.autoDeduct" class="wide"></switch>
+                  </td>
+                  
+                  <td>
+                    <ui-select 
+                      ng-model="selectedCompany.companySubscription.primaryBiller"
+                      theme="bootstrap"
+                      ng-disabled="disabled"
+                      reset-search-input="false"
+                      on-select="primPayeeChange($item, $model)"
+                    >
+                      <ui-select-match placeholder="Select...">{{$select.selected.userName}}</ui-select-match>
+                      <ui-select-choices 
+                        ui-disable-choice="person.userUniqueName === selectedCompany.createdBy.uniqueName"
+                        repeat="person in sharedUsersList">
+                        <div ng-bind-html="person.userName"></div>
+                        <small>
+                          email: {{person.userEmail}}
+                          age: {{person.userUniqueName}}
+                        </small>
+                      </ui-select-choices>
+                    </ui-select>
+                  </td>
+                  <td>
+                    <input type="text" class="form-control" ng-disabled="true" 
+                    tooltip-placement="top" uib-tooltip="{{selectedCompany.createdBy.email}}"
+                    ng-model="selectedCompany.createdBy.name">
+                  </td>
+                  <td>
+                    <button ng-disabled="compSetBtn" class="btn btn-sm btn-info" ng-click="updateCompSubs(selectedCompany.companySubscription)">Update</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            
+            <section ng-hide="compDataFound" class="mrT2">
+              <a href="javascript:void(0)" ng-click="getCompanyTransactions()">
+                Show Transaction logs
+              </a>
+            </section>
+            <section ng-if="compDataFound">
+              <div class="bdrB mrT2 mrB2"></div>
+
+              <p class="lead mrB2">Transaction logs</p>
+              <table class="table table-striped table-bordered">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                    <th>User</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="value in compTransData.paymentDetail">
+                    <td ng-bind-html="value.paymentDate | moment: 'format': 'MMM DD, YYYY' "></td>
+                    <td>
+                      <span class="mrR" ng-bind-html="value.balance.amount"></span>
+                      <span class="text-success" ng-if="value.balance.type == 'CREDIT'">
+                        (CR)
+                      </span>
+                      <span class="text-danger" ng-if="value.balance.type == 'DEBIT'">
+                        (DR)
+                      </span>
+                    </td>
+                    <td>
+                      <div ng-bind-html="value.user.name" tooltip-placement="top" uib-tooltip="{{value.user.email}}"></div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+              <button ng-hide="compTransData.totalPages <= 1" ng-disabled="nothingToLoadComp" class="btn btn-primary" ng-click="pageChangedComp(compTransData)">Load more</button>
+            </section>
+
+          </div>
+        </uib-tab>
+        <!-- end transaction tab -->
+
+        <uib-tab ng-if="canManageCompany" heading="{{tabs[8].title}}" active="tabs[8].active" id="fin-year" select="getFY()">
+          <div class="pd2">
+
+              <h3 class="fs16 mrB1 mrT1">Financial Year(s) - {{fy.company}}</h3>
+              <div class="">
+                <table class="mrT3 table table-bordered table-striped">
+                  <thead ng-if="fy.years.length > 0">
+                    <tr>
+                      <th>#</th>
+                      <th>From</th>
+                      <th>To</th>
+                      <th colspan="2">Lock Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr ng-repeat="year in fy.years track by $index">
+                      <td>{{$index + 1}}</td>
+                      <td>{{year.financialYearStarts}}</td>
+                      <td>{{year.financialYearEnds}}</td>
+                      <td ng-if="$index != 0">
+                        <div ng-click="lockFY(year)">
+                          <switch name="lockFY_{{$index}}" on="Lock" off="Unlock" ng-model="year.isLocked" class="wide100" ></switch>
+                        </div>
+                      </td>
+                      <td ng-if="$index == 0"><p>Current Financial Year (can not be locked)</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <hr>
+
+              <div>
+                <h3 class="fs16 mrB1 mrT1">Switch Financial Year</h3>
+                <div class="clearfix max350">
+                  <ui-select ng-model="fy.selectedYear" theme="bootstrap">
+                      <ui-select-match placeholder="Select Period">
+                        <span>{{$select.selected.name}}</span>
+                      </ui-select-match >
+                      <ui-select-choices repeat="yr in fy.years | filter: $select.search">
+                        <span ng-bind="yr.name"></span>
+                      </ui-select-choices>
+                  </ui-select>
+                </div>
+                <button class="btn btn-success mrT1 mrB1" ng-click="switchFY(fy.selectedYear)">Save</button>   
+              </div>
+
+              <hr>
+
+              <div>
+                <h3 class="fs16 mrB1 mrT1">Add Financial Year</h3>
+                <div class="clearfix max350">
+                  <ui-select ng-model="fy.newFY" theme="bootstrap">
+                      <ui-select-match placeholder="Select Period">
+                        <span>{{$select.selected}}</span>
+                      </ui-select-match >
+                      <ui-select-choices repeat="yr in fyYears | filter: $select.search | orderBy:yr">
+                        <span ng-bind="yr"></span>
+                      </ui-select-choices>
+                  </ui-select>
+                </div>
+                <button class="btn btn-success mrT1 mrB1" ng-click="addFY(fy.newFY)">Save</button>   
+              </div>
+          </div>
+        </uib-tab>
+
+
       </uib-tabset>
     </perfect-scrollbar>
   </div>

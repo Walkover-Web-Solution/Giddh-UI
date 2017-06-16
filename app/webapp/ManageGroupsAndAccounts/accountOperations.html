@@ -24,35 +24,36 @@
       <div class="row pdT2 pdL pdR">
 
         <div class="col-xs-6">
-          <section class="greyBox">
+          <section class="greyBox" style="min-height:300px;">
             <p class="form-group">Basic Info (required)*</p>
 
             <div class="form-group">
               <input type="text" placeholder="Enter Account name" class="form-control" name="name" maxlength="100"
-                     ng-model="selectedAccount.name" required ng-disabled="isFixedAcc" autocomplete="off"/>
+                     ng-model="selectedAccount.name" required ng-disabled="isFixedAcc" autocomplete="off" ng-change="autoFillUnq(selectedAccount.name)" ng-model-options="{debounce:1000}"
+                    />
             </div>
             <div class="form-group">
               <input type="text" placeholder="Unique Names" class="form-control" name="uniqueName" valid-unique
-              ng-model="selectedAccount.uniqueName" ng-disabled="isFixedAcc" autocomplete="off" required/>
+              ng-model="selectedAccount.uniqueName" ng-disabled="isFixedAcc || fetchingUnq" autocomplete="off" required/>
             </div>
 
-            <div class="form-group">
+<!--             <div class="form-group"> -->
               <!-- selectedAccount.openingBalanceDate -->
               <!-- <p class="input-group"> -->
-               <input type="text" class="form-control"
+<!--                <input type="text" class="form-control"
                        uib-datepicker-popup="{{format}}"
                        datepicker-options="dateOptions"
                        is-open="valuationDatePickerIsOpen"
                        ng-click="valuationDatePickerOpen()"
-                       ng-model="datePicker.accountOpeningBalanceDate" max-date="today"/>
+                       ng-model="datePicker.accountOpeningBalanceDate" max-date="today"/> -->
                        <!--ng-disabled="isFixedAcc"-->
             <!--  <span class="input-group-btn">
                 <button type="button" class="btn btn-default" ng-click="valuationDatePickerOpen()"><i
                     class="glyphicon glyphicon-calendar"></i></button>
               </span> -->
-              </p>
+<!--               </p>
 
-            </div>
+            </div> -->
 
             <div class="row">
               <p class="mrB small col-xs-12">Opening balance types</p>
@@ -125,14 +126,14 @@
 
       </div>
       <!-- end of clearfix -->
-      <div class="row pdL pdR mrT2">
-        <div class="form-group col-xs-12" ng-hide="!canUpdate || cantUpdate">
+      <div class="row pdL pdR">
+        <div class="form-group col-xs-12 text-center" ng-hide="!canUpdate || cantUpdate">
           <button ng-if="acntCase == 'Update'" class="btn btn-success" ng-click="updateAccount()"
-                  ng-disabled="addAccountForm.$invalid">{{acntCase}}
+                  ng-disabled="addAccountForm.$invalid" style="width:250px;">{{acntCase}}
           </button>
 
           <button ng-if="acntCase == 'Add'" class="btn btn-success" ng-click="addAccount()"
-                  ng-disabled="addAccountForm.$invalid">{{acntCase}}
+                  ng-disabled="addAccountForm.$invalid" style="width:250px;">{{acntCase}}
           </button>
 
         </div>
@@ -189,7 +190,7 @@
             </div>
             <div class="form-group">
               <input ng-model="moveacto" type="text" placeholder="Group name" class="form-control" required
-                typeahead="groups as groups.name for groups in flattenGroupList | omit: isCurrentGroup | filter:({uniqueName:$viewValue} || {name:$viewValue} || {synonyms:$viewValue}) | limitTo: 4"/>
+                uib-typeahead="groups as groups.name for groups in flattenGroupList | omit: isCurrentGroup | filter:({name:$viewValue} || {uniqueName:$viewValue} || {synonyms:$viewValue}) | limitTo: 4"/>
 
               <!--<ui-select ng-model="moveacto" theme="bootstrap">-->
                 <!--<ui-select-choices-->
@@ -263,7 +264,7 @@
                   </ui-select-match >
                   <ui-select-choices
                     ui-disable-choice="acc.uniqueName === selAcntUname"
-                    repeat="acc in mergeAccList | filter: $select.search" refresh="refreshFlatAccount($select.search)" minimum-input-length="2">
+                    repeat="acc in mergeAccList | filter: $select.search" refresh="refreshFlatAccount($select.search)" minimum-input-length="1">
                     <span>{{acc.name}} ({{acc.uniqueName}})</span>
                   </ui-select-choices>
               </ui-select>

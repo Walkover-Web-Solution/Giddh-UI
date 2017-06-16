@@ -1,6 +1,11 @@
 <!DOCTYPE HTML>
 <html lang="en" ng-app='giddhApp'>
 <head>
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-K2L9QG');</script>
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,7 +22,9 @@
   <link href="<<PREFIX_THIS>>/public/website/css/new-style.css" rel="stylesheet">
   <!-- LIBRARIES -->
   <script src="<<PREFIX_THIS>>/public/webapp/newRelic.js"></script>
+  <script src="<<PREFIX_THIS>>/bower_components/file-saver.js/FileSaver.js"></script>
   <script  type="text/javascript" src='<<PREFIX_THIS>>/public/webapp/core_bower.min.js'></script>
+    <script src="<<PREFIX_THIS>>/bower_components/angular-file-saver/dist/angular-file-saver.js"></script>
   <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/app.js"></script>
   <script src="<<PREFIX_THIS>>/public/website/js/controller/loginController.js"></script>
   <!-- recaptcha -->
@@ -26,7 +33,8 @@
   
 </head>
 <body ng-controller="homeCtrl" id="page-top">
-
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   <ng-include src="'public/website/views/header.html'"></ng-include>
 
   <section id="videoBg" class="intro pricing">
@@ -35,9 +43,10 @@
       <div class="container">
         <div class="row">
           <div class="col-sm-12">
-            <h1 class="brand-heading arvo">Don’t expect long tables here.<br> We are flat <span>₹ 500 a month.</span></h1>
+            <h1 class="brand-heading arvo">Don’t expect long tables here.<br> We are flat <span>₹ 800 a month.</span></h1>
             <figure>
-              <img class="img-responsive" src="<<PREFIX_THIS>>/public/website/images/new/pricing-mascot.png" alt="business accounting software">
+              <img class="img-responsive" src="<<PREFIX_THIS>>/public/website/images/Pricing-Icon.png" alt="business accounting software">
+                          <h3 class=""><span class="pClr head3">Free</span>, If Revenue is less than 1 Lac per month.</h3>
             </figure>
 
             <div class="text-center pBnrBtm clearfix">

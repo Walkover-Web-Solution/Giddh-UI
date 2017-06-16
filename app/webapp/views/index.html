@@ -1,7 +1,17 @@
 <!DOCTYPE HTML>
-<!-- <html lang="en" ng-app='giddhWebApp'> -->
 <html lang="en">
 <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="viewport" content="width=1366" />
+  <base href="/">
+
+  <!-- @if NODE_ENV='PRODUCTION' -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-K2L9QG');</script>
+  <!-- @endif -->
   <meta charset="UTF-8"/>
   <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -11,59 +21,73 @@
   <!-- LIBRARIES INCLUDE -->
   
   <link rel="stylesheet" type="text/css" href="/public/webapp/Globals/css/giddh.min.css">
-  <!-- @if NODE_ENV='PRODUCTION' -->
-  <script  type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/newRelic.js"></script>
-  <!-- @endif -->
- <!--data-cfasync="false" -->
-  <script  type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/core_bower.min.js"></script>
-  <script type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/_extras.js"></script>
-  <!-- including app Js Files -->
-  <!-- @if NODE_ENV='DEVELOPMENT' -->
-  <script  type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/app.js"></script>
-  <!-- @endif -->
-  <!-- @if NODE_ENV='PRODUCTION' -->
-  <script type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/app.min.js"></script>
-  <!-- @endif -->
 
-
-
-  <!-- @if NODE_ENV='PRODUCTION' -->
-  <!-- <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,300,600' rel='stylesheet' type='text/css'> -->
-  <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
-  <!-- @endif -->
-
-  <!-- setting base to '/' to remove hashbang from URLs-->
-  <!--   <base href="/"> -->
-</head>
-<body class="unresponsive" ng-controller="mainController" >
-
-  <div ng-include="'/public/webapp/views/header.html'"></div>
-  <ui-view></ui-view>
-
-
-  <script type="text/javascript" src="<<PREFIX_THIS>>/node_modules/rxjs/bundles/Rx.umd.js"></script>
-  <script type="text/javascript" src="<<PREFIX_THIS>>/node_modules/es6-shim/es6-shim.js"></script>
-  <script type="text/javascript" src="<<PREFIX_THIS>>/node_modules/angular2/bundles/angular2-polyfills.js"></script>
-  <script type="text/javascript" src="<<PREFIX_THIS>>/node_modules/angular2/bundles/angular2-all.umd.min.js"></script>
-  <script  type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/ng2.js"></script>
-
-  <!-- @if NODE_ENV='PRODUCTION' -->
-  <!-- Google Tag Manager -->
-  <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
-  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-  <script   type="text/javascript">(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  '//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-K2L9QG');</script>
-  <!-- End Google Tag Manager -->
-  <!-- @endif -->
+  <link rel="stylesheet" href="/bower_components/ngOnboarding/dist/ng-onboarding.css" />
+  <link rel="stylesheet" type="text/css" href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" />
   
+  <link rel="stylesheet" type="text/css" href="/bower_components/bootstrap-daterangepicker/daterangepicker.css" />
 
-  <!-- @if NODE_ENV='PRODUCTION' -->
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
+  <script  type="text/javascript" src="/bower_components/tinymce/tinymce.min.js"></script>
 
+  <!-- @if NODE_ENV='PRODUCTION' -->
+  <script  type="text/javascript" src="/public/webapp/newRelic.js"></script>
   <!-- @endif -->
+  <script  type="text/javascript" src="/public/webapp/core_bower.min.js"></script>
+  <script type="text/javascript" src="/public/webapp/_extras.js"></script>
+
+  <!-- including app Js Files -->
+  <!-- @if NODE_ENV='DEVELOPMENT' -->
+  <script  type="text/javascript" src="/public/webapp/app.js"></script>
+  <!-- @endif -->
+  <!-- @if NODE_ENV='PRODUCTION' -->
+  <script type="text/javascript" src="/public/webapp/app.min.js"></script>
+  <!-- @endif -->
+  
+  
+</head>
+<body class="unresponsive" ng-controller="mainController" >
+  <!-- @if NODE_ENV='PRODUCTION' -->
+    <noscript>
+      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2L9QG" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+  <!-- @endif -->
+
+
+  <div class="header-container" ng-include="'/public/webapp/views/header.html'"></div>
+  
+  <div style="min-height:100%;overflow:hidden;" >
+    <ui-view></ui-view>
+  </div>
+  
+
+
+  <footer>
+    <div>
+      <a href="https://giddh.com/about" target="_Blank" ng-click="$event.stopPropagation()" >About us</a>|
+      <a href="http://blog.giddh.com/"  target="_Blank" ng-click="$event.stopPropagation()">Blog</a>|
+      <a href="https://trello.com/b/PArZrnyg/giddh" target="_Blank" ng-click="$event.stopPropagation()">Upcoming</a>|
+      <a href="https://giddh.com//terms"  target="_Blank" ng-click="$event.stopPropagation()">Terms of use</a>|
+      <a href="https://giddh.com//privacy"  target="_Blank" ng-click="$event.stopPropagation()">Privacy policy</a>|
+      <a href="https://www.walkover.in/currentopening.php"  target="_Blank" ng-click="$event.stopPropagation()">Work with us!</a>|
+      <a href="http://faq.giddh.com"  target="_Blank" ng-click="$event.stopPropagation()">FAQ</a>|
+      <a href="https://giddh.com//affiliate"  target="_Blank" ng-click="$event.stopPropagation()">Affiliate With Us</a>
+    </div>
+
+    <small>All right are reserved © 2020 Walkover <a href="https://giddh.com/"  target="_Blank" ng-click="$event.stopPropagation()">Giddh.com</a></small>
+  </footer>
+
+
+  <script type="text/javascript" src="/node_modules/rxjs/bundles/Rx.umd.js"></script>
+  <script type="text/javascript" src="/node_modules/es6-shim/es6-shim.js"></script>
+  <script type="text/javascript" src="/node_modules/angular2/bundles/angular2-polyfills.js"></script>
+  <script type="text/javascript" src="/node_modules/angular2/bundles/angular2-all.umd.min.js"></script>
+  <script  type="text/javascript" src="/public/webapp/ng2.js"></script>
+
+  
+  
+
+
 </body>
 </html>

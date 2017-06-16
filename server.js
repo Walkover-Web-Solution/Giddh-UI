@@ -1,4 +1,4 @@
-require('newrelic');
+//require('newrelic');
 // comment it while developement
 var settings = require('./public/routes/util/settings');
 var favicon = require('serve-favicon');
@@ -12,7 +12,7 @@ var request = require('request');
 var jwt = require('jwt-simple');
 var mongoose = require('mongoose');
 var MongoStore = require('connect-mongo')(session);
-var MemcachedStore = require('connect-memcached')(session);
+// var MemcachedStore = require('connect-memcached')(session);
 //global.sessionTTL = 1000 * 60
 //Example POST method invocation 
 var Client = require('node-rest-client').Client; 
@@ -23,26 +23,15 @@ var cors = require('cors')
 var requestIp = require('request-ip');
 var multer = require('multer');
 var rest = require('restler');
+// var Raven = require('raven');
 
 var app = settings.express();
 
-console.log(process.env)
-
 app.disable('x-powered-by');
-//// Require and setup mashape analytics
-//var analytics = require('mashape-analytics')
-//var agent = analytics('5628ae08593b00f7098a3b3d', 'giddh-ui', {
-//  queue: {
-//    batch: 1, // turn batching on
-//    entries: 1 // number of entries per batch
-//  }
-//})
-//
-//app.use(agent)
 
 var port = process.env.PORT || 8000;
 //enabling cors
-app.use(cors())
+//app.use(cors())
 
 
 //set engine
@@ -57,36 +46,43 @@ app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(settings.express.static(settings.path.join(__dirname, 'public')));
+app.use('/app/bower_components', settings.express.static(__dirname + '/bower_components'));
 app.use('/bower_components', settings.express.static(__dirname + '/bower_components'));
 app.use('/node_modules', settings.express.static(__dirname + '/node_modules'));
 app.use('/public', settings.express.static(__dirname + '/public'));
 
 //set ttl for session expiry, format : milliseconds * seconds * minutes
-if (app.get('env') === 'development') {
-  // one hour
-  sessionTTL = 1000 * 60 * 60
-}
-else{
-  // ten minutes
-  sessionTTL = 1000 * 60 * 10
-}
+sessionTTL = 1000*60*30
+// if (app.get('env') === 'development') {
+//   // one hour
+//   sessionTTL = 1000 * 60 * 60
+// }
+// else{
+//   // ten minutes
+//   sessionTTL = 1000 * 60 * 60
+// }
 
 app.use(session({
   secret: "keyboardcat",
-  name: "userVerified",
+  name: "userAuth",
   resave: true,
   saveUninitialized: true,
   cookie: {
+    path:'/',
     secure: false,
-    maxAge: sessionTTL
-  },
-  //store: new MongoStore({
+    maxAge: sessionTTL,
+    domain:'giddh.com',
+    httpOnly: false
+  }
+
+  // ,store: new MongoStore({
   //   url: settings.mongoUrl,
   //   autoRemove: 'interval',
   //   autoRemoveInterval: sessionTTL,
   //   ttl: sessionTTL,
   //   touchAfter: sessionTTL - 300
-  //})
+  // })
+
   // store   : new MemcachedStore({
   //   hosts: ['127.0.0.1:11211'],
   //   secret: 'keyboardcat'
@@ -108,14 +104,24 @@ app.use(function (req, res, next) {
   next();
 })
 
+//to allow cookie sharing across subdomains
+app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, authorization');
+    next();
+
+});
+
 // do not remove code from this position
 var login = require('./public/routes/website/login');
 var contact = require('./public/routes/website/contact');
 var websiteRoutes = require('./public/routes/website/main');
 
-app.use('/auth', login);
+app.use('/app/auth', login);
 app.use('/contact', contact);
-app.use('/', websiteRoutes);
+app.use('/app/api', websiteRoutes);
 
 global.mStorage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -133,7 +139,7 @@ global.mStorage = multer.diskStorage({
         cb(null, Date.now() + '.xlsx')
         break;
       default:
-        cb(null, Date.now() + '.xml');
+        cb(null, file.originalname)
     }
     // if (file.mimetype === "application/vnd.ms-excel"){
     //   cb(null, Date.now() + '.xls')
@@ -170,6 +176,7 @@ var appRoutes = require('./public/routes/webapp/main');
 var users = require('./public/routes/webapp/users');
 var roles = require('./public/routes/webapp/roles');
 var trialBalance = require('./public/routes/webapp/trialBal');
+var balanceSheet = require('./public/routes/webapp/balancesheet');
 var upload = require('./public/routes/webapp/upload');
 var profitLoss = require('./public/routes/webapp/profitLoss')
 var reports = require('./public/routes/webapp/reports')
@@ -179,7 +186,17 @@ var ebanks  = require('./public/routes/webapp/ebanks')
 var magicLink = require('./public/routes/webapp/magic')
 var timetest = require('./public/routes/webapp/timetest')
 var invoice = require('./public/routes/webapp/invoices')
+var templates = require('./public/routes/webapp/templates')
 var proforma = require('./public/routes/webapp/proformas')
+var placeholders = require('./public/routes/webapp/placeholders')
+var inventory = require('./public/routes/webapp/inventory')
+var adminPanel = require('./public/routes/adminPanel/adminPanel')
+var recEntry = require('./public/routes/webapp/recurringEntry')
+var invoiceUpload = require('./public/routes/webapp/invoiceUpload')
+var stateDetails = require('./public/routes/webapp/stateDetails')
+var invoiceModule = require('./invoice/invoiceModule')
+var voucherModule = require('./voucher/voucherModule')
+
 
 app.use('/time-test', timetest);
 app.use('/currency', currency);
@@ -187,20 +204,108 @@ app.use('/users', users);
 app.use('/roles', roles);
 app.use('/location', location);
 app.use('/company', company);
+app.use('/app/company/:companyUniqueName/placeholders', placeholders);
 app.use('/company/:companyUniqueName/invoices', invoice);
 app.use('/company/:companyUniqueName/proforma', proforma);
 app.use('/company/:companyUniqueName/groups', groups);
 app.use('/company/:companyUniqueName/accounts', accounts);
 app.use('/company/:companyUniqueName/accounts/:accountUniqueName/ledgers', ledgers);
 app.use('/company/:companyUniqueName/trial-balance', trialBalance);
+app.use('/company/:companyUniqueName/balance-sheet', balanceSheet);
+app.use('/upload-invoice',parseUploads, invoiceUpload);
 app.use('/upload', parseUploads, upload);
-app.use('/', appRoutes);
+// app.use('/', appRoutes);
+app.use('/company/:companyUniqueName/stock-group', inventory)
 app.use('/company/:companyUniqueName/profit-loss', profitLoss);
+app.use('/company/:companyUniqueName/templates', templates);
+app.use('/company/:companyUniqueName/recurring-entry', recEntry);
 app.use('/company/:companyUniqueName', reports);
 app.use('/coupon', coupon);
 app.use('/yodlee', yodlee);
 app.use('/ebanks', ebanks);
-//app.use('/magic', magicLink);
+app.use('/admin', adminPanel);
+app.use('/state-details', stateDetails);
+app.use('/magic-link', magicLink);
+app.use('/invoice',invoiceModule);
+app.use('/voucher',voucherModule);
+
+
+
+// delete user session on logout
+app.use('/logout', function(req, res){
+  if(req.session.name){
+    req.session.destroy()
+    res.redirect('https://giddh.com')
+    //res.status(200).send({message:'user logged out'})
+  }else{
+    res.status(403).send({message:'user not found'})
+  }
+})
+
+//get understanding json
+app.get('/understanding', function(req, res){
+  res.status(200).send(settings.understanding)
+})
+
+//return user-details
+app.use('/fetch-user', function(req, res){
+  var authHead, hUrl;
+  authHead = {
+    headers: {
+      'Auth-Key': req.session.authKey,
+      'Content-Type': 'application/json',
+      'X-Forwarded-For': res.locales.remoteIp
+    }
+  };
+  hUrl = settings.envUrl + 'users/' + req.session.name;
+  return settings.client.get(hUrl, authHead, function(data, response) {
+    if (data.status === 'error' || data.status === void 0) {
+      res.status(response.statusCode);
+    }
+    return res.send(data);
+  });
+})
+
+//serve magic-link page
+app.use('/magic', function(req, res){
+  res.sendFile(__dirname + '/public/website/views/magic.html')
+});
+
+//get user auth key
+app.get('/userak', function(req, res){
+  if(req.session.name){
+    res.send(req.session.authKey)
+  }else{
+    res.status(403)
+    res.send('Invalid User')
+  }
+})
+
+// get session id and match with existing session
+var getSession = function(req, res, next){
+  var sessionId = req.query.sId;
+  req.sessionStore.get(sessionId, function(err, session) {
+  if (session) {
+      // createSession() re-assigns req.session
+      req.sessionStore.createSession(req, session)
+    }
+    next()
+  })
+}
+
+//serve index.html, this has to come after *ALL* routes are defined
+app.use('/', getSession, function(req, res){
+  if(req.url.startsWith("/tmp/") && req.url.endsWith(".pdf")) {
+    res.sendFile(req.url)
+  } else if(req.session.name){
+    res.sendFile(__dirname+ '/public/webapp/views/index.html')
+  } else{
+    res.status(404)
+    res.redirect('https://www.giddh.com')
+  }
+});
+
+
 /*
  # set all route above this snippet
  # redirecting to 404 if page/route not found

@@ -21,6 +21,7 @@ router.get '/flatten-groups-accounts', (req, res) ->
       'q':req.query.q
       'page': req.query.page
       'count':req.query.count
+      'showEmptyGroups':req.query.showEmptyGroups || false
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/flatten-groups-with-accounts'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
@@ -64,6 +65,8 @@ router.get '/with-accounts', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
+    parameters:
+      'q':req.query.q || ''
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups-with-accounts'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
@@ -86,7 +89,7 @@ router.get '/detailed-groups-with-accounts', (req, res) ->
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/detailed-groups-with-accounts'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups-with-accounts'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
@@ -200,9 +203,7 @@ router.post '/:groupUniqueName/accounts', (req, res) ->
       'Content-Type': 'application/json'
       'X-Forwarded-For': res.locales.remoteIp
     data: req.body
-  console.log "in creating account", args, hUrl
   settings.client.post hUrl, args, (data, response) ->
-    console.log "creating account completed", args, hUrl
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
@@ -218,6 +219,7 @@ router.get '/:groupUniqueName/closing-balance', (req, res) ->
     parameters:
       from: req.query.fromDate
       to: req.query.toDate
+      refresh: req.query.refresh
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)

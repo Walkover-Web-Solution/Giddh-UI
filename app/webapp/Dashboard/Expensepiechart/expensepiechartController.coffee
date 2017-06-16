@@ -59,6 +59,7 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
   $scope.accountList = []
   $scope.fromDate = ""
   $scope.toDate = ""
+  $scope.hardRefresh = false
 
   $scope.setDateByFinancialYear = () ->
     presentYear = $scope.getPresentFinancialYear()
@@ -104,8 +105,8 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
       duration.to = $scope.toDate
       duration.from = $scope.fromDate
       $scope.accountList = []
-      $scope.getClosingBalance("operating_cost",duration)
-      $scope.getClosingBalance("indirect_expenses",duration)
+      $scope.getClosingBalance($rootScope.groupName.operatingCost,duration)
+      $scope.getClosingBalance($rootScope.groupName.indirectExpenses,duration)
 
   $scope.getClosingBalance = (groupUniqueName, duration) ->
     objToSend = {}
@@ -113,15 +114,18 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
     objToSend.selGrpUname = groupUniqueName
     objToSend.fromDate = duration.from
     objToSend.toDate = duration.to
+    objToSend.refresh = $scope.hardRefresh
 #    url = 'https://apitest.giddh.com/company/'+objToSend.compUname+'/groups/'+objToSend.selGrpUname+'/closing-balance?from='+objToSend.fromDate+'&to='+objToSend.toDate
 #    $http.get(url).then($scope.getClosingBalSuccess, $scope.getClosingBalFailure)
     groupService.getClosingBal(objToSend).then($scope.getClosingBalSuccess,$scope.getClosingBalFailure)
 
   $scope.getClosingBalSuccess = (res) ->
+    $scope.hardRefresh = false
     $scope.extractGroups(res.body[0])
     $scope.generateChartData($scope.accountList)
 
   $scope.getClosingBalFailure = (res) ->
+    $scope.hardRefresh = false
     $scope.chartDataAvailable = false
     $scope.errorMessage = res.data.message
 
@@ -174,6 +178,12 @@ piechartController = ($scope, $rootScope, localStorageService, toastr, groupServ
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.getExpenseData()
+
+
+  $scope.$on 'reloadAll', (event) ->
+    $scope.hardRefresh = true
+    $scope.getExpenseData()
+
 
 
 

@@ -1,0 +1,94 @@
+<section class="col-xs-12 pd2 h100 oyAuto" cover-page>
+	
+<div class="loader mrT4" ng-if="recEntry.showLoader">
+	  <span></span>
+	  <span></span>
+	  <span></span>
+	  <span></span>
+	  <span></span>
+	</div>
+
+	<div class="recurring-entry-grid" ng-if="!recEntry.showLoader">
+		<div class="row mar0">
+			<i class="glyphicon glyphicon-plus pull-right f24 cp" ng-click="recEntry.addNewEntry()"></i>
+			<!-- <i class="glyphicon glyphicon-filter pull-right f24 cp mrR1" ng-class="{'warning':recEntry.showFilters}" ng-click="recEntry.showFilters = !recEntry.showFilters"></i> -->
+		</div>
+
+<!-- 
+		<div class="filters" ng-include="'/public/webapp/recurring-entry/partials/filters.html'" ng-if="recEntry.showFilters">
+			
+		</div> -->
+
+
+
+		<div class="re-header">
+				
+			<div class="col-xs-1 text-center">
+				Date
+			</div>
+			<div class="col-xs-2 text-center">
+				Base Account	
+			</div>
+			<div class="col-xs-2 text-center">
+				Particular
+			</div>
+			<div class="col-xs-1 text-center">
+				Quantity
+			</div>
+			<div class="col-xs-2 text-center">
+				Duration
+			</div>
+			<div class="col-xs-1 text-center">
+				Amount
+			</div>
+			<div class="col-xs-2 text-center">
+				Voucher Type
+			</div>
+			<div class="col-xs-1 text-center">
+				Type
+			</div>
+
+		</div>	
+
+		<div class="re-body">
+			
+			<div class="row text-center mr2" ng-if="recEntry.rows.length == 0">
+				<p>No entries found, please click on the plus sign to add new recurring entry</p>
+			</div>
+
+
+			<div 
+				class="recurring-entry"
+				ng-class="{'animate':ledger.highlight}" 
+				ng-repeat="ledger in recEntry.rows"
+				>
+					
+					<div 
+					class="row"
+					ng-class="{'animate':entry.showPanel}"
+					ng-dblclick="recEntry.selectEntry(entry, $parent.$index, ledger)"
+					ng-repeat="entry in ledger.transactions"
+					ng-include="'/public/webapp/recurring-entry/partials/rec-entry-list.html'"	
+					>
+					
+				</div>
+			</div>
+
+
+
+
+		</div>
+
+
+	</div>
+
+
+</section>
+
+
+<script type="text/ng-template" id="accountPopUp.html">
+  <a href="javascript:void(0)" class="account-list-item" set-drop-overflow style="border-bottom:1px solid #e0e0e0;">
+    <span class="account-list-item" ng-bind-html="match.label | uibTypeaheadHighlight:query" style="display: block;font-size:12px"></span>
+    <span class="account-list-item" ng-bind-html="match.model.uniqueName | uibTypeaheadHighlight:query" style="display: block;font-size:10px"></span>
+  </a>
+</script>

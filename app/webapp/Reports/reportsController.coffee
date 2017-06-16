@@ -387,7 +387,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
                 $scope.chartData.splice(removeAtIdx, 1)                 
 
   $scope.getGraphData  = (reqParam,graphParam) ->
-    reportService.newHistoricData(reqParam, graphParam).then $scope.getGraphDataSuccess, $scope.getGraphDataFailure
+    reportService.historicData(reqParam, graphParam).then $scope.getGraphDataSuccess, $scope.getGraphDataFailure
 
   $scope.getGraphDataSuccess = (res) ->
     $scope.graphData = res.body
@@ -471,7 +471,8 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.getPLgraphDataSuccess = (res) ->
     $scope.plGraphData = res.body
     $scope.formatPLgraphData($scope.plGraphData)
-
+    $scope.chartDataAvailable = true
+    
   $scope.getPLgraphDataFailure = (res) ->
     $scope.chartDataAvailable = true
     toastr.error(res.data.message)

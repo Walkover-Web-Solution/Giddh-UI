@@ -21,6 +21,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-execute');
   grunt.loadNpmTasks('grunt-processhtml');
 
+// https://test-fs8eefokm8yjj.stackpathdns.com test dev
+
   srcDir = 'app/';
   destDir = 'public/';
   routeSrcDir = 'routes/';
@@ -116,6 +118,19 @@ module.exports = function (grunt) {
           }
         }
       },
+      signUpWebsite: {
+        src: srcDir + 'website/views/signup.html',
+        dest: destDir + 'website/views/signup.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
+      },
       pricingWebsite: {
         src: srcDir + 'website/views/pricing.html',
         dest: destDir + 'website/views/pricing.html',
@@ -155,6 +170,19 @@ module.exports = function (grunt) {
           }
         }
       },
+      joinusWebsite: {
+        src: srcDir + 'website/views/joinus.html',
+        dest: destDir + 'website/views/joinus.html',
+        options: {
+          process: function (content, path) {
+            var replaced = content.replace(/<<PREFIX_THIS>>/g,process.env.PREFIX_THIS);
+            // content is your whole HTML body of index page
+            // use this => `content.replace("<<PREFIX_THIS>>",process.env.PREFIX_THIS)`
+            // after replacing return the tweaked content
+            return replaced;
+          }
+        }
+      },
       paymentWebsite: {
         src: srcDir + 'website/views/payment.html',
         dest: destDir + 'website/views/payment.html',
@@ -175,6 +203,7 @@ module.exports = function (grunt) {
       },
       src: {
         files: [
+          srcDir + '/**/inventoryController.js',
           srcDir + '/**/*.coffee', srcDir + '/**/*.html', srcDir + '**/**/*.css', routeSrcDir + "/**/*.coffee", srcDir + '/**/*.js', srcDir + '/**/**/*.js', srcDir + '/webapp/ng2/**/*.js',  srcDir + '/**/*.coffee'
         ],
         tasks: ['env:dev','coffee', 'copy', 'clean', 'cssmin', 'concat',  'preprocess:dev']
@@ -216,7 +245,7 @@ module.exports = function (grunt) {
           'public/webapp/ng2.js': ['public/webapp/ng2/**/*.services.js','public/webapp/ng2/**/*.component.js','public/webapp/ng2/*.js'],
           'public/webapp/newRelic.js': ['app/webapp/Globals/modified_lib/newRelic.js'],
           'public/webapp/_extras.js': ['app/webapp/Globals/modified_lib/angular-charts.js', 'app/webapp/Globals/modified_lib/jspdf.debug.js'],
-          'public/webapp/Globals/css/giddh.min.css': ['public/webapp/Globals/css/all_bower.css', 'public/webapp/Globals/css/modiefied-bootstrap.css', 'public/webapp/Globals/css/new-style.css']
+          'public/webapp/Globals/css/giddh.min.css': ['public/webapp/Globals/css/*.css', '!public/webapp/Globals/css/*.min.css']
         }
       }
     },
@@ -277,10 +306,11 @@ module.exports = function (grunt) {
           'angular-bootstrap'
         ],
         mainFiles: {
-          // 'bootstrap': 'dist/css/bootstrap.min.css',
           'perfect-scrollbar': 'css/perfect-scrollbar.min.css',
           'angular-toastr': 'dist/angular-toastr.min.css',
-          'ui-select': 'dist/select.min.css'
+          'angular-gridster': 'dist/angular-gridster.min.css',
+          'ui-select': 'dist/select.min.css',
+          'font-awesome': 'css/font-awesome.min.css'
         },
         callback: function(mainFiles, component) {
           return _.map(mainFiles, function(filepath) {
@@ -331,6 +361,71 @@ module.exports = function (grunt) {
           'angular-google-chart',
           'angular-file-saver',
           'intl-tel-input',
+          'international-phone-number',
+          'angular-file-saver',
+          'angular-gridster',
+          'ment.io',
+          'trix',
+          'angular-trix',
+          'tinymce',
+          'tinymce-mention',
+          'angular-ui-tinymce',
+          'file-saver.js',
+          'angular-upload',
+          'angular-ui-mask',
+          'nz-tour'
+        ],
+        dependencies: {
+          'jquery': 'modernizr',
+          'angular': 'jquery',
+          'bootstrap': 'angular',
+          'angular-bootstrap': 'bootstrap',
+          'underscore': 'angular-bootstrap',
+          'intl-tel-input': 'jquery',
+          'international-phone-number':'intl-tel-input',
+          'tinymce-mention':'tinymce',
+          'angular-ui-tinymce':'tinymce-mention'
+        },
+        mainFiles: {
+          'underscore': 'underscore-min.js',
+          'angular-bootstrap': 'ui-bootstrap-tpls.min.js',
+          'perfect-scrollbar': 'js/min/perfect-scrollbar.jquery.min.js',
+          'moment': 'min/moment-with-locales.min.js',
+          'angular-toastr': 'dist/angular-toastr.tpls.min.js'
+        },
+        callback: function(mainFiles, component) {
+          return _.map(mainFiles, function(filepath) {
+            var min = filepath.replace(/\.js$/, '.min.js');
+            return grunt.file.exists(min) ? min : filepath;
+          });
+        },
+        process: function(src) {
+          return "\n" + src + "\n\n";
+        }
+      },
+      webCoreJS:{
+        dest: 'public/website/website_corejs.min.js',
+        bowerOptions: {
+          relative: false
+        },
+        include: [
+          'modernizr',
+          'jquery',
+          'jquery-ui',
+          'angular',
+          'bootstrap',
+          'angular-bootstrap',
+          'underscore',
+          'satellizer',
+          'angular-resource',
+          'angular-ui-router',
+          'angular-translate',
+          'angular-local-storage',
+          'angular-toastr',
+          'angular-vidbg',
+          'fullpage.js',
+          'angular-fullpage.js',
+          'intl-tel-input',
           'international-phone-number'
         ],
         dependencies: {
@@ -350,7 +445,6 @@ module.exports = function (grunt) {
           'angular-toastr': 'dist/angular-toastr.tpls.min.js'
         },
         callback: function(mainFiles, component) {
-          console.log(mainFiles)
           return _.map(mainFiles, function(filepath) {
             var min = filepath.replace(/\.js$/, '.min.js');
             return grunt.file.exists(min) ? min : filepath;

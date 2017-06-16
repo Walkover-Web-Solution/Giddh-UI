@@ -28,6 +28,7 @@ router.post '/group-history', (req, res) ->
       to: req.query.toDate
       from: req.query.fromDate
       interval: req.query.interval
+      refresh: req.query.refresh
     data: req.body
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
       '/group-history'
@@ -105,6 +106,7 @@ router.get '/dashboard', (req, res) ->
       to: req.query.toDate
       from: req.query.fromDate
       interval: req.query.interval
+      refresh: req.query.refresh
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/dashboard'
   settings.client.get hUrl, authHead, (data, response) ->
     if data.status == 'error' || data.status == undefined
@@ -325,22 +327,34 @@ router.put '/invoice-setting', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-# router.post '/flatten-accounts', (req, res) ->
-#   console.log req.query
-#   authHead = 
-#     headers:
-#       'Auth-Key': req.session.authKey
-#       'X-Forwarded-For': res.locales.remoteIp
-#     parameters:
-#       'q':req.query.q
-#       'page': req.query.page
-#       'count':req.query.count
-#   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/flatten-accounts'
-#   settings.client.get hUrl, authHead, (data, response) ->
-#     if data.status == 'error' || data.status == undefined
-#       res.status(response.statusCode)
-#     res.send data
+#entry settings
+router.get '/entry-settings', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'X-Forwarded-For': res.locales.remoteIp
+    # parameters:
+    #   to: req.query.toDate
+    #   from: req.query.fromDate
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName +
+      '/entry-settings'
+  console.log hUrl
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
 
-
+router.put '/update-entry-settings', (req, res) ->
+  args =
+    headers:
+      'Auth-Key': req.session.authKey
+      'Content-Type': 'application/json'
+      'X-Forwarded-For': res.locales.remoteIp
+    data: req.body
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/entry-settings'
+  settings.client.put hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
 
 module.exports = router

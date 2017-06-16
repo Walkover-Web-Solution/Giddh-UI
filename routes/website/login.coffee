@@ -7,7 +7,6 @@ googleLoginUrl = settings.envUrl + 'signup-with-google'
 linkedinLoginUrl =  settings.envUrl + 'signup-with-linkedIn'
 twitterLoginUrl =  settings.envUrl + 'signup-with-twitter'
 
-
 hitViaSocket = (data) ->
   data = JSON.stringify(data)
   data.environment = app.get('env')
@@ -60,10 +59,12 @@ router.post '/google', (req, res, next) ->
       if data.status == 'error' || data.status == undefined
         res.status(response.statusCode)
       else
-        userDetailObj = data.body.user
-        req.session.name = data.body.user.uniqueName
-        req.session.authKey = data.body.authKey
-        hitViaSocket(data.body)
+        if data.body.authKey
+          userDetailObj = data.body.user
+          req.session.name = data.body.user.uniqueName
+          req.session.authKey = data.body.authKey
+          data.body.sId = req.sessionID
+          hitViaSocket(data.body)
       res.send
         token: token
         userDetails: userDetailObj
@@ -117,9 +118,11 @@ router.post '/twitter', (req, res) ->
         if data.status == 'error' || data.status == undefined
           res.status(response.statusCode)
         else
-          userDetailObj = data.body.user
-          req.session.name = data.body.user.uniqueName
-          req.session.authKey = data.body.authKey
+          if data.body.authKey
+            userDetailObj = data.body.user
+            req.session.name = data.body.user.uniqueName
+            req.session.authKey = data.body.authKey
+            data.body.sId = req.sessionID
         res.send
           token: accessToken.oauth_token
           userDetails: userDetailObj
@@ -162,9 +165,11 @@ router.post '/linkedin', (req, res) ->
       if data.status == 'error' || data.status == undefined
         res.status(response.statusCode)
       else
-        userDetailObj = data.body.user
-        req.session.name = data.body.user.uniqueName
-        req.session.authKey = data.body.authKey
+        if data.body.authKey
+          userDetailObj = data.body.user
+          req.session.name = data.body.user.uniqueName
+          req.session.authKey = data.body.authKey
+          data.body.sId = req.sessionID
       res.send
         token: body.access_token
         userDetails: userDetailObj

@@ -1,33 +1,5 @@
-<div>
-  <div class="pdT1 pdB1 form-inline">
 
-    <div ng-hide="canViewSpecificItems">
-      <button id="AddManage" type="button" class="btn btn-primary btn-sm btn-block mrB1" ng-click="goToManageGroups()" ng-show="canManageComp">
-        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Add &amp; Manage
-      </button>
-    </div>
-
-
-    <div class="form-group">
-      <div class="input-group">
-        
-        <div class="input-group-addon">
-          <i class="glyphicon glyphicon-search"></i>
-        </div>
-
-        <!-- <input type="text" name="searchGroup" class="form-control" ng-model="acntSrch" placeholder="Search accounts" ng-keyup="setScrollToTop(acntSrch, 'accountList');" ng-change="checkLength(acntSrch)" ng-model-options="{debounce: 200}"> -->
-
-        <input id="accountSearch" type="text" name="searchGroup" class="form-control" ng-model="search.acnt" placeholder="Search accounts" ng-change="searchGrpWithAccounts(search.acnt)" ng-model-options="{debounce:1000}">
-        <div ng-hide="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(true)" tooltip-placement="right" uib-tooltip="Expand all" >
-          <i class="glyphicon glyphicon-list"></i>
-        </div>
-
-        <div ng-show="showSubMenus" class="input-group-addon cp" ng-click="toggleAcMenus(false)" tooltip-placement="right" uib-tooltip="Collapse all">
-          <i class="glyphicon glyphicon-menu-hamburger"></i>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="" ng-click="$event.stopPropagation()">
   <!-- searchbar end -->
   <div class="pdL1 pdR1 mrB1" ng-if="flatAccntWGroupsList.length == 0 && showAccountList && !noGroups ">
     <h4 class="list-group-item-heading">Oops, there are no accounts in <strong>{{::selectedCompany.name}}</strong> <a
@@ -36,7 +8,7 @@
   <div class="pdL1 pdR1 mrB1" ng-if="flatAccntWGroupsList.length == 0 && showAccountList && noGroups">
     <h4 class="list-group-item-heading">Oops, No Accounts Found :(</h4>
   </div>
-  <perfect-scrollbar id="accountList" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
+  <perfect-scrollbar id="accountList" class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height additional-height="80">
     <div class="menu acList">
       <div class="loader" ng-if="!showAccountList && companyList.length > 0">
         <span></span>
@@ -48,24 +20,24 @@
       <ul class="acntAccordion" ng-if="showAccountList">
         <li>
           <ul id="ul_0" class="mainUl accBox" style="border-left:none">
-            <li class="mainLiAclist" ng-repeat="value in flatAccntWGroupsList | searchfilter:search.acnt | limitTo:gwaList.limit | filter:searchfilter as filtList" id="li_{{value.groupUniqueName}}" ng-if="value.accountDetails.length > 0">
+            <li class="mainLiAclist parent-Group" ng-repeat="value in flatAccntWGroupsList | limitTo:gwaList.limit" id="li_{{value.groupUniqueName}}">
               <div 
                 class="title  LIB{{value.groupUniqueName}}" 
                 ng-click="value.open = !value.open"
                 ng-class="{'active' : value.open || value.groupUniqueName === selectedGroupUname}">
-                <a ng-bind-html="value.groupName | highlight: search.acnt"></a>
+                <a ng-bind-html="value.groupName | highlight: search.acnt" class="ellp max250"></a>
               </div>
               <ul class="accBox subAccBox" ng-show="value.open || value.groupUniqueName === selectedGroupUname"
                   id="ul_{{value.groupUniqueName}}">
-                <li class="inrPrnt" ng-repeat="(index,accDtl) in value.accountDetails | filter : isGrpMatch(value, search.acnt) ? '' : search.acnt" id="ac_{{accDtl.uniqueName}}"
+                <li class="inrPrnt" ng-repeat="(index,accDtl) in value.accountDetails" id="ac_{{accDtl.uniqueName}}"
                   tooltip-placement="top" uib-tooltip="{{accDtl.uniqueName}}">
                   <a
-                    ng-click="loadLedger(value, accDtl); setLedgerData(value, accDtl); getLedgerData(value, accDtl);"
+                    ng-click="setLedgerData(value, accDtl);"
                      ng-class="{'active': accDtl.uniqueName === selectedAccountUniqueName}" 
                      ui-sref="company.content.ledgerContent({unqName:accDtl.uniqueName})">
                     <div class="clearfix">
                       <i ng-class="accDtl.charId == 1 ? 'smlSquare LIB' : 'smlSquare ASS'"></i>
-                      <span ng-bind-html="accDtl.name" class="ellp max100"></span>
+                      <span ng-bind-html="accDtl.name" class="ellp max250"></span>
                       <span class="ng-hide">{{accDtl.uniqueName}}</span>
                     </div>
                   </a>
@@ -74,7 +46,7 @@
             </li> 
           </ul>
         </li>
-        <a href="javascript:void(0)" class="load-more pull-left" ng-click="loadMoreGrpWithAcc(selectedCompany.uniqueName);$event.stopPropagation()" ng-if="gwaList.currentPage <= gwaList.totalPages" >Load More</a>
+        <a href="javascript:void(0)" class="load-more" ng-click="loadMoreGrpWithAcc(selectedCompany.uniqueName, search.acnt);$event.stopPropagation()" ng-if="gwaList.currentPage < gwaList.totalPages" >Load More</a>
       </ul>
 
     </div>

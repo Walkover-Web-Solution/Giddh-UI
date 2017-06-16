@@ -16,7 +16,10 @@
   <link href="/public/website/css/new-style.css" rel="stylesheet">
   <!-- LIBRARIES -->
   <script src="/public/webapp/newRelic.js"></script>
+  <script src="<<PREFIX_THIS>>/bower_components/file-saver.js/FileSaver.js"></script>
+
   <script  type="text/javascript" src='/public/webapp/core_bower.min.js'></script>
+    <script src="<<PREFIX_THIS>>/bower_components/angular-file-saver/dist/angular-file-saver.js"></script>
   <script type="text/javascript" src="/public/website/js/app.js"></script>
   <script src="/public/website/js/controller/loginController.js"></script>
   <!-- recaptcha -->
@@ -24,7 +27,8 @@
   <script type="text/javascript" src="/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
 </head>
 <body ng-controller="homeCtrl" class="gridBg txtBody terms">
-
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K2L9QG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 <ng-include src="'public/website/views/header.html'"></ng-include>
 
 <section class="cmnPd100">

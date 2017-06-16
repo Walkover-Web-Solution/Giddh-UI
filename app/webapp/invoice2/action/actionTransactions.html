@@ -1,9 +1,38 @@
 <div id="actionTransaction">
-  <div class="container-fluid">
-    <div class="row">
-      <table class="table table-bordered">
-
-      </table>
+  <div class="container-fluid pd1">
+    <div class="row pdR1">
+      <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss();getAllInvoices()" aria-label="Close"><span
+          aria-hidden="true">&times;</span></button>
     </div>
+    <div class="row">
+      <div class="clearfix mrT1 col-xs-10">
+        <label>Enter amount</label>
+        <input type="number" class="form-control" ng-model="invoiceSelected.balanceDue">
+        <!--<div class="input-group">-->
+          <!--<ui-select allow-clear ng-model="accountSelected" theme="bootstrap">-->
+            <!--<ui-select-match placeholder="Select Accounts" reset-search-input="true">-->
+              <!--{{$select.selected.name}}-->
+            <!--</ui-select-match >-->
+            <!--<ui-select-choices-->
+                <!--repeat="acc in queryFltAccnt | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,['sundry_debtors'])" style="margin-left:-30px;">-->
+              <!--<span>{{acc.name}} ({{acc.uniqueName}})</span>-->
+            <!--</ui-select-choices>-->
+          <!--</ui-select>-->
+          <!--<span class="input-group-btn">-->
+            <!--<button type="button" ng-click="accountSelected = undefined" class="btn btn-default">-->
+              <!--<span class="glyphicon glyphicon-trash"></span>-->
+            <!--</button>-->
+          <!--</span>-->
+        <!--</div>-->
+      </div>
+      <div class="col-xs-2">
+        <button class="btn btn-default mrT3" ng-click="getTransactionList()">Paid</button>
+      </div>
+    </div>
+    <!--<div class="row">-->
+      <!--<table class="table table-bordered">-->
+
+      <!--</table>-->
+    <!--</div>-->
   </div>
 </div>

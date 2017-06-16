@@ -1,0 +1,6 @@
+<!-- <div ng-include="'/public/webapp/Ledger/ledgerPaginated.html'" ng-controller="ledgerController as ledgerCtrl" ng-if="ledgerMode == 'new' && showSwitchUserOption"></div> -->
+<div ng-include="'/public/webapp/Ledger/ledger.html'" ng-if="ledgerMode == 'old' || !showSwitchUserOption">
+	
+</div>
+
+<div ng-include="'/public/webapp/Ledger/ledgerTxns.html'" ng-if="ledgerMode == 'new' && showSwitchUserOption"></div>

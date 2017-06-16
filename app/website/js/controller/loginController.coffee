@@ -1,6 +1,6 @@
 'use strict'
 
-loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr, $window) ->
+loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageService, toastr, $window, $uibModal, $location) ->
   $scope.showLoginBox = false
   $scope.toggleLoginBox = (e) ->
     $scope.showLoginBox = !$scope.showLoginBox
@@ -14,6 +14,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
   $rootScope.homePage = false
   $scope.loginBtnTxt = "Get OTP"
   $scope.loggingIn = false
+  $scope.twoWayVfyCode = null
   # check string has whitespace
   $scope.hasWhiteSpace = (s) ->
     return /\s/g.test(s)
@@ -51,6 +52,33 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
         $scope.responseMsg = response.data.message
     )
 
+  $scope.TwoWayLogin = (code) ->
+    @success = (res) ->
+      localStorageService.set("_userDetails", res.data.body.user)
+      $window.sessionStorage.setItem("_ak", res.data.body.authKey)
+      window.location = "/app/#/home/"
+
+    @failure = (res) ->
+      toastr.error(res.data.message, "Error")
+      # $timeout (->
+      #   window.location = "/index"
+      # ),3000
+
+    $scope.twoWayUserData.oneTimePassword = code
+    url = '/app/api/verify-number'
+    $http.post(url,  $scope.twoWayUserData).then(@success, @failure)
+
+  loginWithTwoWayAuthentication = (res) ->
+    $scope.twoWayUserData = {}
+    $scope.twoWayUserData.countryCode = res.countryCode
+    $scope.twoWayUserData.mobileNumber = res.contactNumber
+    modalInstance = $uibModal.open(
+      templateUrl: '/public/website/views/twoWayAuthSignIn.html',
+      size: "md",
+      backdrop: 'static',
+      scope: $scope
+    )
+
   $scope.authenticate = (provider) ->
     $scope.loginIsProcessing = true
     $auth.authenticate(provider).then((response) ->
@@ -62,9 +90,13 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
         ),3000
       else
         #user is registered and redirect it to app
-        localStorageService.set("_userDetails", response.data.userDetails)
-        $window.sessionStorage.setItem("_ak", response.data.result.body.authKey)
-        window.location = "/app/#/home/"
+        if response.data.result.body.authKey
+          localStorageService.set('_newUser', response.data.result.body.isNewUser)
+          localStorageService.set("_userDetails", response.data.userDetails)
+          $window.sessionStorage.setItem("_ak", response.data.result.body.authKey)
+          window.location = "/app/#/home/"
+        else
+          loginWithTwoWayAuthentication(response.data.result.body)
     ).catch (response) ->
       $scope.loginIsProcessing = false
       #user is not registerd with us
@@ -81,6 +113,20 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
   $scope.loginWithMobile = (e) ->
     $scope.phoneLoginPopup = true
     e.stopPropagation()
+    
+  $scope.signUpWithEmailModal = (e) ->
+    modalInstance = $uibModal.open(
+      templateUrl: '/public/website/views/signUpEmail.html',
+      size: "md",
+      backdrop: 'static',
+      scope: $scope
+    )
+    e.stopPropagation()
+
+  $scope.verifyMail = false
+  $scope.emailToVerify = ""
+  $scope.verifyMailMakeFalse = () ->
+    $scope.verifyMail = false
 
   getOtpSuccess = (res) ->
     $scope.showOtp = true
@@ -91,7 +137,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
   $scope.getOtp = () ->
     $scope.contact.countryCode = $scope.countryCode
     if $scope.contact.mobileNumber != undefined
-      $http.post('/get-login-otp', $scope.contact).then(
+      $http.post('/app/api/get-login-otp', $scope.contact).then(
         getOtpSuccess,
         getOtpFailure
       )
@@ -115,7 +161,7 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
       mobileNumber : $scope.contact.mobileNumber
       token : token
     }
-    $http.post('/login-with-number', data).then(
+    $http.post('/app/api/login-with-number', data).then(
       loginUserSuccess,
       loginUserFailure
     )
@@ -131,10 +177,54 @@ loginController = ($scope, $rootScope, $http, $timeout, $auth, localStorageServi
   $scope.verifyOtp = (otp) ->
     contact = $scope.contact
     contact.oneTimePassword = otp
-    $http.post('/verify-login-otp', contact).then(
+    $http.post('/app/api/verify-login-otp', contact).then(
       verifyOtpSuccess,
       verifyOtpFailure
     )
     $scope.loggingIn = true
+
+  $scope.signUpWithEmail = (emailId, resend) ->
+    dataToSend = {
+      email: emailId
+    }
+    $http.post('/app/api/signup-with-email', dataToSend).then(
+      (res) ->
+        $scope.verifyMail = true
+        $scope.emailToVerify = emailId
+        if resend
+          toastr.success(res.data.body)
+      (res) ->
+        $scope.verifyMail = false
+        toastr.error(res.data.message)
+    )
+
+  $scope.verifyEmail = (emailId, code) ->
+    dataToSend = {
+      email: $scope.emailToVerify
+      verificationCode: code
+    }
+    $http.post('/app/api/verify-email-now', dataToSend).then(
+      verifyEmailSuccess,
+      verifyEmailFailure
+    )
+
+  verifyEmailSuccess = (res) ->
+    $scope.verifyEmail = false
+    localStorageService.set("_userDetails", res.data.body.user)
+    $window.sessionStorage.setItem("_ak", res.data.body.authKey)
+    window.location = '/app/#/home'
+
+  verifyEmailFailure = (res) ->
+    toastr.error(res.data.message)
+    $scope.verifyMail = true
+
+  # $scope.notifyUser = (user) ->
+  #   this.success = (res) ->
+      
+  #   this.failure = (res) ->
+      
+  #   data = {user: user}
+
+  #   $http.post('/global-user', data).then(this.success, this.failure)
 
 angular.module('giddhApp').controller 'loginController', loginController

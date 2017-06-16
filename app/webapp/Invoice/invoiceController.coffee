@@ -1,5 +1,5 @@
 "use strict"
-invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices, $state,  Upload, ledgerService, companyServices, accountService, modalService, $location) ->
+invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, localStorageService, groupService, DAServices, $state,  Upload, ledgerService, companyServices, accountService, modalService, $location, $http) ->
 
   $rootScope.selectedCompany = {}
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -151,7 +151,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       # with accounts, group data
       $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
 #      $scope.getSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,'sundry_debtors')
-      $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,['sundry_debtors','revenue_from_operations'])
+      $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,[$rootScope.groupName.sundryDebtors,$rootScope.groupName.revenueFromOperations,$rootScope.groupName.otherIncome])
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
 
   $scope.makeAccountsList = (res) ->
@@ -161,7 +161,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       uniqueName:"current_assets"
     }
     result = groupService.matchAndReturnGroupObj(item, res.body)
-    $rootScope.flatGroupsList = groupService.flattenGroup([result], [])
+    #$rootScope.flatGroupsList = groupService.flattenGroup([result], [])
     #$scope.flatAccntWGroupsList = groupService.flattenGroupsWithAccounts($rootScope.flatGroupsList)
     $rootScope.canChangeCompany = true
     #$scope.showAccountList = true
@@ -404,7 +404,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     # open dialog
     if(showPopUp)
       $scope.modalInstance = $uibModal.open(
-        templateUrl: $rootScope.prefixThis+'/public/webapp/Invoice/prevInvoiceTemp.html'
+        templateUrl: '/public/webapp/Invoice/prevInvoiceTemp.html'
         size: "a4"
         backdrop: 'static'
         scope: $scope
@@ -418,36 +418,68 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.editGenInvoice = false
 
   # upload logo
-  $scope.uploadLogo=(files,type)->
-    $scope.logoUpldComplt = true
-    $scope.signatureUpldComplt = true
-    angular.forEach files, (file) ->
-      file.fType = type
-#      console.log file
-      file.upload = Upload.upload(
-        url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/logo'
-        # file: file
-        # fType: type
-        data : {
-          file: file
-          fType: type
-        }
-      )
-      file.upload.then ((res) ->
-        $timeout ->
-          # $scope.logoWrapShow = false
-          if type == 'logo'
-            $scope.defTempData.logo.path = res.data.body.path
-          else
-            $scope.defTempData.signature.path = res.data.body.path
-          toastr.success("Logo Uploaded Successfully", res.data.status)
-      ), ((res) ->
-#        console.log res, "error"
-        $scope.logoUpldComplt = false
-        $scope.signatureUpldComplt = false
-        toastr.warning("Something went wrong", "warning")
-      ), (evt) ->
-        console.log "file upload progress" ,Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
+#   $scope.uploadLogo=(files,type)->
+#     $scope.logoUpldComplt = true
+#     $scope.signatureUpldComplt = true
+#     angular.forEach files, (file) ->
+#       file.fType = type
+# #      console.log file
+#       file.upload = Upload.upload(
+#         url: '/upload/' + $rootScope.selectedCompany.uniqueName + '/logo'
+#         # file: file
+#         # fType: type
+#         data : {
+#           file: file
+#           fType: type
+#         }
+#       )
+#       file.upload.then ((res) ->
+#         $timeout ->
+#           # $scope.logoWrapShow = false
+#           if type == 'logo'
+#             $scope.defTempData.logo.path = res.data.body.path
+#           else
+#             $scope.defTempData.signature.path = res.data.body.path
+#           toastr.success("Logo Uploaded Successfully", res.data.status)
+#       ), ((res) ->
+# #        console.log res, "error"
+#         $scope.logoUpldComplt = false
+#         $scope.signatureUpldComplt = false
+#         toastr.warning("Something went wrong", "warning")
+#       ), (evt) ->
+#         console.log "file upload progress" ,Math.min(100, parseInt(100.0 * evt.loaded / evt.total))
+
+  $scope.uploadLogo = (type) ->
+    if type == 'logo'
+      file = document.getElementById('invoiceLogo').files[0]
+    else
+      file = document.getElementById('invoiceSign').files[0]
+    formData = new FormData()
+    formData.append('file', file)
+    formData.append('type', type)
+    #formData.append('company', $rootScope.selectedCompany.uniqueName)
+
+    @success = (res) ->
+      $timeout ->
+        # $scope.logoWrapShow = false
+        if type == 'logo'
+          $scope.defTempData.logo.path = res.data.body.path
+        else
+          $scope.defTempData.signature.path = res.data.body.path
+        $scope.logoUpldComplt = true
+
+    @failure = (res) ->
+      $scope.logoUpldComplt = false
+      $scope.signatureUpldComplt = false
+      toastr.warning("Something went wrong", "warning")
+
+    url = '/upload/' + $rootScope.selectedCompany.uniqueName + '/logo'
+    $http.post(url, formData, {
+      transformRequest: angular.identity,
+      headers: {'Content-Type': undefined}
+    }).then(@success, @failure)
+
+
 
   # reset Logo
   $scope.resetLogo=()->
