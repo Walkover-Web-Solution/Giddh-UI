@@ -2619,14 +2619,17 @@ body.unresponsive {
 }
 @media only screen and (max-width: 1300px) {
   body.unresponsive {
-    width: 1366px;
+    width: 1366px !important;
     overflow: auto;
   }
-  .container{
-    width: 1000px;
+  .container, .modal-liq90{
+    width: 1000px !important;
   }
   .header-container{
-    width: 1366px;
+    width: 1366px !important;
+  }
+  .modal{
+    position: absolute !important;
   }
 }
 
