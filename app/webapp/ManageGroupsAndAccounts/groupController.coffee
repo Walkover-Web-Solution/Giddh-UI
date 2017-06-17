@@ -268,7 +268,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
 
   gc.getFlatAccountListCount5ListFailure = (res) ->
     $scope.workInProgress = false
-    toastr.error(res.data.message)
+    if !_.isUndefined(res)
+      toastr.error(res.data.message)
 
   # search flat accounts list
   $scope.searchAccountsC5 = (str) ->

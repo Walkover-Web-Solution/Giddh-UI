@@ -1432,8 +1432,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         tax.account = {}
         tax.account.uniqueName = 0
       #check if selected account is a tax account
-      if tax.account.uniqueName == ledgerCtrl.accountToShow.uniqueName
-        ledgerCtrl.accountToShow.isTax = true
+      if !_.isUndefined(ledgerCtrl.accountToShow)
+        if tax.account.uniqueName == ledgerCtrl.accountToShow.uniqueName
+          ledgerCtrl.accountToShow.isTax = true
       ledgerCtrl.taxList.push(tax)
 
     #ledgerCtrl.matchTaxAccounts(ledgerCtrl.taxList)
@@ -2153,12 +2154,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
    
 
   $rootScope.$on 'company-changed', (event,changeData) ->
-    if changeData.type == 'CHANGE'
-      ledgerCtrl.resetDates() 
-      ledgerCtrl.loadDefaultAccount()
-      ledgerCtrl.getTaxList()
-      ledgerCtrl.getDiscountGroupDetail()
-      #ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
+    if !_.isUndefined(changeData)
+      $rootScope.getFlatAccountList(company.uniqueName)
+      if changeData.type == 'CHANGE'
+        ledgerCtrl.resetDates()
+        ledgerCtrl.loadDefaultAccount()
+        ledgerCtrl.getTaxList()
+        ledgerCtrl.getDiscountGroupDetail()
+        #ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
 
   ledgerCtrl.hasParent = (target, parent) ->
     target = $(target)
