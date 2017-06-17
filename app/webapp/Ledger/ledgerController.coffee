@@ -1423,7 +1423,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if $rootScope.canUpdate and $rootScope.canDelete
       companyServices.getTax($rootScope.selectedCompany.uniqueName).then(ledgerCtrl.getTaxListSuccess, ledgerCtrl.getTaxListFailure)
 
-  ledgerCtrl.getTaxList()
+
 
   ledgerCtrl.getTaxListSuccess = (res) ->
     _.each res.body, (tax) ->
@@ -1432,7 +1432,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         tax.account = {}
         tax.account.uniqueName = 0
       #check if selected account is a tax account
-      if !_.isUndefined(ledgerCtrl.accountToShow)
+      if not _.isUndefined(ledgerCtrl.accountToShow)
         if tax.account.uniqueName == ledgerCtrl.accountToShow.uniqueName
           ledgerCtrl.accountToShow.isTax = true
       ledgerCtrl.taxList.push(tax)
@@ -1866,7 +1866,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     _.each(ledgerCtrl.taxList, (tax) ->
       tax.isChecked = false
     )
-    if !_.isUndefined(ledgerCtrl.discountAccount)
+    if not _.isUndefined(ledgerCtrl.discountAccount)
       _.each(ledgerCtrl.discountAccount.accountDetails, (dis) ->
         dis.amount = 0
       )
@@ -2149,14 +2149,15 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.loadDefaultAccount()
     ledgerCtrl.getDiscountGroupDetail()
     ledgerCtrl.getTaxList()
-  ), 2000
+  ), 3000
 
    
 
   $rootScope.$on 'company-changed', (event,changeData) ->
-    if !_.isUndefined(changeData)
-      $rootScope.getFlatAccountList(company.uniqueName)
+    if not _.isUndefined(changeData)
       if changeData.type == 'CHANGE'
+        if not _.isUndefined(changeData.data)
+          $rootScope.getFlatAccountList(changeData.data.uniqueName)
         ledgerCtrl.resetDates()
         ledgerCtrl.loadDefaultAccount()
         ledgerCtrl.getTaxList()
