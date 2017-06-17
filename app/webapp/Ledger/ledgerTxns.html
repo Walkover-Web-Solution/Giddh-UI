@@ -254,7 +254,7 @@ th {
 							ng-click="ledgerCtrl.selectCompoundEntry(txn, $event)"
 							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
-							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
+							<td class="col-xs-7" ng-bind="txn.inventory ? txn.particular.name+' ('+txn.inventory.stock.name+')' : txn.particular.name"></td>
 							<td class="col-xs-3 pos-rel text-right" ng-class="{pdR25imp:txn.attachedFileUniqueName.length > 0 || txn.isInvoiceGenerated}">
 								{{txn.amount}}
 								<span 
@@ -389,7 +389,7 @@ th {
 							ng-click="ledgerCtrl.selectCompoundEntry(txn, $event)"
 							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
-							<td class="col-xs-7" ng-bind="txn.particular.name"></td>
+							<td class="col-xs-7" ng-bind="txn.inventory ? txn.particular.name+' ('+txn.inventory.stock.name+')' : txn.particular.name"></td>
 							<td class="col-xs-3 pos-rel text-right" ng-class="{pdR25imp:txn.attachedFileUniqueName.length > 0 || txn.isInvoiceGenerated}">
 								{{txn.amount}}
 								<span 
