@@ -2257,6 +2257,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.paginatedLedgers[0].voucher = ledgerCtrl.voucherTypeList[i]
 
   ledgerCtrl.matchDiscountTxn = (ledger) ->
+    if _.isUndefined(ledgerCtrl.discountAccount)
+      return
     _.each ledger.transactions, (txn) ->
       discount = _.findWhere(ledgerCtrl.discountAccount.accountDetails, {uniqueName:txn.particular.uniqueName})
       if discount

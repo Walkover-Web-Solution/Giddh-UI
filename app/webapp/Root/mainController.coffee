@@ -615,6 +615,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.changeCompany = (company, index, method) ->
 #    console.log("method we get here is : ", method)
     # select and set active financial year
+    if _.isUndefined(company)
+      return
     $scope.getFlattenGrpWithAccList(company.uniqueName)
     $scope.setFYonCompanychange(company)
     #check permissions on selected company
