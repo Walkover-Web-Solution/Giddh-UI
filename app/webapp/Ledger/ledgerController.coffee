@@ -723,10 +723,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     #reset prev txn
     ledgerCtrl.prevTxn = txn
 
-    if typeof(txn.particular) is "object" && txn.particular.uniqueName.length
-      ledgerCtrl.checkCurrentTxnElgibility(txn, txn.particular)
-    else
-      ledgerCtrl.findCurrentAccountCategory(txn)
+    ledgerCtrl.checkCurrentTxnElgibility(txn, txn.particular)
 
     ledgerCtrl.getCompoundTotal()
 
@@ -748,29 +745,39 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     )
 
 
-  ledgerCtrl.findCurrentAccountCategory=(txn)->
-    category = ledgerCtrl.getAccCategoryByUniquename(ledgerCtrl.accountToShow.uniqueName)
-    if category is "income" || category == "expenses"
-      ledgerCtrl.showTaxationDiscountBox = true
-      ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
-    else
-      ledgerCtrl.showTaxationDiscountBox = false
+  # ledgerCtrl.findCurrentAccountCategory=(txn)->
+  #   category = ledgerCtrl.getAccCategoryByUniquename(ledgerCtrl.accountToShow.uniqueName)
+  #   if category is "income" || category == "expenses"
+  #     ledgerCtrl.showTaxationDiscountBox = true
+  #     ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
+  #     ledgerCtrl.addApplicableTaxes(item)
+  #   else
+  #     ledgerCtrl.showTaxationDiscountBox = false
   
   ledgerCtrl.checkCurrentTxnElgibility=(txn, item)->
     ledgerCtrl.showTaxationDiscountBox = false
-    category = ledgerCtrl.getAccCategoryByUniquename(item.uniqueName)
-    if category is "income" || category == "expenses"
-      ledgerCtrl.showTaxationDiscountBox = true
-      ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
-      ledgerCtrl.addApplicableTaxes(item)
-    else
-      ledgerCtrl.findCurrentAccountCategory(txn)
+    if typeof(item) is "object" && item.uniqueName. length
+      category = ledgerCtrl.getAccCategoryByUniquename(item.uniqueName)
+      if category is "income" || category == "expenses"
+        ledgerCtrl.showTaxationDiscountBox = true
+        ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
+        ledgerCtrl.addApplicableTaxes(item.applicableTaxes)
+    if ledgerCtrl.showTaxationDiscountBox == false
+      category = ledgerCtrl.getAccCategoryByUniquename(ledgerCtrl.accountToShow.uniqueName)
+      if category is "income" || category == "expenses"
+        ledgerCtrl.showTaxationDiscountBox = true
+        ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
+        taxArray = _.map ledgerCtrl.accountToShow.applicableTaxes, (taxObj) ->
+          taxObj.uniqueName
+        ledgerCtrl.addApplicableTaxes(taxArray)
 
   ledgerCtrl.getCompoundTotal=()->
     total = 0
     _.each ledgerCtrl.selectedLedger.transactions, (txn) ->
       if typeof(txn.panel) is "object"
         total += txn.panel.total
+      else if !txn.panel and txn.amount
+        total += Number(txn.amount)
     return ledgerCtrl.selectedLedger.compoundTotal = total
   
   ledgerCtrl.getAccCategoryByUniquename = (unqName) ->
@@ -931,9 +938,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       change.getTotal(txn, ledger)
 
     change.txnAmount = (txn, ledger) ->
-      txn.panel.amount = Number(txn.amount)
-      change.tax(txn, ledger)
-      txn.panel.quantity = ledgerCtrl.cutToTwoDecimal(txn.panel.amount/txn.panel.price)
+      if txn.panel
+        txn.panel.amount = Number(txn.amount)
+        change.tax(txn, ledger)
+        txn.panel.quantity = ledgerCtrl.cutToTwoDecimal(txn.panel.amount/txn.panel.price)
 
     change.getTotal = (txn, ledger) ->
       amount = txn.panel.amount - txn.panel.discount
@@ -954,18 +962,30 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     return change
 
 
-  ledgerCtrl.addApplicableTaxes = (account) ->
-    if account.applicableTaxes.length > 0
+  # ledgerCtrl.addApplicableTaxes = (account) ->
+  #   if account.applicableTaxes.length > 0
+  #     _.each ledgerCtrl.taxList, (tax) ->
+  #       if account.applicableTaxes.indexOf(tax.uniqueName) != -1
+  #         tax.isChecked = true
+  #         ledgerCtrl.selectedLedger.taxList.push(tax)
+  #     ledgerCtrl.selectedLedger.applyApplicableTaxes = true
+  #   else
+  #     ledgerCtrl.selectedLedger.taxList = []
+  #     ledgerCtrl.selectedLedger.applyApplicableTaxes = false
+  #   ledgerCtrl.onNewPanelChange().tax(ledgerCtrl.selectedTxn, ledgerCtrl.blankLedger)
+
+  ledgerCtrl.addApplicableTaxes = (taxArray) ->
+    if taxArray.length > 0
       _.each ledgerCtrl.taxList, (tax) ->
-        if account.applicableTaxes.indexOf(tax.uniqueName) != -1
+        if taxArray.indexOf(tax.uniqueName) != -1
           tax.isChecked = true
-          ledgerCtrl.selectedLedger.taxList.push(tax)
+          if ledgerCtrl.selectedLedger.taxList.indexOf(tax) < 0
+            ledgerCtrl.selectedLedger.taxList.push(tax)
       ledgerCtrl.selectedLedger.applyApplicableTaxes = true
     else
       ledgerCtrl.selectedLedger.taxList = []
       ledgerCtrl.selectedLedger.applyApplicableTaxes = false
     ledgerCtrl.onNewPanelChange().tax(ledgerCtrl.selectedTxn, ledgerCtrl.blankLedger)
-
 
   ledgerCtrl.selectTxn = (ledger, txn, index ,e) ->
     e.stopPropagation()
@@ -1455,7 +1475,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.setAmount = (ledger) ->
     _.each ledger.transactions, (txn) ->
       if !txn.isTax && !ledgerCtrl.isNotDiscountTxn(txn)
-        txn.amount = txn.panel.total
+        if txn.panel
+          txn.amount = txn.panel.total
+        else
+          txn.amount
 
   ledgerCtrl.buildLedger = (ledger) ->
     ledgerCtrl.ledgerBeforeEdit = angular.copy(ledger,{})
