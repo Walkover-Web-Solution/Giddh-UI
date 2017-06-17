@@ -4766,13 +4766,11 @@ table.proforma-particulars {
   padding-bottom: 300px;
 }
 
-#entryModal {
-  overflow: hidden;
+#entryModal .ledgHead{
+  float: none;
 }
-
 #entryModal .modal-body {
   padding: 0 20px 100px;
-  overflow: hidden;
 }
 
 .entrypanel label {
