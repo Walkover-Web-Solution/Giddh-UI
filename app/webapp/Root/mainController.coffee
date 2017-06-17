@@ -874,6 +874,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     localStorageService.set('_selectedCompany', company)
     $rootScope.selectedCompany = company
     $scope.changeCompany(company, 0, 'CHANGE')
+    if lastStateData.lastState.indexOf('@') != -1
+      lastStateData.lastState.replace('@','')
     $state.go(lastStateData.lastState)
   )
 
