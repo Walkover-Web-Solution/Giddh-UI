@@ -138,7 +138,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       acntUname : 'cash'
     }
     if $rootScope.selectedCompany.role.uniqueName == 'shared'
-      unqObj.acntUname = $rootScope.fltAccntListPaginated[0].uniqueName
+      sortedAccList = ledgerCtrl.sortFlatAccListAlphabetically($rootScope.fltAccntListPaginated, 'uniqueName')
+      if sortedAccList.length > 0
+        unqObj.acntUname = sortedAccList[0]
+        ledgerCtrl.accountUnq = sortedAccList[0]
     accountService.get(unqObj).then(@success, @failure)
 
   ledgerCtrl.sortFlatAccListAlphabetically = (list, property) ->
@@ -167,7 +170,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       toastr.error(res.data.message, res.data.status)
     else
       sortedAccList = ledgerCtrl.sortFlatAccListAlphabetically($rootScope.fltAccntListPaginated, 'uniqueName')
-      ledgerCtrl.getAccountDetail(sortedAccList[0])
+      if sortedAccList.length > 0
+        ledgerCtrl.getAccountDetail(sortedAccList[0])
 
   ledgerCtrl.getAccountDetailSuccess = (res) ->
     localStorageService.set('_selectedAccount', res.body)
