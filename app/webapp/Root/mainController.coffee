@@ -208,7 +208,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       localStorageService.remove('_selectedAccount')
       localStorageService.remove('_ledgerData')
       window.sessionStorage.clear()
-      window.location = "https://www.giddh.com"
+      window.location = "https://giddh.com"
     ), (res) ->
 
   # for ledger

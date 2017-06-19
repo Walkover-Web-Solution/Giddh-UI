@@ -235,8 +235,7 @@ app.use('/voucher',voucherModule);
 app.use('/logout', function(req, res){
   if(req.session.name){
     req.session.destroy()
-    res.redirect('https://giddh.com')
-    //res.status(200).send({message:'user logged out'})
+    res.status(200).send({message:'user logged out'})
   }else{
     res.status(403).send({message:'user not found'})
   }
