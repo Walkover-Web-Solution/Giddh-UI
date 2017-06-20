@@ -749,15 +749,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         return item
     )
 
-
-  # ledgerCtrl.findCurrentAccountCategory=(txn)->
-  #   category = ledgerCtrl.getAccCategoryByUniquename(ledgerCtrl.accountToShow.uniqueName)
-  #   if category is "income" || category == "expenses"
-  #     ledgerCtrl.showTaxationDiscountBox = true
-  #     ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
-  #     ledgerCtrl.addApplicableTaxes(item)
-  #   else
-  #     ledgerCtrl.showTaxationDiscountBox = false
   
   ledgerCtrl.checkCurrentTxnElgibility=(txn, item)->
     ledgerCtrl.showTaxationDiscountBox = false
@@ -966,19 +957,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
     return change
 
-
-  # ledgerCtrl.addApplicableTaxes = (account) ->
-  #   if account.applicableTaxes.length > 0
-  #     _.each ledgerCtrl.taxList, (tax) ->
-  #       if account.applicableTaxes.indexOf(tax.uniqueName) != -1
-  #         tax.isChecked = true
-  #         ledgerCtrl.selectedLedger.taxList.push(tax)
-  #     ledgerCtrl.selectedLedger.applyApplicableTaxes = true
-  #   else
-  #     ledgerCtrl.selectedLedger.taxList = []
-  #     ledgerCtrl.selectedLedger.applyApplicableTaxes = false
-  #   ledgerCtrl.onNewPanelChange().tax(ledgerCtrl.selectedTxn, ledgerCtrl.blankLedger)
-
   ledgerCtrl.addApplicableTaxes = (taxArray) ->
     if taxArray.length > 0
       _.each ledgerCtrl.taxList, (tax) ->
@@ -993,6 +971,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.onNewPanelChange().tax(ledgerCtrl.selectedTxn, ledgerCtrl.blankLedger)
 
   ledgerCtrl.selectTxn = (ledger, txn, index ,e) ->
+    ledger = ledgerCtrl.selectedLedger
     e.stopPropagation()
     if !_.isNull(ledgerCtrl.prevTxn)
       ledgerCtrl.prevTxn.isOpen = false
@@ -1000,7 +979,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.selectedTxn.isOpen = true
     ledgerCtrl.prevTxn = txn
     ledgerCtrl.addBlankRow(ledger, txn)
-    # ledgerCtrl.selectedLedger = ledger
     
 
   ledgerCtrl.createPanel = (ledger) ->
@@ -1697,11 +1675,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.removeTaxTxnOnPrincipleTxnModified(ledger.transactions)
       ledger.transactions = ledgerCtrl.txnAfterRmovingTax
     if ledger.transactions.length > 0
-      console.log "bingo", ledger
-      # ledgerService.updateEntry(unqNamesObj, ledger).then(
-      #   (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
-      #   (res) -> ledgerCtrl.updateEntryFailure(res, ledger)
-      # )
+      ledgerService.updateEntry(unqNamesObj, ledger).then(
+        (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
+        (res) -> ledgerCtrl.updateEntryFailure(res, ledger)
+      )
 
   ledgerCtrl.matchTaxTransactions = (txnList, taxList) ->
     _.each txnList, (txn) ->
@@ -1858,22 +1835,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledger.failed = false
     ledgerCtrl.paginatedLedgers = [res.body]
     ledgerCtrl.selectedLedger = res.body
-    # ledgerCtrl.clearTaxSelection(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
     ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
     ledgerCtrl.entryTotal = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
     ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
     toastr.success("Entry updated successfully.", "Success")
     if ledgerCtrl.generateInvoice
       ledgerCtrl.autoGenerateInvoice(res.body)
-    # ledgerCtrl.paginatedLedgers = [res.body]
-    # ledgerCtrl.selectedLedger = res.body
-    # ledgerCtrl.clearTaxSelection(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.isTransactionContainsTax(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.entryTotal = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
+    
     ledgerCtrl.addBlankTransactionIfOneSideEmpty(ledgerCtrl.selectedLedger)
     ledgerCtrl.ledgerBeforeEdit = {}
     ledgerCtrl.ledgerBeforeEdit = angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
@@ -1890,10 +1858,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.doingEntry = false
     ledger = ledgerCtrl.ledgerBeforeEdit
     toastr.error(res.data.message, res.data.status)
-    # $timeout ( ->
-    #   ledgerCtrl.pageLoader = false
-    #   ledgerCtrl.showLoader = false
-    # ), 1000
     
   ledgerCtrl.createLedger = (ledger, type) ->
     txns = []
@@ -2159,7 +2123,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
     @success = (res) ->
       #do not change order of functions
-      ledgerCtrl.paginatedLedgers = [res.body]
+      # ledgerCtrl.paginatedLedgers = [res.body]
       ledgerCtrl.selectedLedger = angular.copy(res.body)
       ledgerCtrl.clearTaxSelection(ledgerCtrl.selectedLedger)
       ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
@@ -2174,7 +2138,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       _.each res.body.transactions, (txn) ->
         if txn.particular.uniqueName == ledgerCtrl.clickedTxn.particular.uniqueName
           ledgerCtrl.selectedTxn = txn
-      ledgerCtrl.setVoucherCode(ledgerCtrl.selectedLedger)
+      # ledgerCtrl.setVoucherCode(ledgerCtrl.selectedLedger)
       if !ledgerCtrl.selectedLedger.invoiceGenerated
         ledgerCtrl.generateInvoice = false
       if openModal
