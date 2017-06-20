@@ -2636,9 +2636,7 @@ label {
 .fa-times {
     cursor: pointer;
 }
-#getGroupModal .select-locked {
-    display: none !important;
-}
+
 .fix .new_btn {
     position: absolute;
     background: #fff;
@@ -2675,6 +2673,11 @@ label {
     border-radius: 0;
 }
 
+/******** commented due to old manage modal ******/
+/*#getGroupModal .select-locked {
+    display: none !important;
+}*/
+
 @media only screen and (min-width: 1336px) and (max-width: 1440px) {
   .grp_wrapper {
      -webkit-column-count: 3;
@@ -2697,3 +2700,4 @@ label {
       padding: 8px 7px !important;
   }
 }
+
