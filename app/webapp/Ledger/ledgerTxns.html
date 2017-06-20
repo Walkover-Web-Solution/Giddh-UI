@@ -176,10 +176,6 @@ th {
 				</div>
 				<div class="col-xs-4 pull-right text-right">
 					<div class="row">
-						  
-						<!-- <a class="icomoon_ico mrL1" href="javascript:void(0)" title="" uib-tooltip="Generate Magic Link" tooltip-placement="left" ng-click="ledgerCtrl.getMagicLink()">
-							<i class="icon-magic_link"></i>
-						</a>  -->
 						
 						<a class="icomoon_ico" href="javascript:void(0)" title="" uib-tooltip="Export" tooltip-placement="right" ng-click="ledgerCtrl.shareLedger(); ledgerCtrl.toggleExportFucntion()" >
 							<i class="icon-download"></i>
@@ -203,9 +199,9 @@ th {
 
 		<!--bank ledgers-->
 		<section class="mrT5" ng-if="ledgerCtrl.eLedgerData.length > 0 && ledgerCtrl.showEledger">
-            <div ng-include="'/public/webapp/Ledger/eledger-new.html'"></div>
-        </section>
-        <!--/bank ledger-->
+      <div ng-include="'/public/webapp/Ledger/eledger-new.html'"></div>
+    </section>
+    <!--/bank ledger-->
 
 		<table class="col-xs-12 ledger-head mrT3">
 			<thead>
@@ -223,16 +219,11 @@ th {
 						<tr class="t-h-bg1">
 							<th class="col-xs-2" style="border-top:none">
 								<span ng-click="ledgerCtrl.sortOrder.debit = ledgerCtrl.sortDirectionInvert(ledgerCtrl.sortOrder.debit); ledgerCtrl.sortOrderChange('dr')" class="cursor-pointer">
-									<!-- <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="ledgerCtrl.sortOrder.debit == ledgerCtrl.sortDirection.desc"></i>
-									<i class="glyphicon glyphicon-sort-by-order" ng-if="ledgerCtrl.sortOrder.debit == ledgerCtrl.sortDirection.asc"></i> -->
 									Date
 								</span>
-								<!-- <i class="glyphicon glyphicon-sort pull-left mrL"></i> -->
 							</th>
 							<th class="col-xs-7" style="border-top:none">Particular</th>
 							<th class="col-xs-3" style="border-top:none">
-								<!-- <span class="col-xs-6 pad0" ng-if="ledgerCtrl.accountToShow.stock != null">Qty</span> -->
-								<!-- <span class="pad0" ng-class="{'col-xs-6':ledgerCtrl.accountToShow.stock != null, 'col-xs-12':ledgerCtrl.accountToShow.stock == null}">Amount</span> -->
 								Amount
 							</th>
 						</tr>
@@ -294,13 +285,12 @@ th {
 											ng-repeat="txn in ledgerCtrl.blankLedger.transactions"
 											ng-if="txn.type == 'DEBIT'"
 											uib-popover-template="ledgerCtrl.popover.templateUrl"
-											popover-trigger="none"
+											popover-trigger="outsideClick"
 											popover-placement="{{ledgerCtrl.popover.position}}"
 											popover-append-to-body='true'
 											popover-enable="!ledgerCtrl.popover.draggable"
 											popover-is-open="txn.isOpen"
 											popover-popup-delay="200"
-											ng-click="$event.stopPropagation()"
 											>
 											<td class="col-xs-2">
 												<input 
@@ -357,15 +347,10 @@ th {
 				<table class="width100">
 					<thead>
 						<tr class="t-h-bg1">
-							<!--  <th class="col-xs-1"></th> -->
 							<th class="col-xs-2" style="border-top:none">
 								<span ng-click="ledgerCtrl.sortOrder.credit = ledgerCtrl.sortDirectionInvert(ledgerCtrl.sortOrder.credit); ledgerCtrl.sortOrderChange('cr')" class="cursor-pointer">
-									<!-- <i class="glyphicon glyphicon-sort-by-order-alt" ng-if="ledgerCtrl.sortOrder.credit == ledgerCtrl.sortDirection.desc"></i>
-									<i class="glyphicon glyphicon-sort-by-order" ng-if="ledgerCtrl.sortOrder.credit == ledgerCtrl.sortDirection.asc"></i> -->
 									Date
 								</span>
-								
-								<!-- <i class="glyphicon glyphicon-sort pull-left"></i> -->
 							</th>
 							<th class="col-xs-7" style="border-top:none">Particular</th>
 							<th class="col-xs-3" style="border-top:none">Amount</th>
@@ -429,13 +414,12 @@ th {
 											ng-repeat="txn in ledgerCtrl.blankLedger.transactions"
 											ng-if="txn.type == 'CREDIT'"
 											uib-popover-template="ledgerCtrl.popover.templateUrl"
-											popover-trigger="none"
+											popover-trigger="outsideClick"
 											popover-placement="{{ledgerCtrl.popover.position}}"
 											popover-append-to-body='true'
 											popover-enable="!ledgerCtrl.popover.draggable"
 											popover-is-open="txn.isOpen"
 											popover-popup-delay="200"
-											ng-click="$event.stopPropagation()"
 											>
 											<td class="col-xs-2">
 												<input 

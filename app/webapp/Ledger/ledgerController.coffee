@@ -715,6 +715,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     e.stopPropagation()
     # hide side menu
     ledgerCtrl.hideSideMenu()
+    # unselect selected entry
+    ledgerCtrl.selectedTxnUniqueName = undefined
 
     if ledgerCtrl.prevTxn isnt null
       ledgerCtrl.prevTxn.isOpen = false
@@ -2045,8 +2047,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   $(document).on 'click', (e) ->
     if (!$(e.target).is('.account-list-item') && !$(e.target).is('.account-list-item strong') && !ledgerCtrl.hasParent(e.target, '.ledger-panel') && !$(e.target).is('.ledger-panel')) && ledgerCtrl.prevTxn
       ledgerCtrl.prevTxn.isOpen = false
-    if (!$(e.target).is('.ledger-row'))
-      ledgerCtrl.selectedTxnUniqueName = null
+    if !e.target.parentElement.classList.contains('ledger-row')
+      ledgerCtrl.selectedTxnUniqueName = undefined
     return 0
 
 #########################################################
@@ -2123,7 +2125,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.selectCompoundEntry = (txn, e) ->
     ledgerCtrl.currentTxn = txn
     ledgerCtrl.selectedTxnUniqueName = txn.entryUniqueName
-    e.stopPropagation()  
 
   ledgerCtrl.setVoucherCode = (ledger) ->
     _.each ledgerCtrl.voucherTypeList, (vc, i) ->
