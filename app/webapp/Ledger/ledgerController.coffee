@@ -1346,9 +1346,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.taxList = []
     if $rootScope.canUpdate and $rootScope.canDelete
       companyServices.getTax($rootScope.selectedCompany.uniqueName).then(ledgerCtrl.getTaxListSuccess, ledgerCtrl.getTaxListFailure)
-    $timeout( ->
-      ledgerCtrl.getTaxList()
-        ,500)
+
+  $timeout( ->
+    ledgerCtrl.getTaxList()
+  ,500)
 
   ledgerCtrl.getTaxListSuccess = (res) ->
     _.each res.body, (tax) ->
