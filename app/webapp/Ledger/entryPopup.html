@@ -329,7 +329,7 @@
             <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().$parent.getInvoiceFile(this.files)">
             <label for="invoiceFile" ng-click="$event.stopPropagation()" style="padding:0"><i class="glyphicon glyphicon-paperclip"></i></label>
           </div>
-          <button class="btn btn-success" ng-click="ledgerCtrl.saveUpdateLedger(ledgerCtrl.selectedLedger)">Update</button>
+          <button class="btn btn-success" ng-click="ledgerCtrl.saveUpdateLedger()">Update</button>
         </div>
       </div>
     </div>

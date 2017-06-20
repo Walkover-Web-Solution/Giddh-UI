@@ -690,6 +690,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.emailLedgerFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+
+  ledgerCtrl.resetTaxes = () ->
+    _.each(ledgerCtrl.taxList, (tax) ->
+      tax.isChecked = false
+    )
   
 
   ledgerCtrl.hideSideMenu=()->
@@ -995,7 +1000,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.selectedTxn.isOpen = true
     ledgerCtrl.prevTxn = txn
     ledgerCtrl.addBlankRow(ledger, txn)
-    ledgerCtrl.selectedLedger = ledger
+    # ledgerCtrl.selectedLedger = ledger
     
 
   ledgerCtrl.createPanel = (ledger) ->
@@ -1500,11 +1505,21 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     transactions
 
   ledgerCtrl.lastSelectedLedger = {}
-  ledgerCtrl.saveUpdateLedger = (ledger) ->
+
+  ledgerCtrl.saveUpdateLedger = () ->
+    
+    ledger = ledgerCtrl.selectedLedger
+
+    if _.isEmpty(ledger.voucher.shortCode)
+      toastr.error("Select voucher type.")
+      return false
+
+
     if !ledger.isBankTransaction
       ledger = ledgerCtrl.buildLedger(ledger)
+    
     ledgerCtrl.lastSelectedLedger = ledger
-    #ledgerCtrl.formatInventoryTxns(ledger)
+
     if ledgerCtrl.doingEntry == true
       return
 
@@ -1513,113 +1528,102 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if ledger.isBankTransaction
       ledgerCtrl.btIndex = ledger.index
     delete ledger.isCompoundEntry
-    if !_.isEmpty(ledger.voucher.shortCode) 
-      if _.isEmpty(ledger.uniqueName)
-        #add new entry
-        unqNamesObj = {
-          compUname: $rootScope.selectedCompany.uniqueName
-          acntUname: ledgerCtrl.accountUnq
-        }
-        delete ledger.uniqueName
-        delete ledger.voucherNo
-        transactionsArray = []
-        rejectedTransactions = []
-        transactionsArray = _.reject(ledger.transactions, (led) ->
-         if led.particular == "" || led.particular.uniqueName == ""
-           rejectedTransactions.push(led)
-           return led
-        )
-        ledger.transactions = transactionsArray
-        ledger.voucherType = ledger.voucher.shortCode
-        ledgerCtrl.addTaxesToLedger(ledger)
-        if ledger.transactions.length > 0
-          if ledger.transactions.length > 1
-            ledgerCtrl.matchTaxTransactions(ledger.transactions, ledgerCtrl.taxList)
-            ledgerCtrl.checkManualTaxTransaction(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
-            ledgerCtrl.checkTaxCondition(ledger)
-          ledgerService.createEntry(unqNamesObj, ledger).then(
-            (res) -> ledgerCtrl.addEntrySuccess(res, ledger)
-            (res) -> ledgerCtrl.addEntryFailure(res,rejectedTransactions, ledger))
-        else
-          ledgerCtrl.doingEntry = false
-          ledger.transactions = rejectedTransactions
-          response = {}
-          response.data = {}
-          response.data.message = "There must be at least a transaction to make an entry."
-          response.data.status = "Error"
-          ledgerCtrl.addEntryFailure(response,[])
-#          toastr.error("There must be at least a transaction to make an entry.")
-      else
-        #update entry
-        #ledgerCtrl.removeEmptyTransactions(ledger.transactions)
-        ledgerCtrl.generateInvoice = ledger.generateInvoice
-        ledger.transactions = ledgerCtrl.removeTaxTransactions(ledger)
-        _.each ledger.transactions, (txn) ->
-          if !_.isEmpty(txn.particular.uniqueName)
-            particular = {}
-            particular.name = txn.particular.name
-            particular.uniqueName = txn.particular.uniqueName
-            txn.particular = particular
-          if txn.inventory && (txn.inventory.quantity == "" || txn.inventory.quantity == undefined || txn.inventory.quantity == null)
-            delete txn.inventory
-  #      ledger.isInclusiveTax = false
-        unqNamesObj = {
-          compUname: $rootScope.selectedCompany.uniqueName
-          acntUname: ledgerCtrl.accountUnq
-          entUname: ledger.uniqueName
-        }
-        if ledgerCtrl.currentTxn.isCompoundEntry && ledgerCtrl.currentTxn.isBaseAccount
-          unqNamesObj.acntUname = ledgerCtrl.currentTxn.particular.uniqueName
+    
+    # add new entry case
+    if _.isEmpty(ledger.uniqueName)
+      unqNamesObj = {
+        compUname: $rootScope.selectedCompany.uniqueName
+        acntUname: ledgerCtrl.accountUnq
+      }
+      delete ledger.uniqueName
+      delete ledger.voucherNo
+      transactionsArray = []
+      rejectedTransactions = []
+      transactionsArray = _.reject(ledger.transactions, (led) ->
+       if led.particular == "" || led.particular.uniqueName == ""
+         rejectedTransactions.push(led)
+         return led
+      )
+      ledger.transactions = transactionsArray
+      ledger.voucherType = ledger.voucher.shortCode
+      ledgerCtrl.addTaxesToLedger(ledger)
 
-        # transactionsArray = []
-        # _.every(ledgerCtrl.blankLedger.transactions,(led) ->
-        #   delete led.date
-        #   delete led.parentGroups
-        # )
-        # _.each(ledger.)
-        # transactionsArray = _.reject(ledgerCtrl.blankLedger.transactions, (led) ->
-        #   led.particular.uniqueName == ""
-        # )
-        ledgerCtrl.addTaxesToLedger(ledger)
-#        console.log ledger
-        #ledger.transactions.push(transactionsArray)
-        ledger.voucher = _.findWhere(ledgerCtrl.voucherTypeList,{'shortCode':ledger.voucher.shortCode})
-        ledger.voucherType = ledger.voucher.shortCode
-        if ledger.transactions.length > 0
+      if ledger.transactions.length > 0
+        if ledger.transactions.length > 1
           ledgerCtrl.matchTaxTransactions(ledger.transactions, ledgerCtrl.taxList)
-          ledgerCtrl.matchTaxTransactions(ledgerCtrl.ledgerBeforeEdit.transactions, ledgerCtrl.taxList)
           ledgerCtrl.checkManualTaxTransaction(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
-          updatedTxns = ledgerCtrl.updateEntryTaxes(ledger.transactions)
-          ledger.transactions = updatedTxns
-          ledgerCtrl.checkTaxCondition(ledger)
-          isModified = false
-          if ledger.taxes.length > 0
-            isModified = ledgerCtrl.checkPrincipleModifications(ledger, ledgerCtrl.ledgerBeforeEdit.transactions)
-          if isModified
-            # ledgerCtrl.selectedTxn.isOpen = false
-            modalService.openConfirmModal(
-              title: 'Update'
-              body: 'Principle transaction updated, Would you also like to update tax transactions?',
-              ok: 'Yes',
-              cancel: 'No'
-            ).then(
-                (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, true),
-                (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, false)
-            )
-          else
-           ledgerService.updateEntry(unqNamesObj, ledger).then(
-             (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
-             (res) -> ledgerCtrl.updateEntryFailure(res, ledger)
-           )
-        else
-          ledgerCtrl.doingEntry = false
-          response = {}
-          response.data = {}
-          response.data.message = "There must be at least a transaction to make an entry."
-          response.data.status = "Error"
-          ledgerCtrl.addEntryFailure(response,[])
+          # ledgerCtrl.checkTaxCondition(ledger)
+        ledgerService.createEntry(unqNamesObj, ledger).then(
+          (res) -> ledgerCtrl.addEntrySuccess(res, ledger)
+          (res) -> ledgerCtrl.addEntryFailure(res,rejectedTransactions, ledger))
+      else
+        ledgerCtrl.doingEntry = false
+        ledger.transactions = rejectedTransactions
+        response = {}
+        response.data = {}
+        response.data.message = "There must be at least a transaction to make an entry."
+        response.data.status = "Error"
+        ledgerCtrl.addEntryFailure(response,[])
+    #update entry case
     else
-      toastr.error("Select voucher type.")
+      # ledger.transactions = ledgerCtrl.removeTaxTransactions(ledger)
+      ledgerCtrl.generateInvoice = ledger.generateInvoice
+      _.each ledger.transactions, (txn) ->
+        if !_.isEmpty(txn.particular.uniqueName)
+          particular = {}
+          particular.name = txn.particular.name
+          particular.uniqueName = txn.particular.uniqueName
+          txn.particular = particular
+        if txn.inventory && (txn.inventory.quantity == "" || txn.inventory.quantity == undefined || txn.inventory.quantity == null)
+          delete txn.inventory
+
+      unqNamesObj = {
+        compUname: $rootScope.selectedCompany.uniqueName
+        acntUname: ledgerCtrl.accountUnq
+        entUname: ledger.uniqueName
+      }
+
+      if ledgerCtrl.currentTxn.isCompoundEntry && ledgerCtrl.currentTxn.isBaseAccount
+        unqNamesObj.acntUname = ledgerCtrl.currentTxn.particular.uniqueName
+
+      ledgerCtrl.addTaxesToLedger(ledger)
+
+      ledger.voucher = _.findWhere(ledgerCtrl.voucherTypeList,{'shortCode':ledger.voucher.shortCode})
+
+      ledger.voucherType = ledger.voucher.shortCode
+
+      if ledger.transactions.length > 0
+        ledgerCtrl.matchTaxTransactions(ledger.transactions, ledgerCtrl.taxList)
+        ledgerCtrl.matchTaxTransactions(ledgerCtrl.ledgerBeforeEdit.transactions, ledgerCtrl.taxList)
+        ledgerCtrl.checkManualTaxTransaction(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
+        # updatedTxns = ledgerCtrl.updateEntryTaxes(ledger.transactions)
+        # ledger.transactions = updatedTxns
+        # ledgerCtrl.checkTaxCondition(ledger)
+        isModified = false
+        if ledger.taxes.length > 0
+          isModified = ledgerCtrl.checkPrincipleModifications(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
+        if isModified
+          modalService.openConfirmModal(
+            title: 'Update'
+            body: 'Principle transaction updated, Would you also like to update tax transactions?',
+            ok: 'Yes',
+            cancel: 'No'
+          ).then(
+              (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, true),
+              (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, false)
+          )
+        else
+          ledgerService.updateEntry(unqNamesObj, ledger).then(
+           (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
+           (res) -> ledgerCtrl.updateEntryFailure(res, ledger))
+      else
+        ledgerCtrl.doingEntry = false
+        response = {}
+        response.data = {}
+        response.data.message = "There must be at least a transaction to make an entry."
+        response.data.status = "Error"
+        ledgerCtrl.addEntryFailure(response,[])
+      
 
 
   ledgerCtrl.checkTaxCondition = (ledger) ->
@@ -1630,22 +1634,19 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if ledger.isInclusiveTax
       ledger.transactions = transactions
 
-  ledgerCtrl.checkPrincipleModifications = (ledger, uTxnList) ->
-    withoutTaxesLedgerTxn = ledgerCtrl.getPrincipleTxnOnly(ledger.transactions)
-    withoutTaxesUtxnList = ledgerCtrl.getPrincipleTxnOnly(uTxnList)
+  ledgerCtrl.checkPrincipleModifications = (newTxnList, oldTxnList) ->
+    arr1 = ledgerCtrl.getPrincipleTxnOnly(newTxnList)
+    arr2 = ledgerCtrl.getPrincipleTxnOnly(oldTxnList)
     isModified = false
-    if withoutTaxesLedgerTxn.length == withoutTaxesUtxnList.length
-      _.each withoutTaxesLedgerTxn, (txn, idx) ->
-        _.each withoutTaxesUtxnList, (uTxn, dx) ->
-          if idx == dx 
-            if txn.particular.uniqueName != uTxn.particular.uniqueName || txn.amount != uTxn.amount
-              isModified = true
+    if arr1.length is arr2.length
+      _.each arr1, (txn, idx) ->
+        if txn.particular.uniqueName isnt arr2[idx].particular.uniqueName || txn.amount isnt arr2[idx].amount
+          isModified = true
     else
       isModified = true
     isModified
 
   ledgerCtrl.checkManualTaxTransaction = (txnList, uTxnList) ->
-    #console.log txnList.length, uTxnList.length
     _.each txnList, (txn) ->
       txn.isManualTax = true
       _.each uTxnList, (uTxn) ->
@@ -1656,7 +1657,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.getPrincipleTxnOnly = (txnList) ->
     transactions = []
     _.each txnList, (txn) ->
-      if txn.isTax == undefined || !txn.isTax
+      if (_.isUndefined(txn.isTax) || !txn.isTax) and !_.isEmpty(txn.particular.uniqueName)
         transactions.push(txn)
     transactions
 
@@ -1667,10 +1668,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledger.taxes.push(tax.uniqueName)
     )
 
-  ledgerCtrl.resetTaxes = () ->
-    # _.each(ledgerCtrl.taxList, (tax) ->
-    #   tax.isChecked = false
-    # )
 
   ledgerCtrl.updateEntryTaxes = (txnList) ->
     transactions = []
@@ -1680,8 +1677,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           if txn.particular.uniqueName == tax.account.uniqueName && !tax.isChecked
             if !txn.isManualTax
               txn.toRemove = true 
-              #transactions.push(txn)
-              #txnList.splice(idx, 1)
     txnList = _.filter(txnList, (txn)->
       return txn.toRemove == undefined || txn.toRemove == false
     )
@@ -1695,33 +1690,18 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           tax.isChecked = true
           ledger.taxList.push(tax)
 
-    # if ledger.taxes != undefined && ledger.taxes.length > 0
-    #   _.each(ledgerCtrl.taxList, (tax) ->
-    #     tax.isChecked = false
-    #     _.each(ledger.taxes, (taxe) ->
-    #       if taxe == tax.uniqueName
-    #         tax.isChecked = true
-    #     )
-    #   )
-    # else
-    #   _.each(ledgerCtrl.taxList, (tax) ->
-    #     #tax.isChecked = false
-    #     _.each(ledger.transactions, (txn) ->
-    #       if txn.particular.uniqueName == tax.account.uniqueName
-    #         tax.isChecked = true
-    #     )
-    #   )
 
   ledgerCtrl.UpdateEntry = (ledger, unqNamesObj,removeTax) ->
-    if removeTax == true
+    if removeTax
       ledgerCtrl.txnAfterRmovingTax = []
       ledgerCtrl.removeTaxTxnOnPrincipleTxnModified(ledger.transactions)
       ledger.transactions = ledgerCtrl.txnAfterRmovingTax
     if ledger.transactions.length > 0
-      ledgerService.updateEntry(unqNamesObj, ledger).then(
-        (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
-        (res) -> ledgerCtrl.updateEntryFailure(res, ledger)
-      )
+      console.log "bingo", ledger
+      # ledgerService.updateEntry(unqNamesObj, ledger).then(
+      #   (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
+      #   (res) -> ledgerCtrl.updateEntryFailure(res, ledger)
+      # )
 
   ledgerCtrl.matchTaxTransactions = (txnList, taxList) ->
     _.each txnList, (txn) ->
@@ -1930,18 +1910,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     _.each ledger.transactions, (txn) ->
       txn.isOpen = false
 
-  ledgerCtrl.deleteEntryConfirm = (ledger) ->
-    modalService.openConfirmModal(
-      title: 'Delete'
-      body: 'Are you sure you want to delete this entry?',
-      ok: 'Yes',
-      cancel: 'No'
-    ).then(
-      (res) -> 
-        ledgerCtrl.deleteEntry(ledger)
-      (res) -> 
-        $dismiss()
-    )
 
   ledgerCtrl.deleteEntry = (ledger) ->
     # ledgerCtrl.pageLoader = true
@@ -2113,7 +2081,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.addLedgerPages()
       ledgerCtrl.showLedgers = true
       ledgerCtrl.calculateReckonging(ledgerCtrl.txnData)
-      # ledgerCtrl.resetTaxes()
 
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -2193,7 +2160,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     @success = (res) ->
       #do not change order of functions
       ledgerCtrl.paginatedLedgers = [res.body]
-      ledgerCtrl.selectedLedger = res.body
+      ledgerCtrl.selectedLedger = angular.copy(res.body)
       ledgerCtrl.clearTaxSelection(ledgerCtrl.selectedLedger)
       ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
       ledgerCtrl.matchDiscountTxn(ledgerCtrl.selectedLedger)
@@ -2279,7 +2246,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       total += ledgerCtrl.cutToTwoDecimal(txn.amount)
     return total
 
-
   ledgerCtrl.deleteEntryConfirm = () ->
     modalService.openConfirmModal(
       title: 'Delete'
@@ -2287,10 +2253,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ok: 'Yes',
       cancel: 'No'
     ).then(
-      (res) -> 
+      (res)-> 
         ledgerCtrl.deleteEntry()
-      (res) -> 
-        $dismiss()
+      (res)->
     )
 
   ledgerCtrl.deleteEntry = () ->
