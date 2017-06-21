@@ -297,12 +297,13 @@ header, header .navbar {
   cursor: text;
 }
 
-.ledger-panel .btn {
+/*.ledger-panel .btn {
   background: #eee;
   border: 1px solid #949494;
-}
+  .ledger-panel .btn:hover, 
+}*/
 
-.ledger-panel .btn:hover, .ledger-panel .btn-primary {
+.ledger-panel .btn-primary {
   background: #f3f0e6;
   border-color: #ff782d;
   color: #616161;

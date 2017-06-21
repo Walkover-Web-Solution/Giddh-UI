@@ -757,11 +757,17 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         return item
     )
 
+  ledgerCtrl.showHideInvGenOpts=(category)->
+    if category is "income"
+      ledgerCtrl.showGenInvOpts = true
+    else if not ledgerCtrl.selectedLedger.isCompoundEntry
+      ledgerCtrl.showGenInvOpts = false
   
   ledgerCtrl.checkCurrentTxnElgibility=(txn, item)->
     ledgerCtrl.showTaxationDiscountBox = false
     if typeof(item) is "object" && item.uniqueName. length
       category = ledgerCtrl.getAccCategoryByUniquename(item.uniqueName)
+      ledgerCtrl.showHideInvGenOpts(category)
       if category is "income" || category == "expenses"
         ledgerCtrl.showTaxationDiscountBox = true
         ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
@@ -778,10 +784,17 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.getCompoundTotal=()->
     total = 0
     _.each ledgerCtrl.selectedLedger.transactions, (txn) ->
-      if typeof(txn.panel) is "object"
-        total += txn.panel.total
-      else if !txn.panel and txn.amount
-        total += Number(txn.amount)
+      if txn.type is 'DEBIT'
+        if typeof(txn.panel) is "object"
+          total += txn.panel.total
+        else if !txn.panel and txn.amount
+          total += Number(txn.amount)
+      else if txn.type is 'CREDIT' and txn.amount > 0
+        if typeof(txn.panel) is "object"
+          total -= txn.panel.total
+        else if !txn.panel and txn.amount
+          total -= Number(txn.amount)
+
     return ledgerCtrl.selectedLedger.compoundTotal = total
   
   ledgerCtrl.getAccCategoryByUniquename = (unqName) ->
@@ -818,7 +831,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.createNewPanel = (txn, ledger) ->
     panel = {}
-
     if typeof(txn.particular) is "object" and _.isUndefined(txn.panel)
       txn.panel = {
         tax : 0
@@ -830,75 +842,81 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         quantity: 1
         units: []
       }
-    
-    panel.getQuantity = () ->
-      if txn.panel.quantity isnt undefined
-        if panel.getPrice() is 0
-          return 1
-        else if panel.getAmount() is 0
-          return 1
+      
+      panel.getQuantity = () ->
+        if txn.panel.quantity isnt undefined
+          if panel.getPrice() is 0
+            return 1
+          else if panel.getAmount() is 0
+            return 1
+          else
+            return ledgerCtrl.cutToTwoDecimal(panel.getAmount()/panel.getPrice())
+
+      panel.getPrice = () ->
+        if txn.panel.price
+          return txn.panel.price
+        else if txn.particular.stock
+          units = panel.getUnits()
+          if txn.panel.unit
+            return txn.panel.unit.rate
+          else if units.length > 0
+            return units[0].rate
         else
-          return ledgerCtrl.cutToTwoDecimal(panel.getAmount()/panel.getPrice())
+          return 0
 
-    panel.getPrice = () ->
-      if txn.panel.price
-        return txn.panel.price
-      else if txn.particular.stock
-        units = panel.getUnits()
-        if txn.panel.unit
-          return txn.panel.unit.rate
-        else if units.length > 0
-          return units[0].rate
-      else
-        return 0
+      panel.getSelectedUnit=()->
+        if _.isNull(txn.panel.unit) || _.isUndefined(txn.panel.unit)
+          return txn.panel.units[0]
+        else
+          return txn.panel.unit
 
-    panel.getSelectedUnit=()->
-      if _.isNull(txn.panel.unit) || _.isUndefined(txn.panel.unit)
-        return txn.panel.units[0]
-      else
-        return txn.panel.unit
+      panel.getUnits = () ->
+        if txn.particular.stock && txn.particular.stock.accountStockDetails.unitRates.length > 0
+          return txn.particular.stock.accountStockDetails.unitRates
+        else if txn.particular.uniqueName.length > 0 && txn.particular.stock
+          txn.particular.stock.stockUnit.rate = 0
+          txn.particular.stock.stockUnit.stockUnitCode = txn.particular.stock.stockUnit.code
+          return [txn.particular.stock.stockUnit]
+        else
+          return txn.panel.units
 
-    panel.getUnits = () ->
-      if txn.particular.stock && txn.particular.stock.accountStockDetails.unitRates.length > 0
-        return txn.particular.stock.accountStockDetails.unitRates
-      else if txn.particular.uniqueName.length > 0 && txn.particular.stock
-        txn.particular.stock.stockUnit.rate = 0
-        txn.particular.stock.stockUnit.stockUnitCode = txn.particular.stock.stockUnit.code
-        return [txn.particular.stock.stockUnit]
-      else
-        return txn.panel.units
-
-    panel.getAmount = () ->
-      if txn.particular.stock && txn.particular.stock.accountStockDetails.unitRates.length > 0
-        if txn.panel.quantity > 0
-          return txn.panel.quantity * txn.panel.price
+      panel.getAmount = () ->
+        if txn.particular.stock && txn.particular.stock.accountStockDetails.unitRates.length > 0
+          if txn.panel.quantity > 0
+            return txn.panel.quantity * txn.panel.price
+          else
+            return Number(txn.amount)
         else
           return Number(txn.amount)
+
+      panel.getDiscount = () ->
+        discount = ledgerCtrl.getNewPanelDiscount(ledger)
+
+      panel.getTax = () ->
+        tax = ledgerCtrl.getNewPanelTax(txn, ledger)
+        return tax
+
+      panel.getTotal = () ->
+        amount = txn.panel.amount - txn.panel.discount
+        txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount + (amount*txn.panel.tax/100))
+
+      if(ledgerCtrl.selectedLedger.isCompoundEntry)
+        ledgerCtrl.onNewPanelChange().txnAmount(txn, ledgerCtrl.blankLedger)
       else
-        return Number(txn.amount)
+        txn.panel.quantity = panel.getQuantity()
+        txn.panel.price = panel.getPrice()
+        txn.panel.units = panel.getUnits()
+        txn.panel.unit = panel.getSelectedUnit()
+        txn.panel.amount = panel.getAmount()
+        txn.panel.disocunt = panel.getDiscount()
+        txn.panel.tax = panel.getTax()
+        txn.panel.total = panel.getTotal()
+        # call func
+        ledgerCtrl.getCompoundTotal()
 
-    panel.getDiscount = () ->
-      discount = ledgerCtrl.getNewPanelDiscount(ledger)
-
-    panel.getTax = () ->
-      tax = ledgerCtrl.getNewPanelTax(txn, ledger)
-      return tax
-
-    panel.getTotal = () ->
-      amount = txn.panel.amount - txn.panel.discount
-      txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount + (amount*txn.panel.tax/100))
-
-    txn.panel.quantity = panel.getQuantity()
-    txn.panel.price = panel.getPrice()
-    txn.panel.units = panel.getUnits()
-    txn.panel.unit = panel.getSelectedUnit()
-    txn.panel.amount = panel.getAmount()
-    txn.panel.disocunt = panel.getDiscount()
-    txn.panel.tax = panel.getTax()
-    txn.panel.total = panel.getTotal()
-    # call func
-    ledgerCtrl.getCompoundTotal()
-
+  ledgerCtrl.reDrawPanelForCompoundCase=(txn, $event)->
+    if(ledgerCtrl.selectedLedger.isCompoundEntry && $event.key is 'Tab')
+      ledgerCtrl.selectBlankTxn(txn, $event)
 
   ledgerCtrl.onNewPanelChange = () ->
     change = @
@@ -978,7 +996,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.selectedLedger.applyApplicableTaxes = false
     ledgerCtrl.onNewPanelChange().tax(ledgerCtrl.selectedTxn, ledgerCtrl.blankLedger)
 
-  ledgerCtrl.selectTxn = (ledger, txn, index ,e) ->
+  ledgerCtrl.selectTxn = (txn, index ,e) ->
     ledger = ledgerCtrl.selectedLedger
     e.stopPropagation()
     if !_.isNull(ledgerCtrl.prevTxn)
@@ -1703,7 +1721,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if !txn.isTax
         ledgerCtrl.txnAfterRmovingTax.push(txn)
 
+
+  ledgerCtrl.showGenInvOpts = false
   ledgerCtrl.resetBlankLedger = () ->
+    ledgerCtrl.showGenInvOpts = false
     ledgerCtrl.newDebitTxn = {
       date: $filter('date')(new Date(), "dd-MM-yyyy")
       particular: {
@@ -2027,6 +2048,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
    
 
   $rootScope.$on 'company-changed', (event,changeData) ->
+    $("html, body").animate({ scrollTop: 0 }, "slow")
     if not _.isUndefined(changeData)
       if changeData.type == 'CHANGE'
         if not _.isUndefined(changeData.data)
@@ -2065,6 +2087,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.addLedgerPages()
       ledgerCtrl.showLedgers = true
       ledgerCtrl.calculateReckonging(ledgerCtrl.txnData)
+      $("html, body").animate({ scrollTop: 0 }, "slow")
 
     @failure = (res) ->
       toastr.error(res.data.message)
