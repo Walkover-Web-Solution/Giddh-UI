@@ -2631,6 +2631,16 @@ body.unresponsive {
   .modal{
     position: absolute !important;
   }
+  .modal-open .modal{
+    overflow: hidden !important;
+  }
+  .modal-content{
+    overflow: auto;
+    height: 400px;
+  }
+  body.modal-open{
+    overflow-y: hidden !important;
+  }
 }
 
 @media only screen and (max-width: 1068px) {
