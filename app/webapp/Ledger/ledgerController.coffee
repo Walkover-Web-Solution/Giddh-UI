@@ -709,6 +709,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.getMagicLinkFailure = (res) ->
     toastr.error(res.data.message)
 
+
   ledgerCtrl.prevTxn = null
 
   ledgerCtrl.selectBlankTxn = (txn, e) ->
@@ -726,18 +727,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.resetTemporaryblankLedger(txn)
         ledgerCtrl.selectedLedger.compoundTotal = 0
 
-
     ledgerCtrl.selectedLedger = ledgerCtrl.blankLedger
     ledgerCtrl.selectedTxn = txn
     ledgerCtrl.selectedTxn.isOpen = true
     ledgerCtrl.clearTaxSelection(txn, ledgerCtrl.selectedLedger)
     ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
-
     #reset prev txn
     ledgerCtrl.prevTxn = txn
-
     ledgerCtrl.checkCurrentTxnElgibility(txn, txn.particular)
-
     ledgerCtrl.getCompoundTotal()
 
   ledgerCtrl.resetTemporaryblankLedger=(txn)->
@@ -2071,6 +2068,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.prevTxn.isOpen = false
     if !e.target.parentElement.classList.contains('ledger-row')
       ledgerCtrl.selectedTxnUniqueName = undefined
+    
     return 0
 
 #########################################################
