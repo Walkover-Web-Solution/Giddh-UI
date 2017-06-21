@@ -191,7 +191,7 @@
                     <label class="pdR pdL default_clr">+</label>
                   </td>
                   <td ng-if="ledgerCtrl.taxList.length > 0">
-                    <span class="pr" uib-dropdown auto-close="outsideClick">
+                    <span class="pr fixHitDrop" uib-dropdown auto-close="outsideClick">
 								      <a href id="tax" uib-dropdown-toggle>
 						        		<label>Tax %</label>
 						        		<div class="multi-select adjust">
@@ -199,7 +199,7 @@
 						        			<span class="caret"></span>
           							</div>
           						</a>
-						          <ul class="dropdown-menu pd" uib-dropdown-menu>
+						          <ul class="dropdown-menu" uib-dropdown-menu>
 						            <li class="oh width100 bdrB pdB" ng-repeat="tax in ledgerCtrl.taxList">
 						              <label class="checkbox" ng-click="$event.stopPropagation()">
 						                <input class="pull-left" style="margin-top:5px;" type="checkbox" ng-model="tax.isChecked" ng-change="ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)" ng-click="$event.stopPropagation()" />

@@ -2642,6 +2642,12 @@ body.unresponsive {
     overflow-y: hidden !important;
   }
 }
+.fixHitDrop ul.dropdown-menu{
+  height: 200px;
+  padding: 10px;
+  overflow: auto;
+  min-width: 200px;
+}
 
 @media only screen and (max-width: 1068px) {
   .sidebar {
