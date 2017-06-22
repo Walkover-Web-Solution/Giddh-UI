@@ -2386,6 +2386,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     @success = (res) ->
       ledgerCtrl.gwaList.totalPages = res.body.totalPages
       ledgerCtrl.flatGrpList = ledgerCtrl.markFixedGrps(res.body.results)
+      ledgerCtrl.flatGrpListWithoutFixedGroups = ledgerCtrl.removeFixedGroupsFromArr(ledgerCtrl.flatGrpList)
       ledgerCtrl.gwaList.limit = 5
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -2399,6 +2400,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if(showEmpty) 
       reqParam.showEmptyGroups = true
     groupService.getFlattenGroupAccList(reqParam).then(@success, @failure)
+
+  ledgerCtrl.removeFixedGroupsFromArr=(arr)->
+    fixedArr = ["currentassets", "fixedassets", "investments", "indirectexpenses", "operatingcost", "otherincome", "revenuefromoperations", "capital", "currentliabilities", "loan"]
+    a=[]
+    _.each arr, (item) ->
+      if _.indexOf(fixedArr, item.groupUniqueName) is -1
+        a.push(item)
+    return a
 
   ledgerCtrl.markFixedGrps = (flatGrpList) ->
     temp = []
