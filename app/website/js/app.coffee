@@ -504,7 +504,7 @@ app.controller 'magicCtrl', [
 
     $scope.downloadInvoice = (invoiceNumber) ->
       @success = (res) ->
-        blobData = ml.b64toBlob(res.data.body, "application/pdf", 512)
+        blobData = $scope.b64toBlob(res.data.body, "application/pdf", 512)
         FileSaver.saveAs(blobData, invoiceNumber + ".pdf")
       @failure = (res) ->
         toastr.error(res.message)
@@ -514,9 +514,26 @@ app.controller 'magicCtrl', [
       }
       $http.post($scope.downloadInvoiceUrl, data:_data).then @success, @failure  
 
+
+    # $scope.downloadAttachedFile = (file, e) ->
+    #   e.stopPropagation()
+    #   @success = (res) ->
+    #     data = $scope.b64toBlob(res.body.uploadedFile, "image/"+res.body.fileType)
+    #     # blobUrl = URL.createObjectURL(data)
+    #     FileSaver.saveAs(data, res.body.name)
+
+    #   @failure = (res) ->
+    #     toastr.error(res.data.message)
+    #   reqParam = {
+    #     companyUniqueName: $rootScope.selectedCompany.uniqueName
+    #     accountsUniqueName: $rootScope.selectedAccount.uniqueName
+    #     file:file
+    #   }
+    #   ledgerService.downloadInvoiceFile(reqParam).then(@success, @failure)
+
     $scope.getData($scope.data, true)
 
-    ml.b64toBlob = (b64Data, contentType, sliceSize) ->
+    $scope.b64toBlob = (b64Data, contentType, sliceSize) ->
       contentType = contentType or ''
       sliceSize = sliceSize or 512
       # b64Data = b64Data.replace(/\s/g, '')

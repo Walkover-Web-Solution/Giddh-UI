@@ -778,8 +778,8 @@ th {
 	  						<span class="pull-left">Generate Invoice</span>
 	  					</label>
 	  				</div>
-		  			<div class="upload_div" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0">
-	                  <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
+		  			<div class="upload_div" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0" ng-if="ledgerCtrl.selectedLedger.attachedFileName.length == 0" ng-click="$event.stopPropagation()">
+	                  <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onChange="angular.element(this).scope().getInvoiceFile(this.files)">
 	                  <label for="invoiceFile"><i class="glyphicon glyphicon-paperclip"></i></label>
 	                </div>
 		  			<button class="btn btn-success" ng-click="ledgerCtrl.addBlankTxn('DEBIT', ledgerCtrl.selectedLedger)">Add to DR</button>

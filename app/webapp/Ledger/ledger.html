@@ -709,7 +709,7 @@
             </div>
             <div class="col-xs-5 pull-right" ng-if="!lc.selectedLedger.invoiceGenerated">
                             <!--file upload-->
-              <div class="upload_div blue" style="padding:5px;" ng-if="lc.selectedLedger.attachedFileName.length == 0">
+              <div class="upload_div blue" style="padding:5px;" ng-if="lc.selectedLedger.attachedFileName.length == 0" ng-click="$event.stopPropagation()">
                   <input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
                   <label for="invoiceFile">Upload Image</label>
                 </div>
