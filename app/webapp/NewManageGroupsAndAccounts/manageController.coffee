@@ -1114,27 +1114,15 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     _.each data, (grp) ->
       col.groups.push(grp)
       if grp.groups.length > 0
-        mc.pushSearchResultChildLevel(grp.groups)
+        mc.pushSearchResultChildLevel(grp.groups, [])
     mc.columns.unshift(col)
 
-  mc.pushSearchResultChildLevel = (groups) ->
+  mc.pushSearchResultChildLevel = (groups, accounts) ->
     childCol = {} 
-    childCol.groups = []
-    childCol.accounts = []
-    _.each groups, (grp) ->
-      childCol.groups.push(grp)
-      mc.columns.unshift(childCol)
-      if grp.accounts.length > 0
-        _.each grp.accounts, (acc) ->
-          childCol.accounts.push(acc)
-      if grp.groups.length > 0
-        _.each grp.groups, (grp) ->
-          childCol.groups.push(grp)
-          if grp.accounts.length > 0
-            _.each grp.accounts, (acc) ->
-              childCol.accounts.push(acc)
+    childCol.groups = groups
+    childCol.accounts = accounts
     mc.columns.push(childCol)
-
+    
   # mc.pushSearchResultChildLevel = (groups) ->
   #   mc.searchResultIndex = 0
   #   childCol = {} 
