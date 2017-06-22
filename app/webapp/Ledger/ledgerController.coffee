@@ -24,7 +24,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   }
   ledgerCtrl.showTaxationDiscountBox = false
   ledgerCtrl.toggleShow = false
-# mustafa
+  
+  # mustafa
   
   ledgerCtrl.exportOptions = () ->
     ledgerCtrl.showExportOption = !ledgerCtrl.showExportOption
@@ -269,11 +270,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
     ledgerService.getReconcileEntries(reqParam).then(@success, @failure)
   
-  # $rootScope.$on('account-selected', ()->
-  #   ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
-  #   #ledgerCtrl.isSelectedAccount()
-  #   #$rootScope.$emit('catchBreadcumbs', ledgerCtrl.accountToShow.name)
-  # )
 
   ledgerCtrl.matchBankTransaction = () ->
     matchingEntries = []
@@ -290,6 +286,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           (res) -> ledgerCtrl.mapBankTransaction(mappedEntry.uniqueName, bankEntry.transactionId),
           (res) -> 
       )
+
   ledgerCtrl.mapBankTransaction = (entryUnq, transactionId) ->
     ledgerCtrl.selectedTxn.isOpen = false
     @success = (res) ->
@@ -448,7 +445,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     $scope.cDate =
         startDate: moment().subtract(5, 'days')
         endDate: moment()
-  ###date range picker end###
+  
 
   ledgerCtrl.selectedLedger = {
     description:null
