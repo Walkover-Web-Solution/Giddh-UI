@@ -475,8 +475,8 @@ app.controller 'magicCtrl', [
     $scope.assignDates = (fromDate,toDate) ->
       fdArr = fromDate.split('-')
       tdArr = toDate.split('-')
-      from = new Date(fdArr[1] + '/' + fdArr[0] + '/' + fdArr[2])
-      to = new Date(tdArr[1] + '/' + tdArr[0] + '/' + tdArr[2])
+      to= new Date(fdArr[1] + '/' + fdArr[0] + '/' + fdArr[2])
+      from= new Date(tdArr[1] + '/' + tdArr[0] + '/' + tdArr[2])
       $scope.fromDate.date = from
       $scope.toDate.date = to
 

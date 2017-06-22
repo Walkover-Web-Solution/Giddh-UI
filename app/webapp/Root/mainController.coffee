@@ -869,14 +869,25 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $rootScope.ledgerState = false
   )
 
-  $rootScope.$on('different-company', (event, lastStateData)->
+  $scope.redirectAccordingToCondition=(lastStateData)->
+    
     company = _.findWhere($scope.companyList, {uniqueName:lastStateData.companyUniqueName})
+
     localStorageService.set('_selectedCompany', company)
     $rootScope.selectedCompany = company
     $scope.changeCompany(company, 0, 'CHANGE')
-    if lastStateData.lastState.indexOf('@') != -1
+    if lastStateData.lastState.indexOf('@') isnt -1
       lastStateData.lastState.replace('@','')
     $state.go(lastStateData.lastState)
+    
+
+  $rootScope.$on('different-company', (event, lastStateData)->
+    if _.isUndefined($scope.companyList)
+      $timeout (->
+        $scope.redirectAccordingToCondition(lastStateData)
+      ), 1000
+    else
+      $scope.redirectAccordingToCondition(lastStateData)
   )
 
 giddh.webApp.controller 'mainController', mainController

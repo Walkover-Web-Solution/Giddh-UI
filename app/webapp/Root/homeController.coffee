@@ -1,5 +1,5 @@
 "use strict"
-homeController = ($scope, $rootScope, getLedgerState, $state, $location, localStorageService, $http) ->
+homeController = ($scope, $rootScope, getLedgerState, $state, $location, localStorageService, $http, $timeout) ->
   $scope.goToLedgerState = () ->
     $rootScope.firstLogin = getLedgerState.data.firstLogin
     # if getLedgerState.data.shared && getLedgerState.data.firstLogin == false
@@ -11,7 +11,7 @@ homeController = ($scope, $rootScope, getLedgerState, $state, $location, localSt
         (res) ->
             $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
             if $rootScope.selectedCompany.uniqueName == res.data.body.companyUniqueName
-                if res.data.body.lastState.indexOf('ledger') != -1
+                if res.data.body.lastState.indexOf('ledger') isnt -1
                     state = res.data.body.lastState.split('@')
                     $state.go(state[0], {unqName:state[1]})
                 else if res.data.body.lastState != '/home'
@@ -32,9 +32,11 @@ homeController = ($scope, $rootScope, getLedgerState, $state, $location, localSt
     #   else
     #     $state.go('company.content.manage')
 
-  $scope.goToLedgerState()
+    $timeout (->
+        $scope.goToLedgerState()
+    ), 500
 
-  $rootScope.setActiveFinancialYear(getLedgerState.data.activeFinancialYear)
+    $rootScope.setActiveFinancialYear(getLedgerState.data.activeFinancialYear)
 
 #init angular app
 giddh.webApp.controller 'homeController', homeController
