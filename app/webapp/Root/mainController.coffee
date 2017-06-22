@@ -876,9 +876,12 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     localStorageService.set('_selectedCompany', company)
     $rootScope.selectedCompany = company
     $scope.changeCompany(company, 0, 'CHANGE')
-    if lastStateData.lastState.indexOf('@') isnt -1
-      lastStateData.lastState.replace('@','')
-    $state.go(lastStateData.lastState)
+
+    if res.data.body.lastState.indexOf('@') isnt -1
+        state = res.data.body.lastState.split('@')
+        $state.go(state[0])
+    else
+        $state.go('company.content.ledgerContent')
     
 
   $rootScope.$on('different-company', (event, lastStateData)->

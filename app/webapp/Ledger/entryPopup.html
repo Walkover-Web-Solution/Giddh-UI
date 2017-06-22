@@ -1,4 +1,4 @@
-<div id="entryModal">
+<div id="entryModal" ng-click="$event.stopPropagation(); $event.cancelBubble()">
   <div class="modal-header themeBg">
     <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); ledgerCtrl.resetTaxes();search.flataccount = '';" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h3 class="modal-title" style="color:#fff">Edit Entry</h3>

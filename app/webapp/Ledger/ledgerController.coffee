@@ -1697,15 +1697,21 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
 
   ledgerCtrl.UpdateEntry = (ledger, unqNamesObj,removeTax) ->
+
     if removeTax
       ledgerCtrl.txnAfterRmovingTax = []
       ledgerCtrl.removeTaxTxnOnPrincipleTxnModified(ledger.transactions)
       ledger.transactions = ledgerCtrl.txnAfterRmovingTax
+    else
+      ledger.taxes = []
+      
     if ledger.transactions.length > 0
       ledgerService.updateEntry(unqNamesObj, ledger).then(
         (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
         (res) -> ledgerCtrl.updateEntryFailure(res, ledger)
       )
+    else
+      toastr.warning("Something went wrong. please reload page")
 
   ledgerCtrl.matchTaxTransactions = (txnList, taxList) ->
     _.each txnList, (txn) ->
@@ -2066,7 +2072,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   $(document).on 'click', (e) ->
     if (!$(e.target).is('.account-list-item') && !$(e.target).is('.account-list-item strong') && !ledgerCtrl.hasParent(e.target, '.ledger-panel') && !$(e.target).is('.ledger-panel')) && ledgerCtrl.prevTxn
       ledgerCtrl.prevTxn.isOpen = false
-    if !e.target.parentElement.classList.contains('ledger-row')
+    if not(_.isNull(e.target.parentElement)) and  not e.target.parentElement.classList.contains('ledger-row')
       ledgerCtrl.selectedTxnUniqueName = undefined
     
     return 0
