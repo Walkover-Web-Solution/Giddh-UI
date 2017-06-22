@@ -1026,7 +1026,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if stockAccount
         linkedStock = _.findWhere(stockAccount.stocks, {uniqueName:stockTxn.inventory.stock.uniqueName})
         if linkedStock
-          ledgerCtrl.selectedLedger.panel.units = linkedStock.accountStockDetails.unitRates
+          if linkedStock.accountStockDetails.unitRates.length > 0
+            ledgerCtrl.selectedLedger.panel.units = linkedStock.accountStockDetails.unitRates
+          else
+            obj = {
+              stockUnitCode: linkedStock.stockUnit.code,
+              name: linkedStock.stockUnit.name
+            }
+            ledgerCtrl.selectedLedger.panel.units = [obj]
           ledgerCtrl.selectedLedger.panel.unit = _.findWhere(ledgerCtrl.selectedLedger.panel.units, {stockUnitCode:stockTxn.inventory.unit.code})
     
 
@@ -2048,10 +2055,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.getTaxList()
   ), 3000
 
+  ledgerCtrl.moveToTop=()->
+    $("html, body").animate({ scrollTop: 0 }, "slow")
    
 
   $rootScope.$on 'company-changed', (event,changeData) ->
-    $("html, body").animate({ scrollTop: 0 }, "slow")
+    ledgerCtrl.moveToTop()
     if not _.isUndefined(changeData)
       if changeData.type == 'CHANGE'
         if not _.isUndefined(changeData.data)
@@ -2091,7 +2100,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.addLedgerPages()
       ledgerCtrl.showLedgers = true
       ledgerCtrl.calculateReckonging(ledgerCtrl.txnData)
-      $("html, body").animate({ scrollTop: 0 }, "slow")
 
     @failure = (res) ->
       toastr.error(res.data.message)

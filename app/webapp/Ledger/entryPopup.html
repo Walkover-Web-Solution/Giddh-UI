@@ -40,7 +40,7 @@
                   <input type="text" ng-model="ledgerCtrl.selectedLedger.entryDate" class="form-control" ng-click="ledgerCtrl.selectTxn( txn, $index, $event)" is-open="txn.isOpen" ui-mask="99-99-9999" model-view-value="true">
                 </td>
                 <td class="col-xs-7">
-                  <input type="text" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | addStockinAccountList:ledgerCtrl.baseAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" typeahead-on-select="ledgerCtrl.createPanel(ledger);ledgerCtrl.matchInventory(ledger)" class="form-control" ng-click="ledgerCtrl.selectTxn(txn, $index, $event)" is-open="txn.isOpen">
+                  <input type="text" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | addStockinAccountList:ledgerCtrl.baseAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" typeahead-on-select="ledgerCtrl.createPanel(ledgerCtrl.selectedLedger);ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)" class="form-control" ng-click="ledgerCtrl.selectTxn(txn, $index, $event)" is-open="txn.isOpen">
                 </td>
                 <td class="col-xs-3 pos-rel">
                   <input type="text" ng-model="txn.amount" class="form-control" ng-click="ledgerCtrl.selectTxn(txn, $index, $event)" is-open="txn.isOpen" ng-change="ledgerCtrl.onTxnAmountChange(txn)">
@@ -76,7 +76,7 @@
                   <input class="form-control" type="text" ng-model="ledgerCtrl.selectedLedger.entryDate" ng-click="ledgerCtrl.selectTxn(txn, $index, $event)" is-open="txn.isOpen" ui-mask="99-99-9999" model-view-value="true">
                 </td>
                 <td class="col-xs-7">
-                  <input class="form-control" type="text" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated  |addStockinAccountList:ledgerCtrl.baseAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" typeahead-on-select="ledgerCtrl.createPanel(ledger);ledgerCtrl.matchInventory(ledger)" ng-click="ledgerCtrl.selectTxn(txn, $index, $event)" is-open="txn.isOpen">
+                  <input class="form-control" type="text" ng-model="txn.particular" typeahead-append-to-body="true" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated  |addStockinAccountList:ledgerCtrl.baseAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-template-url="accountPopUp.html" typeahead-on-select="ledgerCtrl.createPanel(ledgerCtrl.selectedLedger);ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)" ng-click="ledgerCtrl.selectTxn(txn, $index, $event)" is-open="txn.isOpen">
                 </td>
                 <td class="col-xs-3 pos-rel">
                   <input class="form-control" type="text" ng-model="txn.amount" ng-click="ledgerCtrl.selectTxn(txn, $index, $event)" is-open="txn.isOpen" ng-change="ledgerCtrl.onTxnAmountChange(txn)">

@@ -524,7 +524,7 @@ th {
 					<ul 
 						total-items="ledgerCtrl.totalLedgerPages"
 						items-per-page="1" 
-						ng-change="ledgerCtrl.getTransactions(ledgerCtrl.currentPage)"
+						ng-change="ledgerCtrl.getTransactions(ledgerCtrl.currentPage);ledgerCtrl.moveToTop()"
 						uib-pagination
 						ng-model="ledgerCtrl.currentPage"
 						max-size="5"
