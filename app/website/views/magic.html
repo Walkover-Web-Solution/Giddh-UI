@@ -28,7 +28,6 @@
   <script  type="text/javascript" src='<<PREFIX_THIS>>/public/webapp/core_bower.min.js'></script>
     <script src="<<PREFIX_THIS>>/bower_components/angular-file-saver/dist/angular-file-saver.js"></script>
   <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/app.js"></script>
-  <script src="<<PREFIX_THIS>>/public/website/js/controller/loginController.js"></script>
   <!-- recaptcha -->
   <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
   <script type="text/javascript" src="<<PREFIX_THIS>>/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
@@ -108,47 +107,12 @@
                   GO
                 </button>
               </div>
-<!--               <div class="form-group" ng-if="entryTotal.amount > 0">
-                Entry Total:{{entryTotal.amount}} {{entryTotal.type}}
-              </div> -->
             </form>
 
            <div class="form-group mrL1 pull-right">
               <input type="search" class="form-control maxW150" placeholder="Search ledger" ng-model="particularSearch">
               <i class="glyphicon glyphicon-search"  style="right:25px;top:3px;"></i>
             </div>
-            <!--  
-            <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Show List" tooltip-placement="left" ng-click="showImportList()" >
-              <i class="glyphicon glyphicon-th-list" ></i>
-            </a>
-            
-            <a class="pull-right mrL1" href="javascript:void(0)" title=""  uib-tooltip="Export" tooltip-placement="left" ng-click="exportLedger()" >
-              <i class="glyphicon glyphicon-cloud-download pull-right" ></i>
-            </a>
-
-            <span id="isSafari"></span>
-           
-            <form class="pull-right mrL1" enctype="multipart/form-data">
-              <a class="mrL1" type="file" ngf-select="importLedger($files, $invalidFiles)" accept=".xls, .xlsx" ngf-max-size="100MB" ng-disabled="!canUpdate">
-                 <i class="glyphicon glyphicon-copy" uib-tooltip="Import" tooltip-placement="left"></i>
-              </a>
-            </form>
-            
-            <span class="pull-right mrL1" uib-dropdown  auto-close="outsideClick">
-              <a href id="simple-dropdown" uib-dropdown-toggle>
-                <i uib-tooltip="Send Ledger" tooltip-placement="right" class="glyphicon glyphicon-envelope" ></i>
-              </a>
-              <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
-                <li>
-                  <form class="form-group pd1" name="ledgerEmailSendForm" novalidate>
-                    <div class="mrB1">
-                      <textarea ng-model="ledgerEmailData.email" required name="ledgerEmailSendForm.email" class="form-control" placeholder="Recipents Email Id's"></textarea>
-                    </div>
-                    <button ng-disabled="ledgerEmailSendForm.$invalid" class="btn btn-primary btn-sm" ng-click="sendLedgEmail(ledgerEmailData.email)">Send Email</button>
-                  </form>
-                </li>
-              </ul>
-            </span> -->
           </div>
 
           <table class="table ledgerTable">

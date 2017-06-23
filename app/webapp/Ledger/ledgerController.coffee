@@ -18,13 +18,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.showLedgers = false
   ledgerCtrl.showEledger = true
   ledgerCtrl.popover = {
-
-    templateUrl: 'panel'
+    templateUrl: 'newEntryPanel.html'
     draggable: false
     position: "bottom"
   }
+  ledgerCtrl.showTaxationDiscountBox = false
   ledgerCtrl.toggleShow = false
-# mustafa
+  
+  # mustafa
   
   ledgerCtrl.exportOptions = () ->
     ledgerCtrl.showExportOption = !ledgerCtrl.showExportOption
@@ -269,11 +270,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
     ledgerService.getReconcileEntries(reqParam).then(@success, @failure)
   
-  # $rootScope.$on('account-selected', ()->
-  #   ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
-  #   #ledgerCtrl.isSelectedAccount()
-  #   #$rootScope.$emit('catchBreadcumbs', ledgerCtrl.accountToShow.name)
-  # )
 
   ledgerCtrl.matchBankTransaction = () ->
     matchingEntries = []
@@ -290,6 +286,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           (res) -> ledgerCtrl.mapBankTransaction(mappedEntry.uniqueName, bankEntry.transactionId),
           (res) -> 
       )
+
   ledgerCtrl.mapBankTransaction = (entryUnq, transactionId) ->
     ledgerCtrl.selectedTxn.isOpen = false
     @success = (res) ->
@@ -448,7 +445,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     $scope.cDate =
         startDate: moment().subtract(5, 'days')
         endDate: moment()
-  ###date range picker end###
+  
 
   ledgerCtrl.selectedLedger = {
     description:null
@@ -569,87 +566,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       type: type
     }
 
-
-
-  # ledgerCtrl.resetBlankLedger = () ->
-  #   ledgerCtrl.newDebitTxn = {
-  #     date: $filter('date')(new Date(), "dd-MM-yyyy")
-  #     particular: {
-  #       name:''
-  #       uniqueName:''
-  #     }
-  #     amount : 0
-  #     type: 'DEBIT'
-  #   }
-  #   ledgerCtrl.newCreditTxn = {
-  #     date: $filter('date')(new Date(), "dd-MM-yyyy")
-  #     particular: {
-  #       name:''
-  #       uniqueName:''
-  #     }
-  #     amount : 0
-  #     type: 'CREDIT'
-  #   }
-#     ledgerCtrl.blankLedger = {
-#       isBlankLedger : true
-#       description:null
-#       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
-# #      hasCredit:false
-# #      hasDebit:false
-#       invoiceGenerated:false
-#       isCompoundEntry:false
-#       applyApplicableTaxes:false
-#       tag:null
-#       transactions:[
-#         ledgerCtrl.newDebitTxn
-#         ledgerCtrl.newCreditTxn
-#       ]
-#       unconfirmedEntry:false
-#       isInclusiveTax: false
-#       uniqueName:""
-#       voucher:{
-#         name:"Sales"
-#         shortCode:"sal"
-#       }
-#       tax:[]
-#       taxList: []
-#       voucherNo:null
-#     }
-
-
-  # ledgerCtrl.ledgerPerPageCount = 10
-  # ledgerCtrl.pages = []
-  # ledgerCtrl.getPaginatedLedger = (page) ->
-  #   @success = (res) ->
-  #     ledgerCtrl.ledgerData = res.body
-  #     ledgerCtrl.pages = []
-  #     ledgerCtrl.paginatedLedgers = res.body.ledgers
-  #     ledgerCtrl.totalLedgerPages = res.body.totalPages
-  #     ledgerCtrl.currentPage = res.body.page
-  #     ledgerCtrl.totalCreditTxn = res.body.totalCreditTransactions
-  #     ledgerCtrl.totalDebitTxn = res.body.totalDebitTransactions
-  #     ledgerCtrl.addLedgerPages()
-  #     ledgerCtrl.calculateClosingBal(res.body.ledgers)
-
-  #   @failure = (res) ->
-  #     toastr.error(res.data.message)
-
-  #   if _.isUndefined($rootScope.selectedCompany.uniqueName)
-  #     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
-  #   unqNamesObj = {
-  #     compUname: $rootScope.selectedCompany.uniqueName
-  #     acntUname: ledgerCtrl.accountUnq
-  #     fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
-  #     toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
-  #     count: ledgerCtrl.ledgerPerPageCount
-  #     page: page || 1
-  #     sort: 'desc'
-  #   }
-    # if not _.isEmpty(ledgerCtrl.accountUnq)
-    #   ledgerService.getLedger(unqNamesObj).then(@success, @failure)
-
-  #ledgerCtrl.getPaginatedLedger(1)
-
   ledgerCtrl.calculateClosingBal = (ledgers) ->
     totalDebit = 0
     totalCredit = 0
@@ -686,7 +602,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if $rootScope.canUpdate
       $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
   
-  ledgerCtrl.getSharedList()
   # generate magic link
   ledgerCtrl.getMagicLink = () ->
     accUname = ledgerCtrl.accountUnq
@@ -700,29 +615,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.getMagicLinkSuccess = (res) ->
     ledgerCtrl.magicLink = res.body.magicLink
-    # modalInstance = $uibModal.open(
-    #   template: '<div>
-    #       <div class="modal-header">
-    #         <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
-    #     aria-hidden="true">&times;</span></button>
-    #       <h3 class="modal-title">Magic Link</h3>
-    #       </div>
-    #       <div class="modal-body">
-    #         <input id="magicLink" class="form-control" type="text" ng-model="ledgerCtrl.magicLink">
-    #       </div>
-    #       <div class="modal-footer">
-    #         <button class="btn btn-default" ngclipboard data-clipboard-target="#magicLink">Copy</button>
-    #       </div>
-    #   </div>'
-    #   size: "md"
-    #   backdrop: 'static'
-    #   scope: $scope
-    # )
-    # ledgerCtrl.getLink = false
 
   ledgerCtrl.getMagicLinkFailure = (res) ->
     toastr.error(res.data.message)
-# mustafa end
 
 
   ledgerCtrl.ledgerEmailData = {
@@ -733,7 +628,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   }
   ledgerCtrl.ledgerEmailData.emailType = ledgerCtrl.ledgerEmailData.viewDetailed
   
-# ledger send email
+  # ledger send email
   ledgerCtrl.sendLedgEmail = (emailData, emailType) ->
     data = emailData
     if _.isNull(ledgerCtrl.toDate.date) || _.isNull($scope.cDate.startDate)
@@ -777,67 +672,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.emailLedgerFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
-  # #export ledger
-  # ledgerCtrl.exportLedger = (type)->
-  #   ledgerCtrl.showExportOption = false
-  #   unqNamesObj = {
-  #     compUname: $rootScope.selectedCompany.uniqueName
-  #     acntUname: ledgerCtrl.accountUnq
-  #     fromDate: $filter('date')($scope.cDate.startDate, "dd-MM-yyyy")
-  #     toDate: $filter('date')($scope.cDate.endDate, "dd-MM-yyyy")
-  #     lType:type
-  #   }
-  #   accountService.exportLedger(unqNamesObj).then(ledgerCtrl.exportLedgerSuccess, ledgerCtrl.exportLedgerFailure)
 
-  # ledgerCtrl.exportLedgerSuccess = (res)->
-  #   # blob = new Blob([res.body.filePath], {type:'file'})
-  #   # fileName = res.body.filePath.split('/')
-  #   # fileName = fileName[fileName.length-1]
-  #   # FileSaver.saveAs(blob, fileName)
-  #   ledgerCtrl.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
-  #   if $rootScope.msieBrowser()
-  #     $rootScope.openWindow(res.body.filePath)
-  #   else if ledgerCtrl.isSafari       
-  #     modalInstance = $uibModal.open(
-  #       template: '<div>
-  #           <div class="modal-header">
-  #             <h3 class="modal-title">Download File</h3>
-  #           </div>
-  #           <div class="modal-body">
-  #             <p class="mrB">To download your file Click on button</p>
-  #             <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
-  #           </div>
-  #           <div class="modal-footer">
-  #             <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
-  #           </div>
-  #       </div>'
-  #       size: "sm"
-  #       backdrop: 'static'
-  #       scope: $scope
-  #     )
-  #   else
-  #     window.open(res.body.filePath)
-
-  # ledgerCtrl.exportLedgerFailure = (res)->
-  #   toastr.error(res.data.message, res.data.status)
-  #   modalInstance = $uibModal.open(
-  #     template: '<div>
-  #         <div class="modal-header">
-  #           <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
-  #       aria-hidden="true">&times;</span></button>
-  #         <h3 class="modal-title">Magic Link</h3>
-  #         </div>
-  #         <div class="modal-body">
-  #           <input id="magicLink" class="form-control" type="text" ng-model="ledgerCtrl.magicLink">
-  #         </div>
-  #         <div class="modal-footer">
-  #           <button class="btn btn-default" ngclipboard data-clipboard-target="#magicLink">Copy</button>
-  #         </div>
-  #     </div>'
-  #     size: "md"
-  #     backdrop: 'static'
-  #     scope: $scope
-  #   )
+  ledgerCtrl.resetTaxes = () ->
+    _.each(ledgerCtrl.taxList, (tax) ->
+      tax.isChecked = false
+    )
+  
 
   ledgerCtrl.hideSideMenu=()->
     $rootScope.flyAccounts=false
@@ -845,24 +685,99 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.getMagicLinkFailure = (res) ->
     toastr.error(res.data.message)
 
+
   ledgerCtrl.prevTxn = null
-  ledgerCtrl.selectBlankTxn = (ledger, txn, index ,e) ->
-    
+
+  ledgerCtrl.selectBlankTxn = (txn, e) ->
+    e.stopPropagation()
     # hide side menu
     ledgerCtrl.hideSideMenu()
+    # unselect selected entry
+    ledgerCtrl.selectedTxnUniqueName = undefined
 
-    ledgerCtrl.selectedTxn = txn
-    if ledgerCtrl.prevTxn != null
+    if ledgerCtrl.prevTxn isnt null
       ledgerCtrl.prevTxn.isOpen = false
+
+      # reset blank ledger transaction in case not compound entry
+      if ledgerCtrl.prevTxn.$$hashKey isnt txn.$$hashKey and !ledgerCtrl.selectedLedger.isCompoundEntry
+        ledgerCtrl.resetTemporaryblankLedger(txn)
+        ledgerCtrl.selectedLedger.compoundTotal = 0
+
+    ledgerCtrl.selectedLedger = ledgerCtrl.blankLedger
+    ledgerCtrl.selectedTxn = txn
     ledgerCtrl.selectedTxn.isOpen = true
-    ledgerCtrl.selectedLedger = ledger
-    # ledgerCtrl.clearTaxSelection(txn, ledger)
-    # ledgerCtrl.clearDiscounts(ledger)
-    ledgerCtrl.isTransactionContainsTax(ledgerCtrl.selectedLedger)
-    ledgerCtrl.createNewPanel(ledgerCtrl.selectedTxn, ledgerCtrl.selectedLedger)
-    # ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
+    ledgerCtrl.clearTaxSelection(txn, ledgerCtrl.selectedLedger)
+    ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
+    #reset prev txn
     ledgerCtrl.prevTxn = txn
-    e.stopPropagation()
+    ledgerCtrl.checkCurrentTxnElgibility(txn, txn.particular)
+    ledgerCtrl.getCompoundTotal()
+
+  ledgerCtrl.resetTemporaryblankLedger=(txn)->
+    dummyObj = {
+      date: $filter('date')(new Date(), "dd-MM-yyyy")
+      particular: {
+        name:''
+        uniqueName:''
+      }
+      amount : 0
+      type: if txn.type is "DEBIT" then 'CREDIT' else 'DEBIT'
+    }
+    ledgerCtrl.blankLedger.transactions = _.map(ledgerCtrl.blankLedger.transactions, (item) ->
+      if item.type isnt txn.type
+        return dummyObj
+      else
+        return item
+    )
+
+  ledgerCtrl.showHideInvGenOpts=(category)->
+    if category is "income"
+      ledgerCtrl.showGenInvOpts = true
+    else if not ledgerCtrl.selectedLedger.isCompoundEntry
+      ledgerCtrl.showGenInvOpts = false
+  
+  ledgerCtrl.checkCurrentTxnElgibility=(txn, item)->
+    ledgerCtrl.showTaxationDiscountBox = false
+    if typeof(item) is "object" && item.uniqueName. length
+      category = ledgerCtrl.getAccCategoryByUniquename(item.uniqueName)
+      ledgerCtrl.showHideInvGenOpts(category)
+      if category is "income" || category == "expenses"
+        ledgerCtrl.showTaxationDiscountBox = true
+        ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
+        ledgerCtrl.addApplicableTaxes(item.applicableTaxes)
+    if ledgerCtrl.showTaxationDiscountBox == false
+      category = ledgerCtrl.getAccCategoryByUniquename(ledgerCtrl.accountToShow.uniqueName)
+      if category is "income" || category == "expenses"
+        ledgerCtrl.showTaxationDiscountBox = true
+        ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
+        taxArray = _.map ledgerCtrl.accountToShow.applicableTaxes, (taxObj) ->
+          taxObj.uniqueName
+        ledgerCtrl.addApplicableTaxes(taxArray)
+
+  ledgerCtrl.getCompoundTotal=()->
+    total = 0
+    _.each ledgerCtrl.selectedLedger.transactions, (txn) ->
+      if txn.type is 'DEBIT'
+        if typeof(txn.panel) is "object"
+          total += txn.panel.total
+        else if !txn.panel and txn.amount
+          total += Number(txn.amount)
+      else if txn.type is 'CREDIT' and txn.amount > 0
+        if typeof(txn.panel) is "object"
+          total -= txn.panel.total
+        else if !txn.panel and txn.amount
+          total -= Number(txn.amount)
+
+    return ledgerCtrl.selectedLedger.compoundTotal = total
+  
+  ledgerCtrl.getAccCategoryByUniquename = (unqName) ->
+    category = ''
+    account = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:unqName})
+    if account
+      parent = account.parentGroups[0].uniqueName
+      parentGroup = _.findWhere($rootScope.groupWithAccountsList, {uniqueName:parent})
+      category = parentGroup.category
+    return category
 
 
   ledgerCtrl.getNewPanelDiscount = (ledger) ->
@@ -889,7 +804,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.createNewPanel = (txn, ledger) ->
     panel = {}
-    if typeof(txn.particular) == 'object' && txn.particular.uniqueName.length < 1 && _.isEmpty(txn.amount)
+    if typeof(txn.particular) is "object" and _.isUndefined(txn.panel)
       txn.panel = {
         tax : 0
         total: 0
@@ -897,60 +812,84 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         amount: 0
         price: 0
         unit: null
-        quantity: 0
+        quantity: 1
         units: []
       }
-    
-    panel.getQuantity = () ->
-      if txn.panel.quantity != undefined
-        return ledgerCtrl.cutToTwoDecimal(panel.getAmount()/panel.getPrice())
+      
+      panel.getQuantity = () ->
+        if txn.panel.quantity isnt undefined
+          if panel.getPrice() is 0
+            return 1
+          else if panel.getAmount() is 0
+            return 1
+          else
+            return ledgerCtrl.cutToTwoDecimal(panel.getAmount()/panel.getPrice())
 
-    panel.getPrice = () ->
-      if txn.particular.stock
-        units = panel.getUnits()
-        if txn.panel.unit
-          return txn.panel.unit.rate
-        else if units.length > 0
-          return units[0].rate
+      panel.getPrice = () ->
+        if txn.panel.price
+          return txn.panel.price
+        else if txn.particular.stock
+          units = panel.getUnits()
+          if txn.panel.unit
+            return txn.panel.unit.rate
+          else if units.length > 0
+            return units[0].rate
+        else
+          return 0
+
+      panel.getSelectedUnit=()->
+        if _.isNull(txn.panel.unit) || _.isUndefined(txn.panel.unit)
+          return txn.panel.units[0]
+        else
+          return txn.panel.unit
+
+      panel.getUnits = () ->
+        if txn.particular.stock && txn.particular.stock.accountStockDetails.unitRates.length > 0
+          return txn.particular.stock.accountStockDetails.unitRates
+        else if txn.particular.uniqueName.length > 0 && txn.particular.stock
+          txn.particular.stock.stockUnit.rate = 0
+          txn.particular.stock.stockUnit.stockUnitCode = txn.particular.stock.stockUnit.code
+          return [txn.particular.stock.stockUnit]
+        else
+          return txn.panel.units
+
+      panel.getAmount = () ->
+        if txn.particular.stock && txn.particular.stock.accountStockDetails.unitRates.length > 0
+          if txn.panel.quantity > 0
+            return txn.panel.quantity * txn.panel.price
+          else
+            return Number(txn.amount)
+        else
+          return Number(txn.amount)
+
+      panel.getDiscount = () ->
+        discount = ledgerCtrl.getNewPanelDiscount(ledger)
+
+      panel.getTax = () ->
+        tax = ledgerCtrl.getNewPanelTax(txn, ledger)
+        return tax
+
+      panel.getTotal = () ->
+        amount = txn.panel.amount - txn.panel.discount
+        txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount + (amount*txn.panel.tax/100))
+
+      if(ledgerCtrl.selectedLedger.isCompoundEntry)
+        ledgerCtrl.onNewPanelChange().txnAmount(txn, ledgerCtrl.blankLedger)
       else
-        return 0
+        txn.panel.quantity = panel.getQuantity()
+        txn.panel.price = panel.getPrice()
+        txn.panel.units = panel.getUnits()
+        txn.panel.unit = panel.getSelectedUnit()
+        txn.panel.amount = panel.getAmount()
+        txn.panel.discount = panel.getDiscount()
+        txn.panel.tax = panel.getTax()
+        txn.panel.total = panel.getTotal()
+        # call func
+        ledgerCtrl.getCompoundTotal()
 
-    panel.getUnits = () ->
-      if txn.particular.stock && txn.particular.stock.accountStockDetails.unitRates.length > 0
-        return txn.particular.stock.accountStockDetails.unitRates
-      else if txn.particular.uniqueName.length > 0 && txn.particular.stock
-        txn.particular.stock.stockUnit.rate = 0
-        txn.particular.stock.stockUnit.stockUnitCode = txn.particular.stock.stockUnit.code
-        return [txn.particular.stock.stockUnit]
-      else
-        return txn.panel.units
-
-    panel.getAmount = () ->
-      if txn.panel.quantity > 0
-        return txn.panel.quantity * txn.panel.price
-      else
-        return Number(txn.amount) 
-
-    panel.getDiscount = () ->
-      discount = ledgerCtrl.getNewPanelDiscount(ledger)
-
-    panel.getTax = () ->
-      tax = ledgerCtrl.getNewPanelTax(txn, ledger)
-      return tax
-
-    panel.getTotal = () ->
-      amount = txn.panel.amount - txn.panel.discount
-      txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount + (amount*txn.panel.tax/100))
-
-    txn.panel.quantity = panel.getQuantity()
-    txn.panel.price = panel.getPrice()
-    txn.panel.units = panel.getUnits()
-    txn.panel.unit = txn.panel.units[0]
-    txn.panel.amount = panel.getAmount()
-    txn.panel.disocunt = panel.getDiscount()
-    txn.panel.tax = panel.getTax()
-    txn.panel.total = panel.getTotal()
-
+  ledgerCtrl.reDrawPanelForCompoundCase=(txn, $event)->
+    if(ledgerCtrl.selectedLedger.isCompoundEntry && $event.key is 'Tab')
+      ledgerCtrl.selectBlankTxn(txn, $event)
 
   ledgerCtrl.onNewPanelChange = () ->
     change = @
@@ -962,7 +901,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     change.unit = (txn, ledger) ->
       txn.panel.price = ledgerCtrl.cutToFourDecimal(txn.panel.unit.rate)
       txn.panel.quantity = ledgerCtrl.cutToTwoDecimal(txn.panel.amount / txn.panel.price)
-      #change.price(txn, ledger)
 
     change.price = (txn, ledger) ->
       txn.panel.amount = ledgerCtrl.cutToTwoDecimal(txn.panel.quantity * txn.panel.price)
@@ -979,19 +917,36 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       change.getTotal(txn, ledger)
 
     change.tax = (txn, ledger) ->
+      #ID:1:START Check if all selected taxes are same as applicableTaxes then ledger.applyApplicableTaxes is true
+      checkedTaxes = _.filter ledgerCtrl.taxList, (tax) ->
+        return tax.isChecked == true
+      checkedTaxesMatchingApplicable = _.filter checkedTaxes, (tax) ->
+        return _.contains txn.particular.applicableTaxes, tax.uniqueName
+
+      if checkedTaxes.length == checkedTaxesMatchingApplicable.length and checkedTaxes.length == txn.particular.applicableTaxes.length 
+        ledger.applyApplicableTaxes = true
+      else 
+        ledger.applyApplicableTaxes = false
+      #ID:1:END
+
       txn.panel.tax = ledgerCtrl.getNewPanelTax(txn, ledger)
       change.getTotal(txn, ledger)
 
     change.txnAmount = (txn, ledger) ->
-      txn.panel.amount = Number(txn.amount)
-      change.tax(txn, ledger)
-      # if txn.panel.quantity == undefined || txn.panel.quantity == 0
-      txn.panel.quantity = ledgerCtrl.cutToTwoDecimal(txn.panel.amount/txn.panel.price)
+      if txn.panel
+        txn.panel.amount = Number(txn.amount)
+        change.tax(txn, ledger)
+        txn.panel.quantity = ledgerCtrl.cutToTwoDecimal(txn.panel.amount/txn.panel.price)
 
     change.getTotal = (txn, ledger) ->
       amount = txn.panel.amount - txn.panel.discount
-      txn.panel.total = amount + (amount*txn.panel.tax/100)
-      txn.amount = txn.panel.amount
+      if txn.panel.tax > 0
+        txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount + (amount*txn.panel.tax/100))
+        txn.amount = ledgerCtrl.cutToTwoDecimal(txn.panel.amount)
+      else
+        txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount)
+        txn.amount = txn.panel.amount
+      ledgerCtrl.getCompoundTotal()
 
     change.total = (txn, ledger) ->
       if !txn.panel.discount 
@@ -999,53 +954,35 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       else
         amount = (100*txn.panel.total)/(100+(txn.panel.tax||0)) + txn.panel.discount
       txn.panel.amount = Number(amount.toFixed(2))
+      txn.panel.price = ledgerCtrl.cutToFourDecimal(txn.panel.amount / txn.panel.quantity)
+      txn.amount = txn.panel.amount
+      ledgerCtrl.getCompoundTotal()
+
     return change
 
-
-  ledgerCtrl.addApplicableTaxes = (account) ->
-    if account.applicableTaxes.length > 0
+  ledgerCtrl.addApplicableTaxes = (taxArray) ->
+    if taxArray.length > 0
       _.each ledgerCtrl.taxList, (tax) ->
-        #taxInAccount = _.findWhere(account.applicableTaxes, tax.uniqueName)
-        if account.applicableTaxes.indexOf(tax.uniqueName) != -1
+        if taxArray.indexOf(tax.uniqueName) != -1
           tax.isChecked = true
-          ledgerCtrl.selectedLedger.taxList.push(tax)
+          if ledgerCtrl.selectedLedger.taxList.indexOf(tax) < 0
+            ledgerCtrl.selectedLedger.taxList.push(tax)
       ledgerCtrl.selectedLedger.applyApplicableTaxes = true
     else
       ledgerCtrl.selectedLedger.taxList = []
       ledgerCtrl.selectedLedger.applyApplicableTaxes = false
     ledgerCtrl.onNewPanelChange().tax(ledgerCtrl.selectedTxn, ledgerCtrl.blankLedger)
 
-
-  ledgerCtrl.selectTxn = (ledger, txn, index ,e) ->
-    ledgerCtrl.selectedTxn = txn
-    if ledgerCtrl.prevTxn != null
+  ledgerCtrl.selectTxn = (txn, index ,e) ->
+    ledger = ledgerCtrl.selectedLedger
+    e.stopPropagation()
+    if !_.isNull(ledgerCtrl.prevTxn)
       ledgerCtrl.prevTxn.isOpen = false
+    ledgerCtrl.selectedTxn = txn
     ledgerCtrl.selectedTxn.isOpen = true
     ledgerCtrl.prevTxn = txn
-    # ledgerCtrl.clearTaxSelection(ledger)
-    # ledgerCtrl.clearDiscounts(ledger)
-    if !ledger.isBlankLedger
-      ledgerCtrl.addBlankRow(ledger, txn)
-    # ledgerCtrl.removeBlankRowFromPrevLedger(ledgerCtrl.prevLedger, ledger)
-    # ledger.isCompoundEntry = true
-    # if ledgerCtrl.prevLedger && ledgerCtrl.prevLedger.uniqueName != ledger.uniqueName
-    #   ledgerCtrl.prevLedger.isCompoundEntry = false
-    # # ledgerCtrl.calculateEntryTotal(ledger)
-    # ledgerCtrl.showLedgerPopover = true
-    # ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.ledgerBeforeEdit = {}
-    # angular.copy(ledger,ledgerCtrl.ledgerBeforeEdit)
-    # # ledgerCtrl.isTransactionContainsTax(ledger)
-    ledgerCtrl.selectedLedger = ledger
-    # ledgerCtrl.selectedLedger.index = index
-    #ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
-
-    #ledgerCtrl.selectedLedger.panel.total = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
-    #if ledger.uniqueName != '' || ledger.uniqueName != undefined || ledger.uniqueName != null
-    # ledgerCtrl.checkCompEntry(txn)
-    #ledgerCtrl.blankCheckCompEntry(ledger)
-    # ledgerCtrl.prevLedger = ledger
-    e.stopPropagation()
+    ledgerCtrl.addBlankRow(ledger, txn)
+    
 
   ledgerCtrl.createPanel = (ledger) ->
     ledgerCtrl.selectedLedger.panel = {
@@ -1069,10 +1006,16 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if stockAccount
         linkedStock = _.findWhere(stockAccount.stocks, {uniqueName:stockTxn.inventory.stock.uniqueName})
         if linkedStock
-          ledgerCtrl.selectedLedger.panel.units = linkedStock.accountStockDetails.unitRates
+          if linkedStock.accountStockDetails.unitRates.length > 0
+            ledgerCtrl.selectedLedger.panel.units = linkedStock.accountStockDetails.unitRates
+          else
+            obj = {
+              stockUnitCode: linkedStock.stockUnit.code,
+              name: linkedStock.stockUnit.name
+            }
+            ledgerCtrl.selectedLedger.panel.units = [obj]
           ledgerCtrl.selectedLedger.panel.unit = _.findWhere(ledgerCtrl.selectedLedger.panel.units, {stockUnitCode:stockTxn.inventory.unit.code})
-    # else
-    #   console.log stockTxn
+    
 
   ledgerCtrl.getStockAccountfromFlattenAccountList = (txn) ->
     account = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
@@ -1109,13 +1052,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         if txn.blankRow && txn.particular.uniqueName == ''
           prevLedger.transactions.splice(i, 1)
 
-  ledgerCtrl.addBlankTxn = (type, ledger) ->
+  ledgerCtrl.addBlankTxn = (type) ->
     txn = new txnModel(type)
-    hasBlank = ledgerCtrl.checkForExistingblankTransaction(ledger, type)
+    hasBlank = ledgerCtrl.checkForExistingblankTransaction(ledgerCtrl.selectedLedger, type)
     if !hasBlank
-      ledgerCtrl.createNewPanel(txn, ledger)
-      ledger.transactions.push(txn)
-    ledgerCtrl.setFocusToBlankTxn(ledger, txn, type)
+      ledgerCtrl.selectedLedger.transactions.push(txn)
+    
+    ledgerCtrl.selectedLedger.isCompoundEntry = true
+    ledgerCtrl.setFocusToBlankTxn(ledgerCtrl.selectedLedger, txn, type)
 
   ledgerCtrl.checkForExistingblankTransaction = (ledger, type) ->
     hasBlank = false
@@ -1128,14 +1072,16 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.prevTxn.isOpen = false
     _.each ledger.transactions, (trn) ->
       if trn.particular.uniqueName == "" && trn.type == type
-        ledgerCtrl.createNewPanel(trn, ledger)
         trn.isOpen = true
         ledgerCtrl.prevTxn = trn
 
   ledgerCtrl.clearDiscounts = (ledger) ->
-    if ledgerCtrl.discountAccount
-      _.each ledgerCtrl.discountAccount.accountDetails, (account) ->
-        account.amount = 0
+    if ledgerCtrl.selectedLedger.isCompoundEntry
+      return false
+    else
+      if ledgerCtrl.discountAccount
+        _.each ledgerCtrl.discountAccount.accountDetails, (account) ->
+          account.amount = 0
 
   ledgerCtrl.matchInventory = (ledger) ->
     stockTxn = ledgerCtrl.getStockTxn(ledger)
@@ -1395,29 +1341,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.exportLedgerSuccess = (res)->
     data = ledgerCtrl.b64toBlob(res.body, "application/vnd.ms-excel", 512)
     FileSaver.saveAs(data, $rootScope.selectedAccount.name + '.xls')
-    # ledgerCtrl.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
-    # if $rootScope.msieBrowser()
-    #   $rootScope.openWindow(res.body.filePath)
-    # else if ledgerCtrl.isSafari       
-    #   modalInstance = $uibModal.open(
-    #     template: '<div>
-    #         <div class="modal-header">
-    #           <h3 class="modal-title">Download File</h3>
-    #         </div>
-    #         <div class="modal-body">
-    #           <p class="mrB">To download your file Click on button</p>
-    #           <button onClick="window.open(\''+res.body.filePath+'\')" class="btn btn-primary">Download</button>
-    #         </div>
-    #         <div class="modal-footer">
-    #           <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
-    #         </div>
-    #     </div>'
-    #     size: "sm"
-    #     backdrop: 'static'
-    #     scope: $scope
-    #   )
-    # else
-    #   window.open(res.body.filePath)
+    
 
   ledgerCtrl.exportLedgerFailure = (res)->
     toastr.error(res.data.message, res.data.status)
@@ -1426,7 +1350,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.taxList = []
     if $rootScope.canUpdate and $rootScope.canDelete
       companyServices.getTax($rootScope.selectedCompany.uniqueName).then(ledgerCtrl.getTaxListSuccess, ledgerCtrl.getTaxListFailure)
-
 
 
   ledgerCtrl.getTaxListSuccess = (res) ->
@@ -1441,7 +1364,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           ledgerCtrl.accountToShow.isTax = true
       ledgerCtrl.taxList.push(tax)
 
-    #ledgerCtrl.matchTaxAccounts(ledgerCtrl.taxList)
 
   ledgerCtrl.getTaxListFailure = (res) ->
     toastr.error(res.data.message, res.status)
@@ -1458,13 +1380,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     reqParam.count = 0
     groupService.getFlattenGroupAccList(reqParam).then(@success, @failure) 
 
-  # ledgerCtrl.getGroupsList = () ->
-  #   @success = (res) ->
-  #     ledgerCtrl.groupList = res.body
-  #   @failure = (res) ->
-
-  #   groupService.getGroupsWithoutAccountsCropped($rootScope.selectedCompany.uniqueName).then(@success, @failure)
-  # ledgerCtrl.getGroupsList()
 
   ledgerCtrl.checkTransactionByUniqueName = (transactions, uniqueName) ->
     hasTransaction = false
@@ -1541,7 +1456,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         inventory.unit = txn.panel.unit
         inventory.unit.code = txn.panel.unit.stockUnitCode
         txn.inventory = inventory
-        txn.amount = txn.panel.total
+        if txn.panel.tax > 0
+          txn.amount = txn.panel.total
+        else
+          txn.amount = txn.panel.amount
 
   ledgerCtrl.isNotDiscountTxn = (txn) ->
     particularAccount = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
@@ -1554,7 +1472,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.setAmount = (ledger) ->
     _.each ledger.transactions, (txn) ->
       if !txn.isTax && !ledgerCtrl.isNotDiscountTxn(txn)
-        txn.amount = txn.panel.total
+        if txn.panel and txn.panel.tax > 0
+          txn.amount = txn.panel.total
+        else
+          txn.amount
 
   ledgerCtrl.buildLedger = (ledger) ->
     ledgerCtrl.ledgerBeforeEdit = angular.copy(ledger,{})
@@ -1576,11 +1497,21 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     transactions
 
   ledgerCtrl.lastSelectedLedger = {}
-  ledgerCtrl.saveUpdateLedger = (ledger) ->
+
+  ledgerCtrl.saveUpdateLedger = () ->
+    
+    ledger = ledgerCtrl.selectedLedger
+
+    if _.isEmpty(ledger.voucher.shortCode)
+      toastr.error("Select voucher type.")
+      return false
+
+
     if !ledger.isBankTransaction
       ledger = ledgerCtrl.buildLedger(ledger)
+    
     ledgerCtrl.lastSelectedLedger = ledger
-    #ledgerCtrl.formatInventoryTxns(ledger)
+
     if ledgerCtrl.doingEntry == true
       return
 
@@ -1589,113 +1520,106 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if ledger.isBankTransaction
       ledgerCtrl.btIndex = ledger.index
     delete ledger.isCompoundEntry
-    if !_.isEmpty(ledger.voucher.shortCode) 
-      if _.isEmpty(ledger.uniqueName)
-        #add new entry
-        unqNamesObj = {
-          compUname: $rootScope.selectedCompany.uniqueName
-          acntUname: ledgerCtrl.accountUnq
-        }
-        delete ledger.uniqueName
-        delete ledger.voucherNo
-        transactionsArray = []
-        rejectedTransactions = []
-        transactionsArray = _.reject(ledger.transactions, (led) ->
-         if led.particular == "" || led.particular.uniqueName == ""
-           rejectedTransactions.push(led)
-           return led
-        )
-        ledger.transactions = transactionsArray
-        ledger.voucherType = ledger.voucher.shortCode
-        ledgerCtrl.addTaxesToLedger(ledger)
-        if ledger.transactions.length > 0
-          if ledger.transactions.length > 1
-            ledgerCtrl.matchTaxTransactions(ledger.transactions, ledgerCtrl.taxList)
-            ledgerCtrl.checkManualTaxTransaction(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
-            ledgerCtrl.checkTaxCondition(ledger)
-          ledgerService.createEntry(unqNamesObj, ledger).then(
-            (res) -> ledgerCtrl.addEntrySuccess(res, ledger)
-            (res) -> ledgerCtrl.addEntryFailure(res,rejectedTransactions, ledger))
-        else
-          ledgerCtrl.doingEntry = false
-          ledger.transactions = rejectedTransactions
-          response = {}
-          response.data = {}
-          response.data.message = "There must be at least a transaction to make an entry."
-          response.data.status = "Error"
-          ledgerCtrl.addEntryFailure(response,[])
-#          toastr.error("There must be at least a transaction to make an entry.")
-      else
-        #update entry
-        #ledgerCtrl.removeEmptyTransactions(ledger.transactions)
-        ledgerCtrl.generateInvoice = ledger.generateInvoice
-        ledger.transactions = ledgerCtrl.removeTaxTransactions(ledger)
-        _.each ledger.transactions, (txn) ->
-          if !_.isEmpty(txn.particular.uniqueName)
-            particular = {}
-            particular.name = txn.particular.name
-            particular.uniqueName = txn.particular.uniqueName
-            txn.particular = particular
-          if txn.inventory && (txn.inventory.quantity == "" || txn.inventory.quantity == undefined || txn.inventory.quantity == null)
-            delete txn.inventory
-  #      ledger.isInclusiveTax = false
-        unqNamesObj = {
-          compUname: $rootScope.selectedCompany.uniqueName
-          acntUname: ledgerCtrl.accountUnq
-          entUname: ledger.uniqueName
-        }
-        if ledgerCtrl.currentTxn.isCompoundEntry && ledgerCtrl.currentTxn.isBaseAccount
-          unqNamesObj.acntUname = ledgerCtrl.currentTxn.particular.uniqueName
+    
+    # add new entry case
+    if _.isEmpty(ledger.uniqueName)
+      unqNamesObj = {
+        compUname: $rootScope.selectedCompany.uniqueName
+        acntUname: ledgerCtrl.accountUnq
+      }
+      delete ledger.uniqueName
+      delete ledger.voucherNo
+      transactionsArray = []
+      rejectedTransactions = []
+      transactionsArray = _.reject(ledger.transactions, (led) ->
+       if led.particular == "" || led.particular.uniqueName == ""
+         rejectedTransactions.push(led)
+         return led
+      )
+      ledger.transactions = transactionsArray
+      ledger.voucherType = ledger.voucher.shortCode
+      ledgerCtrl.addTaxesToLedger(ledger)
 
-        # transactionsArray = []
-        # _.every(ledgerCtrl.blankLedger.transactions,(led) ->
-        #   delete led.date
-        #   delete led.parentGroups
-        # )
-        # _.each(ledger.)
-        # transactionsArray = _.reject(ledgerCtrl.blankLedger.transactions, (led) ->
-        #   led.particular.uniqueName == ""
-        # )
-        ledgerCtrl.addTaxesToLedger(ledger)
-#        console.log ledger
-        #ledger.transactions.push(transactionsArray)
-        ledger.voucher = _.findWhere(ledgerCtrl.voucherTypeList,{'shortCode':ledger.voucher.shortCode})
-        ledger.voucherType = ledger.voucher.shortCode
-        if ledger.transactions.length > 0
+      if ledger.transactions.length > 0
+        if ledger.transactions.length > 1
           ledgerCtrl.matchTaxTransactions(ledger.transactions, ledgerCtrl.taxList)
-          ledgerCtrl.matchTaxTransactions(ledgerCtrl.ledgerBeforeEdit.transactions, ledgerCtrl.taxList)
           ledgerCtrl.checkManualTaxTransaction(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
-          updatedTxns = ledgerCtrl.updateEntryTaxes(ledger.transactions)
-          ledger.transactions = updatedTxns
-          ledgerCtrl.checkTaxCondition(ledger)
-          isModified = false
-          if ledger.taxes.length > 0
-            isModified = ledgerCtrl.checkPrincipleModifications(ledger, ledgerCtrl.ledgerBeforeEdit.transactions)
-          if isModified
-            # ledgerCtrl.selectedTxn.isOpen = false
-            modalService.openConfirmModal(
-              title: 'Update'
-              body: 'Principle transaction updated, Would you also like to update tax transactions?',
-              ok: 'Yes',
-              cancel: 'No'
-            ).then(
-                (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, true),
-                (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, false)
-            )
-          else
-           ledgerService.updateEntry(unqNamesObj, ledger).then(
-             (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
-             (res) -> ledgerCtrl.updateEntryFailure(res, ledger)
-           )
-        else
-          ledgerCtrl.doingEntry = false
-          response = {}
-          response.data = {}
-          response.data.message = "There must be at least a transaction to make an entry."
-          response.data.status = "Error"
-          ledgerCtrl.addEntryFailure(response,[])
+          # ledgerCtrl.checkTaxCondition(ledger)
+        ledgerService.createEntry(unqNamesObj, ledger).then(
+          (res) -> ledgerCtrl.addEntrySuccess(res, ledger)
+          (res) -> ledgerCtrl.addEntryFailure(res,rejectedTransactions, ledger))
+      else
+        ledgerCtrl.doingEntry = false
+        ledger.transactions = rejectedTransactions
+        response = {}
+        response.data = {}
+        response.data.message = "There must be at least a transaction to make an entry."
+        response.data.status = "Error"
+        ledgerCtrl.addEntryFailure(response,[])
+    #update entry case
     else
-      toastr.error("Select voucher type.")
+      # ledger.transactions = ledgerCtrl.removeTaxTransactions(ledger)
+      ledgerCtrl.generateInvoice = ledger.generateInvoice
+      _.each ledger.transactions, (txn) ->
+        if !_.isEmpty(txn.particular.uniqueName)
+          particular = {}
+          particular.name = txn.particular.name
+          particular.uniqueName = txn.particular.uniqueName
+          txn.particular = particular
+        if txn.inventory && (txn.inventory.quantity == "" || txn.inventory.quantity == undefined || txn.inventory.quantity == null)
+          delete txn.inventory
+
+      unqNamesObj = {
+        compUname: $rootScope.selectedCompany.uniqueName
+        acntUname: ledgerCtrl.accountUnq
+        entUname: ledger.uniqueName
+      }
+
+      if ledgerCtrl.currentTxn.isCompoundEntry && ledgerCtrl.currentTxn.isBaseAccount
+        unqNamesObj.acntUname = ledgerCtrl.currentTxn.particular.uniqueName
+
+      ledgerCtrl.addTaxesToLedger(ledger)
+
+      ledger.voucher = _.findWhere(ledgerCtrl.voucherTypeList,{'shortCode':ledger.voucher.shortCode})
+
+      ledger.voucherType = ledger.voucher.shortCode
+
+      if ledger.transactions.length > 0
+        ledgerCtrl.matchTaxTransactions(ledger.transactions, ledgerCtrl.taxList)
+        ledgerCtrl.matchTaxTransactions(ledgerCtrl.ledgerBeforeEdit.transactions, ledgerCtrl.taxList)
+        ledgerCtrl.checkManualTaxTransaction(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
+        # updatedTxns = ledgerCtrl.updateEntryTaxes(ledger.transactions)
+        # ledger.transactions = updatedTxns
+        # ledgerCtrl.checkTaxCondition(ledger)
+        isModified = false
+        if ledger.taxes.length > 0
+          isModified = ledgerCtrl.checkPrincipleModifications(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
+        if isModified
+          console.log(ledger)
+          return false
+          # modalService.openConfirmModal(
+          #   title: 'Update'
+          #   body: 'Principle transaction updated, Would you also like to update tax transactions?',
+          #   ok: 'Yes',
+          #   cancel: 'No'
+          # ).then(
+          #     (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, true),
+          #     (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, false)
+          # )
+        else
+          console.log(ledger)
+          return false
+          # ledgerService.updateEntry(unqNamesObj, ledger).then(
+          #  (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
+          #  (res) -> ledgerCtrl.updateEntryFailure(res, ledger))
+      else
+        ledgerCtrl.doingEntry = false
+        response = {}
+        response.data = {}
+        response.data.message = "There must be at least a transaction to make an entry."
+        response.data.status = "Error"
+        ledgerCtrl.addEntryFailure(response,[])
+      
 
 
   ledgerCtrl.checkTaxCondition = (ledger) ->
@@ -1706,22 +1630,19 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if ledger.isInclusiveTax
       ledger.transactions = transactions
 
-  ledgerCtrl.checkPrincipleModifications = (ledger, uTxnList) ->
-    withoutTaxesLedgerTxn = ledgerCtrl.getPrincipleTxnOnly(ledger.transactions)
-    withoutTaxesUtxnList = ledgerCtrl.getPrincipleTxnOnly(uTxnList)
+  ledgerCtrl.checkPrincipleModifications = (newTxnList, oldTxnList) ->
+    arr1 = ledgerCtrl.getPrincipleTxnOnly(newTxnList)
+    arr2 = ledgerCtrl.getPrincipleTxnOnly(oldTxnList)
     isModified = false
-    if withoutTaxesLedgerTxn.length == withoutTaxesUtxnList.length
-      _.each withoutTaxesLedgerTxn, (txn, idx) ->
-        _.each withoutTaxesUtxnList, (uTxn, dx) ->
-          if idx == dx 
-            if txn.particular.uniqueName != uTxn.particular.uniqueName || txn.amount != uTxn.amount
-              isModified = true
+    if arr1.length is arr2.length
+      _.each arr1, (txn, idx) ->
+        if txn.particular.uniqueName isnt arr2[idx].particular.uniqueName || txn.amount isnt arr2[idx].amount
+          isModified = true
     else
       isModified = true
     isModified
 
   ledgerCtrl.checkManualTaxTransaction = (txnList, uTxnList) ->
-    #console.log txnList.length, uTxnList.length
     _.each txnList, (txn) ->
       txn.isManualTax = true
       _.each uTxnList, (uTxn) ->
@@ -1732,7 +1653,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.getPrincipleTxnOnly = (txnList) ->
     transactions = []
     _.each txnList, (txn) ->
-      if txn.isTax == undefined || !txn.isTax
+      if (_.isUndefined(txn.isTax) || !txn.isTax) and !_.isEmpty(txn.particular.uniqueName)
         transactions.push(txn)
     transactions
 
@@ -1743,10 +1664,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledger.taxes.push(tax.uniqueName)
     )
 
-  ledgerCtrl.resetTaxes = () ->
-    # _.each(ledgerCtrl.taxList, (tax) ->
-    #   tax.isChecked = false
-    # )
 
   ledgerCtrl.updateEntryTaxes = (txnList) ->
     transactions = []
@@ -1756,8 +1673,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           if txn.particular.uniqueName == tax.account.uniqueName && !tax.isChecked
             if !txn.isManualTax
               txn.toRemove = true 
-              #transactions.push(txn)
-              #txnList.splice(idx, 1)
     txnList = _.filter(txnList, (txn)->
       return txn.toRemove == undefined || txn.toRemove == false
     )
@@ -1771,33 +1686,23 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           tax.isChecked = true
           ledger.taxList.push(tax)
 
-    # if ledger.taxes != undefined && ledger.taxes.length > 0
-    #   _.each(ledgerCtrl.taxList, (tax) ->
-    #     tax.isChecked = false
-    #     _.each(ledger.taxes, (taxe) ->
-    #       if taxe == tax.uniqueName
-    #         tax.isChecked = true
-    #     )
-    #   )
-    # else
-    #   _.each(ledgerCtrl.taxList, (tax) ->
-    #     #tax.isChecked = false
-    #     _.each(ledger.transactions, (txn) ->
-    #       if txn.particular.uniqueName == tax.account.uniqueName
-    #         tax.isChecked = true
-    #     )
-    #   )
 
   ledgerCtrl.UpdateEntry = (ledger, unqNamesObj,removeTax) ->
-    if removeTax == true
+
+    if removeTax
       ledgerCtrl.txnAfterRmovingTax = []
       ledgerCtrl.removeTaxTxnOnPrincipleTxnModified(ledger.transactions)
       ledger.transactions = ledgerCtrl.txnAfterRmovingTax
+    else
+      ledger.taxes = []
+      
     if ledger.transactions.length > 0
       ledgerService.updateEntry(unqNamesObj, ledger).then(
         (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
         (res) -> ledgerCtrl.updateEntryFailure(res, ledger)
       )
+    else
+      toastr.warning("Something went wrong. please reload page")
 
   ledgerCtrl.matchTaxTransactions = (txnList, taxList) ->
     _.each txnList, (txn) ->
@@ -1810,7 +1715,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if !txn.isTax
         ledgerCtrl.txnAfterRmovingTax.push(txn)
 
+
+  ledgerCtrl.showGenInvOpts = false
   ledgerCtrl.resetBlankLedger = () ->
+    ledgerCtrl.showGenInvOpts = false
     ledgerCtrl.newDebitTxn = {
       date: $filter('date')(new Date(), "dd-MM-yyyy")
       particular: {
@@ -1833,8 +1741,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       isBlankLedger : true
       description:null
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
-#      hasCredit:false
-#      hasDebit:false
       invoiceGenerated:false
       isCompoundEntry:false
       applyApplicableTaxes:false
@@ -1959,22 +1865,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledger.failed = false
     ledgerCtrl.paginatedLedgers = [res.body]
     ledgerCtrl.selectedLedger = res.body
-    # ledgerCtrl.clearTaxSelection(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
     ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
     ledgerCtrl.entryTotal = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
     ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
     toastr.success("Entry updated successfully.", "Success")
     if ledgerCtrl.generateInvoice
       ledgerCtrl.autoGenerateInvoice(res.body)
-    # ledgerCtrl.paginatedLedgers = [res.body]
-    # ledgerCtrl.selectedLedger = res.body
-    # ledgerCtrl.clearTaxSelection(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.isTransactionContainsTax(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.entryTotal = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
+    
     ledgerCtrl.addBlankTransactionIfOneSideEmpty(ledgerCtrl.selectedLedger)
     ledgerCtrl.ledgerBeforeEdit = {}
     ledgerCtrl.ledgerBeforeEdit = angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
@@ -1991,10 +1888,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.doingEntry = false
     ledger = ledgerCtrl.ledgerBeforeEdit
     toastr.error(res.data.message, res.data.status)
-    # $timeout ( ->
-    #   ledgerCtrl.pageLoader = false
-    #   ledgerCtrl.showLoader = false
-    # ), 1000
     
   ledgerCtrl.createLedger = (ledger, type) ->
     txns = []
@@ -2011,18 +1904,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     _.each ledger.transactions, (txn) ->
       txn.isOpen = false
 
-  ledgerCtrl.deleteEntryConfirm = (ledger) ->
-    modalService.openConfirmModal(
-      title: 'Delete'
-      body: 'Are you sure you want to delete this entry?',
-      ok: 'Yes',
-      cancel: 'No'
-    ).then(
-      (res) -> 
-        ledgerCtrl.deleteEntry(ledger)
-      (res) -> 
-        $dismiss()
-    )
 
   ledgerCtrl.deleteEntry = (ledger) ->
     # ledgerCtrl.pageLoader = true
@@ -2066,9 +1947,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.cLedgerContainer.remove(item)
 
   ledgerCtrl.clearTaxSelection = (ledger) ->
-    _.each ledgerCtrl.taxList, (tax) ->
-      if ledger.taxes.indexOf(tax.uniqueName) == -1
-        tax.isChecked = false
+    if ledgerCtrl.selectedLedger.isCompoundEntry
+      return false
+    else
+      _.each ledgerCtrl.taxList, (tax) ->
+        if ledger.taxes and ledger.taxes.indexOf(tax.uniqueName) == -1
+          tax.isChecked = false
 
   ledgerCtrl.b64toBlob = (b64Data, contentType, sliceSize) ->
     contentType = contentType or ''
@@ -2144,20 +2028,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         $dismiss()
     )
 
-
-  $timeout ( ->
-    
-    if ledgerCtrl.accountUnq
-      ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
-    else
-      ledgerCtrl.loadDefaultAccount()
-    ledgerCtrl.getDiscountGroupDetail()
-    ledgerCtrl.getTaxList()
-  ), 3000
-
+  ledgerCtrl.moveToTop=()->
+    $("html, body").animate({ scrollTop: 0 }, "slow")
    
 
   $rootScope.$on 'company-changed', (event,changeData) ->
+    ledgerCtrl.moveToTop()
     if not _.isUndefined(changeData)
       if changeData.type == 'CHANGE'
         if not _.isUndefined(changeData.data)
@@ -2178,8 +2054,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   $(document).on 'click', (e) ->
     if (!$(e.target).is('.account-list-item') && !$(e.target).is('.account-list-item strong') && !ledgerCtrl.hasParent(e.target, '.ledger-panel') && !$(e.target).is('.ledger-panel')) && ledgerCtrl.prevTxn
       ledgerCtrl.prevTxn.isOpen = false
-    if (!$(e.target).is('.ledger-row'))
-      ledgerCtrl.selectedTxnUniqueName = null
+    if not(_.isNull(e.target.parentElement)) and  not e.target.parentElement.classList.contains('ledger-row')
+      ledgerCtrl.selectedTxnUniqueName = undefined
+    
     return 0
 
 #########################################################
@@ -2196,7 +2073,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.addLedgerPages()
       ledgerCtrl.showLedgers = true
       ledgerCtrl.calculateReckonging(ledgerCtrl.txnData)
-      # ledgerCtrl.resetTaxes()
 
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -2257,7 +2133,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.selectCompoundEntry = (txn, e) ->
     ledgerCtrl.currentTxn = txn
     ledgerCtrl.selectedTxnUniqueName = txn.entryUniqueName
-    e.stopPropagation()  
 
   ledgerCtrl.setVoucherCode = (ledger) ->
     _.each ledgerCtrl.voucherTypeList, (vc, i) ->
@@ -2277,8 +2152,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
     @success = (res) ->
       #do not change order of functions
-      ledgerCtrl.paginatedLedgers = [res.body]
-      ledgerCtrl.selectedLedger = res.body
+      # ledgerCtrl.paginatedLedgers = [res.body]
+      ledgerCtrl.selectedLedger = angular.copy(res.body)
       ledgerCtrl.clearTaxSelection(ledgerCtrl.selectedLedger)
       ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
       ledgerCtrl.matchDiscountTxn(ledgerCtrl.selectedLedger)
@@ -2292,7 +2167,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       _.each res.body.transactions, (txn) ->
         if txn.particular.uniqueName == ledgerCtrl.clickedTxn.particular.uniqueName
           ledgerCtrl.selectedTxn = txn
-      ledgerCtrl.setVoucherCode(ledgerCtrl.selectedLedger)
+      # ledgerCtrl.setVoucherCode(ledgerCtrl.selectedLedger)
       if !ledgerCtrl.selectedLedger.invoiceGenerated
         ledgerCtrl.generateInvoice = false
       if openModal
@@ -2352,12 +2227,18 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       scope: $scope
     )
 
+    ledgerCtrl.entryModalInstance.result.then (->
+      console.log 'Modal opened at: ' + new Date
+    ), ->
+      console.log 'Modal dismissed at: ' + new Date
+      ledgerCtrl.selectedLedger = {}
+      ledgerCtrl.selectedTxnUniqueName = undefined
+
   ledgerCtrl.getTotalBalance = (transactions) ->
     total = 0
     _.each transactions, (txn) ->
       total += ledgerCtrl.cutToTwoDecimal(txn.amount)
     return total
-
 
   ledgerCtrl.deleteEntryConfirm = () ->
     modalService.openConfirmModal(
@@ -2366,10 +2247,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ok: 'Yes',
       cancel: 'No'
     ).then(
-      (res) -> 
+      (res)-> 
         ledgerCtrl.deleteEntry()
-      (res) -> 
-        $dismiss()
+      (res)->
     )
 
   ledgerCtrl.deleteEntry = () ->
@@ -2480,6 +2360,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     @success = (res) ->
       ledgerCtrl.gwaList.totalPages = res.body.totalPages
       ledgerCtrl.flatGrpList = ledgerCtrl.markFixedGrps(res.body.results)
+      ledgerCtrl.flatGrpListWithoutFixedGroups = ledgerCtrl.removeFixedGroupsFromArr(ledgerCtrl.flatGrpList)
       ledgerCtrl.gwaList.limit = 5
     @failure = (res) ->
       toastr.error(res.data.message)
@@ -2493,6 +2374,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if(showEmpty) 
       reqParam.showEmptyGroups = true
     groupService.getFlattenGroupAccList(reqParam).then(@success, @failure)
+
+  ledgerCtrl.removeFixedGroupsFromArr=(arr)->
+    fixedArr = ["currentassets", "fixedassets", "investments", "indirectexpenses", "operatingcost", "otherincome", "revenuefromoperations", "capital", "currentliabilities", "loan"]
+    a=[]
+    _.each arr, (item) ->
+      if _.indexOf(fixedArr, item.groupUniqueName) is -1
+        a.push(item)
+    return a
 
   ledgerCtrl.markFixedGrps = (flatGrpList) ->
     temp = []
@@ -2514,8 +2403,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           toastr.error('Failed to get Detailed Groups List')
       )
   
-  if $rootScope.canUpdate
-    ledgerCtrl.getGroupsWithDetail()
 
   ledgerCtrl.downloadInvoice = (invoiceNumber, e) ->
     e.stopPropagation()
@@ -2597,6 +2484,20 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     permission.user = user
     permission.role = role
     accountService.share(reqParam, permission).then(@success,@failure)
+
+  ###################### on dom ready funcs ###########
+  ledgerCtrl.getSharedList()
+  if $rootScope.canUpdate
+    ledgerCtrl.getGroupsWithDetail()
+
+  $timeout(->
+    if ledgerCtrl.accountUnq
+      ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
+    else
+      ledgerCtrl.loadDefaultAccount()
+    ledgerCtrl.getDiscountGroupDetail()
+    ledgerCtrl.getTaxList()
+  ,3000)
 
 
   return ledgerCtrl

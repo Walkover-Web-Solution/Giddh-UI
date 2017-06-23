@@ -300,7 +300,16 @@ app.use('/', getSession, function(req, res){
     res.sendFile(__dirname+ '/public/webapp/views/index.html')
   } else{
     res.status(404)
-    res.redirect('https://www.giddh.com')
+    //redirect according to environment
+    if(process.env.API_URL === "http://apitest.giddh.com/"){
+      res.redirect('http://test.giddh.com/')
+    }
+    else if(process.env.API_URL === "http://api.giddh.com/"){
+      res.redirect('http://giddh.com/')
+    }
+    else{
+      res.redirect('http://site.giddh.com/')
+    }
   }
 });
 

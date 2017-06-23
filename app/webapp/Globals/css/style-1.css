@@ -2619,15 +2619,34 @@ body.unresponsive {
 }
 @media only screen and (max-width: 1300px) {
   body.unresponsive {
-    width: 1366px;
+    width: 1366px !important;
     overflow: auto;
   }
-  .container{
-    width: 1000px;
+  .container, .modal-liq90{
+    width: 1000px !important;
   }
   .header-container{
-    width: 1366px;
+    width: 1366px !important;
   }
+  .modal{
+    position: absolute !important;
+  }
+  .modal-open .modal{
+    overflow: hidden !important;
+  }
+  .modal-content{
+    overflow: auto;
+    height: 400px;
+  }
+  body.modal-open{
+    overflow-y: hidden !important;
+  }
+}
+.fixHitDrop ul.dropdown-menu{
+  height: 200px;
+  padding: 10px;
+  overflow: auto;
+  min-width: 200px;
 }
 
 @media only screen and (max-width: 1068px) {
@@ -4763,13 +4782,11 @@ table.proforma-particulars {
   padding-bottom: 300px;
 }
 
-#entryModal {
-  overflow: hidden;
+#entryModal .ledgHead{
+  float: none;
 }
-
 #entryModal .modal-body {
   padding: 0 20px 100px;
-  overflow: hidden;
 }
 
 .entrypanel label {

@@ -51,7 +51,6 @@ giddh.webApp.config (localStorageServiceProvider) ->
 giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
   $urlRouterProvider.otherwise('/home')
   $locationProvider.hashPrefix('')
-  # $rootScope.prefixThis = "https://test-fs8eefokm8yjj.stackpathdns.com"
   appendThis = ""
   $stateProvider.state('/home',
     url: '/home'
@@ -189,19 +188,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
     }
   )
-  # .state('company.content.ledgerContent1',
-  #   url: '/ledger-paginated/:unqName'
-  #   views:{
-  #     # 'accountsList':{
-  #     #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
-  #     # }
-  #     'rightPanel':{
-  #       templateUrl: appendThis+'/public/webapp/Ledger/ledgerPaginated.html'
-  #       controller: 'ledgerController'
-  #       controllerAs: 'ledgerCtrl'
-  #     }
-  #   }
-  # )
   .state('dashboard',
     url: '/dashboard'
     templateUrl: appendThis+'/public/webapp/Dashboard/dashboard.html'
@@ -305,21 +291,6 @@ giddh.webApp.run [
   'groupService'
   '$http'
   ($rootScope, $state, $stateParams, $location, $window, toastr, localStorageService, DAServices, groupService, $http) ->
-    
-    # $rootScope.setState = (lastState, url, param) ->
-    #   data = {
-    #       "lastState": lastState,
-    #       "companyUniqueName": $rootScope.selectedCompany.uniqueName
-    #   }
-    #   if url.indexOf('ledger') != -1
-    #     data.lastState = data.lastState + '@' + param
-    #   $http.post('/state-details', data).then(
-    #       (res) ->
-            
-    #       (res) ->
-            
-    #   )
-
 
     $rootScope.$on('$stateChangeStart', (event, toState, toParams, fromState, fromParams)->
       $rootScope.showLedgerBox = false
@@ -332,27 +303,6 @@ giddh.webApp.run [
       return false
     )
 
-    # $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
-    #   user = localStorageService.get('_userDetails')
-    #   window.dataLayer.push({
-    #     event: 'giddh.pageView',
-    #     attributes: {
-    #       route: $location.path()
-    #     },
-    #     userId: user.uniqueName
-    #   });
-    #   #$rootScope.setState(toState.name, toState.url, toParams.unqName)
-    # )
-      #    # check IE browser version
-      #    $rootScope.GetIEVersion = () ->
-      #      ua = window.navigator.userAgent
-      #      msie = ua.indexOf('MSIE ')
-      #      trident = ua.indexOf('Trident/')
-      #      edge = ua.indexOf('Edge/')
-      #      if (msie > 0)
-      #        toastr.error('For Best User Expreince, upgrade to IE 11+')
-      #    $rootScope.GetIEVersion()
-      #    # check browser
     $rootScope.msieBrowser = ()->
       ua = window.navigator.userAgent
       msie = ua.indexOf('MSIE')
@@ -361,73 +311,22 @@ giddh.webApp.run [
       else
         console.info window.navigator.userAgent, 'otherbrowser', msie
         return false
-#    # open window for IE
+    
+    # open window for IE
     $rootScope.openWindow = (url) ->
       win = window.open()
       win.document.write('sep=,\r\n', url)
       win.document.close()
       win.document.execCommand('SaveAs', true, 'abc' + ".xls")
       win.close()
-#
-#   $rootScope.firstLogin = true
   
     $rootScope.$on('companyChanged', ->
       DAServices.ClearData()
       localStorageService.remove("_ledgerData")
       localStorageService.remove("_selectedAccount")
     )
-    # $rootScope.$on('company-changed', (event, changeData)->
-    #   if changeData.type == "CHANGE"
-    #     $state.go('company.content.manage')
-    # )
+    
     $rootScope.canChangeCompany = false
-#    $rootScope.flatAccList = {
-#      page: 1
-#      count: 10
-#      totalPages: 0
-#      currentPage : 1
-#    }
-
-#    $rootScope.getFlatAccountList = (compUname) ->
-#      reqParam = {
-#        companyUniqueName: compUname
-#        q: ''
-#        page: $rootScope.flatAccList.page
-#        count: $rootScope.flatAccList.count
-#      }
-#      groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
-#
-#    $rootScope.getFlatAccountListListSuccess = (res) ->
-#      $rootScope.fltAccntListPaginated = res.body.results
-#      $rootScope.flatAccList.limit = 5
-#
-#    $rootScope.getFlatAccountListFailure = (res) ->
-#      toastr.error(res.data.message)
-
-#    # search flat accounts list
-#    $rootScope.searchAccounts = (str) ->
-#      reqParam = {}
-#      reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
-#      if str.length > 2
-#        reqParam.q = str
-#        groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
-#      else
-#        reqParam.q = ''
-#        reqParam.count = 5
-#        groupService.getFlatAccList(reqParam).then($rootScope.getFlatAccountListListSuccess, $rootScope.getFlatAccountListFailure)
-
-#    # set financial year
-#    $rootScope.setActiveFinancialYear = (FY) ->
-#      if FY != undefined
-#        activeYear = {}
-#        activeYear.start = moment(FY.financialYearStarts,"DD/MM/YYYY").year()
-#        activeYear.ends = moment(FY.financialYearEnds,"DD/MM/YYYY").year()
-#        if activeYear.start == activeYear.ends then (activeYear.year = activeYear.start) else (activeYear.year = activeYear.start + '-' + activeYear.ends)
-#        $rootScope.fy = FY
-#        $rootScope.activeYear = activeYear
-#        $rootScope.currentFinancialYear =  activeYear.year
-#      localStorageService.set('activeFY',FY)
-
 ]
 
 giddh.webApp.config ($sceProvider) ->
