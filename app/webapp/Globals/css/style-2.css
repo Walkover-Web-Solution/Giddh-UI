@@ -2672,12 +2672,28 @@ label {
 .input-group-addon.cp {
     border-radius: 0;
 }
-
+#serviceCode .input-group-addon:first-child {
+  background: none;
+  border: 0;
+}
 /******** commented due to old manage modal ******/
-/*#getGroupModal .select-locked {
+#getGroupModal .select-locked {
     display: none !important;
-}*/
-
+}
+.gstList {
+  max-height: 270px;
+  overflow-y: auto;
+  height: auto;
+}
+.gst .fa-times {
+  position: absolute;
+  top: 20px;
+  right: 0;
+}
+.gst {
+    margin-top: 15px;
+    overflow: hidden;
+}
 @media only screen and (min-width: 1336px) and (max-width: 1440px) {
   .grp_wrapper {
      -webkit-column-count: 3;

@@ -1,6 +1,6 @@
 'use strict'
 
-manageController = ($scope, $rootScope, localStorageService, groupService, toastr, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService, DAServices, $location, $uibModal, companyServices) ->
+manageController = ($scope, $rootScope, localStorageService, groupService, toastr, $http, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService, DAServices, $location, $uibModal, companyServices) ->
   mc = this
   mc.groupList = []
   mc.flattenGroupList = []
@@ -37,6 +37,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.columns = []
   mc.searchColumns = []
   mc.createNew = false
+  mc.gstDetail = []
 #  $scope.fltAccntListPaginated = []
 #  $scope.flatAccList = {
 #    page: 1
@@ -57,6 +58,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.breadCrumbList = []
   # mc.updateBreadCrumbs = true
   mc.updateSearchItem = false
+  mc.radioModel = null
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
     mc.selectedType = type
@@ -418,6 +420,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.getAccDtlSuccess = (res, data) ->
     data = res.body
     mc.selectedAcc = res.body
+    mc.getServiceCode(mc.selectedAcc.hsnNumber, mc.selectedAcc.sacNumber)
     mc.getMergeAcc = mc.selectedAcc.mergedAccounts.replace(RegExp(' ', 'g'), '')
     if mc.getMergeAcc.indexOf(',') != -1
       mc.getMergeAcc = mc.getMergeAcc.split(",")
@@ -436,6 +439,42 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.showBreadCrumbs(data.parentGroups)
     mc.selectedAcc = res.body
     mc.columns.length = mc.getCurrentColIndex+1
+    mc.gstDetail = res.body.gstDetails
+    mc.setGstState(mc.gstDetail)
+    console.log mc.gstDetail
+    if mc.gstDetail.length < 1
+      gstDetail = {
+        gstNumber: "",
+        addressList: [
+            {
+              address:"",
+              stateCode: ""
+            }
+        ]
+      }
+      mc.gstDetail.unshift(gstDetail)
+
+  mc.setGstState = (arr) ->
+    _.each arr, (obj) ->
+      currentState = _.findWhere(mc.stateList, {stateCode:obj.addressList[0].stateCode})
+      console.log currentState
+
+  mc.addNewGst = () ->
+    gstDetail = {
+      gstNumber: "",
+      addressList: [
+          {
+            address:"",
+            stateCode: ""
+          }
+      ]
+    }
+    mc.gstDetail.unshift(gstDetail)
+
+  mc.deleteGst = (obj, i) ->
+    console.log obj
+    console.log i
+    mc.gstDetail.splice(i,1)
 
   mc.getAccDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -728,6 +767,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
     accountService.updateAc(unqNamesObj, mc.selectedAcc).then(mc.updateAccountSuccess,
         mc.updateAccountFailure)
+    console.log mc.selectedAcc.gstDetail
 
 
   mc.updateAccountSuccess = (res) ->
@@ -1143,7 +1183,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     if col.groups.length > 0
       mc.addColumnOnSearchChildLevels(col.groups, {})
 
-
   mc.checkCurrentColumn = (index) ->
     mc.columns[index+1].showCreateNew = true
 
@@ -1176,6 +1215,35 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.breadCrumbList = currentItem.parentGroups
     mc.updateBreadCrumbs = false
     mc.columns = mc.columns.splice(0,mc.parentIndex+1)
+
+  mc.getServiceCode = (hsn, sac)->
+    console.log hsn, sac
+    if hsn != undefined
+      mc.radioModel = "hsn"
+    else
+      mc.radioModel = "sac"
+
+  mc.checkActiveServiceCode = (selected) ->
+    console.log selected
+    if selected == 'hsn'
+      mc.radioModel = 'hsn'
+
+      mc.selectedAcc.sacNumber = null
+    else
+      mc.radioModel = 'sac'
+      mc.selectedAcc.hsnNumber = null
+
+
+  mc.getState = () ->
+    url = 'http://apitest.giddh.com/states'
+    $http.get(url).then(mc.onGetStateSuccess, mc.onGetStateFailure)
+  mc.getState()
+
+  mc.onGetStateSuccess = (res) ->
+    mc.stateList = res.data.body
+
+  mc.onGetStateFailure = (res) ->
+    toastr.error(res.data.message, res.data.status)
 
 # end
 
