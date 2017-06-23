@@ -616,29 +616,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.getMagicLinkSuccess = (res) ->
     ledgerCtrl.magicLink = res.body.magicLink
-    # modalInstance = $uibModal.open(
-    #   template: '<div>
-    #       <div class="modal-header">
-    #         <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss()" aria-label="Close"><span
-    #     aria-hidden="true">&times;</span></button>
-    #       <h3 class="modal-title">Magic Link</h3>
-    #       </div>
-    #       <div class="modal-body">
-    #         <input id="magicLink" class="form-control" type="text" ng-model="ledgerCtrl.magicLink">
-    #       </div>
-    #       <div class="modal-footer">
-    #         <button class="btn btn-default" ngclipboard data-clipboard-target="#magicLink">Copy</button>
-    #       </div>
-    #   </div>'
-    #   size: "md"
-    #   backdrop: 'static'
-    #   scope: $scope
-    # )
-    # ledgerCtrl.getLink = false
 
   ledgerCtrl.getMagicLinkFailure = (res) ->
     toastr.error(res.data.message)
-# mustafa end
 
 
   ledgerCtrl.ledgerEmailData = {
@@ -649,7 +629,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   }
   ledgerCtrl.ledgerEmailData.emailType = ledgerCtrl.ledgerEmailData.viewDetailed
   
-# ledger send email
+  # ledger send email
   ledgerCtrl.sendLedgEmail = (emailData, emailType) ->
     data = emailData
     if _.isNull(ledgerCtrl.toDate.date) || _.isNull($scope.cDate.startDate)
@@ -902,7 +882,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         txn.panel.units = panel.getUnits()
         txn.panel.unit = panel.getSelectedUnit()
         txn.panel.amount = panel.getAmount()
-        txn.panel.disocunt = panel.getDiscount()
+        txn.panel.discount = panel.getDiscount()
         txn.panel.tax = panel.getTax()
         txn.panel.total = panel.getTotal()
         # call func
@@ -961,8 +941,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
     change.getTotal = (txn, ledger) ->
       amount = txn.panel.amount - txn.panel.discount
-      txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount + (amount*txn.panel.tax/100))
-      txn.amount = ledgerCtrl.cutToTwoDecimal(txn.panel.amount)
+      if txn.panel.tax > 0
+        txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount + (amount*txn.panel.tax/100))
+        txn.amount = ledgerCtrl.cutToTwoDecimal(txn.panel.amount)
+      else
+        txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount)
+        txn.amount = txn.panel.amount
       ledgerCtrl.getCompoundTotal()
 
     change.total = (txn, ledger) ->
@@ -1476,7 +1460,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         inventory.unit = txn.panel.unit
         inventory.unit.code = txn.panel.unit.stockUnitCode
         txn.inventory = inventory
-        txn.amount = txn.panel.total
+        if txn.panel.tax > 0
+          txn.amount = txn.panel.total
+        else
+          txn.amount = txn.panel.amount
 
   ledgerCtrl.isNotDiscountTxn = (txn) ->
     particularAccount = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
@@ -1489,7 +1476,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.setAmount = (ledger) ->
     _.each ledger.transactions, (txn) ->
       if !txn.isTax && !ledgerCtrl.isNotDiscountTxn(txn)
-        if txn.panel
+        if txn.panel and txn.panel.tax > 0
           txn.amount = txn.panel.total
         else
           txn.amount
@@ -1612,19 +1599,23 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         if ledger.taxes.length > 0
           isModified = ledgerCtrl.checkPrincipleModifications(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
         if isModified
-          modalService.openConfirmModal(
-            title: 'Update'
-            body: 'Principle transaction updated, Would you also like to update tax transactions?',
-            ok: 'Yes',
-            cancel: 'No'
-          ).then(
-              (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, true),
-              (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, false)
-          )
+          console.log(ledger)
+          return false
+          # modalService.openConfirmModal(
+          #   title: 'Update'
+          #   body: 'Principle transaction updated, Would you also like to update tax transactions?',
+          #   ok: 'Yes',
+          #   cancel: 'No'
+          # ).then(
+          #     (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, true),
+          #     (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, false)
+          # )
         else
-          ledgerService.updateEntry(unqNamesObj, ledger).then(
-           (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
-           (res) -> ledgerCtrl.updateEntryFailure(res, ledger))
+          console.log(ledger)
+          return false
+          # ledgerService.updateEntry(unqNamesObj, ledger).then(
+          #  (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
+          #  (res) -> ledgerCtrl.updateEntryFailure(res, ledger))
       else
         ledgerCtrl.doingEntry = false
         response = {}
@@ -2043,7 +2034,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
 
   $timeout ( ->
-    
     if ledgerCtrl.accountUnq
       ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
     else
@@ -2256,6 +2246,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ), ->
       console.log 'Modal dismissed at: ' + new Date
       ledgerCtrl.selectedLedger = {}
+      ledgerCtrl.selectedTxnUniqueName = undefined
 
   ledgerCtrl.getTotalBalance = (transactions) ->
     total = 0
