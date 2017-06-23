@@ -602,7 +602,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if $rootScope.canUpdate
       $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
   
-  ledgerCtrl.getSharedList()
   # generate magic link
   ledgerCtrl.getMagicLink = () ->
     accUname = ledgerCtrl.accountUnq
@@ -1352,9 +1351,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if $rootScope.canUpdate and $rootScope.canDelete
       companyServices.getTax($rootScope.selectedCompany.uniqueName).then(ledgerCtrl.getTaxListSuccess, ledgerCtrl.getTaxListFailure)
 
-  $timeout( ->
-    ledgerCtrl.getTaxList()
-  ,500)
 
   ledgerCtrl.getTaxListSuccess = (res) ->
     _.each res.body, (tax) ->
@@ -2032,16 +2028,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         $dismiss()
     )
 
-
-  $timeout ( ->
-    if ledgerCtrl.accountUnq
-      ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
-    else
-      ledgerCtrl.loadDefaultAccount()
-    ledgerCtrl.getDiscountGroupDetail()
-    ledgerCtrl.getTaxList()
-  ), 3000
-
   ledgerCtrl.moveToTop=()->
     $("html, body").animate({ scrollTop: 0 }, "slow")
    
@@ -2417,8 +2403,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           toastr.error('Failed to get Detailed Groups List')
       )
   
-  if $rootScope.canUpdate
-    ledgerCtrl.getGroupsWithDetail()
 
   ledgerCtrl.downloadInvoice = (invoiceNumber, e) ->
     e.stopPropagation()
@@ -2500,6 +2484,20 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     permission.user = user
     permission.role = role
     accountService.share(reqParam, permission).then(@success,@failure)
+
+  ###################### on dom ready funcs ###########
+  ledgerCtrl.getSharedList()
+  if $rootScope.canUpdate
+    ledgerCtrl.getGroupsWithDetail()
+
+  $timeout(->
+    if ledgerCtrl.accountUnq
+      ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
+    else
+      ledgerCtrl.loadDefaultAccount()
+    ledgerCtrl.getDiscountGroupDetail()
+    ledgerCtrl.getTaxList()
+  ,3000)
 
 
   return ledgerCtrl
