@@ -1,4 +1,4 @@
-ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, groupService, $uibModal, companyServices, $state,idbService, $http, nzTour, $q, invoiceService ) ->
+ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, groupService, $uibModal, companyServices, $state,idbService, $http, nzTour, $q, invoiceService, UnderstandingService) ->
   ledgerCtrl = this
   ledgerCtrl.LedgerExport = false
   ledgerCtrl.toggleShare = false
@@ -55,11 +55,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
 
   ledgerCtrl.getUnderstanding = (account) ->
-    @success = (res) ->
-      ledgerCtrl.understandingJson = res.data
-      ledgerCtrl.createUnderstandingText(account, ledgerCtrl.understandingJson)
-
-    $http.get('/understanding').then(@success, @failure)
+    ledgerCtrl.understandingJson = angular.copy(UnderstandingService.get())
+    ledgerCtrl.createUnderstandingText(account, ledgerCtrl.understandingJson)
 
 
   ledgerCtrl.voucherTypeList = [

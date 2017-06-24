@@ -241,11 +241,6 @@ app.use('/logout', function(req, res){
   }
 })
 
-//get understanding json
-app.get('/understanding', function(req, res){
-  res.status(200).send(settings.understanding)
-})
-
 //return user-details
 app.use('/fetch-user', function(req, res){
   var authHead, hUrl;
