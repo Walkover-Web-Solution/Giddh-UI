@@ -1595,23 +1595,19 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         if ledger.taxes.length > 0
           isModified = ledgerCtrl.checkPrincipleModifications(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
         if isModified
-          console.log(ledger)
-          return false
-          # modalService.openConfirmModal(
-          #   title: 'Update'
-          #   body: 'Principle transaction updated, Would you also like to update tax transactions?',
-          #   ok: 'Yes',
-          #   cancel: 'No'
-          # ).then(
-          #     (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, true),
-          #     (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, false)
-          # )
+          modalService.openConfirmModal(
+            title: 'Update'
+            body: 'Principle transaction updated, Would you also like to update tax transactions?',
+            ok: 'Yes',
+            cancel: 'No'
+          ).then(
+              (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, true),
+              (res) -> ledgerCtrl.UpdateEntry(ledger, unqNamesObj, false)
+          )
         else
-          console.log(ledger)
-          return false
-          # ledgerService.updateEntry(unqNamesObj, ledger).then(
-          #  (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
-          #  (res) -> ledgerCtrl.updateEntryFailure(res, ledger))
+          ledgerService.updateEntry(unqNamesObj, ledger).then(
+           (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
+           (res) -> ledgerCtrl.updateEntryFailure(res, ledger))
       else
         ledgerCtrl.doingEntry = false
         response = {}
