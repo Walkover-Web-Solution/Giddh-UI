@@ -290,6 +290,10 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: appendThis + '/public/webapp/invoice2/invoice2.html'
     controller: 'invoice2Controller'
   )
+  .state('manufacturing',
+    url: '/manufacturing'
+    templateUrl: appendThis+'/public/webapp/manufacturing/manufacturing.html'
+  )
   $locationProvider.html5Mode(true)
   return
 

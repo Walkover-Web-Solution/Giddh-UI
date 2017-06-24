@@ -2705,6 +2705,9 @@ label {
 .manageModal #getGroupModal, .manageModal .modal-content, .manageModal #shareModal {
   height: 100%;
 }
+.section_title {
+  font-size: 1.2rem;
+}
 @media only screen and (min-width: 1336px) and (max-width: 1440px) {
   .grp_wrapper {
      -webkit-column-count: 3;

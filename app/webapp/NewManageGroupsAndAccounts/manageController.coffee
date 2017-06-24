@@ -450,7 +450,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         addressList: [
             {
               address:"",
-              stateCode: ""
+              stateCode: "",
+              stateName: ""
             }
         ]
       }
@@ -462,7 +463,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       addressList: [
           {
             address:"",
-            stateCode: ""
+            stateCode: "",
+            stateName: ""
           }
       ]
     }
