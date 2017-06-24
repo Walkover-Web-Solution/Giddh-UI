@@ -264,6 +264,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       existingGrp = item
       mc.columns = mc.columns.splice(0,item.hLevel+1)
       mc.columns.push(item)
+    if parentIndex <= mc.columns.length-1
+      mc.checkCurrentColumn(parentIndex)
 
   mc.getGrpDtlSuccess = (res) ->
     mc.selectedItem = res.body
@@ -1100,28 +1102,54 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.searchLoad = false
     # mc.updateBreadCrumbs = false
     # toastr.success(res.status)
-    mc.pushSearchResultLevel1(res.body)
+    mc.pushSearchResult(res.body)
 
   mc.getSearchResultFailure = () ->
     toastr.error(res.data.message, res.data.status)
 
-
-  mc.pushSearchResultLevel1 = (data) ->
+  # add search result to first column on ui, first column has no accounts
+  mc.pushSearchResult = (data) ->
     data = mc.addHLevel(data, 0)
     col = {} 
     col.groups = []
     col.accounts = []
-    _.each data, (grp) ->
-      col.groups.push(grp)
-      if grp.groups.length > 0
-        mc.pushSearchResultChildLevel(grp.groups, [])
+    col.groups = data
     mc.columns.unshift(col)
+    mc.addColumnOnSearchLevel1(data, {})
 
-  mc.pushSearchResultChildLevel = (groups, accounts) ->
-    childCol = {} 
-    childCol.groups = groups
-    childCol.accounts = accounts
-    mc.columns.push(childCol)
+  #add search results to second column, we will get accounts from second column onwards
+  mc.addColumnOnSearchLevel1 = (data, col) ->
+    col.groups = []
+    col.accounts = []
+    _.each data, (grp) ->
+      if grp.groups.length > 0
+        _.each grp.groups, (chGrp) ->
+          col.groups.push(chGrp)
+    mc.columns.push(col)
+    mc.addColumnOnSearchChildLevels(col.groups, {})
+
+  # add search results to further columns, called recursively
+  mc.addColumnOnSearchChildLevels = (groups, col) ->
+    col.groups = []
+    col.accounts = []
+    _.each groups, (grp) ->
+      if grp.groups.length > 0
+        _.each grp.groups, (chGrp) ->
+          col.groups.push(chGrp)
+      if grp.accounts.length > 0
+        _.each grp.accounts, (acc) ->
+          col.accounts.push(acc)
+    mc.columns.push(col)
+    if col.groups.length > 0
+      mc.addColumnOnSearchChildLevels(col.groups, {})
+
+
+  mc.checkCurrentColumn = (index) ->
+    mc.columns[index+1].showCreateNew = true
+
+
+  # mc.pushSearchResultChildLevel = (groups, accounts) ->
+  #   mc.columns.push(childCol)
     
   # mc.pushSearchResultChildLevel = (groups) ->
   #   mc.searchResultIndex = 0
