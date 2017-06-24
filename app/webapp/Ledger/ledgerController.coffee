@@ -2375,7 +2375,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.getFlattenGrpWithAccList = (compUname, showEmpty) ->
     @success = (res) ->
       ledgerCtrl.gwaList.totalPages = res.body.totalPages
-      ledgerCtrl.flatGrpListWithoutFixedGroups = ledgerCtrl.removeFixedGroupsFromArr(ledgerCtrl.flatGrpList)
+      ledgerCtrl.flatGrpListWithoutFixedGroups = ledgerCtrl.removeFixedGroupsFromArr(res.body.results)
       ledgerCtrl.gwaList.limit = 5
     @failure = (res) ->
       toastr.error(res.data.message)
