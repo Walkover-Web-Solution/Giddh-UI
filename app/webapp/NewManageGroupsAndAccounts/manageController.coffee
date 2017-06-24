@@ -61,6 +61,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.radioModel = null
   mc.showDefaultGstList = true
   mc.showDefaultGst = 2
+  mc.stateList = []
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
     mc.selectedType = type
@@ -442,7 +443,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.selectedAcc = res.body
     mc.columns.length = mc.getCurrentColIndex+1
     mc.gstDetail = res.body.gstDetails
-    mc.setGstState(mc.gstDetail)
     console.log mc.gstDetail
     if mc.gstDetail.length < 1
       gstDetail = {
@@ -455,11 +455,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         ]
       }
       mc.gstDetail.unshift(gstDetail)
-
-  mc.setGstState = (arr) ->
-    _.each arr, (obj) ->
-      currentState = _.findWhere(mc.stateList, {stateCode:obj.addressList[0].stateCode})
-      console.log currentState
 
   mc.addNewGst = () ->
     gstDetail = {
@@ -1255,6 +1250,11 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     else
       mc.showDefaultGst = 2
     mc.showDefaultGstList = !mc.showDefaultGstList
+
+  mc.getStateCode = (val) ->
+    if val.length >= 2
+      mc.gstState = _.findWhere(mc.stateList, {code:val.substr(0,2)})
+      console.log mc.gstState
 # end
 
   return mc

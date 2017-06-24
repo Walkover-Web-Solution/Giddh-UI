@@ -116,11 +116,12 @@
           <div class="col-xs-5 pd0">
             <span class="col-xs-12 pd0 pdB1">
               <label class="w100">GST No.</label>
-              <input type="text" class="form-control" ng-model="gst.gstNumber" maxlength="20" name="" />
+              <input type="text" class="form-control" ng-model="gst.gstNumber" ng-change="mc.getStateCode(gst.gstNumber)" maxlength="20" name="" />
             </span>
             <span class="col-xs-12 pd0">
               <label class="w100">State</label>
-               <input type="text" ng-model="mc.state" uib-typeahead="state.name for state in mc.getState($viewValue)" class="form-control" />
+              <input type="text" ng-model="selected" uib-typeahead="state.name for state in states | filter:$viewValue | limitTo:8" class="form-control">
+               <input type="text" ng-model="mc.selected" uib-typeahead="state.name for state in mc.stateList | filter:$viewValue" class="form-control" />
               <label ng-show="noResults">
                 <i class="glyphicon glyphicon-remove"></i> No Results Found
               </label>
