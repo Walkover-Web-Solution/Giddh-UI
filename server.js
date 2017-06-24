@@ -296,20 +296,7 @@ app.use('/', getSession, function(req, res){
   } else{
     res.status(404)
     //redirect according to environment
-    if (process.env.API_URL){
-      if(process.env.API_URL.indexOf("apitest") !== -1){
-        res.redirect('http://test.giddh.com/')
-      }
-      else if(process.env.API_URL.indexOf("api.giddh") !== -1){
-        res.redirect('http://giddh.com/')
-      }
-      else{
-        res.redirect('http://site.giddh.com/')
-      }
-    }
-    else{
-      res.redirect('http://site.giddh.com/')
-    }
+    res.redirect('http://giddh.com/')
   }
 });
 
