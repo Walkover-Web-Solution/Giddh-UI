@@ -59,6 +59,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   # mc.updateBreadCrumbs = true
   mc.updateSearchItem = false
   mc.radioModel = null
+  mc.showDefaultGstList = true
+  mc.showDefaultGst = 2
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
     mc.selectedType = type
@@ -1235,16 +1237,24 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
 
   mc.getState = () ->
-    url = 'http://apitest.giddh.com/states'
-    $http.get(url).then(mc.onGetStateSuccess, mc.onGetStateFailure)
+    # url = 'http://apitest.giddh.com/states'
+    $http({
+      method: 'GET',
+      url: 'http://apitest.giddh.com/states'
+    }).then((response) ->
+        mc.stateList = response.data.body
+      , (response) -> 
+        console.log response
+      )
+    # $http.get(url).then(mc.onGetStateSuccess, mc.onGetStateFailure)
   mc.getState()
 
-  mc.onGetStateSuccess = (res) ->
-    mc.stateList = res.data.body
-
-  mc.onGetStateFailure = (res) ->
-    toastr.error(res.data.message, res.data.status)
-
+  mc.toggleList = () ->
+    if mc.showDefaultGstList
+      mc.showDefaultGst = mc.gstDetail.length
+    else
+      mc.showDefaultGst = 2
+    mc.showDefaultGstList = !mc.showDefaultGstList
 # end
 
   return mc

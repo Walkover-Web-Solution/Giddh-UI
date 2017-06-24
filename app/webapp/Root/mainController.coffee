@@ -575,6 +575,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
         templateUrl:'/public/webapp/NewManageGroupsAndAccounts/ManageGroupModal.html'
         size: "liq90"
         backdrop: 'static'
+        windowClass: 'manageModal'
         scope: $scope
       )
       # modalInstance.result.then(mc.goToManageGroupsOpen, mc.goToManageGroupsClose)

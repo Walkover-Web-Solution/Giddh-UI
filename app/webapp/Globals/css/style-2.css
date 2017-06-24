@@ -2347,6 +2347,7 @@ label {
     position: fixed;
     height: calc(100% - 17%);
     min-height: 0;
+    width: 251px;
 }
 .col_wrapper:nth-child(1) li a{
     text-transform: uppercase;
@@ -2687,12 +2688,22 @@ label {
 }
 .gst .fa-times {
   position: absolute;
-  top: 20px;
-  right: 0;
+  top: 22px;
+  right: 8px;
 }
 .gst {
     margin-top: 15px;
     overflow: hidden;
+    padding-right: 15px;
+}
+.gst_row .fa-plus {
+  color: #d25f29;
+}
+.manageModal .modal-dialog {
+    height: 100%;
+}
+.manageModal #getGroupModal, .manageModal .modal-content, .manageModal #shareModal {
+  height: 100%;
 }
 @media only screen and (min-width: 1336px) and (max-width: 1440px) {
   .grp_wrapper {
