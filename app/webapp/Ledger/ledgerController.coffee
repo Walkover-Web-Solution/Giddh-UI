@@ -926,8 +926,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         return tax.isChecked == true
       checkedTaxesMatchingApplicable = _.filter checkedTaxes, (tax) ->
         return _.contains txn.particular.applicableTaxes, tax.uniqueName
-
-      if checkedTaxes.length == checkedTaxesMatchingApplicable.length and checkedTaxes.length == txn.particular.applicableTaxes.length 
+      
+      if !_.isUndefined(txn.particular.applicableTaxes) and (checkedTaxes.length == checkedTaxesMatchingApplicable.length and checkedTaxes.length == txn.particular.applicableTaxes.length )
         ledger.applyApplicableTaxes = true
       else 
         ledger.applyApplicableTaxes = false
@@ -1473,8 +1473,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         inventory = {}
         inventory.stock = txn.particular.stock
         inventory.quantity = txn.panel.quantity
-        inventory.unit = txn.panel.unit
-        inventory.unit.code = txn.panel.unit.stockUnitCode
+        if !_.isUndefined(txn.panel.unit)
+          inventory.unit = txn.panel.unit
+          inventory.unit.code = txn.panel.unit.stockUnitCode
         txn.inventory = inventory
         if txn.panel.tax > 0
           txn.amount = txn.panel.total
