@@ -201,7 +201,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       compUname : $rootScope.selectedCompany.uniqueName
       acntUname : accountUniqueName
     }
-    if $rootScope.selectedCompany.role.uniqueName.indexOf('admin') != -1
+    if $rootScope.selectedCompany.role.uniqueName.indexOf('super_admin') isnt -1
       # get other ledger transactions
       ledgerService.getOtherTransactions(unqObj)
       .then(
