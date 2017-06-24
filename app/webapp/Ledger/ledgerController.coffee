@@ -198,7 +198,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       compUname : $rootScope.selectedCompany.uniqueName
       acntUname : accountUniqueName
     }
-    if $rootScope.selectedCompany.role.uniqueName.indexOf('super_admin') isnt -1
+    if $rootScope.selectedCompany.role.uniqueName.indexOf('admin') isnt -1 and ledgerCtrl.checkIfParentGroupIsBankAcc()
       # get other ledger transactions
       ledgerService.getOtherTransactions(unqObj)
       .then(
@@ -208,6 +208,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.getBankTransactionsFailure(error)
       )
 
+  ledgerCtrl.checkIfParentGroupIsBankAcc=()->
+    staticObj = {name:"Bank Accounts", uniqueName:"bankaccounts"}
+    if ledgerCtrl.accountToShow
+      result = _.findWhere(ledgerCtrl.accountToShow.parentGroups, staticObj)
+      return if result then true else false
+    else
+      return true
+
   ledgerCtrl.getBankTransactionsFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
@@ -215,7 +223,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.eLedgerData = ledgerCtrl.formatBankLedgers(res.body)
     ledgerCtrl.calculateELedger()
     ledgerCtrl.getReconciledEntries()
-    #ledgerCtrl.removeUpdatedBankLedger()
 
   ledgerCtrl.calculateELedger = () ->
     ledgerCtrl.eLedgType = undefined
@@ -2352,7 +2359,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.getFlattenGrpWithAccList = (compUname, showEmpty) ->
     @success = (res) ->
       ledgerCtrl.gwaList.totalPages = res.body.totalPages
-      ledgerCtrl.flatGrpList = ledgerCtrl.markFixedGrps(res.body.results)
       ledgerCtrl.flatGrpListWithoutFixedGroups = ledgerCtrl.removeFixedGroupsFromArr(ledgerCtrl.flatGrpList)
       ledgerCtrl.gwaList.limit = 5
     @failure = (res) ->
@@ -2376,16 +2382,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         a.push(item)
     return a
 
-  ledgerCtrl.markFixedGrps = (flatGrpList) ->
-    temp = []
-    _.each ledgerCtrl.detGrpList, (detGrp) ->
-      _.each flatGrpList, (fGrp) ->
-        if detGrp.uniqueName == fGrp.groupUniqueName && detGrp.isFixed
-          fGrp.isFixed = true
-    _.each flatGrpList, (grp) ->
-      if !grp.isFixed
-        temp.push(grp)
-    temp
 
   ledgerCtrl.getGroupsWithDetail = () ->
     if $rootScope.allowed == true
@@ -2479,15 +2475,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     accountService.share(reqParam, permission).then(@success,@failure)
 
   ###################### on dom ready funcs ###########
-  ledgerCtrl.getSharedList()
-  if $rootScope.canUpdate
-    ledgerCtrl.getGroupsWithDetail()
 
   $timeout(->
-    if ledgerCtrl.accountUnq
-      ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq)
-    else
-      ledgerCtrl.loadDefaultAccount()
+    if ledgerCtrl.accountUnq then ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq) else ledgerCtrl.loadDefaultAccount()
+
     ledgerCtrl.getDiscountGroupDetail()
     ledgerCtrl.getTaxList()
   ,3000)
