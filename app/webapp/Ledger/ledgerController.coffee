@@ -1426,7 +1426,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.removeBlankTransactions = (ledger) ->
     transactions = []
     _.each ledger.transactions, (txn, i) ->
-      if txn && not _.isEmpty(txn.particular.uniqueName)
+      if txn and typeof txn.particular is 'object'  and  not _.isEmpty(txn.particular.uniqueName)
         transactions.push(txn)
     return transactions
 
