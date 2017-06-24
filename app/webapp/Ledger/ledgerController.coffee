@@ -758,6 +758,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
           taxObj.uniqueName
         ledgerCtrl.addApplicableTaxes(taxArray)
 
+    if !_.isUndefined(item.stock) and _.isUndefined(txn.panel.unit)
+      txn.panel.unit = item.stock.stockUnit.code
+      txn.panel.units.push(item.stock.stockUnit)
+
   ledgerCtrl.getCompoundTotal=()->
     total = 0
     _.each ledgerCtrl.selectedLedger.transactions, (txn) ->
