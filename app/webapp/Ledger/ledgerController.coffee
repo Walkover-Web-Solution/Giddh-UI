@@ -1607,17 +1607,25 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if ledger.transactions.length > 0
         ledgerCtrl.matchTaxTransactions(ledger.transactions, ledgerCtrl.taxList)
         ledgerCtrl.matchTaxTransactions(ledgerCtrl.ledgerBeforeEdit.transactions, ledgerCtrl.taxList)
-        ledgerCtrl.checkManualTaxTransaction(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
+        # ledgerCtrl.checkManualTaxTransaction(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
         # updatedTxns = ledgerCtrl.updateEntryTaxes(ledger.transactions)
         # ledger.transactions = updatedTxns
         # ledgerCtrl.checkTaxCondition(ledger)
         isModified = false
+        discountMsg = 'Discount entry added, Would you also like to update Principle amount?'
+        modifiedMsg = 'Principle transaction updated, Would you also like to update tax transactions?'
+
         if ledger.taxes.length > 0
           isModified = ledgerCtrl.checkPrincipleModifications(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
+          if not isModified
+            if ledgerCtrl.crossCheckForDiscountTxn(ledger)
+              modifiedMsg = discountMsg
+              isModified = true
+
         if isModified
           modalService.openConfirmModal(
             title: 'Update'
-            body: 'Principle transaction updated, Would you also like to update tax transactions?',
+            body: modifiedMsg,
             ok: 'Yes',
             cancel: 'No'
           ).then(
@@ -1636,7 +1644,19 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         response.data.status = "Error"
         ledgerCtrl.addEntryFailure(response,[])
       
-
+  ledgerCtrl.crossCheckForDiscountTxn=(ledger)->
+    current = ledger.transactions
+    old = ledgerCtrl.oldLedgrObj.transactions
+    result = false
+    if current.length isnt old.length
+      _.each current, (txn) ->
+        if txn.particular.uniqueName is 'discount'
+          result=true
+    else
+      _.each current, (txn, idx) ->
+        if txn.particular.uniqueName is 'discount' and txn.amount isnt old[idx].amount
+          result=true
+    return result
 
   ledgerCtrl.checkTaxCondition = (ledger) ->
     transactions = []
@@ -1711,7 +1731,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledger.transactions = ledgerCtrl.txnAfterRmovingTax
     else
       ledger.taxes = []
-      
+
     if ledger.transactions.length > 0
       ledgerService.updateEntry(unqNamesObj, ledger).then(
         (res) -> ledgerCtrl.updateEntrySuccess(res, ledger)
@@ -1880,6 +1900,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.doingEntry = false
     ledger.failed = false
     ledgerCtrl.paginatedLedgers = [res.body]
+    ledgerCtrl.oldLedgrObj = angular.copy({})
+    ledgerCtrl.oldLedgrObj = angular.copy(res.body)
     ledgerCtrl.selectedLedger = res.body
     ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
     ledgerCtrl.entryTotal = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
@@ -2168,7 +2190,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
     @success = (res) ->
       #do not change order of functions
-      # ledgerCtrl.paginatedLedgers = [res.body]
+      # a = angular.copy(res.body)
+      ledgerCtrl.oldLedgrObj = angular.copy(res.body)
       ledgerCtrl.selectedLedger = angular.copy(res.body)
       ledgerCtrl.clearTaxSelection(ledgerCtrl.selectedLedger)
       ledgerCtrl.clearDiscounts(ledgerCtrl.selectedLedger)
