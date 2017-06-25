@@ -812,7 +812,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.createNewPanel = (txn, ledger) ->
     panel = {}
-    if typeof(txn.particular) is "object" and _.isUndefined(txn.panel)
+    if typeof(txn.particular) is "object"
       txn.panel = {
         tax : 0
         total: 0

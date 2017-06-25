@@ -575,7 +575,7 @@ th {
       	<table>
       		<tbody>     		
 	        	<tr>
-	        		<td class="pItem" ng-if="ledgerCtrl.accountToShow.stocks != null || ledgerCtrl.selectedTxn.particular.stocks != null"
+	        		<td class="pItem" ng-if="ledgerCtrl.selectedTxn.particular.stocks != null"
 	        		>
 				        <table>
 				        	<tbody>
@@ -595,15 +595,15 @@ th {
 				        </table>
 	        		</td>
 	        		
-	        		<td class="pItem" ng-if="ledgerCtrl.accountToShow.stocks != null || ledgerCtrl.selectedTxn.particular.stocks != null">
+	        		<td class="pItem" ng-if="ledgerCtrl.selectedTxn.particular.stocks != null">
 	        			<label>&nbsp;</label>
 	        			<label class="pdR pdL default_clr">x</label>
 	        		</td>
-	        		<td style="max-width:150px" class="pItem" ng-if="ledgerCtrl.accountToShow.stocks != null || ledgerCtrl.selectedTxn.particular.stocks != null">
+	        		<td style="max-width:150px" class="pItem" ng-if=" ledgerCtrl.selectedTxn.particular.stocks != null">
 				        <label>Price</label>
 				        <input type="number" name="" class="form-control" ng-model="ledgerCtrl.selectedTxn.panel.price" ng-change="ledgerCtrl.onNewPanelChange().price(ledgerCtrl.selectedTxn, ledgerCtrl.blankLedger)"/>
 	        		</td>
-	        		<td  class="pItem" ng-if="ledgerCtrl.accountToShow.stocks != null || ledgerCtrl.selectedTxn.particular.stocks != null">
+	        		<td  class="pItem" ng-if="ledgerCtrl.selectedTxn.particular.stocks != null">
 	        			<label>&nbsp;</label>
 	        			<label class="pdR pdL default_clr">=</label>
 	        		</td>
