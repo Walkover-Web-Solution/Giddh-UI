@@ -33,7 +33,7 @@
       <div class="search-loading" ng-hide="mc.showListGroupsNow" ng-show="mc.searchLoad">
         <div class="vcenter"><span class="spinner small"></span> Loading…</div>
       </div>
-      <div class="grp_col" style="width: 100%">
+      <div class="grp_col fullWidth">
       <ul>
         <li ng-repeat="ass in mc.mainGrp">
         <a href=""  ng-bind-html="ass.name"></a>
@@ -43,7 +43,7 @@
       <div class="grp_wrapper">
 
         <!-- level 1 -->
-      <div class="col_wrapper" ng-repeat="col in mc.columns">
+      <div class="col_wrapper" ng-repeat="col in mc.columns" ng-click="mc.getColsCount()">
 
         <ul class="grp_list" overflowfix>
           <li ng-repeat="grp in col.groups track by $index">

@@ -1942,7 +1942,7 @@ input[type=radio]:checked:after {
 /*====================== mustafa =====================*/
 .select_drop {
   position: relative;
-  top: 16px;
+  top: 0;
   right: 2px;
   z-index: 9;
 }
@@ -2169,11 +2169,11 @@ select.form-control {
     float: left;
     min-height: 100%;
     height: 100%;
-    overflow-x: hidden;
+    overflow-x: auto;
 }
 
 .col_wrapper {
-    width: 100%;
+    width: 255px;
     float: left;
     border-right: 1px solid #ccc;
     min-height: 100%;
@@ -2193,13 +2193,6 @@ select.form-control {
      overflow: hidden;
     overflow-x: auto;
     white-space: nowrap;
-    -webkit-column-count: 4;
-    -moz-column-count: 4;
-    column-count: 4;
-    -webkit-column-gap: 0px; /* Chrome, Safari, Opera */
-    -moz-column-gap: 0px; /* Firefox */
-    column-gap: 0px;
-
 }
 
 .form_bg {
@@ -2339,15 +2332,14 @@ label {
 
 .col_wrapper:nth-child(1) {
     background: #f4f5f5;
-    z-index: 9;
-    position: relative;
-    /*position: absolute;*/
-}
-.col_wrapper:nth-child(1) ul {
     position: fixed;
-    height: calc(100% - 17%);
+    height: calc(100% - 78px);
     min-height: 0;
-    width: 251px;
+    width: 255px;
+    z-index: 9;
+}
+.col_wrapper:nth-child(2) {
+  margin-left: 255px;
 }
 .col_wrapper:nth-child(1) li a{
     text-transform: uppercase;
@@ -2372,13 +2364,6 @@ label {
      overflow: hidden;
     overflow-x: auto;
     white-space: nowrap;
-    -webkit-column-count: 4;
-    -moz-column-count: 4;
-    column-count: 4;
-    -webkit-column-gap: 0px; /* Chrome, Safari, Opera */
-    -moz-column-gap: 0px; /* Firefox */
-    column-gap: 0px;
-
 }
 .isAcc {
     color: #1a1a1a !important;
@@ -2495,11 +2480,6 @@ label {
 }
 .ledger-panel .upload_div label {
     color: #4d4d4d;
-}
-.col3 {
-    -webkit-column-count: 3;
-    -moz-column-count: 3;
-    column-count: 3;
 }
 .form_box {
     overflow-y: auto;
@@ -2690,6 +2670,7 @@ label {
   position: absolute;
   top: 22px;
   right: 8px;
+  color: #b1b3b3;
 }
 .gst {
     margin-top: 15px;
@@ -2708,22 +2689,7 @@ label {
 .section_title {
   font-size: 1.2rem;
 }
-@media only screen and (min-width: 1336px) and (max-width: 1440px) {
-  .grp_wrapper {
-     -webkit-column-count: 3;
-     -moz-column-count: 3;
-     column-count: 3;
-  }
 
-}
-
-@media only screen and (min-width: 1441px) and (max-width: 1800px) {
-  .grp_wrapper {
-     -webkit-column-count: 3;
-     -moz-column-count: 3;
-     column-count: 3;
-  }
-}
 @media only screen and (min-width: 1920px) {
   .col_wrapper:nth-child(1) li a{
       text-transform: uppercase;

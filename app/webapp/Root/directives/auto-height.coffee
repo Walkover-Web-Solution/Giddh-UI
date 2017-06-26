@@ -104,7 +104,6 @@ directive 'autoHeight', ['$window', '$timeout', ($window, $timeout) ->
 ])
 
 
-
 # convert digit to words
 giddh.webApp.filter 'numtowords', ->
 

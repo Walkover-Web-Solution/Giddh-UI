@@ -1253,10 +1253,17 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.showDefaultGst = 2
     mc.showDefaultGstList = !mc.showDefaultGstList
 
-  mc.getStateCode = (val) ->
+  mc.getStateCode = (val, item) ->
     if val.length >= 2
       mc.gstState = _.findWhere(mc.stateList, {code:val.substr(0,2)})
-      console.log mc.gstState
+    if mc.gstState
+      item.addressList[0].stateCode = mc.gstState.code
+      item.addressList[0].stateName = mc.gstState.name
+
+  mc.getColsCount = () ->
+    calcWidth = mc.columns.length * 260
+    $(".fullWidth").css("min-width",calcWidth)
+    return false
 # end
 
   return mc
