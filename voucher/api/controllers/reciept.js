@@ -16,7 +16,7 @@ reciept.downloadReciept = function(req,res){
 
 //response.status = 'success';
 //response.body = pdfPath.substring(0, pdfPath.lastIndexOf('.'));
-var recieptObj = req.body;
+var recieptObj = req.body.reciept[0];
 
 const recieptPug = pug.compileFile('./voucher/api/models/reciept/templates/reciept_a.pug');
 //const recieptFoot = pug.compileFile('./voucher/api/models/reciept/templates/reciept_a_footer.pug')
