@@ -2345,10 +2345,7 @@ label {
     text-transform: uppercase;
     padding: 8px 9px !important;
 }
-.col_wrapper:nth-child(1) li:last-child{
-    display: none;
-    text-indent: -99999px;
-}
+
 .col_wrapper:nth-child(1) .isParent {
     background: #e1ebf0 !important;
     color: #d25f29 !important;

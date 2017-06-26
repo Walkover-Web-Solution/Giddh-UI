@@ -419,6 +419,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     accountService.get(reqParam).then(mc.getAccDtlSuccess, mc.getAccDtlFailure)
     if mc.updateBreadCrumbs
       mc.addToBreadCrumbs(item, 'account', parentIndex)
+    mc.toMerge.toUnMerge.uniqueNames = null
+
 
   mc.getAccDtlSuccess = (res, data) ->
     data = res.body
@@ -1207,7 +1209,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getGroups()
 
   mc.updateSearchhierarchy = (data) ->
-    if mc.selectedType = 'grp'
+    if mc.selectedType == 'grp'
       currentItem = _.findWhere($rootScope.flatGroupsList, {uniqueName:data.uniqueName})
     else
       currentItem = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:data.uniqueName})
