@@ -2248,10 +2248,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       acntUname: $rootScope.selectedAccount.uniqueName
       entUname: entry.entryUniqueName
     }
+    category = ledgerCtrl.getAccCategoryByUniquename($rootScope.selectedAccount.uniqueName)
 
     ledgerCtrl.baseAccount = ledgerCtrl.accountToShow
 
-    if entry.isCompoundEntry && entry.isBaseAccount 
+    # if entry.isCompoundEntry && entry.isBaseAccount 
+    if category is "income" || category == "expenses"
       reqParam.acntUname = entry.particular.uniqueName
       ledgerCtrl.editModeBaseAccount = entry.particular.name
       ledgerCtrl.baseAccount = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:entry.particular.uniqueName})
