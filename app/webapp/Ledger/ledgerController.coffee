@@ -994,18 +994,36 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   # can't add multiple stock txn while update
   ledgerCtrl.isEntryAllowed=(txn)->
     result = false
-    _.each(ledgerCtrl.selectedLedger.transactions, (item)->
-      if not result
-        result = if item.inventory then true else false
-    )
+    result = ledgerCtrl.countStockAccount(ledgerCtrl.selectedLedger)
+    # if not findTxn
+    #   _.each(ledgerCtrl.selectedLedger.transactions, (item)->
+    #     if not result
+    #       result = if item.inventory then true else false
+    #   )
 
-    if result and txn.particular.stocks
-      txn.particular = {name:"",uniqueName:""}
-      toastr.warning("You can't add multiple stock entries")
+    # if result and txn.particular.stocks
+    #   txn.particular = {name:"",uniqueName:""}
+    #   toastr.warning("You can't add multiple stock entries")
+    #   return false
+    if result
+      txn.particular = {name:"", uniqueName:""}
+      toastr.warning("You can't add multiple stock entries.")
       return false
 
     ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
     ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
+
+  ledgerCtrl.countStockAccount = (ledger) ->
+    count = 0;
+    _.each(ledger.transactions, (item) ->
+      if item.particular.stock || item.inventory
+        count++
+    )
+    if count > 1
+      return true
+    else
+      return false
+    
     
 
   ledgerCtrl.createPanel = (ledger) ->
