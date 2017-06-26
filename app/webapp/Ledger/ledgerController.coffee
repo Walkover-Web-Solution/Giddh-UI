@@ -1614,12 +1614,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
       unqNamesObj = {
         compUname: $rootScope.selectedCompany.uniqueName
-        acntUname: ledgerCtrl.accountUnq
+        acntUname: ledgerCtrl.baseAccount.uniqueName
         entUname: ledger.uniqueName
       }
 
-      if ledgerCtrl.currentTxn.isCompoundEntry && ledgerCtrl.currentTxn.isBaseAccount
-        unqNamesObj.acntUname = ledgerCtrl.currentTxn.particular.uniqueName
+      # if ledgerCtrl.currentTxn.isCompoundEntry && ledgerCtrl.currentTxn.isBaseAccount
+      #   unqNamesObj.acntUname = ledgerCtrl.currentTxn.particular.uniqueName
 
       ledgerCtrl.addTaxesToLedger(ledger)
 
@@ -2226,8 +2226,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.addBlankTransactionIfOneSideEmpty(ledgerCtrl.selectedLedger)
       ledgerCtrl.ledgerBeforeEdit = {}
       ledgerCtrl.ledgerBeforeEdit = angular.copy(res.body,ledgerCtrl.ledgerBeforeEdit)
+      matchThisUniqueName = ledgerCtrl.clickedTxn.particular.uniqueName
+      if matchThisUniqueName == ledgerCtrl.baseAccount.uniqueName
+        matchThisUniqueName = $rootScope.selectedAccount.uniqueName
       _.each res.body.transactions, (txn) ->
-        if txn.particular.uniqueName == ledgerCtrl.clickedTxn.particular.uniqueName
+        if txn.particular.uniqueName == matchThisUniqueName
           ledgerCtrl.selectedTxn = txn
       # ledgerCtrl.setVoucherCode(ledgerCtrl.selectedLedger)
       if !ledgerCtrl.selectedLedger.invoiceGenerated
