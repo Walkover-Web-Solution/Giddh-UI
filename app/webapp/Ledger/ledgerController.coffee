@@ -999,7 +999,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         result = if item.inventory then true else false
     )
 
-    if result and not _.isNull(txn.particular.stocks)
+    if result and txn.particular.stocks
       txn.particular = {name:"",uniqueName:""}
       toastr.warning("You can't add multiple stock entries")
       return false
