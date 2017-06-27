@@ -62,6 +62,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.showDefaultGstList = true
   mc.showDefaultGst = 2
   mc.stateList = []
+  mc.stateDetail = undefined
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
     mc.selectedType = type
@@ -242,6 +243,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.updateBreadCrumbs = true
     mc.parentIndex = parentIndex
     mc.currentIndex = currentIndex
+    mc.selectedType = 'grp'
     if mc.keyWord != undefined
       if mc.keyWord.length > 3
         mc.updateSearchItem = true
@@ -407,7 +409,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getCurrentColIndex = parentIndex
     mc.currentAccIndex = currentIndex
     item.hLevel = mc.getCurrentColIndex
-    mc.getSelectedType('acc')
+    mc.selectedType = 'acc'
     if mc.keyWord != undefined
       if mc.keyWord.length > 3
         mc.updateSearchItem = true
@@ -446,18 +448,19 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.columns.length = mc.getCurrentColIndex+1
     mc.gstDetail = res.body.gstDetails
     console.log mc.gstDetail
-    if mc.gstDetail.length < 1
-      gstDetail = {
-        gstNumber: "",
-        addressList: [
-            {
-              address:"",
-              stateCode: "",
-              stateName: ""
-            }
-        ]
-      }
-      mc.gstDetail.unshift(gstDetail)
+    if mc.selectedAcc.parentGroups[1].uniqueName == 'sundrycreditors' || mc.selectedAcc.parentGroups[1].uniqueName == 'sundrydebtors'
+      if mc.gstDetail.length < 1
+        gstDetail = {
+          gstNumber: "",
+          addressList: [
+              {
+                address:"",
+                stateCode: "",
+                stateName: ""
+              }
+          ]
+        }
+        mc.gstDetail.unshift(gstDetail)
 
   mc.addNewGst = () ->
     gstDetail = {
@@ -729,6 +732,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     unqNamesObj = mc.setAdditionalAccountDetails()
     accountService.createAc(unqNamesObj, mc.selectedAcc).then(mc.addAccountSuccess, mc.addAccountFailure)
     # mc.breadCrumbList = undefined
+    mc.stateDetail = mc.stateDetail
 
   mc.addAccountSuccess = (res) ->
     toastr.success("Account created successfully", res.status)
@@ -946,8 +950,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     _.each mc.toMerge.mergedAcc, (acc) ->
       $rootScope.removeAccountFromPaginatedList(acc)
       acc.noRemove = true
-    # mc.getGroups()
     mc.prePopulate = mc.toMerge.mergedAcc
+    mc.getGroups()
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
     mc.getAccDetail(mc.selectedAcc, mc.getCurrentColIndex)
 
@@ -1209,13 +1213,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getGroups()
 
   mc.updateSearchhierarchy = (data) ->
-    if mc.selectedType == 'grp'
+    if mc.selectedType == "grp"
       currentItem = _.findWhere($rootScope.flatGroupsList, {uniqueName:data.uniqueName})
     else
       currentItem = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:data.uniqueName})
     mc.breadCrumbList = currentItem.parentGroups
-    mc.updateBreadCrumbs = false
-    mc.columns = mc.columns.splice(0,mc.parentIndex+1)
+    mc.updateBreadCrumbs = true
 
   mc.getServiceCode = (hsn, sac)->
     console.log hsn, sac
@@ -1265,7 +1268,14 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.getColsCount = () ->
     calcWidth = mc.columns.length * 260
     $(".fullWidth").css("min-width",calcWidth)
+    # leftPos = $('.grp_wrapper').scrollLeft()
+    # $(".grp_wrapper").animate({
+    #   scrollLeft: calcWidth
+    # }, 800)
     return false
+
+  mc.setStateCode = (item) ->
+    mc.selectedAcc.stateCode  = item.code
 # end
 
   return mc

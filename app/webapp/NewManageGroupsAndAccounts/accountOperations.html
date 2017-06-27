@@ -100,11 +100,12 @@
       <div class="clearfix"></div>
       <div class="form-group mrB col-xs-7 pd0">
         <label>Address</label>
-        <input type="text" class="form-control" name="address" ng-model="mc.selectedAcc.address" placeholder="405, Indore, India" ng-disabled="mc.isFixedAcc" />
+        <textarea class="form-control" name="address" ng-model="mc.selectedAcc.address" placeholder="405, Indore, India" ng-disabled="mc.isFixedAcc" style="height: 78px;"></textarea>
       </div>
       <div class="form-group mrB col-xs-5">
-        <label>State Code</label>
-        <input type="text" class="form-control" name="stateCode" ng-model="mc.selectedAcc.stateCode" placeholder="" ng-disabled="mc.isFixedAcc" />
+        <label>State</label>
+        <input type="text" ng-model="mc.selectedAcc.state" typeahead-append-to-body="true" uib-typeahead="state.name for state in mc.stateList | filter:$viewValue" class="form-control" typeahead-on-select="mc.setStateCode($item)" name="state" ng-disabled="mc.isFixedAcc" placeholder="Select State" />
+        <input type="text" class="form-control mrT1" name="stateCode" ng-model="mc.selectedAcc.stateCode" ng-disabled="mc.isFixedAcc" ng-readonly="true" placeholder="State Code" />
       </div>
     </div>
     <div class="clearfix"></div>
@@ -230,7 +231,7 @@
       <div class="form-group col-xs-10 mrB">
         <div class="row">
           
-          <label class="col-xs-12 row">Merge this A/c with</label>
+          <label class="col-xs-12 row">Select A/c to merge with <span class="primary_clr">{{mc.selectedAcc.name}}</span></label>
           <ul class="accmerge mrB1" ng-if="mc.getMergeAcc.length>0">
             <li ng-repeat="merged in mc.getMergeAcc">
               <a href="javascript:void(0);"ng-class="{isActive:merged == mc.toMerge.toUnMerge.uniqueNames}" ng-click="mc.unmerge(merged)">{{merged}} <i class="fa fa-times" ng-click="mc.deleteMergedAccount(merged)"></i></a>

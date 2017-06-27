@@ -2771,3 +2771,12 @@ label {
     background: #ddd;
     left: -2px;
 }
+.shared_list li .delIcon {
+  height: auto;
+}
+#Addaccount .form-inline select.form-control {
+  padding: 0;
+}
+#Addaccount .form-inline .select_drop {
+  top: 15px;
+}

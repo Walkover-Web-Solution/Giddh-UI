@@ -19,13 +19,13 @@
             <div class="col-xs-8 pdB1 pdT1 mrB2" ng-if="mc.accountSharedUserList.length">
                <div class="row">
                   <ul class="shared_list">
-                     <li ng-repeat="(key,value) in mc.accountSharedUserList track by $index">
+                     <li ng-repeat="(key,value) in mc.accountSharedUserList track by $index" class="clearfix">
                         <span class="pull-left">
                            <!-- <div ng-bind-html="value.userName"></div> -->
-                           <small class="Useremail">{{value.userEmail}}-</small>
+                           <small class="Useremail">{{value.userEmail}}</small>
                         </span>
                         <span class="form-inline">
-                           <small class="">{{value.role.name}}</small>
+<!--                            <small class="">{{value.role.name}}</small> -->
                            <span class="delIcon pull-right">
                            <i ng-click="mc.unShareAccount(value.userUniqueName)" class="fa fa-times" aria-hidden="true"></i>
                            </span>
