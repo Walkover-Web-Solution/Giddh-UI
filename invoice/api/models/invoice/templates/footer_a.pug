@@ -140,10 +140,14 @@ html
       tr
         td
           each companyIdentity in companyIdentitiesData
-            p #{companyIdentity}
+            if(companyIdentity!='')
+              if(companyIdentity!=null)                  
+                p #{companyIdentity}
       tr
         td(colspan='9')
           ul(style='padding-left: 15px;padding-bottom: 25px;')
             each term in terms  
-              li #{term}. 
+              if(term!='')
+                if(term!=null)
+                  li #{term}. 
             

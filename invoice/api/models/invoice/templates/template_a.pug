@@ -162,10 +162,12 @@ html
            -var n = 0;
               each entry in entries
                 each transaction in entry.transactions
-                  tr
-                    td #{++n} 
-                    td #{transaction.accountName}
-                    td #{transaction.amount}
+                  if(transaction!='')
+                    if(transaction!=null)
+                      tr
+                        td #{++n} 
+                        td #{transaction.accountName}
+                        td #{transaction.amount}
         table.tfooter.summary
           tfoot
             tr
@@ -173,10 +175,12 @@ html
               td Sub Total
               td #{subTotal}
             each tax in taxes
-              tr
-                td  
-                td #{tax.accountName} (#{tax.taxRate}%)
-                  td #{tax.amount} 
+              if(tax!='')
+                if(tax!=null)
+                  tr
+                    td  
+                      td #{tax.accountName} (#{tax.taxRate}%)
+                      td #{tax.amount} 
             tr
               td  
               td Round Off
@@ -192,6 +196,7 @@ html
           tr
             td(style='color: #000;font-weight: 500;') #{companyName}
           each data in companyData
-            tr
-           ;(style='line-height:18px;') #{data}
+            if(data!='')
+              if(data!=null)
+                tr (style='line-height:18px;') #{data}
       .p30
