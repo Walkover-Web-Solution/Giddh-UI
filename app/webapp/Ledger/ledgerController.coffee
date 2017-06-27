@@ -931,7 +931,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       checkedTaxesMatchingApplicable = _.filter checkedTaxes, (tax) ->
         return _.contains txn.particular.applicableTaxes, tax.uniqueName
       
-      if !_.isUndefined(txn.particular.applicableTaxes) and (checkedTaxes.length == checkedTaxesMatchingApplicable.length and checkedTaxes.length == txn.particular.applicableTaxes.length )
+      if !_.isUndefined(txn.particular.applicableTaxes) and (checkedTaxes.length == checkedTaxesMatchingApplicable.length and checkedTaxes.length == txn.particular.applicableTaxes.length ) and checkedTaxes.length > 0
         ledger.applyApplicableTaxes = true
       else 
         ledger.applyApplicableTaxes = false
