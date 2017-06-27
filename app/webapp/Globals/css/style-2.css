@@ -1954,6 +1954,7 @@ input[type=radio]:checked:after {
   color: #4d4d4d;
   top: 50%;
   transform: translateY(-50%);
+  cursor: pointer;
 }
 
 .ledger-panel .bdrB {
@@ -2345,10 +2346,7 @@ label {
     text-transform: uppercase;
     padding: 8px 9px !important;
 }
-.col_wrapper:nth-child(1) li:last-child{
-    display: none;
-    text-indent: -99999px;
-}
+
 .col_wrapper:nth-child(1) .isParent {
     background: #e1ebf0 !important;
     color: #d25f29 !important;
@@ -2689,11 +2687,87 @@ label {
 .section_title {
   font-size: 1.2rem;
 }
-
-@media only screen and (min-width: 1920px) {
-  .col_wrapper:nth-child(1) li a{
-      text-transform: uppercase;
-      padding: 8px 7px !important;
-  }
+.clearfix {
+  clear: both;
 }
 
+.tcaption {
+  display: table-caption;
+}
+#manufacture .form-theme tbody tr td {
+  padding: 12px 0;
+  color: #525252;
+}
+#manufacture .form-theme tbody tr td:nth-child(1) {
+  padding-left: 20px;
+}
+#manufacture .form-theme tbody tr td:last-child {
+  position: relative;
+  top: -8px;
+  right: -8px;
+}
+#manufacture select {
+  border-radius: 0;
+}
+#manufacture .form-theme tbody tr td select, #manufacture .source tbody tr td select {
+  width: 170px;
+  display: inline-block;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  padding: 0 7px !important;
+  background: transparent !important;
+}
+#manufacture .form-theme tbody tr td .select_drop, #manufacture .source tbody tr td .select_drop {
+  right: 8px;
+}
+#manufacture .bdrT {
+  border-color: #ddd;
+}
+#manufacture thead th{
+  font-weight: normal;
+}
+#manufacture .source thead {
+  border-bottom: 1px solid #ddd;
+}
+#manufacture .source .linkstock {
+  height: auto;
+  color: #777;
+}
+#manufacture .source .linkstock thead th {
+  color: #333;
+}
+#manufacture .source table thead th,#manufacture .source table tbody td {
+  text-align: right;
+}
+#manufacture .source table tbody td:nth-child(1), #manufacture .source table thead th:nth-child(1) {
+  text-align: left;
+}
+#manufacture .source table thead th, #manufacture .source .linkStockTbl>tbody>tr>td:first-child, #manufacture .source table tfoot td {
+  padding: 10px 15px;
+}
+#manufacture .source .linkStockTbl {
+  border: 0;
+}
+#manufacture .source tbody tr td:nth-child(1) span.hr {
+    width: 10px;
+    height: 2px;
+    display: inline-block;
+    background-color: #dfe2e5;
+    position: absolute;
+    top: 50%;
+    left: 0;
+}
+#manufacture .source tbody {
+  position: relative;
+}
+
+#manufacture .source tbody:before {
+    content: '';
+    height: 50.5%;
+    position: absolute;
+    bottom: 110px;
+    width: 2px;
+    background: #ddd;
+    left: -2px;
+}

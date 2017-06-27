@@ -54,7 +54,7 @@
             <a href="javascript:void(0);" class="isAcc" id="acc_{{acc.name}}" ng-bind-html="acc.name | capitalize" ng-click="mc.getAccDetail(acc, $parent.$index, $index); mc.getSelectedType('acc');mc.selectActiveItems(col, 'acc', $index)" uib-tooltip="{{acc.synonyms}}" tooltip-placement="bottom" ng-class="{isActive:mc.breadCrumbList[mc.breadCrumbList.length-1].uniqueName == acc.uniqueName && mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'account'}"></a>
           </li>
 
-          <li class="new_btn" ng-if="col.showCreateNew || mc.searchLoad"><a href="javascript:void(0)" class="btn-add" ng-click="mc.createNewGrpAccount($index)" >Create new</a></li>
+          <li class="new_btn" ng-if="col.showCreateNew || mc.searchLoad && !mc.addToIndex == 0"><a href="javascript:void(0)" class="btn-add" ng-click="mc.createNewGrpAccount($index)" >Create new</a></li>
         </ul>
       </div>
     <!-- level 1 -->
