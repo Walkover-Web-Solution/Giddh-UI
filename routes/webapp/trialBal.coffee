@@ -33,7 +33,7 @@ router.get '/balance-sheet', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     parameters:
       fy: req.query.fy
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/balance-sheet'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/v2/balance-sheet'
   if req.query.refresh == "true"
     args =
       headers:
@@ -55,7 +55,7 @@ router.get '/profit-loss', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     parameters:
       fy: req.query.fy
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/profit-loss'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/v2/profit-loss'
   if req.query.refresh == "true"
     args =
       headers:
