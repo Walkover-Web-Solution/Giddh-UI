@@ -1282,13 +1282,16 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.onTxnAmountChange = (txn)->
     if !ledgerCtrl.isDiscountTxn(txn) && (ledgerCtrl.getTxnCategory(txn) == 'income' || ledgerCtrl.getTxnCategory(txn) == 'expenses')
-      ledgerCtrl.selectedLedger.panel.amount = Number(txn.amount)
+      # ledgerCtrl.selectedLedger.panel.amount = Number(txn.amount)
       ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
       ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
     else if ledgerCtrl.isDiscountTxn(txn)
-      ledgerCtrl.selectedLedger.panel.discount = Number(txn.amount)
+      # ledgerCtrl.selectedLedger.panel.discount = Number(txn.amount)
       ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
       ledgerCtrl.getTotalDiscountByNewWay(ledgerCtrl.selectedLedger)
+
+    ledgerCtrl.getPanelAmount(ledgerCtrl.selectedLedger)
+
 
   ledgerCtrl.getTotalDiscountByNewWay = (ledger) ->
     discount = 0
@@ -1852,6 +1855,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     #ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
     if ledgerCtrl.currentPage == ledgerCtrl.totalLedgerPages
       ledgerCtrl.getTransactions(0)
+    else if ledgerCtrl.totalLedgerPages > ledgerCtrl.currentPage
+      ledgerCtrl.currentPage = ledgerCtrl.totalLedgerPages
+      ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
     else
       ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
     # $timeout ( ->
