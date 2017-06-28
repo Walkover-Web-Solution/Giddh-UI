@@ -247,7 +247,7 @@ th {
 							ng-repeat="txn in ledgerCtrl.txnData.debitTransactions" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn, true)"  
 							ng-click="ledgerCtrl.selectCompoundEntry(txn, $event)"
-							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}">
+							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}" uib-tooltip="{{txn.description}}">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
 							<td class="col-xs-7" ng-bind="txn.inventory ? txn.particular.name+' ('+txn.inventory.stock.name+')' : txn.particular.name"></td>
 							<td class="col-xs-3 pos-rel text-right" ng-class="{pdR25imp:txn.attachedFileUniqueName.length > 0 || txn.isInvoiceGenerated}">
@@ -377,7 +377,7 @@ th {
 							ng-repeat="txn in ledgerCtrl.txnData.creditTransactions" 
 							ng-dblclick="ledgerCtrl.fetchEntryDetails(txn, true)" 
 							ng-click="ledgerCtrl.selectCompoundEntry(txn, $event)"
-							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}">
+							ng-class="{compoundEntry: txn.entryUniqueName == ledgerCtrl.selectedTxnUniqueName}" uib-tooltip="{{txn.description}}">
 							<td class="col-xs-2" ng-bind="txn.entryDate"></td>
 							<td class="col-xs-7" ng-bind="txn.inventory ? txn.particular.name+' ('+txn.inventory.stock.name+')' : txn.particular.name"></td>
 							<td class="col-xs-3 pos-rel text-right" ng-class="{pdR25imp:txn.attachedFileUniqueName.length > 0 || txn.isInvoiceGenerated}">
@@ -796,7 +796,9 @@ th {
     </div>
 </script>
 
-
+<script type="text/ng-template" id="descriptionPopovertemplate.html">
+<div>{{txn.description}}</div>
+</script>
 
 <script type="text/ng-template" id="accountPopUp.html">
   <a href="javascript:void(0)" class="account-list-item" set-drop-overflow style="border-bottom:1px solid #e0e0e0;">

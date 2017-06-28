@@ -2109,6 +2109,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.loadDefaultAccount()
         ledgerCtrl.getTaxList()
         ledgerCtrl.getDiscountGroupDetail()
+        ledgerCtrl.resetBlankLedger()
         #ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
 
   ledgerCtrl.hasParent = (target, parent) ->
