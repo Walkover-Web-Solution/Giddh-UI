@@ -1268,10 +1268,11 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.getColsCount = () ->
     calcWidth = mc.columns.length * 260
     $(".fullWidth").css("min-width",calcWidth)
-    # leftPos = $('.grp_wrapper').scrollLeft()
-    # $(".grp_wrapper").animate({
-    #   scrollLeft: calcWidth
-    # }, 800)
+    # slide to last column
+    leftPos = $('.grp_col').scrollLeft()
+    $(".grp_col").animate({
+      scrollLeft: calcWidth
+    }, 800)
     return false
 
   mc.setStateCode = (item) ->
