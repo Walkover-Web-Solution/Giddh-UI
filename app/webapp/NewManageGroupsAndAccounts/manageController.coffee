@@ -66,6 +66,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
     mc.selectedType = type
+    if mc.selectedType == 'acc'
+      if mc.breadCrumbList.length > 0
+        if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
+          mc.addNewGst()
     mc.createNew = false
 # end
 
@@ -177,16 +181,18 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.groupAccntList = result.accounts
 
   mc.updateAll = (groupList) ->
+    mc.fixedParentGroup = undefined
     _.each mc.breadCrumbList, (item, i) ->
       currentItem = _.findWhere(groupList, {uniqueName:item.uniqueName})
       if currentItem
         mc.selectItem(currentItem, false)
+        mc.fixedParentGroup = currentItem
         ###set selcted item class####
         _.each mc.columns[i].groups, (grp, idx) ->
           if grp.uniqueName == currentItem.uniqueName
             mc.selectActiveItems(mc.columns[i], 'grp', idx)
       else if !currentItem
-        if item.groups
+        if mc.fixedParentGroup.groups
           currentItem = _.findWhere(mc.selectedItem.groups, {uniqueName:item.uniqueName})
           mc.selectItem(currentItem, false)
           ###set selcted item class####
@@ -307,6 +313,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     groupService.create($rootScope.selectedCompany.uniqueName, body).then(mc.onCreateGroupSuccess,mc.onCreateGroupFailure)
 
   mc.onCreateGroupSuccess = (res) ->
+    mc.keyWord = undefined
     mc.columns[mc.addToIndex].groups.push(res.body)
     toastr.success("Sub group added successfully", "Success")
     # mc.selectedItem = {}
@@ -397,9 +404,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         mc.selectedGrp = mc.breadCrumbList[mc.breadCrumbList.length-1]
         mc.updateBreadCrumbs = false
         mc.columns = mc.columns.splice(0,mc.addToIndex+1)
-    if mc.keyWord != undefined
-      mc.breadCrumbList = []
-      mc.keyWord = undefined
+    # if mc.keyWord != undefined
+    #   mc.breadCrumbList = []
+    #   mc.keyWord = undefined
+    mc.gstDetail = []
 
 # get account details under groups and sub groups
   mc.getAccDetail = (item, parentIndex, currentIndex) ->
@@ -450,17 +458,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     console.log mc.gstDetail
     if mc.selectedAcc.parentGroups[1].uniqueName == 'sundrycreditors' || mc.selectedAcc.parentGroups[1].uniqueName == 'sundrydebtors'
       if mc.gstDetail.length < 1
-        gstDetail = {
-          gstNumber: "",
-          addressList: [
-              {
-                address:"",
-                stateCode: "",
-                stateName: ""
-              }
-          ]
-        }
-        mc.gstDetail.unshift(gstDetail)
+        mc.addNewGst()
 
   mc.addNewGst = () ->
     gstDetail = {
@@ -733,6 +731,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     accountService.createAc(unqNamesObj, mc.selectedAcc).then(mc.addAccountSuccess, mc.addAccountFailure)
     # mc.breadCrumbList = undefined
     mc.stateDetail = mc.stateDetail
+    mc.removeBlankGst(mc.gstDetail)
 
   mc.addAccountSuccess = (res) ->
     toastr.success("Account created successfully", res.status)
@@ -769,6 +768,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
     if mc.selectedAcc.applicableTaxes.length > 0
       mc.selectedAcc.applicableTaxes = _.pluck(mc.selectedAcc.applicableTaxes,'uniqueName')
+
+    mc.removeBlankGst(mc.gstDetail)
+
+    mc.selectedAcc.gstDetails = mc.gstDetail
 
     accountService.updateAc(unqNamesObj, mc.selectedAcc).then(mc.updateAccountSuccess,
         mc.updateAccountFailure)
@@ -1217,7 +1220,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       currentItem = _.findWhere($rootScope.flatGroupsList, {uniqueName:data.uniqueName})
     else
       currentItem = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:data.uniqueName})
+    currentItem = _.extend(data, currentItem)
     mc.breadCrumbList = currentItem.parentGroups
+    mc.selectedItem = currentItem
     mc.updateBreadCrumbs = true
 
   mc.getServiceCode = (hsn, sac)->
@@ -1261,9 +1266,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.getStateCode = (val, item) ->
     if val.length >= 2
       mc.gstState = _.findWhere(mc.stateList, {code:val.substr(0,2)})
-    if mc.gstState
-      item.addressList[0].stateCode = mc.gstState.code
-      item.addressList[0].stateName = mc.gstState.name
+      if mc.gstState
+        item.addressList[0].stateCode = mc.gstState.code
+        item.addressList[0].stateName = mc.gstState.name
 
   mc.getColsCount = () ->
     calcWidth = mc.columns.length * 260
@@ -1277,6 +1282,14 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.setStateCode = (item) ->
     mc.selectedAcc.stateCode  = item.code
+
+  mc.removeBlankGst = (gstList) ->
+    if gstList.length > 0
+      _.each gstList, (item) ->
+        if item.gstNumber == ""
+          gstList = _.without(gstList, item)
+      mc.gstDetail = gstList
+    console.log gstList
 # end
 
   return mc
