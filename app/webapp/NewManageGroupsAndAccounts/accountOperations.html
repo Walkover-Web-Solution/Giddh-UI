@@ -245,9 +245,10 @@
                     <ui-select-match allow-clear="true" placeholder="Select Accounts" ui-lock-choice="$item.noRemove == true" reset-search-input="true" append-to-body="true">
                       {{$item.uniqueName}}
                     </ui-select-match >
+                    
                     <ui-select-choices
-                      ui-disable-choice="acc.uniqueName === selAcntUname"
-                      repeat="acc in mc.mergeAccList | omit:acc.isFixed | filter: $select.search" refresh="mc.refreshFlatAccount($select.search)" minimum-input-length="1" ng-model-options="{debounce:1000}" position='auto'>
+                      ui-disable-choice="acc.uniqueName === mc.selectedAcc.uniqueName"
+                      repeat="acc in mc.mergeAccList | omit:acc.isFixed | filter: $select.search" refresh="mc.refreshFlatAccount($select.search)" minimum-input-length="3" position='auto'>
                       <span>{{acc.name}} ({{acc.uniqueName}})</span>
                     </ui-select-choices>
                 </ui-select>
@@ -276,9 +277,9 @@
               <ui-select-match placeholder="Select Accounts">
                 <span>{{$select.selected.name}}</span>
               </ui-select-match >
-              <ui-select-choices 
-                ui-disable-choice="acc.uniqueName === selAcntUname" 
-                repeat="acc in fltAccntListPaginated | filter: $select.search" refresh="refreshFlatAccount($select.search)">
+              <ui-select-choices
+                ui-disable-choice="acc.uniqueName === mc.selectedAcc.uniqueName"
+                repeat="acc in fltAccntListPaginated | omit:acc.isFixed | filter: $select.search" refresh="mc.refreshFlatAccount($select.search)" minimum-input-length="3" position='auto'>
                 <span>{{acc.name}} ({{acc.uniqueName}})</span>
               </ui-select-choices>
           </ui-select>

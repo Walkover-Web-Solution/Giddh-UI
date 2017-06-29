@@ -954,7 +954,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       $rootScope.removeAccountFromPaginatedList(acc)
       acc.noRemove = true
     mc.prePopulate = mc.toMerge.mergedAcc
-    mc.getGroups()
+    # mc.updateAll()
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
     mc.getAccDetail(mc.selectedAcc, mc.getCurrentColIndex)
 
