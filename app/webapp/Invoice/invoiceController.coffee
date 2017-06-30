@@ -400,11 +400,20 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     _.extend($scope.defTempData , data)
     $scope.defTempData.signatureType = $scope.tempSet.signatureType
     showPopUp = $scope.convertIntoOur()
-
+    
+    if($scope.templateClass.indexOf('gst') != -1) 
+      $scope.defTempData = $http.get('/public/webapp/Invoice/gstTempData.json').then((res) -> 
+        console.log(res.data.body)
+        $scope.defTempData = res.data.body
+      )
+      $scope.templateName = 'gstPrevInvoiceTemp.html'
+    else
+      $scope.templateName =  'prevInvoiceTemp.html'
+    
     # open dialog
-    if(showPopUp)
+    if(showPopUp)      
       $scope.modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/Invoice/prevInvoiceTemp.html'
+        templateUrl: '/public/webapp/Invoice/' + $scope.templateName
         size: "a4"
         backdrop: 'static'
         scope: $scope

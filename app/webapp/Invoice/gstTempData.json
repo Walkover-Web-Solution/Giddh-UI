@@ -1,0 +1,226 @@
+{
+  "status": "success",
+  "body": {
+    "logo": {
+      "path": ""
+    },
+    "company": {
+      "name": "Walkover Web Solutions Private Limited",
+      "data": [
+        "405-406, Capt. C. S. Naydu Arcade, 10/2, Old Palasia, near Greater Kailash Hospital, Indore 452001(M. P.)"
+      ]
+    },
+    "account": {
+      "name": "Mr. Shubhendra Agrawal",
+      "uniqueName": "gaurav",
+      "data": [
+        "Company Dummy Name, 24 Building Name, 3rd Floor, 15 A.B. Road Indore (M.P.) 452000"
+      ],
+      "attentionTo": "",
+      "email": "shubhendra@walkover.in",
+      "mobileNumber": "9898989898"
+    },
+    "signature": {
+      "name": "",
+      "data": "",
+      "path": ""
+    },
+    "companyIdentities": {
+      "data": ""
+    },
+    "terms": [
+      "All payments to be made in cash",
+      "Contact us for queries on these quotations."
+    ],
+    "template": {
+      "uniqueName": "template_a",
+      "sections": {
+        "logo": true,
+        "company": true,
+        "invoiceDetails": true,
+        "companyIdentities": true,
+        "account": true,
+        "signature": true,
+        "terms": true,
+        "entries": true,
+        "taxes": true,
+        "signatureType": "text"
+      }
+    },
+    "entries": [
+      {
+        "transactions": [
+          {
+            "accountName": "Sales",
+            "description": "Sales",
+            "discount": [
+              {
+                "accountName": "5percent",
+                "description": "sales",
+                "amount": -5,
+                "accountUniqueName": "5percent"
+              }
+            ],
+            "accountUniqueName": "sales",
+            "amount": 20
+          }
+        ],
+        "uniqueName": "qtp1498546843257"
+      }
+    ],
+    "taxes": [
+      {
+        "accountName": "CGST",
+        "errorMessage": "Calculated tax rate on entry/entries subTotal does not match with tax rate on the invoice date.",
+        "amount": 5,
+        "accountUniqueName": "cgst",
+        "visibleTaxRate": 0,
+        "taxRate": 0,
+        "hasError": true
+      }
+    ],
+    "totalAsWords": null,
+    "roundOff": null,
+    "balanceStatus": "EMPTY",
+    "sealPath": "",
+    "commonDiscounts": [],
+    "invoiceDetails": {
+      "invoiceNumber": "##########",
+      "invoiceDate": "27-06-2017",
+      "dueDate": null
+    },
+    "ledgerUniqueNames": [
+      "qtp1498546843257"
+    ],
+    "taxTotal": 5,
+    "subTotal": 15,
+    "grandTotal": 20,
+    "discountTotal": -5,
+    "gstDetails": {
+      "gstEntries": [
+        {
+          "uniqueName": "spd1498749971729",
+          "discounts": [],
+          "taxes": [
+            {
+              "accountName": "cgst",
+              "accountUniqueName": "cgst",
+              "amount": 5,
+              "rate": 5
+            }
+          ],
+          "transactions": [
+            {
+              "accountName": "Sales",
+              "accountUniqueName": "sales",
+              "amount": 100,
+              "hsnNumber": null,
+              "sacNumber": null,
+              "description": "Sales",
+              "quantity": null,
+              "rate": null
+            }
+          ],
+          "description": "sales",
+          "taxableValue": 100,
+          "entryTotal": 105
+        },
+        {
+          "uniqueName": "fzc1498750008070",
+          "discounts": [],
+          "taxes": [
+            {
+              "accountName": "sgst",
+              "accountUniqueName": "sgst",
+              "amount": 5,
+              "rate": 5
+            }
+          ],
+          "transactions": [
+            {
+              "accountName": "Sales",
+              "accountUniqueName": "sales",
+              "amount": 100,
+              "hsnNumber": null,
+              "sacNumber": null,
+              "description": "Sales",
+              "quantity": null,
+              "rate": null
+            }
+          ],
+          "description": "sales",
+          "taxableValue": 100,
+          "entryTotal": 105
+        },
+        {
+          "uniqueName": "y0x1498754324624",
+          "discounts": [],
+          "taxes": [
+            {
+              "accountName": "cgst",
+              "accountUniqueName": "cgst",
+              "amount": 5,
+              "rate": 5
+            },
+            {
+              "accountName": "sgst",
+              "accountUniqueName": "sgst",
+              "amount": 5,
+              "rate": 5
+            }
+          ],
+          "transactions": [
+            {
+              "accountName": "Sales",
+              "accountUniqueName": "sales",
+              "amount": 100,
+              "hsnNumber": null,
+              "sacNumber": null,
+              "description": "Sales",
+              "quantity": null,
+              "rate": null
+            }
+          ],
+          "description": "sales",
+          "taxableValue": 100,
+          "entryTotal": 110
+        }
+      ],
+      "companyGstDetails": {
+        "gstNumber": "230000000000000",
+        "address": [
+          "Indore"
+        ],
+        "stateCode": "23"
+      },
+      "accountGstBillingDetails": {
+        "gstNumber": "230000000000000",
+        "address": [
+          "Indore"
+        ],
+        "stateCode": "23",
+        "accountGstShippingDetails": {
+          "gstNumber": "230000000000000",
+          "address": [
+            "Indore"
+          ],
+          "stateCode": "23",
+          "gstTaxableValueTotal": 300,
+          "gstTaxesTotal": [
+            {
+              "uniqueName": "cgst",
+              "name": "cgst",
+              "total": 10
+            },
+            {
+              "uniqueName": "sgst",
+              "name": "sgst",
+              "total": 10
+            }
+          ],
+          "gstEntriesTotal": 320
+        }
+      }
+    }
+  }
+}
