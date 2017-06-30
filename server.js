@@ -289,7 +289,7 @@ var getSession = function(req, res, next){
 
 //serve index.html, this has to come after *ALL* routes are defined
 app.use('/', getSession, function(req, res){
-  if(req.url.startsWith("/tmp/") && req.url.endsWith(".pdf")) {
+  if(req.url.startsWith("/home/app-downloads/") && req.url.endsWith(".pdf")) {
     res.sendFile(req.url)
   } else if(req.session.name){
     res.sendFile(__dirname+ '/public/webapp/views/index.html')
