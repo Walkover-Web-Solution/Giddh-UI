@@ -1,0 +1,52 @@
+doctype strict
+head
+  style.
+        @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+        body{font-family: 'Open Sans', sans-serif; font-size:9px; font-weight:400;}
+        h3{font-weight:700; margin-bottom:20px; font-size:10px;}
+        p{margin-bottom:5px;}
+        table {width:100%;}
+        .invHd{display: inline-block; padding: 10px 16px; background: none; position: absolute; bottom: 20px; margin:0 auto; right:0;left: 0;}
+        table.table{font-size:8px; margin-top:0px;}
+        table.table td, table.table th{vertical-align:middle !important; text-align:right;}
+        table.table td:first-child, table.table th:first-child{text-align:left;}
+        table.table td small{color:#777}
+        .text-right {text-align:right;}
+        @page {size: A4 portrait;margin: 0;}
+section.container
+  .clearfix
+    .col-xs-12
+      .col-xs-12
+        table(style='width: 100%;')
+          tbody
+            tr
+              td
+                h3(style='color:#E14926 !important;') #{companyName}
+                table.with-pd
+                  tbody
+                    if(companyGstDetailsObject!='undefined' && companyGstDetailsObject!=''&&companyGstDetailsObject!=null)
+                      tr
+                        td(style='padding-right: 15px;')
+                          p
+                            b GSTIN
+                        td
+                          p #{companyGstDetailsObject.gstNumber}
+              td(style='text-align: right')
+                h3(style='color:#E14926 !important;') Total ₹ #{grandTotal}
+                table(style='float: right;')
+                  tbody
+                    tr
+                      td(style='padding-right: 15px;text-align: right;')
+                        p.text-right
+                          b Invoice Date
+                        p.text-right
+                          b Invoice No.
+                      td
+                        p #{invoiceDate}
+                        p #{invoiceNumber}
+  div(style='border-bottom:2px solid #E14926 !important; margin-top: 10px;')  
+  .text-center
+    if(showTaxes)
+      h3.invHd(style='background: #fff !important; color:#E14926 !important;') TAX INVOICE
+    else
+      h3.invHd(style='background: #fff !important; color:#E14926 !important;') INVOICE  

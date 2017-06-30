@@ -1,0 +1,49 @@
+head
+			style.
+				@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700');
+				body{font-family: 'Open Sans', sans-serif; font-size:9px; font-weight:400;}
+				h3{font-weight:700; margin-bottom:10px; font-size:10px;}
+				p{margin-bottom:5px;}
+				table {width:100%;}
+				.invHd{display: inline-block; padding: 10px 16px; background: #fff; position: relative; top: -20px; margin:0}
+				table.table{font-size:8px; margin-top:0px;}
+				table.table td, table.table th{vertical-align:middle !important; text-align:right;}
+				table.table td:first-child, table.table th:first-child{text-align:left;}
+				table.table td small{color:#777}
+				.signature{border-top:1px solid #ccc; margin-top:10px; padding-top:8px; width:260px; float:right}
+				.thankyou{border-bottom:2px solid #E14926; margin-bottom:5px}
+				.thankyou h3{margin-bottom:5px}
+				p {font-size: 10px;}
+				@page {size: A4 portrait;margin: 0;}
+			body
+				.clearfix.small(style='margin-top:0px')
+					.clearfix
+						.col-xs-12
+							.col-xs-12
+								table(style='width: 100%;')
+									tbody
+										tr
+											td
+												p
+													b *Tax to be paid on Reverse Charge
+												p
+													b Notes
+														each term in terms  
+															if(term!='')
+																if(term!=null)
+																	p #{term}.	
+										td(style='text-align: center;')
+											.signature
+												p
+													b #{companyName}
+												p
+													b.text-muted (Signature)
+			.clearfix
+				.col-sm-12
+					.col-xs-12.thankyou
+						h3(style='color: #E14926 !important;') Thank you for your business
+				.small.text-center
+					p
+						b #{companyName}
+					p
+						| #{companyAddressGst}

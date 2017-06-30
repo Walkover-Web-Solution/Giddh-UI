@@ -1,0 +1,11 @@
+-var et=0;
+                        each gstEntryTax in gstEntry.taxes
+                          -var t=0;
+                          each gstTax in gstTaxesForHeaders
+                            if(gstEntryTax.accountUniqueName == gstTax.uniqueName) 
+                              td
+                                | #{gstEntryTax.amount}
+                                br
+                                small @#{gstEntryTax.rate}
+                            else
+                              td -- 
