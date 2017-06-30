@@ -602,7 +602,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     condition = _.contains(checkInThis, tax.uniqueName)
 
   mc.removeAppliedtax = (tax, type) ->
-    idx = _.findLastIndex(mc.taxHierarchy.applicableTaxes, {uniqueName:tax.uniqueName})
+    idx = null
+    _.each mc.taxHierarchy.applicableTaxes, (tx, i) ->
+      if tx.uniqueName == tax.uniqueName
+        idx = i
     mc.taxHierarchy.applicableTaxes.splice(idx, 1)
     mc.applyTax(type)
 #end
@@ -1297,6 +1300,11 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
           gstList = _.without(gstList, item)
       mc.gstDetail = gstList
 # end
+    
+  mc.updateFlatAccountList = () ->
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+
+
 
   return mc
 

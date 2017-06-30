@@ -56,7 +56,7 @@
         <label>All Applied Taxes</label>
         <div class="tags">
           <span class="tax-bullet pr" style="padding-right:20px" ng-repeat="tax in mc.selectedItem.applicableTaxes" ng-if="mc.selectedItem.applicableTaxes.length > 0">          {{tax.name}}
-            <span class="glyphicon glyphicon-remove pa" style="right:2px;top:5px;"  ng-click="mc.removeAppliedtax(tax, 'group')"></span>
+            <span class="glyphicon glyphicon-remove pa" style="right:2px;top:5px;"  ng-click="mc.removeAppliedtax(tax, 'group')" ng-show="mc.showEditTaxSection"></span>
           </span>
           <small ng-if="mc.selectedItem.applicableTaxes.length < 1" class="grey">No taxes Applied</small>
         </div>

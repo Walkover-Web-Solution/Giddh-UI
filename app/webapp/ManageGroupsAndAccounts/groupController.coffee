@@ -1325,6 +1325,10 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
   $rootScope.$on 'catchBreadcumbs', (e, breadcrumbs) ->
     $scope.accountToShow = breadcrumbs
 
+
+  $scope.updateFlatAccountList = () ->
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+
   return
 
 #init angular app
