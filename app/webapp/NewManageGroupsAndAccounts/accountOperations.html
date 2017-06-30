@@ -1,4 +1,4 @@
-<div class="view_forms" id="Addaccount">
+<div class="view_forms" id="Addaccount"  style="padding-bottom: 200px;">
 
   <form class="horizontal-form" name="addAccountForm" novalidate autocomplete="off">
     <div class="form_bg pd2">
@@ -241,7 +241,7 @@
           
           <div class="col-xs-8 pdL0 merge_input">
               <div class="form-inline">
-                <ui-select multiple='true' ng-model="mc.toMerge.mergedAcc" theme="bootstrap">
+                <ui-select multiple='true' ng-model="mc.toMerge.mergedAcc" theme="bootstrap" >
                     <ui-select-match allow-clear="true" placeholder="Select Accounts" ui-lock-choice="$item.noRemove == true" reset-search-input="true" append-to-body="true">
                       {{$item.uniqueName}}
                     </ui-select-match >
@@ -279,7 +279,7 @@
               </ui-select-match >
               <ui-select-choices
                 ui-disable-choice="acc.uniqueName === mc.selectedAcc.uniqueName"
-                repeat="acc in fltAccntListPaginated | omit:acc.isFixed | filter: $select.search" refresh="mc.refreshFlatAccount($select.search)" minimum-input-length="3" position='auto' refresh-delay="1000">
+                repeat="acc in mc.mergeAccList | omit:acc.isFixed | filter: $select.search" refresh="mc.refreshFlatAccount($select.search)" minimum-input-length="3" position='auto' refresh-delay="1000">
                 <span>{{acc.name}} ({{acc.uniqueName}})</span>
               </ui-select-choices>
           </ui-select>

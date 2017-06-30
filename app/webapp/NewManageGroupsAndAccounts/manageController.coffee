@@ -98,7 +98,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
 
   mc.goToManageGroupsOpen = (res) ->
-    console.log "manage opened", res
+    # console.log "manage opened", res
 
   mc.goToManageGroupsClose = () ->
     mc.selectedItem = undefined
@@ -464,7 +464,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.selectedAcc = res.body
     mc.columns.length = mc.getCurrentColIndex+1
     mc.gstDetail = res.body.gstDetails
-    console.log mc.gstDetail
     if mc.selectedAcc.parentGroups[1].uniqueName == 'sundrycreditors' || mc.selectedAcc.parentGroups[1].uniqueName == 'sundrydebtors'
       if mc.gstDetail.length < 1
         mc.addNewGst()
@@ -483,8 +482,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.gstDetail.unshift(gstDetail)
 
   mc.deleteGst = (obj, i) ->
-    console.log obj
-    console.log i
     mc.gstDetail.splice(i,1)
 
   mc.getAccDtlFailure = (res) ->
@@ -784,7 +781,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
     accountService.updateAc(unqNamesObj, mc.selectedAcc).then(mc.updateAccountSuccess,
         mc.updateAccountFailure)
-    console.log mc.selectedAcc.gstDetail
 
 
   mc.updateAccountSuccess = (res) ->
@@ -1235,14 +1231,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.updateBreadCrumbs = true
 
   mc.getServiceCode = (hsn, sac)->
-    console.log hsn, sac
     if hsn != undefined
       mc.radioModel = "hsn"
     else
       mc.radioModel = "sac"
 
   mc.checkActiveServiceCode = (selected) ->
-    console.log selected
     if selected == 'hsn'
       mc.radioModel = 'hsn'
 
@@ -1260,7 +1254,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     }).then((response) ->
         mc.stateList = response.data.body
       , (response) -> 
-        console.log response
       )
     # $http.get(url).then(mc.onGetStateSuccess, mc.onGetStateFailure)
   mc.getState()
@@ -1298,7 +1291,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         if item.gstNumber == ""
           gstList = _.without(gstList, item)
       mc.gstDetail = gstList
-    console.log gstList
 # end
 
   return mc
