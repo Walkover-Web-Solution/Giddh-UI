@@ -379,10 +379,32 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       _.extend($scope.defTempData , $scope.tempDataDef)
     $scope.convertIntoOur()
 
+  # success gst template
+  $scope.editUpdateGstTemplateSuccess=(res)->
+    $scope.updatingTempData = false
+    toastr.success("Template updated successfully", "Success")
+    $scope.GstmodalInstance.close()
+
+
+  # edit update gst template
+  $scope.editUpdateGstTemplate=(stype, force)->
+    $scope.genMode = false
+    $scope.updatingTempData = true
+    dData = {}
+    data = {}
+    angular.copy($scope.defTempData, data)
+
+    # terms setting
+    if not(_.isEmpty(data.termsStr))
+      data.terms = data.termsStr.split('\n')
+    else
+      data.terms = []
+
+    if stype is 'save'
+      companyServices.updtInvTempData($rootScope.selectedCompany.uniqueName, data).then($scope.editUpdateGstTemplateSuccess, $scope.saveTempFailure)
+
+  # open gst template module
   $scope.viewGSTInvTemplate =(template, mode, data) ->
-    console.log(template)
-    console.log(mode)
-    console.log(data)
     $scope.defTempData = {}
     # set mode
     if mode isnt 'genprev'
@@ -390,7 +412,11 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.editMode = if mode is 'edit' then true else false
     _.extend($scope.defTempData , data)
 
-    $uibModal.open(
+    if $scope.defTempData.terms.length > 0
+      str = $scope.defTempData.terms.toString()
+      $scope.defTempData.termsStr = str.replace(RegExp(',', 'g'), '\n')
+    
+    $scope.GstmodalInstance = $uibModal.open(
       templateUrl: '/public/webapp/Invoice/gstPrevInvoiceTemp.html',
       size: "a4"
       backdrop: 'static'

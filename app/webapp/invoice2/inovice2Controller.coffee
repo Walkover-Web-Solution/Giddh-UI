@@ -195,14 +195,52 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
   $scope.prevAndGenInvSuccess=(res)->
     $scope.prevInProg = false
-    $scope.viewInvTemplate(res.body.template, 'edit', res.body)
+    if res.body.template.uniqueName.indexOf('gst') isnt -1
+      $scope.viewGSTInvTemplate(res.body.template, 'generate', res.body)
+    else
+      $scope.viewInvTemplate(res.body.template, 'edit', res.body)
+
+  # open gst template module
+  $scope.viewGSTInvTemplate =(template, mode, data) ->
+    $scope.defTempData = {}
+    _.extend($scope.defTempData , data)
+
+    # set mode
+    tempUrl = "gstGenTemp.html"
+    if mode is 'generate'
+      $scope.generateMode = true
+    if mode is 'genprev'
+      tempUrl = 'gstPreviewTemplate.html'
+    
+    $scope.modalInstance = $uibModal.open(
+      templateUrl: '/public/webapp/Invoice/' + tempUrl,
+      size: "a4"
+      backdrop: 'static'
+      scope: $scope
+    )
+    console.log($scope.defTempData.gstDetails, "after")
+
+  $scope.generateTemplate=()->
+    data = {}
+    dData = {}
+    angular.copy($scope.defTempData, data)
+    _.omit(data, 'termsStr')
+    obj=
+      compUname: $rootScope.selectedCompany.uniqueName
+      acntUname: sendForGenerate[0].account.uniqueName
+    dData=
+      uniqueNames: data.ledgerUniqueNames
+      validateTax: true
+      invoice: _.omit(data, 'ledgerUniqueNames')
+      updateAccountDetails: false
+
+    accountService.genInvoice(obj, dData).then($scope.genInvoiceSuccess, $scope.genInvoiceFailure)
 
 
   $scope.prevAndGenInvFailure=(res)->
     $scope.prevInProg = false
     $scope.entriesForInvoice = []
     toastr.error(res.data.message, res.data.status)
-#    $scope.resetAllCheckBoxes()
 
   $scope.getAllInvoices = () ->
     infoToSend = {
@@ -427,7 +465,10 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
   $scope.prevGenerateInvSuccess=(res)->
     $scope.genPrevMode = true
-    $scope.viewInvTemplate( res.body.template, 'genprev', res.body)
+    if res.body.template.uniqueName.indexOf('gst') isnt -1
+      $scope.viewGSTInvTemplate(res.body.template, 'genprev', res.body)
+    else
+      $scope.viewInvTemplate(res.body.template, 'genprev', res.body)
     $scope.tempType=
       uniqueName: res.body.template.uniqueName
 
