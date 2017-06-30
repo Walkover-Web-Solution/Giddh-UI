@@ -11,7 +11,7 @@ const phantom = require("phantom-html-to-pdf")
 var invoice = {};
 
 invoice.downloadInvoice = function(req, res) {
-  var invoiceObj = req.body;
+  var invoiceObj = req.body.invoice[0];
   //if(invoiceObj.template.uniqueName == "template_b") {
   // const bodyCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/test.pug') 
   // const footerCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/test_foot_b.pug') 
@@ -36,7 +36,7 @@ invoice.downloadInvoice = function(req, res) {
   
   companyName: invoiceObj.company.name,
   companyData: invoiceObj.company.data,
-
+  showTaxes: invoiceObj.gstDetails.showTaxes,
   grandTotal: invoiceObj.grandTotal,
     
   //company gst details
