@@ -752,7 +752,6 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     $scope.cntBnkData = res.body
     url = res.body.token_URL + '?token=' + res.body.token
     $scope.connectUrl = encodeURI(url)
-    console.log($scope.connectUrl)
     modalInstance = $uibModal.open(
       templateUrl:  '/public/webapp/Globals/modals/connectBankModal.html',
       size: "md",

@@ -126,8 +126,8 @@
           </div>
         </uib-tab>
         <!-- manage taxes -->
-        <uib-tab heading="{{tabs[1].title}}" active="tabs[1].active" id="taxes" select="getTax(); setTab(1)">
-          <div class="pd2">
+        <uib-tab heading="{{tabs[1].title}}" active="tabs[1].active" id="taxes" select="getTax(); setTab(1);showTaxTab=true">
+          <div class="pd2" ng-if="showTaxTab">
             <h3 class="fs16 mrB1">Create New Tax</h3>
             <div class="form-wrapper" style="max-width:460px">
               <form name="createTax"  novalidate >
@@ -462,8 +462,8 @@
         </uib-tab>
         <!-- end of yodlee tabs -->
 
-        <uib-tab heading="{{tabs[4].title}}" active="tabs[4].active" select="getRazorPayDetails(); setTab(4)">
-          <div class="col-xs-3 pd3" cover-page>
+        <uib-tab heading="{{tabs[4].title}}" active="tabs[4].active" select="getRazorPayDetails(); setTab(4);showRazorPayTab=true">
+          <div class="col-xs-3 pd3" cover-page ng-if="showRazorPayTab">
             <div class="row pd1">
               <label>Razorpay details :</label>
             </div>
@@ -689,8 +689,8 @@
         </uib-tab>
 
         <!--shared list-->
-        <uib-tab ng-if="canManageCompany" heading="{{tabs[6].title}}" active="tabs[6].active" id="permission" select="getSharedList()">
-          <div class="pd2" ng-controller="companyController">
+        <uib-tab ng-if="canManageCompany" heading="{{tabs[6].title}}" active="tabs[6].active" id="permission" select="getSharedList();showPermissionTab = true">
+          <div class="pd2" ng-controller="companyController" ng-if="showPermissionTab">
             <div class="greyBox mrB2">
               <form name="addShareEmailForm" novalidate class="form-inline">
                 <div class="form-group">

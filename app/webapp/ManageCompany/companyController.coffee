@@ -232,9 +232,9 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   #   toastr.error(res.data.message, res.data.status)
 
   $scope.getUserDetails = ->
+    $rootScope.basicInfo = localStorageService.get("_userDetails")
     if _.isUndefined($rootScope.basicInfo.uniqueName)
-      $rootScope.basicInfo = localStorageService.get("_userDetails")
-    userServices.get($rootScope.basicInfo.uniqueName).then($scope.getUserDetailSuccess, $scope.getUserDetailFailure)
+      userServices.get($rootScope.basicInfo.uniqueName).then($scope.getUserDetailSuccess, $scope.getUserDetailFailure)
 
   #Get user details
   $scope.getUserDetailSuccess = (res) ->
@@ -1745,18 +1745,18 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     }
     $scope.gstDetail.unshift(gstDetail)
 
-  $scope.getState = () ->
-    # url = 'http://apitest.giddh.com/states'
-    $http({
-      method: 'GET',
-      url: 'http://apitest.giddh.com/states'
-    }).then((response) ->
-        $scope.stateList = response.data.body
-      , (response) -> 
-      )
-    # $http.get(url).then(mc.onGetStateSuccess, mc.onGetStateFailure)
+  # $scope.getState = () ->
+  #   # url = 'http://apitest.giddh.com/states'
+  #   $http({
+  #     method: 'GET',
+  #     url: 'http://apitest.giddh.com/states'
+  #   }).then((response) ->
+  #       $scope.stateList = response.data.body
+  #     , (response) -> 
+  #     )
+  #   # $http.get(url).then(mc.onGetStateSuccess, mc.onGetStateFailure)
   
-  $scope.getState()
+  # $scope.getState()
 
   $scope.getStateCode = (val, item) ->
     if val.length >= 2

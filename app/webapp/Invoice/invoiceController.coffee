@@ -995,7 +995,7 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
 #    $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,['sundry_debtors','revenue_from_operations'])
     # when company is changed, redirect to manage company page
-    if changeData.type == 'CHANGE'
-      $scope.redirectToState('company.content.manage')
+    # if changeData.type == 'CHANGE'
+    #   $scope.redirectToState('company.content.manage')
 
 giddh.webApp.controller 'invoiceController', invoiceController
