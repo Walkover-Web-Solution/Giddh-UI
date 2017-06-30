@@ -130,8 +130,22 @@
           <div class="pd2">
             <h3 class="fs16 mrB1">Create New Tax</h3>
             <div class="form-wrapper" style="max-width:460px">
-              <form name="createTax"  novalidate >
-
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="form-group">
+                    <ui-select ng-model="typeOfTax" theme="bootstrap" on-select="changeTypeOfTax($select.selected)">
+                      <ui-select-match placeholder="Select type of TAX to add">
+                        <span>{{$select.selected}}</span>
+                      </ui-select-match >
+                      <ui-select-choices
+                              repeat="val in typeOfTaxList | limitTo : 5 | filter: $select.search">
+                        <span ng-bind-html="val"></span>
+                      </ui-select-choices>
+                    </ui-select>
+                  </div>
+                </div>
+              </div>
+              <form name="createTax" novalidate>
                 <div class="row">
                   <div class="col-xs-6">
                     <div class="form-group">
@@ -144,7 +158,6 @@
                     </div>
                   </div>
                 </div>
-
                 <div class="row">
                   <div class="col-xs-12">
                     <div class="form-group">
@@ -190,7 +203,7 @@
                     </div>
                   </div>
                 </div>
-                <div class="row mrB1">
+                <div class="row mrB1" ng-if="!typeOfTaxGst">
                   <div class="col-xs-6">
                     <div class="form-group">
                       <label class="mrB">Tax Duration:</label>

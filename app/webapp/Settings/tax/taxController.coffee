@@ -2,6 +2,7 @@
 
 taxController = ($scope, $rootScope, modalService, companyServices, toastr) ->
 # get taxes
+
   $scope.getTax=()->
     $scope.taxList = []
     if $rootScope.canUpdate and $rootScope.canDelete
