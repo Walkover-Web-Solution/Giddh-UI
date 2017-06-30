@@ -176,9 +176,12 @@
       </div>
       
       <div class="form-group clearfix mrT1 mrB">
-        <label>All Applied Taxes</label>
+        <label>All Applied Taxes1</label>
         <div class="tags clearfix">
-          <span class="tax-bullet" ng-repeat="tax in mc.selectedAcc.applicableTaxes" ng-if="mc.selectedAcc.applicableTaxes.length > 0">{{tax.name}}</span>
+          <span class="tax-bullet pr" style="padding-right:20px" ng-repeat="tax in mc.selectedAcc.applicableTaxes" ng-if="mc.selectedAcc.applicableTaxes.length > 0">
+            {{tax.name}}
+            <span class="glyphicon glyphicon-remove pa" style="right:2px;top:5px;" ng-click="mc.removeAppliedtax(tax, 'account')"></span>
+          </span>
           <small ng-if="mc.selectedAcc.applicableTaxes.length < 1" class="grey">No taxes Applied</small>
         </div>
         <hr>

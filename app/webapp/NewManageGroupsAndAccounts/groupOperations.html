@@ -55,7 +55,9 @@
       <div class="form-group clearfix mrT2 mrB">
         <label>All Applied Taxes</label>
         <div class="tags">
-          <span class="tax-bullet" ng-repeat="tax in mc.selectedItem.applicableTaxes" ng-if="mc.selectedItem.applicableTaxes.length > 0">{{tax.name}}</span>
+          <span class="tax-bullet pr" style="padding-right:20px" ng-repeat="tax in mc.selectedItem.applicableTaxes" ng-if="mc.selectedItem.applicableTaxes.length > 0">          {{tax.name}}
+            <span class="glyphicon glyphicon-remove pa" style="right:2px;top:5px;"  ng-click="mc.removeAppliedtax(tax, 'group')"></span>
+          </span>
           <small ng-if="mc.selectedItem.applicableTaxes.length < 1" class="grey">No taxes Applied</small>
         </div>
       </div>
@@ -72,12 +74,12 @@
         <div class="form-group clearfix mrT2 mrB" id="App_taxes">
           <label>Applicable Taxes</label>
           <ui-select multiple ng-model="mc.taxHierarchy.applicableTaxes" theme="bootstrap">
-          <ui-select-match placeholder="Select Taxes">
-          <span>{{$item.name}}</span>
-          </ui-select-match >
-          <ui-select-choices repeat="tax in mc.taxList| filter: $select.search | omit: mc.alreadyAppliedTaxes">
-          <span class="tax_tag" ng-bind="tax.name"></span>
-          </ui-select-choices>
+            <ui-select-match placeholder="Select Taxes">
+              <span>{{$item.name}}</span>
+            </ui-select-match >
+            <ui-select-choices repeat="tax in mc.taxList| filter: $select.search | omit: mc.alreadyAppliedTaxes">
+              <span class="tax_tag" ng-bind="tax.name"></span>
+            </ui-select-choices>
           </ui-select>
         </div>
         <button class="btn btn-success mrT1" ng-click="mc.applyTax('group')" ng-if="mc.showEditTaxSection"> Save</button>

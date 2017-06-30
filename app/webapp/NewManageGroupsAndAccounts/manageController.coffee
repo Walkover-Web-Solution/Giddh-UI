@@ -600,6 +600,11 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.applicableTaxes.push(mc.inheritTax)
     checkInThis = _.pluck(_.flatten(mc.applicableTaxes),'uniqueName')
     condition = _.contains(checkInThis, tax.uniqueName)
+
+  mc.removeAppliedtax = (tax, type) ->
+    idx = _.findLastIndex(mc.taxHierarchy.applicableTaxes, {uniqueName:tax.uniqueName})
+    mc.taxHierarchy.applicableTaxes.splice(idx, 1)
+    mc.applyTax(type)
 #end
 
 # move group
