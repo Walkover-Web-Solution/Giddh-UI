@@ -334,7 +334,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $rootScope.$stateParams.invId = acData.uniqueName
     $scope.entriesForInvoice = []
     # call invoice load func
-    $scope.getTemplates()
     $scope.invoiceLoadDone = true
 
 
@@ -380,6 +379,24 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       _.extend($scope.defTempData , $scope.tempDataDef)
     $scope.convertIntoOur()
 
+  $scope.viewGSTInvTemplate =(template, mode, data) ->
+    console.log(template)
+    console.log(mode)
+    console.log(data)
+    $scope.defTempData = {}
+    # set mode
+    if mode isnt 'genprev'
+      $scope.genPrevMode = false
+    $scope.editMode = if mode is 'edit' then true else false
+    _.extend($scope.defTempData , data)
+
+    $uibModal.open(
+      templateUrl: '/public/webapp/Invoice/gstPrevInvoiceTemp.html',
+      size: "a4"
+      backdrop: 'static'
+      scope: $scope
+    )
+
   # view template with sample data
   $scope.viewInvTemplate =(template, mode, data) ->
     showPopUp = true
@@ -400,20 +417,12 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     _.extend($scope.defTempData , data)
     $scope.defTempData.signatureType = $scope.tempSet.signatureType
     showPopUp = $scope.convertIntoOur()
-    
-    if($scope.templateClass.indexOf('gst') != -1) 
-      $scope.defTempData = $http.get('/public/webapp/Invoice/gstTempData.json').then((res) -> 
-        console.log(res.data.body)
-        $scope.defTempData = res.data.body
-      )
-      $scope.templateName = 'gstPrevInvoiceTemp.html'
-    else
-      $scope.templateName =  'prevInvoiceTemp.html'
-    
+  
+
     # open dialog
     if(showPopUp)      
       $scope.modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/Invoice/' + $scope.templateName
+        templateUrl: '/public/webapp/Invoice/prevInvoiceTemp.html',
         size: "a4"
         backdrop: 'static'
         scope: $scope
@@ -421,7 +430,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $scope.modalInstance.result.then($scope.showInvoiceSuccess,$scope.showInvoiceFailure)
 
   $scope.showInvoiceSuccess = () ->
-    console.log("invoice opened")
 
   $scope.showInvoiceFailure = () ->
     $scope.editGenInvoice = false

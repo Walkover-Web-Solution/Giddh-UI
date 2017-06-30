@@ -25,25 +25,33 @@
       </div>
     </div>
     <div class="pdT2">
-      <div class="template_list" ng-repeat="value in templateList">
-        <a href="javascript:void(0)" class="thumbnail" ng-class="value.isDefault? 'active': ''">
+      <div class="template_list" ng-repeat="template in templateList">
+        <a href="javascript:void(0)" class="thumbnail" ng-class="template.isDefault? 'active': ''">
           <div class="caption">
           <div class="templateInfo">
-            <h3 class="lead templateName alC" ng-bind-html="value.name"></h3>
+            <h3 class="lead templateName alC" ng-bind-html="template.name"></h3>
 
             <div class="mrT1 alC switch_state">
-              <div ng-click="setDefTemp(value)" class="switch_div">
-                <switch name="setAsDefault" on="On" off="Off" class="wide" ng-model="value.isDefault"></switch>
+              <div ng-click="setDefTemp(template)" class="switch_div">
+                <switch name="setAsDefault" on="On" off="Off" class="wide" ng-model="template.isDefault"></switch>
               </div>
-              <label ng-if="value.isDefault" class="mrT text-left">Default Selected</label>
-              <label ng-if="!value.isDefault" class="mrT">Set as default</label>
+              <label ng-if="template.isDefault" class="mrT text-left">Default Selected</label>
+              <label ng-if="!template.isDefault" class="mrT">Set as default</label>
             </div>
             </div>
 
-              <div class="template_action">
-                <button ng-click="viewInvTemplate( value, 'sample', tempDataDef)" class="btn btn-default mrB1">Sample</button>
-                <button ng-disabled="!value.isDefault" ng-click="viewInvTemplate(value, 'edit', templateData)" class="btn btn-default">Edit</button>
+              <!-- non-gst templates -->
+              <div class="template_action" ng-if="template.uniqueName.indexOf('gst') === -1">
+                <button ng-click="viewInvTemplate( template, 'sample', tempDataDef)" class="btn btn-default mrB1">Sample</button>
+                <button ng-disabled="!template.isDefault" ng-click="viewInvTemplate(template, 'edit', templateData)" class="btn btn-default">Edit</button>
               </div>
+
+              <!-- gst templates action-->
+              <div class="template_action" ng-if="template.uniqueName.indexOf('gst') !== -1">
+                <button ng-click="viewGSTInvTemplate( template, 'sample', tempDataDef)" class="btn btn-default mrB1">Sample</button>
+                <button ng-disabled="!template.isDefault" ng-click="viewGSTInvTemplate(template, 'edit', templateData)" class="btn btn-default">Edit</button>
+              </div>
+
           </div>
         </a>
       </div>
