@@ -149,9 +149,9 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       toastr.error("Select company first.", "Error")
     else
       # with accounts, group data
-      $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
+      # $scope.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName)
 #      $scope.getSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,'sundry_debtors')
-      $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,[$rootScope.groupName.sundryDebtors,$rootScope.groupName.revenueFromOperations,$rootScope.groupName.otherIncome])
+      # $scope.getMultipleSubgroupsWithAccounts($rootScope.selectedCompany.uniqueName,[$rootScope.groupName.sundryDebtors,$rootScope.groupName.revenueFromOperations,$rootScope.groupName.otherIncome])
       groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then($scope.makeAccountsList, $scope.makeAccountsListFailure)
 
   $scope.makeAccountsList = (res) ->
@@ -978,15 +978,15 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
   ,1000)
 
   # init func on dom ready
-  $timeout(->
-    $scope.getTemplates()
-    # get accounts
-    $scope.getAllGroupsWithAcnt()
+  # $timeout(->
+  #   # $scope.getTemplates()
+  #   # get accounts
+  #   # $scope.getAllGroupsWithAcnt()
 
-    # group list through api
-    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+  #   # group list through api
+  #   # $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
 
-  ,10)
+  # ,10)
 
   $scope.redirectToState = (state) ->
     $state.go(state)

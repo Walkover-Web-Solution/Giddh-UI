@@ -2612,6 +2612,7 @@ i.cls-alert {
 /*make un-responsive*/
 body.unresponsive {
   padding-top: 54px;
+  overflow-y:auto !important;
 }
 
 .navbar-right.navbar-nav > li > a {

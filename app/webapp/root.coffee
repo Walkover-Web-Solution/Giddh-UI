@@ -170,15 +170,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
       }
     }
   )
-  .state('company.content.tbpl',
-    url: '/trial-balance-and-profit-loss',
-    views:{
-      'rightPanel':{
-        templateUrl: appendThis+'/public/webapp/Tbpl/tbpl.html'
-        controller: 'tbplController'
-      }
-    }
-  )
   .state('company.content.ledgerContent',
     url: '/ledger/:unqName'
     views:{
@@ -188,6 +179,11 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
         controllerAs: 'ledgerCtrl'
       }
     }
+  )
+  .state('tbpl',
+    url: '/trial-balance-and-profit-loss',
+    templateUrl: appendThis+'/public/webapp/Tbpl/tbpl.html'
+    controller: 'tbplController'
   )
   # .state('company.content.ledgerContent1',
   #   url: '/ledger-paginated/:unqName'
