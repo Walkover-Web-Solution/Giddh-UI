@@ -53,7 +53,6 @@ h1 {
 
 .txtAreaWrap textarea.form-control {
   overflow: hidden;
-  /*height: 1.2in*/
 }
 
 #one,
@@ -111,7 +110,6 @@ h1 {
 }
 
 .modal-dialog.modal-a4 {
-  /*margin: 0;*/
   width: 8.5in;
 }
 
@@ -160,6 +158,7 @@ textarea {
 textarea:disabled,
 input:disabled {
   background: #fff !important;
+  border: none !important;
 }
 
 .invHd {
@@ -205,11 +204,11 @@ h3 {
       <aside class="form-inline">
         
         <div class="form-group mrR">
-          <button ng-disabled="editGenInvoice" ng-click="downloadInv()" class="btn btn-primary">Download</button>
+          <button ng-click="downloadInv()" class="btn btn-primary">Download</button>
         </div>
         
         <div class="form-group mrR" uib-dropdown auto-close="outsideClick">
-          <button ng-disabled="editGenInvoice" id="button-template-url" type="button" class="btn btn-primary" uib-dropdown-toggle>Send Email</button>
+          <button id="button-template-url" type="button" class="btn btn-primary" uib-dropdown-toggle>Send Email</button>
           <ul class="dropdown-menu" uib-dropdown-menu template-url="invDropdown.html" aria-labelledby="button-template-url">
           </ul>
         </div>
@@ -223,7 +222,6 @@ h3 {
 
 <div class="modal-body">
   <div class="invoiceContainer">
-    <fieldset ng-disabled="true">
       <div class="row">
         <div class="col-xs-12">
           <table style="width: 100%;">
@@ -238,9 +236,7 @@ h3 {
                           <p><b>GSTIN</b></p>
                         </td>
                         <td>
-                          <select class="form-control">
-                            <option>{{defTempData.gstDetails.companyGstDetails.gstNumber}}</option>
-                          </select>
+                          {{defTempData.gstDetails.companyGstDetails.gstNumber}}
                         </td>
                       </tr>
                     </tbody>
@@ -268,159 +264,147 @@ h3 {
           </table>
         </div>
       </div>
-      <div style="border-bottom:2px solid #E14926 !important; margin-top: 10px;">&nbsp;</div>
-      <div class="text-center">
-        <h3 class="invHd" style="background: #fff !important; color:#E14926 !important;">TAX</h3>
-      </div>
-      <div class="row">
-        <div class="col-xs-12">
-          <table style="width: 100%">
-            <tbody>
-              <tr>
-                <td style="padding-right: 15px;">
-                  <p><b>Customer Name</b></p>
-                  <p>{{defTempData.account.name}}</p>
-                  <p>{{defTempData.account.mobileNumber}}</p>
-                  <p>{{defTempData.account.email}}</p>
-                  <br />
-                  <p><b>Due Date</b></p>
-                  <p>{{defTempData.invoiceDetails.dueDate}}</p>
-                </td>
-                <td style="padding-right: 15px;">
-                  <p><b>Billing Address</b></p>
-                  <textarea class="form-control" ng-model="defTempData.gstDetails.accountGstBillingDetails.address[0]" placeholder="Address and other details" rows="5"></textarea>
-                  <br />
-                  <b>GSTIN</b>
-                  <select class="form-control">
-                    <option>{{defTempData.gstDetails.accountGstBillingDetails.gstNumber}}</option>
-                  </select>
-                </td>
-                <td>
-                  <p><b>Shipping Address</b></p>
-                  <textarea class="form-control" ng-model="defTempData.gstDetails.accountGstShippingDetails.address[0]" placeholder="Address and other details" rows="5"></textarea>
-                  <br />
-                  <b>GSTIN</b>
-                  <select class="form-control">
-                    <option>{{defTempData.gstDetails.accountGstShippingDetails.gstNumber}}</option>
-                  </select>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
 
-      <table class="table">
-        <thead style="background: #f5f5f5;">
-          <tr>
-            <th>Item</th>
-            <th>HSN/SAC</th>
-            <th>Qty.</th>
-            <th class="text-right">Rate/
-              <br />Item(₹)</th>
-            <th class="text-right">Discount/
-              <br />Item(₹)</th>
-            <th class="text-right">Taxable
-              <br />Value(₹)</th>
-            <th class="text-right">SGST
-              <br />₹</th>
-            <th class="text-right">CGST
-              <br />₹</th>
-            <th class="text-right">CESS
-              <br />₹</th>
-            <th class="text-right">Total
-              <br />₹</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="item in defTempData.gstDetails.gstEntries track by $index">
-            <td>{{item.description}}</td>
-            <td>123456</td>
-            <td>10 No.</td>
-            <td>1000.00</td>
-            <td class="text-right">300.00</td>
-            <td class="text-right">9700.00</td>
-            <td class="text-right">970.00
-              <br /><small>@10%</small></td>
-            <td class="text-right">970.00
-              <br /><small>@10%</small></td>
-            <td class="text-right">00.00
-              <br /><small>@0%</small></td>
-            <td class="text-right">11000640.00</td>
-          </tr>
-        </tbody>
-        <tfoot style="background: #f5f5f5;">
-          <tr>
-            <th colspan="5"></th>
-            <th>30100.00</th>
-            <th>2960.00</th>
-            <th>2960.00</th>
-            <th>00.00</th>
-            <th>36020.00</th>
-          </tr>
-        </tfoot>
-      </table>
-      <div class="clearfix text-right">
-        <table style="width: 100%;">
+    <div style="border-bottom:2px solid #E14926 !important; margin-top: 10px;">&nbsp;</div>
+    <div class="text-center">
+      <h3 class="invHd" style="background: #fff !important; color:#E14926 !important;">TAX INVOICE</h3>
+    </div>
+
+    <div class="row">
+      <div class="col-xs-12">
+        <table style="width: 100%">
           <tbody>
             <tr>
-              <td>
-                <p><b>Taxable Amount</b></p>
-                <p><b>Total Tax*</b></p>
-                <p><b>Invoice Total</b></p>
-                <p><b>Invoice Total (In words)</b></p>
+              <td style="padding-right: 15px;">
+                <p><b>Customer Name</b></p>
+                <p>{{defTempData.account.name}}</p>
+                <p>{{defTempData.account.mobileNumber}}</p>
+                <p>{{defTempData.account.email}}</p>
+                <br />
+                <p><b>Due Date</b></p>
+                <p>{{defTempData.invoiceDetails.dueDate}}</p>
+              </td>
+              <td style="padding-right: 15px;">
+                <p><b>Billing Address</b></p>
+                <textarea disabled="true" class="form-control" ng-model="defTempData.gstDetails.accountGstBillingDetails.address[0]" placeholder="Address and other details" rows="5"></textarea>
+                <br />
+                <b>GSTIN</b><br />
+                {{defTempData.gstDetails.accountGstBillingDetails.gstNumber}}
               </td>
               <td>
-                <p><b>₹30100.00</b></p>
-                <p><b>₹5920.00</b></p>
-                <p><b>₹36020.00</b></p>
-                <p><b>Thirty Six Thousand Twenty Only</b></p>
+                <p><b>Shipping Address</b></p>
+                <textarea disabled="true" class="form-control" ng-model="defTempData.gstDetails.accountGstShippingDetails.address[0]" placeholder="Address and other details" rows="5"></textarea>
+                <br />
+                <b>GSTIN</b><br />
+                {{defTempData.gstDetails.accountGstShippingDetails.gstNumber}}
               </td>
             </tr>
           </tbody>
         </table>
       </div>
-    </fieldset>
+    </div>
+
+    <table class="table">
+      <thead style="background: #f5f5f5;">
+        <tr>
+          <th>Item</th>
+          <th ng-if="defTempData.gstDetails.showHsn || defTempData.gstDetails.showSac">HSN/SAC</th>
+          <th ng-if="defTempData.gstDetails.showQty">Qty.</th>
+          <th ng-if="defTempData.gstDetails.showRate" class="text-right">Rate/
+            <br />Item(₹)</th>
+          <th ng-if="defTempData.gstDetails.showDiscount" class="text-right">Discount/
+            <br />Item(₹)</th>
+          <th class="text-right" ng-if="defTempData.gstDetails.showTaxes">Taxable
+            <br />Value(₹)</th>
+          <th class="text-right" ng-repeat="tax in defTempData.gstDetails.gstTaxesTotal track by $index">{{tax.name}}</th>
+          <th class="text-right">Total
+            <br />₹</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="item in defTempData.gstDetails.gstEntries track by $index">
+          <td>{{item.transactions[0].description}}</td>
+          <td class="text-right" ng-if="item.transactions[0].hsnNumber != null">{{item.transactions[0].hsnNumber}}</td>
+          <td class="text-right" ng-if="item.transactions[0].sacNumber != null">{{item.transactions[0].sacNumber}}</td>
+          <td ng-if="item.transactions[0].quantity != null">{{item.transactions[0].quantity}}</td>
+          <td class="text-right" ng-if="item.transactions[0].rate != null">
+            {{item.transactions[0].rate | number : 2}}
+          </td>
+          <td class="text-right" ng-if="item.discounts.length > 0">{{item.discounts[0].amount | number : 2}}</td>
+          <td class="text-right">{{item.taxableValue | number : 2}}</td>
+          <td class="text-right" ng-repeat="tax in item.taxes track by $index">{{tax.amount | number : 2}}<br /><small>@{{tax.rate}}%</small></td>
+          <td class="text-right">{{item.entryTotal | number : 2}}</td>
+        </tr>
+      </tbody>
+      <tfoot style="background: #f5f5f5;">
+        <tr>
+          <th>&nbsp;</th>
+          <th ng-if="defTempData.gstDetails.showHsn || defTempData.gstDetails.showSac">&nbsp;</th>
+          <th ng-if="defTempData.gstDetails.showQty">&nbsp;</th>
+          <th ng-if="defTempData.gstDetails.showRate" class="text-right">&nbsp;</th>
+          <th ng-if="defTempData.gstDetails.showDiscount" class="text-right">&nbsp;</th>
+          <th class="text-right" ng-if="defTempData.gstDetails.showTaxes">{{defTempData.gstDetails.gstTaxableValueTotal | number : 2}}</th>
+          <th class="text-right" ng-repeat="tax in defTempData.gstDetails.gstTaxesTotal track by $index">{{tax.total | number : 2}}</th>
+          <th class="text-right">{{defTempData.gstDetails.gstEntriesTotal | number : 2}}</th>
+        </tr>
+      </tfoot>
+    </table>
     
-    <div class="clearfix small" style="margin-top:60px">
-      <div class="clearfix">
-        <div class="col-xs-12">
-          <div class="col-xs-12">
-            <table style="width: 100%;">
-              <tbody>
-                <tr>
-                  <td>
-                    <p><b>Notes</b></p>
-                    <textarea ng-if="editMode" style="width:100%;height:100%" ng-model="defTempData.termsStr"></textarea>
-                    <p ng-if="!editMode" ng-repeat="term in defTempData.terms track by $index">{{ term }}</p>
-                    <br>
-                    <p><b>*Tax to be paid on Reverse Charge</b></p>
-                  </td>
-                  <td style="text-align: center;">
-                    <div class="signature">
-                      <p><b>{{defTempData.company.name}}</b></p>
-                      <p><b class="text-muted">(Signature)</b></p>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+    <div class="clearfix text-right">
+      <table style="width: 100%;">
+        <tbody>
+          <tr>
+            <td>
+              <p><b>Taxable Amount</b></p>
+              <p><b>Total Tax*</b></p>
+              <p><b>Invoice Total</b></p>
+              <p><b>Invoice Total (In words)</b></p>
+            </td>
+            <td>
+              <p><b>₹ {{defTempData.gstDetails.gstTaxableValueTotal | number : 2}}</b></p>
+              <p><b>₹ {{defTempData.taxTotal | number : 2}}</b></p>
+              <p><b>₹ {{defTempData.grandTotal | number : 2}}</b></p>
+              <p><b>{{defTempData.grandTotal | numtowords}}</b></p>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    
+    <div class="row small" style="margin-top:60px">
+      <div class="col-xs-12">
+        <table style="width: 100%;">
+          <tbody>
+            <tr>
+              <td>
+                <p><b>Notes</b></p>
+                <p ng-repeat="term in defTempData.terms track by $index">{{term}}</p>
+                <br>
+                <p><b>*Tax to be paid on Reverse Charge</b></p>
+              </td>
+              <td style="text-align: center;">
+                <div class="signature">
+                  <p><b>{{defTempData.company.name}}</b></p>
+                  <p><b class="text-muted">(Signature)</b></p>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
-    <div class="clearfix">
-      <div class="col-sm-12">
-        <div class="col-xs-12 thankyou">
-          <h3 style="color: #E14926 !important;">Thank you for your business</h3>
-        </div>
+
+    <div class="row">
+      <div class="col-xs-12 thankyou">
+        <h3 style="color: #E14926 !important;">Thank you for your business</h3>
       </div>
-      <div class="small text-center">
+      <div class="small text-center col-xs-12">
         <p><b>{{defTempData.company.name}}</b></p>
-        <p>{{defTempData.gstDetails.companyGstDetails.address[0]}}</p>
+        <p ng-repeat="address in defTempData.company.data track by $index">{{ address }}</p>
       </div>
     </div>
-  </section>
+  
     
     <!-- end of preview mode -->
   </div>

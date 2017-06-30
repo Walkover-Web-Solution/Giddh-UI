@@ -218,7 +218,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       backdrop: 'static'
       scope: $scope
     )
-    console.log($scope.defTempData.gstDetails, "after")
 
   $scope.generateTemplate=()->
     data = {}
@@ -275,7 +274,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.invoices = {}
     _.each(res.body.results, (invoice) ->
       dateDivi = invoice.invoiceDate.split('-')
-#      console.log(invoice.invoiceDate, moment(new Date(dateDivi[2], dateDivi[1], dateDivi[0])).format('DD-MM-YYYY'))
       invoice.invoiceDateObj = new Date(dateDivi[2], dateDivi[1], dateDivi[0])
       temp = invoice.invoiceNumber.split("-")
       if temp[0] != "x"
@@ -497,7 +495,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     angular.copy(data, $scope.defTempData)
     $scope.defTempData.signatureType = $scope.tempSet.signatureType
     angular.copy($scope.defTempData, $scope.selectedInvoiceDetails)
-    #console.log $scope.selectedInvoice
     showPopUp = $scope.convertIntoOur()
     
     # open dialog
@@ -511,7 +508,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
       $scope.modalInstance.result.then($scope.showInvoiceSuccess,$scope.showInvoiceFailure)
 
   $scope.showInvoiceSuccess = () ->
-    console.log("invoice opened")
+    
 
   $scope.showInvoiceFailure = () ->
     $scope.editGenInvoice = false
