@@ -1261,7 +1261,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       url: 'http://apitest.giddh.com/states'
     }).then((response) ->
         mc.stateList = response.data.body
-      , (response) -> 
+      , (response) ->
       )
     # $http.get(url).then(mc.onGetStateSuccess, mc.onGetStateFailure)
   mc.getState()
