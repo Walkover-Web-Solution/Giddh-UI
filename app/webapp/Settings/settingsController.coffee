@@ -191,6 +191,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
 
 
   $scope.changeTypeOfTax = (selectedItem) ->
+    $scope.typeOfTax = selectedItem
     if selectedItem == 'Other'
       $scope.typeOfTaxGst = false
     else
