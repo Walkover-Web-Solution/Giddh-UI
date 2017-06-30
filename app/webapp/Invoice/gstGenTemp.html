@@ -1,0 +1,221 @@
+<style type="text/css">
+@page {
+  size: 8.5in 11in;
+  margin: 2cm
+}
+
+@page :left {
+  margin-left: 3cm;
+}
+
+@page :right {
+  margin-left: 4cm;
+}
+
+h1 {
+  page-break-before: always;
+}
+
+
+/*end of print css*/
+
+.invoiceContainer .row {
+  margin-bottom: 20px;
+}
+
+.previewMode .form-control {
+  border: 0;
+  padding-left: 0;
+  padding-right: 0;
+  box-shadow: none;
+}
+
+.previewMode .txtAreaWrap .form-control {
+  padding: 0
+}
+
+.previewMode .txtAreaWrap input.form-control {
+  height: 24px
+}
+
+.previewMode #two .form-control {
+  padding: 0;
+  height: 20px;
+}
+
+.previewMode .form-control.wid80 {
+  width: 80px
+}
+
+.editMode .form-control.wid80 {
+  width: 100px
+}
+
+.txtAreaWrap textarea.form-control {
+  overflow: hidden;
+  /*height: 1.2in*/
+}
+
+#one,
+#two {
+  height: .6in;
+  overflow: hidden;
+}
+
+#three,
+#four {
+  height: 2in;
+  overflow: auto !important;
+}
+
+#five {
+  height: 2.5in;
+}
+
+#six,
+#seven {
+  height: 1.2in;
+}
+
+#eight {
+  height: 2in;
+}
+
+#two label {
+  display: block;
+  text-align: left;
+}
+
+.form-inline .form-control.smlInp {
+  width: 100px;
+  padding: 6px 0 6px 4px;
+}
+
+.form-inline input[disabled].form-control.smlInp {
+  width: 100px;
+  padding: 0;
+  background-color: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.template_b #three,
+#four {
+  height: 2.5in;
+  overflow: visible;
+}
+
+.vcenter {
+  display: block;
+  vertical-align: middle;
+}
+
+.modal-dialog.modal-a4 {
+  /*margin: 0;*/
+  width: 8.5in;
+}
+
+.modal-dialog.modal-a4 .modal-body {
+  min-height: 11.5in
+}
+
+.modal-dialog.modal-a4 .modal-content {
+  border-radius: 0
+}
+
+.modal-dialog.modal-a4 .modal-header span {
+  position: absolute;
+  left: 15px;
+}
+
+hr {
+  margin: 10px 0 20px;
+}
+
+fieldset[disabled] .form-control {
+  cursor: default;
+  background-color: white
+}
+
+.thumb {
+  height: 50px;
+}
+
+.modal-header.genPrevMode {
+  height: 80px;
+}
+
+.genPrevMode span {
+  top: 5px;
+}
+
+.genPrevMode .form-group {
+  margin-bottom: 0;
+}
+
+textarea {
+  resize: none;
+}
+
+textarea:disabled,
+input:disabled {
+  background: #fff !important;
+}
+
+.invHd {
+  display: inline-block;
+  padding: 10px 16px;
+  background: #fff;
+  position: relative;
+  top: -20px;
+  margin: 0;
+}
+
+table.table {
+  font-size: 13px;
+  margin-top: 20px;
+}
+
+table td {
+  vertical-align: top;
+}
+
+h3 {
+  margin-bottom: 15px;
+}
+
+.thankyou {
+  margin-top: 20px;
+  border-bottom: 2px solid #E14926;
+  margin-bottom: 15px;
+}
+
+.signature {
+  border-top: 1px solid #ccc;
+  margin-top: 60px;
+  padding-top: 8px;
+  width: 260px;
+  float: right;
+}
+</style>
+<div id="InvoiceTemplate" class="templateClass no-border">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" ng-click="$dismiss(); closePop()" aria-label="Close"><i aria-hidden="true">&times;</i></button>
+    
+    <h3 class="modal-title alC">
+      View Invoice
+    </h3>
+
+  </div>
+
+  <div class="modal-body alC">
+
+    <h3 class=" mrB4">Preview is currently not available for GST Templates</h3>
+    
+
+    <a ng-click="generateTemplate()" class="btn btn-success btn-sm" href="javascript:void(0)">Generate Invoice</a>
+
+  </div>
+  <!-- end of modal-body -->
+</div>
+<!-- end of InvoiceTemplate -->
