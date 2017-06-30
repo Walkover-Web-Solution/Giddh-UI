@@ -766,9 +766,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.updateAccount = () ->
     unqNamesObj = mc.setAdditionalAccountDetails()
-    if angular.equals(mc.selectedAcc, mc.selAcntPrevObj)
-      toastr.info("Nothing to update", "Info")
-      return false
+#    if angular.equals(mc.selectedAcc, mc.selAcntPrevObj)
+#      toastr.info("Nothing to update", "Info")
+#      return false
 
     if mc.selectedAcc.openingBalanceType == null
       mc.selectedAcc.openingBalanceType = 'credit'

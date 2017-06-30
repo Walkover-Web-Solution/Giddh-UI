@@ -469,6 +469,11 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
     $scope.getGroupsList()
+    contactnumber = $rootScope.selectedCompany.contactNo
+    if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
+      SplitNumber = contactnumber.split('-')
+      $rootScope.selectedCompany.mobileNo = SplitNumber[1]
+      $rootScope.selectedCompany.cCode = SplitNumber[0]
 #    $rootScope.getCroppedAccountList(company.uniqueName, '')
 
 

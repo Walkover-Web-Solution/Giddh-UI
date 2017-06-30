@@ -325,7 +325,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
-    $scope.removeBlankGst($scope.gstDetail)
+    $scope.removeBlankGst($rootScope.selectedCompany.companyGstDetails)
     $rootScope.selectedCompany.companyGstDetails = $scope.gstDetail
     if _.isObject(data.cCode)
       data.contactNo = data.cCode.value + "-" + data.mobileNo
@@ -340,6 +340,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     toastr.success("Company updated successfully", "Success")
     $scope.getCompanyList()
     $scope.gstDetail = $rootScope.selectedCompany.companyGstDetails
+    contactnumber = $rootScope.selectedCompany.contactNo
+    if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
+      SplitNumber = contactnumber.split('-')
+      $rootScope.selectedCompany.mobileNo = SplitNumber[1]
+      $rootScope.selectedCompany.cCode = SplitNumber[0]
     if $scope.gstDetail.length < 1
         $scope.addNewGst()
 
@@ -1743,7 +1748,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
           }
       ]
     }
-    $scope.gstDetail.unshift(gstDetail)
+    $rootScope.selectedCompany.companyGstDetails.unshift(gstDetail)
 
   $scope.getState = () ->
     # url = 'http://apitest.giddh.com/states'
