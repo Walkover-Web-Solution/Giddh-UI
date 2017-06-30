@@ -1014,7 +1014,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
 
   ledgerCtrl.countStockAccount = (ledger) ->
-    count = 0;
+    count = 0
     _.each(ledger.transactions, (item) ->
       if item.particular.stock || item.inventory
         count++
@@ -1023,6 +1023,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       return true
     else
       return false
+
+  ledgerCtrl.numberStockAccount = (ledger) ->
+    count = 0
+    _.each(ledger.transactions, (item) ->
+      if item.particular.stock || item.inventory
+        count++
+    )
+    count
     
     
 
@@ -1127,13 +1135,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.matchInventory = (ledger) ->
     stockTxn = ledgerCtrl.getStockTxn(ledger)
+    result = ledgerCtrl.numberStockAccount(ledgerCtrl.selectedLedger)
     if stockTxn && stockTxn.inventory
       ledger.panel.quantity = stockTxn.inventory.quantity
       ledger.panel.price = ledgerCtrl.cutToFourDecimal(ledger.panel.amount / ledger.panel.quantity)
       # add stock name to transaction.particular to show on view when particular is not changed
       if Object.keys(stockTxn.particular).length == 2 && !stockTxn.particular.stock
         stockTxn.particular.name += ' (' + stockTxn.inventory.stock.name + ')'
-      ledger.showStock = true
     if stockTxn.particular && stockTxn.particular.stock
       if stockTxn.particular.stock.accountStockDetails.unitRates.length > 0
         ledger.panel.units = stockTxn.particular.stock.accountStockDetails.unitRates
@@ -1149,7 +1157,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledger.panel.price = 0
       # add stock name to transaction.particular to show on view when particular is changed
       stockTxn.particular.name += ' (' + stockTxn.particular.stock.name + ')'
-      ledger.showStock = true
+
+    if result > 0
+      ledgerCtrl.selectedLedger.showStock = true
+    else
+      ledgerCtrl.selectedLedger.showStock = false
     
     # match = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:txn.particular.uniqueName})
     # if match && match.stocks != null

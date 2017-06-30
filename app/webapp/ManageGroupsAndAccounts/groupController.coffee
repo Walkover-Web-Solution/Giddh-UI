@@ -1249,6 +1249,8 @@ groupController = ($scope, $rootScope, localStorageService, groupService, toastr
       }
       accountService.get(reqParams).then(gc.getAcDtlSuccess, $scope.getAcDtlFailure)
 
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+
   # $scope.getAccountDetailsSuccess = (res) ->
   #   $scope.selectedAccount.applicableTaxes = res.body.applicableTaxes
 
