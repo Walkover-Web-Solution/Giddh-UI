@@ -5,7 +5,7 @@ const fs = require('fs');
 const phantom = require("phantom-html-to-pdf")
 ({
   phantomPath: require("phantomjs-prebuilt").path,
-  tmpDir: '/tmp/',
+  tmpDir: '/home/app-downloads/',
   numberOfWorkers: 2,
 });
 var invoice = {};
@@ -22,7 +22,7 @@ invoice.downloadInvoice = function(req, res) {
 
   //const bodyCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/template_a.pug');
   //const footerCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/footer_a.pug');
-   console.log(invoiceObj.gstDetails.gstEntries[0].rate)
+  console.log(invoiceObj.gstDetails.gstEntries[0].rate)
   const headerCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/invoice_gst_header.pug');
   const bodyCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/invoice_gst_body.pug');
   const footerCompiledFunction = pug.compileFile('./invoice/api/models/invoice/templates/invoice_gst_footer.pug');
