@@ -1294,15 +1294,15 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.onTxnAmountChange = (txn)->
     if !ledgerCtrl.isDiscountTxn(txn) && (ledgerCtrl.getTxnCategory(txn) == 'income' || ledgerCtrl.getTxnCategory(txn) == 'expenses')
-      # ledgerCtrl.selectedLedger.panel.amount = Number(txn.amount)
+      ledgerCtrl.selectedLedger.panel.amount = Number(txn.amount)
       ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
       ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
     else if ledgerCtrl.isDiscountTxn(txn)
-      # ledgerCtrl.selectedLedger.panel.discount = Number(txn.amount)
+      ledgerCtrl.selectedLedger.panel.discount = Number(txn.amount)
       ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
       ledgerCtrl.getTotalDiscountByNewWay(ledgerCtrl.selectedLedger)
 
-    ledgerCtrl.getPanelAmount(ledgerCtrl.selectedLedger)
+    # ledgerCtrl.getPanelAmount(ledgerCtrl.selectedLedger)
 
 
   ledgerCtrl.getTotalDiscountByNewWay = (ledger) ->
