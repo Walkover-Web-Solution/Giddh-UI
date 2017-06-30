@@ -250,6 +250,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.parentIndex = parentIndex
     mc.currentIndex = currentIndex
     mc.selectedType = 'grp'
+    if item.hLevel == undefined
+      item.hLevel = parentIndex + 1
     if mc.keyWord != undefined
       if mc.keyWord.length > 3
         mc.updateSearchItem = true
@@ -314,11 +316,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.onCreateGroupSuccess = (res) ->
     mc.keyWord = undefined
+    mc.flattenGroupList.push(res.body)
     mc.columns[mc.addToIndex].groups.push(res.body)
     toastr.success("Sub group added successfully", "Success")
     # mc.selectedItem = {}
-    mc.getGroups()
-    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], false, mc.parentIndex, mc.currentIndex)
+    # mc.getGroups()
+    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
 
   mc.onCreateGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -396,14 +399,20 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.addToIndex = index
     mc.toggleView(true)
     mc.showOnUpdate = false
-    if mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'account'
-      mc.breadCrumbList.pop()
-    if mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'grp'
-      if mc.addToIndex == mc.parentIndex
+    # if mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'account'
+    #   mc.breadCrumbList.pop()
+    # if mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'grp'
+    if mc.addToIndex == mc.parentIndex
+      if mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'account'
+        mc.breadCrumbList.pop()
+      else
         mc.breadCrumbList.pop()
         mc.selectedGrp = mc.breadCrumbList[mc.breadCrumbList.length-1]
         mc.updateBreadCrumbs = false
         mc.columns = mc.columns.splice(0,mc.addToIndex+1)
+        mc.selectedItem = {}
+        mc.selectedAcc = {}
+        mc.parentIndex = mc.parentIndex - 1
     # if mc.keyWord != undefined
     #   mc.breadCrumbList = []
     #   mc.keyWord = undefined
@@ -1188,7 +1197,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         _.each grp.accounts, (acc) ->
           col.accounts.push(acc)
     mc.columns.push(col)
-    if col.groups.length > 0
+    if col.groups.length > 0 || col.accounts.length > 0
       mc.addColumnOnSearchChildLevels(col.groups, {})
 
   mc.checkCurrentColumn = (index) ->

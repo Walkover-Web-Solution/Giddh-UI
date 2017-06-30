@@ -2780,3 +2780,11 @@ label {
 #Addaccount .form-inline .select_drop {
   top: 15px;
 }
+.h100 {
+  max-height: none;
+  height: auto;
+}
+.companyGst .fa-plus {
+    top: -12px;
+    position: relative;
+}

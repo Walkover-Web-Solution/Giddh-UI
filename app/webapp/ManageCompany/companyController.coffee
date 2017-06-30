@@ -118,6 +118,9 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     'todayBtn': true
   }
 
+  $scope.gstDetail = []
+  $scope.stateList = []
+
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
 
@@ -322,6 +325,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
+    $scope.removeBlankGst($scope.gstDetail)
+    $rootScope.selectedCompany.companyGstDetails = $scope.gstDetail
     if _.isObject(data.cCode)
       data.contactNo = data.cCode.value + "-" + data.mobileNo
     else
@@ -334,6 +339,9 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     localStorageService.set("_selectedCompany", res.body)
     toastr.success("Company updated successfully", "Success")
     $scope.getCompanyList()
+    $scope.gstDetail = $rootScope.selectedCompany.companyGstDetails
+    if $scope.gstDetail.length < 1
+        $scope.addNewGst()
 
   #update company failure
   $scope.updtCompanyFailure = (res)->
@@ -1723,6 +1731,59 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   #Mayank
   $scope.setShareableRoles = (selectedCompany) ->
     $scope.shareableRoles = permissionService.shareableRoles(selectedCompany)
+
+  $scope.addNewGst = () ->
+    gstDetail = {
+      gstNumber: "",
+      addressList: [
+          {
+            address:"",
+            stateCode: "",
+            stateName: ""
+          }
+      ]
+    }
+    $scope.gstDetail.unshift(gstDetail)
+
+  $scope.getState = () ->
+    # url = 'http://apitest.giddh.com/states'
+    $http({
+      method: 'GET',
+      url: 'http://apitest.giddh.com/states'
+    }).then((response) ->
+        $scope.stateList = response.data.body
+      , (response) -> 
+      )
+    # $http.get(url).then(mc.onGetStateSuccess, mc.onGetStateFailure)
+  
+  $scope.getState()
+
+  $scope.getStateCode = (val, item) ->
+    if val.length >= 2
+      $scope.gstState = _.findWhere($scope.stateList, {code:val.substr(0,2)})
+      if $scope.gstState
+        item.addressList[0].stateCode = $scope.gstState.code
+        item.addressList[0].stateName = $scope.gstState.name
+
+  $scope.getGstDetail = () ->
+    $scope.gstDetail = $rootScope.selectedCompany.companyGstDetails
+    if $scope.gstDetail.length < 1
+        $scope.addNewGst()
+
+  $scope.deleteGst = (obj, i) ->
+    console.log obj
+    console.log i
+    $scope.gstDetail.splice(i,1)
+
+  $scope.removeBlankGst = (gstList) ->
+    if gstList.length > 0
+      _.each gstList, (item) ->
+        if item.gstNumber == ""
+          gstList = _.without(gstList, item)
+      $scope.gstDetail = gstList
+    console.log gstList 
+
+  $scope.getGstDetail()
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

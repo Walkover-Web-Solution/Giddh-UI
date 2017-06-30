@@ -590,7 +590,7 @@
                        ng-class="(cmpnyBascFrm.cState.$valid  && cmpnyBascFrm.cState.$touched) ? 'has-success' : (cmpnyBascFrm.cState.$touched) ? 'has-error' : '' ">
                     <label>State</label>
                     <input type="text" ng-model="selectedCompany.state"
-                           uib-typeahead="address for address in getState($viewValue)" typeahead-loading="loadingLocationsS"
+                           uib-typeahead="address as address.name for address in getState($viewValue)" typeahead-loading="loadingLocationsS"
                            typeahead-no-results="noResultsS" class="form-control" name="cState" autocomplete="off"
                            tabindex="7" ng-disabled="cmpnyBascFrm.cCountry.$invalid" required>
                     <i ng-show="loadingLocationsS" class="glyphicon glyphicon-refresh"></i>
@@ -637,10 +637,49 @@
                     </div>
                   </div>
                 </div>
+
+                <!--  GST START -->
+
+                  <div class="col-xs-6 clearfix mrT2 companyGst">
+
+                    <h1 class="bdrB pdB1">Add GST Detail 
+                      <div class="pdB1">
+                        <span class="pull-right"><i class="fa fa-plus cursor-pointer" aria-hidden="true" ng-click="addNewGst()"></i></span>
+                      </div>
+                    </h1>
+                      <div class="mrT1 clearfix gst_row">
+                      <ul class="gstList h100">
+                          <li ng-repeat="gst in gstDetail" class="pos-rel gst">
+                            <div class="col-xs-5 pd0">
+                              <span class="col-xs-12 pd0 pdB1">
+                                <label class="w100">GST No.</label>
+                                <input type="text" class="form-control" ng-model="gst.gstNumber" ng-change="getStateCode(gst.gstNumber, gst)" maxlength="15" name="gstNumber" valid-number />
+                              </span>
+                              <span class="col-xs-12 pd0">
+                                <label class="w100">State</label>
+                                 <input type="text" ng-model="gst.addressList[0].stateName" ng-readonly="gst.gstNumber > 2" typeahead-append-to-body="true" uib-typeahead="state.name for state in stateList | filter:$viewValue" class="form-control" name="gstState" />
+                                <label ng-show="noResults">
+                                  <i class="glyphicon glyphicon-remove"></i> No Results Found
+                                </label>
+                              </span>
+                            </div>
+                            <div class="col-xs-7 pd0">
+                              <span class="col-xs-12">
+                                <label class="w100">Address</label>
+                                <textarea ng-model="gst.addressList[0].address" class="form-control" rows="4" name="gstAddress"></textarea>
+                              </span>
+                            </div>
+                            <i class="fa fa-times cursor-pointer" aria-hidden="true" ng-click="deleteGst(gst, $index)"></i>
+                          </li>
+                      </ul>
+                      </div>
+                  </div>
+
+                <!-- GST END -->
               </div>
               <!-- end of row -->
               <div class="clearfix">
-                <button ng-hide="!canManageCompany" tabindex="11" ng-click="updateCompanyInfo(selectedCompany)" class="btn btn-primary" ng-disabled="cmpnyBascFrm.$invalid">Update
+                <button ng-hide="!canManageCompany" tabindex="11" ng-click="updateCompanyInfo(selectedCompany)" class="btn btn-primary">Update
                 </button>
               </div>
             </form>
