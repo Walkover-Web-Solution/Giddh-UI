@@ -17,6 +17,15 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     {title:'Payment details', active: false}
     {title:'Financial Year', active: false}
   ]
+  $scope.typeOfTaxList = [
+    "IGST"
+    "CGST"
+    "SGST"
+    "UTGST"
+    "Other"
+  ]
+  $scope.typeOfTaxGst = true
+  $scope.typeOfTax = "IGST"
   $scope.addRazorAccount = false
   $scope.linkRazor = false
 
@@ -181,10 +190,19 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     }
 
 
+  $scope.changeTypeOfTax = (selectedItem) ->
+    if selectedItem == 'Other'
+      $scope.typeOfTaxGst = false
+    else
+      $scope.typeOfTaxGst = true
+
   $scope.addNewTax = (newTax) ->
+    if _.isUndefined(newTax.account)
+      newTax.account = {'uniqueName':''}
     newTax = {
       updateEntries: false
       taxNumber:newTax.taxNumber,
+      taxType: $scope.typeOfTax
       name: newTax.name,
       account:
         uniqueName: newTax.account.uniqueName
@@ -201,6 +219,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
 
   $scope.addNewTaxSuccess = (res) ->
 # reset tax data
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
     $scope.createTaxData = {
       duration: "MONTHLY"
       taxFileDate: 1

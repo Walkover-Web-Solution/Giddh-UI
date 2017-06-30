@@ -297,12 +297,13 @@ header, header .navbar {
   cursor: text;
 }
 
-.ledger-panel .btn {
+/*.ledger-panel .btn {
   background: #eee;
   border: 1px solid #949494;
-}
+  .ledger-panel .btn:hover,
+}*/
 
-.ledger-panel .btn:hover, .ledger-panel .btn-primary {
+.ledger-panel .btn-primary {
   background: #f3f0e6;
   border-color: #ff782d;
   color: #616161;
@@ -1909,6 +1910,7 @@ a.btn.btn-xs.btn-link.pull-right {
 
 .modal-title {
   font-size: 18px !important;
+  color: black !important
 }
 
 .radio {
@@ -1942,7 +1944,7 @@ input[type=radio]:checked:after {
 /*====================== mustafa =====================*/
 .select_drop {
   position: relative;
-  top: 0;
+  top: 0px;
   right: 2px;
   z-index: 9;
 }
@@ -2690,6 +2692,18 @@ label {
 .clearfix {
   clear: both;
 }
+
+/******** commented due to old manage modal ******/
+/*#getGroupModal .select-locked {
+    display: none !important;
+}*/
+
+@media only screen and (min-width: 1336px) and (max-width: 1440px) {
+  .grp_wrapper {
+     -webkit-column-count: 3;
+     -moz-column-count: 3;
+     column-count: 3;
+  }
 
 .tcaption {
   display: table-caption;

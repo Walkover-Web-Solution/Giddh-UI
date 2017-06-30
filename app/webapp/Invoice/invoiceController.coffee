@@ -334,7 +334,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $rootScope.$stateParams.invId = acData.uniqueName
     $scope.entriesForInvoice = []
     # call invoice load func
-    $scope.getTemplates()
     $scope.invoiceLoadDone = true
 
 
@@ -380,6 +379,50 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       _.extend($scope.defTempData , $scope.tempDataDef)
     $scope.convertIntoOur()
 
+  # success gst template
+  $scope.editUpdateGstTemplateSuccess=(res)->
+    $scope.updatingTempData = false
+    toastr.success("Template updated successfully", "Success")
+    $scope.GstmodalInstance.close()
+
+
+  # edit update gst template
+  $scope.editUpdateGstTemplate=(stype, force)->
+    $scope.genMode = false
+    $scope.updatingTempData = true
+    dData = {}
+    data = {}
+    angular.copy($scope.defTempData, data)
+
+    # terms setting
+    if not(_.isEmpty(data.termsStr))
+      data.terms = data.termsStr.split('\n')
+    else
+      data.terms = []
+
+    if stype is 'save'
+      companyServices.updtInvTempData($rootScope.selectedCompany.uniqueName, data).then($scope.editUpdateGstTemplateSuccess, $scope.saveTempFailure)
+
+  # open gst template module
+  $scope.viewGSTInvTemplate =(template, mode, data) ->
+    $scope.defTempData = {}
+    # set mode
+    if mode isnt 'genprev'
+      $scope.genPrevMode = false
+    $scope.editMode = if mode is 'edit' then true else false
+    _.extend($scope.defTempData , data)
+
+    if $scope.defTempData.terms.length > 0
+      str = $scope.defTempData.terms.toString()
+      $scope.defTempData.termsStr = str.replace(RegExp(',', 'g'), '\n')
+    
+    $scope.GstmodalInstance = $uibModal.open(
+      templateUrl: '/public/webapp/Invoice/gstPrevInvoiceTemp.html',
+      size: "a4"
+      backdrop: 'static'
+      scope: $scope
+    )
+
   # view template with sample data
   $scope.viewInvTemplate =(template, mode, data) ->
     showPopUp = true
@@ -400,11 +443,12 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     _.extend($scope.defTempData , data)
     $scope.defTempData.signatureType = $scope.tempSet.signatureType
     showPopUp = $scope.convertIntoOur()
+  
 
     # open dialog
-    if(showPopUp)
+    if(showPopUp)      
       $scope.modalInstance = $uibModal.open(
-        templateUrl: '/public/webapp/Invoice/prevInvoiceTemp.html'
+        templateUrl: '/public/webapp/Invoice/prevInvoiceTemp.html',
         size: "a4"
         backdrop: 'static'
         scope: $scope
@@ -412,7 +456,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
       $scope.modalInstance.result.then($scope.showInvoiceSuccess,$scope.showInvoiceFailure)
 
   $scope.showInvoiceSuccess = () ->
-    console.log("invoice opened")
 
   $scope.showInvoiceFailure = () ->
     $scope.editGenInvoice = false

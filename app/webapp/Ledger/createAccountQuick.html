@@ -10,7 +10,7 @@
                   <ui-select-match  placeholder="Select Group">
                       <span>{{$select.selected.groupName}}</span>
                   </ui-select-match>
-                  <ui-select-choices repeat="grp in ledgerCtrl.flatGrpList | filter:$select.search" ui-disable-choice="grp.isFixed">
+                  <ui-select-choices repeat="grp in ledgerCtrl.flatGrpListWithoutFixedGroups | filter:$select.search" ui-disable-choice="grp.isFixed">
                       <span ng-bind="grp.groupName"></span>
                   </ui-select-choices>
               </ui-select>

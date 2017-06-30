@@ -241,11 +241,6 @@ app.use('/logout', function(req, res){
   }
 })
 
-//get understanding json
-app.get('/understanding', function(req, res){
-  res.status(200).send(settings.understanding)
-})
-
 //return user-details
 app.use('/fetch-user', function(req, res){
   var authHead, hUrl;
@@ -300,7 +295,8 @@ app.use('/', getSession, function(req, res){
     res.sendFile(__dirname+ '/public/webapp/views/index.html')
   } else{
     res.status(404)
-    res.redirect('https://www.giddh.com')
+    //redirect according to environment
+    res.redirect('http://giddh.com/')
   }
 });
 

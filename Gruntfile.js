@@ -16,7 +16,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-coffeelint');
   grunt.loadNpmTasks('grunt-preprocess');
-  grunt.loadNpmTasks('grunt-karma');
+  // grunt.loadNpmTasks('grunt-karma');
   grunt.loadNpmTasks('grunt-env');
   grunt.loadNpmTasks('grunt-execute');
   grunt.loadNpmTasks('grunt-processhtml');
@@ -292,7 +292,9 @@ module.exports = function (grunt) {
     },
     bower_concat: {
       onlyCss: {
-        cssDest: 'public/webapp/Globals/css/all_bower.css',
+        dest: {
+          css: 'public/webapp/Globals/css/all_bower.css'
+        },
         bowerOptions: {
           relative: false
         },
@@ -321,7 +323,9 @@ module.exports = function (grunt) {
         }
       },
       coreJs: {
-        dest: 'public/webapp/core_bower.min.js',
+        dest: {
+          js: 'public/webapp/core_bower.min.js'
+        },
         bowerOptions: {
           relative: false
         },
@@ -404,7 +408,9 @@ module.exports = function (grunt) {
         }
       },
       webCoreJS:{
-        dest: 'public/website/website_corejs.min.js',
+        dest: {
+          js: 'public/website/website_corejs.min.js'
+        },
         bowerOptions: {
           relative: false
         },
