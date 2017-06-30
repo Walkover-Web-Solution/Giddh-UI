@@ -331,7 +331,7 @@ h3 {
             {{item.transactions[0].rate | number : 2}}
           </td>
           <td class="text-right" ng-if="item.discounts.length > 0">{{item.discounts[0].amount | number : 2}}</td>
-          <td class="text-right">{{item.taxableValue | number : 2}}</td>
+          <td class="text-right" ng-if="defTempData.gstDetails.showTaxes">{{item.taxableValue | number : 2}}</td>
           <td class="text-right" ng-repeat="tax in item.taxes track by $index">{{tax.amount | number : 2}}<br /><small>@{{tax.rate}}%</small></td>
           <td class="text-right">{{item.entryTotal | number : 2}}</td>
         </tr>
@@ -380,8 +380,6 @@ h3 {
               <td>
                 <p><b>Notes</b></p>
                 <p ng-repeat="term in defTempData.terms track by $index">{{term}}</p>
-                <br>
-                <p><b>*Tax to be paid on Reverse Charge</b></p>
               </td>
               <td style="text-align: center;">
                 <div class="signature">
