@@ -1765,10 +1765,10 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         item.addressList[0].stateCode = $scope.gstState.code
         item.addressList[0].stateName = $scope.gstState.name
 
-  $scope.getGstDetail = () ->
-    $scope.gstDetail = $rootScope.selectedCompany.companyGstDetails
-    if $scope.gstDetail.length < 1
-        $scope.addNewGst()
+  # $scope.getGstDetail = () ->
+  #   $scope.gstDetail = $rootScope.selectedCompany.companyGstDetails
+  #   if $scope.gstDetail.length < 1
+  #       $scope.addNewGst()
 
   $scope.deleteGst = (obj, i) ->
     console.log obj
@@ -1783,7 +1783,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.gstDetail = gstList
     console.log gstList 
 
-  $scope.getGstDetail()
+  # $scope.getGstDetail()
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

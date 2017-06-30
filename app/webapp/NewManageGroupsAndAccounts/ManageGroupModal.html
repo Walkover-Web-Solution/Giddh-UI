@@ -40,7 +40,7 @@
          </li>
       </ul>
       
-      <div class="grp_wrapper">
+      <div class="grp_wrapper" ng-style="{width:mc.columns.length*255}">
 
         <!-- level 1 -->
       <div class="col_wrapper" ng-repeat="col in mc.columns track by $index" ng-click="mc.getColsCount()">
