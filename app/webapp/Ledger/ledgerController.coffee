@@ -1233,28 +1233,27 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     taxPercentage || 0
 
   ledgerCtrl.isTaxApplicable = (tax) ->
-    today = new Date()
-    today = today.getTime()
+    today = moment(moment().format('DD-MM-YYYY'), "DD-MM-YYYY", true).valueOf()
     isApplicable = false
     _.each tax.taxDetail, (det) ->
-      if today > ledgerCtrl.parseLedgerDate(det.date) 
+      if today >= ledgerCtrl.parseLedgerDate(det.date) 
         isApplicable = true
     isApplicable
 
   ledgerCtrl.getApplicableTaxRate = (tax) ->
     rate = 0
-    today = new Date()
-    today = today.getTime()
+    today = moment(moment().format('DD-MM-YYYY'), "DD-MM-YYYY", true).valueOf()
     _.each tax.taxDetail, (det) ->
-      if today > ledgerCtrl.parseLedgerDate(det.date) 
+      if today >= ledgerCtrl.parseLedgerDate(det.date) 
         rate = det.taxValue
     rate
 
   ledgerCtrl.parseLedgerDate = (date) ->
-    date = date.split('-')
-    date = date[2] + '-' + date[1] + '-' + date[0]
-    date = new Date(date).getTime()
-    date
+    return moment(date, "DD-MM-YYYY", true).valueOf()
+    # date = date.split('-')
+    # date = date[2] + '-' + date[1] + '-' + date[0]
+    # date = new Date(date).getTime()
+    # date
 
   ledgerCtrl.onAmountChange = (ledger) ->
     ledgerCtrl.getTotalTax(ledger)
