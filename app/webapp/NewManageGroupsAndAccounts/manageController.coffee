@@ -1255,15 +1255,14 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
 
   mc.getState = () ->
-    # url = 'http://apitest.giddh.com/states'
-    $http({
-      method: 'GET',
-      url: 'http://apitest.giddh.com/states'
-    }).then((response) ->
-        mc.stateList = response.data.body
-      , (response) ->
-      )
-    # $http.get(url).then(mc.onGetStateSuccess, mc.onGetStateFailure)
+    @success=(res)->
+      mc.stateList = res.body
+
+    @failure=(err)->
+      console.log("failure", err)
+
+    companyServices.getStates().then(@success, @failure)
+
   mc.getState()
 
   mc.toggleList = () ->

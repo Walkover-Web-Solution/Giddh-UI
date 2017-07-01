@@ -14,6 +14,10 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
   {
     addCompany:
       method: 'POST'
+
+    getStates:
+      method: 'GET'
+      url: '/company/states'
     
     getCompanyDetails:
       method: 'GET'
@@ -222,6 +226,9 @@ giddh.serviceModule.service 'companyServices', ($resource, $q) ->
 
     getAll: () ->
       @handlePromise((onSuccess, onFailure) -> Company.getCompanyList(onSuccess, onFailure))
+
+    getStates: () ->
+      @handlePromise((onSuccess, onFailure) -> Company.getStates( onSuccess, onFailure))
 
     get: (uniqueName) ->
       @handlePromise((onSuccess, onFailure) -> Company.getCompanyDetails({uniqueName: uniqueName}, onSuccess,

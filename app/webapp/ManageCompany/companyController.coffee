@@ -1605,18 +1605,16 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     }
     $rootScope.selectedCompany.companyGstDetails.unshift(gstDetail)
 
-  $scope.getState = () ->
-    # url = 'http://apitest.giddh.com/states'
-    $http({
-     method: 'GET',
-     url: 'http://apitest.giddh.com/states'
-    }).then((response) ->
-       $scope.stateList = response.data.body
-     , (response) ->
-     )
-    # $http.get(url).then(mc.onGetStateSuccess, mc.onGetStateFailure)
+  $scope.getStateByAPI = () ->
+    @success=(res)->
+      $scope.stateList = res.body
+
+    @failure=(err)->
+      console.log("failure", err)
+
+    companyServices.getStates().then(@success, @failure)
   
-  $scope.getState()
+  $scope.getStateByAPI()
 
   $scope.getStateCode = (val, item) ->
     if val.length >= 2

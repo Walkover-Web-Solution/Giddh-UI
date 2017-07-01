@@ -27,6 +27,17 @@ hitViaSocket = (data) ->
   else
     console.log("not hitting via socket because we are in ", env)
 
+router.get '/states', (req, res) ->
+  args =
+    headers:
+      'X-Forwarded-For': res.locales.remoteIp
+  hUrl = settings.envUrl + 'states'
+  settings.client.get hUrl, args, (data, response) ->
+    if data.status == 'error' || data.status == undefined
+      res.status(response.statusCode)
+    res.send data
+
+
 router.get '/all', (req, res) ->
   args =
     headers:
