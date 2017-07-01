@@ -981,6 +981,15 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.selectedLedger.applyApplicableTaxes = false
     ledgerCtrl.onNewPanelChange().tax(ledgerCtrl.selectedTxn, ledgerCtrl.blankLedger)
 
+  ledgerCtrl.selectBankTxn = (txn, index ,e, eledger) ->
+    e.stopPropagation()
+    ledgerCtrl.selectedLedger = eledger
+    if !_.isNull(ledgerCtrl.prevTxn)
+      ledgerCtrl.prevTxn.isOpen = false
+    ledgerCtrl.selectedTxn = txn
+    ledgerCtrl.selectedTxn.isOpen = true
+    ledgerCtrl.prevTxn = txn
+
   ledgerCtrl.selectTxn = (txn, index ,e) ->
     ledger = ledgerCtrl.selectedLedger
     e.stopPropagation()

@@ -769,7 +769,7 @@ th {
 
   		<div class="row">
 	  		<div class="col-xs-3 pdT1">
-	  				<button class="btn btn-danger" ng-click="ledgerCtrl.resetBlankLedger()">Reset</button>
+	  			<button ng-hide="ledgerCtrl.selectedLedger.isBankTransaction" class="btn btn-danger" ng-click="ledgerCtrl.resetBlankLedger()">Reset</button>
   			</div>
   			<div class="col-xs-9 pdT1">
 	  			<div class="pull-right">
@@ -783,8 +783,8 @@ th {
 		  				<input type="file" name="invoiceFile" id="invoiceFile" ng-click="$event.stopPropagation()" onchange="angular.element(this).scope().getInvoiceFile(this.files)">
 	          	<label for="invoiceFile"><i class="glyphicon glyphicon-paperclip"></i></label>
 	          </div>
-		  			<button class="btn btn-success" ng-click="ledgerCtrl.addBlankTxn('DEBIT')">Add to DR</button>
-		  			<button class="btn btn-success" ng-click="ledgerCtrl.addBlankTxn('CREDIT')">Add to CR</button>
+		  			<button ng-hide="ledgerCtrl.selectedLedger.isBankTransaction" class="btn btn-success" ng-click="ledgerCtrl.addBlankTxn('DEBIT')">Add to DR</button>
+		  			<button ng-hide="ledgerCtrl.selectedLedger.isBankTransaction" class="btn btn-success" ng-click="ledgerCtrl.addBlankTxn('CREDIT')">Add to CR</button>
 		  			<button id="saveLedger" class="btn btn-success" ng-click="ledgerCtrl.saveUpdateLedger()">Save</button>
 
 		  		</div>
