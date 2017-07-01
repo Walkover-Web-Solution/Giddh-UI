@@ -416,7 +416,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         mc.columns = mc.columns.splice(0,mc.addToIndex+1)
         mc.selectedItem = {}
         mc.selectedAcc = {}
-        mc.parentIndex = mc.parentIndex - 1
     # if mc.keyWord != undefined
     #   mc.breadCrumbList = []
     #   mc.keyWord = undefined
