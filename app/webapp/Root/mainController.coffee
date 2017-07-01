@@ -163,7 +163,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       backdrop: 'static',
       scope: $scope
     )
-    #modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
 
   #get account details for ledger
   $rootScope.getSelectedAccountDetail = (acc) ->
@@ -338,7 +337,11 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.onCreateCompanySuccess = (res) ->
     toastr.success("Company created successfully", "Success")
     $rootScope.mngCompDataFound = true
-    $scope.companyList.push(res.body)
+    try
+      $scope.companyList.push(res.body)
+    catch e
+      $scope.companyList = []
+      $scope.companyList.push(res.body)
 
   #create company failure
   $scope.onCreateCompanyFailure = (res) ->
@@ -347,24 +350,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   #Create ne company
   $scope.createNewCompany = () ->
     $scope.runSetupWizard()
-    # Open modal here and ask for company details
-    # modalInstance = $uibModal.open(
-    #   templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
-    #   size: "sm",
-    #   backdrop: 'static',
-    #   scope: $scope
-    # )
-    # modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
-   # if $rootScope.hasOwnCompany
-   #   modalInstance = $uibModal.open(
-   #     templateUrl: '/public/webapp/Globals/modals/createCompanyModal.html',
-   #     size: "sm",
-   #     backdrop: 'static',
-   #     scope: $scope
-   #   )
-   #   modalInstance.result.then($scope.onCompanyCreateModalCloseSuccess, $scope.onCompanyCreateModalCloseFailure)
-   # else
-
+    
   $scope.onCompanyCreateModalCloseSuccess = (data) ->
     cData = {}
     cData.name = data.name
@@ -372,7 +358,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.createCompany(cData)
 
   $scope.onCompanyCreateModalCloseFailure = () ->
-#    $scope.checkCmpCretedOrNot()
     if $scope.companyList.length <= 0
       modalService.openConfirmModal(
         title: 'LogOut',
@@ -385,17 +370,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.firstLogout = () ->
     $http.post('/logout').then ((res) ->
-# don't need to clear below
-# _userDetails, _currencyList
       localStorageService.clearAll()
       window.location = "/thanks"
     ), (res) ->
 
-
-#for make sure
-  # $scope.checkCmpCretedOrNot = ->
-  #   if $scope.companyList.length <= 0
-  #     $scope.openFirstTimeUserModal()
 
   #get only city for create company
   $scope.getOnlyCity = (val) ->
