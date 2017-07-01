@@ -71,7 +71,11 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
   $scope.onCreateCompanySuccess = (res) ->
     toastr.success("Company created successfully", "Success")
     $rootScope.mngCompDataFound = true
-    $scope.companyList.push(res.body)
+    try
+      $scope.companyList.push(res.body)
+    catch e
+      $scope.companyList = []
+      $scope.companyList.push(res.body)
     $rootScope.setCompany(res.body)
     $rootScope.getCompanyList()
     changeData = {}
