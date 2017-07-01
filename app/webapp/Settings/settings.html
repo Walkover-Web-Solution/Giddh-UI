@@ -670,7 +670,7 @@
                               </span>
                               <span class="col-xs-12 pd0">
                                 <label class="w100">State</label>
-                                 <input type="text" ng-model="gst.addressList[0].stateName" ng-readonly="gst.gstNumber > 2" typeahead-append-to-body="true" uib-typeahead="state.name for state in stateList | filter:$viewValue" class="form-control" />
+                                 <input type="text" ng-model="gst.addresses[0].stateName" ng-readonly="gst.gstNumber > 2" typeahead-append-to-body="true" uib-typeahead="state.name for state in stateList | filter:$viewValue" class="form-control" />
                                 <label ng-show="noResults">
                                   <i class="glyphicon glyphicon-remove"></i> No Results Found
                                 </label>
@@ -679,7 +679,7 @@
                             <div class="col-xs-7 pd0">
                               <span class="col-xs-12">
                                 <label class="w100">Address</label>
-                                <textarea ng-model="gst.addressList[0].address" class="form-control" rows="4" name="gstAddress"></textarea>
+                                <textarea ng-model="gst.addresses[0].address" class="form-control" rows="4" name="gstAddress"></textarea>
                               </span>
                             </div>
                             <i class="fa fa-times cursor-pointer" aria-hidden="true" ng-click="deleteGst(gst, $index)"></i>
