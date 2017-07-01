@@ -2621,12 +2621,14 @@ body.unresponsive {
   body.unresponsive {
     width: 1366px !important;
     overflow: auto;
+    padding-top: 0;
   }
   .container, .modal-liq90{
     width: 1000px !important;
   }
   .header-container{
     width: 1366px !important;
+    position: relative;
   }
   .modal{
     position: absolute !important;
