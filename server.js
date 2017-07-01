@@ -1,5 +1,3 @@
-//require('newrelic');
-// comment it while developement
 var settings = require('./public/routes/util/settings');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -10,11 +8,7 @@ var session = require('express-session');
 var engines = require('consolidate');
 var request = require('request');
 var jwt = require('jwt-simple');
-// var mongoose = require('mongoose');
-// var MongoStore = require('connect-mongo')(session);
-// var MemcachedStore = require('connect-memcached')(session);
-//global.sessionTTL = 1000 * 60
-//Example POST method invocation 
+
 var Client = require('node-rest-client').Client; 
 var client = new Client();
 
@@ -53,14 +47,6 @@ app.use('/public', settings.express.static(__dirname + '/public'));
 
 //set ttl for session expiry, format : milliseconds * seconds * minutes
 sessionTTL = 1000*60*30
-// if (app.get('env') === 'development') {
-//   // one hour
-//   sessionTTL = 1000 * 60 * 60
-// }
-// else{
-//   // ten minutes
-//   sessionTTL = 1000 * 60 * 60
-// }
 
 app.use(session({
   secret: "keyboardcat",
@@ -74,19 +60,6 @@ app.use(session({
     domain:'giddh.com',
     httpOnly: false
   }
-
-  // ,store: new MongoStore({
-  //   url: settings.mongoUrl,
-  //   autoRemove: 'interval',
-  //   autoRemoveInterval: sessionTTL,
-  //   ttl: sessionTTL,
-  //   touchAfter: sessionTTL - 300
-  // })
-
-  // store   : new MemcachedStore({
-  //   hosts: ['127.0.0.1:11211'],
-  //   secret: 'keyboardcat'
-  // })
 }));
 
 // some global variables
@@ -141,15 +114,6 @@ global.mStorage = multer.diskStorage({
       default:
         cb(null, file.originalname)
     }
-    // if (file.mimetype === "application/vnd.ms-excel"){
-    //   cb(null, Date.now() + '.xls')
-    // }
-    // else if (file.mimetype === "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"){
-    //   cb(null, Date.now() + '.xlsx')
-    // }
-    // else{
-    //   cb(null, Date.now() + '.xml')
-    // }
   }
 })
 
@@ -289,7 +253,7 @@ var getSession = function(req, res, next){
 
 //serve index.html, this has to come after *ALL* routes are defined
 app.use('/', getSession, function(req, res){
-  if(req.url.startsWith("/home/app-downloads/") && req.url.endsWith(".pdf")) {
+  if(req.url.startsWith(settings.giddhPdfPath) && req.url.endsWith(".pdf")) {
     res.sendFile(req.url)
   } else if(req.session.name){
     res.sendFile(__dirname+ '/public/webapp/views/index.html')
