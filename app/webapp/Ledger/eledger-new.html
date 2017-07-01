@@ -38,21 +38,17 @@
                     <tbody>
                       <tr ng-repeat="txn in eledger.transactions" 
                         ng-if="txn.type == 'DEBIT'" 
-                        ng-click="ledgerCtrl.selectTxn(eledger, txn,$index ,$event)"   
+                        ng-click="ledgerCtrl.selectBankTxn(txn, $index ,$event, eledger)"   
                         uib-popover-template="ledgerCtrl.popover.templateUrl" 
                         popover-trigger="outsideClick" 
                         popover-placement="bottom"
                         popover-append-to-body='true' 
                         popover-is-open="txn.isOpen" 
                         popover-popup-delay="200">
-                        <!--<td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">-->
-                          <!--<input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">-->
-                        <!--</td>-->
                         <td class="col-xs-3 nopad">
                           <input class="form-control background-transparent" ng-model="eledger.entryDate" ng-disabled="true">
                         </td>
                         <td class="col-xs-5 nopad">
-                          <!--<input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-append-to-body="true" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForledgerCtrl.blankLedger(txn, ledger)" typeahead-template-url="accountPopUp.html">-->
                           <input class="form-control" 
                           ng-model="txn.particular" 
                           typeahead-append-to-body="true" 
@@ -94,21 +90,17 @@
                       <tr 
                         ng-repeat="txn in eledger.transactions" 
                         ng-if="txn.type == 'CREDIT'" 
-                        ng-click="ledgerCtrl.selectTxn(eledger, txn,$index ,$event)"   
+                        ng-click="ledgerCtrl.selectBankTxn(txn,$index ,$event, eledger)"   
                         uib-popover-template="ledgerCtrl.popover.templateUrl" 
                         popover-trigger="outsideClick" 
                         popover-placement="bottom" 
                         popover-append-to-body='true'  
                         popover-is-open="txn.isOpen"  
                         popover-popup-delay="200">
-                        <!--<td class="col-xs-1 maxW42" ng-click="$event.stopPropagation()">-->
-                          <!--<input type="checkbox" ng-model="txn.isSelected" ng-change="selectMultiple(ledger, txn, $index)" ng-click="$event.stopPropagation()">-->
-                        <!--</td>-->
                         <td class="col-xs-3 nopad">
                           <input class="form-control background-transparent" ng-model="eledger.entryDate" ng-disabled="true">
                         </td>
                         <td class="col-xs-5 nopad">
-                          <!--<input class="form-control" ng-model="txn.particular" uib-typeahead="accounts as accounts.name for accounts in fltAccntListPaginated | omit:isCurrentAccount | searchAccountInPaginated:$viewValue | limitTo: 25" typeahead-append-to-body="true" ng-focus="openClosePopoverForLedger(txn, ledger);openClosePopoverForeLedger(txn, ledger);openClosePopoverForledgerCtrl.blankLedger(txn, ledger)" typeahead-template-url="accountPopUp.html">-->
                           <input class="form-control" 
                           ng-model="txn.particular" 
                           typeahead-append-to-body="true" 
