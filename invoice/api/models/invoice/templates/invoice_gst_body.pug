@@ -33,10 +33,10 @@ html(xmlns='http://www.w3.org/1999/xhtml')
                   td(style='padding-right: 15px;')
                     p
                       b Customer Name
-                    if(accountAttentionToForInvoice!='' && accountAttentionToForInvoice!=null)
-                      p #{accountAttentionToForInvoice}
-                    else
+                    if(accountNameForInvoice!='' && accountNameForInvoice!=null)
                       p #{accountNameForInvoice}
+                    else
+                      p #{accountAttentionToForInvoice}
                     br
                     p
                       b Due Date

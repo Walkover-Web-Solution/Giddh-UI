@@ -6,22 +6,26 @@ head
         h3{font-weight:700; margin-bottom:20px; font-size:10px;}
         p{margin-bottom:5px;}
         table {width:100%;}
-        .invHd{display: inline-block; padding: 10px 16px; background: none; position: absolute; bottom: 20px; margin:0 auto; right:0;left: 0;}
+        .invHd{ padding: 6px 8px; background: #fff; margin:0 auto;text-align: center; position: relative; bottom: -13px;color: #E14926;right:0;left:0;display:inline-table;}
         table.table{font-size:8px; margin-top:0px;}
         table.table td, table.table th{vertical-align:middle !important; text-align:right;}
         table.table td:first-child, table.table th:first-child{text-align:left;}
         table.table td small{color:#777}
         .text-right {text-align:right;}
+        table.header tr td {padding: 0;}
+        table.header tr td b {margin-right: 15px;}
+        table.right_col span {width: 100px;}
+        .text-center {text-align:center;}
         @page {size: A4 portrait;margin: 0;}
 section.container
   .clearfix
     .col-xs-12
       .col-xs-12
-        table(style='width: 100%;')
+        table.header(style='width: 100%;')
           tbody
             tr
               td
-                h3(style='color:#E14926 !important;') #{companyName}
+                h3(style='color:#E14926 !important;margin:0;') #{companyName}
                 table.with-pd
                   tbody
                     if(companyGstDetailsObject!='undefined' && companyGstDetailsObject!=''&&companyGstDetailsObject!=null)
@@ -29,24 +33,25 @@ section.container
                         td(style='padding-right: 15px;')
                           p
                             b GSTIN
-                        td
-                          p #{companyGstDetailsObject.gstNumber}
-              td(style='text-align: right')
+                            | #{companyGstDetailsObject.gstNumber}
+                          p
+                            b PAN
+                            |
+              td.text-right(style='text-align: right')
                 h3(style='color:#E14926 !important;') Total ₹ #{grandTotal}
-                table(style='float: right;')
+                table.right_col(cellpadding='0', cellspacing='0',style='float: right;')
                   tbody
                     tr
-                      td(style='padding-right: 15px;text-align: right;')
-                        p.text-right
+                      td(style='text-align: right;')
+                        p
                           b Invoice Date
-                        p.text-right
+                          span #{invoiceDate}
+                        p
                           b Invoice No.
-                      td
-                        p #{invoiceDate}
-                        p #{invoiceNumber}
-  div(style='border-bottom:2px solid #E14926 !important; margin-top: 10px;')  
-  .text-center
-    if(showTaxes)
-      h3.invHd(style='background: #fff !important; color:#E14926 !important;') TAX INVOICE
-    else
-      h3.invHd(style='background: #fff !important; color:#E14926 !important;') INVOICE  
+                          span #{invoiceNumber}
+  div.text-center(style='border-bottom:2px solid #E14926 !important; background: none; position: relative; bottom: 0px;width: 100%;text-align: center;bottom:20px;')  
+    span.text-center
+      if(showTaxes)
+        h3.invHd TAX INVOICE
+      else
+        h3.invHd INVOICE  

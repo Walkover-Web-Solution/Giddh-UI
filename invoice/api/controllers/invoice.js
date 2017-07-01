@@ -118,8 +118,8 @@ invoice.downloadInvoice = function(req, res) {
       html: bodyRes, 
       footer: footerResource, 
       paperSize: {
-      footerHeight: '3in',
-      headerHeight: '2.2in'
+      footerHeight: '2.4in',
+      headerHeight: '1.8in'
       }, 
     }, 
     function(err, pdf) {
