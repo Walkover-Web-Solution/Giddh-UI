@@ -38,6 +38,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.searchColumns = []
   mc.createNew = false
   mc.gstDetail = []
+  mc.keyWord = ""
 #  $scope.fltAccntListPaginated = []
 #  $scope.flatAccList = {
 #    page: 1
@@ -63,6 +64,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.showDefaultGst = 2
   mc.stateList = []
   mc.stateDetail = undefined
+  mc.radioModel = ""
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
     mc.selectedType = type
@@ -279,7 +281,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       existingGrp = item
       mc.columns = mc.columns.splice(0,item.hLevel+1)
       mc.columns.push(item)
-    if parentIndex <= mc.columns.length-1
+    if parentIndex <= mc.columns.length-1 && mc.keyWord != undefined
       mc.checkCurrentColumn(parentIndex)
 
   mc.getGrpDtlSuccess = (res) ->
@@ -402,9 +404,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # if mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'account'
     #   mc.breadCrumbList.pop()
     # if mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'grp'
-    if mc.addToIndex == mc.parentIndex
+    if mc.addToIndex == mc.parentIndex || mc.addToIndex == mc.getCurrentColIndex
       if mc.breadCrumbList[mc.breadCrumbList.length-1].type == 'account'
         mc.breadCrumbList.pop()
+        mc.getCurrentColIndex = undefined
       else
         mc.breadCrumbList.pop()
         mc.selectedGrp = mc.breadCrumbList[mc.breadCrumbList.length-1]
@@ -761,6 +764,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # mc.getGroups()
     
   mc.addAccountFailure = (res) ->
+    if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
+      if mc.gstDetail.length < 1
+        mc.addNewGst()
     toastr.error(res.data.message, res.data.status)
 
 
@@ -813,6 +819,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getAccDetail(mc.selectedAcc, mc.getCurrentColIndex, mc.currentAccIndex)
 
   mc.updateAccountFailure = (res) ->
+    if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
+      if mc.gstDetail.length < 1
+        mc.addNewGst()
     toastr.error(res.data.message, res.data.status)
 
 
@@ -1239,10 +1248,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.updateBreadCrumbs = true
 
   mc.getServiceCode = (hsn, sac)->
-    if hsn != undefined
+    if hsn
       mc.radioModel = "hsn"
-    else
+    else if sac
       mc.radioModel = "sac"
+    else
+      mc.radioModel = ""
 
   mc.checkActiveServiceCode = (selected) ->
     if selected == 'hsn'
