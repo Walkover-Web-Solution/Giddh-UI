@@ -460,6 +460,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     _.extend(mc.selAcntPrevObj, data)
     _.extend(mc.selectedAcc, data)
     # mc.breakMobNo(data)
+    mc.acntCase = "Update"
     mc.setOpeningBalanceDate()
     mc.getAccountSharedList()
     mc.isFixedAcc = res.body.isFixed
@@ -467,6 +468,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.selectedAcc = res.body
     mc.columns.length = mc.getCurrentColIndex+1
     mc.gstDetail = res.body.gstDetails
+    # mc.fetchingUnq = false
     if mc.selectedAcc.parentGroups[1].uniqueName == 'sundrycreditors' || mc.selectedAcc.parentGroups[1].uniqueName == 'sundrydebtors'
       if mc.gstDetail.length < 1
         mc.addNewGst()
@@ -749,6 +751,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # mc.breadCrumbList = undefined
     mc.stateDetail = mc.stateDetail
     mc.removeBlankGst(mc.gstDetail)
+    mc.acntCase = "Update"
 
   mc.addAccountSuccess = (res) ->
     toastr.success("Account created successfully", res.status)
@@ -1315,6 +1318,32 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
 
 
+  # featching uniqname
+
+  # mc.fetchingUnq = false
+  # num = 1
+  # mc.autoFillUnq = (unq) ->
+  #   unq = unq.replace(/ |,|\//g,'')
+  #   unq = unq.toLowerCase()
+  #   $this = @
+  #   mc.fetchingUnq = true
+  #   $this.success = (res) ->
+  #     mc.autoFillUnq(unq+num)
+  #     num += 1
+  #   $this.failure = (res) ->
+  #     mc.selectedAcc.uniqueName = unq
+  #     num = 1
+  #     mc.fetchingUnq = false
+  #   if mc.acntCase == 'Add' && unq != undefined && unq.length > 2
+  #     $timeout ( ->
+  #       reqParams = {
+  #         compUname: $rootScope.selectedCompany.uniqueName
+  #         acntUname: unq
+  #       }
+  #       accountService.get(reqParams).then($this.success, $this.failure)
+  #     ), 1000
+  #   else if unq == undefined
+  #     mc.selectedAcc.uniqueName == null
 
   return mc
 
