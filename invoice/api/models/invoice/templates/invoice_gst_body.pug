@@ -111,8 +111,6 @@ html(xmlns='http://www.w3.org/1999/xhtml')
                         td #{gstEntry.transactions[0].hsnNumber}
                       else if(gstEntry.transactions[0].sacNumber!=null)
                         td #{gstEntry.transactions[0].sacNumber}
-                      else   
-                        td --
                       if(showQty) 
                         if(gstEntry.quantity != 'undefined' && gstEntry.quantity !='' && gstEntry.quantity !=null) 
                           td #{gstEntry.quantity}
