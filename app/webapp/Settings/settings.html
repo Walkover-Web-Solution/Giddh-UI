@@ -565,7 +565,7 @@
 
                         <input type="hidden" ng-model="selectedCompany.contactNo">
 
-                        <input type="text" ng-model="selectedCompany.cCode" required
+                        <input type="text" ng-model="selectedCompany.cCode"
                                uib-typeahead="country as country.value for country in countryCodesList | filter:$viewValue | limitTo:8"
                                class="form-control" typeahead-template-url="cityTemplate.html" placeholder="91" tabindex="3"/>
 

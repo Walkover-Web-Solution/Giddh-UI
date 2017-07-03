@@ -195,7 +195,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     localStorageService.set("_selectedCompany", res.body)
     toastr.success("Company updated successfully", "Success")
     $scope.getCompanyList()
-    $scope.gstDetail = $rootScope.selectedCompany.gstDetails
+    $scope.gstDetail = $rootScope.selectedCompany.gstDetails || []
     contactnumber = $rootScope.selectedCompany.contactNo
     if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
       SplitNumber = contactnumber.split('-')
@@ -1630,7 +1630,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
         item.addressList[0].stateName = $scope.gstState.name
 
   $scope.getGstDetail = () ->
-    $scope.gstDetail = $rootScope.selectedCompany.gstDetails
+    $scope.gstDetail = $rootScope.selectedCompany.gstDetails || []
     if $scope.gstDetail.length < 1
         $scope.addNewGst()
 
@@ -1658,7 +1658,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $timeout( ->
     $scope.getGstDetail()
-  ,200)
+  ,100)
 
 
   $timeout( ->
