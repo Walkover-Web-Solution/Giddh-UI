@@ -419,6 +419,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # if mc.keyWord != undefined
     #   mc.breadCrumbList = []
     #   mc.keyWord = undefined
+    mc.columns = mc.columns.splice(0,mc.addToIndex+1)
     mc.gstDetail = []
 
 # get account details under groups and sub groups

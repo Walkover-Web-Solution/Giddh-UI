@@ -2704,7 +2704,7 @@ label {
      -moz-column-count: 3;
      column-count: 3;
   }
-
+}
 .tcaption {
   display: table-caption;
 }
@@ -2808,4 +2808,3 @@ label {
 .col_wrapper ul li a.isParent.isActive {
   background: #e5e5e5 !important;
 }
-
