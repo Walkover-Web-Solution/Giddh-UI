@@ -357,12 +357,14 @@ h3 {
             <td>
               <p><b>Taxable Amount</b></p>
               <p><b>Total Tax*</b></p>
+              <p ng-if="defTempData.roundOff"><b>Round off</b></p>
               <p><b>Invoice Total</b></p>
               <p><b>Invoice Total (In words)</b></p>
             </td>
             <td>
               <p><b>₹ {{defTempData.gstDetails.gstTaxableValueTotal | number : 2}}</b></p>
               <p><b>₹ {{defTempData.taxTotal | number : 2}}</b></p>
+              <p ng-if="defTempData.roundOff"><b>₹ {{defTempData.roundOff.transaction.amount | number : 2}}</b></p>
               <p><b>₹ {{defTempData.grandTotal | number : 2}}</b></p>
               <p><b>{{defTempData.grandTotal | numtowords}}</b></p>
             </td>
