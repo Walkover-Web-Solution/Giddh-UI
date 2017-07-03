@@ -419,7 +419,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # if mc.keyWord != undefined
     #   mc.breadCrumbList = []
     #   mc.keyWord = undefined
-    mc.columns = mc.columns.splice(0,mc.addToIndex+1)
+    else if mc.addToIndex < mc.parentIndex || mc.addToIndex < mc.getCurrentColIndex
+      mc.columns = mc.columns.splice(0,mc.addToIndex+1)
+      mc.breadCrumbList.splice(mc.addToIndex)
+      mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1])
     mc.gstDetail = []
 
 # get account details under groups and sub groups
@@ -1345,6 +1348,15 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   #     ), 1000
   #   else if unq == undefined
   #     mc.selectedAcc.uniqueName == null
+
+  mc.removeSpace = (val, item) ->
+    val = val.replace(/ |,|\//g,'')
+    val = val.toLowerCase()
+    item.uniqueName = val
+
+  mc.createNewForm = () ->
+    mc.selectedItem = {}
+    mc.selectedAcc = {}
 
   return mc
 

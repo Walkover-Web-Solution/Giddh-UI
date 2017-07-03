@@ -13,7 +13,7 @@
         <div class="col-xs-5">
           <div class="row">
             <label>Unique Name</label>
-            <input type="text"  class="form-control" name="grpUnq" ng-model="mc.selectedItem.uniqueName" required />
+            <input type="text" class="form-control" name="grpUnq" ng-model="mc.selectedItem.uniqueName" ng-change="mc.removeSpace(mc.selectedItem.uniqueName, mc.selectedItem)" required />
           </div>
         </div>
       </div>

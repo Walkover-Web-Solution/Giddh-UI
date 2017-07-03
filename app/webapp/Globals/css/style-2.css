@@ -2805,6 +2805,3 @@ label {
 .col_wrapper:nth-child(1) ul li a.btn-add {
   display: none !important;
 }
-.col_wrapper ul li a.isParent.isActive {
-  background: #e5e5e5 !important;
-}

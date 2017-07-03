@@ -6,7 +6,7 @@
         <div class="col-xs-6">
           <div class="row">
             <label>A/c Name</label>
-            <input type="text" name="accName" maxlength="100" ng-disabled="mc.isFixedAcc" class="form-control" ng-model="mc.selectedAcc.name" ng-change="autoFillUnq(mc.selectedAcc.name)" ng-model-options="{debounce:1000}" required />
+            <input type="text" name="accName" maxlength="100" ng-disabled="mc.isFixedAcc" class="form-control" ng-model="mc.selectedAcc.name" ng-model-options="{debounce:1000}" required />
           </div>
         </div>
       </div>
@@ -15,7 +15,7 @@
           <div class="row">
             <label>Unique Name</label>
             <input type="text"  class="form-control" name="accUnq" ng-model="mc.selectedAcc.uniqueName" valid-unique
-              ng-model="mc.selectedAcc.uniqueName" ng-disabled="mc.isFixedAcc || mc.fetchingUnq" required />
+              ng-model="mc.selectedAcc.uniqueName" ng-disabled="mc.isFixedAcc" ng-change="mc.removeSpace(mc.selectedAcc.uniqueName, mc.selectedAcc)" required />
           </div>
         </div>
         <div class="col-xs-6">
