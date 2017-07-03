@@ -316,7 +316,7 @@ h3 {
             <br />Item(₹)</th>
           <th class="text-right" ng-if="defTempData.gstDetails.showTaxes">Taxable
             <br />Value(₹)</th>
-          <th class="text-right" ng-repeat="tax in defTempData.gstDetails.gstTaxesTotal track by $index">{{tax.name}}</th>
+          <th class="text-right" ng-repeat="tax in defTempData.gstDetails.gstTaxesTotal track by $index | orderBy:'uniqueName'">{{tax.name}}</th>
           <th class="text-right">Total
             <br />₹</th>
         </tr>
@@ -332,7 +332,14 @@ h3 {
           </td>
           <td class="text-right" ng-if="item.discounts.length > 0">{{item.discounts[0].amount | number : 2}}</td>
           <td class="text-right" ng-if="defTempData.gstDetails.showTaxes">{{item.taxableValue | number : 2}}</td>
-          <td class="text-right" ng-repeat="tax in item.taxes track by $index">{{tax.amount | number : 2}}<br /><small>@{{tax.rate}}%</small></td>
+          <td class="text-right" ng-repeat="fTax in defTempData.gstDetails.gstTaxesTotal track by $index | orderBy:'uniqueName'">
+            <span ng-repeat="tax in item.taxes track by $index">
+              <span ng-if="fTax.uniqueName === tax.accountUniqueName">
+                {{tax.amount | number : 2}}<br />
+                <small>@{{tax.rate}}%</small>
+              </span>
+            </span>
+          </td>
           <td class="text-right">{{item.entryTotal | number : 2}}</td>
         </tr>
       </tbody>
@@ -344,7 +351,7 @@ h3 {
           <th ng-if="defTempData.gstDetails.showRate" class="text-right">&nbsp;</th>
           <th ng-if="defTempData.gstDetails.showDiscount" class="text-right">&nbsp;</th>
           <th class="text-right" ng-if="defTempData.gstDetails.showTaxes">{{defTempData.gstDetails.gstTaxableValueTotal | number : 2}}</th>
-          <th class="text-right" ng-repeat="tax in defTempData.gstDetails.gstTaxesTotal track by $index">{{tax.total | number : 2}}</th>
+          <th class="text-right" ng-repeat="tax in defTempData.gstDetails.gstTaxesTotal track by $index | orderBy:'uniqueName'">{{tax.total | number : 2}}</th>
           <th class="text-right">{{defTempData.gstDetails.gstEntriesTotal | number : 2}}</th>
         </tr>
       </tfoot>
