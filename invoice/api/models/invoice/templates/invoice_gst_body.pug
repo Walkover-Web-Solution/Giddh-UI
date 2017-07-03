@@ -95,60 +95,55 @@ html(xmlns='http://www.w3.org/1999/xhtml')
                 | ₹    
           tbody
             each gstEntry in gstEntries
-              if(gstEntry!='')
-                if(gstEntry != null)
-                  if(gstEntry != 'undefined')
-                    tr
+              tr
+                td
+                  | #{gstEntry.transactions[0].description}
+                if(showHsn || showSac)  
+                if(gstEntry.transactions[0].sacNumber!=null && gstEntry.transactions[0].hsnNumber!=null)
+                  td 
+                    |#{gstEntry.transactions[0].hsnNumber}/
+                    br
+                    | #{gstEntry.transactions[0].sacNumber}  
+                else if(gstEntry.transactions[0].hsnNumber!=null)
+                  td #{gstEntry.transactions[0].hsnNumber}
+                else if(gstEntry.transactions[0].sacNumber!=null)
+                  td #{gstEntry.transactions[0].sacNumber}
+                if(showQty) 
+                  if(gstEntry.quantity != 'undefined' && gstEntry.quantity !='' && gstEntry.quantity !=null) 
+                    td #{gstEntry.quantity}
+                  else
+                    td --    
+                if(showRate)
+                  if(gstEntry.rate != 'undefined' && gstEntry.rate !='' && gstEntry.rate !=null) 
+                    td #{gstEntry.rate}
+                  else
+                    td -- 
+                if(showDiscount)
+                  if(gstEntry.discounts[0] != 'undefined' && gstEntry.discounts[0] !='' && gstEntry.discounts[0] !=null )
+                    td #{gstEntry.discounts[0].amount}
+                  else
+                    td --  
+                if(showTaxes)
+                  if(gstEntry.taxableValue !='' && gstEntry.taxableValue !=null)
+                    td #{gstEntry.taxableValue}
+                  else
+                    td --  
+                  each gstTax in gstTaxesForHeaders
+                    -var found = false;
+                    -var thisGstEntryTax;
+                    each gstEntryTax in gstEntry.taxes
+                      if(gstEntryTax.accountUniqueName == gstTax.uniqueName)
+                        -thisGstEntryTax = gstEntryTax
+                        -found = true
+                    if(found)
                       td
-                        | #{gstEntry.transactions[0].description}
-                      if(showHsn || showSac)  
-                      if(gstEntry.transactions[0].sacNumber!=null && gstEntry.transactions[0].hsnNumber!=null)
-                        td 
-                          |#{gstEntry.transactions[0].hsnNumber}/
-                          br
-                          | #{gstEntry.transactions[0].sacNumber}  
-                      else if(gstEntry.transactions[0].hsnNumber!=null)
-                        td #{gstEntry.transactions[0].hsnNumber}
-                      else if(gstEntry.transactions[0].sacNumber!=null)
-                        td #{gstEntry.transactions[0].sacNumber}
-                      if(showQty) 
-                        if(gstEntry.quantity != 'undefined' && gstEntry.quantity !='' && gstEntry.quantity !=null) 
-                          td #{gstEntry.quantity}
-                        else
-                          td --    
-                      if(showRate)
-                        if(gstEntry.rate != 'undefined' && gstEntry.rate !='' && gstEntry.rate !=null) 
-                          td #{gstEntry.rate}
-                        else
-                          td -- 
-                      if(showDiscount)
-                        if(gstEntry.discounts[0] != 'undefined' && gstEntry.discounts[0] !='' && gstEntry.discounts[0] !=null )
-                          td #{gstEntry.discounts[0].amount}
-                        else
-                          td --  
-                      if(showTaxes)
-                        if(gstEntry.taxableValue !='' && gstEntry.taxableValue !=null)
-                          td #{gstEntry.taxableValue}
-                        else
-                          td --  
-                        each gstTax in gstTaxesForHeaders
-                          -var found = false;
-                          -var thisGstEntryTax;
-                          each gstEntryTax in gstEntry.taxes
-                            if(gstEntryTax.accountUniqueName == gstTax.uniqueName)
-                              -thisGstEntryTax = gstEntryTax
-                              -found = true
-                          if(found)
-                            td
-                              | #{thisGstEntryTax.amount}
-                              br
-                              small @#{thisGstEntryTax.rate}
-                          else
-                            td --
-                      if(gstEntry.entryTotal !='' && gstEntry.entryTotal !=null)  
-                        td #{gstEntry.entryTotal}
-                      else
-                        td --  
+                        | #{thisGstEntryTax.amount}
+                        br
+                        small @#{thisGstEntryTax.rate}
+                if(gstEntry.entryTotal)  
+                  td #{gstEntry.entryTotal}
+                else
+                  td --  
           tfoot(style='background: #f5f5f5;')
             tr
               th &nbsp;
@@ -182,6 +177,12 @@ html(xmlns='http://www.w3.org/1999/xhtml')
                   | Total Tax*
                 td
                   | ₹ #{gstTaxableValueTotal}
+              if(roundOff)
+                tr
+                  td
+                    | Round off
+                  td
+                    | ₹ #{roundOff}
               tr
                 td
                   | Invoice Total
