@@ -37,7 +37,7 @@
       </div>
       <div class="form-group col-xs-5 pdL0 mr0">
         <input name="moveGrp" ng-model="mc.moveto" type="text" placeholder="Group name" class="form-control" required
-        uib-typeahead="groups as groups.name for groups in mc.flattenGroupList | omit: mc.isChildGroup | filter:{name: $viewValue} | limitTo:8" append-to-body="true" position='auto' />
+        uib-typeahead="groups as groups.name for groups in mc.flattenGroupList | omit: mc.isChildGroup | filter:{name: $viewValue} | limitTo:8" position='auto' />
       </div>
       <div class="form-group mr0">
         <button class="btn isActive" ng-click="mc.moveGroup(mc.moveto)" ng-disabled="moveGrp.$invalid">Move</button>

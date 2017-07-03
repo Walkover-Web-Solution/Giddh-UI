@@ -621,3 +621,7 @@ angular.module('trialBalance', []).directive('exportReport', [
   (num) ->
     num = Math.abs(num)
     return num
+
+.filter 'nospace', ->
+  (value) ->
+    if !value then '' else value.replace(RegExp(' ', 'g'), '')

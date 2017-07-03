@@ -318,6 +318,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.onCreateGroupSuccess = (res) ->
     mc.keyWord = undefined
+    res.body.accounts = res.body.accounts || []
     mc.flattenGroupList.push(res.body)
     mc.columns[mc.addToIndex].groups.push(res.body)
     toastr.success("Sub group added successfully", "Success")
@@ -978,6 +979,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.mergeSuccess = (res) ->
     mc.toMerge.mergedAcc = []
+    mc.mergeAccList = []
     toastr.success(res.body)
     _.each mc.toMerge.mergedAcc, (acc) ->
       $rootScope.removeAccountFromPaginatedList(acc)
@@ -1350,9 +1352,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   #     mc.selectedAcc.uniqueName == null
 
   mc.removeSpace = (val, item) ->
-    val = val.replace(/ |,|\//g,'')
-    val = val.toLowerCase()
-    item.uniqueName = val
+    if val && val.length  > 0
+      val = val.replace(/ |,|\//g,'')
+      val = val.toLowerCase()
+      item.uniqueName = val
 
   mc.createNewForm = () ->
     mc.selectedItem = {}
