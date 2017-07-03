@@ -120,6 +120,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.gstDetail = []
   $scope.stateList = []
+  $scope.setDefaultGst = false;
 
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
@@ -180,8 +181,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
-    $scope.removeBlankGst($rootScope.selectedCompany.companyGstDetails)
-    $rootScope.selectedCompany.companyGstDetails = $scope.gstDetail
+    $scope.removeBlankGst($rootScope.selectedCompany.gstDetails)
+    $rootScope.selectedCompany.gstDetails = $scope.gstDetail
     if _.isObject(data.cCode)
       data.contactNo = data.cCode.value + "-" + data.mobileNo
     else
@@ -194,7 +195,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     localStorageService.set("_selectedCompany", res.body)
     toastr.success("Company updated successfully", "Success")
     $scope.getCompanyList()
-    $scope.gstDetail = $rootScope.selectedCompany.companyGstDetails
+    $scope.gstDetail = $rootScope.selectedCompany.gstDetails
     contactnumber = $rootScope.selectedCompany.contactNo
     if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
       SplitNumber = contactnumber.split('-')
@@ -205,7 +206,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #update company failure
   $scope.updtCompanyFailure = (res)->
+    $rootScope.selectedCompany.gstDetails = $scope.gstDetail
+    if $scope.gstDetail.length < 1
+        $scope.addNewGst()
     toastr.error(res.data.message, res.data.status)
+
 
   #to inject form again on scope do not remove very imp function
   $scope.setFormScope = (scope) ->
@@ -1595,15 +1600,16 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.addNewGst = () ->
     gstDetail = {
       gstNumber: "",
-      addresses: [
+      addressList: [
           {
             address:"",
             stateCode: "",
-            stateName: ""
+            stateName: "",
+            isDefault: false
           }
       ]
     }
-    $rootScope.selectedCompany.companyGstDetails.unshift(gstDetail)
+    $scope.gstDetail.unshift(gstDetail)
 
   $scope.getStateByAPI = () ->
     @success=(res)->
@@ -1620,11 +1626,11 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     if val.length >= 2
       $scope.gstState = _.findWhere($scope.stateList, {code:val.substr(0,2)})
       if $scope.gstState
-        item.addresses[0].stateCode = $scope.gstState.code
-        item.addresses[0].stateName = $scope.gstState.name
+        item.addressList[0].stateCode = $scope.gstState.code
+        item.addressList[0].stateName = $scope.gstState.name
 
   $scope.getGstDetail = () ->
-    $scope.gstDetail = $rootScope.selectedCompany.companyGstDetails
+    $scope.gstDetail = $rootScope.selectedCompany.gstDetails
     if $scope.gstDetail.length < 1
         $scope.addNewGst()
 
@@ -1641,7 +1647,19 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.gstDetail = gstList
     console.log gstList 
 
-  $scope.getGstDetail()
+  $scope.checkIsDefault = (gst, e) ->
+    _.each $scope.gstDetail, (item) ->
+      item.addressList[0].isDefault = false
+    if gst.gstNumber
+      gst.addressList[0].isDefault = true
+    else
+      toastr.error("Invalid GST Number")
+    e.stopPropagation()
+
+  $timeout( ->
+    $scope.getGstDetail()
+  ,200)
+
 
   $timeout( ->
     $rootScope.selAcntUname = undefined

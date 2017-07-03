@@ -2805,3 +2805,14 @@ label {
 .col_wrapper:nth-child(1) ul li a.btn-add {
   display: none !important;
 }
+
+.Default_box {
+    float: left;
+    display: inline-block;
+    position: absolute;
+    right: 2px;
+    top: 42px;
+}
+.grey_clr {
+  color: #6d6d6d;
+}
