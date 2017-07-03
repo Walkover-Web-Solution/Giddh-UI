@@ -330,7 +330,11 @@ h3 {
           <td class="text-right" ng-if="item.transactions[0].rate != null">
             {{item.transactions[0].rate | number : 2}}
           </td>
+          <td class="text-right" ng-if="item.transactions[0].rate === null && defTempData.gstDetails.showRate">&nbsp;</td>
+
           <td class="text-right" ng-if="item.discounts.length > 0">{{item.discounts[0].amount | number : 2}}</td>
+          <td class="text-right" ng-if="item.discounts.length === 0 && defTempData.gstDetails.showDiscount">&nbsp;</td>
+
           <td class="text-right" ng-if="defTempData.gstDetails.showTaxes">{{item.taxableValue | number : 2}}</td>
           <td class="text-right" ng-repeat="fTax in defTempData.gstDetails.gstTaxesTotal track by $index | orderBy:'uniqueName'">
             <span ng-repeat="tax in item.taxes track by $index">
