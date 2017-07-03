@@ -2802,8 +2802,6 @@ label {
     top: -12px;
     position: relative;
 }
-
-
 .col_wrapper:nth-child(1) ul li a.btn-add {
   display: none !important;
 }

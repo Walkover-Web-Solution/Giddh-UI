@@ -1595,7 +1595,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.addNewGst = () ->
     gstDetail = {
       gstNumber: "",
-      addressList: [
+      addresses: [
           {
             address:"",
             stateCode: "",
@@ -1620,13 +1620,13 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     if val.length >= 2
       $scope.gstState = _.findWhere($scope.stateList, {code:val.substr(0,2)})
       if $scope.gstState
-        item.addressList[0].stateCode = $scope.gstState.code
-        item.addressList[0].stateName = $scope.gstState.name
+        item.addresses[0].stateCode = $scope.gstState.code
+        item.addresses[0].stateName = $scope.gstState.name
 
-  # $scope.getGstDetail = () ->
-  #   $scope.gstDetail = $rootScope.selectedCompany.companyGstDetails
-  #   if $scope.gstDetail.length < 1
-  #       $scope.addNewGst()
+  $scope.getGstDetail = () ->
+    $scope.gstDetail = $rootScope.selectedCompany.companyGstDetails
+    if $scope.gstDetail.length < 1
+        $scope.addNewGst()
 
   $scope.deleteGst = (obj, i) ->
     console.log obj
@@ -1641,7 +1641,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       $scope.gstDetail = gstList
     console.log gstList 
 
-  # $scope.getGstDetail()
+  $scope.getGstDetail()
 
   $timeout( ->
     $rootScope.selAcntUname = undefined
