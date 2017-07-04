@@ -20,6 +20,9 @@ angular.module('exportDirectives', [])
           }
           rawData = scope.exportData
           companyDetails = $rootScope.selectedCompany
+          companyDetails.address = companyDetails.address || ''
+          companyDetails.city = companyDetails.city || ''
+          companyDetails.pincode = companyDetails.pincode || ''
 
           _.each rawData, (obj) ->
             group = {}
@@ -122,7 +125,7 @@ angular.module('exportDirectives', [])
           rows = accounts
 
           pdf.autoTable(columns,rows,
-              theme: "plain"
+              theme: "plain",
               margin: {
                   top: 110
                 },
@@ -172,6 +175,9 @@ angular.module('exportDirectives', [])
           groups = []
           rawData = scope.exportData
           companyDetails = $rootScope.selectedCompany
+          companyDetails.address = companyDetails.address || ''
+          companyDetails.city = companyDetails.city || ''
+          companyDetails.pincode = companyDetails.pincode || ''
           total = {
             ob: 0
             cb: 0
@@ -285,7 +291,10 @@ angular.module('exportDirectives', [])
 
         pdf = new jsPDF
         # initial coordinates
-        companyDetails = $rootScope.selectedCompany 
+        companyDetails = $rootScope.selectedCompany
+        companyDetails.address = companyDetails.address || ''
+        companyDetails.city = companyDetails.city || ''
+        companyDetails.pincode = companyDetails.pincode || '' 
         colX = 10
         colY = 50
 
@@ -338,7 +347,6 @@ angular.module('exportDirectives', [])
               #loop over childgroups and write values
               colX += 5
               _.each childgroups, (childGrp) ->
-                console.log childGrp
                 writeText(childGrp)
 
                 if childGrp.subAccounts.length > 0
@@ -512,6 +520,9 @@ angular.module('exportDirectives', [])
           expenseTotal = plData.expenseTotal.toString()
           pl = $filter('number')(plData.closingBalance, 3)
           companyDetails = $rootScope.selectedCompany
+          companyDetails.address = companyDetails.address || ''
+          companyDetails.city = companyDetails.city || ''
+          companyDetails.pincode = companyDetails.pincode || ''
           colX = 20
           colY = 40
           pWidth = pdf.internal.pageSize.width
