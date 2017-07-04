@@ -324,8 +324,8 @@ h3 {
       <tbody>
         <tr ng-repeat="item in defTempData.gstDetails.gstEntries track by $index">
           <td>{{item.transactions[0].description}}</td>
-          <td class="text-right" ng-if="item.transactions[0].hsnNumber != null">{{item.transactions[0].hsnNumber}}</td>
-          <td class="text-right" ng-if="item.transactions[0].sacNumber != null">{{item.transactions[0].sacNumber}}</td>
+          <td ng-if="item.transactions[0].hsnNumber != null">{{item.transactions[0].hsnNumber}} (H)</td>
+          <td ng-if="item.transactions[0].sacNumber != null">{{item.transactions[0].sacNumber}} (S)</td>
           <td ng-if="item.transactions[0].quantity != null">{{item.transactions[0].quantity}}</td>
           <td class="text-right" ng-if="item.transactions[0].rate != null">
             {{item.transactions[0].rate | number : 2}}
