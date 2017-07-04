@@ -783,6 +783,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 #    if angular.equals(mc.selectedAcc, mc.selAcntPrevObj)
 #      toastr.info("Nothing to update", "Info")
 #      return false
+    delete mc.selectedAcc.stocks
 
     if mc.selectedAcc.openingBalanceType == null
       mc.selectedAcc.openingBalanceType = 'credit'
