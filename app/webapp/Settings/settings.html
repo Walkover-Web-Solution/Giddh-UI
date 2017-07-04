@@ -683,9 +683,9 @@
                               </span>
                             </div>
                             <i class="fa fa-times cursor-pointer" aria-hidden="true" ng-click="deleteGst(gst, $index)"></i>
-                            
+                            {{gst.addressList[0].isDefault}}
                             <span class="Default_box">
-                            <input title="Set as Default" type="checkbox"  name="isDefault" ng-model="gst.addressList[0].isDefault" ng-checked="gst.addressList[0].isDefault === 'true' ? true: false" ng-click="checkIsDefault(gst, $event)" />
+                            <input type="checkbox"  name="isDefault" ng-model="gst.addressList[0].isDefault" ng-click="checkIsDefault(gst, $event)" />
                             </span>
                           </li>
                       </ul>
