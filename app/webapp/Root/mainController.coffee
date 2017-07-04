@@ -323,7 +323,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $scope.refreshcompanyListSuccess = (res) ->
     $scope.companyList = _.sortBy(res.body, 'shared')
-    $scope.findCompanyInList()
+    # $scope.findCompanyInList()
 
   #delete company failure
   $scope.delCompanyFailure = (res) ->
