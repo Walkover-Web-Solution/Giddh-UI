@@ -439,15 +439,19 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     toastr.error(res.data.message, res.data.status)
 
   $rootScope.setCompany = (company) ->
-    #angular.extend($rootScope.selectedCompany, company)
     $rootScope.selectedCompany = company
     $rootScope.fltAccntListPaginated = []
-    #$rootScope.selectedCompany = company
+    $rootScope.breakCompanyContactDetails()
     $scope.checkPermissions($rootScope.selectedCompany)
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
     $scope.getGroupsList()
-#    $rootScope.getCroppedAccountList(company.uniqueName, '')
+
+  $rootScope.breakCompanyContactDetails = () ->
+    if $rootScope.selectedCompany.contactNo
+      result = $rootScope.selectedCompany.contactNo.split("-")
+      $rootScope.selectedCompany.cCode = result[0]
+      $rootScope.selectedCompany.mobileNo = result[1]
 
 
   $rootScope.getParticularAccount = (searchThis) ->
