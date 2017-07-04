@@ -172,6 +172,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.getAccountDetail(sortedAccList[0])
 
   ledgerCtrl.getAccountDetailSuccess = (res) ->
+    ledgerCtrl.showEledger = false
     localStorageService.set('_selectedAccount', res.body)
     $rootScope.selectedAccount = res.body
     ledgerCtrl.accountToShow = $rootScope.selectedAccount
@@ -182,10 +183,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     $state.go($state.current, {unqName: res.body.uniqueName}, {notify: false})
     if res.body.uniqueName == 'cash'
       $rootScope.ledgerState = true
-    # ledgerCtrl.getPaginatedLedger(1)
+    
     ledgerCtrl.getUnderstanding(res.body)
     if res.body.yodleeAdded == true && $rootScope.canUpdate
-      #get bank transaction here
       $timeout ( ->
         ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
       ), 2000
@@ -220,6 +220,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     toastr.error(res.data.message, res.data.status)
 
   ledgerCtrl.getBankTransactionsSuccess = (res) ->
+    ledgerCtrl.showEledger = true
     ledgerCtrl.eLedgerData = ledgerCtrl.formatBankLedgers(res.body)
     ledgerCtrl.calculateELedger()
     ledgerCtrl.getReconciledEntries()
@@ -2130,7 +2131,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.getTaxList()
         ledgerCtrl.getDiscountGroupDetail()
         ledgerCtrl.resetBlankLedger()
-        #ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
 
   ledgerCtrl.hasParent = (target, parent) ->
     target = $(target)
