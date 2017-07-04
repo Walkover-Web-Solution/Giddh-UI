@@ -436,7 +436,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     item.hLevel = mc.getCurrentColIndex
     mc.selectedType = 'acc'
     if mc.keyWord != undefined
-      if mc.keyWord.length > 3
+      if mc.keyWord.length >= 3
         mc.updateSearchItem = true
         mc.updateSearchhierarchy(item)
     reqParam = {
@@ -1222,7 +1222,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       if grp.accounts.length > 0
         _.each grp.accounts, (acc) ->
           col.accounts.push(acc)
-    mc.columns.push(col)
+    if col.groups.length > 0 || col.accounts.length > 0
+      mc.columns.push(col)
     if col.groups.length > 0 || col.accounts.length > 0
       mc.addColumnOnSearchChildLevels(col.groups, {})
 
