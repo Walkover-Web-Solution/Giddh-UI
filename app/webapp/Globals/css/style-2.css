@@ -2804,3 +2804,7 @@ label {
 .grey_clr {
   color: #6d6d6d;
 }
+
+.grp_col::-webkit-scrollbar {
+   margin-left: 255px;
+}
