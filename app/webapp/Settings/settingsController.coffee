@@ -916,6 +916,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
 
   $scope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
+      $scope.prepareContactDetailsForBasicInfo()
       _.each($scope.tabs, (tab) ->
         if tab.active == true
           if tab.title == "Invoice/Proforma"
@@ -929,6 +930,11 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
       )
 
   $scope.checkForCompany()
+
+  $scope.prepareContactDetailsForBasicInfo=() ->
+    if not _.isUndefined($rootScope.selectedCompany)
+      $rootScope.breakCompanyContactDetails()
+
   ##--payment details functions--###
    # payment details related func
   $scope.primPayeeChange = (a, b) ->
@@ -1389,5 +1395,8 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
         cYear = yr
     $rootScope.setActiveFinancialYear(cYear)
     localStorageService.set('activeFY', cYear)
+
+  # dom load funcs
+  $scope.prepareContactDetailsForBasicInfo()
 
 giddh.webApp.controller 'settingsController', settingsController
