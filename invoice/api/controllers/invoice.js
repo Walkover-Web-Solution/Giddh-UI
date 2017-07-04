@@ -39,6 +39,7 @@ invoice.downloadInvoice = function(req, res) {
     companyData: invoiceObj.company.data,
     logo: invoiceObj.logo.path,
     //various totals
+    taxTotal: invoiceObj.taxTotal,
     grandTotal: invoiceObj.grandTotal,
     subTotal: invoiceObj.subTotal,
     totalAsWords: invoiceObj.totalAsWords,

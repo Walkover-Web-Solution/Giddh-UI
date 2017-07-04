@@ -173,23 +173,23 @@ html(xmlns='http://www.w3.org/1999/xhtml')
                 td
                   | Taxable Amount
                 td
-                  | ₹ #{subTotal.toFixed(2)}
+                  | ₹ #{gstTaxableValueTotal}
               tr
                 td
                   | Total Tax*
                 td
-                  | ₹ #{gstTaxableValueTotal.toFixed(2)}
+                  | ₹ #{taxTotal}
               if(roundOff)
                 tr
                   td
                     | Round off
                   td
-                    | ₹ #{roundOff.transaction.amount.toFixed(2)}
+                    | ₹ #{roundOff.transaction.amount}
               tr
                 td
                   | Invoice Total
                 td
-                  | ₹ #{grandTotal.toFixed(2)}
+                  | ₹ #{grandTotal}
               tr
                 if(totalAsWords!=null && totalAsWords!='' && totalAsWords !='undefined')
                   td
