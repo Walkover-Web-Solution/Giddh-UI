@@ -784,6 +784,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 #      toastr.info("Nothing to update", "Info")
 #      return false
     delete mc.selectedAcc.stocks
+    delete mc.selectedAcc.createdBy
+    delete mc.selectedAcc.parentGroups
+    delete mc.selectedAcc.role
 
     if mc.selectedAcc.openingBalanceType == null
       mc.selectedAcc.openingBalanceType = 'credit'

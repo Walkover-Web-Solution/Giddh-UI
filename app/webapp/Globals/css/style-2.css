@@ -2693,11 +2693,6 @@ label {
   clear: both;
 }
 
-/******** commented due to old manage modal ******/
-/*#getGroupModal .select-locked {
-    display: none !important;
-}*/
-
 .tcaption {
   display: table-caption;
 }
