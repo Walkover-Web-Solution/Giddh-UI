@@ -150,17 +150,17 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.setTab = (value) ->
     $scope.selectedTab = value
     $timeout ( ->
-      $scope.commonGoButtonClick()
+      $scope.commonGoButtonClick(value)
     ),2000
     if value == 2
       $scope.hideFilters = true
     else
       $scope.hideFilters = false
 
-  $scope.commonGoButtonClick = () ->
-    if $scope.selectedTab == 0
+  $scope.commonGoButtonClick = (val) ->
+    if val == 0
       $scope.getAllInvoices()
-    else if $scope.selectedTab == 1
+    else if val == 1
       $scope.ledgerCurrentPage = 1
       $scope.inCaseOfFailedInvoice = []
       sendForGenerate = []
