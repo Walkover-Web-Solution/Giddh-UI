@@ -229,7 +229,8 @@
         </div>
         <div class="form-group col-xs-5 pdL0 mr0">
           <input ng-model="mc.moveacto" name="moveacto" type="text" placeholder="Select Group" class="form-control" required
-          uib-typeahead="groups as groups.name for groups in mc.flattenGroupList | omit: mc.isCurrentGroup | filter:({name:$viewValue} || {uniqueName:$viewValue} || {synonyms:$viewValue}) | limitTo: 4"/>
+          uib-typeahead="groups as groups.name for groups in mc.flattenGroupList | omit: mc.isCurrentGroup | filter:({name:$viewValue} || {uniqueName:$viewValue} || {synonyms:$viewValue}) | limitTo: 4"
+          typeahead-template-url="moveaccount.html"/>
         </div>
         <div class="form-group mr0">
           <button class="btn isActive" ng-click="mc.moveAccnt(mc.moveacto)" ng-disabled="moveacto.$invalid">Move</button>
@@ -307,3 +308,10 @@
 
   </div>
  
+
+ <script type="text/ng-template" id="moveaccount.html">
+  <a href="javascript:void(0)" class="account-list-item" set-drop-overflow style="border-bottom:1px solid #e0e0e0;">
+    <span class="account-list-item" ng-bind-html="match.label | uibTypeaheadHighlight:query" style="display: block;font-size:12px"></span>
+    <span class="account-list-item" ng-bind-html="match.model.uniqueName | uibTypeaheadHighlight:query" style="display: block;font-size:10px"></span>
+  </a>
+</script>
