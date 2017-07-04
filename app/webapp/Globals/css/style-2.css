@@ -2806,5 +2806,18 @@ label {
 }
 
 .grp_col::-webkit-scrollbar {
-   margin-left: 255px;
+  width: 2em;
+  position: relative;
+  margin-left: 255px;
+}
+
+.grp_col::-webkit-scrollbar-track {
+  background: #eee;
+  margin-left: 255px;
+}
+
+.grp_col::-webkit-scrollbar-thumb {
+  background-color: darkgrey;
+  outline: 1px solid slategrey;
+  margin-left: 255px;
 }
