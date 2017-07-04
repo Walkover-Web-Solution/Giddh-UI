@@ -2698,13 +2698,6 @@ label {
     display: none !important;
 }*/
 
-@media only screen and (min-width: 1336px) and (max-width: 1440px) {
-  .grp_wrapper {
-     -webkit-column-count: 3;
-     -moz-column-count: 3;
-     column-count: 3;
-  }
-}
 .tcaption {
   display: table-caption;
 }
