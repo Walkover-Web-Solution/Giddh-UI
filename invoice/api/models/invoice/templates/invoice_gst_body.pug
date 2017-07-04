@@ -110,13 +110,13 @@ html(xmlns='http://www.w3.org/1999/xhtml')
                   else if(gstEntry.transactions[0].sacNumber!=null)
                     td #{gstEntry.transactions[0].sacNumber}
                   if(showQty) 
-                    if(gstEntry.quantity != 'undefined' && gstEntry.quantity !='' && gstEntry.quantity !=null) 
-                      td #{gstEntry.quantity}
+                    if(gstEntry.transactions[0].quantity) 
+                      td #{gstEntry.transactions[0].quantity}
                     else
                       td --    
                   if(showRate)
-                    if(gstEntry.rate != 'undefined' && gstEntry.rate !='' && gstEntry.rate !=null) 
-                      td #{gstEntry.rate}
+                    if(gstEntry.transactions[0].rate) 
+                      td #{gstEntry.transactions[0].rate}
                     else
                       td -- 
                   if(showDiscount)
