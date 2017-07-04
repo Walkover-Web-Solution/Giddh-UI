@@ -317,7 +317,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     groupService.create($rootScope.selectedCompany.uniqueName, body).then(mc.onCreateGroupSuccess,mc.onCreateGroupFailure)
 
   mc.onCreateGroupSuccess = (res) ->
-    mc.keyWord = undefined
+    mc.keyWord = ''
     res.body.accounts = res.body.accounts || []
     mc.flattenGroupList.push(res.body)
     mc.columns[mc.addToIndex].groups.push(res.body)
