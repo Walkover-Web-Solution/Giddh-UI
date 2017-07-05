@@ -755,7 +755,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # mc.breadCrumbList = undefined
     mc.stateDetail = mc.stateDetail
     mc.removeBlankGst(mc.gstDetail)
-    mc.acntCase = "Update"
+    mc.selectedAcc.gstDetails = mc.gstDetail
 
   mc.addAccountSuccess = (res) ->
     toastr.success("Account created successfully", res.status)
@@ -1302,6 +1302,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       if mc.gstState
         item.addressList[0].stateCode = mc.gstState.code
         item.addressList[0].stateName = mc.gstState.name
+    else if val.length < 2
+      item.addressList[0].stateCode = ''
+      item.addressList[0].stateName = ''
 
   mc.getColsCount = () ->
     calcWidth = mc.columns.length * 260

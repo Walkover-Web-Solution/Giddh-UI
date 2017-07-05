@@ -125,8 +125,12 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   getUserSuccess = (res) ->
     localStorageService.set('_userDetails', res.data.body)
     $rootScope.basicInfo = res.data.body
-    $scope.userName = $rootScope.basicInfo.name.split(" ")
-    $scope.userName = $scope.userName[0][0]+$scope.userName[1][0]
+    if $rootScope.basicInfo.name.indexOf(" ") != -1
+     $scope.userName = $rootScope.basicInfo.name.split(" ")
+     $scope.userName = $scope.userName[0][0]+$scope.userName[1][0]
+    else if $rootScope.basicInfo.name.indexOf("@") != -1
+     $scope.userName = $rootScope.basicInfo.name.split("@")
+     $scope.userName = $scope.userName[0][0]
     $rootScope.getCompanyList()
     if !_.isEmpty($rootScope.selectedCompany)
       $rootScope.cmpViewShow = true
