@@ -66,10 +66,14 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
           firstLogin:true
         }
         checkRole = (data) ->
-          return {
-          type: data.role.uniqueName
-          data: data
-          }
+          obj = {}
+          obj.type = ''
+          obj.data = {}
+          if data
+            obj.type = data.role.uniqueName
+            obj.data = data
+          return obj
+           
         onSuccess = (res) ->
           companyList = _.sortBy(res.body, 'shared')
           cdt = localStorageService.get("_selectedCompany")
