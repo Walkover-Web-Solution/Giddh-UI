@@ -121,6 +121,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 # end
 
   mc.getGroupListSuccess = (res) ->
+    mc.showNoResult = false
     res.body = mc.orderGroups(res.body)
     mc.searchLoad = false
     mc.columns = []
@@ -784,7 +785,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 #      return false
     delete mc.selectedAcc.stocks
     delete mc.selectedAcc.createdBy
-    delete mc.selectedAcc.parentGroups
     delete mc.selectedAcc.role
 
     if mc.selectedAcc.openingBalanceType == null
@@ -1181,6 +1181,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       groupService.searchGroupsWithAccountsCropped(reqParam).then(mc.getSearchResultSuccess, mc.getSearchResultFailure)
 
   mc.getSearchResultSuccess = (res) ->
+    if res.body.length < 1
+      mc.columns = []
+      mc.showNoResult = true
     mc.searchLoad = false
     # mc.updateBreadCrumbs = false
     # toastr.success(res.status)
