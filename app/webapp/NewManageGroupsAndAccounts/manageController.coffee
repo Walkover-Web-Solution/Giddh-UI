@@ -130,6 +130,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     col.groups = mc.addHLevel(res.body, 0)
     col.accounts = []
     mc.columns.push(col)
+    $rootScope.flatGroupsList = groupService.flattenGroup(res.body, [])
     if mc.breadCrumbList.length
       mc.updateAll(res.body)
     mc.flattenGroupList = groupService.makeGroupListFlatwithLessDtl($rootScope.flatGroupsList)
