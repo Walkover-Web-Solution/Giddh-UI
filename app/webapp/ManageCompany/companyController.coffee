@@ -1629,6 +1629,9 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
       if $scope.gstState
         item.addressList[0].stateCode = $scope.gstState.code
         item.addressList[0].stateName = $scope.gstState.name
+    else if val.length < 2
+      item.addressList[0].stateCode = ''
+      item.addressList[0].stateName = ''
 
   $scope.getGstDetail = () ->
     $scope.gstDetail = $rootScope.selectedCompany.gstDetails
