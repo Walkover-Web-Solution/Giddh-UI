@@ -420,8 +420,19 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       if cmp.shared
         $rootScope.hasOwnCompany = true
 
+  # get index of a company from company list array
+  $scope.getcompanyIndex = (company) ->
+    idx = 0
+    if $scope.companyList.length > 0
+      _.each $scope.companyList, (cmp, index) ->
+        if cmp.uniqueName == company.uniqueName
+          idx = index
+    return idx
+
+  # get last selected company from localstorage and match from new list
   $scope.findCompanyInList = () ->
     cdt = localStorageService.get("_selectedCompany")
+    # if we get a company from localstorage
     if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
       cdt = _.findWhere($scope.companyList, {uniqueName: cdt.uniqueName})
       if _.isUndefined(cdt)
@@ -429,9 +440,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
         $rootScope.setCompany($scope.companyList[0])
         $rootScope.companyIndex = 0
       else
-        $scope.changeCompany(cdt,cdt.index,'SELECT')
+        $rootScope.companyIndex = $scope.getcompanyIndex(cdt)
+        $scope.changeCompany(cdt,$rootScope.companyIndex,'SELECT')
         $rootScope.setCompany(cdt)
-        $rootScope.companyIndex = cdt.index
+    #if we dont get a company from localstorage, set company at 0 index as selected company
     else
       $scope.changeCompany($scope.companyList[0],0,'CHANGE')
       $rootScope.setCompany($scope.companyList[0])
@@ -599,7 +611,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   
 
   $scope.changeCompany = (company, index, method) ->
-#    console.log("method we get here is : ", method)
+    #console.log("method we get here is : ", method)
     # select and set active financial year
     if _.isUndefined(company)
       return
@@ -620,9 +632,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     else
       $rootScope.canManageComp = true
       #$scope.goToCompany(company, index, "CHANGED")
-      $rootScope.setCompany(company)
+      if method == 'CHANGE'
+        $rootScope.setCompany(company)
       $rootScope.selectedCompany.index = index
-    $rootScope.$emit('reloadAccounts')
+    # $rootScope.$emit('reloadAccounts')
     changeData = {}
     changeData.data = company
     changeData.index = index

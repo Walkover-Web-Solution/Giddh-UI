@@ -140,7 +140,7 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: ''
     abstract: true
     templateUrl: appendThis+'/public/webapp/views/home.html'
-    controller:'groupController'
+    # controller:'groupController'
   )
   .state('company.content',
     url: ''
