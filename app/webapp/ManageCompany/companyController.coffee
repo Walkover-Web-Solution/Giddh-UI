@@ -1627,8 +1627,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     if val.length >= 2
       $scope.gstState = _.findWhere($scope.stateList, {code:val.substr(0,2)})
       if $scope.gstState
-        item.addresses[0].stateCode = $scope.gstState.code
-        item.addresses[0].stateName = $scope.gstState.name
+        item.addressList[0].stateCode = $scope.gstState.code
+        item.addressList[0].stateName = $scope.gstState.name
 
   $scope.getGstDetail = () ->
     $scope.gstDetail = $rootScope.selectedCompany.gstDetails
