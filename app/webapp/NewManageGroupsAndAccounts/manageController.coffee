@@ -132,7 +132,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.columns.push(col)
     if mc.breadCrumbList.length
       mc.updateAll(res.body)
-    mc.flattenGroupList = groupService.makeGroupListFlatwithLessDtl($rootScope.flatGroupsList)
+    mc.flattenGroupList = groupService.flattenGroup(res.body, [])
 
   mc.getGroupListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -180,7 +180,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   # mc.selectItemAfterUpdate = (item, fromApi) ->
 
   mc.populateAccountList = (item) ->
-    result = groupService.matchAndReturnGroupObj(item, $rootScope.flatGroupsList)
+    result = groupService.matchAndReturnGroupObj(item, mc.flattenGroupList)
     mc.groupAccntList = result.accounts
 
   mc.updateAll = (groupList) ->
@@ -720,7 +720,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.getAccountCategory = (parentGroups) ->
     pg = parentGroups[0]['uniqueName']
-    grp = _.findWhere($rootScope.flatGroupsList, {uniqueName:pg})
+    grp = _.findWhere(mc.flattenGroupList, {uniqueName:pg})
     grp.category
 
 
@@ -1255,7 +1255,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.updateSearchhierarchy = (data) ->
     if mc.selectedType == "grp"
-      currentItem = _.findWhere($rootScope.flatGroupsList, {uniqueName:data.uniqueName})
+      currentItem = _.findWhere(mc.flattenGroupList, {uniqueName:data.uniqueName})
     else
       currentItem = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:data.uniqueName})
     currentItem = _.extend(data, currentItem)
