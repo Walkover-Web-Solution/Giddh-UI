@@ -755,7 +755,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # mc.breadCrumbList = undefined
     mc.stateDetail = mc.stateDetail
     mc.removeBlankGst(mc.gstDetail)
-    mc.acntCase = "Update"
+    mc.selectedAcc.gstDetails = mc.gstDetail
 
   mc.addAccountSuccess = (res) ->
     toastr.success("Account created successfully", res.status)
