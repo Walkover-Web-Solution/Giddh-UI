@@ -2794,6 +2794,10 @@ label {
   display: none !important;
 }
 
+.companyGst .gst {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ddd;
+}
 .Default_box {
     float: left;
     display: inline-block;
@@ -2820,4 +2824,7 @@ label {
   background-color: darkgrey;
   outline: 1px solid slategrey;
   margin-left: 255px;
+}
+.no-result h1 {
+  font-size: 1.3em;
 }

@@ -33,6 +33,9 @@
       <div class="search-loading" ng-hide="mc.showListGroupsNow" ng-show="mc.searchLoad">
         <div class="vcenter"><span class="spinner small"></span> Loading…</div>
       </div>
+      <div class="search-loading no-result" ng-show="mc.showNoResult">
+        <div class="vcenter"><h1>No Result Found</h1></div>
+      </div>
       <div class="grp_col fullWidth">
       <ul>
         <li ng-repeat="ass in mc.mainGrp">
