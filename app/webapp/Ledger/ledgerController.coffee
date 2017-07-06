@@ -1822,6 +1822,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     }
     ledgerCtrl.blankLedger = {
       isBlankLedger : true
+      attachedFile: ""
+      attachedFileName: ""
       description:null
       entryDate:$filter('date')(new Date(), "dd-MM-yyyy")
       invoiceGenerated:false
