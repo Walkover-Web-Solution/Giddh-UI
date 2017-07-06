@@ -1190,8 +1190,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     if res.body.length < 1
       mc.columns = []
       mc.showNoResult = true
+    else
+      mc.showNoResult = false
     mc.searchLoad = false
-    mc.showNoResult = false
     # mc.updateBreadCrumbs = false
     # toastr.success(res.status)
     mc.pushSearchResult(res.body)
