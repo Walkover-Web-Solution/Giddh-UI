@@ -752,6 +752,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.addApplicableTaxes(item.applicableTaxes)
     if ledgerCtrl.showTaxationDiscountBox == false
       category = ledgerCtrl.getAccCategoryByUniquename(ledgerCtrl.accountToShow.uniqueName)
+      ledgerCtrl.showHideInvGenOpts(category)
       if category is "income" || category == "expenses"
         ledgerCtrl.showTaxationDiscountBox = true
         ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
