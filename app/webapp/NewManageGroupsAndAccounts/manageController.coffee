@@ -291,6 +291,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # mc.populateAccountList(res.body)
     if mc.parentIndex != undefined
       mc.columns.length = mc.parentIndex + 2
+    mc.getCurrentColIndex = undefined
 
   mc.getGrpDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -1262,7 +1263,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getGroups()
 
   mc.updateSearchhierarchy = (data) ->
-    if mc.selectedType == "grp"
+    if data.groups != undefined && data.accounts != undefined
       currentItem = _.findWhere(mc.flattenGroupList, {uniqueName:data.uniqueName})
     else
       currentItem = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:data.uniqueName})
@@ -1378,6 +1379,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.createNewForm = () ->
     mc.selectedItem = {}
     mc.selectedAcc = {}
+
+  mc.checkValidState = (state) ->
+    if state.length < 1
+      mc.selectedAcc.stateCode = ""
 
   return mc
 
