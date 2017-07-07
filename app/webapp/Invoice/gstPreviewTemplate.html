@@ -231,12 +231,20 @@ h3 {
                   <h3 style="color:#E14926 !important;">{{ defTempData.company.name }}</h3>
                   <table class="with-pd">
                     <tbody>
-                      <tr>
+                      <tr ng-if="defTempData.gstDetails.companyGstDetails.gstNumber">
                         <td style="padding-right: 15px; vertical-align: middle;">
                           <p><b>GSTIN</b></p>
                         </td>
                         <td>
                           {{defTempData.gstDetails.companyGstDetails.gstNumber}}
+                        </td>
+                      </tr>
+                      <tr ng-if="defTempData.gstDetails.companyGstDetails.panNumber">
+                        <td style="padding-right: 15px; vertical-align: middle;">
+                          <p><b>PAN</b></p>
+                        </td>
+                        <td>
+                          {{defTempData.gstDetails.companyGstDetails.panNumber}}
                         </td>
                       </tr>
                     </tbody>
@@ -287,16 +295,26 @@ h3 {
               <td style="padding-right: 15px;">
                 <p><b>Billing Address</b></p>
                 <textarea disabled="true" class="form-control" ng-model="defTempData.gstDetails.accountGstBillingDetails.address[0]" placeholder="Address and other details" rows="5"></textarea>
-                <br />
-                <b>GSTIN</b><br />
-                {{defTempData.gstDetails.accountGstBillingDetails.gstNumber}}
+                <span ng-if="defTempData.gstDetails.accountGstBillingDetails.gstNumber">
+                  <br /><b>GSTIN</b><br />{{defTempData.gstDetails.accountGstBillingDetails.gstNumber}}
+                </span>
+                <span ng-if="defTempData.gstDetails.accountGstBillingDetails.panNumber">
+                  <br /><b>PAN</b><br />{{defTempData.gstDetails.accountGstBillingDetails.panNumber}}
+                </span>
               </td>
               <td>
                 <p><b>Shipping Address</b></p>
                 <textarea disabled="true" class="form-control" ng-model="defTempData.gstDetails.accountGstShippingDetails.address[0]" placeholder="Address and other details" rows="5"></textarea>
-                <br />
-                <b>GSTIN</b><br />
-                {{defTempData.gstDetails.accountGstShippingDetails.gstNumber}}
+                <span ng-if="defTempData.gstDetails.accountGstShippingDetails.gstNumber">
+                  <br />
+                  <b>GSTIN</b><br />
+                  {{defTempData.gstDetails.accountGstShippingDetails.gstNumber}}
+                </span>
+                <span ng-if="defTempData.gstDetails.accountGstShippingDetails.panNumber">
+                  <br />
+                  <b>PAN</b><br />
+                  {{defTempData.gstDetails.accountGstShippingDetails.panNumber}}
+                </span>
               </td>
             </tr>
           </tbody>
