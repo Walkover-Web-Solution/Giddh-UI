@@ -648,6 +648,15 @@
 
                       </div>
                     </div>
+                    <div class="col-xs-4">
+                      <div class="form-group"
+                           ng-class="(cmpnyBascFrm.cpanNumber.$valid  && cmpnyBascFrm.cpanNumber.$touched) ? 'has-success' : (cmpnyBascFrm.cpanNumber.$touched) ? 'has-error' : '' ">
+                        <label>PAN Number</label>
+                        <input type="text" ng-model="selectedCompany.panNumber" class="form-control" name="cpanNumber" tabindex="10" maxlength="10" ng-change="validatePanNum(selectedCompany.panNumber)">
+
+                      </div>
+                      <div ng-if="invalidPan"><p class="alert alert-danger pd1">Invalid PAN Number</p></div>
+                    </div>
                   </div>
                 </div>
 

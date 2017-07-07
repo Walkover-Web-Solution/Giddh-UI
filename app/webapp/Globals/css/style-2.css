@@ -2149,6 +2149,7 @@ select.form-control {
     min-height: 100%;
     overflow-y: auto;
     height: 100%;
+    padding-bottom: 60px;
 }
 .grp_list li {
     list-style: none;
@@ -2764,14 +2765,23 @@ label {
   position: relative;
 }
 
-#manufacture .source tbody:before {
-    content: '';
-    height: 50.5%;
-    position: absolute;
-    bottom: 110px;
-    width: 2px;
-    background: #ddd;
-    left: -2px;
+#manufacture .source tbody tr td:nth-child(1):before {
+  content: '';
+  height: 100%;
+  position: absolute;
+  top: 21px;
+  width: 2px;
+  background: #ddd;
+  left: -2px;
+}
+#manufacture .source tbody tr:nth-last-child(3) td:before {
+  height: 120%;
+}
+#manufacture .source tbody tr:last-child td:before, #manufacture .source tbody tr:nth-last-child(2) td:before {
+  content: none;
+}
+#manufacture .source tbody tr {
+  position: relative;
 }
 .shared_list li .delIcon {
   height: auto;

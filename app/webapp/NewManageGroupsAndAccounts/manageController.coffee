@@ -62,14 +62,13 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.radioModel = null
   mc.showDefaultGstList = true
   mc.showDefaultGst = 2
-  mc.stateList = []
   mc.stateDetail = undefined
   mc.radioModel = ""
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
     mc.selectedType = type
     if mc.selectedType == 'acc'
-      if mc.breadCrumbList.length > 0
+      if mc.breadCrumbList.length > 1
         if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
           mc.addNewGst()
     mc.createNew = false
@@ -284,12 +283,15 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.columns.push(item)
     if parentIndex <= mc.columns.length-1 && mc.keyWord != undefined
       mc.checkCurrentColumn(parentIndex)
+    if mc.breadCrumbList.length < 1 && mc.columns.length > 2
+      mc.breadCrumbList = item.parentGroups
 
   mc.getGrpDtlSuccess = (res) ->
     mc.selectedItem = res.body
     # mc.populateAccountList(res.body)
     if mc.parentIndex != undefined
       mc.columns.length = mc.parentIndex + 2
+    mc.getCurrentColIndex = undefined
 
   mc.getGrpDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -411,6 +413,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         mc.breadCrumbList.pop()
         mc.getCurrentColIndex = undefined
       else
+        mc.parentIndex = undefined
+        mc.getCurrentColIndex = undefined
         mc.breadCrumbList.pop()
         mc.selectedGrp = mc.breadCrumbList[mc.breadCrumbList.length-1]
         mc.updateBreadCrumbs = false
@@ -424,6 +428,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.columns = mc.columns.splice(0,mc.addToIndex+1)
       mc.breadCrumbList.splice(mc.addToIndex)
       mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1])
+      mc.parentIndex = mc.breadCrumbList[mc.breadCrumbList.length-1].hLevel
+
     mc.gstDetail = []
 
 # get account details under groups and sub groups
@@ -444,6 +450,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       acntUname: item.uniqueName
     }
     accountService.get(reqParam).then(mc.getAccDtlSuccess, mc.getAccDtlFailure)
+    mc.updateBreadCrumbs = true
     if mc.updateBreadCrumbs
       mc.addToBreadCrumbs(item, 'account', parentIndex)
     mc.toMerge.toUnMerge.uniqueNames = null
@@ -1184,6 +1191,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     if res.body.length < 1
       mc.columns = []
       mc.showNoResult = true
+    else
+      mc.showNoResult = false
     mc.searchLoad = false
     # mc.updateBreadCrumbs = false
     # toastr.success(res.status)
@@ -1254,7 +1263,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getGroups()
 
   mc.updateSearchhierarchy = (data) ->
-    if mc.selectedType == "grp"
+    if data.groups != undefined && data.accounts != undefined
       currentItem = _.findWhere(mc.flattenGroupList, {uniqueName:data.uniqueName})
     else
       currentItem = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:data.uniqueName})
@@ -1281,16 +1290,16 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.selectedAcc.hsnNumber = null
 
 
-  mc.getState = () ->
-    @success=(res)->
-      mc.stateList = res.body
+  # mc.getState = () ->
+  #   @success=(res)->
+  #     mc.stateList = res.body
 
-    @failure=(err)->
-      console.log("failure", err)
+  #   @failure=(err)->
+  #     console.log("failure", err)
 
-    companyServices.getStates().then(@success, @failure)
+  #   companyServices.getStates().then(@success, @failure)
 
-  mc.getState()
+  # mc.getState()
 
   mc.toggleList = () ->
     if mc.showDefaultGstList
@@ -1301,7 +1310,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.getStateCode = (val, item) ->
     if val.length >= 2
-      mc.gstState = _.findWhere(mc.stateList, {code:val.substr(0,2)})
+      mc.gstState = _.findWhere($rootScope.stateList, {code:val.substr(0,2)})
       if mc.gstState
         item.addressList[0].stateCode = mc.gstState.code
         item.addressList[0].stateName = mc.gstState.name
@@ -1370,6 +1379,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.createNewForm = () ->
     mc.selectedItem = {}
     mc.selectedAcc = {}
+
+  mc.checkValidState = (state) ->
+    if state.length < 1
+      mc.selectedAcc.stateCode = ""
 
   return mc
 

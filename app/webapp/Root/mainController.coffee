@@ -66,6 +66,11 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $rootScope.hasOwnCompany = false
   $rootScope.sharedEntity = ""
   $rootScope.croppedAcntList = []
+  $rootScope.gstDetail = []
+  $rootScope.stateList = []
+  $rootScope.setDefaultGst = false;
+  $rootScope.defaultChecked = {}
+
 
   ##Date range picker###
   # $scope.fixedDate = {
@@ -461,6 +466,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $scope.checkPermissions($rootScope.selectedCompany)
     localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
     $rootScope.getFlatAccountList(company.uniqueName)
+    $rootScope.getGstDetail()
     $scope.getGroupsList()
 
   $rootScope.breakCompanyContactDetails = () ->
@@ -849,6 +855,76 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
         (res) ->
           
     )
+
+
+  $rootScope.addNewGst = () ->
+    gstDetail = {
+      gstNumber: "",
+      addressList: [
+          {
+            address:"",
+            stateCode: "",
+            stateName: "",
+            isDefault: ""
+          }
+      ]
+    }
+    $rootScope.gstDetail.unshift(gstDetail)
+
+  $rootScope.getStateByAPI = () ->
+    @success=(res)->
+      $rootScope.stateList = res.body
+
+    @failure=(err)->
+      console.log("failure", err)
+
+    companyServices.getStates().then(@success, @failure)
+  
+  $scope.getStateByAPI()
+
+  $rootScope.getStateCode = (val, item) ->
+    if val.length >= 2
+      gstState = _.findWhere($rootScope.stateList, {code:val.substr(0,2)})
+      if gstState
+        item.addressList[0].stateCode = gstState.code
+        item.addressList[0].stateName = gstState.name
+    else if val.length < 2
+      item.addressList[0].stateCode = ''
+      item.addressList[0].stateName = ''
+
+  $rootScope.getGstDetail = () ->
+    $rootScope.gstDetail = $rootScope.selectedCompany.gstDetails
+    if $rootScope.gstDetail.length < 1
+      $rootScope.addNewGst()
+    $rootScope.findDefaultGst($scope.gstDetail)
+
+  $rootScope.deleteGst = (obj, i) ->
+    $rootScope.gstDetail.splice(i,1)
+
+  $rootScope.removeBlankGst = (gstList) ->
+    _.each gstList, (item) ->
+      if item.gstNumber == ""
+        gstList = _.without(gstList, item)
+    $rootScope.gstDetail = gstList
+    
+
+  $rootScope.checkIsDefault = (gst, e) ->
+    if $rootScope.defaultChecked.gstNumber != gst.gstNumber
+      _.each $rootScope.gstDetail, (item) ->
+        item.addressList[0].isDefault = false
+      if gst.gstNumber
+        gst.addressList[0].isDefault = true
+      else
+        toastr.error("Invalid GST Number")
+    e.stopPropagation()
+
+  $rootScope.findDefaultGst = (gstList) ->
+    if gstList.length > 0
+      _.each gstList, (item) ->
+        if _.findWhere(item.addressList, {isDefault: true})
+            $scope.defaultChecked = item
+
+
 
   $rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams)->
     if $rootScope.selectedCompany != undefined && $rootScope.selectedCompany != null

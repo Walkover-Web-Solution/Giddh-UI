@@ -118,11 +118,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     'todayBtn': true
   }
 
-  $scope.gstDetail = []
-  $scope.stateList = []
-  $scope.setDefaultGst = false;
-  $scope.defaultChecked = {}
-
   $scope.fromDatePickerOpen = ->
     this.fromDatePickerIsOpen = true
 
@@ -144,6 +139,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.getUserDetailSuccess = (res) ->
     localStorageService.set("_userDetails", res.body)
     $rootScope.basicInfo = res.body
+
 
   #get company list failure
   $scope.getUserDetailFailure = (res)->
@@ -182,8 +178,8 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
-    $scope.removeBlankGst($scope.gstDetail)
-    $rootScope.selectedCompany.gstDetails = $scope.gstDetail
+    $rootScope.removeBlankGst($rootScope.gstDetail)
+    $rootScope.selectedCompany.gstDetails = $rootScope.gstDetail
     if _.isObject(data.cCode)
       data.contactNo = data.cCode.value + "-" + data.mobileNo
     else
@@ -196,20 +192,20 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     localStorageService.set("_selectedCompany", res.body)
     toastr.success("Company updated successfully", "Success")
     $scope.getCompanyList()
-    $scope.gstDetail = $rootScope.selectedCompany.gstDetails || []
+    $rootScope.gstDetail = $rootScope.selectedCompany.gstDetails || []
     contactnumber = $rootScope.selectedCompany.contactNo
     if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
       SplitNumber = contactnumber.split('-')
       $rootScope.selectedCompany.mobileNo = SplitNumber[1]
       $rootScope.selectedCompany.cCode = SplitNumber[0]
-    if $scope.gstDetail.length < 1
-      $scope.addNewGst()
+    if $rootScope.gstDetail.length < 1
+      $rootScope.addNewGst()
 
   #update company failure
   $scope.updtCompanyFailure = (res)->
-    $rootScope.selectedCompany.gstDetails = $scope.gstDetail
-    if $scope.gstDetail.length < 1
-      $scope.addNewGst()
+    $rootScope.selectedCompany.gstDetails = $rootScope.gstDetail
+    if $rootScope.gstDetail.length < 1
+      $rootScope.addNewGst()
     toastr.error(res.data.message, res.data.status)
 
 
@@ -1598,77 +1594,15 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.setShareableRoles = (selectedCompany) ->
     $scope.shareableRoles = permissionService.shareableRoles(selectedCompany)
 
-  $scope.addNewGst = () ->
-    gstDetail = {
-      gstNumber: "",
-      addressList: [
-          {
-            address:"",
-            stateCode: "",
-            stateName: "",
-            isDefault: ""
-          }
-      ]
-    }
-    $scope.gstDetail.unshift(gstDetail)
-
-  $scope.getStateByAPI = () ->
-    @success=(res)->
-      $scope.stateList = res.body
-
-    @failure=(err)->
-      console.log("failure", err)
-
-    companyServices.getStates().then(@success, @failure)
-  
-  $scope.getStateByAPI()
-
-  $scope.getStateCode = (val, item) ->
-    if val.length >= 2
-      $scope.gstState = _.findWhere($scope.stateList, {code:val.substr(0,2)})
-      if $scope.gstState
-        item.addressList[0].stateCode = $scope.gstState.code
-        item.addressList[0].stateName = $scope.gstState.name
-    else if val.length < 2
-      item.addressList[0].stateCode = ''
-      item.addressList[0].stateName = ''
-
-  $scope.getGstDetail = () ->
-    $scope.gstDetail = $rootScope.selectedCompany.gstDetails
-    if $scope.gstDetail.length < 1
-      $scope.addNewGst()
-    $scope.findDefaultGst($scope.gstDetail)
-
-  $scope.deleteGst = (obj, i) ->
-    $scope.gstDetail.splice(i,1)
-
-  $scope.removeBlankGst = (gstList) ->
-    _.each gstList, (item) ->
-      if item.gstNumber == ""
-        gstList = _.without(gstList, item)
-    $scope.gstDetail = gstList
-    
-
-  $scope.checkIsDefault = (gst, e) ->
-    if $scope.defaultChecked.gstNumber != gst.gstNumber
-      _.each $scope.gstDetail, (item) ->
-        item.addressList[0].isDefault = false
-      if gst.gstNumber
-        gst.addressList[0].isDefault = true
+  $scope.validatePanNum = (val) ->
+    if val.length > 0
+      regpan = /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/
+      if regpan.test(val) == false
+        $scope.invalidPan = true
       else
-        toastr.error("Invalid GST Number")
-    e.stopPropagation()
-
-  $scope.findDefaultGst = (gstList) ->
-    if gstList.length > 0
-      _.each gstList, (item) ->
-        if _.findWhere(item.addressList, {isDefault: true})
-            $scope.defaultChecked = item
-
-
-  $timeout( ->
-    $scope.getGstDetail()
-  ,100)
+        $scope.invalidPan = false
+    else
+      $scope.invalidPan = false
 
 
   $timeout( ->
