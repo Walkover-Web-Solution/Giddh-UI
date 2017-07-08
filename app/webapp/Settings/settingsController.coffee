@@ -18,14 +18,14 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     {title:'Financial Year', active: false}
   ]
   $scope.typeOfTaxList = [
+    "GST"
     "IGST"
     "CGST"
     "SGST"
     "UTGST"
     "Other"
   ]
-  $scope.typeOfTaxGst = true
-  $scope.typeOfTax = "IGST"
+
   $scope.addRazorAccount = false
   $scope.linkRazor = false
 
@@ -43,13 +43,23 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     "HALFYEARLY"
   ]
   $scope.monthDays = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]
-  $scope.createTaxData = {
-    duration: "MONTHLY"
-    taxFileDate: 1
-  }
+  
+  
+  $scope.initTaxFormObj=()->
+    $scope.createTaxData=
+      "taxNumber":undefined,
+      "name":undefined,
+      "taxType":"GST",
+      "duration":"MONTHLY",
+      "taxFileDate": 1,
+      "accounts":[],
+      "taxDetail":[{
+        date: new Date(),
+        taxValue: undefined
+      }]
+  
 
   $scope.today = new Date()
-  $scope.fromTaxDate = {date: new Date()}
   $scope.format = "dd-MM-yyyy"
   $scope.dateOptions = {
     'year-format': "'yy'",
@@ -162,72 +172,52 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   # get taxes
   $scope.getTax=()->
     $scope.taxList = []
-    if $rootScope.canUpdate and $rootScope.canDelete
-      companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxSuccess, $scope.getTaxFailure)
+    # if $rootScope.canUpdate and $rootScope.canDelete
+    #   companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxSuccess, $scope.getTaxFailure)
 
   $scope.getTaxSuccess = (res) ->
     if res.body.length is 0
       $scope.taxList = []
     else
-      _.each res.body, (obj) ->
-        obj.isEditable = false
-        if obj.account == null
-          obj.account = {}
-          obj.account.uniqueName = ''
-        obj.hasLinkedAcc = _.find($scope.fltAccntListPaginated, (acc)->
-          return acc.uniqueName == obj.account.uniqueName
-        )
-        $scope.taxList.push(obj)
+      $scope.taxList = res.body
+      # _.each res.body, (obj) ->
+      #   obj.isEditable = false
+      #   if obj.account == null
+      #     obj.account = {}
+      #     obj.account.uniqueName = ''
+      #   obj.hasLinkedAcc = _.find($scope.fltAccntListPaginated, (acc)->
+      #     return acc.uniqueName == obj.account.uniqueName
+      #   )
+      #   $scope.taxList.push(obj)
 
   $scope.getTaxFailure = (res) ->
     $scope.noTaxes = true
 
 
   $scope.clearTaxFields = () ->
-    $scope.createTaxData = {
-      duration: "MONTHLY"
-      taxFileDate: 1
-    }
+    $scope.initTaxFormObj()
 
+  $scope.addNewTax=() ->
+    o = angular.copy($scope.createTaxData)
+    o.taxDetail[0].date = $filter('date')(o.taxDetail[0].date, 'dd-MM-yyyy')
+    if (o.taxType is 'Other') and _.isEmpty(o.account)
+      toastr.warning("Linked account can't be blank")
+      return
 
-  $scope.changeTypeOfTax = (selectedItem) ->
-    $scope.typeOfTax = selectedItem
-    if selectedItem == 'Other'
-      $scope.typeOfTaxGst = false
-    else
-      $scope.typeOfTaxGst = true
+    if (o.taxType isnt 'GST' and not _.isEmpty(o.account) and not _.isUndefined(o.account.uniqueName) and not _.isUndefined(o.account.name))
+      a=
+        uniqueName: o.account.uniqueName
+        name: o.account.name
+      o.accounts.push(a)
+      o =_.omit(o, 'account')
 
-  $scope.addNewTax = (newTax) ->
-    if _.isUndefined(newTax.account)
-      newTax.account = {'uniqueName':''}
-    newTax = {
-      updateEntries: false
-      taxNumber:newTax.taxNumber,
-      taxType: $scope.typeOfTax
-      name: newTax.name,
-      account:
-        uniqueName: newTax.account.uniqueName
-      duration:newTax.duration,
-      taxFileDate:1,
-      taxDetail:[
-        {
-          date : $filter('date')($scope.fromTaxDate.date, 'dd-MM-yyyy'),
-          value: newTax.value
-        }
-      ]
-    }
-    companyServices.addTax($rootScope.selectedCompany.uniqueName, newTax).then($scope.addNewTaxSuccess, $scope.addNewTaxFailure)
+    companyServices.addTax($rootScope.selectedCompany.uniqueName, o).then($scope.addNewTaxSuccess, $scope.addNewTaxFailure)
 
   $scope.addNewTaxSuccess = (res) ->
-# reset tax data
-    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
-    $scope.createTaxData = {
-      duration: "MONTHLY"
-      taxFileDate: 1
-    }
-    $scope.fromTaxDate = {date: new Date()}
-    $scope.getTax()
     toastr.success("Tax added successfully.", "Success")
+    $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+    $scope.initTaxFormObj()
+    $scope.getTax()
 
 
   $scope.addNewTaxFailure = (res) ->

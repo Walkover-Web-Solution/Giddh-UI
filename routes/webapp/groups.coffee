@@ -29,6 +29,7 @@ router.get '/flatten-groups-accounts', (req, res) ->
     res.send data
 
 router.get '/flatten-accounts', (req, res) ->
+  console.log "in req for flatten-accounts", req.query
   authHead = 
     headers:
       'Auth-Key': req.session.authKey
@@ -38,7 +39,9 @@ router.get '/flatten-accounts', (req, res) ->
       'page': req.query.page
       'count':req.query.count
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/flatten-accounts'
+  console.log "while making req for flatten-accounts", authHead
   settings.client.get hUrl, authHead, (data, response) ->
+    console.log(data, "in response")
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data
