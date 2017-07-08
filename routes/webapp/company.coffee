@@ -422,12 +422,15 @@ router.get '/:uniqueName/switchUser', (req, res) ->
 
 # get taxes
 router.get '/:companyUniqueName/tax', (req, res) ->
+  console.log "in req for tax", req.params
   authHead =
     headers:
       'Auth-Key': req.session.authKey
       'X-Forwarded-For': res.locales.remoteIp
   hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/tax'
+  console.log "while making req for tax", authHead, hUrl
   settings.client.get hUrl, authHead, (data, response) ->
+    console.log(data, "in response of tax")
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
     res.send data

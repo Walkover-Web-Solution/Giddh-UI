@@ -5,15 +5,13 @@
     <div class="modal-body">
         One or more tax values have changed, would you like to update tax amount in all entries as per new value(s) ?
         <div class="form-group mrT1">
-            <label>
-                <input type="checkbox" ng-model="updateEntriesWithChangedTaxValue" ng-click="$event.stopPropagation();">
-                Update All Entries with Changed Tax Amount 
-            </label>
+            <button class="btn btn-danger btn-block" ng-click="updateTaxAndEntries(true)">Yes, Update All Entries with Changed Tax Amount</button><br>
+
+            <button class="btn btn-success btn-block" ng-click="updateTaxAndEntries(false)">No, Don't Update All Entries. Only Update Tax Amount</button>
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-danger" ng-click="updateTaxAndEntries(updateEntriesWithChangedTaxValue)">Yes</button>
-        <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
+        <button class="btn btn-default" ng-click="$dismiss(); updateTaxAndEntriesCancel()">Cancel</button>
     </div>
 </div>
 

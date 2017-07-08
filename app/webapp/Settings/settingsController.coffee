@@ -172,14 +172,17 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   # get taxes
   $scope.getTax=()->
     $scope.taxList = []
-    # if $rootScope.canUpdate and $rootScope.canDelete
-    #   companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxSuccess, $scope.getTaxFailure)
+    if $rootScope.canUpdate and $rootScope.canDelete
+      companyServices.getTax($rootScope.selectedCompany.uniqueName).then($scope.getTaxSuccess, $scope.getTaxFailure)
 
   $scope.getTaxSuccess = (res) ->
     if res.body.length is 0
       $scope.taxList = []
     else
       $scope.taxList = res.body
+      _.map($scope.taxList, (o)-> 
+        o.editMode = false
+      )
       # _.each res.body, (obj) ->
       #   obj.isEditable = false
       #   if obj.account == null
@@ -193,6 +196,14 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   $scope.getTaxFailure = (res) ->
     $scope.noTaxes = true
 
+  #edit tax
+  $scope.editTax = (item) ->
+    item.editMode = true
+    $scope.taxEditData = item
+    $scope.taxDetail_1 = angular.copy(item.taxDetail)
+    _.each $scope.taxList, (tax) ->
+      if tax.uniqueName isnt item.uniqueName
+        tax.editMode = false
 
   $scope.clearTaxFields = () ->
     $scope.initTaxFormObj()
@@ -244,59 +255,20 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   $scope.deleteTaxFailure = (res) ->
     toastr.error(res.status, res.data.message)
 
-  #edit tax
-  $scope.editTax = (item) ->
-    item.isEditable = true
-    $scope.taxEditData = item
-    $scope.taxDetail_1 = angular.copy(item.taxDetail)
-    _.each $scope.taxList, (tax) ->
-      if tax.uniqueName != item.uniqueName
-        tax.isEditable = false
-
   $scope.updateTax = (item) ->
-    newTax = {
-      'taxNumber': item.taxNumber,
-      'name': item.name,
-      'account':{
-        'uniqueName': item.account.uniqueName
-      },
-      'duration':item.duration,
-      'taxFileDate': item.taxFileDate,
-      'taxDetail': item.taxDetail
-    }
-    item.hasLinkedAcc = true
-    $scope.taxValueUpdated = false
-
+    taxValueUpdated = false
     _.each $scope.taxDetail_1, (tax_1, idx) ->
-      _.each item.taxDetail, (tax, index) ->
-        if tax.taxValue.toString() != tax_1.taxValue.toString() && idx == index
-          $scope.taxValueUpdated = true
-
-    _.each newTax.taxDetail, (detail) ->
-      detail.value = detail.taxValue.toString()
-
+      if item.taxDetail[idx].taxValue.toString() isnt tax_1.taxValue.toString()
+        taxValueUpdated = true
     reqParam = {
       uniqueName: $rootScope.selectedCompany.uniqueName
       taxUniqueName: $scope.taxEditData.uniqueName
       updateEntries: false
     }
 
-    if $scope.taxValueUpdated
-# modalService.openConfirmModal(
-#   title: 'Update Tax Value',
-#   body: 'One or more tax values have changed, would you like to update tax amount in all entries as per new value(s) ?',
-#   showConfirmBox: true,
-#   ok: 'Yes',
-#   cancel: 'No'
-# ).then(->
-#   console.log this
-#   reqParam.updateEntries = true
-#   companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
-# )
-      $scope.updateEntriesWithChangedTaxValue = false
+    if taxValueUpdated
       $scope.taxObj = {
-        reqParam : reqParam
-        newTax : newTax
+        data : item
       }
       $scope.updateTax.modalInstance = $uibModal.open(
         templateUrl:  '/public/webapp/Globals/modals/update-tax.html'
@@ -305,21 +277,31 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
         scope: $scope
       )
     else
-      companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
-      item.isEditable = false
+      companyServices.editTax(reqParam, item).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
+      item.editMode = false
+
+  $scope.updateTaxAndEntriesCancel=()->
+    $scope.taxObj.data.taxDetail = $scope.taxDetail_1
+    $scope.taxObj.data.editMode = false
+    $scope.taxObj={}
+    $scope.taxDetail_1 =[]
 
   $scope.updateTaxAndEntries = (val) ->
-    reqParam = $scope.taxObj.reqParam
-    newTax = $scope.taxObj.newTax
-    reqParam.updateEntries = val
-    companyServices.editTax(reqParam, newTax).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
+    reqParam = {
+      uniqueName: $rootScope.selectedCompany.uniqueName
+      taxUniqueName: $scope.taxEditData.uniqueName
+      updateEntries: val
+    }
+    companyServices.editTax(reqParam, $scope.taxObj.data).then($scope.updateTaxSuccess, $scope.updateTaxFailure)
+    $scope.taxObj={}
+    $scope.taxDetail_1 =[]
+    $scope.taxEditData= {}
+    $scope.updateTax.modalInstance.close()
 
 
   $scope.updateTaxSuccess = (res) ->
-    $scope.taxEditData.isEditable = false
     $scope.getTax()
     toastr.success(res.status, "Tax updated successfully.")
-    $scope.updateTax.modalInstance.close()
 
   $scope.updateTaxFailure = (res) ->
     $scope.getTax()

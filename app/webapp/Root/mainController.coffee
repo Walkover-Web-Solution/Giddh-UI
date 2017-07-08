@@ -640,7 +640,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       #$scope.goToCompany(company, index, "CHANGED")
       if method == 'CHANGE'
         $rootScope.setCompany(company)
-      $rootScope.selectedCompany.index = index
+      if $rootScope.selectedCompany
+        $rootScope.selectedCompany.index = index
     # $rootScope.$emit('reloadAccounts')
     changeData = {}
     changeData.data = company

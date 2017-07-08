@@ -236,18 +236,19 @@
             <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">
               <table class="taxTable table table-bordered" ng-if="taxList.length > 0">
                 <thead>
-                <th class="col-xs-2">Tax #</th>
+                <th class="col-xs-1">Tax #</th>
                 <th class="col-xs-2">Name</th>
                 <th class="col-xs-3">Percentage</th>
                 <th class="col-xs-2">Linked Ac</th>
-                <th class="col-xs-2">Type</th>
+                <th class="col-xs-1">Duration</th>
+                <th class="col-xs-1">Type</th>
                 <th class="col-xs-1">Day</th>
                 <th class="col-xs-1">Action</th>
                 </thead>
                 <tbody>
                 <tr ng-repeat="item in taxList track by $index">
-                  <td><input class="form-control" ng-class="{isNotEditable : item.editMode}" type="text" ng-model="item.taxNumber" ng-disabled="item.editMode"/></td>
-                  <td><input class="form-control" ng-class="{isNotEditable : item.editMode}" type="text" ng-model="item.name" ng-disabled="item.editMode"/></td>
+                  <td><input class="form-control" type="text" ng-model="item.taxNumber" ng-disabled="!item.editMode"/></td>
+                  <td><input class="form-control" type="text" ng-model="item.name" ng-disabled="!item.editMode"/></td>
                   <td class="nopad">
                     <table class="nopad inner-table" style="width:100%">
                       <thead>
@@ -261,12 +262,12 @@
                       <tbody>
                       <tr ng-repeat="tax in item.taxDetail | orderBy: tax.date">
                         <td>
-                          <input class="form-control" ng-class="{isNotEditable : item.editMode}" type="text" ng-model="tax.date" ng-disabled="item.editMode"/>
+                          <input class="form-control" type="text" ng-model="tax.date" ng-disabled="!item.editMode"/>
                         </td>
                         <td>
                           <section class="form-inline">
                             <div class="form-group">
-                              <input class="form-control" ng-class="{isNotEditable : item.editMode}" type="text" ng-model="tax.taxValue" ng-disabled="item.editMode"/>
+                              <input class="form-control" type="text" ng-model="tax.taxValue" ng-disabled="!item.editMode"/>
                             </div>
                           </section>
                         </td>
@@ -285,25 +286,28 @@
                       No Account Linked
                     </div>
                     <div ng-if="item.accounts.length <= 1">
-                      <select ng-options="option.uniqueName as option.name for option in fltAccntListPaginated | searchAccountInPaginated:$viewValue" class="form-control" ng-class="{isNotEditable : item.editMode}" ng-model="item.accounts[0].uniqueName" ng-disabled="item.editMode" ng-if="item.editMode">
+                      <select ng-options="option.uniqueName as option.name for option in fltAccntListPaginated | searchAccountInPaginated:$viewValue" class="form-control" ng-model="item.accounts[0].uniqueName" ng-if="item.editMode">
                       </select>
                       <div class="pdBth06" ng-if="!item.editMode">{{item.accounts[0].name}}</div>
                     </div>
-                    <div ng-if="item.accounts.length > 1">
-                      Gingo
+                    <div class="form-control" style="height: inherit;" ng-if="item.accounts.length > 1">
+                      <span ng-repeat="acc in item.accounts">
+                        {{acc.name}}<br>
+                      </span>
                     </div>
                   <td>
-                    <select class="form-control" ng-class="{isNotEditable : item.editMode}" ng-model="item.duration" ng-disabled="item.editMode" ng-if="item.editMode">
+                    <select class="form-control" ng-model="item.duration" ng-if="item.editMode">
                       <option ng-repeat="option in taxTypes">{{option}}</option>
                     </select>
-                    <div class="pdBth06" ng-if="item.editMode">{{item.duration}}</div>
+                    <div class="pdBth06" ng-if="!item.editMode">{{item.duration}}</div>
                   </td>
+                  <td>{{item.taxType}}</td>
                   <td>
-                    <input class="form-control" ng-class="{isNotEditable : item.editMode}" type="text" ng-model="item.taxFileDate" ng-disabled="item.editMode"/>
+                    <input class="form-control" type="text" ng-model="item.taxFileDate" ng-disabled="!item.editMode"/>
                   </td>
                   <td class="tdfsbig">
                     <div class="pdBth06">
-                      <a ng-click="editTax(item)" href="javascript:void(0)" ng-if="item.editMode"><i class="glyphicon glyphicon-pencil" tooltip-placement="top" uib-tooltip="Edit Tax" ></i></a>
+                      <a ng-click="editTax(item)" href="javascript:void(0)" ng-if="!item.editMode"><i class="glyphicon glyphicon-pencil" tooltip-placement="top" uib-tooltip="Edit Tax" ></i></a>
                       <a ng-click="updateTax(item)" href="javascript:void(0)" ng-if="item.editMode" ><i class="glyphicon glyphicon-ok" tooltip-placement="top" uib-tooltip="Save Tax"></i></a>
                       <a ng-click="deleteTaxconfirmation(item)" href="javascript:void(0)"><i class="glyphicon glyphicon-trash" tooltip-placement="top" uib-tooltip="Delete Tax"></i></a>
                     </div>
