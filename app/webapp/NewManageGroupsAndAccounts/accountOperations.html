@@ -59,7 +59,7 @@
             <span class="input-group-addon pdL0">
               <input type="radio" ng-model="mc.radioModel" uib-btn-radio="'hsn'" name="serviceCode" uncheckable ng-click="$event.stopPropagation();mc.checkActiveServiceCode(mc.radioModel)" ng-checked="mc.radioModel === 'hsn' ? true: false"/>
             </span>
-            <input type="text" ng-disabled="mc.radioModel == 'sac'" class="form-control" name="hsnNumber" ng-model="mc.selectedAcc.hsnNumber" maxLength="6" valid-number>
+            <input type="text" ng-disabled="mc.radioModel == 'sac'" class="form-control" name="hsnNumber" ng-model="mc.selectedAcc.hsnNumber" maxLength="10" valid-number>
           </div><!-- /input-group -->
         </div>
       </div>
@@ -70,7 +70,7 @@
             <span class="input-group-addon pdL0">
               <input type="radio" ng-model="mc.radioModel" uib-btn-radio="'sac'" uncheckable name="serviceCode" ng-click="$event.stopPropagation();mc.checkActiveServiceCode(mc.radioModel)" ng-checked="mc.radioModel === 'sac' ? true: false" />
             </span>
-            <input type="text" ng-disabled="mc.radioModel == 'hsn'" class="form-control" name="sacNumber" maxLength="10" ng-model="mc.selectedAcc.sacNumber" valid-number>
+            <input type="text" ng-disabled="mc.radioModel == 'hsn'" class="form-control" name="sacNumber" maxLength="6" ng-model="mc.selectedAcc.sacNumber" valid-number>
           </div><!-- /input-group -->
         </div>
       </div>
