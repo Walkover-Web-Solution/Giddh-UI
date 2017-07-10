@@ -64,6 +64,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.showDefaultGst = 2
   mc.stateDetail = undefined
   mc.radioModel = ""
+  mc.createNewAcc = false
+  mc.createNewGrp = false
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
     mc.selectedType = type
@@ -273,6 +275,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     existingGrp = _.findWhere(mc.columns, {uniqueName:item.uniqueName})
     mc.selectedItem = mc.selectedGrp
     groupService.get($rootScope.selectedCompany.uniqueName, item.uniqueName).then(mc.getGrpDtlSuccess, mc.getGrpDtlFailure)
+    mc.getCurrentColIndex = undefined
     if !existingGrp
       if (item.hLevel-1) < mc.columns.length
         mc.columns = mc.columns.splice(0,item.hLevel+1)
@@ -291,7 +294,17 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # mc.populateAccountList(res.body)
     if mc.parentIndex != undefined
       mc.columns.length = mc.parentIndex + 2
-    mc.getCurrentColIndex = undefined
+    if mc.createNewGrp
+      mc.showOnUpdate = false
+      mc.selectedItem = {}
+    else if mc.createNewAcc
+      mc.showOnUpdate = false
+      mc.selectedAcc = {}
+      mc.selectedType = 'acc'
+    mc.createNewGrp = false
+    mc.createNewAcc =  false
+
+
 
   mc.getGrpDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -321,6 +334,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.onCreateGroupSuccess = (res) ->
     mc.keyWord = ''
+    res.body.hLevel = mc.addToIndex
     res.body.accounts = res.body.accounts || []
     mc.flattenGroupList.push(res.body)
     mc.columns[mc.addToIndex].groups.push(res.body)
@@ -328,6 +342,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # mc.selectedItem = {}
     # mc.getGroups()
     mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
+    mc.createNewGrp = true
 
   mc.onCreateGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -424,12 +439,11 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # if mc.keyWord != undefined
     #   mc.breadCrumbList = []
     #   mc.keyWord = undefined
-    else if mc.addToIndex < mc.parentIndex || mc.addToIndex < mc.getCurrentColIndex
+    else
       mc.columns = mc.columns.splice(0,mc.addToIndex+1)
       mc.breadCrumbList.splice(mc.addToIndex)
       mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1])
       mc.parentIndex = mc.breadCrumbList[mc.breadCrumbList.length-1].hLevel
-
     mc.gstDetail = []
 
 # get account details under groups and sub groups
@@ -450,6 +464,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       acntUname: item.uniqueName
     }
     accountService.get(reqParam).then(mc.getAccDtlSuccess, mc.getAccDtlFailure)
+    mc.parentIndex = undefined
     mc.updateBreadCrumbs = true
     if mc.updateBreadCrumbs
       mc.addToBreadCrumbs(item, 'account', parentIndex)
@@ -775,6 +790,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getSelectedType('grp')
     mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
     mc.updateBreadCrumbs = true
+    mc.createNewAcc = true
     # mc.columns = []
     # mc.getGroups()
     
@@ -1379,10 +1395,15 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.createNewForm = () ->
     mc.selectedItem = {}
     mc.selectedAcc = {}
+    mc.showOnUpdate = false
 
   mc.checkValidState = (state) ->
     if state.length < 1
       mc.selectedAcc.stateCode = ""
+
+  mc.isChildGroup =(group) ->
+    _.some(group.parentGroups, (group) ->
+      group.uniqueName == mc.selectedGrp.uniqueName)
 
   return mc
 

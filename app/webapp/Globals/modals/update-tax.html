@@ -6,7 +6,7 @@
         One or more tax values have changed, would you like to update tax amount in all entries as per new value(s) ?
         <div class="form-group mrT1">
             <label>
-                <input type="checkbox" ng-model="updateEntriesWithChangedTaxValue">
+                <input type="checkbox" ng-model="updateEntriesWithChangedTaxValue" ng-click="$event.stopPropagation();">
                 Update All Entries with Changed Tax Amount 
             </label>
         </div>

@@ -59,7 +59,7 @@
             <span class="input-group-addon pdL0">
               <input type="radio" ng-model="mc.radioModel" uib-btn-radio="'hsn'" name="serviceCode" uncheckable ng-click="$event.stopPropagation();mc.checkActiveServiceCode(mc.radioModel)" ng-checked="mc.radioModel === 'hsn' ? true: false"/>
             </span>
-            <input type="text" ng-disabled="mc.radioModel == 'sac'" class="form-control" name="hsnNumber" ng-model="mc.selectedAcc.hsnNumber" maxLength="10" valid-number>
+            <input type="text" ng-disabled="mc.radioModel == 'sac'" class="form-control" name="hsnNumber" ng-model="mc.selectedAcc.hsnNumber" maxLength="6" valid-number>
           </div><!-- /input-group -->
         </div>
       </div>
