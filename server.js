@@ -2,7 +2,7 @@
 // comment it while developement
 var settings = require('./public/routes/util/settings');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
@@ -41,7 +41,14 @@ app.set('view engine', 'html');
 
 app.use(favicon(__dirname + '/app/website/images/favicon.ico'));
 
-app.use(logger('dev'));
+app.use(morgan('combined', {
+  skip: function (req, res) {
+    return res.statusCode < 400 
+  }
+}))
+
+
+
 app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
