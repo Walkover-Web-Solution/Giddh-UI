@@ -706,7 +706,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       # reset blank ledger transaction in case not compound entry
       if ledgerCtrl.prevTxn.$$hashKey isnt txn.$$hashKey and !ledgerCtrl.selectedLedger.isCompoundEntry
         ledgerCtrl.resetTemporaryblankLedger(txn)
-        ledgerCtrl.selectedLedger.compoundTotal = 0
 
     ledgerCtrl.selectedLedger = ledgerCtrl.blankLedger
     ledgerCtrl.selectedTxn = txn
@@ -716,7 +715,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     #reset prev txn
     ledgerCtrl.prevTxn = txn
     ledgerCtrl.checkCurrentTxnElgibility(txn, txn.particular)
-    ledgerCtrl.getCompoundTotal()
+    # ledgerCtrl.getCompoundTotal()
 
   ledgerCtrl.resetTemporaryblankLedger=(txn)->
     dummyObj = {
@@ -748,23 +747,29 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledgerCtrl.showHideInvGenOpts(category)
       if category is "income" || category == "expenses"
         ledgerCtrl.showTaxationDiscountBox = true
-        ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
         ledgerCtrl.addApplicableTaxes(item.applicableTaxes)
+        ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
     if ledgerCtrl.showTaxationDiscountBox == false
       category = ledgerCtrl.getAccCategoryByUniquename(ledgerCtrl.accountToShow.uniqueName)
       ledgerCtrl.showHideInvGenOpts(category)
       if category is "income" || category == "expenses"
         ledgerCtrl.showTaxationDiscountBox = true
-        ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
         taxArray = _.map ledgerCtrl.accountToShow.applicableTaxes, (taxObj) ->
           taxObj.uniqueName
         ledgerCtrl.addApplicableTaxes(taxArray)
+        ledgerCtrl.createNewPanel(txn, ledgerCtrl.blankLedger)
 
     if !_.isUndefined(item.stock) and _.isUndefined(txn.panel.unit)
       txn.panel.unit = item.stock.stockUnit.code
-      txn.panel.units.push(item.stock.stockUnit)
+      try
+        txn.panel.units.push(item.stock.stockUnit)
+      catch e
+        txn.panel.units=[]
+        txn.panel.units.push(item.stock.stockUnit)
+      
 
   ledgerCtrl.getCompoundTotal=()->
+    return false
     total = 0
     _.each ledgerCtrl.selectedLedger.transactions, (txn) ->
       if txn.type is 'DEBIT'
@@ -778,7 +783,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         else if !txn.panel and txn.amount
           total -= Number(txn.amount)
 
-    return ledgerCtrl.selectedLedger.compoundTotal = total
   
   ledgerCtrl.getAccCategoryByUniquename = (unqName) ->
     category = ''
@@ -803,27 +807,34 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.getNewPanelTax = (txn, ledger) ->
     totalTax = 0
-    if ledgerCtrl.taxList.length > 0
-      _.each ledgerCtrl.taxList, (tax) ->
+    if ledger.taxList.length > 0
+      _.each ledger.taxList, (tax) ->
         if ledgerCtrl.isTaxApplicable(tax) && tax.isChecked
-          taxAmount = txn.panel.amount * ledgerCtrl.getApplicableTaxRate(tax) /100
-          totalTax += taxAmount
-    taxPercentage = ledgerCtrl.cutToTwoDecimal((totalTax/txn.panel.amount)*100)
-    txn.panel.total = ledgerCtrl.cutToTwoDecimal(txn.panel.amount - txn.panel.discount + (taxPercentage*(txn.panel.amount-txn.panel.discount)/100))
-    ledgerCtrl.cutToTwoDecimal(taxPercentage) || 0
+          taxAmount = ledgerCtrl.getApplicableTaxRate(tax)
+        totalTax += taxAmount
+    return totalTax
+
+  ledgerCtrl.updateTaxArrInTxn =(tax)->
+    if (tax.isChecked)
+      ledgerCtrl.selectedLedger.taxList.push(tax)
+    else
+      ledgerCtrl.selectedLedger.taxList = _.reject ledgerCtrl.selectedLedger.taxList, (taxItem, idx) ->
+        return taxItem.uniqueName is tax.uniqueName
+
+    ledgerCtrl.selectedTxn.panel.tax = ledgerCtrl.getNewPanelTax(ledgerCtrl.selectedTxn, ledgerCtrl.selectedLedger)
 
   ledgerCtrl.createNewPanel = (txn, ledger) ->
     panel = {}
     if typeof(txn.particular) is "object"
       txn.panel = {
         tax : 0
-        total: 0
-        discount: 0
-        amount: 0
-        price: 0
-        unit: null
-        quantity: 1
-        units: []
+        # total: 0
+        # discount: 0
+        # amount: 0
+        # price: 0
+        # unit: null
+        # quantity: 1
+        # units: []
       }
       
       panel.getQuantity = () ->
@@ -884,18 +895,19 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount + (amount*txn.panel.tax/100))
 
       if(ledgerCtrl.selectedLedger.isCompoundEntry)
-        ledgerCtrl.onNewPanelChange().txnAmount(txn, ledgerCtrl.blankLedger)
+        console.log "will see what to do now"
+        # ledgerCtrl.onNewPanelChange().txnAmount(txn, ledgerCtrl.blankLedger)
       else
-        txn.panel.quantity = panel.getQuantity()
-        txn.panel.price = panel.getPrice()
-        txn.panel.units = panel.getUnits()
-        txn.panel.unit = panel.getSelectedUnit()
-        txn.panel.amount = panel.getAmount()
-        txn.panel.discount = panel.getDiscount()
+        # txn.panel.quantity = panel.getQuantity()
+        # txn.panel.price = panel.getPrice()
+        # txn.panel.units = panel.getUnits()
+        # txn.panel.unit = panel.getSelectedUnit()
+        # txn.panel.amount = panel.getAmount()
+        # txn.panel.discount = panel.getDiscount()
         txn.panel.tax = panel.getTax()
-        txn.panel.total = panel.getTotal()
+        # txn.panel.total = panel.getTotal()
         # call func
-        ledgerCtrl.getCompoundTotal()
+        # ledgerCtrl.getCompoundTotal()
 
   ledgerCtrl.reDrawPanelForCompoundCase=(txn, $event)->
     if(ledgerCtrl.selectedLedger.isCompoundEntry && $event.key is 'Tab')
@@ -956,7 +968,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       else
         txn.panel.total = ledgerCtrl.cutToTwoDecimal(amount)
         txn.amount = txn.panel.amount
-      ledgerCtrl.getCompoundTotal()
+      # ledgerCtrl.getCompoundTotal()
 
     change.total = (txn, ledger) ->
       if !txn.panel.discount 
@@ -966,7 +978,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       txn.panel.amount = Number(amount.toFixed(2))
       txn.panel.price = ledgerCtrl.cutToFourDecimal(txn.panel.amount / txn.panel.quantity)
       txn.amount = txn.panel.amount
-      ledgerCtrl.getCompoundTotal()
+      # ledgerCtrl.getCompoundTotal()
 
     return change
 
@@ -981,7 +993,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     else
       ledgerCtrl.selectedLedger.taxList = []
       ledgerCtrl.selectedLedger.applyApplicableTaxes = false
-    ledgerCtrl.onNewPanelChange().tax(ledgerCtrl.selectedTxn, ledgerCtrl.blankLedger)
+    # ledgerCtrl.onNewPanelChange().tax(ledgerCtrl.selectedTxn, ledgerCtrl.blankLedger)
 
   ledgerCtrl.selectBankTxn = (txn, index ,e, eledger) ->
     e.stopPropagation()
@@ -1043,8 +1055,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     )
     count
     
-    
-
   ledgerCtrl.createPanel = (ledger) ->
     ledgerCtrl.selectedLedger.panel = {
       tax : 0
@@ -1340,16 +1350,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.onstockUnitChange = (ledger) ->
     ledger.panel.price = ledger.panel.unit.rate
     ledger.panel.quantity = ledgerCtrl.cutToTwoDecimal(ledger.panel.amount / ledger.panel.price)
-    # ledgerCtrl.onPriceChange(ledgerCtrl.selectedLedger)
 
   ledgerCtrl.updateTxnAmount = () ->
+    return false
     _.each ledgerCtrl.selectedLedger.transactions, (txn) ->
       if ledgerCtrl.getTxnCategory(txn) == 'income' || ledgerCtrl.getTxnCategory(txn) == 'expenses' && !txn.isTax && txn.particular.uniqueName != 'roundoff' && !ledgerCtrl.isDiscountTxn(txn)
         txn.amount = ledgerCtrl.selectedLedger.panel.amount
-
-    # ledgerCtrl.selectedLedger.isInclusiveTax = true
-    # ledgerCtrl.getTotalTax(ledgerCtrl.selectedLedger)
-    # ledgerCtrl.getTotalDiscount(ledgerCtrl.selectedLedger)
 
 
   ledgerCtrl.calculateAmountAfterInclusiveTax = (tax) ->
@@ -1422,13 +1428,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.getTaxListSuccess = (res) ->
     _.each res.body, (tax) ->
       tax.isSelected = false
-      if tax.account == null
-        tax.account = {}
-        tax.account.uniqueName = 0
       #check if selected account is a tax account
       if not _.isUndefined(ledgerCtrl.accountToShow)
-        if tax.account.uniqueName == ledgerCtrl.accountToShow.uniqueName
-          ledgerCtrl.accountToShow.isTax = true
+        _.each tax.accounts, (item) ->
+          if item.uniqueName == ledgerCtrl.accountToShow.uniqueName
+            ledgerCtrl.accountToShow.isTax = true
       ledgerCtrl.taxList.push(tax)
 
 
@@ -1511,10 +1515,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
       if stockTxn.amount != ledger.panel.amount
         ledgerCtrl.updateTxnAmount()
-      # if stockTxn.amount != ledger.panel.total
-      #   stockTxn.amount = ledger.panel.total
 
   ledgerCtrl.addStockDetailsForNewEntry = (ledger) ->
+    return false
     _.each ledger.transactions, (txn) ->
       if txn.particular.stock
         inventory = {}
@@ -1538,6 +1541,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       return false
 
   ledgerCtrl.setAmount = (ledger) ->
+    return false
     _.each ledger.transactions, (txn) ->
       if !txn.isTax && !ledgerCtrl.isNotDiscountTxn(txn)
         if txn.panel and txn.panel.tax > 0
@@ -1653,12 +1657,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       ledger.voucherType = ledger.voucher.shortCode
 
       if ledger.transactions.length > 0
-        ledgerCtrl.matchTaxTransactions(ledger.transactions, ledgerCtrl.taxList)
-        ledgerCtrl.matchTaxTransactions(ledgerCtrl.ledgerBeforeEdit.transactions, ledgerCtrl.taxList)
-        # ledgerCtrl.checkManualTaxTransaction(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
-        # updatedTxns = ledgerCtrl.updateEntryTaxes(ledger.transactions)
-        # ledger.transactions = updatedTxns
-        # ledgerCtrl.checkTaxCondition(ledger)
+        # ledgerCtrl.matchTaxTransactions(ledger.transactions, ledgerCtrl.taxList)
+        # ledgerCtrl.matchTaxTransactions(ledgerCtrl.ledgerBeforeEdit.transactions, ledgerCtrl.taxList)
+
         isModified = false
         discountMsg = 'Discount entry added, Would you also like to update Principle amount?'
         modifiedMsg = 'Principle transaction updated, Would you also like to update tax transactions?'
@@ -1748,20 +1749,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledger.taxes.push(tax.uniqueName)
     )
 
-
-  ledgerCtrl.updateEntryTaxes = (txnList) ->
-    transactions = []
-    if txnList.length > 1
-      _.each txnList, (txn, idx) ->
-        _.each ledgerCtrl.taxList, (tax) ->
-          if txn.particular.uniqueName == tax.account.uniqueName && !tax.isChecked
-            if !txn.isManualTax
-              txn.toRemove = true 
-    txnList = _.filter(txnList, (txn)->
-      return txn.toRemove == undefined || txn.toRemove == false
-    )
-    txnList
-
   ledgerCtrl.isTransactionContainsTax = (ledger) ->
     if ledger.taxes and ledger.taxes.length > 0
       ledger.taxList = []
@@ -1791,8 +1778,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.matchTaxTransactions = (txnList, taxList) ->
     _.each txnList, (txn) ->
       _.each taxList, (tax) ->
-        if txn.particular.uniqueName == tax.account.uniqueName
-          txn.isTax = true
+        _.each tax.accounts, (item) ->
+          if txn.particular.uniqueName == item.uniqueName
+            txn.isTax = true
 
   ledgerCtrl.removeTaxTxnOnPrincipleTxnModified = (txnList) ->
     _.each txnList, (txn) ->
@@ -2574,10 +2562,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ###################### on dom ready funcs ###########
 
   $timeout(->
+    ledgerCtrl.getTaxList()
+  ,1000)
+
+  $timeout(->
     if ledgerCtrl.accountUnq then ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq) else ledgerCtrl.loadDefaultAccount()
 
     ledgerCtrl.getDiscountGroupDetail()
-    ledgerCtrl.getTaxList()
   ,3000)
 
 

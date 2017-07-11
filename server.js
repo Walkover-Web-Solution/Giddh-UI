@@ -1,6 +1,6 @@
 var settings = require('./public/routes/util/settings');
 var favicon = require('serve-favicon');
-var logger = require('morgan');
+var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var fs = require('fs');
@@ -35,7 +35,14 @@ app.set('view engine', 'html');
 
 app.use(favicon(__dirname + '/app/website/images/favicon.ico'));
 
-app.use(logger('dev'));
+app.use(morgan('combined', {
+  skip: function (req, res) {
+    return res.statusCode < 400 
+  }
+}))
+
+
+
 app.use(bodyParser.json({limit: '10mb'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
@@ -79,12 +86,11 @@ app.use(function (req, res, next) {
 
 //to allow cookie sharing across subdomains
 app.use(function(req, res, next) {
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Origin', req.headers.origin);
-    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, authorization');
-    next();
-
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header('Access-Control-Allow-Origin', req.headers.origin);
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept, authorization');
+  next();
 });
 
 // do not remove code from this position
@@ -120,10 +126,10 @@ global.mStorage = multer.diskStorage({
 
 // disable browser cache
 app.use(function (req, res, next) {
-    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-    res.header('Expires', '-1');
-    res.header('Pragma', 'no-cache');
-    next()
+  res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  res.header('Expires', '-1');
+  res.header('Pragma', 'no-cache');
+  next()
 });
 
 
@@ -242,8 +248,7 @@ app.get('/userak', function(req, res){
 var getSession = function(req, res, next){
   var sessionId = req.query.sId;
   req.sessionStore.get(sessionId, function(err, session) {
-  if (session) {
-      // createSession() re-assigns req.session
+    if (session) {
       req.sessionStore.createSession(req, session)
     }
     next()
