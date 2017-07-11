@@ -889,42 +889,6 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     a.download = $scope.nameForAction[0]+".pdf"
     a.href = dataUri
     a.click()
-    #close dialog box
-    # if $scope.genPrevMode
-    #   $scope.modalInstance.close()
-    # $scope.genPrevMode = false
-
-    # $scope.isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0
-    # if $scope.msieBrowser()
-    #   #$scope.openWindow("data:application/pdf;base64, " + res.body)
-    #   window.navigator.msSaveBlob(file, 'abc.pdf')
-    # else if $scope.isSafari       
-    #   modalInstance = $uibModal.open(
-    #     template: '<div>
-    #         <div class="modal-header">
-    #           <h3 class="modal-title">Download File</h3>
-    #         </div>
-    #         <div class="modal-body">
-    #           <p class="mrB">To download your file Click on button</p>
-    #           <button onClick="window.open(\'data:application/pdf;base64, '+res.body+'\')" class="btn btn-primary">Download</button>
-    #         </div>
-    #         <div class="modal-footer">
-    #           <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
-    #         </div>
-    #     </div>'
-    #     size: "sm"
-    #     backdrop: 'static'
-    #     scope: $scope
-    #   )
-    # else
-      # passthis = "data:application/pdf;base64, " + res.body 
-      # window.open(passthis)
-    # a = document.createElement("a")
-    # document.body.appendChild(a)
-    # a.style = "display:none"
-    # a.href = fileURL
-    # a.download = $scope.nameForAction[0]+".pdf"
-    # a.click()
 
 
   # preview of generated invoice
