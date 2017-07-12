@@ -399,6 +399,12 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.getOnlyCityFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+  $scope.setCompanyCountryDefault=()->
+    $timeout (->
+      $rootScope.selectedCompany.country = if $rootScope.selectedCompany.country then $rootScope.selectedCompany.country else 'India'
+      $rootScope.breakCompanyContactDetails()
+    ), 1500
+
   #Get company list
   $rootScope.getCompanyList = ()->
     companyServices.getAll().then($scope.getCompanyListSuccess, $scope.getCompanyListFailure)
@@ -474,6 +480,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       result = $rootScope.selectedCompany.contactNo.split("-")
       $rootScope.selectedCompany.cCode = result[0]
       $rootScope.selectedCompany.mobileNo = result[1]
+    else
+      $rootScope.selectedCompany.cCode = 91
+      $rootScope.selectedCompany.mobileNo = null
 
   $rootScope.getParticularAccount = (searchThis) ->
     accountList = []
@@ -640,8 +649,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       #$scope.goToCompany(company, index, "CHANGED")
       if method == 'CHANGE'
         $rootScope.setCompany(company)
-      $rootScope.selectedCompany.index = index
-    # $rootScope.$emit('reloadAccounts')
+      if $rootScope.selectedCompany
+        $rootScope.selectedCompany.index = index
     changeData = {}
     changeData.data = company
     changeData.index = index
@@ -893,7 +902,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       item.addressList[0].stateName = ''
 
   $rootScope.getGstDetail = () ->
-    $rootScope.gstDetail = $rootScope.selectedCompany.gstDetails
+    $rootScope.gstDetail = $rootScope.selectedCompany.gstDetails || []
     if $rootScope.gstDetail.length < 1
       $rootScope.addNewGst()
     $rootScope.findDefaultGst($scope.gstDetail)

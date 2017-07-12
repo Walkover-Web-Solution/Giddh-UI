@@ -147,7 +147,6 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #making a detail company view
   $scope.goToCompany = (data, index, type) ->
-    #$rootScope.$emit('callCheckPermissions', data)
     $scope.tabs[0].active = true
     $scope.compDataFound = false
     $scope.showUpdTbl = false
@@ -157,27 +156,19 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.dErrFiles = []
     $rootScope.cmpViewShow = true
     $scope.selectedCmpLi = index
-    #$rootScope.setCompany(data)
-    #angular.extend($rootScope.selectedCompany, data)
     $rootScope.selectedCompany.index = index
-    contactnumber = $rootScope.selectedCompany.contactNo
-    if not _.isNull(contactnumber) and not _.isEmpty(contactnumber) and not _.isUndefined(contactnumber) and contactnumber.match("-")
-      SplitNumber = contactnumber.split('-')
-      $rootScope.selectedCompany.mobileNo = SplitNumber[1]
-      $rootScope.selectedCompany.cCode = SplitNumber[0]
-
-    #localStorageService.set("_selectedCompany", $rootScope.selectedCompany)
-
+    $rootScope.breakCompanyContactDetails()
     if $rootScope.canManageCompany
       $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
       $scope.setShareableRoles($rootScope.selectedCompany)
     if type is 'CHANGED'
       $rootScope.$emit('companyChanged')
-    else
-      #console.info "Same Company loaded"
 
   #update company details
   $scope.updateCompanyInfo = (data) ->
+    if _.isUndefined(data.cCode)
+      toastr.warning("Please Insert Contact details")
+      return false
     $rootScope.removeBlankGst($rootScope.gstDetail)
     $rootScope.selectedCompany.gstDetails = $rootScope.gstDetail
     if _.isObject(data.cCode)
@@ -217,36 +208,45 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     locationService.searchCountry(val).then($scope.onGetCountrySuccess, $scope.onGetCountryFailure)
 
   $scope.onGetCountrySuccess = (data) ->
+    arr=[]
     filterThis = data.results.filter (i) -> _.contains(i.types, "country")
-    filterThis.map((item) ->
-      item.address_components[0].long_name
-    )
+    _.each filterThis, (item) ->
+      arr.push(item.address_components[0])
+    return arr
 
   $scope.onGetCountryFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
   $scope.getState = (val) ->
+    if not $rootScope.selectedCompany.country
+      toastr.warning("Please select Country first")
+      return false
     locationService.searchState(val, $rootScope.selectedCompany.country).then($scope.onGetStateSuccess,
       $scope.onGetStateFailure)
 
   $scope.onGetStateSuccess = (data) ->
+    arr = []
     filterThis = data.results.filter (i) -> _.contains(i.types, "administrative_area_level_1")
-    filterThis.map((item) ->
-      item.address_components[0].long_name
-    )
+    _.each filterThis, (item) ->
+      arr.push(item.address_components[0])
+    return arr
 
   $scope.onGetStateFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
   $scope.getCity = (val) ->
+    if not $rootScope.selectedCompany.state
+      toastr.warning("Please select State first")
+      return false
     locationService.searchCity(val, $rootScope.selectedCompany.state).then($scope.onGetCitySuccess,
       $scope.onGetCityFailure)
 
   $scope.onGetCitySuccess = (data) ->
+    arr=[]
     filterThis = data.results.filter (i) -> i.types[0] is "locality"
-    filterThis.map((item) ->
-      item.address_components[0].long_name
-    )
+    _.each filterThis, (item) ->
+      arr.push(item.address_components[0])
+    return arr
 
   $scope.onGetCityFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
