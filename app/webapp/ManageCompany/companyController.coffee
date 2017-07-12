@@ -219,7 +219,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   $scope.getState = (val) ->
     if not $rootScope.selectedCompany.country
-      toastr.warning("Please select State first")
+      toastr.warning("Please select Country first")
       return false
     locationService.searchState(val, $rootScope.selectedCompany.country).then($scope.onGetStateSuccess,
       $scope.onGetStateFailure)
