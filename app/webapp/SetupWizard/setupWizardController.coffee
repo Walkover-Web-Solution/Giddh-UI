@@ -69,6 +69,7 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
 
   #create company success
   $scope.onCreateCompanySuccess = (res) ->
+    $rootScope.setupModalInstance.close()
     toastr.success("Company created successfully", "Success")
     $rootScope.mngCompDataFound = true
     try
@@ -86,7 +87,6 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
     $scope.showSuccessMsg = true
     WizardHandler.wizard().next()
     $state.go('company.content.ledgerContent')
-    $rootScope.setupModalInstance.close()
 
   #create company failure
   $scope.onCreateCompanyFailure = (res) ->

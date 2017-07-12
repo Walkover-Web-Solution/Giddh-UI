@@ -642,7 +642,6 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
         $rootScope.setCompany(company)
       if $rootScope.selectedCompany
         $rootScope.selectedCompany.index = index
-    # $rootScope.$emit('reloadAccounts')
     changeData = {}
     changeData.data = company
     changeData.index = index
@@ -894,7 +893,7 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       item.addressList[0].stateName = ''
 
   $rootScope.getGstDetail = () ->
-    $rootScope.gstDetail = $rootScope.selectedCompany.gstDetails
+    $rootScope.gstDetail = $rootScope.selectedCompany.gstDetails || []
     if $rootScope.gstDetail.length < 1
       $rootScope.addNewGst()
     $rootScope.findDefaultGst($scope.gstDetail)
