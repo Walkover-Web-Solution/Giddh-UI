@@ -1899,19 +1899,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     # ), 1000
 
   ledgerCtrl.addEntryFailure = (res, rejectedTransactions, ledger) ->
+    ledgerCtrl.resetBlankLedger()
     ledgerCtrl.doingEntry = false
     ledger.failed = true
     toastr.error(res.data.message, res.data.status)
     ledgerCtrl.selectedLedger = angular.copy(ledgerCtrl.ledgerBeforeEdit, {})
-    return false
-    # if rejectedTransactions.length > 0
-    #   _.each(rejectedTransactions, (rTransaction) ->
-    #     ledgerCtrl.selectedLedger.transactions.push(rTransaction)
-    #   )
-    # $timeout ( ->
-    #   ledgerCtrl.pageLoader = false
-    #   ledgerCtrl.showLoader = false
-    # ), 1000
 
   ledgerCtrl.updateBankLedger = (ledger) ->
     _.each ledgerCtrl.eLedgerData, (eledger, idx) ->
@@ -1985,6 +1977,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.isTransactionContainsTax(ledgerCtrl.selectedLedger)
     
   ledgerCtrl.updateEntryFailure = (res, ledger) ->
+    ledgerCtrl.resetBlankLedger()
     ledgerCtrl.doingEntry = false
     ledger = ledgerCtrl.ledgerBeforeEdit
     toastr.error(res.data.message, res.data.status)
