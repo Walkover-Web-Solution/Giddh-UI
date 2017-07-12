@@ -530,7 +530,7 @@
         </uib-tab>
 
         <!--basic info-->
-        <uib-tab heading="{{tabs[5].title}}" active="tabs[5].active" id="basic">
+        <uib-tab heading="{{tabs[5].title}}" active="tabs[5].active" id="basic" select="setCompanyCountryDefault()">
           <div class="pd2" ng-controller="companyController">
             <fieldset ng-disabled="!canManageCompany">
             <form id="cmpnyBascFrm" name="cmpnyBascFrm" novalidate ng-init="setFormScope(this)">
@@ -595,7 +595,7 @@
                        ng-class="(cmpnyBascFrm.cCountry.$valid  && cmpnyBascFrm.cCountry.$touched) ? 'has-success' : (cmpnyBascFrm.cCountry.$touched) ? 'has-error' : '' ">
                     <label>Country</label>
                     <input type="text" ng-model="selectedCompany.country"
-                           uib-typeahead="address for address in getCountry($viewValue)" typeahead-loading="loadingLocationsC"
+                           uib-typeahead="address.long_name for address in getCountry($viewValue)" typeahead-loading="loadingLocationsC"
                            typeahead-no-results="noResultsC" class="form-control" name="cCountry" autocomplete="off"
                            tabindex="6" >
                     <i ng-show="loadingLocationsC" class="glyphicon glyphicon-refresh"></i>
@@ -608,10 +608,11 @@
                   <div class="form-group"
                        ng-class="(cmpnyBascFrm.cState.$valid  && cmpnyBascFrm.cState.$touched) ? 'has-success' : (cmpnyBascFrm.cState.$touched) ? 'has-error' : '' ">
                     <label>State</label>
-                    <input type="text" ng-model="selectedCompany.state"
-                           uib-typeahead="address as address.name for address in getState($viewValue)" typeahead-loading="loadingLocationsS"
-                           typeahead-no-results="noResultsS" class="form-control" name="cState" autocomplete="off"
-                           tabindex="7" ng-disabled="cmpnyBascFrm.cCountry.$invalid" required>
+                    <input type="text" 
+                      ng-model="selectedCompany.state"
+                      uib-typeahead="address.long_name for address in getState($viewValue)" typeahead-loading="loadingLocationsS"
+                      typeahead-no-results="noResultsS" class="form-control" name="cState" autocomplete="off"
+                      tabindex="7" ng-disabled="cmpnyBascFrm.cCountry.$invalid && selectedCompany.country" required>
                     <i ng-show="loadingLocationsS" class="glyphicon glyphicon-refresh"></i>
 
                     <div ng-show="noResultsS">
@@ -622,10 +623,11 @@
                   <div class="form-group"
                        ng-class="(cmpnyBascFrm.cCity.$valid  && cmpnyBascFrm.cCity.$touched) ? 'has-success' : (cmpnyBascFrm.cCity.$touched) ? 'has-error' : '' ">
                     <label>City</label>
-                    <input type="text" ng-model="selectedCompany.city"
-                           uib-typeahead="address for address in getCity($viewValue)" typeahead-loading="loadingLocationsCt"
-                           typeahead-no-results="noResultsCt" class="form-control" name="cCity" autocomplete="off"
-                           tabindex="8" ng-disabled="cmpnyBascFrm.cState.$invalid" required>
+                    <input type="text" 
+                      ng-model="selectedCompany.city"
+                      uib-typeahead="address.long_name for address in getCity($viewValue)" typeahead-loading="loadingLocationsCt"
+                      typeahead-no-results="noResultsCt" class="form-control" name="cCity" autocomplete="off"
+                      tabindex="8" ng-disabled="cmpnyBascFrm.cState.$invalid && selectedCompany.state" required>
                     <i ng-show="loadingLocationsCt" class="glyphicon glyphicon-refresh"></i>
 
                     <div ng-show="noResultsCt">
