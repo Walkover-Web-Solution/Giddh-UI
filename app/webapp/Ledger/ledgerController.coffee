@@ -761,7 +761,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
     if !_.isUndefined(item.stock) and _.isUndefined(txn.panel.unit)
       txn.panel.unit = item.stock.stockUnit.code
-      txn.panel.units.push(item.stock.stockUnit)
+      try
+        txn.panel.units.push(item.stock.stockUnit)
+      catch e
+        txn.panel.units = []
+        txn.panel.units.push(item.stock.stockUnit)
+      
 
   ledgerCtrl.getCompoundTotal=()->
     total = 0
@@ -1421,14 +1426,16 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.getTaxListSuccess = (res) ->
     _.each res.body, (tax) ->
       tax.isSelected = false
-      if tax.account == null
-        tax.account = {}
-        tax.account.uniqueName = 0
+      ledgerCtrl.taxList.push(tax)
+      
       #check if selected account is a tax account
       if not _.isUndefined(ledgerCtrl.accountToShow)
-        if tax.account.uniqueName == ledgerCtrl.accountToShow.uniqueName
+        found = false
+        _.each tax.accounts, (item) ->
+          if item.uniqueName == ledgerCtrl.accountToShow.uniqueName
+            found = true
+        if found
           ledgerCtrl.accountToShow.isTax = true
-      ledgerCtrl.taxList.push(tax)
 
 
   ledgerCtrl.getTaxListFailure = (res) ->
@@ -1547,11 +1554,11 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.buildLedger = (ledger) ->
     ledgerCtrl.ledgerBeforeEdit = angular.copy(ledger,{})
     ledger.transactions = ledgerCtrl.removeBlankTransactions(ledger)
-    if !ledger.isBlankLedger
-      ledgerCtrl.addStockDetails(ledger)
-    else
+    if ledger.isBlankLedger
       ledgerCtrl.addStockDetailsForNewEntry(ledger)
       ledgerCtrl.setAmount(ledger)
+    else
+      ledgerCtrl.addStockDetails(ledger)
     ledgerCtrl.addDiscountTxns(ledger)
     delete ledger.panel
     ledger
@@ -1579,7 +1586,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     
     ledgerCtrl.lastSelectedLedger = ledger
 
-    if ledgerCtrl.doingEntry == true
+    if ledgerCtrl.doingEntry is true
       return
 
     ledgerCtrl.doingEntry = true
@@ -1753,9 +1760,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if txnList.length > 1
       _.each txnList, (txn, idx) ->
         _.each ledgerCtrl.taxList, (tax) ->
-          if txn.particular.uniqueName == tax.account.uniqueName && !tax.isChecked
-            if !txn.isManualTax
-              txn.toRemove = true 
+          _.each tax.accounts, (item) ->
+            if txn.particular.uniqueName == item.uniqueName && !tax.isChecked
+              if !txn.isManualTax
+                txn.toRemove = true 
     txnList = _.filter(txnList, (txn)->
       return txn.toRemove == undefined || txn.toRemove == false
     )
@@ -1790,8 +1798,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ledgerCtrl.matchTaxTransactions = (txnList, taxList) ->
     _.each txnList, (txn) ->
       _.each taxList, (tax) ->
-        if txn.particular.uniqueName == tax.account.uniqueName
-          txn.isTax = true
+        _.each tax.accounts, (item) ->
+          if txn.particular.uniqueName == item.uniqueName
+            txn.isTax = true
 
   ledgerCtrl.removeTaxTxnOnPrincipleTxnModified = (txnList) ->
     _.each txnList, (txn) ->
