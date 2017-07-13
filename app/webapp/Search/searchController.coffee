@@ -85,6 +85,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
           _.extend($scope.searchResDataOrig, $scope.searchResData)
           $scope.srchDataFound = true
           $scope.searchDtCntLdr = false
+          $scope.refreshData = false
         ,(error)->
           $scope.srchDataFound = false
           $scope.searchDtCntLdr = false
@@ -326,8 +327,17 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.sendEmailFailure = (res) ->
     toastr.error(res.data.message)
 
-  $scope.$on 'company-changed' , () ->
+  $rootScope.$on 'company-changed' , () ->
     $scope.getGrpsforSearch()
+    $scope.srchDataSet = []
+    $scope.searchFormData = {
+      fromDate: new Date(moment().subtract(1, 'month').utc())
+      toDate: new Date()
+    }
+    $scope.searchResData = {}
+    $scope.searchResDataOrig = {}
+    $scope.refreshData = true
+    
 
 #init angular app
 giddh.webApp.controller 'searchController', searchController
