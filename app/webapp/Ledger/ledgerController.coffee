@@ -1671,7 +1671,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         modifiedMsg = 'Principle transaction updated, Would you also like to update tax transactions?'
 
         if ledger.taxes.length > 0
-          isModified = ledgerCtrl.checkPrincipleModifications(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
+          isModified = ledgerCtrl.checkPrincipleModifications(ledger.transactions, ledgerCtrl.oldLedgrObj.transactions)
           if not isModified
             if ledgerCtrl.crossCheckForDiscountTxn(ledger)
               modifiedMsg = discountMsg
@@ -1749,9 +1749,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     transactions
 
   ledgerCtrl.addTaxesToLedger = (ledger) ->
-    ledger.taxes = []
+    if not angular.isArray(ledger.taxes)
+      ledger.taxes = []
     _.each(ledgerCtrl.taxList, (tax) ->
-      if tax.isChecked == true
+      if tax.isChecked == true and ledger.taxes.indexOf(tax.uniqueName) is -1
         ledger.taxes.push(tax.uniqueName)
     )
 
