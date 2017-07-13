@@ -1054,7 +1054,7 @@ tbplController = ($scope, $rootScope, trialBalService, localStorageService, $fil
     blob = new Blob(byteArrays, type: contentType)
     blob  
 
-  $scope.$on 'company-changed' , (event, data) ->
+  $rootScope.$on 'company-changed' , (event, data) ->
     if data.type == 'CHANGE'
       $state.reload()
  

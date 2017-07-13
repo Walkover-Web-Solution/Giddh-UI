@@ -188,19 +188,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     templateUrl: appendThis+'/public/webapp/Tbpl/tbpl.html'
     controller: 'tbplController'
   )
-  # .state('company.content.ledgerContent1',
-  #   url: '/ledger-paginated/:unqName'
-  #   views:{
-  #     # 'accountsList':{
-  #     #   templateUrl: appendThis+'/public/webapp/views/accounts.html'
-  #     # }
-  #     'rightPanel':{
-  #       templateUrl: appendThis+'/public/webapp/Ledger/ledgerPaginated.html'
-  #       controller: 'ledgerController'
-  #       controllerAs: 'ledgerCtrl'
-  #     }
-  #   }
-  # )
   .state('dashboard',
     url: '/dashboard'
     templateUrl: appendThis+'/public/webapp/Dashboard/dashboard.html'

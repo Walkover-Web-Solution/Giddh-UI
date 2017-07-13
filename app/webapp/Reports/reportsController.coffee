@@ -10,15 +10,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
   $scope.fromDatePickerIsOpen = false
   $scope.toDatePickerIsOpen = false
   $scope.GroupsAndAccounts = []
-  $scope.selected = {
-    groups: []
-    accounts: []
-    interval: 'Daily'
-    filterBy: 'Closing Balance'
-    createChartBy : 'Closing Balance'
-    createChartByMultiple: []
-    filteredGroupsAndAccounts: {}
-  }
+  
   $scope.tabs = [
     {title:'Historical Comparision', active: true}
     {title:'Profit & Loss', active: false}
@@ -71,6 +63,18 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
 #  $scope.intervalVals = [1, 3, 7, 30, 90, 180, 365]
   $scope.intervalVals = ["Daily", "Weekly", "Bi-Weekly","Monthly", "Yearly"]
   $scope.chartParams = ['Closing Balance', 'Credit Total', 'Debit Total']
+
+  $scope.initQueryParams = ()->
+    $scope.selected=
+      groups: []
+      accounts: []
+      interval: 'Daily'
+      filterBy: 'Closing Balance'
+      createChartBy : 'Closing Balance'
+      createChartByMultiple: []
+      filteredGroupsAndAccounts: {}
+
+  $scope.initQueryParams()
 
   $scope.getAccountsGroupsList = ()->
     $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
@@ -618,7 +622,10 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
         $scope.generateNWgraph()
   )
 
-  $scope.$on 'company-changed' , () ->
+  $rootScope.$on 'company-changed' , () ->
+    $scope.initQueryParams()
+    $scope.showHistoryFilter()
+    $scope.chartDataAvailable = false
     $scope.getAccountsGroupsList()
 
 giddh.webApp.controller 'reportsController', reportsController

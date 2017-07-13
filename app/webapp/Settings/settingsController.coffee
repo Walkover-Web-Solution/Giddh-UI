@@ -886,7 +886,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   $scope.deleteRazorPayFailure = (res) ->
     toastr.error(res.data.message)
 
-  $scope.$on 'company-changed', (event,changeData) ->
+  $rootScope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.prepareContactDetailsForBasicInfo()
       _.each($scope.tabs, (tab) ->

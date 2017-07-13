@@ -14,7 +14,7 @@ dashboard = angular.module('dashboard', [
 dashboardController = ($scope, $rootScope, toastr) ->
   $rootScope.cmpViewShow = true
 
-  $scope.$on 'company-changed', (event,changeData) ->
+  $rootScope.$on 'company-changed', (event,changeData) ->
     if changeData.type == 'CHANGE' || changeData.type == 'SELECT'
       $scope.$broadcast('reloadAll')
 
