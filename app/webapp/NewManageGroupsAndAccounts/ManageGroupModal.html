@@ -46,7 +46,7 @@
       <div class="grp_wrapper" ng-style="{width:mc.columns.length*255}">
 
         <!-- level 1 -->
-      <div class="col_wrapper" ng-repeat="col in mc.columns track by $index" ng-click="mc.getColsCount()">
+      <div class="col_wrapper" ng-repeat="col in mc.columns track by $index">
 
         <ul class="grp_list" overflowfix>
           <li ng-repeat="grp in col.groups track by $index">

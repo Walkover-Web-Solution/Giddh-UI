@@ -292,8 +292,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.getGrpDtlSuccess = (res) ->
     mc.selectedItem = res.body
     # mc.populateAccountList(res.body)
-    if mc.parentIndex != undefined
-      mc.columns.length = mc.parentIndex + 2
+    # if mc.parentIndex != undefined
+    #   mc.columns.length = mc.parentIndex + 2
     if mc.createNewGrp
       mc.showOnUpdate = false
       mc.selectedItem = {}
@@ -303,6 +303,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.selectedType = 'acc'
     mc.createNewGrp = false
     mc.createNewAcc =  false
+    mc.getColsCount()
 
 
 
@@ -495,6 +496,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.selectedAcc = res.body
     mc.columns.length = mc.getCurrentColIndex+1
     mc.gstDetail = res.body.gstDetails
+    mc.getColsCount()
     # mc.fetchingUnq = false
     if mc.selectedAcc.parentGroups[1].uniqueName == 'sundrycreditors' || mc.selectedAcc.parentGroups[1].uniqueName == 'sundrydebtors'
       if mc.gstDetail.length < 1
@@ -1279,9 +1281,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getGroups()
 
   mc.updateSearchhierarchy = (data) ->
-    if data.groups != undefined && data.accounts != undefined
-      currentItem = _.findWhere(mc.flattenGroupList, {uniqueName:data.uniqueName})
-    else
+    currentItem = _.findWhere(mc.flattenGroupList, {uniqueName:data.uniqueName})
+    if _.isUndefined(currentItem)
       currentItem = _.findWhere($rootScope.fltAccntListPaginated, {uniqueName:data.uniqueName})
     currentItem = _.extend(data, currentItem)
     mc.breadCrumbList = currentItem.parentGroups
@@ -1333,10 +1334,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     else if val.length < 2
       item.addressList[0].stateCode = ''
       item.addressList[0].stateName = ''
+    return false
 
   mc.getColsCount = () ->
-    calcWidth = mc.columns.length * 260
-    $(".fullWidth").css("min-width",calcWidth)
+    calcWidth = $(".grp_wrapper").width()
     # slide to last column
     leftPos = $('.grp_col').scrollLeft()
     $(".grp_col").animate({
