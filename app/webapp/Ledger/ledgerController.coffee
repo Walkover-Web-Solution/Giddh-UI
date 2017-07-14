@@ -1662,20 +1662,17 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if ledger.transactions.length > 0
         ledgerCtrl.matchTaxTransactions(ledger.transactions, ledgerCtrl.taxList)
         ledgerCtrl.matchTaxTransactions(ledgerCtrl.ledgerBeforeEdit.transactions, ledgerCtrl.taxList)
-        # ledgerCtrl.checkManualTaxTransaction(ledger.transactions, ledgerCtrl.ledgerBeforeEdit.transactions)
-        # updatedTxns = ledgerCtrl.updateEntryTaxes(ledger.transactions)
-        # ledger.transactions = updatedTxns
-        # ledgerCtrl.checkTaxCondition(ledger)
+        
         isModified = false
         discountMsg = 'Discount entry added, Would you also like to update Principle amount?'
         modifiedMsg = 'Principle transaction updated, Would you also like to update tax transactions?'
 
-        if ledger.taxes.length > 0
-          isModified = ledgerCtrl.checkPrincipleModifications(ledger.transactions, ledgerCtrl.oldLedgrObj.transactions)
-          if not isModified
-            if ledgerCtrl.crossCheckForDiscountTxn(ledger)
-              modifiedMsg = discountMsg
-              isModified = true
+        if ledgerCtrl.checkPrincipleModifications(ledger.transactions, ledgerCtrl.oldLedgrObj.transactions) and ledger.taxes.length > 0
+          isModified = true
+        if not isModified
+          if ledgerCtrl.crossCheckForDiscountTxn(ledger)
+            modifiedMsg = discountMsg
+            isModified = true
 
         if isModified
           modalService.openConfirmModal(
@@ -1749,10 +1746,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     transactions
 
   ledgerCtrl.addTaxesToLedger = (ledger) ->
-    if not angular.isArray(ledger.taxes)
-      ledger.taxes = []
+    ledger.taxes = []
     _.each(ledgerCtrl.taxList, (tax) ->
-      if tax.isChecked == true and ledger.taxes.indexOf(tax.uniqueName) is -1
+      if tax.isChecked == true
         ledger.taxes.push(tax.uniqueName)
     )
 
