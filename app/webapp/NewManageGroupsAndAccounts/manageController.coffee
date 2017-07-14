@@ -409,8 +409,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.showAccountListDetails = false
     mc.breadCrumbList.pop()
     # mc.getGroups()
-    # mc.columns[mc.parentIndex].groups.pop()
-    mc.selectItem(mc.columns[mc.columns.length-1], true, mc.parentIndex, mc.currentIndex)
+    mc.columns[mc.parentIndex].groups.pop()
+    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
 
   mc.onDeleteGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
