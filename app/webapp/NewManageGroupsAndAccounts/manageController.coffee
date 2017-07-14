@@ -334,15 +334,16 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     groupService.create($rootScope.selectedCompany.uniqueName, body).then(mc.onCreateGroupSuccess,mc.onCreateGroupFailure)
 
   mc.onCreateGroupSuccess = (res) ->
-    mc.keyWord = ''
+    # mc.keyWord = ''
     res.body.hLevel = mc.addToIndex
     res.body.accounts = res.body.accounts || []
+    res.body.parentGroups = mc.breadCrumbList
     mc.flattenGroupList.push(res.body)
     mc.columns[mc.addToIndex].groups.push(res.body)
     toastr.success("Sub group added successfully", "Success")
     # mc.selectedItem = {}
     # mc.getGroups()
-    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
+    mc.selectItem(mc.columns[mc.columns.length-1], false, mc.parentIndex, mc.currentIndex)
     mc.createNewGrp = true
 
   mc.onCreateGroupFailure = (res) ->
@@ -408,8 +409,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.showAccountListDetails = false
     mc.breadCrumbList.pop()
     # mc.getGroups()
-    mc.columns[mc.parentIndex].groups.pop()
-    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
+    # mc.columns[mc.parentIndex].groups.pop()
+    mc.selectItem(mc.columns[mc.columns.length-1], true, mc.parentIndex, mc.currentIndex)
 
   mc.onDeleteGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -443,7 +444,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     else
       mc.columns = mc.columns.splice(0,mc.addToIndex+1)
       mc.breadCrumbList.splice(mc.addToIndex)
-      mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1])
+      mc.selectItem(mc.columns[mc.columns.length-1])
       mc.parentIndex = mc.breadCrumbList[mc.breadCrumbList.length-1].hLevel
     mc.gstDetail = []
 
@@ -789,8 +790,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.groupAccntList.push(abc)
     mc.columns[mc.addToIndex].accounts.push(res.body)
     # $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
-    mc.getSelectedType('grp')
-    mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
+    mc.getSelectedType('acc')
+    mc.selectItem(mc.columns[mc.columns.length-1], true, mc.parentIndex, mc.currentIndex)
     mc.updateBreadCrumbs = true
     mc.createNewAcc = true
     # mc.columns = []
@@ -1197,7 +1198,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     reqParam.query = str
-    if str.length < 3
+    if str.length <= 2
       mc.breadCrumbList = []
       mc.getGroups()
     else if str.length > 2

@@ -421,8 +421,6 @@ angular.module('trialBalance', []).directive('exportReport', [
         $(elem1).addClass("fix")
     )
 ]
-
-
 # .directive 'ledgerScroller', ['$window', '$timeout','$parse', ($window, $timeout, $parse) ->
 #   restrict: "EA"
 #   link: (scope, elem, attrs) ->

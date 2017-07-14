@@ -2145,11 +2145,13 @@ select.form-control {
   color: #4b7fbd
 }
 .grp_list {
-    padding: 10px 0px;
-    min-height: 100%;
-    overflow-y: auto;
-    height: 100%;
-    padding-bottom: 60px;
+  padding: 41px 0px 60px;
+  min-height: 100%;
+  overflow-y: auto;
+  height: 100%;
+}
+.col_wrapper:first-child .grp_list {
+  padding-top: 10px;
 }
 .grp_list li {
     list-style: none;
@@ -2616,11 +2618,12 @@ label {
     cursor: pointer;
 }
 
-.fix .new_btn {
-    position: absolute;
-    background: #fff;
-    bottom: 0px;
-    width: 100%;
+.new_btn {
+  position: absolute;
+  background: #fff;
+  top: 0;
+  padding: 4px 0;
+  width: 100%;
 }
 .fix ul li:nth-last-child(2) {
     margin-bottom: 30px;
@@ -2788,6 +2791,10 @@ label {
 }
 #Addaccount .form-inline .select_drop {
   top: 15px;
+  position: relative;
+  float: right;
+  width: 15px;
+  height: 18px;
 }
 .h100 {
   max-height: none;
@@ -2834,4 +2841,15 @@ label {
 }
 .no-result h1 {
   font-size: 1.3em;
+}
+.col_wrapper:last-child {
+    border: 0;
+}
+#Addaccount .form-inline .select_drop i {
+  position: absolute;
+  right: 20px;
+  font-size: 16px;
+  color: #4d4d4d;
+  top: 0;
+  cursor: pointer;
 }

@@ -946,7 +946,7 @@ header .navbar-nav > li.active {
 }
 
 .modal-liq90 {
-  width: 90%;
+  width: 98%;
 }
 
 .modal-liq100 {
@@ -2625,7 +2625,7 @@ body.unresponsive {
     padding-top: 0;
   }
   .container, .modal-liq90{
-    width: 1000px !important;
+    width: 98% !important;
   }
   .header-container{
     width: 1366px !important;

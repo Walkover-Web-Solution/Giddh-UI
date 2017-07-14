@@ -27,7 +27,7 @@
               ng-model="mc.selectedAcc.uniqueName" ng-disabled="mc.isFixedAcc" ng-change="mc.removeSpace(mc.selectedAcc.uniqueName, mc.selectedAcc)" required />
           </div>
         </div>
-        <div class="col-xs-6">
+        <div class="col-xs-7 pdR0">
           <label class="col-xs-12 row">Opening Balance</label>
           <div class="col-xs-8">
             <div class="row">
@@ -78,7 +78,7 @@
     
     <div class="clearfix"></div>
 
-      <div class="form-group col-xs-3">
+      <div class="form-group col-xs-5">
         <div class="row">
           <label>Mobile Number</label>
           <input type="text" class="form-control" name="mobileNo" placeholder="9198XXXXXXXX" ng-model="mc.selectedAcc.mobileNo" valid-number ng-disabled="mc.isFixedAcc"  />
@@ -90,7 +90,7 @@
         </div>
       </div>
 
-      <div class="form-group col-xs-5">
+      <div class="form-group col-xs-6">
         <label>Email</label>
         <input type="text" class="form-control" name="email" placeholder="email@example.com" ng-model="mc.selectedAcc.email"  ng-disabled="mc.isFixedAcc" />
       </div>
@@ -129,7 +129,7 @@
           <div class="col-xs-5 pd0">
             <span class="col-xs-12 pd0 pdB1">
               <label class="w100">GST No.</label>
-              <input type="text" class="form-control" ng-model="gst.gstNumber" ng-change="mc.getStateCode(gst.gstNumber, gst)" maxlength="15" name="gstNumber" />
+              <input type="text" class="form-control" ng-model="gst.gstNumber" ng-keyup="mc.getStateCode(gst.gstNumber, gst)" maxlength="15" name="gstNumber" />
             </span>
             <span class="col-xs-12 pd0">
               <label class="w100">State</label>
