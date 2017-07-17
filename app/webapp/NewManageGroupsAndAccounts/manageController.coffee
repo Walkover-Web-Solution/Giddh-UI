@@ -409,7 +409,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.showAccountListDetails = false
     mc.breadCrumbList.pop()
     # mc.getGroups()
-    mc.columns[mc.parentIndex].groups.pop()
+    # mc.columns[mc.parentIndex].groups.pop()
     mc.selectItem(mc.breadCrumbList[mc.breadCrumbList.length-1], true, mc.parentIndex, mc.currentIndex)
 
   mc.onDeleteGroupFailure = (res) ->
@@ -908,6 +908,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
 
   mc.moveAccntSuccess = (res) ->
+    mc.keyWord = ''
     mc.showOnUpdate = false
     toastr.success(res.body, res.status)
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)

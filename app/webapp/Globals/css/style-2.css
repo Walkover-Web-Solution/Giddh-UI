@@ -2853,3 +2853,6 @@ label {
   top: 0;
   cursor: pointer;
 }
+.col_wrapper:first-child .grp_list .new_btn {
+  padding: 0;
+}
