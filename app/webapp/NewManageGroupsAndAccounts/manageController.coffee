@@ -257,7 +257,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     if item.hLevel == undefined
       item.hLevel = parentIndex + 1
     if mc.keyWord != undefined
-      if mc.keyWord.length > 3
+      if mc.keyWord.length >= 3
         mc.updateSearchItem = true
         mc.updateSearchhierarchy(item)
     if mc.breadCrumbList.length > 0
@@ -407,6 +407,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.selectedItem = {}
     mc.showGroupDetails = false
     mc.showAccountListDetails = false
+    mc.columns[mc.breadCrumbList.length-1].groups.splice(mc.currentIndex, 1)
     mc.breadCrumbList.pop()
     # mc.getGroups()
     # mc.columns[mc.parentIndex].groups.pop()
@@ -1199,17 +1200,15 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     reqParam = {}
     reqParam.companyUniqueName = $rootScope.selectedCompany.uniqueName
     reqParam.query = str
-    if str.length <= 2
-      mc.breadCrumbList = []
-      mc.getGroups()
-    else if str.length > 2
+    if str.length < 1
+      mc.resetSearch()
+    else if str.length >= 3
       mc.searchLoad = true
       mc.columns = []
       groupService.searchGroupsWithAccountsCropped(reqParam).then(mc.getSearchResultSuccess, mc.getSearchResultFailure)
 
   mc.getSearchResultSuccess = (res) ->
     if res.body.length < 1
-      mc.columns = []
       mc.showNoResult = true
     else
       mc.showNoResult = false
@@ -1277,7 +1276,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   #   console.log childCol
 
   mc.resetSearch = () ->
-    mc.searchQuery('')
+    # mc.searchQuery('')
     mc.keyWord = ''
     mc.breadCrumbList = []
     mc.getGroups()
