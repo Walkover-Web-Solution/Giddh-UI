@@ -2377,16 +2377,22 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.magicLink = ''
     ledgerCtrl.shareModalInstance.close()
 
-  ledgerCtrl.newAccountModel = {
-    group : ''
-    account: ''
-    accUnqName: ''
-  }
+  
+  ledgerCtrl.initAddNewAcModelObj = () ->
+    ledgerCtrl.newAccountModel=
+      group : ''
+      account: ''
+      accUnqName: ''
+      showGstBox: false
+
+  ledgerCtrl.checkSelectedGroup=(selectedItem)->
+    if selectedItem.groupUniqueName is "sundrydebtors" || selectedItem.groupUniqueName is "sundrycreditors"
+      ledgerCtrl.newAccountModel.showGstBox = true
+    else
+      ledgerCtrl.newAccountModel.showGstBox = false
 
   ledgerCtrl.addNewAccount = () ->
-    ledgerCtrl.newAccountModel.group = ''
-    ledgerCtrl.newAccountModel.account = ''
-    ledgerCtrl.newAccountModel.accUnqName = ''
+    ledgerCtrl.initAddNewAcModelObj()
     ledgerCtrl.selectedTxn.isOpen = false
     ledgerCtrl.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName, true)
     ledgerCtrl.AccmodalInstance = $uibModal.open(
@@ -2406,6 +2412,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
     @failure = (res) ->
       toastr.error(res.data.message)
+
     newAccount = {
       email:""
       mobileNo:""
@@ -2413,6 +2420,15 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       openingBalanceDate: $filter('date')(ledgerCtrl.today, "dd-MM-yyyy")
       uniqueName:ledgerCtrl.newAccountModel.accUnqName
     }
+    if ledgerCtrl.newAccountModel.showGstBox
+      newAccount.gstDetails =[{
+        "gstNumber": ledgerCtrl.newAccountModel.gstNumber
+        "addressList":[{
+          "address" :""
+          "stateCode" : ledgerCtrl.newAccountModel.stateCode
+        }]
+      }]
+
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: ledgerCtrl.newAccountModel.group.groupUniqueName
@@ -2421,7 +2437,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if ledgerCtrl.newAccountModel.group.groupUniqueName == '' || ledgerCtrl.newAccountModel.group.groupUniqueName == undefined
       toastr.error('Please select a group.')
     else
-      accountService.createAc(unqNamesObj, newAccount).then(@success, @failure) 
+      accountService.createAc(unqNamesObj, newAccount).then(@success, @failure)
 
   ledgerCtrl.genearateUniqueName = (unqName) ->
     unqName = unqName.replace(/ |,|\//g,'')
