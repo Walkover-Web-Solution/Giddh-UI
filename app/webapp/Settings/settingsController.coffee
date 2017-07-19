@@ -19,10 +19,7 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
   ]
   $scope.typeOfTaxList = [
     "GST"
-    "IGST"
-    "CGST"
-    "SGST"
-    "UTGST"
+    "INPUTGST"
     "Other"
   ]
 
