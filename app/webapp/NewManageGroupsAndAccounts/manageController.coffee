@@ -72,11 +72,11 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
     mc.selectedType = type
-    # if mc.selectedType == 'acc'
-    #   if mc.breadCrumbList.length > 1
-    #     if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
-    #       if mc.gstDetail.length < 1
-    #         mc.addNewGst()
+    if mc.selectedType == 'acc'
+      if mc.breadCrumbList.length > 1
+        if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
+          if mc.gstDetail.length < 1
+            mc.addNewGst()
     mc.createNew = false
 # end
 
