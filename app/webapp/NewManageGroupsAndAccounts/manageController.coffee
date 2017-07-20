@@ -72,7 +72,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     if mc.selectedType == 'acc'
       if mc.breadCrumbList.length > 1
         if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
-          mc.addNewGst()
+          if mc.gstDetail.length < 1
+            mc.addNewGst()
     mc.createNew = false
 # end
 
@@ -301,6 +302,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.showOnUpdate = false
       mc.selectedAcc = {}
       mc.selectedType = 'acc'
+    mc.gstDetail = []
+    if mc.gstDetail.length < 1
+      mc.addNewGst()
     mc.createNewGrp = false
     mc.createNewAcc =  false
     mc.getColsCount()
