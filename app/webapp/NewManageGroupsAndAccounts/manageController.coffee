@@ -297,10 +297,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     if mc.createNewGrp
       mc.showOnUpdate = false
       mc.selectedItem = {}
+      mc.gstDetail = []
     else if mc.createNewAcc
       mc.showOnUpdate = false
       mc.selectedAcc = {}
       mc.selectedType = 'acc'
+      mc.gstDetail = []
     mc.createNewGrp = false
     mc.createNewAcc =  false
     mc.getColsCount()
