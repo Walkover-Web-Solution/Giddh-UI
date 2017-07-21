@@ -2392,6 +2392,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       accUnqName: ''
       showGstBox: false
       gstNumber: ''
+      state: {}
 
   ledgerCtrl.checkSelectedGroup=(selectedItem)->
     result = _.findWhere(ledgerCtrl.flatGrpList, {uniqueName:selectedItem.groupUniqueName})
@@ -2456,6 +2457,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       toastr.error('Please select a group.')
     else
       accountService.createAc(unqNamesObj, newAccount).then(@success, @failure)
+
+  ledgerCtrl.getStateCode = (val, item) ->
+    if val.length >= 2
+      gstState = _.findWhere($rootScope.stateList, {code:val.substr(0,2)})
+      if gstState
+        item.state = gstState
+    else if val.length < 2
+      item.state = {}
 
   ledgerCtrl.genearateUniqueName = (unqName) ->
     unqName = unqName.replace(/ |,|\//g,'')
