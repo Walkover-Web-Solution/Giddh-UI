@@ -113,19 +113,12 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
 
     if arrayType is 'pArr'
       if vm.addStockObj.purchaseAccountDetails.unitRates.length > 1
-        vm.addStockObj.purchaseAccountDetails.unitRates.splice(indx, 1);
-        # vm.addStockObj.purchaseAccountDetails.unitRates = _.reject(vm.addStockObj.purchaseAccountDetails.unitRates, (o)-> 
-        #   return o is item
-        # )
+        vm.addStockObj.purchaseAccountDetails.unitRates.splice(indx, 1)
       else
         return
     else if arrayType is 'sArr'
       if vm.addStockObj.salesAccountDetails.unitRates.length > 1
-        vm.addStockObj.purchaseAccountDetails.unitRates.splice(indx, 1);
-      
-        # vm.addStockObj.salesAccountDetails.unitRates = _.reject(vm.addStockObj.salesAccountDetails.unitRates, (o)-> 
-        #   return o is item
-        # )
+        vm.addStockObj.purchaseAccountDetails.unitRates.splice(indx, 1)
       else
         return
 
@@ -133,7 +126,6 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
     @success = (res) ->
       toastr.success 'Stock Item added successfully'
       vm.clearAddEditStockForm()
-      # _.extend(vm.addStockObj, res.body)
       # getting list from parent controller
       $scope.$parent.stock.getHeirarchicalStockGroups()
       $scope.$parent.stock.getStockGroupDetail($state.params.grpId)
