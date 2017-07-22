@@ -14,8 +14,8 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
   # init arr obj
   vm.initAcDetailsObj=()->
     return {
-      rate: undefined,
-      stockUnitCode: undefined
+      rate: null,
+      stockUnitCode: null
     }
 
   vm.appendEmptyRow=()->
@@ -97,7 +97,7 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
       )
 
   vm.checkPrevItem=(o)->
-    return if (_.isEmpty(o.stockUnitCode) || _.isEmpty(o.rate)) && (_.isUndefined(o.stockUnitCode) || _.isUndefined(o.rate)) then false else true
+    return if (_.isEmpty(o.stockUnitCode) || _.isEmpty(o.rate)) && (_.isNull(o.stockUnitCode) || _.isNull(o.rate)) then false else true
 
   vm.addUnitItem=(item, arrayType)->
     if vm.checkPrevItem(item)
@@ -108,6 +108,16 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
 
 
   vm.removeUnitItem=(item, arrayType, indx)->
+    if arrayType is 'pArr'
+      if vm.addStockObj.purchaseAccountDetails.unitRates.length <= 1
+        item.rate = null
+        item.stockUnitCode = null
+
+    else if arrayType is 'sArr'
+      if vm.addStockObj.salesAccountDetails.unitRates.length <= 1
+        item.rate = null
+        item.stockUnitCode = null
+        
     if !(item.rate || item.stockUnitCode)
       return
 
@@ -118,7 +128,7 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
         return
     else if arrayType is 'sArr'
       if vm.addStockObj.salesAccountDetails.unitRates.length > 1
-        vm.addStockObj.purchaseAccountDetails.unitRates.splice(indx, 1)
+        vm.addStockObj.salesAccountDetails.unitRates.splice(indx, 1)
       else
         return
 

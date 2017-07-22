@@ -90,7 +90,7 @@
 								</ui-select>
 							</div>
 							<div class="col-xs-5">
-								<input type="number" class="form-control" ng-model="item.rate" />
+								<input type="text" class="form-control" ng-model="item.rate" valid-number />
 							</div>
 							<div class="col-xs-2 mutliple_unit">
 								<button ng-if="$last" ng-click="vm.addUnitItem(item, 'pArr')"><i class="fa fa-plus add_row"></i></button
@@ -139,7 +139,7 @@
 								</ui-select>
 							</div>
 							<div class="col-xs-5">
-								<input type="number" class="form-control" ng-model="item.rate" />
+								<input type="text" class="form-control" ng-model="item.rate" valid-number />
 							</div>
 							<div class="col-xs-2 mutliple_unit">
 								<button ng-if="$last" ng-click="vm.addUnitItem(item, 'sArr')"><i class="fa fa-plus add_row"></i></button
