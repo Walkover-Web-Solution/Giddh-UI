@@ -1,298 +1,301 @@
-<form name="addEditStockForm"  novalidate>
-<section class="col-xs-12 col-md-9 col-lg-7">
-	<div class="pd2 pdB0">
-		<div class="row form_title">
-			<label ng-if="!vm.addStockObj.stockGroup">Add Stock</label>
-			<label ng-if="vm.addStockObj.stockGroup">Modify Stock</label>
-		</div>
-	
-		<div class="row">
-			<section class="form-theme clearfix mrBChldLbl">
-				<div class="row mr0">
-					<div class="form-group col-xs-6 pdL0 pdR">
-						<label>Name<span class="required">*</span></label>
-						<input type="text" name="name" class="form-control" ng-model="vm.addStockObj.name" required minlength="2">
-					</div>
-					<!-- show only when update -->
-					<div class="form-group col-xs-6 pdR0 pdL">
-						<label>Unique Name</label>
-						<input type="text" name="uniqueName" class="form-control" ng-model="vm.addStockObj.uniqueName" required>
-					</div>			
-				</div>
+<form name="addEditStockForm" novalidate>
+	<section class="col-xs-12 col-md-9 col-lg-7">
+		<div class="pd2 pdB0">
+			<div class="row form_title">
+				<label ng-if="!vm.addStockObj.stockGroup">Add Stock</label>
+				<label ng-if="vm.addStockObj.stockGroup">Modify Stock</label>
+			</div>
 
-				<div class="row mr0">
-					<div class="form-group col-xs-3 pdL0 pdR">
-						<label>Stock Unit<span class="required">*</span></label>
-						<ui-select ng-model="vm.addStockObj.stockUnitCode" theme="bootstrap" search-enabled="true" required  title="Choose Unit">
-              <ui-select-match>
-                <span>
+			<div class="row">
+				<section class="form-theme clearfix mrBChldLbl">
+					<div class="row mr0">
+						<div class="form-group col-xs-6 pdL0 pdR">
+							<label>Name<span class="required">*</span></label>
+							<input type="text" name="name" class="form-control" ng-model="vm.addStockObj.name" required minlength="2">
+						</div>
+						<!-- show only when update -->
+						<div class="form-group col-xs-6 pdR0 pdL">
+							<label>Unique Name</label>
+							<input type="text" name="uniqueName" class="form-control" ng-model="vm.addStockObj.uniqueName" required>
+						</div>
+					</div>
+
+					<div class="row mr0">
+						<div class="form-group col-xs-3 pdL0 pdR">
+							<label>Stock Unit<span class="required">*</span></label>
+							<ui-select ng-model="vm.addStockObj.stockUnitCode" theme="bootstrap" search-enabled="true" required title="Choose Unit">
+								<ui-select-match>
+									<span>
                 	{{$select.selected.name || $select.selected}}
                 </span>
-              </ui-select-match>
-              <ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
-              	<span ng-bind-html="unit.name | hilite: $select.search"></span>
-              	<small>(<span ng-bind-html="''+unit.code | hilite: $select.search"></span>)</small>
-              </ui-select-choices>
-            </ui-select>
-					</div>
-
-					<div class="form-group col-xs-3 pdR">
-						<label>Open. Qty</label>
-						<input type="number" name="openingQuantity" class="form-control" ng-model="vm.addStockObj.openingQuantity">
-					</div>
-
-					<div class="form-group col-xs-3 pdL">
-						<label>Rate/stock unit</label>
-						<input readonly="true" type="text" class="form-control" placeholder="calculate later" value="{{vm.addStockObj.openingAmount/vm.addStockObj.openingQuantity | number}}" />
-					</div>
-
-					<!--amount/quantity formula manuallly calculate -->
-					<div class="form-group col-xs-3 pdL pdR0 ">
-						<label>Amount</label>
-						<input type="number" name="openingAmount" class="form-control" ng-model="vm.addStockObj.openingAmount">
-					</div>
-
-				</div>
-
-				<div class="row mr0 col-xs-6 pdL0 pdR">
-					<div class="form-group col-xs-12 pdL0 pdR">
-						<label class="boldHead">Purchase Acc</label>
-	        	<ui-select ng-model="vm.addStockObj.purchaseAccountDetails.accountUniqueName" theme="bootstrap">
-              <ui-select-match allow-clear="true" placeholder="select purchase account">
-                <span>{{$select.selected.name}}</span>
-              </ui-select-match>
-              <ui-select-choices repeat="account.uniqueName as account in vm.purchaseAccounts | filter:$select.search | limitTo:5" refresh="vm.getPurchaseAccounts($select.search)">
-              	<span ng-bind="account.name"></span>
-              </ui-select-choices>
-            </ui-select>
-					</div>
-
-					<div class="row mrB">
-						<div class="col-xs-5">
-							<label>Unit</label>
+								</ui-select-match>
+								<ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
+									<span ng-bind-html="unit.name | hilite: $select.search"></span>
+									<small>(<span ng-bind-html="''+unit.code | hilite: $select.search"></span>)</small>
+								</ui-select-choices>
+							</ui-select>
 						</div>
-						<div class="col-xs-5">
-							<label>Rate</label>
+
+						<div class="form-group col-xs-3 pdR">
+							<label>Open. Qty</label>
+							<input type="number" name="openingQuantity" class="form-control" ng-model="vm.addStockObj.openingQuantity">
 						</div>
+
+						<div class="form-group col-xs-3 pdL">
+							<label>Rate/stock unit</label>
+							<input readonly="true" type="text" class="form-control" placeholder="calculate later" value="{{vm.addStockObj.openingAmount/vm.addStockObj.openingQuantity | number}}"
+							/>
+						</div>
+
+						<!--amount/quantity formula manuallly calculate -->
+						<div class="form-group col-xs-3 pdL pdR0 ">
+							<label>Amount</label>
+							<input type="number" name="openingAmount" class="form-control" ng-model="vm.addStockObj.openingAmount">
+						</div>
+
 					</div>
 
-					<div class="row mrB1" ng-repeat="item in vm.addStockObj.purchaseAccountDetails.unitRates track by $index">
-						<div class="col-xs-5">
-							<ui-select search-enabled="true" ng-model="item.stockUnitCode" theme="bootstrap" title="Choose Unit">
-		            <ui-select-match>
-	                <span>{{$select.selected.name || $select.selected}}</span>
-	              </ui-select-match>
-	              <ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
-	              	<span ng-bind="unit.name"></span>&nbsp;
-	              	<small>(<span ng-bind-html="''+unit.code | hilite: $select.search"></span>)</small>
-	              </ui-select-choices>
-		          </ui-select>
+					<div class="row mr0 col-xs-6 pdL0 pdR">
+						<div class="form-group col-xs-12 pdL0 pdR">
+							<label class="boldHead">Purchase Acc</label>
+							<ui-select ng-model="vm.addStockObj.purchaseAccountDetails.accountUniqueName" theme="bootstrap">
+								<ui-select-match allow-clear="true" placeholder="select purchase account">
+									<span>{{$select.selected.name}}</span>
+								</ui-select-match>
+								<ui-select-choices repeat="account.uniqueName as account in vm.purchaseAccounts | filter:$select.search | limitTo:5" refresh="vm.getPurchaseAccounts($select.search)">
+									<span ng-bind="account.name"></span>
+								</ui-select-choices>
+							</ui-select>
 						</div>
-						<div class="col-xs-5">
-							<input type="number" class="form-control" ng-model="item.rate" />
+
+						<div class="row mrB">
+							<div class="col-xs-5">
+								<label>Unit</label>
+							</div>
+							<div class="col-xs-5">
+								<label>Rate</label>
+							</div>
 						</div>
-						<div class="col-xs-2 mutliple_unit">
-							<button ng-if="$last" ng-click="vm.addUnitItem(item, 'pArr')"><i class="fa fa-plus add_row"></i></button
+
+						<div class="row mrB1" ng-repeat="item in vm.addStockObj.purchaseAccountDetails.unitRates track by $index">
+							<div class="col-xs-5">
+								<ui-select search-enabled="true" ng-model="item.stockUnitCode" theme="bootstrap" title="Choose Unit">
+									<ui-select-match>
+										<span>{{$select.selected.name || $select.selected}}</span>
+									</ui-select-match>
+									<ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
+										<span ng-bind="unit.name"></span>&nbsp;
+										<small>(<span ng-bind-html="''+unit.code | hilite: $select.search"></span>)</small>
+									</ui-select-choices>
+								</ui-select>
+							</div>
+							<div class="col-xs-5">
+								<input type="number" class="form-control" ng-model="item.rate" />
+							</div>
+							<div class="col-xs-2 mutliple_unit">
+								<button ng-if="$last" ng-click="vm.addUnitItem(item, 'pArr')"><i class="fa fa-plus add_row"></i></button
 							>
-							<button ng-hide="$last && !$first" ng-click="vm.removeUnitItem(item, 'pArr')"><i class="fa fa-times dlet"></i></button>
+							<button ng-hide="$last && !$first" ng-click="vm.removeUnitItem(item, 'pArr', $index)"><i class="fa fa-times dlet"></i></button>
+							</div>
 						</div>
+
 					</div>
 
-				</div>
 
-
-				<div class="row mr0 col-xs-6 pdL pdR0">
-					<div class="form-group col-xs-12 pdL0 pdR">
-						<label class="boldHead">Sales Acc</label>
-						<ui-select ng-model="vm.addStockObj.salesAccountDetails.accountUniqueName" theme="bootstrap">
-              <ui-select-match  allow-clear="true" placeholder="select sales account">
-              	<span>{{$select.selected.name}}</span>
-              </ui-select-match>
-              <ui-select-choices repeat="account.uniqueName as account in vm.salesAccounts | filter:$select.search | limitTo:5" refresh="vm.getSalesAccounts($select.search)">
-                <span ng-bind="account.name"></span>
-              </ui-select-choices>
-            </ui-select>
-					</div>
-
-				
-
-					<div class="row mrB">
-						<div class="col-xs-5">
-							<label>Unit</label>
+					<div class="row mr0 col-xs-6 pdL pdR0">
+						<div class="form-group col-xs-12 pdL0 pdR">
+							<label class="boldHead">Sales Acc</label>
+							<ui-select ng-model="vm.addStockObj.salesAccountDetails.accountUniqueName" theme="bootstrap">
+								<ui-select-match allow-clear="true" placeholder="select sales account">
+									<span>{{$select.selected.name}}</span>
+								</ui-select-match>
+								<ui-select-choices repeat="account.uniqueName as account in vm.salesAccounts | filter:$select.search | limitTo:5" refresh="vm.getSalesAccounts($select.search)">
+									<span ng-bind="account.name"></span>
+								</ui-select-choices>
+							</ui-select>
 						</div>
-						<div class="col-xs-5">
-							<label>Rate</label>
-						</div>
-					</div>
 
-					<div class="row mrB1" ng-repeat="item in vm.addStockObj.salesAccountDetails.unitRates track by $index">
-						<div class="col-xs-5">
-							<ui-select search-enabled="true" ng-model="item.stockUnitCode" theme="bootstrap" title="Choose Unit">
-		            <ui-select-match>
-	                <span>{{$select.selected.name || $select.selected}}</span>
-	              </ui-select-match>
-	              <ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
-	              	<span ng-bind="unit.name"></span>&nbsp;
-	              	<small>(<span ng-bind-html="''+unit.code | hilite: $select.search"></span>)</small>
-	              </ui-select-choices>
-		          </ui-select>
+
+
+						<div class="row mrB">
+							<div class="col-xs-5">
+								<label>Unit</label>
+							</div>
+							<div class="col-xs-5">
+								<label>Rate</label>
+							</div>
 						</div>
-						<div class="col-xs-5">
-							<input type="number" class="form-control" ng-model="item.rate" />
-						</div>
-						<div class="col-xs-2 mutliple_unit">
-							<button ng-if="$last" ng-click="vm.addUnitItem(item, 'sArr')"><i class="fa fa-plus add_row"></i></button
+
+						<div class="row mrB1" ng-repeat="item in vm.addStockObj.salesAccountDetails.unitRates track by $index">
+							<div class="col-xs-5">
+								<ui-select search-enabled="true" ng-model="item.stockUnitCode" theme="bootstrap" title="Choose Unit">
+									<ui-select-match>
+										<span>{{$select.selected.name || $select.selected}}</span>
+									</ui-select-match>
+									<ui-select-choices repeat="unit.code as unit in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
+										<span ng-bind="unit.name"></span>&nbsp;
+										<small>(<span ng-bind-html="''+unit.code | hilite: $select.search"></span>)</small>
+									</ui-select-choices>
+								</ui-select>
+							</div>
+							<div class="col-xs-5">
+								<input type="number" class="form-control" ng-model="item.rate" />
+							</div>
+							<div class="col-xs-2 mutliple_unit">
+								<button ng-if="$last" ng-click="vm.addUnitItem(item, 'sArr')"><i class="fa fa-plus add_row"></i></button
 							>
-							<button ng-hide="$last && !$first" ng-click="vm.removeUnitItem(item, 'sArr')"><i class="fa fa-times dlet"></i></button>
+							<button ng-hide="$last && !$first" ng-click="vm.removeUnitItem(item, 'sArr', $index)"><i class="fa fa-times dlet"></i></button>
+							</div>
 						</div>
-					</div>
-					
-				</div>
 
-				<div class="row mrT1">
-					<div class="col-xs-12">
-						<div class="checkbox">
-							<label class="isFsStock" for="isFsStock" ng-click="$event.stopPropagation()">
+					</div>
+
+					<div class="row mrT1">
+						<div class="col-xs-12">
+							<div class="checkbox">
+								<label class="isFsStock" for="isFsStock" ng-click="$event.stopPropagation()">
 								<input type="checkbox" ng-model="vm.addStockObj.isFsStock" id="isFsStock" name="isFsStock" />Is it a finished stock? <small>(Manufacturing/Combo)</small></label>
+							</div>
 						</div>
 					</div>
-				</div>
-			</section>
-			<!-- end box -->
+				</section>
+				<!-- end box -->
+			</div>
 		</div>
-	</div>
-</section>
+	</section>
 
-<div class="clearfix"></div>
-<!-- combo code -->
-<section class="col-xs-12">
-	<div class="pdL2 pdR2 mrB2">
-	<div class="row">
-		<table ng-if="vm.addStockObj.isFsStock" class="width100 table_theme mrT1 noPdTd addStockTbl">
-			<thead>
-				<tr>
-					<th colspan="2">
-						{{vm.addStockObj.name}} (Made with)
-					</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td class="col-xs-8">
-						<div class="clearfix pdTBth15">
-							<div class="form-group col-xs-4">
-								<ui-select ng-model="vm.mfsCmbItem.stockUniqueName" theme="bootstrap" search-enabled="true" title="Choose uniqueName">
-							    <ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
-							    <ui-select-choices repeat="item.uniqueName as item in stock.allStocks | propsFilter: {name: $select.search, uniqueName: $select.search}">
-							      <span ng-bind-html="item.name | hilite: $select.search"></span>
-							      <small>(<span ng-bind-html="''+item.uniqueName | hilite: $select.search"></span>)</small>
-							    </ui-select-choices>
-							  </ui-select>
-							</div>
+	<div class="clearfix"></div>
+	<!-- combo code -->
+	<section class="col-xs-12">
+		<div class="pdL2 pdR2 mrB2">
+			<div class="row">
+				<table ng-if="vm.addStockObj.isFsStock" class="width100 table_theme mrT1 noPdTd addStockTbl">
+					<thead>
+						<tr>
+							<th colspan="2">
+								{{vm.addStockObj.name}} (Made with)
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="col-xs-8">
+								<div class="clearfix pdTBth15">
+									<div class="form-group col-xs-4">
+										<ui-select ng-model="vm.mfsCmbItem.stockUniqueName" theme="bootstrap" search-enabled="true" title="Choose uniqueName">
+											<ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
+											<ui-select-choices repeat="item.uniqueName as item in stock.allStocks | propsFilter: {name: $select.search, uniqueName: $select.search}">
+												<span ng-bind-html="item.name | hilite: $select.search"></span>
+												<small>(<span ng-bind-html="''+item.uniqueName | hilite: $select.search"></span>)</small>
+											</ui-select-choices>
+										</ui-select>
+									</div>
 
-							<div class="form-group col-xs-3">
-			          <ui-select ng-model="vm.mfsCmbItem.stockUnitCode" theme="bootstrap" search-enabled="true" title="Choose Unit">
-							    <ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
-							    <ui-select-choices repeat="item.code as item in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
-							      <span ng-bind-html="item.name | hilite: $select.search"></span>
-							      <small>(<span ng-bind-html="''+item.code | hilite: $select.search"></span>)</small>
-							    </ui-select-choices>
-							  </ui-select>
-							</div>
+									<div class="form-group col-xs-3">
+										<ui-select ng-model="vm.mfsCmbItem.stockUnitCode" theme="bootstrap" search-enabled="true" title="Choose Unit">
+											<ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
+											<ui-select-choices repeat="item.code as item in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
+												<span ng-bind-html="item.name | hilite: $select.search"></span>
+												<small>(<span ng-bind-html="''+item.code | hilite: $select.search"></span>)</small>
+											</ui-select-choices>
+										</ui-select>
+									</div>
 
-							<div class="form-group col-xs-3">
-								<input type="text" name="quantity" placeholder="Stock Quantity" class="form-control" ng-model="vm.mfsCmbItem.quantity">
-							</div>
-							<div class="form-group col-xs-2">
-								<a ng-if="!vm.mfsCmbItem.hasIdx" class="btn btn-sm btn-primary pull-right" ng-click="vm.addMfsCmbItem()">Add</a>
-								<a ng-if="vm.mfsCmbItem.hasIdx" class="btn btn-sm btn-primary pull-right" ng-click="vm.updateMfsCmbItem()">Update</a>
-							</div>
-						</div>
+									<div class="form-group col-xs-3">
+										<input type="text" name="quantity" placeholder="Stock Quantity" class="form-control" ng-model="vm.mfsCmbItem.quantity">
+									</div>
+									<div class="form-group col-xs-2">
+										<a ng-if="!vm.mfsCmbItem.hasIdx" class="btn btn-sm btn-primary pull-right" ng-click="vm.addMfsCmbItem()">Add</a>
+										<a ng-if="vm.mfsCmbItem.hasIdx" class="btn btn-sm btn-primary pull-right" ng-click="vm.updateMfsCmbItem()">Update</a>
+									</div>
+								</div>
 
-						<div class="clearfix mrT1 mrB1" ng-if="vm.mfsCmbItemErrMsg">
-							<div class="col-xs-12">
-								<p class="text-warning">{{vm.mfsCmbItemErrMsg}}</p>
-							</div>
-						</div>
+								<div class="clearfix mrT1 mrB1" ng-if="vm.mfsCmbItemErrMsg">
+									<div class="col-xs-12">
+										<p class="text-warning">{{vm.mfsCmbItemErrMsg}}</p>
+									</div>
+								</div>
 
-						<section class="linkstock">
-							<table class="col-xs-12 linkStockTbl">
-								<tbody>
-									<tr ng-repeat="list in vm.addStockObj.manufacturingDetails.linkedStocks track by $index">
-										<td class="col-xs-4 list-row">
-										<span></span>
-										<p>{{list.stockUniqueName}}</p>
-										</td>
-										<td class="col-xs-2">{{list.stockUnitCode}}</td>
-										<td class="col-xs-2">{{list.quantity}}</td>
-										<td class="col-xs-4 action">
-											<a href class="btn btn-default" ng-click="vm.editMfsCmbItem(list, $index)">Edit</a>
-											<a href class="btn btn-default" ng-click="vm.deleteMfsCmbItem(list)">Delete</a>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</section>
-					</td>
-					<td class="col-xs-4">
-						<section class="clearfix pr">
-							<div class="col-md-2 col-lg-2 col-xs-12">
-							&nbsp;
-							</div>
-							<p class="lead col-md-10 col-lg-10 col-xs-12 mrB fw400">
-								<small>
+								<section class="linkstock">
+									<table class="col-xs-12 linkStockTbl">
+										<tbody>
+											<tr ng-repeat="list in vm.addStockObj.manufacturingDetails.linkedStocks track by $index">
+												<td class="col-xs-4 list-row">
+													<span></span>
+													<p>{{list.stockUniqueName}}</p>
+												</td>
+												<td class="col-xs-2">{{list.stockUnitCode}}</td>
+												<td class="col-xs-2">{{list.quantity}}</td>
+												<td class="col-xs-4 action">
+													<a href class="btn btn-default" ng-click="vm.editMfsCmbItem(list, $index)">Edit</a>
+													<a href class="btn btn-default" ng-click="vm.deleteMfsCmbItem(list)">Delete</a>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</section>
+							</td>
+							<td class="col-xs-4">
+								<section class="clearfix pr">
+									<div class="col-md-2 col-lg-2 col-xs-12">
+										&nbsp;
+									</div>
+									<p class="lead col-md-10 col-lg-10 col-xs-12 mrB fw400">
+										<small>
 								{{vm.addStockObj.manufacturingDetails.manufacturingQuantity}}
 								{{vm.addStockObj.manufacturingDetails.manufacturingUnitCode}}
-								</small>
-								{{vm.addStockObj.name}}
-							</p>
-						</section>
-						<section class="clearfix pr">
-							<div class="form-group col-md-2 col-lg-2 col-xs-12">
-								<span class="total-ico">=</span>
-							</div>
-							<div class="form-group col-md-5 col-lg-5 col-xs-12">
-								<input type="text" class="form-control" ng-model="vm.addStockObj.manufacturingDetails.manufacturingQuantity" name="manufacturingQuantity" placeholder="Quantity" />
-							</div>
-							<div class="form-group col-md-5 col-lg-5 col-xs-12">
-								
-			          <ui-select ng-model="vm.addStockObj.manufacturingDetails.manufacturingUnitCode" theme="bootstrap" search-enabled="true" title="Choose Unit">
-							    <ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
-							    <ui-select-choices repeat="item.code as item in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
-							      <span ng-bind-html="item.name | hilite: $select.search"></span>
-							      <small>(<span ng-bind-html="''+item.code | hilite: $select.search"></span>)</small>
-							    </ui-select-choices>
-							  </ui-select>
+								</small> {{vm.addStockObj.name}}
+									</p>
+								</section>
+								<section class="clearfix pr">
+									<div class="form-group col-md-2 col-lg-2 col-xs-12">
+										<span class="total-ico">=</span>
+									</div>
+									<div class="form-group col-md-5 col-lg-5 col-xs-12">
+										<input type="text" class="form-control" ng-model="vm.addStockObj.manufacturingDetails.manufacturingQuantity" name="manufacturingQuantity"
+										  placeholder="Quantity" />
+									</div>
+									<div class="form-group col-md-5 col-lg-5 col-xs-12">
 
-							</div>
-						</section>
-					</td>
-				</tr>
-			</tbody>
-		</table>
-	</div>
-	</div>
-</section>
-<!-- combo code end-->
-<div class="clearfix"></div>
+										<ui-select ng-model="vm.addStockObj.manufacturingDetails.manufacturingUnitCode" theme="bootstrap" search-enabled="true" title="Choose Unit">
+											<ui-select-match placeholder="Select">{{$select.selected.name}}</ui-select-match>
+											<ui-select-choices repeat="item.code as item in vm.customUnits | propsFilter: {name: $select.search, code: $select.search}">
+												<span ng-bind-html="item.name | hilite: $select.search"></span>
+												<small>(<span ng-bind-html="''+item.code | hilite: $select.search"></span>)</small>
+											</ui-select-choices>
+										</ui-select>
 
-<div class="col-xs-12 col-md-9 col-lg-7">
-	<div class="pd pdT0">
-						
-		<button ng-if="!vm.addStockObj.stockGroup" type="submit" class="btn btn-md btn-success mrR1" ng-disabled="addEditStockForm.$invalid"  ng-click="vm.addStock()">Save</button>
+									</div>
+								</section>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</section>
+	<!-- combo code end-->
+	<div class="clearfix"></div>
 
-		<button ng-if="vm.addStockObj.stockGroup" type="submit" class="btn btn-md btn-success mrR1" ng-disabled="addEditStockForm.$invalid"  ng-click="vm.updateStock()">Update</button>
+	<div class="col-xs-12 col-md-9 col-lg-7">
+		<div class="pd pdT0">
 
-		<button ng-click="vm.clearAddEditStockForm()" type="reset" class="btn btn-md btn-primary">
+			<button ng-if="!vm.addStockObj.stockGroup" type="submit" class="btn btn-md btn-success mrR1" ng-disabled="addEditStockForm.$invalid"
+			  ng-click="vm.addStock()">Save</button>
+
+			<button ng-if="vm.addStockObj.stockGroup" type="submit" class="btn btn-md btn-success mrR1" ng-disabled="addEditStockForm.$invalid"
+			  ng-click="vm.updateStock()">Update</button>
+
+			<button ng-click="vm.clearAddEditStockForm()" type="reset" class="btn btn-md btn-primary">
 			Cancel
 		</button>
 
-		<button ng-if="vm.addStockObj.stockGroup" class="btn btn-md btn-danger pull-right gico-wrap" ng-click="vm.deleteStockItem()">
+			<button ng-if="vm.addStockObj.stockGroup" class="btn btn-md btn-danger pull-right gico-wrap" ng-click="vm.deleteStockItem()">
 			<span class="icon-trash"></span>
 			Delete Stock
 		</button>
-		
+
+		</div>
 	</div>
-</div>
 
 </form>

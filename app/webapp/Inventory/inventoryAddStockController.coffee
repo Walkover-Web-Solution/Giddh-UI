@@ -107,22 +107,25 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
         vm.addStockObj.salesAccountDetails.unitRates.push(vm.initAcDetailsObj())
 
 
-  vm.removeUnitItem=(item, arrayType)->
+  vm.removeUnitItem=(item, arrayType, indx)->
     if !(item.rate || item.stockUnitCode)
       return
 
     if arrayType is 'pArr'
       if vm.addStockObj.purchaseAccountDetails.unitRates.length > 1
-        vm.addStockObj.purchaseAccountDetails.unitRates = _.reject(vm.addStockObj.purchaseAccountDetails.unitRates, (o)-> 
-          return o is item
-        )
+        vm.addStockObj.purchaseAccountDetails.unitRates.splice(indx, 1);
+        # vm.addStockObj.purchaseAccountDetails.unitRates = _.reject(vm.addStockObj.purchaseAccountDetails.unitRates, (o)-> 
+        #   return o is item
+        # )
       else
         return
     else if arrayType is 'sArr'
       if vm.addStockObj.salesAccountDetails.unitRates.length > 1
-        vm.addStockObj.salesAccountDetails.unitRates = _.reject(vm.addStockObj.salesAccountDetails.unitRates, (o)-> 
-          return o is item
-        )
+        vm.addStockObj.purchaseAccountDetails.unitRates.splice(indx, 1);
+      
+        # vm.addStockObj.salesAccountDetails.unitRates = _.reject(vm.addStockObj.salesAccountDetails.unitRates, (o)-> 
+        #   return o is item
+        # )
       else
         return
 
