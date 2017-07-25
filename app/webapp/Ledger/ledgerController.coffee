@@ -2377,16 +2377,36 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.magicLink = ''
     ledgerCtrl.shareModalInstance.close()
 
-  ledgerCtrl.newAccountModel = {
-    group : ''
-    account: ''
-    accUnqName: ''
-  }
+  ledgerCtrl.generateFlatGroupList = () ->
+    if _.isUndefined($rootScope.groupWithAccountsList)
+      $timeout(->
+        ledgerCtrl.generateFlatGroupList()
+      ,3000)
+      return
+    ledgerCtrl.flatGrpList = groupService.flattenGroup($rootScope.groupWithAccountsList, [])
+
+  ledgerCtrl.initAddNewAcModelObj = () ->
+    ledgerCtrl.newAccountModel=
+      group : ''
+      account: ''
+      accUnqName: ''
+      showGstBox: false
+      gstNumber: ''
+      state: {}
+
+  ledgerCtrl.checkSelectedGroup=(selectedItem)->
+    result = _.findWhere(ledgerCtrl.flatGrpList, {uniqueName:selectedItem.groupUniqueName})
+    if result and angular.isArray(result.parentGroups) and result.parentGroups.length >= 2
+      category = result.parentGroups[1].uniqueName
+      if category is "sundrydebtors" || category is "sundrycreditors"
+        ledgerCtrl.newAccountModel.showGstBox = true
+      else
+        ledgerCtrl.newAccountModel.showGstBox = false
+    else
+      ledgerCtrl.newAccountModel.showGstBox = false
 
   ledgerCtrl.addNewAccount = () ->
-    ledgerCtrl.newAccountModel.group = ''
-    ledgerCtrl.newAccountModel.account = ''
-    ledgerCtrl.newAccountModel.accUnqName = ''
+    ledgerCtrl.initAddNewAcModelObj()
     ledgerCtrl.selectedTxn.isOpen = false
     ledgerCtrl.getFlattenGrpWithAccList($rootScope.selectedCompany.uniqueName, true)
     ledgerCtrl.AccmodalInstance = $uibModal.open(
@@ -2397,7 +2417,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     )
 
   ledgerCtrl.addNewAccountConfirm = () ->
-
     @success = (res) ->
       toastr.success('Account created successfully')
       $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
@@ -2406,6 +2425,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
     @failure = (res) ->
       toastr.error(res.data.message)
+
     newAccount = {
       email:""
       mobileNo:""
@@ -2413,6 +2433,21 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       openingBalanceDate: $filter('date')(ledgerCtrl.today, "dd-MM-yyyy")
       uniqueName:ledgerCtrl.newAccountModel.accUnqName
     }
+    if ledgerCtrl.newAccountModel.showGstBox
+      if _.isEmpty(ledgerCtrl.newAccountModel.gstNumber)
+        if _.isUndefined(ledgerCtrl.newAccountModel.state)
+          toastr.warning("State field can't be empty.")
+          return
+        else if _.isUndefined(ledgerCtrl.newAccountModel.state.code)
+          toastr.warning("State field can't be empty.")
+          return
+      newAccount.gstDetails =[{
+        "gstNumber": ledgerCtrl.newAccountModel.gstNumber
+        "addressList":[{
+          "address" :""
+          "stateCode" : ledgerCtrl.newAccountModel.state.code
+        }]
+      }]
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: ledgerCtrl.newAccountModel.group.groupUniqueName
@@ -2421,7 +2456,15 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     if ledgerCtrl.newAccountModel.group.groupUniqueName == '' || ledgerCtrl.newAccountModel.group.groupUniqueName == undefined
       toastr.error('Please select a group.')
     else
-      accountService.createAc(unqNamesObj, newAccount).then(@success, @failure) 
+      accountService.createAc(unqNamesObj, newAccount).then(@success, @failure)
+
+  ledgerCtrl.getStateCode = (val, item) ->
+    if val.length >= 2
+      gstState = _.findWhere($rootScope.stateList, {code:val.substr(0,2)})
+      if gstState
+        item.state = gstState
+    else if val.length < 2
+      item.state = {}
 
   ledgerCtrl.genearateUniqueName = (unqName) ->
     unqName = unqName.replace(/ |,|\//g,'')
@@ -2571,12 +2614,14 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     accountService.share(reqParam, permission).then(@success,@failure)
 
   ###################### on dom ready funcs ###########
-
+  # $timeout(->,3000)
   $timeout(->
     if ledgerCtrl.accountUnq then ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq) else ledgerCtrl.loadDefaultAccount()
 
     ledgerCtrl.getDiscountGroupDetail()
     ledgerCtrl.getTaxList()
+    ledgerCtrl.generateFlatGroupList()
+
   ,3000)
 
 

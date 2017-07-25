@@ -14,8 +14,8 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
   # init arr obj
   vm.initAcDetailsObj=()->
     return {
-      rate: undefined,
-      stockUnitCode: undefined
+      rate: null,
+      stockUnitCode: null
     }
 
   vm.appendEmptyRow=()->
@@ -97,7 +97,7 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
       )
 
   vm.checkPrevItem=(o)->
-    return if (_.isEmpty(o.stockUnitCode) || _.isEmpty(o.rate)) && (_.isUndefined(o.stockUnitCode) || _.isUndefined(o.rate)) then false else true
+    return if (_.isEmpty(o.stockUnitCode) || _.isEmpty(o.rate)) && (_.isNull(o.stockUnitCode) || _.isNull(o.rate)) then false else true
 
   vm.addUnitItem=(item, arrayType)->
     if vm.checkPrevItem(item)
@@ -107,24 +107,35 @@ inventoryAddStockController = ($scope, $rootScope, $timeout, toastr, localStorag
         vm.addStockObj.salesAccountDetails.unitRates.push(vm.initAcDetailsObj())
 
 
-  vm.removeUnitItem=(item, arrayType)->
+  vm.removeUnitItem=(item, arrayType, indx)->
+    if arrayType is 'pArr'
+      if vm.addStockObj.purchaseAccountDetails.unitRates.length <= 1
+        item.rate = null
+        item.stockUnitCode = null
+
+    else if arrayType is 'sArr'
+      if vm.addStockObj.salesAccountDetails.unitRates.length <= 1
+        item.rate = null
+        item.stockUnitCode = null
+        
     if !(item.rate || item.stockUnitCode)
-      return false
+      return
 
     if arrayType is 'pArr'
-      vm.addStockObj.purchaseAccountDetails.unitRates = _.reject(vm.addStockObj.purchaseAccountDetails.unitRates, (o)-> 
-        return o is item
-      )
+      if vm.addStockObj.purchaseAccountDetails.unitRates.length > 1
+        vm.addStockObj.purchaseAccountDetails.unitRates.splice(indx, 1)
+      else
+        return
     else if arrayType is 'sArr'
-      vm.addStockObj.salesAccountDetails.unitRates = _.reject(vm.addStockObj.salesAccountDetails.unitRates, (o)-> 
-        return o is item
-      )
+      if vm.addStockObj.salesAccountDetails.unitRates.length > 1
+        vm.addStockObj.salesAccountDetails.unitRates.splice(indx, 1)
+      else
+        return
 
   vm.addStock=()->
     @success = (res) ->
       toastr.success 'Stock Item added successfully'
       vm.clearAddEditStockForm()
-      # _.extend(vm.addStockObj, res.body)
       # getting list from parent controller
       $scope.$parent.stock.getHeirarchicalStockGroups()
       $scope.$parent.stock.getStockGroupDetail($state.params.grpId)

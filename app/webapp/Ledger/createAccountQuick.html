@@ -1,34 +1,53 @@
-<div>
+<form novalidate name="newAccountModelForm" class="pdL1 pdR1">
     <div class="modal-header">
         <h3 class="modal-title">Create New Account</h3>
     </div>
     <div class="modal-body">
-        <div class="pdL1 pdR1">
-            <div class="clearfix">
-              <label>Select Group</label>
-              <ui-select ng-model="ledgerCtrl.newAccountModel.group" theme="bootstrap">
-                  <ui-select-match  placeholder="Select Group">
-                      <span>{{$select.selected.groupName}}</span>
-                  </ui-select-match>
-                  <ui-select-choices repeat="grp in ledgerCtrl.flatGrpListWithoutFixedGroups | filter:$select.search" ui-disable-choice="grp.isFixed">
-                      <span ng-bind="grp.groupName"></span>
-                  </ui-select-choices>
-              </ui-select>
-            </div>
-            <div class="clearfix mrT1">
-              <label>Account Name</label>
-              <input class="form-control" name="account" type="text" ng-model="ledgerCtrl.newAccountModel.account" placeholder="Enter Account Name">
-            </div>
-            <div class="clearfix mrT1 pdR2 pos-rel">
-              
-              <label>Account Unique Name</label>
-              <input class="form-control" name="account" type="text" ng-model="ledgerCtrl.newAccountModel.accUnqName" placeholder="Enter Account Unique Name" >
-              <i class="glyphicon glyphicon-random pos-abs" style="right:0px;top:30px;color:green" uib-tooltip="Auto Generate UniqueName" tooltip-placement="top" tooltip-append-to-body='true' ng-click="ledgerCtrl.genUnq(ledgerCtrl.newAccountModel.account)"></i>
-            </div>
+      <div class="clearfix">
+        <label>Select Group</label>
+        <ui-select ng-model="ledgerCtrl.newAccountModel.group" theme="bootstrap" on-select="ledgerCtrl.checkSelectedGroup($item)">
+          <ui-select-match  placeholder="Select Group">
+            <span>{{$select.selected.groupName}}</span>
+          </ui-select-match>
+          <ui-select-choices repeat="grp in ledgerCtrl.flatGrpListWithoutFixedGroups | filter:$select.search" ui-disable-choice="grp.isFixed">
+            <span ng-bind="grp.groupName"></span>
+          </ui-select-choices>
+        </ui-select>
+      </div>
+      <div class="clearfix mrT1">
+        <label>Account Name</label>
+        <input class="form-control" required name="account" type="text" ng-model="ledgerCtrl.newAccountModel.account" placeholder="Enter Account Name">
+      </div>
+      <div class="clearfix mrT1 pdR2 pos-rel">
+        <label>Account Unique Name</label>
+        <input class="form-control" required name="accUnqName" type="text" ng-model="ledgerCtrl.newAccountModel.accUnqName" placeholder="Enter Account Unique Name" >
+        <i class="glyphicon glyphicon-random pos-abs" style="right:0px;top:30px;color:green" uib-tooltip="Auto Generate UniqueName" tooltip-placement="top" tooltip-append-to-body='true' ng-click="ledgerCtrl.genUnq(ledgerCtrl.newAccountModel.account)"></i>
+      </div>
+      <section ng-if="ledgerCtrl.newAccountModel.showGstBox">
+        <div class="row mrT1">
+          <div class="col-xs-12">
+            <label>GST no.</label>
+            <input type="text" name="gstNumber" ng-model="ledgerCtrl.newAccountModel.gstNumber" maxlength="15" ng-keyup="ledgerCtrl.getStateCode(ledgerCtrl.newAccountModel.gstNumber, ledgerCtrl.newAccountModel)" class="form-control">
+          </div>
         </div>
+        <div class="row mrT1">
+          <div class="col-xs-12">
+            <label>State code</label>
+            <ui-select ng-model="ledgerCtrl.newAccountModel.state" theme="bootstrap" on-select="">
+              <ui-select-match allow-clear="true" placeholder="Select State">
+                <span>{{$select.selected.code}} - {{$select.selected.name}}</span>
+              </ui-select-match>
+              <ui-select-choices repeat="state in stateList | filter:$select.search">
+                <span ng-bind="state.code"></span> - 
+                <span ng-bind="state.name"></span>
+              </ui-select-choices>
+            </ui-select>
+          </div>
+        </div>
+      </section>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-success" ng-click="ledgerCtrl.validateUniqueName(ledgerCtrl.newAccountModel.accUnqName);ledgerCtrl.addNewAccountConfirm()" ng-disabled="ledgerCtrl.newAccountModel.group == ''">Create</button>
+        <button class="btn btn-success" ng-click="ledgerCtrl.validateUniqueName(ledgerCtrl.newAccountModel.accUnqName);ledgerCtrl.addNewAccountConfirm()" ng-disabled="newAccountModelForm.$invalid">Create</button>
         <button class="btn btn-default" ng-click="$dismiss()">Cancel</button>
     </div>
-</div>
+</form>
