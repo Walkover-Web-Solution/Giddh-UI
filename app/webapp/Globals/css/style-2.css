@@ -2856,3 +2856,15 @@ label {
 .col_wrapper:first-child .grp_list .new_btn {
   padding: 0;
 }
+.newAccounform .ui-select-match-text{
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 40px;
+}
+.newAccounform .ui-select-toggle > .btn.btn-link {
+  margin-right: 10px;
+  top: 6px;
+  position: absolute;
+  right: 10px;
+}
