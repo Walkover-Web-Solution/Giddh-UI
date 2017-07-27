@@ -123,6 +123,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 # end
 
   mc.getGroupListSuccess = (res) ->
+    $rootScope.groupWithAccountsList = res.body
     mc.showNoResult = false
     res.body = mc.orderGroups(res.body)
     mc.searchLoad = false
@@ -1363,7 +1364,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     
   mc.updateFlatAccountList = () ->
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
-
+    groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then(mc.getGroupListSuccess, mc.getGroupListFailure)
 
   # featching uniqname
 

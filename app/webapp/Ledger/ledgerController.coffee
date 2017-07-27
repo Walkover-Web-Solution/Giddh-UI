@@ -2400,10 +2400,15 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       category = result.parentGroups[1].uniqueName
       if category is "sundrydebtors" || category is "sundrycreditors"
         ledgerCtrl.newAccountModel.showGstBox = true
+        ledgerCtrl.newAccountModel.state = ""
       else
         ledgerCtrl.newAccountModel.showGstBox = false
     else
       ledgerCtrl.newAccountModel.showGstBox = false
+    if _.isUndefined(result)
+      ledgerCtrl.generateFlatGroupList()
+      ledgerCtrl.checkSelectedGroup(ledgerCtrl.newAccountModel.group)
+
 
   ledgerCtrl.addNewAccount = () ->
     ledgerCtrl.initAddNewAcModelObj()
@@ -2441,13 +2446,15 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         else if _.isUndefined(ledgerCtrl.newAccountModel.state.code)
           toastr.warning("State field can't be empty.")
           return
-      newAccount.gstDetails =[{
-        "gstNumber": ledgerCtrl.newAccountModel.gstNumber
-        "addressList":[{
-          "address" :""
-          "stateCode" : ledgerCtrl.newAccountModel.state.code
+      if ledgerCtrl.newAccountModel.gstNumber.length >1
+        newAccount.gstDetails =[{
+          "gstNumber": ledgerCtrl.newAccountModel.gstNumber
+          "addressList":[{
+            "address" :""
+            "stateCode" : ledgerCtrl.newAccountModel.state.code
+          }]
         }]
-      }]
+      newAccount.stateCode = ledgerCtrl.newAccountModel.state.code
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: ledgerCtrl.newAccountModel.group.groupUniqueName
@@ -2464,7 +2471,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if gstState
         item.state = gstState
     else if val.length < 2
-      item.state = {}
+      item.state = ""
 
   ledgerCtrl.genearateUniqueName = (unqName) ->
     unqName = unqName.replace(/ |,|\//g,'')
