@@ -887,4 +887,7 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     $scope.$broadcast("proformaSelect","")
 
 
+  $rootScope.$on 'company-changed' , (event, data) ->
+    $scope.getAllInvoices()
+
 giddh.webApp.controller 'invoice2Controller', invoice2controller
