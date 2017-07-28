@@ -2440,12 +2440,15 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     }
     if ledgerCtrl.newAccountModel.showGstBox
       if _.isEmpty(ledgerCtrl.newAccountModel.gstNumber)
-        if _.isUndefined(ledgerCtrl.newAccountModel.state)
+        if _.isEmpty(ledgerCtrl.newAccountModel.state)
           toastr.warning("State field can't be empty.")
           return
         else if _.isUndefined(ledgerCtrl.newAccountModel.state.code)
           toastr.warning("State field can't be empty.")
           return
+      if _.isEmpty(ledgerCtrl.newAccountModel.state)
+        toastr.warning("State field can't be empty.")
+        return
       if ledgerCtrl.newAccountModel.gstNumber.length >1
         newAccount.gstDetails =[{
           "gstNumber": ledgerCtrl.newAccountModel.gstNumber
@@ -2470,6 +2473,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       gstState = _.findWhere($rootScope.stateList, {code:val.substr(0,2)})
       if gstState
         item.state = gstState
+      if !gstState
+        ledgerCtrl.newAccountModel.state = ""
     else if val.length < 2
       item.state = ""
 
