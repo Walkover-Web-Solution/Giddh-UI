@@ -2524,7 +2524,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     groupService.getFlattenGroupAccList(reqParam).then(@success, @failure)
 
   ledgerCtrl.removeFixedGroupsFromArr=(arr)->
-    fixedArr = ["currentassets", "fixedassets", "investments", "indirectexpenses", "operatingcost", "otherincome", "revenuefromoperations", "capital", "currentliabilities", "loan"]
+    fixedArr = ["currentassets", "fixedassets", "noncurrentassets", "indirectexpenses", "operatingcost", "otherincome", "revenuefromoperations", "shareholdersfunds", "currentliabilities", "noncurrentliabilities"]
     a=[]
     _.each arr, (item) ->
       if _.indexOf(fixedArr, item.groupUniqueName) is -1
