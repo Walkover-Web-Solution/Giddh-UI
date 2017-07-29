@@ -258,7 +258,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.selectedType = 'grp'
     if item.hLevel == undefined
       item.hLevel = parentIndex + 1
-    if mc.keyWord != undefined
+    if mc.keyWord != ""
       if mc.keyWord.length >= 3
         mc.updateSearchItem = true
         mc.updateSearchhierarchy(item)
@@ -286,7 +286,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       existingGrp = item
       mc.columns = mc.columns.splice(0,item.hLevel+1)
       mc.columns.push(item)
-    if parentIndex <= mc.columns.length-1 && mc.keyWord != undefined
+    if parentIndex <= mc.columns.length-1 && mc.keyWord != "" 
       mc.checkCurrentColumn(parentIndex)
     if mc.breadCrumbList.length < 1 && mc.columns.length > 2
       mc.breadCrumbList = item.parentGroups
@@ -463,7 +463,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.currentAccIndex = currentIndex
     item.hLevel = mc.getCurrentColIndex
     mc.selectedType = 'acc'
-    if mc.keyWord != undefined
+    if mc.keyWord != ""
       if mc.keyWord.length >= 3
         mc.updateSearchItem = true
         mc.updateSearchhierarchy(item)
@@ -1364,6 +1364,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     
   mc.updateFlatAccountList = () ->
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
+    mc.breadCrumbList = []
     groupService.getGroupsWithAccountsCropped($rootScope.selectedCompany.uniqueName).then(mc.getGroupListSuccess, mc.getGroupListFailure)
 
   # featching uniqname

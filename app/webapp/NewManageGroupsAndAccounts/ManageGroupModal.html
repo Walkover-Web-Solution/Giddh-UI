@@ -29,7 +29,7 @@
   <div class="modal-body noPad">
 
     <!-- list of groups -->
-    <div class="col-xs-7 grp_col bdrL bdrR pd0">
+    <div class="col-xs-7 grp_col bdrL bdrR pd0" ng-class="{notallowed: superLoader}">
       <div class="search-loading" ng-hide="mc.showListGroupsNow" ng-show="mc.searchLoad">
         <div class="vcenter"><span class="spinner small"></span> Loading…</div>
       </div>
@@ -72,7 +72,7 @@
 
 
     <!-- form view -->
-    <div class="col-xs-5 form_box">
+    <div class="col-xs-5 form_box" ng-class="{notallowed: superLoader}">
       <div class="row">
 
       <div class="breadcrumbs pdL2 pdT1 pdR2 pdB1">

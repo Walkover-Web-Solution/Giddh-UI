@@ -2868,3 +2868,6 @@ label {
   position: absolute;
   right: 10px;
 }
+.notallowed {
+  pointer-events: none;
+}
