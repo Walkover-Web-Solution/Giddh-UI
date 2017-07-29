@@ -2395,6 +2395,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       state: {}
 
   ledgerCtrl.checkSelectedGroup=(selectedItem)->
+    ledgerCtrl.generateFlatGroupList()
     result = _.findWhere(ledgerCtrl.flatGrpList, {uniqueName:selectedItem.groupUniqueName})
     if result and angular.isArray(result.parentGroups) and result.parentGroups.length >= 2
       category = result.parentGroups[1].uniqueName
@@ -2405,9 +2406,6 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         ledgerCtrl.newAccountModel.showGstBox = false
     else
       ledgerCtrl.newAccountModel.showGstBox = false
-    if _.isUndefined(result)
-      ledgerCtrl.generateFlatGroupList()
-      ledgerCtrl.checkSelectedGroup(ledgerCtrl.newAccountModel.group)
 
 
   ledgerCtrl.addNewAccount = () ->
