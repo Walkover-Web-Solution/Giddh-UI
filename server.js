@@ -259,7 +259,7 @@ app.use('/', getSession, function(req, res){
   } else{
     res.status(404)
     //redirect according to environment
-    res.redirect('http://dev.giddh.com/')
+    res.redirect('http://giddh.com/')
   }
 });
 
