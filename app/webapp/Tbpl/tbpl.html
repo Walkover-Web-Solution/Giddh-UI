@@ -607,6 +607,18 @@
                       </div>
                     </div>
                   </section>
+                  <section class="row row-2 isHidden" ng-repeat="childSubGrp in subGrp.childGroups">
+                    <div class="row">
+                      <div class="col-xs-6  account" ng-style="{'padding-left':padLeft + 10}" ng-bind-html=" childSubGrp.groupName | lowercase">
+                      </div>
+                      <div class="col-xs-6  account text-right">
+                        <!-- ng-bind-html=" childSubGrp.closingBalance.amount | lowercase" -->
+                        <span>
+                          {{childSubGrp.closingBalance.amount | number:2}}{{childSubGrp.closingBalance.type | recType}}
+                        </span>
+                      </div>
+                    </div>
+                  </section>
                 </section>
               </section>
               <!--/Grid-->
@@ -654,6 +666,18 @@
                         <!-- ng-bind-html=" acc.closingBalance.amount | lowercase" -->
                         <span>
                           {{acc.closingBalance.amount | number:2}}{{acc.closingBalance.type | recType}}
+                        </span>
+                      </div>
+                    </div>
+                  </section>
+                  <section class="row row-2 isHidden" ng-repeat="childSubGrp in subGrp.childGroups">
+                    <div class="row">
+                      <div class="col-xs-6  account" ng-style="{'padding-left':padLeft + 10}" ng-bind-html=" childSubGrp.groupName | lowercase">
+                      </div>
+                      <div class="col-xs-6  account text-right">
+                        <!-- ng-bind-html=" childSubGrp.closingBalance.amount | lowercase" -->
+                        <span>
+                          {{childSubGrp.closingBalance.amount | number:2}}{{childSubGrp.closingBalance.type | recType}}
                         </span>
                       </div>
                     </div>
