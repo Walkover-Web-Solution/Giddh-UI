@@ -69,11 +69,11 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
     mc.selectedType = type
-    if mc.selectedType == 'acc'
-      if mc.breadCrumbList.length > 1
-        if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
-          if mc.gstDetail.length < 1
-            mc.addNewGst()
+    # if mc.selectedType == 'acc'
+    #   if mc.breadCrumbList.length > 1
+    #     if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
+    #       if mc.gstDetail.length < 1
+    #         mc.addNewGst()
     mc.createNew = false
 # end
 
@@ -304,8 +304,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.selectedAcc = {}
       mc.selectedType = 'acc'
     mc.gstDetail = []
-    if mc.gstDetail.length < 1
-      mc.addNewGst()
+    # if mc.gstDetail.length < 1
+    #   mc.addNewGst()
     mc.createNewGrp = false
     mc.createNewAcc =  false
     mc.getColsCount()
@@ -504,23 +504,29 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.columns.length = mc.getCurrentColIndex+1
     mc.gstDetail = res.body.gstDetails
     mc.getColsCount()
+    mc.accState(mc.selectedAcc.stateCode, mc.selectedAcc)
+    if mc.gstDetail
+      mc.setStateCode(mc.gstDetail)
     # mc.fetchingUnq = false
-    if mc.selectedAcc.parentGroups[1].uniqueName == 'sundrycreditors' || mc.selectedAcc.parentGroups[1].uniqueName == 'sundrydebtors'
-      if mc.gstDetail.length < 1
-        mc.addNewGst()
+    # if mc.selectedAcc.parentGroups[1].uniqueName == 'sundrycreditors' || mc.selectedAcc.parentGroups[1].uniqueName == 'sundrydebtors'
+    #   if mc.gstDetail.length < 1
+    #     mc.addNewGst()
 
   mc.addNewGst = () ->
-    gstDetail = {
-      gstNumber: "",
-      addressList: [
-          {
-            address:"",
-            stateCode: "",
-            stateName: ""
-          }
-      ]
-    }
-    mc.gstDetail.unshift(gstDetail)
+    if mc.selectedAcc.gstIn
+      gstDetail = {
+        gstNumber: "",
+        addressList: [
+            {
+              address:"",
+              stateCode: "",
+              state: ""
+            }
+        ]
+      }
+      mc.gstDetail.unshift(gstDetail)
+    else
+      toastr.error("Please fill GSTIN field first")
 
   mc.deleteGst = (obj, i) ->
     mc.gstDetail.splice(i,1)
@@ -779,15 +785,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     }
 
 
-
-
   mc.addAccount = () ->
     unqNamesObj = mc.setAdditionalAccountDetails()
-    accountService.createAc(unqNamesObj, mc.selectedAcc).then(mc.addAccountSuccess, mc.addAccountFailure)
-    # mc.breadCrumbList = undefined
-    mc.stateDetail = mc.stateDetail
     mc.removeBlankGst(mc.gstDetail)
     mc.selectedAcc.gstDetails = mc.gstDetail
+    accountService.createAc(unqNamesObj, mc.selectedAcc).then(mc.addAccountSuccess, mc.addAccountFailure)
+    mc.stateDetail = mc.stateDetail
 
   mc.addAccountSuccess = (res) ->
     toastr.success("Account created successfully", res.status)
@@ -804,9 +807,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # mc.getGroups()
     
   mc.addAccountFailure = (res) ->
-    if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
-      if mc.gstDetail.length < 1
-        mc.addNewGst()
+    # if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
+    #   if mc.gstDetail.length < 1
+    #     mc.addNewGst()
     toastr.error(res.data.message, res.data.status)
 
 
@@ -831,6 +834,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
     if mc.selectedAcc.applicableTaxes.length > 0
       mc.selectedAcc.applicableTaxes = _.pluck(mc.selectedAcc.applicableTaxes,'uniqueName')
+
+    if !mc.selectedAcc.stateCode
+      toastr.warning("State field can't be empty.")
+      return false
 
     mc.removeBlankGst(mc.gstDetail)
 
@@ -862,9 +869,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getAccDetail(mc.selectedAcc, mc.getCurrentColIndex, mc.currentAccIndex)
 
   mc.updateAccountFailure = (res) ->
-    if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
-      if mc.gstDetail.length < 1
-        mc.addNewGst()
+    # if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
+    #   if mc.gstDetail.length < 1
+    #     mc.addNewGst()
     toastr.error(res.data.message, res.data.status)
 
 
@@ -1336,11 +1343,51 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.gstState = _.findWhere($rootScope.stateList, {code:val.substr(0,2)})
       if mc.gstState
         item.addressList[0].stateCode = mc.gstState.code
-        item.addressList[0].stateName = mc.gstState.name
+        item.addressList[0].state = mc.gstState.name
+        item.addressList[0].stateName = mc.gstState
+      if !mc.gstState
+        item.addressList[0].stateCode = ''
+        item.addressList[0].state = ''
+        item.addressList[0].stateName = ''
+        return false
     else if val.length < 2
       item.addressList[0].stateCode = ''
+      item.addressList[0].state = ''
       item.addressList[0].stateName = ''
     return false
+
+  mc.setStateCode = (gstList) ->
+    if gstList.length > 0
+      _.each gstList, (item) ->
+        if item.addressList[0].stateCode
+          mc.gstState = _.findWhere($rootScope.stateList, {code:item.addressList[0].stateCode})
+          if mc.gstState
+            item.addressList[0].stateName = mc.gstState
+
+
+  mc.accState = (val,item) ->
+    if _.isString(val)
+      if val.length >= 2
+        accstate = _.findWhere($rootScope.stateList, {code:val.substr(0,2)})
+        if accstate
+          item.stateName = accstate
+          item.stateCode = accstate.code
+          item.state = accstate.name
+        if !accstate
+          item.stateCode = ''
+          item.state = ''
+          item.stateName = ''
+          toastr.warning("Invalid GSTIN.")
+          return false
+      else if val.length < 2
+        item.stateCode = ''
+        item.state = ''
+        item.stateName = ''
+    if _.isObject(val)
+      mc.accState(val.code, item)
+    return false
+
+
 
   mc.getColsCount = () ->
     calcWidth = $(".grp_wrapper").width()
@@ -1350,9 +1397,6 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       scrollLeft: calcWidth
     }, 800)
     return false
-
-  mc.setStateCode = (item) ->
-    mc.selectedAcc.stateCode  = item.code
 
   mc.removeBlankGst = (gstList) ->
     if gstList.length > 0
