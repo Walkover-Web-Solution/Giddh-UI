@@ -504,11 +504,11 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.columns.length = mc.getCurrentColIndex+1
     mc.gstDetail = res.body.gstDetails
     mc.getColsCount()
-    mc.accState(mc.selectedAcc.stateCode, mc.selectedAcc)
-    if mc.gstDetail
-      mc.setStateCode(mc.gstDetail)
     # mc.fetchingUnq = false
-    # if mc.selectedAcc.parentGroups[1].uniqueName == 'sundrycreditors' || mc.selectedAcc.parentGroups[1].uniqueName == 'sundrydebtors'
+    if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
+      mc.accState(mc.selectedAcc.stateCode, mc.selectedAcc)
+      if mc.gstDetail
+        mc.setStateCode(mc.gstDetail)
     #   if mc.gstDetail.length < 1
     #     mc.addNewGst()
 
@@ -789,6 +789,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     unqNamesObj = mc.setAdditionalAccountDetails()
     mc.removeBlankGst(mc.gstDetail)
     mc.selectedAcc.gstDetails = mc.gstDetail
+    if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
+      if !mc.selectedAcc.stateCode
+        toastr.warning("State field can't be empty.")
+        return false
     accountService.createAc(unqNamesObj, mc.selectedAcc).then(mc.addAccountSuccess, mc.addAccountFailure)
     mc.stateDetail = mc.stateDetail
 
@@ -835,9 +839,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     if mc.selectedAcc.applicableTaxes.length > 0
       mc.selectedAcc.applicableTaxes = _.pluck(mc.selectedAcc.applicableTaxes,'uniqueName')
 
-    if !mc.selectedAcc.stateCode
-      toastr.warning("State field can't be empty.")
-      return false
+    if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
+      if !mc.selectedAcc.stateCode
+        toastr.warning("State field can't be empty.")
+        return false
 
     mc.removeBlankGst(mc.gstDetail)
 
