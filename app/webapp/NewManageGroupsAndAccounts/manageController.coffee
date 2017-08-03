@@ -1355,6 +1355,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         item.addressList[0].stateCode = ''
         item.addressList[0].state = ''
         item.addressList[0].stateName = ''
+        toastr.warning("Invalid GSTIN.")
         return false
     else if val.length < 2
       item.addressList[0].stateCode = ''
