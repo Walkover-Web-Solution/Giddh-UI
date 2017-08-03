@@ -540,6 +540,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.createNew = true
     mc.selectedItem = {}
     mc.selectedAcc = {}
+    mc.isFixedAcc= false
 # end
 
 # get tax list

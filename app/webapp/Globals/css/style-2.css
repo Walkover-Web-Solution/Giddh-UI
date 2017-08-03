@@ -2885,3 +2885,7 @@ label {
   float: left;
   width: 100%;
 }
+.stateList .ui-select-bootstrap .ui-select-choices-row>a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

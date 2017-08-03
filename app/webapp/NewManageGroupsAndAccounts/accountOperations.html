@@ -138,6 +138,10 @@
                  <label>Address</label>
                  <textarea ng-model="mc.selectedAcc.address" class="form-control" rows="4" name="accAddress" placeholder="405, Indore, India" style="height: 97px;"></textarea>
               </div>
+              <div class="form-group mrB col-xs-5">
+                 <label>GSTIN</label>
+                 <input type="text" type="text" class="form-control" ng-model="mc.selectedAcc.gstIn" maxlength="15" name="gstin" placeholder="GSTIN" ng-keyup="mc.accState(mc.selectedAcc.gstIn, mc.selectedAcc)" />
+              </div>
               <div class="form-group mrB col-xs-5 stateList">
                  <label>State*</label>
                  <ui-select ng-model="mc.selectedAcc.stateName" theme="bootstrap" ng-disabled="mc.selectedAcc.gstIn.length >=2" on-select="mc.accState(mc.selectedAcc.stateName, mc.selectedAcc)">
@@ -149,10 +153,6 @@
                        <span ng-bind="state.name"></span>
                     </ui-select-choices>
                  </ui-select>
-              </div>
-              <div class="form-group mrB col-xs-5">
-                 <label>GSTIN</label>
-                 <input type="text" type="text" class="form-control" ng-model="mc.selectedAcc.gstIn" maxlength="15" name="gstin" placeholder="GSTIN" ng-keyup="mc.accState(mc.selectedAcc.gstIn, mc.selectedAcc)" />
               </div>
 
             </div>
@@ -167,7 +167,7 @@
                    <textarea ng-model="gst.addressList[0].address" class="form-control" rows="4" name="gstAddress" placeholder="405, Indore, India" style="height: 97px;"></textarea>
                   </div>
                   <div class="form-group mrB col-xs-5">
-                    <label>GST No.</label>
+                    <label>GSTIN</label>
                     <input type="text" type="text" class="form-control" ng-model="gst.gstNumber" ng-keyup="mc.getStateCode(gst.gstNumber, gst)" maxlength="15" name="gstNumber" placeholder="GSTIN"  />
                   </div>
                   <div class="form-group mrB col-xs-5 stateList">
