@@ -1403,6 +1403,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     $(".grp_col").animate({
       scrollLeft: calcWidth
     }, 800)
+    $('.form_box').scrollTop(0)
     return false
 
   mc.removeBlankGst = (gstList) ->
