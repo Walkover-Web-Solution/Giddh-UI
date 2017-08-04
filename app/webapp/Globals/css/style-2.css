@@ -2817,7 +2817,7 @@ label {
     float: left;
     display: inline-block;
     position: absolute;
-    right: 2px;
+    right: -12px;
     top: 50px;
 }
 .grey_clr {
@@ -2888,4 +2888,7 @@ label {
 .stateList .ui-select-bootstrap .ui-select-choices-row>a {
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.companyGst .gst .fa-times {
+  right: -6px;
 }
