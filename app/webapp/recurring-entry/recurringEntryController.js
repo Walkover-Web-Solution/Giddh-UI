@@ -339,6 +339,7 @@ angular.module('recurringEntryController', [])
 	$rootScope.$on('company-changed', function(event, changeData) {
 		recEntry.rows = []
 		recEntry.getAllEntries();
+		recEntry.getTaxList();
 	});
 
 	return recEntry;
