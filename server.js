@@ -231,7 +231,7 @@ app.use('/magic', function(req, res){
 
 //serve invoice-pay page
 app.use('/invoicepay', function(req, res){
-  res.sendFile(__dirname + '/public/website/views/paymentNew.php')
+  res.sendFile(__dirname + '/public/website/views/payment.php')
 });
 
 //get user auth key
