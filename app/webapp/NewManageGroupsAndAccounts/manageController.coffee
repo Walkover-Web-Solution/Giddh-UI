@@ -504,6 +504,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.columns.length = mc.getCurrentColIndex+1
     mc.gstDetail = res.body.gstDetails
     mc.getColsCount()
+    if mc.selectedAcc.country.countryCode == null
+      mc.selectedAcc.country = ''
     # mc.fetchingUnq = false
     if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
       mc.accState(mc.selectedAcc.stateCode, mc.selectedAcc)
@@ -794,6 +796,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       if !mc.selectedAcc.stateCode
         toastr.warning("State field can't be empty.")
         return false
+      if !mc.selectedAcc.country
+        toastr.warning("Country field can't be empty.")
+        return false
+
     accountService.createAc(unqNamesObj, mc.selectedAcc).then(mc.addAccountSuccess, mc.addAccountFailure)
     mc.stateDetail = mc.stateDetail
 
@@ -844,6 +850,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       if !mc.selectedAcc.stateCode
         toastr.warning("State field can't be empty.")
         return false
+      if !mc.selectedAcc.country
+        toastr.warning("Country field can't be empty.")
+        return false 
 
     mc.removeBlankGst(mc.gstDetail)
 
@@ -1464,6 +1473,13 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.isChildGroup =(group) ->
     _.some(group.parentGroups, (group) ->
       group.uniqueName == mc.selectedGrp.uniqueName)
+
+  mc.SetCountryCode = () ->
+    mc.countryList = locationService.getCountryCode()
+    _.each mc.countryList, (item) ->
+      item.countryCode = item.countryflag.substr(0,2)
+
+  mc.SetCountryCode()
 
   return mc
 

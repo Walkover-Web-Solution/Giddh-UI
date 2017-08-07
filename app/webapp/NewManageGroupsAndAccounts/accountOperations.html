@@ -83,7 +83,7 @@
          </div>
          <div class="clearfix"></div>
          <div ng-hide="mc.breadCrumbList[0].uniqueName == 'revenuefromoperations' || mc.breadCrumbList[0].uniqueName == 'otherincome' || mc.breadCrumbList[0].uniqueName == 'operatingcost' || mc.breadCrumbList[0].uniqueName == 'indirectexpenses'">
-            <div class="form-group col-xs-5">
+            <div class="form-group col-xs-3">
                <div class="row">
                   <label>Mobile Number</label>
                   <input type="text" class="form-control" name="mobileNo" placeholder="9198XXXXXXXX" ng-model="mc.selectedAcc.mobileNo" valid-number ng-disabled="mc.isFixedAcc"  />
@@ -92,15 +92,29 @@
                      ng-model="mc.acntExt.onlyMobileNo" valid-number ng-disabled="mc.isFixedAcc"/>
                </div>
             </div>
-            <div class="form-group col-xs-6">
+            <div class="form-group col-xs-5">
                <label>Email</label>
                <input type="text" class="form-control" name="email" placeholder="email@example.com" ng-model="mc.selectedAcc.email"  ng-disabled="mc.isFixedAcc" />
             </div>
-            <div class="clearfix"></div>
-            <div class="form-group col-xs-5">
-               <div class="row">
+            
+            <div class="form-group pdL0 col-xs-4">
+               <div class="">
                   <label>Company</label>
                   <input type="text" class="form-control" name="companyName" placeholder="Apple INC" ng-model="mc.selectedAcc.companyName" ng-disabled="mc.isFixedAcc" />
+               </div>
+            </div>
+            <div class="form-group col-xs-5 countryList">
+               <div class="row">
+                  <label>Country</label>
+                  <ui-select ng-model="mc.selectedAcc.country" theme="bootstrap" ng-disabled="mc.selectedAcc.isFixed" on-select="">
+                    <ui-select-match placeholder="Select Country">
+                       <span>{{$select.selected.countryCode}} - {{$select.selected.countryName}}</span>
+                    </ui-select-match>
+                    <ui-select-choices repeat="country in mc.countryList | filter:$select.search">
+                       <span ng-bind="country.countryCode"></span> -
+                       <span ng-bind="country.countryName"></span>
+                    </ui-select-choices>
+                 </ui-select>
                </div>
             </div>
             <div class="form-group col-xs-7">
@@ -108,29 +122,8 @@
                <input type="text" class="form-control" name="attentionTo" placeholder="Barney stinson" ng-model="mc.selectedAcc.attentionTo" ng-disabled="mc.isFixedAcc" />
             </div>
             <div class="clearfix"></div>
-            <div ng-hide="mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'">
-              <div class="form-group mrB col-xs-12 pdL0">
-               <label>Address</label>
-               <textarea class="form-control" name="address" ng-model="mc.selectedAcc.address" placeholder="405, Indore, India" ng-disabled="mc.isFixedAcc" rows="1"></textarea>
-              </div>
-              
-              <!-- removed by QA
-              <div class="form-group mrB col-xs-5 stateList">
-               <label>State</label>
-               <ui-select ng-model="mc.selectedAcc.state" name="state" theme="bootstrap" ng-disabled="mc.isFixedAcc">
-                  <ui-select-match allow-clear="true" placeholder="Select State">
-                    <span>{{$select.selected.code}} - {{$select.selected.name}}</span>
-                  </ui-select-match>
-                  <ui-select-choices repeat="state in stateList | filter:$select.search">
-                    <span ng-bind="state.code"></span> - 
-                    <span ng-bind="state.name"></span>
-                  </ui-select-choices>
-              </ui-select>
-              </div>
-               -->
-            </div>
 
-            <div ng-show="mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'" class="clearfix detailed">
+            <div class="clearfix detailed">
 
             <div class="clearfix">
             
@@ -156,6 +149,8 @@
               </div>
 
             </div>
+
+            <div ng-show="mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'">
 
               <ul class="gstList" ng-if="mc.gstDetail.length">
                 
@@ -192,6 +187,7 @@
 
                 <a href="javascript:void(0);" class="pull-right gstbtn pdR1 cursor-pointer" ng-click="mc.addNewGst()"><i class="fa fa-plus cursor-pointer" aria-hidden="true"></i> Add more </a>  
               </span>
+            </div>
               
             </div>
 

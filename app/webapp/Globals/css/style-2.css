@@ -2857,7 +2857,7 @@ label {
 .col_wrapper:first-child .grp_list .new_btn {
   padding: 0;
 }
-.newAccounform .ui-select-match-text, .stateList .ui-select-match-text{
+.newAccounform .ui-select-match-text, .stateList .ui-select-match-text, .countryList .ui-select-match-text{
   width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
