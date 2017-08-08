@@ -796,9 +796,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       if !mc.selectedAcc.stateCode
         toastr.warning("State field can't be empty.")
         return false
-      if !mc.selectedAcc.country
-        toastr.warning("Country field can't be empty.")
-        return false
+      # if !mc.selectedAcc.country
+      #   toastr.warning("Country field can't be empty.")
+      #   return false
 
     accountService.createAc(unqNamesObj, mc.selectedAcc).then(mc.addAccountSuccess, mc.addAccountFailure)
     mc.stateDetail = mc.stateDetail
@@ -850,9 +850,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       if !mc.selectedAcc.stateCode
         toastr.warning("State field can't be empty.")
         return false
-      if !mc.selectedAcc.country
-        toastr.warning("Country field can't be empty.")
-        return false 
+    if !mc.selectedAcc.country
+      mc.selectedAcc.country = {}
+      # toastr.warning("Country field can't be empty.")
+      # return false 
 
     mc.removeBlankGst(mc.gstDetail)
 
