@@ -25,7 +25,7 @@ app.disable('x-powered-by');
 
 var port = process.env.PORT || 8000;
 //enabling cors
-app.use(cors())
+app.use(cors)
 
 
 //set engine
