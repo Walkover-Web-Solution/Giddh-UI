@@ -189,7 +189,7 @@ app.use('/ebanks', ebanks);
 app.use('/admin', adminPanel);
 app.use('/state-details', stateDetails);
 app.use('/magic-link', magicLink);
-app.use('/invoice-pay', websiteRoutes);
+app.use('/invoice-pay-request', websiteRoutes);
 app.use('/invoice',invoiceModule);
 app.use('/voucher',voucherModule);
 
