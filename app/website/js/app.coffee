@@ -374,13 +374,11 @@ app.run [
       $rootScope.whiteLinks = true
       $rootScope.fixedHeader = true
     if loc == "/payment"
-      $rootScope.showBlack = true
+      $rootScope.invoicePayPage = true
+      $rootScope.fixedHeader = false
     if loc == "/signup"
       $rootScope.whiteLinks = true
       $rootScope.signupPage = true
-    if loc == "/invoicepay"
-      $rootScope.invoicePayPage = true
-      $rootScope.fixedHeader = false
   
     ##detect if browser is IE##
     isIE = ->
