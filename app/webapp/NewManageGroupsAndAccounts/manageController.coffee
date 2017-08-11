@@ -1077,7 +1077,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       compUname: $rootScope.selectedCompany.uniqueName
       acntUname: mc.toMerge.mergeTo
     }
-    mc.accToMerge = mc.toMerge.mergedAcc
+    if mc.toMerge.mergedAcc.length > 0
+      _.each mc.toMerge.mergedAcc, (acc) ->
+        if !acc.hasOwnProperty('mergedAccounts')
+          mc.toMerge.mergedAcc = _.without(mc.toMerge.mergedAcc, acc)
+      mc.accToMerge = mc.toMerge.mergedAcc
+         
     if mc.accToMerge.length > 0
       accountService.merge(unqNamesObj, mc.accToMerge).then( mc.mergeSuccess, mc.mergeFailure)
       _.each mc.accToMerge, (acc) ->
@@ -1092,6 +1097,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.mergeSuccess = (res) ->
     mc.toMerge.mergedAcc = []
     mc.mergeAccList = []
+    mc.accToMerge = []
     toastr.success(res.body)
     _.each mc.toMerge.mergedAcc, (acc) ->
       $rootScope.removeAccountFromPaginatedList(acc)
