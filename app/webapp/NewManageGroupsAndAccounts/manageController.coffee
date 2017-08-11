@@ -66,6 +66,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.radioModel = ""
   mc.createNewAcc = false
   mc.createNewGrp = false
+  mc.isIndia = true
 # get selected account or grp to show/hide
   mc.getSelectedType = (type) ->
     mc.selectedType = type
@@ -301,7 +302,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.selectedItem = {}
     else if mc.createNewAcc
       mc.showOnUpdate = false
-      mc.selectedAcc = {}
+      mc.selectedAcc = {
+        country: {
+          countryCode: "IN",
+          countryName: "India"
+        }
+      }
       mc.selectedType = 'acc'
     mc.gstDetail = []
     # if mc.gstDetail.length < 1
@@ -443,7 +449,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         mc.updateBreadCrumbs = false
         mc.columns = mc.columns.splice(0,mc.addToIndex+1)
         mc.selectedItem = {}
-        mc.selectedAcc = {}
+        mc.selectedAcc = {
+          country: {
+            countryCode: "IN",
+            countryName: "India"
+          }
+        }
     # if mc.keyWord != undefined
     #   mc.breadCrumbList = []
     #   mc.keyWord = undefined
@@ -506,13 +517,15 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.getColsCount()
     if mc.selectedAcc.country.countryCode == null
       mc.selectedAcc.country = ''
+    else
+      mc.ValidateOnCountry(mc.selectedAcc.country, mc.selectedAcc)
     # mc.fetchingUnq = false
-    if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
+    
+    if mc.AccountCategory == 'assets' || mc.AccountCategory == 'liabilities'
       mc.accState(mc.selectedAcc.stateCode, mc.selectedAcc)
       if mc.gstDetail
         mc.setStateCode(mc.gstDetail)
-    #   if mc.gstDetail.length < 1
-    #     mc.addNewGst()
+    
 
   mc.addNewGst = () ->
     if mc.selectedAcc.gstIn
@@ -541,7 +554,13 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.toggleView = () ->
     mc.createNew = true
     mc.selectedItem = {}
-    mc.selectedAcc = {}
+    mc.selectedAcc = {
+      country: {
+        countryCode: "IN",
+        countryName: "India"
+      }
+    }
+    mc.selectedAcc.country = {}
     mc.isFixedAcc= false
 # end
 
@@ -792,20 +811,32 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     unqNamesObj = mc.setAdditionalAccountDetails()
     mc.removeBlankGst(mc.gstDetail)
     mc.selectedAcc.gstDetails = mc.gstDetail
-    if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
-      if !mc.selectedAcc.stateCode
-        toastr.warning("State field can't be empty.")
-        return false
-      # if !mc.selectedAcc.country
-      #   toastr.warning("Country field can't be empty.")
-      #   return false
+    
+    if (mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors')
+      if mc.selectedAcc.country.countryCode == 'IN' 
+        if !mc.selectedAcc.stateCode
+          toastr.warning("State field can't be empty.")
+          return false
+
+    if mc.grpCategory == 'assets' || mc.grpCategory == 'liabilities'
+      if mc.gstDetail.length
+        if !mc.selectedAcc.gstIn
+          toastr.error("You cannot leave GSTIN field blank, while adding multiple GSTIN.")
+          return false
+
+    delete mc.selectedAcc.stateName
 
     accountService.createAc(unqNamesObj, mc.selectedAcc).then(mc.addAccountSuccess, mc.addAccountFailure)
     mc.stateDetail = mc.stateDetail
 
   mc.addAccountSuccess = (res) ->
     toastr.success("Account created successfully", res.status)
-    mc.selectedAcc = {}
+    mc.selectedAcc = {
+      country: {
+        countryCode: "IN",
+        countryName: "India"
+      }
+    }
     abc = _.pick(res.body, 'name', 'uniqueName', 'mergedAccounts','applicableTaxes','parentGroups')
     mc.groupAccntList.push(abc)
     mc.columns[mc.addToIndex].accounts.push(res.body)
@@ -814,6 +845,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.selectItem(mc.columns[mc.columns.length-1], true, mc.parentIndex, mc.currentIndex)
     mc.updateBreadCrumbs = true
     mc.createNewAcc = true
+    mc.isIndia = true
+    # mc.createNewForm()
     # mc.columns = []
     # mc.getGroups()
     
@@ -821,7 +854,14 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
     #   if mc.gstDetail.length < 1
     #     mc.addNewGst()
+    mc.selectedAcc = res.config.data
+    mc.selectedAcc.stateName = {
+      code: res.config.data.stateCode,
+      name: res.config.data.state
+    }
     toastr.error(res.data.message, res.data.status)
+
+
 
 
   mc.updateAccount = () ->
@@ -846,21 +886,29 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     if mc.selectedAcc.applicableTaxes.length > 0
       mc.selectedAcc.applicableTaxes = _.pluck(mc.selectedAcc.applicableTaxes,'uniqueName')
 
-    if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
-      if !mc.selectedAcc.stateCode
-        toastr.warning("State field can't be empty.")
-        return false
-    if !mc.selectedAcc.country
-      mc.selectedAcc.country = {}
-      # toastr.warning("Country field can't be empty.")
-      # return false 
+    if (mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors')
+      if mc.selectedAcc.country.countryCode == 'IN' 
+        if !mc.selectedAcc.stateCode
+          toastr.warning("State field can't be empty.")
+          return false
 
     mc.removeBlankGst(mc.gstDetail)
 
+    if mc.AccountCategory == 'assets' || mc.AccountCategory == 'liabilities'
+      if mc.gstDetail.length < 2 && !mc.selectedAcc.gstIn
+        mc.gstDetail = []
+      if mc.gstDetail.length
+        if !mc.selectedAcc.gstIn
+          toastr.error("You cannot leave GSTIN field blank, while adding multiple GSTIN.")
+          return false 
+
+    delete mc.selectedAcc.stateName
     mc.selectedAcc.gstDetails = mc.gstDetail
 
     accountService.updateAc(unqNamesObj, mc.selectedAcc).then(mc.updateAccountSuccess,
         mc.updateAccountFailure)
+
+
 
 
   mc.updateAccountSuccess = (res) ->
@@ -888,6 +936,11 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
     #   if mc.gstDetail.length < 1
     #     mc.addNewGst()
+    mc.selectedAcc = res.config.data
+    mc.selectedAcc.stateName = {
+      code: res.config.data.stateCode,
+      name: res.config.data.state
+    }
     toastr.error(res.data.message, res.data.status)
 
 
@@ -1421,8 +1474,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       _.each gstList, (item) ->
         if item.gstNumber == ""
           gstList = _.without(gstList, item)
-      mc.gstDetail = gstList
-# end
+      mc.deleteDuplicateState(gstList)
     
   mc.updateFlatAccountList = () ->
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
@@ -1464,8 +1516,15 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.createNewForm = () ->
     mc.selectedItem = {}
-    mc.selectedAcc = {}
+    mc.selectedAcc = {
+      country: {
+        countryCode: "IN",
+        countryName: "India"
+      }
+    }
     mc.showOnUpdate = false
+    mc.isIndia = true
+
 
   mc.checkValidState = (state) ->
     if state.length < 1
@@ -1481,6 +1540,23 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       item.countryCode = item.countryflag.substr(0,2)
 
   mc.SetCountryCode()
+
+  mc.ValidateOnCountry = (val, item) ->
+    if val.countryCode != 'IN'
+      item.stateName = ""
+      item.stateCode = ""
+      item.state = ""
+      item.gstIn = ""
+      mc.gstDetail = []
+      mc.isIndia = false
+    else
+      mc.isIndia = true
+
+  mc.deleteDuplicateState = (gstList) ->
+    console.log gstList
+    _.each gstList, (item) ->
+      delete item.addressList[0].stateName
+    mc.gstDetail = gstList
 
   return mc
 

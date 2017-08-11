@@ -230,7 +230,7 @@ app.use('/magic', function(req, res){
 });
 
 //serve invoice-pay page
-app.use('/invoicepay', function(req, res){
+app.use('/payment', function(req, res){
   res.sendFile(__dirname + '/public/website/views/payment.html')
 });
 

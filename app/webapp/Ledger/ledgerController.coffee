@@ -24,6 +24,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   }
   ledgerCtrl.showTaxationDiscountBox = false
   ledgerCtrl.toggleShow = false
+  ledgerCtrl.showInvoiceAgainstVoucher = false
   
   # mustafa
   
@@ -474,6 +475,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       name:"Sales"
       shortCode:"sal"
     }
+    invoceNumberAgainstVoucher: ""
     voucherNo:null
     panel:{
       amount: 0
@@ -1858,6 +1860,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.doingEntry = false
     ledger.failed = false
     toastr.success("Entry created successfully", "Success")
+    #uncomment for debit/credit note
+    # _.each(res.body, (item) ->
+    #   if item.warning
+    #     toastr.warning(item.warning)
+    # )
+    #uncomment end
     #addThisLedger = {}
     #_.extend(addThisLedger,ledgerCtrl.selectedLedger)
     #ledgerCtrl.ledgerData.ledgers.push(res.body)
@@ -1954,6 +1962,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.oldLedgrObj = angular.copy({})
     ledgerCtrl.oldLedgrObj = angular.copy(res.body)
     ledgerCtrl.selectedLedger = res.body
+  #uncomment for debit/credit note  
+    # if res.body.warning
+    #   toastr.warning(res.body.warning)
     ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
     ledgerCtrl.entryTotal = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
     ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
