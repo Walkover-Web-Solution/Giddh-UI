@@ -2409,10 +2409,13 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.generateFlatGroupList()
     result = _.findWhere(ledgerCtrl.flatGrpList, {uniqueName:selectedItem.groupUniqueName})
     if result and angular.isArray(result.parentGroups) and result.parentGroups.length >= 2
-      category = result.parentGroups[1].uniqueName
-      if category is "sundrydebtors" || category is "sundrycreditors"
+      category = result.category
+      parent = result.parentGroups[1].uniqueName
+      if category is "assets" || category is "liabilities"
         ledgerCtrl.newAccountModel.showGstBox = true
         ledgerCtrl.newAccountModel.state = ""
+        ledgerCtrl.newAccountModel.category = category
+        ledgerCtrl.newAccountModel.parent = parent
       else
         ledgerCtrl.newAccountModel.showGstBox = false
     else
@@ -2448,24 +2451,20 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       uniqueName:ledgerCtrl.newAccountModel.accUnqName
     }
     if ledgerCtrl.newAccountModel.showGstBox
-      if _.isEmpty(ledgerCtrl.newAccountModel.gstNumber)
-        if _.isEmpty(ledgerCtrl.newAccountModel.state)
-          toastr.warning("State field can't be empty.")
-          return
-        else if _.isUndefined(ledgerCtrl.newAccountModel.state.code)
-          toastr.warning("State field can't be empty.")
-          return
-      if _.isEmpty(ledgerCtrl.newAccountModel.state)
-        toastr.warning("State field can't be empty.")
-        return
+      if ledgerCtrl.newAccountModel.category
+        if ledgerCtrl.newAccountModel.parent == 'sundrycreditors' || ledgerCtrl.newAccountModel.parent == 'sundrydebtors'
+          if _.isEmpty(ledgerCtrl.newAccountModel.gstNumber)
+            if _.isEmpty(ledgerCtrl.newAccountModel.state)
+              toastr.warning("State field can't be empty.")
+              return
+            else if _.isUndefined(ledgerCtrl.newAccountModel.state.code)
+              toastr.warning("State field can't be empty.")
+              return
+          if _.isEmpty(ledgerCtrl.newAccountModel.state)
+            toastr.warning("State field can't be empty.")
+            return
       if ledgerCtrl.newAccountModel.gstNumber.length >1
-        newAccount.gstDetails =[{
-          "gstNumber": ledgerCtrl.newAccountModel.gstNumber
-          "addressList":[{
-            "address" :""
-            "stateCode" : ledgerCtrl.newAccountModel.state.code
-          }]
-        }]
+        newAccount.gstIn = ledgerCtrl.newAccountModel.gstNumber
       newAccount.stateCode = ledgerCtrl.newAccountModel.state.code
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
