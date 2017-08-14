@@ -335,5 +335,12 @@ angular.module('recurringEntryController', [])
 	recEntry.removeTxn = function(ledger, index){
 		ledger.transactions.splice(index, 1)
 	}
+
+	$rootScope.$on('company-changed', function(event, changeData) {
+		recEntry.rows = []
+		recEntry.getAllEntries();
+		recEntry.getTaxList();
+	});
+
 	return recEntry;
 }])

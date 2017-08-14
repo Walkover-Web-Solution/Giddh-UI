@@ -55,8 +55,8 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
   link: (scope, element, attrs) ->
     scope.proceedToPay = (e, amount) ->
       options = {
-        # key: scope.wlt.razorPayKey
-        key: "rzp_live_rM2Ub3IHfDnvBq"
+        key: scope.wlt.razorPayKey
+        # key: "rzp_live_rM2Ub3IHfDnvBq"
         amount: amount
         name: scope.wlt.company.name
         description: "Pay for " + scope.wlt.contentType + " #" + scope.wlt.contentNumber
@@ -128,7 +128,7 @@ app.controller 'paymentCtrl', [
       blob = new Blob(byteArrays, type: contentType)
       blob
     $scope.getDetails = () ->
-      $http.post('/invoice-pay-request', data).then(
+      $http.post('/invoice-pay-request/invoice-pay-request', data).then(
         (response) ->
           $scope.wlt = response.data.body
 #          str = $scope.wlt.content + "/" + $scope.wlt.contentNumber
@@ -359,6 +359,7 @@ app.run [
     $rootScope.signupPage = false
     $rootScope.fixedHeader = false
     $rootScope.showBlack = false
+    $rootScope.invoicePayPage = false
     loc = window.location.pathname
     if loc == "/index" or loc == "/"
       $rootScope.whiteLinks = true
@@ -373,7 +374,8 @@ app.run [
       $rootScope.whiteLinks = true
       $rootScope.fixedHeader = true
     if loc == "/payment"
-      $rootScope.showBlack = true
+      $rootScope.invoicePayPage = true
+      $rootScope.fixedHeader = false
     if loc == "/signup"
       $rootScope.whiteLinks = true
       $rootScope.signupPage = true

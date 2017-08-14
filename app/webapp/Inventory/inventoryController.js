@@ -16,13 +16,6 @@ angular.module('inventoryController', [])
 		e.stopPropagation();
 		vm.showSidebar = true;
 	}
-
-	//reload when company changed
-	$scope.$on('company-changed' , function(e, data){
-		if (!_.isUndefined(data.index)){
-    	$state.go('inventory', {}, {reload: true, notify: true});
-		}
-  });
 	
 	// get flattten stock groups
 	vm.stockGroup = {}
@@ -317,5 +310,13 @@ angular.module('inventoryController', [])
 		}
 	}
 
+	//reload when company changed
+	$rootScope.$on('company-changed' , function(e, data){
+		if (!_.isUndefined(data.index)){
+    		$state.go('inventory', {}, {reload: true, notify: true});
+		}
+		vm.getStockGroupsFlatten('', 1,'get');
+  	});
+		
 
 }])

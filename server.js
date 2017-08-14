@@ -160,7 +160,7 @@ var invoiceUpload = require('./public/routes/webapp/invoiceUpload')
 var stateDetails = require('./public/routes/webapp/stateDetails')
 var invoiceModule = require('./invoice/invoiceModule')
 var voucherModule = require('./voucher/voucherModule')
-
+// var invoicePay = require('./public/routes/website/main')
 
 app.use('/time-test', timetest);
 app.use('/currency', currency);
@@ -189,6 +189,7 @@ app.use('/ebanks', ebanks);
 app.use('/admin', adminPanel);
 app.use('/state-details', stateDetails);
 app.use('/magic-link', magicLink);
+app.use('/invoice-pay-request', websiteRoutes);
 app.use('/invoice',invoiceModule);
 app.use('/voucher',voucherModule);
 
@@ -226,6 +227,11 @@ app.use('/fetch-user', function(req, res){
 //serve magic-link page
 app.use('/magic', function(req, res){
   res.sendFile(__dirname + '/public/website/views/magic.html')
+});
+
+//serve invoice-pay page
+app.use('/payment', function(req, res){
+  res.sendFile(__dirname + '/public/website/views/payment.html')
 });
 
 //get user auth key

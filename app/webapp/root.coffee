@@ -280,6 +280,14 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: '/manufacturing'
     templateUrl: appendThis+'/public/webapp/manufacturing/manufacturing.html'
   )
+  .state('refresh-completed',
+    url: '/refresh-completed'
+    templateUrl: appendThis+'/public/webapp/views/refresh-completed.html'
+  )
+  .state('success',
+    url: '/success'
+    templateUrl: appendThis+'/public/webapp/views/refresh-completed.html'
+  )
   $locationProvider.html5Mode(true)
   return
 

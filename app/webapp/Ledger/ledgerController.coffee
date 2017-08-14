@@ -24,6 +24,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   }
   ledgerCtrl.showTaxationDiscountBox = false
   ledgerCtrl.toggleShow = false
+  ledgerCtrl.showInvoiceAgainstVoucher = false
   
   # mustafa
   
@@ -474,6 +475,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       name:"Sales"
       shortCode:"sal"
     }
+    invoceNumberAgainstVoucher: ""
     voucherNo:null
     panel:{
       amount: 0
@@ -1858,6 +1860,12 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.doingEntry = false
     ledger.failed = false
     toastr.success("Entry created successfully", "Success")
+    #uncomment for debit/credit note
+    # _.each(res.body, (item) ->
+    #   if item.warning
+    #     toastr.warning(item.warning)
+    # )
+    #uncomment end
     #addThisLedger = {}
     #_.extend(addThisLedger,ledgerCtrl.selectedLedger)
     #ledgerCtrl.ledgerData.ledgers.push(res.body)
@@ -1954,6 +1962,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.oldLedgrObj = angular.copy({})
     ledgerCtrl.oldLedgrObj = angular.copy(res.body)
     ledgerCtrl.selectedLedger = res.body
+  #uncomment for debit/credit note  
+    # if res.body.warning
+    #   toastr.warning(res.body.warning)
     ledgerCtrl.createPanel(ledgerCtrl.selectedLedger)
     ledgerCtrl.entryTotal = ledgerCtrl.getEntryTotal(ledgerCtrl.selectedLedger)
     ledgerCtrl.matchInventory(ledgerCtrl.selectedLedger)
@@ -2395,15 +2406,21 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       state: {}
 
   ledgerCtrl.checkSelectedGroup=(selectedItem)->
+    ledgerCtrl.generateFlatGroupList()
     result = _.findWhere(ledgerCtrl.flatGrpList, {uniqueName:selectedItem.groupUniqueName})
     if result and angular.isArray(result.parentGroups) and result.parentGroups.length >= 2
-      category = result.parentGroups[1].uniqueName
-      if category is "sundrydebtors" || category is "sundrycreditors"
+      category = result.category
+      parent = result.parentGroups[1].uniqueName
+      if category is "assets" || category is "liabilities"
         ledgerCtrl.newAccountModel.showGstBox = true
+        ledgerCtrl.newAccountModel.state = ""
+        ledgerCtrl.newAccountModel.category = category
+        ledgerCtrl.newAccountModel.parent = parent
       else
         ledgerCtrl.newAccountModel.showGstBox = false
     else
       ledgerCtrl.newAccountModel.showGstBox = false
+
 
   ledgerCtrl.addNewAccount = () ->
     ledgerCtrl.initAddNewAcModelObj()
@@ -2434,20 +2451,21 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       uniqueName:ledgerCtrl.newAccountModel.accUnqName
     }
     if ledgerCtrl.newAccountModel.showGstBox
-      if _.isEmpty(ledgerCtrl.newAccountModel.gstNumber)
-        if _.isUndefined(ledgerCtrl.newAccountModel.state)
-          toastr.warning("State field can't be empty.")
-          return
-        else if _.isUndefined(ledgerCtrl.newAccountModel.state.code)
-          toastr.warning("State field can't be empty.")
-          return
-      newAccount.gstDetails =[{
-        "gstNumber": ledgerCtrl.newAccountModel.gstNumber
-        "addressList":[{
-          "address" :""
-          "stateCode" : ledgerCtrl.newAccountModel.state.code
-        }]
-      }]
+      if ledgerCtrl.newAccountModel.category
+        if ledgerCtrl.newAccountModel.parent == 'sundrycreditors' || ledgerCtrl.newAccountModel.parent == 'sundrydebtors'
+          if _.isEmpty(ledgerCtrl.newAccountModel.gstNumber)
+            if _.isEmpty(ledgerCtrl.newAccountModel.state)
+              toastr.warning("State field can't be empty.")
+              return
+            else if _.isUndefined(ledgerCtrl.newAccountModel.state.code)
+              toastr.warning("State field can't be empty.")
+              return
+          if _.isEmpty(ledgerCtrl.newAccountModel.state)
+            toastr.warning("State field can't be empty.")
+            return
+      if ledgerCtrl.newAccountModel.gstNumber.length >1
+        newAccount.gstIn = ledgerCtrl.newAccountModel.gstNumber
+      newAccount.stateCode = ledgerCtrl.newAccountModel.state.code
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: ledgerCtrl.newAccountModel.group.groupUniqueName
@@ -2463,8 +2481,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       gstState = _.findWhere($rootScope.stateList, {code:val.substr(0,2)})
       if gstState
         item.state = gstState
+      if !gstState
+        ledgerCtrl.newAccountModel.state = ""
     else if val.length < 2
-      item.state = {}
+      item.state = ""
 
   ledgerCtrl.genearateUniqueName = (unqName) ->
     unqName = unqName.replace(/ |,|\//g,'')
@@ -2514,7 +2534,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     groupService.getFlattenGroupAccList(reqParam).then(@success, @failure)
 
   ledgerCtrl.removeFixedGroupsFromArr=(arr)->
-    fixedArr = ["currentassets", "fixedassets", "investments", "indirectexpenses", "operatingcost", "otherincome", "revenuefromoperations", "capital", "currentliabilities", "loan"]
+    fixedArr = ["currentassets", "fixedassets", "noncurrentassets", "indirectexpenses", "operatingcost", "otherincome", "revenuefromoperations", "shareholdersfunds", "currentliabilities", "noncurrentliabilities"]
     a=[]
     _.each arr, (item) ->
       if _.indexOf(fixedArr, item.groupUniqueName) is -1

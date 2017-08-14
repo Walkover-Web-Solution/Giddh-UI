@@ -2571,6 +2571,7 @@ label {
 }
 .accmerge li a {
     padding: 4px 8px;
+    float: left;
     color: #808080;
     background: #e5e5e5;
 }
@@ -2664,19 +2665,20 @@ label {
 }
 .gstList {
   max-height: 270px;
-  overflow-y: auto;
+  /*overflow-y: auto;*/
   height: auto;
 }
 .gst .fa-times {
   position: absolute;
   top: 22px;
-  right: 8px;
+  right: -2px;
   color: #b1b3b3;
 }
 .gst {
-    margin-top: 15px;
-    overflow: hidden;
-    padding-right: 15px;
+    margin-bottom: 15px;
+    list-style: none;
+    /*overflow: hidden;*/
+    /*padding-right: 15px;*/
 }
 .gst_row .fa-plus {
   color: #d25f29;
@@ -2816,7 +2818,7 @@ label {
     float: left;
     display: inline-block;
     position: absolute;
-    right: 2px;
+    right: -12px;
     top: 50px;
 }
 .grey_clr {
@@ -2855,4 +2857,39 @@ label {
 }
 .col_wrapper:first-child .grp_list .new_btn {
   padding: 0;
+}
+.newAccounform .ui-select-match-text, .stateList .ui-select-match-text, .countryList .ui-select-match-text{
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 40px;
+}
+.newAccounform .ui-select-toggle > .btn.btn-link, .stateList .ui-select-toggle .btn-link {
+  margin-right: 10px;
+  top: 6px;
+  position: absolute;
+  right: 10px;
+}
+.notallowed {
+  pointer-events: none;
+}
+.view_forms textarea {
+  height: inherit;
+}
+.gstbtn {
+  color: #767676;
+}
+.gstbtn:hover {
+  color: #da6e3c;
+}
+.gst_cta {
+  float: left;
+  width: 100%;
+}
+.stateList .ui-select-bootstrap .ui-select-choices-row>a {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.companyGst .gst .fa-times {
+  right: -6px;
 }

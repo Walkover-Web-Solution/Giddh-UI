@@ -327,7 +327,7 @@ searchController = ($scope, $rootScope, localStorageService, toastr, groupServic
   $scope.sendEmailFailure = (res) ->
     toastr.error(res.data.message)
 
-  $rootScope.$on 'company-changed' , () ->
+  $rootScope.$on 'company-changed' , (event, data) ->
     $scope.getGrpsforSearch()
     $scope.srchDataSet = []
     $scope.searchFormData = {

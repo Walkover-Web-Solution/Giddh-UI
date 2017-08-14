@@ -9,7 +9,7 @@ router.get '/balance-sheet-collapsed-download', (req, res) ->
       'X-Forwarded-For': res.locales.remoteIp
     parameters:
       fy: req.query.fy
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/balance-sheet-collapsed-download'
+  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName  + '/v2/balance-sheet-collapsed-download'
   settings.client.get hUrl, args, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
