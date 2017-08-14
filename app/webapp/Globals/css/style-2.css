@@ -2901,4 +2901,5 @@ label {
 }
 .logsReport{
   background: #fff;
+  width: calc(100% - 350px);
 }
