@@ -272,11 +272,9 @@
                 </select>
               </td>
               
-              <!-- mustafa | if conditionfor debit/credit note -->
               <td class="pdL1" ng-if="(ledgerCtrl.selectedLedger.voucher.shortCode == 'pur' || ledgerCtrl.selectedLedger.voucher.shortCode == 'debit note' || ledgerCtrl.selectedLedger.voucher.shortCode == 'credit note') && ledgerCtrl.showInvoiceAgainstVoucher">
                   <span><input type="text" placeholder="Invoice no." class="form-control" ng-model="ledgerCtrl.selectedLedger.invoiceNumberAgainstVoucher" /></span>
               </td>
-              <!-- mustafa | comment it for debit/credit note -->
 
               <td class="pdL1">
                 <span>{{ledgerCtrl.selectedLedger.voucherNo}}</span>

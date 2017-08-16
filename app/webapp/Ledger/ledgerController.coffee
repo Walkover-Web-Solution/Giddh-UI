@@ -24,7 +24,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   }
   ledgerCtrl.showTaxationDiscountBox = false
   ledgerCtrl.toggleShow = false
-  ledgerCtrl.showInvoiceAgainstVoucher = false
+  ledgerCtrl.showInvoiceAgainstVoucher = true
   
   # mustafa
   
