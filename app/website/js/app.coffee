@@ -160,11 +160,24 @@ app.controller 'paymentCtrl', [
         )
 
     $scope.downloadInvoice = () ->
-      dataUri = 'data:application/pdf;base64,' + $scope.wlt.content
-      a = document.createElement('a')
-      a.download = $scope.wlt.contentNumber+".pdf"
-      a.href = dataUri
-      a.click()
+      # dataUri = 'data:application/pdf;base64,' + $scope.wlt.content
+      # a = document.createElement('a')
+      # a.download = $scope.wlt.contentNumber+".pdf"
+      # a.href = dataUri
+      # a.click()
+
+      byteString = atob($scope.wlt.content)
+      # Convert that text into a byte array.
+      ab = new ArrayBuffer(byteString.length)
+      ia = new Uint8Array(ab)
+      i = 0
+      while i < byteString.length
+        ia[i] = byteString.charCodeAt(i)
+        i++
+      # Blob for saving.
+      blob = new Blob([ ia ], type: 'application/pdf')
+      # Tell the browser to save as report.pdf.
+      saveAs blob, $scope.wlt.contentNumber+'.pdf'
 
     $scope.getDetails()
 ]
