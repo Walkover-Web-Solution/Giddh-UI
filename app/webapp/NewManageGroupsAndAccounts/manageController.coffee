@@ -1517,6 +1517,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.removeSpace = (val, item) ->
     if val && val.length  > 0
       val = val.replace(/ |,|\//g,'')
+      val = val.replace(/\\/, "").replace("<", "").replace(">", "").replace("(", "").replace(")", "").replace("{", "").replace("}", "").replace(";", "").replace(":", "").replace('"', "")
       val = val.toLowerCase()
       item.uniqueName = val
 
