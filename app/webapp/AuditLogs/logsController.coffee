@@ -26,7 +26,7 @@ logsController = ($scope, $rootScope, localStorageService, groupService, toastr,
       'starting-day': 1,
       'showWeeks': false,
       'show-button-bar': false,
-      'year-range': 1,
+      'year-range': 20,
       'todayBtn': false
     }
   $scope.format = "dd-MM-yyyy"

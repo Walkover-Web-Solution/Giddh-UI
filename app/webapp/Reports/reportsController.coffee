@@ -21,7 +21,7 @@ reportsController = ($scope, $rootScope, localStorageService, toastr, groupServi
     'starting-day': 1,
     'showWeeks': false,
     'show-button-bar': false,
-    'year-range': 1,
+    'year-range': 20,
     'todayBtn': false,
     'container': "body"
     'minViewMode': 0

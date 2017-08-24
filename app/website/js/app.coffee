@@ -1,4 +1,3 @@
-
 app = angular.module("giddhApp", [
   "satellizer"
   "ui.bootstrap"
@@ -89,13 +88,9 @@ directive 'razorPay', ['$compile', '$filter', '$document', '$parse', '$rootScope
   }
 ]
 app.controller 'paymentCtrl', [
-  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter', '$sce'
-  ($scope, toastr, $http, $location, $rootScope, $filter, $sce) ->
-    urlSearch = window.location.search
-    searchArr = urlSearch.split("=")
-    $scope.randomUniqueName = searchArr[1]
-    data = {}
-    data.randomNumber = $scope.randomUniqueName
+  '$scope', 'toastr', '$http', '$location', '$rootScope', '$filter', '$sce', 'FileSaver'
+  ($scope, toastr, $http, $location, $rootScope, $filter, $sce, FileSaver) ->
+
     $scope.wlt = {
       Amnt:100
       orderId: ""
@@ -128,20 +123,49 @@ app.controller 'paymentCtrl', [
       blob = new Blob(byteArrays, type: contentType)
       blob
     $scope.getDetails = () ->
-      $http.post('/invoice-pay-request/invoice-pay-request', data).then(
-        (response) ->
-          $scope.wlt = response.data.body
-#          str = $scope.wlt.content + "/" + $scope.wlt.contentNumber
-#          data = $scope.b64toBlob(str, "application/pdf", 512)
-#          blobUrl = URL.createObjectURL(data)
-#
-          $scope.content = "data:application/pdf;base64," + $scope.wlt.content
-          $scope.pdfFile = $sce.trustAsResourceUrl($scope.content);
-          $scope.contentHtml = $sce.trustAsHtml($scope.wlt.htmlContent)
-          $scope.showInvoice = true
-        (error) ->
-          toastr.error(error.data.message)
-      )
+      if _.isEmpty(window.location.search)
+        return false
+
+      if window.location.search.indexOf('=') is -1
+        return false
+
+      str = window.location.search.split("=")
+      obj = {}
+      if !_.isEmpty(str[1])
+        $scope.randomUniqueName = str[1]
+        obj.randomNumber = $scope.randomUniqueName
+
+        $http.post('/invoice-pay-request/invoice-pay-request', obj).then(
+          (res) ->
+            if res and res.data
+              $scope.wlt = res.data.body
+              $scope.content = "data:application/pdf;base64," + $scope.wlt.content
+              $scope.pdfFile = $sce.trustAsResourceUrl($scope.content);
+              $scope.contentHtml = $sce.trustAsHtml($scope.wlt.htmlContent)
+              $scope.showInvoice = true
+              
+          (error) ->
+            console.log('error', error)
+            if error.data
+              toastr.error(error.data.message || error.data.status+ ' ' +error.data.statusText)
+        )
+
+      # $http.post('/invoice-pay-request', data).then(
+      #   (response) ->
+      #     $scope.wlt = response.data.body
+      #     $scope.content = "data:application/pdf;base64," + $scope.wlt.content
+      #     $scope.pdfFile = $sce.trustAsResourceUrl($scope.content);
+      #     $scope.contentHtml = $sce.trustAsHtml($scope.wlt.htmlContent)
+      #     $scope.showInvoice = true
+      #   (error) ->
+      #     if error.data
+      #       toastr.error(error.data.message)
+      # )
+      # // old keyCode
+      # str = $scope.wlt.content + "/" + $scope.wlt.contentNumber
+      # data = $scope.b64toBlob(str, "application/pdf", 512)
+      # blobUrl = URL.createObjectURL(data)
+      
 
     $scope.successPayment = (data) ->
       if $scope.wlt.contentType == "invoice"
@@ -160,12 +184,29 @@ app.controller 'paymentCtrl', [
         )
 
     $scope.downloadInvoice = () ->
-      dataUri = 'data:application/pdf;base64,' + $scope.wlt.content
-      a = document.createElement('a')
-      a.download = $scope.wlt.contentNumber+".pdf"
-      a.href = dataUri
-      a.click()
+      blobData = $scope.b64toBlob($scope.wlt.content, "application/pdf", 512)
+      FileSaver.saveAs(blobData, $scope.wlt.contentNumber + ".pdf")
 
+    $scope.b64toBlob = (b64Data, contentType, sliceSize) ->
+      contentType = contentType or ''
+      sliceSize = sliceSize or 512
+      byteCharacters = atob(b64Data)
+      byteArrays = []
+      offset = 0
+      while offset < byteCharacters.length
+        slice = byteCharacters.slice(offset, offset + sliceSize)
+        byteNumbers = new Array(slice.length)
+        i = 0
+        while i < slice.length
+          byteNumbers[i] = slice.charCodeAt(i)
+          i++
+        byteArray = new Uint8Array(byteNumbers)
+        byteArrays.push byteArray
+        offset += sliceSize
+      blob = new Blob(byteArrays, type: contentType)
+      blob
+
+    # run func when scope ready
     $scope.getDetails()
 ]
 
@@ -726,6 +767,7 @@ app.directive 'numberSelect', ->
       )
 
   }
+
 
 # resources locations
 # video background- https://github.com/2013gang/angular-video-background

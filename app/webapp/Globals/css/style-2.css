@@ -2893,3 +2893,13 @@ label {
 .companyGst .gst .fa-times {
   right: -6px;
 }
+.logs {
+    height: 100%;
+    min-height: 100%;
+    width: 100%;
+    float: left;
+}
+.logsReport{
+  background: #fff;
+  width: calc(100% - 350px);
+}

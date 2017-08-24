@@ -1,65 +1,84 @@
 <!DOCTYPE HTML>
 <html lang="en" ng-app='giddhApp'>
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Start using easiest and well featured Giddh accounting software. Giddh is an ultimate accounting solution for small businesses at the best price"/>
-  <meta name="keywords" content="bookkeeping software, Accounting softwares, best accounting software"/>
-  <title>Giddh ~ Accounting at its Rough! Bookkeeping and Accounting Software</title>
-  <!-- STYLE / THEME -->
-  <link href="<<PREFIX_THIS>>/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="<<PREFIX_THIS>>/bower_components/intl-tel-input/build/css/intlTelInput.css" rel="stylesheet">
-  <link href='https://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet' type='text/css'>
-  <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=egde" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Start using easiest and well featured Giddh accounting software. Giddh is an ultimate accounting solution for small businesses at the best price" />
+    <meta name="keywords" content="bookkeeping software, Accounting softwares, best accounting software" />
+    <title>Giddh ~ Accounting at its Rough! Bookkeeping and Accounting Software</title>
+    <!-- STYLE / THEME -->
+    <link rel="stylesheet" type="text/css" href="<<PREFIX_THIS>>/bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="<<PREFIX_THIS>>/bower_components/intl-tel-input/build/css/intlTelInput.css">
+    <link rel="stylesheet" type="text/css" href='https://fonts.googleapis.com/css?family=Arvo:400,700' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet'>
+    <link rel="stylesheet" type="text/css" href="<<PREFIX_THIS>>/public/website/css/new-style.css">
+    <link rel="stylesheet" type="text/css" href="<<PREFIX_THIS>>/public/webapp/css/giddh.min.css">
+    <link rel="stylesheet" type="text/css" href="<<PREFIX_THIS>>/public/website/css/new-style.css">
+    <!-- LIBRARIES -->
+    <script type="text/javascript" src="<<PREFIX_THIS>>/public/webapp/newRelic.js"></script>
+    <script type="text/javascript" src="<<PREFIX_THIS>>/bower_components/file-saver.js/FileSaver.js"></script>
+    <script type="text/javascript" src='<<PREFIX_THIS>>/public/webapp/core_bower.min.js'></script>
+    <script type="text/javascript" src="<<PREFIX_THIS>>/bower_components/angular-file-saver/dist/angular-file-saver.js"></script>
+    <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/app.js"></script>
+    <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/controller/loginController.js"></script>
+    <!-- recaptcha -->
+    <script type="text/javascript" src="<<PREFIX_THIS>>/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
+    <script type="text/javascript" src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-  <link href="<<PREFIX_THIS>>/public/website/css/new-style.css" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" href="<<PREFIX_THIS>>/public/webapp/css/giddh.min.css">
-  <link href="<<PREFIX_THIS>>/public/website/css/new-style.css" rel="stylesheet">
-  <!-- LIBRARIES -->
-  <script src="<<PREFIX_THIS>>/public/webapp/newRelic.js"></script>
-  <script src="<<PREFIX_THIS>>/bower_components/file-saver.js/FileSaver.js"></script>
-  <script  type="text/javascript" src='<<PREFIX_THIS>>/public/webapp/core_bower.min.js'></script>
-    <script src="<<PREFIX_THIS>>/bower_components/angular-file-saver/dist/angular-file-saver.js"></script>
-  <script type="text/javascript" src="<<PREFIX_THIS>>/public/website/js/app.js"></script>
-  <script src="<<PREFIX_THIS>>/public/website/js/controller/loginController.js"></script>
-  <!-- recaptcha -->
-  <script src="https://www.google.com/recaptcha/api.js?onload=vcRecaptchaApiLoaded&render=explicit" async defer></script>
-  <script type="text/javascript" src="<<PREFIX_THIS>>/bower_components/angular-recaptcha/release/angular-recaptcha.min.js"></script>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-
-<style type="text/css">
-  .invoice_view {
-    box-shadow: 0px 1px 27px rgba(0, 0, 0, 0.16);
-    margin-top: 20px !important;
-  }
-  .btn-primary:hover {
-    background-color: #26263a;
-    border-color: #26263a;
-    color: #fff;
-  }
-</style>
+    <!-- other -->
+    <style type="text/css">
+    .invoice_view {
+      box-shadow: 0px 1px 27px rgba(0, 0, 0, 0.16);
+      margin-top: 20px !important;
+    }
+    .btn-primary:hover {
+      background-color: #26263a;
+      border-color: #26263a;
+      color: #fff;
+    }
+    #invoice-wrapper{
+      margin:0 20%;
+      padding:2%;
+      border:1px solid lightgrey;
+    }
+    #invoice-wrapper #pageHeader{
+      position: inherit;
+    }
+    #invoice-wrapper .container{
+      width: 100% !important;
+      padding: 0 15px !important;
+      background-color: #fff;
+    }
+    #invoice-wrapper .footer{
+      position: inherit;
+    }
+    #invoice-wrapper .entryDiv{
+      margin-top: 0 !important 
+    }
+    #invoice-wrapper img, #invoice-wrapper .entryDiv .table img, #invoice-wrapper .entryDiv table img{
+      height: 10px;
+      top: 0 !important ;
+    }
+    .entryDiv .table thead tr{
+      background-color: #f5f5f5;
+    }
+    </style>
 </head>
+
 <body ng-controller="paymentCtrl" id="page-top" style="padding-bottom: 100px;">
+  <ng-include src="'/public/website/views/header.html'"></ng-include>
+  <section class="container-fluid" style="margin-top:100px">
+    <div class="row mr1"></div>
+    <div ng-if="showInvoice" class="row mr1">
+      <button ng-if="wlt.status != 'paid'" ng-disabled="disableRazorPay" razor-pay class="btn btn-primary pull-left" style="margin-left:20%;">Pay Now</button>
+      <button class="btn btn-primary pull-right" style="margin-right:20%" ng-click="downloadInvoice()">Download</button>
+    </div>
+    <div class="row mr1">
+      <div ng-if="showInvoice" ng-bind-html="contentHtml" class="invoice_view" id="invoice-wrapper"></div>
+    </div>
+  </section>
+</body>
 
-<ng-include src="'/public/website/views/header.html'"></ng-include>
-<section class="container-fluid" style="margin-top:100px">
-  <div class="row mr1">
-
-  </div>
-  <div ng-if="showInvoice" class="row mr1">
-    <button ng-if="wlt.status != 'paid'" ng-disabled="disableRazorPay" razor-pay class="btn btn-primary pull-left" style="margin-left:20%;">Pay Now</button>
-    <button class="btn btn-primary pull-right" style="margin-right:20%" ng-click="downloadInvoice()">Download</button>
-  </div>
-  <div class="row mr1">
-    <!--<a ng-download="{{wlt.contentNumber}}.pdf" ng-href="{{content}}">Download Invoice</a>-->
-    <!--<object ng-disabled="true" ng-if="showInvoice" data="{{pdfFile}}" type="application/pdf" style="width: 100%; height: 600px;">-->
-      <!--<param name="title" value="{{wlt.contentNumber}}.pdf" >-->
-    <!--</object>-->
-    <div ng-if="showInvoice" ng-bind-html="contentHtml" class="invoice_view" style="margin:0 20%;padding:2%;border:1px solid lightgrey;"></div>
-    <!--<embed ng-src="{{pdfFile}}" style="width:100%;height:600px;"></embed>-->
-    <!--<iframe style="height:100%; width:100%" src="data:application/pdf;base64,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L01lZGlhQm94WzAgMCA1OTUgODQyXS9SZXNvdXJjZXM8PC9Gb250PDwvRjEgMiAwIFIvRjIgMyAwIFI+Pj4+L0NvbnRlbnRzIDQgMCBSL1BhcmVudCA1IDAgUj4+CmVuZG9iago3IDAgb2JqCjw8L1RpdGxlKEludm9pY2UpL1BhcmVudCA2IDAgUi9EZXN0WzEgMCBSL1hZWiAyMCA4MDYgMF0+PgplbmRvYmoKNiAwIG9iago8PC9UeXBlL091dGxpbmVzL0ZpcnN0IDcgMCBSL0xhc3QgNyAwIFIvQ291bnQgMT4+CmVuZG9iagoyIDAgb2JqCjw8L1R5cGUvRm9udC9TdWJ0eXBlL1R5cGUxL0Jhc2VGb250L0hlbHZldGljYS1Cb2xkL0VuY29kaW5nL1dpbkFuc2lFbmNvZGluZz4+CmVuZG9iagozIDAgb2JqCjw8L1R5cGUvRm9udC9TdWJ0eXBlL1R5cGUxL0Jhc2VGb250L0hlbHZldGljYS9FbmNvZGluZy9XaW5BbnNpRW5jb2Rpbmc+PgplbmRvYmoKNSAwIG9iago8PC9UeXBlL1BhZ2VzL0NvdW50IDEvS2lkc1sxIDAgUl0+PgplbmRvYmoKOCAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgNSAwIFIvT3V0bGluZXMgNiAwIFI+PgplbmRvYmoKOSAwIG9iago8PC9Qcm9kdWNlcihpVGV4dK4gNS41LjEwIKkyMDAwLTIwMTUgaVRleHQgR3JvdXAgTlYgXChBR1BMLXZlcnNpb25cKSkvQ3JlYXRpb25EYXRlKEQ6MjAxNjExMTEwOTU4MDNaKS9Nb2REYXRlKEQ6MjAxNjExMTEwOTU4MDNaKT4+CmVuZG9iagp4cmVmCjAgMTAKMDAwMDAwMDAwMCA2NTUzNSBmIAowMDAwMDAxNzgwIDAwMDAwIG4gCjAwMDAwMDIwMzkgMDAwMDAgbiAKMDAwMDAwMjEzMiAwMDAwMCBuIAowMDAwMDAwMDE1IDAwMDAwIG4gCjAwMDAwMDIyMjAgMDAwMDAgbiAKMDAwMDAwMTk3NCAwMDAwMCBuIAowMDAwMDAxOTAxIDAwMDAwIG4gCjAwMDAwMDIyNzEgMDAwMDAgbiAKMDAwMDAwMjMzMSAwMDAwMCBuIAp0cmFpbGVyCjw8L1NpemUgMTAvUm9vdCA4IDAgUi9JbmZvIDkgMCBSL0lEIFs8OTIxNDQ1ZWU2YmQyMTE1ZjQ1NmUwZGU0OTQwMGEwN2M+PDkyMTQ0NWVlNmJkMjExNWY0NTZlMGRlNDk0MDBhMDdjPl0+PgolaVRleHQtNS41LjEwCnN0YXJ0eHJlZgoyNDc3CiUlRU9GCg=="></iframe>-->
-  </div>
-</section>
-
-</body></html>
+</html>
