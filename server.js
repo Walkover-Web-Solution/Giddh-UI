@@ -224,6 +224,11 @@ app.use('/fetch-user', function(req, res){
   });
 })
 
+// serve verify email from email
+app.use('/company/verify-email', function(req, res){
+  res.sendFile(__dirname + '/public/website/views/verify-email.html')
+});
+
 //serve magic-link page
 app.use('/magic', function(req, res){
   res.sendFile(__dirname + '/public/website/views/magic.html')
