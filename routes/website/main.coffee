@@ -29,7 +29,6 @@ router.get '/sindhu', (req,res) ->
 router.get '/', (req, res) ->
   res.sendFile 'index.html', options
 
-
 router.get '/index', (req, res) ->
   res.sendFile 'index.html', options
 
@@ -78,9 +77,6 @@ router.get '/robots.txt', (req, res) ->
 router.get '/success', (req, res) ->
   res.sendFile 'success.html', options
 
-router.get '/company/verify-email', (req, res) ->
-  res.sendFile 'verifyEmail.html', options
-
 router.get '/refresh-completed', (req, res) ->
   res.sendFile 'refresh-completed.html', options
 
@@ -120,7 +116,8 @@ router.post '/verify-email', (req, res) ->
   settings.client.get hUrl, (data, response) ->
     if data.status == 'error' || data.status == undefined
       res.status(response.statusCode)
-    res.sendFile '/public/webapp/views/index.html',options
+    res.send data
+    # res.sendFile '/public/webapp/views/index.html',options
 
 router.post '/proforma/pay', (req, res) ->
   data = req.body

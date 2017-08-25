@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=egde"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Giddh, the best online accounting and bookkeeping software. An accounting software to provide you an outstanding solution for business accounting management"/>
+  <meta name="keywords" content="bookkeeping software, Accounting softwares, online accounting software, bookkeeping software for small business"/>
+  <title>Giddh ~ Accounting at its Rough! Bookkeeping and Accounting Software</title>
+  <!-- STYLE / THEME -->
+  <link href="/bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/bower_components/angular-vidbg/dist/vidBg.min.css" rel="stylesheet">
+  <link href='https://fonts.googleapis.com/css?family=Arvo:400' rel='stylesheet' type='text/css'>
+  <link href='https://fonts.googleapis.com/css?family=Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  <link href="/public/website/css/new-style.css" rel="stylesheet">
+  <!-- LIBRARIES -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.5/angular.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+  <script src="/public/webapp/newRelic.js"></script>
+  <script type="text/javascript" src="/public/website/js/app.js"></script>
+  <script type="text/javascript">
+    angular.module("giddhVerifyEmailApp", [])
+    .controller('verifyEmailCtrl', [
+      '$scope', '$http', function($scope, $http) {
+        var companyUniqueName, data, emailAddress, scope, searchArr, url, urlSearch;
+        urlSearch = window.location.search;
+        if (!_.isEmpty(urlSearch)) {
+          searchArr = urlSearch.split("&");
+          emailAddress = searchArr[0].split("=")[1];
+          companyUniqueName = searchArr[1].split("=")[1];
+          scope = searchArr[2].split("=")[1];
+          data = {};
+          if (!companyUniqueName && !emailAddress){
+            console.log('You arrived here by mistake go on!');
+            return false;
+          }
+          data.companyUname = companyUniqueName;
+          data.emailAddress = emailAddress;
+          data.scope = scope;
+          url = '/app/api/verify-email';
+          return $http.post(url, data).then(function(success) {
+            return console.log(success);
+          }, function(error) {
+            return console.log(error);
+          });
+        }
+      }
+    ]);
+  </script>
+
+<style type="text/css">
+body{
+  background-color: #f5f5f5;
+  color: #777;
+  text-align: center;
+  padding-top: 100px;
+}
+h1{
+  margin-bottom: 100px;
+}
+h3{
+  margin-top: 60px;
+}
+.copy-right{
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 14px;
+}
+</style>
+</head>
+<body ng-app='giddhVerifyEmailApp' id="page-top" class="light">
+  <section ng-controller="verifyEmailCtrl">
+    <div>
+      <h1 style="margin-bottom:40px;">Success</h1>
+      <h5>You can close this window.</h5>
+    </div>
+    <div class="copy-right">
+      <p>All right are reserved &copy; 2020 Walkover <a href="https://giddh.com/" target="_Blank">Giddh.com</a></p>
+    </div>
+  </section>
+</body>
+</html>
