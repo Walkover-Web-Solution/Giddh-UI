@@ -438,19 +438,17 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
     )
     sendThis
 
+  # $scope.getTemplates = ()->
+  #   companyServices.getInvTemplates($rootScope.selectedCompany.uniqueName).then($scope.getTemplatesSuccess, $scope.getTemplatesFailure)
 
-  $scope.getTemplates = ()->
-    companyServices.getInvTemplates($rootScope.selectedCompany.uniqueName).then($scope.getTemplatesSuccess, $scope.getTemplatesFailure)
+  # $scope.getTemplatesSuccess=(res)->
+  #   $scope.templateList = res.body.templates
+  #   $scope.templateData = res.body.templateData
+  #   $scope.invoiceSettings.emailAddress = res.body.templateData.email
+  #   $scope.invoiceSettings.isEmailVerified = res.body.templateData.emailVerified
 
-  $scope.getTemplatesSuccess=(res)->
-    $scope.templateList = res.body.templates
-    $scope.templateData = res.body.templateData
-    $scope.invoiceSettings.emailAddress = $scope.templateData.email
-    $scope.invoiceSettings.isEmailVerified = $scope.templateData.emailVerified
-
-  $scope.getTemplatesFailure = (res) ->
-#    $scope.invoiceLoadDone = true
-    toastr.error(res.data.message, res.data.status)
+  # $scope.getTemplatesFailure = (res) ->
+  #   toastr.error(res.data.message, res.data.status)
 
   # preview of generated invoice
   $scope.prevGenerateInv=(item)->
@@ -808,16 +806,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
 
   # Helper methods
 
-  $scope.getTemplates = ()->
-    companyServices.getInvTemplates($rootScope.selectedCompany.uniqueName).then($scope.getTemplatesSuccess, $scope.getTemplatesFailure)
-
-  $scope.getTemplatesSuccess=(res)->
-    $scope.templateList = res.body.templates
-    $scope.templateData = res.body.templateData
-
-  $scope.getTemplatesFailure = (res) ->
-#    $scope.invoiceLoadDone = true
-    toastr.error(res.data.message, res.data.status)
 
   $scope.setDiffView=()->
     even = _.find($scope.templateList, (item)->
@@ -878,10 +866,6 @@ invoice2controller = ($scope, $rootScope, invoiceService, toastr, accountService
   $scope.unCheckSelectedEntries = (srchString) ->
     if srchString.length > 1
       $scope.selectAllLedger(false)
-
-  $timeout ( ->
-    $scope.getTemplates()
-  ),2000
 
   $scope.broadcastToProforma = () ->
     $scope.$broadcast("proformaSelect","")

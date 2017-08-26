@@ -7,19 +7,14 @@
           <div class="form-group pos-rel">
             <label class="pull-left lh33">From Email :</label>
             <div class="col-xs-2">
-            <input type="email" ng-model="invoiceSettings.emailAddress" class="form-control" name="settingEmail"
-                   tabindex="2" required>
-                   <i class="fa fa-check-circle pos-abs verified" uib-tooltip="Verified" ng-if="invoiceSettings.isEmailVerified" aria-hidden="true"></i>
-            
-             <i class="glyphicon glyphicon-exclamation-sign pos-abs unverified" uib-tooltip="Unverified" ng-if="!invoiceSettings.isEmailVerified && !settingForm.settingEmail.$invalid"></i>
+              <input type="email" ng-model="invoiceSettings.emailAddress" class="form-control" name="settingEmail" tabindex="2" required>
+              <i class="fa fa-check-circle pos-abs verified" uib-tooltip="Verified" ng-if="invoiceSettings.isEmailVerified" aria-hidden="true"></i>
+              <i class="glyphicon glyphicon-exclamation-sign pos-abs unverified" uib-tooltip="Unverified" ng-if="!invoiceSettings.isEmailVerified && !settingForm.settingEmail.$invalid"></i>
             </div>
-               <div class="lh33">
-               <button class="btn btn-danger sm-btn" ng-click="saveInvoiceSettings('delete')" ng-if="invoiceSettings.emailAddress != ''">Delete</button>
-              <!-- <i class="glyphicon glyphicon-trash" ng-click="saveInvoiceSettings('delete')" ng-if="invoiceSettings.emailAddress != ''"></i> -->
+            <div class="lh33">
+              <button class="btn btn-danger sm-btn" ng-disabled="settingForm.settingEmail.$invalid" ng-click="saveInvoiceSettings('delete')" ng-if="invoiceSettings.isEmailVerified">Delete</button>
               <button class="btn sm-btn btn-success" ng-disabled="settingForm.settingEmail.$invalid" ng-click="saveInvoiceSettings('save')">Save</button>
             </div>
-            
-           
           </div>
         </form>
       </div>
@@ -58,6 +53,7 @@
     </div>
   </div>
 </div>
+
 <!-- main content start -->
 <uib-tabset justified="false" ng-if="invoiceLoadDone">
   <uib-tab heading="Generate Invoice" id="generate" select="getLedgerEntries()">
@@ -68,9 +64,6 @@
       <span></span>
       <span></span>
     </div>
-<!--     <div class="page-loader" ng-show="superLoader && !entryListUpdated">
-      <div class="giddh-spinner vertical-center-spinner"></div>
-    </div> -->
     <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height ng-show="entryListUpdated" timeout="5000">
 
       <div class="pd2" ng-init="getLedgerEntries()">
@@ -80,7 +73,6 @@
             <section class="clearfix form-inline">
               <div class="form-group">
                 <button ng-click="prevAndGenInv()" ng-disabled="!prevInProg" class="btn btn-primary mrR1">Preview &amp; Generate Invoice</button>
-                <!-- <button ng-disabled="true" class="btn btn-info">Upload Invoice</button> -->
               </div>
               <div class="form-group mrL1">
                 <input type="search" class="form-control maxW150" placeholder="Search ledger" ng-model="searchCrData">
@@ -163,8 +155,6 @@
 
 
       </div>
-      <!-- <div style="height: 100px"></div> -->
-      <!-- end of pd div -->
     </perfect-scrollbar>
   </uib-tab>
   <!-- end of list entries for invoice -->
