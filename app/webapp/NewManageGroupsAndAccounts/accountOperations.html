@@ -246,9 +246,9 @@
          <button class="btn btn-success pull-right" ng-if="!mc.showOnUpdate" ng-click="mc.addAccount()" ng-disabled="addAccountForm.$invalid">Add</button>
          <button class="btn btn-success pull-right" ng-if="mc.showOnUpdate && canUpdate" ng-click="mc.updateAccount()" ng-disabled="addAccountForm.$invalid">Update</button>
       </div>
-      <hr ng-if="mc.AccountCategory == 'income' || mc.AccountCategory == 'expenses'" />
+      <hr ng-if="mc.AccountCategory == 'income' || mc.AccountCategory == 'expenses' || mc.grpCategory == 'income' || mc.grpCategory == 'expenses'" />
       <!-- taxes -->
-      <div class="pd2 detailed" ng-if="mc.AccountCategory == 'income' || mc.AccountCategory == 'expenses'">
+      <div class="pd2 detailed" ng-if="mc.AccountCategory == 'income' || mc.AccountCategory == 'expenses' || mc.grpCategory == 'income' || mc.grpCategory == 'expenses'">
          <div class="tax_group">
             <h2 style="font-size: 18px;">Taxes</h2>
             <button id="editTax" ng-if="canUpdate" class="btn btn-sm btn-default edit-tax-btn" ng-click="mc.getTaxHierarchy('account')" ng-hide="mc.showEditTaxSection"><i class="glyphicon glyphicon-edit"></i></button>
