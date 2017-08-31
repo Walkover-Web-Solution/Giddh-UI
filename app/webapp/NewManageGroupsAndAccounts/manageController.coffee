@@ -270,6 +270,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.addToBreadCrumbs(item, 'grp')
     mc.selectedGrp = item
     mc.grpCategory = item.category
+    mc.AccountCategory = item.category
     mc.showEditTaxSection = false
     mc.selectedGrp.oldUName = item.uniqueName
     mc.getGroupSharedList(item)
@@ -780,7 +781,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.getAccountCategory = (parentGroups) ->
     pg = parentGroups[0]['uniqueName']
     grp = _.findWhere(mc.flattenGroupList, {uniqueName:pg})
-    grp.category
+    mc.grpCategory = grp.category
 
 
 
