@@ -347,8 +347,11 @@ invoiceController = ($scope, $rootScope, $filter, $uibModal, $timeout, toastr, l
     $scope.invoiceSettings.isEmailVerified = $scope.templateData.emailVerified
 
   $scope.getTemplatesFailure = (res) ->
-#    $scope.invoiceLoadDone = true
     toastr.error(res.data.message, res.data.status)
+
+  $timeout ( ->
+    $scope.getTemplates()
+  ),2000
 
   # set as default
   $scope.setDefTemp = (data) ->

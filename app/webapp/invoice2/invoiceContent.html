@@ -11,103 +11,94 @@
         </span>
     
       <uib-tab class="mrB1" heading="View" select="setTab(0)">
+        <!-- filters -->
+        <div ng-hide="flyDiv" class="pos-rel filterForm row" ng-class="{'flying-div' : flyDiv == true}" style="margin:0;margin-top:10px;padding-left:15px;">
+          
+          <div class="form-group datePickr">
+            <label>From</label>
+            <input type="text" class="form-control"
+              uib-datepicker-popup="{{format}}" required
+              datepicker-options="dateOptions"
+              is-open="fromDatePickerIsOpen"
+              ng-click="fromDatePickerOpen()"
+              ng-model="dateData.fromDate"
+              max-date="today"
+              placeholder="from date"
+                />
+          </div>
+
+          <div class="form-group datePickr">
+            <label>To</label>
+            <input type="text" class="form-control"
+                   uib-datepicker-popup="{{format}}" required
+                   datepicker-options="dateOptions"
+                   is-open="toDatePickerIsOpen"
+                   ng-click="toDatePickerOpen()"
+                   ng-model="dateData.toDate"
+                   min-date="dateData.fromDate"
+                   max-date="today"
+                   placeholder="to date"
+                />
+          </div>
 
 
-            <!-- filters -->
+          <div ng-if="selectedTab == 0">
 
-            <div ng-hide="flyDiv" class="pos-rel filterForm row" ng-class="{'flying-div' : flyDiv == true}" style="margin:0;margin-top:10px;padding-left:15px;">
-              
-              <div class="form-group datePickr">
-                <label>From</label>
-                <input type="text" class="form-control"
-                       uib-datepicker-popup="{{format}}" required
-                       datepicker-options="dateOptions"
-                       is-open="fromDatePickerIsOpen"
-                       ng-click="fromDatePickerOpen()"
-                       ng-model="dateData.fromDate"
-                       max-date="today"
-                       placeholder="from date"
-                    />
+            <div class="form-group" style="padding-left: 4px;">
+              <label>Account</label>
+              <div class="input-group bootstrapSelect">
+                <ui-select allow-clear ng-model="filtersInvoice.account">
+                  <ui-select-match placeholder="Select Accounts" reset-search-input="true">
+                    {{$select.selected.name}}
+                  </ui-select-match >
+                  <ui-select-choices
+                      repeat="acc in queryFltAccnt | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,[groupName.revenueFromOperations,groupName.sundryDebtors])">
+                    <span>{{acc.name}} ({{acc.uniqueName}})</span>
+                  </ui-select-choices>
+                </ui-select>
+                <span class="input-group-btn">
+                  <button type="button" ng-click="filtersInvoice.account = undefined" class="btn btn-default">
+                    <span class="glyphicon glyphicon-trash"></span>
+                  </button>
+                </span>
               </div>
-
-              <div class="form-group datePickr">
-                <label>To</label>
-                <input type="text" class="form-control"
-                       uib-datepicker-popup="{{format}}" required
-                       datepicker-options="dateOptions"
-                       is-open="toDatePickerIsOpen"
-                       ng-click="toDatePickerOpen()"
-                       ng-model="dateData.toDate"
-                       min-date="dateData.fromDate"
-                       max-date="today"
-                       placeholder="to date"
-                    />
-              </div>
-
-
-              <div ng-if="selectedTab == 0">
-
-                <!-- <div class="max100">
-                      <label>Account Name</label>
-                      <input type="text" class="form-control" placeholder="Account Name" ng-model="filtersInvoice.accountUniqueName" uib-typeahead="account as account.name for account in fltAccntListPaginated | filter:$viewValue">
-                </div> -->
-
-              <div class="form-group" style="padding-left: 4px;">
-                <label>Account</label>
-                <div class="input-group bootstrapSelect">
-                  <ui-select allow-clear ng-model="filtersInvoice.account">
-                    <ui-select-match placeholder="Select Accounts" reset-search-input="true">
-                      {{$select.selected.name}}
-                    </ui-select-match >
-                    <ui-select-choices
-                        repeat="acc in queryFltAccnt | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,[groupName.revenueFromOperations,groupName.sundryDebtors])">
-                      <span>{{acc.name}} ({{acc.uniqueName}})</span>
-                    </ui-select-choices>
-                  </ui-select>
-                  <span class="input-group-btn">
-                    <button type="button" ng-click="filtersInvoice.account = undefined" class="btn btn-default">
-                      <span class="glyphicon glyphicon-trash"></span>
-                    </button>
-                  </span>
-                </div>
-              </div>
-
-              <div class="form-group">
-                <label>Invoice Number</label>
-                <input type="text" class="form-control" ng-model="filtersInvoice.invoiceNumber" placeholder="Invoice number">
-              </div>
-              
-              <div class="form-group">
-                <label>Count</label>
-                <select class="form-control col-xs-2" ng-model="filtersInvoice.count" ng-options="count for count in counts">
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label>Balance Due</label>
-                <select ng-model="filtersInvoice.option" class="form-control">
-                  <option>-- Select --</option>
-                  <option>Greater than</option>
-                  <option>Greater than and Equals</option>
-                  <option>Less than</option>
-                  <option>Less than and Equals</option>
-                  <option>Equals</option>
-                </select>
-              </div>
-
-              <div class="form-group">
-                <label>&nbsp;</label>
-                <input type="text" class="form-control col-xs-2" ng-model="filtersInvoice.balanceDue" placeholder="Balance Due">
-              </div>
-
             </div>
 
             <div class="form-group">
-            <label>&nbsp;</label>
-              <button class="btn btn-primary" ng-click="commonGoButtonClick(0)">GO</button>
+              <label>Invoice Number</label>
+              <input type="text" class="form-control" ng-model="filtersInvoice.invoiceNumber" placeholder="Invoice number">
             </div>
             
+            <div class="form-group">
+              <label>Count</label>
+              <select class="form-control col-xs-2" ng-model="filtersInvoice.count" ng-options="count for count in counts">
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>Balance Due</label>
+              <select ng-model="filtersInvoice.option" class="form-control">
+                <option>-- Select --</option>
+                <option>Greater than</option>
+                <option>Greater than and Equals</option>
+                <option>Less than</option>
+                <option>Less than and Equals</option>
+                <option>Equals</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label>&nbsp;</label>
+              <input type="text" class="form-control col-xs-2" ng-model="filtersInvoice.balanceDue" placeholder="Balance Due">
+            </div>
           </div>
+
+          <div class="form-group">
+            <label>&nbsp;</label>
+            <button class="btn btn-primary" ng-click="commonGoButtonClick(0)">GO</button>
+          </div>
+          
+        </div>
 
         <div class="row mr1" ng-if="invoices.results.length == 0">
           <div class="no-data">
@@ -116,9 +107,7 @@
           </div>
         </div>
 
-          <div class="container-fluid " ng-if="invoices.results.length > 0" ng-class="{'pdT2':flyDiv}">
-
-          <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
+        <div class="container-fluid " ng-if="invoices.results.length > 0" ng-class="{'pdT2':flyDiv}">
           <table class="table basic table-bordered">
             <thead class="t-h-bg1">
             <th ng-click="sortVarInv = 'invoiceNumberM';reverseInv = !reverseInv;sortInvoices(sortVarInv, reverseInv)">
@@ -171,14 +160,10 @@
             </tfoot>
             <tbody>
             <tr ng-repeat="invoice in invoices.results">
-              <!--<td>-->
-              <!--<input type="checkbox">-->
-              <!--</td>-->
               <td>
                 <a href="javascript:void(0)" ng-click="prevGenerateInv(invoice)">
                   {{invoice.invoiceNumber}}
                 </a>
-                <!--<label ng-model="invoice.invoiceNumber">{{invoice.invoiceNumber}}</label>-->
               </td>
               <td>
                 {{invoice.account.name}}
@@ -206,114 +191,103 @@
               </td>
               <td class="delt">
                 <i class="glyphicon glyphicon-trash color-giddh" ng-click="deleteInvoice(invoice)"></i>
-                <!--<i class="glyphicon glyphicon-download" ng-click="downloadInvoice(ledger.invoiceNumber, $event)"></i>-->
               </td>
             </tr>
             </tbody>
           </table>
-          <!--</perfect-scrollbar>-->
         </div>
       </uib-tab>
       <uib-tab class="mrB1" select="setTab(1)">
         <uib-tab-heading>Generate</uib-tab-heading>
-
-<!-- filters start -->
           <div ng-hide="flyDiv" class="pos-rel filterForm row" style="margin:0;padding-left:15px;" ng-class="{'flying-div' : flyDiv == true}">
-      <div class="form-group">
-        <label>From</label>
-        <input type="text" class="form-control"
-               uib-datepicker-popup="{{format}}" required
-               datepicker-options="dateOptions"
-               is-open="fromDatePickerIsOpen"
-               ng-click="fromDatePickerOpen()"
-               ng-model="dateData.fromDate"
-               max-date="today"
-               placeholder="from date"
-            />
-      </div>
-      <div class="form-group">
-        <label>To</label>
-        <input type="text" class="form-control"
-               uib-datepicker-popup="{{format}}" required
-               datepicker-options="dateOptions"
-               is-open="toDatePickerIsOpen"
-               ng-click="toDatePickerOpen()"
-               ng-model="dateData.toDate"
-               min-date="dateData.fromDate"
-               max-date="today"
-               placeholder="to date"
-            />
-      </div>
+            <div class="form-group">
+              <label>From</label>
+              <input type="text" class="form-control"
+                uib-datepicker-popup="{{format}}" required
+                datepicker-options="dateOptions"
+                is-open="fromDatePickerIsOpen"
+                ng-click="fromDatePickerOpen()"
+                ng-model="dateData.fromDate"
+                max-date="today"
+                placeholder="from date"
+              />
+            </div>
+            <div class="form-group">
+              <label>To</label>
+              <input type="text" class="form-control"
+                uib-datepicker-popup="{{format}}" required
+                datepicker-options="dateOptions"
+                is-open="toDatePickerIsOpen"
+                ng-click="toDatePickerOpen()"
+                ng-model="dateData.toDate"
+                min-date="dateData.fromDate"
+                max-date="today"
+                placeholder="to date"
+              />
+            </div>
 
-      <div ng-if="selectedTab == 1">
-        <div class="form-group" style="padding-left: 4px;">
-          <label>Account</label>
-          <div class="input-group bootstrapSelect">
-            <ui-select allow-clear ng-model="filtersLedger.account" theme="bootstrap">
-              <ui-select-match placeholder="Select Accounts" reset-search-input="true">
-                {{$select.selected.name}}
-              </ui-select-match >
-              <ui-select-choices
-                  repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,[groupName.revenueFromOperations,groupName.sundryDebtors])">
-                <span>{{acc.name}} ({{acc.uniqueName}})</span>
-              </ui-select-choices>
-            </ui-select>
-                    <span class="input-group-btn">
-                      <button type="button" ng-click="filtersLedger.account = undefined" class="btn btn-default">
-                        <span class="glyphicon glyphicon-trash"></span>
-                      </button>
-                    </span>
+            <div ng-if="selectedTab == 1">
+              <div class="form-group" style="padding-left: 4px;">
+                <label>Account</label>
+                <div class="input-group bootstrapSelect">
+                  <ui-select allow-clear ng-model="filtersLedger.account" theme="bootstrap">
+                    <ui-select-match placeholder="Select Accounts" reset-search-input="true">
+                      {{$select.selected.name}}
+                    </ui-select-match >
+                    <ui-select-choices
+                        repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,[groupName.revenueFromOperations,groupName.sundryDebtors])">
+                      <span>{{acc.name}} ({{acc.uniqueName}})</span>
+                    </ui-select-choices>
+                  </ui-select>
+                  <span class="input-group-btn">
+                    <button type="button" ng-click="filtersLedger.account = undefined" class="btn btn-default">
+                      <span class="glyphicon glyphicon-trash"></span>
+                    </button>
+                  </span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Description</label>
+                <input type="text" class="form-control" ng-model="filtersLedger.description" placeholder="By description">
+              </div>
+              <div class="form-group">
+                <label>Count</label>
+                <select class="form-control col-xs-2" ng-model="filtersLedger.count" ng-options="count for count in counts">
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Amount</label>
+                <select ng-model="filtersLedger.option" class="form-control">
+                  <option>Greater than</option>
+                  <option>Greater than and Equals</option>
+                  <option>Less than</option>
+                  <option>Less than and Equals</option>
+                  <option>Equals</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>&nbsp;</label>
+                <input type="text" class="form-control col-xs-2" ng-model="filtersLedger.entryTotal" placeholder="By amount">
+              </div>
+            </div>
+            <div class="form-group">
+            <label>&nbsp;</label>
+              <button class="btn btn-primary" ng-click="commonGoButtonClick(1)">GO</button>
+            </div>
           </div>
-        </div>
-        <div class="form-group">
-          <label>Description</label>
-          <input type="text" class="form-control" ng-model="filtersLedger.description" placeholder="By description">
-        </div>
-        <div class="form-group">
-          <label>Count</label>
-          <select class="form-control col-xs-2" ng-model="filtersLedger.count" ng-options="count for count in counts">
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Amount</label>
-          <select ng-model="filtersLedger.option" class="form-control">
-            <option>Greater than</option>
-            <option>Greater than and Equals</option>
-            <option>Less than</option>
-            <option>Less than and Equals</option>
-            <option>Equals</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>&nbsp;</label>
-          <input type="text" class="form-control col-xs-2" ng-model="filtersLedger.entryTotal" placeholder="By amount">
-        </div>
-      </div>
-      <div class="form-group">
-      <label>&nbsp;</label>
-        <button class="btn btn-primary" ng-click="commonGoButtonClick(1)">GO</button>
-      </div>
-    </div>
-
-<!-- filters end -->
+          <!-- filters end -->
 
           <div class="row mr1" ng-if="ledgers.results.length == 0">
-          <div class="no-data">
-            <h1>No Entry found in sales!</h1>
-            <h1>Have to do some sales before creating invoice</h1>
-            <a onclick="GoTosales()" class="btn btn-primary">Go to Sales</a>
+            <div class="no-data">
+              <h1>No Entry found in sales!</h1>
+              <h1>Have to do some sales before creating invoice</h1>
+              <a onclick="GoTosales()" class="btn btn-primary">Go to Sales</a>
+            </div>
           </div>
-        </div>
-        <div class="" ng-if="ledgers.results.length > 0">
-
-
-          <div class="container-fluid" ng-class="{'pdT2' : flyDiv}">
-
-
-
-
-<!-- start -->
- <div class="col-xs-12 pd0 pdB1">
+          <div class="" ng-if="ledgers.results.length > 0">
+            <div class="container-fluid" ng-class="{'pdT2' : flyDiv}">
+            <!-- start -->
+            <div class="col-xs-12 pd0 pdB1">
               <ul class="list-inline pull-left">
                 <li><button ng-disabled="!canGenerateInvoice" class="btn btn-primary" ng-click="generateBulkInvoice(false)">Generate Multiple</button></li>
                 <li><button ng-disabled="!canGenerateInvoice" class="btn btn-primary" ng-click="generateBulkInvoice(true)">Generate Compound</button></li>
@@ -325,13 +299,11 @@
               </span>
             </div>
 
-<!-- end -->
+            <!-- end -->
 
-            <!--<perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="20" min-scrollbar-length="20">-->
             <table class="table basic table-bordered">
               <thead class="t-h-bg1">
               <th style="width:3%">
-                <!-- <input name="checkall" type="checkbox" ng-model="checkall" ng-change="selectAllLedger(checkall)"> -->
                 <img style="max-height:18px;" src="/public/webapp/Globals/images/unchecked.png" ng-if="!checkall" ng-click="selectAllLedger(true)">
                 <img style="max-height:18px;" src="/public/webapp/Globals/images/checked.png" ng-if="checkall" ng-click="selectAllLedger(false)">
               </th>
@@ -407,143 +379,20 @@
               </tr>
               </tbody>
             </table>
-            <!--</perfect-scrollbar>-->
           </div>
         </div>
       </uib-tab>
+      <!-- template section -->
       <uib-tab heading="Template" select="setTab(2)">
-        <div class="y-scroll" ng-include="'/public/webapp/Invoice/invoiceContent.html'" ng-controller="invoiceController">
-
-        </div>
-        <!--<div class="y-scroll" ng-include="'/public/webapp/Settings/invoice-temp.html'" cover-page>-->
-
-        <!--</div>-->
+        <div class="y-scroll" ng-include="'/public/webapp/Invoice/invoiceContent.html'" ng-controller="invoiceController"></div>
       </uib-tab>
+      <!-- template section end-->
     </uib-tabset>
-    <!--</perfect-scrollbar>-->
   </div>
-
-
-  <!-- <div class="graph-filters add-transition" ng-class="{'col-xs-1 mrT5 pos-abs right0' : flyDiv == false, 'col-xs-2 pos-abs right0 background-color-giddh' : flyDiv == true}" ng-hide="hideFilters"> -->
-    
-<!--     <div ng-show="flyDiv" class="mrT5 pd1 pos-abs" ng-class="{'flying-div' : flyDiv == true}" auto-height>
-      <div class="clearfix">
-        <label>From</label>
-        <input type="text" class="form-control"
-               uib-datepicker-popup="{{format}}" required
-               datepicker-options="dateOptions"
-               is-open="fromDatePickerIsOpen"
-               ng-click="fromDatePickerOpen()"
-               ng-model="dateData.fromDate"
-               max-date="today"
-               placeholder="from date"
-            />
-      </div>
-      <div class="clearfix mrT1">
-        <label>To</label>
-        <input type="text" class="form-control"
-               uib-datepicker-popup="{{format}}" required
-               datepicker-options="dateOptions"
-               is-open="toDatePickerIsOpen"
-               ng-click="toDatePickerOpen()"
-               ng-model="dateData.toDate"
-               min-date="dateData.fromDate"
-               max-date="today"
-               placeholder="to date"
-            />
-      </div>
-      <div ng-if="selectedTab == 0">
-        <div class="clearfix mrT1">
-          <label>Account</label>
-          <div class="input-group">
-            <ui-select allow-clear ng-model="filtersInvoice.account" theme="bootstrap">
-              <ui-select-match placeholder="Select Accounts" reset-search-input="true">
-                {{$select.selected.name}}
-              </ui-select-match >
-              <ui-select-choices
-                  repeat="acc in queryFltAccnt | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,[groupName.revenueFromOperations,groupName.sundryDebtors])" style="margin-left:-30px;">
-                <span>{{acc.name}} ({{acc.uniqueName}})</span>
-              </ui-select-choices>
-            </ui-select>
-                    <span class="input-group-btn">
-                      <button type="button" ng-click="filtersInvoice.account = undefined" class="btn btn-default">
-                        <span class="glyphicon glyphicon-trash"></span>
-                      </button>
-                    </span>
-          </div>
-        </div>
-        <div class="clearfix mrT1">
-          <label>Invoice Number</label>
-          <input type="text" class="form-control" ng-model="filtersInvoice.invoiceNumber" placeholder="Invoice number">
-        </div>
-        <div class="clearfix mrT1">
-          <label>Balance Due</label>
-          <select ng-model="filtersInvoice.option" class="col-xs-6 form-control">
-            <option>-- Select --</option>
-            <option>Greater than</option>
-            <option>Greater than and Equals</option>
-            <option>Less than</option>
-            <option>Less than and Equals</option>
-            <option>Equals</option>
-          </select>
-          <input type="text" class="form-control col-xs-6" ng-model="filtersInvoice.balanceDue" placeholder="Balance Due">
-        </div>
-        <div class="clearfix mrT1">
-          <label>Count</label>
-          <select class="form-control" ng-model="filtersInvoice.count" ng-options="count for count in counts">
-          </select>
-        </div>
-      </div>
-      <div ng-if="selectedTab == 1">
-        <div class="clearfix mrT1">
-          <label>Account</label>
-          <div class="input-group">
-            <ui-select allow-clear ng-model="filtersLedger.account" theme="bootstrap">
-              <ui-select-match placeholder="Select Accounts" reset-search-input="true">
-                {{$select.selected.name}}
-              </ui-select-match >
-              <ui-select-choices
-                  repeat="acc in queryFltAccnt | omit:isCurrentAccount | limitTo : 5" refresh="postFlatAccntsByQuery($select.search,[groupName.revenueFromOperations,groupName.sundryDebtors])">
-                <span>{{acc.name}} ({{acc.uniqueName}})</span>
-              </ui-select-choices>
-            </ui-select>
-                    <span class="input-group-btn">
-                      <button type="button" ng-click="filtersLedger.account = undefined" class="btn btn-default">
-                        <span class="glyphicon glyphicon-trash"></span>
-                      </button>
-                    </span>
-          </div>
-        </div>
-        <div class="clearfix mrT1">
-          <label>Description</label>
-          <input type="text" class="form-control" ng-model="filtersLedger.description" placeholder="By description">
-        </div>
-        <div class="clearfix mrT1">
-          <label>Count</label>
-          <select class="form-control" ng-model="filtersLedger.count" ng-options="count for count in counts">
-          </select>
-        </div>
-        <div class="clearfix mrT1">
-          <label>Amount</label>
-          <select ng-model="filtersLedger.option" class="col-xs-6 form-control">
-            <option>Greater than</option>
-            <option>Greater than and Equals</option>
-            <option>Less than</option>
-            <option>Less than and Equals</option>
-            <option>Equals</option>
-          </select>
-          <input type="text" class="form-control col-xs-6" ng-model="filtersLedger.entryTotal" placeholder="By amount">
-        </div>
-      </div>
-      <div class="clearfix mrT1">
-        <button class="btn btn-primary" ng-click="commonGoButtonClick()">GO</button>
-      </div>
-    </div> -->
-  <!-- </div> -->
 </div>
 <script type="text/javascript">
   function GoTosales() {
-      var orig = location.origin;
-      window.location.href = orig + '/app/#/ledger/sales';
+    var orig = location.origin;
+    window.location.href = orig + '/app/#/ledger/sales';
   }
 </script>
