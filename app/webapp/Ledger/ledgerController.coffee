@@ -179,17 +179,22 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.accountToShow = $rootScope.selectedAccount
     ledgerCtrl.accountUnq = res.body.uniqueName
     ledgerCtrl.getTransactions(0)
-    ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
+    ############## comment due to saltegde ########### 
+    # ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
+    ############## comment due to saltegde ########### 
+
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
     $state.go($state.current, {unqName: res.body.uniqueName}, {notify: false})
     if res.body.uniqueName == 'cash'
       $rootScope.ledgerState = true
     
     ledgerCtrl.getUnderstanding(res.body)
-    if res.body.yodleeAdded == true && $rootScope.canUpdate
-      $timeout ( ->
-        ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
-      ), 2000
+    ############## comment due to saltegde ########### 
+    # if res.body.yodleeAdded == true && $rootScope.canUpdate
+    #   $timeout ( ->
+    #     ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
+    #   ), 2000
+    ############## comment due to saltegde ########### 
 
   ledgerCtrl.hideEledger = () ->
     ledgerCtrl.showEledger = !ledgerCtrl.showEledger
@@ -256,7 +261,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
             if txn.amount == ledgerCtrl.selectedLedger.transactions[0].amount
               matchingEntries.push(entry)
         if matchingEntries.length == 1
-          ledgerCtrl.confirmBankTransactionMap(matchingEntries[0], ledgerCtrl.selectedLedger)
+          console.log matchingEntries.length
+          ############## comment due to saltegde ###########
+          # ledgerCtrl.confirmBankTransactionMap(matchingEntries[0], ledgerCtrl.selectedLedger)
+          ############## comment due to saltegde ###########
         else if matchingEntries.length >1
           ledgerCtrl.showBankEntriesToMap(matchingEntries)
         else
@@ -298,7 +306,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     @success = (res) ->
       toastr.success(res.body)
       # ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
-      ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
+      ############## comment due to saltegde ###########
+      # ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
+      ############## comment due to saltegde ###########
       ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
 
     @failure = (res) ->
