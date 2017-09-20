@@ -129,7 +129,7 @@
             
               <div class="form-group mrB col-xs-7 pd0">
                  <label>Address</label>
-                 <textarea ng-model="mc.selectedAcc.address" class="form-control" rows="4" name="accAddress" placeholder="405, Indore, India" style="height: 97px;"></textarea>
+                 <textarea ng-model="mc.selectedAcc.address" class="form-control" rows="4" name="accAddress" placeholder="405, Indore, India" style="height: 97px;" maxlength="120"></textarea>
               </div>
               <div class="form-group mrB col-xs-5" ng-show="(mc.selectedAcc.country.countryCode == 'IN' && mc.showOnUpdate) || mc.isIndia">
                  <label>GSTIN</label>
@@ -158,7 +158,7 @@
                 <li ng-repeat="gst in mc.gstDetail | limitTo:mc.showDefaultGst" class="pos-rel gst clearfix" ng-hide="gst.addressList[0].isDefault">
                   <div class="form-group mrB col-xs-7 pd0">
                    <label>Address</label>
-                   <textarea ng-model="gst.addressList[0].address" class="form-control" rows="4" name="gstAddress" placeholder="405, Indore, India" style="height: 97px;"></textarea>
+                   <textarea ng-model="gst.addressList[0].address" class="form-control" rows="4" name="gstAddress" placeholder="405, Indore, India" style="height: 97px;"  maxlength="120"></textarea>
                   </div>
                   <div class="form-group mrB col-xs-5">
                     <label>GSTIN</label>
