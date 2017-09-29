@@ -232,6 +232,9 @@ router.post '/:companyUniqueName/ebanks/:ItemAccountId/verify-mfa', (req, res) -
       res.status(response.statusCode)
     res.send data
 
+router.post '/:companyUniqueName/invoice-setting/verify-email', (req, res) ->
+  res.sendFile(__dirname + '/public/website/views/verify-email.html')
+
 #get added ebanks list
 router.get '/:companyUniqueName/ebanks', (req, res) ->
   authHead =
