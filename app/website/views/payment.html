@@ -76,7 +76,10 @@
       <button class="btn btn-primary pull-right" style="margin-right:20%" ng-click="downloadInvoice()">Download</button>
     </div>
     <div class="row mr1">
-      <div ng-if="showInvoice" ng-bind-html="contentHtml" class="invoice_view" id="invoice-wrapper"></div>
+      <div style="width:770px; height: 800px; margin:0 auto;">
+        <object width="100%" height="100%" data="{{content}}"></object>
+      </div>
+      <!--<div ng-if="showInvoice" ng-bind-html="contentHtml" class="invoice_view" id="invoice-wrapper"></div>-->
     </div>
   </section>
 </body>
