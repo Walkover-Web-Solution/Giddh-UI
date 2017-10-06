@@ -5,6 +5,13 @@ inventoryCustomStockController = ($scope, $rootScope, $timeout, toastr, localSto
   vm.editMode = false
   $rootScope.selectedCompany = {}
   $rootScope.selectedCompany = localStorageService.get("_selectedCompany")
+  
+  if $rootScope.selectedCompany.country
+    vm.country = $rootScope.selectedCompany.country.toLocaleLowerCase()
+  else
+    vm.country = 'india' 
+
+
 
   #getStockUnits
   vm.getStockUnits = () ->
@@ -25,6 +32,8 @@ inventoryCustomStockController = ($scope, $rootScope, $timeout, toastr, localSto
     vm.customUnitObj.parentStockUnit = null
 
   vm.addCustomUnitStock = ()->
+    if vm.customUnitObj.nameObj
+      delete vm.customUnitObj.nameObj
     reqParam = {
       companyUniqueName: $rootScope.selectedCompany.uniqueName
     }
@@ -36,12 +45,13 @@ inventoryCustomStockController = ($scope, $rootScope, $timeout, toastr, localSto
     vm.makeUnits()
 
   vm.updateCustomUnitStock = ()->
+    if vm.customUnitObj.nameObj
+      delete vm.customUnitObj.nameObj
     reqParam=
       companyUniqueName: $rootScope.selectedCompany.uniqueName
     stockService.updateStockUnit(reqParam, vm.customUnitObj).then(vm.updateStockUnitSuccess,vm.getStockUnitsFailure)
 
   vm.updateStockUnitSuccess = (res) ->
-    console.log(vm.customUnitObj, res.body)
     vm.unitTypes.splice(vm.customUnitObj.idx, 1, res.body)
     # vm.unitTypes = _.reject(vm.unitTypes, (o)->
     #   return o.code is res.body.code
@@ -75,6 +85,10 @@ inventoryCustomStockController = ($scope, $rootScope, $timeout, toastr, localSto
     vm.customUnitObj = angular.copy(item)
     vm.customUnitObj.uName = _.clone(item.code)
     vm.customUnitObj.idx = idx
+    vm.customUnitObj.nameObj = {
+      text: vm.customUnitObj.name
+      id: vm.customUnitObj.code
+    }
 
   vm.makeUnits = () ->
     vm.customUnits = []
@@ -82,6 +96,16 @@ inventoryCustomStockController = ($scope, $rootScope, $timeout, toastr, localSto
     _.each(arr, (o)->
       vm.customUnits.push(_.pick(o, 'code', 'name'))
     )
+
+  vm.getStockName = () ->
+    vm.stockNameList = stockService.getStockUnit()
+
+  vm.setUnitName = (item) ->
+    if item.id
+      vm.customUnitObj.code = item.id
+      vm.customUnitObj.name = item.text
+
+  vm.getStockName()
 
 
   # init func on dom ready
