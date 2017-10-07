@@ -904,6 +904,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
           return false 
 
     delete mc.selectedAcc.stateName
+    
+    mc.gstDetail = _.reject(mc.gstDetail, (gst) -> gst.addressList[0].isDefault )
     mc.selectedAcc.gstDetails = mc.gstDetail
 
     accountService.updateAc(unqNamesObj, mc.selectedAcc).then(mc.updateAccountSuccess,
