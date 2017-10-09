@@ -9,7 +9,7 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
   $scope.userNumber = ''
   $scope.showSuccessMsg = false
   $scope.mobNum = {
-    countryCode: 91
+    countryCode: null
     number: ''
     showVerificationBox : false
     verificationCode: ''
@@ -19,9 +19,11 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
     $scope.isNotVerified = false
 
   $scope.addNumber = (number) ->
-    mobileRegex = /^[0-9]{1,10}$/
-    if mobileRegex.test(number) and number.length is 10
-      $scope.mobNum.number = number
+    num = number.split('-');
+    
+    if num.length == 2
+      $scope.mobNum.countryCode = num[0]
+      $scope.mobNum.number = num[1]
       data = {
         "countryCode":$scope.mobNum.countryCode
         "mobileNumber":$scope.mobNum.number
@@ -29,6 +31,17 @@ setWizardController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, l
       userServices.addNumber(data).then($scope.addNumberSuccess, $scope.addNumberFailure)
     else
       toastr.error("Please enter number in format: 91-9998899988")
+  
+    # mobileRegex = /^[0-9]{1,10}$/
+    # if mobileRegex.test(number) and number.length is 10
+    #   $scope.mobNum.number = number
+    #   data = {
+    #     "countryCode":$scope.mobNum.countryCode
+    #     "mobileNumber":$scope.mobNum.number
+    #   }
+    #   userServices.addNumber(data).then($scope.addNumberSuccess, $scope.addNumberFailure)
+    # else
+    #   toastr.error("Please enter number in format: 91-9998899988")
 
   $scope.addNumberSuccess = (res) ->
     toastr.success("You will receive a verification code on your mobile shortly.")

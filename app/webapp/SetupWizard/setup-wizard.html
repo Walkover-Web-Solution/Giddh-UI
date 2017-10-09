@@ -30,7 +30,8 @@
               <div class=" clearfix">
                 <h1 class="l8grey">Add Mobile Number</h1>
                 <form class="mrT mrB1" name="mobileForm" novalidate>
-                  <input ng-minlength="10" ng-pattern="/^[0-9]{1,10}$/" class="form-control max350 pull-left" type="text" ng-required="true" placeholder="9998899988" name="mobileForm.phoneNumber" ng-model="phoneNumber"/>
+                  <!--<input ng-minlength="10" ng-pattern="/^[0-9]{1,10}$/" class="form-control max350 pull-left" type="text" ng-required="true" placeholder="9998899988" name="mobileForm.phoneNumber" ng-model="phoneNumber"/>-->
+                  <input class="form-control max350 pull-left" type="text" ng-required="true" name="mobileForm.phoneNumber" ng-model="phoneNumber"/>
                   <button class="btn btn-success mrL1" ng-click="addNumber(phoneNumber)" ng-disabled="mobileForm.$invalid">Add</button>
                 </form>
                 <h3 class="mrB1">Format should be like 9898989898</h3>
