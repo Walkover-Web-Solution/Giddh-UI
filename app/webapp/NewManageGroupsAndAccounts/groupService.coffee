@@ -1,7 +1,7 @@
 'use strict'
 
 giddh.serviceModule.service 'groupService', ($resource, $q) ->
-  Group = $resource('/company/:companyUniqueName/groups',
+  Group = $resource('company/:companyUniqueName/groups',
     {
       'companyUniqueName': @companyUniqueName
       'groupUniqueName': @groupUniqueName

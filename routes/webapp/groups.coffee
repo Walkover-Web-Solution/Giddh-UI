@@ -195,18 +195,18 @@ router.post '/', (req, res) ->
       res.status(response.statusCode)
     res.send data
 
-router.post '/:groupUniqueName/accounts', (req, res) ->
-  hUrl = settings.envUrl + 'company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName + '/accounts'
-  args =
-    headers:
-      'Auth-Key': req.session.authKey
-      'Content-Type': 'application/json'
-      'X-Forwarded-For': res.locales.remoteIp
-    data: req.body
-  settings.client.post hUrl, args, (data, response) ->
-    if data.status == 'error' || data.status == undefined
-      res.status(response.statusCode)
-    res.send data
+# router.post '/:groupUniqueName/accounts', (req, res) ->
+#   hUrl = settings.envUrl + 'v2/company/' + req.params.companyUniqueName + '/groups/' + req.params.groupUniqueName + '/accounts'
+#   args =
+#     headers:
+#       'Auth-Key': req.session.authKey
+#       'Content-Type': 'application/json'
+#       'X-Forwarded-For': res.locales.remoteIp
+#     data: req.body
+#   settings.client.post hUrl, args, (data, response) ->
+#     if data.status == 'error' || data.status == undefined
+#       res.status(response.statusCode)
+#     res.send data
 
 # get closing balance
 router.get '/:groupUniqueName/closing-balance', (req, res) ->
