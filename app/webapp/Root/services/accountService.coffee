@@ -1,7 +1,7 @@
 'use strict'
 
 giddh.serviceModule.service 'accountService', ($resource, $q) ->
-  createAccount = $resource('/company/:companyUniqueName/groups/:groupUniqueName/accounts',
+  createAccount = $resource('v2/company/:companyUniqueName/groups/:groupUniqueName/accounts',
     {
       'companyUniqueName': @companyUniqueName
       'groupUniqueName': @groupUniqueName
@@ -27,7 +27,7 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
     {
       update:
         method: 'PUT'
-        url: '/company/:companyUniqueName/accounts/:accountsUniqueName'
+        url: '/v2/company/:companyUniqueName/accounts/:accountsUniqueName'
       share:
         method: 'PUT'
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/share'
@@ -55,7 +55,8 @@ giddh.serviceModule.service 'accountService', ($resource, $q) ->
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName'
       get:
         method: 'GET'
-        url: '/company/:companyUniqueName/accounts/:accountsUniqueName'
+        # url: '/company/:companyUniqueName/accounts/:accountsUniqueName'
+        url: '/v2/company/:companyUniqueName/accounts/:accountsUniqueName'
       move:
         method: 'PUT'
         url: '/company/:companyUniqueName/accounts/:accountsUniqueName/move'

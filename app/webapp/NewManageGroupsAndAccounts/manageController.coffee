@@ -1,7 +1,10 @@
 'use strict'
 
 manageController = ($scope, $rootScope, localStorageService, groupService, toastr, $http, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService, DAServices, $location, $uibModal, companyServices) ->
+  console.log('$rootScope.selectedCompany is :', $rootScope.selectedCompany)
   mc = this
+  mc.isMultipleCurrency = $rootScope.selectedCompany.isMultipleCurrency
+  mc.baseCurrency = $rootScope.selectedCompany.baseCurrency
   mc.groupList = []
   mc.flattenGroupList = []
   mc.moveto = undefined
@@ -529,7 +532,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     
 
   mc.addNewGst = () ->
-    if mc.selectedAcc.gstIn
+    if mc.selectedAcc.addresses || (!mc.selectedAcc.addresses || !mc.selectedAcc.addresses.length)
       gstDetail = {
         gstNumber: "",
         addressList: [
@@ -540,12 +543,16 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
             }
         ]
       }
-      mc.gstDetail.unshift(gstDetail)
-    else
+      # mc.gstDetail.unshift(gstDetail)
+      if !mc.selectedAcc.addresses
+        mc.selectedAcc.addresses = []
+      mc.selectedAcc.addresses.unshift(gstDetail)
+    else 
       toastr.error("Please fill GSTIN field first")
 
   mc.deleteGst = (obj, i) ->
-    mc.gstDetail.splice(i,1)
+    # mc.gstDetail.splice(i,1)
+    mc.selectedAcc.addresses.splice(i,1)
 
   mc.getAccDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -810,8 +817,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.addAccount = () ->
     unqNamesObj = mc.setAdditionalAccountDetails()
-    mc.removeBlankGst(mc.gstDetail)
-    mc.selectedAcc.gstDetails = mc.gstDetail
+    mc.selectedAcc.addresses = mc.removeBlankGst(mc.selectedAcc.addresses)
+    # mc.selectedAcc.gstDetails = mc.gstDetail
     
     if (mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors')
       if mc.selectedAcc.country.countryCode == 'IN' 
@@ -893,12 +900,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
           toastr.warning("State field can't be empty.")
           return false
 
-    mc.removeBlankGst(mc.gstDetail)
+    mc.selectedAcc.addresses = mc.removeBlankGst(mc.selectedAcc.addresses)
 
     if mc.AccountCategory == 'assets' || mc.AccountCategory == 'liabilities'
-      if mc.gstDetail.length < 2 && !mc.selectedAcc.gstIn
+      if mc.gstDetail && mc.gstDetail.length < 2 && !mc.selectedAcc.gstIn
         mc.gstDetail = []
-      if mc.gstDetail.length
+      if mc.gstDetail && mc.gstDetail.length
         if !mc.selectedAcc.gstIn
           toastr.error("You cannot leave GSTIN field blank, while adding multiple GSTIN.")
           return false 
@@ -1411,28 +1418,28 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.toggleList = () ->
     if mc.showDefaultGstList
-      mc.showDefaultGst = mc.gstDetail.length
+      mc.showDefaultGst = mc.selectedAcc.addresses.length
     else
       mc.showDefaultGst = 2
     mc.showDefaultGstList = !mc.showDefaultGstList
 
   mc.getStateCode = (val, item) ->
-    if val.length >= 2
+    if val && val.length >= 2
       mc.gstState = _.findWhere($rootScope.stateList, {code:val.substr(0,2)})
       if mc.gstState
-        item.addressList[0].stateCode = mc.gstState.code
-        item.addressList[0].state = mc.gstState.name
-        item.addressList[0].stateName = mc.gstState
+        item.stateCode = mc.gstState.code
+        item.state = mc.gstState.name
+        item.stateName = mc.gstState
       if !mc.gstState
-        item.addressList[0].stateCode = ''
-        item.addressList[0].state = ''
-        item.addressList[0].stateName = ''
+        item.stateCode = ''
+        item.state = ''
+        item.stateName = ''
         toastr.warning("Invalid GSTIN.")
         return false
-    else if val.length < 2
-      item.addressList[0].stateCode = ''
-      item.addressList[0].state = ''
-      item.addressList[0].stateName = ''
+    else if val && val.length < 2
+      item.stateCode = ''
+      item.state = ''
+      item.stateName = ''
     return false
 
   mc.setStateCode = (gstList) ->
@@ -1479,11 +1486,13 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     return false
 
   mc.removeBlankGst = (gstList) ->
-    if gstList.length > 0
+    if gstList && gstList.length > 0
       _.each gstList, (item) ->
         if item.gstNumber == ""
           gstList = _.without(gstList, item)
-      mc.deleteDuplicateState(gstList)
+        delete item.stateName
+    return gstList
+      # mc.deleteDuplicateState(gstList)
     
   mc.updateFlatAccountList = () ->
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
