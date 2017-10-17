@@ -1,7 +1,6 @@
 'use strict'
 
 manageController = ($scope, $rootScope, localStorageService, groupService, toastr, $http, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService, DAServices, $location, $uibModal, companyServices) ->
-  console.log('$rootScope.selectedCompany is :', $rootScope.selectedCompany)
   mc = this
   mc.isMultipleCurrency = $rootScope.selectedCompany.isMultipleCurrency
   mc.baseCurrency = $rootScope.selectedCompany.baseCurrency
@@ -822,7 +821,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     
     if (mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors')
       if mc.selectedAcc.country.countryCode == 'IN' 
-        if !mc.selectedAcc.stateCode
+        defaultAddress = mc.selectedAcc.addresses[0]
+        if !defaultAddress || !defaultAddress.stateCode
           toastr.warning("State field can't be empty.")
           return false
 
@@ -895,8 +895,9 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.selectedAcc.applicableTaxes = _.pluck(mc.selectedAcc.applicableTaxes,'uniqueName')
 
     if (mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors')
-      if mc.selectedAcc.country.countryCode == 'IN' 
-        if !mc.selectedAcc.stateCode
+      if mc.selectedAcc.country.countryCode == 'IN'
+        defaultAddress = mc.selectedAcc.addresses.find(obj) -> obj.isDefault == true
+        if !defaultAddress || !defaultAddress.stateCode
           toastr.warning("State field can't be empty.")
           return false
 
