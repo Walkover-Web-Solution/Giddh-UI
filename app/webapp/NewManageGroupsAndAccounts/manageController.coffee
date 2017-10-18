@@ -1,6 +1,6 @@
 'use strict'
 
-manageController = ($scope, $rootScope, localStorageService, groupService, toastr, $http, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService, DAServices, $location, $uibModal, companyServices) ->
+manageController = ($scope, $rootScope, localStorageService, groupService, toastr, $http, modalService, $timeout, accountService, locationService, ledgerService, $filter, permissionService, DAServices, $location, $uibModal, companyServices, roleServices) ->
   mc = this
   mc.isMultipleCurrency = $rootScope.selectedCompany.isMultipleCurrency
   mc.baseCurrency = $rootScope.selectedCompany.baseCurrency
@@ -19,8 +19,8 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.AccountsList = []
   mc.groupAccntList = []
   mc.showEditTaxSection = false
-  mc.shareGroupObj = {role: "view_only"}
-  mc.shareAccountObj ={role: "view_only"}
+  mc.shareGroupObj = { entity: "group", entityUniqueName: ""}
+  mc.shareAccountObj = { entity: "account", entityUniqueName: ""}
   mc.openingBalType = [
     {"name": "Credit", "val": "CREDIT"}
     {"name": "Debit", "val": "DEBIT"}
@@ -728,18 +728,15 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.shareGroup = () ->
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: mc.selectedGrp.uniqueName
+      roleUname: 'view'
     }
-    groupService.share(unqNamesObj, mc.shareGroupObj).then(mc.onShareGroupSuccess, mc.onShareGroupFailure)
+    mc.shareGroupObj.entityUniqueName = mc.selectedGrp.uniqueName
+    roleServices.share(unqNamesObj, mc.shareGroupObj).then(mc.onShareGroupSuccess, mc.onShareGroupFailure)
 
   mc.onShareGroupSuccess = (res) ->
-    mc.shareGroupObj = {
-      role: "view_only"
-      user: ""
-    }
-    toastr.success(res.body, res.status)
+    mc.shareGroupObj = { entity: "group", entityUniqueName: "", emailId: ''}
+    toastr.success('Account shared successfully.')
     mc.getGroupSharedList(mc.selectedGrp)
-    mc.shareGroupObj.user = ''
 
   mc.onShareGroupFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -747,12 +744,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
 # get Shared Group List
   mc.getGroupSharedList = () ->
-    # if $scope.canShare
-    unqNamesObj = {
-      compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: mc.selectedGrp.uniqueName
-    }
-    groupService.sharedList(unqNamesObj).then(mc.onsharedListSuccess, mc.onsharedListFailure)
+    if $rootScope.canShare
+      unqNamesObj = {
+        compUname: $rootScope.selectedCompany.uniqueName
+        selGrpUname: mc.selectedGrp.uniqueName
+      }
+      groupService.sharedList(unqNamesObj).then(mc.onsharedListSuccess, mc.onsharedListFailure)
 
   mc.onsharedListSuccess = (res) ->
     mc.groupSharedUserList = res.body
@@ -762,20 +759,22 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
 
   #unShare group with user
-  mc.unShareGroup = (user) ->
+  mc.unShareGroup = (userObj) ->
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: mc.selectedGrp.uniqueName
+      roleUname: userObj.role.uniqueName
     }
-    data = {
-      user: user
+    dataToSend = {
+      emailId: userObj.userEmail,
+      entity: 'group',
+      entityUniqueName: mc.selectedGrp.uniqueName
     }
-    groupService.unshare(unqNamesObj, data).then(mc.unShareGroupSuccess, mc.unShareGroupFailure)
+    roleServices.unshare(unqNamesObj, dataToSend).then(mc.unShareGroupSuccess, mc.unShareGroupFailure)
 
   mc.unShareGroupSuccess = (res)->
-    toastr.success(res.body, res.status)
+    toastr.success("User unshared successfully.")
     mc.getGroupSharedList(mc.selectedGrp)
-    mc.shareGroupObj.user = ""
+    mc.shareGroupObj.emailId = ""
 
   mc.unShareGroupFailure = (res)->
     toastr.error(res.data.message, res.data.status)
@@ -1241,44 +1240,48 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.shareAccount = () ->
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: mc.selectedGrp.uniqueName
-      acntUname: mc.selectedAcc.uniqueName
+      roleUname: 'view'
     }
-    if _.isEmpty(mc.selectedGroup)
-      unqNamesObj.selGrpUname = mc.selectedAcc.parentGroups[0].uniqueName
+    mc.shareAccountObj.entityUniqueName = mc.selectedAcc.uniqueName
 
-    accountService.share(unqNamesObj, mc.shareAccountObj).then(mc.onShareAccountSuccess, mc.onShareAccountFailure)
+    # if _.isEmpty(mc.selectedGroup)
+      # unqNamesObj.selGrpUname = mc.selectedAcc.parentGroups[0].uniqueName
+
+    roleServices.share(unqNamesObj, mc.shareAccountObj).then(mc.onShareAccountSuccess, mc.onShareAccountFailure)
 
   mc.onShareAccountSuccess = (res) ->
-    mc.shareAccountObj.user = ""
-    toastr.success(res.body, res.status)
+    mc.shareAccountObj.emailId = ""
+    toastr.success('Account shared successfully.')
     mc.getAccountSharedList()
 
   mc.onShareAccountFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
 
-  mc.unShareAccount = (user) ->
+  mc.unShareAccount = (userObj) ->
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
-      selGrpUname: mc.selectedGrp.uniqueName
-      acntUname: mc.selectedAcc.uniqueName
+      roleUname: userObj.role.uniqueName
     }
-    if _.isEmpty(mc.selectedGrp)
-      unqNamesObj.selGrpUname = mc.selectedAcc.parentGroups[0].uniqueName
+    dataToSend = {
+      emailId: userObj.userEmail,
+      entity: 'account',
+      entityUniqueName: mc.selectedAcc.uniqueName
+    }
+    # if _.isEmpty(mc.selectedGrp)
+    #   unqNamesObj.selGrpUname = mc.selectedAcc.parentGroups[0].uniqueName
 
-    data = { user: user}
-    accountService.unshare(unqNamesObj, data).then(mc.unShareAccountSuccess, mc.unShareAccountFailure)
+    roleServices.unshare(unqNamesObj, dataToSend).then(mc.unShareAccountSuccess, mc.unShareAccountFailure)
 
   mc.unShareAccountSuccess = (res)->
-    toastr.success(res.body, res.status)
+    toastr.success('User unshared successfully.')
     mc.getAccountSharedList()
 
   mc.unShareAccountFailure = (res)->
     toastr.error(res.data.message, res.data.status)
 
   mc.getAccountSharedList = () ->
-    if $scope.canShare
+    if $rootScope.canShare
       unqNamesObj = {
         compUname: $rootScope.selectedCompany.uniqueName
         selGrpUname: mc.selectedAcc.parentGroups[0].uniqueName
