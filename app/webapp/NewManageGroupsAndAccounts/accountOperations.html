@@ -182,14 +182,13 @@
               </div>
 
             </div>-->
+            <div ng-show="((mc.AccountCategory == 'assets' || mc.AccountCategory == 'liabilities') && mc.selectedAcc.country.countryCode == 'IN') || mc.isIndia">
 
-            <div ng-show="((mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors') && mc.selectedAcc.country.countryCode == 'IN') || mc.isIndia">
-
-              <ul class="gstList" ng-if="mc.selectedAcc.addresses.length">
+              <ul class="gstList" ng-if="mc.gstDetail.length">
                 
                 <hr class="mrT2 mrB2" />
 
-                <li ng-repeat="gst in mc.selectedAcc.addresses | limitTo:mc.showDefaultGst" class="pos-rel gst clearfix">
+                <li ng-repeat="gst in mc.gstDetail | limitTo:mc.showDefaultGst" class="pos-rel gst clearfix">
                   <div class="form-group mrB col-xs-7 pd0">
                    <label>Address</label>
                    <textarea ng-model="gst.address" class="form-control" rows="4" name="gstAddress" placeholder="405, Indore, India" style="height: 97px;"  maxlength="120"></textarea>
@@ -200,7 +199,7 @@
                   </div>
                   <div class="form-group mrB col-xs-5 stateList" ng-init="mc.getStateCode(gst.gstNumber, gst)">
                    <label>State</label>
-                      <ui-select ng-model="gst.stateName" theme="bootstrap">
+                      <ui-select ng-model="gst.stateName" theme="bootstrap" on-select="mc.setAddressState(gst.stateName, gst)" ng-disabled="gst.gstNumber.length >=2">
                         <ui-select-match placeholder="Select State">
                           <span>{{$select.selected.code}} - {{$select.selected.name}}</span>
                         </ui-select-match>
@@ -215,8 +214,8 @@
               </ul>
 
               <span class="clearfix gst_cta mrT1">
-                <a href="javascript:void(0);" class="pull-left gstbtn pdR1 cursor-pointer" ng-click="mc.toggleList()" ng-if="(mc.showDefaultGstList && mc.selectedAcc.addresses.length && mc.selectedAcc.addresses.length > 2 && !mc.showOnUpdate) || (mc.showOnUpdate && mc.selectedAcc.addresses.length > 2 && mc.showDefaultGstList)">Show all <span ng-if="mc.showOnUpdate">({{mc.selectedAcc.addresses.length}})</span><span ng-if="!mc.showOnUpdate">({{mc.selectedAcc.addresses.length}})</span> </a>
-                <a href="javascript:void(0);" class="pull-left gstbtn pdR1 cursor-pointer" ng-click="mc.toggleList()" ng-if="!mc.showDefaultGstList && mc.selectedAcc.addresses.length > 2">Show less </a>
+                <a href="javascript:void(0);" class="pull-left gstbtn pdR1 cursor-pointer" ng-click="mc.toggleList()" ng-if="(mc.showDefaultGstList && mc.gstDetail.length && mc.gstDetail.length > 2 && !mc.showOnUpdate) || (mc.showOnUpdate && mc.gstDetail.length > 2 && mc.showDefaultGstList)">Show all <span ng-if="mc.showOnUpdate">({{mc.gstDetail.length}})</span><span ng-if="!mc.showOnUpdate">({{mc.gstDetail.length}})</span> </a>
+                <a href="javascript:void(0);" class="pull-left gstbtn pdR1 cursor-pointer" ng-click="mc.toggleList()" ng-if="!mc.showDefaultGstList && mc.gstDetail.length > 2">Show less </a>
 
                 <a href="javascript:void(0);" class="pull-right gstbtn pdR1 cursor-pointer" ng-click="mc.addNewGst()"><i class="fa fa-plus cursor-pointer" aria-hidden="true"></i> Add more </a>  
               </span>
