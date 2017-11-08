@@ -70,12 +70,12 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
           obj.type = ''
           obj.data = {}
           if data
-            obj.type = data.role.uniqueName
+            obj.type = data.userEntityRoles[0].role.uniqueName
             obj.data = data
           return obj
            
         onSuccess = (res) ->
-          companyList = _.sortBy(res.body, 'shared')
+          companyList = res.body
           cdt = localStorageService.get("_selectedCompany")
           if not _.isNull(cdt) && not _.isEmpty(cdt) && not _.isUndefined(cdt)
             cst = _.findWhere(companyList, {uniqueName: cdt.uniqueName})
@@ -90,8 +90,10 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
           else
             localStorageService.set("_selectedCompany", companyList[0])
             if companyList.length < 1
-              a = checkRole(user)
-              return a
+              return {
+                type: undefined
+                data: {}
+              }
             else      
               a = checkRole(companyList[0])
               return a
@@ -144,7 +146,6 @@ giddh.webApp.config ($stateProvider, $urlRouterProvider, $locationProvider) ->
     url: ''
     abstract: true
     templateUrl: appendThis+'/public/webapp/views/home.html'
-    # controller:'groupController'
   )
   .state('company.content',
     url: ''

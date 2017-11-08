@@ -741,13 +741,13 @@
               <form name="addShareEmailForm" novalidate class="form-inline">
                 <div class="form-group">
                   <label class="mrR1">Give permission to:</label>
-                  <input ng-model="shareRequest.user" name="userEmail" type="text" class="form-control" placeholder="Uniquename/Email ID" required/>
+                  <input ng-model="shareRequest.emailId" name="userEmail" type="text" class="form-control" placeholder="Uniquename/Email ID" required/>
                 </div>
                 <div class="form-group">
                   <select 
                     class="form-control"
                     name="userRole" 
-                    ng-model="shareRequest.role"
+                    ng-model="shareRequest.roleUniqueName"
                     ng-options="item.uniqueName as item.name for item in shareableRoles">
                   </select>
                 </div>
@@ -759,7 +759,34 @@
                 </div>
               </form>
             </div>
-            <ul class="list-group ln">
+            
+            <div ng-repeat="usrGrp in sharedUsersList">
+              <div class="lead mrB1">{{usrGrp.name}}</div>
+              <div class="mrB1"><i class="fa fa-user"></i> {{usrGrp.rows[0].userUniqueName}}</div>
+              <table width="100%" class="table bdrB">
+                <tbody>
+                  <tr ng-repeat="user in usrGrp.rows">
+                    <td width="30%">&nbsp;</td>
+                    <td width="16%">
+                      <input class="form-control" value="{{user.roleName}}">
+                    </td>
+                    <td width="22%">
+                      <input ng-if="user.from && user.to" class="form-control" value="{{user.from}} - {{user.to}}" />
+                      <input ng-if="user.period && user.duration" class="form-control" value="Past &nbsp;{{user.duration}} &nbsp; {{user.period}}S" />
+                    </td>
+                    <td width="22%">
+                      <input ng-if="user.ipsStr" class="form-control" value="{{user.ipsStr}}">
+                      <input ng-if="user.cidrsStr" class="form-control" value="{{user.cidrsStr}}">
+                    </td>
+                    <td width="10%" class="alC">
+                      <i ng-click="unSharedUser(user)" class="fa fa-trash cp"></i>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+            <!-- <ul class="list-group ln">
 
               <li ng-repeat="(key,value) in sharedUsersList | pick: exceptOwnEmail track by $index" class="list-group-item">
 
@@ -798,7 +825,7 @@
 
               </li>
 
-            </ul>
+            </ul> -->
 
           </div>
         </uib-tab>

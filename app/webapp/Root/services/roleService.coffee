@@ -19,9 +19,12 @@ giddh.serviceModule.service 'roleServices', ($resource, $q) ->
       'roleUniqueName': @roleUniqueName
     },
     {
+      getAllRolesOfCompany:
+        method: 'GET'
+        url: '/company/:companyUniqueName/role/'
       assign:
         method: 'POST'
-        url: '/company/:companyUniqueName/role/:roleUniqueName/assign',
+        url: '/company/:companyUniqueName/role/:roleUniqueName/assign'
       revoke:
         method: 'POST'
         url: '/company/:companyUniqueName/role/:roleUniqueName/revoke'
@@ -35,8 +38,9 @@ giddh.serviceModule.service 'roleServices', ($resource, $q) ->
       func(onSuccess, onFailure)
       deferred.promise
 
-    getAll: () ->
-      @handlePromise((onSuccess,  onFailure) -> Role.all(onSuccess, onFailure))
+    getAll: (compUname) ->
+      @handlePromise((onSuccess,  onFailure) -> permissionRoles.getAllRolesOfCompany({
+        companyUniqueName: compUname}, onSuccess, onFailure))
 
     getEnvVars: () ->
       @handlePromise((onSuccess, onFailure) -> Role.getEnvVar(onSuccess, onFailure))
