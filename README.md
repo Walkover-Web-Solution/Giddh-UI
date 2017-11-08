@@ -38,7 +38,7 @@ Usual build tasks
 `node server.js`
 
 * Watch over the Coffee changes
-`grunt coffee`
+`grunt watch`
 
 * Check coffee syntax
 `grunt coffeelint`

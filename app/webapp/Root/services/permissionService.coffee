@@ -7,7 +7,7 @@ giddh.serviceModule.service 'permissionService', (localStorageService) ->
       if(_.isUndefined(roles) or _.isEmpty(roles))
         return false
       role = _.find roles, (role) ->
-        role.uniqueName is entity.role.uniqueName
+        role.uniqueName is entity.userEntityRoles[0].role.uniqueName
       if(_.isUndefined(role) or _.isEmpty(role))
         return false
       _.some(role.permissions, (permission) ->
@@ -17,7 +17,7 @@ giddh.serviceModule.service 'permissionService', (localStorageService) ->
     shareableRoles: (selectedCompany) ->
       roles = localStorageService.get("_roles")
       roleOnCompany = _.find roles, (role) ->
-        role.uniqueName is selectedCompany.role.uniqueName
+        role.uniqueName is selectedCompany.userEntityRoles[0].role.uniqueName
       if _.isUndefined(roleOnCompany)
         return
 

@@ -21,7 +21,7 @@
               <div>
                 <perfect-scrollbar class="scrClass" wheel-propagation="true" wheel-speed="1" min-scrollbar-length="20" auto-height>
                   <ul class="dshUl clearfix list-inline">
-                    <li class="dmLi trialB" ui-sref="dashboard" ng-if="sharedEntity == null">
+                    <li class="dmLi trialB" ui-sref="dashboard" ng-if="sharedEntity === 'COMPANY'">
                       <a href="">
                         <div class="media">
                           <div class="media-body">
@@ -31,7 +31,7 @@
                         </div>
                       </a>
                     </li>
-                    <li class="dmLi trialB" ui-sref="settings" ng-if="canUpdate && sharedEntity == null">
+                    <li class="dmLi trialB" ui-sref="settings" ng-if="canUpdate && sharedEntity === 'COMPANY'">
                       <a href="">
                         <div class="media">
                           <div class="media-body">
@@ -41,16 +41,6 @@
                         </div>
                       </a>
                     </li>
-<!--                     <li class="dmLi" ui-sref="company.content.ledgerContent">
-                        <a href="" >
-                          <div class="media">
-                            <div class="media-body">
-                              <div class="title">Ledger</div>
-                              <div class="subTitle">View and edit all your <b>done</b> entries.</div>
-                            </div>
-                          </div>
-                        </a>
-                    </li> -->
                     <li class="dmLi" ui-sref="tbpl">
                       <a href="" >
                         <div class="media">
@@ -61,27 +51,7 @@
                         </div>
                       </a>
                     </li>
-                <!-- <li ng-hide="canViewSpecificItems" class="dmLi" ui-sref="company.profitAndLoss">
-                    <a href="" >
-                      <div class="media">
-                        <div class="media-body">
-                          <div class="title">Profit and Loss</div>
-                          <div class="subTitle">View and edit all your <b>done</b> entries.</div>
-                        </div>
-                      </div>
-                    </a>
-                </li> -->
-                    <!--<li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="invoice.accounts">-->
-                        <!--<a href="" >-->
-                          <!--<div class="media">-->
-                            <!--<div class="media-body">-->
-                              <!--<div class="title">Invoice</div>-->
-                              <!--<div class="subTitle">Generate and Download</div>-->
-                            <!--</div>-->
-                          <!--</div>-->
-                        <!--</a>-->
-                    <!--</li>-->
-                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="invoice2">
+                    <li ng-if="canUpdate && sharedEntity === 'COMPANY'" class="dmLi" ui-sref="invoice2">
                       <a href="" >
                         <div class="media">
                           <div class="media-body">
@@ -91,7 +61,7 @@
                         </div>
                       </a>
                     </li>
-                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="inventory" ui-sref-opts="{reload: true, notify: true}">
+                    <li ng-if="canUpdate && sharedEntity === 'COMPANY'" class="dmLi" ui-sref="inventory" ui-sref-opts="{reload: true, notify: true}">
                       <a href="" >
                         <div class="media">
                           <div class="media-body">
@@ -101,7 +71,7 @@
                         </div>
                       </a>
                     </li>
-                    <li ng-if="canUpdate && sharedEntity == null" class="dmLi" ui-sref="recurring-entry">
+                    <li ng-if="canUpdate && sharedEntity === 'COMPANY'" class="dmLi" ui-sref="recurring-entry">
                       <a href="" >
                         <div class="media">
                           <div class="media-body">
@@ -121,7 +91,7 @@
                           </div>
                         </a>
                     </li>
-                    <li ng-if="sharedEntity == null" class="dmLi" ui-sref="audit-logs">
+                    <li ng-if="sharedEntity === 'COMPANY'" class="dmLi" ui-sref="audit-logs">
                         <a href="" >
                           <div class="media">
                             <div class="media-body">
@@ -131,7 +101,7 @@
                           </div>
                         </a>
                     </li>
-                    <li ng-if="sharedEntity != 'accounts'" class="dmLi" ui-sref="search">
+                    <li ng-if="sharedEntity === 'COMPANY'" class="dmLi" ui-sref="search">
                         <a href="" >
                           <div class="media">
                             <div class="media-body">
@@ -141,37 +111,7 @@
                           </div>
                         </a>
                     </li>
-<!--                     <li class="dmLi" ui-sref="manufacturing">
-                        <a href="" >
-                          <div class="media">
-                            <div class="media-body">
-                              <div class="title">Manufacturing</div>
-                              <div class="subTitle">View all your creditors</div>
-                            </div>
-                          </div>
-                        </a>
-                    </li> -->
-<!--                     <li ng-if="canUpdate && sharedEntity == null" class="dmLi trialB" ui-sref="company.content.manage">
-                      <a href="">
-                        <div class="media">
-                          <div class="media-body">
-                            <div class="title">Manage Company</div>
-                            <div class="subTitle">All your <b>Groups, accounts</b> at one place.</div>
-                          </div>
-                        </div>
-                      </a>
-                    </li> -->
-<!--                 <li class="dmLi" ui-sref="company.content.ledger">
-                    <a href="" >
-                      <div class="media">
-                        <div class="media-body">
-                          <div class="title">ledger</div>
-                          <div class="subTitle">View all your creditors</div>
-                        </div>
-                      </div>
-                    </a>
-                </li> -->
-              </ul>
+                  </ul>
                 </perfect-scrollbar>
               </div> 
             </li>
