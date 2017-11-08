@@ -312,7 +312,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         }
       }
       mc.selectedType = 'acc'
-    mc.gstDetail = []
+    # mc.gstDetail = []
     # if mc.gstDetail.length < 1
     #   mc.addNewGst()
     mc.createNewGrp = false
@@ -516,7 +516,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.showBreadCrumbs(data.parentGroups)
     mc.selectedAcc = res.body
     mc.columns.length = mc.getCurrentColIndex+1
-    mc.gstDetail = res.body.gstDetails
+    mc.gstDetail = res.body.addresses
     mc.getColsCount()
     if mc.selectedAcc.country.countryCode == null
       mc.selectedAcc.country = ''
@@ -525,33 +525,33 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     # mc.fetchingUnq = false
     
     if mc.AccountCategory == 'assets' || mc.AccountCategory == 'liabilities'
+      if mc.gstDetail.length < 1
+        mc.addNewGst()
       mc.accState(mc.selectedAcc.stateCode, mc.selectedAcc)
       if mc.gstDetail
         mc.setStateCode(mc.gstDetail)
     
 
   mc.addNewGst = () ->
-    if mc.selectedAcc.addresses || (!mc.selectedAcc.addresses || !mc.selectedAcc.addresses.length)
+    if mc.gstDetail || (!mc.gstDetail || !mc.gstDetail.length)
       gstDetail = {
         gstNumber: "",
-        addressList: [
-            {
-              address:"",
-              stateCode: "",
-              state: ""
-            }
-        ]
+        address: "",
+        stateCode: "",
+        isDefault: ""
       }
       # mc.gstDetail.unshift(gstDetail)
-      if !mc.selectedAcc.addresses
-        mc.selectedAcc.addresses = []
-      mc.selectedAcc.addresses.unshift(gstDetail)
+      if !mc.gstDetail
+        mc.gstDetail = []
+      mc.gstDetail.unshift(gstDetail)
     else 
       toastr.error("Please fill GSTIN field first")
 
   mc.deleteGst = (obj, i) ->
     # mc.gstDetail.splice(i,1)
-    mc.selectedAcc.addresses.splice(i,1)
+    mc.gstDetail.splice(i,1)
+    if mc.gstDetail.length < 1
+      mc.addNewGst()
 
   mc.getAccDtlFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
@@ -815,23 +815,24 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.addAccount = () ->
     unqNamesObj = mc.setAdditionalAccountDetails()
-    mc.selectedAcc.addresses = mc.removeBlankGst(mc.selectedAcc.addresses)
-    # mc.selectedAcc.gstDetails = mc.gstDetail
+    mc.gstDetail = mc.removeBlankGst(mc.gstDetail)
     
     if (mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors')
       if mc.selectedAcc.country.countryCode == 'IN' 
-        defaultAddress = mc.selectedAcc.addresses[0]
-        if !defaultAddress || !defaultAddress.stateCode
+        defaultAddress = _.filter(mc.gstDetail, (obj) -> obj.stateCode != "")
+        if !defaultAddress.length > 0 || !defaultAddress[0].stateCode
           toastr.warning("State field can't be empty.")
+          if mc.gstDetail.length <1
+            mc.addNewGst()
           return false
 
-    if mc.grpCategory == 'assets' || mc.grpCategory == 'liabilities'
-      if mc.gstDetail.length
-        if !mc.selectedAcc.gstIn
-          toastr.error("You cannot leave GSTIN field blank, while adding multiple GSTIN.")
-          return false
+    # if mc.grpCategory == 'assets' || mc.grpCategory == 'liabilities'
+    #   if mc.gstDetail.length
+    #     if !mc.selectedAcc.gstIn
+    #       toastr.error("You cannot leave GSTIN field blank, while adding multiple GSTIN.")
+    #       return false
 
-    delete mc.selectedAcc.stateName
+    mc.selectedAcc.addresses = mc.gstDetail
 
     accountService.createAc(unqNamesObj, mc.selectedAcc).then(mc.addAccountSuccess, mc.addAccountFailure)
     mc.stateDetail = mc.stateDetail
@@ -853,19 +854,17 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     mc.updateBreadCrumbs = true
     mc.createNewAcc = true
     mc.isIndia = true
+    mc.gstDetail = []
+    mc.addNewGst()
     # mc.createNewForm()
     # mc.columns = []
     # mc.getGroups()
     
   mc.addAccountFailure = (res) ->
-    # if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
-    #   if mc.gstDetail.length < 1
-    #     mc.addNewGst()
     mc.selectedAcc = res.config.data
-    mc.selectedAcc.stateName = {
-      code: res.config.data.stateCode,
-      name: res.config.data.state
-    }
+    if mc.AccountCategory == 'assets' || mc.AccountCategory == 'liabilities'
+      if res.config.data.addresses.length < 1
+        mc.addNewGst()
     toastr.error(res.data.message, res.data.status)
 
 
@@ -879,6 +878,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     delete mc.selectedAcc.stocks
     delete mc.selectedAcc.createdBy
     delete mc.selectedAcc.role
+    mc.gstDetail = mc.removeBlankGst(mc.gstDetail)
 
     if mc.selectedAcc.openingBalanceType == null
       mc.selectedAcc.openingBalanceType = 'credit'
@@ -895,25 +895,24 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
     if (mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors')
       if mc.selectedAcc.country.countryCode == 'IN'
-        defaultAddress = mc.selectedAcc.addresses.find(obj) -> obj.isDefault == true
-        if !defaultAddress || !defaultAddress.stateCode
+        defaultAddress = _.filter(mc.gstDetail, (obj) -> obj.stateCode != "")
+        if !defaultAddress.length>0 || !defaultAddress[0].stateCode
           toastr.warning("State field can't be empty.")
+          if mc.gstDetail.length <1
+            mc.addNewGst()
           return false
 
-    mc.selectedAcc.addresses = mc.removeBlankGst(mc.selectedAcc.addresses)
-
-    if mc.AccountCategory == 'assets' || mc.AccountCategory == 'liabilities'
-      if mc.gstDetail && mc.gstDetail.length < 2 && !mc.selectedAcc.gstIn
-        mc.gstDetail = []
-      if mc.gstDetail && mc.gstDetail.length
-        if !mc.selectedAcc.gstIn
-          toastr.error("You cannot leave GSTIN field blank, while adding multiple GSTIN.")
-          return false 
-
-    delete mc.selectedAcc.stateName
     
-    mc.gstDetail = _.reject(mc.gstDetail, (gst) -> gst.addressList[0].isDefault )
-    mc.selectedAcc.gstDetails = mc.gstDetail
+
+    # if mc.AccountCategory == 'assets' || mc.AccountCategory == 'liabilities'
+    #   if mc.gstDetail && mc.gstDetail.length < 2 && !mc.selectedAcc.gstIn
+    #     mc.gstDetail = []
+    #   if mc.gstDetail && mc.gstDetail.length
+    #     if !mc.selectedAcc.gstIn
+    #       toastr.error("You cannot leave GSTIN field blank, while adding multiple GSTIN.")
+    #       return false 
+    
+    mc.selectedAcc.addresses = mc.gstDetail
 
     accountService.updateAc(unqNamesObj, mc.selectedAcc).then(mc.updateAccountSuccess,
         mc.updateAccountFailure)
@@ -941,16 +940,14 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
     angular.merge(mc.selAcntPrevObj, res.body)
     mc.columns[mc.columns.length-1].accounts.splice(mc.currentAccIndex, 1, res.body)
     mc.getAccDetail(mc.selectedAcc, mc.getCurrentColIndex, mc.currentAccIndex)
+    if res.body.addresses.length < 1
+      mc.addNewGst()
 
   mc.updateAccountFailure = (res) ->
-    # if mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors'
-    #   if mc.gstDetail.length < 1
-    #     mc.addNewGst()
     mc.selectedAcc = res.config.data
-    mc.selectedAcc.stateName = {
-      code: res.config.data.stateCode,
-      name: res.config.data.state
-    }
+    if mc.AccountCategory == 'assets' || mc.AccountCategory == 'liabilities'
+      if res.config.data.addresses.length < 1
+        mc.addNewGst()
     toastr.error(res.data.message, res.data.status)
 
 
@@ -1422,7 +1419,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.toggleList = () ->
     if mc.showDefaultGstList
-      mc.showDefaultGst = mc.selectedAcc.addresses.length
+      mc.showDefaultGst = mc.gstDetail.length
     else
       mc.showDefaultGst = 2
     mc.showDefaultGstList = !mc.showDefaultGstList
@@ -1449,10 +1446,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.setStateCode = (gstList) ->
     if gstList.length > 0
       _.each gstList, (item) ->
-        if item.addressList[0].stateCode
-          mc.gstState = _.findWhere($rootScope.stateList, {code:item.addressList[0].stateCode})
-          if mc.gstState
-            item.addressList[0].stateName = mc.gstState
+        if item.stateCode
+          state = _.findWhere($rootScope.stateList, {code:item.stateCode})
+          if state
+            item.stateName = state
 
 
   mc.accState = (val,item) ->
@@ -1491,10 +1488,10 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
 
   mc.removeBlankGst = (gstList) ->
     if gstList && gstList.length > 0
-      _.each gstList, (item) ->
-        if item.gstNumber == ""
+      _.each gstList, (item, i) ->
+        console.log i
+        if !item.address && !item.stateCode
           gstList = _.without(gstList, item)
-        delete item.stateName
     return gstList
       # mc.deleteDuplicateState(gstList)
     
@@ -1545,6 +1542,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
         countryName: "India"
       }
     }
+    mc.addNewGst()
     mc.showOnUpdate = false
     mc.isIndia = true
 
@@ -1578,8 +1576,12 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.deleteDuplicateState = (gstList) ->
     console.log gstList
     _.each gstList, (item) ->
-      delete item.addressList[0].stateName
+      delete item.stateName
     mc.gstDetail = gstList
+
+  mc.setAddressState = (state, gst) ->
+    gst.stateCode = state.code
+    console.log(state,gst)
 
   return mc
 
