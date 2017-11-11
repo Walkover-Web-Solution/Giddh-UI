@@ -24,23 +24,23 @@
                   <input type="text" name="accName" maxlength="100" ng-disabled="mc.isFixedAcc" class="form-control" ng-model="mc.selectedAcc.name" ng-model-options="{debounce:1000}" required />
                </div>
             </div>
-         </div>
-         <div class="form-group clearfix mrB">
-            <div class="col-xs-5">
+            <div class="col-xs-6">
                <div class="row">
                   <label>Unique Name</label>
                   <input type="text"  class="form-control" name="accUnq" ng-model="mc.selectedAcc.uniqueName" valid-unique
                      ng-model="mc.selectedAcc.uniqueName" ng-disabled="mc.isFixedAcc" ng-change="mc.removeSpace(mc.selectedAcc.uniqueName, mc.selectedAcc)" required />
                </div>
             </div>
-            <div class="col-xs-7 pdR0">
+         </div>
+         <div class="form-group clearfix mrB">
+            <div class="col-xs-6 pd0">
                <label class="col-xs-12 row">Opening Balance</label>
                <div class="col-xs-8">
                   <div class="row">
                      <input type="text" class="form-control" name="openingBalance" ng-model="mc.selectedAcc.openingBalance" valid-number  />
                   </div>
                </div>
-               <div class="col-xs-4">
+               <div class="col-xs-4 pdR0">
                   <div class="row">
                      <div class="form-inline">
                         <select class="form-control col-md-3" name="openingBalanceType" ng-model="mc.selectedAcc.openingBalanceType">
@@ -50,6 +50,39 @@
                         <span class="select_drop"><i class="fa fa-caret-down"></i></span>
                      </div>
                   </div>
+               </div>
+            </div>
+            <div class="col-xs-6">
+               <div class="row">
+                  <label>Currency <small ng-if="mc.isMultipleCurrency">(Company)</small></label>
+                  <input type="text" ng-disabled="true"  class="form-control" name="currency" ng-model="mc.baseCurrency"/>
+               </div>
+            </div>
+         </div>
+         <div class="form-group clearfix mrB" ng-if="mc.isMultipleCurrency">
+            <div class="col-xs-6 pd0">
+               <label class="col-xs-12 row">Opening Balance</label>
+               <div class="col-xs-8">
+                  <div class="row">
+                     <input type="text" class="form-control" name="foreignOpeningBalance" ng-model="mc.selectedAcc.foreignOpeningBalance" valid-number  />
+                  </div>
+               </div>
+               <div class="col-xs-4 pdR0">
+                  <div class="row">
+                     <div class="form-inline">
+                        <select class="form-control col-md-3" name="openingBalanceType" ng-model="mc.selectedAcc.openingBalanceType">
+                           <option value="DEBIT">Debit</option>
+                           <option value="CREDIT">Credit</option>
+                        </select>
+                        <span class="select_drop"><i class="fa fa-caret-down"></i></span>
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="col-xs-6">
+               <div class="row">
+                  <label>Currency <small>(Account)</small></label>
+                  <input type="text"  class="form-control" name="accCurrency" ng-model="mc.selectedAcc.currency" />
                </div>
             </div>
          </div>
@@ -125,7 +158,7 @@
 
             <div class="clearfix detailed">
 
-            <div class="clearfix">
+            <!--<div class="clearfix">
             
               <div class="form-group mrB col-xs-7 pd0">
                  <label>Address</label>
@@ -148,25 +181,25 @@
                  </ui-select>
               </div>
 
-            </div>
-            <div ng-show="((mc.breadCrumbList[1].uniqueName == 'sundrycreditors' || mc.breadCrumbList[1].uniqueName == 'sundrydebtors') && mc.selectedAcc.country.countryCode == 'IN') || mc.isIndia">
+            </div>-->
+            <div ng-show="((mc.AccountCategory == 'assets' || mc.AccountCategory == 'liabilities') && mc.selectedAcc.country.countryCode == 'IN') || mc.isIndia">
 
               <ul class="gstList" ng-if="mc.gstDetail.length">
                 
                 <hr class="mrT2 mrB2" />
 
-                <li ng-repeat="gst in mc.gstDetail | limitTo:mc.showDefaultGst" class="pos-rel gst clearfix" ng-hide="gst.addressList[0].isDefault">
+                <li ng-repeat="gst in mc.gstDetail | limitTo:mc.showDefaultGst" class="pos-rel gst clearfix">
                   <div class="form-group mrB col-xs-7 pd0">
                    <label>Address</label>
-                   <textarea ng-model="gst.addressList[0].address" class="form-control" rows="4" name="gstAddress" placeholder="405, Indore, India" style="height: 97px;"  maxlength="120"></textarea>
+                   <textarea ng-model="gst.address" class="form-control" rows="4" name="gstAddress" placeholder="405, Indore, India" style="height: 97px;"  maxlength="120"></textarea>
                   </div>
                   <div class="form-group mrB col-xs-5">
                     <label>GSTIN</label>
                     <input type="text" type="text" class="form-control" ng-model="gst.gstNumber" ng-keyup="mc.getStateCode(gst.gstNumber, gst)" maxlength="15" name="gstNumber" placeholder="GSTIN"  />
                   </div>
-                  <div class="form-group mrB col-xs-5 stateList">
+                  <div class="form-group mrB col-xs-5 stateList" ng-init="mc.getStateCode(gst.gstNumber, gst)">
                    <label>State</label>
-                      <ui-select ng-model="gst.addressList[0].stateName" theme="bootstrap" ng-disabled="true" on-select="">
+                      <ui-select ng-model="gst.stateName" theme="bootstrap" on-select="mc.setAddressState(gst.stateName, gst)" ng-disabled="gst.gstNumber.length >=2">
                         <ui-select-match placeholder="Select State">
                           <span>{{$select.selected.code}} - {{$select.selected.name}}</span>
                         </ui-select-match>
@@ -181,7 +214,7 @@
               </ul>
 
               <span class="clearfix gst_cta mrT1">
-                <a href="javascript:void(0);" class="pull-left gstbtn pdR1 cursor-pointer" ng-click="mc.toggleList()" ng-if="(mc.showDefaultGstList && mc.gstDetail.length && mc.gstDetail.length > 2 && !mc.showOnUpdate) || (mc.showOnUpdate && mc.gstDetail.length > 3 && mc.showDefaultGstList)">Show all <span ng-if="mc.showOnUpdate">({{mc.gstDetail.length-1}})</span><span ng-if="!mc.showOnUpdate">({{mc.gstDetail.length}})</span> </a>
+                <a href="javascript:void(0);" class="pull-left gstbtn pdR1 cursor-pointer" ng-click="mc.toggleList()" ng-if="(mc.showDefaultGstList && mc.gstDetail.length && mc.gstDetail.length > 2 && !mc.showOnUpdate) || (mc.showOnUpdate && mc.gstDetail.length > 2 && mc.showDefaultGstList)">Show all <span ng-if="mc.showOnUpdate">({{mc.gstDetail.length}})</span><span ng-if="!mc.showOnUpdate">({{mc.gstDetail.length}})</span> </a>
                 <a href="javascript:void(0);" class="pull-left gstbtn pdR1 cursor-pointer" ng-click="mc.toggleList()" ng-if="!mc.showDefaultGstList && mc.gstDetail.length > 2">Show less </a>
 
                 <a href="javascript:void(0);" class="pull-right gstbtn pdR1 cursor-pointer" ng-click="mc.addNewGst()"><i class="fa fa-plus cursor-pointer" aria-hidden="true"></i> Add more </a>  

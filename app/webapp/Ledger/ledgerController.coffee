@@ -180,7 +180,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     ledgerCtrl.accountUnq = res.body.uniqueName
     ledgerCtrl.getTransactions(0)
     ############## comment due to saltegde ########### 
-    # ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
+    ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
     ############## comment due to saltegde ########### 
 
     $rootScope.getFlatAccountList($rootScope.selectedCompany.uniqueName)
@@ -190,10 +190,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     
     ledgerCtrl.getUnderstanding(res.body)
     ############## comment due to saltegde ########### 
-    # if res.body.yodleeAdded == true && $rootScope.canUpdate
-    #   $timeout ( ->
-    #     ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
-    #   ), 2000
+    if res.body.yodleeAdded == true && $rootScope.canUpdate
+      $timeout ( ->
+        ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
+      ), 2000
     ############## comment due to saltegde ########### 
 
   ledgerCtrl.hideEledger = () ->
@@ -263,7 +263,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
         if matchingEntries.length == 1
           console.log matchingEntries.length
           ############## comment due to saltegde ###########
-          # ledgerCtrl.confirmBankTransactionMap(matchingEntries[0], ledgerCtrl.selectedLedger)
+          ledgerCtrl.confirmBankTransactionMap(matchingEntries[0], ledgerCtrl.selectedLedger)
           ############## comment due to saltegde ###########
         else if matchingEntries.length >1
           ledgerCtrl.showBankEntriesToMap(matchingEntries)
@@ -307,7 +307,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       toastr.success(res.body)
       # ledgerCtrl.getPaginatedLedger(ledgerCtrl.currentPage)
       ############## comment due to saltegde ###########
-      # ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
+      ledgerCtrl.getBankTransactions($rootScope.selectedAccount.uniqueName)
       ############## comment due to saltegde ###########
       ledgerCtrl.getTransactions(ledgerCtrl.currentPage)
 

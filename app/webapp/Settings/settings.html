@@ -410,7 +410,7 @@
 
 
         <!--linked bank accounts section-->
-        <!-- <uib-tab heading="{{tabs[3].title}}" active="tabs[3].active" select="loadYodlee(); setTab(3)">
+        <uib-tab heading="{{tabs[3].title}}" active="tabs[3].active" select="loadYodlee(); setTab(3)">
           <div class="pd2 clearfix">
             <h1 class="mrB1">Add Bank Account </h1>
             <button ng-click="connectBank()" class="btn btn-primary">Connect Bank</button>
@@ -478,7 +478,7 @@
               </div>
             </div>
           </div>
-        </uib-tab> -->
+        </uib-tab>
         <!-- end of yodlee tabs -->
 
         <uib-tab heading="{{tabs[4].title}}" active="tabs[4].active" select="getRazorPayDetails(); setTab(4);showRazorPayTab=true">
@@ -648,14 +648,21 @@
                       </div>
                     </div>
                     <div class="col-xs-8">
-                      <div class="form-group"
+                      <!--<div class="form-group"
                            ng-class="(cmpnyBascFrm.cPincode.$valid  && cmpnyBascFrm.cPincode.$touched) ? 'has-success' : (cmpnyBascFrm.cPincode.$touched) ? 'has-error' : '' ">
-                        <label>Pincode</label>
-                        <input type="text" ng-model="selectedCompany.pincode" class="form-control" required
-                               pattern="^[0-9]*$" name="cPincode" tabindex="10" valid-number>
-
+                        <label>Multicurrency?</label>
+                        <input type="checkbox" ng-model="selectedCompany.isMultipleCurrency" name="multiCurrency" tabindex="10">
+                      </div>-->
+                      <div class="form-group pdT2">
+                          <div class="checkbox">
+                              <label ng-click="$event.stopPropagation()">
+                                  <input type="checkbox" ng-model="selectedCompany.isMultipleCurrency" name="multiCurrency">Multicurrency?
+                              </label>
+                          </div>
                       </div>
                     </div>
+                  </div>
+                  <div class="row">
                     <div class="col-xs-4">
                       <div class="form-group"
                            ng-class="(cmpnyBascFrm.cpanNumber.$valid  && cmpnyBascFrm.cpanNumber.$touched) ? 'has-success' : (cmpnyBascFrm.cpanNumber.$touched) ? 'has-error' : '' ">
@@ -664,6 +671,15 @@
 
                       </div>
                       <div ng-if="invalidPan"><p class="alert alert-danger pd1">Invalid PAN Number</p></div>
+                    </div>
+                    <div class="col-xs-8">
+                      <div class="form-group"
+                           ng-class="(cmpnyBascFrm.cPincode.$valid  && cmpnyBascFrm.cPincode.$touched) ? 'has-success' : (cmpnyBascFrm.cPincode.$touched) ? 'has-error' : '' ">
+                        <label>Pincode</label>
+                        <input type="text" ng-model="selectedCompany.pincode" class="form-control" required
+                               pattern="^[0-9]*$" name="cPincode" tabindex="10" valid-number>
+
+                      </div>
                     </div>
                   </div>
                 </div>
