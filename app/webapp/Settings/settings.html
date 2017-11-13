@@ -761,12 +761,13 @@
             </div>
             
             <div ng-repeat="usrGrp in sharedUsersList">
-              <div class="lead mrB1">{{usrGrp.name}}</div>
-              <div class="mrB1"><i class="fa fa-user"></i> {{usrGrp.rows[0].userUniqueName}}</div>
-              <table width="100%" class="table bdrB">
+              <table width="100%" class="table mrB">
                 <tbody>
                   <tr ng-repeat="user in usrGrp.rows">
-                    <td width="30%">&nbsp;</td>
+                    <td width="30%">
+                      <div class="lead mrB1">{{usrGrp.name}}</div>
+                      <div class="mrB1"><i class="fa fa-user"></i> {{usrGrp.rows[0].userUniqueName}}</div>
+                    </td>
                     <td width="16%">
                       <input class="form-control" value="{{user.roleName}}">
                     </td>
