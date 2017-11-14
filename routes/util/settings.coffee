@@ -11,7 +11,7 @@ module.exports.giddhPdfPath = "/home/app-downloads/"
 # module.exports.giddhPdfPath = "/tmp/"
 
 # module.exports.envUrl = process.env.API_URL || "http://apitest.giddh.com/"
-module.exports.envUrl = "http://apidev.giddh.com/"
+module.exports.envUrl = "http://apitest.giddh.com/"
 #module.exports.envUrl = "http://giddh-api-dev.eu-west-1.elasticbeanstalk.com/"
 #module.exports.envUrl = "http://localapi.giddh.com/"
 module.exports.googleKey = process.env.GOOGLE_KEY || "eWzLFEb_T9VrzFjgE40Bz6_l"
