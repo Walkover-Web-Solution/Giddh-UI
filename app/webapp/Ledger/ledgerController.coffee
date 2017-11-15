@@ -2459,7 +2459,10 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       name:ledgerCtrl.newAccountModel.account
       openingBalanceDate: $filter('date')(ledgerCtrl.today, "dd-MM-yyyy")
       uniqueName:ledgerCtrl.newAccountModel.accUnqName
-      addresses: []
+      addresses: [{
+        gstNumber: ''
+        stateCode: ''
+        }]
     }
     if ledgerCtrl.newAccountModel.showGstBox
       if ledgerCtrl.newAccountModel.category
