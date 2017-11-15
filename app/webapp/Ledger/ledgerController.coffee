@@ -2459,6 +2459,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       name:ledgerCtrl.newAccountModel.account
       openingBalanceDate: $filter('date')(ledgerCtrl.today, "dd-MM-yyyy")
       uniqueName:ledgerCtrl.newAccountModel.accUnqName
+      addresses: []
     }
     if ledgerCtrl.newAccountModel.showGstBox
       if ledgerCtrl.newAccountModel.category
@@ -2474,8 +2475,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
             toastr.warning("State field can't be empty.")
             return
       if ledgerCtrl.newAccountModel.gstNumber.length >1
-        newAccount.gstIn = ledgerCtrl.newAccountModel.gstNumber
-      newAccount.stateCode = ledgerCtrl.newAccountModel.state.code
+        newAccount.addresses[0].gstNumber = ledgerCtrl.newAccountModel.gstNumber
+      newAccount.addresses[0].stateCode = ledgerCtrl.newAccountModel.state.code
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: ledgerCtrl.newAccountModel.group.groupUniqueName
