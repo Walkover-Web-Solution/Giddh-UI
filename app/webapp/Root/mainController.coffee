@@ -466,8 +466,12 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   #get company list failure
   $scope.getCompanyListFailure = (res)->
+    $scope.createNewCompany()
     $rootScope.CompanyList = []
+    if !$scope.companyList
+      $scope.companyList = []
     toastr.error(res.data.message, res.data.status)
+    return false
 
   $rootScope.setCompany = (company) ->
     $rootScope.selectedCompany = company
@@ -960,7 +964,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.redirectAccordingToCondition=(data)->
     
     company = _.findWhere($scope.companyList, {uniqueName:data.companyUniqueName})
-
+    if !company && $rootScope.selectedCompany 
+      company = $rootScope.selectedCompany
+    if !company
+      return false
     localStorageService.set('_selectedCompany', company)
     $rootScope.selectedCompany = company
     $scope.changeCompany(company, 0, 'CHANGE')
