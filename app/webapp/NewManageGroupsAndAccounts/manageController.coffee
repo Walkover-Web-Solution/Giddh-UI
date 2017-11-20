@@ -1486,7 +1486,7 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
   mc.removeBlankGst = (gstList) ->
     if gstList && gstList.length > 0
       _.each gstList, (item, i) ->
-        console.log i
+        # console.log i
         if !item.address && !item.stateCode
           gstList = _.without(gstList, item)
     return gstList
@@ -1571,14 +1571,14 @@ manageController = ($scope, $rootScope, localStorageService, groupService, toast
       mc.isIndia = true
 
   mc.deleteDuplicateState = (gstList) ->
-    console.log gstList
+    # console.log gstList
     _.each gstList, (item) ->
       delete item.stateName
     mc.gstDetail = gstList
 
   mc.setAddressState = (state, gst) ->
     gst.stateCode = state.code
-    console.log(state,gst)
+    # console.log(state,gst)
 
   return mc
 
