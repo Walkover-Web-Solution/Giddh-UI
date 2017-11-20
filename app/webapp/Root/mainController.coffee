@@ -325,6 +325,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $scope.companyList = _.without($scope.companyList, $scope.beforeDeleteCompany.company)
     $rootScope.getCompanyList()
     $scope.beforeDeleteCompany = {}
+    if !$rootScope.CompanyList
+      localStorageService.set("_selectedCompany", null)
+      localStorageService.set("_selectedAccount", null)
     toastr.success("Company deleted successfully", "Success")
 
 #    $scope.getCompanyList()
@@ -470,6 +473,8 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     $rootScope.CompanyList = []
     if !$scope.companyList
       $scope.companyList = []
+    localStorageService.set("_selectedCompany", null)
+    localStorageService.set("_selectedCompany", null)
     toastr.error(res.data.message, res.data.status)
     return false
 
