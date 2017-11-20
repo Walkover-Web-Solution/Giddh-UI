@@ -2646,6 +2646,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ###################### on dom ready funcs ###########
   # $timeout(->,3000)
   $timeout(->
+    companyExist = localStorageService.get("_selectedCompany")
+    if !companyExist
+      return false
     if ledgerCtrl.accountUnq then ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq) else ledgerCtrl.loadDefaultAccount()
 
     ledgerCtrl.getDiscountGroupDetail()
