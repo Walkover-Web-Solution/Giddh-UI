@@ -2480,6 +2480,8 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       if ledgerCtrl.newAccountModel.gstNumber.length >1
         newAccount.addresses[0].gstNumber = ledgerCtrl.newAccountModel.gstNumber
       newAccount.addresses[0].stateCode = ledgerCtrl.newAccountModel.state.code
+    else 
+      delete newAccount.addresses
     unqNamesObj = {
       compUname: $rootScope.selectedCompany.uniqueName
       selGrpUname: ledgerCtrl.newAccountModel.group.groupUniqueName
