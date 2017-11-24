@@ -136,7 +136,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       compUname : $rootScope.selectedCompany.uniqueName
       acntUname : 'cash'
     }
-    if $rootScope.selectedCompany.role.uniqueName == 'shared'
+    if $rootScope.selectedCompany.userEntityRoles[0].role.uniqueName == 'shared'
       sortedAccList = ledgerCtrl.sortFlatAccListAlphabetically($rootScope.fltAccntListPaginated, 'uniqueName')
       if sortedAccList.length > 0
         unqObj.acntUname = sortedAccList[0]
@@ -165,7 +165,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       )
 
   ledgerCtrl.getAccountDetailFailure = (res) ->
-    if ledgerCtrl.accountUnq != 'sales' && $rootScope.selectedCompany.role.uniqueName != 'shared'
+    if ledgerCtrl.accountUnq != 'sales' && $rootScope.selectedCompany.userEntityRoles[0].role.uniqueName != 'shared'
       toastr.error(res.data.message, res.data.status)
     else
       sortedAccList = ledgerCtrl.sortFlatAccListAlphabetically($rootScope.fltAccntListPaginated, 'uniqueName')
@@ -204,7 +204,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       compUname : $rootScope.selectedCompany.uniqueName
       acntUname : accountUniqueName
     }
-    if $rootScope.selectedCompany.role.uniqueName.indexOf('admin') isnt -1 and ledgerCtrl.checkIfParentGroupIsBankAcc()
+    if $rootScope.selectedCompany.userEntityRoles[0].role.uniqueName.indexOf('admin') isnt -1 and ledgerCtrl.checkIfParentGroupIsBankAcc()
       # get other ledger transactions
       ledgerService.getOtherTransactions(unqObj)
       .then(
@@ -1406,7 +1406,7 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
 
   ledgerCtrl.exportLedger = (type)->
     ledgerCtrl.showExportOption = false
-    if $rootScope.selectedCompany.role.uniqueName == "view_only" || $rootScope.selectedCompany.role.uniqueName == "edit"
+    if $rootScope.selectedCompany.userEntityRoles[0].role.uniqueName == "view_only" || $rootScope.selectedCompany.userEntityRoles[0].role.uniqueName == "edit"
       detailStr = "detailed"
       condensedStr = "condensed"
       if type.indexOf(detailStr) != -1
@@ -2652,6 +2652,9 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
   ###################### on dom ready funcs ###########
   # $timeout(->,3000)
   $timeout(->
+    companyExist = localStorageService.get("_selectedCompany")
+    if !companyExist
+      return false
     if ledgerCtrl.accountUnq then ledgerCtrl.getAccountDetail(ledgerCtrl.accountUnq) else ledgerCtrl.loadDefaultAccount()
 
     ledgerCtrl.getDiscountGroupDetail()

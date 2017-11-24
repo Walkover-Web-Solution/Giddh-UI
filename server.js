@@ -161,6 +161,7 @@ var invoiceUpload = require('./public/routes/webapp/invoiceUpload')
 var stateDetails = require('./public/routes/webapp/stateDetails')
 var invoiceModule = require('./invoice/invoiceModule')
 var voucherModule = require('./voucher/voucherModule')
+var permissionRoles = require('./public/routes/webapp/permissionRoles')
 // var invoicePay = require('./public/routes/website/main')
 
 app.use('/time-test', timetest);
@@ -194,6 +195,7 @@ app.use('/magic-link', magicLink);
 app.use('/invoice-pay-request', websiteRoutes);
 app.use('/invoice',invoiceModule);
 app.use('/voucher',voucherModule);
+app.use('/company/:companyUniqueName/role', permissionRoles);
 
 
 

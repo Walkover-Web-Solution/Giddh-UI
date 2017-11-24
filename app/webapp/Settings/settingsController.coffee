@@ -1194,7 +1194,12 @@ settingsController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServ
     companyServices.shredList(uniqueName).then($scope.getSharedUserListSuccess, $scope.getSharedUserListFailure)
 
   $scope.getSharedUserListSuccess = (res) ->
-    $scope.sharedUsersList = res.body
+    sortedArr = _.groupBy(res.body, 'userName')
+    arr = []
+    _.each(sortedArr, (value, key) ->
+      arr.push({ name: key, rows: value });
+    )
+    $scope.sharedUsersList = _.sortBy(arr, ['name'])
 
   $scope.getSharedUserListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)

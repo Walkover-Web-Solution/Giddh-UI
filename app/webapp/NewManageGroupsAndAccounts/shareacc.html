@@ -9,7 +9,7 @@
          <div class="add_mailer">
             <form name="shareAccountForm" novalidate class="form-inline" autocomplete="off" ng-disabled="!canUpdate">
                <div class="input-group col-xs-8">
-                  <input required name="userEmail" type="email" ng-model="mc.shareAccountObj.user" placeholder="Email ID" class="form-control" />
+                  <input required name="userEmail" type="email" ng-model="mc.shareAccountObj.emailId" placeholder="Email ID" class="form-control" />
                   <div class="input-group-btn">
                      <button ng-disabled="shareAccountForm.$invalid" class="btn btn-success mrL1" ng-click="mc.shareAccount()">Share</button>
                   </div>
@@ -25,9 +25,9 @@
                            <small class="Useremail">{{value.userEmail}}</small>
                         </span>
                         <span class="form-inline">
-<!--                            <small class="">{{value.role.name}}</small> -->
+                           <!-- <small class="">{{value.role.name}}</small> -->
                            <span class="delIcon pull-right">
-                           <i ng-click="mc.unShareAccount(value.userUniqueName)" class="fa fa-times" aria-hidden="true"></i>
+                           <i ng-click="mc.unShareAccount(value)" class="fa fa-times" aria-hidden="true"></i>
                            </span>
                         </span>
                      </li>
