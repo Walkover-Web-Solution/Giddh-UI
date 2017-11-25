@@ -27,7 +27,8 @@ giddh.serviceModule.service 'roleServices', ($resource, $q) ->
         url: '/company/:companyUniqueName/role/:roleUniqueName/assign'
       revoke:
         method: 'POST'
-        url: '/company/:companyUniqueName/role/:roleUniqueName/revoke'
+        # url: '/company/:companyUniqueName/role/:roleUniqueName/revoke'
+        url: '/company/:companyUniqueName/uer/:roleUniqueName'
     })
 
   roleServices =
