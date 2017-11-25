@@ -1,5 +1,5 @@
 "use strict"
-companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService, accountService, $filter, $http, $location) ->
+companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServices, roleServices, currencyService, locationService, modalService, localStorageService, toastr, userServices, Upload, DAServices, $state, permissionService, $stateParams, couponServices, groupService, accountService, $filter, $http, $location) ->
 
   #make sure managecompanylist page not load
   $rootScope.mngCompDataFound = false
@@ -20,7 +20,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
   $scope.companyDetails = {}
   $scope.currencyList = []
   $scope.currencySelected = undefined
-  $scope.shareRequest = {role: 'view_only', user: null}
+  $scope.shareRequest = {}
   # userController methods
   $scope.payAlert = []
   $scope.wlt = {}
@@ -276,36 +276,47 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
 
   #share and manage permission in manage company
   $scope.shareCompanyWithUser = () ->
-    if _.isEqual($scope.shareRequest.user, $rootScope.basicInfo.email)
+    if _.isEqual($scope.shareRequest.emailId, $rootScope.basicInfo.email)
       toastr.error("You cannot add yourself.", "Error")
       return
-    companyServices.share($rootScope.selectedCompany.uniqueName, $scope.shareRequest).then($scope.onShareCompanySuccess,
-      $scope.onShareCompanyFailure)
+    obj =
+      compUname: $rootScope.selectedCompany.uniqueName
+      roleUname: $scope.shareRequest.roleUniqueName
+    roleServices.share(obj, $scope.shareRequest).then($scope.onShareCompanySuccess, $scope.onShareCompanyFailure)
 
   $scope.onShareCompanySuccess = (res) ->
-    $scope.shareRequest = {role: 'view_only', user: null}
-    toastr.success(res.body, res.status)
+    $scope.initShareObj()
+    toastr.success('Shared successfully with '+ res.body.sharedWith.name, res.status)
     $scope.getSharedUserList($rootScope.selectedCompany.uniqueName)
 
 
   $scope.onShareCompanyFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
+  $scope.initShareObj = () ->
+    $scope.shareRequest = {roleUniqueName: 'admin', emailId: null, entity: 'company'}
+
   #get shared user list
   $scope.getSharedUserList = (uniqueName) ->
-    companyServices.shredList(uniqueName).then($scope.getSharedUserListSuccess, $scope.getSharedUserListFailure)
+    companyServices.shredList(uniqueName).then( $scope.getSharedUserListSuccess, $scope.getSharedUserListFailure)
 
   $scope.getSharedUserListSuccess = (res) ->
-    $scope.sharedUsersList = res.body
+    sortedArr = _.groupBy(res.body, 'userName')
+    arr = []
+    _.each(sortedArr, (value, key) ->
+      arr.push({ name: key, rows: value });
+    )
+    $scope.sharedUsersList = _.sortBy(arr, ['name'])
 
   $scope.getSharedUserListFailure = (res) ->
     toastr.error(res.data.message, res.data.status)
 
   #delete shared user
-  $scope.unSharedUser = (uNqame, id) ->
-    data = {user: uNqame}
-    companyServices.unSharedComp($rootScope.selectedCompany.uniqueName, data).then($scope.unSharedCompSuccess,
-      $scope.unSharedCompFailure)
+  $scope.unSharedUser = (user) ->
+    obj =
+      compUname: $rootScope.selectedCompany.uniqueName
+      roleUname: user.roleUniqueName
+    roleServices.unshare(obj, user).then( $scope.unSharedCompSuccess,  $scope.unSharedCompFailure)
 
   $scope.unSharedCompSuccess = (res) ->
     toastr.success("Company unshared successfully", "Success")
@@ -1611,6 +1622,7 @@ companyController = ($scope, $rootScope, $timeout, $uibModal, $log, companyServi
     $scope.getCurrencyList()
     $scope.getUserDetails()
     # $scope.getCurrentPeriod()
+    $scope.initShareObj()
   ,200)
 
   #fire function after page fully loaded

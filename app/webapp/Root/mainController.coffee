@@ -233,16 +233,14 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.countryCodesList = locationService.getCountryCode()
 
-  $scope.getRoles = () ->
-    roleServices.getAll().then($scope.onGetRolesSuccess, $scope.onGetRolesFailure)
+  $scope.getRoles = (company) ->
+    roleServices.getAll(company.uniqueName).then($scope.onGetRolesSuccess, $scope.onGetRolesFailure)
 
   $scope.onGetRolesSuccess = (res) ->
-#    console.log("roles we have",res.body)
     localStorageService.set("_roles", res.body)
 
   $scope.onGetRolesFailure = (res) ->
     toastr.error("Something went wrong while fetching role", "Error")
-
 
   $scope.getCdnUrl = ->
     roleServices.getEnvVars().then($scope.onGetEnvSuccess, $scope.onGetEnvFailure)
@@ -266,14 +264,19 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     toastr.error(res.data.message, res.data.status)
 
   $scope.checkPermissions = (entity) ->
-    $rootScope.canUpdate = permissionService.hasPermissionOn(entity, "UPDT")
-    $rootScope.canDelete = permissionService.hasPermissionOn(entity, "DLT")
-    $rootScope.canAdd = permissionService.hasPermissionOn(entity, "ADD")
-    $rootScope.canShare = permissionService.hasPermissionOn(entity, "SHR")
-    $rootScope.canManageCompany = permissionService.hasPermissionOn(entity, "MNG_CMPNY")
-    $rootScope.canVWDLT = permissionService.hasPermissionOn(entity, "VWDLT")
-
-    
+    $rootScope.canUpdate = true
+    $rootScope.canDelete = true
+    $rootScope.canAdd = true
+    $rootScope.canShare = true
+    $rootScope.canManageCompany = true
+    $rootScope.canVWDLT = true
+    # commented by sarfaraz on 8 nov. 2017
+    # $rootScope.canUpdate = permissionService.hasPermissionOn(entity, "UPDT")
+    # $rootScope.canDelete = permissionService.hasPermissionOn(entity, "DLT")
+    # $rootScope.canAdd = permissionService.hasPermissionOn(entity, "ADD")
+    # $rootScope.canShare = permissionService.hasPermissionOn(entity, "SHR")
+    # $rootScope.canManageCompany = permissionService.hasPermissionOn(entity, "MNG_CMPNY")
+    # $rootScope.canVWDLT = permissionService.hasPermissionOn(entity, "VWDLT")
 
   $rootScope.setScrollToTop = (val, elem)->
     if val is '' || _.isUndefined(val)
@@ -286,13 +289,14 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
     pattern = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
     return pattern.test(emailStr)
   
-  $scope.getRoles()
-  $scope.getCdnUrl()
+  
 
   $timeout (->
     cdt = localStorageService.get("_selectedCompany")
     if !_.isNull(cdt)
       $rootScope.setActiveFinancialYear(cdt.activeFinancialYear)
+      $scope.getRoles(cdt)
+      $scope.getCdnUrl()
   ), 500
 
 
@@ -321,6 +325,9 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       $scope.companyList = _.without($scope.companyList, $scope.beforeDeleteCompany.company)
     $rootScope.getCompanyList()
     $scope.beforeDeleteCompany = {}
+    if !$rootScope.CompanyList
+      localStorageService.set("_selectedCompany", null)
+      localStorageService.set("_selectedAccount", null)
     toastr.success("Company deleted successfully", "Success")
 
 #    $scope.getCompanyList()
@@ -462,8 +469,14 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   #get company list failure
   $scope.getCompanyListFailure = (res)->
+    $scope.createNewCompany()
     $rootScope.CompanyList = []
+    if !$scope.companyList
+      $scope.companyList = []
+    localStorageService.set("_selectedCompany", null)
+    localStorageService.set("_selectedCompany", null)
     toastr.error(res.data.message, res.data.status)
+    return false
 
   $rootScope.setCompany = (company) ->
     $rootScope.selectedCompany = company
@@ -632,11 +645,11 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
       return
     $scope.getFlattenGrpWithAccList(company.uniqueName)
     $scope.setFYonCompanychange(company)
-    #check permissions on selected company
+    #check permissions on selected company 
     $rootScope.doWeHavePermission(company)
     $scope.checkPermissions(company)
     $rootScope.canViewSpecificItems = false
-    if company.role.uniqueName is 'shared'
+    if company.userEntityRoles[0].role.uniqueName is 'shared'
       $rootScope.canManageComp = false
       if company.sharedEntity is 'groups'
         $rootScope.canViewSpecificItems = true
@@ -672,15 +685,15 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
 
   $rootScope.allowed = true
   $rootScope.doWeHavePermission = (company) ->
-    str = company.sharedEntity
+    str = company.userEntityRoles[0].entity.entity
     $rootScope.sharedEntity = str
-    if str == null
+    if str is null
       $rootScope.allowed = true
     else
-      if str == "accounts"
+      if str is "accounts"
         $rootScope.allowed = false
       else
-        if str == "groups"
+        if str is "groups"
           $rootScope.allowed = true
 
   $scope.setFYonCompanychange = (company) ->
@@ -956,7 +969,10 @@ mainController = ($scope, $state, $rootScope, $timeout, $http, $uibModal, localS
   $scope.redirectAccordingToCondition=(data)->
     
     company = _.findWhere($scope.companyList, {uniqueName:data.companyUniqueName})
-
+    if !company && $rootScope.selectedCompany 
+      company = $rootScope.selectedCompany
+    if !company
+      return false
     localStorageService.set('_selectedCompany', company)
     $rootScope.selectedCompany = company
     $scope.changeCompany(company, 0, 'CHANGE')
