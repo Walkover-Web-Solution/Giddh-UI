@@ -1,4 +1,4 @@
-ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, groupService, $uibModal, companyServices, $state,idbService, $http, nzTour, $q, invoiceService, UnderstandingService) ->
+ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, modalService, ledgerService,FileSaver , $filter, DAServices, $stateParams, $timeout, $location, $document, permissionService, accountService, roleServices, groupService, $uibModal, companyServices, $state,idbService, $http, nzTour, $q, invoiceService, UnderstandingService) ->
   ledgerCtrl = this
   ledgerCtrl.LedgerExport = false
   ledgerCtrl.toggleShare = false
@@ -2588,22 +2588,41 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
       template: ''
     accountService.downloadInvoice(obj, data).then(@success, @failure)
 
+# //
+#   public async shareAccount() {
+#     let activeAccount = await this.activeAccount$.first().toPromise();
+#     let userRole = {
+#       emailId: this.email,
+#       entity: 'account',
+#       entityUniqueName: activeAccount.uniqueName,
+#     };
+#     let selectedPermission = _.clone(this.selectedPermission);
+#     this.store.dispatch(this.accountActions.shareEntity(userRole, selectedPermission.toLowerCase()));
+#     this.email = '';
+#     this.selectedPermission = '';
+#   }
+# //
 
 
   ledgerCtrl.shareAccount = () ->
     @success = (res) ->
       ledgerCtrl.getSharedWithList()
-      toastr.success(res.body)
+      toastr.success('Account shared successfully.')
     @failure = (res) ->
       toastr.error(res.data.message)
 
+    shareAccountObj = { entity: "account", entityUniqueName: ""}
+
     reqParam = {}
     reqParam.compUname = $rootScope.selectedCompany.uniqueName
-    reqParam.acntUname = ledgerCtrl.accountToShow.uniqueName
-    permission = {}
-    permission.user = ledgerCtrl.shareRequest.user
-    permission.role = 'view_only'
-    accountService.share(reqParam, permission).then(@success,@failure)
+    reqParam.roleUname = 'view'
+    # permission = {}
+    # permission.user = ledgerCtrl.shareRequest.user
+    # permission.role = 'view_only'
+    shareAccountObj.emailId  = ledgerCtrl.shareRequest.user
+    shareAccountObj.entityUniqueName = ledgerCtrl.accountToShow.uniqueName
+
+    roleServices.share(reqParam, shareAccountObj).then(@success,@failure)
 
   ledgerCtrl.getSharedWithList = () ->
     @success = (res) ->
@@ -2625,13 +2644,23 @@ ledgerController = ($scope, $rootScope, $window,localStorageService, toastr, mod
     @failure = (res) ->
       toastr.error(res.data.message)
 
-    reqParam = {}
-    reqParam.compUname = $rootScope.selectedCompany.uniqueName
-    reqParam.acntUname = ledgerCtrl.accountToShow.uniqueName
+    unqNamesObj = {
+      compUname: $rootScope.selectedCompany.uniqueName
+      roleUname: 'view'
+    }
+    dataToSend = {
+      emailId: user,
+      entity: 'account',
+      entityUniqueName: ledgerCtrl.accountToShow.uniqueName
+    }
+
+    # reqParam = {}
+    # reqParam.compUname = $rootScope.selectedCompany.uniqueName
+    # reqParam.acntUname = ledgerCtrl.accountToShow.uniqueName
 
     userObj = {}
     userObj.user = user
-    accountService.unshare(reqParam, userObj).then(@success,@failure)
+    roleServices.unshare(unqNamesObj, dataToSend).then(@success,@failure)
 
   ledgerCtrl.updateSharePermission = (user, role) ->
 
