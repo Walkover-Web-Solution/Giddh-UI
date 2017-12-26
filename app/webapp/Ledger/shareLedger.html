@@ -29,10 +29,10 @@
             <div class="col-xs-8 pdB1 pdT1 mrB2">
                <div class="row">
                   <ul class="shared_list">
-                     <li ng-repeat="(key,value) in ledgerCtrl.sharedUsersList">
+                     <li ng-repeat="(key,value) in ledgerCtrl.sharedUsersList" class="clearfix">
                         <span class="pull-left">
                            <!-- <div ng-bind-html="value.userName"></div> -->
-                           <small class="Useremail" ng-bind-html="value.userEmail + '-' "></small>
+                           <small class="Useremail" ng-bind-html="value.emailId + '-' "></small>
                         </span>
                         <div class="form-inline">
                         <small ng-bind-html="value.role.uniqueName"></small>
